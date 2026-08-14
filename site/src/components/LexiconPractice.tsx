@@ -1417,6 +1417,36 @@ function sessionScopeIndexForMode(
 }
 
 /**
+ * #6734 residual (A1 Пароніми): `sessionScopeIndexForMode` only trusts the DECLARED
+ * `.modes` flag baked into the index shard at build time. For modes backed by their own
+ * per-lemma content shard (paronym, synonym, heritage) the index and content shards can
+ * drift out of sync — a stale/partial republish leaves the index still claiming
+ * eligibility for a lemma while the content shard that lemma's item would come from has
+ * no matching row. Left unchecked, that opens a session with plannedTotal > 0 (e.g. a
+ * live 0/8 Пароніми session) and zero real candidates: stuck forever instead of the
+ * empty-mode message a genuinely empty mode already surfaces (#6741). Cross-check the
+ * declared scope against the deck's actually-loaded content before treating an item as
+ * playable — a mode with no dedicated content shard (flashcards, matching, cloze, …)
+ * passes through unchanged.
+ */
+function withLoadedModeContent(
+  index: PracticeIndexItem[],
+  deck: PracticeDeckData | null,
+  modeFilter: PracticeModeFilter,
+): PracticeIndexItem[] {
+  if (!deck) return index;
+  const contentByMode: Partial<Record<PracticeModeFilter, { lemmaId: string }[] | undefined>> = {
+    synonym: deck.synonym,
+    paronym: deck.paronym,
+    heritage: deck.heritage,
+  };
+  const content = contentByMode[modeFilter];
+  if (!content) return index;
+  const lemmaIdsWithContent = new Set(content.map((item) => item.lemmaId));
+  return index.filter((item) => lemmaIdsWithContent.has(item.lemmaId));
+}
+
+/**
  * #6734: idle modeCounts load every published level's index (learner level is a
  * preference, not a shard cap), but a newly started session plans against the
  * selected level first. Counting higher-level synonym lemmas on an A1 home made
@@ -2277,8 +2307,9 @@ function LexiconPracticeIsland({
       }
     }
 
-    const scopedIndex = sessionScopeIndexForMode(
-      filterIndexByDeckFilter(deck.index, deckLemmaKeySet),
+    const scopedIndex = withLoadedModeContent(
+      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, deckLemmaKeySet), mode),
+      deck,
       mode,
     );
     // #6734: autoStart must not open an empty-mode session that later bleeds
@@ -2709,8 +2740,9 @@ function LexiconPracticeIsland({
     // synonym with antonym-only inventory). Keying off plannedTotal was too broad —
     // autoStart remounts and borrowed-due picks can have plannedTotal 0 while real
     // mode inventory still exists, which starved heritage / remount flows.
-    const scopedIndex = sessionScopeIndexForMode(
-      filterIndexByDeckFilter(selectionDeck.index, deckLemmaKeySet),
+    const scopedIndex = withLoadedModeContent(
+      sessionScopeIndexForMode(filterIndexByDeckFilter(selectionDeck.index, deckLemmaKeySet), mode),
+      selectionDeck,
       mode,
     );
     if (scopedIndex.length === 0) return null;
@@ -3329,11 +3361,15 @@ function LexiconPracticeIsland({
     // A session is starting for real — drop any stale idle notice (e.g. the empty-focus
     // message) so the active status line reads «Сесія …» cleanly.
     setFeedback(null);
-    const index = sessionScopeIndexForMode(
-      filterIndexByDeckFilter(
-        loadedDeck.index,
-        resolveDeckLemmaKeySet(effectiveDeckFilter, customSets),
+    const index = withLoadedModeContent(
+      sessionScopeIndexForMode(
+        filterIndexByDeckFilter(
+          loadedDeck.index,
+          resolveDeckLemmaKeySet(effectiveDeckFilter, customSets),
+        ),
+        nextMode,
       ),
+      loadedDeck,
       nextMode,
     );
     const plan = computeSessionScope(index, budget, { dailyNewCount });

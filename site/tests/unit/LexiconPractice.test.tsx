@@ -2547,6 +2547,86 @@ describe('LexiconPractice', () => {
     expect(container.querySelector('[data-mode="paronym"]')).toHaveTextContent('Пароніми');
   });
 
+  /**
+   * #6734 residual (live QA, post-#6741): A1 Пароніми still opened a 0/8 session. Root
+   * cause is a class #6741 didn't cover — the index shard's DECLARED `.modes` flag can
+   * drift from the actual paronym content shard (stale/partial republish leaves the
+   * index still claiming eligibility for a lemma the content shard has no row for). The
+   * idle card badge still trusts the declared count (no per-mode content fetch at idle
+   * by design), but `beginSession`/`selection`/autoStart now cross-check the real,
+   * already-loaded `deck.paronym` before treating an item as playable — so a tap can no
+   * longer open a session that is stuck at 0/N forever.
+   */
+  function paronymContentMismatchDeck(): PracticeDeckData {
+    const entry = lexeme(
+      'bihate',
+      'бігати',
+      'to run',
+      { nominative: 'бігати', accusative: 'бігати', locative: 'бігати' },
+      { cefr: 'A1' },
+    );
+    return {
+      deckVersion: 'test-paronym-mismatch',
+      level: 'A1',
+      lexemes: [entry],
+      index: [
+        {
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['paronym'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        },
+      ],
+      cloze: [],
+      stress: [],
+      classify: [],
+      paradigm: [],
+      synonym: [],
+      // The mismatch: index says paronym-eligible, but the content shard is empty.
+      paronym: [],
+      // An unrelated loaded row keeps `hasLoadedDrillShards` true so `ensureDeck`
+      // treats the drills as already-fetched instead of refetching over the network.
+      heritage: [heritagePracticeItem()],
+    };
+  }
+
+  test('#6734 residual: paronym tap refuses a stale index/content mismatch instead of a stuck 0/N session', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={paronymContentMismatchDeck()} />);
+
+    // Idle badge still reads the declared index count (1) — the fix is the refusal
+    // to open a session on tap, not idle-time honesty (no content fetch at idle).
+    expect(screen.getByTestId('practice-mode-count-paronym')).toHaveTextContent('1');
+
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="paronym"]')!);
+
+    expect(screen.queryByTestId('practice-paronym')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
+    expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
+    expect(container.querySelector('.lexicon-practice-status')).toHaveTextContent('Немає вправ');
+  });
+
+  test('#6734 residual: paronym autoStart with a stale index/content mismatch stays itemless at 0/0', async () => {
+    render(
+      <LexiconPractice
+        initialDeck={paronymContentMismatchDeck()}
+        autoStart
+        initialMode="paronym"
+      />,
+    );
+
+    // Live bug: the index's declared eligibility (1 lemma) drove plannedTotal, so the
+    // progress pill read a nonzero N (0/8 in production) while zero real items ever
+    // served. Cross-checking against the actually-loaded (confirmed empty) paronym
+    // content shard collapses the plan to the honest 0/0 before the session even opens.
+    expect(await screen.findByTestId('practice-paronym-empty')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/0');
+    expect(screen.queryByTestId('practice-paronym')).not.toBeInTheDocument();
+  });
+
   test('focus deep-link: a bare Atlas lemma resolves to its item with no double session start', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
