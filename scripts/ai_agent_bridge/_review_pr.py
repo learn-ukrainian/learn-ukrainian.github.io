@@ -2,7 +2,7 @@
 
 Pointer-only: no embedded diffs or inventory YAML. Prefer sealed Codex
 ``--review --pr`` isolation (#5285). Claude-dark local default for
-opencode-family reviewers is GLM-5.2 (LOCAL-ONLY — never CI).
+opencode-family reviewers is GLM-5.3 (LOCAL-ONLY — never CI).
 
 Formal CF defaults (operator 2026-07-21) use practical seats.  Explicit
 operator pins may select another formally eligible model on the requested
@@ -46,7 +46,7 @@ EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
     REVIEWER_AGY: "gemini-3.7-flash",
-    REVIEWER_GLM: "glm-5.2",
+    REVIEWER_GLM: "glm-5.3",
     REVIEWER_GROK: "grok-4.5",
     REVIEWER_KIMI: "kimi-k3",
     "kimicc": "kimi-k3",
@@ -57,7 +57,7 @@ FORMAL_CF_MODEL: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
     REVIEWER_AGY: "gemini-3.7-flash-high",
-    REVIEWER_GLM: "glm-5.2",
+    REVIEWER_GLM: "glm-5.3",
     REVIEWER_GROK: "grok-4.5",
     REVIEWER_KIMI: "kimi-code/k3",
     "kimicc": "kimi-code/k3",

@@ -34,7 +34,7 @@ def test_formal_cf_pins_are_practical_seats_at_high():
     assert formal_cf_pin("codex") == ("gpt-5.6-terra", "high")
     assert formal_cf_pin("claude") == ("claude-sonnet-5", "high")
     assert formal_cf_pin("agy") == ("gemini-3.7-flash-high", "high")
-    assert formal_cf_pin("glm") == ("glm-5.2", "high")
+    assert formal_cf_pin("glm") == ("glm-5.3", "high")
     assert FORMAL_CF_MODEL["codex"] == "gpt-5.6-terra"
     assert FORMAL_CF_EFFORT["claude"] == "high"
 
@@ -55,7 +55,7 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
         ("claude", "claude-opus-4-8", "claude-opus-4-8"),
         ("codex", "gpt-5.6-terra", "gpt-5.6-terra"),
         ("codex", "gpt-5.6-sol", "openai_frontier"),
-        ("glm", "glm-5.2", "glm-5.2"),
+        ("glm", "glm-5.3", "glm-5.3"),
         ("grok", "grok-4.5", "grok-4.5"),
     ],
 )

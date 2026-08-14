@@ -345,7 +345,7 @@ def test_discussion_uses_normal_transport_for_three_participants_with_pins(
             idempotency_key="idem-three-seat",
             rounds=2,
             participants=("claude", "kimicc", "glm"),
-            models={"kimicc": "kimi-code/k3", "glm": "glm-5.2"},
+            models={"kimicc": "kimi-code/k3", "glm": "glm-5.3"},
             efforts={"glm": "high"},
             source="codex",
         )
@@ -360,7 +360,7 @@ def test_discussion_uses_normal_transport_for_three_participants_with_pins(
     kimicc_calls = [kwargs for agent, kwargs in calls if agent == "kimicc"]
     glm_calls = [kwargs for agent, kwargs in calls if agent == "glm"]
     assert all(kwargs["model"] == "kimi-code/k3" for kwargs in kimicc_calls)
-    assert all(kwargs["model"] == "glm-5.2" for kwargs in glm_calls)
+    assert all(kwargs["model"] == "glm-5.3" for kwargs in glm_calls)
     assert all(kwargs["effort"] == "high" for kwargs in glm_calls)
 
 

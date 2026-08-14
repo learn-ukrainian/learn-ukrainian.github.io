@@ -50,7 +50,7 @@ _TOKEN_TO_FAMILY = {
     # formal code-review families
     "composer-2.5": "moonshot",
     "kimi-code/k3": "moonshot",
-    "glm-5.2": "zhipu",
+    "glm-5.3": "zhipu",
     "poolside/laguna-s-2.1": "poolside",
     "poolside/laguna-m.1": "poolside",
     # qwen — restored in Layer-B (was orphaned/None)

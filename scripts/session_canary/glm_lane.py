@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """GLM epic-lane session canary + stream bootstrap for orchestrator cold-start.
 
-GLM-5.2 is a Zhipu AI code and review model routed via opencode.
+GLM-5.3 is a Zhipu AI code and review model routed via opencode.
 LOCAL-ONLY: GLM egresses prompt data to China — forbidden in CI / automated pipelines.
 
 Usage
@@ -41,7 +41,7 @@ EPIC_STREAM_DEFAULTS = dict(_gl.EPIC_STREAM_DEFAULTS)
 
 _HOLDER_AGENT = "glm"
 _HOLDER_HARNESS = "opencode-glm"
-_DEFAULT_MODEL = "glm-5.2"
+_DEFAULT_MODEL = "glm-5.3"
 
 FIXED_PROBE_PROMPT = (
     "CANARY PROBE: What is the return value of fn() where def fn(): return 'GLM-CANARY-7718'? "
@@ -78,7 +78,7 @@ def _cold_start_body(
 > **No secrets. LOCAL-ONLY: China-egress model — never run in CI.**
 
 ## Identity
-- **Seat:** GLM-5.2 orchestrator (Zhipu family; opencode transport)
+- **Seat:** GLM-5.3 orchestrator (Zhipu family; opencode transport)
 - **Epic:** `{epic}`
 - **Stream:** `{stream_id}`
 - **Lease:** {lease_summary}
@@ -335,7 +335,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     if not glm_handoff.is_file():
         glm_handoff.write_text(
             f"# GLM driver handoff — stream {stream_id}\n\n"
-            f"> Seat: GLM-5.2 · Epic: {epic} · Stream: {stream_id}\n"
+            f"> Seat: GLM-5.3 · Epic: {epic} · Stream: {stream_id}\n"
             f"> **Last diary stamp:** {_utc_now()}\n\n"
             "## Next drive order\n1. Cold-start from stream tail\n2. Drive next unblocked action\n\n"
             "## Hands-off\n- Foreign stream leases; CI automation\n\n"
@@ -411,7 +411,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--out-dir", default=None)
     score.add_argument("--answers", required=True)
     score.add_argument("--context-tokens", type=int, default=0)
-    score.add_argument("--model", default="glm-5.2")
+    score.add_argument("--model", default="glm-5.3")
     score.add_argument("--pass-ratio", type=float, default=_gl.DEFAULT_PASS_RATIO)
     score.add_argument("--threshold", type=float, default=_gl.DEFAULT_SIM_THRESHOLD)
     score.add_argument("--handoff", default=None)

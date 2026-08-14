@@ -800,17 +800,17 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_pool_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_pool_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
-    # ask-glm (Zhipu glm-5.2 — cross-family CODE + review; ⚠️ China-hosted, LOCAL-ONLY)
+    # ask-glm (Zhipu glm-5.3 — cross-family CODE + review; ⚠️ China-hosted, LOCAL-ONLY)
     ask_glm_parser = subparsers.add_parser(
         "ask-glm",
-        help="Send message AND invoke Zhipu GLM (glm-5.2) via opencode. LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
+        help="Send message AND invoke Zhipu GLM (glm-5.3) via opencode. LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
     )
     ask_glm_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_glm_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_glm_parser.add_argument("--type", default="query", help="Message type")
     ask_glm_parser.add_argument("--data", help="Path to data file to attach")
     ask_glm_parser.add_argument(
-        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.2)"
+        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.3)"
     )
     ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")

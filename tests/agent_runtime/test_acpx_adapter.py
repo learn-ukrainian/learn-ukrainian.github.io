@@ -2104,7 +2104,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
             "agent": "agy",
             "model": "gemini-3.7-flash-high",
         },
-        "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": "glm-5.2"},
+        "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": "glm-5.3"},
         "deepseek": {
             "seat": "acpx-deepseek-shadow",
             "agent": "deepseek",
@@ -2117,7 +2117,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
     ("adapter_class", "participant", "provider_binary", "version", "model"),
     [
         (AcpxAgyShadowAdapter, "agy", "agy", "1.1.9", "gemini-3.7-flash-high"),
-        (AcpxGlmShadowAdapter, "glm", "opencode", "1.17.13", "glm-5.2"),
+        (AcpxGlmShadowAdapter, "glm", "opencode", "1.17.13", "glm-5.3"),
         (AcpxDeepSeekShadowAdapter, "deepseek", "hermes", "0.18.2", "deepseek-v4-pro"),
     ],
 )
@@ -2176,7 +2176,7 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     assert "--no-fs" in plan.cmd
     assert "--no-terminal" in plan.cmd
     if participant == "glm":
-        assert ("--model", "zai-coding-plan/glm-5.2") in zip(
+        assert ("--model", "zai-coding-plan/glm-5.3") in zip(
             plan.cmd, plan.cmd[1:], strict=False
         )
         assert plan.env_overrides == {

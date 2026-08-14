@@ -13,7 +13,7 @@ this transport:
   Rides opencode with ``--variant`` effort + NDJSON; browses via lightpanda MCP
   in ``~/.config/opencode/opencode.jsonc``. See ``ask_pool`` below.
 - ``ask-glm`` — the first-class **Zhipu GLM** fleet member (model
-  ``zai-coding-plan/glm-5.2``): strong code authoring + review (its top axis)
+  ``zai-coding-plan/glm-5.3``): strong code authoring + review (its top axis)
   and live web fact-checking, its own (China-lab) family. ⚠️ China-hosted →
   prompt data EGRESSES TO CHINA → LOCAL-ONLY; ``ask_glm`` refuses to run under
   CI as a backstop. See ``ask_glm`` below.
@@ -104,8 +104,8 @@ _EFFORT_TO_VARIANT = {
     "max": "max",
 }
 
-# Zhipu GLM fleet member (model glm-5.2), reached via the Z.AI Coding Plan
-# provider under opencode (also reachable as openrouter/z-ai/glm-5.2). Strong
+# Zhipu GLM fleet member (model glm-5.3), reached via the Z.AI Coding Plan
+# provider under opencode (also reachable as openrouter/z-ai/glm-5.3). Strong
 # code + review + browsing; a distinct (China-lab) family → valid cross-family
 # reviewer.
 #
@@ -113,8 +113,9 @@ _EFFORT_TO_VARIANT = {
 # data EGRESSES TO CHINA. LOCAL-ONLY — never call it from CI / automated
 # pipelines or with sensitive data; prefer a Western-lab reviewer for
 # top-stakes work. ``ask_glm`` refuses to run under CI as a runtime backstop.
-GLM_MODEL = "zai-coding-plan/glm-5.2"
-GLM_DEFAULT_VARIANT = "high"  # reasoning effort when --effort is omitted (operator 2026-08-13)
+GLM_MODEL = "zai-coding-plan/glm-5.3"
+GLM_DEFAULT_VARIANT = "high"  # default effort when --effort omitted (operator 2026-08-14)
+GLM_ADVISORY_VARIANT = "max"  # advisory / hard escalation effort for GLM-5.3
 GLM_DEFAULT_TIMEOUT_S = 1800
 # Env vars whose presence indicates an automated/CI context where the
 # China-egress constraint forbids invoking GLM.
@@ -122,11 +123,11 @@ _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
 # Max output token budget for opencode-routed reasoning-heavy lanes (glm/pool)
 # to give headroom for hidden reasoning before a `step_finish` with reason="length".
-# Observed death: ~32k reasoning + 5 output on glm-5.2 (input ~31k). Target:
+# Observed death: ~32k reasoning + 5 output on glm-5.3 (input ~31k). Target:
 # reasoning + final output headroom >= 64K (or the provider-advertised max).
 #
 # Control:
-# - Sane default per model (131072 for glm-5.2 which advertises ~131K output).
+# - Sane default per model (131072 for glm-5.3 which advertises ~131K output).
 # - Per-model env overrides: AB_GLM_MAX_OUTPUT_TOKENS, AB_POOL_MAX_OUTPUT_TOKENS
 # - Global: AB_OPENCODE_MAX_OUTPUT_TOKENS
 # - Falls back to setting OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX for the
@@ -789,7 +790,7 @@ def ask_glm(
     on_message_created: Callable[[int], None] | None = None,
     review_pr_lifecycle: bool = False,
 ) -> int:
-    """Send a message AND invoke Zhipu GLM (glm-5.2) one-shot via opencode.
+    """Send a message AND invoke Zhipu GLM (glm-5.3) one-shot via opencode.
 
     ``glm`` is a strong cross-family CODE + review specialist (its top axis —
     deep security/bug review) that also browses for live fact-checks, plus a
@@ -804,7 +805,7 @@ def ask_glm(
 
     ``model`` overrides the pinned ``GLM_MODEL`` — needed while the tag drifts
     (``zai-coding-plan`` needs opencode auth; the openrouter fallback is
-    ``openrouter/z-ai/glm-5.2``). Any override MUST still be a GLM model — the
+    ``openrouter/z-ai/glm-5.3``). Any override MUST still be a GLM model — the
     China-egress guard above is unconditional.
     """
     try:
@@ -822,6 +823,10 @@ def ask_glm(
     effective_model = resolve_model_selection(
         lane="ask-glm", to_model=to_model, model=model, default=GLM_MODEL
     )
+    # Advisory consultations default to max; everyday/query defaults to high.
+    # Explicit --effort always wins (operator 2026-08-14 / GLM-5.3).
+    if effort is None and str(msg_type or "").strip().lower() == "advisory":
+        effort = "max"
     effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-glm", effort=effort)
     effective_variant = effective_variant or GLM_DEFAULT_VARIANT
     msg_id = send_message(

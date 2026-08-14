@@ -174,7 +174,7 @@ Use the live model catalog and rules as authority. Standing task-fit defaults:
   mechanical work but are never sole consequential authority.
 - Grok may own sustained daily driving where the roster permits. Fable and Sol
   are summoned for short judgment, not polling.
-- GLM-5.2/z.ai is eligible for public, non-sensitive code/infra, bug/security,
+- GLM-5.3/z.ai is eligible for public, non-sensitive code/infra, bug/security,
   and cross-file analysis only. It is local-invocation-only, sends prompt data
   to China, never runs in CI or automated pipelines, never receives secrets,
   credentials, learner data, private sources, or sensitive infrastructure, and

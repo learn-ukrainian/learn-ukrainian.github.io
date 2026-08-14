@@ -57,7 +57,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         "deepseek-v4-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
         "pool": "poolside",
-        "glm-5.2": "zhipu",
+        "glm-5.3": "zhipu",
         "qwen/qwen3.6-plus": "qwen",
         "kimi": "moonshot",
         "kimi-code/k3": "moonshot",
@@ -881,7 +881,7 @@ def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is
     )
 
     assert resolution.selected is not None
-    assert resolution.selected.name == "glm-5.2"
+    assert resolution.selected.name == "glm-5.3"
     assert resolution.selected.family == "zhipu"
     assert resolution.selected.suitability_rank == 1
 
@@ -932,7 +932,7 @@ def test_practical_ladder_starts_with_terra_then_sonnet():
         assert [rung[0].name for rung in ladder[:4]] == [
             "gpt-5.6-terra",
             "claude-sonnet-5",
-            "glm-5.2",
+            "glm-5.3",
             "gemini-3.7-flash",
         ]
         assert ladder[4][0].name == "grok-4.5"
