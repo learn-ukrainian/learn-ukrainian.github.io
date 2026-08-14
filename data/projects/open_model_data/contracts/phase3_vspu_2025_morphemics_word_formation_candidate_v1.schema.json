@@ -73,7 +73,7 @@
           "const": "c3ee0cf9319cc4f007b9f5e3f076fb1f1cc0b72e9392371734092ea828011d85"
         },
         "exactness_audit_sha256": {
-          "$ref": "#/$defs/sha256"
+          "const": "8bc0ee3dcb1d4a8f581288277666be8dbca8bda4551394365377509aa6b8f6ea"
         },
         "implementation_sha256": {
           "$ref": "#/$defs/sha256"
@@ -97,11 +97,10 @@
           "const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
         },
         "private_jsonl_bytes": {
-          "type": "integer",
-          "minimum": 1
+          "const": 672075
         },
         "private_jsonl_sha256": {
-          "$ref": "#/$defs/sha256"
+          "const": "f11f2dabb390e77bd7fca4015f5d3b75c7d8db07143ed15626177c7e935aac77"
         },
         "schema_sha256": {
           "$ref": "#/$defs/sha256"

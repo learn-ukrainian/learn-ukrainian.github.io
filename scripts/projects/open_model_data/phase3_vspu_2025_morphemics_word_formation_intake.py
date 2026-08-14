@@ -1073,9 +1073,9 @@ def build_receipt_body(
             "item_metadata_bytes": ITEM_METADATA_BYTES,
             "bitstream_metadata_sha256": BITSTREAM_METADATA_SHA256,
             "bitstream_metadata_bytes": BITSTREAM_METADATA_BYTES,
-            "private_jsonl_sha256": private_jsonl_sha256,
-            "private_jsonl_bytes": private_jsonl_bytes,
-            "exactness_audit_sha256": exactness["audit_receipt_sha256"],
+            "private_jsonl_sha256": PRIVATE_JSONL_SHA256,
+            "private_jsonl_bytes": PRIVATE_JSONL_BYTES,
+            "exactness_audit_sha256": EXACTNESS_AUDIT_SHA256,
             "content_fit_audit_sha256": CONTENT_FIT_AUDIT_SHA256,
             "custody_receipt_file_sha256": CUSTODY_RECEIPT_FILE_SHA256,
             "custody_receipt_body_sha256": CUSTODY_RECEIPT_BODY_SHA256,
@@ -1189,6 +1189,9 @@ def build_receipt_body(
         ],
     }
     require(bitstream_metadata["bitstream_metadata_sha256"] == BITSTREAM_METADATA_SHA256, "bitstream binding drift")
+    require(private_jsonl_sha256 == PRIVATE_JSONL_SHA256, "private JSONL hash drift")
+    require(private_jsonl_bytes == PRIVATE_JSONL_BYTES, "private JSONL byte denominator drift")
+    require(exactness["audit_receipt_sha256"] == EXACTNESS_AUDIT_SHA256, "exactness audit hash drift")
     return body
 
 
@@ -1215,6 +1218,22 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     )
     require(receipt["bindings"]["source_pdf_sha256"] == PDF_SHA256, "receipt PDF hash drift")
     require(receipt["bindings"]["source_pdf_bytes"] == PDF_BYTES, "receipt PDF bytes drift")
+    require(
+        receipt["bindings"]["private_jsonl_sha256"] == PRIVATE_JSONL_SHA256,
+        "private JSONL hash drift",
+    )
+    require(
+        receipt["bindings"]["private_jsonl_bytes"] == PRIVATE_JSONL_BYTES,
+        "private JSONL byte denominator drift",
+    )
+    require(
+        receipt["bindings"]["exactness_audit_sha256"] == EXACTNESS_AUDIT_SHA256,
+        "exactness audit hash drift",
+    )
+    require(
+        receipt["bindings"]["content_fit_audit_sha256"] == CONTENT_FIT_AUDIT_SHA256,
+        "content-fit audit hash drift",
+    )
     require(
         receipt["bindings"]["custody_receipt_file_sha256"] == CUSTODY_RECEIPT_FILE_SHA256,
         "custody receipt file hash drift",
