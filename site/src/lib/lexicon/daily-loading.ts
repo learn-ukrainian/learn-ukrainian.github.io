@@ -1,10 +1,10 @@
 /**
- * DailyWords loading / error / watchdog DOM state (#6771, #6711 review).
+ * DailyWords loading / error DOM state (#6771, #6711 review).
  * Shared by the processed DailyWords module script and unit tests.
- * The inline CDN-fail watchdog in DailyWords.astro mirrors applyDailyLoadFallback.
+ *
+ * The is:inline CDN-fail watchdog in DailyWords.astro intentionally duplicates
+ * the fallback paint path and must NOT import this module (#6771 resilience).
  */
-
-export const DAILY_WATCHDOG_TIMEOUT_MS = 10_000;
 
 export function setDailyLoadingStatus(
   status: HTMLElement | null,
@@ -75,34 +75,4 @@ export function markDailyLoadSuccess(
     }
   }
   section.dataset.dailyReady = "true";
-}
-
-export function isDailyWatchdogDue(section: HTMLElement): boolean {
-  if (section.dataset.dailyReady === "true") return false;
-  const status = section.querySelector<HTMLElement>("[data-daily-status]");
-  const stillLoading =
-    Boolean(status) &&
-    !status!.hidden &&
-    status!.getAttribute("data-daily-loading") === "true";
-  const list = section.querySelector("[data-daily-list]");
-  const emptyList = !list || list.children.length === 0;
-  return stillLoading && emptyList;
-}
-
-/**
- * Arm the watchdog timer. If the module never marks ready and the status is
- * still loading with an empty list, paint the same fallback as a fetch error.
- */
-export function armDailyWatchdog(
-  section: HTMLElement,
-  opts: {
-    timeoutMs?: number;
-    setTimeoutFn?: typeof setTimeout;
-  } = {},
-): ReturnType<typeof setTimeout> {
-  const timeoutMs = opts.timeoutMs ?? DAILY_WATCHDOG_TIMEOUT_MS;
-  const schedule = opts.setTimeoutFn ?? setTimeout;
-  return schedule(() => {
-    if (isDailyWatchdogDue(section)) applyDailyLoadFallback(section);
-  }, timeoutMs);
 }

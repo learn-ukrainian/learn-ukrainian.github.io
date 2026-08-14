@@ -20,36 +20,58 @@ const readingsIndex = readFileSync(resolve(root, "src/pages/readings/index.astro
 const chromeDict = readFileSync(resolve(root, "src/lib/i18n/chrome.ts"), "utf8");
 const courseLayout = readFileSync(resolve(root, "src/layouts/CourseLayout.astro"), "utf8");
 
-/**
- * happy-dom does not recompute attribute-selector CSS when data-chrome-locale
- * flips. Apply the same show/hide contract CourseLayout's .lu-i18n rules define
- * so tests assert actual per-locale visibility, not mere span existence.
- */
-function applyLuI18nVisibilityContract(doc: Document = document): void {
-  const locale = doc.documentElement.dataset.chromeLocale === "uk" ? "uk" : "en";
-  for (const span of doc.querySelectorAll(".lu-i18n [data-loc]")) {
-    const el = span as HTMLElement;
-    el.style.display = el.getAttribute("data-loc") === locale ? "inline" : "none";
+/** Production .lu-i18n show/hide rules shipped by CourseLayout (not a test copy). */
+function extractProductionLuI18nCss(layoutSource: string): string {
+  const rules = [
+    /\.lu-i18n \[data-loc='uk'\] \{[^}]+\}/,
+    /html\[data-chrome-locale='uk'\] \.lu-i18n \[data-loc='uk'\] \{[^}]+\}/,
+    /html\[data-chrome-locale='uk'\] \.lu-i18n \[data-loc='en'\] \{[^}]+\}/,
+  ];
+  const parts: string[] = [];
+  for (const re of rules) {
+    const match = layoutSource.match(re);
+    if (!match) {
+      throw new Error("CourseLayout is missing the production .lu-i18n show/hide CSS contract");
+    }
+    parts.push(match[0]);
   }
+  return parts.join("\n");
 }
 
-function expectOnlyLocaleVisible(rootEl: Element, locale: "en" | "uk"): void {
-  applyLuI18nVisibilityContract();
+function injectProductionLuI18nCss(css: string): HTMLStyleElement {
+  document.querySelectorAll("style[data-test-lu-i18n]").forEach((el) => el.remove());
+  const style = document.createElement("style");
+  style.setAttribute("data-test-lu-i18n", "production");
+  style.textContent = css;
+  document.head.appendChild(style);
+  return style;
+}
+
+/**
+ * happy-dom does not recompute attribute-selector CSS when data-chrome-locale
+ * flips on an already-mounted tree — set locale first, then mount, then assert
+ * computed visibility against the injected production stylesheet.
+ */
+function mountDualAndExpectVisible(
+  enText: string,
+  ukText: string,
+  locale: "en" | "uk",
+): Element {
+  document.documentElement.dataset.chromeLocale = locale;
+  document.body.innerHTML = chromeDualHtml(enText, ukText);
+  const rootEl = document.querySelector(".lu-i18n")!;
   const en = rootEl.querySelector<HTMLElement>('[data-loc="en"]');
   const uk = rootEl.querySelector<HTMLElement>('[data-loc="uk"]');
   expect(en).toBeTruthy();
   expect(uk).toBeTruthy();
   if (locale === "en") {
-    expect(en!.style.display).toBe("inline");
-    expect(uk!.style.display).toBe("none");
-    expect(getComputedStyle(en!).display).not.toBe("none");
     expect(getComputedStyle(uk!).display).toBe("none");
+    expect(getComputedStyle(en!).display).not.toBe("none");
   } else {
-    expect(uk!.style.display).toBe("inline");
-    expect(en!.style.display).toBe("none");
-    expect(getComputedStyle(uk!).display).not.toBe("none");
     expect(getComputedStyle(en!).display).toBe("none");
+    expect(getComputedStyle(uk!).display).not.toBe("none");
   }
+  return rootEl;
 }
 
 describe("readings chrome locale (#6750 already on HEAD)", () => {
@@ -126,22 +148,15 @@ describe("WotD hub chrome locale (#6711)", () => {
     expect(few.en).toBe("B1 · 3 words");
     expect(few.uk).toBe("B1 · 3 слова");
 
-    // CourseLayout CSS contract must still hide the inactive locale.
-    expect(courseLayout).toContain(".lu-i18n [data-loc='uk'] { display: none; }");
-    expect(courseLayout).toContain(
-      "html[data-chrome-locale='uk'] .lu-i18n [data-loc='en'] { display: none; }",
-    );
+    // Inject the real CourseLayout stylesheet — not a duplicated show/hide copy.
+    const productionCss = extractProductionLuI18nCss(courseLayout);
+    injectProductionLuI18nCss(productionCss);
 
-    document.body.innerHTML = chromeDualHtml(en, uk);
-    const rootEl = document.querySelector(".lu-i18n")!;
+    const enRoot = mountDualAndExpectVisible(en, uk, "en");
+    expect(enRoot.querySelector('[data-loc="en"]')?.textContent).toBe(en);
 
-    document.documentElement.dataset.chromeLocale = "en";
-    expectOnlyLocaleVisible(rootEl, "en");
-    expect(rootEl.querySelector('[data-loc="en"]')?.textContent).toBe(en);
-
-    document.documentElement.dataset.chromeLocale = "uk";
-    expectOnlyLocaleVisible(rootEl, "uk");
-    expect(rootEl.querySelector('[data-loc="uk"]')?.textContent).toContain("слів");
+    const ukRoot = mountDualAndExpectVisible(en, uk, "uk");
+    expect(ukRoot.querySelector('[data-loc="uk"]')?.textContent).toContain("слів");
   });
 
   test("chromeDualHtml escapes angle brackets, ampersand, and quotes", () => {
