@@ -1,0 +1,88 @@
+name: UI Policy Gate (advisory)
+
+# #5376 — advisory UI policy gate: locale purity (EN/UK), selector-state rule,
+# no-auto-advance, axe-core serious/critical, and build-time deck variety
+# metrics. ADVISORY BY DESIGN: this workflow is deliberately NOT part of
+# .github/workflows/ci.yml's ci-gate.needs and must not be added to branch
+# protection's required checks without an explicit operator/advisor decision.
+# A red run here signals a policy regression to investigate; it never blocks
+# a merge on its own.
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'site/**'
+      - 'scripts/practice/**'
+      - '.github/workflows/ui-policy-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  ui-policy:
+    name: UI policy checks (advisory)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: site/package-lock.json
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Create Python venv
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          # jsonschema: `npm run build` imports scripts/audit via meta_validator —
+          # keep in sync with the ci.yml frontend job venv.
+          .venv/bin/python -m pip install PyYAML jsonschema
+
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Install dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Install Playwright browser
+        working-directory: site
+        run: npx playwright install --with-deps chromium
+
+      - name: Build site for Playwright preview
+        working-directory: site
+        run: npm run build
+
+      # Checks 1-4 (#5376): locale purity, selector state, no-auto-advance, axe.
+      - name: Run UI policy Playwright specs
+        working-directory: site
+        run: npx playwright test ui-policy
+
+      # Check 5 (#5376): build-time deck variety metrics over the hydrated
+      # practice shards. Warns on thin pools, fails on degenerate decks.
+      - name: Deck variety metrics
+        run: .venv/bin/python scripts/practice/deck_variety_metrics.py --practice-dir site/public/lexicon
