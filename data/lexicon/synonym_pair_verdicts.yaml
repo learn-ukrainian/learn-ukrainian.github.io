@@ -3,6 +3,31 @@ policy: emit = deterministically-attested AND llm-approved
 judged_at: '2026-07-06'
 issue: 4504
 approved:
+- a: а
+  b: але
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: абетковий
+  b: абетний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: абетковий
+  b: елементарний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: абетковий
+  b: загальновідомий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: абетковий
+  b: початковий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: абиде
   b: будь-де
   polarity: synonym
@@ -15,6 +40,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: абиде
+  b: десь
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: абихто
   b: будь-хто
   polarity: synonym
@@ -22,10 +52,20 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: абихто
+  b: хто-будь
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: абихто
   b: хто-небудь
   polarity: synonym
   sources:
   - synonyms
+- a: абихто
+  b: хтось
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: абиякий
   b: будь-який
   polarity: synonym
@@ -63,16 +103,191 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: абсурдний
+  b: безглуздий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: абсурдний
+  b: нісенітний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: абітурієнт
   b: учень
   polarity: synonym
   sources:
   - synonyms
+- a: авангардний
+  b: передовий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авантюра
+  b: афера
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авантюра
+  b: дурисвітство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: біда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: зіпсуття
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: катастрофа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: лихо
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: невдача
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: нещастя
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: пошкодження
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: халепа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аварія
+  b: шкода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автобіографія
+  b: біографія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автор
+  b: винахідник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автор
+  b: проектувальник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автор
+  b: сотворитель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автор
+  b: творець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автор
+  b: укладач
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: автор
+  b: упорядник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: ваговитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: впливовий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: ерудований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: кваліфікований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: поважний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: престижний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: авторитетний
+  b: упевнений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: агресор
+  b: завойовник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: агресор
+  b: загарбник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: адвокат
   b: захисник
   polarity: synonym
   sources:
   - synonyms
+- a: адвокат
+  b: оборонець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: адвокат
+  b: повірник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: адвокат
+  b: правник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: адвокат
+  b: присяжний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: адвокат
+  b: юрист
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: адже
   b: бо
   polarity: synonym
@@ -104,11 +319,111 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: активний
+  b: беручкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: дійовий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: діяльний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: енергійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: завзятий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: завзятущий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: заповзятий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: моторний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: наполегливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: невтомний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: непосидющий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: активний
+  b: ініціативний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: актор
   b: виконавець
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: акуратний
+  b: кукібний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: охайний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: педантичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: пунктуальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: ретельний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: справний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: точний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: акуратний
+  b: чепурний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: акцент
   b: наголос
   polarity: synonym
@@ -120,6 +435,41 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: акція
+  b: експедиція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: але
+  b: зате
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: але
+  b: однак
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: але
+  b: одначе
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: але
+  b: проте
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: але
+  b: та
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: але
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: альтернатива
   b: вибір
   polarity: synonym
@@ -130,6 +480,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: аномалія
+  b: відхилення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: анонсувати
   b: оголошувати
   polarity: synonym
@@ -161,11 +516,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: антураж
+  b: довкілля
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ані
   b: жодний
   polarity: synonym
   sources:
   - synonyms
+- a: аплодисменти
+  b: оплески
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: аптекар
   b: фармацевт
   polarity: synonym
@@ -189,11 +554,31 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: аргументувати
+  b: обґрунтовувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: арешт
+  b: ув'язнення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: аристократизм
+  b: шляхетність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: аромат
   b: запах
   polarity: synonym
   sources:
   - synonyms
+- a: артільний
+  b: панібратський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: архаїзм
   b: неологізм
   polarity: antonym
@@ -204,12 +589,27 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: аспект
+  b: обставина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ательє
   b: майстерня
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: атестувати
+  b: характеризувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: атлант
+  b: гігант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: афіша
   b: оголошення
   polarity: synonym
@@ -220,6 +620,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: багатий
+  b: багач
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатир
+  b: багач
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багато
+  b: багацько
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: багато
   b: досхочу
   polarity: synonym
@@ -231,17 +646,122 @@ approved:
   sources:
   - wiktionary
 - a: багато
+  b: незліченно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багато
+  b: немало
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багато
+  b: пребагато
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багато
   b: чимало
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: багатозначний
+  b: багатомовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатозначний
+  b: виразний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатозначний
+  b: значний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатозначний
+  b: значущий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатозначний
+  b: красномовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатозначний
+  b: полісемічний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатозначний
+  b: промовистий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатшати
+  b: багатіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатій
+  b: багач
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатіти
+  b: багатішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатіти
+  b: збагачуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: багатіти
+  b: розживатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бажання
+  b: жага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бажання
+  b: жадання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бажання
+  b: забаганка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бажання
   b: побажання
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: бажання
+  b: прагнення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бажання
+  b: хотіння
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бажання
+  b: хіть
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бажати
   b: воліти
   polarity: synonym
@@ -254,6 +774,26 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: база
+  b: опертя
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: база
+  b: основа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: база
+  b: підвалина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: база
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: базар
   b: ринок
   polarity: synonym
@@ -266,16 +806,86 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: базікати
+  b: говорити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байдуже
+  b: байдужливо
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байдуже
+  b: безпристрасно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байдуже
+  b: знехотя
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: байдужість
   b: зневага
   polarity: synonym
   sources:
   - synonyms
+- a: байка
+  b: брехенька
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байка
+  b: вигадка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байка
+  b: казка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байка
+  b: небилиця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байка
+  b: небувальщина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байка
+  b: побрехенька
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: байка
+  b: фантазія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: балакати
+  b: говорити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: балакати
   b: розмовляти
   polarity: synonym
   sources:
   - synonyms
+- a: баланс
+  b: рівновага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: батьки
+  b: батько-мати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: батько
   b: тато
   polarity: synonym
@@ -294,11 +904,46 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: бездоганний
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бездомний
   b: здичавілий
   polarity: synonym
   sources:
   - synonyms
+- a: безжалісний
+  b: безсердечний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безжалісний
+  b: жорстокий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безжурний
+  b: безтурботний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: беззвучно
+  b: тихо
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безклопітний
+  b: безтурботний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безкорисливий
+  b: самовідданий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: безкоштовний
   b: безплатний
   polarity: synonym
@@ -320,16 +965,61 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: безпечальний
+  b: безтурботний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безпечний
+  b: безтурботний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: безпосередньо
   b: прямо
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: безрезультатний
+  b: даремний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безстрашність
+  b: відвага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безталанний
+  b: бідолаха
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: безумовно
   b: звісно
   polarity: synonym
   sources:
   - synonyms
+- a: безуспішний
+  b: даремний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безхребетний
+  b: мінливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безцеремонний
+  b: панібратський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: безчестя
+  b: ганьба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: берег
   b: узбережжя
   polarity: synonym
@@ -347,11 +1037,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: беручкий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бирка
   b: наліпка
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: бистро
+  b: швидко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бити
   b: стукати
   polarity: synonym
@@ -368,6 +1068,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: благородність
+  b: шляхетність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: блаженство
+  b: насолода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: блакитний
   b: електрик
   polarity: synonym
@@ -403,6 +1113,31 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: блискуче
+  b: гаразд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бовтати
+  b: каламутити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: болючий
+  b: гострий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: болючий
+  b: пекучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: болючий
+  b: сильний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: боротьба
   b: бійка
   polarity: synonym
@@ -445,6 +1180,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: братан
+  b: друг
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: братерський
+  b: єдинокровний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: брати
   b: діставати
   polarity: synonym
@@ -466,6 +1211,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: братній
+  b: єдинокровний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: брехати
   b: гавкати
   polarity: synonym
@@ -476,6 +1226,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: бридкий
+  b: обридливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бридкий
   b: огидний
   polarity: synonym
@@ -488,6 +1243,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: бронзовий
+  b: коричневий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бувай
   b: вітаю
   polarity: antonym
@@ -524,6 +1284,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: будь-який
+  b: всякий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: будівля
   b: забудова
   polarity: synonym
@@ -547,6 +1312,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: буран
+  b: завірюха
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бурхати
+  b: кипіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: буря
   b: завірюха
   polarity: synonym
@@ -617,11 +1392,51 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: бідак
+  b: бідолаха
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідкатися
+  b: бідкуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідкатися
+  b: жалітися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідкатися
+  b: клопотатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідкатися
+  b: нарікати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бідкатися
   b: плакати
   polarity: synonym
   sources:
   - synonyms
+- a: бідкатися
+  b: плекатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідкатися
+  b: поплакатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідкатися
+  b: піклуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бідкатися
   b: скаржитися
   polarity: synonym
@@ -642,6 +1457,41 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: бідний
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідніти
+  b: біднішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідніти
+  b: занепадати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідніти
+  b: підупадати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідніти
+  b: убожіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідолаха
+  b: невдаха
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: бідолаха
+  b: нещасник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: бідолашний
   b: нещасний
   polarity: synonym
@@ -652,6 +1502,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: білий
+  b: білосніжний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: білий
   b: молочний
   polarity: synonym
@@ -664,6 +1519,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: білий
+  b: сніжно-білий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: більше
   b: гірше
   polarity: synonym
@@ -702,16 +1562,101 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: біографія
+  b: життєпис
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: біографія
+  b: житіє
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: біситися
   b: сердитися
   polarity: synonym
   sources:
   - synonyms
+- a: в
+  b: у
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: глейкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: глеюватий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: глизявий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: грузький
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: ковкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: липкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: липучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: тванистий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: тягучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'язкий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'їдливий
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: в'їдливість
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: в'їхати
   b: заїжджати
   polarity: synonym
   sources:
   - synonyms
+- a: вага
+  b: ваги
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вага
+  b: вагівниця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вага
   b: значення
   polarity: synonym
@@ -722,6 +1667,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вага
+  b: терези
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вада
+  b: хиба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вада
+  b: ґандж
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: важити
   b: зазіхати
   polarity: synonym
@@ -758,6 +1718,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: варкий
+  b: жагучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: варт
   b: гідний
   polarity: synonym
@@ -777,15 +1742,40 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: ввічливий
+  b: увічливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ввічливий
   b: чемний
   polarity: synonym
   sources:
   - synonyms
+- a: велет
+  b: гігант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: велетень
+  b: гігант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: великий
   b: колосальний
   polarity: synonym
   sources:
   - synonyms
+- a: великий
+  b: розлогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: великодушність
+  b: шляхетність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: величезний
   b: колосальний
   polarity: synonym
@@ -817,6 +1807,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: верещати
+  b: лементувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: верзти
+  b: говорити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вертеп
   b: печера
   polarity: synonym
@@ -833,11 +1833,41 @@ approved:
   sources:
   - synonyms
 - a: веселий
+  b: жартівливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: веселий
   b: радісний
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: веселити
+  b: забавляти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: веселити
+  b: звеселяти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: веселити
+  b: потішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: веселити
+  b: розважати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: веселити
+  b: розвеселити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: веселитися
   b: розважатися
   polarity: synonym
@@ -874,11 +1904,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: весь
+  b: цілий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вечір
   b: ранок
   polarity: antonym
   sources:
   - wiktionary
+- a: вже
+  b: уже
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: взагалі
   b: загалом
   polarity: synonym
@@ -912,11 +1952,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: взірцевий
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вибачати
   b: вибачити
   polarity: synonym
   sources:
   - synonyms
+- a: вибивати
+  b: відбивати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вибирати
   b: висипати
   polarity: synonym
@@ -937,6 +1987,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вибувати
+  b: від'їздити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вибігати
   b: вибігти
   polarity: synonym
@@ -952,6 +2007,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вивезення
+  b: евакуація
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вивести
   b: запроваджувати
   polarity: synonym
@@ -984,6 +2044,36 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вивчити
+  b: визубрювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вивчити
+  b: вчити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вивчити
+  b: завчати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вивчити
+  b: зубрити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вивіз
+  b: евакуація
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вигаданий
+  b: фіктивний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вигадати
   b: пригадати
   polarity: synonym
@@ -1014,6 +2104,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вигадка
+  b: фантазія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вигадливий
+  b: меткий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вигляд
   b: зовнішність
   polarity: synonym
@@ -1025,6 +2125,11 @@ approved:
   sources:
   - synonyms
 - a: вигляд
+  b: лук
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вигляд
   b: пейзаж
   polarity: synonym
   sources:
@@ -1035,6 +2140,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вигода
+  b: економія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вигода
   b: користь
   polarity: synonym
@@ -1088,6 +2198,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: видатний
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: видимий
   b: очевидний
   polarity: synonym
@@ -1159,6 +2274,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: визначний
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: визубень
+  b: щербина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виймати
   b: вийняти
   polarity: synonym
@@ -1221,6 +2346,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: виключно
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: виколисувати
+  b: виховувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: виколихувати
+  b: виховувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виконувати
   b: здійснювати
   polarity: synonym
@@ -1299,6 +2439,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: винахідливий
+  b: меткий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виникати
   b: виникнути
   polarity: synonym
@@ -1349,11 +2494,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: випадково
+  b: часом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: випадковість
   b: випадок
   polarity: synonym
   sources:
   - synonyms
+- a: випадок
+  b: обставина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: випадок
   b: подія
   polarity: synonym
@@ -1405,6 +2560,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: випробовувати
+  b: перевіряти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: випробування
   b: іспит
   polarity: synonym
@@ -1427,6 +2587,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: виринати
+  b: з'являтися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виробити
   b: виробляти
   polarity: synonym
@@ -1452,6 +2617,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вирощувати
+  b: виховувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вирувати
+  b: кипіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вирушати
   b: вирушити
   polarity: synonym
@@ -1485,12 +2660,27 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: виряджатися
+  b: від'їздити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вирівнювати
+  b: нівелювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вирішити
   b: ухвалити
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вирішувати
+  b: рішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вирішувати
   b: ухвалювати
   polarity: synonym
@@ -1550,6 +2740,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: високоякісний
+  b: кваліфікований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: висота
   b: височина
   polarity: synonym
@@ -1561,6 +2756,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: витикатися
+  b: з'являтися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: витратити
   b: витрачати
   polarity: synonym
@@ -1588,6 +2788,36 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: витівник
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вихований
+  b: увічливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: виховувати
+  b: плекати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: виховувати
+  b: ростити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: виховувати
+  b: формувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: виходити
+  b: з'являтися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виходити
   b: сходити
   polarity: synonym
@@ -1608,11 +2838,26 @@ approved:
   curator: claude-opus/4698-a2-curation
   a2Rationale: Canonical spatial antonym (exit / entrance); both A2 in PULS; dominant
     senses map 1:1, unmistakable at A2.
+- a: вичерпний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вищати
+  b: галасувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виявитися
   b: виявлятися
   polarity: synonym
   sources:
   - synonyms
+- a: виявляти
+  b: являти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виявлятися
   b: відбиватися
   polarity: synonym
@@ -1653,6 +2898,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: виїзд
+  b: евакуація
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: виїзд
   b: еміграція
   polarity: synonym
@@ -1743,6 +2993,11 @@ approved:
   sources:
   - synonyms
 - a: власний
+  b: самостійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: власний
   b: свій
   polarity: synonym
   sources:
@@ -1777,6 +3032,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: внизу
+  b: зісподу
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: водити
   b: супроводити
   polarity: synonym
@@ -1794,6 +3054,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: водограй
+  b: фонтан
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: возити
   b: подавати
   polarity: synonym
@@ -1804,6 +3069,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вокзал
+  b: двірець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вологий
   b: сирий
   polarity: synonym
@@ -1815,11 +3085,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: волоцюга
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: воліти
   b: прагнути
   polarity: synonym
   sources:
   - synonyms
+- a: воротар
+  b: голкіпер
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: воістину
+  b: дійсно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: впертий
   b: упертий
   polarity: synonym
@@ -1846,6 +3131,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вправний
+  b: кваліфікований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: впроваджувати
   b: доводити
   polarity: synonym
@@ -1899,6 +3189,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вредність
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: врешті
   b: зрештою
   polarity: synonym
@@ -1951,6 +3246,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вряди-годи
+  b: часом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: всесвітній
   b: світовий
   polarity: synonym
@@ -1962,27 +3262,67 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вставати
+  b: підійматися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: вступ
+  b: передмова
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: всупереч
   b: усупереч
   polarity: synonym
   sources:
   - synonyms
+- a: всього-на-всього
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: всюди
   b: повсюди
   polarity: synonym
   sources:
   - synonyms
+- a: всякий
+  b: кожний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: втеча
+  b: евакуація
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: втрачати
   b: губити
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: втручатися
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: втіха
+  b: насолода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вчасно
   b: якраз
   polarity: synonym
   sources:
   - synonyms
+- a: вчитель
+  b: учитель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вчити
   b: навчати
   polarity: synonym
@@ -1995,10 +3335,80 @@ approved:
   sources:
   - wiktionary
 - a: від'їжджати
+  b: від'їздити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: від'їжджати
   b: подаватися
   polarity: synonym
   sources:
   - synonyms
+- a: від'їздити
+  b: віддалятися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: від'їздити
+  b: відправлятися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: від'їздити
+  b: відходити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: від'їздити
+  b: рушати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: відкидати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: відколювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: відпечатувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: відсвічувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: відтискати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: відтісняти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: лупати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: надбивати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відбивати
+  b: парирувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відбиватися
   b: зеленіти
   polarity: synonym
@@ -2025,6 +3435,31 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відвага
+  b: відважність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвага
+  b: сміливість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвага
+  b: хоробрість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвертий
+  b: щирий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відверто
+  b: правдиво
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відвести
   b: запроваджувати
   polarity: synonym
@@ -2035,11 +3470,36 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відвідання
+  b: відвідини
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відвідати
   b: завітати
   polarity: synonym
   sources:
   - synonyms
+- a: відвідини
+  b: відвідування
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвідини
+  b: візит
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвідини
+  b: гостина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвідини
+  b: гостювання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відвідувати
   b: завітати
   polarity: synonym
@@ -2050,6 +3510,66 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відвіку
+  b: віддавна
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвіку
+  b: звіку
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвіку
+  b: зроду-віку
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відвіку
+  b: споконвіку
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгадувати
+  b: здогадуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгадувати
+  b: пояснювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгадувати
+  b: розпізнавати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгадувати
+  b: тлумачити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгонити
+  b: пахнути
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгонити
+  b: тхнути
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгородження
+  b: ізоляція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відгук
+  b: відклик
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відгук
   b: відлуння
   polarity: synonym
@@ -2060,11 +3580,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: відгук
+  b: рецензія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: віддавати
   b: звертати
   polarity: synonym
   sources:
   - synonyms
+- a: відданий
+  b: самовідданий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відділ
   b: відділення
   polarity: synonym
@@ -2081,6 +3611,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відказувати
+  b: відповідати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відкладати
   b: заощаджувати
   polarity: synonym
@@ -2098,10 +3633,65 @@ approved:
   sources:
   - synonyms
 - a: відкритий
+  b: відімкнений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: голий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: доступний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: незакритий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: незахищений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: прилюдний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: розверстий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
+  b: розкритий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відкритий
   b: щирий
   polarity: synonym
   sources:
   - synonyms
+- a: відлюдник
+  b: відлюдок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відлюдок
+  b: відлюдько
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відлюдок
+  b: самітник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відмовитися
   b: відмовлятися
   polarity: synonym
@@ -2112,6 +3702,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відмовляти
+  b: відраджувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відмовляти
+  b: глухнути
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відмовляти
+  b: заглухати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відміна
   b: відмінність
   polarity: synonym
@@ -2133,10 +3738,25 @@ approved:
   sources:
   - synonyms
 - a: відмінний
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відмінний
   b: інший
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: відмінність
+  b: відхилення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відмінність
+  b: несхожість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відмінність
   b: різниця
   polarity: synonym
@@ -2158,6 +3778,11 @@ approved:
   sources:
   - synonyms
 - a: відносини
+  b: ставлення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відносини
   b: стосунки
   polarity: synonym
   sources:
@@ -2174,6 +3799,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відокремлення
+  b: ізоляція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відомий
   b: знайомий
   polarity: synonym
@@ -2185,11 +3815,31 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відособлення
+  b: ізоляція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відповідати
+  b: відрізувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: відповідати
+  b: повідати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відповідати
   b: узгоджуватися
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: відповідник
+  b: еквівалент
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відповідь
   b: питання
   polarity: antonym
@@ -2225,6 +3875,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відрядження
+  b: експедиція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: відсвяткувати
   b: провести
   polarity: synonym
@@ -2337,6 +3992,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вінчати
+  b: рішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вітати
   b: вітатися
   polarity: synonym
@@ -2347,16 +4007,226 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вітрогон
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: вітчизняний
   b: наш
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: віхола
+  b: завірюха
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаданий
+  b: гіпотетичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадати
+  b: думати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадати
+  b: міркувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: думка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: задум
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: мисль
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: міркування
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: намір
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: передбачення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: погляд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: поняття
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: припущення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гадка
+  b: ідея
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галайстра
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галакати
+  b: йойкати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галас
+  b: гам
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галас
+  b: гамір
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галас
+  b: крик
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галузь
+  b: ділянка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галузь
+  b: нива
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галузь
+  b: поле
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: галузь
   b: сфера
   polarity: synonym
   sources:
   - synonyms
+- a: галузь
+  b: царина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галузь
+  b: цілина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галява
+  b: галявина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: галявина
+  b: поляна
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ганити
+  b: гудити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ганити
+  b: огуджувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ганьба
+  b: сором
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ганьба
+  b: стид
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: гаразденько
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: добре
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: згода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: нехай
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: ок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: славно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: хай
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гаразд
+  b: чудово
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гармонія
+  b: злагода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гармонія
+  b: милозвучність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гармонія
+  b: погодженість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гарна
   b: файний
   polarity: synonym
@@ -2377,6 +4247,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: гарний
+  b: гожий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарний
+  b: каліграфічний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гарний
   b: красен
   polarity: synonym
@@ -2387,6 +4267,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: гарний
+  b: лепський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарний
+  b: миловидий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гарний
   b: прегарний
   polarity: synonym
@@ -2404,6 +4294,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гарний
+  b: хороший
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гарний
   b: чудовий
   polarity: synonym
@@ -2426,6 +4321,41 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: гарячий
+  b: душний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарячий
+  b: жагучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарячий
+  b: жаркий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарячий
+  b: палючий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарячий
+  b: пекучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарячий
+  b: розпечений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гарячий
+  b: спекотний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гарячка
   b: лихоманка
   polarity: synonym
@@ -2436,12 +4366,27 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: геніальний
+  b: талановитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: герой
   b: персонаж
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: героїчний
+  b: самовідданий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: герць
+  b: двобій
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: геть
   b: значно
   polarity: synonym
@@ -2472,6 +4417,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: глибокий
+  b: гострий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: глибокий
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: глузд
   b: розум
   polarity: synonym
@@ -2482,6 +4437,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: глузливий
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: глухий
   b: здичавілий
   polarity: synonym
@@ -2497,6 +4457,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: гнати
+  b: їхати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гнити
   b: горіти
   polarity: synonym
@@ -2522,6 +4487,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: гнідий
+  b: коричневий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: говорити
   b: казати
   polarity: synonym
@@ -2530,23 +4500,58 @@ approved:
   - synonyms_karavansky
   - wiktionary
 - a: говорити
+  b: мовити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: говорити
   b: оповідати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: говорити
+  b: промовляти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: говорити
+  b: ректи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: говорити
+  b: теревенити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: голова
   b: начальник
   polarity: synonym
   sources:
   - synonyms
+- a: голова
+  b: інтелект
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: головний
   b: центральний
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: головний
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: голодранець
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: голос
   b: мелодія
   polarity: synonym
@@ -2558,11 +4563,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: голота
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гора
   b: яма
   polarity: antonym
   sources:
   - wiktionary
+- a: гордість
+  b: зарозумілість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: горе
+  b: сум
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: горизонт
   b: кругозір
   polarity: synonym
@@ -2573,6 +4593,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: горланити
+  b: горлопанити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: город
   b: місто
   polarity: synonym
@@ -2594,6 +4619,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: господарчий
+  b: хазяйновитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гостинець
   b: дорога
   polarity: synonym
@@ -2606,11 +4636,71 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гостити
+  b: частувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: гостролезий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: гостроязикий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: дотепний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: дошкульний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: драматичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гострий
   b: напружений
   polarity: synonym
   sources:
   - synonyms
+- a: гострий
+  b: проникливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: уважний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: уїдливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: шпилястий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гострий
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: готовий
   b: завершений
   polarity: synonym
@@ -2627,6 +4717,31 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гра
+  b: забава
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грайливий
+  b: жартівливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гризький
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гримати
+  b: кричати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гримати
+  b: стукати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: громада
   b: компанія
   polarity: synonym
@@ -2648,17 +4763,167 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: група
+  b: експедиція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: група
+  b: категорія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: жаский
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: злий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: злостивий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: лихий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: лютий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: моторошний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: розгніваний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: роздратований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: грізний
+  b: страшний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: губитися
+  b: діватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гульвіса
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гультяй
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гуманність
+  b: людяність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гуманізм
+  b: людяність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гумористичний
+  b: жартівливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гурма
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гурт
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: густий
+  b: щільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гібрид
+  b: мішанець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гібрид
+  b: переводня
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гібрид
+  b: покруч
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гібрид
+  b: суржик
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гігант
+  b: колос
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гід
   b: екскурсовод
   polarity: synonym
   sources:
   - synonyms
 - a: гідний
+  b: достойний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гідний
+  b: належний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гідний
   b: шановний
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гідність
+  b: достойність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гідність
+  b: самоповага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гіллястий
+  b: розлогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гімн
   b: дифірамб
   polarity: synonym
@@ -2669,23 +4934,168 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: гіпнотизувати
+  b: заворожувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гіпнотизувати
+  b: зачаровувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гіпнотизувати
+  b: присипляти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гіпотеза
   b: припущення
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гіпотетичний
+  b: здогадний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гіпотетичний
+  b: правдоподібний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: гіпотетичний
+  b: сумнівний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: гірше
   b: найбільше
   polarity: synonym
   sources:
   - synonyms
+- a: давити
+  b: душити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: мулити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: муляти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: плющити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: придушувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: сплющувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: стискати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: тиснути
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давити
+  b: чавити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давніше
+  b: колись
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давніше
+  b: попереду
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: давніше
+  b: раніше
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: далеко
   b: набагато
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: далекоглядний
+  b: передбачливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: далекозорий
+  b: передбачливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дама
+  b: жінка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дар
+  b: талант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: даремний
+  b: марний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дармоїд
+  b: паразит
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дармоїд
+  b: трутень
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дарувати
+  b: обдаровувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дарувати
+  b: презентувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дарунок
+  b: подарунок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дарунок
+  b: підношення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дата
   b: число
   polarity: synonym
@@ -2697,6 +5107,41 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: двигун
+  b: звір
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: двобій
+  b: дуель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: двобій
+  b: поєдинок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: двобій
+  b: пря
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: двобій
+  b: єдиноборство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дворище
+  b: садиба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дворушник
+  b: лицемір
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: двір
   b: подвір'я
   polarity: synonym
@@ -2725,6 +5170,11 @@ approved:
   sources:
   - synonyms
 - a: деколи
+  b: часом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: деколи
   b: інколи
   polarity: synonym
   sources:
@@ -2747,6 +5197,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: делікатний
+  b: обережний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: делікатний
+  b: увічливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: демонструвати
+  b: являти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: день
   b: ніч
   polarity: antonym
@@ -2835,11 +5300,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: дибати
+  b: йти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дивний
   b: прегарний
   polarity: synonym
   sources:
   - synonyms
+- a: дивовижно
+  b: напрочуд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дивувати
   b: дивуватися
   polarity: synonym
@@ -2902,16 +5377,121 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: доброзичливий
+  b: лагідний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: доброта
   b: ласка
   polarity: synonym
   sources:
   - synonyms
+- a: добротність
+  b: якість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довгоногий
+  b: цибатий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довершений
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: довести
   b: доводити
   polarity: synonym
   sources:
   - synonyms
+- a: довкола
+  b: довкруги
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: довкруж
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: довкіл
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: доокола
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: зокола
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: круг
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: навколо
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: навкруг
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: навкруги
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: округ
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкола
+  b: округи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкружжя
+  b: довкілля
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкілля
+  b: околиця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкілля
+  b: околія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкілля
+  b: округа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкілля
+  b: окіл
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: довкілля
+  b: оточення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: доводити
   b: запроваджувати
   polarity: synonym
@@ -2969,6 +5549,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: дозвіл
+  b: ліцензія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дозрілий
   b: достиглий
   polarity: synonym
@@ -2980,6 +5565,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: док
+  b: засмучувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: док
+  b: зіпсувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: доказ
   b: показник
   polarity: synonym
@@ -3001,6 +5596,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: докорінний
+  b: радикальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: доктор
   b: лікар
   polarity: synonym
@@ -3011,11 +5611,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: докучливий
+  b: обридливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: домашній
   b: саморобний
   polarity: synonym
   sources:
   - synonyms
+- a: домовитий
+  b: хазяйновитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: домовитися
   b: домовлятися
   polarity: synonym
@@ -3051,6 +5661,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: донос
+  b: ябеда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: донька
   b: дочка
   polarity: synonym
@@ -3069,6 +5684,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: допитливість
+  b: цікавість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: допливати
   b: доплисти
   polarity: synonym
@@ -3102,11 +5722,21 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: дороговказ
+  b: керівництво
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: досвід
   b: практика
   polarity: synonym
   sources:
   - synonyms
+- a: досвідчений
+  b: кваліфікований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: досить
   b: достатньо
   polarity: synonym
@@ -3122,6 +5752,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: досконалий
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: доскіпливість
+  b: цікавість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дослівний
   b: точний
   polarity: synonym
@@ -3183,6 +5823,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: достоту
+  b: дійсно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: доступ
   b: прохід
   polarity: synonym
@@ -3199,6 +5844,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: дотеп
+  b: жарт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дотла
+  b: цілком
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дотриматися
   b: дотримуватися
   polarity: synonym
@@ -3224,6 +5879,16 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: дошкульний
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дощенту
+  b: цілком
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дощити
   b: падати
   polarity: synonym
@@ -3260,6 +5925,16 @@ approved:
   sources:
   - synonyms
 - a: друг
+  b: друзяка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: друг
+  b: кент
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: друг
   b: товариш
   polarity: synonym
   sources:
@@ -3272,6 +5947,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дружба
+  b: єднання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дружина
+  b: жінка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дружина
   b: чоловік
   polarity: antonym
@@ -3370,6 +6055,66 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: душа
+  b: людина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: душевний
+  b: емоційний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діаметр
+  b: поперечник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діаметр
+  b: промір
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: дітися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: запропадати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: знаходити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: зникати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: пристановище
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: притулитися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: прихилитися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діватися
+  b: ховатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дівчатко
   b: дівчина
   polarity: synonym
@@ -3385,21 +6130,71 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: дійовий
+  b: ефективний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійовий
+  b: плодотворний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійовий
+  b: плідний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійовий
+  b: результативний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійсно
+  b: навсправжки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дійсно
   b: насправді
   polarity: synonym
   sources:
   - synonyms
 - a: дійсно
+  b: правда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійсно
   b: практично
   polarity: synonym
   sources:
   - synonyms
 - a: дійсно
+  b: реально
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійсно
+  b: саме
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійсно
   b: справді
   polarity: synonym
   sources:
   - synonyms
+- a: дійсно
+  b: таки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: дійсно
+  b: якраз
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: діло
   b: заняття
   polarity: synonym
@@ -3427,12 +6222,27 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ділянка
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дім
   b: житло
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дітвора
+  b: діти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: діти
+  b: малеча
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: дія
   b: діяльність
   polarity: synonym
@@ -3483,12 +6293,52 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: евакуація
+  b: евакуювання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: евакуація
+  b: залишення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: евфонія
   b: милозвучність
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: еквівалентний
+  b: однаковий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: еквівалентний
+  b: рівнозначний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: еквівалентний
+  b: рівноцінний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: еквівалентний
+  b: синонімічний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: еквівалентний
+  b: тотожний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: еквівалентний
+  b: ідентичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: екзамен
   b: іспит
   polarity: synonym
@@ -3500,6 +6350,26 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: економія
+  b: заощадження
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: економія
+  b: ощадливість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: економія
+  b: ощадність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: економія
+  b: прибуток
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: екскурсовод
   b: провідник
   polarity: synonym
@@ -3510,21 +6380,166 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: експедиція
+  b: загін
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: місія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: операція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: партія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: подорож
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: похід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: рейд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експедиція
+  b: розсилання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: експеримент
+  b: проба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: експеримент
   b: спроба
   polarity: synonym
   sources:
   - synonyms
+- a: екстрений
+  b: невідкладний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: екстрений
+  b: негайний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: екстрений
+  b: непередбачений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: екстрений
+  b: несподіваний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: екстрений
+  b: позачерговий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: електрик
   b: синій
   polarity: synonym
   sources:
   - synonyms
+- a: емоційний
+  b: емоціональний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: запальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: нестриманий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: почуттєвий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: пристрасний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: психічний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: сердечний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: емоційний
+  b: чуттєвий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: емоція
   b: почуття
   polarity: synonym
   sources:
   - synonyms
+- a: енергійність
+  b: ентузіазм
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: енергійність
+  b: ініціатива
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: енергія
+  b: наснага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ентузіазм
+  b: запал
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ентузіазм
+  b: захоплення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ентузіазм
+  b: піднесення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: епіграма
+  b: жарт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: епідемія
   b: мор
   polarity: synonym
@@ -3540,6 +6555,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: етап
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ефект
   b: наслідок
   polarity: synonym
@@ -3551,6 +6571,121 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: ешелон
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагливий
+  b: жагучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: жаркий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: запальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: нестерпний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: огнистий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: палкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: пекучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: пристрасний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жагучий
+  b: спраглий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жадібний
+  b: пожадливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалкувати
+  b: жаліти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалувати
+  b: жаліти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жаль
+  b: сум
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалібний
+  b: жалісний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалібний
+  b: журливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалібний
+  b: слізний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалібний
+  b: тужливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жалібний
+  b: тужний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жаліти
+  b: співчувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жаліти
+  b: шкодувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жар
+  b: наснага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жарт
+  b: пародія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: жарт
   b: перець
   polarity: synonym
@@ -3566,16 +6701,91 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: жарт
+  b: фарс
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жарт
+  b: шарж
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жартливий
+  b: жартівливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жартівливий
+  b: жартівний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жартівливий
+  b: пустотливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жартівливий
+  b: сміховинний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жах
+  b: жахливо
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жах
+  b: жахіття
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: жах
   b: кошмар
   polarity: synonym
   sources:
   - synonyms
 - a: жах
+  b: ляк
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жах
+  b: острах
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жах
+  b: переляк
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жах
   b: страх
   polarity: synonym
   sources:
   - synonyms
+- a: жах
+  b: страшно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жваво
+  b: швидко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жертвенний
+  b: самовідданий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жертовний
+  b: самовідданий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: живопис
   b: малювання
   polarity: synonym
@@ -3672,6 +6882,106 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: журба
+  b: сум
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: журити
+  b: засмучувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: журливий
+  b: мінорний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жінка
+  b: молодиця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жінка
+  b: пані
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: жінка
+  b: тітка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з
+  b: зі
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з
+  b: із
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'являтися
+  b: показуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'являтися
+  b: появлятися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'ясувати
+  b: характеризувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'єднаний
+  b: злучений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'єднаний
+  b: об'єднаний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'єднаний
+  b: сполучений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'єднаний
+  b: спільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'їдати
+  b: поглинати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'їдати
+  b: пожирати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: з'їдати
+  b: їсти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: забава
+  b: розвага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: забава
+  b: розривка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: заборонити
   b: обстоювати
   polarity: synonym
@@ -3746,6 +7056,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: завершувати
+  b: рішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: завести
   b: запроваджувати
   polarity: synonym
@@ -3766,11 +7081,86 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: заводіяка
+  b: підбурювач
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: завтра
   b: сьогодні
   polarity: antonym
   sources:
   - wiktionary
+- a: завірюха
+  b: завія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: заметіль
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: курява
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: метелиця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: поземка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: пороша
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: пурга
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: сніговій
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: сніговійниця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: хвища
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: хурделиця
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: хурдига
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: хуртовина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: завірюха
+  b: шквиря
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: завірюха
   b: шторм
   polarity: synonym
@@ -3841,6 +7231,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: загальний
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: заголовок
   b: назва
   polarity: synonym
@@ -3867,11 +7262,21 @@ approved:
   sources:
   - synonyms_karavansky
 - a: задоволення
+  b: насолода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: задоволення
   b: радість
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зажурювати
+  b: засмучувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: заздрощі
   b: заздрість
   polarity: synonym
@@ -3888,6 +7293,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зазуб
+  b: щербина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зазубень
+  b: щербина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зазубець
+  b: щербина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зазіхати
   b: наважуватися
   polarity: synonym
@@ -3898,6 +7318,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: закономірність
+  b: логіка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: закритий
   b: замкнутий
   polarity: synonym
@@ -3991,11 +7416,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: запал
+  b: наснага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: запалювати
   b: народжувати
   polarity: synonym
   sources:
   - synonyms
+- a: запанібратський
+  b: панібратський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: заперечити
   b: заперечувати
   polarity: synonym
@@ -4023,6 +7458,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: заповзятливість
+  b: ініціатива
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: запроваджувати
   b: запровадити
   polarity: synonym
@@ -4070,6 +7510,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: заразливий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: заробити
   b: заробляти
   polarity: synonym
@@ -4080,6 +7525,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: засада
+  b: керівництво
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: засвоювати
   b: засвоїти
   polarity: synonym
@@ -4095,6 +7545,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: засмучувати
+  b: смутити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: засновник
+  b: організатор
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: засохлий
   b: мертвий
   polarity: synonym
@@ -4105,6 +7565,36 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: заспокійливий
+  b: миротворний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: заспокійливий
+  b: протибольовий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: заспокійливий
+  b: седативний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: заспокійливий
+  b: цілющий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: застарілий
+  b: несучасний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: застарілий
+  b: перестарілий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: застереження
   b: попередження
   polarity: synonym
@@ -4116,6 +7606,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: затвердлий
+  b: твердий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: затверділий
+  b: твердий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зате
   b: однак
   polarity: synonym
@@ -4151,6 +7651,21 @@ approved:
   curator: claude-opus/4698-a2-curation
   a2Rationale: Cardinal-direction antonym (west / east); both A2 adjectives in PULS;
     core geography vocabulary, trivially fair at A2.
+- a: зацікавлення
+  b: увага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зацікавлення
+  b: цікавість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зацікавленість
+  b: цікавість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зачин
   b: початок
   polarity: synonym
@@ -4201,6 +7716,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: збиватися
+  b: юрмитися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: збирати
   b: зібрати
   polarity: synonym
@@ -4211,6 +7731,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: збитий
+  b: щільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зблідлий
   b: побілілий
   polarity: synonym
@@ -4227,6 +7752,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: збурений
+  b: обурений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: збільшувати
   b: підвищувати
   polarity: synonym
@@ -4273,6 +7803,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: звук
+  b: фон
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: звісно
   b: річ
   polarity: synonym
@@ -4308,6 +7843,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: зграя
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: згуртований
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: здавати
   b: здати
   polarity: synonym
@@ -4363,6 +7908,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: земля
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зима
   b: літо
   polarity: antonym
@@ -4373,16 +7923,71 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: зиск
+  b: користь
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: злиденний
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: злий
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: злобний
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: злободенний
+  b: насущний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зловмисний
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зловмисність
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зловтіха
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зловтішний
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: злодій
   b: крадій
   polarity: synonym
   sources:
   - synonyms
+- a: злука
+  b: єднання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: злякатися
   b: тремтіти
   polarity: synonym
   sources:
   - synonyms
+- a: змах
+  b: розмах
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: змога
   b: можливість
   polarity: synonym
@@ -4418,6 +8023,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: змінний
+  b: мінливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: змішати
   b: мішати
   polarity: synonym
@@ -4493,6 +8103,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: знизу
+  b: зісподу
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зникати
   b: зникнути
   polarity: synonym
@@ -4513,6 +8128,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: зо
+  b: зі
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зобов'язання
   b: контракт
   polarity: synonym
@@ -4533,6 +8153,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: зосередження
+  b: увага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зосереджуватися
   b: зосередитися
   polarity: synonym
@@ -4569,6 +8194,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зривати
+  b: саботувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зробити
   b: створити
   polarity: synonym
@@ -4633,6 +8263,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: зухвалий
+  b: хамський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зібратися
   b: концентруватися
   polarity: synonym
@@ -4648,16 +8283,66 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: зігрівати
+  b: нагрівати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зігрівати
+  b: огрівати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зійти
   b: пройти
   polarity: synonym
   sources:
   - synonyms
+- a: зімкнутий
+  b: щільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: зісподу
+  b: спідсподу
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: зіставлення
   b: порівняння
   polarity: synonym
   sources:
   - synonyms
+- a: й
+  b: і
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ймовірно
+  b: імовірно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йойкати
+  b: фукати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: крокувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: пертися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: плестися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: йти
   b: подаватися
   polarity: synonym
@@ -4665,22 +8350,124 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: йти
+  b: простувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: прошкувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: ступати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: чвалати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
+  b: чимчикувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: йти
   b: іти
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: каблучка
+  b: перстень
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кафе
+  b: кав'ярня
+  polarity: synonym
+  sources:
+  - sum20
+  - vts
+  - synonyms
+- a: кавер
+  b: переспів
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каверза
+  b: капость
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каверза
+  b: підступ
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: казати
   b: оповідати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: казка
+  b: фантазія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кайф
+  b: насолода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каламутити
+  b: колотити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каламутити
+  b: мутити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каліграфічний
+  b: краснописний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каліграфічний
+  b: рівний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: каліграфічний
+  b: чіткий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: капітальний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: карати
   b: мучити
   polarity: synonym
   sources:
   - synonyms
+- a: кардинальний
+  b: радикальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: карий
+  b: коричневий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: карта
   b: меню
   polarity: synonym
@@ -4692,6 +8479,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: катаклізм
+  b: катастрофа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: катастрофа
+  b: крах
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: категоричний
   b: незаперечний
   polarity: synonym
@@ -4703,22 +8500,85 @@ approved:
   sources:
   - synonyms
 - a: категорія
+  b: клас
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
+  b: масть
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
+  b: ранг
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
+  b: розряд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
   b: рід
   polarity: synonym
   sources:
   - synonyms_karavansky
-- a: кафе
-  b: кав'ярня
+- a: категорія
+  b: різновид
   polarity: synonym
   sources:
-  - sum20
-  - vts
-  - synonyms
+  - miyklas.com.ua
+- a: категорія
+  b: сорт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
+  b: сімейство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
+  b: тип
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: категорія
+  b: ґатунок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: каштановий
   b: коричневий
   polarity: synonym
   sources:
   - synonyms
+- a: кваліфікований
+  b: напрактикований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кваліфікований
+  b: натренований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кваліфікований
+  b: професійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кваліфікований
+  b: умілий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кваліфікований
+  b: фаховий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: квартал
   b: чверть
   polarity: synonym
@@ -4740,6 +8600,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: кебета
+  b: талант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кермо
+  b: керівництво
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: керування
   b: керівництво
   polarity: synonym
@@ -4753,15 +8623,50 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: керівник
+  b: організатор
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: керівник
   b: шеф
   polarity: synonym
   sources:
   - synonyms
+- a: керівництво
+  b: оруда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: керівництво
+  b: провід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: керівництво
+  b: управа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: керівництво
+  b: управління
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: кидати
   b: кинути
   polarity: synonym
   sources:
   - synonyms
+- a: кипіти
+  b: клекотіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кипіти
+  b: нуртувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: кипіти
   b: шуміти
   polarity: synonym
@@ -4777,11 +8682,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: клеймований
+  b: таврований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: клієнт
   b: покупець
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: кмітливий
+  b: меткий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: кмітливий
   b: розумний
   polarity: synonym
@@ -4793,6 +8708,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: кмітливість
+  b: інтелект
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: книга
   b: книжка
   polarity: synonym
@@ -4820,6 +8740,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: коли-не-коли
+  b: часом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: коли-небудь
   b: колись
   polarity: synonym
@@ -4858,6 +8783,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: колючий
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: коліно
   b: поворот
   polarity: synonym
@@ -4885,6 +8815,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: компактний
+  b: щільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: компанійський
+  b: панібратський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: компанія
   b: суспільство
   polarity: synonym
@@ -4985,11 +8925,36 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: коректний
+  b: увічливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кореспонденція
+  b: листування
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: коридор
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: користуватися
   b: послуговуватися
   polarity: synonym
   sources:
   - synonyms
+- a: коритися
+  b: підкоритися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: коричневий
+  b: шоколадний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: короткий
   b: короткочасний
   polarity: synonym
@@ -5015,17 +8980,32 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: костистий
+  b: кістлявий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: котрий
   b: який
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: кощавий
+  b: кістлявий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: кравець
   b: кравчиня
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: крадькома
+  b: тайкома
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: крамниця
   b: магазин
   polarity: synonym
@@ -5061,16 +9041,51 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: крислатий
+  b: розлогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: крихітний
+  b: мініатюрний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: кров
   b: походження
   polarity: synonym
   sources:
   - synonyms
+- a: крок
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: крокувати
+  b: ходити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: крутій
+  b: лицемір
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: куватися
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: куди
   b: набагато
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: культурний
+  b: інтелігентний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: куплет
   b: строфа
   polarity: synonym
@@ -5098,6 +9113,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: кіготь
+  b: ніготь
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: кіготь
+  b: пазур
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: кількість
   b: число
   polarity: synonym
@@ -5133,16 +9158,46 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: лагідний
+  b: м'який
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лагідний
+  b: милий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лагідний
   b: ніжний
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
 - a: лагідний
+  b: приязний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лагідний
   b: спокійний
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: лагідний
+  b: сумирний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лагідний
+  b: тихий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лагідний
+  b: шовковий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ладна
   b: файний
   polarity: synonym
@@ -5160,6 +9215,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: легко
+  b: трохи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ледар
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ледве
   b: майже
   polarity: synonym
@@ -5167,6 +9232,11 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: ледве
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: лекція
   b: урок
   polarity: synonym
@@ -5179,18 +9249,103 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: лицемір
+  b: фарисей
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лицемірство
+  b: фальш
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: личити
+  b: пасувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лише
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лукавий
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лукавство
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: люб'язний
+  b: милий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: людина
+  b: особа
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: людина
+  b: особистість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: людина
+  b: чоловік
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ліворуч
   b: наліво
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: лідер
+  b: організатор
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: лізти
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ліквідувати
+  b: нівелювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: лінійка
   b: лінія
   polarity: synonym
   sources:
   - synonyms_karavansky
   - wiktionary
+- a: ліпкий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: м'яз
+  b: мускул
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: м'яз
+  b: мускулатура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: м'який
+  b: ніжний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: мабуть
   b: можливо
   polarity: synonym
@@ -5250,6 +9405,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: манюній
+  b: мініатюрний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: маняк
+  b: фігура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: марш
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: масштаб
+  b: розмах
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: матеріал
   b: сировина
   polarity: synonym
@@ -5260,6 +9435,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: маєток
+  b: садиба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: мета
   b: ціль
   polarity: synonym
@@ -5267,6 +9447,46 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: меткий
+  b: моторний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: меткий
+  b: проворний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: меткий
+  b: промітний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: меткий
+  b: прудкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: меткий
+  b: рухливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: меткий
+  b: спритний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: милий
+  b: привітний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: милий
+  b: хороший
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: мимоволі
   b: самохіть
   polarity: synonym
@@ -5283,23 +9503,163 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: мов
+  b: наче
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мов
+  b: немов
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мов
+  b: неначе
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мов
+  b: ніби
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мов
+  b: нібито
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: можливість
   b: нагода
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: мозок
+  b: інтелект
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: монумент
+  b: пам'ятник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: монументальний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: мороз
   b: холод
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: мотивувати
+  b: обґрунтовувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: мрія
   b: сон
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: мрія
+  b: фантазія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мчати
+  b: їхати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: міжнародний
+  b: міжнаціональний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: міжнародний
+  b: світовий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: міжнародний
+  b: усесвітній
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: міжнародний
+  b: інтернаціональний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мізерний
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінливий
+  b: несталий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінливий
+  b: нетвердий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінливий
+  b: нетривкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінливий
+  b: перемінний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінливий
+  b: хисткий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінливий
+  b: хиткий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінорний
+  b: ніжний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінорний
+  b: смутний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінорний
+  b: сумовитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мінорний
+  b: тихий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: мініатюрний
+  b: тендітний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: містити
+  b: охоплювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: місто
   b: село
   polarity: antonym
@@ -5335,6 +9695,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: міцний
+  b: стійкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: міцний
+  b: тривкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: мішати
   b: перемішувати
   polarity: synonym
@@ -5352,12 +9722,47 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: наболілий
+  b: насущний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: набридливий
+  b: обридливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: навдивовижу
+  b: напрочуд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: навігація
   b: плавання
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: навіжений
+  b: шалений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: навісний
+  b: шалений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нагальний
+  b: негайний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: наглий
+  b: негайний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: наголошувати
   b: підкреслювати
   polarity: synonym
@@ -5373,28 +9778,88 @@ approved:
   curator: claude-opus/4698-a2-curation
   a2Rationale: Place-preposition antonym (over / under); both A2 in PULS; staple of
     A1-A2 prepositions-of-place lessons.
+- a: надзвичайно
+  b: напрочуд
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: надсилати
   b: подавати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: надуманість
+  b: фальш
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: надумувати
+  b: рішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: надхнення
+  b: наснага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: наділ
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: назрілий
+  b: насущний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: найвидніший
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: найдійовіший
+  b: радикальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: найкращий
   b: щонайкращий
   polarity: synonym
   sources:
   - synonyms
+- a: найкращий
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: найрезультативніший
+  b: радикальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: наказ
   b: розпорядження
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: наклеп
+  b: ябеда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: наліпка
   b: ярлик
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: намагатися
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: намір
   b: план
   polarity: synonym
@@ -5412,6 +9877,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: наприкінці
+  b: насамкінець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: напрочуд
+  b: неповторно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: напій
   b: пиття
   polarity: synonym
@@ -5447,6 +9922,91 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: наснага
+  b: піднесення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: наснага
+  b: снага
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насолода
+  b: приємність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насолода
+  b: раювання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насолода
+  b: розкошування
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насолода
+  b: смак
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насолода
+  b: солодощі
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насущний
+  b: необхідний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насущний
+  b: пекучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: насущний
+  b: украй
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: натовп
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нахабний
+  b: хамський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: начільний
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нашепт
+  b: ябеда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: небагатий
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: небагато
+  b: трохи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: невдаваний
+  b: щирий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: невже
   b: хіба
   polarity: synonym
@@ -5459,24 +10019,94 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: невимушений
+  b: панібратський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: неволя
+  b: рабство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: неволя
+  b: ув'язнення
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: невідкладний
+  b: негайний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: негайний
+  b: пильний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: недалеко
   b: поблизу
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: недоброзичливий
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: недоброзичливість
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: недовго
+  b: трохи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: недолік
+  b: хиба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: недолік
+  b: ґандж
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: недорогий
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: незадовільний
   b: поганий
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: незалежний
+  b: самостійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: незаможний
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: незгода
   b: сварка
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: нелукавий
+  b: щирий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ненадійний
   b: слизький
   polarity: synonym
@@ -5493,12 +10123,82 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: непишний
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: неповторний
+  b: самобутній
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: неподільний
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: непоказний
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: непомітно
+  b: тихо
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: непохитний
+  b: стійкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: непочатий
+  b: цілий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: неприродно
+  b: удавано
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: непідлеглий
+  b: самостійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нервучкий
+  b: обережний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нереальний
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нероба
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нерозривний
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: несподівано
   b: раптом
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: несправжній
+  b: фіктивний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: нестерпний
   b: пекельний
   polarity: synonym
@@ -5511,6 +10211,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: нестися
+  b: їхати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нещиро
+  b: удавано
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нещирість
+  b: фальш
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нишком
+  b: тайкома
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: новий
   b: сучасний
   polarity: synonym
@@ -5529,6 +10249,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: нівелювати
+  b: рівняти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ніж
+  b: чим
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ніж
+  b: як
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ніжний
+  b: оксамитовий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ніжний
   b: пестливий
   polarity: synonym
@@ -5541,6 +10281,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ніжний
+  b: тонкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ніжний
+  b: шовковистий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: нізащо
+  b: ніколи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ніхто
   b: хто-небудь
   polarity: antonym
@@ -5556,17 +10311,97 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: об'єднання
+  b: єднання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обачливість
+  b: обачність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обачливість
+  b: обережність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обачливість
+  b: оглядність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обачний
+  b: обережний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обдарований
+  b: талановитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обдаровання
+  b: талант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обдарованість
+  b: талант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обдурювати
+  b: підводити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обережний
+  b: сторожкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обережний
+  b: тактовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обережний
+  b: тихий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: область
   b: сфера
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: облуда
+  b: фальш
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: облудно
+  b: удавано
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обмова
+  b: ябеда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: обов'язок
   b: функція
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: обридливий
+  b: огидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: обряд
   b: церемонія
   polarity: synonym
@@ -5579,10 +10414,40 @@ approved:
   sources:
   - synonyms
 - a: обставина
+  b: оказія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обставина
+  b: подія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обставина
+  b: пригода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обставина
   b: факт
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: обставина
+  b: феномен
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обставина
+  b: явище
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обставина
+  b: інцидент
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: обставини
   b: становище
   polarity: synonym
@@ -5595,24 +10460,129 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: обстежувати
+  b: перевіряти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обурений
+  b: роздратований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обурений
+  b: розлючений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обхідливий
+  b: увічливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обшарпанець
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обідранець
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обійстя
+  b: садиба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обійстя
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: обірванець
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: обіцянка
   b: слово
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: обґрунтовувати
+  b: узасаднювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: оголошення
   b: повідомлення
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: один
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: один-однісінький
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: один-єдиний
+  b: єдиний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: однак
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: однаковий
+  b: ідентичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: однозначний
+  b: ідентичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: однокровний
+  b: єдинокровний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: одночасно
   b: разом
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ознака
+  b: симптом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: окремий
+  b: самостійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: окремішній
+  b: самобутній
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: окреслювати
+  b: характеризувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: описувати
   b: оповідати
   polarity: synonym
@@ -5656,12 +10626,62 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: опоряджати
+  b: чепурити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: організатор
+  b: призвідець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: організатор
+  b: призвідник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: організатор
+  b: провідник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: організатор
+  b: фундатор
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: орда
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ориґінальний
+  b: самобутній
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ориґінальний
+  b: самостійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: орфографія
   b: правопис
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: осад
+  b: садиба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: освічений
+  b: інтелігентний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: особа
   b: персонаж
   polarity: synonym
@@ -5674,11 +10694,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: остаточно
+  b: цілком
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: отож
+  b: тож
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: офіційний
   b: службовий
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: охочий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: оцей
   b: цей
   polarity: synonym
@@ -5690,6 +10725,51 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: ошалілий
+  b: шалений
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: п'єдестал
+  b: постамент
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: п'єдестал
+  b: підвалина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: п'єдестал
+  b: підмурок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: п'єдестал
+  b: підніжжя
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: п'єдестал
+  b: фундамент
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: п'єдестал
+  b: цоколь
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: панібратський
+  b: товариський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: панібратський
+  b: фамільярний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: певен
   b: твердий
   polarity: synonym
@@ -5708,12 +10788,72 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: перевірка
+  b: цензура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: перевіряти
+  b: пересвідчуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: перевіряти
+  b: цензурувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: перегляд
+  b: цензура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: передавати
   b: подавати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: передбачливий
+  b: прозорливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: передмова
+  b: передслово
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: передмова
+  b: пролог
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: передмова
+  b: інтродукція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: передовий
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: переживання
+  b: пережиття
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: переживання
+  b: потерпання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: переживання
+  b: уболівання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: переказ
   b: розповідь
   polarity: synonym
@@ -5731,6 +10871,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: перемога
+  b: тріумф
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: перемога
+  b: удача
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: перетворення
   b: реформа
   polarity: synonym
@@ -5766,6 +10916,46 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: перше
+  b: раніше
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: печаль
+  b: сум
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: плавний
+  b: розлогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: плато
+  b: рівнина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: плебейський
+  b: хамський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: плебс
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: плентатися
+  b: ходити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: плоскогір'я
+  b: рівнина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: поблизу
   b: поруч
   polarity: synonym
@@ -5783,6 +10973,31 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: поважний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: повний
+  b: цілий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: повний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: повністю
+  b: цілком
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: повставати
+  b: підійматися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: повтор
   b: повторення
   polarity: synonym
@@ -5793,6 +11008,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: подеколи
+  b: часом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: подорож
   b: рейс
   polarity: synonym
@@ -5821,11 +11041,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: показний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: показник
   b: прикмета
   polarity: synonym
   sources:
   - synonyms
+- a: показувати
+  b: являти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: положення
   b: теза
   polarity: synonym
@@ -5844,6 +11074,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: помах
+  b: розмах
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: поняття
   b: розуміння
   polarity: synonym
@@ -5851,6 +11086,11 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: поперечка
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: поправка
   b: правка
   polarity: synonym
@@ -5868,6 +11108,11 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: пориватися
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: порушувати
   b: турбувати
   polarity: synonym
@@ -5884,6 +11129,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: поспішати
+  b: ходити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: поставний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: постанова
   b: розпорядження
   polarity: synonym
@@ -5896,63 +11151,163 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: постать
+  b: фігура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: поступово
   b: потроху
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: потай
+  b: тайкома
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: потихеньку
+  b: тайкома
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: потік
   b: річка
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: похід
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: почин
+  b: ініціатива
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: пошук
   b: розвідка
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: правдивий
+  b: щирий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: правознавство
+  b: юриспруденція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: прегарний
   b: чудовий
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: пресинг
+  b: тиск
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: прибирати
+  b: чепурити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: прибувати
   b: приходити
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: привабливість
+  b: цікавість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: привіт
   b: привітання
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: пригощати
+  b: частувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: прикмета
   b: симптом
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: прикрашати
+  b: чепурити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: природа
   b: характер
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: прискіпуватися
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: пристрій
+  b: ґаджет
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: приступець
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: приступка
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: присудок
   b: підмет
   polarity: antonym
   sources:
   - wiktionary
+- a: присікуватися
+  b: сікатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: прихильник
   b: учень
   polarity: synonym
   sources:
   - synonyms
+- a: причепливий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: причепурювати
+  b: чепурити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: проба
+  b: якість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: проводжати
   b: супроводжувати
   polarity: synonym
@@ -5965,12 +11320,42 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: провокатор
+  b: підбурювач
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: продовжуватися
+  b: тривати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: продукти
   b: харч
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: прорість
+  b: сходи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: простий
+  b: убогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: просторий
+  b: розлогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: проте
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: професія
   b: фах
   polarity: synonym
@@ -5978,23 +11363,48 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: прохід
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: процес
   b: хід
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: процесія
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: прудко
   b: швидко
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: пружинистий
+  b: твердий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: пружний
+  b: твердий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: прямий
   b: щирий
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: пустун
+  b: шалапут
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: південний
   b: північний
   polarity: antonym
@@ -6004,17 +11414,77 @@ approved:
   curator: claude-opus/4698-a2-curation
   a2Rationale: Cardinal-direction antonym (south / north); both A2 adjectives in PULS;
     core geography vocabulary, trivially fair at A2.
+- a: підбиватися
+  b: підійматися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: підводитися
+  b: підійматися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: піддавати
+  b: саботувати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: підкоритися
+  b: підпорядковуватися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: підкоритися
+  b: слухатися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: підприємливість
+  b: ініціатива
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: підробка
   b: фальсифікат
   polarity: synonym
   sources:
   - synonyms
+- a: підробка
+  b: фальш
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: підстава
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: підсумок
   b: результат
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: підійматися
+  b: ставати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: підійматися
+  b: сходити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: радикальний
+  b: рішучий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: радикальний
+  b: фундаментальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: радити
   b: рекомендувати
   polarity: synonym
@@ -6027,11 +11497,51 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ракло
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: раніше
+  b: спочатку
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: раритет
+  b: рідкість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: раритетність
+  b: рідкість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: регламент
   b: інструкція
   polarity: synonym
   sources:
   - synonyms
+- a: реготати
+  b: сміятися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: репрезентувати
+  b: являти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ретельний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: роблено
+  b: удавано
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: родина
   b: сім'я
   polarity: synonym
@@ -6049,18 +11559,58 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: розв'язувати
+  b: рішати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: розвинений
+  b: інтелігентний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: розкотистий
+  b: розлогий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: розкрилля
+  b: розмах
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: розкішний
   b: чудовий
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: розлогий
+  b: розложистий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: розмах
+  b: широта
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: розмах
+  b: широчінь
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: розповідь
   b: історія
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: розум
+  b: інтелект
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: рутина
   b: стереотип
   polarity: synonym
@@ -6072,18 +11622,63 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: рівень
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: рівнозначний
+  b: ідентичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: рідний
+  b: єдинокровний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ріка
   b: річка
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: річниця
+  b: ювілей
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: рішати
+  b: ухвалювати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: рішення
   b: ухвала
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: садиба
+  b: садибка
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: садиба
+  b: селитьба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: садиба
+  b: фільварок
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: садиба
+  b: ґражда
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: сам
   b: самотній
   polarity: synonym
@@ -6095,11 +11690,41 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: самобутній
+  b: самостійний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: самобутній
+  b: своєрідний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: самовідданий
+  b: саможертовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: самостійний
+  b: суверенний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: свинський
+  b: хамський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: свято
   b: фестиваль
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: світлина
+  b: фотографія
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: селище
   b: село
   polarity: synonym
@@ -6117,11 +11742,41 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: скакати
+  b: їхати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: склад
   b: структура
   polarity: synonym
   sources:
   - synonyms
+- a: скоро
+  b: швидко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: скрупульозний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: скульптура
+  b: фігура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: скупчення
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: скількимога
+  b: якомога
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: словотворення
   b: словотвір
   polarity: synonym
@@ -6134,6 +11789,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: смуток
+  b: сум
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: сміятися
+  b: хихикати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: солідний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: спеціальність
   b: фах
   polarity: synonym
@@ -6147,6 +11817,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: сповидний
+  b: фіктивний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: сподіватися
   b: чекати
   polarity: synonym
@@ -6164,12 +11839,67 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: співдружба
+  b: єднання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: співдружність
+  b: єднання
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ставний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: стадія
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: стан
   b: табір
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: стандарт
+  b: трафарет
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: становити
+  b: являти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: статечний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: статковитий
+  b: хазяйновитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: статурний
+  b: імпозантний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: статуя
+  b: фігура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: стереотип
+  b: трафарет
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: стереотип
   b: штамп
   polarity: synonym
@@ -6186,28 +11916,103 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: стрімко
+  b: швидко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: стрічка
   b: фільм
   polarity: synonym
   sources:
   - synonyms
+- a: стукати
+  b: товкти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: суміш
   b: суржик
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: сфера
+  b: царина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: сходинка
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: східець
+  b: щабель
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: сікатися
+  b: чіплятися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: та
+  b: і
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: табун
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: таврований
+  b: штампований
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тайкома
+  b: таємно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тайкома
+  b: тихцем
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: також
   b: теж
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: талановитість
+  b: талант
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: талант
+  b: хист
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: там
   b: тут
   polarity: antonym
   sources:
   - wiktionary
+- a: твердий
+  b: тугий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: твердий
+  b: цупкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: темп
   b: хода
   polarity: synonym
@@ -6231,12 +12036,117 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: тонконогий
+  b: цибатий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: торжество
+  b: тріумф
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тотожний
+  b: ідентичний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: точитися
+  b: тривати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: трафарет
+  b: шаблон
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: трафарет
+  b: штамп
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тривати
+  b: тягтися
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: трохи
+  b: тільки
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тунель
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: турбувати
   b: хвилювати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: тяма
+  b: інтелект
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тямущість
+  b: інтелект
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: тільки
+  b: щойно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: уважний
+  b: увічливий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: увічливий
+  b: чемний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: увічливий
+  b: ґречний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: удавано
+  b: фальшиво
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: удавано
+  b: штучно
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: удача
+  b: успіх
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: удача
+  b: фортуна
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: удача
+  b: щастя
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: урвитель
+  b: халамидник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: уривок
   b: фрагмент
   polarity: synonym
@@ -6255,11 +12165,56 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ущипливий
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ущипливість
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: уявний
+  b: фіктивний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: уявний
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: уїдливий
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: файний
   b: чудовий
   polarity: synonym
   sources:
   - synonyms
+- a: фактор
+  b: чинник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: фалшивий
+  b: фіктивний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: фальш
+  b: шахрайство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: фальш
+  b: штучність
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: фокус
   b: хитрощі
   polarity: synonym
@@ -6272,12 +12227,82 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: форма
+  b: фігура
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: фото
   b: фотографія
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: фундаментальний
+  b: ґрунтовний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хазяйновитий
+  b: хазяйський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хазяйновитий
+  b: хазяїновитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хазяйновитий
+  b: ґаздовитий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: халамидник
+  b: харпак
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: халамидник
+  b: хуліган
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: халамидник
+  b: шарпак
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хамовитий
+  b: хамський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хамський
+  b: хамуватий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хамський
+  b: хамів
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хамський
+  b: хуліганський
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: характер
+  b: якість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: характеристика
+  b: якість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: харч
   b: їжа
   polarity: synonym
@@ -6290,12 +12315,92 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: хиба
+  b: ґандж
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хитрий
+  b: єхидний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хитрість
+  b: єхидство
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: ходити
   b: іти
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ходьба
+  b: хід
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хутко
+  b: швидко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хід
+  b: хідник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: хід
+  b: швидкість
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: цензура
+  b: інспекція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: центральний
+  b: чільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: цупкий
+  b: чіпкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: цупкий
+  b: щільний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: цікавість
+  b: інтерес
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: цілковито
+  b: цілком
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: часами
+  b: часом
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: часом
+  b: інколи
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: часом
+  b: іноді
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: частина
   b: частка
   polarity: synonym
@@ -6315,6 +12420,31 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: чепурити
+  b: чистити
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: чернь
+  b: юрба
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: чимдуж
+  b: щодуху
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: чимдуж
+  b: якомога
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: чимдужче
+  b: швидко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: чомусь
   b: щось
   polarity: synonym
@@ -6326,12 +12456,172 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: чудовий
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шалапут
+  b: шалапутник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шалапут
+  b: шкода
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шамотіти
+  b: шарудіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шарудіти
+  b: шелестіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шарудіти
+  b: шерхотати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шарудіти
+  b: шерхотіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шарудіти
+  b: шкрябати
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: шарудіти
+  b: шурхотіти
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: швидко
+  b: шпарко
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щабель
+  b: щаблина
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щербина
+  b: ґандж
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щирий
+  b: щиросердий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щодуху
+  b: щомога
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щодуху
+  b: щосили
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щодуху
+  b: якнайголосніше
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щодуху
+  b: якнайшвидше
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: щосили
+  b: якомога
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: юрба
+  b: юрбище
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: юрба
+  b: юрма
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ябеда
+  b: ябедник
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ядучий
+  b: їдкий
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: як
+  b: якби
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: якнайшвидше
+  b: якомога
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: єдинокровний
+  b: єдиноплемінний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: єдинокровний
+  b: єдинородний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: єхидний
+  b: іронічний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ідеальний
+  b: ілюзорний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ізолювання
+  b: ізоляція
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 - a: інколи
   b: іноді
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: їстовний
+  b: їстівний
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ґрунт
+  b: ґрунтець
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
+- a: ґрунт
+  b: ґрунтування
+  polarity: synonym
+  sources:
+  - miyklas.com.ua
 rejected:
 - a: абстрактний
   b: загальний

@@ -2827,7 +2827,16 @@ def _valid_synonym_distractors(
             continue
         if _headword(lexeme["gloss"]) in blocked_heads:
             continue
-        if _plain(lexeme["lemma"]) in {_plain(prompt["lemma"]), _plain(answer["lemma"])}:
+        cand_plain = _plain(lexeme["lemma"])
+        ans_plain = _plain(answer["lemma"])
+        prompt_plain = _plain(prompt["lemma"])
+        if (
+            cand_plain in {prompt_plain, ans_plain}
+            or ans_plain in cand_plain
+            or cand_plain in ans_plain
+            or prompt_plain in cand_plain
+            or cand_plain in prompt_plain
+        ):
             continue
         candidates.append(lexeme)
     answer_len = len(answer["lemma"])
