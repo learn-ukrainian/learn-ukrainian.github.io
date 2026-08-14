@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+/* Self-hosted Noto Sans via Fontsource (OFL-1.1).
+ * Weight CSS includes unicode-range so browsers fetch only latin/Cyrillic
+ * subsets in use — same family/weights as the former Google Fonts import
+ * (400/600/700 + 400 italic). Removes fonts.googleapis.com / fonts.gstatic.com
+ * runtime dependency that 404'd on retired CDN URLs (CourseLayout / WotD). */
+@import '@fontsource/noto-sans/400.css';
+@import '@fontsource/noto-sans/400-italic.css';
+@import '@fontsource/noto-sans/600.css';
+@import '@fontsource/noto-sans/700.css';
 
 /**
  * Learn Ukrainian - Premium Ukrainian Language Learning Platform
