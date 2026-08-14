@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-pravopys-evaluation-context-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# PR #6777 — repair independent-review blockers
+
+Repo/worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-pravopys-evaluation-context-cursor`
+PR: #6777
+Blocked reviewed head: `2e1ff64b5f507cb5bbffa2d85bbcd3b0eaf9192a`
+Issue: #6375
+
+Claude exact-head review verified the entire 413-row production artifact and receipt as correct, but BLOCKED on missing regression protection. Fix the root cause with focused mutation/negative tests. Prefer changing only `tests/test_open_model_phase3_pravopys_evaluation_context.py`; do not change production code unless a new test exposes a real implementation defect. If production changes, rebind the tracked receipt through the supported producer and re-run custody verification—never hand-patch hashes.
+
+Required repairs:
+
+1. Rewrite `test_hash_drift_fails_closed`. It currently appends a blank line and passes early on strict-JSON failure (`invalid strict JSON: partition manifest`) while `match="partition"` accidentally matches the label. Mutate a valid JSONL byte/value while preserving JSONL shape and exact row count so execution reaches the intended pinned SHA check; assert the specific `partition manifest hash drift` message. Add equivalent targeted tests for source materialization and evaluation-context manifest hash drift if those guards are otherwise unprotected.
+
+2. Add wrong-mode and symlink/ancestor-symlink negative tests for private inputs and private output, mirroring the already-merged sibling suites. Never chmod a real fixture group/world-readable: use an `lstat` metadata monkeypatch pattern where CodeQL would otherwise flag insecure chmod. Verify the real temp artifacts remain 0600 and dirs 0700.
+
+3. Add targeted mutation tests that prove these fail-closed guards are live:
+   - duplicate source identity and duplicate partition identity;
+   - missing partition row and missing source row for a selected Pravopys manifest identity;
+   - duplicate parent path;
+   - partition/manifest/source family mismatch and lane mismatch;
+   - source/manifest text, source hash, and locator hash drift as applicable;
+   - missing/ambiguous child substring and Unicode offset round-trip/stale offset rejection;
+   - wrong corpus family/year/routing if not already directly proven.
+
+Avoid a meaningless blanket assertion count. Each test must mutate the narrow condition while keeping earlier parsing/hash prerequisites valid enough to reach the intended guard, using monkeypatches only to isolate the exact upstream fixed input/hash when necessary. Assert specific failure messages. Add a mutation probe demonstrating that removing/bypassing each guard cluster makes its corresponding test fail, or otherwise show direct coverage convincingly.
+
+Preserve exact production artifact/custody hashes and all gates. Do not print private source text. Run focused tests, sibling #6758/v2/prefreeze tests, Ruff, and full `tests/test_open_model_phase3_*.py`. Commit with `X-Agent: cursor/phase3-6375-pravopys-review-fix-r1`, push normally, keep PR draft, no merge/approval/auto-merge. Return exact head, diff, test counts, and production/custody unchanged proof.

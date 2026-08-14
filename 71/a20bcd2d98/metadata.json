@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "71a20bcd2d98",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-pravopys-evaluation-context-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_open_model_phase3_pravopys_evaluation_context.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/71/a20bcd2d98/0/metadata.json",
+      "transcript": "/71/a20bcd2d98/0/full.jsonl",
+      "compact_transcript": "/71/a20bcd2d98/0/transcript.jsonl",
+      "content_hash": "/71/a20bcd2d98/0/content_hash.txt",
+      "prompt": "/71/a20bcd2d98/0/prompt.txt"
+    }
+  ]
+}
