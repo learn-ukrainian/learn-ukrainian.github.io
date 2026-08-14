@@ -591,21 +591,35 @@ def test_validate_receipt_rejects_overclaims(tmp_path: Path, monkeypatch: pytest
 
 
 @pytest.mark.parametrize(
-    ("field", "forged_value", "match"),
+    ("path", "forged_value", "match"),
     [
-        ("private_jsonl_sha256", "0" * 64, r"private JSONL hash drift|schema violation"),
-        ("private_jsonl_bytes", 1, r"private JSONL byte denominator drift|schema violation"),
-        ("exactness_audit_sha256", "0" * 64, r"exactness audit hash drift|schema violation"),
+        (("bindings", "private_jsonl_sha256"), "0" * 64, r"private JSONL hash drift|schema violation"),
+        (
+            ("bindings", "private_jsonl_bytes"),
+            1,
+            r"private JSONL byte denominator drift|schema violation",
+        ),
+        (
+            ("bindings", "exactness_audit_sha256"),
+            "0" * 64,
+            r"exactness audit hash drift|schema violation",
+        ),
+        (
+            ("native_exactness", "audit_receipt_sha256"),
+            "0" * 64,
+            r"native exactness audit receipt hash drift|schema violation",
+        ),
     ],
 )
 def test_validate_receipt_rejects_resealed_private_custody_binding_mutations(
-    field: str, forged_value: object, match: str
+    path: tuple[str, str], forged_value: object, match: str
 ) -> None:
     if not PUBLIC_RECEIPT.is_file():
         pytest.skip("public receipt not materialized yet")
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     forged = copy.deepcopy(receipt)
-    forged["bindings"][field] = forged_value
+    container, field = path
+    forged[container][field] = forged_value
     forged["receipt_sha256"] = intake.receipt_sha256(forged)
     with pytest.raises(intake.Vspu2025MorphemicsWordFormationIntakeError, match=match):
         intake.validate_receipt(forged)
@@ -625,6 +639,8 @@ def test_committed_receipt_validates_when_present() -> None:
     assert validated["bindings"]["private_jsonl_sha256"] == intake.PRIVATE_JSONL_SHA256
     assert validated["bindings"]["private_jsonl_bytes"] == intake.PRIVATE_JSONL_BYTES
     assert validated["bindings"]["exactness_audit_sha256"] == intake.EXACTNESS_AUDIT_SHA256
+    assert validated["native_exactness"]["audit_receipt_sha256"] == intake.EXACTNESS_AUDIT_SHA256
+    assert validated["native_exactness"]["audit_receipt_sha256"] == validated["bindings"]["exactness_audit_sha256"]
     assert validated["bindings"]["content_fit_audit_sha256"] == intake.CONTENT_FIT_AUDIT_SHA256
     assert validated["bindings"]["university_content_audit_freeze_v1_sha256"] == intake.UNIVERSITY_FREEZE_SHA256
     assert validated["bindings"]["complete_source_policy_v4_sha256"] == intake.SOURCE_POLICY_SHA256

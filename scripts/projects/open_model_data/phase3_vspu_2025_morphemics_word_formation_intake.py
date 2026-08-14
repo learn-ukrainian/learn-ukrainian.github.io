@@ -1231,6 +1231,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         "exactness audit hash drift",
     )
     require(
+        receipt["native_exactness"]["audit_receipt_sha256"] == EXACTNESS_AUDIT_SHA256,
+        "native exactness audit receipt hash drift",
+    )
+    require(
+        receipt["native_exactness"]["audit_receipt_sha256"] == receipt["bindings"]["exactness_audit_sha256"],
+        "native exactness audit receipt binding twin drift",
+    )
+    require(
         receipt["bindings"]["content_fit_audit_sha256"] == CONTENT_FIT_AUDIT_SHA256,
         "content-fit audit hash drift",
     )

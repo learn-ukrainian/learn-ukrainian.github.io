@@ -399,7 +399,7 @@
       ],
       "properties": {
         "audit_receipt_sha256": {
-          "$ref": "#/$defs/sha256"
+          "const": "8bc0ee3dcb1d4a8f581288277666be8dbca8bda4551394365377509aa6b8f6ea"
         },
         "chunk_count": {
           "const": 197
