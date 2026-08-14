@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2647bf39c4b6",
+  "session_id": "fleet-ef685b7ff19a4c808f691f6b3de81d34",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T17:54:10.668208Z",
+  "branch": "cursor/atlas-6711-wotd-hub-locale",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lexicon/DailyWords.astro",
+    "site/src/lib/lexicon/daily-loading.ts",
+    "site/src/pages/__tests__/wotd-hub-chrome-locale.test.ts",
+    "site/src/pages/words-of-the-day.astro",
+    "site/tests/unit/daily-words-example.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "b91667d97a27",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T17:54:10.661752Z",
+    "agent_lines": 356,
+    "agent_removed": 56,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 356,
+    "total_lines_changed": 412,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
