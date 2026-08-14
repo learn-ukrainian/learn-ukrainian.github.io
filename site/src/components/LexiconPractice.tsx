@@ -220,6 +220,12 @@ async function resolveDeckKeyMetadata(
   if (needsFullIndexFallback) {
     // Last resort only: older/static deployments can lack a manifest or a
     // relevant shard even though their legacy complete index still has the row.
+    // Last resort only: older/static deployments can lack a manifest or a
+    // relevant shard even though their legacy complete index still has the row.
+    // Soft-empty on *any* fault here: this path only resolves optional glosses
+    // for custom-deck keys. Drill shards use softSkipUnpublishedDrillShard so a
+    // 5xx cannot look like an empty deck (#6768); do not elevate this fallback
+    // into a session-killing error.
     rows = await getShardJson<SearchRow[]>('/lexicon/search-index.json', cache).catch(() => []);
   }
 
@@ -1831,6 +1837,21 @@ async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>
   return p;
 }
 
+/**
+ * Optional drill-kind shards (and some Atlas search fallbacks) are unpublished
+ * per level/type: HTTP 404 means "not shipped", so callers may treat that as an
+ * empty payload. Network faults and 5xx must not be rewritten as empty decks
+ * (#6768) — rethrow so the Practice load-error path can surface.
+ */
+function isMissingShard(reason: unknown): boolean {
+  return (reason as { status?: number } | null)?.status === 404;
+}
+
+function softSkipUnpublishedDrillShard(reason: unknown): Record<string, never> {
+  if (isMissingShard(reason)) return {};
+  throw reason;
+}
+
 export default function LexiconPractice(props: LexiconPracticeProps) {
   return (
     <PracticeErrorBoundary>
@@ -2908,7 +2929,7 @@ function LexiconPracticeIsland({
         ];
         const drillResults = await Promise.all(
           drillUrls.map((u) =>
-            getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({})),
+            getShardJson<any>(u, shardJsonCacheRef.current).catch(softSkipUnpublishedDrillShard),
           ),
         );
         const [clozeR, stressR, classifyR, paradigmR, synonymR, paronymR, heritageR, antonymR] = drillResults;
@@ -2940,8 +2961,9 @@ function LexiconPracticeIsland({
                 ],
               };
             }
-          } catch {
-            // Degrades gracefully if teacher cloze shard is missing
+          } catch (err) {
+            // Teacher cloze is optional when unpublished (404); real faults surface.
+            if (!isMissingShard(err)) throw err;
           }
         }
 
@@ -2964,48 +2986,55 @@ function LexiconPracticeIsland({
         if (otherLevels.length > 0) {
           void (async () => {
             const bgId = deckRequestId.current;
-            const otherDrillBatches = await Promise.all(
-              otherLevels.map(async (lv) => {
-                const urls = [
-                  `${shardBaseUrl}/practice-cloze.${lv}.json`,
-                  `${shardBaseUrl}/practice-stress.${lv}.json`,
-                  `${shardBaseUrl}/practice-classify.${lv}.json`,
-                  `${shardBaseUrl}/practice-paradigm.${lv}.json`,
-                  `${shardBaseUrl}/practice-synonym.${lv}.json`,
-                  `${shardBaseUrl}/practice-paronym.${lv}.json`,
-                  `${shardBaseUrl}/practice-heritage.${lv}.json`,
-                  `${shardBaseUrl}/practice-antonym.${lv}.json`,
-                ];
-                const rs = await Promise.all(
-                  urls.map((u) => getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({}))),
-                );
+            try {
+              const otherDrillBatches = await Promise.all(
+                otherLevels.map(async (lv) => {
+                  const urls = [
+                    `${shardBaseUrl}/practice-cloze.${lv}.json`,
+                    `${shardBaseUrl}/practice-stress.${lv}.json`,
+                    `${shardBaseUrl}/practice-classify.${lv}.json`,
+                    `${shardBaseUrl}/practice-paradigm.${lv}.json`,
+                    `${shardBaseUrl}/practice-synonym.${lv}.json`,
+                    `${shardBaseUrl}/practice-paronym.${lv}.json`,
+                    `${shardBaseUrl}/practice-heritage.${lv}.json`,
+                    `${shardBaseUrl}/practice-antonym.${lv}.json`,
+                  ];
+                  const rs = await Promise.all(
+                    urls.map((u) =>
+                      getShardJson<any>(u, shardJsonCacheRef.current).catch(softSkipUnpublishedDrillShard),
+                    ),
+                  );
+                  return {
+                    cloze: (rs[0] as { cloze?: PracticeClozeItem[] }).cloze ?? [],
+                    stress: (rs[1] as { stress?: any[] }).stress ?? [],
+                    classify: (rs[2] as { classify?: any[] }).classify ?? [],
+                    paradigm: (rs[3] as { paradigm?: any[] }).paradigm ?? [],
+                    synonym: (rs[4] as { synonym?: any[] }).synonym ?? [],
+                    paronym: (rs[5] as { paronym?: any[] }).paronym ?? [],
+                    heritage: (rs[6] as { heritage?: any[] }).heritage ?? [],
+                    antonym: (rs[7] as { antonym?: any[] }).antonym ?? [],
+                  };
+                }),
+              );
+              if (deckRequestId.current !== bgId) return;
+              setDeck((prev) => {
+                if (!prev) return prev;
                 return {
-                  cloze: (rs[0] as { cloze?: PracticeClozeItem[] }).cloze ?? [],
-                  stress: (rs[1] as { stress?: any[] }).stress ?? [],
-                  classify: (rs[2] as { classify?: any[] }).classify ?? [],
-                  paradigm: (rs[3] as { paradigm?: any[] }).paradigm ?? [],
-                  synonym: (rs[4] as { synonym?: any[] }).synonym ?? [],
-                  paronym: (rs[5] as { paronym?: any[] }).paronym ?? [],
-                  heritage: (rs[6] as { heritage?: any[] }).heritage ?? [],
-                  antonym: (rs[7] as { antonym?: any[] }).antonym ?? [],
+                  ...prev,
+                  cloze: [...(prev.cloze ?? []), ...otherDrillBatches.flatMap((b) => b.cloze)],
+                  stress: [...(prev.stress ?? []), ...otherDrillBatches.flatMap((b) => b.stress)],
+                  classify: [...(prev.classify ?? []), ...otherDrillBatches.flatMap((b) => b.classify)],
+                  paradigm: [...(prev.paradigm ?? []), ...otherDrillBatches.flatMap((b) => b.paradigm)],
+                  synonym: [...(prev.synonym ?? []), ...otherDrillBatches.flatMap((b) => b.synonym)],
+                  paronym: [...(prev.paronym ?? []), ...otherDrillBatches.flatMap((b) => b.paronym)],
+                  heritage: [...(prev.heritage ?? []), ...otherDrillBatches.flatMap((b) => b.heritage)],
+                  antonym: [...(prev.antonym ?? []), ...otherDrillBatches.flatMap((b) => b.antonym)],
                 };
-              }),
-            );
-            if (deckRequestId.current !== bgId) return;
-            setDeck((prev) => {
-              if (!prev) return prev;
-              return {
-                ...prev,
-                cloze: [...(prev.cloze ?? []), ...otherDrillBatches.flatMap((b) => b.cloze)],
-                stress: [...(prev.stress ?? []), ...otherDrillBatches.flatMap((b) => b.stress)],
-                classify: [...(prev.classify ?? []), ...otherDrillBatches.flatMap((b) => b.classify)],
-                paradigm: [...(prev.paradigm ?? []), ...otherDrillBatches.flatMap((b) => b.paradigm)],
-                synonym: [...(prev.synonym ?? []), ...otherDrillBatches.flatMap((b) => b.synonym)],
-                paronym: [...(prev.paronym ?? []), ...otherDrillBatches.flatMap((b) => b.paronym)],
-                heritage: [...(prev.heritage ?? []), ...otherDrillBatches.flatMap((b) => b.heritage)],
-                antonym: [...(prev.antonym ?? []), ...otherDrillBatches.flatMap((b) => b.antonym)],
-              };
-            });
+              });
+            } catch {
+              // Selected-level drills already committed; skip broken background
+              // enrichment rather than rewriting it as empty arrays (#6768).
+            }
           })();
         }
       }

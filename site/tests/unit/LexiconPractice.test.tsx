@@ -59,6 +59,11 @@ function notFoundResponse(): Response {
   return { ok: false, status: 404, json: async () => ({}) } as unknown as Response;
 }
 
+/** A 5xx server error — a real load fault, distinct from a 404 "not published". */
+function serverErrorResponse(status = 503): Response {
+  return { ok: false, status, json: async () => ({}) } as unknown as Response;
+}
+
 /** D2: the Words-of-the-Day zone now fetches this pool directly (see `dailyPoolFixture`). */
 function dailyPoolFixture(counts: Partial<Record<CefrLevel, number>>): DailyWord[] {
   return Object.entries(counts).flatMap(([level, n]) =>
@@ -2743,6 +2748,84 @@ describe('LexiconPractice', () => {
       window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
       vi.restoreAllMocks();
     }
+  });
+
+  test('a 5xx on practice-synonym surfaces the load error instead of an empty synonym session (#6768)', async () => {
+    const deck = sampleDeck();
+    const user = userEvent.setup();
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, items: deck.index });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, lexemes: deck.lexemes });
+      }
+      if (url.includes('practice-synonym.A1.json')) return serverErrorResponse(500);
+      if (url.includes('practice-cloze.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, cloze: deck.cloze });
+      }
+      return notFoundResponse();
+    });
+
+    render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-start-session'));
+
+    expect(await screen.findByTestId('practice-fetch-error')).toHaveTextContent(
+      'Не вдалося завантажити практику.',
+    );
+    expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
+  });
+
+  test('a network failure on a drill shard surfaces the load error instead of an empty session (#6768)', async () => {
+    const deck = sampleDeck();
+    const user = userEvent.setup();
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, items: deck.index });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, lexemes: deck.lexemes });
+      }
+      if (url.includes('practice-cloze.A1.json')) throw new TypeError('Failed to fetch');
+      return notFoundResponse();
+    });
+
+    render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-start-session'));
+
+    expect(await screen.findByTestId('practice-fetch-error')).toHaveTextContent(
+      'Не вдалося завантажити практику.',
+    );
+    expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
+  });
+
+  test('a 404 on an unpublished drill shard is soft-skipped without surfacing an error (#6768)', async () => {
+    const deck = sampleDeck();
+    const user = userEvent.setup();
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('daily-pool.json')) return okJson([]);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, items: deck.index });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, lexemes: deck.lexemes });
+      }
+      if (url.includes('practice-cloze.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, cloze: deck.cloze });
+      }
+      return notFoundResponse();
+    });
+
+    render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-start-session'));
+
+    expect(await screen.findByTestId('practice-session-progress')).toBeInTheDocument();
+    expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
   });
 
   test('cloze wrong-case answer records one case miss and leaves blank open', async () => {
