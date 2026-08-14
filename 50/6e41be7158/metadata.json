@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "506e41be7158",
+  "strategy": "manual-commit",
+  "branch": "cursor/6764-lexicon-twins",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/word-atlas-static-api.md",
+    "site/scripts/hydrate-lexicon-api-shards.ts",
+    "site/src/lib/lexicon/atlasDb.ts",
+    "site/src/lib/lexicon/practice-api-shard.ts",
+    "site/src/lib/lexicon/practice-index-files.ts",
+    "site/src/lib/lexicon/runtime-contract.ts",
+    "site/src/lib/lexicon/sqlite-atlas-data-source.ts",
+    "site/src/lib/lexicon/srs.ts",
+    "site/src/pages/api/lexicon/daily-pool.json.ts",
+    "site/src/pages/api/lexicon/search-index.json.ts",
+    "site/src/pages/lexicon/daily-pool.json.ts",
+    "site/src/pages/lexicon/search-index.json.ts",
+    "site/tests/unit/lexicon-api-routes.test.ts",
+    "site/tests/unit/lexicon-srs.test.ts",
+    "site/tests/unit/practice-index-files.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/50/6e41be7158/0/metadata.json",
+      "transcript": "/50/6e41be7158/0/full.jsonl",
+      "compact_transcript": "/50/6e41be7158/0/transcript.jsonl",
+      "content_hash": "/50/6e41be7158/0/content_hash.txt",
+      "prompt": "/50/6e41be7158/0/prompt.txt"
+    }
+  ]
+}

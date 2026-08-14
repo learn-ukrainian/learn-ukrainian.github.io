@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "506e41be7158",
+  "session_id": "fleet-62f84ac978474aa5a91945e7f1249e10",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T04:48:07.882773Z",
+  "branch": "cursor/6764-lexicon-twins",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/word-atlas-static-api.md",
+    "site/scripts/hydrate-lexicon-api-shards.ts",
+    "site/src/lib/lexicon/atlasDb.ts",
+    "site/src/lib/lexicon/practice-api-shard.ts",
+    "site/src/lib/lexicon/practice-index-files.ts",
+    "site/src/lib/lexicon/runtime-contract.ts",
+    "site/src/lib/lexicon/sqlite-atlas-data-source.ts",
+    "site/src/lib/lexicon/srs.ts",
+    "site/src/pages/api/lexicon/daily-pool.json.ts",
+    "site/src/pages/api/lexicon/search-index.json.ts",
+    "site/src/pages/lexicon/daily-pool.json.ts",
+    "site/src/pages/lexicon/search-index.json.ts",
+    "site/tests/unit/lexicon-api-routes.test.ts",
+    "site/tests/unit/lexicon-srs.test.ts",
+    "site/tests/unit/practice-index-files.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "8150c6ddf1cd",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T04:48:07.87755Z",
+    "agent_lines": 205,
+    "agent_removed": 103,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 205,
+    "total_lines_changed": 308,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
