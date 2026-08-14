@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e2fe38d1a9e1",
+  "session_id": "fleet-05399e9e8ce84f91b957675f1f5f2b1d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T06:09:12.804327Z",
+  "branch": "cursor/phase3-6375-vspu-2025-source-admission-r1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_vspu_2025_morphemics_word_formation_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_vspu_2025_morphemics_word_formation_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_vspu_2025_morphemics_word_formation_intake.py",
+    "tests/test_open_model_phase3_vspu_2025_morphemics_word_formation_intake.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "ed88e2843cc7",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T06:09:12.794912Z",
+    "agent_lines": 2767,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2767,
+    "total_lines_changed": 2767,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
