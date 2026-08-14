@@ -432,8 +432,32 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML jsonschema
+          .venv/bin/python -m pip install PyYAML jsonschema requests==2.34.2
           npm ci
+
+      - name: Run Word Atlas sense-lint ratchet (#6437)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+          .venv/bin/python -m scripts.practice_deck.io
+          if [[ -n "$BASE_SHA" ]]; then
+            base_ref="$BASE_SHA"
+          else
+            base_ref="origin/main"
+          fi
+          deck_args=()
+          for deck in site/public/lexicon/*.json; do
+            deck_args+=(--practice-deck "$deck")
+          done
+          .venv/bin/python scripts/audit/lint_word_atlas.py \
+            --manifest site/src/data/lexicon-manifest.json \
+            "${deck_args[@]}" \
+            --base-ref "$base_ref" \
+            --baseline scripts/audit/word_atlas_lint_baseline.json \
+            --ratchet \
+            --update-baseline
+          git diff --exit-code -- scripts/audit/word_atlas_lint_baseline.json
 
       - name: Regenerate lesson schema and check drift
         run: |

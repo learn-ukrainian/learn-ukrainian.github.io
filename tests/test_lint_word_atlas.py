@@ -270,9 +270,7 @@ def test_practice_deck_mode_flags_cards_without_sense_id(tmp_path: Path) -> None
         encoding="utf-8",
     )
 
-    exit_code = lint_word_atlas.main(
-        ["--manifest", str(manifest_path), "--practice-deck", str(deck_path)]
-    )
+    exit_code = lint_word_atlas.main(["--manifest", str(manifest_path), "--practice-deck", str(deck_path)])
     assert exit_code == 0
     findings = lint_word_atlas.lint_practice_items(
         [{"lemmaId": "автобус"}, {"lemmaId": "мова", "senseId": "mova_language"}]
@@ -298,9 +296,7 @@ def test_practice_deck_lexemes_shard_flags_lexeme_without_sense_id(tmp_path: Pat
         encoding="utf-8",
     )
 
-    exit_code = lint_word_atlas.main(
-        ["--manifest", str(manifest_path), "--practice-deck", str(deck_path)]
-    )
+    exit_code = lint_word_atlas.main(["--manifest", str(manifest_path), "--practice-deck", str(deck_path)])
     assert exit_code == 0
     findings = lint_word_atlas.lint_practice_items(
         lint_word_atlas._practice_cards_from_deck(json.loads(deck_path.read_text(encoding="utf-8")))
@@ -327,9 +323,7 @@ def test_report_mode_writes_json_and_stays_advisory(tmp_path: Path) -> None:
     )
     report_path = tmp_path / "residual.json"
 
-    exit_code = lint_word_atlas.main(
-        ["--manifest", str(manifest_path), "--report", str(report_path)]
-    )
+    exit_code = lint_word_atlas.main(["--manifest", str(manifest_path), "--report", str(report_path)])
 
     assert exit_code == 0  # advisory: findings exist but --strict was not passed
     payload = json.loads(report_path.read_text(encoding="utf-8"))
@@ -616,3 +610,145 @@ def test_pos_transform_mismatch_suppressed_for_unknown_sense_pos() -> None:
         ]
     }
     assert lint_word_atlas.lint_manifest(manifest) == []
+
+
+def _ratchet_base_manifest() -> dict:
+    return {
+        "entries": [
+            {
+                "slug": "untouched-entry",
+                "practice_bindings": [{"mode": "classify"}],
+            },
+            {
+                "slug": "changed-entry",
+                "senses": [
+                    {
+                        "id": "changed-sense",
+                        "learner_en": ["glyph"],
+                        "source": "sum20_vetted",
+                    }
+                ],
+            },
+        ]
+    }
+
+
+def _ratchet_current_manifest() -> dict:
+    manifest = _ratchet_base_manifest()
+    manifest["entries"][1]["senses"][0].pop("source")
+    return manifest
+
+
+def test_changed_entry_keys_keep_untouched_entry_out_of_ratchet_scope() -> None:
+    changed = lint_word_atlas.changed_entry_keys(_ratchet_base_manifest(), _ratchet_current_manifest())
+    assert changed == {"changed-entry"}
+
+
+def test_ratchet_blocks_changed_finding_and_keeps_untouched_finding_advisory() -> None:
+    findings = lint_word_atlas.lint_manifest(_ratchet_current_manifest())
+    changed = lint_word_atlas.changed_entry_keys(_ratchet_base_manifest(), _ratchet_current_manifest())
+
+    blocking = lint_word_atlas.ratchet_blocking_findings(findings, changed)
+    assert [(finding.rule_id, finding.entry_slug) for finding in blocking] == [("LINT-004", "changed-entry")]
+    untouched = [finding for finding in findings if finding.entry_slug not in changed]
+    assert [(finding.rule_id, finding.entry_slug) for finding in untouched] == [("LINT-003", "untouched-entry")]
+
+
+def test_ratchet_cli_emits_two_sided_evidence_and_blocks_changed_entry(tmp_path: Path, capsys) -> None:
+    base_path = tmp_path / "base.json"
+    current_path = tmp_path / "current.json"
+    baseline_path = tmp_path / "baseline.json"
+    base_path.write_text(json.dumps(_ratchet_base_manifest()), encoding="utf-8")
+    current_path.write_text(json.dumps(_ratchet_current_manifest()), encoding="utf-8")
+    lint_word_atlas.write_baseline(
+        baseline_path,
+        {
+            "LINT-001": 0,
+            "LINT-002": 0,
+            "LINT-003": 1,
+            "LINT-004": 1,
+            "LINT-101": 0,
+            "LINT-102": 0,
+        },
+    )
+
+    exit_code = lint_word_atlas.main(
+        [
+            "--manifest",
+            str(current_path),
+            "--base-manifest",
+            str(base_path),
+            "--baseline",
+            str(baseline_path),
+            "--ratchet",
+        ]
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 1
+    assert "Blocking touched-entry findings: 1" in output
+    assert "LINT-004 UNVETTED_EN_SOURCE changed-entry" in output
+    assert "Advisory pre-existing/untouched findings: 1" in output
+    assert "[advisory pre-existing] LINT-003 DRILL_SENSE_ID_MISSING untouched-entry" in output
+
+
+def test_debt_baseline_equal_passes_increase_fails_and_decrease_updates(tmp_path: Path) -> None:
+    baseline_path = tmp_path / "baseline.json"
+    baseline_counts = {
+        "LINT-001": 0,
+        "LINT-002": 0,
+        "LINT-003": 4,
+        "LINT-004": 2,
+        "LINT-101": 1,
+        "LINT-102": 0,
+    }
+    lint_word_atlas.write_baseline(baseline_path, baseline_counts)
+
+    equal = lint_word_atlas.enforce_debt_baseline(baseline_counts, baseline_path)
+    assert equal.passed
+
+    increased_counts = dict(baseline_counts, **{"LINT-003": 5})
+    increased = lint_word_atlas.enforce_debt_baseline(
+        increased_counts,
+        baseline_path,
+        comparison_counts=baseline_counts,
+        update=True,
+    )
+    assert not increased.passed
+    assert "LINT-003 4->5" in " ".join(increased.errors)
+    assert lint_word_atlas.load_baseline(baseline_path) == baseline_counts
+
+    decreased_counts = dict(baseline_counts, **{"LINT-003": 3})
+    decreased = lint_word_atlas.enforce_debt_baseline(
+        decreased_counts,
+        baseline_path,
+        comparison_counts=baseline_counts,
+        update=True,
+    )
+    assert decreased.passed
+    assert decreased.updated
+    assert lint_word_atlas.load_baseline(baseline_path) == decreased_counts
+
+
+def test_practice_deck_entry_changes_are_scoped_by_lemma() -> None:
+    base = [("practice-cloze.A1.json", {"cloze": [{"lemmaId": "old", "senseId": "s"}]})]
+    current = [
+        (
+            "practice-cloze.A1.json",
+            {"cloze": [{"lemmaId": "old", "senseId": "new"}, {"lemmaId": "new"}]},
+        )
+    ]
+    assert lint_word_atlas.changed_practice_entry_keys(base, current) == {"old", "new"}
+
+
+def test_ci_workflow_runs_ratchet_and_requires_committed_baseline() -> None:
+    workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert workflow.count("Run Word Atlas sense-lint ratchet (#6437)") == 1
+    assert '--base-ref "$base_ref"' in workflow
+    assert "github.event.merge_group.base_sha" in workflow
+    assert "--ratchet" in workflow
+    assert "--update-baseline" in workflow
+    assert "git diff --exit-code -- scripts/audit/word_atlas_lint_baseline.json" in workflow
+    assert workflow.index("Run Word Atlas sense-lint ratchet (#6437)") > workflow.index(
+        "Install contract-check dependencies"
+    )
