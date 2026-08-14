@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -161,98 +160,82 @@ def test_run_is_read_only_without_apply(monkeypatch) -> None:
     assert decisions == [integration_sweep.Decision(99, True, "stream_epic_4707")]
 
 
-def test_required_check_contexts_never_calls_branch_protection() -> None:
-    """GITHUB_TOKEN cannot call branches/.../protection (administration / HTTP 403)."""
+def test_required_check_contexts_returns_documented_default_without_gh() -> None:
+    """GitHub removed rollup ``isRequired`` (#6748) and branch protection is admin-only (#6717)."""
 
     def runner(args: list[str]) -> str:
-        joined = " ".join(args)
-        assert "/branches/" not in joined and "/protection" not in joined, joined
-        assert "graphql" in args
-        return json.dumps(
-            {
-                "data": {
-                    "repository": {
-                        "pullRequests": {
-                            "nodes": [
-                                {
-                                    "commits": {
-                                        "nodes": [
-                                            {
-                                                "commit": {
-                                                    "statusCheckRollup": {
-                                                        "contexts": {
-                                                            "nodes": [
-                                                                {
-                                                                    "__typename": "CheckRun",
-                                                                    "name": "CI Gate",
-                                                                    "isRequired": True,
-                                                                },
-                                                                {
-                                                                    "__typename": "CheckRun",
-                                                                    "name": "advisory",
-                                                                    "isRequired": False,
-                                                                },
-                                                            ]
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        )
+        raise AssertionError(f"required-context lookup must not invoke gh: {' '.join(args)}")
 
     adapter = integration_sweep.GitHubAdapter(Path("."), runner=runner)
 
     assert adapter.required_check_contexts("org/repo") == ["CI Gate"]
 
 
-def test_required_check_contexts_falls_back_to_ci_gate_on_graphql_403() -> None:
-    """Adapter 403 on required-context lookup must not crash; CI Gate remains."""
+def test_run_never_calls_gh_without_a_pr_number(monkeypatch) -> None:
+    """A PR without a usable number is refused and never reaches a gh call."""
 
-    def runner(args: list[str]) -> str:
-        joined = " ".join(args)
-        assert "/branches/" not in joined and "/protection" not in joined, joined
-        raise integration_sweep.SweepError(
-            "gh: Resource not accessible by integration (HTTP 403)"
-        )
-
-    adapter = integration_sweep.GitHubAdapter(Path("."), runner=runner)
-
-    assert adapter.required_check_contexts("org/repo") == ["CI Gate"]
-
-
-def test_run_survives_required_context_403_via_documented_default(monkeypatch) -> None:
-    class SoftAdapter:
+    class GuardedAdapter:
         repo_root = Path(".")
 
-        def required_check_contexts(self, repository: str) -> list[str]:
-            # Simulate the real adapter falling back after a 403.
-            return integration_sweep.GitHubAdapter(
-                Path("."),
-                runner=lambda _args: (_ for _ in ()).throw(
-                    integration_sweep.SweepError(
-                        "gh: Resource not accessible by integration (HTTP 403)"
-                    )
-                ),
-            ).required_check_contexts(repository)
+        def required_check_contexts(self, _repository: str) -> list[str]:
+            return ["CI Gate"]
 
         def list_open_prs(self, _repository: str) -> list[dict]:
-            return [_pr()]
+            return [_pr(number=0), _pr(number=100, reviewDecision="", reviews=[], body="Refs #42\n")]
 
-        def arm_auto_merge(self, _repository: str, _number: int) -> None:
-            raise AssertionError("dry run must not mutate GitHub")
+        def comments(self, _repository: str, number: int) -> list[dict]:
+            assert integration_sweep._is_usable_pr_number(number), number
+            return []
+
+        def arm_auto_merge(self, _repository: str, number: int) -> None:
+            raise AssertionError(f"no PR should be armed: {number}")
 
     monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
 
-    decisions = integration_sweep.run(SoftAdapter(), "org/repo", apply=False, now=NOW)
+    decisions = integration_sweep.run(GuardedAdapter(), "org/repo", apply=True, now=NOW)
 
-    assert decisions == [integration_sweep.Decision(99, True, "stream_epic_4707")]
+    assert decisions == [
+        integration_sweep.Decision(0, False, "invalid_pr_number"),
+        integration_sweep.Decision(100, False, "current_head_review_missing"),
+    ]
+
+
+def test_run_skips_comments_and_merge_when_number_unusable(monkeypatch) -> None:
+    """Even a pathological review-missing decision never invokes gh without a number."""
+
+    class GuardedAdapter:
+        repo_root = Path(".")
+
+        def required_check_contexts(self, _repository: str) -> list[str]:
+            return ["CI Gate"]
+
+        def list_open_prs(self, _repository: str) -> list[dict]:
+            return [_pr(number=0)]
+
+        def comments(self, _repository: str, number: int) -> list[dict]:
+            raise AssertionError(f"comments must not be fetched for number {number!r}")
+
+        def arm_auto_merge(self, _repository: str, number: int) -> None:
+            raise AssertionError(f"auto-merge must not be armed for number {number!r}")
+
+    def fake_decide(pr, report, contexts, *, now, comments=None):
+        del pr, report, contexts, now, comments
+        return integration_sweep.Decision(0, True, "current_head_review_missing")
+
+    monkeypatch.setattr(integration_sweep, "decide", fake_decide)
+    monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
+
+    decisions = integration_sweep.run(GuardedAdapter(), "org/repo", apply=True, now=NOW)
+
+    assert decisions == [integration_sweep.Decision(0, True, "current_head_review_missing")]
+
+
+def test_main_empty_sweep_noops_exit_zero(monkeypatch, capsys) -> None:
+    """With nothing to comment on or apply, the sweep exits 0."""
+    monkeypatch.setattr(integration_sweep, "run", lambda _adapter, _repository, **_kwargs: [])
+
+    assert integration_sweep.main(["--repo", "org/repo", "--apply"]) == 0
+    assert capsys.readouterr().out.strip() == "[]"
 
 
 def test_main_schedule_soft_skips_http_403(monkeypatch, capsys) -> None:
