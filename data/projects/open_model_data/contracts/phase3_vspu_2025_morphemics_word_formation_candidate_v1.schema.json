@@ -322,25 +322,25 @@
           ],
           "properties": {
             "bitstream_metadata": {
-              "$ref": "#/$defs/sha256"
+              "const": "d6e0500b41f0c1070eee32d36c2b46f284523ee36275b068431279de5bef9f85"
             },
             "content_fit_audit": {
-              "$ref": "#/$defs/sha256"
+              "const": "30c90acc38d99ffbf54b89e77b59e19d20a95b9372961443ed26fd25c51beeb9"
             },
             "exactness_audit": {
-              "$ref": "#/$defs/sha256"
+              "const": "e64e3a10609a9f4a06ad97b3ff4fd89ffd8b93d69fccd20dc53a33f6e9949d26"
             },
             "item_metadata": {
-              "$ref": "#/$defs/sha256"
+              "const": "e1f654b2c8249aa276978b0be7757f407ce6830103b39b58743f8cb376e3f1c4"
             },
             "landing_html": {
-              "$ref": "#/$defs/sha256"
+              "const": "1865e9f110ac0be6b32f13a728716dc8bcb547be20c4620b826c9296f0c261a7"
             },
             "private_jsonl": {
-              "$ref": "#/$defs/sha256"
+              "const": "b0d3f26ba6da82aea3b29166c604ba5e346acc07dce850ccfe2fc94213e91405"
             },
             "source_pdf": {
-              "$ref": "#/$defs/sha256"
+              "const": "d91f109d7294be1e3b22aa8ceed567cd17103e7a19bf7659f5435b4ed27dc7d7"
             }
           }
         },

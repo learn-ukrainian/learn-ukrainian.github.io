@@ -89,6 +89,15 @@ CONTENT_FIT_AUDIT_SHA256 = "75f6ec52896a60bc80e306ed4232fdafd329430dfd2f65d588e4
 CUSTODY_RECEIPT_FILE_SHA256 = "c3ee0cf9319cc4f007b9f5e3f076fb1f1cc0b72e9392371734092ea828011d85"
 CUSTODY_RECEIPT_BODY_SHA256 = "0e6cb7887c6b16f16c3c8c735217c0e8cb6e50f3613f7ec7f0a7f366cceab345"
 CHECKSUMS_SHA256 = "1be1849a73afac6242805f1d974354e757047fb4d05449966cb0f821b5a174c0"
+AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256 = {
+    "bitstream_metadata": "d6e0500b41f0c1070eee32d36c2b46f284523ee36275b068431279de5bef9f85",
+    "content_fit_audit": "30c90acc38d99ffbf54b89e77b59e19d20a95b9372961443ed26fd25c51beeb9",
+    "exactness_audit": "e64e3a10609a9f4a06ad97b3ff4fd89ffd8b93d69fccd20dc53a33f6e9949d26",
+    "item_metadata": "e1f654b2c8249aa276978b0be7757f407ce6830103b39b58743f8cb376e3f1c4",
+    "landing_html": "1865e9f110ac0be6b32f13a728716dc8bcb547be20c4620b826c9296f0c261a7",
+    "private_jsonl": "b0d3f26ba6da82aea3b29166c604ba5e346acc07dce850ccfe2fc94213e91405",
+    "source_pdf": "d91f109d7294be1e3b22aa8ceed567cd17103e7a19bf7659f5435b4ed27dc7d7",
+}
 V2_PROMPT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V3_PROMPT_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
 V2_SOURCE_UNITS = 67_041
@@ -1250,6 +1259,11 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         receipt["bindings"]["custody_receipt_body_sha256"] == CUSTODY_RECEIPT_BODY_SHA256,
         "custody receipt body hash drift",
     )
+    require(
+        receipt["custody"]["google_drive_provider_identity_sha256"]
+        == AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256,
+        "google drive provider identity mapping drift",
+    )
     require(receipt["bindings"]["checksums_sha256"] == CHECKSUMS_SHA256, "SHA256SUMS hash drift")
     require(receipt["review_scope"]["topic_gaps_closed"] == [], "receipt overclaims a closed topic gap")
     require(receipt["review_scope"]["topic_gaps_narrowed"] == [], "receipt overclaims topic narrowing")
@@ -1394,13 +1408,18 @@ def build_custody_block(
     staging_root: Path,
     provider_ids: Mapping[str, str],
 ) -> dict[str, Any]:
+    provider_identity_sha256 = {
+        name: sha256_bytes(value.encode("utf-8")) for name, value in sorted(provider_ids.items())
+    }
+    require(
+        provider_identity_sha256 == AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256,
+        "google drive provider identity mapping drift",
+    )
     return {
         "google_drive_custody": True,
         "google_drive_mount_containment_verified": True,
         "google_drive_provider_identity_present": True,
-        "google_drive_provider_identity_sha256": {
-            name: sha256_bytes(value.encode("utf-8")) for name, value in sorted(provider_ids.items())
-        },
+        "google_drive_provider_identity_sha256": provider_identity_sha256,
         "drive_relative_directory": PRIVATE_INPUT_LOCATOR,
         "private_files_mode_0600": True,
         "private_directory_mode_0700": stat.S_IMODE(staging_root.stat().st_mode) == PRIVATE_DIR_MODE,

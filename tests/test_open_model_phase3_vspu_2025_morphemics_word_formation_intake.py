@@ -335,6 +335,11 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
             "checksums": intake.CHECKSUMS_FILENAME,
         },
     }
+    monkeypatch.setattr(
+        intake,
+        "AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256",
+        dict(custody["google_drive_provider_identity_sha256"]),
+    )
     custody_doc = {
         "schema_version": "phase3_vspu_2025_morphemics_word_formation_custody_receipt_v1",
         "text_free": True,
@@ -609,17 +614,37 @@ def test_validate_receipt_rejects_overclaims(tmp_path: Path, monkeypatch: pytest
             "0" * 64,
             r"native exactness audit receipt hash drift|schema violation",
         ),
+        *(
+            (
+                ("custody", "google_drive_provider_identity_sha256", field),
+                "0" * 64,
+                r"google drive provider identity mapping drift|schema violation",
+            )
+            for field in (
+                "bitstream_metadata",
+                "content_fit_audit",
+                "exactness_audit",
+                "item_metadata",
+                "landing_html",
+                "private_jsonl",
+                "source_pdf",
+            )
+        ),
     ],
 )
 def test_validate_receipt_rejects_resealed_private_custody_binding_mutations(
-    path: tuple[str, str], forged_value: object, match: str
+    path: tuple[str, ...], forged_value: object, match: str
 ) -> None:
     if not PUBLIC_RECEIPT.is_file():
         pytest.skip("public receipt not materialized yet")
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     forged = copy.deepcopy(receipt)
-    container, field = path
-    forged[container][field] = forged_value
+    cursor: dict[str, object] = forged
+    for key in path[:-1]:
+        nested = cursor[key]
+        assert isinstance(nested, dict)
+        cursor = nested
+    cursor[path[-1]] = forged_value
     forged["receipt_sha256"] = intake.receipt_sha256(forged)
     with pytest.raises(intake.Vspu2025MorphemicsWordFormationIntakeError, match=match):
         intake.validate_receipt(forged)
@@ -646,6 +671,10 @@ def test_committed_receipt_validates_when_present() -> None:
     assert validated["bindings"]["complete_source_policy_v4_sha256"] == intake.SOURCE_POLICY_SHA256
     assert validated["bindings"]["custody_receipt_file_sha256"] == intake.CUSTODY_RECEIPT_FILE_SHA256
     assert validated["bindings"]["custody_receipt_body_sha256"] == intake.CUSTODY_RECEIPT_BODY_SHA256
+    assert (
+        validated["custody"]["google_drive_provider_identity_sha256"]
+        == intake.AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256
+    )
     assert validated["native_exactness"]["flagged_chunk_count"] == 0
     assert validated["review_scope"]["topic_gaps_narrowed"] == []
     assert validated["content_fitness"]["cells"]["morphemics"]["depth_evidence"]["scope"] == "topic_conditioned"
