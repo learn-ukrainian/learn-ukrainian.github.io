@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f2f600587ae1",
+  "session_id": "fleet-acf29afa42dc4871b47289c68f405af9",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T01:06:37.114183Z",
+  "branch": "cursor/phase3-6375-school-context-negative-recovery-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json",
+    "data/projects/open_model_data/inventory/phase3_school_context_negative_recovery_receipt_v1.json",
+    "scripts/projects/open_model_data/phase3_school_context_negative_recovery.py",
+    "tests/test_open_model_phase3_school_context_negative_recovery.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "2852e4cf05be",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T01:06:37.11125Z",
+    "agent_lines": 1065,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1065,
+    "total_lines_changed": 1065,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
