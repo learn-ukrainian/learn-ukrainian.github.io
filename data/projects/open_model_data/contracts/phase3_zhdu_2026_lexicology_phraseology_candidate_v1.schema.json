@@ -1,0 +1,493 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_zhdu_2026_lexicology_phraseology_candidate_v1.schema.json",
+  "title": "Phase 3 ZHDU 2026 lexicology/phraseology candidate receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "text_free",
+    "provider_calls",
+    "source",
+    "bindings",
+    "text_layer",
+    "native_exactness",
+    "content_fitness",
+    "custody",
+    "rights",
+    "review_scope",
+    "denominators",
+    "gates",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_zhdu_2026_lexicology_phraseology_candidate_v1"
+    },
+    "status": {
+      "const": "NARROW_ONLY_CANDIDATE_PENDING_UKRAINIAN_CANON_REVIEW_AND_SCOPE_CRITIC"
+    },
+    "text_free": {
+      "const": true
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "title",
+        "authors",
+        "metadata_authors",
+        "institution",
+        "publisher",
+        "audience",
+        "year",
+        "isbn",
+        "pages",
+        "item_url",
+        "bitstream_url",
+        "private_input_locator",
+        "bitstream_is_complete_publication"
+      ],
+      "properties": {
+        "source_id": {
+          "const": "uni-ukrmova-lexicology-phraseology-zhdu-2026"
+        },
+        "title": {
+          "const": "Лексикологія, фразеологія, фонетика і фонологія сучасної української літературної мови: навчальний посібник. Ч. 1: Лексикологія, фразеологія, лексикографія"
+        },
+        "authors": {
+          "const": [
+            "Наталія Дяченко",
+            "Людмила Фальківська"
+          ]
+        },
+        "metadata_authors": {
+          "const": [
+            "Дяченко, Н. М.",
+            "Фальківська, Л. П."
+          ]
+        },
+        "institution": {
+          "const": "Житомирський державний університет імені Івана Франка, кафедра української мови та методики її навчання"
+        },
+        "publisher": {
+          "const": "Житомирський державний університет імені Івана Франка"
+        },
+        "audience": {
+          "const": "native_ukrainian_philology_students_ukrainian_language_and_literature"
+        },
+        "year": {
+          "const": 2026
+        },
+        "isbn": {
+          "const": "978-966-485-336-8"
+        },
+        "pages": {
+          "const": 98
+        },
+        "item_url": {
+          "const": "https://eprints.zu.edu.ua/48784/"
+        },
+        "bitstream_url": {
+          "const": "https://eprints.zu.edu.ua/48784/1/1.pdf"
+        },
+        "private_input_locator": {
+          "const": "university_corpus/staging/phase3-6375-zhdu-2026-lexicology-phraseology"
+        },
+        "bitstream_is_complete_publication": {
+          "const": true
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "source_pdf_sha256",
+        "source_pdf_md5",
+        "source_pdf_bytes",
+        "landing_html_sha256",
+        "landing_html_bytes",
+        "private_jsonl_sha256",
+        "private_jsonl_bytes",
+        "exactness_audit_sha256",
+        "implementation_sha256",
+        "schema_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {
+          "const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+        },
+        "phase3_reboot_prompt_v3_sha256": {
+          "const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+        },
+        "source_pdf_sha256": {
+          "const": "fdaf6a524f4cc6dc2cb19c721fae9cb15d96a23c20c0ec75d8049458ca665019"
+        },
+        "source_pdf_md5": {
+          "const": "f725b24a7e834b155d2d4fb9b2de84e3"
+        },
+        "source_pdf_bytes": {
+          "const": 744081
+        },
+        "landing_html_sha256": {
+          "const": "fcf9ff188ddf2a3e1f48f0e44e24ebcc7295112ac4da6a5c81210fb448c041f5"
+        },
+        "landing_html_bytes": {
+          "const": 28667
+        },
+        "private_jsonl_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "private_jsonl_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exactness_audit_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "text_layer": {
+      "const": {
+        "pages": 98,
+        "text_bearing_pages": 98,
+        "unicode_code_points": 214095,
+        "utf8_bytes": 382099,
+        "page_manifest_sha256": "ad07207b4cfcc2f9c375931df148c4ea1d077defa3963ec8a6f998706a263911",
+        "extracted_text_sha256": "b0d08c67f049c46c6e556735070204104bd99a312973682dbb168209a7964deb",
+        "anomaly_page_count": 0,
+        "isbn_text_verified": true,
+        "normalization_applied": false,
+        "ocr_used": false,
+        "repairs_applied": false,
+        "source_text_retained_in_public_receipt": false
+      }
+    },
+    "native_exactness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "source_count",
+        "chunk_count",
+        "flagged_chunk_count",
+        "flagged_page_count",
+        "verified_flagged_chunk_count",
+        "unverified_flagged_chunk_count",
+        "clean_chunk_count",
+        "production_eligible_under_exactness_gate",
+        "audit_receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "textbook-native-exactness-audit.v1"
+        },
+        "source_count": {
+          "const": 1
+        },
+        "chunk_count": {
+          "const": 98
+        },
+        "flagged_chunk_count": {
+          "const": 0
+        },
+        "flagged_page_count": {
+          "const": 0
+        },
+        "verified_flagged_chunk_count": {
+          "const": 0
+        },
+        "unverified_flagged_chunk_count": {
+          "const": 0
+        },
+        "clean_chunk_count": {
+          "const": 98
+        },
+        "production_eligible_under_exactness_gate": {
+          "const": true
+        },
+        "audit_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "content_fitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_cells",
+        "provisional_effect",
+        "topic_gaps_closed",
+        "topic_gaps_narrowed_claimed",
+        "cells",
+        "supporting_depth_outside_target_cells",
+        "audience",
+        "explicit_limitations",
+        "flags_for_ukrainian_review"
+      ],
+      "properties": {
+        "target_cells": {
+          "const": [
+            "semantics",
+            "phraseology"
+          ]
+        },
+        "provisional_effect": {
+          "const": "narrow_only_candidate"
+        },
+        "topic_gaps_closed": {
+          "const": []
+        },
+        "topic_gaps_narrowed_claimed": {
+          "const": []
+        },
+        "cells": {
+          "const": {
+            "semantics": {
+              "frozen_status": "partial",
+              "provisional_effect": "narrow_only_candidate",
+              "depth_evidence": {
+                "topic_marker_hits": 331,
+                "topic_pages": 62,
+                "definition_marker_hits": 33,
+                "definition_pages": 22,
+                "theory_classification_marker_hits": 27,
+                "theory_classification_pages": 20,
+                "example_marker_hits": 49,
+                "example_pages": 25,
+                "exercise_marker_hits": 115,
+                "exercise_pages": 52,
+                "self_control_answer_marker_hits": 11,
+                "self_control_answer_pages": 6
+              }
+            },
+            "phraseology": {
+              "frozen_status": "partial",
+              "provisional_effect": "narrow_only_candidate",
+              "depth_evidence": {
+                "topic_marker_hits": 181,
+                "topic_pages": 41,
+                "definition_marker_hits": 33,
+                "definition_pages": 22,
+                "theory_classification_marker_hits": 27,
+                "theory_classification_pages": 20,
+                "example_marker_hits": 49,
+                "example_pages": 25,
+                "exercise_marker_hits": 115,
+                "exercise_pages": 52,
+                "self_control_answer_marker_hits": 11,
+                "self_control_answer_pages": 6
+              }
+            }
+          }
+        },
+        "supporting_depth_outside_target_cells": {
+          "const": {
+            "lexicology_marker_hits": 43,
+            "lexicology_pages": 21,
+            "lexicography_marker_hits": 262,
+            "lexicography_pages": 53,
+            "lexicology_frozen_status": "sufficient",
+            "note": "lexicology is already sufficient; this candidate is not used to claim lexicology closure"
+          }
+        },
+        "audience": {
+          "const": {
+            "current_ukrainian_philology_students": true,
+            "programme_marker_verified": true,
+            "repository_type": "book",
+            "publication_year": 2026,
+            "publication_period_post_2019": true,
+            "board_recommendation_date": "2026-06-26",
+            "board_recommendation_marker_verified": true
+          }
+        },
+        "explicit_limitations": {
+          "const": [
+            "Cursor content-fit notes are provisional marker evidence only.",
+            "Independent Ukrainian-canon review must adjudicate terminology, Russianisms/calques, and factual claims.",
+            "No university topic is closed by this candidate.",
+            "Semantics and phraseology remain partial until root disposition after Ukrainian review."
+          ]
+        },
+        "flags_for_ukrainian_review": {
+          "const": {
+            "davnoruska_marker_hits": 8,
+            "shared_east_slavic_calque_hits": 2,
+            "russian_comparison_hits": 10,
+            "soviet_era_marker_hits": 5,
+            "etymology_marker_hits": 27,
+            "yazyk_token_hits": 1,
+            "adjudication": "pending_independent_ukrainian_canon_review"
+          }
+        }
+      }
+    },
+    "custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "google_drive_custody",
+        "google_drive_mount_containment_verified",
+        "google_drive_provider_identity_present",
+        "google_drive_provider_identity_sha256",
+        "drive_relative_directory",
+        "private_files_mode_0600",
+        "private_directory_mode_0700",
+        "all_new_files_readback_hash_match",
+        "artifacts"
+      ],
+      "properties": {
+        "google_drive_custody": {
+          "const": true
+        },
+        "google_drive_mount_containment_verified": {
+          "const": true
+        },
+        "google_drive_provider_identity_present": {
+          "const": true
+        },
+        "google_drive_provider_identity_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "exactness_audit",
+            "landing_html",
+            "private_jsonl",
+            "source_pdf"
+          ],
+          "properties": {
+            "exactness_audit": {
+              "$ref": "#/$defs/sha256"
+            },
+            "landing_html": {
+              "$ref": "#/$defs/sha256"
+            },
+            "private_jsonl": {
+              "$ref": "#/$defs/sha256"
+            },
+            "source_pdf": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        },
+        "drive_relative_directory": {
+          "const": "university_corpus/staging/phase3-6375-zhdu-2026-lexicology-phraseology"
+        },
+        "private_files_mode_0600": {
+          "const": true
+        },
+        "private_directory_mode_0700": {
+          "const": true
+        },
+        "all_new_files_readback_hash_match": {
+          "const": true
+        },
+        "artifacts": {
+          "const": {
+            "source_pdf": "uni-ukrmova-lexicology-phraseology-zhdu-2026.pdf",
+            "landing_html": "zu-eprints-48784-landing.html",
+            "private_jsonl": "processed/grade-00/uni-ukrmova-lexicology-phraseology-zhdu-2026.jsonl",
+            "exactness_audit": "exactness/textbook-native-exactness-audit-v1.json",
+            "custody_receipt": "phase3_zhdu_2026_lexicology_phraseology_custody_receipt_v1.json",
+            "checksums": "SHA256SUMS"
+          }
+        }
+      }
+    },
+    "rights": {
+      "const": {
+        "visibility": "publicly_accessible",
+        "reuse_license": "not_stated",
+        "rights_statement": "publicly accessible; reuse license not stated",
+        "standardized_license_present": false,
+        "landing_standardized_license_present": false,
+        "author_copyright_notice_present": true,
+        "university_copyright_notice_present": true,
+        "operator_private_attributed_research_use_directed": true,
+        "legal_reuse_authorization_established": false,
+        "attribution_required": true,
+        "takedown_ready": true,
+        "adapt_or_remove_on_substantiated_complaint": true,
+        "public_redistribution_authorized": false,
+        "unrestricted_reuse_authorized": false,
+        "unrestricted_training_export_authorized": false,
+        "private_corpus_text_and_pdf_required": true
+      }
+    },
+    "review_scope": {
+      "const": {
+        "content_disposition": "narrow_only_candidate",
+        "ukrainian_canon_review_complete": false,
+        "scope_critic_complete": false,
+        "topic_gaps_closed": [],
+        "topic_gaps_narrowed": [],
+        "provisional_narrow_cells": [
+          "semantics",
+          "phraseology"
+        ],
+        "coverage_effect": "narrow_only_pending_ukrainian_canon_review"
+      }
+    },
+    "denominators": {
+      "const": {
+        "v2_source_units": 67041,
+        "v2_evaluation_identities": 9392,
+        "phase3_labels": 0,
+        "university_topic_areas": 26,
+        "university_sufficient": 5,
+        "university_partial": 21,
+        "university_missing": 0,
+        "candidate_additive_outside_v2_totals": true
+      }
+    },
+    "gates": {
+      "const": {
+        "database_ingest_authorized": false,
+        "retained_extracted_text_authorized": false,
+        "private_training_conversion_candidate": false,
+        "training_conversion_complete": false,
+        "normative_rule_authority": false,
+        "semantic_gold": false,
+        "source_universe_frozen": false,
+        "source_coverage_ready": false,
+        "phase3_complete": false,
+        "phase4_blocked": true
+      }
+    },
+    "residuals": {
+      "const": [
+        "Exact official bytes are privately custodied; Git retains metadata only.",
+        "Native exactness passed with zero flagged pages/chunks; semantic validation remains out of scope.",
+        "Cursor content-fit evidence may support NARROW_ONLY for semantics and phraseology but closes none.",
+        "Independent Ukrainian-canon review must adjudicate terminology, calques, and factual/etymological claims.",
+        "Root disposition remains required; Phase 3 stays incomplete and Phase 4 stays blocked.",
+        "Absent reuse license keeps PDF/text private and blocks public redistribution and unrestricted training export."
+      ]
+    },
+    "receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
