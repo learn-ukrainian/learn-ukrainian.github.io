@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fb13aba91ff4",
+  "session_id": "fleet-d41e3d881b7548949b0b6bec86d23d41",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T03:26:53.387068Z",
+  "branch": "cursor/phase3-6375-school-parent-context-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/inventory/phase3_school_parent_section_context_receipt_v1.json",
+    "scripts/projects/open_model_data/phase3_school_parent_section_context.py",
+    "tests/test_open_model_phase3_school_parent_section_context.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "5002a5832388",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T03:26:53.383929Z",
+    "agent_lines": 160,
+    "agent_removed": 63,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 160,
+    "total_lines_changed": 223,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
