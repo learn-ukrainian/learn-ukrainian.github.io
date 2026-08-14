@@ -4657,13 +4657,13 @@ describe('LexiconPractice', () => {
     // outline and no explanatory sentence — paronym already had the good pattern
     // (a distinction sentence on both correct and wrong picks). These bring the
     // other MC drills up to the same bar using data already in the deck payload.
-    test('choice ("Вибір"): wrong pick states the word ↔ meaning pairing', async () => {
+    test('choice ("Вибір") word-to-meaning wrong pick states word ↔ meaning pairing with EN subtitle (#6801)', async () => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
       const scope = within(screen.getByTestId('practice-choice'));
 
       const promptText = screen.getByText(/^Що означає «/).textContent ?? '';
-      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river' };
+      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river', іти: 'to go', та: 'and' };
       const promptWord = Object.keys(promptToGloss).find((word) => promptText.includes(word))!;
       const correctGloss = promptToGloss[promptWord];
 
@@ -4673,26 +4673,118 @@ describe('LexiconPractice', () => {
 
       await user.click(wrongButton);
 
-      expect(screen.getByTestId('practice-choice-feedback')).toHaveTextContent(
+      const feedback = screen.getByTestId('practice-choice-feedback');
+      expect(feedback).toHaveTextContent(
         `Неправильно. «${promptWord}» = ${correctGloss}.`,
+      );
+      expect(feedback).toHaveTextContent(
+        `Incorrect. «${promptWord}» = ${correctGloss}.`,
       );
     });
 
-    test('choice ("Вибір"): correct pick affirms the pairing', async () => {
+    test('choice ("Вибір") in mixed session: wrong pick shows teaching feedback panel and English subtitle pair (#6801)', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'choice')} autoStart initialMode="mixed" />);
+      const scope = within(await screen.findByTestId('practice-choice'));
+
+      const promptText = screen.getByText(/^Що означає «|^Яке слово означає «/).textContent ?? '';
+      const isWordToMeaning = promptText.includes('Що означає «');
+
+      const options = scope.getAllByRole('button');
+      const correctButton = options.find((button) => button.textContent?.includes(isWordToMeaning ? 'book' : 'книга'))!;
+      const wrongButton = options.find((button) => button !== correctButton)!;
+
+      await user.click(wrongButton);
+
+      const feedback = screen.getByTestId('practice-choice-feedback');
+      expect(feedback).toHaveTextContent(
+        'Неправильно. «книга» = book.',
+      );
+      expect(feedback).toHaveTextContent(
+        'Incorrect. «книга» = book.',
+      );
+    });
+
+    test('mixed session: antonym-mode «Що означає» miss mounts teaching panel (operator QA #6801)', async () => {
+      // Live A1 «світлий» declares antonym alongside choice. Antonym lacks a dedicated
+      // renderer, so the card falls through to the meaning-choice surface — same prompt
+      // the operator saw — while handleChoice used to skip choiceFeedbackFor (mode !==
+      // 'choice'), leaving only the status line. Homonym (магазин) is the same path.
+      const user = userEvent.setup();
+      render(
+        <LexiconPractice
+          initialDeck={sampleDeckWithOnlyMode('knyha', 'antonym')}
+          autoStart
+          initialMode="mixed"
+        />,
+      );
+      const scope = within(await screen.findByTestId('practice-antonym'));
+
+      expect(screen.getByText(/^Що означає «|^Яке слово означає «/)).toBeTruthy();
+
+      const promptText = screen.getByText(/^Що означає «|^Яке слово означає «/).textContent ?? '';
+      const isWordToMeaning = promptText.includes('Що означає «');
+      const options = scope.getAllByRole('button');
+      const correctButton = options.find((button) =>
+        button.textContent?.includes(isWordToMeaning ? 'book' : 'книга'),
+      )!;
+      const wrongButton = options.find((button) => button !== correctButton)!;
+
+      await user.click(wrongButton);
+
+      const feedback = screen.getByTestId('practice-choice-feedback');
+      expect(feedback).toHaveClass('mc-feedback', 'wrong');
+      expect(feedback).toHaveTextContent('Неправильно. «книга» = book.');
+      expect(feedback).toHaveTextContent('Incorrect. «книга» = book.');
+      // Status line still updates (operator saw this alone before the panel fix).
+      expect(document.querySelector('.lexicon-practice-status')?.textContent).toMatch(
+        /книга:\s*(Ще раз|Again)/,
+      );
+    });
+
+    test('mixed session: homonym-mode meaning-choice miss also mounts teaching panel (#6801)', async () => {
+      const user = userEvent.setup();
+      render(
+        <LexiconPractice
+          initialDeck={sampleDeckWithOnlyMode('knyha', 'homonym')}
+          autoStart
+          initialMode="mixed"
+        />,
+      );
+      const scope = within(await screen.findByTestId('practice-homonym'));
+      const promptText = screen.getByText(/^Що означає «|^Яке слово означає «/).textContent ?? '';
+      const isWordToMeaning = promptText.includes('Що означає «');
+      const options = scope.getAllByRole('button');
+      const correctButton = options.find((button) =>
+        button.textContent?.includes(isWordToMeaning ? 'book' : 'книга'),
+      )!;
+      const wrongButton = options.find((button) => button !== correctButton)!;
+
+      await user.click(wrongButton);
+
+      const feedback = screen.getByTestId('practice-choice-feedback');
+      expect(feedback).toHaveTextContent('Неправильно. «книга» = book.');
+    });
+
+    test('choice ("Вибір"): correct pick affirms the pairing with EN subtitle', async () => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
       const scope = within(screen.getByTestId('practice-choice'));
 
       const promptText = screen.getByText(/^Що означає «/).textContent ?? '';
-      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river' };
+      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river', іти: 'to go', та: 'and' };
       const promptWord = Object.keys(promptToGloss).find((word) => promptText.includes(word))!;
       const correctGloss = promptToGloss[promptWord];
 
       const correctButton = scope.getAllByRole('button').find((button) => button.textContent?.includes(correctGloss))!;
       await user.click(correctButton);
 
-      expect(screen.getByTestId('practice-choice-feedback')).toHaveTextContent(
+      const feedback = screen.getByTestId('practice-choice-feedback');
+      expect(feedback).toHaveTextContent(
         `Правильно! «${promptWord}» = ${correctGloss}.`,
+      );
+      expect(feedback).toHaveTextContent(
+        `Correct! «${promptWord}» = ${correctGloss}.`,
       );
     });
 

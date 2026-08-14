@@ -1164,8 +1164,23 @@ function choiceFeedbackFor(
   const gloss = glossLabel(selection.lemma);
   const pair = `«${lemma}» = ${gloss}.`;
   return option.correct
-    ? { kind: 'correct', textUk: `Правильно! ${pair}`, textEn: 'Correct!' }
-    : { kind: 'wrong', textUk: `Неправильно. ${pair}`, textEn: 'Incorrect.' };
+    ? { kind: 'correct', textUk: `Правильно! ${pair}`, textEn: `Correct! ${pair}` }
+    : { kind: 'wrong', textUk: `Неправильно. ${pair}`, textEn: `Incorrect. ${pair}` };
+}
+
+/**
+ * #6801: antonym/homonym index modes currently lack dedicated renderers, so
+ * `buildStaticCandidates` emits bare selections that fall through to the same
+ * word↔gloss MC surface as Вибір («Що означає …?» / «Яке слово означає …?»).
+ * Teaching feedback must follow that surface — not only `mode === 'choice'` —
+ * otherwise a mixed-session miss shows the status line with no red panel.
+ */
+function isMeaningChoiceSurface(selection: PracticeSelection): boolean {
+  return (
+    selection.mode === 'choice' ||
+    selection.mode === 'antonym' ||
+    selection.mode === 'homonym'
+  );
 }
 
 /**
@@ -3614,8 +3629,10 @@ function LexiconPracticeIsland({
       : null;
     // #6722: bring 'choice' ('Вибір') and 'classify' ('Група') up to the paronym bar —
     // a teaching sentence, not just a red ✗ / green outline.
+    // #6801: antonym/homonym reuse the meaning-choice surface in mixed sessions —
+    // teach those misses too (see isMeaningChoiceSurface).
     const nextChoiceFeedback =
-      selection.mode === 'choice'
+      isMeaningChoiceSurface(selection)
         ? choiceFeedbackFor(selection, option, learnerLevel)
         : selection.classify
           ? classifyFeedbackFor(selection, option, learnerLevel)
@@ -4935,10 +4952,17 @@ function PracticeItem({
             </li>
           ))}
         </ul>
-        {selection.mode === 'classify' ? (
+        {/* #6801: teach whenever feedback was computed — not classify-only.
+            Choice (and antonym/homonym surfaces that reuse this MC list) used to
+            compute choiceFeedback then mount nothing here. */}
+        {choiceFeedback ? (
           <DrillFeedbackPanel
             feedback={choiceFeedback}
-            testId="practice-classify-feedback"
+            testId={
+              selection.mode === 'classify'
+                ? 'practice-classify-feedback'
+                : 'practice-choice-feedback'
+            }
             showEnglishSubtitles={showEnglishSubtitles}
           />
         ) : null}
