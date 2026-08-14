@@ -1215,6 +1215,17 @@ function choiceFeedbackFor(
     : { kind: 'wrong', textUk: `Неправильно. ${pair}`, textEn: 'Incorrect.' };
 }
 
+/**
+ * #6789: matching used to leave a wrong pair as a bare «Спробуйте ще раз» notice
+ * with no explanatory sentence, unlike choice/classify/stress (#6722). The tapped
+ * left tile's word ↔ gloss pair is already attested deck payload (same `left`/
+ * `right` the board renders), so restate it — same bar, same wording as choice.
+ */
+function matchMissFeedback(pair: MatchPair): DrillFeedback {
+  const text = `«${pair.left}» = ${pair.right}.`;
+  return { kind: 'wrong', textUk: `Неправильно. ${text}`, textEn: `Incorrect. ${text}` };
+}
+
 function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
   const sets = selection.classify?.sets ?? [];
   if (!sets.length) return null;
@@ -1580,12 +1591,14 @@ function PracticeMatchBoard({
   pairs,
   instruction,
   isUkrainian,
+  showEnglishSubtitles,
   onComplete,
   onMatch,
 }: {
   pairs: MatchPair[];
   instruction?: ReactNode;
   isUkrainian: boolean;
+  showEnglishSubtitles: boolean;
   onComplete(): void;
   onMatch?: (pairIndex: number, rating: PracticeRating) => void;
 }) {
@@ -1595,6 +1608,7 @@ function PracticeMatchBoard({
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
   const [misses, setMisses] = useState<Record<number, number>>({});
   const [missNotice, setMissNotice] = useState(false);
+  const [missTeach, setMissTeach] = useState<DrillFeedback | null>(null);
   const completedRef = useRef(false);
   const missTimerRef = useRef<number | null>(null);
 
@@ -1620,6 +1634,7 @@ function PracticeMatchBoard({
     if (matched.has(index) || wrongPair) return;
     setSelectedLeft(index);
     setMissNotice(false);
+    setMissTeach(null);
   }
 
   function handleRightClick(originalIndex: number) {
@@ -1636,14 +1651,18 @@ function PracticeMatchBoard({
       setMatchedOrder(nextOrder);
       setSelectedLeft(null);
       setMissNotice(false);
+      setMissTeach(null);
       onMatch?.(selectedLeft, rating);
       return;
     }
     // Wrong pair: count the miss (feeds the eventual rating), flash red, and
     // keep a visible «try again» notice — never silently deselect (#6721).
+    // #6789: the notice alone de-selects but doesn't teach anything — pair it
+    // with the attested word ↔ gloss the learner missed (same bar as choice).
     setMisses((prev) => ({ ...prev, [selectedLeft]: (prev[selectedLeft] ?? 0) + 1 }));
     setWrongPair({ left: selectedLeft, right: originalIndex });
     setMissNotice(true);
+    setMissTeach(matchMissFeedback(pairs[selectedLeft]!));
     if (missTimerRef.current !== null) window.clearTimeout(missTimerRef.current);
     missTimerRef.current = window.setTimeout(() => {
       setWrongPair(null);
@@ -1773,6 +1792,11 @@ function PracticeMatchBoard({
           <ChromeDual uk="✗ Спробуйте ще раз" en="✗ Try again" />
         </p>
       ) : null}
+      <DrillFeedbackPanel
+        feedback={missTeach}
+        testId="practice-match-teach"
+        showEnglishSubtitles={showEnglishSubtitles}
+      />
       {allMatched ? (
         <p
           className="lexicon-practice-muted practice-match-success"
@@ -5072,6 +5096,7 @@ function PracticeItem({
             />
           )}
           isUkrainian={chromeLocale === 'uk'}
+          showEnglishSubtitles={showEnglishSubtitles}
           onComplete={onMatchingComplete}
           onMatch={(pairIndex, rating) => {
             matchedPairIndexesRef.current.add(pairIndex);

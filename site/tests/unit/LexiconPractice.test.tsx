@@ -5367,6 +5367,56 @@ describe('LexiconPractice', () => {
       }
     });
 
+    test('#6789 matching wrong pair teaches the missed word ↔ gloss, not just a de-select', async () => {
+      // lemma → gloss straight from matchingDeck() so the assertion tracks whichever
+      // lemma the session actually schedules first, rather than assuming an order.
+      const GLOSS_BY_LEMMA: Record<string, string> = {
+        книга: 'book',
+        робота: 'work',
+        місто: 'city',
+        школа: 'school',
+        сад: 'garden',
+        дім: 'house',
+      };
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      try {
+        const user = userEvent.setup({ delay: null });
+        const { container } = render(
+          <LexiconPractice initialDeck={matchingDeck()} autoStart initialMode="matching" />,
+        );
+        const leftCol = container.querySelector('[data-activity="match-left-column"]') as HTMLElement;
+        const rightCol = container.querySelector('[data-activity="match-right-column"]') as HTMLElement;
+
+        const firstLeft = within(leftCol).getAllByRole('button')[0]!;
+        const missedLemma = firstLeft.textContent!.trim();
+        const missedGloss = GLOSS_BY_LEMMA[missedLemma];
+        expect(missedGloss).toBeDefined();
+        const wrongRight = within(rightCol)
+          .getAllByRole('button')
+          .find((b) => b.getAttribute('data-original-index') !== '0')!;
+
+        // No teaching sentence before the miss.
+        expect(screen.queryByTestId('practice-match-teach')).not.toBeInTheDocument();
+
+        await user.click(firstLeft);
+        await user.click(wrongRight);
+
+        // The miss is taught: the attested word ↔ gloss pair the learner missed,
+        // same bar as choice/classify/stress (#6722), not an invented gloss.
+        const teach = screen.getByTestId('practice-match-teach');
+        expect(teach).toHaveTextContent(missedLemma);
+        expect(teach).toHaveTextContent(missedGloss!);
+
+        // Re-selecting the left tile after the flash clears the teaching sentence,
+        // matching the miss notice's own lifecycle.
+        await advanceFakeTimers(PRACTICE_MATCH_MISS_FLASH_MS);
+        await user.click(within(leftCol).getAllByRole('button')[0]!);
+        expect(screen.queryByTestId('practice-match-teach')).not.toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     test('#6723 stats tiles reflect the just-played session on return home', async () => {
       document.documentElement.dataset.chromeLocale = 'en';
       localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
