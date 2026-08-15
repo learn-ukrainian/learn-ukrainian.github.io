@@ -2003,14 +2003,34 @@ def _visible_source_lines(path: str, text: str) -> list[str]:
     return masked.splitlines()
 
 
+# Combining acute stress marks (U+0301) are pedagogical annotations, not
+# lexical identity: a stressed learner surface (м'яки́й) and its unstressed
+# ledger lemma (м'який) are the same word. Word tokens must admit the mark
+# mid-token (м'яки́й otherwise splits into м'яки + й and can never match), and
+# comparisons strip it — for candidate matching and VESUM lookup only. Stored
+# and displayed evidence always keeps the original bytes. (#5375)
+_COMBINING_STRESS_MARK = "\u0301"
+_TOKEN_WORD = "[^\\W_]+(?:\u0301+[^\\W_]*)*"
+_LEXICAL_TOKEN_PATTERN = re.compile(rf"{_TOKEN_WORD}(?:[’']{_TOKEN_WORD})*", flags=re.UNICODE)
+
+
+def _strip_combining_stress(text: str) -> str:
+    return text.replace(_COMBINING_STRESS_MARK, "")
+
+
+def _candidate_match_key(text: str) -> str:
+    """Comparison-only key for candidate resolution; never applied to evidence bytes."""
+    return _strip_combining_stress(text).casefold()
+
+
 def _lexical_tokens(value: str) -> list[str]:
     """Return Unicode word tokens without inferring any morphology."""
-    return [token.casefold() for token in re.findall(r"[^\W_]+(?:[’'][^\W_]+)*", value, flags=re.UNICODE)]
+    return [token.casefold() for token in _LEXICAL_TOKEN_PATTERN.findall(value)]
 
 
 def _contains_exact_token_sequence(value: str, phrase: str) -> bool:
-    value_tokens = _lexical_tokens(value)
-    phrase_tokens = _lexical_tokens(phrase)
+    value_tokens = [_candidate_match_key(token) for token in _lexical_tokens(value)]
+    phrase_tokens = [_candidate_match_key(token) for token in _lexical_tokens(phrase)]
     if not phrase_tokens:
         return False
     width = len(phrase_tokens)
@@ -2075,7 +2095,7 @@ def build_vocabulary_surface_candidates(
     vocabulary_material = target_materials.get("vocabulary")
     if not isinstance(vocabulary_material, Mapping):
         payload = {
-            "resolver_version": "vesum-surface-candidates.v1",
+            "resolver_version": "vesum-surface-candidates.v2",
             "vesum_status": "not_applicable",
             "lemmas": [],
         }
@@ -2093,14 +2113,13 @@ def build_vocabulary_surface_candidates(
 
     tokenized_lines: list[tuple[str, int, str, list[re.Match[str]]]] = []
     unique_tokens: set[str] = set()
-    token_pattern = re.compile(r"[^\W_]+(?:[’'][^\W_]+)*", flags=re.UNICODE)
     for path, material in learner_materials:
         for line_number, visible in enumerate(_visible_source_lines(path, target_material_text(material)), start=1):
-            matches = list(token_pattern.finditer(visible))
+            matches = list(_LEXICAL_TOKEN_PATTERN.finditer(visible))
             if not matches:
                 continue
             tokenized_lines.append((path, line_number, visible, matches))
-            unique_tokens.update(match.group(0).casefold() for match in matches)
+            unique_tokens.update(_candidate_match_key(match.group(0)) for match in matches)
 
     vesum_path = main_checkout_root(repo_root) / "data" / "vesum.db"
     vesum_status = "available"
@@ -2124,12 +2143,12 @@ def build_vocabulary_surface_candidates(
                     continue
                 surface = visible[window[0].start() : window[-1].end()]
                 surface_tokens = [match.group(0).casefold() for match in window]
-                if surface.casefold() == lemma.casefold():
+                if _candidate_match_key(surface) == _candidate_match_key(lemma):
                     verification = "exact lemma surface"
                 elif all(
                     any(
-                        str(match.get("lemma") or "").casefold() == lemma_token
-                        for match in verified.get(surface_token, [])
+                        _candidate_match_key(str(match.get("lemma") or "")) == _candidate_match_key(lemma_token)
+                        for match in verified.get(_candidate_match_key(surface_token), [])
                     )
                     for lemma_token, surface_token in zip(lemma_tokens, surface_tokens, strict=True)
                 ):
@@ -2162,7 +2181,7 @@ def build_vocabulary_surface_candidates(
             }
         )
     candidate_payload = {
-        "resolver_version": "vesum-surface-candidates.v1",
+        "resolver_version": "vesum-surface-candidates.v2",
         "vesum_status": vesum_status,
         "lemmas": lemma_entries,
     }

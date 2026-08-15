@@ -3129,6 +3129,84 @@ def test_regression_exposes_unintegrated_vocabulary_surfaces_hermetically() -> N
     }
 
 
+def test_vocabulary_candidates_match_across_combining_stress_marks() -> None:
+    """#5375: combining stress marks (U+0301) are stripped for candidate
+    matching/VESUM lookup only; candidate surfaces keep the original bytes."""
+
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        lemmas = {"твердого": "твердий"}
+        return {word: ([{"lemma": lemmas[word]}] if word in lemmas else []) for word in words}
+
+    content = (
+        # Stressed learner surface for the unstressed ledger lemma.
+        "М'яки́й знак пом'якшує приголосний.\n"
+        # Stressed inflected surface for the stressed ledger lemma.
+        "Це твердого́ відмінка.\n"
+        # Lexical drift: злиття is not a form of зли́то.
+        "Ніколи не пиши злиття тут.\n"
+    )
+    vocabulary = "- lemma: м'який знак\n- lemma: тверди́й\n- lemma: зли́то\n"
+    candidates = pbr.build_vocabulary_surface_candidates(
+        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
+    by_lemma = {entry["lemma"]: entry["candidates"] for entry in candidates["lemmas"]}
+
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["м'який знак"]} == {
+        ("М'яки́й знак", "exact lemma surface")
+    }
+    # Displayed/stored evidence bytes are preserved: the surface still carries U+0301.
+    assert by_lemma["м'який знак"][0]["surface"] == "М'яки́й знак"
+
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["тверди́й"]} == {
+        ("твердого́", "VESUM: тверди́й=твердого́")
+    }
+
+    assert by_lemma["зли́то"] == []
+
+
+def test_vocabulary_coverage_accepts_stressed_exact_surface() -> None:
+    """#5375: a packet-bound stressed surface with 'exact lemma surface'
+    verification passes coverage validation for the unstressed lemma."""
+    source_lookup = {"module.md": "М'яки́й знак пом'якшує приголосний.\n"}
+    coverage = {
+        "lemma": "м'який знак",
+        "status": "INTEGRATED",
+        "surface": "М'яки́й знак",
+        "verification": "exact lemma surface",
+        "evidence": [
+            {
+                "location": "module.md:1",
+                "excerpt": "М'яки́й знак пом'якшує приголосний.",
+                "supports": "The stressed learner surface is the ledger lemma.",
+            }
+        ],
+        "finding_id": None,
+    }
+    normalized = pbr._normalize_vocabulary_coverage(
+        [coverage],
+        expected_lemmas=["м'який знак"],
+        verdict="PASS",
+        findings=[],
+        source_lookup=source_lookup,
+        target_files={"content": "module.md"},
+    )
+    assert normalized[0]["surface"] == "М'яки́й знак"
+
+
 def test_vocabulary_coverage_rejects_stem_collision_and_comment_only_surface() -> None:
     source_lookup = {"module.md": "<!-- правий -->\nПравда не є поверхнею цільової леми.\n"}
     base = {
