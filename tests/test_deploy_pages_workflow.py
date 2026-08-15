@@ -121,6 +121,7 @@ def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
     assert "push:\n    branches: [main]" in trigger_block
     assert "workflow_dispatch:" in trigger_block
     assert workflow["permissions"]["actions"] == "read"
+    assert workflow["permissions"]["deployments"] == "read"
 
     eligibility = workflow["jobs"]["auto-deploy-eligibility"]
     assert eligibility["if"] == "github.event_name == 'push'"
@@ -132,7 +133,7 @@ def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
     assert "outputs.deploy == 'true'" in deploy["if"]
 
     preflight = "\n".join(step.get("run", "") for step in eligibility["steps"])
-    assert "actions/workflows/deploy-pages.yml/runs" in preflight
+    assert "deployments?environment=github-pages" in preflight
     assert "git cat-file -e" in preflight
     assert "git merge-base --is-ancestor" in preflight
     assert "git diff --no-renames --name-only --diff-filter=ACDMRT -z" in preflight
