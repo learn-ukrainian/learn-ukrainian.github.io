@@ -1382,6 +1382,39 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
     )
 
 
+def _warn_node_modules_integrity() -> None:
+    """Advisory-only node_modules symlink-corruption probe (#6818 follow-up).
+
+    `_provision_data_symlinks` symlinks the primary's `node_modules` and
+    `site/node_modules` directly into every dispatch worktree — any write a
+    worktree makes through that path lands in the primary's real files
+    (#6805 incident). This probe DETECTS and RECORDS such corruption; per the
+    K3-reviewed design it never blocks a dispatch and never repairs here —
+    auto-repair is gated on the Node-version pin landing first and is a
+    separate operator decision (see check_node_modules_integrity.py). Fails
+    open on any probe error, same contract as the primary-integrity watchdog.
+    """
+    try:
+        try:
+            from scripts.audit.check_node_modules_integrity import (
+                check_node_modules_integrity,
+            )
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_node_modules_integrity import check_node_modules_integrity
+
+        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+    except Exception as exc:
+        print(
+            f"⚠️  node_modules-integrity probe errored ({type(exc).__name__}: {exc}); "
+            "proceeding — detection only, never blocks dispatch",
+            file=sys.stderr,
+        )
+        return
+
+    if not ok:
+        print(f"⚠️  {message}", file=sys.stderr)
+
+
 def _warn_if_monitor_api_unreachable() -> None:
     """Make a dead local Monitor API visible without making dispatch depend on it.
 
@@ -4074,6 +4107,35 @@ def _run_worker(
             file=sys.stderr,
         )
 
+    # Post-worker node_modules-integrity sweep (#6818 follow-up): same shape
+    # as the primary-integrity sweep above, but for the symlink conduit
+    # `_provision_data_symlinks` opens into every worktree's node_modules.
+    # ALERT-only — never blocks, never repairs; attributes this worker's
+    # task_id/agent/pid while they're still known.
+    try:
+        try:
+            from scripts.audit.check_node_modules_integrity import (
+                check_node_modules_integrity,
+            )
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_node_modules_integrity import check_node_modules_integrity
+
+        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        if not nmi_ok:
+            _append_dispatch_event(
+                "node_modules_integrity_post_worker",
+                task_id=task_id,
+                agent=agent,
+                ok=nmi_ok,
+                detail=nmi_message,
+            )
+    except Exception as nmi_exc:
+        print(
+            f"[delegate] WARNING: node_modules-integrity post-worker sweep failed: "
+            f"{type(nmi_exc).__name__}: {nmi_exc}",
+            file=sys.stderr,
+        )
+
     if timed_out:
         _append_dispatch_event(
             "dispatch_silence_timeout",
@@ -4199,6 +4261,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if primary_integrity_error:
         print(primary_integrity_error, file=sys.stderr)
         return 2
+
+    _warn_node_modules_integrity()
 
     _warn_if_monitor_api_unreachable()
     if bool(getattr(args, "dry_run", False)):

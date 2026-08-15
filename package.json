@@ -82,6 +82,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": [
     "packages/*"
   ],
