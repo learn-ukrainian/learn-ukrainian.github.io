@@ -63,6 +63,29 @@ def _stub_primary_integrity_sweep(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _stub_node_modules_integrity_sweep(monkeypatch):
+    """Keep _run_worker/cmd_dispatch tests hermetic from the ambient checkout.
+
+    Same rationale as ``_stub_primary_integrity_sweep`` above (#6818
+    follow-up sweep, same shape): the node_modules-integrity watchdog walks
+    real symlinks under delegate._REPO_ROOT and checks a real acpx sentinel.
+    A CI workspace that hasn't provisioned the project-local acpx install (or
+    whose node_modules layout the sentinel doesn't expect) reads as ALERT, so
+    the sweep appends node_modules_integrity_post_worker to
+    dispatch_events.jsonl — breaking tests that assert on that file. The
+    sweep itself is covered against fixture repos in
+    tests/test_check_node_modules_integrity.py.
+    """
+    import scripts.audit.check_node_modules_integrity as nmi
+
+    monkeypatch.setattr(
+        nmi,
+        "check_node_modules_integrity",
+        lambda *_args, **_kwargs: (True, "node_modules integrity ok (test stub)"),
+    )
+
+
+@pytest.fixture(autouse=True)
 def _fixture_runtime_tmp_root(tmp_path, monkeypatch):
     """Keep dispatch-time orphan sweeps inside each test fixture only."""
     runtime_tmp = tmp_path / "runtime-tmp"
