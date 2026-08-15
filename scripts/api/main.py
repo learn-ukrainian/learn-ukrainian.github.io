@@ -1003,6 +1003,37 @@ def _primary_integrity_canary() -> bool:
     return ok
 
 
+def _node_modules_integrity_canary() -> bool:
+    """Read-only diagnostic for symlink corruption of the primary's node_modules.
+
+    #6818 follow-up: `_provision_data_symlinks` (`scripts/delegate.py`)
+    symlinks the primary's `node_modules`/`site/node_modules` directly into
+    every dispatch worktree, so a worktree write lands in the primary's real
+    files (#6805 incident). ALERT-only, same posture as
+    `_primary_integrity_canary` — detects and records, never repairs. Never
+    raises: the canary must not break health collection.
+    """
+    try:
+        from scripts.audit.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
+            check_node_modules_integrity,
+        )
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
+            check_node_modules_integrity,
+        )
+    try:
+        ok, message = check_node_modules_integrity(
+            PROJECT_ROOT,
+            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+        )
+    except Exception:
+        logger.exception("node_modules-integrity canary failed to run")
+        return True  # fail-open: don't raise a false alarm on canary error
+    if not ok:
+        logger.warning("node_modules-integrity canary: %s", message)
+    return ok
+
+
 def _collect_health_orient_data() -> dict:
     return {
         "api": True,
@@ -1012,6 +1043,7 @@ def _collect_health_orient_data() -> dict:
         "git_core_bare_ok": _core_bare_canary(),
         "node_modules_symlinks_ok": _self_symlink_canary(),
         "primary_integrity_ok": _primary_integrity_canary(),
+        "node_modules_integrity_ok": _node_modules_integrity_canary(),
     }
 
 
