@@ -3796,6 +3796,21 @@ function LexiconPracticeIsland({
         : { pendingDue: [], pendingNew: [], done: [] },
     [dailySnapshot, reviewLog],
   );
+  // #6839: the k3-stats tile row used to read straight off `dailyRows`, i.e.
+  // snapshot-membership — with ~1,371 A1 items and only 12 in the daily
+  // snapshot, a normal `Mix` session essentially never lands on a snapshot
+  // lemma, so the tiles structurally couldn't move for a typical session.
+  // Drive them off the session's own live counters instead — `dailyRows`
+  // still backs the "Words of the day" deck list below (#6786 deck labels
+  // stay snapshot-scoped), just not these three numbers.
+  const dashboardStats = useMemo(
+    () => ({
+      due: reviewsCompleted,
+      new: dailyNewCount,
+      done: reviewsCompleted + sessionNewIntroduced,
+    }),
+    [dailyNewCount, reviewsCompleted, sessionNewIntroduced],
+  );
   const stageMode: PracticeModeFilter = selection?.mode ?? mode;
   const visibleStageMode = visiblePracticeMode(stageMode);
   const stageTitleUk =
@@ -4007,15 +4022,15 @@ function LexiconPracticeIsland({
 
             <div className="k3-stats" data-testid="practice-dashboard-stats" role="group" aria-label={CHROME_STRINGS[chromeLocale]['practice.stats']}>
               <div className="k3-stat">
-                <span className="k3-stat-value">{dailyRows.pendingDue.length}</span>
+                <span className="k3-stat-value">{dashboardStats.due}</span>
                 <span className="k3-stat-label"><ChromeText k="practice.statusDue" /></span>
               </div>
               <div className="k3-stat">
-                <span className="k3-stat-value">{dailyRows.pendingNew.length}</span>
+                <span className="k3-stat-value">{dashboardStats.new}</span>
                 <span className="k3-stat-label"><ChromeText k="practice.statusNew" /></span>
               </div>
               <div className="k3-stat">
-                <span className="k3-stat-value">{dailyRows.done.length}</span>
+                <span className="k3-stat-value">{dashboardStats.done}</span>
                 <span className="k3-stat-label"><ChromeText k="practice.statusDone" /></span>
               </div>
               <div className="k3-stat">
