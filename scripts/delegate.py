@@ -2103,6 +2103,8 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
 # read-only dispatches at repo root and inside dispatch worktrees (#6803).
 # Keep this list precise: committed ``.entire/`` config (settings, allowlist,
 # private-recall) must still fail the guard when a worker edits it.
+# Force-added tracked files under these prefixes are NOT exempt: exemption
+# requires an ignored/untracked porcelain status at snapshot time (#6803 r2).
 _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES = (
     ".entire/metadata",
     ".entire/logs",
@@ -2110,6 +2112,7 @@ _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES = (
     ".entire/redactors/local",
 )
 _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
+_READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES = frozenset({"??", "!!"})
 
 
 def _is_read_only_runtime_telemetry_path(path: str) -> bool:
@@ -2125,19 +2128,48 @@ def _is_read_only_runtime_telemetry_path(path: str) -> bool:
     )
 
 
+def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
+    """Return whether a porcelain status is ignored/untracked (not git-tracked).
+
+    Absent entries are treated as non-tracked for the exemption gate: a clean
+    tracked file is invisible in the snapshot until it mutates, and the
+    post-mutation status then fails this check.
+    """
+    if state is None:
+        return True
+    return state[:2] in _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES
+
+
+def _is_read_only_runtime_telemetry_exemption(
+    path: str, *, before_state: str | None, after_state: str | None
+) -> bool:
+    """Exempt harness telemetry only when it is not tracked at snapshot time."""
+    if not _is_read_only_runtime_telemetry_path(path):
+        return False
+    return _is_read_only_untracked_or_ignored_status(
+        before_state
+    ) and _is_read_only_untracked_or_ignored_status(after_state)
+
+
 def _read_only_mutation_paths(
     before: dict[str, str], after: dict[str, str]
 ) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
-    Harness-generated ``.entire/`` telemetry is excluded: the runtime owns those
-    writes, so they are not evidence that a read-only worker mutated the tree.
+    Harness-generated ``.entire/`` telemetry is excluded when it is ignored or
+    untracked: the runtime owns those writes, so they are not evidence that a
+    read-only worker mutated the tree. Tracked paths under the same prefixes
+    (including force-added files) still trip the guard.
     """
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
-        and not _is_read_only_runtime_telemetry_path(path)
+        and not _is_read_only_runtime_telemetry_exemption(
+            path,
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
     )
 
 

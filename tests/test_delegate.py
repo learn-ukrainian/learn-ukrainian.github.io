@@ -2245,6 +2245,13 @@ def test_read_only_mutation_paths_ignore_entire_telemetry_only():
     after_mixed = {**after_telemetry, "tracked.txt": " M"}
     assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
 
+    # Force-added tracked file under an exempted prefix must still trip (#6803 r2).
+    tracked_telemetry = ".entire/metadata/force-added.jsonl"
+    assert (
+        delegate._read_only_mutation_paths({}, {tracked_telemetry: " M"})
+        == [tracked_telemetry]
+    )
+
 
 @pytest.mark.parametrize(
     ("layout", "repo_relative"),
@@ -2353,6 +2360,70 @@ def test_read_only_dispatch_still_fails_on_tracked_mutation_with_entire_telemetr
     assert "tracked.txt" in state["read_only_checkout_post"]
     for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
         assert state["read_only_checkout_post"][relative_path] == "!!"
+
+
+def test_read_only_dispatch_fails_on_force_added_entire_metadata_mutation(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6803 r2: force-added tracked file under ``.entire/metadata/`` still trips.
+
+    Path-prefix exemption alone would silently ignore this mutation. The guard
+    must require ignored/untracked porcelain status before exempting.
+    """
+    checkout = (tmp_path / "force-added-entire").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    force_added = Path(".entire/metadata/force-added-session.jsonl")
+    force_target = checkout / force_added
+    force_target.parent.mkdir(parents=True, exist_ok=True)
+    force_target.write_text("baseline tracked telemetry\n", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "-f", str(force_added)],
+        cwd=checkout,
+        check=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "force-add entire metadata"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    task_id = "read-only-force-added-entire-metadata"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+
+    def mutate_force_added(*_args, **_kwargs):
+        force_target.write_text("read-only worker mutation\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=mutate_force_added):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    relative = force_added.as_posix()
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [relative]
+    assert state["last_error"] == f"read-only checkout mutation detected: {relative}"
+    assert state["read_only_checkout_post"][relative] == " M"
 
 
 def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
