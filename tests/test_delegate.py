@@ -2188,6 +2188,244 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     assert all((worktree / relative_path).exists() for relative_path in leaked_paths)
 
 
+_ENTIRE_HARNESS_TELEMETRY_PATHS = (
+    ".entire/logs/entire.log",
+    ".entire/metadata/fleet-a7162bf1c3c24bd7a700de667aae66a6/full.jsonl",
+    ".entire/metadata/fleet-a7162bf1c3c24bd7a700de667aae66a6/prompt.txt",
+    ".entire/tmp/pre-prompt-fleet-a7162bf1c3c24bd7a700de667aae66a6.json",
+)
+
+
+def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
+    """Git repo with production-shaped ``.entire/`` ignore rules + one tracked file."""
+    _init_git_repo_for_test(repo, monkeypatch)
+    entire = repo / ".entire"
+    entire.mkdir(parents=True, exist_ok=True)
+    (entire / ".gitignore").write_text(
+        "tmp/\nsettings.local.json\nmetadata/\nlogs/\nredactors/local/\n",
+        encoding="utf-8",
+    )
+    (repo / "tracked.txt").write_text("baseline\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".entire/.gitignore", "tracked.txt"], cwd=repo, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "fixture"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+
+def _write_entire_harness_telemetry(repo: Path) -> None:
+    for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
+        target = repo / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("harness telemetry\n", encoding="utf-8")
+
+
+def test_read_only_runtime_telemetry_path_classification():
+    """#6803: only harness Entire residue is exempt; committed config is not."""
+    for path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
+        assert delegate._is_read_only_runtime_telemetry_path(path)
+    assert delegate._is_read_only_runtime_telemetry_path(".entire/settings.local.json")
+    assert not delegate._is_read_only_runtime_telemetry_path(".entire/settings.json")
+    assert not delegate._is_read_only_runtime_telemetry_path(".entire/private-recall.json")
+    assert not delegate._is_read_only_runtime_telemetry_path("tracked.txt")
+    assert not delegate._is_read_only_runtime_telemetry_path(
+        "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md"
+    )
+
+
+def test_read_only_mutation_paths_ignore_entire_telemetry_only():
+    """Unit half of #6803: telemetry-only delta is empty; mixed delta keeps real edits."""
+    before: dict[str, str] = {}
+    after_telemetry = {path: "!!" for path in _ENTIRE_HARNESS_TELEMETRY_PATHS}
+    assert delegate._read_only_mutation_paths(before, after_telemetry) == []
+
+    after_mixed = {**after_telemetry, "tracked.txt": " M"}
+    assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
+
+    # Force-added tracked file under an exempted prefix must still trip (#6803 r2).
+    tracked_telemetry = ".entire/metadata/force-added.jsonl"
+    assert (
+        delegate._read_only_mutation_paths({}, {tracked_telemetry: " M"})
+        == [tracked_telemetry]
+    )
+
+
+@pytest.mark.parametrize(
+    ("layout", "repo_relative"),
+    [
+        ("repo-root", Path(".")),
+        ("worktree", Path(".worktrees") / "dispatch" / "cursor" / "infra-6803-readonly-guard-entire"),
+    ],
+    ids=["repo-root", "worktree"],
+)
+def test_read_only_dispatch_allows_entire_harness_telemetry(
+    layout,
+    repo_relative,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6803: harness ``.entire/**`` alone must not fail read-only (root + worktree)."""
+    checkout = (tmp_path / repo_relative).resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = f"read-only-entire-telemetry-{layout}"
+    state_path = delegate._state_path(task_id)
+    state = {"task_id": task_id, "cwd": str(checkout)}
+    if layout == "worktree":
+        state["worktree_path"] = str(checkout)
+        state["worktree_base"] = "main"
+    delegate._write_state_atomic(state_path, state)
+
+    def telemetry_only_side_effect(*_args, **_kwargs):
+        _write_entire_harness_telemetry(checkout)
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=telemetry_only_side_effect):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["last_error"] is None
+    for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
+        assert state["read_only_checkout_post"][relative_path] == "!!"
+        assert (checkout / relative_path).exists()
+
+
+@pytest.mark.parametrize(
+    ("layout", "repo_relative"),
+    [
+        ("repo-root", Path(".")),
+        ("worktree", Path(".worktrees") / "dispatch" / "cursor" / "infra-6803-readonly-guard-entire"),
+    ],
+    ids=["repo-root", "worktree"],
+)
+def test_read_only_dispatch_still_fails_on_tracked_mutation_with_entire_telemetry(
+    layout,
+    repo_relative,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6803: genuine edits still fail even when harness ``.entire/**`` is also present."""
+    checkout = (tmp_path / repo_relative).resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = f"read-only-entire-plus-edit-{layout}"
+    state_path = delegate._state_path(task_id)
+    state = {"task_id": task_id, "cwd": str(checkout)}
+    if layout == "worktree":
+        state["worktree_path"] = str(checkout)
+        state["worktree_base"] = "main"
+    delegate._write_state_atomic(state_path, state)
+
+    def mixed_side_effect(*_args, **_kwargs):
+        _write_entire_harness_telemetry(checkout)
+        (checkout / "tracked.txt").write_text("task authored edit\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=mixed_side_effect):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["tracked.txt"]
+    assert state["last_error"] == "read-only checkout mutation detected: tracked.txt"
+    assert "tracked.txt" in state["read_only_checkout_post"]
+    for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
+        assert state["read_only_checkout_post"][relative_path] == "!!"
+
+
+def test_read_only_dispatch_fails_on_force_added_entire_metadata_mutation(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6803 r2: force-added tracked file under ``.entire/metadata/`` still trips.
+
+    Path-prefix exemption alone would silently ignore this mutation. The guard
+    must require ignored/untracked porcelain status before exempting.
+    """
+    checkout = (tmp_path / "force-added-entire").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    force_added = Path(".entire/metadata/force-added-session.jsonl")
+    force_target = checkout / force_added
+    force_target.parent.mkdir(parents=True, exist_ok=True)
+    force_target.write_text("baseline tracked telemetry\n", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "-f", str(force_added)],
+        cwd=checkout,
+        check=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "force-add entire metadata"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    task_id = "read-only-force-added-entire-metadata"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+
+    def mutate_force_added(*_args, **_kwargs):
+        force_target.write_text("read-only worker mutation\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=mutate_force_added):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    relative = force_added.as_posix()
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [relative]
+    assert state["last_error"] == f"read-only checkout mutation detected: {relative}"
+    assert state["read_only_checkout_post"][relative] == " M"
+
+
 def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
     tmp_tasks_dir,
     tmp_path,
