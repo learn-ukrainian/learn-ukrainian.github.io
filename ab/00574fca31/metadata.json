@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ab00574fca31",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6802-pages-deploy-anchor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/deploy-pages.yml",
+    "tests/test_deploy_pages_workflow.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ab/00574fca31/0/metadata.json",
+      "transcript": "/ab/00574fca31/0/full.jsonl",
+      "compact_transcript": "/ab/00574fca31/0/transcript.jsonl",
+      "content_hash": "/ab/00574fca31/0/content_hash.txt",
+      "prompt": "/ab/00574fca31/0/prompt.txt"
+    }
+  ]
+}
