@@ -10,6 +10,16 @@ import lessonFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson
 import lessonSupportFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson-support.v1.valid.fixture.json';
 import invalidLessonSupportFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson-support.v1.invalid.fixture.json';
 import { ActivityPlayer, LessonViewer } from '../../../packages/activity-kit/src';
+import {
+  Cloze as KitCloze,
+  ClozePassage as KitClozePassage,
+  MatchUp as KitMatchUp,
+  TrueFalse as KitTrueFalse,
+  TrueFalseQuestion as KitTrueFalseQuestion,
+} from '../../../packages/activity-kit/src';
+import SiteCloze, { ClozePassage as SiteClozePassage } from '@site/src/components/Cloze';
+import SiteMatchUp from '@site/src/components/MatchUp';
+import SiteTrueFalse, { TrueFalseQuestion as SiteTrueFalseQuestion } from '@site/src/components/TrueFalse';
 import type {
   ActivityEditOperation,
   LuActivityV1,
@@ -518,4 +528,97 @@ describe('lesson document v1 contract', () => {
       expect(container.querySelector('[data-testid="block-note-rent-04-multiple-choice"]')).toBeNull();
     });
   });
+});
+
+describe('golden envelope contract', () => {
+  test('pins the id pattern, level const, and provenance triple on every golden fixture', () => {
+    for (const fixture of fixtures) {
+      expect(fixture.id).toMatch(/^[a-z0-9][a-z0-9-]*$/);
+      expect(fixture.level).toBe('b1');
+      expect(fixture.provenance.source).toEqual(expect.any(String));
+      expect(fixture.provenance.generator).toEqual(expect.any(String));
+      expect(fixture.provenance.gates).toContain('schema');
+    }
+  });
+});
+
+describe('site shim surface', () => {
+  test('re-exports the kit implementations at runtime', () => {
+    expect(SiteCloze).toBe(KitCloze);
+    expect(SiteClozePassage).toBe(KitClozePassage);
+    expect(SiteMatchUp).toBe(KitMatchUp);
+    expect(SiteTrueFalse).toBe(KitTrueFalse);
+    expect(SiteTrueFalseQuestion).toBe(KitTrueFalseQuestion);
+  });
+
+  type PropAnnotations = Record<string, { schemaDescription: boolean; ukrainianText?: string }>;
+
+  function parseInterfaceProps(source: string, interfaceName: string): PropAnnotations {
+    const body = source.match(
+      new RegExp(`export interface ${interfaceName} \\{(?<body>[\\s\\S]*?)\\n\\}`),
+    )?.groups?.body;
+    expect(body, `interface ${interfaceName} not found`).toBeDefined();
+
+    const props: PropAnnotations = {};
+    let pendingSchema = false;
+    let pendingUkrainian: string | undefined;
+    for (const line of body!.split('\n')) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('* @schemaDescription')) {
+        pendingSchema = true;
+      } else if (trimmed.startsWith('* @ukrainianText')) {
+        pendingUkrainian = trimmed.replace('* @ukrainianText', '').trim();
+      } else {
+        const prop = trimmed.match(/^(?<name>[a-zA-Z][a-zA-Z0-9]*)\??:/)?.groups?.name;
+        if (prop) {
+          props[prop] = { schemaDescription: pendingSchema, ukrainianText: pendingUkrainian };
+        }
+        pendingSchema = false;
+        pendingUkrainian = undefined;
+      }
+    }
+    return props;
+  }
+
+  const SHIM_PAIRS = [
+    {
+      shim: join(repoRoot, 'site/src/components/Cloze.tsx'),
+      kit: join(kitRoot, 'src/components/Cloze.tsx'),
+      interfaces: ['ClozeBlank', 'ClozePassageProps', 'ClozeProps'],
+    },
+    {
+      shim: join(repoRoot, 'site/src/components/TrueFalse.tsx'),
+      kit: join(kitRoot, 'src/components/TrueFalse.tsx'),
+      interfaces: ['TrueFalseQuestionProps', 'TrueFalseItem', 'TrueFalseProps'],
+    },
+    {
+      shim: join(repoRoot, 'site/src/components/MatchUp.tsx'),
+      kit: join(kitRoot, 'src/components/MatchUp.tsx'),
+      interfaces: ['MatchPair', 'MatchUpProps'],
+    },
+  ];
+
+  test.each(SHIM_PAIRS)(
+    '$shim mirrors the kit prop surface and annotation presence',
+    ({ shim, kit, interfaces }) => {
+      const shimSource = readFileSync(shim, 'utf8');
+      const kitSource = readFileSync(kit, 'utf8');
+
+      for (const interfaceName of interfaces) {
+        const shimProps = parseInterfaceProps(shimSource, interfaceName);
+        const kitProps = parseInterfaceProps(kitSource, interfaceName);
+
+        // Same prop names, same schemaDescription/ukrainianText annotation surface.
+        expect(shimProps).toEqual(kitProps);
+
+        // Every schema-annotated prop carries the ukrainianText tag the lesson
+        // schema generator (scripts/build/generate_lesson_schema.py) reads.
+        for (const [prop, annotations] of Object.entries(kitProps)) {
+          if (annotations.schemaDescription) {
+            expect(annotations.ukrainianText, `${interfaceName}.${prop}`).toMatch(/^(true|false)$/);
+          }
+        }
+      }
+    },
+  );
 });
