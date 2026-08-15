@@ -2288,15 +2288,15 @@ def _run(args: argparse.Namespace) -> int:
                 use_generator=use_generator,
                 obligation_checklist=obligation_checklist,
             )
-        _persist_llm_qg_result(
-            level=level,
-            slug=slug,
-            module_dir=module_dir,
-            llm_qg=llm_qg,
-            reviewer=_reviewer_for_writer(writer, llm_qg_reviewer_override),
-            source=llm_qg_source,
-            prompt_hash=expected_llm_qg_prompt_hash,
-        )
+            _persist_llm_qg_result(
+                level=level,
+                slug=slug,
+                module_dir=module_dir,
+                llm_qg=llm_qg,
+                reviewer=_reviewer_for_writer(writer, llm_qg_reviewer_override),
+                source=llm_qg_source,
+                prompt_hash=expected_llm_qg_prompt_hash,
+            )
         aggregate = llm_qg["aggregate"]
         tracker.emit(
             "review_score",

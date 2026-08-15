@@ -9,6 +9,7 @@ API and certification code a queryable source of truth.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -18,7 +19,7 @@ import subprocess
 import time
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from contextlib import closing, suppress
+from contextlib import closing, contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -209,14 +210,40 @@ def _repository_root(checkout_root: Path | None = None) -> Path:
 
 
 def circuit_state_path(path: Path | None = None) -> Path:
-    """Return the configured live Tier-2 circuit state path."""
+    """Return the configured live Tier-2 circuit state path.
+
+    The implicit circuit state belongs to the primary checkout that owns Git's
+    common directory, matching the shared LLM-QG SQLite store. An explicit
+    environment override is the only path override for that process.
+    """
     if path is not None:
         return path
-    return Path(os.environ.get(CIRCUIT_ENV_VAR, str(DEFAULT_CIRCUIT_STATE_PATH)))
+    configured = os.environ.get(CIRCUIT_ENV_VAR)
+    if configured is not None:
+        return Path(configured)
+    return _repository_root() / "data" / "telemetry" / "llm_qg_live_circuit.json"
 
 
 def _now_z() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _parse_iso_timestamp(ts: str | None) -> float:
+    """Parse an ISO-8601 timestamp string into a float epoch timestamp.
+
+    Handles 'Z', '+00:00', variable microsecond precision, or missing timezone.
+    Returns 0.0 on malformed input.
+    """
+    if not ts:
+        return 0.0
+    try:
+        cleaned = ts.replace("Z", "+00:00") if ts.endswith("Z") else ts
+        dt = datetime.fromisoformat(cleaned)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=UTC)
+        return dt.timestamp()
+    except (ValueError, TypeError):
+        return 0.0
 
 
 def _json_dumps(value: Any) -> str:
@@ -349,6 +376,282 @@ def init_db(path: Path | None = None) -> Path:
     return resolved
 
 
+def discover_worktree_dbs(repo_root: Path | None = None) -> list[Path]:
+    """Discover existing worktree-scoped LLM-QG database files.
+
+    Returns distinct existing database paths belonging to linked worktrees,
+    excluding the primary checkout's shared database.
+    """
+    try:
+        primary_root = _repository_root(repo_root)
+    except RuntimeError:
+        primary_root = repo_root or LIVE_REPO_ROOT
+
+    primary_db = (primary_root / "data" / "telemetry" / "llm_qg.db").resolve()
+    discovered: set[Path] = set()
+
+    # 1. Parse git worktree list --porcelain
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(primary_root), "worktree", "list", "--porcelain"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if proc.returncode == 0:
+            for line in proc.stdout.splitlines():
+                if line.startswith("worktree "):
+                    wt_dir = Path(line.split(" ", 1)[1].strip())
+                    candidate = wt_dir / "data" / "telemetry" / "llm_qg.db"
+                    if candidate.is_file():
+                        resolved = candidate.resolve()
+                        if resolved != primary_db:
+                            discovered.add(resolved)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+    # 2. Inspect .worktrees/ directory if present
+    worktrees_dir = primary_root / ".worktrees"
+    if worktrees_dir.is_dir():
+        try:
+            for candidate in worktrees_dir.glob("**/data/telemetry/llm_qg.db"):
+                if candidate.is_file():
+                    resolved = candidate.resolve()
+                    if resolved != primary_db:
+                        discovered.add(resolved)
+        except OSError:
+            pass
+
+    return sorted(discovered)
+
+
+def migrate_worktree_dbs(
+    primary_path: Path | None = None,
+    worktree_dbs: Sequence[Path] | None = None,
+    *,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Migrate worktree-scoped LLM-QG databases into the primary store.
+
+    Copies runs from all source DBs into the primary store, preserving full
+    append-only history across gate versions and prompt hashes. If the same
+    run_id exists in both primary and source, the row with the newer created_at
+    timestamp is retained.
+
+    Source databases are opened read-only and never altered. Busy source databases
+    are retried with exponential backoff.
+
+    Returns migration stats:
+    {
+        "discovered_dbs": int,
+        "scanned_rows": int,
+        "migrated_rows": int,
+        "skipped_rows": int,
+        "skipped_sources": list[str],
+    }
+    """
+    target_db = init_db(primary_path)
+    target_resolved = target_db.resolve()
+
+    if worktree_dbs is None:
+        source_paths = discover_worktree_dbs(repo_root=repo_root)
+    else:
+        source_paths = [Path(p).resolve() for p in worktree_dbs]
+
+    valid_sources = [p for p in source_paths if p.is_file() and p != target_resolved]
+    skipped_sources: list[str] = [
+        str(p)
+        for p in source_paths
+        if (not p.is_file() or p == target_resolved) and p != target_resolved
+    ]
+
+    stats: dict[str, Any] = {
+        "discovered_dbs": len(valid_sources),
+        "scanned_rows": 0,
+        "migrated_rows": 0,
+        "skipped_rows": 0,
+        "skipped_sources": skipped_sources,
+    }
+
+    if not valid_sources:
+        return stats
+
+    candidates_by_run_id: dict[str, dict[str, Any]] = {}
+
+    for src_path in valid_sources:
+        def _read_source(path: Path = src_path) -> tuple[list[dict[str, Any]], dict[str, list[dict[str, Any]]]] | None:
+            with closing(_connect_sqlite_db(path, writable=False)) as src_conn:
+                src_conn.row_factory = sqlite3.Row
+                table_check = src_conn.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='llm_qg_runs'"
+                ).fetchone()
+                if not table_check:
+                    return None
+
+                raw_rows = src_conn.execute("SELECT * FROM llm_qg_runs").fetchall()
+                run_rows = [dict(r) for r in raw_rows]
+
+                findings_by_run: dict[str, list[dict[str, Any]]] = {}
+                findings_check = src_conn.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='llm_qg_findings'"
+                ).fetchone()
+                if findings_check:
+                    f_rows = src_conn.execute(
+                        """
+                        SELECT run_id, category, severity, file, quote, replacement, payload_json
+                        FROM llm_qg_findings
+                        """
+                    ).fetchall()
+                    for f in f_rows:
+                        f_dict = dict(f)
+                        r_id = str(f_dict.pop("run_id"))
+                        findings_by_run.setdefault(r_id, []).append(f_dict)
+
+                return run_rows, findings_by_run
+
+        try:
+            result = _run_with_lock_retry(_read_source)
+            if result is None:
+                continue
+            run_rows, findings_by_run = result
+            for r in run_rows:
+                stats["scanned_rows"] += 1
+                run_id = str(r.get("run_id") or "")
+                if not run_id:
+                    continue
+                created_at = str(r.get("created_at") or "")
+                curr = candidates_by_run_id.get(run_id)
+                if curr is None or _parse_iso_timestamp(created_at) > _parse_iso_timestamp(curr["created_at"]):
+                    candidates_by_run_id[run_id] = {
+                        "created_at": created_at,
+                        "run_id": run_id,
+                        "row": r,
+                        "findings": findings_by_run.get(run_id, []),
+                    }
+        except (sqlite3.DatabaseError, OSError, RuntimeError):
+            stats["skipped_sources"].append(str(src_path))
+            continue
+
+    def _do_migrate() -> None:
+        with closing(_connect_sqlite_db(target_db, writable=True)) as target_conn:
+            target_conn.execute("PRAGMA foreign_keys = ON")
+            _ensure_composite_columns(target_conn)
+            target_conn.row_factory = sqlite3.Row
+
+            for run_id, candidate in candidates_by_run_id.items():
+                existing = target_conn.execute(
+                    "SELECT created_at FROM llm_qg_runs WHERE run_id = ?",
+                    (run_id,),
+                ).fetchone()
+
+                if existing is not None:
+                    ex_created = str(existing["created_at"])
+                    if _parse_iso_timestamp(ex_created) >= _parse_iso_timestamp(candidate["created_at"]):
+                        continue
+
+                r = candidate["row"]
+                target_conn.execute(
+                    """
+                    INSERT INTO llm_qg_runs (
+                        run_id, created_at, level, slug, content_sha, gate_version,
+                        prompt_hash, checker_version, level_policy_family,
+                        reviewer_model, reviewer_family, route_name,
+                        tool_call_count, tools_used_json, tool_events_json,
+                        raw_response, raw_response_sha256, dispatch_json,
+                        retry_history_json, gate_outcomes_json, attempt_id,
+                        source, verdict, terminal_verdict,
+                        min_score, min_dim, payload_json
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(run_id) DO UPDATE SET
+                        created_at = excluded.created_at,
+                        level = excluded.level,
+                        slug = excluded.slug,
+                        content_sha = excluded.content_sha,
+                        gate_version = excluded.gate_version,
+                        prompt_hash = excluded.prompt_hash,
+                        checker_version = excluded.checker_version,
+                        level_policy_family = excluded.level_policy_family,
+                        reviewer_model = excluded.reviewer_model,
+                        reviewer_family = excluded.reviewer_family,
+                        route_name = excluded.route_name,
+                        tool_call_count = excluded.tool_call_count,
+                        tools_used_json = excluded.tools_used_json,
+                        tool_events_json = excluded.tool_events_json,
+                        raw_response = excluded.raw_response,
+                        raw_response_sha256 = excluded.raw_response_sha256,
+                        dispatch_json = excluded.dispatch_json,
+                        retry_history_json = excluded.retry_history_json,
+                        gate_outcomes_json = excluded.gate_outcomes_json,
+                        attempt_id = excluded.attempt_id,
+                        source = excluded.source,
+                        verdict = excluded.verdict,
+                        terminal_verdict = excluded.terminal_verdict,
+                        min_score = excluded.min_score,
+                        min_dim = excluded.min_dim,
+                        payload_json = excluded.payload_json
+                    """,
+                    (
+                        r.get("run_id"),
+                        r.get("created_at"),
+                        r.get("level"),
+                        r.get("slug"),
+                        r.get("content_sha"),
+                        r.get("gate_version"),
+                        r.get("prompt_hash"),
+                        r.get("checker_version"),
+                        r.get("level_policy_family"),
+                        r.get("reviewer_model"),
+                        r.get("reviewer_family"),
+                        r.get("route_name"),
+                        r.get("tool_call_count", 0),
+                        r.get("tools_used_json"),
+                        r.get("tool_events_json"),
+                        r.get("raw_response"),
+                        r.get("raw_response_sha256"),
+                        r.get("dispatch_json"),
+                        r.get("retry_history_json"),
+                        r.get("gate_outcomes_json"),
+                        r.get("attempt_id"),
+                        r.get("source"),
+                        r.get("verdict"),
+                        r.get("terminal_verdict"),
+                        r.get("min_score"),
+                        r.get("min_dim"),
+                        r.get("payload_json"),
+                    ),
+                )
+                target_conn.execute("DELETE FROM llm_qg_findings WHERE run_id = ?", (candidate["run_id"],))
+                if candidate["findings"]:
+                    target_conn.executemany(
+                        """
+                        INSERT INTO llm_qg_findings (
+                            run_id, category, severity, file, quote, replacement, payload_json
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        [
+                            (
+                                candidate["run_id"],
+                                f.get("category"),
+                                f.get("severity"),
+                                f.get("file"),
+                                f.get("quote"),
+                                f.get("replacement"),
+                                f.get("payload_json"),
+                            )
+                            for f in candidate["findings"]
+                        ],
+                    )
+                stats["migrated_rows"] += 1
+            target_conn.commit()
+
+    _run_with_lock_retry(_do_migrate)
+    stats["skipped_rows"] = stats["scanned_rows"] - stats["migrated_rows"]
+    return stats
+
+
 
 def live_tier2_circuit_status(path: Path | None = None) -> dict[str, Any]:
     """Return deterministic live Tier-2 circuit state from the sidecar file."""
@@ -365,15 +668,31 @@ def live_tier2_circuit_open_message(path: Path | None = None) -> str:
     return _circuit_open_message(status)
 
 
+@contextmanager
+def _circuit_file_lock(path: Path):
+    """Acquire an exclusive advisory file lock on the circuit sidecar lockfile."""
+    lock_path = path.with_name(f"{path.name}.lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, "a+", encoding="utf-8") as lock_file:
+        if fcntl is not None:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            if fcntl is not None:
+                fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
 def reset_live_tier2_circuit(path: Path | None = None) -> dict[str, Any]:
     """Clear the live Tier-2 circuit until new live outcomes trip it again."""
     resolved = circuit_state_path(path)
-    state = _empty_circuit_state()
-    now = _now_z()
-    state["reset_at"] = now
-    state["updated_at"] = now
-    _write_circuit_state(resolved, state)
-    return _circuit_status_from_state(state)
+    with _circuit_file_lock(resolved):
+        state = _empty_circuit_state()
+        now = _now_z()
+        state["reset_at"] = now
+        state["updated_at"] = now
+        _write_circuit_state(resolved, state)
+        return _circuit_status_from_state(state)
 
 
 def record_live_tier2_outcome(
@@ -390,31 +709,32 @@ def record_live_tier2_outcome(
 ) -> dict[str, Any]:
     """Persist one completed live Tier-2 passage outcome for circuit accounting."""
     resolved = circuit_state_path(path)
-    state = _read_circuit_state(resolved)
-    outcome_status = status.strip()
-    now = _now_z()
-    outcome = {
-        "created_at": now,
-        "level": level.strip().lower(),
-        "slug": slug.strip(),
-        "gate_version": gate_version,
-        "reviewer_model": reviewer_model,
-        "reviewer_family": reviewer_family,
-        "route_name": route_name,
-        "status": outcome_status,
-        "reason": reason,
-        "terminal_failure": live_tier2_status_is_terminal_failure(outcome_status),
-    }
-    outcomes = [item for item in state.get("live_outcomes", []) if isinstance(item, Mapping)]
-    outcomes.append(outcome)
-    state["live_outcomes"] = outcomes[-CIRCUIT_WINDOW_SIZE:]
-    state["updated_at"] = now
-    status_payload = _circuit_status_from_state(state)
-    if status_payload["open"] and not state.get("opened_at"):
-        state["opened_at"] = now
-    state["operator_message"] = _circuit_open_message(status_payload) if status_payload["open"] else None
-    _write_circuit_state(resolved, state)
-    return _circuit_status_from_state(state)
+    with _circuit_file_lock(resolved):
+        state = _read_circuit_state(resolved)
+        outcome_status = status.strip()
+        now = _now_z()
+        outcome = {
+            "created_at": now,
+            "level": level.strip().lower(),
+            "slug": slug.strip(),
+            "gate_version": gate_version,
+            "reviewer_model": reviewer_model,
+            "reviewer_family": reviewer_family,
+            "route_name": route_name,
+            "status": outcome_status,
+            "reason": reason,
+            "terminal_failure": live_tier2_status_is_terminal_failure(outcome_status),
+        }
+        outcomes = [item for item in state.get("live_outcomes", []) if isinstance(item, Mapping)]
+        outcomes.append(outcome)
+        state["live_outcomes"] = outcomes[-CIRCUIT_WINDOW_SIZE:]
+        state["updated_at"] = now
+        status_payload = _circuit_status_from_state(state)
+        if status_payload["open"] and not state.get("opened_at"):
+            state["opened_at"] = now
+        state["operator_message"] = _circuit_open_message(status_payload) if status_payload["open"] else None
+        _write_circuit_state(resolved, state)
+        return _circuit_status_from_state(state)
 
 
 def live_tier2_status_is_terminal_failure(status: str) -> bool:
@@ -451,8 +771,12 @@ def _read_circuit_state(path: Path | None = None) -> dict[str, Any]:
 
 
 def _write_circuit_state(path: Path, state: Mapping[str, Any]) -> None:
+    """Atomically write circuit state to disk via tmp file + os.replace."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(_json_pretty(dict(state)) + "\n", encoding="utf-8")
+    tmp_path = path.with_name(f"{path.name}.tmp.{uuid4().hex}")
+    content = _json_pretty(dict(state)) + "\n"
+    tmp_path.write_text(content, encoding="utf-8")
+    os.replace(tmp_path, path)
 
 
 def _circuit_status_from_state(state: Mapping[str, Any]) -> dict[str, Any]:
@@ -1090,22 +1414,46 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Export/check compact LLM-QG evidence records.")
+    parser = argparse.ArgumentParser(description="Export/check compact LLM-QG evidence records or migrate stores.")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--emit-record", action="store_true", help="Export current DB evidence as compact JSON.")
     mode.add_argument("--check-record", action="store_true", help="Check compact JSON content_sha against a module.")
+    mode.add_argument(
+        "--migrate-worktrees",
+        action="store_true",
+        help="Discover and migrate worktree-scoped LLM-QG databases into the primary store.",
+    )
     parser.add_argument("--level", help="Curriculum level, e.g. b1.")
     parser.add_argument("--slug", help="Module slug.")
-    parser.add_argument("--module-dir", type=Path, required=True, help="Module artifact directory.")
+    parser.add_argument("--module-dir", type=Path, help="Module artifact directory.")
     parser.add_argument("--profile", help="Optional curriculum profile label.")
     parser.add_argument("--db", type=Path, help="Optional LLM-QG SQLite path.")
+    parser.add_argument(
+        "--worktree-db",
+        type=Path,
+        action="append",
+        dest="worktree_dbs",
+        help="Explicit worktree DB path to migrate (can be repeated).",
+    )
     parser.add_argument("--out", type=Path, help="Output JSON path for --emit-record.")
     parser.add_argument("--record", type=Path, help="Input JSON path for --check-record.")
     args = parser.parse_args(argv)
 
+    if args.migrate_worktrees:
+        stats = migrate_worktree_dbs(primary_path=args.db, worktree_dbs=args.worktree_dbs)
+        msg = (
+            f"Worktree DB migration complete: discovered={stats['discovered_dbs']}, "
+            f"scanned={stats['scanned_rows']}, migrated={stats['migrated_rows']}, "
+            f"skipped={stats['skipped_rows']}"
+        )
+        if stats.get("skipped_sources"):
+            msg += f", skipped_sources={len(stats['skipped_sources'])}"
+        print(msg)
+        return 0
+
     if args.emit_record:
-        if not args.level or not args.slug or not args.out:
-            parser.error("--emit-record requires --level, --slug, and --out")
+        if not args.level or not args.slug or not args.out or not args.module_dir:
+            parser.error("--emit-record requires --level, --slug, --module-dir, and --out")
         evidence = current_evidence_for_module(
             args.level,
             args.slug,
@@ -1119,8 +1467,8 @@ def main(argv: list[str] | None = None) -> int:
         _write_json(args.out, evidence)
         return 0
 
-    if not args.record:
-        parser.error("--check-record requires --record")
+    if not args.record or not args.module_dir:
+        parser.error("--check-record requires --record and --module-dir")
     evidence = json.loads(args.record.read_text(encoding="utf-8"))
     if not isinstance(evidence, dict) or not evidence_record_passes_for_module(
         evidence,

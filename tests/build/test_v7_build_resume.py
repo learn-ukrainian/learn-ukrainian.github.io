@@ -434,6 +434,67 @@ def test_llm_qg_resumes_from_shared_store_in_linked_worktree(
     )
 
 
+def test_llm_qg_resume_does_not_repersist_row(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import sqlite3
+    db = tmp_path / "shared.db"
+    monkeypatch.setenv(DB_ENV_VAR, str(db))
+
+    plan = {"level": "b1", "slug": "target", "sequence": 1}
+    plan_content = "level: b1\nslug: target\n"
+    module = tmp_path / "curriculum" / "l2-uk-en" / "b1" / "target"
+    _write_module_content(module)
+    _write_resumable_artifacts(module)
+
+    monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "render_review_prompt",
+        lambda *_args, **_kwargs: f"prompt::{_args[3]}",
+    )
+    monkeypatch.setattr(v7_build, "read_implementation_map", lambda _path: {"entries": []})
+    expected_prompt_hash = v7_build._expected_llm_qg_prompt_hash(
+        plan=plan,
+        plan_content=plan_content,
+        module_dir=module,
+        wiki_manifest={},
+        implementation_map={"entries": []},
+        use_generator=False,
+        obligation_checklist=None,
+    )
+    assert expected_prompt_hash is not None
+    record_llm_qg(
+        level="b1",
+        slug="target",
+        module_dir=module,
+        payload=_qg_pass_payload(),
+        gate_version=v7_build.LLM_QG_GATE_VERSION,
+        prompt_hash=expected_prompt_hash,
+        run_id="initial-run-1",
+    )
+
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT count(*) FROM llm_qg_runs").fetchone()[0] == 1
+
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text(plan_content, encoding="utf-8")
+    monkeypatch.setattr(v7_build.linear_pipeline, "plan_path_for", lambda *_args: plan_path)
+    monkeypatch.setattr(v7_build.linear_pipeline, "load_plan", lambda _path: plan)
+    monkeypatch.setattr(v7_build.linear_pipeline, "validate_plan", lambda _plan: None)
+    monkeypatch.setattr(v7_build.linear_pipeline, "curriculum_profile_for_level", lambda _level: "core")
+    monkeypatch.setattr(v7_build.linear_pipeline, "assemble_mdx", lambda *_args: None)
+
+    args = v7_build.parse_args(["b1", "target", "--out", str(module)])
+    assert v7_build._run(args) == 0
+
+    # Row count must STILL be 1 — resume must not re-persist a duplicate row
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT count(*) FROM llm_qg_runs").fetchone()[0] == 1
+        row = conn.execute("SELECT run_id FROM llm_qg_runs").fetchone()
+        assert row[0] == "initial-run-1"
+
+
 # ----- unknown phase ----------------------------------------------------------
 
 def test_unknown_phase_returns_false(module_dir: Path) -> None:
