@@ -16,6 +16,7 @@ with imports; rename there is a follow-up.
 Tools:
     - search_sources, search_text, search_literary, search_external, search_images, get_chunk_context
     - verify_word, verify_words, verify_lemma, vet_vocabulary (VESUM)
+    - verify_stress (stress oracle: ukrainian-word-stress trie + override layer + VESUM join)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
     - search_slovnyk_me, search_heritage
@@ -505,6 +506,38 @@ async def list_tools() -> list[Tool]:
                     },
                 },
                 "required": ["lemma"]
+            },
+        ),
+        Tool(
+            name="verify_stress",
+            description=(
+                "Stress oracle: look up the stressed form + stressed-vowel index for a Ukrainian word "
+                "from the offline ukrainian-word-stress dictionary (ULIF-derived, 2.9M word forms), with "
+                "the project's manual override layer applied and a best-effort VESUM identity join. "
+                "vowel_index is the 0-based codepoint index of the stressed vowel in the NFC-normalized "
+                "unstressed form (same convention as generate_practice_deck.py / PracticeStress.tsx). "
+                "status is 'ok' (single reading), 'ambiguous' (heteronym — pass pos/tags to disambiguate; "
+                "see each match's required_tags), 'not_found' (valid word, not in the dictionary), or "
+                "'invalid_input' (empty/multi-word/non-Cyrillic/single-syllable). Returns JSON (unlike the "
+                "prose-formatted verify_word/verify_lemma) so bake-off scoring can consume it directly."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word to check: bare lemma, inflected form, or U+0301/U+0300-marked form (e.g., 'замок', 'любов'ю', 'за́мок')"
+                    },
+                    "pos": {
+                        "type": "string",
+                        "description": "Optional POS to help disambiguate a heteronym (e.g. 'NOUN' or 'upos=NOUN')."
+                    },
+                    "tags": {
+                        "type": "string",
+                        "description": "Optional additional dictionary tags to help disambiguate, comma-separated (e.g. 'Case=Nom,Gender=Masc') — same vocabulary as each match's required_tags."
+                    },
+                },
+                "required": ["word"]
             },
         ),
         # ── Live source query tools ──────────────────────────────
@@ -1323,6 +1356,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "verify_words": lambda: handle_verify_words(arguments),
             "vet_vocabulary": lambda: handle_vet_vocabulary(arguments),
             "verify_lemma": lambda: handle_verify_lemma(arguments),
+            "verify_stress": lambda: handle_verify_stress(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
             "query_ulif": lambda: handle_query_ulif(arguments),
@@ -1782,6 +1816,17 @@ async def handle_verify_lemma(args: dict) -> list[TextContent]:
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_verify_stress(args: dict) -> list[TextContent]:
+    word = args["word"]
+    pos = args.get("pos")
+    tags = args.get("tags")
+
+    from scripts.verification.stress import verify_stress
+    payload = await asyncio.to_thread(verify_stress, word, pos, tags)
+
+    return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
 def _lookup_wikipedia_in_db(query: str) -> dict | None:
