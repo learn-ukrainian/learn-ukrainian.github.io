@@ -28,6 +28,7 @@ ASK_SEATS = (
     ("ask-agy", "_handle_ask_agy", "agy"),
     ("ask-grok", "_handle_ask_grok_build", "grok"),
     ("ask-glm", "_handle_ask_glm", "glm"),
+    ("ask-gemma", "_handle_ask_gemma", "gemma"),
     ("ask-kimi", "_handle_ask_kimi", "kimi"),
     ("ask-cursor", "_handle_ask_cursor", "cursor"),
     ("ask-hermes", "_handle_ask_hermes", "hermes"),
@@ -36,7 +37,6 @@ ASK_SEATS = (
 
 RETIRED_ASK_SEATS = (
     ("ask-opencode", "_handle_ask_opencode", "opencode"),
-    ("ask-gemma", "_handle_ask_gemma", "gemma"),
 )
 
 
@@ -260,6 +260,50 @@ def test_ask_target_without_an_enabled_acp_route_fails_closed(
     )
     with pytest.raises(SystemExit, match=f"{target!r} has no enabled ACP route"):
         getattr(_cli, handler_name)(args)
+
+
+def test_compat_ask_fails_at_admission_when_provider_binary_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#6805: a dead seat fails before any authority job is enqueued, with the
+    actionable remediation and documented fallback — not mid-review at spawn."""
+    from scripts.agent_runtime.adapters import acpx as acpx_module
+
+    class _AuthorityBomb:
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            raise AssertionError("authority must not be reached for a dead seat")
+
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.authority.AuthorityService", _AuthorityBomb
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        _acp_compat._run_compat_ask_impl("hermes", "question", task_id="dead-seat")
+
+    message = str(exc_info.value)
+    assert "hermes binary not found on PATH" in message
+    assert "docs/runbooks/agent-seat-onboarding.md" in message
+    assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
+
+
+def test_ask_hermes_cli_surfaces_remediation_when_binary_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#6805: the CLI exits nonzero with the remediation the caller reroutes on."""
+    from scripts.agent_runtime.adapters import acpx as acpx_module
+
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    args = _cli._build_parser().parse_args(
+        ["ask-hermes", "question", "--task-id", "dead-seat", "--from", "codex"]
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        _cli._handle_ask_hermes(args)
+
+    message = str(exc_info.value)
+    assert "hermes binary not found on PATH" in message
+    assert "delegate.py dispatch --agent deepseek" in message
 
 
 @pytest.mark.parametrize("effort", EFFORT_CHOICES)

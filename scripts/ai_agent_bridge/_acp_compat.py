@@ -24,6 +24,7 @@ _TARGETS = {
     "hermes": "deepseek",
     "pool": "pool",
     "glm": "glm",
+    "gemma": "gemma",
     "cursor": "cursor",
     "grok": "grok",
     "grok-build": "grok",
@@ -328,6 +329,18 @@ def _run_compat_ask_impl(
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
+
+    # Admission preflight (#6805): a participant whose provider CLI is absent
+    # fails here — before an authority job is enqueued — with the actionable
+    # remediation and documented fallback, instead of dying mid-review at
+    # spawn time. The adapter's own compatibility probe still enforces the
+    # full contract immediately before spawn.
+    from scripts.agent_runtime.adapters.acpx import probe_participant_reachability
+
+    reachability_error = probe_participant_reachability(participant)
+    if reachability_error is not None:
+        raise ValueError(reachability_error)
+
     prompt = content
     if data:
         prompt += "\n\n--- attached inert text ---\n" + data

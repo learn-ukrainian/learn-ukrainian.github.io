@@ -34,6 +34,7 @@ from scripts.agent_runtime.adapters.acpx import (
     AcpxClaudeShadowAdapter,
     AcpxCursorShadowAdapter,
     AcpxDeepSeekShadowAdapter,
+    AcpxGemmaShadowAdapter,
     AcpxGlmShadowAdapter,
     AcpxGrokShadowAdapter,
     AcpxKimiCcShadowAdapter,
@@ -2105,6 +2106,11 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
             "model": "gemini-3.7-flash-high",
         },
         "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": "glm-5.3"},
+        "gemma": {
+            "seat": "acpx-gemma-shadow",
+            "agent": "gemma",
+            "model": "google-ais/gemma-4-31b-it",
+        },
         "deepseek": {
             "seat": "acpx-deepseek-shadow",
             "agent": "deepseek",
@@ -2192,6 +2198,121 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     else:
         assert "--model" not in plan.cmd
         assert plan.env_overrides == {}
+
+
+def test_gemma_shadow_seat_uses_a_confined_opencode_command(tmp_path, monkeypatch):
+    """#6805: the $0 toolless Gemma seat mirrors the confined GLM shape."""
+    _stub_binary(monkeypatch, tmp_path)
+    opencode = tmp_path / "opencode"
+    opencode.write_text("#!/bin/sh\n", encoding="utf-8")
+    opencode.chmod(0o755)
+    monkeypatch.setattr(
+        acpx_module.shutil, "which", lambda name: {"opencode": str(opencode)}.get(name)
+    )
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_compatibility",
+        lambda _path, _executable: ("1.17.13", ()),
+    )
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+
+    adapter = AcpxGemmaShadowAdapter()
+    with acpx_module.active_discussion_scope():
+        plan = adapter.build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="google-ais/gemma-4-31b-it",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "gemma",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+    assert adapter.name == "acpx-gemma-shadow"
+    command = plan.cmd[plan.cmd.index("--agent") + 1]
+    assert shlex.split(command) == [str(opencode), "acp", "--pure"]
+    assert ("--model", "google-ais/gemma-4-31b-it") in zip(
+        plan.cmd, plan.cmd[1:], strict=False
+    )
+    assert plan.cmd[-3:] == ["exec", "-f", "-"]
+    for flag in ("--deny-all", "--no-fs", "--no-terminal"):
+        assert flag in plan.cmd
+    assert plan.metadata["model"] == "google-ais/gemma-4-31b-it"
+    assert plan.metadata["provider_route"] == "google-ais/gemma-4-31b-it"
+    assert plan.metadata["provider_cli_compatibility"] == "native-acp-pure-v1"
+    assert plan.metadata["tool_policy"] == "deny-all"
+    assert plan.env_overrides == {
+        "ACPX_AUTH_OPENCODE_LOGIN": "1",
+        "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}',
+    }
+    env = build_agent_env(provider=adapter.name, overrides=plan.env_overrides)
+    assert env["ACPX_AUTH_OPENCODE_LOGIN"] == "1"
+    assert env["OPENCODE_CONFIG_CONTENT"] == plan.env_overrides["OPENCODE_CONFIG_CONTENT"]
+
+
+def test_gemma_shadow_seat_rejects_a_caller_model_other_than_its_pin(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    with acpx_module.active_discussion_scope(), pytest.raises(
+        AcpxShadowRefusalError, match="model="
+    ):
+        AcpxGemmaShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="openrouter/google/gemma-4-31b-it",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "gemma",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatch):
+    """Key guard (#6805): a dead DeepSeek seat must surface an actionable
+    remediation plus the documented fallback route — never a bare not-found."""
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+
+    with pytest.raises(AcpxShadowRefusalError) as exc_info:
+        acpx_module._resolve_participant_binary(
+            "hermes", adapter_label="AcpxDeepSeekShadowAdapter"
+        )
+
+    message = str(exc_info.value)
+    assert "hermes binary not found on PATH" in message
+    assert "text-oneshot-isolated-v1" in message
+    assert "docs/runbooks/agent-seat-onboarding.md" in message
+    assert "hermes --version" in message
+    assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
+    assert "delegate.py dispatch --agent deepseek" in message
+
+
+def test_probe_participant_reachability_reports_only_missing_provider_binaries(monkeypatch):
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: {"opencode": "/usr/local/bin/opencode"}.get(name),
+    )
+
+    assert acpx_module.probe_participant_reachability("gemma") is None
+    assert acpx_module.probe_participant_reachability("glm") is None
+    # ACPX built-in seats resolve no external provider binary: unprobed.
+    assert acpx_module.probe_participant_reachability("codex") is None
+    assert acpx_module.probe_participant_reachability("unknown-seat") is None
+
+    error = acpx_module.probe_participant_reachability("deepseek")
+    assert error is not None
+    assert "hermes binary not found on PATH" in error
+    assert "docs/runbooks/agent-seat-onboarding.md" in error
 
 
 def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, monkeypatch):

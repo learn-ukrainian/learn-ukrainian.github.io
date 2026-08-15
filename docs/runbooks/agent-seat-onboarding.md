@@ -280,8 +280,8 @@ not permanent routing weights and do not override current CodexBar headroom.
 - Direct-only seat names include `acpx-codex-shadow`, `acpx-grok-shadow`,
   `acpx-claude-shadow`, `acpx-kimi-shadow`, `acpx-kimicc-shadow`,
   `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
-  `acpx-glm-shadow`, and `acpx-deepseek-shadow`; never registered for
-  dispatch, routing, review, or failover.
+  `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`; never
+  registered for dispatch, routing, review, or failover.
 - ACPX, Grok, AGY, OpenCode, and Hermes use rolling compatibility contracts.
   Immediately before spawn, each adapter checks the exact command and flags
   it will invoke; versions are recorded for telemetry but are not allowlists.
@@ -308,7 +308,7 @@ not permanent routing weights and do not override current CodexBar headroom.
 - Feature-flagged adapters (default off / shadow comparison / bounded active
   controller).
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
-  Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek.
+  Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek.
 - Grok fixed effective model/effort: `grok-4.5` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
 - Grok ACP server command (single custom agent argument; never built-in
@@ -329,6 +329,10 @@ not permanent routing weights and do not override current CodexBar headroom.
 - GLM uses native `opencode acp --pure`, pinned to
   `zai-coding-plan/glm-5.3`, with both `permission.*=deny` and `tools.*=false`.
   GLM and first-party DeepSeek retain their local-only/never-CI egress guards.
+- Gemma (#6805) uses the same confined `opencode acp --pure` shape pinned to
+  `google-ais/gemma-4-31b-it` (the $0 AIS-direct catalog id doubles as the
+  invocation id). The google-ais provider is Western-hosted, so no egress
+  guard applies; the deny-all config keeps the chat-only model toolless.
 - Correlation / idempotency fields recorded as **evidence** (local runtime
   metadata only — never ACP protocol flags, argv, or stdin; never published
   to fleet-comms, dispatch authority, or review evidence), not as a new
@@ -682,6 +686,60 @@ git status --short
 **Pass criteria:** the seat selects discuss vs delegate vs plane-status vs
 formal `review-pr` correctly in prose, quotes live `plane-status` rather than a
 memorized mode, refuses to treat discuss as CF, and leaves a clean worktree.
+
+---
+
+## Reviewer-seat transport recovery
+
+Dead reviewer seats must fail at admission with an actionable error — never
+mid-review with a bare "not found on PATH" (#6805). The `ask-*` compatibility
+shim runs a PATH-only preflight
+(`scripts/agent_runtime/adapters/acpx.py::probe_participant_reachability`)
+before an authority job is enqueued; the adapter re-checks the full
+compatibility contract immediately before spawn. Both paths emit the same
+remediation text.
+
+### Symptom → meaning
+
+| Error excerpt | Meaning |
+| --- | --- |
+| `hermes binary not found on PATH` | Host-level Hermes install is gone (e.g. clobbered PATH or uninstalled) — the DeepSeek ACP seat is down |
+| `opencode binary not found on PATH` | The GLM, Gemma, and Pool ACP seats are down |
+| `agy binary not found on PATH` | The AGY ACP seat is down |
+| `legacy ask target '<x>' has no enabled ACP route` | The seat is not wired under authority mode; do not assume a fallback — check this runbook and #6805 |
+
+### Hermes provisioning (host-level, operator-owned)
+
+Hermes is a full agent platform with operator-owned credentials under
+`~/.hermes/` — it is **never** provisioned by project tooling or from a
+dispatch worktree. The machine-local install recipe is deliberately not
+tracked (operator OPSEC policy 2026-07-05): see the gitignored
+`docs/references/private/hermes-usage.md` on the operator's machine, or
+re-derive it from the operator's private infra notes if that copy is absent.
+Do not reconstruct machine specifics in any tracked file.
+
+After reinstalling, verify the compatibility contract surface:
+
+```bash
+hermes --version   # must print 'Hermes Agent v<semver>'
+hermes --help      # must list: --ignore-rules, --oneshot, --model, --provider
+```
+
+### Documented fallbacks while a seat is down
+
+Per `agents_extensions/shared/rules/model-assignment.md` (the error text
+quotes the same substitutions):
+
+- **ask-hermes (DeepSeek seat) down:** one-shot review/research runs
+  first-party via
+  `opencode run --model deepseek-direct/deepseek-v4-flash --variant high`
+  (native Entire capture); tool-heavy work goes to
+  `delegate.py dispatch --agent deepseek` from a dispatch worktree.
+- **ask-glm / ask-gemma / ask-pool down (opencode missing):** reinstall
+  opencode first — three seats share the binary. There is no second host for
+  the opencode ACP transport.
+- Record every substitution in the artifact; silent rerouting hides
+  review-independence, cost, and egress changes.
 
 ---
 

@@ -206,6 +206,7 @@ def test_registry_has_known_agents():
         "acpx-codex-shadow",
         "acpx-cursor-shadow",
         "acpx-deepseek-shadow",
+        "acpx-gemma-shadow",
         "acpx-glm-shadow",
         "acpx-grok-shadow",
         "acpx-agy-shadow",
@@ -342,6 +343,11 @@ def test_acpx_grok_shadow_entry_is_direct_only():
             "acpx-glm-shadow",
             "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
             "glm-5.3",
+        ),
+        (
+            "acpx-gemma-shadow",
+            "scripts.agent_runtime.adapters.acpx:AcpxGemmaShadowAdapter",
+            "google-ais/gemma-4-31b-it",
         ),
         (
             "acpx-deepseek-shadow",
@@ -4784,6 +4790,7 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
         "acpx-grok-shadow",
         "acpx-kimi-shadow",
         "acpx-glm-shadow",
+        "acpx-gemma-shadow",
     ],
 )
 def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):

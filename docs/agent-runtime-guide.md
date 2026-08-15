@@ -84,10 +84,11 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   runner, routing, dispatch, failover, or review setting. Rollback is setting
   the flag to `off` (or unsetting it) and using native transport.
 - Direct-only seats cover Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool,
-  AGY/Gemini, GLM, and DeepSeek through the fixed registry in
+  AGY/Gemini, GLM, Gemma, and DeepSeek through the fixed registry in
   `scripts/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
   `acpx-grok-shadow` via `AcpxGrokShadowAdapter`, `acpx-agy-shadow`,
-  `acpx-glm-shadow`, and `acpx-deepseek-shadow`). They are never returned by
+  `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`). They
+  are never returned by
   `available_agents()` and never become dispatch/routing/review/failover
   candidates.
 - The project-local ACPX dependency and every directly invoked provider CLI
