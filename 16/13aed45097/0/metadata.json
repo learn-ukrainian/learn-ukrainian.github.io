@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1613aed45097",
+  "session_id": "session_9bcf75e6-bc24-408d-a8be-bf50df0a6aa9",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T17:52:00.550206Z",
+  "branch": "kimi/5374-apostrophe-glyph-candidates",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/post_build_review.py",
+    "tests/audit/test_post_build_review.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "82f7dd306a21",
+  "checkpoint_transcript_start": 463,
+  "transcript_lines_at_start": 463,
+  "token_usage": {
+    "input_tokens": 96690,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5619200,
+    "output_tokens": 45647,
+    "api_call_count": 72
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T17:52:00.513794Z",
+    "agent_lines": 88,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 88,
+    "total_lines_changed": 89,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
