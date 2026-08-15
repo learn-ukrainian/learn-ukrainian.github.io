@@ -9,12 +9,14 @@ Run from the repository root:
 from __future__ import annotations
 
 import argparse
-import copy
+import contextlib
 import json
+import os
 import sqlite3
 import sys
+import tempfile
 from collections.abc import Iterator, Sequence
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +31,7 @@ from scripts.lexicon.content_lexicon_reconciler import (
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
+DEFAULT_CHECKPOINT_INTERVAL = 10
 GENERATED_FROM = "content_lexicon_reconciler.missing_lemmas"
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 _POS_PRIORITY = {
@@ -37,6 +40,59 @@ _POS_PRIORITY = {
     "adj": 2,
     "adv": 3,
 }
+
+
+def _write_atomically(path: Path, content: bytes) -> None:
+    """Write content to path atomically via a temporary file in path.parent."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_name = ""
+    try:
+        with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as tmp:
+            tmp_name = tmp.name
+            tmp.write(content)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+        os.replace(tmp_name, path)
+    finally:
+        if tmp_name:
+            with contextlib.suppress(FileNotFoundError):
+                Path(tmp_name).unlink()
+
+
+def _flush_caches() -> None:
+    """Flush any dirty in-memory fetch caches to disk."""
+    with suppress(Exception):
+        enrich_manifest._write_wiki_reference_cache()
+    with suppress(Exception):
+        enrich_manifest._write_grac_frequency_cache()
+
+
+def load_checkpoint(path: Path) -> dict[str, dict[str, Any]]:
+    """Load previously enriched entries from an existing candidates file.
+
+    Returns a mapping of lemma -> entry dict. If the file is missing, empty, or
+    corrupted, returns an empty mapping and logs a warning to stderr.
+    """
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            print(f"[grow_lexicon] Warning: checkpoint {path} is not a JSON object; starting fresh.", file=sys.stderr)
+            return {}
+        entries_by_lemma: dict[str, dict[str, Any]] = {}
+        for entry in data.get("auto_merge", []):
+            if isinstance(entry, dict) and "lemma" in entry:
+                entries_by_lemma[str(entry["lemma"])] = entry
+        for item in data.get("needs_review", []):
+            if isinstance(item, dict):
+                entry = item.get("entry")
+                if isinstance(entry, dict) and "lemma" in entry:
+                    entries_by_lemma[str(entry["lemma"])] = entry
+        return entries_by_lemma
+    except Exception as exc:
+        print(f"[grow_lexicon] Warning: could not load checkpoint from {path} ({exc}); starting fresh.", file=sys.stderr)
+        return {}
 
 
 def build_skeleton_entry(lemma: str) -> dict[str, Any]:
@@ -102,45 +158,123 @@ def build_payload(
     }
 
 
+def write_candidates(payload: dict[str, Any], out: Path = DEFAULT_OUT) -> None:
+    """Atomically write the candidates JSON payload to disk."""
+    content = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    _write_atomically(out, content)
+
+
+def write_checkpoint(
+    entries: Sequence[dict[str, Any]],
+    *,
+    total_delta: int,
+    limit: int | None,
+    out: Path = DEFAULT_OUT,
+) -> dict[str, Any]:
+    """Save an intermediate checkpoint atomically to disk."""
+    auto_merge, needs_review = split_candidates(entries)
+    payload = build_payload(
+        total_delta=total_delta,
+        processed=len(entries),
+        auto_merge=auto_merge,
+        needs_review=needs_review,
+        limit=limit,
+    )
+    write_candidates(payload, out)
+    _flush_caches()
+    return payload
+
+
 def generate_candidates(
     *,
     limit: int | None = None,
     out: Path = DEFAULT_OUT,
+    checkpoint_interval: int = DEFAULT_CHECKPOINT_INTERVAL,
+    resume: bool = True,
+    quiet: bool = False,
 ) -> dict[str, Any]:
-    """Generate, write, and return gated Atlas-entry candidates."""
+    """Generate, write, and return gated Atlas-entry candidates with checkpointing."""
     paths = discover_content_mdx_paths()
     result = reconcile_content(paths, manifest_path=LEXICON_MANIFEST_PATH)
     delta = _limited_delta(result.missing_lemmas, limit)
+    total_missing = len(result.missing_lemmas)
+    total_to_process = len(delta)
+
+    checkpointed = load_checkpoint(out) if resume and out.exists() else {}
+    resumed_count = 0
+    newly_enriched_count = 0
+
+    if not quiet:
+        print(
+            f"[grow_lexicon] Starting candidates generation: {total_to_process} delta items "
+            f"(total missing: {total_missing}, checkpointed: {len(checkpointed)}, interval: {checkpoint_interval})",
+            file=sys.stderr,
+        )
 
     entries: list[dict[str, Any]] = []
     kaikki_lookup = enrich_manifest._load_kaikki_lookup()
     with _source_connection(enrich_manifest.SOURCES_DB) as conn, _preserve_wiki_reference_cache():
         has_sum11_flags = enrich_manifest._sum11_has_flag_columns(conn)
-        for item in delta:
-            entry = build_skeleton_entry(item.lemma)
-            enrich_manifest.enrich_entry(
-                entry,
-                conn,
-                kaikki_lookup,
-                has_sum11_flags=has_sum11_flags,
-            )
-            entries.append(entry)
+        for idx, item in enumerate(delta, start=1):
+            if resume and item.lemma in checkpointed:
+                entry = checkpointed[item.lemma]
+                entries.append(entry)
+                resumed_count += 1
+                if not quiet and (
+                    idx % max(1, checkpoint_interval) == 0 or idx == total_to_process
+                ):
+                    print(
+                        f"[grow_lexicon] [{idx}/{total_to_process}] lemma='{item.lemma}' (resumed, total_resumed={resumed_count}, newly_enriched={newly_enriched_count})",
+                        file=sys.stderr,
+                    )
+            else:
+                entry = build_skeleton_entry(item.lemma)
+                enrich_manifest.enrich_entry(
+                    entry,
+                    conn,
+                    kaikki_lookup,
+                    has_sum11_flags=has_sum11_flags,
+                )
+                entries.append(entry)
+                newly_enriched_count += 1
+                if not quiet and (
+                    idx % max(1, checkpoint_interval) == 0 or idx == total_to_process
+                ):
+                    print(
+                        f"[grow_lexicon] [{idx}/{total_to_process}] lemma='{item.lemma}' (enriched, total_resumed={resumed_count}, newly_enriched={newly_enriched_count})",
+                        file=sys.stderr,
+                    )
+                if checkpoint_interval > 0 and newly_enriched_count % checkpoint_interval == 0:
+                    write_checkpoint(
+                        entries,
+                        total_delta=total_missing,
+                        limit=limit,
+                        out=out,
+                    )
+                    if not quiet:
+                        print(
+                            f"[grow_lexicon] Checkpoint saved: {len(entries)} items ({newly_enriched_count} newly enriched) -> {out}",
+                            file=sys.stderr,
+                        )
 
     auto_merge, needs_review = split_candidates(entries)
     payload = build_payload(
-        total_delta=len(result.missing_lemmas),
+        total_delta=total_missing,
         processed=len(delta),
         auto_merge=auto_merge,
         needs_review=needs_review,
         limit=limit,
     )
     write_candidates(payload, out)
+    _flush_caches()
+    if not quiet:
+        print(
+            f"[grow_lexicon] Completed: {len(entries)} items written to {out} "
+            f"({resumed_count} resumed, {newly_enriched_count} newly enriched; "
+            f"auto_merge={len(auto_merge)}, needs_review={len(needs_review)})",
+            file=sys.stderr,
+        )
     return payload
-
-
-def write_candidates(payload: dict[str, Any], out: Path = DEFAULT_OUT) -> None:
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def format_report(payload: dict[str, Any]) -> str:
@@ -165,6 +299,22 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"Candidate JSON output path (default: {DEFAULT_OUT.relative_to(PROJECT_ROOT)})",
     )
     parser.add_argument("--report", action="store_true", help="Print candidate bucket counts")
+    parser.add_argument(
+        "--checkpoint-interval",
+        type=int,
+        default=DEFAULT_CHECKPOINT_INTERVAL,
+        help=f"Periodic checkpoint interval in lemmas (default: {DEFAULT_CHECKPOINT_INTERVAL})",
+    )
+    parser.add_argument(
+        "--no-resume",
+        action="store_true",
+        help="Do not resume from existing candidates file, start fresh",
+    )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Suppress stderr progress heartbeat",
+    )
     return parser
 
 
@@ -173,9 +323,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.limit is not None and args.limit < 0:
         parser.error("--limit must be non-negative")
+    if args.checkpoint_interval < 0:
+        parser.error("--checkpoint-interval must be non-negative")
 
     try:
-        payload = generate_candidates(limit=args.limit, out=args.out)
+        payload = generate_candidates(
+            limit=args.limit,
+            out=args.out,
+            checkpoint_interval=args.checkpoint_interval,
+            resume=not args.no_resume,
+            quiet=args.quiet,
+        )
     except FileNotFoundError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -227,20 +385,11 @@ def _vesum_pos(lemma: str) -> str | None:
 
 @contextmanager
 def _preserve_wiki_reference_cache() -> Iterator[None]:
-    path = enrich_manifest.WIKI_REFERENCE_CACHE
-    original_bytes = path.read_bytes() if path.exists() else None
-    original_data = copy.deepcopy(enrich_manifest._WIKI_REFERENCE_CACHE_DATA)
-    original_dirty = enrich_manifest._WIKI_REFERENCE_CACHE_DIRTY
+    """Maintain cache persistence across runs and flush dirty caches on exit."""
     try:
         yield
     finally:
-        if original_bytes is None:
-            path.unlink(missing_ok=True)
-        else:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(original_bytes)
-        enrich_manifest._WIKI_REFERENCE_CACHE_DATA = original_data
-        enrich_manifest._WIKI_REFERENCE_CACHE_DIRTY = original_dirty
+        _flush_caches()
 
 
 def _has_dictionary_definition(entry: dict[str, Any]) -> bool:
@@ -283,3 +432,4 @@ def _heritage_review_reasons(status: dict[str, Any]) -> list[str]:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
