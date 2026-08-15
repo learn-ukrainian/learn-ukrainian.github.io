@@ -2876,6 +2876,76 @@ def test_translation_parses_slovnyk_ukreng_plural_label(monkeypatch) -> None:
     }
 
 
+def test_slovnyk_ukreng_glosses_accept_missing_domain_labels() -> None:
+    """#6809: attested label abbreviations must not mask extractable glosses.
+
+    Each row quotes a cached slovnyk.me ukreng article from the 6323-slug
+    missing-translation residual whose gloss extraction returned [] only
+    because the leading label abbreviation was absent from
+    ``_SLOVNYK_UKRENG_PREFIX_LABELS``.
+    """
+    attested = [
+        ("анчоус", "анчоус іхт. anchovy Джерело: Українсько-англійський словник на Slovnyk.me", ["anchovy"]),
+        ("аршин", "аршин заст. arshine (= 71,1 cm or 28 inches)", ["arshine"]),
+        ("ай", "ай! виг. oh! Джерело: Українсько-англійський словник на Slovnyk.me", ["oh"]),
+        ("дрохва", "дрохва орн. bustard", ["bustard"]),
+        ("алібі", "алібі невідм. юр. alibi встановити чиєсь алібі — to establish smb's alibi", ["alibi"]),
+        ("інтерферон", "інтерферон біохім. interferon", ["interferon"]),
+        ("сфінкс", "сфінкс міф., перен. sphinx", ["sphinx"]),
+        ("бурлеск", "бурлеск літ. burlesque", ["burlesque"]),
+        ("готика", "готика архт. Gothic", ["Gothic"]),
+        (
+            "антракт",
+            "антракт 1) театр. intermission; брит. interval 2) муз. entr'acte, interlude "
+            "Джерело: Українсько-англійський словник на Slovnyk.me",
+            ["intermission", "interval"],
+        ),
+        ("ампір", "ампір мист. (стиль) Empire style", ["Empire style"]),
+        ("спатоньки", "спатоньки дит. hushaby", ["hushaby"]),
+        ("нетто", "нетто ком. net нетто-вага — net weight", ["net"]),
+        ("анапест", "анапест вірш. anapaest", ["anapaest"]),
+        ("задньоязиковий", "задньоязиковий фон. velar, back", ["velar", "back"]),
+        ("нуклон", "нуклон яд. фіз. nucleon", ["nucleon"]),
+        ("еліксир", "еліксир фарм. elixir", ["elixir"]),
+        ("вібріон", "вібріон бакт. vibrio", ["vibrio"]),
+        ("мариніст", "мариніст жив. painter of seascapes, marine painter", ["painter of seascapes", "marine painter"]),
+        ("бонна", "бонна заст. nursery governess", ["nursery governess"]),
+    ]
+    for lemma, text, expected in attested:
+        row = {
+            "dictionary_slug": "ukreng",
+            "word": lemma,
+            "text": text,
+        }
+        assert enrich_manifest_module._slovnyk_ukreng_glosses(row, lemma) == expected, lemma
+
+
+def test_slovnyk_ukreng_glosses_strip_trailing_sense_number() -> None:
+    """A gloss must not carry the next sense's number («ambrosia 2»)."""
+    row = {
+        "dictionary_slug": "ukreng",
+        "word": "амброзія",
+        "text": "амброзія міф. ambrosia 2) бот. ragweed Джерело: Українсько-англійський словник на Slovnyk.me",
+    }
+    assert enrich_manifest_module._slovnyk_ukreng_glosses(row, "амброзія") == ["ambrosia"]
+
+    automatics = {
+        "dictionary_slug": "ukreng",
+        "word": "автоматика",
+        "text": (
+            "автоматика 1) (галузь науки і техніки) automatics; "
+            "2) (обладнання) automatic machinery, automatic equipment, automation "
+            "Джерело: Українсько-англійський словник на Slovnyk.me"
+        ),
+    }
+    assert enrich_manifest_module._slovnyk_ukreng_glosses(automatics, "автоматика") == [
+        "automatics",
+        "automatic machinery",
+        "automatic equipment",
+        "automation",
+    ]
+
+
 def test_fill_learner_english_anchor_from_cached_ukreng() -> None:
     cache = {
         "lookups": {

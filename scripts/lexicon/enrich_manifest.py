@@ -5965,6 +5965,56 @@ _SLOVNYK_UKRENG_PREFIX_LABELS = {
     "в",
     "спол",
     "лит",
+    # #6809: attested slovnyk.me ukreng label abbreviations that were missing
+    # here. Each blocked an otherwise-extractable English gloss in the cached
+    # 6323-slug missing-translation residual (e.g. «анчоус іхт. anchovy»,
+    # «аршин заст. arshine», «ай! виг. oh!», «дрохва орн. bustard»,
+    # «алібі невідм. юр. alibi», «інтерферон біохім. interferon»).
+    "амер",
+    "арт",
+    "архт",
+    "бакт",
+    "безос",
+    "біохім",
+    "брит",
+    "буд",
+    "бух",
+    "виг",
+    "дит",
+    "друк",
+    "ент",
+    "жив",
+    "заст",
+    "знев",
+    "ірон",
+    "іхт",
+    "карт",
+    "кін",
+    "ком",
+    "лог",
+    "літ",
+    "мисл",
+    "міф",
+    "мист",
+    "опт",
+    "орн",
+    "пестл",
+    "прикм",
+    "преф",
+    "пр",
+    "присл",
+    "рідк",
+    "сад",
+    "скороч",
+    "театр",
+    "уроч",
+    "фарм",
+    "фін",
+    "вірш",
+    "фон",
+    "фот",
+    "юр",
+    "яд",
 }
 
 
@@ -6019,6 +6069,12 @@ def _clean_ukreng_gloss(candidate: str) -> str | None:
     cleaned = re.sub(r"\(\s*(?:pl|sg|plural|singular)\.?\s*\)", " ", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\s+", " ", cleaned).strip(" \t\r\n.,;:!?()[]{}«»\"“”")
     cleaned = re.sub(r"^(?:to|a|an|the)\s+", "", cleaned, flags=re.IGNORECASE)
+    # A sense boundary the chunker cannot split on (no preceding ")" before the
+    # next "2)") leaves the next sense's number glued to the gloss tail
+    # («амброзія міф. ambrosia 2) бот. ragweed» -> "ambrosia 2"). Strip a
+    # trailing standalone sense number; "vitamin B12"-style tokens keep their
+    # digits because this requires whitespace before the number.
+    cleaned = re.sub(r"\s+\d+$", "", cleaned)
     if not cleaned or not _LATIN_RE.search(cleaned) or re.search(r"[А-Яа-яЄєІіЇїҐґ]", cleaned):
         return None
     if len(cleaned.split()) > 5:
