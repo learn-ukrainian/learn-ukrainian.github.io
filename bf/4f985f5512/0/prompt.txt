@@ -1,0 +1,55 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-4870-contract-tests-r2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — infra-4870-activity-kit-contract-tests
+
+**Issue:** #4870 — read it fully. The grok review of #4867 named the untested contract
+surfaces; the current test is smoke-level.
+
+## Evidence preamble (#M-4, binding)
+Every claim tool-backed: claim + deterministic command + quoted raw output.
+
+## Shippable unit (one PR)
+Expand `site/tests/unit/ActivityKit.contract.test.tsx` (and siblings if needed) to cover
+every surface the issue enumerates: onComplete for cloze and match-up, ClozePassage /
+TrueFalseQuestion / MatchUp onMatch in isolation, cloze legacy embedded-options parsing +
+children fallback, content rendering assertions, and isUkrainian label/feedback switching.
+
+## Acceptance criteria (verify BEFORE opening the PR)
+1. Each issue bullet maps to at least one named test — table in the PR body.
+2. Mutation-check at least the three highest-value new tests (#M-16): break the behavior →
+   test fails; quote one example run.
+3. `npm test` green for the site test suite; `npx eslint` quiet on changed files.
+4. No production component changes UNLESS a test exposes a real defect — in that case STOP
+   on that item, report the defect on #4870 with evidence, and keep the test marked
+   appropriately; do not silently fix product code in a test PR.
+
+## Out of scope
+- New activity types; player behavior changes; visual styling.
+
+## Process (numbered, binding)
+1. Work only inside your dispatch worktree.
+2. Implement tests; run the suite; quote outputs.
+3. Conventional commit(s) with trailer `X-Agent: <your-lane>`.
+4. Push; open PR titled `test(activity-kit): ... (#4870)`. Do NOT enable auto-merge; do NOT merge.
+
+---
+ROUTING_CARD_V1
+task_id: infra-4870-activity-kit-contract-tests
+tier: practical
+model_x_harness: (set at fire time — cursor/auto preferred: frontend/TSX fit)
+why_this_tier: mechanical-with-judgment TSX test authoring against an enumerated contract
+advisor_packet: fable (this brief)
+owned_paths: site/tests/
+acceptance_cmd: npm test (site suite) && npx eslint <changed files> --quiet
+alternatives_considered: (filled at fire time)
+parallel_free_seats: (filled at fire time)

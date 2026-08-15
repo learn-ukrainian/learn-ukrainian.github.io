@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bf4f985f5512",
+  "session_id": "session_f8440f9c-6812-474a-884f-30d42ec15bce",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T19:24:34.2105Z",
+  "branch": "kimi/infra-4870-contract-tests-r2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/ActivityKit.player.test.tsx"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "79f13a41d46f",
+  "token_usage": {
+    "input_tokens": 75559,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4121088,
+    "output_tokens": 28683,
+    "api_call_count": 58
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T19:24:34.188413Z",
+    "agent_lines": 631,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 631,
+    "total_lines_changed": 631,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
