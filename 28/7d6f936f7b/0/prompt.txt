@@ -1,0 +1,54 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-4797-ellipsis-axis
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — infra-4797-ellipsis-axis (bounded slice of #4797)
+
+**Issue:** #4797 — read it fully via REST
+(`gh api repos/learn-ukrainian/learn-ukrainian.github.io/issues/4797`), especially the
+"Remaining" list and the merged sibling fixes (#4791 #4792 #4795 — study #4795's
+approach: exact-match → prefix-boundary containment, it is the pattern precedent).
+Evidence doc: `docs/projects/ua-eval-harness/model-evidence.md` § matcher brittleness.
+
+## Shippable unit (one PR) — the FOURTH axis only
+Fix **excerpt ellipsis/abridged matching** in the QG grounding matcher: excerpts that
+models abridge with ellipses (…, ..., mid-span elision) or light truncation currently
+fail verbatim/containment matching and reject real grounding. Make the matcher accept
+genuinely-grounded abridged excerpts WITHOUT reintroducing the fuzzy false-accept class
+that #4800's autopsy documents (read `docs/bug-autopsies/` for it — that failure mode is
+the hard constraint here; when in doubt, fail closed).
+
+## Explicitly OUT OF SCOPE
+- Grounding gate v2 / entailment (its design is in fleet review — do not preempt).
+- QG decision metric redesign; threshold changes; the 17-fixture paid re-sweep.
+
+## Acceptance criteria (verify BEFORE opening the PR)
+1. Regression fixtures: (a) ellipsis-abridged real grounding now matches; (b) an
+   ellipsis-spliced FABRICATED excerpt (fragments from different places stitched with …)
+   still REJECTS — this is the false-accept guard; mutation-check both (#M-16), quote runs.
+2. Before/after counts on existing affected fixture evidence where cheaply reproducible
+   offline (no paid model calls) — quote what you measured; if offline repro is not
+   possible, say so explicitly rather than approximating.
+3. `.venv/bin/pytest` green on affected files; `.venv/bin/ruff check` green on changed files.
+4. PR references #4797, names the axis, quotes the evidence. Trailer `X-Agent: kimi`.
+5. No auto-merge; no merge.
+
+ROUTING_CARD_V1
+task_id: infra-4797-ellipsis-axis
+tier: practical
+model_x_harness: kimi/k3-256k (free; codex — the prior #4797 grinder — is capped this session)
+advisor_packet: fable (this brief)
+owned_paths: scripts/ (QG grounding matcher) + its tests/fixtures
+acceptance_cmd: .venv/bin/pytest <affected test files> && .venv/bin/ruff check <changed files>
+alternatives_considered:
+  - codex/terra — capped (usage limit) + deficit until 2026-08-20
+  - agy — 2h zero-commit timeout earlier today on a comparable task; not first pick
+parallel_free_seats: agy technically free; claude busy (6515 revision)
