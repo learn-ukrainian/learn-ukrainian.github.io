@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "81880c183560",
+  "strategy": "manual-commit",
+  "branch": "glm/atlas-6809-zero-fill",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/81/880c183560/0/metadata.json",
+      "transcript": "/81/880c183560/0/full.jsonl",
+      "compact_transcript": "/81/880c183560/0/transcript.jsonl",
+      "content_hash": "/81/880c183560/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 125649,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6684736,
+    "output_tokens": 17539,
+    "api_call_count": 80
+  }
+}

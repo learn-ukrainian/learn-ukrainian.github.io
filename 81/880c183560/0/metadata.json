@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "81880c183560",
+  "session_id": "ses_ff849ed58ffejOAnOyczZDDRJU",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T23:47:59.347823Z",
+  "branch": "glm/atlas-6809-zero-fill",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "47b318e66dee",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 125649,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6684736,
+    "output_tokens": 17539,
+    "api_call_count": 80
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T23:47:59.299596Z",
+    "agent_lines": 126,
+    "agent_removed": 0,
+    "human_added": 1,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 127,
+    "total_lines_changed": 128,
+    "agent_percentage": 98.4375,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
