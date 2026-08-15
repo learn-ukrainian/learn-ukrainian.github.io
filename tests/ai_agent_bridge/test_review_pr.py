@@ -15,8 +15,9 @@ from agent_runtime.adapters.acpx import (
     AcpxGlmShadowAdapter,
     _confinement_prefix_argv,
 )
-from ai_agent_bridge import _review_pr as review_pr
-from ai_agent_bridge._review_safety import ReviewSafetyError
+
+from scripts.ai_agent_bridge import _review_pr as review_pr
+from scripts.ai_agent_bridge._review_safety import ReviewSafetyError
 
 
 def _invalid_response_args() -> Namespace:
@@ -53,8 +54,8 @@ def _run_invalid_response_lifecycle(
 ) -> tuple[int, list[str], object]:
     """Run one invalid response through the bridge with a real formal-job store."""
     from agent_runtime import runner
-    from ai_agent_bridge import _review_worktree
 
+    from scripts.ai_agent_bridge import _review_worktree
     from scripts.fleet_comms import authority as authority_module
     from scripts.fleet_comms import routing_reservations
     from scripts.fleet_comms.artifacts import ArtifactStore
@@ -408,7 +409,7 @@ def test_build_review_pr_prompt_injects_ground_truth_block() -> None:
 
 def test_build_review_pr_prompt_large_path_inventory_stays_under_cap() -> None:
     """Large three-dot inventories must stay pointer-budgeted (≤ 4 KiB)."""
-    from ai_agent_bridge._review_safety import MAX_REVIEW_REQUEST_BYTES
+    from scripts.ai_agent_bridge._review_safety import MAX_REVIEW_REQUEST_BYTES
     from scripts.fleet_comms.review_ground_truth import (
         format_ground_truth_brief,
         inventory_from_path_status,
@@ -603,7 +604,7 @@ def test_acpx_parser_preserves_sealed_tool_coverage_trace() -> None:
 
 
 def test_acpx_parser_normalizes_grok_use_tool_to_sealed_operation(tmp_path: Path) -> None:
-    from ai_agent_bridge._review_worktree import verify_clean_review_evidence_reads
+    from scripts.ai_agent_bridge._review_worktree import verify_clean_review_evidence_reads
 
     bundle = tmp_path / ".review-bundle"
     bundle.mkdir()

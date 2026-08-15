@@ -10,14 +10,15 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from ai_agent_bridge import _channels, _cli, _db, _inbox, _reconcile
+
+from scripts.ai_agent_bridge import _channels, _cli, _db, _inbox, _reconcile
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_file), patch(
-        "ai_agent_bridge._db.DB_PATH", db_file
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch(
+        "scripts.ai_agent_bridge._db.DB_PATH", db_file
     ):
         _db.init_db()
         yield
@@ -80,7 +81,7 @@ def test_reconcile_dry_run_prints_worker_disappeared_without_applying(capsys, mo
         lease_until=(datetime.now(UTC) - timedelta(minutes=5)).isoformat(),
     )
 
-    with patch("ai_agent_bridge._reconcile._has_active_worker", return_value=False):
+    with patch("scripts.ai_agent_bridge._reconcile._has_active_worker", return_value=False):
         exit_code = _run_cli(["reconcile", "--dry-run"])
 
     assert exit_code == 0
@@ -124,7 +125,7 @@ def test_reconcile_marks_workspace_write_delivery_delivered_when_recovery_commit
     delivery_id = post["delivery_ids"][0]
     _set_delivery(delivery_id, status="processing")
 
-    with patch("ai_agent_bridge._reconcile._find_timeout_recovery_commit", return_value="abc123"):
+    with patch("scripts.ai_agent_bridge._reconcile._find_timeout_recovery_commit", return_value="abc123"):
         changes = _reconcile.reconcile_deliveries()
 
     assert changes[0].error == "reconcile:git-commit-found:abc123"
@@ -134,8 +135,8 @@ def test_reconcile_marks_workspace_write_delivery_delivered_when_recovery_commit
     assert row["delivered_at"] is not None
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
-@patch("ai_agent_bridge._inbox.reconcile_deliveries")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.reconcile_deliveries")
 def test_run_inbox_calls_reconcile_at_end(mock_reconcile, mock_invoke):
     _channels.create_channel("reviews")
     _channels.post("reviews", "user", "hello", to_agents=["claude"], auto_snapshot=False)

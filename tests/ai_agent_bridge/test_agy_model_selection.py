@@ -18,9 +18,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.result import Result
-from ai_agent_bridge._agy import _extract_target_model, process_for_agy
-from ai_agent_bridge._config import REPO_ROOT
-from ai_agent_bridge._review_worktree import (
+
+from scripts.ai_agent_bridge._agy import _extract_target_model, process_for_agy
+from scripts.ai_agent_bridge._config import REPO_ROOT
+from scripts.ai_agent_bridge._review_worktree import (
     ProvisionedReviewWorktree,
     ReviewIsolationEvidenceBinder,
 )
@@ -69,10 +70,10 @@ def test_agy_bridge_records_unsandboxed_repo_read_mode(monkeypatch):
     }
     captured: dict[str, object] = {}
 
-    monkeypatch.setattr("ai_agent_bridge._agy._fetch_agy_message", lambda _id: msg)
-    monkeypatch.setattr("ai_agent_bridge._agy.acknowledge", lambda _id: None)
-    monkeypatch.setattr("ai_agent_bridge._agy.send_message", lambda **_kwargs: 9)
-    monkeypatch.setattr("ai_agent_bridge._agy.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy._fetch_agy_message", lambda _id: msg)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.acknowledge", lambda _id: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.send_message", lambda **_kwargs: 9)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.record_ask_reply", lambda *_args: None)
 
     def fake_invoke(*_args, **kwargs):
         captured.update(kwargs)
@@ -91,7 +92,7 @@ def test_agy_bridge_records_unsandboxed_repo_read_mode(monkeypatch):
             usage_record={},
         )
 
-    monkeypatch.setattr("ai_agent_bridge._agy.agent_runner.invoke", fake_invoke)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.agent_runner.invoke", fake_invoke)
 
     assert process_for_agy(8, stdout_only=True) == "reply"
     assert captured["mode"] == "danger"
@@ -135,18 +136,18 @@ def test_agy_branch_review_fails_closed_until_native_isolation_exists(monkeypatc
     def fake_checkout(*_args, **_kwargs):
         yield checkout
 
-    monkeypatch.setattr("ai_agent_bridge._agy._fetch_agy_message", lambda _id: msg)
-    monkeypatch.setattr("ai_agent_bridge._agy.provision_review_worktree", fake_checkout)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy._fetch_agy_message", lambda _id: msg)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.provision_review_worktree", fake_checkout)
     monkeypatch.setattr(
         ProvisionedReviewWorktree,
         "review_prompt_evidence",
         lambda self, engine: "\nSEALED_DOSSIER",
     )
-    monkeypatch.setattr("ai_agent_bridge._agy.acknowledge", lambda _id: None)
-    monkeypatch.setattr("ai_agent_bridge._agy.send_message", lambda **_kwargs: 10)
-    monkeypatch.setattr("ai_agent_bridge._agy.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.acknowledge", lambda _id: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.send_message", lambda **_kwargs: 10)
+    monkeypatch.setattr("scripts.ai_agent_bridge._agy.record_ask_reply", lambda *_args: None)
     monkeypatch.setattr(
-        "ai_agent_bridge._agy.agent_runner.invoke",
+        "scripts.ai_agent_bridge._agy.agent_runner.invoke",
         lambda *args, **kwargs: (
             captured.update({"prompt": args[1], **kwargs})
             or Result(

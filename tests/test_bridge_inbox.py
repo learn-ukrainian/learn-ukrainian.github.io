@@ -12,15 +12,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
-from ai_agent_bridge import _channels, _db, _inbox
 from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
+
+from scripts.ai_agent_bridge import _channels, _db, _inbox
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), \
+         patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -105,7 +106,7 @@ def _ok_result(
     )
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_single_delivery(mock_invoke):
     thread = _make_thread("claude", count=1)
     mock_invoke.return_value = _ok_result("claude")
@@ -126,7 +127,7 @@ def test_run_inbox_single_thread_single_delivery(mock_invoke):
     assert messages[-1]["parent_id"] == thread[0]["message_id"]
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
     thread = _make_thread("codex", count=1)
     mock_invoke.return_value = _ok_result(
@@ -142,7 +143,7 @@ def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
     assert _inbox._get_session_id(task_id, "codex") == "codex-session-one"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke):
     thread = _make_thread("codex", count=1)
     mock_invoke.return_value = _ok_result(
@@ -173,7 +174,7 @@ def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke
     assert str(follow_up["message_id"]) not in prompt
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
     first = _make_thread("codex", channel="first", count=1)
     second = _make_thread("codex", channel="second", count=1)
@@ -194,7 +195,7 @@ def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
     assert _inbox._get_session_id(second_task_id, "codex") == "second-session"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
     thread = _make_thread("codex", count=1)
     task_id = _inbox._thread_session_key("topic", str(thread[0]["thread_id"]))
@@ -214,7 +215,7 @@ def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
     assert _inbox._get_session_id(task_id, "codex") == "existing-session"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
     thread = _make_thread("claude", count=3)
     mock_invoke.return_value = _ok_result("claude")
@@ -233,7 +234,7 @@ def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
     assert messages[-1]["parent_id"] == thread[-1]["message_id"]
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_two_threads_invokes_twice(mock_invoke):
     first = _make_thread("claude", channel="topic", count=1)
     second = _make_thread("claude", channel="topic", count=1)
@@ -248,7 +249,7 @@ def test_run_inbox_two_threads_invokes_twice(mock_invoke):
     assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "delivered"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -267,7 +268,7 @@ def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     assert second_row["status"] == "delivered"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_rate_limit_releases_and_aborts(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -293,7 +294,7 @@ def test_run_inbox_rate_limit_releases_and_aborts(mock_invoke):
     assert second_row["status"] == "pending"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -308,13 +309,13 @@ def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
     assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "pending"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_stop_after_seconds_checks_between_groups(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
     mock_invoke.return_value = _ok_result("claude")
 
-    with patch("ai_agent_bridge._inbox.time.monotonic", side_effect=[0.0, 5.0]):
+    with patch("scripts.ai_agent_bridge._inbox.time.monotonic", side_effect=[0.0, 5.0]):
         summary = _inbox.run_inbox("claude", stop_after_seconds=1)
 
     assert summary.threads_processed == 1
@@ -323,7 +324,7 @@ def test_run_inbox_stop_after_seconds_checks_between_groups(mock_invoke):
     assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "pending"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_max_messages_caps_deliveries(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=2)
@@ -341,7 +342,7 @@ def test_run_inbox_max_messages_caps_deliveries(mock_invoke):
     assert all(row["status"] == "pending" for row in second_rows)
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
     """Regression: Gemini c2-review r1 BLOCKER — queue deadlock.
 
@@ -367,7 +368,7 @@ def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
         assert _delivery_rows(str(message["message_id"]))[0]["status"] == "delivered"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_invoke):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])
@@ -401,7 +402,7 @@ def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_in
     )
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
     thread = _make_thread("gemini", count=1)
     _set_delivery_model(str(thread[0]["message_id"]), PRO_MODEL)
@@ -416,7 +417,7 @@ def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
     }
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_falls_back_flash_to_flash_lite(mock_invoke):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])
@@ -445,7 +446,7 @@ def test_run_inbox_gemini_429_falls_back_flash_to_flash_lite(mock_invoke):
     assert messages[-1]["body"] == "bridge reply"
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_exhausts_cascade_and_fails(mock_invoke):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])

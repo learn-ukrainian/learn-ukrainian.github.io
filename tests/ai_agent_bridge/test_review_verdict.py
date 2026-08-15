@@ -6,8 +6,9 @@ import json
 import subprocess
 
 import pytest
-from ai_agent_bridge import _review_verdict as publisher
-from ai_agent_bridge._review_safety import ReviewSafetyError
+
+from scripts.ai_agent_bridge import _review_verdict as publisher
+from scripts.ai_agent_bridge._review_safety import ReviewSafetyError
 
 
 def _approved_evidence() -> dict[str, object]:

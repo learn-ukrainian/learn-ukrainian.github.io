@@ -13,15 +13,15 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_agent_bridge import _channels, _db
+from scripts.ai_agent_bridge import _channels, _db
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     """Ensure every test runs against a clean, isolated SQLite database."""
     db_file = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), \
+         patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -1600,7 +1600,7 @@ def test_add_column_racesafe_swallows_duplicate_and_reraises_others(tmp_path):
     must re-raise. (review-4897 F1 — concurrent migration race.)"""
     import sqlite3
 
-    from ai_agent_bridge._db import _add_column_racesafe
+    from scripts.ai_agent_bridge._db import _add_column_racesafe
 
     conn = sqlite3.connect(str(tmp_path / "race.db"))
     conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY)")

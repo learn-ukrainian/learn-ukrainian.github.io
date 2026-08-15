@@ -13,8 +13,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from ai_agent_bridge import _acp_compat, _cli
-from ai_agent_bridge._ask_contract import (
+from scripts.ai_agent_bridge import _acp_compat, _cli
+from scripts.ai_agent_bridge._ask_contract import (
     EFFORT_CHOICES,
     failed_response_provenance,
     resolve_model_selection,
@@ -158,7 +158,7 @@ def test_terminalization_conflict_preserves_completed_provider_response(
     output_path = tmp_path / "response.txt"
     monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", TerminalConflictAuthority)
     monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
-    monkeypatch.setattr("ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
 
     with pytest.raises(RuntimeError, match="terminal bookkeeping failed after provider response"):
         _acp_compat._run_compat_ask_impl(
@@ -417,9 +417,9 @@ def test_acp_failed_result_receipt_serializes_none_effort_as_unapplied() -> None
 
 def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> None:
     """Native grok ask prompt includes NATIVE_ASK_TOOL_CONTRACT when not review-provisioned; absent on review-provisioned, reverted builders, and full drivers (#5893)."""
-    from ai_agent_bridge._ask_contract import NATIVE_ASK_TOOL_CONTRACT
-    from ai_agent_bridge._grok_build import _build_grok_build_prompt
-    from ai_agent_bridge._prompts import (
+    from scripts.ai_agent_bridge._ask_contract import NATIVE_ASK_TOOL_CONTRACT
+    from scripts.ai_agent_bridge._grok_build import _build_grok_build_prompt
+    from scripts.ai_agent_bridge._prompts import (
         _build_full_execution_prompt,
         build_agy_prompt,
         build_claude_prompt,

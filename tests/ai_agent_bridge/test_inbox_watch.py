@@ -11,14 +11,14 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from ai_agent_bridge import _db, _inbox_watch, _messaging
+from scripts.ai_agent_bridge import _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path: Path):
     """Create an isolated broker database with the current messages schema."""
     db_path = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_path), patch("ai_agent_bridge._db.DB_PATH", db_path):
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_path), patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
         _db.init_db().close()
         yield db_path
 
@@ -159,7 +159,7 @@ def test_cursor_does_not_advance_when_stdout_flush_fails(isolate_db: Path):
 
 def test_inbox_watcher_tick_invokes_ask_watchdog(isolate_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """The persistent inbox watcher loop invokes run_ask_watchdog on each tick (#5893)."""
-    watchdog_mock = patch("ai_agent_bridge._ask_lifecycle.run_ask_watchdog").start()
+    watchdog_mock = patch("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog").start()
     try:
         _inbox_watch.run_watcher(
             "grok",
@@ -175,7 +175,7 @@ def test_inbox_watcher_tick_invokes_ask_watchdog(isolate_db: Path, tmp_path: Pat
 
 def test_inbox_watcher_watchdog_failure_warns_and_continues(isolate_db: Path, tmp_path: Path, capsys: pytest.CaptureFixture):
     """A raising ask watchdog emits a stderr warning and does not crash the watcher loop (#5893)."""
-    watchdog_mock = patch("ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")).start()
+    watchdog_mock = patch("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")).start()
     try:
         cursor = _inbox_watch.run_watcher(
             "grok",

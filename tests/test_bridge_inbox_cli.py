@@ -12,7 +12,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db
+
+from scripts.ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db
 
 
 def test_post_preflight_warns_for_large_body():
@@ -66,7 +67,7 @@ def isolate_db(tmp_path, monkeypatch):
     # historical writer behavior. Production authority mode refuses writers.
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
     db_file = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_file), patch("ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -182,9 +183,9 @@ def _delivery_detail(delivery_id: str) -> sqlite3.Row:
 
 
 def _install_fake_inbox_module(monkeypatch, run_inbox) -> None:
-    fake_inbox_module = ModuleType("ai_agent_bridge._inbox")
+    fake_inbox_module = ModuleType("scripts.ai_agent_bridge._inbox")
     fake_inbox_module.run_inbox = run_inbox
-    monkeypatch.setitem(sys.modules, "ai_agent_bridge._inbox", fake_inbox_module)
+    monkeypatch.setitem(sys.modules, "scripts.ai_agent_bridge._inbox", fake_inbox_module)
 
 
 def _reply_deliveries() -> list[sqlite3.Row]:

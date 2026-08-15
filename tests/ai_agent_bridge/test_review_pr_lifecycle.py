@@ -7,7 +7,8 @@ from contextlib import contextmanager
 from types import SimpleNamespace
 
 import pytest
-from ai_agent_bridge import _review_pr
+
+from scripts.ai_agent_bridge import _review_pr
 
 
 def _args(
@@ -93,8 +94,8 @@ def test_completed_replay_requires_the_original_authorization_envelope() -> None
 
 def test_completed_exact_head_replays_without_provider_call(monkeypatch, capsys, tmp_path) -> None:
     from agent_runtime import runner
-    from ai_agent_bridge import _review_worktree
 
+    from scripts.ai_agent_bridge import _review_worktree
     from scripts.api import state_router
     from scripts.fleet_comms import authority as authority_module
     from scripts.fleet_comms import routing_reservations
@@ -200,8 +201,8 @@ def test_completed_exact_head_replays_without_provider_call(monkeypatch, capsys,
 
 def test_active_exact_head_exits_before_reservation_or_provider_call(monkeypatch, capsys, tmp_path) -> None:
     from agent_runtime import runner
-    from ai_agent_bridge import _review_worktree
 
+    from scripts.ai_agent_bridge import _review_worktree
     from scripts.api import state_router
     from scripts.fleet_comms import authority as authority_module
     from scripts.fleet_comms import routing_reservations
@@ -273,8 +274,8 @@ def test_failed_explicit_review_without_result_invalid_prior_retries_in_place(
     prior_failure: str | None,
 ) -> None:
     from agent_runtime import runner
-    from ai_agent_bridge import _review_worktree
 
+    from scripts.ai_agent_bridge import _review_worktree
     from scripts.api import state_router
     from scripts.fleet_comms import authority as authority_module
     from scripts.fleet_comms import routing_reservations
@@ -366,8 +367,8 @@ def test_refused_substitution_makes_no_provider_call_or_claim(
     refusal: str,
 ) -> None:
     from agent_runtime import runner
-    from ai_agent_bridge import _review_worktree
 
+    from scripts.ai_agent_bridge import _review_worktree
     from scripts.api import state_router
     from scripts.fleet_comms import authority as authority_module
     from scripts.fleet_comms import routing_reservations
@@ -453,8 +454,8 @@ def test_expired_reservation_after_successful_substitution_never_reaches_provide
     tmp_path,
 ) -> None:
     from agent_runtime import runner
-    from ai_agent_bridge import _review_worktree
 
+    from scripts.ai_agent_bridge import _review_worktree
     from scripts.api import state_router
     from scripts.fleet_comms import authority as authority_module
     from scripts.fleet_comms import routing_reservations

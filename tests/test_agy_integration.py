@@ -73,7 +73,7 @@ def _isolate_bridge_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     siblings — inherits isolation without reintroducing the leak.
     """
     _ensure_scripts_path()
-    from ai_agent_bridge import _config, _db
+    from scripts.ai_agent_bridge import _config, _db
 
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
@@ -89,7 +89,7 @@ def _isolate_bridge_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
 def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
     """Stub channel I/O for discuss tests; relies on ``_isolate_bridge_db_path``."""
     _ensure_scripts_path()
-    from ai_agent_bridge import _channels
+    from scripts.ai_agent_bridge import _channels
 
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
@@ -146,7 +146,7 @@ def test_ab_channels_valid_agents_includes_agy():
     scripts_dir = str(_REPO_ROOT / "scripts")
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
-    from ai_agent_bridge import _channels
+    from scripts.ai_agent_bridge import _channels
 
     importlib.reload(_channels)
     assert "agy" in _channels.VALID_AGENTS
@@ -157,7 +157,7 @@ def test_ab_channels_cli_marks_agy_cli_available():
     scripts_dir = str(_REPO_ROOT / "scripts")
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
-    from ai_agent_bridge import _channels_cli
+    from scripts.ai_agent_bridge import _channels_cli
 
     assert _channels_cli._cli_available_agent("agy") is True
 
@@ -165,7 +165,7 @@ def test_ab_channels_cli_marks_agy_cli_available():
 def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkeypatch):
     """ACP discussion accepts Agy as one member of a bounded participant set."""
     _ensure_scripts_path()
-    from ai_agent_bridge import _channels_cli
+    from scripts.ai_agent_bridge import _channels_cli
 
     observed: dict[str, object] = {}
 
@@ -197,7 +197,7 @@ def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkey
 def test_ab_discuss_passes_registered_agy_model_pin(discuss_bridge, monkeypatch):
     """The registered Agy ACP model pin reaches the durable controller."""
     _ensure_scripts_path()
-    from ai_agent_bridge import _channels_cli
+    from scripts.ai_agent_bridge import _channels_cli
 
     observed: dict[str, object] = {}
 

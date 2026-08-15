@@ -21,10 +21,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_agent_bridge import _channels
-from ai_agent_bridge import _config as ab_config
-from ai_agent_bridge import _db as ab_db
-
+from scripts.ai_agent_bridge import _channels
+from scripts.ai_agent_bridge import _config as ab_config
+from scripts.ai_agent_bridge import _db as ab_db
 from scripts.api import comms_router
 from scripts.api.state_helpers import cache_invalidate
 

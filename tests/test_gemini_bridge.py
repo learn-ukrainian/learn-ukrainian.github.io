@@ -11,18 +11,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
-from ai_agent_bridge._cli import _handle_ask_gemini
-from ai_agent_bridge._db import get_db, init_db
-from ai_agent_bridge._gemini import _run_gemini_sync
-from ai_agent_bridge._messaging import send_message
 from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
+
+from scripts.ai_agent_bridge._cli import _handle_ask_gemini
+from scripts.ai_agent_bridge._db import get_db, init_db
+from scripts.ai_agent_bridge._gemini import _run_gemini_sync
+from scripts.ai_agent_bridge._messaging import send_message
 
 
 @pytest.fixture
 def bridge_db(tmp_path):
     db_path = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_path), \
-         patch("ai_agent_bridge._db.DB_PATH", db_path):
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_path), \
+         patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
         conn = init_db()
         conn.close()
         yield db_path
@@ -41,9 +42,9 @@ def _message_to_model(message_id: int) -> str | None:
         conn.close()
 
 
-@patch("ai_agent_bridge._gemini._route_gemini_response")
-@patch("ai_agent_bridge._gemini.acknowledge")
-@patch("ai_agent_bridge._gemini.runtime_invoke")
+@patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
+@patch("scripts.ai_agent_bridge._gemini.acknowledge")
+@patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
 def test_run_gemini_sync_429_retries_same_model_then_falls_back_to_auto(
     mock_invoke,
     mock_acknowledge,
@@ -88,10 +89,10 @@ def test_run_gemini_sync_429_retries_same_model_then_falls_back_to_auto(
         ),
     ]
 
-    with patch("ai_agent_bridge._gemini._is_task_locked", return_value=False), \
-         patch("ai_agent_bridge._gemini._write_pid_file"), \
-         patch("ai_agent_bridge._gemini._remove_pid_file"), \
-         patch("ai_agent_bridge._gemini.atexit.register"):
+    with patch("scripts.ai_agent_bridge._gemini._is_task_locked", return_value=False), \
+         patch("scripts.ai_agent_bridge._gemini._write_pid_file"), \
+         patch("scripts.ai_agent_bridge._gemini._remove_pid_file"), \
+         patch("scripts.ai_agent_bridge._gemini.atexit.register"):
         response = _run_gemini_sync(
             msg,
             message_id,
@@ -114,9 +115,9 @@ def test_run_gemini_sync_429_retries_same_model_then_falls_back_to_auto(
     mock_acknowledge.assert_called_once_with(message_id, quiet=True)
 
 
-@patch("ai_agent_bridge._gemini._route_gemini_response")
-@patch("ai_agent_bridge._gemini.acknowledge")
-@patch("ai_agent_bridge._gemini.runtime_invoke")
+@patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
+@patch("scripts.ai_agent_bridge._gemini.acknowledge")
+@patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
 def test_run_gemini_sync_passes_auth_mode_to_runtime(
     mock_invoke,
     _mock_acknowledge,
@@ -156,10 +157,10 @@ def test_run_gemini_sync_passes_auth_mode_to_runtime(
         usage_record={},
     )
 
-    with patch("ai_agent_bridge._gemini._is_task_locked", return_value=False), \
-         patch("ai_agent_bridge._gemini._write_pid_file"), \
-         patch("ai_agent_bridge._gemini._remove_pid_file"), \
-         patch("ai_agent_bridge._gemini.atexit.register"):
+    with patch("scripts.ai_agent_bridge._gemini._is_task_locked", return_value=False), \
+         patch("scripts.ai_agent_bridge._gemini._write_pid_file"), \
+         patch("scripts.ai_agent_bridge._gemini._remove_pid_file"), \
+         patch("scripts.ai_agent_bridge._gemini.atexit.register"):
         _run_gemini_sync(
             msg,
             message_id,
@@ -188,9 +189,9 @@ def _ok_result() -> Result:
     "allow_write, expected_mode",
     [(False, "read-only"), (True, "workspace-write")],
 )
-@patch("ai_agent_bridge._gemini._route_gemini_response")
-@patch("ai_agent_bridge._gemini.acknowledge")
-@patch("ai_agent_bridge._gemini.runtime_invoke")
+@patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
+@patch("scripts.ai_agent_bridge._gemini.acknowledge")
+@patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
 def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
     mock_invoke, _ack, _route, bridge_db, allow_write, expected_mode,
 ):
@@ -205,10 +206,10 @@ def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
            "to": "gemini", "type": "query", "content": "x", "data": None}
     mock_invoke.return_value = _ok_result()
 
-    with patch("ai_agent_bridge._gemini._is_task_locked", return_value=False), \
-         patch("ai_agent_bridge._gemini._write_pid_file"), \
-         patch("ai_agent_bridge._gemini._remove_pid_file"), \
-         patch("ai_agent_bridge._gemini.atexit.register"):
+    with patch("scripts.ai_agent_bridge._gemini._is_task_locked", return_value=False), \
+         patch("scripts.ai_agent_bridge._gemini._write_pid_file"), \
+         patch("scripts.ai_agent_bridge._gemini._remove_pid_file"), \
+         patch("scripts.ai_agent_bridge._gemini.atexit.register"):
         _run_gemini_sync(
             msg, message_id, PRO_MODEL, "bridge prompt", no_timeout=False,
             stdout_only=True, output_path=None, allow_write=allow_write,
@@ -227,7 +228,7 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
         captured["kwargs"] = kwargs
         return SimpleNamespace(ok=True)
 
-    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", _fake_ask_agy)
+    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", _fake_ask_agy)
 
     class _Args:
         content = "hello"

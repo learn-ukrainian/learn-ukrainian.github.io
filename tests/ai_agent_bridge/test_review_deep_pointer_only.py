@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import patch
 
-from ai_agent_bridge._dispatch_wrappers import (
+from scripts.ai_agent_bridge._dispatch_wrappers import (
     _list_review_path_names,
     _write_review_deep_path_prompt,
     _write_review_deep_pr_prompt,
@@ -38,7 +38,7 @@ def test_pr_prompt_is_pointer_only(tmp_path: Path) -> None:
         "files": [{"path": "a.py", "additions": 1, "deletions": 0}],
     }
     with patch(
-        "ai_agent_bridge._dispatch_wrappers._run_json_command",
+        "scripts.ai_agent_bridge._dispatch_wrappers._run_json_command",
         return_value=fake,
     ):
         out = _write_review_deep_pr_prompt("1", tmp_path)

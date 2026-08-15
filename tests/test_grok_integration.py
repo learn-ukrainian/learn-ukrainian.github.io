@@ -71,7 +71,7 @@ def test_ab_channels_valid_agents_includes_grok_seats():
     scripts_dir = str(_REPO_ROOT / "scripts")
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
-    from ai_agent_bridge import _channels
+    from scripts.ai_agent_bridge import _channels
 
     importlib.reload(_channels)
     for name in ("grok", "grok-build", "grok-hermes"):
@@ -83,7 +83,7 @@ def test_ab_channels_cli_marks_grok_cli_available():
     scripts_dir = str(_REPO_ROOT / "scripts")
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
-    from ai_agent_bridge import _channels_cli
+    from scripts.ai_agent_bridge import _channels_cli
 
     assert _channels_cli._cli_available_agent("grok") is True
     assert _channels_cli._cli_available_agent("grok-build") is True

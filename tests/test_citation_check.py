@@ -29,7 +29,7 @@ _SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-from ai_agent_bridge import _citation_check as cc
+from scripts.ai_agent_bridge import _citation_check as cc
 
 # ─────────────────────────────────────────────────────────────────────
 # Detection
@@ -436,7 +436,7 @@ def _isolated_db(tmp_path, monkeypatch):
     own DB without touching the real broker. Cleared automatically
     when ``tmp_path`` is removed at end of the test.
     """
-    from ai_agent_bridge import _config, _db
+    from scripts.ai_agent_bridge import _config, _db
     db_path = tmp_path / "messages.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
     monkeypatch.setattr(_db, "DB_PATH", db_path)
@@ -455,7 +455,7 @@ def test_channels_post_annotates_unverified_citation(monkeypatch, tmp_path):
     """End-to-end: posting a message with a fabricated citation results
     in the body (as persisted) carrying the CITATION-UNVERIFIED marker.
     """
-    from ai_agent_bridge import _channels, _citation_check
+    from scripts.ai_agent_bridge import _channels, _citation_check
 
     fake = _FakeSourcesDB(style_guide={})  # no AD entries
     monkeypatch.setattr(_citation_check, "_try_load_sources_db", lambda: fake)
@@ -488,7 +488,7 @@ def test_channels_post_annotates_unverified_citation(monkeypatch, tmp_path):
 
 
 def test_channels_post_skips_verification_when_disabled(monkeypatch, tmp_path):
-    from ai_agent_bridge import _channels, _citation_check
+    from scripts.ai_agent_bridge import _channels, _citation_check
 
     fake = _FakeSourcesDB(style_guide={})
     monkeypatch.setattr(_citation_check, "_try_load_sources_db", lambda: fake)
@@ -514,7 +514,7 @@ def test_channels_post_skips_verification_when_disabled(monkeypatch, tmp_path):
 
 
 def test_channels_post_skips_verification_for_system_kinds(monkeypatch, tmp_path):
-    from ai_agent_bridge import _channels, _citation_check
+    from scripts.ai_agent_bridge import _channels, _citation_check
 
     fake = _FakeSourcesDB(style_guide={})
     monkeypatch.setattr(_citation_check, "_try_load_sources_db", lambda: fake)

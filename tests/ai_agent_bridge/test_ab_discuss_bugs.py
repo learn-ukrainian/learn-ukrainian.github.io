@@ -9,8 +9,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
-from ai_agent_bridge import _channels, _channels_cli, _cli, _db
-from ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
+
+from scripts.ai_agent_bridge import _channels, _channels_cli, _cli, _db
+from scripts.ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
 
 
 def _clear_identity_env(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -34,7 +35,7 @@ def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
     """
     # Patch both bindings — ``_db`` imports DB_PATH from ``_config`` by
     # name, so they are independent (#5247 xdist leak class).
-    from ai_agent_bridge import _config
+    from scripts.ai_agent_bridge import _config
 
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
@@ -170,7 +171,7 @@ def test_ask_codex_infers_from_claude_agent_name(
         captured["from_llm"] = kwargs["source"]
         return SimpleNamespace(ok=True, response="ok", transport_outcome="ok")
 
-    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
+    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     parser = _cli._build_parser()
     args = parser.parse_args(["ask-codex", "hello", "--task-id", "task-1"])
 
@@ -202,7 +203,7 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
         captured.update(target=target, content=content, **kwargs)
         return SimpleNamespace(ok=True, response="ok", transport_outcome="ok")
 
-    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
+    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     parser = _cli._build_parser()
     args = parser.parse_args(
         [

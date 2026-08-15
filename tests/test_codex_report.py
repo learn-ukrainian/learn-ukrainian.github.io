@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from ai_agent_bridge._codex_report import (
+from scripts.ai_agent_bridge._codex_report import (
     CodexReport,
     parse_codex_report,
     validate_codex_report,

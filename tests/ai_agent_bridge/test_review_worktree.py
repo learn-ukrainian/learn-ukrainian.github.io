@@ -15,13 +15,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from ai_agent_bridge import _agy, _claude, _cli, _codex, _grok_build
-from ai_agent_bridge import _review_worktree as review_worktree
-
 from scripts.agent_runtime.adapters.acpx import (
     AcpxShadowRefusalError,
     _validate_sealed_review_mcp_config,
 )
+from scripts.ai_agent_bridge import _agy, _claude, _cli, _codex, _grok_build
+from scripts.ai_agent_bridge import _review_worktree as review_worktree
 from scripts.review.isolation import create_review_temp_root
 from scripts.review.snapshot import (
     ReviewSnapshot,

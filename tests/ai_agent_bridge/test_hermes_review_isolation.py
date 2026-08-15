@@ -8,8 +8,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from ai_agent_bridge import _hermes as hermes
-from ai_agent_bridge import _review_safety as safety
+
+from scripts.ai_agent_bridge import _hermes as hermes
+from scripts.ai_agent_bridge import _review_safety as safety
 
 
 @pytest.fixture()

@@ -23,17 +23,18 @@ from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.result import Result
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
-from ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
-from ai_agent_bridge._codex import (
+
+from scripts.ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
+from scripts.ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,
     _reported_codex_effort,
     _resolve_codex_bridge_timeout,
     ask_codex_chain,
     process_for_codex,
 )
-from ai_agent_bridge._db import get_db, init_db
-from ai_agent_bridge._messaging import detect_sender, send_message
-from ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
+from scripts.ai_agent_bridge._db import get_db, init_db
+from scripts.ai_agent_bridge._messaging import detect_sender, send_message
+from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 @pytest.fixture(autouse=True)
@@ -49,7 +50,7 @@ def _isolate_usage_log(tmp_path):
 def bridge_db(tmp_path):
     """Use a temporary broker DB for bridge tests."""
     db_path = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._db.DB_PATH", db_path):
+    with patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
         conn = init_db()
         conn.close()
         yield db_path
@@ -103,7 +104,7 @@ def test_detect_sender_codex():
     }
     with (
         patch.dict(os.environ, {**env, "CODEX_SESSION": "1"}, clear=True),
-        patch("ai_agent_bridge._messaging.Path.exists", return_value=False),
+        patch("scripts.ai_agent_bridge._messaging.Path.exists", return_value=False),
     ):
         assert detect_sender() == "codex"
 
@@ -137,7 +138,7 @@ def test_handle_ask_codex_reads_stdin(monkeypatch):
         captured.update(args=args, kwargs=kwargs)
         return SimpleNamespace(ok=True)
 
-    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
+    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     with patch("sys.stdin", io.StringIO("stdin prompt")):
         _handle_ask_codex(args)
     assert captured["args"] == ("codex", "stdin prompt")
@@ -211,7 +212,7 @@ def test_ask_codex_chain_dispatches_issues_sequentially(monkeypatch):
         monkeypatch.delenv(variable, raising=False)
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/project")
 
-    with patch("ai_agent_bridge._codex.ask_codex", side_effect=[11, 12]) as ask_codex_mock:
+    with patch("scripts.ai_agent_bridge._codex.ask_codex", side_effect=[11, 12]) as ask_codex_mock:
         message_ids = ask_codex_chain(
             "Fix {issue_ref} via {task_id}",
             ["1177", "#1178", "issue-1177"],
@@ -234,7 +235,7 @@ def test_ask_codex_chain_dispatches_issues_sequentially(monkeypatch):
 
 
 def test_ask_codex_chain_prefixes_issue_context_without_placeholders():
-    with patch("ai_agent_bridge._codex.ask_codex", return_value=11) as ask_codex_mock:
+    with patch("scripts.ai_agent_bridge._codex.ask_codex", return_value=11) as ask_codex_mock:
         ask_codex_chain("Review and fix the issue.", ["1177"])
 
     assert ask_codex_mock.call_args.args[0] == ("GitHub issue #1177 (issue-1177).\n\nReview and fix the issue.")
@@ -266,13 +267,13 @@ def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
         assert _codex_bridge_runtime_mode() == "read-only"
 
 
-@patch("ai_agent_bridge._codex.acknowledge")
-@patch("ai_agent_bridge._codex.send_message", return_value=99)
-@patch("ai_agent_bridge._codex.set_session")
-@patch("ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
-@patch("ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
+@patch("scripts.ai_agent_bridge._codex.acknowledge")
+@patch("scripts.ai_agent_bridge._codex.send_message", return_value=99)
+@patch("scripts.ai_agent_bridge._codex.set_session")
+@patch("scripts.ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
+@patch("scripts.ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
 @patch(
-    "ai_agent_bridge._codex._fetch_codex_message",
+    "scripts.ai_agent_bridge._codex._fetch_codex_message",
     return_value={
         "id": 7,
         "task_id": "issue-1177",
@@ -342,13 +343,13 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     mock_acknowledge.assert_called_once_with(7)
 
 
-@patch("ai_agent_bridge._codex.acknowledge")
-@patch("ai_agent_bridge._codex.send_message", return_value=100)
-@patch("ai_agent_bridge._codex.set_session")
-@patch("ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
-@patch("ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
+@patch("scripts.ai_agent_bridge._codex.acknowledge")
+@patch("scripts.ai_agent_bridge._codex.send_message", return_value=100)
+@patch("scripts.ai_agent_bridge._codex.set_session")
+@patch("scripts.ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
+@patch("scripts.ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
 @patch(
-    "ai_agent_bridge._codex._fetch_codex_message",
+    "scripts.ai_agent_bridge._codex._fetch_codex_message",
     return_value={
         "id": 8,
         "task_id": "issue-1178",
@@ -445,14 +446,14 @@ def test_process_for_codex_cold_starts_without_stored_session(monkeypatch):
         returncode=0,
         usage_record={},
     )
-    monkeypatch.setattr("ai_agent_bridge._codex._fetch_codex_message", lambda _message_id: message)
-    monkeypatch.setattr("ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": None})
-    monkeypatch.setattr("ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
-    monkeypatch.setattr("ai_agent_bridge._codex.build_codex_prompt", lambda *_args, **_kwargs: "bridge prompt")
-    monkeypatch.setattr("ai_agent_bridge._codex.agent_runner.invoke", lambda *_args, **kwargs: captured.update(kwargs) or result)
-    monkeypatch.setattr("ai_agent_bridge._codex.send_message", lambda **_kwargs: 11)
-    monkeypatch.setattr("ai_agent_bridge._codex.acknowledge", lambda *_args: None)
-    monkeypatch.setattr("ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex._fetch_codex_message", lambda _message_id: message)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": None})
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.build_codex_prompt", lambda *_args, **_kwargs: "bridge prompt")
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.agent_runner.invoke", lambda *_args, **kwargs: captured.update(kwargs) or result)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.send_message", lambda **_kwargs: 11)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.acknowledge", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
 
     process_for_codex(10)
 
@@ -620,7 +621,7 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
         yield checkout
 
     monkeypatch.setattr(
-        "ai_agent_bridge._codex._fetch_codex_message",
+        "scripts.ai_agent_bridge._codex._fetch_codex_message",
         lambda _id: {
             "id": 9,
             "task_id": "branch-review",
@@ -631,9 +632,9 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
             "data": json.dumps({"review_target": {"branch": "feature/review"}}),
         },
     )
-    monkeypatch.setattr("ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
-    monkeypatch.setattr("ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": "session-existing"})
-    monkeypatch.setattr("ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": "session-existing"})
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
     monkeypatch.setattr(
         ProvisionedReviewWorktree,
         "review_prompt_evidence",
@@ -649,12 +650,12 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
         "bind_review_result",
         lambda self, result, engine: None,
     )
-    monkeypatch.setattr("ai_agent_bridge._codex.acknowledge", lambda *_args: None)
-    monkeypatch.setattr("ai_agent_bridge._codex.send_message", lambda **_kwargs: 10)
-    monkeypatch.setattr("ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
-    monkeypatch.setattr("ai_agent_bridge._codex.set_session", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.acknowledge", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.send_message", lambda **_kwargs: 10)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._codex.set_session", lambda *_args: None)
     monkeypatch.setattr(
-        "ai_agent_bridge._codex.agent_runner.invoke",
+        "scripts.ai_agent_bridge._codex.agent_runner.invoke",
         lambda *args, **kwargs: (
             captured.update({"prompt": args[1], **kwargs})
             or Result(
@@ -694,11 +695,11 @@ def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):
 
     with (
         patch(
-            "ai_agent_bridge._codex.has_codex_headroom",
+            "scripts.ai_agent_bridge._codex.has_codex_headroom",
             return_value=(False, "rate_limited 30s ago"),
         ),
         patch(
-            "ai_agent_bridge._codex.build_codex_prompt",
+            "scripts.ai_agent_bridge._codex.build_codex_prompt",
         ) as mock_prompt,
         patch(
             "agent_runtime.runner.invoke",
@@ -734,11 +735,11 @@ def test_rate_limit_error_defers_message(bridge_db):
 
     with (
         patch(
-            "ai_agent_bridge._codex.has_codex_headroom",
+            "scripts.ai_agent_bridge._codex.has_codex_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "ai_agent_bridge._codex.build_codex_prompt",
+            "scripts.ai_agent_bridge._codex.build_codex_prompt",
             return_value="bridge prompt",
         ),
         patch(
@@ -771,11 +772,11 @@ def test_other_errors_still_ack_inbound(bridge_db):
 
     with (
         patch(
-            "ai_agent_bridge._codex.has_codex_headroom",
+            "scripts.ai_agent_bridge._codex.has_codex_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "ai_agent_bridge._codex.build_codex_prompt",
+            "scripts.ai_agent_bridge._codex.build_codex_prompt",
             return_value="bridge prompt",
         ),
         patch(

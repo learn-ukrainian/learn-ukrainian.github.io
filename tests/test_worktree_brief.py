@@ -10,14 +10,14 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from ai_agent_bridge._worktree_brief import write_worktree_brief
+from scripts.ai_agent_bridge._worktree_brief import write_worktree_brief
 
 
 def test_write_worktree_brief_writes_expected_yaml(tmp_path):
     fixed_now = datetime(2026, 4, 12, 9, 30, 0, tzinfo=UTC)
 
-    with patch("ai_agent_bridge._worktree_brief._run_git") as run_git_mock, patch(
-        "ai_agent_bridge._worktree_brief._utcnow", return_value=fixed_now
+    with patch("scripts.ai_agent_bridge._worktree_brief._run_git") as run_git_mock, patch(
+        "scripts.ai_agent_bridge._worktree_brief._utcnow", return_value=fixed_now
     ):
         run_git_mock.side_effect = [
             "abc123def456",
@@ -41,7 +41,7 @@ def test_write_worktree_brief_writes_expected_yaml(tmp_path):
 
 
 def test_write_worktree_brief_calculates_divergence_from_git_commands(tmp_path):
-    with patch("ai_agent_bridge._worktree_brief._run_git") as run_git_mock:
+    with patch("scripts.ai_agent_bridge._worktree_brief._run_git") as run_git_mock:
         run_git_mock.side_effect = [
             "deadbeef",
             "7 3",

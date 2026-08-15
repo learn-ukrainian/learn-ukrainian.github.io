@@ -11,8 +11,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from ai_agent_bridge import _channels, _inbox, _prompts
-from ai_agent_bridge._inbox import _ClaimedDelivery, _ClaimedThread
+from scripts.ai_agent_bridge import _channels, _inbox, _prompts
+from scripts.ai_agent_bridge._inbox import _ClaimedDelivery, _ClaimedThread
 
 
 def test_review_protocol_is_loaded_at_call_time(tmp_path, monkeypatch):

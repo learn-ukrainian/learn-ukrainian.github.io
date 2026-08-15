@@ -11,8 +11,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.errors import AgentTimeoutError
-from ai_agent_bridge import _channels, _db, _inbox
-from ai_agent_bridge._orphan_recovery import (
+
+from scripts.ai_agent_bridge import _channels, _db, _inbox
+from scripts.ai_agent_bridge._orphan_recovery import (
     RecoveryCandidate,
     RecoveryResult,
     recover_orphan_commit,
@@ -110,7 +111,7 @@ def test_recover_orphan_commit_rejects_when_ruff_fails(tmp_path: Path):
     repo = _init_repo(tmp_path)
     (repo / "scripts" / "task.py").write_text("print('bad')\n", encoding="utf-8")
 
-    with patch("ai_agent_bridge._orphan_recovery._run_ruff", return_value=False):
+    with patch("scripts.ai_agent_bridge._orphan_recovery._run_ruff", return_value=False):
         result = recover_orphan_commit(
             _candidate("Touch scripts/task.py"),
             repo_root=repo,
@@ -141,16 +142,16 @@ def test_recover_orphan_commit_rejects_when_pre_commit_blocks(tmp_path: Path):
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path: Path):
     db_file = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_file), patch(
-        "ai_agent_bridge._db.DB_PATH", db_file
+    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch(
+        "scripts.ai_agent_bridge._db.DB_PATH", db_file
     ):
         _db.init_db()
         yield
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
+@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 @patch(
-    "ai_agent_bridge._inbox._maybe_recover_orphan_commit",
+    "scripts.ai_agent_bridge._inbox._maybe_recover_orphan_commit",
     return_value=RecoveryResult(commit_sha="abc123", reason=None),
 )
 def test_run_inbox_timeout_recovery_marks_delivery_delivered(

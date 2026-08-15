@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from ai_agent_bridge import _review_safety as safety
+
+from scripts.ai_agent_bridge import _review_safety as safety
 
 
 def test_looks_like_pr_cf_review_detects_github_pr_url() -> None:
