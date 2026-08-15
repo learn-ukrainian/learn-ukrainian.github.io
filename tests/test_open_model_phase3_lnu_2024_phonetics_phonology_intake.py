@@ -91,6 +91,8 @@ def test_mint_is_source_blind_deterministic_and_fail_closed() -> None:
     assert first["content_fitness"]["topic_gaps_closed"] == []
     assert first["content_fitness"]["topic_gaps_narrowed_claimed"] == []
     assert first["gates"]["phase4_blocked"] is True and first["gates"]["phase4_authorized"] is False
+    for field in intake.TRAINING_AUTHORIZATION_FIELDS:
+        assert first["rights"][field] is False, field
     encoded = intake.canonical_json(first)
     assert all(
         value not in encoded for value in ("GoogleDrive-", "@gmail.com", "/Users/", '"page_texts"', '"source_text"')
@@ -104,6 +106,8 @@ def test_mint_is_source_blind_deterministic_and_fail_closed() -> None:
         (("content_fitness", "target_cells", 0, "qualified_source_needed"), "forged rationale"),
         (("content_fitness", "descriptive_topics", 0, "role"), "forged secondary role"),
         (("rights", "unrestricted_training_export"), True),
+        (("rights", "private_training_preparation"), True),
+        (("rights", "general_downstream_dataset_license_established"), True),
         (("signals", "spectrograph"), 9),
         (("text_layer", "extracted_characters"), 1),
         (("source", "year"), 2023),
@@ -130,6 +134,48 @@ def test_resealed_mutations_fail(path: tuple[object, ...], value: object) -> Non
     receipt["receipt_sha256"] = intake.receipt_sha256(receipt)
     with pytest.raises(intake.Lnu2024PhoneticsPhonologyIntakeError, match=r"body drift|schema violation"):
         intake.validate_receipt(receipt)
+
+
+def test_require_no_training_authorization_rejects_any_true_flag() -> None:
+    base = dict.fromkeys(intake.TRAINING_AUTHORIZATION_FIELDS, False)
+    intake._require_no_training_authorization(base)
+    for field in intake.TRAINING_AUTHORIZATION_FIELDS:
+        forged = {**base, field: True}
+        with pytest.raises(intake.Lnu2024PhoneticsPhonologyIntakeError, match="training authorization"):
+            intake._require_no_training_authorization(forged)
+
+
+def _schema_validator() -> Draft202012Validator:
+    schema = json.loads(intake.SCHEMA_PATH.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    return Draft202012Validator(schema)
+
+
+def test_schema_rejects_duplicate_target_cell_area() -> None:
+    receipt = copy.deepcopy(intake.mint_receipt())
+    cells = receipt["content_fitness"]["target_cells"]
+    cells[1] = copy.deepcopy(cells[0])
+    assert not _schema_validator().is_valid(receipt)
+
+
+def test_schema_rejects_missing_target_cell_area() -> None:
+    receipt = copy.deepcopy(intake.mint_receipt())
+    del receipt["content_fitness"]["target_cells"][-1]
+    assert not _schema_validator().is_valid(receipt)
+
+
+def test_schema_rejects_reordered_target_cells() -> None:
+    receipt = copy.deepcopy(intake.mint_receipt())
+    cells = receipt["content_fitness"]["target_cells"]
+    cells[0], cells[1] = cells[1], cells[0]
+    assert not _schema_validator().is_valid(receipt)
+
+
+def test_schema_rejects_mismatched_qualified_source_needed() -> None:
+    receipt = copy.deepcopy(intake.mint_receipt())
+    cells = receipt["content_fitness"]["target_cells"]
+    cells[0]["qualified_source_needed"] = cells[1]["qualified_source_needed"]
+    assert not _schema_validator().is_valid(receipt)
 
 
 def test_private_audit_rejects_modes_symlink_and_hash_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

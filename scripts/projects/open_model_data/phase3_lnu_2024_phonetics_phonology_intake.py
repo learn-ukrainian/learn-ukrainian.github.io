@@ -94,6 +94,18 @@ def require(condition: bool, message: str) -> None:
         raise Lnu2024PhoneticsPhonologyIntakeError(message)
 
 
+TRAINING_AUTHORIZATION_FIELDS = (
+    "private_training_preparation",
+    "general_downstream_dataset_license_established",
+    "unrestricted_training_export",
+)
+
+
+def _require_no_training_authorization(rights: Mapping[str, Any]) -> None:
+    for field in TRAINING_AUTHORIZATION_FIELDS:
+        require(rights[field] is False, f"training authorization must stay false: {field}")
+
+
 def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
@@ -237,6 +249,24 @@ def validate_authoritative_state(freeze_path: Path | None = None, policy_path: P
 
 def build_receipt_body() -> dict[str, Any]:
     bindings = validate_authoritative_state()
+    rights = {
+        "metadata_standard_license_present": False,
+        "repository_deposit_terms": (
+            "public institutional website copy; no explicit standard license; "
+            "downstream dataset reuse not established; retain only for private audit and later rights review"
+        ),
+        "general_downstream_dataset_license_established": False,
+        "private_acquisition": True,
+        "private_backup": True,
+        "private_extraction": True,
+        "private_training_preparation": False,
+        "public_reconstructable_full_text_export": False,
+        "unrestricted_training_export": False,
+        "public_text_free_metadata_hash_nonreconstructable_evidence": True,
+        "final_release_review_required": True,
+        "takedown_adapt_on_substantiated_complaint": True,
+    }
+    _require_no_training_authorization(rights)
     cells = [
         {
             "area": area,
@@ -353,23 +383,7 @@ def build_receipt_body() -> dict[str, Any]:
             "topic_gaps_closed": [],
             "topic_gaps_narrowed_claimed": [],
         },
-        "rights": {
-            "metadata_standard_license_present": False,
-            "repository_deposit_terms": (
-                "public institutional website copy; no explicit standard license; "
-                "downstream dataset reuse not established; retain only for private audit and later rights review"
-            ),
-            "general_downstream_dataset_license_established": False,
-            "private_acquisition": True,
-            "private_backup": True,
-            "private_extraction": True,
-            "private_training_preparation": True,
-            "public_reconstructable_full_text_export": False,
-            "unrestricted_training_export": False,
-            "public_text_free_metadata_hash_nonreconstructable_evidence": True,
-            "final_release_review_required": True,
-            "takedown_adapt_on_substantiated_complaint": True,
-        },
+        "rights": rights,
         "denominators": {
             "v2_source_units": 67041,
             "v2_evaluation_identities": 9392,
@@ -418,6 +432,7 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "receipt"
         raise Lnu2024PhoneticsPhonologyIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
+    _require_no_training_authorization(receipt["rights"])
     require(receipt == {**build_receipt_body(), "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
     encoded = canonical_json(receipt)
     for forbidden in (

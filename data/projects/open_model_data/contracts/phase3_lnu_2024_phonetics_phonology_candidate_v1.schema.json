@@ -125,14 +125,50 @@
         "orthography": {"const": 40}
       }
     },
-    "cell": {
+    "cell_phonetics": {
       "type": "object",
       "additionalProperties": false,
       "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
       "properties": {
-        "area": {"enum": ["phonetics", "phonology", "orthoepy", "accentology"]},
+        "area": {"const": "phonetics"},
         "frozen_status": {"const": "partial"},
-        "qualified_source_needed": {"type": "string"},
+        "qualified_source_needed": {"const": "Modern post-2019 university textbook dedicated to theoretical phonetics and acoustic phonology (e.g. Hryshchenko et al. post-2019 edition)."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "cell_phonology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "phonology"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Dedicated university course manual on Ukrainian phonology and morphonology."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "cell_orthoepy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "orthoepy"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Post-2019 standard Ukrainian orthoepy handbook with updated stress and pronunciation norms."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "cell_accentology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "accentology"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Dedicated modern university manual on Ukrainian accentology and accentual paradigms."},
         "evidence_classification": {"const": "NARROW_ONLY"},
         "role": {"const": "current_practical_corroboration_no_gap_transition"}
       }
@@ -162,7 +198,18 @@
       "required": ["primary_role", "target_cells", "secondary_observation", "descriptive_topics", "broad_topics", "limitations", "topic_gaps_closed", "topic_gaps_narrowed_claimed"],
       "properties": {
         "primary_role": {"const": "modern_ukrainian_practical_university_handbook"},
-        "target_cells": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/cell"}},
+        "target_cells": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/cell_phonetics"},
+            {"$ref": "#/$defs/cell_phonology"},
+            {"$ref": "#/$defs/cell_orthoepy"},
+            {"$ref": "#/$defs/cell_accentology"}
+          ],
+          "items": false
+        },
         "secondary_observation": {"$ref": "#/$defs/secondary"},
         "descriptive_topics": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/descriptive_topic"}},
         "broad_topics": {"type": "array", "items": {"type": "string"}},
@@ -182,7 +229,7 @@
         "private_acquisition": {"const": true},
         "private_backup": {"const": true},
         "private_extraction": {"const": true},
-        "private_training_preparation": {"const": true},
+        "private_training_preparation": {"const": false},
         "public_reconstructable_full_text_export": {"const": false},
         "unrestricted_training_export": {"const": false},
         "public_text_free_metadata_hash_nonreconstructable_evidence": {"const": true},
