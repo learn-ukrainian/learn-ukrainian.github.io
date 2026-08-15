@@ -3258,6 +3258,47 @@ def test_vocabulary_candidates_fold_ukrainian_apostrophe_glyphs() -> None:
     assert all("\u02bb" not in candidate["surface"] for candidate in by_lemma["сім'я"])
 
 
+def test_vocabulary_candidates_resolve_modifier_apostrophe_stressed_token() -> None:
+    """#5374 review fix: a U+02BC surface carrying the combining stress mark
+    (Мʼяки́й знак) must stay ONE token on the tokenizer path — if the
+    modifier apostrophe ever splits the token, _APOSTROPHE_FOLD never sees
+    the joined word and the false-MISSING returns. The surface resolves
+    against the ASCII-apostrophe ledger lemma м'який знак."""
+
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        return {word: [] for word in words}
+
+    # Tokenizer path: the U+02BC + U+0301 surface is a single token.
+    assert pbr._lexical_tokens("Мʼяки́й знак") == ["мʼяки́й", "знак"]
+
+    content = "Мʼяки́й знак помʼякшує приголосний.\n"
+    vocabulary = "- lemma: м'який знак\n"
+    candidates = pbr.build_vocabulary_surface_candidates(
+        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
+    by_lemma = {entry["lemma"]: entry["candidates"] for entry in candidates["lemmas"]}
+
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["м'який знак"]} == {
+        ("Мʼяки́й знак", "exact lemma surface")
+    }
+    # Evidence bytes are preserved: the surface keeps U+02BC and U+0301.
+    assert by_lemma["м'який знак"][0]["surface"] == "Мʼяки́й знак"
+
+
 def test_vocabulary_coverage_accepts_modifier_apostrophe_exact_surface() -> None:
     """#5374: a packet-bound U+02BC surface with 'exact lemma surface'
     verification passes coverage validation for the U+0027 lemma."""

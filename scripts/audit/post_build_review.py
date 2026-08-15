@@ -2011,7 +2011,10 @@ def _visible_source_lines(path: str, text: str) -> list[str]:
 # and displayed evidence always keeps the original bytes. (#5375)
 _COMBINING_STRESS_MARK = "\u0301"
 _TOKEN_WORD = "[^\\W_]+(?:\u0301+[^\\W_]*)*"
-_LEXICAL_TOKEN_PATTERN = re.compile(rf"{_TOKEN_WORD}(?:[’']{_TOKEN_WORD})*", flags=re.UNICODE)
+# U+02BC is a modifier letter (Lm), so _TOKEN_WORD already matches it
+# mid-word; it is named in the joiner class explicitly so the apostrophe
+# equivalence set stays visibly complete with _APOSTROPHE_FOLD below. (#5374)
+_LEXICAL_TOKEN_PATTERN = re.compile(rf"{_TOKEN_WORD}(?:[’'ʼ]{_TOKEN_WORD})*", flags=re.UNICODE)
 
 # The three Ukrainian apostrophe glyphs — U+0027 ASCII apostrophe, U+2019
 # right single quotation mark, and U+02BC modifier letter apostrophe — are the
