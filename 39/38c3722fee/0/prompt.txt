@@ -1,0 +1,65 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-lnu-2024-intake-cursor-v1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# LNU 2024 phonetics/phonology text-free intake implementation
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: composer-2.5 × Cursor
+- why_this_tier: bounded four-file implementation following several merged fail-closed intake patterns; no normative Ukrainian judgment is delegated
+- advisor_packet: exact prior implementations, frozen hashes, private receipt, and maximum disposition are supplied below
+- owned_paths:
+  - `scripts/projects/open_model_data/phase3_lnu_2024_phonetics_phonology_intake.py`
+  - `data/projects/open_model_data/contracts/phase3_lnu_2024_phonetics_phonology_candidate_v1.schema.json`
+  - `data/projects/open_model_data/admission/phase3_lnu_2024_phonetics_phonology_candidate_v1.json`
+  - `tests/test_open_model_phase3_lnu_2024_phonetics_phonology_intake.py`
+- acceptance_cmd: focused pytest, adjacent intake tests, Ruff `--no-cache`, `git diff --check`, live private audit, repeated source-blind mint/check
+- alternatives_considered:
+  - Claude Sonnet 5 × native Claude — capable but the cool Claude pool is reserved for subsequent cross-family review/integration work
+  - gpt-5.6-terra × native Codex — rejected because Codex weekly usage is 52% and in deficit
+- parallel_free_seats: AGY owns Ukrainian content fitness; Fable owns contract interpretation; neither may edit these paths
+
+Functional role: bounded implementation/data worker, mapped only to the engineering portion of `rule_author_extractor`; no authority to author or approve normative rules.
+Task family: `open-model-data-correction-factory`
+Track: `open-model-data`
+Issue: #6375.
+Authority: workspace write only in the dispatch worktree. You are not alone in the repository: do not revert or modify others' work. Do not create a PR or merge. Commit and push the branch only after all acceptance checks pass.
+
+Base: exact current `origin/main` at dispatch time.
+Frozen contracts:
+- v2 prompt SHA-256 `298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b`
+- v3 prompt SHA-256 `5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d`
+- v2 denominators stay 67,041 source units / 9,392 evaluation identities.
+
+Private packet (read-only):
+`/Users/krisztiankoos/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data/university_corpus/staging/phase3-6375-lnu-2024-phonetics-phonology/`
+
+Expected PDF identity: 7,630,415 bytes, SHA-256 `61c4f9bab191c7361eea93ce704eceaee1b8ac66129140f0d07f45f9e82e1a53`, 399/399 text-bearing pages, unencrypted. Expected private receipt SHA-256 `6783dff411c2c1400947a44a761a5547348051311e13349063bc38b0c11bd04e`. Verify all facts from bytes/receipt.
+
+Reuse semantic patterns from the merged UzhNU 2023 phonetics and UzhNU 2023 morphemology intake modules, but do not copy source-specific constants blindly. The implementation must:
+1. Add exactly the four owned new files and modify nothing else.
+2. Emit a strict text-free public candidate with source identity, official locator, immutable PDF/private-receipt hashes, content-fitness boundary, rights/access facts, and Drive custody binding without private absolute paths, raw provider IDs, source text, or reconstructable excerpts.
+3. Scope candidate topics to the existing frozen ids `phonetics`, `phonology`, `orthoepy`, and `accentology`; each disposition must be no stronger than `NARROW_ONLY` regardless of model review. Do not claim any gap transition.
+4. Keep all public gates false: source-universe frozen, source-role frozen, source coverage ready, semantic gold, training export, public redistribution, Phase 3 complete, Phase 4 authorized.
+5. Fail closed on missing/tampered source/evidence bytes, symlink traversal, Drive provider-identity drift, timeouts, wrong permissions, hash drift, schema drift, output resealing, or runtime code-binding drift.
+6. Verify private stage directory mode 0700 and files 0600; robustly avoid following symlinks and use bounded xattr/provider-readback timeouts.
+7. Provide deterministic source-blind mint/check behavior; repeated runs must be byte-identical.
+8. Tests must include mutation/reseal attacks for every load-bearing scalar and all false gates, synthetic provider identity drift, missing receipt, permission drift, symlink/ancestor attacks, timeout behavior, and live Drive audit when the exact packet is available. Tests may not expose private paths or raw source text in committed output.
+9. Use Python 3.12.8. The primary `.venv` is currently misbuilt under 3.14.7; in this worktree create an ignored `.venv` symlink to `/Users/krisztiankoos/.pyenv/versions/3.12.8` before running project commands, and invoke `.venv/bin/python` thereafter. Do not edit `.python-version` or the primary checkout.
+10. Commit with conventional subject and trailer `X-Agent: cursor/phase3-6375-lnu-2024-intake`. Push the branch. Do not open a PR.
+
+User-visible outcome: a reproducible, fail-closed, text-free public binding for the already-custodied LNU source that enables later independent source-fitness and scope review without leaking private material.
+Denominator: every artifact in the exact private packet plus all four public topic cells and all public false gates.
+Non-goals: no topic closure, no DB ingest, no label creation, no training export, no public source text, no modification of existing freeze/status/audit artifacts.
+Stop policy: stop and report a blocker if any private identity, permissions, provider upload, source readability, schema, or acceptance test differs. Never weaken a gate or invent a replacement value.
+
+Return: branch, commit SHA, exact changed paths, receipt SHA, raw acceptance outputs/counts, private-audit result, provider identity result without raw IDs, and residual blockers.
