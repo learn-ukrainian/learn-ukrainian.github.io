@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_lnu_2024_phonetics_phonology_candidate_v1.schema.json",
+  "title": "Phase 3 LNU 2024 phonetics and phonology candidate receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "text_free", "provider_calls", "source", "bindings", "custody", "text_layer", "signals", "content_fitness", "rights", "denominators", "gates", "residuals", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_lnu_2024_phonetics_phonology_candidate_v1"},
+    "status": {"const": "ACADEMIC_CANON_CORROBORATION_CANDIDATE_NO_GAP_TRANSITION"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "source": {"$ref": "#/$defs/source"},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "custody": {"$ref": "#/$defs/custody"},
+    "text_layer": {"$ref": "#/$defs/text_layer"},
+    "signals": {"$ref": "#/$defs/signals"},
+    "content_fitness": {"$ref": "#/$defs/content_fitness"},
+    "rights": {"$ref": "#/$defs/rights"},
+    "denominators": {"$ref": "#/$defs/denominators"},
+    "gates": {"$ref": "#/$defs/gates"},
+    "residuals": {"type": "array", "items": {"type": "string"}},
+    "receipt_sha256": {"$ref": "#/$defs/sha"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "title", "author", "institution", "faculty_department", "approval", "year", "printed_pages", "pdf_page_objects", "genre", "course_page_url", "pdf_url", "institutional_listing_url", "private_input_locator"],
+      "properties": {
+        "source_id": {"const": "uni-ukrmova-phonetics-phonology-asiyiv-piletskyi-2024"},
+        "title": {"const": "Фонетика і фонологія сучасної української літературної мови: збірник лекційних матеріалів, практичних, тестових та контрольних завдань"},
+        "author": {"const": "Асіїв, Любослава; Пілецький, Володимир"},
+        "institution": {"const": "Львівський національний університет імені Івана Франка"},
+        "faculty_department": {"type": "string"},
+        "approval": {"type": "string"},
+        "year": {"const": 2024},
+        "printed_pages": {"const": 399},
+        "pdf_page_objects": {"const": 399},
+        "genre": {"type": "string"},
+        "course_page_url": {"type": "string", "format": "uri"},
+        "pdf_url": {"type": "string", "format": "uri"},
+        "institutional_listing_url": {"type": "string", "format": "uri"},
+        "private_input_locator": {"const": "university_corpus/staging/phase3-6375-lnu-2024-phonetics-phonology"}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["university_content_audit_freeze_v1_sha256", "complete_source_policy_v4_sha256", "phase3_recovery_prompt_v2_sha256", "phase3_reboot_prompt_v3_sha256", "implementation_sha256", "schema_sha256"],
+      "properties": {
+        "university_content_audit_freeze_v1_sha256": {"$ref": "#/$defs/sha"},
+        "complete_source_policy_v4_sha256": {"$ref": "#/$defs/sha"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha"},
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha"},
+        "implementation_sha256": {"$ref": "#/$defs/sha"},
+        "schema_sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "bytes", "sha256", "provider_item_id_sha256"],
+      "properties": {
+        "filename": {"type": "string"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha"},
+        "provider_item_id_sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["private_stage_mode", "private_file_mode", "drive_uploaded_readback_verified", "artifacts"],
+      "properties": {
+        "private_stage_mode": {"const": "0700"},
+        "private_file_mode": {"const": "0600"},
+        "drive_uploaded_readback_verified": {"const": true},
+        "artifacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["institutional_listing", "rights_access_note", "source_response_headers", "source_pdf", "private_audit_receipt"],
+          "properties": {
+            "institutional_listing": {"$ref": "#/$defs/artifact"},
+            "rights_access_note": {"$ref": "#/$defs/artifact"},
+            "source_response_headers": {"$ref": "#/$defs/artifact"},
+            "source_pdf": {"$ref": "#/$defs/artifact"},
+            "private_audit_receipt": {"$ref": "#/$defs/artifact"}
+          }
+        }
+      }
+    },
+    "text_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pdf_pages", "text_bearing_pages", "extracted_characters", "encrypted", "ocr_used", "repairs_applied", "source_text_retained_in_public_receipt", "visual_qa_passed_pdf_pages"],
+      "properties": {
+        "pdf_pages": {"const": 399},
+        "text_bearing_pages": {"const": 399},
+        "extracted_characters": {"const": 739288},
+        "encrypted": {"const": false},
+        "ocr_used": {"const": false},
+        "repairs_applied": {"const": false},
+        "source_text_retained_in_public_receipt": {"const": false},
+        "visual_qa_passed_pdf_pages": {"const": [1, 2, 4, 8, 16, 32, 64, 128, 192, 256, 320, 384, 399]}
+      }
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["practical_session_markers", "exercise_markers", "acoustic", "experimental", "spectrograph", "formant", "oscillograph", "articulation", "orthoepy", "stress", "intonation", "orthography"],
+      "properties": {
+        "practical_session_markers": {"const": 40},
+        "exercise_markers": {"const": 216},
+        "acoustic": {"const": 77},
+        "experimental": {"const": 4},
+        "spectrograph": {"const": 0},
+        "formant": {"const": 1},
+        "oscillograph": {"const": 0},
+        "articulation": {"const": 115},
+        "orthoepy": {"const": 20},
+        "stress": {"const": 144},
+        "intonation": {"const": 20},
+        "orthography": {"const": 40}
+      }
+    },
+    "cell_phonetics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "phonetics"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Modern post-2019 university textbook dedicated to theoretical phonetics and acoustic phonology (e.g. Hryshchenko et al. post-2019 edition)."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "cell_phonology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "phonology"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Dedicated university course manual on Ukrainian phonology and morphonology."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "cell_orthoepy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "orthoepy"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Post-2019 standard Ukrainian orthoepy handbook with updated stress and pronunciation norms."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "cell_accentology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "qualified_source_needed", "evidence_classification", "role"],
+      "properties": {
+        "area": {"const": "accentology"},
+        "frozen_status": {"const": "partial"},
+        "qualified_source_needed": {"const": "Dedicated modern university manual on Ukrainian accentology and accentual paradigms."},
+        "evidence_classification": {"const": "NARROW_ONLY"},
+        "role": {"const": "current_practical_corroboration_no_gap_transition"}
+      }
+    },
+    "secondary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "frozen_status", "role"],
+      "properties": {
+        "area": {"const": "orthography"},
+        "frozen_status": {"const": "sufficient"},
+        "role": {"const": "secondary_corroboration_only"}
+      }
+    },
+    "descriptive_topic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topic", "role"],
+      "properties": {
+        "topic": {"const": "morphonology"},
+        "role": {"const": "diagnostic_signal_only_not_a_primary_cell"}
+      }
+    },
+    "content_fitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_role", "target_cells", "secondary_observation", "descriptive_topics", "broad_topics", "limitations", "topic_gaps_closed", "topic_gaps_narrowed_claimed"],
+      "properties": {
+        "primary_role": {"const": "modern_ukrainian_practical_university_handbook"},
+        "target_cells": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/cell_phonetics"},
+            {"$ref": "#/$defs/cell_phonology"},
+            {"$ref": "#/$defs/cell_orthoepy"},
+            {"$ref": "#/$defs/cell_accentology"}
+          ],
+          "items": false
+        },
+        "secondary_observation": {"$ref": "#/$defs/secondary"},
+        "descriptive_topics": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/descriptive_topic"}},
+        "broad_topics": {"type": "array", "items": {"type": "string"}},
+        "limitations": {"type": "string"},
+        "topic_gaps_closed": {"const": []},
+        "topic_gaps_narrowed_claimed": {"const": []}
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metadata_standard_license_present", "repository_deposit_terms", "general_downstream_dataset_license_established", "private_acquisition", "private_backup", "private_extraction", "private_training_preparation", "public_reconstructable_full_text_export", "unrestricted_training_export", "public_text_free_metadata_hash_nonreconstructable_evidence", "final_release_review_required", "takedown_adapt_on_substantiated_complaint"],
+      "properties": {
+        "metadata_standard_license_present": {"const": false},
+        "repository_deposit_terms": {"type": "string"},
+        "general_downstream_dataset_license_established": {"const": false},
+        "private_acquisition": {"const": true},
+        "private_backup": {"const": true},
+        "private_extraction": {"const": true},
+        "private_training_preparation": {"const": false},
+        "public_reconstructable_full_text_export": {"const": false},
+        "unrestricted_training_export": {"const": false},
+        "public_text_free_metadata_hash_nonreconstructable_evidence": {"const": true},
+        "final_release_review_required": {"const": true},
+        "takedown_adapt_on_substantiated_complaint": {"const": true}
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v2_source_units", "v2_evaluation_identities", "university_total", "university_sufficient", "university_partial", "university_missing", "candidate_sources", "database_resident_sources", "reference_only_sources", "quarantine_sources"],
+      "properties": {
+        "v2_source_units": {"const": 67041},
+        "v2_evaluation_identities": {"const": 9392},
+        "university_total": {"const": 26},
+        "university_sufficient": {"const": 5},
+        "university_partial": {"const": 21},
+        "university_missing": {"const": 0},
+        "candidate_sources": {"const": 30},
+        "database_resident_sources": {"const": 20},
+        "reference_only_sources": {"const": 6},
+        "quarantine_sources": {"const": 4}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["database_ingest_authorized", "semantic_gold", "author_eval_membership", "topic_gaps_closed", "topic_gaps_narrowed", "source_universe_frozen", "source_coverage_ready", "source_freeze_ready", "phase3_complete", "phase4_authorized", "phase4_blocked"],
+      "properties": {
+        "database_ingest_authorized": {"const": false},
+        "semantic_gold": {"const": false},
+        "author_eval_membership": {"const": false},
+        "topic_gaps_closed": {"const": false},
+        "topic_gaps_narrowed": {"const": false},
+        "source_universe_frozen": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_authorized": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    }
+  }
+}
