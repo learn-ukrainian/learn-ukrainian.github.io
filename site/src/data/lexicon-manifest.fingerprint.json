@@ -135,7 +135,7 @@
       },
       {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
-        "sha256": "3ebbbc8c379784a5c10b261a72a10c895a1f4308027ce3c85e49dabf0de347fb"
+        "sha256": "4ffc2ba63f72f01843fc09204fb1fe7ad3f50a989c30e47fe9fefd9dc92bf487"
       },
       {
         "path": "scripts/lexicon/heritage_calque_wave.py",
