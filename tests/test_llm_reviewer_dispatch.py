@@ -1415,6 +1415,122 @@ def test_grounding_rejects_ellipsized_excerpt_with_only_short_glue_segments() ->
     assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
 
 
+# --- #4797 ellipsis axis: abridged-excerpt brittleness fixes -----------------
+
+_VESNIANKY_OUTPUT = (
+    "# Веснянки\n"
+    "Весня́нки — назва старовинних слов'янських обрядових пісень, "
+    "що виконуються навесні. Вони звучали дзвінко."
+)
+
+
+def _vesnianky_grounding(excerpt: str) -> dict[str, Any]:
+    return {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": excerpt,
+        "tool_call_id": "model-invented",
+    }
+
+
+def test_grounding_matches_bold_wrapped_ellipsis_excerpt() -> None:
+    """Live «Веснянки» run-2 regression (#4797 ellipsis axis): the model wrapped
+    the ellipsis in bold markers — «Весня́нки**...** назва…» — and the emphasis
+    glued to the split segments, failing the literal substring check (4/7 legit
+    groundings rejected; model-evidence.md § Live «Веснянки» proof)."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding("Весня́нки**...** назва…")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+@pytest.mark.parametrize("ellipsis", [". . .", "[ ... ]", "[…]", ". ..."])
+def test_grounding_matches_spaced_and_bracketed_ellipsis_spellings(ellipsis: str) -> None:
+    """Models spell elision as spaced dot runs and loosely-bracketed ellipses;
+    all are formatting variants of the same abridgment marker."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding(f"Веснянки {ellipsis} обрядових пісень")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def test_grounding_matches_excerpt_with_markdown_emphasis() -> None:
+    """Italic/bold inside a quoted segment is formatting, not content."""
+    events = (_sources_event(output="Виконання веснянок було колективним усім селом."),)
+    grounding = _vesnianky_grounding("Виконання *веснянок* було **колективним**")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+@pytest.mark.parametrize(
+    "excerpt",
+    [
+        # Model closes the quoted clause with '.' where the source has «пісень, що».
+        "назва старовинних слов'янських обрядових пісень.",
+        # Model wraps the quote in guillemets the source lacks.
+        "«Веснянки — назва старовинних слов'янських обрядових пісень»",
+    ],
+)
+def test_grounding_matches_lightly_abridged_excerpt_edge_decoration(excerpt: str) -> None:
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding(excerpt)
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def test_grounding_matches_segment_closed_with_period_before_ellipsis() -> None:
+    """Observed shadow-baseline shape («…день. ... Наповнені…»): a sentence-final
+    period glued to the ellipsis run is edge decoration, not content."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding("Веснянки … обрядових пісень. … Вони звучали")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def test_grounding_rejects_ellipsis_spliced_number_swap_fabrication() -> None:
+    """False-accept guard (#4797; autopsy qg-grounding-gate-fuzzy-false-accept):
+    a near-copy that swaps the fact and elides with … must still reject — every
+    retained fragment must appear verbatim, in order, in the SAME output."""
+    events = (
+        _sources_event(
+            query="Сковорода Григорій",
+            output="Сковорода народився у 1722 році в Чорнухах.",
+        ),
+    )
+    grounded = _vesnianky_grounding("Сковорода народився … у 1722 році")
+    grounded["query"] = "Сковорода Григорій"
+    assert llm_reviewer_dispatch._grounding_matches_events(grounded, events) is True
+
+    fabricated = dict(grounded, evidence_excerpt="Сковорода народився … у 1900 році")
+    assert llm_reviewer_dispatch._grounding_matches_events(fabricated, events) is False
+
+
+def test_grounding_rejects_fabrication_despite_markdown_emphasis() -> None:
+    """Emphasis stripping must not rescue a swapped-fact excerpt («нових»)."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding("**Веснянки** — назва *нових* обрядових пісень")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_rejects_fabricated_ending_despite_edge_stripping() -> None:
+    """Edge stripping removes punctuation, never content: «взимку» is absent."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding("обрядових пісень взимку.")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_sentence_boundary_is_not_an_elision_marker() -> None:
+    """Fail-closed residual (#4797): a sentence restart that elides source text
+    WITHOUT an ellipsis marker («пісень. Вони» for «пісень, що … . Вони») still
+    rejects — semantic re-adjunction is the entailment gate's (v2) job."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding("Веснянки … обрядових пісень. Вони звучали")
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
 def test_grounding_matches_dict_shaped_event_output_after_stringify() -> None:
     events = (
         _sources_event(

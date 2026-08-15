@@ -80,7 +80,23 @@ _SOURCE_TOOL_PREFIXES = ("sources_", "mcp__sources")
 _WIKI_TOOL_MARKERS = ("wikipedia", "wiki")
 _DEEP_READ_WIKI_MODES = {"section", "sections", "extract", "article", "page"}
 _POSITIVE_FACT_CHECK_VERDICTS = frozenset({"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED"})
-_ELLIPSIS_RE = re.compile(r"\[…\]|\[\.\.\.\]|…|\.{3,}")
+# Ellipsis spellings models actually emit when abridging a quote: «…», «...»,
+# bracketed forms (optionally spaced), and spaced dot runs «. . .». The spaced
+# dot-run pattern requires 3+ dots separated ONLY by whitespace, so ordinary
+# sentence boundaries («речення. Наступне.») never split.
+_ELLIPSIS_RE = re.compile(r"\[\s*(?:…|\.(?:\s*\.){2,})\s*\]|…|\.(?:\s*\.){2,}")
+# Markdown emphasis is formatting, not content: models quote with **bold**,
+# *italic*, or `code` markers while captured tool outputs are plain text.
+# Symmetric removal from BOTH excerpt and output cannot fabricate tokens —
+# the letter/digit content must still match verbatim.
+_MARKDOWN_EMPHASIS_RE = re.compile(r"[*`]+")
+# Decoration glued to quoted-segment edges by abridgment: wrapping quotes,
+# brackets, dashes, and sentence-final punctuation a model adds when it
+# presents a quoted clause as a complete sentence (source has «пісень, що»,
+# excerpt ends «пісень.»). Edge stripping cannot fabricate grounding: the
+# segment's interior tokens must still appear verbatim, in order, in the SAME
+# captured output.
+_SEGMENT_EDGE_DECORATION_CHARS = "*`_«»“”„\"'’‘()[]….,;:!?—–-"
 SCORECARD_COST_BASIS_PATH = "audit/2026-07-05-qg-bakeoff/SCORECARD.md"
 SCORECARD_COST_BASIS_GENERATED_AT = "2026-07-05T22:29:21.234824Z"
 SCORECARD_COST_BASIS = (
@@ -1735,7 +1751,13 @@ def _grounding_matches_events(
     a captured event AND the normalized excerpt must be present in that event's
     captured output. Abridged excerpts with ellipsis markers match only when all
     retained normalized segments appear in order in the SAME event output, with
-    short-glue and evidence-mass guards. ``tool_call_id`` is ADVISORY — the transport-level id
+    short-glue and evidence-mass guards. Normalization treats markdown emphasis
+    (``**…**``, ``*…*``), wrapping quotes, and segment-edge sentence punctuation
+    as formatting variance (#4797 ellipsis axis): a model presenting a quoted
+    clause as a full sentence («…пісень.» where the source has «пісень, що») or
+    bolding an ellipsis still matches, but every content token — digits and
+    names included — must still appear verbatim, in order, in one output.
+    ``tool_call_id`` is ADVISORY — the transport-level id
     (e.g. ``chatcmpl-tool-…``) is never shown to the model, so requiring
     equality failed every legitimate grounding in the live «Веснянки» proof
     while adding nothing against fabrication (a fabricated excerpt still has
@@ -1823,9 +1845,19 @@ def _event_output_text(event: Mapping[str, Any]) -> str | None:
 
 def _output_contains_excerpt(output: str, excerpt: str) -> bool:
     normalized_output = _normalize_for_match(output)
+    if not normalized_output:
+        return False
     if not _ELLIPSIS_RE.search(excerpt):
         normalized_excerpt = _normalize_for_match(excerpt)
-        return bool(normalized_output and normalized_excerpt and normalized_excerpt in normalized_output)
+        if not normalized_excerpt:
+            return False
+        if normalized_excerpt in normalized_output:
+            return True
+        # Light abridgment without an ellipsis marker: the model wrapped the
+        # quote in guillemets or closed it with sentence-final punctuation the
+        # source does not have at that position. Retry on the stripped core.
+        core = _strip_segment_edge_decoration(normalized_excerpt)
+        return bool(core) and core in normalized_output
 
     segments = [segment for segment in _excerpt_segments(excerpt) if len(segment) >= 4]
     if not segments:
@@ -1846,12 +1878,22 @@ def _output_contains_excerpt(output: str, excerpt: str) -> bool:
 def _normalize_for_match(text: str) -> str:
     normalized = unicodedata.normalize("NFKC", text)
     normalized = normalized.replace("\u0301", "").replace("\u0341", "")
+    normalized = _MARKDOWN_EMPHASIS_RE.sub("", normalized)
     normalized = re.sub(r"\s+", " ", normalized)
     return normalized.casefold().strip()
 
 
+def _strip_segment_edge_decoration(segment: str) -> str:
+    """Strip formatting/quoting punctuation from segment edges (see the constant)."""
+    return segment.strip(_SEGMENT_EDGE_DECORATION_CHARS)
+
+
 def _excerpt_segments(excerpt: str) -> list[str]:
-    return [segment for part in _ELLIPSIS_RE.split(excerpt) if (segment := _normalize_for_match(part))]
+    return [
+        segment
+        for part in _ELLIPSIS_RE.split(excerpt)
+        if (segment := _strip_segment_edge_decoration(_normalize_for_match(part)))
+    ]
 
 
 def _event_input_matches_query(event: Mapping[str, Any], query: str) -> bool:
