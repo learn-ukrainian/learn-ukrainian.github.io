@@ -18,6 +18,7 @@ paths:
 ## Core tools (always use)
 - `mcp__sources__verify_word` / `mcp__sources__verify_words` / `mcp__sources__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Also surfaces `is_archaic` and `has_archaic_forms` metadata flags for forms tagged as historical.
 - `mcp__sources__check_modern_form` — VESUM metadata extraction to explicitly check if a word has modern codified forms vs only archaic forms.
+- `mcp__sources__verify_stress` — stress oracle: stressed form + 0-based stressed-vowel index for a word, from the offline `ukrainian-word-stress` dictionary (2.9M forms) + the project's manual override layer + a best-effort VESUM join. Returns JSON (unlike the other `verify_*` tools' prose). Pass `pos`/`tags` to disambiguate a heteronym (e.g. за́мок "castle" vs замо́к "lock").
 - `mcp__sources__search_sources` — **PREFERRED unified entry point** across textbooks, literary corpora, Wikipedia, external articles, and `ukrainian_wiki`
 - `mcp__sources__search_text` — textbook content search (23K chunks, Grades 1-11)
 - `mcp__sources__search_images` — textbook image search (14K images)

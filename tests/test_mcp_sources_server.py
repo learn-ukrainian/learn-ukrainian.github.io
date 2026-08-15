@@ -50,6 +50,7 @@ class TestListTools:
             "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
+            "verify_stress",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
             "query_ulif_antonyms", "query_ulif_phraseology",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
@@ -175,6 +176,13 @@ class TestUlifHandlers:
             "style_guide",
         }
 
+    def test_verify_stress_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(t for t in tools if t.name == "verify_stress")
+        assert tool.input_schema["required"] == ["word"]
+        assert "pos" in tool.input_schema["properties"]
+        assert "tags" in tool.input_schema["properties"]
+
 
 class TestCallToolDispatch:
     """Test that call_tool routes to correct handlers."""
@@ -271,6 +279,12 @@ class TestCallToolDispatch:
             mock.assert_called_once_with({"word": "звір"})
 
 
+    def test_verify_stress_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_stress", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("verify_stress", {"word": "замок", "pos": "VERB"}))
+            mock.assert_called_once_with({"word": "замок", "pos": "VERB"})
+
     def test_handler_exception_returns_error_text(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:
             mock.side_effect = RuntimeError("test error")
@@ -356,6 +370,29 @@ class TestVerifyWordsHandler:
             assert "Found: 1/2" in text
             assert "**стій** — FOUND" in text
             assert "**взяйте** — NOT FOUND" in text
+
+
+class TestVerifyStressHandler:
+    """Test the verify_stress handler wires args through and emits JSON (#6515)."""
+
+    def test_returns_json_envelope(self, server_module):
+        payload = {
+            "input": "замок",
+            "lookup_key": "замок",
+            "status": "ambiguous",
+            "matches": [],
+            "unresolvable_by_tags": True,
+            "source": {"dictionary": "ukrainian-word-stress (ULIF-derived)"},
+        }
+        with patch("scripts.verification.stress.verify_stress", return_value=payload) as mock:
+            result = _run(server_module.handle_verify_stress({"word": "замок"}))
+            mock.assert_called_once_with("замок", None, None)
+            assert json.loads(result[0].text) == payload
+
+    def test_passes_pos_and_tags(self, server_module):
+        with patch("scripts.verification.stress.verify_stress", return_value={}) as mock:
+            _run(server_module.handle_verify_stress({"word": "замок", "pos": "VERB", "tags": "Number=Sing"}))
+            mock.assert_called_once_with("замок", "VERB", "Number=Sing")
 
 
 @pytest.fixture

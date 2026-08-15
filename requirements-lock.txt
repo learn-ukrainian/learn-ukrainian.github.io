@@ -207,7 +207,7 @@ typing_extensions==4.16.0
 tzlocal==5.4.4
 udapi==0.5.2
 udtools==0.2.8
-ukrainian_word_stress==1.1.1
+ukrainian_word_stress==2.1.0
 unlzw3==0.2.3
 urllib3==2.7.0
 uvicorn==0.48.0
