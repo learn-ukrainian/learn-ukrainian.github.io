@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9bbc282426ed",
+  "session_id": "fleet-31d146b473d94530903ad10e1939698d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T15:53:53.610729Z",
+  "branch": "agy/infra-5801-qg-store-followups",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/llm_qg_store.py",
+    "scripts/build/v7_build.py",
+    "tests/audit/test_llm_qg_store.py",
+    "tests/build/test_v7_build_resume.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "12f782dd5e9a",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T15:53:53.602473Z",
+    "agent_lines": 680,
+    "agent_removed": 17,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 680,
+    "total_lines_changed": 697,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
