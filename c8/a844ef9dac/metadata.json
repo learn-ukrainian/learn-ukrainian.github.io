@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c8a844ef9dac",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-6812-bridge-module-identity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/adapters/glm.py",
+    "scripts/ai_agent_bridge/_ui_agy.py",
+    "scripts/ai_agent_bridge/_ui_codex.py",
+    "scripts/tools/agent_watcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c8/a844ef9dac/0/metadata.json",
+      "transcript": "/c8/a844ef9dac/0/full.jsonl",
+      "content_hash": "/c8/a844ef9dac/0/content_hash.txt",
+      "prompt": "/c8/a844ef9dac/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 38853,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1445632,
+    "output_tokens": 14611,
+    "api_call_count": 35
+  }
+}

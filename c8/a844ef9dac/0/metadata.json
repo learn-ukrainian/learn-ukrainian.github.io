@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c8a844ef9dac",
+  "session_id": "session_7d676a1b-76b1-471f-b04a-09bed16ac2cc",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T19:43:26.623233Z",
+  "branch": "kimi/infra-6812-bridge-module-identity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/adapters/glm.py",
+    "scripts/ai_agent_bridge/_ui_agy.py",
+    "scripts/ai_agent_bridge/_ui_codex.py",
+    "scripts/tools/agent_watcher.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "8633949eecaf",
+  "token_usage": {
+    "input_tokens": 38853,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1445632,
+    "output_tokens": 14611,
+    "api_call_count": 35
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T19:43:26.589619Z",
+    "agent_lines": 14,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 14,
+    "total_lines_changed": 20,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
