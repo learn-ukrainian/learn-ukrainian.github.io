@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_agent_bridge import _dispatch_wrappers as wrappers
+from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
 
 
 def _option(command: list[str], name: str) -> str:

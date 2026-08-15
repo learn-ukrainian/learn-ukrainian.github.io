@@ -240,7 +240,7 @@ class TestWarnLongHandoff:
     """Test _warn_long_handoff."""
 
     def _import(self):
-        from ai_agent_bridge._gemini import _warn_long_handoff
+        from scripts.ai_agent_bridge._gemini import _warn_long_handoff
 
         return _warn_long_handoff
 
@@ -251,13 +251,13 @@ class TestWarnLongHandoff:
 
     def test_long_handoff_with_issue_warns(self, capsys):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._extract_issue_number", return_value=123):
+        with patch("scripts.ai_agent_bridge._gemini._extract_issue_number", return_value=123):
             f("x" * 600, "handoff", "issue-123")
             assert "WARNING" in capsys.readouterr().out
 
     def test_long_handoff_no_issue_no_warning(self, capsys):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._extract_issue_number", return_value=None):
+        with patch("scripts.ai_agent_bridge._gemini._extract_issue_number", return_value=None):
             f("x" * 600, "handoff", None)
             assert "WARNING" not in capsys.readouterr().out
 
@@ -271,38 +271,38 @@ class TestHandleGeminiError:
     """Test _handle_gemini_error."""
 
     def _import(self):
-        from ai_agent_bridge._gemini import _handle_gemini_error
+        from scripts.ai_agent_bridge._gemini import _handle_gemini_error
 
         return _handle_gemini_error
 
     def test_model_error_returns_stop(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error", return_value="Model not found"):
+        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value="Model not found"):
             result = f("model not found", "test-model", 0, 5, 30)
             assert result == "stop"
 
     @patch("time.sleep")
     def test_rate_limit_returns_retry(self, mock_sleep):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error", return_value=None):
+        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("exhausted your capacity", "test-model", 0, 5, 30)
             assert result == "retry"
 
     def test_rate_limit_last_attempt_returns_stop(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error", return_value=None):
+        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("429 error", "test-model", 4, 5, 30)
             assert result == "stop"
 
     def test_quota_returns_retry(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error", return_value=None), patch("time.sleep"):
+        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None), patch("time.sleep"):
             result = f("quota exceeded", "test-model", 0, 5, 30)
             assert result == "retry"
 
     def test_unknown_error_returns_continue(self):
         f = self._import()
-        with patch("ai_agent_bridge._gemini._detect_model_error", return_value=None):
+        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("some random error", "test-model", 0, 5, 30)
             assert result == "continue"
 
@@ -311,7 +311,7 @@ class TestExtractAndPrint:
     """Test _extract_and_print."""
 
     def test_extract_with_tags(self, capsys):
-        from ai_agent_bridge._gemini import _extract_and_print
+        from scripts.ai_agent_bridge._gemini import _extract_and_print
 
         # Call with no matching tags - should still work without crashing
         _extract_and_print("some response text", [])
@@ -324,11 +324,11 @@ class TestExtractAndPrint:
             extract_delimited=MagicMock(return_value=None),
         )
         with patch.dict("sys.modules", {"gemini_output": mock_gemini_output}):
-            if "ai_agent_bridge._gemini" in sys.modules:
+            if "scripts.ai_agent_bridge._gemini" in sys.modules:
                 import importlib
 
-                importlib.reload(sys.modules["ai_agent_bridge._gemini"])
-            from ai_agent_bridge._gemini import _extract_and_print
+                importlib.reload(sys.modules["scripts.ai_agent_bridge._gemini"])
+            from scripts.ai_agent_bridge._gemini import _extract_and_print
 
             _extract_and_print("some response", [])
             out = capsys.readouterr().out
@@ -339,7 +339,7 @@ class TestPrintCompletionStatus:
     """Test _print_completion_status."""
 
     def _import(self):
-        from ai_agent_bridge._gemini import _print_completion_status
+        from scripts.ai_agent_bridge._gemini import _print_completion_status
 
         return _print_completion_status
 
@@ -370,7 +370,7 @@ class TestRouteGeminiResponse:
     """Test _route_gemini_response."""
 
     def _import(self):
-        from ai_agent_bridge._gemini import _route_gemini_response
+        from scripts.ai_agent_bridge._gemini import _route_gemini_response
 
         return _route_gemini_response
 
@@ -385,8 +385,8 @@ class TestRouteGeminiResponse:
         f = self._import()
         msg = {"task_id": "test-task"}
         with (
-            patch("ai_agent_bridge._gemini.send_message", return_value=42) as sm,
-            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=42) as sm,
+            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             f(msg, 1, "model", "response", True, None, False)
             sm.assert_called_once()
@@ -396,9 +396,9 @@ class TestRouteGeminiResponse:
         f = self._import()
         msg = {"task_id": "test-task"}
         with (
-            patch("ai_agent_bridge._gemini.send_message", return_value=42),
-            patch("ai_agent_bridge._gemini.acknowledge"),
-            patch("ai_agent_bridge._gemini._post_review_to_github") as gh,
+            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=42),
+            patch("scripts.ai_agent_bridge._gemini.acknowledge"),
+            patch("scripts.ai_agent_bridge._gemini._post_review_to_github") as gh,
         ):
             f(msg, 1, "model", "response", False, None, False)
             gh.assert_called_once()
@@ -407,9 +407,9 @@ class TestRouteGeminiResponse:
         f = self._import()
         msg = {"task_id": "test-task"}
         with (
-            patch("ai_agent_bridge._gemini.send_message", return_value=42),
-            patch("ai_agent_bridge._gemini.acknowledge"),
-            patch("ai_agent_bridge._gemini._post_review_to_github") as gh,
+            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=42),
+            patch("scripts.ai_agent_bridge._gemini.acknowledge"),
+            patch("scripts.ai_agent_bridge._gemini._post_review_to_github") as gh,
         ):
             f(msg, 1, "model", "response", False, None, True)
             gh.assert_not_called()
@@ -419,7 +419,7 @@ class TestSendGeminiError:
     """Test _send_gemini_error."""
 
     def _import(self):
-        from ai_agent_bridge._gemini import _send_gemini_error
+        from scripts.ai_agent_bridge._gemini import _send_gemini_error
 
         return _send_gemini_error
 
@@ -427,8 +427,8 @@ class TestSendGeminiError:
         f = self._import()
         msg = {"task_id": "test-task"}
         with (
-            patch("ai_agent_bridge._gemini.send_message", return_value=99) as sm,
-            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=99) as sm,
+            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             f(msg, 42)
             sm.assert_called_once()
@@ -437,7 +437,7 @@ class TestSendGeminiError:
     def test_exception_suppressed(self):
         f = self._import()
         msg = {"task_id": "test-task"}
-        with patch("ai_agent_bridge._gemini.send_message", side_effect=Exception("boom")):
+        with patch("scripts.ai_agent_bridge._gemini.send_message", side_effect=Exception("boom")):
             f(msg, 42)  # Should not raise
 
 
@@ -445,15 +445,15 @@ class TestSendGeminiMessage:
     """Test _send_gemini_message."""
 
     def _import(self):
-        from ai_agent_bridge._gemini import _send_gemini_message
+        from scripts.ai_agent_bridge._gemini import _send_gemini_message
 
         return _send_gemini_message
 
     def test_output_path_mode(self):
         f = self._import()
         with (
-            patch("ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st,
-            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("scripts.ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st,
+            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             result = f("content", "task-1", "query", None, None, None, "model", False, "/out")
             assert result == 10
@@ -462,8 +462,8 @@ class TestSendGeminiMessage:
     def test_stdout_only_mode(self):
         f = self._import()
         with (
-            patch("ai_agent_bridge._gemini.send_to_gemini", return_value=11),
-            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("scripts.ai_agent_bridge._gemini.send_to_gemini", return_value=11),
+            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             result = f("content", "task-1", "query", None, None, None, "model", True, None)
             assert result == 11
@@ -472,8 +472,8 @@ class TestSendGeminiMessage:
     def test_normal_mode(self):
         f = self._import()
         with (
-            patch("ai_agent_bridge._gemini.send_to_gemini", return_value=12),
-            patch("ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("scripts.ai_agent_bridge._gemini.send_to_gemini", return_value=12),
+            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             result = f("content", "task-1", "query", None, None, None, "model", False, None)
             assert result == 12
@@ -484,7 +484,7 @@ class TestDetectModelError:
     """Test _detect_model_error from _model.py."""
 
     def _import(self):
-        from ai_agent_bridge._model import _detect_model_error
+        from scripts.ai_agent_bridge._model import _detect_model_error
 
         return _detect_model_error
 

@@ -171,7 +171,10 @@ class DeepSeekAdapter:
         rate_limited = bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
         text = _extract_text_from_stdout(stdout)
 
-        from ai_agent_bridge._opencode import read_opencode_turn_status
+        try:
+            from scripts.ai_agent_bridge._opencode import read_opencode_turn_status
+        except ModuleNotFoundError:  # pragma: no cover - direct-script runs with only scripts/ on sys.path
+            from ai_agent_bridge._opencode import read_opencode_turn_status
 
         cwd = plan.cwd if plan is not None else None
         turn_status = read_opencode_turn_status(stdout, cwd=cwd)

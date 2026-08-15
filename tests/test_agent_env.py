@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_agent_bridge._env import build_agent_env, is_secret_env_key
+from scripts.ai_agent_bridge._env import build_agent_env, is_secret_env_key
 
 
 def test_is_secret_env_key_matches_common_secret_names():

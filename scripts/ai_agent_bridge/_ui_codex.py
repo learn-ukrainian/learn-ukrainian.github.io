@@ -39,7 +39,10 @@ Observed behavior:
 
 ## Usage from Python
 
-    from ai_agent_bridge._ui_codex import send
+From outside the package (tests, tools), import `send` from the module
+`scripts.ai_agent_bridge._ui_codex`; from inside the package, siblings use
+the relative form (`from ._ui_codex import send`):
+
     result = send(thread_id="019e6063-...", message="ping", cwd=Path("/tmp"))
     print(result["final_message"])
 """

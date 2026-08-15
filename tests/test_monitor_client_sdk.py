@@ -20,12 +20,11 @@ from fastapi.testclient import TestClient
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from ai_agent_bridge import _monitor_cache as cache
-from ai_agent_bridge import monitor_client
-
 import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router
 import scripts.api.session_router as session_router
+from scripts.ai_agent_bridge import _monitor_cache as cache
+from scripts.ai_agent_bridge import monitor_client
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

@@ -5,8 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from ai_agent_bridge import _claude, _codex, _hermes, _opencode
-from ai_agent_bridge import _review_safety as safety
+
+from scripts.ai_agent_bridge import _claude, _codex, _hermes, _opencode
+from scripts.ai_agent_bridge import _review_safety as safety
 
 
 @pytest.mark.parametrize(

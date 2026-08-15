@@ -62,7 +62,7 @@ def test_tool_config_canonical_order_prefers_native_over_hermes_prefix():
 
 
 def test_grok_agent_env_autodetect_returns_canonical(monkeypatch):
-    from ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge import _cli
 
     monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
     monkeypatch.delenv("CLAUDE_AGENT_NAME", raising=False)
@@ -75,7 +75,7 @@ def test_grok_agent_env_autodetect_returns_canonical(monkeypatch):
 
 
 def test_grok_agent_non_sentinel_does_not_false_positive(monkeypatch):
-    from ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge import _cli
 
     for key in (
         "SESSION_HANDOFF_AGENT",

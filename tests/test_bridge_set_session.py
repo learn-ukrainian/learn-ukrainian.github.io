@@ -15,7 +15,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_agent_bridge._db import (
+from scripts.ai_agent_bridge._db import (
     _session_column,
     get_session,
     init_db,
@@ -27,7 +27,7 @@ from ai_agent_bridge._db import (
 def bridge_db(tmp_path):
     """Use a temporary broker DB so tests never touch the real one."""
     db_path = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._db.DB_PATH", db_path):
+    with patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
         conn = init_db()
         conn.close()
         yield db_path
@@ -63,7 +63,7 @@ def test_set_session_noop_for_grok_build_does_not_raise(bridge_db):
 
 def test_set_session_noop_is_zero_touch(bridge_db):
     """A no-op must not even create a sessions row for the task."""
-    from ai_agent_bridge._db import get_db
+    from scripts.ai_agent_bridge._db import get_db
 
     set_session("task-zero", "grok-build", "sess-x")
     conn = get_db()

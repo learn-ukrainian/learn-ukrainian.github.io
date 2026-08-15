@@ -114,7 +114,7 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     import sys
 
     sys.path.insert(0, str(REPO / "scripts"))
-    from ai_agent_bridge._prompts import build_agy_prompt
+    from scripts.ai_agent_bridge._prompts import build_agy_prompt
 
     out = build_agy_prompt({"from": "claude", "task_id": "t", "type": "query", "content": "x", "data": None})
     assert "operator-expectations.md" in out
@@ -148,7 +148,7 @@ def test_agy_bridge_prompt_permits_narrow_repo_reads_but_forbids_writes() -> Non
     import sys
 
     sys.path.insert(0, str(REPO / "scripts"))
-    from ai_agent_bridge._prompts import build_agy_prompt
+    from scripts.ai_agent_bridge._prompts import build_agy_prompt
 
     out = build_agy_prompt({"from": "claude", "task_id": "t", "type": "query", "content": "x", "data": None})
     assert "MAY read the specific repository file(s)" in out

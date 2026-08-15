@@ -46,7 +46,10 @@ result's `thread_id` is then parsed from the agy log file.
 
 ## Usage from Python
 
-    from ai_agent_bridge._ui_agy import send
+From outside the package (tests, tools), import `send` from the module
+`scripts.ai_agent_bridge._ui_agy`; from inside the package, siblings use
+the relative form (`from ._ui_agy import send`):
+
     result = send(thread_id="48fd721e-...", message="ping", cwd=Path("/tmp"))
     print(result["final_message"])
 """
