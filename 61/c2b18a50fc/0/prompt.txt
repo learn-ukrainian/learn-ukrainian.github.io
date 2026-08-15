@@ -1,0 +1,55 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6803-review-response
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — infra-6803-review-response (follow-up on PR #6825)
+
+**Context:** Your PR #6825 got its cross-family review. Read the review comment
+(`gh pr view 6825 --comments`, comment titled "Cross-family review — VERDICT:
+REQUEST_CHANGES"). Findings 1/3/4 are already rebutted with evidence; **finding 2 is
+valid and is yours to fix.**
+
+## Evidence preamble (#M-4, binding)
+Every claim tool-backed: claim + deterministic command + quoted raw output.
+
+## Shippable unit (commits on the EXISTING branch cursor/infra-6803-readonly-guard-entire)
+Close the tracked-status blindness: a path matching an exempted telemetry prefix must NOT
+be exempted if it is tracked by git at snapshot time (force-added files must still trip
+the guard). You own the mechanism; keep it consistent with the existing guard design.
+
+## Acceptance criteria (verify BEFORE pushing)
+1. New regression test: force-add (`git add -f`) a file under `.entire/metadata/`, mutate
+   it in a read-only dispatch → guard trips. Mutation-check it (#M-16): revert the fix →
+   test fails; quote the run.
+2. Existing telemetry-only pass/fail tests remain green (untracked telemetry still exempt).
+3. `.venv/bin/pytest` green on affected test files; `.venv/bin/ruff check` green on changed files.
+4. Reply on PR #6825 with a short comment: what changed + quoted test evidence, trailer
+   `X-Agent: cursor`.
+
+## Out of scope
+- Re-litigating rebutted findings 1/3/4; any exemption-list changes.
+
+## Process
+1. Work only on the existing branch in your dispatch worktree (it is attached for you).
+2. Implement + test → pytest + ruff → conventional commit (`X-Agent: cursor`) → push.
+3. Do NOT enable auto-merge; do NOT merge.
+
+---
+ROUTING_CARD_V1
+task_id: infra-6803-review-response
+tier: practical
+model_x_harness: cursor/auto (authoring lane — review fixes return to the author, #0)
+advisor_packet: fable (this brief)
+owned_paths: scripts/delegate.py guard area + tests/test_delegate.py (same as parent task)
+acceptance_cmd: .venv/bin/pytest tests/test_delegate.py -k entire && .venv/bin/ruff check scripts/delegate.py
+alternatives_considered:
+  - none — authoring-lane rule binds (fixes to review findings go back to the author)
+parallel_free_seats: agy free; kimi busy (6812); codex capped

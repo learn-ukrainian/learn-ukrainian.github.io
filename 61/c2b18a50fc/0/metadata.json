@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "61c2b18a50fc",
+  "session_id": "fleet-46119a9a083d4ddf933a77a75c87c062",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T15:39:12.155031Z",
+  "branch": "cursor/infra-6803-readonly-guard-entire",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "c8aaaeca517c",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T15:39:12.146927Z",
+    "agent_lines": 106,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 106,
+    "total_lines_changed": 109,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
