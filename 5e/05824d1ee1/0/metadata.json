@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5e05824d1ee1",
+  "session_id": "fleet-bc882d68dbca444a9e6aace3af73dca8",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T23:13:18.145421Z",
+  "branch": "cursor/atlas-6823-hero-contrast",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/styles/word-atlas.css",
+    "site/tests/unit/atlas-hero-contrast.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "3f895280d91e",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T23:13:18.128494Z",
+    "agent_lines": 225,
+    "agent_removed": 11,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 225,
+    "total_lines_changed": 236,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

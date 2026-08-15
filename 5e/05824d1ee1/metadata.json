@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5e05824d1ee1",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6823-hero-contrast",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/styles/word-atlas.css",
+    "site/tests/unit/atlas-hero-contrast.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/5e/05824d1ee1/0/metadata.json",
+      "transcript": "/5e/05824d1ee1/0/full.jsonl",
+      "compact_transcript": "/5e/05824d1ee1/0/transcript.jsonl",
+      "content_hash": "/5e/05824d1ee1/0/content_hash.txt",
+      "prompt": "/5e/05824d1ee1/0/prompt.txt"
+    }
+  ]
+}
