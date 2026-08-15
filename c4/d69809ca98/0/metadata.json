@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c4d69809ca98",
+  "session_id": "fleet-58bc1d8c7e06435c937dfdea1fe51b30",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T16:30:36.818097Z",
+  "branch": "agy/infra-5214-grow-lexicon-checkpoint",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/grow_lexicon_from_content.py",
+    "tests/test_grow_lexicon_from_content.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "6efc3a22ba88",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T16:30:36.804791Z",
+    "agent_lines": 418,
+    "agent_removed": 41,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 418,
+    "total_lines_changed": 459,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
