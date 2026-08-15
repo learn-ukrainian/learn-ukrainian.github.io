@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 125649,
-      "output": 17539,
-      "reasoning": 26359,
+      "input": 130096,
+      "output": 21466,
+      "reasoning": 26689,
       "cache": {
-        "read": 6684736,
+        "read": 7567232,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786835767975,
-      "updated": 1786837669627
+      "updated": 1786837749990
     }
   },
   "messages": [
@@ -8479,19 +8479,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 125307,
+          "input": 164,
+          "output": 279,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 124864
           }
         },
         "modelID": "glm-5.3",
         "providerID": "zai-coding-plan",
         "time": {
-          "created": 1786837669626
+          "created": 1786837669626,
+          "completed": 1786837679595
         },
+        "finish": "tool-calls",
         "id": "msg_007d316fa001WDQ6j03Zcks9GI",
         "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
       },
@@ -8508,20 +8511,584 @@
           "tool": "bash",
           "callID": "call_a3bf8422efc94e8e825fa796",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git commit -m \"$(cat <<'EOF'\nfix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\n\n#6809 diagnosis: the live reenrich zero-fill had two code-side causes in\n_slovnyk_ukreng_glosses. (1) ~45 attested slovnyk.me ukreng label\nabbreviations (виг, заст, орн, іхт, міф, літ, архт, біохім, юр, ...) were\nmissing from _SLOVNYK_UKRENG_PREFIX_LABELS, so every gloss behind them was\nrejected («анчоус іхт. anchovy», «аршин заст. arshine», «ай! виг. oh!»).\n(2) A sense boundary the chunker cannot split on left the next sense's\nnumber glued to the gloss tail («ambrosia 2»). Offline replay against the\ncached 6323-slug residual fills 135 of the 260 cached-article entries;\nfreshly refetched pages parse cleanly («амортизація» → amortization,\ndepreciation).\n\nX-Agent: glm/atlas-6809-zero-fill\nEOF\n)\" && git log --oneline -2"
             },
+            "output": "[glm/atlas-6809-zero-fill 33391839a2] fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\n 3 files changed, 127 insertions(+), 1 deletion(-)\n33391839a2 fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\na73b689a5b fix(qg): accept ellipsis-abridged excerpts in grounding matcher (#4797) (#6835)\n",
+            "metadata": {
+              "output": "[glm/atlas-6809-zero-fill 33391839a2] fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\n 3 files changed, 127 insertions(+), 1 deletion(-)\n33391839a2 fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\na73b689a5b fix(qg): accept ellipsis-abridged excerpts in grounding matcher (#4797) (#6835)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git commit -m \"$(cat <<'EOF'\nfix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\n\n#6809 diagnosis: the live reenrich zero-fill had two code-side causes in\n_slovnyk_ukreng_glosses. (1) ~45 attested slovnyk.me ukreng label\nabbreviations (виг, заст, орн, іхт, міф, літ, архт, біохім, юр, ...) were\nmissing from _SLOVNYK_UKRENG_PREFIX_LABELS, so every gloss behind them was\nrejected («анчоус іхт. anchovy», «аршин заст. arshine», «ай! виг. oh!»).\n(2) A sense boundary the chunker cannot split on left the next sense's\nnumber glued to the gloss tail («ambrosia 2»). Offline replay against the\ncached 6323-slug residual fills 135 of the 260 cached-article entries;\nfreshly refetched pages parse cleanly («амортизація» → amortization,\ndepreciation).\n\nX-Agent: glm/atlas-6809-zero-fill\nEOF\n)\" && git log --oneline -2",
             "time": {
-              "start": 1786837675692
+              "start": 1786837679395,
+              "end": 1786837679397
             }
           },
           "id": "prt_007d32ea5001Vnws6x4ejd3mpR",
           "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
           "messageID": "msg_007d316fa001WDQ6j03Zcks9GI"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 125307,
+            "input": 164,
+            "output": 279,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 124864
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d33d870019RpUIimXH04JfT",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d316fa001WDQ6j03Zcks9GI"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_007b612c4001s30pFTr2MyPeo0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 125465,
+          "input": 434,
+          "output": 39,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 124992
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786837679605,
+          "completed": 1786837689355
+        },
+        "finish": "tool-calls",
+        "id": "msg_007d33df5001P5UxPTyAsBqNK0",
+        "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
+      },
+      "parts": [
+        {
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-start",
+          "id": "prt_007d34d97001BTtuCHXbU26vmM",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d33df5001P5UxPTyAsBqNK0"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_9e2c2c3cfe894b6384ad627e",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin glm/atlas-6809-zero-fill 2>&1 | tail -3",
+              "timeout": 120000
+            },
+            "output": "To https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            glm/atlas-6809-zero-fill -> glm/atlas-6809-zero-fill\nbranch 'glm/atlas-6809-zero-fill' set up to track 'origin/glm/atlas-6809-zero-fill'.\n",
+            "metadata": {
+              "output": "To https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            glm/atlas-6809-zero-fill -> glm/atlas-6809-zero-fill\nbranch 'glm/atlas-6809-zero-fill' set up to track 'origin/glm/atlas-6809-zero-fill'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin glm/atlas-6809-zero-fill 2>&1 | tail -3",
+            "time": {
+              "start": 1786837689001,
+              "end": 1786837689026
+            }
+          },
+          "id": "prt_007d34da9001zpjoxRFUEiDeHX",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d33df5001P5UxPTyAsBqNK0"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 125465,
+            "input": 434,
+            "output": 39,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 124992
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d363760014ZZjH334TBPHXE",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d33df5001P5UxPTyAsBqNK0"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_007b612c4001s30pFTr2MyPeo0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 126364,
+          "input": 169,
+          "output": 819,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 125376
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786837689379,
+          "completed": 1786837705902
+        },
+        "finish": "tool-calls",
+        "id": "msg_007d36423001m1DMtT62tckIeW",
+        "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
+      },
+      "parts": [
+        {
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-start",
+          "id": "prt_007d39955001HW8as45r4sdgu7",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d36423001m1DMtT62tckIeW"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_2274d458c7ed4d358f5de3d7",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --draft --title \"fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction (#6809)\" --body \"$(cat <<'EOF'\n## What\n\nDraft follow-up from the #6809 zero-fill diagnosis (read-only dispatch). Two deterministic extraction defects in `_slovnyk_ukreng_glosses` (`scripts/lexicon/enrich_manifest.py`, one file):\n\n1. **Missing label abbreviations.** ~45 attested slovnyk.me ukreng label abbreviations (`виг`, `заст`, `орн`, `іхт`, `міф`, `літ`, `архт`, `друк`, `театр`, `біохім`, `юр`, `вірш`, …) were absent from `_SLOVNYK_UKRENG_PREFIX_LABELS`, so `_ukreng_prefix_is_label` rejected every sense carrying them:\n   - «анчоус **іхт.** anchovy» → `[]`\n   - «аршин **заст.** arshine (= 71,1 cm or 28 inches)» → `[]`\n   - «ай! **виг.** oh!» → `[]`\n   - «дрохва **орн.** bustard» → `[]`\n   - «алібі **невідм. юр.** alibi» → `[]` (`юр` blocked it; `невідм` was already whitelisted)\n2. **Trailing sense number.** Where a sense boundary has no `)`-predecessor for the chunker's split (`ambrosia 2) бот. ragweed`), the next sense's number survived inside the gloss (`\"ambrosia 2\"`, `\"automatics 2\"`). `_clean_ukreng_gloss` now strips a trailing standalone number (`\\s+\\d+$`, so `vitamin B12`-style tokens are untouched).\n\n## Evidence\n\n- Offline replay against the cached 6323-slug #6809 residual: **135 of the 260 cached-article-but-zero-gloss entries fill with this change alone** (no network). Examples: ай→oh, алібі→alibi, ампір→Empire style, анапест→anapaest, анчоус→anchovy, аршин→arshine, антракт→intermission/interval.\n- Freshly fetched pages parse cleanly with the fix: амортизація→amortization, depreciation; автоматика→automatics; інтерферон→interferon; абстрагуватися→abstract away.\n- Tests: 2 new tests (20 attested label rows quoted from the cache corpus + trailing-sense-number cases); full `tests/test_lexicon_enrich_manifest.py`, `tests/test_reenrich_thin_manifest_entries.py` and 3 adjacent suites pass (257 passed). `ruff check scripts/` clean; fingerprint sidecar regenerated via `scripts/pre_commit/regen_lexicon_fingerprint.py`.\n\n## Not in scope (reported on #6809, needs operator decision)\n\n- The **stale negative cache** (the primary zero-fill cause): cached `ukreng: null` rows from Aug 14–15 are contradicted by today's live slovnyk.me for ~57% of a 40-slug random sample; `_slovnyk_cache()` has no TTL/re-attest path for known-misses, so \"live\" runs can never heal them. Fixing that is a policy decision (schema bump to force wholesale refetch, per the v3 precedent), not a one-file bug fix.\n\nPart of #6809.\nEOF\n)\" 2>&1 | tail -2",
+              "timeout": 120000
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6840\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6840\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --draft --title \"fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction (#6809)\" --body \"$(cat <<'EOF'\n## What\n\nDraft follow-up from the #6809 zero-fill diagnosis (read-only dispatch). Two deterministic extraction defects in `_slovnyk_ukreng_glosses` (`scripts/lexicon/enrich_manifest.py`, one file):\n\n1. **Missing label abbreviations.** ~45 attested slovnyk.me ukreng label abbreviations (`виг`, `заст`, `орн`, `іхт`, `міф`, `літ`, `архт`, `друк`, `театр`, `біохім`, `юр`, `вірш`, …) were absent from `_SLOVNYK_UKRENG_PREFIX_LABELS`, so `_ukreng_prefix_is_label` rejected every sense carrying them:\n   - «анчоус **іхт.** anchovy» → `[]`\n   - «аршин **заст.** arshine (= 71,1 cm or 28 inches)» → `[]`\n   - «ай! **виг.** oh!» → `[]`\n   - «дрохва **орн.** bustard» → `[]`\n   - «алібі **невідм. юр.** alibi» → `[]` (`юр` blocked it; `невідм` was already whitelisted)\n2. **Trailing sense number.** Where a sense boundary has no `)`-predecessor for the chunker's split (`ambrosia 2) бот. ragweed`), the next sense's number survived inside the gloss (`\"ambrosia 2\"`, `\"automatics 2\"`). `_clean_ukreng_gloss` now strips a trailing standalone number (`\\s+\\d+$`, so `vitamin B12`-style tokens are untouched).\n\n## Evidence\n\n- Offline replay against the cached 6323-slug #6809 residual: **135 of the 260 cached-article-but-zero-gloss entries fill with this change alone** (no network). Examples: ай→oh, алібі→alibi, ампір→Empire style, анапест→anapaest, анчоус→anchovy, аршин→arshine, антракт→intermission/interval.\n- Freshly fetched pages parse cleanly with the fix: амортизація→amortization, depreciation; автоматика→automatics; інтерферон→interferon; абстрагуватися→abstract away.\n- Tests: 2 new tests (20 attested label rows quoted from the cache corpus + trailing-sense-number cases); full `tests/test_lexicon_enrich_manifest.py`, `tests/test_reenrich_thin_manifest_entries.py` and 3 adjacent suites pass (257 passed). `ruff check scripts/` clean; fingerprint sidecar regenerated via `scripts/pre_commit/regen_lexicon_fingerprint.py`.\n\n## Not in scope (reported on #6809, needs operator decision)\n\n- The **stale negative cache** (the primary zero-fill cause): cached `ukreng: null` rows from Aug 14–15 are contradicted by today's live slovnyk.me for ~57% of a 40-slug random sample; `_slovnyk_cache()` has no TTL/re-attest path for known-misses, so \"live\" runs can never heal them. Fixing that is a policy decision (schema bump to force wholesale refetch, per the v3 precedent), not a one-file bug fix.\n\nPart of #6809.\nEOF\n)\" 2>&1 | tail -2",
+            "time": {
+              "start": 1786837705616,
+              "end": 1786837705621
+            }
+          },
+          "id": "prt_007d39969001jGtW5xrtiakMqx",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d36423001m1DMtT62tckIeW"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 126364,
+            "input": 169,
+            "output": 819,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 125376
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d3a428001KZd8a080dq7pEW",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d36423001m1DMtT62tckIeW"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_007b612c4001s30pFTr2MyPeo0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 126595,
+          "input": 889,
+          "output": 68,
+          "reasoning": 134,
+          "cache": {
+            "write": 0,
+            "read": 125504
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786837705928,
+          "completed": 1786837713377
+        },
+        "finish": "tool-calls",
+        "id": "msg_007d3a4c8001aa9SRVzqBf8rz3",
+        "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
+      },
+      "parts": [
+        {
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-start",
+          "id": "prt_007d3b75f001QU28JGJWVTmgJ4",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3a4c8001aa9SRVzqBf8rz3"
+        },
+        {
+          "type": "reasoning",
+          "text": "Draft PR #6840 opened. Now comment the full findings on PR #6809. Let me get the PR number/url for #6809 first, then post the diagnostic comment with:\n1. Named samples (≥10) with quoted evidence.\n2. Classification of the 6323 with counts.\n3. Root cause chain.\n4. Next attested path recommendation.\n5. Pointer to draft PR #6840.\n\nKeep it structured and evidence-dense. The dispatch says: \"Done means PR #6809 comment with named samples + residual still 6323/4607 unless a proven code no-op is found.\"",
+          "time": {
+            "start": 1786837710695,
+            "end": 1786837712140
+          },
+          "id": "prt_007d3b767001kxvySR22j3WkeX",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3a4c8001aa9SRVzqBf8rz3"
+        },
+        {
+          "type": "text",
+          "text": "Draft PR #6840 opened. Now post the diagnosis comment on PR #6809:",
+          "time": {
+            "start": 1786837712146,
+            "end": 1786837712167
+          },
+          "id": "prt_007d3bd120018b8Ajgy3PDrFVL",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3a4c8001aa9SRVzqBf8rz3"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_40ce0ab1b21745389ee9ba30",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr view 6809 --json url,title,state -q '.url + \" | \" + .title + \" | \" + .state'",
+              "timeout": 60000
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6809 | feat(atlas): promote textbook VESUM-ok leftovers (#6371) | OPEN\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6809 | feat(atlas): promote textbook VESUM-ok leftovers (#6371) | OPEN\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr view 6809 --json url,title,state -q '.url + \" | \" + .title + \" | \" + .state'",
+            "time": {
+              "start": 1786837712895,
+              "end": 1786837712906
+            }
+          },
+          "id": "prt_007d3bd17001jTiSFEpK9x9nxk",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3a4c8001aa9SRVzqBf8rz3"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 126595,
+            "input": 889,
+            "output": 68,
+            "reasoning": 134,
+            "cache": {
+              "write": 0,
+              "read": 125504
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d3c13f001brCWah58eve38G",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3a4c8001aa9SRVzqBf8rz3"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_007b612c4001s30pFTr2MyPeo0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 128851,
+          "input": 307,
+          "output": 2208,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 126336
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786837713416,
+          "completed": 1786837743607
+        },
+        "finish": "tool-calls",
+        "id": "msg_007d3c208001s0m1t2FTAx7fcO",
+        "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
+      },
+      "parts": [
+        {
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-start",
+          "id": "prt_007d42ec9001dCdVt24W39e7lP",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3c208001s0m1t2FTAx7fcO"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_40a03e40bf3a47b5ab69dc09",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr comment 6809 --body \"$(cat <<'EOF'\n## #6809 live-Slovnyk zero-fill diagnosis (read-only dispatch; X-Agent: glm/atlas-6809-zero-fill)\n\n**TL;DR:** The 01:03 \"live\" run added nothing because it had *nothing left to fetch*: every one of the 6323 targets already had a cached `ukreng` resolution (6323/6323 keys present). 6063 are cached **negative** rows (`ukreng: null`), and `_slovnyk_cache()` never re-fetches a present key — there is no TTL on known-misses. Critically, a live sample shows **~57% of those cached negatives are false today**: slovnyk.me now returns full articles for them. A second, one-file extraction bug additionally zeroes 260 entries whose cached articles are fine. Draft fix: #6840.\n\n### Classification of the 6323 (by true lemma, from checkpoint `batch_state/atlas-6809-mac-reenrich/manifest.json` + `target_snapshot.json`, sha256 `4072d0ad…`)\n\n| class | count | evidence |\n|---|---|---|\n| cached negative (`ukreng: null`) | **6063 (95.9%)** | e.g. абстрагуватися, австралійці, автоматика, автономність, адсорбція, амортизація, американці, інтерферон |\n| cached article, gloss extraction returns `[]` | **260 (4.1%)** | e.g. ай, актовий, алібі, амброзія, ампір, анапест, анчоус, аршин, браво, дрохва |\n| already-had-translation-but-still-selected | **0** | selection is sound (`_has_translation` false for all 6323 in the checkpoint) |\n| code-path skip / no cache file | **0** | every lemma had a cache file with the `ukreng` key resolved |\n\nFreshness of the 6063 negatives: fetched_at 2026-08-14 ×3990, 08-15 ×1238, 08-06..08-12 ×835 — i.e. the \"live\" fetching actually happened in the Aug 14 runs and the 18:47→21:01 resume run (which is where the +279/+222 came from); the 01:03 run re-read frozen state. Corroboration: 6323 entries processed in ~7 min, and **0 cache files** have mtimes inside the 01:02–01:12 run window.\n\n### Why the live fetch was a no-op (code walk)\n\n`_slovnyk_cache()` (enrich_manifest.py:1643) skips any slug already present in `lookups`; `_slovnyk_ukreng_row()` (enrich_manifest.py:6055) short-circuits via `_cache_has_lookup` → `_cache_lookup` returns `None` for null rows. Negative caching is by design (#3097) — but with no re-attest path, \"live\" can only ever fetch never-fetched keys.\n\n### Named samples — `_translation_for_entry` offline replay vs live HTTP today\n\nAll 12 replayed with the project interpreter (3.12.8), `LEXICON_SLOVNYK_OFFLINE=1` (side-effect-free); `_translation_for_entry` returned `null` for every one, with dmklinger=0 rows, kaikki=∅, balla-reverse=∅:\n\n| slug | checkpoint `has_translation` | cache row | live slovnyk.me `/dict/ukreng/…` today | verdict |\n|---|---|---|---|---|\n| абстрагуватися | false | `null` (fetched 08-14T17:57Z) | **200**, «абстрагуватися To abstract away (from)…» → glosses `[\"abstract away\"]` | **stale false negative** |\n| автоматика | false | `null` (08-14T17:58Z) | **200**, «1) (галузь науки і техніки) automatics 2) (обладнання) automatic machinery…» | **stale false negative** |\n| адсорбція | false | `null` (08-14T17:58Z) | **200**, article present | **stale false negative** |\n| амортизація | false | `null` (08-14T17:58Z) | **200**, «1) ек. amortization; depreciation 2) тех. shock absorption…» | **stale false negative** |\n| інтерферон | false | `null` (08-14T18:43Z) | **200**, «інтерферон біохім. interferon» (blocked only by missing label `біохім`) | **stale false negative** |\n| австралійці | false | `null` | **404** «Not Found (#404)» | genuine Slovnyk-empty |\n| автономність | false | `null` | **404** | genuine Slovnyk-empty |\n| американці | false | `null` | **404** | genuine Slovnyk-empty |\n| ай | false | text «ай! виг. oh!» | 200 (cache row already full) | extraction bug: `виг` not whitelisted |\n| алібі | false | text «алібі невідм. юр. alibi…» | 200 | extraction bug: `юр` not whitelisted |\n| анчоус | false | text «анчоус іхт. anchovy» | 200 | extraction bug: `іхт` not whitelisted |\n| аршин | false | text «аршин заст. arshine (= 71,1 cm or 28 inches)» | 200 | extraction bug: `заст` not whitelisted |\n\nRandom 40-slug live sample of the 6063 negatives: **23 × 200** (бідняцький, височенько, товаришування, хроматографія, замикання, гідроенергетика, розмежувати, …) vs **17 × 404** (колаген, неоднорідність, папірчик, …) → point estimate **57.5%** false negatives (binomial 95% CI ≈ 42–73%, i.e. roughly **2.5k–4.4k of the 6063** are healable by refetch).\n\n### The 260 extraction rejects, itemized\n\n~45 attested slovnyk.me ukreng label abbreviations are missing from `_SLOVNYK_UKRENG_PREFIX_LABELS`: виг(16), заст(15), орн(11), іхт(6), міф(5), літ(5), архт(5), друк(5), театр(4), знев(4), буд(4), ент(4), амер(4), мист(3), прикм(3), ірон(3), присл(3), брит/карт/фін/дит/біохім/жив/фот/ком(2 each), юр, вірш, преф, пр, уроч, бакт, лог, сад, фон, рідк, арт, опт, кін, бух, скороч, пестл, безос, яд, мисл, фарм(1 each). Remainder after simulating the fix: 67 «див.»-cross-reference-only (білочка → див. білка), 39 «в спол.»-phrase-only (актовий зал — assembly hall), ~23 other (5-word gloss cap: «to talk in a low voice»; «зменш. від …»).\n\n### Next attested path (recommendation, no new sources invented)\n\n1. **Merge #6840 (draft)** — one-file deterministic fix (labels + trailing sense-number strip). Offline replay: **135/260 fill from cache alone**, no network; also required for freshly refetched pages to parse (інтерферон case).\n2. **Operator decision needed: heal the stale negatives.** Established mechanism: bump `_SLOVNYK_CACHE_SCHEMA_VERSION` 3→4 (same lever as the #6524 v3 reset) to force wholesale refetch of all lookups, then rerun the reenrich. Expected yield from the sample: on the order of **2.5k–4.4k** of the 6063. This is ~19k files refetched at 0.34s politeness — an ops choice, not snuck into the bug PR.\n3. **Do not** expect e2u/other new sources from this dispatch: `sources.db` has only `dmklinger_uk_en` (30,111 rows) and `balla_en_uk` (78,704 rows, reverse-only) — both already miss these lemmas; the slovnyk ukreng mirror *is* Balla's UK→EN side. A new bilingual source would be a separate licensed-ingestion decision.\n4. **Stop point:** after 1+2, the honest residual is the true 404s (~1.6k–3.5k depending on the refetch outcome) plus див./в-спол./5-word-cap stragglers (~129). Those need either curation or acceptance as `UNRESOLVED_RESIDUAL`.\n\nResidual now: still 6323 targets / 4607 old-gate no-anchor (unchanged — dispatch was read-only; the checkpoint manifest was not written).\n\nArtifacts: `/tmp/6809_buckets.json`, `/tmp/6809_samples.json`, `/tmp/6809_final_fills.json` (local to the diagnosis seat).\nEOF\n)\"",
+              "timeout": 120000
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6809#issuecomment-5304798811\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6809#issuecomment-5304798811\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr comment 6809 --body \"$(cat <<'EOF'\n## #6809 live-Slovnyk zero-fill diagnosis (read-only dispatch; X-Agent: glm/atlas-6809-zero-fill)\n\n**TL;DR:** The 01:03 \"live\" run added nothing because it had *nothing left to fetch*: every one of the 6323 targets already had a cached `ukreng` resolution (6323/6323 keys present). 6063 are cached **negative** rows (`ukreng: null`), and `_slovnyk_cache()` never re-fetches a present key — there is no TTL on known-misses. Critically, a live sample shows **~57% of those cached negatives are false today**: slovnyk.me now returns full articles for them. A second, one-file extraction bug additionally zeroes 260 entries whose cached articles are fine. Draft fix: #6840.\n\n### Classification of the 6323 (by true lemma, from checkpoint `batch_state/atlas-6809-mac-reenrich/manifest.json` + `target_snapshot.json`, sha256 `4072d0ad…`)\n\n| class | count | evidence |\n|---|---|---|\n| cached negative (`ukreng: null`) | **6063 (95.9%)** | e.g. абстрагуватися, австралійці, автоматика, автономність, адсорбція, амортизація, американці, інтерферон |\n| cached article, gloss extraction returns `[]` | **260 (4.1%)** | e.g. ай, актовий, алібі, амброзія, ампір, анапест, анчоус, аршин, браво, дрохва |\n| already-had-translation-but-still-selected | **0** | selection is sound (`_has_translation` false for all 6323 in the checkpoint) |\n| code-path skip / no cache file | **0** | every lemma had a cache file with the `ukreng` key resolved |\n\nFreshness of the 6063 negatives: fetched_at 2026-08-14 ×3990, 08-15 ×1238, 08-06..08-12 ×835 — i.e. the \"live\" fetching actually happened in the Aug 14 runs and the 18:47→21:01 resume run (which is where the +279/+222 came from); the 01:03 run re-read frozen state. Corroboration: 6323 entries processed in ~7 min, and **0 cache files** have mtimes inside the 01:02–01:12 run window.\n\n### Why the live fetch was a no-op (code walk)\n\n`_slovnyk_cache()` (enrich_manifest.py:1643) skips any slug already present in `lookups`; `_slovnyk_ukreng_row()` (enrich_manifest.py:6055) short-circuits via `_cache_has_lookup` → `_cache_lookup` returns `None` for null rows. Negative caching is by design (#3097) — but with no re-attest path, \"live\" can only ever fetch never-fetched keys.\n\n### Named samples — `_translation_for_entry` offline replay vs live HTTP today\n\nAll 12 replayed with the project interpreter (3.12.8), `LEXICON_SLOVNYK_OFFLINE=1` (side-effect-free); `_translation_for_entry` returned `null` for every one, with dmklinger=0 rows, kaikki=∅, balla-reverse=∅:\n\n| slug | checkpoint `has_translation` | cache row | live slovnyk.me `/dict/ukreng/…` today | verdict |\n|---|---|---|---|---|\n| абстрагуватися | false | `null` (fetched 08-14T17:57Z) | **200**, «абстрагуватися To abstract away (from)…» → glosses `[\"abstract away\"]` | **stale false negative** |\n| автоматика | false | `null` (08-14T17:58Z) | **200**, «1) (галузь науки і техніки) automatics 2) (обладнання) automatic machinery…» | **stale false negative** |\n| адсорбція | false | `null` (08-14T17:58Z) | **200**, article present | **stale false negative** |\n| амортизація | false | `null` (08-14T17:58Z) | **200**, «1) ек. amortization; depreciation 2) тех. shock absorption…» | **stale false negative** |\n| інтерферон | false | `null` (08-14T18:43Z) | **200**, «інтерферон біохім. interferon» (blocked only by missing label `біохім`) | **stale false negative** |\n| австралійці | false | `null` | **404** «Not Found (#404)» | genuine Slovnyk-empty |\n| автономність | false | `null` | **404** | genuine Slovnyk-empty |\n| американці | false | `null` | **404** | genuine Slovnyk-empty |\n| ай | false | text «ай! виг. oh!» | 200 (cache row already full) | extraction bug: `виг` not whitelisted |\n| алібі | false | text «алібі невідм. юр. alibi…» | 200 | extraction bug: `юр` not whitelisted |\n| анчоус | false | text «анчоус іхт. anchovy» | 200 | extraction bug: `іхт` not whitelisted |\n| аршин | false | text «аршин заст. arshine (= 71,1 cm or 28 inches)» | 200 | extraction bug: `заст` not whitelisted |\n\nRandom 40-slug live sample of the 6063 negatives: **23 × 200** (бідняцький, височенько, товаришування, хроматографія, замикання, гідроенергетика, розмежувати, …) vs **17 × 404** (колаген, неоднорідність, папірчик, …) → point estimate **57.5%** false negatives (binomial 95% CI ≈ 42–73%, i.e. roughly **2.5k–4.4k of the 6063** are healable by refetch).\n\n### The 260 extraction rejects, itemized\n\n~45 attested slovnyk.me ukreng label abbreviations are missing from `_SLOVNYK_UKRENG_PREFIX_LABELS`: виг(16), заст(15), орн(11), іхт(6), міф(5), літ(5), архт(5), друк(5), театр(4), знев(4), буд(4), ент(4), амер(4), мист(3), прикм(3), ірон(3), присл(3), брит/карт/фін/дит/біохім/жив/фот/ком(2 each), юр, вірш, преф, пр, уроч, бакт, лог, сад, фон, рідк, арт, опт, кін, бух, скороч, пестл, безос, яд, мисл, фарм(1 each). Remainder after simulating the fix: 67 «див.»-cross-reference-only (білочка → див. білка), 39 «в спол.»-phrase-only (актовий зал — assembly hall), ~23 other (5-word gloss cap: «to talk in a low voice»; «зменш. від …»).\n\n### Next attested path (recommendation, no new sources invented)\n\n1. **Merge #6840 (draft)** — one-file deterministic fix (labels + trailing sense-number strip). Offline replay: **135/260 fill from cache alone**, no network; also required for freshly refetched pages to parse (інтерферон case).\n2. **Operator decision needed: heal the stale negatives.** Established mechanism: bump `_SLOVNYK_CACHE_SCHEMA_VERSION` 3→4 (same lever as the #6524 v3 reset) to force wholesale refetch of all lookups, then rerun the reenrich. Expected yield from the sample: on the order of **2.5k–4.4k** of the 6063. This is ~19k files refetched at 0.34s politeness — an ops choice, not snuck into the bug PR.\n3. **Do not** expect e2u/other new sources from this dispatch: `sources.db` has only `dmklinger_uk_en` (30,111 rows) and `balla_en_uk` (78,704 rows, reverse-only) — both already miss these lemmas; the slovnyk ukreng mirror *is* Balla's UK→EN side. A new bilingual source would be a separate licensed-ingestion decision.\n4. **Stop point:** after 1+2, the honest residual is the true 404s (~1.6k–3.5k depending on the refetch outcome) plus див./в-спол./5-word-cap stragglers (~129). Those need either curation or acceptance as `UNRESOLVED_RESIDUAL`.\n\nResidual now: still 6323 targets / 4607 old-gate no-anchor (unchanged — dispatch was read-only; the checkpoint manifest was not written).\n\nArtifacts: `/tmp/6809_buckets.json`, `/tmp/6809_samples.json`, `/tmp/6809_final_fills.json` (local to the diagnosis seat).\nEOF\n)\"",
+            "time": {
+              "start": 1786837743082,
+              "end": 1786837743095
+            }
+          },
+          "id": "prt_007d42ede001PeaYo223VG7bKx",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3c208001s0m1t2FTAx7fcO"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 128851,
+            "input": 307,
+            "output": 2208,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 126336
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d437330013z7MyCu6dyVtqT",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d3c208001s0m1t2FTAx7fcO"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_007b612c4001s30pFTr2MyPeo0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 128957,
+          "input": 2299,
+          "output": 66,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 126592
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786837743641,
+          "completed": 1786837749960
+        },
+        "finish": "tool-calls",
+        "id": "msg_007d43819001Lrad4ZkocYoFdD",
+        "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
+      },
+      "parts": [
+        {
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-start",
+          "id": "prt_007d44b03001uSFi0giU2T89XP",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d43819001Lrad4ZkocYoFdD"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_0da994fdce884333bc34ceb0",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git status --short; git log --oneline -1; gh pr view 6840 --json url,isDraft,state -q '.url + \" draft=\" + (.isDraft|tostring) + \" \" + .state'",
+              "timeout": 60000
+            },
+            "output": "33391839a2 fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\nhttps://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6840 draft=true OPEN\n",
+            "metadata": {
+              "output": "33391839a2 fix(lexicon): accept attested slovnyk ukreng label abbreviations in gloss extraction\nhttps://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6840 draft=true OPEN\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git status --short; git log --oneline -1; gh pr view 6840 --json url,isDraft,state -q '.url + \" draft=\" + (.isDraft|tostring) + \" \" + .state'",
+            "time": {
+              "start": 1786837749465,
+              "end": 1786837749482
+            }
+          },
+          "id": "prt_007d44b100019DJodC5OIBvf6Q",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d43819001Lrad4ZkocYoFdD"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 128957,
+            "input": 2299,
+            "output": 66,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 126592
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d44fe70017gi5epnrOrSl0o",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d43819001Lrad4ZkocYoFdD"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_007b612c4001s30pFTr2MyPeo0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/atlas-6809-zero-fill"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 129661,
+          "input": 185,
+          "output": 448,
+          "reasoning": 196,
+          "cache": {
+            "write": 0,
+            "read": 128832
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786837749989,
+          "completed": 1786837761771
+        },
+        "finish": "stop",
+        "id": "msg_007d450e4001Awl6HdrrDDk58r",
+        "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU"
+      },
+      "parts": [
+        {
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-start",
+          "id": "prt_007d4674f001uuTsPdoj3ZCVoJ",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d450e4001Awl6HdrrDDk58r"
+        },
+        {
+          "type": "reasoning",
+          "text": "Everything is delivered:\n1. ✅ Read-only dispatch respected: no `--write`, no publish, no `--allow-richness-regression`. (My offline replay used LEXICON_SLOVNYK_OFFLINE=1 which provably writes nothing; live probes were direct HTTP GETs that don't touch the cache.)\n2. ✅ ≥10 named slugs sampled with quoted has_translation/cache row/live HTTP/body shape/why empty.\n3. ✅ Classification of the 6323 with counts + named samples.\n4. ✅ Next attested path recommended (no invented sources).\n5. ✅ PR #6809 comment posted; one-file deterministic bug found → draft PR #6840 opened (labels + trailing digit, 135 offline fills verified, 257 tests pass, ruff clean, fingerprint sidecar regenerated).\n6. Working tree clean, commit pushed with X-Agent trailer.\n\nFinal summary for the user (concise).",
+          "time": {
+            "start": 1786837755740,
+            "end": 1786837757689
+          },
+          "id": "prt_007d4675c001QIR6MWA1J1XeeN",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d450e4001Awl6HdrrDDk58r"
+        },
+        {
+          "type": "text",
+          "text": "Done. Summary of the dispatch:\n\n**Diagnosis (commented on #6809):** The \"live\" run was a no-op because all 6323 targets already had cached `ukreng` keys — 6063 as negative `null` rows (cached 404s, mostly Aug 14–15; the 01:03 run touched 0 cache files) and 260 as real articles whose gloss extraction returns `[]`. Live probing proved **~57% of the cached negatives are false** (23/40 random sample return 200 + parseable glosses today: абстрагуватися→\"abstract away\", автоматика, амортизація, інтерферон…), but `_slovnyk_cache()` has no TTL/re-attest path for known-misses. The 260 reject due to ~45 missing slovnyk label abbreviations (`іхт`, `заст`, `виг`, `юр`…) in `_SLOVNYK_UKRENG_PREFIX_LABELS` plus a trailing-sense-number artifact.\n\n**Deliverables:**\n- **Draft PR #6840** (one-file deterministic bug: 45 label additions + `\\s+\\d+$` gloss tail strip in `enrich_manifest.py`): offline replay fills **135/260** from cache alone; 257 tests pass, ruff clean, fingerprint sidecar regenerated.\n- **PR #6809 comment** with the 12 named samples, full classification counts, and the recommended next path: merge #6840, then an operator decision to bump `_SLOVNYK_CACHE_SCHEMA_VERSION` 3→4 to force the wholesale refetch (~2.5k–4.4k expected heals); no untried bilingual source exists in `sources.db` beyond dmklinger/balla (both already miss these lemmas).\n\nResidual unchanged: 6323 targets / 4607 no-anchor (read-only dispatch). Branch `glm/atlas-6809-zero-fill` pushed, commit `33391839a2` with `X-Agent` trailer.",
+          "time": {
+            "start": 1786837757691,
+            "end": 1786837761201
+          },
+          "id": "prt_007d46efb001YfFsZAz53aE6pS",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d450e4001Awl6HdrrDDk58r"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "34df780ec3a02e06439bb269d882317a257a6893",
+          "type": "step-finish",
+          "tokens": {
+            "total": 129661,
+            "input": 185,
+            "output": 448,
+            "reasoning": 196,
+            "cache": {
+              "write": 0,
+              "read": 128832
+            }
+          },
+          "cost": 0,
+          "id": "prt_007d47dd300116CN4cExyTBKQm",
+          "sessionID": "ses_ff849ed58ffejOAnOyczZDDRJU",
+          "messageID": "msg_007d450e4001Awl6HdrrDDk58r"
         }
       ]
     }
