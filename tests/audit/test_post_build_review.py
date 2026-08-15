@@ -3207,6 +3207,127 @@ def test_vocabulary_coverage_accepts_stressed_exact_surface() -> None:
     assert normalized[0]["surface"] == "М'яки́й знак"
 
 
+def test_vocabulary_candidates_fold_ukrainian_apostrophe_glyphs() -> None:
+    """#5374: the three Ukrainian apostrophe glyphs (U+0027, U+2019, U+02BC)
+    are equivalent for candidate comparison and VESUM lookup; candidate
+    surfaces keep the original glyph; glyphs outside the three stay
+    distinct."""
+
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    seen: list[str] = []
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        seen.extend(words)
+        lemmas = {"сім'ї": "сім'я"}
+        return {word: ([{"lemma": lemmas[word]}] if word in lemmas else []) for word in words}
+
+    content = (
+        "Сім\u02bcя читає разом.\n"  # U+02BC surface, exact lemma match
+        "Сім\u2019я слухає казку.\n"  # U+2019 surface, exact lemma match
+        "Про сім\u2019ї розповіли.\n"  # U+2019 inflected surface, VESUM match
+        "Сім\u02bbя тут не та.\n"  # U+02BB is not an apostrophe: must not bind
+    )
+    vocabulary = "- lemma: сім'я\n"
+    candidates = pbr.build_vocabulary_surface_candidates(
+        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
+    by_lemma = {entry["lemma"]: entry["candidates"] for entry in candidates["lemmas"]}
+
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["сім'я"]} == {
+        ("Сім\u02bcя", "exact lemma surface"),
+        ("Сім\u2019я", "exact lemma surface"),
+        ("сім\u2019ї", "VESUM: сім'я=сім\u2019ї"),
+    }
+    # The VESUM lookup received the folded ASCII form, never the raw curly glyph.
+    assert "сім'ї" in seen
+    assert "сім\u2019ї" not in seen
+    # U+02BB stays distinct: its surface produced no candidate.
+    assert all("\u02bb" not in candidate["surface"] for candidate in by_lemma["сім'я"])
+
+
+def test_vocabulary_candidates_resolve_modifier_apostrophe_stressed_token() -> None:
+    """#5374 review fix: a U+02BC surface carrying the combining stress mark
+    (Мʼяки́й знак) must stay ONE token on the tokenizer path — if the
+    modifier apostrophe ever splits the token, _APOSTROPHE_FOLD never sees
+    the joined word and the false-MISSING returns. The surface resolves
+    against the ASCII-apostrophe ledger lemma м'який знак."""
+
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        return {word: [] for word in words}
+
+    # Tokenizer path: the U+02BC + U+0301 surface is a single token.
+    assert pbr._lexical_tokens("Мʼяки́й знак") == ["мʼяки́й", "знак"]
+
+    content = "Мʼяки́й знак помʼякшує приголосний.\n"
+    vocabulary = "- lemma: м'який знак\n"
+    candidates = pbr.build_vocabulary_surface_candidates(
+        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
+    by_lemma = {entry["lemma"]: entry["candidates"] for entry in candidates["lemmas"]}
+
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["м'який знак"]} == {
+        ("Мʼяки́й знак", "exact lemma surface")
+    }
+    # Evidence bytes are preserved: the surface keeps U+02BC and U+0301.
+    assert by_lemma["м'який знак"][0]["surface"] == "Мʼяки́й знак"
+
+
+def test_vocabulary_coverage_accepts_modifier_apostrophe_exact_surface() -> None:
+    """#5374: a packet-bound U+02BC surface with 'exact lemma surface'
+    verification passes coverage validation for the U+0027 lemma."""
+    source_lookup = {"module.md": "Сім\u02bcя читає разом.\n"}
+    coverage = {
+        "lemma": "сім'я",
+        "status": "INTEGRATED",
+        "surface": "Сім\u02bcя",
+        "verification": "exact lemma surface",
+        "evidence": [
+            {
+                "location": "module.md:1",
+                "excerpt": "Сім\u02bcя читає разом.",
+                "supports": "The modifier-apostrophe surface is the ledger lemma.",
+            }
+        ],
+        "finding_id": None,
+    }
+    normalized = pbr._normalize_vocabulary_coverage(
+        [coverage],
+        expected_lemmas=["сім'я"],
+        verdict="PASS",
+        findings=[],
+        source_lookup=source_lookup,
+        target_files={"content": "module.md"},
+    )
+    assert normalized[0]["surface"] == "Сім\u02bcя"
+
+
 def test_vocabulary_coverage_rejects_stem_collision_and_comment_only_surface() -> None:
     source_lookup = {"module.md": "<!-- правий -->\nПравда не є поверхнею цільової леми.\n"}
     base = {
