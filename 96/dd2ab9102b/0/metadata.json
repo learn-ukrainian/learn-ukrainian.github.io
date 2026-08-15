@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "96dd2ab9102b",
+  "session_id": "session_9a1c00d8-463f-41fa-8b33-5708ad05328b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-15T21:42:03.393872Z",
+  "branch": "kimi/infra-6805-reviewer-transport-residual",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/agent-runtime-guide.md",
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/env_sanitize.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/ai_agent_bridge/_acp_compat.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/ai_agent_bridge/test_ask_contract.py",
+    "tests/test_agent_runtime.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "dae738417181",
+  "token_usage": {
+    "input_tokens": 145509,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 11500544,
+    "output_tokens": 42563,
+    "api_call_count": 105
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-15T21:42:03.362267Z",
+    "agent_lines": 383,
+    "agent_removed": 8,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 383,
+    "total_lines_changed": 391,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

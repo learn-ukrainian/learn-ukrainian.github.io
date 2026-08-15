@@ -1,0 +1,67 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6805-reviewer-transport-residual
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — infra-6805-reviewer-transport-residual
+
+**Issue:** #6805 — read it fully first (`gh issue view 6805 --comments`). The root cause
+(primary-checkout acpx clobber) is FIXED and ask-glm verified working; this task is the
+residual: two reviewer routes are still dead for reasons of their own.
+
+## Evidence preamble (#M-4, binding)
+Every claim in your report and PR must be tool-backed: state the claim, the deterministic
+command that proves it, and quote the raw output.
+
+## Shippable unit (one PR)
+Make the two repo-fixable reviewer-seat routes from #6805 recoverable:
+
+- **(a) ask-hermes / DeepSeek seat:** absence of the `hermes` binary on PATH must surface
+  an actionable remediation (what to install / where documented) AND the seat's callers
+  must degrade per the documented fallback substitutions instead of dying mid-review.
+  If the binary can be provisioned deterministically inside project tooling, do it; if it
+  is genuinely host-level, ship the actionable-error + reroute path and document the
+  provisioning step in the runbook the error points to.
+- **(b) ask-gemma:** wire the missing enabled ACP route under authority mode so the $0
+  toolless seat is reachable again. If enabling is genuinely impossible, do NOT retire the
+  seat yourself — report a blocker with the four-line blocker template instead.
+
+## Explicitly OUT OF SCOPE
+- grok lane 402 Payment Required — operator action, already escalated.
+- Any change to the routing POLICY (which seats review what) — transport reachability only.
+- The sealed/shielded review path (retired; do not touch).
+
+## Acceptance criteria (verify BEFORE opening the PR)
+1. Before/after probe transcripts quoted for ask-hermes and ask-gemma (ONE minimal probe
+   per route after the fix — probes spend real quota; no probe loops).
+2. Tests for the probe/reroute logic; mutation-check the key guard test (#M-16).
+3. `.venv/bin/pytest` green on affected files; `.venv/bin/ruff check` green on changed files.
+
+## Process (numbered, binding)
+1. Work only inside your dispatch worktree (already created for you).
+2. Implement + tests + runbook text as needed.
+3. Verification per acceptance; quote outputs.
+4. Conventional commit(s) with trailer `X-Agent: codex`.
+5. Push; open PR titled `fix(comms): ... (#6805)` referencing #6805.
+6. Do NOT enable auto-merge; do NOT merge.
+
+---
+ROUTING_CARD_V1
+task_id: infra-6805-reviewer-transport-residual
+tier: practical
+model_x_harness: codex/gpt-5.6-terra (default effort)
+why_this_tier: cross-cutting transport diagnosis + fix across adapters/config; needs judgment above heap, not authority
+advisor_packet: fable (this brief)
+owned_paths: scripts/ai_agent_bridge/, scripts/config/, docs/runbooks/
+acceptance_cmd: .venv/bin/pytest <affected test files> && .venv/bin/ruff check <changed files>
+alternatives_considered:
+  - deepseek/v4-flash — is itself the broken seat (hermes missing) — cannot self-repair transport
+  - cursor/auto — free but concurrency_limit 1, taken by #6803
+parallel_free_seats: kimi, agy per /api/orient headroom
