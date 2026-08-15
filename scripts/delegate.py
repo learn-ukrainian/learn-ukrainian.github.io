@@ -2097,14 +2097,47 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     return entries, None
 
 
+# Harness-owned Entire residue under the checkout (ADR-018 capture). These paths
+# are gitignored and appear in the read-only snapshot because the guard includes
+# ignored files (#4840). Treating them as task mutations false-fails healthy
+# read-only dispatches at repo root and inside dispatch worktrees (#6803).
+# Keep this list precise: committed ``.entire/`` config (settings, allowlist,
+# private-recall) must still fail the guard when a worker edits it.
+_READ_ONLY_RUNTIME_TELEMETRY_PREFIXES = (
+    ".entire/metadata",
+    ".entire/logs",
+    ".entire/tmp",
+    ".entire/redactors/local",
+)
+_READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
+
+
+def _is_read_only_runtime_telemetry_path(path: str) -> bool:
+    """Return whether a path is harness Entire telemetry, not a task mutation."""
+    normalized = path.replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    if normalized in _READ_ONLY_RUNTIME_TELEMETRY_FILES:
+        return True
+    return any(
+        normalized == prefix or normalized.startswith(f"{prefix}/")
+        for prefix in _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES
+    )
+
+
 def _read_only_mutation_paths(
     before: dict[str, str], after: dict[str, str]
 ) -> list[str]:
-    """Return exact paths whose observable Git state changed during a review."""
+    """Return exact paths whose observable Git state changed during a review.
+
+    Harness-generated ``.entire/`` telemetry is excluded: the runtime owns those
+    writes, so they are not evidence that a read-only worker mutated the tree.
+    """
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
+        and not _is_read_only_runtime_telemetry_path(path)
     )
 
 
