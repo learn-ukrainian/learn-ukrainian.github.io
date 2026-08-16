@@ -42,10 +42,19 @@ Machine contract for "what should this lane do next" — a driver never needs th
   (counts only), `other_streams.top_blockers` (≤3 repo-wide OFF_TRACK
   pointers), `unscoped_actionable_count`.
 - **Warm cache only**: serves strictly from the unfiltered projection cache
-  (single-flight, #6861). Cold → `503 {"error": "building", "retry_after_s"}`
-  and never triggers a build; expired-but-present entries are served with an
-  honest `cache_age_s` while the shared background refresh runs. Warm calls
-  measure ~1ms locally.
+  (single-flight, #6861). Cold → wire body
+  `503 {"error": "building", "retry_after_s": 3}` (no FastAPI `detail`
+  wrapper — machine-consumable as documented) and never triggers a build;
+  expired-but-present entries are served with an honest `cache_age_s` while
+  the shared background refresh runs, until age exceeds `max_stale_s` (300s)
+  → `503 {"error": "stale", "cache_age_s", "max_stale_s", "retry_after_s"}`.
+  An unreadable `issue_streams.yaml` registry →
+  `503 {"error": "registry_unavailable", "retry_after_s"}` (fail closed —
+  never 200 + empty queue for a stream typo). Warm calls measure ~1ms
+  locally.
+- **Stream-name allowlist**: derive-time membership and any pre-set
+  `open_stream_membership` are re-validated against registry keys before they
+  enter the public projection (#6890).
 - **Deterministic**: rank is the projection's `attention_rank` with a
   `work_id` tie-break; two calls over an unchanged projection return identical
   order.

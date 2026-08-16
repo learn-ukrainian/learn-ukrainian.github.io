@@ -10,6 +10,7 @@ import asyncio
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi.responses import JSONResponse
 
 from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set
 from scripts.orchestration.issue_stream_audit import load_registry
@@ -35,8 +36,24 @@ NEXT_DEFAULT_LIMIT = 7
 NEXT_MAX_LIMIT = 25
 NEXT_RETRY_AFTER_S = 3.0
 NEXT_TOP_BLOCKERS = 3
+# Bound stale-serve for /next: expired cache may be returned while a
+# single-flight refresh runs, but never past this age (residual #3 / #6890).
+NEXT_MAX_STALE_S = 300.0
 STREAM_REGISTRY_CACHE_KEY = "work:v1:stream-registry"
 STREAM_REGISTRY_TTL_S = 60.0
+
+
+def _next_error(
+    status_code: int,
+    body: dict[str, Any],
+    *,
+    headers: dict[str, str] | None = None,
+) -> JSONResponse:
+    """Return a /next error body without FastAPI ``{"detail": ...}`` wrapping.
+
+    Machine consumers parse the documented inner object on the wire (#6890 #6).
+    """
+    return JSONResponse(status_code=status_code, content=body, headers=headers)
 
 
 def _filters_from_request(request: Request) -> dict[str, Any]:
@@ -109,9 +126,7 @@ async def _run_build_job(key: str, filters: dict[str, Any]) -> dict[str, Any]:
         _IN_FLIGHT_BUILDS.pop(key, None)
 
 
-def _get_or_create_build_task(
-    key: str, filters: dict[str, Any]
-) -> asyncio.Task[dict[str, Any]]:
+def _get_or_create_build_task(key: str, filters: dict[str, Any]) -> asyncio.Task[dict[str, Any]]:
     task = _IN_FLIGHT_BUILDS.get(key)
     if task is None or task.done():
         task = asyncio.create_task(_run_build_job(key, filters))
@@ -191,7 +206,7 @@ async def work_projection(
 
 
 def _known_streams() -> list[str] | None:
-    """Registry stream keys with a small TTL cache; None when unreadable (fail open)."""
+    """Registry stream keys with a small TTL cache; None when unreadable (fail closed)."""
     cached = cache_get(STREAM_REGISTRY_CACHE_KEY, STREAM_REGISTRY_TTL_S)
     if isinstance(cached, list):
         return cached
@@ -214,7 +229,7 @@ def _next_rank_key(item: dict[str, Any]) -> tuple[int, str]:
     return (int(item.get("attention_rank") or 0), str(item.get("work_id") or ""))
 
 
-@router.get("/v1/next")
+@router.get("/v1/next", response_model=None)
 async def work_next(
     stream: str = Query(
         ...,
@@ -223,19 +238,32 @@ async def work_next(
         description="Stream key from scripts/config/issue_streams.yaml (the caller's lane epic).",
     ),
     limit: int = Query(NEXT_DEFAULT_LIMIT, ge=1, le=NEXT_MAX_LIMIT),
-) -> dict[str, Any]:
+) -> dict[str, Any] | JSONResponse:
     """Stream-scoped actionable pick list served strictly from the warm cache (#6880).
 
     Never builds a cold projection: absent cache → 503 ``building`` with
     ``retry_after_s``. A present-but-expired cache is served as-is (honest
     ``cache_age_s``) while the shared single-flight refresh runs in the
-    background so /next-only pollers converge without ever blocking.
+    background so /next-only pollers converge without ever blocking — until
+    age exceeds ``NEXT_MAX_STALE_S``, which fails closed with 503 ``stale``.
+    An unreadable stream registry fails closed with 503 ``registry_unavailable``
+    rather than treating typos as an empty queue (#6890).
     """
     known = _known_streams()
-    if known is not None and stream not in known:
-        raise HTTPException(
-            status_code=400,
-            detail={
+    if known is None:
+        return _next_error(
+            503,
+            {
+                "error": "registry_unavailable",
+                "message": "issue stream registry is unreadable; refusing to serve /next",
+                "retry_after_s": NEXT_RETRY_AFTER_S,
+            },
+            headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
+        )
+    if stream not in known:
+        return _next_error(
+            400,
+            {
                 "error": "unknown_stream",
                 "message": f"unknown stream {stream!r}",
                 "valid_streams": known,
@@ -245,9 +273,9 @@ async def work_next(
     key = projection_cache_key({})
     cached = cache_get_with_age(key, float("inf"))
     if cached is None or not isinstance(cached[0], dict):
-        raise HTTPException(
-            status_code=503,
-            detail={
+        return _next_error(
+            503,
+            {
                 "error": "building",
                 "message": "work projection cache is cold; retry shortly",
                 "retry_after_s": NEXT_RETRY_AFTER_S,
@@ -255,15 +283,26 @@ async def work_next(
             headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
         )
     payload, age = cached
+    if age >= NEXT_MAX_STALE_S:
+        _get_or_create_build_task(key, {})
+        return _next_error(
+            503,
+            {
+                "error": "stale",
+                "message": (f"work projection cache age {age:.0f}s exceeds max stale {NEXT_MAX_STALE_S:.0f}s"),
+                "cache_age_s": float(age),
+                "max_stale_s": NEXT_MAX_STALE_S,
+                "retry_after_s": NEXT_RETRY_AFTER_S,
+            },
+            headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
+        )
     if age >= CACHE_TTL_S:
         _get_or_create_build_task(key, {})
 
     items = [i for i in payload.get("items") or [] if isinstance(i, dict)]
     actionable = [i for i in items if is_actionable(i)]
 
-    scoped = sorted(
-        (i for i in actionable if stream in _item_streams(i)), key=_next_rank_key
-    )
+    scoped = sorted((i for i in actionable if stream in _item_streams(i)), key=_next_rank_key)
     queue = [
         {
             "work_id": i.get("work_id"),
@@ -278,7 +317,7 @@ async def work_next(
         for i in scoped[:limit]
     ]
 
-    counts: dict[str, int] = {name: 0 for name in known or [] if name != stream}
+    counts: dict[str, int] = {name: 0 for name in known if name != stream}
     unscoped = 0
     for i in actionable:
         streams_of = _item_streams(i)
@@ -339,19 +378,20 @@ async def work_capabilities() -> dict[str, Any]:
         ],
         "github_enumerations_per_refresh": 2,
         "private_source": private_capability_seam(),
-        "saved_view_keys": sorted(
-            {"health", "kind", "lifecycle", "orphan", "repository_id", "source_id"}
-        ),
+        "saved_view_keys": sorted({"health", "kind", "lifecycle", "orphan", "repository_id", "source_id"}),
         "next_queue": {
             "route": "GET /api/work/v1/next",
             "params": {
                 "stream": (
-                    "required — stream key from scripts/config/issue_streams.yaml; "
-                    "the pick list is scoped to it"
+                    "required — stream key from scripts/config/issue_streams.yaml; the pick list is scoped to it"
                 ),
                 "limit": f"optional int, default {NEXT_DEFAULT_LIMIT}, max {NEXT_MAX_LIMIT}",
             },
-            "served_from": "warm projection cache only; 503 building + retry_after_s when cold",
+            "served_from": (
+                "warm projection cache only; 503 building + retry_after_s when cold; "
+                f"503 stale when cache_age_s ≥ {int(NEXT_MAX_STALE_S)}s; "
+                "503 registry_unavailable when the stream registry is unreadable"
+            ),
         },
     }
 

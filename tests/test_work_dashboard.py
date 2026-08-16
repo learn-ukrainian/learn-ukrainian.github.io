@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import re
+import shutil
+import subprocess
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "dashboards" / "work.html"
@@ -199,3 +204,61 @@ def test_work_page_actionable_predicate_parity_with_server_ssot():
         assert not is_actionable({"health": "UNKNOWN", "safe_next_action": {"code": denied}})
     assert not is_actionable({"health": "ON_TRACK", "safe_next_action": {}})
     assert not is_actionable(None)
+
+
+def test_work_page_actionable_predicate_behavioral_js_parity():
+    """Run the live JS predicate in Node against shared fixtures (#6890 #4).
+
+    Substring scans cannot catch a boolean inversion that keeps the scanned
+    tokens; evaluating the extracted JS against the Python SSOT closes that gap.
+    """
+    if shutil.which("node") is None:
+        pytest.skip("node required for JS actionable parity")
+
+    from scripts.work.attention import NON_ACTIONABLE_ACTION_CODES, is_actionable
+
+    fixtures = [
+        None,
+        {},
+        {"health": "OFF_TRACK", "safe_next_action": {"code": "NONE"}},
+        {"health": "AT_RISK", "safe_next_action": {"code": "OPEN_GITHUB"}},
+        {"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}},
+        {"health": "ON_TRACK", "safe_next_action": {"code": "FIX_CI"}},
+        {"health": "UNKNOWN", "safe_next_action": {"code": "WAIT_CI"}},
+        {"health": "ON_TRACK", "safe_next_action": {}},
+        {"health": "ON_TRACK"},
+        {"health": "UNKNOWN", "safe_next_action": {"code": ""}},
+    ]
+    for denied in sorted(NON_ACTIONABLE_ACTION_CODES):
+        fixtures.append({"health": "ON_TRACK", "safe_next_action": {"code": denied}})
+        fixtures.append({"health": "UNKNOWN", "safe_next_action": {"code": denied}})
+
+    expected = [bool(is_actionable(item)) for item in fixtures]
+    html_path = json.dumps(str(WORK))
+    fixtures_json = json.dumps(fixtures)
+    script = f"""
+    const fs = require('fs');
+    const html = fs.readFileSync({html_path}, 'utf8');
+    const start = html.indexOf('const NON_ACTIONABLE_ACTION_CODES');
+    const fnStart = html.indexOf('function isActionable(');
+    const fnEnd = html.indexOf('function ', fnStart + 1);
+    if (start < 0 || fnStart < 0 || fnEnd <= fnStart) {{
+      throw new Error('isActionable block not found');
+    }}
+    eval(html.slice(start, fnEnd));
+    const fixtures = {fixtures_json};
+    console.log(JSON.stringify(fixtures.map((item) => isActionable(item))));
+    """
+    result = subprocess.run(
+        ["node", "-e", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr or result.stdout
+    js_results = json.loads(result.stdout)
+    assert js_results == expected
+    # Explicit kill for the boolean-inversion residual the substring scan misses.
+    assert expected[fixtures.index({"health": "ON_TRACK", "safe_next_action": {"code": "NONE"}})] is False
+    assert expected[fixtures.index({"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}})] is True
