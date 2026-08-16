@@ -86,6 +86,28 @@ def _stub_node_modules_integrity_sweep(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _stub_venv_integrity_sweep(monkeypatch):
+    """Keep _run_worker/cmd_dispatch tests hermetic from the ambient checkout.
+
+    Same rationale as the two stubs above (#6830 follow-up sweep, same
+    shape): the venv-integrity watchdog runs a real subprocess import probe
+    and scans real console-script launchers under delegate._REPO_ROOT's
+    venv. A checkout with the live #6830 finding (broken pytest/py.test/
+    cbor2 shebangs) or a differently-provisioned CI venv reads as ALERT, so
+    the sweep appends venv_integrity_post_worker to dispatch_events.jsonl —
+    breaking tests that assert on that file. The sweep itself is covered
+    against fixture repos in tests/test_check_venv_integrity.py.
+    """
+    import scripts.audit.check_venv_integrity as vi
+
+    monkeypatch.setattr(
+        vi,
+        "check_venv_integrity",
+        lambda *_args, **_kwargs: (True, "venv integrity ok (test stub)"),
+    )
+
+
+@pytest.fixture(autouse=True)
 def _fixture_runtime_tmp_root(tmp_path, monkeypatch):
     """Keep dispatch-time orphan sweeps inside each test fixture only."""
     runtime_tmp = tmp_path / "runtime-tmp"

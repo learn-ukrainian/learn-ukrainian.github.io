@@ -1048,6 +1048,33 @@ def _node_modules_integrity_canary() -> bool:
     return ok
 
 
+def _venv_integrity_canary() -> bool:
+    """Read-only diagnostic for an empty/broken primary venv.
+
+    #6830 follow-up: a mid-session venv rebuild left `.venv` with no
+    site-packages, and separately, console-script launchers
+    (`pytest`/`py.test`/`cbor2`) were found pointing at a deleted worktree
+    venv. ALERT-only, same posture as `_node_modules_integrity_canary` —
+    detects and records, never repairs. Never raises: the canary must not
+    break health collection.
+    """
+    try:
+        from scripts.audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
+    try:
+        ok, message = check_venv_integrity(
+            PROJECT_ROOT,
+            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+        )
+    except Exception:
+        logger.exception("venv-integrity canary failed to run")
+        return True  # fail-open: don't raise a false alarm on canary error
+    if not ok:
+        logger.warning("venv-integrity canary: %s", message)
+    return ok
+
+
 def _collect_health_orient_data() -> dict:
     return {
         "api": True,
@@ -1058,6 +1085,7 @@ def _collect_health_orient_data() -> dict:
         "node_modules_symlinks_ok": _self_symlink_canary(),
         "primary_integrity_ok": _primary_integrity_canary(),
         "node_modules_integrity_ok": _node_modules_integrity_canary(),
+        "venv_integrity_ok": _venv_integrity_canary(),
     }
 
 
