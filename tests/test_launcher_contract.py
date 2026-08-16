@@ -6,6 +6,7 @@ import os
 import shutil
 import signal
 import subprocess
+import sys
 import time
 from datetime import timedelta
 from pathlib import Path
@@ -108,6 +109,11 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
     assert invalid.returncode == 2
 
 
+@pytest.mark.skipif(
+    not (REPO / ".venv" / "bin" / "python").exists(),
+    reason="start-claude.sh preflight resolves the context profile via the checkout's "
+    ".venv python; dispatch worktrees have no .venv by the shared-interpreter policy (#6858)",
+)
 def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
     shell = shutil.which("bash")
     assert shell is not None
@@ -172,7 +178,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_stre
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
-exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
+exec {sys.executable!r} "$@"
 ''',
         encoding="utf-8",
     )
@@ -263,7 +269,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_stre
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
-exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
+exec {sys.executable!r} "$@"
 ''',
         encoding="utf-8",
     )
@@ -344,14 +350,19 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
         stderr=subprocess.PIPE,
         text=True,
     )
-    for _ in range(100):
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
         if child_started.is_file():
             break
-        process.poll()
-        if process.returncode is not None:
+        if process.poll() is not None:
             break
         time.sleep(0.02)
-    assert child_started.is_file()
+    if not child_started.is_file():
+        process.kill()
+        stdout, stderr = process.communicate(timeout=10)
+        pytest.fail(
+            f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}"
+        )
 
     process.send_signal(termination_signal)
     stdout, stderr = process.communicate(timeout=10)
@@ -382,7 +393,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
     python_bin = root / ".venv" / "bin" / "python"
     python_bin.parent.mkdir(parents=True)
     python_bin.write_text(
-        f"#!/usr/bin/env bash\nexec {os.fspath(REPO / '.venv' / 'bin' / 'python')!r} \"$@\"\n",
+        f'#!/usr/bin/env bash\nexec {sys.executable!r} "$@"\n',
         encoding="utf-8",
     )
     python_bin.chmod(0o755)
