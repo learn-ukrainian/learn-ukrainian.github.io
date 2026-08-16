@@ -1,10 +1,20 @@
-# Work control plane API (public foundation)
+# Work control plane API (unified browser projection)
 
-Read-only projection of public work for the local Monitor. GitHub Issues/PRs remain the source of truth. Completion vocabulary for this foundation: **`FOUNDATION_COMPLETE`** (not product `COMPLETE`).
+Read-only projection of work for the local Monitor. GitHub Issues/PRs remain the
+source of truth. There is no Linear source of truth.
 
-Base URL: `http://127.0.0.1:8765` (prefer loopback IP).
+Completion vocabulary:
 
-## Endpoints
+- Public foundation (server + schema): **`FOUNDATION_COMPLETE`**
+- Browser-local dual-source product slice: **`UNIFIED_COMPLETE`** means dual-source
+  fetch/validation/merge in the browser, public-safe saved views, independent
+  degradation, docs, deterministic unit and headless-browser proofs, ready PR,
+  exact-head cross-family approval, and green repository checks. It does **not**
+  mean mutation, hosted deployment, or private proxying.
+
+Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
+
+## Endpoints (public server)
 
 | Method | Path | Purpose |
 | --- | --- | --- |
@@ -12,14 +22,114 @@ Base URL: `http://127.0.0.1:8765` (prefer loopback IP).
 | `GET` | `/api/work/v1/capabilities` | Schema digest, budgets, class-4 endpoint freeze, private-source seam |
 | `GET` | `/api/work/v1/health` | Cheap Work surface liveness |
 
-UI: [`/work.html`](../../dashboards/work.html) — Evidence rail attention list (Monitor paper language).
+UI: [`/work.html`](../../dashboards/work.html) — Evidence rail attention list
+(Monitor paper language).
 
-## Denominator (public)
+## Browser-local private adapter boundary
 
-At a query instant the projection represents exactly once (or counts in a typed omission):
+Only browser JavaScript in `dashboards/work.html` may fetch the fixed constant:
 
-1. Open public issues — one `gh issue list` enumeration, cap **1000**, `truncated=true` when incomplete.
-2. Open public PRs — one `gh pr list` enumeration, same cap. No per-item detail/comment/check fan-out on refresh.
+`http://127.0.0.1:8766/v1/projection`
+
+Invariants:
+
+1. The public server never imports, reads, proxies, configures, or logs the
+   private adapter. The public capability seam remains
+   `available: false` / `not_configured` until the **browser** admits a private
+   document.
+2. The private endpoint is not configurable: no query parameter, input,
+   environment, local/session storage, cookie, fragment, or server setting. It
+   never enters the page URL, saved views, HTML links, DOM status text as a raw
+   URL, errors, or telemetry.
+3. Both browser requests are GET-only with `Accept: application/json`,
+   `credentials: "omit"`, `cache: "no-store"`, and `referrerPolicy: "no-referrer"`.
+   The private request has an exact 5-second `AbortController` budget and no
+   query string (including on Refresh). Public Refresh may use `fresh=true`.
+   User filters are applied **locally after merge** and are never sent to the
+   private adapter.
+4. Sources settle independently (`Promise.allSettled`). Private availability is
+   never a prerequisite for public rendering or vice versa. Raw
+   fetch/parse/validation exception text is never displayed or logged.
+5. Private admission is closed-world against `work-projection.v1` plus the frozen
+   schema digest `89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde`
+   and public schema commit `f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d`. Any
+   violation rejects the entire private payload as `schema_mismatch` (no partial
+   item admission, no payload echo). Work-id collisions with public items reject
+   the private payload as `identity_collision` without overwriting public data.
+6. Mutation remains false everywhere. No POST/PUT/PATCH/DELETE, dispatch, merge,
+   issue-edit, proxy, websocket, or hosted-resource behavior.
+
+### Private-source status vocabulary (closed)
+
+Rendered only in `#source-private-meta`:
+
+| Condition | Text |
+| --- | --- |
+| Admitted private source | `status=<ok\|degraded\|unavailable\|permission_denied\|timeout\|truncated>` |
+| AbortError / budget exceeded | `unavailable · timeout` |
+| Fetch / non-2xx | `unavailable · unreachable` |
+| Parse / shape failure | `unavailable · schema_mismatch` |
+| Work-id collision | `unavailable · identity_collision` |
+
+When the public document fails but private remains usable,
+`#source-public-meta` is `status=unavailable` (transport) or
+`status=schema_mismatch` (parse/shape). If both fail, the error banner is exactly:
+
+`Work projection unavailable · public=<unreachable|schema_mismatch> · private=<timeout|unreachable|schema_mismatch|identity_collision>`
+
+and the list is exactly: `No source projection is available. Retry refresh.`
+
+### Merge (browser)
+
+On dual admission success the browser:
+
+- replaces only the public `sources[]` member with `source_id=private-local-adapter`
+- concatenates admitted items
+- sums issue/PR denominators, ANDs `streams_complete`, preserves public class-4
+- removes only `{class:"private_adapter",reason:"not_configured"}` from public
+  denominator omissions and appends private omissions
+- installs the validated private `capabilities.private_source`
+- sets `cache_age_s = max(public, private)`
+- emits one dense attention list ordered by health
+  (`OFF_TRACK`, `AT_RISK`, `UNKNOWN`, `ON_TRACK`), then original
+  `attention_rank`, then `source_id`, then `work_id`, rewritten to `0..N-1`
+
+### Saved views
+
+Shareable state is **URL query only** (never fragment, storage, cookie, or other
+encoding). Allowlisted keys: `health`, `kind`, `lifecycle`, `orphan`,
+`repository_id`, `source_id`.
+
+Stricter shareable rules than in-memory filters:
+
+- enums only for health / kind / lifecycle / orphan
+- `repository_id` only when it equals the public singleton
+  `learn-ukrainian/learn-ukrainian.github.io`
+- `source_id` only when it is `public-monitor`
+
+Selecting a private repository or `private-local-adapter` filters the current
+in-memory view only and strips those keys from the URL. Repository choices say
+**All repositories** and include public/private slugs only after they appear in
+an admitted payload.
+
+### Live CORS (private adapter contract)
+
+The private adapter admits exactly Monitor origins
+`http://127.0.0.1:8765` and `http://localhost:8765`. A simple GET returns matching
+`Access-Control-Allow-Origin` plus `Vary: Origin`, no credentials, and needs no
+preflight because `Accept` is CORS-safelisted. Fixture proofs cover real
+cross-origin browser smoke on those fixed loopback ports in addition to request
+interception tests.
+
+## Denominator (public server)
+
+At a query instant the public projection represents exactly once (or counts in a
+typed omission):
+
+1. Open public issues — one `gh issue list` enumeration, cap **1000**,
+   `truncated=true` when incomplete.
+2. Open public PRs — one `gh pr list` enumeration, same cap. No per-item
+   detail/comment/check fan-out on refresh.
 3. Complete public `GET /api/issues/streams` response (private cache keys stripped).
 4. Class-4 summaries only:
    - `GET /api/delegate/active`
@@ -37,38 +147,28 @@ At a query instant the projection represents exactly once (or counts in a typed 
 ## Budgets
 
 - Warm response target: **≤2s** (warm cache ~30s).
-- Optional/failing section → typed degraded/unknown within **≤5s** without hiding healthy sources.
-- `cache_age_s` is always present on the projection.
-
-## Saved-view URL filters
-
-Allowed query keys only: `health`, `kind`, `lifecycle`, `orphan`, `repository_id`, `source_id`.
-
-Multivalue filters are bounded by finite per-key raw cardinality (domain size for health/kind/lifecycle/source_id; singleton for orphan and `repository_id`) **before** canonicalization, then deduplicated + sorted so duplicate/reordered forms within the bound share one permanent warm-cache key and one `filters_applied` object. Excess raw repetitions reject with `400 invalid_saved_view`.
-
-`repository_id` accepts only the closed public repository singleton (`learn-ukrainian/learn-ukrainian.github.io`); it is not overridable by environment. `source_id` is enum-backed (`public-monitor` | `private-local-adapter`) both as a query key and inside the closed `filters_applied` object. The authoritative schema enforces matching `maxItems`, `uniqueItems`, lifecycle enum, and repository `const` on `filters_applied`.
-
-Every projection-builder entry point (`build_projection`, `build_public_projection`, cache-key minting, HTTP) re-enters the shared saved-view admission gate; unknown keys and foreign repository IDs cannot bypass via direct calls.
-
-Formal-review rows are admitted only for that exact public repository (no suffix matching; missing/foreign repositories are dropped at collection and normalization).
-
-Delegate class-4 inventory is filtered by the authoritative task-state fields `repository` / `repository_id` (both must agree when present) **before** sort/limit/total so private volume cannot inflate public counts or starve public rows. Generic `/api/delegate/tasks` and `/api/delegate/active` summaries never re-emit those attribution fields (legacy public shape only). Work's production collectors (`loader is None`) pass the already-admitted public singleton into the fixed internal Python loaders, then stamp Work's own admitted repository metadata under the trusted scoped-loader contract for those claim-less redacted rows; present foreign claims are still dropped defense-in-depth. On that trusted production path, Work **preserves** the scoped loader's authoritative public `total` and sets section `truncated = total > admitted_page_count` (so 501 public tasks with a 500-row page report `total: 501`, `truncated: true`); active inventory has no page budget and does not invent truncation. Caller-injected loaders and mixed/normalize section payloads are untrusted: every retained row must carry an exact authoritative public claim (missing/ambiguous/foreign rows are dropped), and total/count/truncation are recomputed only from admitted rows (a dishonest supplied `total` is ignored; private rows never influence the count). The public HTTP `/api/delegate/*` routes remain unscoped for other Monitor consumers and do not expose a free-form repository selector. Bodies and result files are never read.
-
-Unknown keys, free text, private endpoints, overlong values, and oversized repeated filter values are rejected (`400 invalid_saved_view`).
-
-Schema provenance: `GET /api/work/v1/capabilities` returns live `schema_digest_sha256` over `scripts/work/schema/work_projection.v1.json` (private adapters pin that digest + public commit). Any change to the closed `filters_applied` contract (including maxItems/uniqueItems/enums/const) changes that digest.
+- Optional/failing section → typed degraded/unknown within **≤5s** without hiding
+  healthy sources.
+- Private browser fetch budget: **5s** hard abort.
+- `cache_age_s` is always present on admitted projections.
 
 ## Privacy
 
-- Public server **never** fetches, proxies, persists, or renders private-repository data.
-- Private capability seam returns `available: false`, `reason_if_unavailable: not_configured` until a browser-local adapter is configured (private P2).
-- Mutation is always `false` in the foundation.
+- Public server **never** fetches, proxies, persists, or renders private-repository
+  data.
+- Public capability seam returns `available: false`,
+  `reason_if_unavailable: not_configured`, `endpoint: null` until the browser
+  admits a private document.
+- Mutation is always `false`.
 
 ## Example
 
 ```bash
 curl -sS 'http://127.0.0.1:8765/api/work/v1/capabilities' | .venv/bin/python -m json.tool
-curl -sS 'http://127.0.0.1:8765/api/work/v1/projection?health=AT_RISK&kind=issue' | .venv/bin/python -m json.tool | head
+curl -sS 'http://127.0.0.1:8765/api/work/v1/projection?fresh=true' | .venv/bin/python -m json.tool | head
+# Private adapter (loopback only; never via public Monitor):
+curl -sS -H 'Accept: application/json' -H 'Origin: http://127.0.0.1:8765' \
+  'http://127.0.0.1:8766/v1/projection' | .venv/bin/python -m json.tool | head
 ```
 
 See also: [ADR-019](../decisions/ADR-019-work-control-plane.md).

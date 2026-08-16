@@ -28,7 +28,7 @@ button, input, select { font: inherit; }
 .signal-card { align-self: end; background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 14px 16px; }
 .signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 18px; margin-bottom: 4px; }
 .signal-card p { color: var(--text3); font-size: 12px; margin: 0; line-height: 1.4; }
-.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(5, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
+.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(6, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
 .field { display: grid; gap: 4px; min-width: 0; }
 .field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .field select, .field input { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; background: var(--bg); color: var(--text); }
@@ -122,11 +122,11 @@ button, input, select { font: inherit; }
     <div>
       <div class="eyebrow">Evidence rail · public foundation</div>
       <h2 id="work-title">What needs attention now.</h2>
-      <p>GitHub issues and PRs remain the source of truth. This surface projects open public work with stream membership, dispatch/review summaries, health, and a safe next action. The private source is an optional local adapter and stays unavailable until configured in the browser — never via the public server.</p>
+      <p>GitHub issues and PRs remain the source of truth. This surface projects open public work with stream membership, dispatch/review summaries, health, and a safe next action. The browser fetches the public Monitor projection and, independently, a fixed loopback private adapter. The public server never proxies private data.</p>
     </div>
     <aside class="signal-card" aria-label="Foundation status">
       <strong id="foundation-label">FOUNDATION_COMPLETE</strong>
-      <p id="foundation-copy">No mutations. No dispatch buttons. Private data is never fetched by this page from a public proxy.</p>
+      <p id="foundation-copy">No mutations. Dual-source browser merge only. Private adapter is loopback-only and optional.</p>
     </aside>
   </section>
 
@@ -183,9 +183,16 @@ button, input, select { font: inherit; }
       </select>
     </div>
     <div class="field">
+      <label for="filter-source">Source</label>
+      <select id="filter-source">
+        <option value="">All sources</option>
+        <option value="public-monitor">public-monitor</option>
+      </select>
+    </div>
+    <div class="field">
       <label for="filter-repo">Repository</label>
       <select id="filter-repo">
-        <option value="">All public</option>
+        <option value="">All repositories</option>
       </select>
     </div>
     <div class="filter-actions">
@@ -224,12 +231,37 @@ button, input, select { font: inherit; }
 <script>
 (function () {
   const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id']);
+  const PUBLIC_SINGLETON_REPO = 'learn-ukrainian/learn-ukrainian.github.io';
+  const PUBLIC_PROJECTION_URL = '/api/work/v1/projection';
+  // Fixed constant — never configurable, never persisted, never rendered into shareable state.
+  const PRIVATE_PROJECTION_URL = 'http://127.0.0.1:8766/v1/projection';
+  const PRIVATE_SCHEMA_DIGEST = '89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde';
+  const PUBLIC_SCHEMA_COMMIT = 'f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d';
+  const PRIVATE_SOURCE_ID = 'private-local-adapter';
+  const PUBLIC_SOURCE_ID = 'public-monitor';
+  const PRIVATE_TIMEOUT_MS = 5000;
+  const HEALTH_ORDER = { OFF_TRACK: 0, AT_RISK: 1, UNKNOWN: 2, ON_TRACK: 3 };
+  const ADAPTER_STATUS = new Set(['ok', 'degraded', 'unavailable', 'permission_denied', 'timeout', 'truncated']);
+  const PRIVATE_ROOT_KEYS = ['schema_version','generated_at','cache_age_s','budget','sources','items','attention','denominator','capabilities','foundation_status'];
+  const PRIVATE_SOURCE_KEYS = ['source_id','status','freshness','capabilities','truncation','sections'];
+  const PRIVATE_ITEM_KEYS = ['work_id','source_id','repository_id','resource_kind','remote_id','title','lifecycle','labels','assignees','urls','timestamps','projections','relationships','health','attention_rank','safe_next_action','authority','omissions'];
+  const PRIVATE_ATTENTION_KEYS = ['work_id','attention_rank','health','safe_next_action','title','resource_kind','repository_id','remote_id'];
+  const PRIVATE_DENOM_KEYS = ['issues_open','prs_open','streams_complete','class4','omissions'];
+  const PRIVATE_CAP_KEYS = ['mutation','private_source'];
+  const PRIVATE_PS_KEYS = ['source_id','available','schema_version','schema_digest_sha256','public_schema_commit','endpoint','capabilities','redaction','reason_if_unavailable'];
+  const REPO_RE = /^[a-z0-9][a-z0-9_.-]{0,99}\/[a-z0-9][a-z0-9_.-]{0,99}$/;
+  const REMOTE_ID_RE = /^[1-9][0-9]*$/;
+  const RFC3339_Z_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+
   const state = {
     projection: null,
+    merged: null,
     itemsById: new Map(),
     attention: [],
     selectedId: null,
     selectedIndex: -1,
+    privateStatusText: 'Checking capability…',
+    publicStatusOverride: null,
   };
 
   const els = {
@@ -244,6 +276,7 @@ button, input, select { font: inherit; }
     kind: document.getElementById('filter-kind'),
     lifecycle: document.getElementById('filter-lifecycle'),
     orphan: document.getElementById('filter-orphan'),
+    source: document.getElementById('filter-source'),
     repo: document.getElementById('filter-repo'),
     cmd: document.getElementById('cmd'),
     cmdInput: document.getElementById('cmd-input'),
@@ -260,12 +293,360 @@ button, input, select { font: inherit; }
     els.error.textContent = msg;
   }
 
+  function isObject(value) {
+    return !!value && typeof value === 'object' && !Array.isArray(value);
+  }
+
+  function exactKeys(obj, keys) {
+    const actual = Object.keys(obj).sort();
+    const expected = keys.slice().sort();
+    if (actual.length !== expected.length) return false;
+    for (let i = 0; i < actual.length; i += 1) {
+      if (actual[i] !== expected[i]) return false;
+    }
+    return true;
+  }
+
+  function isFiniteNonNegativeNumber(value) {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 0 && !Object.is(value, -0);
+  }
+
+  function isNonNegInt(value) {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 && !Object.is(value, -0);
+  }
+
+  function deepEqual(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  function admitPublicDocument(doc) {
+    if (!isObject(doc)) return { ok: false, code: 'schema_mismatch' };
+    if (doc.schema_version !== 'work-projection.v1') return { ok: false, code: 'schema_mismatch' };
+    if (doc.foundation_status !== 'FOUNDATION_COMPLETE') return { ok: false, code: 'schema_mismatch' };
+    if (!isObject(doc.capabilities) || doc.capabilities.mutation !== false) return { ok: false, code: 'schema_mismatch' };
+    if (!Array.isArray(doc.sources) || !Array.isArray(doc.items) || !Array.isArray(doc.attention)) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isFiniteNonNegativeNumber(doc.cache_age_s)) return { ok: false, code: 'schema_mismatch' };
+    const ids = new Set();
+    for (const item of doc.items) {
+      if (!isObject(item) || typeof item.work_id !== 'string' || !item.work_id) {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      if (ids.has(item.work_id)) return { ok: false, code: 'schema_mismatch' };
+      ids.add(item.work_id);
+    }
+    return { ok: true, doc: doc };
+  }
+
+  function admitPrivateDocument(doc) {
+    if (!isObject(doc) || !exactKeys(doc, PRIVATE_ROOT_KEYS)) return { ok: false, code: 'schema_mismatch' };
+    if (doc.schema_version !== 'work-projection.v1') return { ok: false, code: 'schema_mismatch' };
+    if (doc.foundation_status !== 'FOUNDATION_COMPLETE') return { ok: false, code: 'schema_mismatch' };
+    if (typeof doc.generated_at !== 'string' || !RFC3339_Z_RE.test(doc.generated_at)) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isFiniteNonNegativeNumber(doc.cache_age_s)) return { ok: false, code: 'schema_mismatch' };
+    if (!isObject(doc.budget) || !exactKeys(doc.budget, ['warm_target_s', 'timeout_s'])) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (doc.budget.warm_target_s !== 2 || doc.budget.timeout_s !== 5) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!Array.isArray(doc.sources) || !Array.isArray(doc.items) || !Array.isArray(doc.attention)) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isObject(doc.denominator) || !exactKeys(doc.denominator, PRIVATE_DENOM_KEYS)) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isObject(doc.capabilities) || !exactKeys(doc.capabilities, PRIVATE_CAP_KEYS)) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (doc.capabilities.mutation !== false) return { ok: false, code: 'schema_mismatch' };
+    const ps = doc.capabilities.private_source;
+    if (!isObject(ps) || !exactKeys(ps, PRIVATE_PS_KEYS)) return { ok: false, code: 'schema_mismatch' };
+    if (ps.source_id !== PRIVATE_SOURCE_ID) return { ok: false, code: 'schema_mismatch' };
+    if (ps.available !== true) return { ok: false, code: 'schema_mismatch' };
+    if (ps.schema_version !== 'work-projection.v1') return { ok: false, code: 'schema_mismatch' };
+    if (ps.schema_digest_sha256 !== PRIVATE_SCHEMA_DIGEST) return { ok: false, code: 'schema_mismatch' };
+    if (ps.public_schema_commit !== PUBLIC_SCHEMA_COMMIT) return { ok: false, code: 'schema_mismatch' };
+    if (ps.endpoint !== PRIVATE_PROJECTION_URL) return { ok: false, code: 'schema_mismatch' };
+    if (!Array.isArray(ps.capabilities) || ps.capabilities.length !== 3) return { ok: false, code: 'schema_mismatch' };
+    if (ps.capabilities[0] !== 'projection' || ps.capabilities[1] !== 'capabilities' || ps.capabilities[2] !== 'health') {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (ps.redaction !== 'strict-metadata-only') return { ok: false, code: 'schema_mismatch' };
+    if (ps.reason_if_unavailable !== null) return { ok: false, code: 'schema_mismatch' };
+
+    if (doc.sources.length !== 1) return { ok: false, code: 'schema_mismatch' };
+    const source = doc.sources[0];
+    if (!isObject(source) || !exactKeys(source, PRIVATE_SOURCE_KEYS)) return { ok: false, code: 'schema_mismatch' };
+    if (source.source_id !== PRIVATE_SOURCE_ID) return { ok: false, code: 'schema_mismatch' };
+    if (!ADAPTER_STATUS.has(source.status)) return { ok: false, code: 'schema_mismatch' };
+    if (!isObject(source.freshness) || !exactKeys(source.freshness, ['observed_at', 'age_s'])) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!(source.freshness.observed_at === null || (typeof source.freshness.observed_at === 'string' && RFC3339_Z_RE.test(source.freshness.observed_at)))) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!(source.freshness.age_s === null || isFiniteNonNegativeNumber(source.freshness.age_s))) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isObject(source.capabilities) || !exactKeys(source.capabilities, ['mutation', 'private_fields'])) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (source.capabilities.mutation !== false || source.capabilities.private_fields !== false) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isObject(source.truncation) || !exactKeys(source.truncation, ['issues', 'prs', 'limit'])) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (typeof source.truncation.issues !== 'boolean' || typeof source.truncation.prs !== 'boolean' || source.truncation.limit !== 1000) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!isObject(source.sections) || !exactKeys(source.sections, ['issues', 'prs'])) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    for (const sectionName of ['issues', 'prs']) {
+      const section = source.sections[sectionName];
+      if (!isObject(section) || !exactKeys(section, ['status', 'count'])) return { ok: false, code: 'schema_mismatch' };
+      if (!ADAPTER_STATUS.has(section.status)) return { ok: false, code: 'schema_mismatch' };
+      if (!isNonNegInt(section.count)) return { ok: false, code: 'schema_mismatch' };
+    }
+
+    const den = doc.denominator;
+    if (!isNonNegInt(den.issues_open) || !isNonNegInt(den.prs_open)) return { ok: false, code: 'schema_mismatch' };
+    if (typeof den.streams_complete !== 'boolean') return { ok: false, code: 'schema_mismatch' };
+    if (!isObject(den.class4) || !exactKeys(den.class4, ['delegate_active', 'delegate_tasks', 'fleet_reviews'])) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (den.class4.delegate_active !== false || den.class4.delegate_tasks !== false || den.class4.fleet_reviews !== false) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (!Array.isArray(den.omissions) || den.omissions.length !== 0) return { ok: false, code: 'schema_mismatch' };
+
+    const ids = new Set();
+    let issueCount = 0;
+    let prCount = 0;
+    const itemsById = new Map();
+    for (const item of doc.items) {
+      if (!isObject(item) || !exactKeys(item, PRIVATE_ITEM_KEYS)) return { ok: false, code: 'schema_mismatch' };
+      if (item.source_id !== PRIVATE_SOURCE_ID) return { ok: false, code: 'schema_mismatch' };
+      if (typeof item.repository_id !== 'string' || !REPO_RE.test(item.repository_id)) return { ok: false, code: 'schema_mismatch' };
+      if (item.resource_kind !== 'issue' && item.resource_kind !== 'pr') return { ok: false, code: 'schema_mismatch' };
+      if (typeof item.remote_id !== 'string' || !REMOTE_ID_RE.test(item.remote_id)) return { ok: false, code: 'schema_mismatch' };
+      const expectedId = 'wp1:' + PRIVATE_SOURCE_ID + ':' + item.repository_id + ':' + item.resource_kind + ':' + item.remote_id;
+      if (item.work_id !== expectedId) return { ok: false, code: 'schema_mismatch' };
+      if (ids.has(item.work_id)) return { ok: false, code: 'schema_mismatch' };
+      ids.add(item.work_id);
+      const expectedTitle = 'private-' + item.resource_kind + '-' + item.remote_id;
+      if (item.title !== expectedTitle) return { ok: false, code: 'schema_mismatch' };
+      if (item.resource_kind === 'issue') {
+        if (item.lifecycle !== 'open') return { ok: false, code: 'schema_mismatch' };
+        issueCount += 1;
+      } else {
+        if (item.lifecycle !== 'open' && item.lifecycle !== 'draft') return { ok: false, code: 'schema_mismatch' };
+        prCount += 1;
+      }
+      if (!Array.isArray(item.labels) || item.labels.length !== 0) return { ok: false, code: 'schema_mismatch' };
+      if (!Array.isArray(item.assignees) || item.assignees.length !== 0) return { ok: false, code: 'schema_mismatch' };
+      if (!isObject(item.urls) || !exactKeys(item.urls, ['html']) || item.urls.html !== null) {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      if (!isObject(item.timestamps) || !exactKeys(item.timestamps, ['created_at', 'updated_at'])) {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      for (const tsKey of ['created_at', 'updated_at']) {
+        const ts = item.timestamps[tsKey];
+        if (!(ts === null || (typeof ts === 'string' && RFC3339_Z_RE.test(ts)))) {
+          return { ok: false, code: 'schema_mismatch' };
+        }
+      }
+      if (!isObject(item.projections) || !exactKeys(item.projections, ['stream', 'dispatch', 'review', 'verification'])) {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      for (const pKey of ['stream', 'dispatch', 'review', 'verification']) {
+        if (!isObject(item.projections[pKey]) || Object.keys(item.projections[pKey]).length !== 0) {
+          return { ok: false, code: 'schema_mismatch' };
+        }
+      }
+      if (!Array.isArray(item.relationships) || item.relationships.length !== 0) return { ok: false, code: 'schema_mismatch' };
+      if (item.health !== 'UNKNOWN') return { ok: false, code: 'schema_mismatch' };
+      if (!isNonNegInt(item.attention_rank)) return { ok: false, code: 'schema_mismatch' };
+      if (!isObject(item.safe_next_action) || !exactKeys(item.safe_next_action, ['code', 'reason_codes'])) {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      if (item.safe_next_action.code !== 'INSPECT_UNKNOWN') return { ok: false, code: 'schema_mismatch' };
+      if (!Array.isArray(item.safe_next_action.reason_codes) || item.safe_next_action.reason_codes.length !== 2) {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      if (item.safe_next_action.reason_codes[0] !== 'private_metadata_redacted' || item.safe_next_action.reason_codes[1] !== 'no_private_authority_evidence') {
+        return { ok: false, code: 'schema_mismatch' };
+      }
+      if (!Array.isArray(item.authority) || item.authority.length !== 0) return { ok: false, code: 'schema_mismatch' };
+      if (!Array.isArray(item.omissions) || item.omissions.length !== 3) return { ok: false, code: 'schema_mismatch' };
+      const expectedOmissions = [
+        { class: 'private_content', reason: 'redacted' },
+        { class: 'stream_authority', reason: 'not_collected' },
+        { class: 'review_authority', reason: 'not_collected' },
+      ];
+      for (let i = 0; i < 3; i += 1) {
+        const om = item.omissions[i];
+        if (!isObject(om) || !exactKeys(om, ['class', 'reason'])) return { ok: false, code: 'schema_mismatch' };
+        if (om.class !== expectedOmissions[i].class || om.reason !== expectedOmissions[i].reason) {
+          return { ok: false, code: 'schema_mismatch' };
+        }
+      }
+      itemsById.set(item.work_id, item);
+    }
+
+    if (doc.attention.length !== doc.items.length) return { ok: false, code: 'schema_mismatch' };
+    const attentionIds = new Set();
+    for (const row of doc.attention) {
+      if (!isObject(row) || !exactKeys(row, PRIVATE_ATTENTION_KEYS)) return { ok: false, code: 'schema_mismatch' };
+      const item = itemsById.get(row.work_id);
+      if (!item) return { ok: false, code: 'schema_mismatch' };
+      if (attentionIds.has(row.work_id)) return { ok: false, code: 'schema_mismatch' };
+      attentionIds.add(row.work_id);
+      if (row.attention_rank !== item.attention_rank) return { ok: false, code: 'schema_mismatch' };
+      if (row.health !== item.health) return { ok: false, code: 'schema_mismatch' };
+      if (!deepEqual(row.safe_next_action, item.safe_next_action)) return { ok: false, code: 'schema_mismatch' };
+      if (row.title !== item.title) return { ok: false, code: 'schema_mismatch' };
+      if (row.resource_kind !== item.resource_kind) return { ok: false, code: 'schema_mismatch' };
+      if (row.repository_id !== item.repository_id) return { ok: false, code: 'schema_mismatch' };
+      if (row.remote_id !== item.remote_id) return { ok: false, code: 'schema_mismatch' };
+    }
+
+    // Terminal section statuses admit neither counts nor items (degraded included).
+    const terminal = new Set(['unavailable', 'permission_denied', 'timeout', 'degraded']);
+    const issuesStatus = source.sections.issues.status;
+    const prsStatus = source.sections.prs.status;
+    if (terminal.has(issuesStatus)) {
+      if (source.sections.issues.count !== 0 || issueCount !== 0) return { ok: false, code: 'schema_mismatch' };
+    } else if (source.sections.issues.count !== issueCount) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (terminal.has(prsStatus)) {
+      if (source.sections.prs.count !== 0 || prCount !== 0) return { ok: false, code: 'schema_mismatch' };
+    } else if (source.sections.prs.count !== prCount) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (den.issues_open !== source.sections.issues.count) return { ok: false, code: 'schema_mismatch' };
+    if (den.prs_open !== source.sections.prs.count) return { ok: false, code: 'schema_mismatch' };
+
+    return { ok: true, doc: doc, sourceStatus: source.status };
+  }
+
+  function attentionRowFromItem(item) {
+    return {
+      work_id: item.work_id,
+      attention_rank: item.attention_rank,
+      health: item.health,
+      safe_next_action: item.safe_next_action,
+      title: item.title,
+      resource_kind: item.resource_kind,
+      repository_id: item.repository_id,
+      remote_id: item.remote_id,
+    };
+  }
+
+  function denseAttention(items) {
+    const ranked = items.slice().sort((a, b) => {
+      const ha = HEALTH_ORDER[a.health] != null ? HEALTH_ORDER[a.health] : 99;
+      const hb = HEALTH_ORDER[b.health] != null ? HEALTH_ORDER[b.health] : 99;
+      if (ha !== hb) return ha - hb;
+      const ra = typeof a._orig_rank === 'number' ? a._orig_rank : a.attention_rank;
+      const rb = typeof b._orig_rank === 'number' ? b._orig_rank : b.attention_rank;
+      if (ra !== rb) return ra - rb;
+      if (a.source_id < b.source_id) return -1;
+      if (a.source_id > b.source_id) return 1;
+      if (a.work_id < b.work_id) return -1;
+      if (a.work_id > b.work_id) return 1;
+      return 0;
+    });
+    ranked.forEach((item, index) => {
+      item.attention_rank = index;
+      delete item._orig_rank;
+    });
+    return ranked.map(attentionRowFromItem);
+  }
+
+  function mergeProjections(publicDoc, privateDoc) {
+    const publicIds = new Set((publicDoc.items || []).map((i) => i.work_id));
+    for (const item of privateDoc.items || []) {
+      if (publicIds.has(item.work_id)) {
+        return { ok: false, code: 'identity_collision' };
+      }
+    }
+
+    const sources = (publicDoc.sources || []).map((s) => {
+      if (s && s.source_id === PRIVATE_SOURCE_ID) {
+        return privateDoc.sources[0];
+      }
+      return s;
+    });
+    if (!sources.some((s) => s && s.source_id === PRIVATE_SOURCE_ID)) {
+      sources.push(privateDoc.sources[0]);
+    }
+
+    const publicItems = (publicDoc.items || []).map((item) => {
+      const copy = Object.assign({}, item);
+      copy._orig_rank = item.attention_rank;
+      return copy;
+    });
+    const privateItems = (privateDoc.items || []).map((item) => {
+      const copy = Object.assign({}, item);
+      copy._orig_rank = item.attention_rank;
+      return copy;
+    });
+    const items = publicItems.concat(privateItems);
+    const attention = denseAttention(items);
+
+    const pubDen = publicDoc.denominator || {};
+    const privDen = privateDoc.denominator || {};
+    const omissions = [];
+    for (const om of (pubDen.omissions || [])) {
+      if (om && om.class === 'private_adapter' && om.reason === 'not_configured') continue;
+      omissions.push(om);
+    }
+    for (const om of (privDen.omissions || [])) omissions.push(om);
+
+    const merged = {
+      schema_version: publicDoc.schema_version,
+      generated_at: publicDoc.generated_at,
+      cache_age_s: Math.max(publicDoc.cache_age_s, privateDoc.cache_age_s),
+      budget: publicDoc.budget,
+      sources: sources,
+      items: items,
+      attention: attention,
+      denominator: {
+        issues_open: (pubDen.issues_open || 0) + (privDen.issues_open || 0),
+        prs_open: (pubDen.prs_open || 0) + (privDen.prs_open || 0),
+        streams_complete: !!(pubDen.streams_complete && privDen.streams_complete),
+        class4: pubDen.class4 || { delegate_active: false, delegate_tasks: false, fleet_reviews: false },
+        omissions: omissions,
+      },
+      capabilities: {
+        mutation: false,
+        private_source: privateDoc.capabilities.private_source,
+      },
+      foundation_status: 'FOUNDATION_COMPLETE',
+    };
+    return { ok: true, doc: merged };
+  }
+
   function readFiltersFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const out = {};
     for (const [key, value] of params.entries()) {
       if (!ALLOWED_FILTER_KEYS.has(key)) continue;
       if (!value || value.length > 64) continue;
+      if (key === 'repository_id' && value !== PUBLIC_SINGLETON_REPO) continue;
+      if (key === 'source_id' && value !== PUBLIC_SOURCE_ID) continue;
+      if (key === 'health' && !['OFF_TRACK', 'AT_RISK', 'UNKNOWN', 'ON_TRACK'].includes(value)) continue;
+      if (key === 'kind' && !['issue', 'pr', 'task', 'review'].includes(value)) continue;
+      if (key === 'lifecycle' && !['open', 'draft', 'running', 'failed'].includes(value)) continue;
+      if (key === 'orphan' && value !== 'true' && value !== 'false') continue;
       out[key] = value;
     }
     return out;
@@ -276,6 +657,7 @@ button, input, select { font: inherit; }
     els.kind.value = filters.kind || '';
     els.lifecycle.value = filters.lifecycle || '';
     els.orphan.value = filters.orphan || '';
+    if (els.source) els.source.value = filters.source_id || '';
     els.repo.value = filters.repository_id || '';
   }
 
@@ -285,30 +667,51 @@ button, input, select { font: inherit; }
     if (els.kind.value) filters.kind = els.kind.value;
     if (els.lifecycle.value) filters.lifecycle = els.lifecycle.value;
     if (els.orphan.value) filters.orphan = els.orphan.value;
+    if (els.source && els.source.value) filters.source_id = els.source.value;
     if (els.repo.value) filters.repository_id = els.repo.value;
     return filters;
   }
 
-  function writeFiltersToUrl(filters) {
-    const params = new URLSearchParams();
+  function shareableFilters(filters) {
+    const out = {};
     Object.keys(filters).sort().forEach((key) => {
       if (!ALLOWED_FILTER_KEYS.has(key)) return;
       const value = String(filters[key]);
       if (!value || value.length > 64) return;
-      // Free text and private endpoint values are rejected client-side.
       if (key === 'endpoint' || key === 'q' || key === 'private_endpoint') return;
-      params.set(key, value);
+      if (key === 'repository_id' && value !== PUBLIC_SINGLETON_REPO) return;
+      if (key === 'source_id' && value !== PUBLIC_SOURCE_ID) return;
+      out[key] = value;
     });
+    return out;
+  }
+
+  function writeFiltersToUrl(filters) {
+    const safe = shareableFilters(filters);
+    const params = new URLSearchParams();
+    Object.keys(safe).sort().forEach((key) => params.set(key, safe[key]));
     const qs = params.toString();
-    const next = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    const next = qs ? (window.location.pathname + '?' + qs) : window.location.pathname;
     window.history.replaceState({}, '', next);
   }
 
-  function queryString(filters) {
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([k, v]) => params.set(k, v));
-    const qs = params.toString();
-    return qs ? `?${qs}` : '';
+  function applyLocalFilters(projection, filters) {
+    if (!projection) return { items: [], attention: [] };
+    const items = (projection.items || []).filter((item) => {
+      if (filters.health && item.health !== filters.health) return false;
+      if (filters.kind && item.resource_kind !== filters.kind) return false;
+      if (filters.lifecycle && item.lifecycle !== filters.lifecycle) return false;
+      if (filters.repository_id && item.repository_id !== filters.repository_id) return false;
+      if (filters.source_id && item.source_id !== filters.source_id) return false;
+      if (filters.orphan === 'true' || filters.orphan === 'false') {
+        const orphan = !!(item.flags && item.flags.orphan);
+        if (String(orphan) !== filters.orphan) return false;
+      }
+      return true;
+    });
+    const idSet = new Set(items.map((i) => i.work_id));
+    const attention = (projection.attention || []).filter((row) => idSet.has(row.work_id));
+    return { items: items, attention: attention };
   }
 
   function railClasses(item) {
@@ -330,25 +733,29 @@ button, input, select { font: inherit; }
   function renderList() {
     const attention = state.attention;
     if (!attention.length) {
-      els.list.innerHTML = '<div class="empty">No attention items for the current public-safe filters. Sources may be empty or degraded — check the source strip.</div>';
+      if (!state.merged) {
+        els.list.innerHTML = '<div class="empty">No source projection is available. Retry refresh.</div>';
+      } else {
+        els.list.innerHTML = '<div class="empty">No attention items for the current public-safe filters. Sources may be empty or degraded — check the source strip.</div>';
+      }
       return;
     }
     els.list.innerHTML = attention.map((row, index) => {
       const item = state.itemsById.get(row.work_id) || row;
       const rail = railClasses(item);
       const selected = row.work_id === state.selectedId;
-      return `<div class="work-row" role="option" tabindex="-1" data-id="${escapeAttr(row.work_id)}" data-index="${index}" aria-selected="${selected ? 'true' : 'false'}">
-        <div class="rail" aria-hidden="true">${rail.map((c) => `<i class="${c}"></i>`).join('')}</div>
-        <div class="row-main">
-          <div class="row-title">${escapeHtml(item.title || row.title || row.work_id)}</div>
-          <div class="row-meta">
-            <span class="mono">${escapeHtml(item.repository_id || row.repository_id || '')}</span>
-            <span class="pill">${escapeHtml(item.resource_kind || row.resource_kind || '')} #${escapeHtml(String(item.remote_id || row.remote_id || ''))}</span>
-            <span class="pill ${escapeAttr(item.health || row.health || 'UNKNOWN')}">${escapeHtml(item.health || row.health || 'UNKNOWN')}</span>
-          </div>
-        </div>
-        <div class="row-side mono">${escapeHtml((item.safe_next_action && item.safe_next_action.code) || (row.safe_next_action && row.safe_next_action.code) || '')}</div>
-      </div>`;
+      return '<div class="work-row" role="option" tabindex="-1" data-id="' + escapeAttr(row.work_id) + '" data-index="' + index + '" aria-selected="' + (selected ? 'true' : 'false') + '">' +
+        '<div class="rail" aria-hidden="true">' + rail.map((c) => '<i class="' + c + '"></i>').join('') + '</div>' +
+        '<div class="row-main">' +
+          '<div class="row-title">' + escapeHtml(item.title || row.title || row.work_id) + '</div>' +
+          '<div class="row-meta">' +
+            '<span class="mono">' + escapeHtml(item.repository_id || row.repository_id || '') + '</span>' +
+            '<span class="pill">' + escapeHtml(item.resource_kind || row.resource_kind || '') + ' #' + escapeHtml(String(item.remote_id || row.remote_id || '')) + '</span>' +
+            '<span class="pill ' + escapeAttr(item.health || row.health || 'UNKNOWN') + '">' + escapeHtml(item.health || row.health || 'UNKNOWN') + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="row-side mono">' + escapeHtml((item.safe_next_action && item.safe_next_action.code) || (row.safe_next_action && row.safe_next_action.code) || '') + '</div>' +
+      '</div>';
     }).join('');
     els.list.querySelectorAll('.work-row').forEach((node) => {
       node.addEventListener('click', () => selectIndex(Number(node.dataset.index)));
@@ -357,39 +764,40 @@ button, input, select { font: inherit; }
 
   function renderDetail(item) {
     if (!item) {
-      els.detail.className = 'detail empty';
+      els.detail.classList.add('empty');
       els.detail.textContent = 'Select a row to inspect ownership, evidence, and the safe next action.';
       return;
     }
-    const stream = item.projections.stream || {};
-    const dispatch = item.projections.dispatch || {};
-    const review = item.projections.review || {};
-    const verification = item.projections.verification || {};
+    const stream = (item.projections && item.projections.stream) || {};
+    const dispatch = (item.projections && item.projections.dispatch) || {};
+    const review = (item.projections && item.projections.review) || {};
+    const verification = (item.projections && item.projections.verification) || {};
     const action = item.safe_next_action || {};
     const authorities = (item.authority || []).map((a) =>
-      `${a.domain}: age=${a.age_s == null ? '—' : a.age_s + 's'}${a.stale ? ' stale' : ''}`
+      a.domain + ': age=' + (a.age_s == null ? '—' : a.age_s + 's') + (a.stale ? ' stale' : '')
     ).join(' · ');
-    const rels = (item.relationships || []).map((r) => `${r.type} → ${r.target_id}`).join('; ') || 'none';
-    els.detail.className = 'detail';
-    els.detail.innerHTML = `
-      <h4>${escapeHtml(item.title || item.work_id)}</h4>
-      <div class="row-meta">
-        <span class="pill ${escapeAttr(item.health)}">${escapeHtml(item.health)}</span>
-        <span class="pill">${escapeHtml(item.resource_kind)} #${escapeHtml(item.remote_id)}</span>
-        <span class="mono">${escapeHtml(item.repository_id)}</span>
-      </div>
-      <dl>
-        <div><dt>Work id</dt><dd class="mono">${escapeHtml(item.work_id)}</dd></div>
-        <div><dt>Lifecycle</dt><dd>${escapeHtml(item.lifecycle || '—')}</dd></div>
-        <div><dt>Stream</dt><dd>${escapeHtml(stream.status || '—')}${(stream.streams && stream.streams.length) ? ' · ' + escapeHtml(stream.streams.join(', ')) : ''}</dd></div>
-        <div><dt>Dispatch</dt><dd>${escapeHtml((dispatch.task_ids || []).join(', ') || 'none')} ${(dispatch.statuses || []).map(escapeHtml).join(', ')}</dd></div>
-        <div><dt>Review</dt><dd>${escapeHtml(review.review_decision || (review.states || []).join(', ') || 'none')}${review.sealed_verdict_available ? ' · sealed available' : ''}</dd></div>
-        <div><dt>Verification</dt><dd>${escapeHtml(verification.ci_state || verification.state || '—')}</dd></div>
-        <div><dt>Relationships</dt><dd class="mono">${escapeHtml(rels)}</dd></div>
-        <div><dt>Authority / freshness</dt><dd>${escapeHtml(authorities || '—')}</dd></div>
-        <div><dt>Safe next action</dt><dd><strong>${escapeHtml(action.code || 'NONE')}</strong> · ${(action.reason_codes || []).map(escapeHtml).join(', ')}</dd></div>
-        <div><dt>URL</dt><dd>${item.urls && item.urls.html ? `<a href="${escapeAttr(item.urls.html)}" target="_blank" rel="noopener">${escapeHtml(item.urls.html)}</a>` : '—'}</dd></div>
-      </dl>`;
+    const rels = (item.relationships || []).map((r) => r.type + ' → ' + r.target_id).join('; ') || 'none';
+    els.detail.classList.remove('empty');
+    els.detail.innerHTML =
+      '<h4>' + escapeHtml(item.title || item.work_id) + '</h4>' +
+      '<div class="row-meta">' +
+        '<span class="pill ' + escapeAttr(item.health) + '">' + escapeHtml(item.health) + '</span>' +
+        '<span class="pill">' + escapeHtml(item.resource_kind) + ' #' + escapeHtml(item.remote_id) + '</span>' +
+        '<span class="mono">' + escapeHtml(item.repository_id) + '</span>' +
+      '</div>' +
+      '<dl>' +
+        '<div><dt>Work id</dt><dd class="mono">' + escapeHtml(item.work_id) + '</dd></div>' +
+        '<div><dt>Source</dt><dd class="mono">' + escapeHtml(item.source_id || '') + '</dd></div>' +
+        '<div><dt>Lifecycle</dt><dd>' + escapeHtml(item.lifecycle || '—') + '</dd></div>' +
+        '<div><dt>Stream</dt><dd>' + escapeHtml(stream.status || '—') + ((stream.streams && stream.streams.length) ? ' · ' + escapeHtml(stream.streams.join(', ')) : '') + '</dd></div>' +
+        '<div><dt>Dispatch</dt><dd>' + escapeHtml((dispatch.task_ids || []).join(', ') || 'none') + ' ' + (dispatch.statuses || []).map(escapeHtml).join(', ') + '</dd></div>' +
+        '<div><dt>Review</dt><dd>' + escapeHtml(review.review_decision || (review.states || []).join(', ') || 'none') + (review.sealed_verdict_available ? ' · sealed available' : '') + '</dd></div>' +
+        '<div><dt>Verification</dt><dd>' + escapeHtml(verification.ci_state || verification.state || '—') + '</dd></div>' +
+        '<div><dt>Relationships</dt><dd class="mono">' + escapeHtml(rels) + '</dd></div>' +
+        '<div><dt>Authority / freshness</dt><dd>' + escapeHtml(authorities || '—') + '</dd></div>' +
+        '<div><dt>Safe next action</dt><dd><strong>' + escapeHtml(action.code || 'NONE') + '</strong> · ' + (action.reason_codes || []).map(escapeHtml).join(', ') + '</dd></div>' +
+        '<div><dt>URL</dt><dd>' + (item.urls && item.urls.html ? ('<a href="' + escapeAttr(item.urls.html) + '" target="_blank" rel="noopener">' + escapeHtml(item.urls.html) + '</a>') : '—') + '</dd></div>' +
+      '</dl>';
   }
 
   function selectIndex(index) {
@@ -399,72 +807,274 @@ button, input, select { font: inherit; }
     state.selectedId = state.attention[clamped].work_id;
     renderList();
     renderDetail(state.itemsById.get(state.selectedId));
-    const node = els.list.querySelector(`.work-row[data-index="${clamped}"]`);
+    const node = els.list.querySelector('.work-row[data-index="' + clamped + '"]');
     if (node) node.focus({ preventScroll: false });
   }
 
-  function renderSources(projection) {
-    const sources = projection.sources || [];
-    const pub = sources.find((s) => s.source_id === 'public-monitor') || {};
-    const priv = sources.find((s) => s.source_id === 'private-local-adapter') || {};
-    const den = projection.denominator || {};
-    els.publicMeta.textContent = [
-      `status=${pub.status || '—'}`,
-      `cache_age_s=${projection.cache_age_s ?? '—'}`,
-      `issues=${den.issues_open ?? '—'}`,
-      `prs=${den.prs_open ?? '—'}`,
-      `streams=${den.streams_complete ? 'complete' : 'incomplete'}`,
-      `class4 d1=${den.class4 && den.class4.delegate_active} d2=${den.class4 && den.class4.delegate_tasks} r1=${den.class4 && den.class4.fleet_reviews}`,
-    ].join(' · ');
-    const cap = (projection.capabilities && projection.capabilities.private_source) || {};
-    els.privateMeta.textContent = priv.available
-      ? `status=${priv.status}`
-      : `unavailable · ${cap.reason_if_unavailable || priv.reason || 'not_configured'} (public server never proxies private data)`;
-    els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
-    els.attentionMeta.textContent = `${(projection.attention || []).length} ranked · cache ${projection.cache_age_s ?? 0}s`;
+  function renderSources(projection, privateMetaText, publicStatusOverride) {
+    const sources = (projection && projection.sources) || [];
+    const pub = sources.find((s) => s.source_id === PUBLIC_SOURCE_ID) || {};
+    const den = (projection && projection.denominator) || {};
+    const pubStatus = publicStatusOverride || pub.status || '—';
+    if (projection) {
+      els.publicMeta.textContent = [
+        'status=' + pubStatus,
+        'cache_age_s=' + (projection.cache_age_s ?? '—'),
+        'issues=' + (den.issues_open ?? '—'),
+        'prs=' + (den.prs_open ?? '—'),
+        'streams=' + (den.streams_complete ? 'complete' : 'incomplete'),
+        'class4 d1=' + (den.class4 && den.class4.delegate_active) + ' d2=' + (den.class4 && den.class4.delegate_tasks) + ' r1=' + (den.class4 && den.class4.fleet_reviews),
+      ].join(' · ');
+      els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
+      els.attentionMeta.textContent = ((projection.attention || []).length) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
+    } else if (publicStatusOverride) {
+      els.publicMeta.textContent = 'status=' + publicStatusOverride;
+    }
+
+    els.privateMeta.textContent = privateMetaText;
 
     const repos = new Set();
-    (projection.items || []).forEach((item) => {
+    const sourcesPresent = new Set();
+    ((projection && projection.items) || []).forEach((item) => {
       if (item.repository_id) repos.add(item.repository_id);
+      if (item.source_id) sourcesPresent.add(item.source_id);
     });
-    const current = els.repo.value;
-    els.repo.innerHTML = '<option value="">All public</option>' +
-      Array.from(repos).sort().map((r) => `<option value="${escapeAttr(r)}">${escapeHtml(r)}</option>`).join('');
-    if (current) els.repo.value = current;
+    const currentRepo = els.repo.value;
+    els.repo.innerHTML = '<option value="">All repositories</option>' +
+      Array.from(repos).sort().map((r) => '<option value="' + escapeAttr(r) + '">' + escapeHtml(r) + '</option>').join('');
+    if (currentRepo) els.repo.value = currentRepo;
+
+    if (els.source) {
+      const currentSource = els.source.value;
+      // Only list private source after an admitted private payload contributed items or source.
+      const hasPrivate = sources.some((s) => s && s.source_id === PRIVATE_SOURCE_ID && s.status !== 'unavailable') || sourcesPresent.has(PRIVATE_SOURCE_ID);
+      const opts = ['<option value="">All sources</option>', '<option value="public-monitor">public-monitor</option>'];
+      if (hasPrivate) opts.push('<option value="private-local-adapter">private-local-adapter</option>');
+      els.source.innerHTML = opts.join('');
+      if (currentSource) els.source.value = currentSource;
+    }
+  }
+
+  function fetchJson(url, options) {
+    const opts = options || {};
+    const controller = opts.timeoutMs ? new AbortController() : null;
+    let timer = null;
+    if (controller) {
+      timer = setTimeout(() => controller.abort(), opts.timeoutMs);
+    }
+    const init = {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'omit',
+      cache: 'no-store',
+      referrerPolicy: 'no-referrer',
+    };
+    if (controller) init.signal = controller.signal;
+    const aborted = function (err) {
+      return (err && err.name === 'AbortError')
+        || (controller && controller.signal && controller.signal.aborted);
+    };
+    // Keep the abort timer active through status checks and full JSON body parse.
+    // Clear only once in the terminal finalization path so a stalled body still
+    // respects the private five-second budget.
+    return fetch(url, init).then(async (res) => {
+      if (!res.ok) {
+        // Prefer timeout when the abort budget fired mid-flight.
+        if (aborted(null)) {
+          const err = new Error('timeout');
+          err.code = 'timeout';
+          throw err;
+        }
+        const err = new Error('http_error');
+        err.code = 'unreachable';
+        throw err;
+      }
+      try {
+        return await res.json();
+      } catch (parseErr) {
+        // Abort during body read must be typed timeout (never raw / schema_mismatch).
+        if (aborted(parseErr)) {
+          const err = new Error('timeout');
+          err.code = 'timeout';
+          throw err;
+        }
+        const err = new Error('parse_error');
+        err.code = 'schema_mismatch';
+        throw err;
+      }
+    }).catch((err) => {
+      if (aborted(err) || (err && err.code === 'timeout')) {
+        if (err && err.code === 'timeout') throw err;
+        const e = new Error('timeout');
+        e.code = 'timeout';
+        throw e;
+      }
+      if (err && err.code) throw err;
+      const e = new Error('unreachable');
+      e.code = 'unreachable';
+      throw e;
+    }).finally(() => {
+      if (timer != null) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    });
+  }
+
+  function classifyPublicFailure(err) {
+    return err && err.code === 'schema_mismatch' ? 'schema_mismatch' : 'unreachable';
+  }
+
+  function classifyPrivateFailure(err) {
+    if (!err) return 'unreachable';
+    if (err.code === 'timeout') return 'timeout';
+    if (err.code === 'schema_mismatch') return 'schema_mismatch';
+    if (err.code === 'identity_collision') return 'identity_collision';
+    return 'unreachable';
+  }
+
+  function privateMetaFromCode(code, admittedStatus) {
+    if (admittedStatus) return 'status=' + admittedStatus;
+    if (code === 'timeout') return 'unavailable · timeout';
+    if (code === 'schema_mismatch') return 'unavailable · schema_mismatch';
+    if (code === 'identity_collision') return 'unavailable · identity_collision';
+    return 'unavailable · unreachable';
+  }
+
+  function installView(projection) {
+    state.merged = projection;
+    state.projection = projection;
+    const filters = controlsToFilters();
+    writeFiltersToUrl(filters);
+    const filtered = applyLocalFilters(projection, filters);
+    state.itemsById = new Map(filtered.items.map((i) => [i.work_id, i]));
+    state.attention = filtered.attention;
+    if (state.selectedId && state.itemsById.has(state.selectedId)) {
+      state.selectedIndex = state.attention.findIndex((a) => a.work_id === state.selectedId);
+    } else if (state.attention.length) {
+      state.selectedIndex = 0;
+      state.selectedId = state.attention[0].work_id;
+    } else {
+      state.selectedIndex = -1;
+      state.selectedId = null;
+    }
+    renderSources(projection, state.privateStatusText, state.publicStatusOverride);
+    renderList();
+    renderDetail(state.selectedId ? state.itemsById.get(state.selectedId) : null);
   }
 
   async function loadProjection(opts) {
-    const filters = controlsToFilters();
-    writeFiltersToUrl(filters);
     showError('');
-    const qs = queryString(filters);
-    const finalUrl = `/api/work/v1/projection${qs}${opts && opts.fresh ? (qs ? '&' : '?') + 'fresh=true' : ''}`;
-    try {
-      const res = await fetch(finalUrl, { headers: { Accept: 'application/json' } });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error((body.detail && body.detail.message) || body.detail || `HTTP ${res.status}`);
-      }
-      const projection = await res.json();
-      state.projection = projection;
-      state.itemsById = new Map((projection.items || []).map((i) => [i.work_id, i]));
-      state.attention = projection.attention || [];
-      renderSources(projection);
-      if (state.selectedId && state.itemsById.has(state.selectedId)) {
-        state.selectedIndex = state.attention.findIndex((a) => a.work_id === state.selectedId);
-      } else if (state.attention.length) {
-        state.selectedIndex = 0;
-        state.selectedId = state.attention[0].work_id;
-      } else {
-        state.selectedIndex = -1;
-        state.selectedId = null;
-      }
-      renderList();
-      renderDetail(state.selectedId ? state.itemsById.get(state.selectedId) : null);
-    } catch (err) {
-      showError(`Work projection unavailable: ${err.message || err}`);
-      els.list.innerHTML = '<div class="empty">Projection failed. Public sources may still be healthy independently — retry refresh.</div>';
+    state.publicStatusOverride = null;
+    const publicUrl = (opts && opts.fresh)
+      ? (PUBLIC_PROJECTION_URL + '?fresh=true')
+      : PUBLIC_PROJECTION_URL;
+
+    const publicPromise = fetchJson(publicUrl);
+    const privatePromise = fetchJson(PRIVATE_PROJECTION_URL, { timeoutMs: PRIVATE_TIMEOUT_MS });
+    const settled = await Promise.allSettled([publicPromise, privatePromise]);
+    const publicSettled = settled[0];
+    const privateSettled = settled[1];
+
+    let publicDoc = null;
+    let publicFail = null;
+    if (publicSettled.status === 'fulfilled') {
+      const admitted = admitPublicDocument(publicSettled.value);
+      if (admitted.ok) publicDoc = admitted.doc;
+      else publicFail = 'schema_mismatch';
+    } else {
+      publicFail = classifyPublicFailure(publicSettled.reason);
     }
+
+    let privateDoc = null;
+    let privateFail = null;
+    let privateAdmittedStatus = null;
+    if (privateSettled.status === 'fulfilled') {
+      const admitted = admitPrivateDocument(privateSettled.value);
+      if (admitted.ok) {
+        privateDoc = admitted.doc;
+        privateAdmittedStatus = admitted.sourceStatus;
+      } else {
+        privateFail = 'schema_mismatch';
+      }
+    } else {
+      privateFail = classifyPrivateFailure(privateSettled.reason);
+    }
+
+    if (publicDoc && privateDoc) {
+      const merged = mergeProjections(publicDoc, privateDoc);
+      if (!merged.ok) {
+        privateFail = 'identity_collision';
+        privateDoc = null;
+        state.privateStatusText = privateMetaFromCode(privateFail);
+        state.publicStatusOverride = null;
+        installView(publicDoc);
+        return;
+      }
+      state.privateStatusText = privateMetaFromCode(null, privateAdmittedStatus);
+      state.publicStatusOverride = null;
+      installView(merged.doc);
+      return;
+    }
+
+    if (publicDoc && !privateDoc) {
+      state.privateStatusText = privateMetaFromCode(privateFail);
+      state.publicStatusOverride = null;
+      installView(publicDoc);
+      return;
+    }
+
+    if (!publicDoc && privateDoc) {
+      state.privateStatusText = privateMetaFromCode(null, privateAdmittedStatus);
+      state.publicStatusOverride = publicFail === 'schema_mismatch' ? 'schema_mismatch' : 'unavailable';
+      // Private-only usable projection: wrap as a minimal document for rendering.
+      const privateOnly = {
+        schema_version: privateDoc.schema_version,
+        generated_at: privateDoc.generated_at,
+        cache_age_s: privateDoc.cache_age_s,
+        budget: privateDoc.budget,
+        sources: privateDoc.sources.slice(),
+        items: privateDoc.items.map((item) => {
+          const copy = Object.assign({}, item);
+          copy._orig_rank = item.attention_rank;
+          return copy;
+        }),
+        attention: [],
+        denominator: privateDoc.denominator,
+        capabilities: privateDoc.capabilities,
+        foundation_status: privateDoc.foundation_status,
+      };
+      privateOnly.attention = denseAttention(privateOnly.items);
+      installView(privateOnly);
+      // Ensure public meta shows typed failure even though private source strip may not include public-monitor.
+      els.publicMeta.textContent = 'status=' + state.publicStatusOverride;
+      return;
+    }
+
+    // Both failed
+    state.merged = null;
+    state.projection = null;
+    state.itemsById = new Map();
+    state.attention = [];
+    state.selectedId = null;
+    state.selectedIndex = -1;
+    const pubCode = publicFail === 'schema_mismatch' ? 'schema_mismatch' : 'unreachable';
+    const privCode = privateFail || 'unreachable';
+    showError('Work projection unavailable · public=' + pubCode + ' · private=' + privCode);
+    state.privateStatusText = privateMetaFromCode(privCode);
+    els.publicMeta.textContent = 'status=' + (pubCode === 'schema_mismatch' ? 'schema_mismatch' : 'unavailable');
+    els.privateMeta.textContent = state.privateStatusText;
+    els.list.innerHTML = '<div class="empty">No source projection is available. Retry refresh.</div>';
+    renderDetail(null);
+  }
+
+  function refilterOnly() {
+    if (!state.merged) {
+      const filters = controlsToFilters();
+      writeFiltersToUrl(filters);
+      return;
+    }
+    installView(state.merged);
   }
 
   function openPalette() {
@@ -492,7 +1102,7 @@ button, input, select { font: inherit; }
     }).slice(0, 30);
     els.cmdList.innerHTML = rows.map((row, i) => {
       const item = state.itemsById.get(row.work_id) || row;
-      return `<button type="button" class="cmd-item${i === 0 ? ' active' : ''}" data-id="${escapeAttr(row.work_id)}">${escapeHtml(item.title || row.work_id)} <span class="mono">${escapeHtml(item.resource_kind)} #${escapeHtml(String(item.remote_id))}</span></button>`;
+      return '<button type="button" class="cmd-item' + (i === 0 ? ' active' : '') + '" data-id="' + escapeAttr(row.work_id) + '">' + escapeHtml(item.title || row.work_id) + ' <span class="mono">' + escapeHtml(item.resource_kind) + ' #' + escapeHtml(String(item.remote_id)) + '</span></button>';
     }).join('') || '<div class="empty">No matches</div>';
     els.cmdList.querySelectorAll('.cmd-item').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -516,7 +1126,7 @@ button, input, select { font: inherit; }
   }
 
   document.getElementById('btn-refresh').addEventListener('click', () => loadProjection({ fresh: true }));
-  document.getElementById('btn-apply').addEventListener('click', () => loadProjection());
+  document.getElementById('btn-apply').addEventListener('click', () => refilterOnly());
   document.getElementById('btn-palette').addEventListener('click', openPalette);
   els.cmdInput.addEventListener('input', () => renderPalette(els.cmdInput.value));
   els.cmd.addEventListener('click', (e) => { if (e.target === els.cmd) closePalette(); });
