@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0a3c57e839e9",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-6805-reviewer-transport-residual",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/ai_agent_bridge/_acp_compat.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/ai_agent_bridge/test_ask_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0a/3c57e839e9/0/metadata.json",
+      "transcript": "/0a/3c57e839e9/0/full.jsonl",
+      "content_hash": "/0a/3c57e839e9/0/content_hash.txt",
+      "prompt": "/0a/3c57e839e9/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 88736,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4348928,
+    "output_tokens": 33305,
+    "api_call_count": 65
+  }
+}
