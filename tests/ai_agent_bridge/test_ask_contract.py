@@ -283,11 +283,23 @@ def test_cli_returns_nonzero_for_replayed_or_live_failure(
         _cli._handle_ask_agy(args)
 
 
+# Raw DSML tool-call markup leaked by the toolless deepseek seat on the first
+# live firing of the #6878 gate (#6886): the model attempted tool calls it
+# does not have instead of delivering a verdict. Kept as a gate fixture.
+DSML_TOOLCALL_GARBLE = (
+    "<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>function<｜tool▁sep｜>read_file\n"
+    '```json\n{"path": "scripts/fleet_comms/authority.py"}\n```'
+    "<｜tool▁call▁end｜><｜tool▁calls▁end｜>"
+)
+
+
 @pytest.mark.parametrize(
     "response",
     [
         # Documented on #6805: literal garbage with transport outcome=ok.
         "DXVECTOR",
+        # The #6886 live firing: raw DSML tool-call markup, no verdict.
+        DSML_TOOLCALL_GARBLE,
         # Model preamble / harness confusion, no verdict ever delivered.
         "Deep breath — emit the tool call now… Wait, formatting requires blocks.",
         "I'll verify key claims against the diff before writing anything.",
@@ -410,6 +422,66 @@ def test_non_review_ask_is_not_outcome_validated(monkeypatch: pytest.MonkeyPatch
 
     assert result.ok is True
     assert authority.finished[0]["state"] == "complete"
+
+
+def test_non_evidentiary_review_ask_terminalizes_through_real_authority_store(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#6886: end-to-end seam the #6878 tests missed — the gate and the
+    failure metadata were each validated against a recording stub, so the real
+    authority failure-code allowlist rejecting ``non_evidentiary`` crashed
+    finish_job AFTER the provider replied and stranded the claimed lease.
+    Run the gate through the real store: the job must terminalize
+    failed:non_evidentiary with the lease released and no exception."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
+    invoke = Mock(return_value=_make_ok_result(DSML_TOOLCALL_GARBLE))
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        Mock(return_value=None),
+    )
+
+    @contextmanager
+    def execution_cwd(*_args, **_kwargs):
+        yield tmp_path
+
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
+    )
+
+    result = _acp_compat._run_compat_ask_impl(
+        "deepseek", "review this diff", task_id="review-6886-seam", review=True
+    )
+
+    assert result.ok is False
+    assert result.transport_outcome == "non_evidentiary"
+
+    with AuthorityService() as service:
+        rows = service.store.connection.execute(
+            "SELECT job_id FROM authority_jobs"
+        ).fetchall()
+        assert len(rows) == 1
+        job = service.get_job(str(rows[0]["job_id"]))
+        events = service.store.connection.execute(
+            """SELECT event_type, metadata_json FROM authority_job_events
+               WHERE job_id = ? ORDER BY created_at""",
+            (job.job_id,),
+        ).fetchall()
+
+    # Clean terminalization — the #6886 crash left the job mid-lease instead.
+    assert job.state == "failed"
+    assert job.lease_owner is None
+    assert job.lease_expires_at is None
+    finished = [event for event in events if event["event_type"] == "finished"]
+    assert len(finished) == 1
+    metadata = json.loads(str(finished[0]["metadata_json"]))
+    assert metadata["failure"] == {
+        "phase": "postprocess",
+        "code": "non_evidentiary",
+        "retryable": False,
+    }
 
 
 @pytest.mark.parametrize(
