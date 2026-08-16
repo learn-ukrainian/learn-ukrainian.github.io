@@ -839,24 +839,40 @@ button, input, select { font: inherit; }
   function renderSources(projection, privateMetaText, publicStatusOverride) {
     const sources = (projection && projection.sources) || [];
     const pub = sources.find((s) => s.source_id === PUBLIC_SOURCE_ID) || {};
+    const priv = sources.find((s) => s.source_id === PRIVATE_SOURCE_ID) || {};
+    // Merged denominator keeps public class4 (mergeProjections); never use merged
+    // issues_open/prs_open/streams_complete on the public card (R-UI-1, R-UI-3).
     const den = (projection && projection.denominator) || {};
+    const pubSections = pub.sections || {};
     const pubStatus = publicStatusOverride || pub.status || '—';
-    if (projection) {
+    if (projection && pub.source_id === PUBLIC_SOURCE_ID) {
       els.publicMeta.textContent = [
         'status=' + pubStatus,
         'cache_age_s=' + (projection.cache_age_s ?? '—'),
-        'issues=' + (den.issues_open ?? '—'),
-        'prs=' + (den.prs_open ?? '—'),
-        'streams=' + (den.streams_complete ? 'complete' : 'incomplete'),
+        'issues=' + sectionCount(pubSections, 'issues'),
+        'prs=' + sectionCount(pubSections, 'prs'),
+        'streams=' + (publicStreamsComplete(pub) ? 'complete' : 'incomplete'),
         'class4 d1=' + (den.class4 && den.class4.delegate_active) + ' d2=' + (den.class4 && den.class4.delegate_tasks) + ' r1=' + (den.class4 && den.class4.fleet_reviews),
       ].join(' · ');
       els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
       els.attentionMeta.textContent = (state.attention ? state.attention.length : ((projection.attention || []).length)) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
+    } else if (projection) {
+      els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
+      els.attentionMeta.textContent = (state.attention ? state.attention.length : ((projection.attention || []).length)) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
+      if (publicStatusOverride) {
+        els.publicMeta.textContent = 'status=' + publicStatusOverride;
+      }
     } else if (publicStatusOverride) {
       els.publicMeta.textContent = 'status=' + publicStatusOverride;
     }
 
-    els.privateMeta.textContent = privateMetaText;
+    // Admitted private envelope → status + private section counts (R-UI-1/2).
+    // Failure / placeholder → typed unavailable vocabulary only (no endpoint URL).
+    if (!isPlaceholderPrivateSource(priv)) {
+      els.privateMeta.textContent = formatAdmittedPrivateMeta(priv);
+    } else {
+      els.privateMeta.textContent = privateMetaText;
+    }
 
     const repos = new Set();
     const sourcesPresent = new Set();
@@ -959,11 +975,41 @@ button, input, select { font: inherit; }
   }
 
   function privateMetaFromCode(code, admittedStatus) {
+    // Admitted path is enriched with per-source counts in renderSources (R-UI-1/2).
     if (admittedStatus) return 'status=' + admittedStatus;
     if (code === 'timeout') return 'unavailable · timeout';
     if (code === 'schema_mismatch') return 'unavailable · schema_mismatch';
     if (code === 'identity_collision') return 'unavailable · identity_collision';
     return 'unavailable · unreachable';
+  }
+
+  function sectionCount(sections, key) {
+    const sec = sections && sections[key];
+    return (sec && typeof sec.count === 'number') ? sec.count : 0;
+  }
+
+  function publicStreamsComplete(pub) {
+    // Public-card completeness from the public envelope only (R-UI-3) — never the
+    // merged denominator AND with private list-enumeration completeness.
+    const streams = pub && pub.sections && pub.sections.streams;
+    if (!streams || typeof streams.status !== 'string') return false;
+    return streams.status === 'ok' || streams.status === 'stale' || streams.status === 'truncated';
+  }
+
+  function formatAdmittedPrivateMeta(priv) {
+    // Glanceable private inventory on the private card only (R-UI-2). Never
+    // claim stream completeness; never print the private endpoint URL.
+    const sections = (priv && priv.sections) || {};
+    return 'status=' + priv.status
+      + ' · issues=' + sectionCount(sections, 'issues')
+      + ' · prs=' + sectionCount(sections, 'prs');
+  }
+
+  function isPlaceholderPrivateSource(priv) {
+    if (!priv || priv.source_id !== PRIVATE_SOURCE_ID) return true;
+    if (priv.status === 'unavailable') return true;
+    if (priv.reason === 'not_configured') return true;
+    return false;
   }
 
   function installView(projection) {

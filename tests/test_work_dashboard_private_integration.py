@@ -435,6 +435,44 @@ def _private_with_extra_canary() -> dict[str, Any]:
     return doc
 
 
+def _public_stale_with_unknown_items() -> dict[str, Any]:
+    """Public projection with stale streams and UNKNOWN item health (FX-03)."""
+    doc = _public_min()
+    for src in doc["sources"]:
+        if src["source_id"] == "public-monitor":
+            src["status"] = "stale"
+            src["sections"]["streams"]["status"] = "stale"
+    item = doc["items"][0]
+    item["health"] = "UNKNOWN"
+    item["projections"]["stream"] = {
+        "status": "unknown",
+        "streams": [],
+        "fresh": False,
+        "authority_missing": True,
+    }
+    item["safe_next_action"] = {
+        "code": "INSPECT_UNKNOWN",
+        "reason_codes": ["stream_authority_stale"],
+    }
+    doc["attention"][0]["health"] = "UNKNOWN"
+    doc["attention"][0]["safe_next_action"] = item["safe_next_action"]
+    # Stale streams still count as denominator-complete on the public envelope;
+    # merge AND with private must not be what the public card reads (R-UI-3).
+    doc["denominator"]["streams_complete"] = True
+    return doc
+
+
+def _public_streams_unavailable() -> dict[str, Any]:
+    """Public envelope whose streams section is not complete (R-UI-3)."""
+    doc = _public_min()
+    for src in doc["sources"]:
+        if src["source_id"] == "public-monitor":
+            src["sections"]["streams"]["status"] = "unavailable"
+            src["sections"]["streams"]["count"] = 0
+    doc["denominator"]["streams_complete"] = False
+    return doc
+
+
 def _public_with_private_id_collision(private_doc: dict[str, Any]) -> dict[str, Any]:
     pub = _public_min()
     # Duplicate the private work_id into public items so merge detects collision.
@@ -829,9 +867,11 @@ try {{
     const rows = Array.from(document.querySelectorAll('.work-row')).map((row) => ({{
       id: row.getAttribute('data-id'),
       text: row.textContent || '',
+      health: (row.querySelector('.pill.ON_TRACK, .pill.AT_RISK, .pill.OFF_TRACK, .pill.UNKNOWN') || {{}}).textContent || '',
     }}));
     const overflow = document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
       || document.body.scrollWidth > document.body.clientWidth + 1;
+    const active = document.activeElement;
     return {{
       publicMeta: document.getElementById('source-public-meta')?.textContent || '',
       privateMeta: document.getElementById('source-private-meta')?.textContent || '',
@@ -841,6 +881,9 @@ try {{
       rowCount: rows.length,
       rowIds: rows.map((r) => r.id),
       rowTexts: rows.map((r) => r.text),
+      rowHealths: rows.map((r) => r.health),
+      activeElementId: active ? (active.id || '') : '',
+      paletteHidden: document.getElementById('cmd')?.hidden ?? true,
       href: location.href,
       search: location.search,
       hash: location.hash,
@@ -885,6 +928,7 @@ try {{
 
 
 def test_static_private_url_is_exact_fixed_constant():
+    """FX-09 adjacent: private URL is a fixed constant, never storage/cookie driven."""
     html = WORK_HTML.read_text(encoding="utf-8")
     assert f"'{PRIVATE_URL}'" in html
     assert html.count("127.0.0.1:8769") == html.count(PRIVATE_URL)
@@ -896,9 +940,14 @@ def test_static_private_url_is_exact_fixed_constant():
     assert "identity_collision" in html
     assert SCHEMA_DIGEST in html
     assert PUBLIC_COMMIT in html
+    # R-UI-1..3 helpers
+    assert "formatAdmittedPrivateMeta" in html
+    assert "publicStreamsComplete" in html
+    assert "sectionCount" in html
 
 
 def test_private_fixture_shape_is_source_blind():
+    """FX-07: public fixtures stay source-blind (synthetic slug, public-safe canary only)."""
     doc = _private_ok()
     blob = json.dumps(doc)
     assert "learn-ukrainian-infra" not in blob
@@ -967,6 +1016,7 @@ def test_resolve_chrome_executable_order_matches_linux_candidates():
 
 
 def test_browser_dual_success_merges_exactly_once():
+    """R-UI-1/2: per-source counts on the matching card after dual admit."""
     public = _public_min()
     private = _private_ok()
     result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=all")
@@ -985,8 +1035,18 @@ def test_browser_dual_success_merges_exactly_once():
     assert len(set(snap["rowIds"])) == 2
     assert any("Public attention item" in t for t in snap["rowTexts"])
     assert any("private-issue-7" in t for t in snap["rowTexts"])
+    # Public card: public envelope counts only (not merged denom issues=2).
+    assert "status=ok" in snap["publicMeta"]
+    assert "issues=1" in snap["publicMeta"]
+    assert "prs=0" in snap["publicMeta"]
+    assert "streams=complete" in snap["publicMeta"]
+    # Private card: admitted status + private section counts; no streams claim; no URL.
     assert "status=ok" in snap["privateMeta"]
-    assert "issues=2" in snap["publicMeta"] or "issues=2" in snap["bodyText"]
+    assert "issues=1" in snap["privateMeta"]
+    assert "prs=0" in snap["privateMeta"]
+    assert "streams=" not in snap["privateMeta"]
+    assert PRIVATE_URL not in snap["privateMeta"]
+    assert PRIVATE_URL not in snap["publicMeta"]
     assert snap["errorHidden"] is True
     assert CANARY not in snap["bodyText"]
     assert not snap["hasCanary"]
@@ -995,16 +1055,19 @@ def test_browser_dual_success_merges_exactly_once():
 
 
 def test_browser_private_unreachable_leaves_public_usable():
+    """FX-02: private absent/unreachable leaves public usable; public counts stay public."""
     result = _browser_scenario(public_doc=_public_min(), private_doc=None, private_status=503)
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
     assert "unavailable · unreachable" in snap["privateMeta"]
     assert "status=ok" in snap["publicMeta"]
+    assert "issues=1" in snap["publicMeta"]
     assert snap["errorHidden"] is True
 
 
 def test_browser_private_timeout_leaves_public_usable():
+    """FX-06: private AbortController timeout is typed; public remains usable."""
     # AbortController budget is 5s; delay beyond that.
     result = _browser_scenario(
         public_doc=_public_min(),
@@ -1019,7 +1082,7 @@ def test_browser_private_timeout_leaves_public_usable():
 
 
 def test_browser_private_stalled_json_body_is_typed_timeout():
-    """Fulfilled headers + never-settling json() must still hit the 5s budget.
+    """FX-06: fulfilled headers + never-settling json() must still hit the 5s budget.
 
     Source-blind page fetch mock only — no real private adapter process.
     """
@@ -1049,6 +1112,7 @@ def test_browser_private_stalled_json_body_is_typed_timeout():
 
 
 def test_browser_private_schema_mismatch_and_canary_rejected():
+    """FX-06 + FX-07: extra-key / canary private payload → schema_mismatch; canary absent."""
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_with_extra_canary(),
@@ -1065,6 +1129,7 @@ def test_browser_private_schema_mismatch_and_canary_rejected():
 
 
 def test_browser_identity_collision_keeps_public():
+    """FX-01: colliding work_id rejects private; public document remains."""
     private = _private_ok()
     public = _public_with_private_id_collision(private)
     result = _browser_scenario(public_doc=public, private_doc=private)
@@ -1078,6 +1143,7 @@ def test_browser_identity_collision_keeps_public():
 
 
 def test_browser_public_failure_private_success():
+    """FX-02 adjacency: public transport failure does not block admitted private rows."""
     result = _browser_scenario(
         public_doc=None,
         public_status=503,
@@ -1089,10 +1155,12 @@ def test_browser_public_failure_private_success():
     assert "private-issue-7" in snap["listText"]
     assert "status=unavailable" in snap["publicMeta"]
     assert "status=ok" in snap["privateMeta"]
+    assert "issues=1" in snap["privateMeta"]
     assert snap["errorHidden"] is True
 
 
 def test_browser_public_schema_mismatch_private_success():
+    """FX-06: public schema_mismatch leaves private usable when admitted."""
     result = _browser_scenario(
         public_doc={"not": "valid"},
         private_doc=_private_ok(),
@@ -1102,9 +1170,11 @@ def test_browser_public_schema_mismatch_private_success():
     assert snap["rowCount"] == 1
     assert "private-issue-7" in snap["listText"]
     assert "status=schema_mismatch" in snap["publicMeta"]
+    assert "status=ok" in snap["privateMeta"]
 
 
 def test_browser_both_failures_typed_banner():
+    """FX-06: both transports fail → typed banner vocabulary only."""
     result = _browser_scenario(
         public_doc=None,
         public_status=503,
@@ -1121,6 +1191,7 @@ def test_browser_both_failures_typed_banner():
 
 
 def test_browser_filters_apply_locally_and_never_hit_private_query():
+    """FX-09: local filters never append a query string to the private GET."""
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
@@ -1144,6 +1215,7 @@ def test_browser_filters_apply_locally_and_never_hit_private_query():
 
 
 def test_browser_private_repo_filter_not_shareable_in_url():
+    """FX-09: private repository_id / source_id never enter location.search."""
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
@@ -1169,7 +1241,34 @@ def test_browser_private_repo_filter_not_shareable_in_url():
     assert snap["cookie"] == ""
 
 
+def test_browser_private_source_filter_lists_rows_without_url_leak():
+    """R-UI-2 + FX-09: in-memory source=private lists rows; never writes source_id to URL."""
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        filter_query="?view=all",
+        actions=[
+            {
+                "type": "select",
+                "selector": "#filter-source",
+                "value": "private-local-adapter",
+            },
+            {"type": "click", "selector": "#btn-apply"},
+            {"type": "wait", "ms": 200},
+        ],
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "private-issue-7" in snap["listText"]
+    assert "Public attention item" not in snap["listText"]
+    assert "private-local-adapter" not in snap["search"]
+    assert "source_id=" not in snap["search"]
+    assert PRIVATE_URL not in snap["search"]
+    assert PRIVATE_URL not in snap["href"]
+
+
 def test_browser_dense_order_and_no_duplicate_ids():
+    """FX-01 adjacent: densified attention keeps distinct work_ids across sources."""
     public = _public_min()
     # Public ON_TRACK + private UNKNOWN + public OFF_TRACK-like via health change
     public["items"][0]["health"] = "ON_TRACK"
@@ -1185,6 +1284,7 @@ def test_browser_dense_order_and_no_duplicate_ids():
 
 
 def test_browser_mobile_viewport_no_horizontal_overflow_and_keyboard():
+    """FX-08: narrow viewport has no horizontal overflow; keyboard navigation works."""
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
@@ -1204,13 +1304,33 @@ def test_browser_mobile_viewport_no_horizontal_overflow_and_keyboard():
     assert snap["rowCount"] == 2
 
 
+def test_browser_palette_escape_restores_list_focus():
+    """FX-08 residual: Esc closes the palette and returns focus to the attention list."""
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        filter_query="?view=all",
+        actions=[
+            {"type": "click", "selector": "#btn-palette"},
+            {"type": "wait", "ms": 150},
+            {"type": "key", "key": "Escape"},
+            {"type": "wait", "ms": 150},
+        ],
+    )
+    snap = result["snapshot"]
+    assert snap["paletteHidden"] is True
+    assert snap["activeElementId"] == "attention-list"
+
+
 def test_browser_public_only_when_adapter_absent():
+    """FX-02: adapter absent (404) → private unreachable; public still renders."""
     result = _browser_scenario(public_doc=_public_min(), private_doc=None, private_status=404)
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
     assert "unavailable · unreachable" in snap["privateMeta"]
     assert "status=ok" in snap["publicMeta"]
+    assert "issues=1" in snap["publicMeta"]
 
 
 def test_browser_refresh_uses_fresh_on_public_only():
@@ -1228,8 +1348,41 @@ def test_browser_refresh_uses_fresh_on_public_only():
         assert req["url"] == PRIVATE_URL
 
 
+def test_browser_stale_public_healthy_private_keeps_public_stale():
+    """R-TEST-2 / FX-03: healthy private must not rewrite public status or paint public ON_TRACK."""
+    public = _public_stale_with_unknown_items()
+    private = _private_ok()
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=all")
+    snap = result["snapshot"]
+    assert "status=stale" in snap["publicMeta"]
+    assert "status=ok" in snap["privateMeta"]
+    assert "issues=1" in snap["publicMeta"]
+    assert "issues=1" in snap["privateMeta"]
+    assert "streams=" not in snap["privateMeta"]
+    assert snap["rowCount"] == 2
+    for row_id, health, text_row in zip(snap["rowIds"], snap["rowHealths"], snap["rowTexts"], strict=True):
+        if row_id.startswith("wp1:public-monitor:"):
+            assert health == "UNKNOWN"
+            assert "ON_TRACK" not in text_row
+            assert "UNKNOWN" in text_row
+        if row_id.startswith("wp1:private-local-adapter:"):
+            assert health == "UNKNOWN"
+
+
+def test_browser_public_streams_not_implied_by_private_list_success():
+    """R-UI-3: private list-enumeration success must not mark public streams complete."""
+    public = _public_streams_unavailable()
+    private = _private_ok()
+    assert private["denominator"]["streams_complete"] is True
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=all")
+    snap = result["snapshot"]
+    assert "streams=incomplete" in snap["publicMeta"]
+    assert "streams=" not in snap["privateMeta"]
+    assert "status=ok" in snap["privateMeta"]
+
+
 def test_browser_actionable_default_view_filters_non_actionable_rows():
-    """Default view without query params renders only actionable items."""
+    """R-UI-2: default view=actionable hides private INSPECT_UNKNOWN rows."""
     # Public item 1 is AT_RISK (actionable); public item 2 is ON_TRACK / OPEN_GITHUB (healthy non-actionable);
     # private item is UNKNOWN / INSPECT_UNKNOWN (non-actionable).
     public = _public_with_healthy_item()
@@ -1243,10 +1396,13 @@ def test_browser_actionable_default_view_filters_non_actionable_rows():
     assert "private-issue-7" not in snap["listText"]
     # URL search remains clean without query params
     assert snap["search"] == ""
+    # Private card still glanceable with counts while rows stay non-actionable.
+    assert "status=ok" in snap["privateMeta"]
+    assert "issues=1" in snap["privateMeta"]
 
 
 def test_browser_switch_view_between_actionable_and_all():
-    """Switching view via dropdown + apply updates visible rows and URL."""
+    """R-UI-2: view=all lists private rows; actionable default hides them."""
     public = _public_with_healthy_item()
     private = _private_ok()
     # Step 1: Start at default actionable view -> 1 row
@@ -1292,7 +1448,7 @@ def test_browser_switch_view_between_actionable_and_all():
 
 
 def test_browser_direct_actionable_url_normalizes_to_clean_path():
-    """Navigating directly to ?view=actionable renders actionable view and normalizes URL."""
+    """FX-09: ?view=actionable renders actionable view and normalizes URL."""
     public = _public_with_healthy_item()
     private = _private_ok()
     result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=actionable")

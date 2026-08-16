@@ -20,6 +20,7 @@ PUBLIC_COMMIT = "f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d"
 
 
 def test_work_page_evidence_rail_and_a11y_surface():
+    """FX-08 adjacent: reduced-motion, focus-visible, narrow breakpoints present."""
     html = WORK.read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert 'class="monitor-nav"' in html
@@ -42,6 +43,7 @@ def test_work_page_evidence_rail_and_a11y_surface():
 
 
 def test_work_page_has_no_mutation_controls():
+    """FX-10 design-only: Work surface stays mutation:false / no write controls."""
     html = WORK.read_text(encoding="utf-8")
     for banned in (
         "method: 'POST'",
@@ -55,11 +57,13 @@ def test_work_page_has_no_mutation_controls():
 
 
 def test_work_page_keyboard_handlers_present():
+    """FX-08: keyboard handlers for list navigation and Esc are present."""
     html = WORK.read_text(encoding="utf-8")
     assert "ArrowDown" in html
     assert "ArrowUp" in html
     assert "Escape" in html
     assert "keydown" in html
+    assert "els.list.focus()" in html
 
 
 def test_index_and_primary_nav_link_to_work():
@@ -72,6 +76,7 @@ def test_index_and_primary_nav_link_to_work():
 
 
 def test_saved_view_client_writes_only_allowlisted_keys():
+    """FX-09: client allowlist excludes free-text / endpoint keys."""
     html = WORK.read_text(encoding="utf-8")
     match = re.search(r"ALLOWED_FILTER_KEYS = new Set\(\[(.*?)\]\)", html, re.S)
     assert match
@@ -106,9 +111,14 @@ def test_work_page_public_refresh_and_private_fixed_url_contract():
     # Filters must not be composed into the private request.
     assert "PRIVATE_PROJECTION_URL" in html
     assert "queryString(filters)" not in html
+    # R-UI-1..3: per-source card meta helpers
+    assert "formatAdmittedPrivateMeta" in html
+    assert "publicStreamsComplete" in html
+    assert "sectionCount" in html
 
 
 def test_work_page_closed_private_status_vocabulary():
+    """FX-06: typed private failure vocabulary only (no raw exception templating)."""
     html = WORK.read_text(encoding="utf-8")
     for token in (
         "unavailable · timeout",
@@ -126,7 +136,7 @@ def test_work_page_closed_private_status_vocabulary():
 
 
 def test_work_page_fetchjson_keeps_timeout_through_json_parse():
-    """Private AbortController budget must cover status handling + body parse."""
+    """FX-06: Private AbortController budget must cover status handling + body parse."""
     html = WORK.read_text(encoding="utf-8")
     start = html.index("function fetchJson(")
     end = html.index("function classifyPublicFailure(", start)
@@ -147,6 +157,7 @@ def test_work_page_fetchjson_keeps_timeout_through_json_parse():
 
 
 def test_work_page_shareable_url_strips_private_selectors():
+    """FX-09: shareableFilters strips private slug/source; never writes private-local-adapter."""
     html = WORK.read_text(encoding="utf-8")
     assert "PUBLIC_SINGLETON_REPO" in html
     assert "shareableFilters" in html
