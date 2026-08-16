@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "23dc1a4cb15b",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6880-drive-epic-next-doc",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/23/dc1a4cb15b/0/metadata.json",
+      "transcript": "/23/dc1a4cb15b/0/full.jsonl",
+      "compact_transcript": "/23/dc1a4cb15b/0/transcript.jsonl",
+      "content_hash": "/23/dc1a4cb15b/0/content_hash.txt",
+      "prompt": "/23/dc1a4cb15b/0/prompt.txt"
+    }
+  ]
+}
