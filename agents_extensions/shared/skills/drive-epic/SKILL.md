@@ -34,6 +34,12 @@ missing/stale, pairs with the `INSPECT_UNKNOWN` safe action; see `HEALTH_RANK` i
 and again when picking the next unblocked action (§2); it is a queue INPUT alongside your
 stream/GH/issue sources, never a replacement for them.
 
+**Stream next-queue:** `GET http://127.0.0.1:8765/api/work/v1/next?stream=<your-stream>`
+returns a compact, stream-scoped actionable pick list (default `limit` 7). Consult it at orient
+and next-action time alongside the projection — also a queue INPUT, never a replacement. Cold
+(absent) cache → `503` `building` + `retry_after_s` (does not trigger a build); unknown
+`stream` → `400` with `valid_streams`.
+
 ---
 
 ## The loop (run it every cycle)
@@ -43,6 +49,7 @@ stream/GH/issue sources, never a replacement for them.
 ```bash
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/projection" || true  # best-effort: local server, degraded/absent sources are normal
+curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/next?stream=<your-stream>" || true  # stream-scoped pick list (#6880)
 .venv/bin/python -m scripts.fleet_comms plane-status        # message-plane mode/parity
 ```
 Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already
@@ -119,8 +126,9 @@ stale in-context snapshot. For per-lane budget health before dispatch:
 ### 2. Pick the next unblocked action
 
 Source of next work: your epic's stream tail / handoff, open GH issues for the epic, the
-build/review queue, and the Work API projection's ranked attention list (§0) — cross-check
-against it before committing to an action. **Step 0 of any dispatch:** `gh pr list --state all
+build/review queue, the Work API projection's ranked attention list (§0), and
+`GET /api/work/v1/next?stream=<your-stream>` — cross-check against them before committing to
+an action. **Step 0 of any dispatch:** `gh pr list --state all
 --search "<issue-nr>"` by issue reference (an open issue ≠ unfixed; a sibling PR may already
 carry it). If nothing genuinely fits a free lane, log it and leave it idle — never
 manufacture busywork (quality > utilization).
