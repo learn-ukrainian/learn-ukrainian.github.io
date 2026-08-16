@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1d97d61fc3c7",
+  "session_id": "fleet-4d9bcff06d37419e9e2ea270a7b6eeef",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T21:30:44.40213Z",
+  "branch": "cursor/infra-492-public-increment",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/work.html",
+    "tests/test_work_dashboard.py",
+    "tests/test_work_dashboard_private_integration.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "c52ffd00a0d5",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T21:30:44.395991Z",
+    "agent_lines": 224,
+    "agent_removed": 11,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 224,
+    "total_lines_changed": 235,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
