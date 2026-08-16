@@ -91,6 +91,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
+from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
 from .telemetry import InvocationTelemetry, resolve_invocation_telemetry
@@ -164,6 +165,7 @@ _SAFE_ACP_FAILURE_CODES = frozenset(
         "acp_turn_limit",
         "github_secondary_rate_limited",
         "adapter_refused",
+        "primary_tree_write",
         "protocol_output_limit",
         "provider_unavailable",
         "rate_limited",
@@ -197,6 +199,23 @@ class AgentOutputLimitError(AgentRuntimeError):
         super().__init__(
             f"{agent} exceeded streamed_output_limit={limit_bytes} bytes "
             f"(observed={observed_bytes})"
+        )
+
+
+class PrimaryTreeWriteError(AgentRuntimeError):
+    """A dispatch child wrote tracked files in the protected primary checkout.
+
+    Raised only when the operator-gated enforcement switch
+    (``LU_PRIMARY_TREE_WATCH_ENFORCE=1``) is on; the default posture is
+    detect + record without killing (#6818).
+    """
+
+    def __init__(self, agent: str, paths: list[str]):
+        self.agent = agent
+        self.paths = list(paths)
+        super().__init__(
+            f"{agent} wrote tracked primary-checkout path(s) during dispatch: "
+            f"{', '.join(self.paths)} (#6818)"
         )
 
 
@@ -987,6 +1006,9 @@ class _ExecutionOutcome:
     isolation_capability_digest: str | None = None
     isolation_prompt_digest: str | None = None
     isolation_prompt_transport: str | None = None
+    # Tracked primary-checkout paths the child dirtied mid-dispatch (#6818);
+    # empty unless the PrimaryTreeWatch tripwire fired.
+    escaped_primary_paths: tuple[str, ...] = ()
 
 
 @dataclass
@@ -1332,6 +1354,20 @@ def _execute_invocation_plan(
     streamed_output_bytes = 0
     fleet_capture: FleetCapture | None = None
     kill_reason: str | None = None
+    escaped_primary: list[str] = []
+    # Mid-dispatch primary-tree tripwire (#6818): the spawn-time guard above
+    # proved cwd isolation, but a child can still resolve absolute paths into
+    # the primary checkout while running (the agy escape class). Baseline is
+    # taken BEFORE the spawn so nothing the child does hides in it. None when
+    # not applicable (read-only, non-dispatch cwd) — always fail-open.
+    tree_watch = PrimaryTreeWatch.start(
+        cwd=review_cwd,
+        mode=mode,
+        agent_name=agent_name,
+        task_id=task_id,
+        event_sink=event_sink,
+        repo_tree=_RUNNER_REPO_TREE,
+    )
 
     try:
         try:
@@ -1498,9 +1534,25 @@ def _execute_invocation_plan(
                     break
                 _kill_process_tree(proc)
                 break
+
+            if tree_watch is not None:
+                escaped_primary.extend(tree_watch.maybe_check())
+                if escaped_primary and tree_watch.enforce:
+                    kill_reason = "primary_tree_write"
+                    returncode = proc.poll()
+                    if returncode is None:
+                        _kill_process_tree(proc)
+                    break
+
             time.sleep(_POLL_INTERVAL_S)
 
         duration_s = time.monotonic() - start_time
+        if tree_watch is not None:
+            # Unthrottled sweep now that the child is done: catches writes from
+            # the last poll interval and fast exits that beat the first check.
+            # (final_check dedupes, so the finally-block safety call is a no-op
+            # after this.)
+            escaped_primary.extend(tree_watch.final_check())
         assert watchdog_state is not None
 
         # ``poll()`` is the authoritative completion observation.  Most
@@ -1603,11 +1655,19 @@ def _execute_invocation_plan(
             isolation_capability_digest=isolation_capability_digest,
             isolation_prompt_digest=isolation_prompt_digest,
             isolation_prompt_transport=isolation_prompt_transport,
+            escaped_primary_paths=tuple(escaped_primary),
         )
     finally:
         if proc is not None and proc.poll() is None:
             with contextlib.suppress(Exception):
                 _kill_process_tree(proc)
+
+        # Post-exit sweep for the tripwire (#6818): catches a write landed
+        # inside the last poll interval, and the common fast-exit case where
+        # the child finished before the first throttled check ever ran.
+        if tree_watch is not None:
+            with contextlib.suppress(Exception):
+                tree_watch.final_check()
 
         if fleet_capture is not None:
             actual_model, route_metadata = resolved_route(
@@ -1713,6 +1773,36 @@ def _raise_for_kill_reason(
         )
         write_record(record)
         raise AgentOutputLimitError(agent_name, limit_bytes, observed_bytes)
+    if kill_reason == "primary_tree_write":
+        # Operator-gated enforcement fired (#6818): the child wrote tracked
+        # primary-checkout files mid-dispatch. Paths were already recorded to
+        # the primary-integrity events JSONL by PrimaryTreeWatch._record.
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="error",
+            rate_limited=False,
+            stalled=False,
+            stderr_excerpt=(
+                "primary_tree_write: child wrote tracked primary-checkout "
+                f"files during dispatch ({', '.join(execution.escaped_primary_paths)}); "
+                "see data/telemetry/primary-integrity/events.jsonl (#6818)"
+            )[:500],
+            tokens=None,
+            substitution=record_substitution,
+            failure_code="primary_tree_write",
+        )
+        write_record(record)
+        raise PrimaryTreeWriteError(agent_name, list(execution.escaped_primary_paths))
     if kill_reason == "stdout_silence_timeout":
         record = _build_usage_record(
             agent=agent_name,
