@@ -65,9 +65,7 @@ def admit_public_repository_id(repository_id: str | None = None) -> str:
     if repository_id is None or repository_id == "":
         return allowed
     if repository_id != allowed:
-        raise ValueError(
-            f"public repository_id must be exactly {allowed!r}; got {repository_id!r}"
-        )
+        raise ValueError(f"public repository_id must be exactly {allowed!r}; got {repository_id!r}")
     return allowed
 
 
@@ -178,9 +176,7 @@ def filter_public_delegate_tasks(
     allowed = admit_public_repository_id(repository_id)
     admitted: list[dict[str, Any]] = []
     for row in rows or []:
-        summary = admit_delegate_task_row(
-            row, repository_id=allowed, trusted_scoped=trusted_scoped
-        )
+        summary = admit_delegate_task_row(row, repository_id=allowed, trusted_scoped=trusted_scoped)
         if summary is not None:
             admitted.append(summary)
 
@@ -348,17 +344,52 @@ def fetch_open_prs(
     )
 
 
+def registry_stream_names(report: dict[str, Any] | None) -> frozenset[str]:
+    """Stream keys admitted by the public registry map in a streams payload."""
+    if not isinstance(report, dict):
+        return frozenset()
+    registry = report.get("streams")
+    if not isinstance(registry, dict):
+        return frozenset()
+    return frozenset(str(k) for k in registry if isinstance(k, str) and k)
+
+
+def allowlist_stream_names(names: Any, known: frozenset[str]) -> list[str]:
+    """Return sorted registry-known stream names; empty known → fail closed."""
+    if not known or not isinstance(names, list):
+        return []
+    return sorted({str(s) for s in names if isinstance(s, str) and s and s in known})
+
+
+def allowlist_open_stream_membership(membership: Any, known: frozenset[str]) -> dict[str, list[str]]:
+    """Re-validate a pre-set / derived issue→streams map against the registry."""
+    if not isinstance(membership, dict) or not known:
+        return {}
+    out: dict[str, list[str]] = {}
+    for key, names in membership.items():
+        try:
+            number = int(key)
+        except (TypeError, ValueError):
+            continue
+        clean = allowlist_stream_names(names, known)
+        if clean:
+            out[str(number)] = clean
+    return out
+
+
 def public_open_stream_membership(report: dict[str, Any]) -> dict[str, list[str]]:
-    """Public-safe issue→stream-names map for OPEN issues only (#6880).
+    """Public-safe issue→stream-names map for OPEN issues only (#6880 / #6890).
 
     Derived from the ADR-011 P4 private index BEFORE it is stripped. Keeps only
-    stream NAMES — already public via the registry ``streams`` key and the
-    ``multi_homed`` rows — for issues in the open set. Epic ownership, closed
-    issues, and the via/uniqueness proofs never leave the private cache.
+    stream NAMES that also appear in the public registry ``streams`` key — derive
+    time re-allowlists so a typo or private-index drift cannot mint unknown
+    lanes into the projection. Epic ownership, closed issues, and the
+    via/uniqueness proofs never leave the private cache.
     """
+    known = registry_stream_names(report)
     membership = report.get("effective_membership")
     open_numbers = report.get("open_issue_numbers")
-    if not isinstance(membership, dict) or not isinstance(open_numbers, list):
+    if not known or not isinstance(membership, dict) or not isinstance(open_numbers, list):
         return {}
     open_set: set[int] = set()
     for n in open_numbers:
@@ -374,10 +405,19 @@ def public_open_stream_membership(report: dict[str, Any]) -> dict[str, list[str]
             continue
         if number not in open_set or not isinstance(entry, dict):
             continue
-        streams = sorted({str(s) for s in entry.get("streams") or [] if isinstance(s, str) and s})
+        streams = allowlist_stream_names(entry.get("streams"), known)
         if streams:
             out[str(number)] = streams
     return out
+
+
+def _admit_open_stream_membership(payload: dict[str, Any]) -> dict[str, list[str]]:
+    """Derive-or-revalidate membership; always overwrite untrusted pre-sets (#6890)."""
+    known = registry_stream_names(payload)
+    derived = public_open_stream_membership(payload)
+    if derived:
+        return derived
+    return allowlist_open_stream_membership(payload.get("open_stream_membership"), known)
 
 
 def fetch_streams_projection(
@@ -391,11 +431,7 @@ def fetch_streams_projection(
 
         report = audit.read_cache(max_age_s=3600)
         stale = None if report is not None else audit.read_cache(max_age_s=7 * 24 * 3600)
-        state = (
-            audit.schedule_refresh(force=False)
-            if report is None
-            else audit.read_refresh_state()
-        )
+        state = audit.schedule_refresh(force=False) if report is None else audit.read_refresh_state()
         if report is not None:
             payload = _strip_private_index(report)
             membership = public_open_stream_membership(report)
@@ -410,6 +446,8 @@ def fetch_streams_projection(
             status = "unavailable"
         if membership:
             payload["open_stream_membership"] = membership
+        else:
+            payload.pop("open_stream_membership", None)
         return {"_status": status, **_with_refresh(payload, state)}
 
     try:
@@ -420,14 +458,18 @@ def fetch_streams_projection(
     status = str(payload.pop("_status", "ok"))
     # Injected loaders may hand up a raw audit report; derive the public-safe
     # membership map before the hard gate drops the private index below.
-    membership = public_open_stream_membership(payload)
+    # Always re-validate pre-set open_stream_membership against the registry
+    # (residual #2) — never leave an unallowlisted map in the public payload.
+    membership = _admit_open_stream_membership(payload)
     # Privacy hard gate: never forward private index keys even if a loader errs.
     from scripts.orchestration.issue_stream_audit import PRIVATE_CACHE_KEYS
 
     for key in PRIVATE_CACHE_KEYS:
         payload.pop(key, None)
-    if membership and "open_stream_membership" not in payload:
+    if membership:
         payload["open_stream_membership"] = membership
+    else:
+        payload.pop("open_stream_membership", None)
     if payload.get("stale"):
         status = "stale"
     if payload.get("error") or payload.get("status") == "no-cache":
@@ -547,9 +589,7 @@ def fetch_delegate_tasks(
     def _default_tasks(repository: str) -> dict[str, Any]:
         from scripts.api.delegate_router import list_delegate_tasks
 
-        return list_delegate_tasks(
-            status="all", limit=DELEGATE_TASK_LIMIT, repository=repository
-        )
+        return list_delegate_tasks(status="all", limit=DELEGATE_TASK_LIMIT, repository=repository)
 
     try:
         page_fn = loader if loader is not None else _default_tasks
@@ -700,15 +740,9 @@ def collect_public_sections(
         "issues": lambda: fetch_open_issues(repo, runner=gh_runner),
         "prs": lambda: fetch_open_prs(repo, runner=gh_runner),
         "streams": lambda: fetch_streams_projection(loader=streams_loader),
-        "delegate_active": lambda: fetch_delegate_active(
-            loader=delegate_active_loader, repository_id=repo
-        ),
-        "delegate_tasks": lambda: fetch_delegate_tasks(
-            loader=delegate_tasks_loader, repository_id=repo
-        ),
-        "fleet_reviews": lambda: fetch_fleet_reviews(
-            loader=fleet_reviews_loader, repository_id=repo
-        ),
+        "delegate_active": lambda: fetch_delegate_active(loader=delegate_active_loader, repository_id=repo),
+        "delegate_tasks": lambda: fetch_delegate_tasks(loader=delegate_tasks_loader, repository_id=repo),
+        "fleet_reviews": lambda: fetch_fleet_reviews(loader=fleet_reviews_loader, repository_id=repo),
     }
     results: dict[str, SectionResult] = {}
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
@@ -764,9 +798,7 @@ def public_source_envelope(sections: dict[str, SectionResult]) -> dict[str, Any]
         and prs is not None
         and prs.status in {"ok", "truncated"}
     )
-    source_status = (
-        "degraded" if core_ok and rank.get(worst, 0) > rank.get("degraded", 0) else worst
-    )
+    source_status = "degraded" if core_ok and rank.get(worst, 0) > rank.get("degraded", 0) else worst
     return {
         "source_id": SOURCE_PUBLIC,
         "status": source_status,

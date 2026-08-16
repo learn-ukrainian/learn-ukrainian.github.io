@@ -24,11 +24,13 @@ from scripts.work.sources_public import (
     GH_ENUM_LIMIT,
     SectionResult,
     admit_public_repository_id,
+    allowlist_stream_names,
     collect_public_sections,
     filter_public_delegate_tasks,
     private_capability_seam,
     private_source_envelope,
     public_source_envelope,
+    registry_stream_names,
 )
 
 
@@ -73,12 +75,15 @@ def _stream_index(streams: dict[str, Any] | None) -> dict[str, Any]:
             "missing": True,
             "generated_at": None,
         }
+    known = registry_stream_names(streams)
     orphans = {int(o["number"]) for o in streams.get("orphans") or [] if isinstance(o, dict) and "number" in o}
-    multi = {
-        int(m["number"]): list(m.get("streams") or [])
-        for m in streams.get("multi_homed") or []
-        if isinstance(m, dict) and "number" in m
-    }
+    multi: dict[int, list[str]] = {}
+    for m in streams.get("multi_homed") or []:
+        if not isinstance(m, dict) or "number" not in m:
+            continue
+        # Keep the multi_homed classification even when every name is unknown —
+        # drop the bogus lanes, do not silently reclassify the issue as homed.
+        multi[int(m["number"])] = allowlist_stream_names(m.get("streams"), known)
     pending_raw = streams.get("pending_native_link") or []
     pending: set[int] = set()
     for entry in pending_raw:
@@ -86,25 +91,27 @@ def _stream_index(streams: dict[str, Any] | None) -> dict[str, Any]:
             pending.add(int(entry["number"]))
         elif isinstance(entry, int):
             pending.add(entry)
-    # Public-safe open-issue→stream-names map (#6880) and the registry's
-    # epic→stream map; both power stream-scoped pick lists in /next.
+    # Public-safe open-issue→stream-names map (#6880/#6890) and the registry's
+    # epic→stream map; both power stream-scoped pick lists in /next. Stream
+    # names are re-allowlisted against the registry keys on every build.
     membership: dict[int, list[str]] = {}
     for key, names in (streams.get("open_stream_membership") or {}).items():
         try:
             number = int(key)
         except (TypeError, ValueError):
             continue
-        if isinstance(names, list):
-            clean = [str(s) for s in names if isinstance(s, str) and s]
-            if clean:
-                membership[number] = clean
+        clean = allowlist_stream_names(names, known)
+        if clean:
+            membership[number] = clean
     epic_of: dict[int, str] = {}
     registry = streams.get("streams")
     if isinstance(registry, dict):
         for name, epics in registry.items():
+            if not isinstance(name, str) or not name:
+                continue
             for epic in epics or []:
                 try:
-                    epic_of[int(epic)] = str(name)
+                    epic_of[int(epic)] = name
                 except (TypeError, ValueError):
                     continue
     missing = bool(streams.get("error") or streams.get("status") == "no-cache")
@@ -148,10 +155,7 @@ def _has_bounded_pr_id(hay: str, number: int) -> bool:
     ``pr-10`` from matching ``pr-100``.
     """
     n = str(int(number))
-    return bool(
-        re.search(rf"pr[-_/]{n}(?!\d)", hay)
-        or hay.endswith(f"-pr{n}")
-    )
+    return bool(re.search(rf"pr[-_/]{n}(?!\d)", hay) or hay.endswith(f"-pr{n}"))
 
 
 def _match_dispatch(tasks: list[dict[str, Any]], *, issue_number: int | None, pr_number: int | None) -> dict[str, Any]:
@@ -185,18 +189,13 @@ def _match_reviews(reviews: list[dict[str, Any]], *, pr_number: int | None, repo
     matched = [
         r
         for r in reviews
-        if int(r.get("pr_number") or 0) == pr_number
-        and str(r.get("repository") or "") == repository_id
+        if int(r.get("pr_number") or 0) == pr_number and str(r.get("repository") or "") == repository_id
     ]
     return {
         "review_ids": [str(r.get("review_id")) for r in matched if r.get("review_id")],
         "states": [str(r.get("state")) for r in matched if r.get("state")],
         "sealed_verdict_available": any(bool(r.get("sealed_verdict_available")) for r in matched),
-        "latest_attempt_states": [
-            str(r.get("latest_attempt_state"))
-            for r in matched
-            if r.get("latest_attempt_state")
-        ],
+        "latest_attempt_states": [str(r.get("latest_attempt_state")) for r in matched if r.get("latest_attempt_state")],
     }
 
 
@@ -563,10 +562,7 @@ def apply_filters(items: list[dict[str, Any]], filters: dict[str, Any] | None) -
     if "orphan" in filters:
         want = bool(filters["orphan"])
         out = [
-            i
-            for i in out
-            if bool(((i.get("projections") or {}).get("stream") or {}).get("status") == "orphan")
-            is want
+            i for i in out if bool(((i.get("projections") or {}).get("stream") or {}).get("status") == "orphan") is want
         ]
     return out
 
@@ -604,9 +600,7 @@ def build_projection(
         if tid and tid not in seen_task_ids:
             raw_task_rows.append(row)
             seen_task_ids.add(tid)
-    task_rows, _task_total, _task_truncated = filter_public_delegate_tasks(
-        raw_task_rows, repository_id=repo
-    )
+    task_rows, _task_total, _task_truncated = filter_public_delegate_tasks(raw_task_rows, repository_id=repo)
     review_rows = list((reviews_section.payload or {}).get("reviews") or [])
 
     items: list[dict[str, Any]] = []
@@ -686,13 +680,9 @@ def build_projection(
 
     omissions: list[dict[str, Any]] = []
     if issues_section.truncated:
-        omissions.append(
-            {"class": "issues", "reason": "enumeration_cap", "count": GH_ENUM_LIMIT}
-        )
+        omissions.append({"class": "issues", "reason": "enumeration_cap", "count": GH_ENUM_LIMIT})
     if prs_section.truncated:
-        omissions.append(
-            {"class": "prs", "reason": "enumeration_cap", "count": GH_ENUM_LIMIT}
-        )
+        omissions.append({"class": "prs", "reason": "enumeration_cap", "count": GH_ENUM_LIMIT})
     if issues_section.status in {"unavailable", "timeout", "degraded"}:
         omissions.append(
             {
