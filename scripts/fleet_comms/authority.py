@@ -51,6 +51,7 @@ _FAILURE_CODES = frozenset(
     {
         "adapter_refused",
         "conversation_state_missing",
+        "non_evidentiary",
         "primary_cwd_rejected",
         "protocol_output_limit",
         "provider_unavailable",

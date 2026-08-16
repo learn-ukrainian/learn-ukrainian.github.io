@@ -720,6 +720,11 @@ The DeepSeek seat's **standing route** is first-party via opencode:
 - Bridge asks use `ask-deepseek` (or the `ask-hermes` alias) — both ride the
   `acpx-deepseek-shadow` ACP participant on native `opencode acp --pure`
   pinned to `deepseek-direct/deepseek-v4-flash` at high effort (#6805).
+  DeepSeek ASKs are toolless and self-contained: the seat has no repo or
+  tool access, so paste everything the answer needs into the prompt —
+  reviews that require repo access go to `delegate.py dispatch --agent
+  deepseek` instead (#6886: the seat otherwise tries to emit tool calls and
+  the reply terminalizes `failed:non_evidentiary`).
 - Direct one-shot review/research outside the bridge runs
   `opencode run --model deepseek-direct/deepseek-v4-flash --variant high`
   (native Entire capture).
