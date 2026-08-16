@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "db451e7b1e56",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6890-next-hardening",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/MONITOR-API.md",
+    "docs/monitor-api/work.md",
+    "scripts/api/work_router.py",
+    "scripts/work/normalize.py",
+    "scripts/work/sources_public.py",
+    "tests/test_work_api.py",
+    "tests/test_work_dashboard.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/db/451e7b1e56/0/metadata.json",
+      "transcript": "/db/451e7b1e56/0/full.jsonl",
+      "compact_transcript": "/db/451e7b1e56/0/transcript.jsonl",
+      "content_hash": "/db/451e7b1e56/0/content_hash.txt",
+      "prompt": "/db/451e7b1e56/0/prompt.txt"
+    }
+  ]
+}
