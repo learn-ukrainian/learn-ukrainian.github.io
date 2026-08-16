@@ -1881,30 +1881,106 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
         conn.close()
 
 
-def bridge_pending_summary(now: str | None = None) -> dict[str, dict[str, float | int]]:
-    """Return per-agent pending counts and oldest pending age in hours."""
-    current = _parse_iso(now) if now else datetime.now(UTC)
+def live_pending_by_agent(now: str | None = None) -> list[dict[str, Any]]:
+    """Return per-agent live pending counts (authority query for banner + show).
+
+    Counts only ``status='pending'`` rows that would *remain* after
+    ``expire_stale_deliveries`` — i.e. still within their effective TTL.
+    Read-only: never mutates rows. Shared by the CLI backlog banner and
+    ``inbox show`` so the two surfaces cannot disagree (#6864).
+    """
+    current = now or _now_iso()
     conn = get_db()
     try:
         rows = conn.execute(
-            """
-            SELECT d.to_agent, COUNT(*) AS count, MIN(cm.created_at) AS oldest_created_at
+            f"""
+            SELECT d.to_agent AS to_agent,
+                   COUNT(*) AS count,
+                   MIN(cm.created_at) AS oldest_created_at
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
+            JOIN channels c ON c.name = cm.channel
             WHERE d.status = 'pending'
+              AND (
+                    julianday(:now) - julianday(cm.created_at)
+                  ) * 24.0 <= {_effective_ttl_hours_sql()}
             GROUP BY d.to_agent
             ORDER BY d.to_agent ASC
-            """
+            """,
+            {"now": current, "action_ttl": DEFAULT_ACTION_REQUIRED_TTL_HOURS},
         ).fetchall()
     finally:
         conn.close()
 
+    return [
+        {
+            "agent": str(row["to_agent"]),
+            "count": int(row["count"]),
+            "oldest_created_at": (
+                str(row["oldest_created_at"]) if row["oldest_created_at"] else None
+            ),
+        }
+        for row in rows
+        if row["oldest_created_at"]
+    ]
+
+
+def live_pending_for_agent(agent: str, now: str | None = None) -> dict[str, Any]:
+    """Return live pending count + oldest timestamp for one agent (#6864)."""
+    for row in live_pending_by_agent(now=now):
+        if row["agent"] == agent:
+            return row
+    return {"agent": agent, "count": 0, "oldest_created_at": None}
+
+
+def oldest_live_pending_preview(
+    agent: str, now: str | None = None
+) -> dict[str, Any] | None:
+    """Return channel/body preview for the oldest live pending delivery."""
+    current = now or _now_iso()
+    conn = get_db()
+    try:
+        row = conn.execute(
+            f"""
+            SELECT cm.channel, cm.thread_id, cm.from_agent, cm.body
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            JOIN channels c ON c.name = cm.channel
+            WHERE d.to_agent = :agent AND d.status = 'pending'
+              AND (
+                    julianday(:now) - julianday(cm.created_at)
+                  ) * 24.0 <= {_effective_ttl_hours_sql()}
+            ORDER BY cm.created_at ASC, d.delivery_id ASC
+            LIMIT 1
+            """,
+            {
+                "agent": agent,
+                "now": current,
+                "action_ttl": DEFAULT_ACTION_REQUIRED_TTL_HOURS,
+            },
+        ).fetchone()
+    finally:
+        conn.close()
+    if row is None:
+        return None
+    body = str(row["body"]).replace("\n", " ").strip()
+    return {
+        "channel": str(row["channel"]),
+        "thread_id": str(row["thread_id"]),
+        "from_agent": str(row["from_agent"]),
+        "body": body[:60] + ("..." if len(body) > 60 else ""),
+    }
+
+
+def bridge_pending_summary(now: str | None = None) -> dict[str, dict[str, float | int]]:
+    """Return per-agent pending counts and oldest pending age in hours."""
+    current = _parse_iso(now) if now else datetime.now(UTC)
     summary: dict[str, dict[str, float | int]] = {}
-    for row in rows:
+    for row in live_pending_by_agent(now=current.isoformat()):
         oldest = row["oldest_created_at"]
         if not oldest:
             continue
-        summary[str(row["to_agent"])] = {
+        summary[row["agent"]] = {
             "count": int(row["count"]),
             "oldest_hours": round(_age_hours(str(oldest), now=current), 1),
         }
