@@ -403,6 +403,16 @@ AGENTS: dict[str, AgentEntry] = {
         "direct_only": True,
         "resume_policy": "never",
     },
+    "acpx-gemma-shadow": {
+        # $0 toolless AIS-direct Gemma ACP participant (#6805).
+        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGemmaShadowAdapter",
+        "default_model": "google-ais/gemma-4-31b-it",
+        "cost_tier": "unknown",
+        "capabilities": frozenset(),
+        "cli_available": False,
+        "direct_only": True,
+        "resume_policy": "never",
+    },
     "agy": {
         # Antigravity CLI shipping Gemini Flash 3.7 (was 3.6) on a separate meter from
         # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff
