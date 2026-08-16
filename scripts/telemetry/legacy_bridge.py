@@ -49,11 +49,23 @@ _TARGETS = (
     "codex",
     "cursor",
     "deepseek",
+    "gemma",
     "glm",
     "grok",
     "kimi",
     "pool",
 )
+# Command aliases and ACP transport ids collapse to one allowlisted seat.
+# ``acpx-<seat>-shadow`` is handled in ``_canonical_bridge_target``.
+_TARGET_ALIASES = {
+    "gemini": "agy",
+    "hermes": "deepseek",
+    "grok-build": "grok",
+    "kimicc": "kimi",
+}
+_ACPX_SHADOW_PREFIX = "acpx-"
+_ACPX_SHADOW_SUFFIX = "-shadow"
+_BRIDGE_SCHEMA_VERSION = 2
 _init_lock = threading.Lock()
 _initialized_paths: set[Path] = set()
 
@@ -87,8 +99,20 @@ def _hour_z(value: datetime) -> str:
     return _iso_z(_normalized_utc(value).replace(minute=0, second=0, microsecond=0))
 
 
-def normalize_target(value: str) -> str:
+def _canonical_bridge_target(value: str) -> str:
+    """Map adapter / alias identities onto the durable telemetry seat."""
     normalized = str(value).strip().lower()
+    if normalized.startswith(_ACPX_SHADOW_PREFIX) and normalized.endswith(
+        _ACPX_SHADOW_SUFFIX
+    ):
+        normalized = normalized[
+            len(_ACPX_SHADOW_PREFIX) : -len(_ACPX_SHADOW_SUFFIX)
+        ]
+    return _TARGET_ALIASES.get(normalized, normalized)
+
+
+def normalize_target(value: str) -> str:
+    normalized = _canonical_bridge_target(value)
     if normalized not in _TARGETS:
         raise ValueError("bridge telemetry target is not allowlisted")
     return normalized
@@ -102,7 +126,7 @@ def classify_caller_family(source: str | None) -> str:
     prefixes = (
         (("claude",), "anthropic"),
         (("codex",), "openai"),
-        (("agy", "gemini"), "google"),
+        (("agy", "gemini", "gemma"), "google"),
         (("grok",), "xai"),
         (("kimi",), "moonshot"),
         (("glm",), "zhipu"),
@@ -137,25 +161,16 @@ def _prepare_private_db_file(path: Path) -> None:
         os.close(descriptor)
 
 
-def _initialize_db(path: Path, *, now: datetime | None = None) -> None:
-    _prepare_private_db_file(path)
-    observed_at = _iso_z(now or _now_utc())
-    with closing(_connect(path)) as connection:
-        connection.execute("PRAGMA journal_mode=WAL")
-        connection.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS telemetry_meta (
-                key   TEXT PRIMARY KEY,
-                value TEXT NOT NULL
-            );
+def _sql_literal_list(values: tuple[str, ...]) -> str:
+    return ", ".join(f"'{value}'" for value in values)
 
-            CREATE TABLE IF NOT EXISTS legacy_bridge_ask_usage (
+
+def _usage_table_sql() -> str:
+    return f"""
+            CREATE TABLE legacy_bridge_ask_usage (
                 hour_utc       TEXT NOT NULL,
                 target         TEXT NOT NULL CHECK (
-                    target IN (
-                        'agy', 'claude', 'codex', 'cursor', 'deepseek',
-                        'glm', 'grok', 'kimi', 'pool'
-                    )
+                    target IN ({_sql_literal_list(_TARGETS)})
                 ),
                 caller_family  TEXT NOT NULL CHECK (
                     caller_family IN (
@@ -172,13 +187,93 @@ def _initialize_db(path: Path, *, now: datetime | None = None) -> None:
                 CHECK (succeeded_count + failed_count <= started_count),
                 PRIMARY KEY (hour_utc, target, caller_family)
             );
-            CREATE INDEX IF NOT EXISTS idx_legacy_bridge_usage_last_seen
-                ON legacy_bridge_ask_usage(last_seen);
+            """
+
+
+def _table_exists(connection: sqlite3.Connection, name: str) -> bool:
+    row = connection.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+        (name,),
+    ).fetchone()
+    return row is not None
+
+
+def _bridge_schema_version(connection: sqlite3.Connection) -> int:
+    if not _table_exists(connection, "telemetry_meta"):
+        return 0
+    row = connection.execute(
+        "SELECT value FROM telemetry_meta WHERE key = 'bridge_schema_version'"
+    ).fetchone()
+    if row is None:
+        return 0
+    try:
+        return int(row[0])
+    except (TypeError, ValueError):
+        return 0
+
+
+def _set_bridge_schema_version(connection: sqlite3.Connection, version: int) -> None:
+    connection.execute(
+        "INSERT INTO telemetry_meta(key, value) VALUES ('bridge_schema_version', ?) "
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        (str(version),),
+    )
+
+
+def _rebuild_usage_table(connection: sqlite3.Connection) -> None:
+    connection.execute(
+        "ALTER TABLE legacy_bridge_ask_usage RENAME TO legacy_bridge_ask_usage_old"
+    )
+    connection.execute(_usage_table_sql())
+    connection.execute(
+        """
+        INSERT INTO legacy_bridge_ask_usage(
+            hour_utc, target, caller_family, started_count,
+            succeeded_count, failed_count, first_seen, last_seen
+        )
+        SELECT hour_utc, target, caller_family, started_count,
+               succeeded_count, failed_count, first_seen, last_seen
+        FROM legacy_bridge_ask_usage_old
+        """
+    )
+    connection.execute("DROP TABLE legacy_bridge_ask_usage_old")
+    connection.execute(
+        "CREATE INDEX IF NOT EXISTS idx_legacy_bridge_usage_last_seen "
+        "ON legacy_bridge_ask_usage(last_seen)"
+    )
+
+
+def _migrate_bridge_schema(connection: sqlite3.Connection) -> None:
+    version = _bridge_schema_version(connection)
+    if version >= _BRIDGE_SCHEMA_VERSION:
+        return
+    if version < 2 and _table_exists(connection, "legacy_bridge_ask_usage"):
+        _rebuild_usage_table(connection)
+    _set_bridge_schema_version(connection, _BRIDGE_SCHEMA_VERSION)
+
+
+def _initialize_db(path: Path, *, now: datetime | None = None) -> None:
+    _prepare_private_db_file(path)
+    observed_at = _iso_z(now or _now_utc())
+    with closing(_connect(path)) as connection:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS telemetry_meta (
+                key   TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )
             """
         )
-        connection.execute(
-            "INSERT OR IGNORE INTO telemetry_meta(key, value) VALUES ('bridge_schema_version', '1')"
-        )
+        if _table_exists(connection, "legacy_bridge_ask_usage"):
+            _migrate_bridge_schema(connection)
+        else:
+            connection.execute(_usage_table_sql())
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_legacy_bridge_usage_last_seen "
+                "ON legacy_bridge_ask_usage(last_seen)"
+            )
+            _set_bridge_schema_version(connection, _BRIDGE_SCHEMA_VERSION)
         connection.execute(
             "INSERT OR IGNORE INTO telemetry_meta(key, value) "
             "VALUES ('bridge_coverage_started_at', ?)",
@@ -294,9 +389,10 @@ def start_bridge_invocation_safely(target: str, source: str | None) -> BridgeInv
     try:
         return record_bridge_invocation_start(target, source)
     except (OSError, RuntimeError, sqlite3.Error, ValueError):
+        mapped = _canonical_bridge_target(target)
         logger.exception(
             "legacy bridge telemetry start failed target=%s caller_family=%s",
-            target if target in _TARGETS else "unknown",
+            mapped if mapped in _TARGETS else "unknown",
             classify_caller_family(source),
         )
         return None

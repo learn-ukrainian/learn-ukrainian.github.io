@@ -85,6 +85,7 @@ def test_release_snapshot_store_uses_its_primary_data_symlink(tmp_path: Path) ->
         ("codex-infra", "openai"),
         ("claude-desktop", "anthropic"),
         ("agy", "google"),
+        ("gemma-seat", "google"),
         ("grok-build", "xai"),
         ("kimi-devops", "moonshot"),
         ("glm", "zhipu"),
@@ -318,7 +319,9 @@ def test_read_only_api_returns_all_targets_and_rejects_invalid_window(
         payload = response.json()
         assert payload["started"] == 0
         assert payload["window_fully_observed"] is False
-        assert len(payload["targets"]) == 9
+        assert [item["target"] for item in payload["targets"]] == list(
+            legacy_bridge._TARGETS
+        )
         assert client.get(
             "/api/telemetry/legacy-bridge-asks?window=forever"
         ).status_code == 422
@@ -343,3 +346,125 @@ def test_summary_json_never_contains_raw_caller_value(telemetry_db: Path) -> Non
     payload = legacy_bridge.bridge_usage_summary("1h", db_path=telemetry_db)
     assert "private-caller-family-6106" not in json.dumps(payload)
     assert payload["by_caller_family"] == {"unknown": 1}
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("gemma", "gemma"),
+        ("acpx-gemma-shadow", "gemma"),
+        ("gemini", "agy"),
+        ("hermes", "deepseek"),
+        ("grok-build", "grok"),
+        ("acpx-kimicc-shadow", "kimi"),
+        ("acpx-kimi-shadow", "kimi"),
+    ],
+)
+def test_normalize_target_maps_adapter_identities(raw: str, expected: str) -> None:
+    assert legacy_bridge.normalize_target(raw) == expected
+
+
+def test_compat_and_acpx_shadow_identities_are_allowlisted() -> None:
+    """Sibling sweep: every live ACP route must map onto a telemetry seat (#6852)."""
+    from scripts.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    for command, participant in _acp_compat._TARGETS.items():
+        assert legacy_bridge.normalize_target(command) == (
+            legacy_bridge.normalize_target(participant)
+        )
+        assert legacy_bridge.normalize_target(participant) in legacy_bridge._TARGETS
+    for seat, spec in ACPX_SUPPORTED_PARTICIPANTS.items():
+        adapter = str(spec["seat"])
+        assert legacy_bridge.normalize_target(adapter) == legacy_bridge.normalize_target(
+            seat
+        )
+        assert legacy_bridge.normalize_target(adapter) in legacy_bridge._TARGETS
+
+
+def test_unknown_adapter_identity_is_still_rejected() -> None:
+    with pytest.raises(ValueError, match="not allowlisted"):
+        legacy_bridge.normalize_target("acpx-no-such-shadow")
+    with pytest.raises(ValueError, match="not allowlisted"):
+        legacy_bridge.normalize_target("retired")
+
+
+def test_gemma_compat_ask_records_allowlisted_target(
+    telemetry_db: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        _acp_compat,
+        "_run_compat_ask_impl",
+        lambda *_args, **_kwargs: SimpleNamespace(ok=True),
+    )
+    result = _acp_compat.run_compat_ask(
+        "gemma", "prompt", task_id="gemma-6852", source="claude-infra"
+    )
+    assert result.ok is True
+    assert _rows(telemetry_db)[0][1:6] == ("gemma", "anthropic", 1, 1, 0)
+
+
+def test_schema_v1_store_migrates_and_accepts_gemma(telemetry_db: Path) -> None:
+    """Existing CHECK-constrained stores must admit the new gemma seat."""
+    telemetry_db.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(str(telemetry_db)) as connection:
+        connection.executescript(
+            """
+            CREATE TABLE telemetry_meta (
+                key   TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            );
+            CREATE TABLE legacy_bridge_ask_usage (
+                hour_utc       TEXT NOT NULL,
+                target         TEXT NOT NULL CHECK (
+                    target IN (
+                        'agy', 'claude', 'codex', 'cursor', 'deepseek',
+                        'glm', 'grok', 'kimi', 'pool'
+                    )
+                ),
+                caller_family  TEXT NOT NULL CHECK (
+                    caller_family IN (
+                        'anthropic', 'cursor', 'deepseek', 'google',
+                        'moonshot', 'openai', 'operator', 'xai', 'zhipu',
+                        'unknown'
+                    )
+                ),
+                started_count   INTEGER NOT NULL DEFAULT 0,
+                succeeded_count INTEGER NOT NULL DEFAULT 0,
+                failed_count    INTEGER NOT NULL DEFAULT 0,
+                first_seen      TEXT NOT NULL,
+                last_seen       TEXT NOT NULL,
+                PRIMARY KEY (hour_utc, target, caller_family)
+            );
+            INSERT INTO telemetry_meta(key, value)
+            VALUES ('bridge_schema_version', '1');
+            INSERT INTO legacy_bridge_ask_usage(
+                hour_utc, target, caller_family, started_count,
+                succeeded_count, failed_count, first_seen, last_seen
+            ) VALUES (
+                '2026-08-02T00:00:00Z', 'glm', 'operator', 1, 1, 0,
+                '2026-08-02T00:30:00Z', '2026-08-02T00:30:00Z'
+            );
+            """
+        )
+        connection.commit()
+
+    now = datetime(2026, 8, 16, 12, 0, tzinfo=UTC)
+    token = legacy_bridge.record_bridge_invocation_start(
+        "acpx-gemma-shadow", "claude-infra", db_path=telemetry_db, now=now
+    )
+    legacy_bridge.record_bridge_invocation_finish(token, succeeded=True, now=now)
+
+    assert token.target == "gemma"
+    with sqlite3.connect(str(telemetry_db)) as connection:
+        version = connection.execute(
+            "SELECT value FROM telemetry_meta WHERE key = 'bridge_schema_version'"
+        ).fetchone()[0]
+        targets = {
+            row[0]
+            for row in connection.execute(
+                "SELECT DISTINCT target FROM legacy_bridge_ask_usage"
+            )
+        }
+    assert version == str(legacy_bridge._BRIDGE_SCHEMA_VERSION)
+    assert targets == {"gemma", "glm"}
