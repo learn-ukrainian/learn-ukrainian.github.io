@@ -1,0 +1,52 @@
+{
+  "git_pr": "batch_state/atlas-jobs/receipts/6876-smoke-limit5.json",
+  "schema": "atlas-job-result.v1",
+  "summary": {
+    "target": "full-catalog",
+    "targets": 5,
+    "target_snapshot": {
+      "count": 5,
+      "sha256": "b4f52fd74b49d5a5df7ce1b9b67b2c42fad3e796cf26b4a6679689b13a000b3b"
+    },
+    "changed": 5,
+    "filled_translation": 0,
+    "gained_english_anchor": 0,
+    "remaining_old_gate_no_english_anchor": 2295,
+    "categorical_binning": {
+      "ENRICHED": 5,
+      "DETERMINISTIC_EXCLUSION": 0,
+      "UNRESOLVED_RESIDUAL": 0
+    },
+    "layer_counters": {
+      "proverbs": 0,
+      "usage_notes": 0,
+      "grinchenko": 1,
+      "forms": 3
+    },
+    "circuit_breaker_tripped": false,
+    "consecutive_misses": 0
+  },
+  "denominator": 5,
+  "delivery": "ok",
+  "exit_status": {
+    "service_result": "success",
+    "exit_code": "exited",
+    "exit_status": "0"
+  },
+  "id": "6876-smoke-limit5",
+  "closed_at": "2026-08-16T18:41:07+00:00",
+  "state": "succeeded",
+  "host": "atlas-runner",
+  "kind": "reenrich",
+  "plan_sha256": "d15c05f97982df6bfb1f85155a8718ada2039aa0f5aaa88acda0512a63701f5c",
+  "backup": {
+    "attempted": true,
+    "ok": true,
+    "snapshot_id": "e0e34c6c580bae89ef69ddd765a1d9ef0ed1c7f7ca98226c06162abeb1068d59",
+    "error": null
+  },
+  "workdir": "run-atlas-job-6876-smoke-limit5",
+  "unit": "atlas-job-6876-smoke-limit5.service",
+  "issue": 6876,
+  "pulled": true
+}

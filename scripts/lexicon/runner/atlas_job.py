@@ -11,6 +11,7 @@ floor (default 5 GiB, ATLAS_MIN_FREE_DISK_BYTES / ATLAS_MIN_FREE_DISK_GIB).
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -675,10 +676,23 @@ def build_git_receipt(full: dict[str, Any]) -> dict[str, Any]:
     # Never embed remote absolute workdirs in the public receipt.
     if isinstance(capped.get("workdir"), str) and capped["workdir"].startswith("/"):
         capped["workdir"] = f"run-atlas-job-{capped.get('id', 'job')}"
+    # Public receipts must not leak absolute paths (backup errors often include them).
+    capped = _redact_abs_paths(capped)
     errors = validate_git_receipt(capped)
     if errors:
         raise ValueError("; ".join(errors))
     return capped
+
+
+def _redact_abs_paths(value: Any) -> Any:
+    """Replace absolute filesystem paths in receipt strings with a safe token."""
+    if isinstance(value, dict):
+        return {k: _redact_abs_paths(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_redact_abs_paths(v) for v in value]
+    if isinstance(value, str):
+        return _ABS_PATH.sub(lambda m: f"{m.group(1)}<abs>", value)
+    return value
 
 
 def write_git_receipt(job_id: str, receipt: dict[str, Any]) -> Path:
@@ -1008,15 +1022,21 @@ def close_job(
     delivery_ok = True
     if sink in {"restic", "both"} and not skip_restic and not backup.get("ok"):
         delivery_ok = False
+    # Set delivery before writing the schema-capped git receipt so the
+    # public file does not forever say "failed" from _base_receipt defaults.
+    receipt["delivery"] = "ok" if delivery_ok else "failed"
     if sink in {"git", "both"}:
         try:
             git_path = write_git_receipt(job_id, receipt)
             receipt["git_pr"] = _receipt_locator(git_path, job_id)
         except ValueError as exc:
             delivery_ok = False
+            receipt["delivery"] = "failed"
             receipt["git_pr"] = None
             receipt["git_error"] = str(exc)
             print(f"git receipt rejected: {exc}", file=sys.stderr)
+            with contextlib.suppress(ValueError):
+                write_git_receipt(job_id, receipt)
     else:
         # Even for restic-only, land a schema-capped local receipt for visibility.
         try:
@@ -1026,8 +1046,8 @@ def close_job(
             receipt["git_pr"] = None
             receipt["git_error"] = str(exc)
             delivery_ok = False
+            receipt["delivery"] = "failed"
 
-    receipt["delivery"] = "ok" if delivery_ok else "failed"
     # Never delete remote workdir — especially on backup failure.
     receipt["workdir_retained"] = True
 

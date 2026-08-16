@@ -141,6 +141,8 @@ def test_remote_wrapper_syncs_current_enrichment_package() -> None:
     assert 'ATLAS_LOCAL_SLOVNYK_CACHE' in source
     assert 'rsync_q "$LOCAL_SLOVNYK_CACHE/" "$HOST:$REMOTE_WORK_DIR/data/lexicon/slovnyk_cache/"' in source
     assert "refusing to replace unexpected work-dir data symlink" in source
+    # Fresh atlas-job-* workdirs have no data/ yet; create the overlay.
+    assert 'if test ! -d \\"\\$data_path\\"; then mkdir -p \\"\\$data_path\\"' in source
     assert "syncing vesum.db into work-dir overlay" in source
     assert 'ATLAS_RE_ENRICH_CODE_ROOT=$(printf \'%q\' "$REMOTE_WORK_DIR")' in source
 
