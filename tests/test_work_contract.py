@@ -1430,6 +1430,226 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
         assert private_repo not in json.dumps(payload)
 
 
+def test_delegate_production_preserves_authoritative_total_beyond_page(tmp_path, monkeypatch):
+    """Trusted production path: 501 public tasks → 500 rows, total 501, truncated.
+
+    ``list_delegate_tasks`` scopes and counts before the 500-row page. Work must
+    preserve that authoritative scoped total rather than recomputing from the
+    admitted page (which would silently hide the 501st public task).
+    """
+    import scripts.api.delegate_router as delegate_router
+    from scripts.work.sources_public import (
+        DELEGATE_TASK_LIMIT,
+        fetch_delegate_active,
+        fetch_delegate_tasks,
+    )
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+    now = datetime.now(UTC)
+    public_total = DELEGATE_TASK_LIMIT + 1
+    assert public_total == 501
+
+    def _write(task_id: str, **overrides):
+        payload = {
+            "task_id": task_id,
+            "agent": "codex",
+            "model": "gpt-5.5",
+            "status": "done",
+            "pid": 1,
+            "started_at": now.isoformat().replace("+00:00", "Z"),
+            "duration_s": 1.0,
+            "repository": REPO,
+        }
+        payload.update(overrides)
+        (tasks_dir / f"{task_id}.json").write_text(
+            json.dumps(payload), encoding="utf-8"
+        )
+
+    # Exactly 501 public tasks: one active + 500 done so active path stays exact.
+    _write(
+        "public-running",
+        status="running",
+        pid=222,
+        started_at=now.isoformat().replace("+00:00", "Z"),
+        duration_s=None,
+    )
+    for i in range(DELEGATE_TASK_LIMIT):
+        _write(
+            f"public-done-{i:04d}",
+            started_at=(now - timedelta(seconds=i + 1))
+            .isoformat()
+            .replace("+00:00", "Z"),
+        )
+
+    raw = delegate_router.list_delegate_tasks(
+        status="all", limit=DELEGATE_TASK_LIMIT, repository=REPO
+    )
+    assert raw["total"] == public_total
+    assert len(raw["tasks"]) == DELEGATE_TASK_LIMIT
+    for row in raw["tasks"]:
+        assert "repository" not in row
+        assert "repository_id" not in row
+
+    tasks = fetch_delegate_tasks(repository_id=REPO)
+    assert tasks.status == "truncated"
+    assert tasks.truncated is True
+    assert tasks.count == DELEGATE_TASK_LIMIT
+    assert len(tasks.payload["tasks"]) == DELEGATE_TASK_LIMIT
+    assert tasks.payload["total"] == public_total
+    assert all(t["repository"] == REPO for t in tasks.payload["tasks"])
+
+    # Active path is complete (no page budget): exact total, never truncated.
+    active = fetch_delegate_active(repository_id=REPO)
+    assert active.status == "ok"
+    assert active.truncated is False
+    assert active.payload["total"] == 1
+    assert active.count == 1
+    assert {t["task_id"] for t in active.payload["tasks"]} == {"public-running"}
+
+
+def test_delegate_production_exact_total_when_within_page(tmp_path, monkeypatch):
+    """Trusted production path: public inventory ≤500 → exact total, truncated false."""
+    import scripts.api.delegate_router as delegate_router
+    from scripts.work.sources_public import (
+        DELEGATE_TASK_LIMIT,
+        fetch_delegate_tasks,
+    )
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+    now = datetime.now(UTC)
+    public_total = 12
+    assert public_total <= DELEGATE_TASK_LIMIT
+
+    for i in range(public_total):
+        payload = {
+            "task_id": f"public-exact-{i:04d}",
+            "agent": "claude",
+            "model": "opus",
+            "status": "done",
+            "pid": 1,
+            "started_at": (now - timedelta(minutes=i)).isoformat().replace("+00:00", "Z"),
+            "duration_s": 1.0,
+            "repository": REPO,
+        }
+        (tasks_dir / f"{payload['task_id']}.json").write_text(
+            json.dumps(payload), encoding="utf-8"
+        )
+
+    tasks = fetch_delegate_tasks(repository_id=REPO)
+    assert tasks.status == "ok"
+    assert tasks.truncated is False
+    assert tasks.count == public_total
+    assert tasks.payload["total"] == public_total
+    assert len(tasks.payload["tasks"]) == public_total
+    assert all(t["repository"] == REPO for t in tasks.payload["tasks"])
+
+
+def test_delegate_injected_loader_dishonest_total_recomputed_from_admitted():
+    """Injected loaders never trust a supplied total; private rows do not count.
+
+    A dishonest ``total`` and private/claim-less padding must not inflate or
+    deflate the public section total — only exact public-admitted rows do.
+    """
+    from scripts.work.sources_public import DELEGATE_TASK_LIMIT, fetch_delegate_tasks
+
+    private_repo = "other-org/other-private-repo"
+    public_ids = [f"public-honest-{i}" for i in range(3)]
+
+    def _dishonest_loader(repository: str) -> dict:
+        assert repository == REPO
+        return {
+            # Dishonest: claims 9999 / beyond page; private rows included.
+            "total": 9999,
+            "tasks": [
+                {
+                    "task_id": tid,
+                    "agent": "codex",
+                    "status": "done",
+                    "repository": REPO,
+                }
+                for tid in public_ids
+            ]
+            + [
+                {
+                    "task_id": "private-pad",
+                    "agent": "codex",
+                    "status": "done",
+                    "repository": private_repo,
+                },
+                {
+                    "task_id": "claimless-pad",
+                    "agent": "codex",
+                    "status": "done",
+                },
+                {
+                    "task_id": "ambiguous-pad",
+                    "agent": "codex",
+                    "status": "done",
+                    "repository": REPO,
+                    "repository_id": private_repo,
+                },
+            ],
+        }
+
+    tasks = fetch_delegate_tasks(loader=_dishonest_loader, repository_id=REPO)
+    assert tasks.status == "ok"
+    assert tasks.truncated is False
+    assert tasks.payload["total"] == 3
+    assert tasks.count == 3
+    assert {t["task_id"] for t in tasks.payload["tasks"]} == set(public_ids)
+    assert all(t["repository"] == REPO for t in tasks.payload["tasks"])
+    blob = json.dumps(tasks.payload)
+    assert private_repo not in blob
+    assert "private-pad" not in blob
+    assert "claimless-pad" not in blob
+    assert "9999" not in blob
+
+    # Paged dishonest loader: page of 500 public claims + inflated total still
+    # derives total only from admitted page rows (never trusts total=501+).
+    page_public = DELEGATE_TASK_LIMIT
+
+    def _paged_dishonest(repository: str) -> dict:
+        assert repository == REPO
+        return {
+            "total": page_public + 50,
+            "tasks": [
+                {
+                    "task_id": f"page-public-{i:04d}",
+                    "agent": "kimi",
+                    "status": "done",
+                    "repository": REPO,
+                }
+                for i in range(page_public)
+            ]
+            + [
+                {
+                    "task_id": f"page-private-{i}",
+                    "agent": "codex",
+                    "status": "done",
+                    "repository": private_repo,
+                }
+                for i in range(10)
+            ],
+        }
+
+    paged = fetch_delegate_tasks(loader=_paged_dishonest, repository_id=REPO)
+    # Untrusted: total is admitted page length, not the dishonest 550.
+    assert paged.payload["total"] == page_public
+    assert paged.count == page_public
+    # truncated only if admitted rows on the supplied list exceed the cap —
+    # private pads are dropped before count, so not truncated by private volume.
+    assert paged.truncated is False
+    assert paged.status == "ok"
+    assert all(t["task_id"].startswith("page-public-") for t in paged.payload["tasks"])
+    assert private_repo not in json.dumps(paged.payload)
+
+
 def test_fleet_reviews_repository_filter_before_hard_cap():
     """Foreign volume above the public scan cap must not hide public reviews.
 

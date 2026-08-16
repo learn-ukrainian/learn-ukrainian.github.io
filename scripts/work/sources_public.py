@@ -154,16 +154,26 @@ def filter_public_delegate_tasks(
     repository_id: str | None = None,
     limit: int | None = None,
     trusted_scoped: bool = False,
+    upstream_total: int | None = None,
 ) -> tuple[list[dict[str, Any]], int, bool]:
     """Filter delegate rows to public-admitted summaries before count/truncation.
 
-    Returns ``(page_rows, public_total, truncated)`` where *public_total* is the
-    full admitted count (never private volume) and *truncated* is true only when
-    that public set exceeds *limit*.
+    Returns ``(page_rows, public_total, truncated)``.
 
     *trusted_scoped* matches :func:`admit_delegate_task_row`: use true only for
     the fixed production scoped loaders (claim fields may be absent after
     generic API redaction). Caller-injected loaders must pass false.
+
+    Count contract:
+    - Trusted production path with *upstream_total*: preserve that
+      repository-scoped public total (never recompute it from the capped page).
+      When *limit* is set, ``truncated = total > admitted_page_count`` so a
+      501-public / 500-row page reports total 501 and truncated true. When
+      *limit* is None (complete active inventory), never invent truncation.
+    - Injected/untrusted loaders (or trusted without upstream total): derive
+      total/truncation only from rows that pass public admission; never trust
+      a supplied total (dishonest totals and private rows must not influence
+      the public count).
     """
     allowed = admit_public_repository_id(repository_id)
     admitted: list[dict[str, Any]] = []
@@ -173,7 +183,27 @@ def filter_public_delegate_tasks(
         )
         if summary is not None:
             admitted.append(summary)
-    total = len(admitted)
+
+    admitted_page_count = len(admitted)
+    if trusted_scoped and upstream_total is not None:
+        try:
+            total = int(upstream_total)
+        except (TypeError, ValueError):
+            total = admitted_page_count
+        if total < admitted_page_count:
+            total = admitted_page_count
+        if limit is None:
+            # Complete upstream path (active) — do not invent truncation.
+            return admitted, total, False
+        cap = max(0, int(limit))
+        page = admitted[:cap]
+        # Truncation is relative to the authoritative scoped total vs the
+        # admitted page actually returned, not a recompute of page length alone.
+        truncated = total > len(page)
+        return page, total, truncated
+
+    # Untrusted / no upstream total: count only admitted rows.
+    total = admitted_page_count
     if limit is None:
         return admitted, total, False
     cap = max(0, int(limit))
@@ -415,14 +445,27 @@ def fetch_delegate_active(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_active", "degraded", reason="delegate_active_shape")
-    summary, total, _truncated = filter_public_delegate_tasks(
-        tasks, repository_id=allowed, trusted_scoped=trusted_scoped
+    # Active inventory is complete (no page budget). Preserve trusted upstream
+    # scoped total; never invent truncation. Injected loaders derive total only
+    # from admitted rows.
+    upstream_total: int | None = None
+    if trusted_scoped and isinstance(payload, dict) and payload.get("total") is not None:
+        try:
+            upstream_total = int(payload["total"])
+        except (TypeError, ValueError):
+            upstream_total = None
+    summary, total, truncated = filter_public_delegate_tasks(
+        tasks,
+        repository_id=allowed,
+        trusted_scoped=trusted_scoped,
+        upstream_total=upstream_total,
     )
     return SectionResult(
         "delegate_active",
         "ok",
         payload={"total": total, "tasks": summary},
         count=total,
+        truncated=truncated,
     )
 
 
@@ -440,12 +483,15 @@ def fetch_delegate_tasks(
     from the call shape, not payload content: ``loader is None`` uses the
     fixed production path (``list_delegate_tasks(..., repository=allowed)``),
     which already filtered upstream and redacts repository fields; those
-    claim-less redacted rows may be stamped under ``trusted_scoped=True``.
-    Any caller-supplied/injected loader is untrusted: every retained row must
-    carry an exact authoritative public ``repository`` / ``repository_id``
-    claim (with ambiguity/foreign checks). Never reads result bodies. Work
-    stamps only its own admitted repository metadata; generic delegate
-    summaries never re-emit repository identity.
+    claim-less redacted rows may be stamped under ``trusted_scoped=True`` and
+    the authoritative scoped public ``total`` is preserved
+    (``truncated = total > admitted_page_count``). Any caller-supplied/injected
+    loader is untrusted: every retained row must carry an exact authoritative
+    public ``repository`` / ``repository_id`` claim (with ambiguity/foreign
+    checks), and total/truncation are derived only from admitted rows (never
+    from a supplied total). Never reads result bodies. Work stamps only its
+    own admitted repository metadata; generic delegate summaries never re-emit
+    repository identity.
     """
     allowed = admit_public_repository_id(repository_id)
     # Provenance is unforgeable via payload shape: only the fixed production
@@ -471,11 +517,20 @@ def fetch_delegate_tasks(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_shape")
+    # Trusted production: keep the scoped loader's public total. Injected
+    # loaders: recompute total from admitted rows only (ignore payload total).
+    upstream_total: int | None = None
+    if trusted_scoped and isinstance(payload, dict) and payload.get("total") is not None:
+        try:
+            upstream_total = int(payload["total"])
+        except (TypeError, ValueError):
+            upstream_total = None
     summary, total, truncated = filter_public_delegate_tasks(
         tasks,
         repository_id=allowed,
         limit=DELEGATE_TASK_LIMIT,
         trusted_scoped=trusted_scoped,
+        upstream_total=upstream_total,
     )
     return SectionResult(
         "delegate_tasks",
