@@ -31,7 +31,7 @@
 #
 # Env overrides:
 #   ATLAS_RUN_ROOT, ATLAS_REPO, ATLAS_RE_ENRICH_WORK_DIR,
-#   ATLAS_RE_ENRICH_CODE_ROOT,
+#   ATLAS_RE_ENRICH_CODE_ROOT, ATLAS_RE_ENRICH_RUNNER_PYTHON,
 #   ATLAS_RE_ENRICH_UNIT, ATLAS_RE_ENRICH_DRIVER, ATLAS_RE_ENRICH_SLUGS_FILE,
 #   ATLAS_SOURCES_DB, ATLAS_KAIKKI_JSON, ATLAS_LIVE_MANIFEST
 set -euo pipefail
@@ -123,8 +123,25 @@ if [[ ! -f "$SOURCES_DB" ]]; then
   echo "sources.db not found: $SOURCES_DB" >&2
   exit 1
 fi
-if [[ ! -f "$REPO/.venv/bin/python" ]]; then
-  echo "repo venv python not found: $REPO/.venv/bin/python" >&2
+# Fail closed (#6876): the driver imports yaml + jsonschema. A runner venv
+# missing them dies mid-run with ModuleNotFoundError *after* systemd-run has
+# already reported success, so verify the imports up front, before any
+# filesystem/systemd side effect. Prefer the project .venv on the runner:
+# $REPO first (its hydrated data sits next to it), then the work-dir overlay.
+RUNNER_PYTHON="${ATLAS_RE_ENRICH_RUNNER_PYTHON:-}"
+if [[ -z "$RUNNER_PYTHON" ]]; then
+  if [[ -x "$REPO/.venv/bin/python" ]]; then
+    RUNNER_PYTHON="$REPO/.venv/bin/python"
+  elif [[ -x "$CODE_ROOT/.venv/bin/python" ]]; then
+    RUNNER_PYTHON="$CODE_ROOT/.venv/bin/python"
+  fi
+fi
+if [[ -z "$RUNNER_PYTHON" || ! -x "$RUNNER_PYTHON" ]]; then
+  echo "runner venv python not found (tried $REPO/.venv/bin/python and $CODE_ROOT/.venv/bin/python)" >&2
+  exit 1
+fi
+if ! "$RUNNER_PYTHON" -c 'import yaml, jsonschema' >/dev/null 2>&1; then
+  echo "runner venv $RUNNER_PYTHON cannot import yaml/jsonschema; install with: $RUNNER_PYTHON -m pip install pyyaml jsonschema" >&2
   exit 1
 fi
 
@@ -172,7 +189,7 @@ fi
 # inherit the launching shell's exports), so this must be set inside the
 # wrapped command, not via `export` before systemd-run.
 run_cmd() {
-  printf '%q ' "$REPO/.venv/bin/python" "$DRIVER" "${COMMON_ARGS[@]}"
+  printf '%q ' "$RUNNER_PYTHON" "$DRIVER" "${COMMON_ARGS[@]}"
   # Bash <4.4 (e.g. macOS's stock /bin/bash 3.2) throws "unbound variable"
   # on "${arr[@]}" for a zero-element array under `set -u` — guard rather
   # than rely on the expansion, in case this script is ever invoked there.
