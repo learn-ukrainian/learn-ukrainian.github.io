@@ -2771,7 +2771,7 @@ def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
 
     import agent_runtime.watchdog as watchdog_module
 
-    samples = iter([(0.0, 0.0), (0.0, 0.10)])
+    samples = iter([(0.0, 0.0), (0.0, 1.5)])
 
     def fake_process(_pid):
         root_cpu, child_cpu = next(samples)
@@ -2786,6 +2786,56 @@ def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
     proc = SimpleNamespace(pid=123)
 
     assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is False
+    assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is True
+
+
+def test_process_tree_has_activity_ignores_idle_cpu_noise(monkeypatch):
+    """Idle-runtime CPU blips must not read as work (#6888).
+
+    A wedged/idle ``agy`` CLI measurably burns ~0.03s CPU per 5s poll with
+    spikes past the old 0.05s bar; each blip refreshed ``last_activity`` and
+    kept ``stdout_silence_timeout`` dead for the full 7200s hard-timeout.
+    Sub-threshold noise must NOT count as activity, while work-grade CPU
+    (compiles, test runs, tool subprocesses) still does.
+    """
+
+    class FakeProcess:
+        def __init__(self, pid, cpu_seconds):
+            self.pid = pid
+            self._cpu_seconds = cpu_seconds
+
+        def cpu_times(self):
+            return SimpleNamespace(user=self._cpu_seconds, system=0.0)
+
+        def io_counters(self):
+            raise AttributeError("not available on this platform")
+
+        def children(self, recursive=False):
+            assert recursive is True
+            return []
+
+    import agent_runtime.watchdog as watchdog_module
+
+    samples = iter([0.0, 0.06, 0.12, 2.12])
+    monkeypatch.setattr(
+        watchdog_module.psutil,
+        "Process",
+        lambda _pid: FakeProcess(pid=123, cpu_seconds=next(samples)),
+    )
+
+    primed_pids: set[int] = set()
+    cpu_baselines: dict[int, float] = {}
+    io_baselines: dict[int, tuple[int, int, int, int]] = {}
+    proc = SimpleNamespace(pid=123)
+
+    # First poll only primes the baseline.
+    assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is False
+    # +0.06s: idle-noise blip — above the pre-#6888 0.05s bar, below the
+    # work-grade bar. Must NOT count as activity.
+    assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is False
+    # +0.06s again: repeated idle noise still does not count.
+    assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is False
+    # +2.0s: real work crosses the bar and counts.
     assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is True
 
 
