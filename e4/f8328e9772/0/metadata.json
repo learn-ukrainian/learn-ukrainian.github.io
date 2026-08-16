@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e4f8328e9772",
+  "session_id": "fleet-1a4f0917a3534926bc22694889bac961",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T20:54:49.128708Z",
+  "branch": "grok/infra-6852-bridge-telemetry",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/telemetry/legacy_bridge.py",
+    "tests/test_dispatch_telemetry.py",
+    "tests/test_legacy_bridge_telemetry.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "0c8d48cc3b76",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T20:54:49.121019Z",
+    "agent_lines": 385,
+    "agent_removed": 23,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 385,
+    "total_lines_changed": 408,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

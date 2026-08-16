@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e4f8328e9772",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6852-bridge-telemetry",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/telemetry/legacy_bridge.py",
+    "tests/test_dispatch_telemetry.py",
+    "tests/test_legacy_bridge_telemetry.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e4/f8328e9772/0/metadata.json",
+      "transcript": "/e4/f8328e9772/0/full.jsonl",
+      "compact_transcript": "/e4/f8328e9772/0/transcript.jsonl",
+      "content_hash": "/e4/f8328e9772/0/content_hash.txt",
+      "prompt": "/e4/f8328e9772/0/prompt.txt"
+    }
+  ]
+}
