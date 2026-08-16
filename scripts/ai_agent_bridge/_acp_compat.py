@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -22,6 +23,7 @@ _TARGETS = {
     "agy": "agy",
     "gemini": "agy",
     "hermes": "deepseek",
+    "deepseek": "deepseek",
     "pool": "pool",
     "glm": "glm",
     "gemma": "gemma",
@@ -204,6 +206,12 @@ def _failure_metadata(
         return {"phase": "transport", "code": "transport_error", "retryable": False}
 
     outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
+    if outcome == "non_evidentiary":
+        # Review-ask outcome validation (#6805): the provider replied, but the
+        # reply carries no verdict grounded in evidence. Not retryable in
+        # place — the idempotency key would replay the same garbage; re-ask
+        # with a fresh task-id or reroute the seat.
+        return {"phase": "postprocess", "code": "non_evidentiary", "retryable": False}
     if outcome == "rate_limited" or bool(getattr(result, "rate_limited", False)):
         return {"phase": "provider", "code": "rate_limited", "retryable": True}
     usage_record = getattr(result, "usage_record", None)
@@ -237,6 +245,57 @@ def _discussion_failure_metadata(payload: object) -> dict[str, object]:
     if "error" in outcomes:
         return {"phase": "provider", "code": "unknown", "retryable": False}
     return {"phase": "postprocess", "code": "result_invalid", "retryable": False}
+
+
+# Review-ask outcome validation (#6805): transport-ok must not mask an
+# unusable review reply (the ask-glm garble and the phantom AGY findings on
+# the issue both terminalized as outcome=ok). Cheap and deterministic — no
+# LLM judge in the transport layer: a review reply must name a VERDICT and
+# ground it in at least one concrete artifact reference (a finding/evidence
+# line, a path[:line], a #PR/issue, or a commit SHA), else the ask
+# terminalizes as failed:non_evidentiary rather than a silent "replied".
+_REVIEW_VERDICT_RE = re.compile(r"\bverdict\b", re.IGNORECASE)
+_REVIEW_EVIDENCE_RE = re.compile(
+    r"(?:\bfindings?\b"  # an explicit finding statement
+    r"|\bevidence\b"  # an explicit evidence statement
+    r"|[\w.-]+/[\w./-]*\.\w{1,6}(?::\d+)?"  # path/to/file.ext[:line]
+    r"|\b[\w.-]+\.\w{1,6}:\d+"  # file.ext:line
+    r"|#\d{2,}"  # PR/issue reference
+    r"|\b(?=[0-9a-f]*\d)[0-9a-f]{7,40}\b)",  # commit SHA (must contain a digit)
+    re.IGNORECASE,
+)
+
+
+def review_outcome_failure(response: str) -> str | None:
+    """Return the failure reason when a review-type reply is non-evidentiary."""
+    if not _REVIEW_VERDICT_RE.search(response):
+        return (
+            "non-evidentiary review reply: no VERDICT token; transport-ok does "
+            "not count as a completed review (#6805)"
+        )
+    if not _REVIEW_EVIDENCE_RE.search(response):
+        return (
+            "non-evidentiary review reply: no finding/evidence line or concrete "
+            "artifact reference (path[:line], #PR, or commit SHA) grounding the "
+            "verdict (#6805)"
+        )
+    return None
+
+
+def _non_evidentiary_result(result: object, reason: str) -> object:
+    """Downgrade a transport-ok review reply to a durable failure receipt.
+
+    The reply body is preserved on the result for forensics; only the outcome
+    changes so the authority job terminalizes as failed:non_evidentiary.
+    """
+    from dataclasses import replace
+
+    return replace(
+        result,
+        ok=False,
+        stderr_excerpt=reason,
+        transport_outcome="non_evidentiary",
+    )
 
 
 def _idempotency_key(
@@ -447,6 +506,15 @@ def _run_compat_ask_impl(
                     os.environ.pop("LU_ACPX_TRANSPORT", None)
                 else:
                     os.environ["LU_ACPX_TRANSPORT"] = previous_transport
+            if review and bool(getattr(result, "ok", False)):
+                # Outcome validation for review asks (#6805): a transport-ok
+                # reply without a verdict grounded in evidence terminalizes as
+                # failed:non_evidentiary — never a silent "replied".
+                review_failure = review_outcome_failure(
+                    str(getattr(result, "response", ""))
+                )
+                if review_failure is not None:
+                    result = _non_evidentiary_result(result, review_failure)
             try:
                 authority.finish_job(
                     job.job_id,

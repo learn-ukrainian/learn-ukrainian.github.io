@@ -43,6 +43,7 @@ from scripts.agent_runtime.adapters.acpx import (
     AcpxShadowRefusalError,
 )
 from scripts.agent_runtime.env_sanitize import build_agent_env
+from scripts.agent_runtime.routes import DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
 
 _SUCCESS_NDJSON = (
     '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
@@ -2114,7 +2115,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
         "deepseek": {
             "seat": "acpx-deepseek-shadow",
             "agent": "deepseek",
-            "model": "deepseek-v4-pro",
+            "model": "deepseek-v4-flash",
         },
     }
 
@@ -2124,7 +2125,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
     [
         (AcpxAgyShadowAdapter, "agy", "agy", "1.1.9", "gemini-3.7-flash-high"),
         (AcpxGlmShadowAdapter, "glm", "opencode", "1.17.13", "glm-5.3"),
-        (AcpxDeepSeekShadowAdapter, "deepseek", "hermes", "0.18.2", "deepseek-v4-pro"),
+        (AcpxDeepSeekShadowAdapter, "deepseek", "opencode", "1.17.13", "deepseek-v4-flash"),
     ],
 )
 def test_new_fleet_discussion_seats_use_fixed_confined_commands(
@@ -2168,7 +2169,9 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     assert "--agent" in plan.cmd
     command = plan.cmd[plan.cmd.index("--agent") + 1]
     command_tokens = shlex.split(command)
-    assert command_tokens[0] == binaries[provider_binary if participant == "glm" else "node"]
+    # AGY rides the project text ACP server via node; GLM and DeepSeek are
+    # native ``opencode acp --pure`` participants (#6805).
+    assert command_tokens[0] == binaries["node" if participant == "agy" else provider_binary]
     assert provider_binary in " ".join(command_tokens)
     assert plan.cmd[-3:] == ["exec", "-f", "-"]
     assert plan.metadata["model"] == model
@@ -2176,13 +2179,17 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     assert plan.metadata["provider_cli_compatibility"] == {
         "agy": "text-plan-sandbox-v1",
         "glm": "native-acp-pure-v1",
-        "deepseek": "text-oneshot-isolated-v1",
+        "deepseek": "native-acp-pure-v1",
     }[participant]
     assert "--deny-all" in plan.cmd
     assert "--no-fs" in plan.cmd
     assert "--no-terminal" in plan.cmd
-    if participant == "glm":
-        assert ("--model", "zai-coding-plan/glm-5.3") in zip(
+    if participant in ("glm", "deepseek"):
+        invocation_model = {
+            "glm": "zai-coding-plan/glm-5.3",
+            "deepseek": "deepseek-direct/deepseek-v4-flash",
+        }[participant]
+        assert ("--model", invocation_model) in zip(
             plan.cmd, plan.cmd[1:], strict=False
         )
         assert plan.env_overrides == {
@@ -2277,11 +2284,61 @@ def test_gemma_shadow_seat_rejects_a_caller_model_other_than_its_pin(tmp_path, m
         )
 
 
+def test_deepseek_shadow_seat_refuses_first_party_egress_in_ci(tmp_path, monkeypatch):
+    """#6805: first-party DeepSeek is China-hosted — the ACP seat keeps the
+    same CI refusal as the dispatch adapter on its new opencode transport."""
+    monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+
+    with acpx_module.active_discussion_scope(), pytest.raises(
+        AcpxShadowRefusalError, match=DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
+    ):
+        AcpxDeepSeekShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="deepseek-v4-flash",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "deepseek",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_deepseek_shadow_seat_rejects_a_caller_model_other_than_its_pin(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    with acpx_module.active_discussion_scope(), pytest.raises(
+        AcpxShadowRefusalError, match="model="
+    ):
+        AcpxDeepSeekShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="deepseek-v4-pro",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "deepseek",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
 def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatch):
-    """Key guard (#6805): a dead DeepSeek seat must surface an actionable
-    remediation plus the documented route — never a bare not-found. Hermes is
-    permanently removed (operator order 2026-08-16), so the message points at
-    the opencode standing path, never at a reinstall."""
+    """Key guard (#6805): any legacy path that still resolves the hermes
+    binary must surface an actionable remediation plus the documented route —
+    never a bare not-found. Hermes is permanently removed (operator order
+    2026-08-16), so the message points at the opencode standing path, never
+    at a reinstall."""
     monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
 
     with pytest.raises(AcpxShadowRefusalError) as exc_info:
@@ -2295,6 +2352,7 @@ def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatc
     assert "docs/runbooks/agent-seat-onboarding.md" in message
     assert "permanently removed" in message
     assert "do not reinstall" in message
+    assert "ask-deepseek" in message
     assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
     assert "delegate.py dispatch --agent deepseek" in message
     assert "hermes --version" not in message
@@ -2309,13 +2367,23 @@ def test_probe_participant_reachability_reports_only_missing_provider_binaries(m
 
     assert acpx_module.probe_participant_reachability("gemma") is None
     assert acpx_module.probe_participant_reachability("glm") is None
+    # DeepSeek shares the opencode transport since the Hermes removal (#6805).
+    assert acpx_module.probe_participant_reachability("deepseek") is None
     # ACPX built-in seats resolve no external provider binary: unprobed.
     assert acpx_module.probe_participant_reachability("codex") is None
     assert acpx_module.probe_participant_reachability("unknown-seat") is None
 
+
+def test_probe_participant_reachability_flags_deepseek_when_opencode_is_missing(monkeypatch):
+    """#6805: the DeepSeek seat now degrades on the opencode binary, with the
+    opencode remediation — never on the permanently removed hermes binary."""
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+
     error = acpx_module.probe_participant_reachability("deepseek")
+
     assert error is not None
-    assert "hermes binary not found on PATH" in error
+    assert "opencode binary not found on PATH" in error
+    assert "hermes binary not found on PATH" not in error
     assert "docs/runbooks/agent-seat-onboarding.md" in error
 
 

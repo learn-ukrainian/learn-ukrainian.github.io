@@ -170,7 +170,9 @@ review_scheduler:
       formal_review_exclusion_reason: text-only child cannot consume parent-owned sealed-review MCP
       participant: deepseek
       adapter_transport: acp
-      catalog_transport: hermes
+      # Native opencode ACP transport since the Hermes removal (operator order
+      # 2026-08-16, #6805) — mirrors the glm/gemma seats.
+      catalog_transport: opencode
       sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
       quota_bucket: deepseek
       credential_bucket: deepseek

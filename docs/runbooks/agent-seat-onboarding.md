@@ -705,10 +705,11 @@ immediately before spawn. Both paths emit the same remediation text.
 
 | Error excerpt | Meaning |
 | --- | --- |
-| `hermes binary not found on PATH` | Hermes was permanently removed from this host (operator order 2026-08-16) — the DeepSeek ACP seat refuses; route via opencode (below) |
-| `opencode binary not found on PATH` | The GLM, Gemma, and Pool ACP seats are down |
+| `hermes binary not found on PATH` | Hermes was permanently removed from this host (operator order 2026-08-16) — only legacy direct-Hermes paths still resolve it; the DeepSeek ACP seat no longer does |
+| `opencode binary not found on PATH` | The GLM, Gemma, DeepSeek, and Pool ACP seats are down |
 | `agy binary not found on PATH` | The AGY ACP seat is down |
 | `legacy ask target '<x>' has no enabled ACP route` | The seat is not wired under authority mode; do not assume a fallback — check this runbook and #6805 |
+| `non-evidentiary review reply` | The seat answered a `--type review` ask without a VERDICT grounded in evidence; the ask terminalized `failed:non_evidentiary` — re-ask with a fresh task-id or reroute, never count it as a review |
 
 ### Hermes permanently removed — DeepSeek routes via opencode
 
@@ -716,13 +717,16 @@ Hermes was permanently removed from this host (operator order 2026-08-16) —
 it is **not** awaiting reinstall, and no provisioning recipe applies anymore.
 The DeepSeek seat's **standing route** is first-party via opencode:
 
-- One-shot review/research runs
+- Bridge asks use `ask-deepseek` (or the `ask-hermes` alias) — both ride the
+  `acpx-deepseek-shadow` ACP participant on native `opencode acp --pure`
+  pinned to `deepseek-direct/deepseek-v4-flash` at high effort (#6805).
+- Direct one-shot review/research outside the bridge runs
   `opencode run --model deepseek-direct/deepseek-v4-flash --variant high`
   (native Entire capture).
 - Tool-heavy work goes to `delegate.py dispatch --agent deepseek` from a
   dispatch worktree.
 
-Any route that still names a `hermes` binary keeps the admission-time
+Any legacy route that still names a `hermes` binary keeps the admission-time
 refusal; its message points at the opencode route above, not at a reinstall.
 
 ### Documented fallbacks while a seat is down
@@ -730,12 +734,13 @@ refusal; its message points at the opencode route above, not at a reinstall.
 Per `agents_extensions/shared/rules/model-assignment.md` (the error text
 quotes the same substitutions):
 
-- **ask-hermes (DeepSeek seat):** Hermes is permanently removed, so the
-  opencode first-party route above is the standing path — not a temporary
-  fallback. Record the substitution in the artifact all the same.
-- **ask-glm / ask-gemma / ask-pool down (opencode missing):** reinstall
-  opencode first — three seats share the binary. There is no second host for
-  the opencode ACP transport.
+- **ask-deepseek / ask-hermes (DeepSeek seat):** Hermes is permanently
+  removed, so the opencode first-party route above is the standing path —
+  not a temporary fallback. Record the substitution in the artifact all the
+  same.
+- **ask-glm / ask-gemma / ask-deepseek / ask-pool down (opencode missing):**
+  reinstall opencode first — four seats share the binary. There is no second
+  host for the opencode ACP transport.
 - Record every substitution in the artifact; silent rerouting hides
   review-independence, cost, and egress changes.
 

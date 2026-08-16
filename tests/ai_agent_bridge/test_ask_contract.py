@@ -32,6 +32,7 @@ ASK_SEATS = (
     ("ask-kimi", "_handle_ask_kimi", "kimi"),
     ("ask-cursor", "_handle_ask_cursor", "cursor"),
     ("ask-hermes", "_handle_ask_hermes", "hermes"),
+    ("ask-deepseek", "_handle_ask_deepseek", "deepseek"),
     ("ask-pool", "_handle_ask_pool", "pool"),
 )
 
@@ -282,6 +283,162 @@ def test_cli_returns_nonzero_for_replayed_or_live_failure(
         _cli._handle_ask_agy(args)
 
 
+@pytest.mark.parametrize(
+    "response",
+    [
+        # Documented on #6805: literal garbage with transport outcome=ok.
+        "DXVECTOR",
+        # Model preamble / harness confusion, no verdict ever delivered.
+        "Deep breath — emit the tool call now… Wait, formatting requires blocks.",
+        "I'll verify key claims against the diff before writing anything.",
+        # A verdict with zero grounding is not a review outcome either.
+        "VERDICT: APPROVED. Looks fine to me.",
+        "",
+    ],
+)
+def test_review_outcome_failure_rejects_non_evidentiary_replies(response: str) -> None:
+    assert _acp_compat.review_outcome_failure(response) is not None
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        "VERDICT: REQUEST_CHANGES\n- Finding: scripts/foo.py:42 swallows the error.",
+        "verdict: approved\nEvidence: reviewed the diff at head 0123abc, 3 files.",
+        "Verdict: PASS\nFindings: none. Checked scripts/ai_agent_bridge/_cli.py and #6805.",
+    ],
+)
+def test_review_outcome_failure_accepts_grounded_verdicts(response: str) -> None:
+    assert _acp_compat.review_outcome_failure(response) is None
+
+
+def _make_ok_result(response: str) -> object:
+    from agent_runtime.result import Result
+
+    return Result(
+        ok=True,
+        agent="glm",
+        model="glm-5.3",
+        mode="read-only",
+        response=response,
+        stderr_excerpt=None,
+        duration_s=1.0,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+        effort="high",
+        transport_outcome="ok",
+    )
+
+
+def _stub_live_invocation(
+    monkeypatch: pytest.MonkeyPatch, authority: object, result: object
+) -> Mock:
+    """Wire the recording authority plus a one-shot provider result."""
+
+    @contextmanager
+    def execution_cwd(*_args, **_kwargs):
+        yield Path.cwd()
+
+    invoke = Mock(return_value=result)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.authority.AuthorityService", lambda: authority
+    )
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
+    )
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        Mock(return_value=None),
+    )
+    return invoke
+
+
+def test_review_ask_with_garbled_reply_terminalizes_failed_non_evidentiary(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """#6805: transport-ok garbage on a review ask must never terminalize as
+    a silent success — the job fails with the non_evidentiary code."""
+    authority = _RecordingAuthority()
+    _stub_live_invocation(monkeypatch, authority, _make_ok_result("DXVECTOR"))
+
+    result = _acp_compat._run_compat_ask_impl(
+        "glm", "review this diff", task_id="garbled-review", review=True
+    )
+
+    assert result.ok is False
+    assert result.transport_outcome == "non_evidentiary"
+    assert result.response == "DXVECTOR"  # body preserved for forensics
+    assert "no VERDICT token" in (result.stderr_excerpt or "")
+    assert len(authority.finished) == 1
+    assert authority.finished[0]["state"] == "failed"
+    assert authority.finished[0]["failure"] == {
+        "phase": "postprocess",
+        "code": "non_evidentiary",
+        "retryable": False,
+    }
+    assert "outcome=non_evidentiary" in capsys.readouterr().err
+
+
+def test_review_ask_with_grounded_verdict_stays_complete(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    authority = _RecordingAuthority()
+    _stub_live_invocation(
+        monkeypatch,
+        authority,
+        _make_ok_result("VERDICT: APPROVED\nEvidence: diff at head 0123abc, 2 files."),
+    )
+
+    result = _acp_compat._run_compat_ask_impl(
+        "glm", "review this diff", task_id="grounded-review", review=True
+    )
+
+    assert result.ok is True
+    assert authority.finished[0]["state"] == "complete"
+    assert authority.finished[0]["failure"] is None
+
+
+def test_non_review_ask_is_not_outcome_validated(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Plain queries keep transport semantics — a one-token answer is fine."""
+    authority = _RecordingAuthority()
+    _stub_live_invocation(monkeypatch, authority, _make_ok_result("OK glm-5.3"))
+
+    result = _acp_compat._run_compat_ask_impl("glm", "ping", task_id="plain-query")
+
+    assert result.ok is True
+    assert authority.finished[0]["state"] == "complete"
+
+
+@pytest.mark.parametrize(
+    ("command", "handler_name", "extra_argv"),
+    [
+        # Drivers pass --type review (#6805 evidence); ask-glm has no --review.
+        ("ask-glm", "_handle_ask_glm", ["--type", "review"]),
+        ("ask-claude", "_handle_ask_claude", ["--review"]),
+    ],
+)
+def test_review_intent_reaches_the_compat_shim_from_either_spelling(
+    command: str, handler_name: str, extra_argv: list[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#6805: drivers pass --type review; the validation must key off it."""
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(
+        _acp_compat,
+        "run_compat_ask",
+        lambda *args, **kwargs: captured.update(kwargs) or SimpleNamespace(ok=True),
+    )
+    args = _cli._build_parser().parse_args(
+        [command, "question", "--task-id", "review-intent", "--from", "kimi", *extra_argv]
+    )
+
+    getattr(_cli, handler_name)(args)
+
+    assert captured["review"] is True
+
+
 @pytest.mark.parametrize(("command", "handler_name", "target"), RETIRED_ASK_SEATS)
 def test_ask_target_without_an_enabled_acp_route_fails_closed(
     command: str, handler_name: str, target: str
@@ -335,9 +492,12 @@ def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_mis
         _acp_compat._run_compat_ask_impl("hermes", "question", task_id="dead-seat")
 
     message = str(exc_info.value)
-    assert "hermes binary not found on PATH" in message
+    # The DeepSeek participant rides the opencode transport since the Hermes
+    # removal (#6805): the admission refusal names the binary that is actually
+    # required now, with the opencode remediation — never the dead hermes path.
+    assert "opencode binary not found on PATH" in message
+    assert "hermes binary not found on PATH" not in message
     assert "docs/runbooks/agent-seat-onboarding.md" in message
-    assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
     assert invoke.call_count == 0
 
 
@@ -359,8 +519,8 @@ def test_ask_hermes_cli_surfaces_remediation_when_binary_is_missing(
         _cli._handle_ask_hermes(args)
 
     message = str(exc_info.value)
-    assert "hermes binary not found on PATH" in message
-    assert "delegate.py dispatch --agent deepseek" in message
+    assert "opencode binary not found on PATH" in message
+    assert "docs/runbooks/agent-seat-onboarding.md" in message
 
 
 @pytest.mark.parametrize("effort", EFFORT_CHOICES)

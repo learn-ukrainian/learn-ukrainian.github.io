@@ -778,6 +778,21 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_opencode_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_opencode_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
+    # ask-deepseek (first-party DeepSeek v4 Flash via the opencode ACP seat; ⚠️ China-hosted, LOCAL-ONLY)
+    ask_deepseek_parser = subparsers.add_parser(
+        "ask-deepseek",
+        help="Send message AND invoke first-party DeepSeek (deepseek-v4-flash) via the opencode ACP seat (#6805). LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
+    )
+    ask_deepseek_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_deepseek_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_deepseek_parser.add_argument("--type", default="query", help="Message type")
+    ask_deepseek_parser.add_argument("--data", help="Path to data file to attach")
+    ask_deepseek_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_deepseek_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_deepseek_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_deepseek_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
+    ask_deepseek_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
     # ask-pool (poolside.ai laguna-s-2.1 — cross-family CODE + web-verify specialist)
     ask_pool_parser = subparsers.add_parser(
         "ask-pool",
@@ -1294,6 +1309,8 @@ def _dispatch_command(args):
         _handle_ask_agy(args)
     elif args.command == "ask-hermes":
         _handle_ask_hermes(args)
+    elif args.command == "ask-deepseek":
+        _handle_ask_deepseek(args)
     elif args.command == "ask-opencode":
         _handle_ask_opencode(args)
     elif args.command == "ask-pool":
@@ -1443,7 +1460,12 @@ def _handle_acp_compat(args, target: str) -> None:
             model=model,
             effort=getattr(args, "effort", None),
             data=data,
-            review=bool(getattr(args, "review", False)),
+            # Review intent comes from either spelling: the explicit --review
+            # flag or the --type review drivers actually pass (#6805).
+            review=(
+                bool(getattr(args, "review", False))
+                or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+            ),
             output_path=getattr(args, "output_path", None),
             stdout_only=bool(getattr(args, "stdout_only", False)),
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else 300,
@@ -1476,6 +1498,11 @@ def _handle_ask_agy(args):
 def _handle_ask_hermes(args):
     """Handle ask-hermes subcommand."""
     _handle_acp_compat(args, "hermes")
+
+
+def _handle_ask_deepseek(args):
+    """Handle ask-deepseek subcommand."""
+    _handle_acp_compat(args, "deepseek")
 
 
 def _handle_ask_opencode(args):
