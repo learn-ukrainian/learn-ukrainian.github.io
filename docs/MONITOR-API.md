@@ -8,6 +8,16 @@ FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
 This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
 
+## Work control plane — `/api/work/v1`
+
+Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation only; no mutations). Operator detail: [`docs/monitor-api/work.md`](monitor-api/work.md). UI: `/work.html`. ADR: [`docs/decisions/ADR-019-work-control-plane.md`](decisions/ADR-019-work-control-plane.md).
+
+| Method | Path | Notes |
+| --- | --- | --- |
+| GET | `/api/work/v1/projection` | Normalized items + attention + source envelopes + `cache_age_s` |
+| GET | `/api/work/v1/capabilities` | Schema digest, budgets, private-source seam (`not_configured`) |
+| GET | `/api/work/v1/health` | Work surface liveness |
+
 ## Fleet facade — `/api/fleet/facade`
 
 This thin, read-only namespace makes the existing `python -m scripts.fleet_comms fleet …` seat-facing surfaces available to Monitor clients. It does not introduce a message bus, write to the Fleet Comms plane, retrieve message bodies, or expose reaper apply mode.

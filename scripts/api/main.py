@@ -101,6 +101,7 @@ from .state_router import router as state_router
 from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
+from .work_router import router as work_router
 from .worktrees_router import router as worktrees_router
 
 
@@ -205,6 +206,7 @@ app.include_router(state_router, prefix="/api/state")
 app.include_router(telemetry_router)
 app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
 app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
+app.include_router(work_router, prefix="/api/work", tags=["work"])
 
 
 # Server start time for uptime calculation

@@ -28,6 +28,7 @@ def test_index_page_uses_shared_parchment_monitor_design():
     for href in [
         "/admin.html",
         "/fleet.html",
+        "/work.html",
         "/audit-dashboard.html",
         "/build-events.html",
         "/consultation.html",
