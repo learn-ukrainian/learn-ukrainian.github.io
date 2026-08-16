@@ -100,26 +100,36 @@ def admit_delegate_task_row(
     row: dict[str, Any],
     *,
     repository_id: str | None = None,
+    trusted_scoped: bool = False,
 ) -> dict[str, Any] | None:
     """Admit one delegate summary row for the public projection.
 
-    Requires an exact canonical public-repository claim via the authoritative
-    attribution fields. Foreign, missing, ambiguous, or non-dict rows are
-    omitted. Never reads result bodies or private metadata; only copies the
-    public-safe summary allowlist plus the admitted repository identity.
+    When *trusted_scoped* is false (normalize / mixed inventory), requires an
+    exact canonical public-repository claim via the authoritative attribution
+    fields. Foreign, missing, ambiguous, or non-dict rows are omitted.
+
+    When *trusted_scoped* is true (rows already filtered by a repository-scoped
+    loader before pagination), missing claims are admitted under that contract
+    and stamped with the closed public singleton. Present claims still face
+    defense-in-depth exact-match admission so a misbehaving loader cannot pass
+    foreign identity through. Never reads result bodies; only copies the
+    public-safe summary allowlist plus Work's own admitted repository metadata.
     """
     if not isinstance(row, dict):
         return None
     allowed = admit_public_repository_id(repository_id)
     claimed = _authoritative_delegate_repository(row)
     if claimed is None:
-        return None
-    try:
-        admitted = admit_public_repository_id(claimed)
-    except ValueError:
-        return None
-    if admitted != allowed:
-        return None
+        if not trusted_scoped:
+            return None
+        admitted = allowed
+    else:
+        try:
+            admitted = admit_public_repository_id(claimed)
+        except ValueError:
+            return None
+        if admitted != allowed:
+            return None
     return {
         "task_id": row.get("task_id"),
         "agent": row.get("agent"),
@@ -140,17 +150,24 @@ def filter_public_delegate_tasks(
     *,
     repository_id: str | None = None,
     limit: int | None = None,
+    trusted_scoped: bool = False,
 ) -> tuple[list[dict[str, Any]], int, bool]:
     """Filter delegate rows to public-admitted summaries before count/truncation.
 
     Returns ``(page_rows, public_total, truncated)`` where *public_total* is the
     full admitted count (never private volume) and *truncated* is true only when
     that public set exceeds *limit*.
+
+    *trusted_scoped* matches :func:`admit_delegate_task_row`: use true only for
+    rows already filtered by a repository-scoped loader (claim fields may be
+    absent after API redaction).
     """
     allowed = admit_public_repository_id(repository_id)
     admitted: list[dict[str, Any]] = []
     for row in rows or []:
-        summary = admit_delegate_task_row(row, repository_id=allowed)
+        summary = admit_delegate_task_row(
+            row, repository_id=allowed, trusted_scoped=trusted_scoped
+        )
         if summary is not None:
             admitted.append(summary)
     total = len(admitted)
@@ -360,9 +377,11 @@ def fetch_delegate_active(
     The admitted public repository is passed into the production loader so
     filtering and total construction happen **before** any page budget is
     consumed. Injectable loaders must accept that exact repository and apply
-    the same pre-count filter. Defense-in-depth re-admission still runs on
-    the returned rows. Paths/branches/task IDs are never used for repository
-    attribution. Bodies and result files are never read.
+    the same pre-count filter. Loader rows may omit repository fields (generic
+    delegate summaries never re-emit them); Work stamps the admitted public
+    singleton under the trusted scoped-loader contract and still drops any
+    present foreign claim. Paths/branches/task IDs are never used for
+    repository attribution. Bodies and result files are never read.
     """
     allowed = admit_public_repository_id(repository_id)
 
@@ -383,9 +402,9 @@ def fetch_delegate_active(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_active", "degraded", reason="delegate_active_shape")
-    # Defense in depth: re-admit even when the loader already scoped.
+    # Trusted scoped load already filtered; re-admit without requiring re-emitted claims.
     summary, total, _truncated = filter_public_delegate_tasks(
-        tasks, repository_id=allowed
+        tasks, repository_id=allowed, trusted_scoped=True
     )
     return SectionResult(
         "delegate_active",
@@ -407,8 +426,9 @@ def fetch_delegate_tasks(
     public enumeration cap is applied. Private/unclassified volume therefore
     cannot starve public rows or inflate totals/truncation. Injectable
     loaders must accept that exact repository and apply the same pre-page
-    filter. Defense-in-depth re-admission still runs on returned rows. Never
-    reads result bodies.
+    filter. Loader rows may omit repository fields; Work stamps the admitted
+    public singleton under the trusted scoped-loader contract and still drops
+    any present foreign claim. Never reads result bodies.
     """
     allowed = admit_public_repository_id(repository_id)
 
@@ -431,9 +451,12 @@ def fetch_delegate_tasks(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_shape")
-    # Defense in depth + public enumeration cap on already-scoped rows.
+    # Trusted scoped load already filtered; public cap on redacted summary rows.
     summary, total, truncated = filter_public_delegate_tasks(
-        tasks, repository_id=allowed, limit=DELEGATE_TASK_LIMIT
+        tasks,
+        repository_id=allowed,
+        limit=DELEGATE_TASK_LIMIT,
+        trusted_scoped=True,
     )
     return SectionResult(
         "delegate_tasks",

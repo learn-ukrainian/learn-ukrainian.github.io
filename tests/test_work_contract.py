@@ -899,7 +899,8 @@ def test_delegate_requires_authoritative_public_repository():
 
     def _scoped_loader(repository: str) -> dict:
         # Production contract: filter before total/page so private volume never
-        # consumes the public enumeration budget.
+        # consumes the public enumeration budget, then redact repository fields
+        # the way the generic delegate API does.
         assert repository == REPO
         scoped = [
             row
@@ -915,7 +916,12 @@ def test_delegate_requires_authoritative_public_repository():
             claims = {c for c in (rid, rid2) if c not in (None, "")}
             claims = {str(c).strip() for c in claims if str(c).strip()}
             if claims == {repository}:
-                cleaned.append(row)
+                redacted = {
+                    k: v
+                    for k, v in row.items()
+                    if k not in {"repository", "repository_id"}
+                }
+                cleaned.append(redacted)
         return {"total": len(cleaned), "tasks": cleaned}
 
     active = fetch_delegate_active(loader=_scoped_loader)
@@ -1110,6 +1116,7 @@ def test_delegate_repository_filter_before_pagination_starvation():
     def _scope(repository: str, *, active_only: bool) -> list[dict]:
         assert repository == REPO
         # Exact pre-pagination filter — private volume never enters the page.
+        # Redact repository fields to match generic delegate summary redaction.
         scoped = []
         for row in universe:
             if active_only and row.get("status") not in {"running", "spawning"}:
@@ -1128,7 +1135,9 @@ def test_delegate_repository_filter_before_pagination_starvation():
                 continue
             if claims[0] != repository:
                 continue
-            scoped.append(row)
+            scoped.append(
+                {k: v for k, v in row.items() if k not in {"repository", "repository_id"}}
+            )
         return scoped
 
     def active_loader(repository: str) -> dict:
@@ -1263,6 +1272,19 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
     assert private_repo not in blob
     assert "/Users/private/" not in blob
     assert "foreign-" not in blob
+    # Work stamps the admitted public repository; production loader rows had none.
+    assert all(t["repository"] == REPO for t in active.payload["tasks"])
+    assert all(t["repository"] == REPO for t in tasks.payload["tasks"])
+    # Generic delegate summaries themselves still redact repository identity.
+    raw_list = delegate_router.list_delegate_tasks(
+        status="all", limit=DELEGATE_TASK_LIMIT, repository=REPO
+    )
+    raw_active = delegate_router.active_delegate_tasks(repository=REPO)
+    for payload in (raw_list, raw_active):
+        for row in payload["tasks"]:
+            assert "repository" not in row
+            assert "repository_id" not in row
+        assert private_repo not in json.dumps(payload)
 
 
 def test_fleet_reviews_repository_filter_before_hard_cap():

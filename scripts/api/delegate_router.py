@@ -163,11 +163,14 @@ def _delegate_task_rows(
 ) -> list[dict[str, Any]]:
     """Load public-safe task summaries, optionally scoped to one repository.
 
-    When *repository* is set, task state is filtered by the authoritative
+    When *repository* is set, raw task state is filtered by the authoritative
     ``repository`` / ``repository_id`` contract **before** totals, sorting, and
     any caller-side pagination. Unscoped calls (Monitor HTTP + other consumers)
-    keep the historical full inventory. Repository is never inferred from path,
-    cwd, worktree, branch, or task id.
+    keep the historical full inventory.
+
+    Repository attribution is filter-only: the returned summary rows preserve the
+    legacy public shape and never include ``repository`` / ``repository_id``.
+    Repository is never inferred from path, cwd, worktree, branch, or task id.
     """
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
@@ -222,31 +225,28 @@ def _delegate_task_rows(
         if statuses is not None and derived_status not in statuses:
             continue
 
-        # Repository scope must apply on raw task state before summary/total.
-        claimed_repo = _authoritative_task_repository(task)
-        if repo_predicate is not None and (
-            claimed_repo is None or claimed_repo != repo_predicate
-        ):
-            continue
+        # Scope applies on raw task state only — never re-emit repository identity.
+        if repo_predicate is not None:
+            claimed_repo = _authoritative_task_repository(task)
+            if claimed_repo is None or claimed_repo != repo_predicate:
+                continue
 
         task_id = task.get("task_id") or entry.name[:-5]
-        row: dict[str, Any] = {
-            "task_id": task_id,
-            "agent": task.get("agent"),
-            "model": task.get("model"),
-            "effort": task.get("effort"),
-            "cli_version": task.get("cli_version"),
-            "substitution": task.get("substitution"),
-            "status": derived_status,
-            "started_at": task.get("started_at"),
-            "duration_s": task.get("duration_s"),
-            "age_s": _task_age_seconds(task.get("started_at")),
-            "alive": alive,
-        }
-        # Surface only the agreed authoritative claim — never path/cwd metadata.
-        if claimed_repo is not None:
-            row["repository"] = claimed_repo
-        rows.append(row)
+        rows.append(
+            {
+                "task_id": task_id,
+                "agent": task.get("agent"),
+                "model": task.get("model"),
+                "effort": task.get("effort"),
+                "cli_version": task.get("cli_version"),
+                "substitution": task.get("substitution"),
+                "status": derived_status,
+                "started_at": task.get("started_at"),
+                "duration_s": task.get("duration_s"),
+                "age_s": _task_age_seconds(task.get("started_at")),
+                "alive": alive,
+            }
+        )
 
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
@@ -269,6 +269,8 @@ def list_delegate_tasks(
     Optional *repository* is an internal exact-match predicate applied before
     total/count and limit slicing. Not exposed on the public HTTP query surface
     (Work passes the already-admitted public singleton via the Python loader).
+    Returned rows keep the legacy summary shape and never include repository
+    attribution fields.
     """
     task_limit = min(max(1, int(limit)), 500)
     statuses = None if status == "all" else {status}
@@ -311,6 +313,8 @@ def active_delegate_tasks(*, repository: str | None = None) -> dict[str, Any]:
 
     Optional *repository* filters task state before total construction. Internal
     only — the HTTP ``/active`` route remains unscoped for other Monitor consumers.
+    Returned rows keep the legacy summary shape and never include repository
+    attribution fields.
     """
     active = _delegate_task_rows(ACTIVE_TASK_STATUSES, repository=repository)
     return {"total": len(active), "tasks": active}
