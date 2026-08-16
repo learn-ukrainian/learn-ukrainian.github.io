@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0cb7bde80e14",
+  "strategy": "manual-commit",
+  "branch": "agy/work-6859-projection-cold-wedge",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/delegate_router.py",
+    "scripts/api/main.py",
+    "scripts/api/work_router.py",
+    "tests/api/test_delegate_active.py",
+    "tests/test_work_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0c/b7bde80e14/0/metadata.json",
+      "transcript": "/0c/b7bde80e14/0/full.jsonl",
+      "compact_transcript": "/0c/b7bde80e14/0/transcript.jsonl",
+      "content_hash": "/0c/b7bde80e14/0/content_hash.txt",
+      "prompt": "/0c/b7bde80e14/0/prompt.txt"
+    }
+  ]
+}

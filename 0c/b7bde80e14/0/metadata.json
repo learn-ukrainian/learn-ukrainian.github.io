@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0cb7bde80e14",
+  "session_id": "fleet-bbf3873819304de4b4ac3896e01a49bc",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T12:05:51.51927Z",
+  "branch": "agy/work-6859-projection-cold-wedge",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/delegate_router.py",
+    "scripts/api/main.py",
+    "scripts/api/work_router.py",
+    "tests/api/test_delegate_active.py",
+    "tests/test_work_contract.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "4dd3ac815fdb",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T12:05:51.513844Z",
+    "agent_lines": 540,
+    "agent_removed": 36,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 540,
+    "total_lines_changed": 576,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

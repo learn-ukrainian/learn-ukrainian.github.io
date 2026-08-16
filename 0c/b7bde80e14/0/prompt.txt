@@ -1,0 +1,64 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/work-6859-projection-cold-wedge
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix issue #6859 — Work projection wedges in permanent 504 after Monitor restart
+
+You are an implementation agent in a dispatch worktree. Read GitHub issue #6859 in full —
+it carries the driver's measurements and root-cause analysis. You authored the #6849 fix
+(PR #6853) in this same area; this is the next layer of the same board-reliability story.
+
+```
+ROUTING_CARD_V1
+tier: practical
+model_x_harness: gemini-3.7-flash-high × agy
+why_this_tier: bounded backend reliability fix; measurements and acceptable design shapes
+  already on the issue; lane has fresh context from PR #6853
+advisor_packet: n/a (tier=practical)
+owned_paths: scripts/work/**, scripts/api/work_router.py, scripts/api/delegate_router.py, scripts/api/main.py, tests/**
+acceptance_cmd: see Acceptance below
+alternatives_considered: kimi-K3 (cost overkill), codex (capped until ~2026-08-20)
+parallel_free_seats: a parallel agy task carries unrelated private-repo research
+```
+
+## Evidence discipline (#M-4)
+Every claim tool-backed with quoted output. Mutation-check guard tests (#M-16).
+
+## Scope
+Make the projection endpoint survive a Monitor restart per #6859's Expected section:
+- No request may 504 forever: first loads may serve a building/degraded/stale state, but
+  the projection must become servable on a freshly restarted server under continuous
+  request load (this is the exact failure observed).
+- Address the delegate_active cold-scan cost at the right layer (11.6s over 1613 task
+  files) — the issue lists acceptable shapes; pick one and justify it in the PR.
+- Choose the design; the streams section's single-flight schedule_refresh is prior art
+  in this codebase. Do not simply raise the 5s budget — that is symptom-masking.
+
+Non-goals: no changes to dashboards/work.html semantics, the private adapter, or the
+redaction contract; do not touch the external-SIGTERM problem (#6830 owns it).
+
+## Steps
+1. Dispatch worktree only. Read #6859 + the current projection cache/build code.
+2. Reproduce first: measure the cold build yourself and quote timings.
+3. Implement. Add tests that simulate a cold restart under request load and assert the
+   endpoint transitions from building/stale to served without unbounded 504s; add a
+   regression test for the delegate scan cost mechanism you choose.
+4. Affected pytest set + ruff; quote counts.
+5. VERIFY END-TO-END: with your fix in the worktree, run the real server path if
+   feasible (or the closest integration test) and quote the evidence that a cold start
+   converges. State explicitly what was and was not verified live.
+6. Conventional commit referencing #6859; push; open PR. NO auto-merge.
+
+## Acceptance
+- Cold-restart simulation test passes and fails on revert (mutation-checked).
+- Projection converges on a fresh server under load; delegate section no longer costs
+  ~12s cold (quote before/after numbers).
+- All existing work-surface tests stay green.
