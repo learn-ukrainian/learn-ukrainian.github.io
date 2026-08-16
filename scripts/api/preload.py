@@ -59,11 +59,12 @@ OPTIONAL_MODULES = [
     "fitz",
     "rag.poc_pair_page",
     "rag.query",
-    "ai_agent_bridge",
-    "ai_agent_bridge._channels",
-    "ai_agent_bridge._db",
+    # Bridge modules use the canonical `scripts.` identity only (#6812):
+    # preloading the bare `ai_agent_bridge` name would create a second,
+    # divergent sys.modules identity in the long-lived API process.
     "scripts.ai_agent_bridge",
     "scripts.ai_agent_bridge._channels",
+    "scripts.ai_agent_bridge._db",
 ]
 
 DYNAMIC_LOADERS = {
