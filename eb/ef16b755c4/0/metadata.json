@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ebef16b755c4",
+  "session_id": "fleet-cb15ea97a2214c6a9d998743f385fe8e",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T17:36:53.880999Z",
+  "branch": "grok-build/infra-6864-inbox-banner",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_channels.py",
+    "scripts/ai_agent_bridge/_channels_cli.py",
+    "tests/test_bridge_inbox_cli.py",
+    "tests/test_reply_sidecar.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "3bb099d7bb73",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T17:36:53.876529Z",
+    "agent_lines": 168,
+    "agent_removed": 76,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 168,
+    "total_lines_changed": 244,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

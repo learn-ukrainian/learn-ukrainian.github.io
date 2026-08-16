@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ebef16b755c4",
+  "strategy": "manual-commit",
+  "branch": "grok-build/infra-6864-inbox-banner",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_channels.py",
+    "scripts/ai_agent_bridge/_channels_cli.py",
+    "tests/test_bridge_inbox_cli.py",
+    "tests/test_reply_sidecar.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/eb/ef16b755c4/0/metadata.json",
+      "transcript": "/eb/ef16b755c4/0/full.jsonl",
+      "compact_transcript": "/eb/ef16b755c4/0/transcript.jsonl",
+      "content_hash": "/eb/ef16b755c4/0/content_hash.txt",
+      "prompt": "/eb/ef16b755c4/0/prompt.txt"
+    }
+  ]
+}
