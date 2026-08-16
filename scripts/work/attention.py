@@ -15,6 +15,26 @@ HEALTH_RANK = {
     "ON_TRACK": 3,
 }
 
+# Actionable-view deny list (#6850): rows whose only next step is browsing
+# GitHub, inspecting an unknown, or nothing are not pick-list work. This is
+# the SSOT for the server-side predicate; dashboards/work.html mirrors it in
+# JS (parity contract test in tests/test_work_dashboard.py).
+NON_ACTIONABLE_ACTION_CODES = frozenset({"INSPECT_UNKNOWN", "OPEN_GITHUB", "NONE"})
+
+
+def is_actionable(item: dict[str, Any] | None) -> bool:
+    """True when a projection row is real pick-list work (#6850 semantics).
+
+    OFF_TRACK / AT_RISK always demand attention; otherwise the safe next
+    action must be a doing verb outside the deny list.
+    """
+    if not item:
+        return False
+    if item.get("health") in {"OFF_TRACK", "AT_RISK"}:
+        return True
+    code = str(((item.get("safe_next_action") or {}).get("code")) or "")
+    return bool(code) and code not in NON_ACTIONABLE_ACTION_CODES
+
 
 def _pr_check_state(pr: dict[str, Any] | None) -> str:
     """Return failing | pending | passing | unknown from GH list rollup only."""

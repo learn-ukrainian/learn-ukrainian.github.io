@@ -289,3 +289,361 @@ def test_independent_degradation_when_one_section_fails(monkeypatch):
     assert public_source["sections"]["streams"]["status"] == "stale"
     assert public_source["sections"]["issues"]["status"] == "ok"
     assert public_source["sections"]["prs"]["status"] == "ok"
+
+
+# ---------------------------------------------------------------------------
+# GET /api/work/v1/next — stream-scoped pick list (#6880)
+# ---------------------------------------------------------------------------
+
+NEXT_STREAMS = ["atlas-practice", "devops", "infra-harness"]
+
+
+def _wid(number: int) -> str:
+    from scripts.work.relations import issue_work_id
+
+    return issue_work_id(REPO, number)
+
+
+
+def _next_sections() -> dict[str, SectionResult]:
+    """Fixture with in-stream, other-stream, unscoped, epic, and non-actionable rows."""
+
+    def issue(number: int, title: str, *, body: str = "") -> dict:
+        return {
+            "number": number,
+            "title": title,
+            "labels": [],
+            "assignees": [],
+            "body": body,
+            "createdAt": "2026-08-01T00:00:00Z",
+            "updatedAt": "2026-08-02T00:00:00Z",
+            "url": f"https://github.com/{REPO}/issues/{number}",
+            "state": "OPEN",
+        }
+
+    return {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                issue(6001, "Blocked infra work", body="blocked by #1"),
+                issue(6002, "Blocked atlas work", body="blocked by #2"),
+                issue(6003, "Orphan issue"),
+                issue(6004, "Multi-homed issue"),
+                issue(6005, "Healthy homed infra issue"),
+                issue(6900, "Infra epic"),
+            ],
+            count=6,
+        ),
+        "prs": SectionResult(
+            "prs",
+            "ok",
+            payload=[
+                {
+                    "number": 100,
+                    "title": "Reviewable PR",
+                    "state": "OPEN",
+                    "isDraft": False,
+                    "reviewDecision": "REVIEW_REQUIRED",
+                    "statusCheckRollup": [{"state": "SUCCESS"}],
+                    "mergeStateStatus": "BLOCKED",
+                    "labels": [],
+                    "assignees": [],
+                    "url": f"https://github.com/{REPO}/pull/100",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "headRefOid": "deadbeef",
+                    "headRefName": "feat/next",
+                }
+            ],
+            count=1,
+        ),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "open_total": 6,
+                "streams": {
+                    "infra-harness": [6900],
+                    "atlas-practice": [6901],
+                    "devops": [6902],
+                },
+                "orphans": [{"number": 6003, "title": "Orphan issue"}],
+                "multi_homed": [
+                    {
+                        "number": 6004,
+                        "title": "Multi-homed issue",
+                        "streams": ["atlas-practice", "infra-harness"],
+                    }
+                ],
+                "pending_native_link": [],
+                "open_stream_membership": {
+                    "6001": ["infra-harness"],
+                    "6002": ["atlas-practice"],
+                    "6005": ["infra-harness"],
+                },
+                "ok": False,
+            },
+            count=6,
+        ),
+        "delegate_active": SectionResult(
+            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "delegate_tasks": SectionResult(
+            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "fleet_reviews": SectionResult(
+            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
+        ),
+    }
+
+
+def _warm_next_cache() -> dict:
+    """Build the fixture projection and install it as the unfiltered warm cache."""
+    from scripts.api.state_helpers import cache_set
+    from scripts.api.work_router import projection_cache_key
+
+    cache_invalidate("work:v1:projection")
+    payload = build_projection(_next_sections(), repository_id=REPO)
+    cache_set(projection_cache_key({}), payload)
+    return payload
+
+
+def _patch_known_streams(monkeypatch):
+    monkeypatch.setattr(work_router, "_known_streams", lambda: list(NEXT_STREAMS))
+
+
+def test_next_stream_scoped_queue_and_digest(monkeypatch):
+    """Pick list is in-stream only; everything else is digest counts (#6880 point 1/2/6)."""
+    _patch_known_streams(monkeypatch)
+    _warm_next_cache()
+
+    response = client.get("/api/work/v1/next?stream=infra-harness")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["stream"] == "infra-harness"
+    assert data["capabilities"]["mutation"] is False
+
+    queue_ids = [row["work_id"] for row in data["queue"]]
+    # In-stream actionable only: the multi-homed OFF_TRACK row ranks first,
+    # then the blocked homed infra issue.
+    assert queue_ids == [_wid(6004), _wid(6001)]
+    for row in data["queue"]:
+        assert row["url"], row
+        assert row["safe_next_action"]["code"] not in {"NONE", "OPEN_GITHUB", "INSPECT_UNKNOWN"}
+    # Never other-stream, unscoped, non-actionable, or epic rows.
+    remote_ids = {row["remote_id"] for row in data["queue"]}
+    assert remote_ids.isdisjoint({"6002", "6003", "6005", "6900", "100"})
+
+    digest = data["digest"]
+    # atlas-practice: blocked atlas issue + the multi-homed row; devops: zero.
+    assert digest["other_streams"]["actionable_counts_by_stream"] == {
+        "atlas-practice": 2,
+        "devops": 0,
+    }
+    # Orphan issue + PR have no stream membership: counted, never picked.
+    assert digest["unscoped_actionable_count"] == 2
+    blockers = digest["other_streams"]["top_blockers"]
+    assert len(blockers) == 1
+    assert blockers[0]["work_id"] == _wid(6004)
+    assert blockers[0]["health"] == "OFF_TRACK"
+    assert blockers[0]["action_code"] == "RESOLVE_MULTI_HOME"
+
+
+def test_next_other_stream_perspective(monkeypatch):
+    """Same projection, atlas caller: its own rows in the queue, infra in the digest."""
+    _patch_known_streams(monkeypatch)
+    _warm_next_cache()
+
+    response = client.get("/api/work/v1/next?stream=atlas-practice")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    queue_ids = [row["work_id"] for row in data["queue"]]
+    assert queue_ids == [_wid(6004), _wid(6002)]
+    assert data["digest"]["other_streams"]["actionable_counts_by_stream"] == {
+        "devops": 0,
+        "infra-harness": 2,
+    }
+    assert data["digest"]["unscoped_actionable_count"] == 2
+
+
+def test_next_determinism_two_calls_identical(monkeypatch):
+    """Two calls over an unchanged projection return identical order (#6880 point 5)."""
+    _patch_known_streams(monkeypatch)
+    _warm_next_cache()
+
+    first = client.get("/api/work/v1/next?stream=infra-harness")
+    second = client.get("/api/work/v1/next?stream=infra-harness")
+    assert first.status_code == 200 and second.status_code == 200
+    a, b = first.json(), second.json()
+    assert [r["work_id"] for r in a["queue"]] == [r["work_id"] for r in b["queue"]]
+    a.pop("cache_age_s")
+    b.pop("cache_age_s")
+    assert a == b
+
+
+def test_next_limit_bounds(monkeypatch):
+    _patch_known_streams(monkeypatch)
+    _warm_next_cache()
+
+    top1 = client.get("/api/work/v1/next?stream=infra-harness&limit=1")
+    assert top1.status_code == 200
+    assert [r["work_id"] for r in top1.json()["queue"]] == [_wid(6004)]
+    assert top1.json()["limit"] == 1
+
+    assert client.get("/api/work/v1/next?stream=infra-harness&limit=0").status_code == 422
+    assert client.get("/api/work/v1/next?stream=infra-harness&limit=26").status_code == 422
+    default = client.get("/api/work/v1/next?stream=infra-harness")
+    assert default.status_code == 200
+    assert default.json()["limit"] == 7
+
+
+def test_next_cold_cache_503_never_builds(monkeypatch):
+    """Cold cache → 503 building + retry_after_s; /next never triggers a build."""
+    _patch_known_streams(monkeypatch)
+    cache_invalidate("work:v1:projection")
+
+    def forbidden_build(**_kwargs):
+        raise AssertionError("/next must never build the projection")
+
+    monkeypatch.setattr(work_router, "build_public_projection", forbidden_build)
+    scheduled: list[str] = []
+    monkeypatch.setattr(
+        work_router,
+        "_get_or_create_build_task",
+        lambda key, filters: scheduled.append(key),
+    )
+    response = client.get("/api/work/v1/next?stream=infra-harness")
+    assert response.status_code == 503, response.text
+    detail = response.json()["detail"]
+    assert detail["error"] == "building"
+    assert detail["retry_after_s"] > 0
+    assert response.headers.get("retry-after") == "3"
+    assert scheduled == []
+    assert work_router._IN_FLIGHT_BUILDS == {}
+
+
+def test_next_stale_cache_served_with_background_refresh(monkeypatch):
+    """Expired-but-present cache is served honestly and kicks the single-flight refresh."""
+    import time
+
+    from scripts.api.state_helpers import _ttl_cache
+    from scripts.api.work_router import projection_cache_key
+
+    _patch_known_streams(monkeypatch)
+    payload = _warm_next_cache()
+    key = projection_cache_key({})
+    _ttl_cache[key] = (time.monotonic() - 45.0, payload)
+
+    called = []
+
+    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        called.append(True)
+        return build_projection(
+            _next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s
+        )
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+    response = client.get("/api/work/v1/next?stream=infra-harness")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["cache_age_s"] >= 30.0
+    assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
+    # The shared single-flight refresh was scheduled (it may or may not have
+    # completed and popped itself by the time the response returns).
+    assert called or key in work_router._IN_FLIGHT_BUILDS
+
+
+def test_next_rejects_unknown_and_missing_stream(monkeypatch):
+    _patch_known_streams(monkeypatch)
+    _warm_next_cache()
+
+    bad = client.get("/api/work/v1/next?stream=not-a-stream")
+    assert bad.status_code == 400
+    detail = bad.json()["detail"]
+    assert detail["error"] == "unknown_stream"
+    assert detail["valid_streams"] == NEXT_STREAMS
+
+    assert client.get("/api/work/v1/next").status_code == 422
+
+
+def test_next_known_streams_come_from_registry():
+    """_known_streams reflects scripts/config/issue_streams.yaml (fail-open on error)."""
+    from scripts.orchestration.issue_stream_audit import load_registry
+
+    cache_invalidate(work_router.STREAM_REGISTRY_CACHE_KEY)
+    names = work_router._known_streams()
+    assert names == sorted(load_registry().keys())
+    assert "infra-harness" in names
+
+
+def test_capabilities_advertise_next_queue():
+    caps = client.get("/api/work/v1/capabilities")
+    assert caps.status_code == 200
+    nq = caps.json()["next_queue"]
+    assert nq["route"] == "GET /api/work/v1/next"
+    assert "stream" in nq["params"] and "limit" in nq["params"]
+    assert "default 7, max 25" in nq["params"]["limit"]
+    assert "503" in nq["served_from"]
+
+
+def test_projection_membership_and_epic_status():
+    """Homed issues carry public-safe stream membership; epics get status=epic."""
+    projection = build_projection(_next_sections(), repository_id=REPO)
+    by_id = {i["work_id"]: i for i in projection["items"]}
+
+    homed = by_id[_wid(6001)]["projections"]["stream"]
+    assert homed["status"] == "homed"
+    assert homed["streams"] == ["infra-harness"]
+
+    epic = by_id[_wid(6900)]["projections"]["stream"]
+    assert epic["status"] == "epic"
+    assert epic["streams"] == ["infra-harness"]
+
+    orphan = by_id[_wid(6003)]["projections"]["stream"]
+    assert orphan["status"] == "orphan"
+    assert orphan["streams"] == []
+
+
+def test_streams_loader_derives_public_membership_and_strips_private_index():
+    """fetch_streams_projection derives open-issue→stream names, drops the raw index."""
+    from scripts.work.sources_public import fetch_streams_projection
+
+    def loader():
+        return {
+            "_status": "ok",
+            "generated_at": 1,
+            "open_total": 1,
+            "streams": {"infra-harness": [6900]},
+            "orphans": [],
+            "multi_homed": [],
+            "pending_native_link": [],
+            "ok": True,
+            "effective_membership": {
+                "6001": {
+                    "epics": [6900],
+                    "streams": ["infra-harness"],
+                    "via": "native",
+                    "unique_stream": True,
+                },
+                "5000": {
+                    "epics": [6900],
+                    "streams": ["infra-harness"],
+                    "via": "body",
+                    "unique_stream": True,
+                },
+            },
+            "open_issue_numbers": [6001],
+        }
+
+    section = fetch_streams_projection(loader=loader)
+    assert section.status == "ok"
+    assert section.payload["open_stream_membership"] == {"6001": ["infra-harness"]}
+    # Closed issue 5000 never surfaces; the private index keys are stripped.
+    assert "effective_membership" not in section.payload
+    assert "open_issue_numbers" not in section.payload
+    blob = json.dumps(section.payload)
+    assert "5000" not in blob
+    assert "unique_stream" not in blob
+    assert "via" not in blob
