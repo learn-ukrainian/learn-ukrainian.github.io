@@ -120,27 +120,35 @@ def test_public_repository_identity_ignores_env_override(monkeypatch):
             seen_repos.append(args[args.index("--repo") + 1])
         return 0, "[]", ""
 
-    def fleet_loader(limit: int, offset: int) -> dict:
+    def fleet_loader(limit: int, offset: int, repository: str) -> dict:
+        # Pre-pagination repository filter (matches fleet_reviews SQL boundary).
+        rows = [
+            {
+                "review_id": "rev-public",
+                "repository": REPO,
+                "pr_number": 1,
+                "state": "running",
+                "sealed_verdict_available": False,
+            },
+            {
+                "review_id": "rev-foreign",
+                "repository": foreign,
+                "pr_number": 2,
+                "state": "running",
+                "sealed_verdict_available": True,
+            },
+        ]
+        scoped = [r for r in rows if r["repository"] == repository]
         if offset:
-            return {"total": 2, "reviews": []}
+            return {
+                "total": len(scoped),
+                "reviews": [],
+                "filters": {"repository": repository},
+            }
         return {
-            "total": 2,
-            "reviews": [
-                {
-                    "review_id": "rev-public",
-                    "repository": REPO,
-                    "pr_number": 1,
-                    "state": "running",
-                    "sealed_verdict_available": False,
-                },
-                {
-                    "review_id": "rev-foreign",
-                    "repository": foreign,
-                    "pr_number": 2,
-                    "state": "running",
-                    "sealed_verdict_available": True,
-                },
-            ],
+            "total": len(scoped),
+            "reviews": scoped[offset : offset + limit],
+            "filters": {"repository": repository},
         }
 
     sections = collect_public_sections(
@@ -236,9 +244,13 @@ def test_collector_entry_points_fail_closed_before_runner():
         runner_calls.append(list(args))
         return 0, "[]", ""
 
-    def tracking_fleet(limit: int, offset: int) -> dict:
-        runner_calls.append(["fleet", str(limit), str(offset)])
-        return {"total": 0, "reviews": []}
+    def tracking_fleet(limit: int, offset: int, repository: str) -> dict:
+        runner_calls.append(["fleet", str(limit), str(offset), repository])
+        return {
+            "total": 0,
+            "reviews": [],
+            "filters": {"repository": repository},
+        }
 
     # Canonical / omitted ids still reach the runner with the closed identity.
     assert admit_public_repository_id() == REPO
@@ -367,10 +379,13 @@ def test_collector_entry_points_fail_closed_before_runner():
     assert projection_cache_key(ok_filters) == projection_cache_key(
         {"repository_id": [REPO]}
     )
-    # Foreign filter values never become cache-key material.
+    # Foreign filter values never become cache-key material — including via
+    # direct projection_cache_key calls (self-validating boundary).
     for bad in saved_view_rejected:
         with pytest.raises(SchemaValidationError, match="invalid repository_id"):
             projection_cache_key(parse_saved_view_params({"repository_id": bad}))
+        with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+            projection_cache_key({"repository_id": bad})
     # Padded canonical forms: parser strips before admit, so exact public id
     # remains the only cache-key identity.
     padded = parse_saved_view_params(
@@ -378,6 +393,9 @@ def test_collector_entry_points_fail_closed_before_runner():
     )
     assert padded["repository_id"] == [REPO]
     assert projection_cache_key(padded) == projection_cache_key(ok_filters)
+    assert projection_cache_key({"repository_id": f"  {REPO}  "}) == projection_cache_key(
+        ok_filters
+    )
 
 
 def test_saved_view_multivalue_filters_are_canonical():
@@ -415,6 +433,48 @@ def test_saved_view_multivalue_filters_are_canonical():
     assert projection_cache_key(a) == projection_cache_key(b)
 
 
+def test_projection_cache_key_direct_call_rejects_and_canonicalizes():
+    """Cache-key boundary self-validates; direct calls need no prevalidated caller."""
+    from scripts.api.state_helpers import cache_invalidate, cache_set
+    from scripts.api.work_router import CACHE_KEY, projection_cache_key
+
+    # Unknown keys and foreign repositories fail closed at the key boundary.
+    with pytest.raises(SchemaValidationError, match="saved-view key not allowed"):
+        projection_cache_key({"q": "secret-search"})
+    with pytest.raises(SchemaValidationError, match="saved-view key not allowed"):
+        projection_cache_key({"private_endpoint": "http://127.0.0.1:9"})
+    with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+        projection_cache_key({"repository_id": "evil-org/private-infra"})
+    with pytest.raises(SchemaValidationError, match="invalid health filter"):
+        projection_cache_key({"health": "not-a-health"})
+
+    # Raw reordered/duplicate multivalues collide with already-parsed forms.
+    raw_a = {
+        "health": ["ON_TRACK", "AT_RISK", "AT_RISK"],
+        "kind": ["pr", "issue"],
+        "repository_id": [REPO, REPO],
+    }
+    raw_b = {
+        "health": ["AT_RISK", "ON_TRACK"],
+        "kind": ["issue", "pr"],
+        "repository_id": REPO,
+    }
+    parsed = parse_saved_view_params(raw_a)
+    key_raw_a = projection_cache_key(raw_a)
+    key_raw_b = projection_cache_key(raw_b)
+    key_parsed = projection_cache_key(parsed)
+    assert key_raw_a == key_raw_b == key_parsed
+    assert key_raw_a.startswith(f"{CACHE_KEY}:")
+    # Single encoding only — no nested repr of an already-encoded key string.
+    assert key_raw_a.count(CACHE_KEY) == 1
+
+    # Prefix invalidation still covers every permanent filter variant.
+    cache_set(key_raw_a, {"ok": True})
+    cache_set(projection_cache_key({}), {"empty": True})
+    removed = cache_invalidate(CACHE_KEY)
+    assert removed >= 2
+
+
 def test_filters_applied_source_id_is_schema_backed():
     """Closed filters_applied object advertises enum-backed source_id."""
     schema = load_schema()
@@ -442,38 +502,46 @@ def test_fleet_reviews_and_projection_reject_mixed_repositories():
     private_repo = "other-org/other-private-repo"
     suffix_cousin = "evil-org/learn-ukrainian.github.io"
 
-    def loader(limit: int, offset: int) -> dict:
+    def loader(limit: int, offset: int, repository: str) -> dict:
+        rows = [
+            {
+                "review_id": "rev-public",
+                "repository": REPO,
+                "pr_number": 42,
+                "state": "running",
+                "sealed_verdict_available": False,
+            },
+            {
+                "review_id": "rev-private",
+                "repository": private_repo,
+                "pr_number": 7,
+                "state": "running",
+                "sealed_verdict_available": True,
+            },
+            {
+                "review_id": "rev-suffix",
+                "repository": suffix_cousin,
+                "pr_number": 99,
+                "state": "running",
+                "sealed_verdict_available": True,
+            },
+        ]
+        scoped = [r for r in rows if r["repository"] == repository]
         if offset:
-            return {"total": 3, "reviews": []}
+            return {
+                "total": len(scoped),
+                "reviews": [],
+                "filters": {"repository": repository},
+            }
         return {
-            "total": 3,
-            "reviews": [
-                {
-                    "review_id": "rev-public",
-                    "repository": REPO,
-                    "pr_number": 42,
-                    "state": "running",
-                    "sealed_verdict_available": False,
-                },
-                {
-                    "review_id": "rev-private",
-                    "repository": private_repo,
-                    "pr_number": 7,
-                    "state": "running",
-                    "sealed_verdict_available": True,
-                },
-                {
-                    "review_id": "rev-suffix",
-                    "repository": suffix_cousin,
-                    "pr_number": 99,
-                    "state": "running",
-                    "sealed_verdict_available": True,
-                },
-            ],
+            "total": len(scoped),
+            "reviews": scoped[offset : offset + limit],
+            "filters": {"repository": repository},
         }
 
     section = fetch_fleet_reviews(loader=loader, repository_id=REPO)
     assert section.status == "ok"
+    assert section.truncated is False
     assert section.count == 1
     assert section.payload["reviews"][0]["review_id"] == "rev-public"
     assert section.payload["reviews"][0]["repository"] == REPO
@@ -593,6 +661,81 @@ def test_fleet_reviews_and_projection_reject_mixed_repositories():
     blob = json.dumps(projection)
     assert private_repo not in blob
     assert suffix_cousin not in blob
+
+
+def test_fleet_reviews_repository_filter_before_hard_cap():
+    """Foreign volume above the public scan cap must not hide public reviews.
+
+    Repository filtering (and the filtered total) happens in the loader before
+    pagination/counting, so private rows never consume FLEET_REVIEW_HARD_CAP
+    and cannot force truncation relative to the public filtered total.
+    """
+    from scripts.work.sources_public import FLEET_REVIEW_HARD_CAP, FLEET_REVIEW_PAGE
+
+    private_repo = "other-org/other-private-repo"
+    public_count = 7
+    foreign_count = FLEET_REVIEW_HARD_CAP + 50
+    assert foreign_count > FLEET_REVIEW_HARD_CAP
+
+    public_rows = [
+        {
+            "review_id": f"rev-public-{i:04d}",
+            "repository": REPO,
+            "pr_number": 1000 + i,
+            "state": "running",
+            "sealed_verdict_available": False,
+            "created_at": f"2026-08-01T00:{i:02d}:00Z",
+        }
+        for i in range(public_count)
+    ]
+    foreign_rows = [
+        {
+            "review_id": f"rev-foreign-{i:04d}",
+            "repository": private_repo,
+            "pr_number": 9000 + i,
+            "state": "running",
+            "sealed_verdict_available": True,
+            "created_at": f"2026-07-01T00:00:{i % 60:02d}Z",
+        }
+        for i in range(foreign_count)
+    ]
+    # Foreign rows first would exhaust an unfiltered 2000-row scan.
+    universe = [*foreign_rows, *public_rows]
+    seen_repos: list[str] = []
+    seen_offsets: list[int] = []
+
+    def loader(limit: int, offset: int, repository: str) -> dict:
+        seen_repos.append(repository)
+        seen_offsets.append(offset)
+        assert repository == REPO
+        # Exact pre-pagination filter — private volume never enters the page.
+        scoped = [r for r in universe if r["repository"] == repository]
+        page = scoped[offset : offset + limit]
+        return {
+            "total": len(scoped),
+            "reviews": page,
+            "limit": limit,
+            "offset": offset,
+            "filters": {"repository": repository},
+        }
+
+    section = fetch_fleet_reviews(loader=loader, repository_id=REPO)
+    assert seen_repos and all(r == REPO for r in seen_repos)
+    assert section.status == "ok"
+    assert section.truncated is False
+    assert section.count == public_count
+    assert section.payload["total"] == public_count
+    assert len(section.payload["reviews"]) == public_count
+    assert {r["review_id"] for r in section.payload["reviews"]} == {
+        f"rev-public-{i:04d}" for i in range(public_count)
+    }
+    assert all(r["repository"] == REPO for r in section.payload["reviews"])
+    # Loader was not forced through the full foreign-dominated universe.
+    assert max(seen_offsets) < FLEET_REVIEW_HARD_CAP
+    assert max(seen_offsets) <= public_count
+    assert private_repo not in json.dumps(section.payload)
+    # Page size stays the public collector constant.
+    assert FLEET_REVIEW_PAGE == 100
 
 
 def test_relations_and_cycle_detection():

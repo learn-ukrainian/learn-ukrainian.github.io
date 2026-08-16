@@ -579,6 +579,103 @@ def test_discussion_review_and_dead_letter_metadata_stay_read_only(
     assert dead_letters.json()["dead_letters"][0]["via"] == "fleet-comms"
 
 
+def test_reviews_repository_filter_applies_before_count_and_pagination(
+    client: TestClient, fleet_root: Path
+) -> None:
+    """Exact repository filter participates in SQL COUNT/LIMIT so foreign volume
+    cannot hide public rows or inflate public totals/truncation signals.
+    """
+    _seed_plane(fleet_root)
+    public_repo = "learn-ukrainian/learn-ukrainian.github.io"
+    foreign_repo = "evil-org/private-infra"
+    # More foreign rows than a typical Work hard-cap page window (2000), plus a
+    # handful of public rows that must remain fully visible when filtered.
+    foreign_n = 2050
+    public_n = 5
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        for i in range(foreign_n):
+            connection.execute(
+                """
+                INSERT INTO formal_review_jobs(
+                    review_id, repository, pr_number, head_sha, gate_kind, state,
+                    snapshot_artifact_id, sealed_verdict_artifact_id, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?)
+                """,
+                (
+                    f"foreign-review-{i:04d}",
+                    foreign_repo,
+                    7000 + i,
+                    f"dead{i:04d}",
+                    "cross-family-review",
+                    "running",
+                    f"2026-07-01T00:00:{i % 60:02d}Z",
+                ),
+            )
+        for i in range(public_n):
+            connection.execute(
+                """
+                INSERT INTO formal_review_jobs(
+                    review_id, repository, pr_number, head_sha, gate_kind, state,
+                    snapshot_artifact_id, sealed_verdict_artifact_id, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?)
+                """,
+                (
+                    f"public-review-{i:04d}",
+                    public_repo,
+                    8000 + i,
+                    f"beef{i:04d}",
+                    "cross-family-review",
+                    "running",
+                    f"2026-08-02T00:{i:02d}:00Z",
+                ),
+            )
+        connection.commit()
+    finally:
+        connection.close()
+
+    unfiltered = client.get("/api/fleet/reviews", params={"limit": 10, "offset": 0})
+    assert unfiltered.status_code == 200
+    # Seed already has review-1 for public_repo; plus inserts.
+    assert unfiltered.json()["total"] == foreign_n + public_n + 1
+
+    filtered = client.get(
+        "/api/fleet/reviews",
+        params={"repository": public_repo, "limit": 100, "offset": 0},
+    )
+    assert filtered.status_code == 200
+    payload = filtered.json()
+    assert payload["filters"]["repository"] == public_repo
+    # total is repository-scoped — private volume does not inflate it.
+    assert payload["total"] == public_n + 1
+    assert len(payload["reviews"]) == public_n + 1
+    assert {row["repository"] for row in payload["reviews"]} == {public_repo}
+    review_ids = {row["review_id"] for row in payload["reviews"]}
+    assert "review-1" in review_ids
+    assert {f"public-review-{i:04d}" for i in range(public_n)} <= review_ids
+    assert not any(rid.startswith("foreign-review-") for rid in review_ids)
+    assert foreign_repo not in json.dumps(payload)
+
+    # Pagination offsets also advance only within the filtered set.
+    page = client.get(
+        "/api/fleet/reviews",
+        params={"repository": public_repo, "limit": 2, "offset": 2},
+    )
+    assert page.status_code == 200
+    assert page.json()["total"] == public_n + 1
+    assert len(page.json()["reviews"]) == 2
+    assert {row["repository"] for row in page.json()["reviews"]} == {public_repo}
+
+    foreign_only = client.get(
+        "/api/fleet/reviews",
+        params={"repository": foreign_repo, "limit": 5, "offset": 0},
+    )
+    assert foreign_only.status_code == 200
+    assert foreign_only.json()["total"] == foreign_n
+    assert len(foreign_only.json()["reviews"]) == 5
+    assert all(r["repository"] == foreign_repo for r in foreign_only.json()["reviews"])
+
+
 def test_acp_and_runtime_provenance_reuse_existing_read_models(
     client: TestClient,
     fleet_root: Path,

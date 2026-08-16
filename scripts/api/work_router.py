@@ -15,6 +15,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
 from scripts.work.normalize import build_public_projection
 from scripts.work.schema import (
+    ALLOWED_SAVED_VIEW_KEYS,
     SchemaValidationError,
     parse_saved_view_params,
     schema_digest_sha256,
@@ -28,6 +29,9 @@ CACHE_KEY = "work:v1:projection"
 CACHE_TTL_S = 30.0
 WARM_TARGET_S = 2.0
 TIMEOUT_S = 5.0
+
+# Parsed filter key emitted by parse_saved_view_params for query key ``kind``.
+_PARSED_KIND_KEY = "resource_kind"
 
 
 def _filters_from_request(request: Request) -> dict[str, Any]:
@@ -69,13 +73,46 @@ def _filters_from_request(request: Request) -> dict[str, Any]:
         ) from exc
 
 
-def projection_cache_key(filters: dict[str, Any]) -> str:
-    """Permanent warm-cache key for a canonical filter dict.
+def _filters_to_saved_view_raw(
+    filters: dict[str, Any],
+) -> dict[str, str | list[str] | None]:
+    """Normalize a filter dict (raw or already-parsed) for ``parse_saved_view_params``.
 
-    Callers must pass already-canonicalized multivalue filters (see
-    ``parse_saved_view_params``) so equivalent query forms collide.
+    Accepts both query-shaped keys (``kind``) and the parser's internal
+    ``resource_kind`` so endpoint-canonical filters re-enter the same admission
+    path without encoding drift.
     """
-    return f"{CACHE_KEY}:{sorted(filters.items())!r}"
+    raw: dict[str, str | list[str] | None] = {}
+    for key, value in filters.items():
+        if key == _PARSED_KIND_KEY:
+            out_key = "kind"
+        elif key in ALLOWED_SAVED_VIEW_KEYS:
+            out_key = key
+        else:
+            raise SchemaValidationError(f"saved-view key not allowed: {key}")
+        if value is None or value == "":
+            continue
+        if isinstance(value, bool):
+            if out_key != "orphan":
+                raise SchemaValidationError(f"boolean not allowed for saved-view: {out_key}")
+            raw[out_key] = "true" if value else "false"
+        elif isinstance(value, (list, tuple)):
+            raw[out_key] = [str(item) for item in value]
+        else:
+            raw[out_key] = str(value)
+    return raw
+
+
+def projection_cache_key(filters: dict[str, Any]) -> str:
+    """Permanent warm-cache key for a validated, canonical filter dict.
+
+    Self-validates via the saved-view parser/admission gate so direct callers
+    cannot mint keys for unknown filters or foreign ``repository_id`` values.
+    Reordered/duplicate multivalues collapse to one permanent key. The key
+    string is built once from the canonical dict (no double-encoding).
+    """
+    canonical = parse_saved_view_params(_filters_to_saved_view_raw(filters or {}))
+    return f"{CACHE_KEY}:{sorted(canonical.items())!r}"
 
 
 def _build_sync(filters: dict[str, Any], *, cache_age_s: float = 0.0) -> dict[str, Any]:

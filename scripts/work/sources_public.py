@@ -347,21 +347,27 @@ def fetch_delegate_tasks(
 
 
 def fetch_fleet_reviews(
-    loader: Callable[[int, int], dict[str, Any]] | None = None,
+    loader: Callable[[int, int, str], dict[str, Any]] | None = None,
     *,
     repository_id: str | None = None,
 ) -> SectionResult:
     """Page fleet review summaries for the exact public repository only.
 
+    The admitted public repository is passed into the loader so filtering,
+    COUNT, and pagination happen *before* the hard scan cap. Injectable
+    loaders must honor ``repository`` the same way (pre-pagination filter).
+
     Never open sealed verdict blobs. Rows whose ``repository`` is missing or
-    not exactly the canonical public repository are dropped (no suffix match).
+    not exactly the canonical public repository are dropped (defense in depth;
+    no suffix match).
     """
     allowed = admit_public_repository_id(repository_id)
 
-    def _default_page(limit: int, offset: int) -> dict[str, Any]:
+    def _default_page(limit: int, offset: int, repository: str) -> dict[str, Any]:
         from scripts.api.fleet_router import fleet_reviews
 
-        return fleet_reviews(limit=limit, offset=offset)
+        # SQL WHERE + count + limit all see the exact public singleton.
+        return fleet_reviews(limit=limit, offset=offset, repository=repository)
 
     page_fn = loader or _default_page
     items: list[dict[str, Any]] = []
@@ -370,18 +376,20 @@ def fetch_fleet_reviews(
     raw_seen = 0
     try:
         while offset < FLEET_REVIEW_HARD_CAP:
-            page = page_fn(FLEET_REVIEW_PAGE, offset)
+            page = page_fn(FLEET_REVIEW_PAGE, offset, allowed)
             if not isinstance(page, dict):
                 return SectionResult("fleet_reviews", "degraded", reason="fleet_reviews_shape")
             batch = page.get("reviews") or page.get("items") or []
             if not isinstance(batch, list):
                 return SectionResult("fleet_reviews", "degraded", reason="fleet_reviews_items")
+            # Prefer the repository-scoped total from the loader / SQL count.
             total = int(page.get("total") or total or len(batch))
             for row in batch:
                 if not isinstance(row, dict):
                     continue
                 raw_seen += 1
                 if str(row.get("repository") or "") != allowed:
+                    # Defense in depth: a misbehaving loader must not leak foreign rows.
                     continue
                 # Explicit allowlist — sealed blobs never enter the projection.
                 items.append(
@@ -408,7 +416,8 @@ def fetch_fleet_reviews(
             "unavailable",
             reason=f"fleet_reviews_error:{type(exc).__name__}",
         )
-    # Truncation reflects the upstream page budget, not post-filter keep count.
+    # Truncation is relative to the repository-filtered total / scan budget.
+    # Private volume must not appear in total or force truncated=true.
     truncated = total > raw_seen
     return SectionResult(
         "fleet_reviews",
@@ -441,7 +450,7 @@ def collect_public_sections(
     streams_loader: Callable[[], dict[str, Any]] | None = None,
     delegate_active_loader: Callable[[], dict[str, Any]] | None = None,
     delegate_tasks_loader: Callable[[], dict[str, Any]] | None = None,
-    fleet_reviews_loader: Callable[[int, int], dict[str, Any]] | None = None,
+    fleet_reviews_loader: Callable[[int, int, str], dict[str, Any]] | None = None,
     max_workers: int = 6,
 ) -> dict[str, SectionResult]:
     """Collect all public sections with independent typed degradation."""
