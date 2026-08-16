@@ -5739,7 +5739,10 @@ describe('LexiconPractice', () => {
           container.querySelectorAll('[data-testid="practice-dashboard-stats"] .k3-stat-value'),
         ).map((el) => el.textContent);
 
-      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '12', '0']));
+      // #6839: tiles are now driven by the session's own live counters
+      // (dailyNewCount/reviewsCompleted/sessionNewIntroduced), not by
+      // dailySnapshot membership — nothing reviewed yet, so all three start at 0.
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '0', '0']));
 
       // Play one flashcard and rate it «Good».
       await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
@@ -5751,16 +5754,15 @@ describe('LexiconPractice', () => {
       await user.click(flashcard);
       await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
 
-      // Back home: the done/new tiles must reflect the rating immediately.
+      // Back home: the new/done tiles must reflect the rating immediately —
+      // dailyNewCount and sessionNewIntroduced both moved by one successful new card.
       await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
-      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '11', '1']));
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '1', '1']));
     });
 
-    test('#6723 deck chip and stats tiles follow the accepted level switch after going home', async () => {
+    test('#6723 deck chip follows the accepted level switch after going home', async () => {
       document.documentElement.dataset.chromeLocale = 'en';
       localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
-      // Distinct, sub-cap (<DAILY_PRACTICE_DECK_SIZE=12) counts per level so the "NEW"
-      // tile can only read 10/7 if it re-reads the CURRENT level's pool, not a stale one.
       const { fn } = mockShardFetch({ A1: 10, B1: 7 });
       vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
       const user = userEvent.setup();
@@ -5771,7 +5773,11 @@ describe('LexiconPractice', () => {
           container.querySelectorAll('[data-testid="practice-dashboard-stats"] .k3-stat-value'),
         ).map((el) => el.textContent);
 
-      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '10', '0']));
+      // #6839: the stats tiles read the session's live counters, which are
+      // level-agnostic (dailyNewCount is a per-day, not per-level, total) — no
+      // card is ever played in this test, so they stay at 0 across the switch.
+      // The deck-chip label below is the actual per-level assertion (#6786).
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '0', '0']));
 
       await user.click(await screen.findByTestId('practice-start-session'));
       await screen.findByTestId('practice-session-progress');
@@ -5780,7 +5786,7 @@ describe('LexiconPractice', () => {
       expect(await screen.findByTestId('practice-active-deck-chip')).toHaveTextContent(
         'All Words (A1)',
       );
-      expect(statValues().slice(0, 3)).toEqual(['0', '10', '0']);
+      expect(statValues().slice(0, 3)).toEqual(['0', '0', '0']);
 
       await user.click(screen.getByRole('button', { name: 'B1' }));
       await user.click(await screen.findByTestId('practice-switch-session-accept'));
@@ -5789,8 +5795,62 @@ describe('LexiconPractice', () => {
       expect(await screen.findByTestId('practice-active-deck-chip')).toHaveTextContent(
         'All Words (B1)',
       );
-      // The B1 pool's own count, not the A1 count left behind by the switch.
-      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '7', '0']));
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '0', '0']));
+    });
+
+    test('#6839 dashboard tiles move from a session that never touches the daily snapshot', async () => {
+      document.documentElement.dataset.chromeLocale = 'en';
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+
+      // The gap #6751's fixture hid: that fixture made the daily-pool.json draw and
+      // the practice-index.A1 shard the SAME 12 lemmas, so session pool == snapshot
+      // pool by construction and any tile-computation bug was invisible. Here the
+      // daily snapshot is a disjoint, fully separate 12-word pool (`daily-only-*`)
+      // from the 30-word practice index (`A1-*`) — closer to production, where the
+      // 12-word snapshot is a sliver of a >1,000-word level pool. A session played
+      // against the index can structurally never touch a `daily-only-*` lemma.
+      const { fn: indexFn } = mockShardFetch({ A1: 30 });
+      const disjointDailyPool = Array.from({ length: 12 }, (_unused, i) => ({
+        lemma: `ізольоване-слово-${i}`,
+        slug: `daily-only-${i}`,
+        gloss: `daily gloss ${i}`,
+        cefr: 'A1',
+      }));
+      const fn = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.includes('daily-pool.json')) return okJson(disjointDailyPool);
+        return indexFn(input);
+      });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice />);
+
+      const statValues = () =>
+        Array.from(
+          container.querySelectorAll('[data-testid="practice-dashboard-stats"] .k3-stat-value'),
+        ).map((el) => el.textContent);
+
+      await screen.findByTestId('practice-daily-deck');
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '0', '0']));
+
+      // Play one flashcard (drawn from the A1-* index pool) and rate it «Good».
+      // Snapshot-membership counting (deriveDailyPracticeRows over dailySnapshot)
+      // would leave every tile frozen forever, since this session can never serve
+      // one of the 12 `daily-only-*` lemmas.
+      await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+      const flashcard = await waitFor(() => {
+        const el = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+        expect(el).toBeInTheDocument();
+        return el!;
+      });
+      const playedLemma = flashcard.textContent ?? '';
+      expect(playedLemma).not.toContain('ізольоване-слово');
+      await user.click(flashcard);
+      await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+
+      await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '1', '1']));
     });
   });
 });
