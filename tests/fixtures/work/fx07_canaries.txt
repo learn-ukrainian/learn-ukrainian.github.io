@@ -1,0 +1,5 @@
+# FX-07 synthetic private canaries — must never appear in public API, HTML, URLs, or fixtures payloads.
+PRIVATE_ISSUE_BODY_CANARY=fx07-private-body-NEVER-PUBLIC-9f3c2a
+PRIVATE_SECRET_CANARY=fx07-secret-token-NEVER-PUBLIC-b71e44
+PRIVATE_PATH_CANARY=/Users/private-opsec/infra-private/secret-runbook.md
+PRIVATE_HOST_CANARY=10.0.0.0

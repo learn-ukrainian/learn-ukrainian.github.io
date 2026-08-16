@@ -206,3 +206,231 @@ def test_zombie_detection_works_on_dead_pid(tmp_path, monkeypatch):
     assert task["task_id"] == "zombie"
     assert task["status"] == "zombie"
     assert task["alive"] is False
+
+
+# Legacy public summary keys for list/active (no repository attribution).
+_LEGACY_DELEGATE_SUMMARY_KEYS = {
+    "task_id",
+    "agent",
+    "model",
+    "effort",
+    "cli_version",
+    "substitution",
+    "status",
+    "started_at",
+    "duration_s",
+    "age_s",
+    "alive",
+}
+
+
+def _assert_legacy_summary_shape(tasks: list) -> None:
+    """Rows must keep legacy keys and never emit repository identity fields."""
+    for task in tasks:
+        assert isinstance(task, dict)
+        assert set(task) <= _LEGACY_DELEGATE_SUMMARY_KEYS
+        assert "repository" not in task
+        assert "repository_id" not in task
+
+
+def test_list_delegate_tasks_repository_filter_before_limit(tmp_path, monkeypatch):
+    """Internal repository predicate filters before total/limit so public rows are not starved."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    public_repo = "learn-ukrainian/learn-ukrainian.github.io"
+    private_repo = "other-org/other-private-repo"
+    now = datetime.now(UTC)
+
+    # >500 newer foreign/unclassified tasks that would consume the default page.
+    for index in range(520):
+        _write_task(
+            tasks_dir / f"foreign-{index:04d}.json",
+            _task_payload(
+                f"foreign-{index:04d}",
+                status="done",
+                started_at=_iso(now - timedelta(seconds=index)),
+                repository=private_repo,
+                cwd=f"/Users/private/{private_repo}",
+                worktree_path=f"/Users/private/.worktrees/dispatch/codex/foreign-{index}",
+            ),
+        )
+    for index in range(30):
+        _write_task(
+            tasks_dir / f"unclassified-{index:04d}.json",
+            _task_payload(
+                f"unclassified-{index:04d}",
+                status="done",
+                started_at=_iso(now - timedelta(seconds=600 + index)),
+                cwd=f"/Users/private/projects/{public_repo}",
+                worktree_path=f"/Users/private/.worktrees/dispatch/codex/issue-{index}",
+            ),
+        )
+    # Older public tasks that must still appear when the list is repo-scoped.
+    public_ids = []
+    for index in range(7):
+        task_id = f"public-old-{index:04d}"
+        public_ids.append(task_id)
+        _write_task(
+            tasks_dir / f"{task_id}.json",
+            _task_payload(
+                task_id,
+                status="done",
+                started_at=_iso(now - timedelta(days=2, minutes=index)),
+                repository=public_repo,
+            ),
+        )
+    _write_task(
+        tasks_dir / "public-running.json",
+        _task_payload(
+            "public-running",
+            status="running",
+            pid=111,
+            started_at=_iso(now - timedelta(days=3)),
+            repository=public_repo,
+            duration_s=None,
+        ),
+    )
+    _write_task(
+        tasks_dir / "public-spawning.json",
+        _task_payload(
+            "public-spawning",
+            status="spawning",
+            pid=None,
+            started_at=_iso(now - timedelta(days=3, minutes=1)),
+            repository_id=public_repo,
+            duration_s=None,
+        ),
+    )
+    _write_task(
+        tasks_dir / "ambiguous.json",
+        _task_payload(
+            "ambiguous",
+            status="done",
+            started_at=_iso(now - timedelta(days=1)),
+            repository=public_repo,
+            repository_id=private_repo,
+        ),
+    )
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+
+    unscoped = delegate_router.list_delegate_tasks(status="all", limit=500)
+    # Unscoped page is filled by newer foreign volume; older public rows drop off.
+    assert unscoped["total"] > 500
+    unscoped_ids = {t["task_id"] for t in unscoped["tasks"]}
+    assert "foreign-0000" in unscoped_ids
+    assert "public-old-0000" not in unscoped_ids
+    # Privacy: raw private repository on disk must never appear in generic summaries.
+    _assert_legacy_summary_shape(unscoped["tasks"])
+    unscoped_blob = json.dumps(unscoped)
+    assert "repository" not in unscoped_blob
+    assert "repository_id" not in unscoped_blob
+    assert private_repo not in unscoped_blob
+
+    scoped = delegate_router.list_delegate_tasks(
+        status="all", limit=500, repository=public_repo
+    )
+    assert scoped["total"] == 9  # 7 older + running + spawning; ambiguous omitted
+    scoped_ids = {t["task_id"] for t in scoped["tasks"]}
+    assert scoped_ids == set(public_ids) | {"public-running", "public-spawning"}
+    # Scoped internal results still use the legacy public summary shape.
+    _assert_legacy_summary_shape(scoped["tasks"])
+    blob = json.dumps(scoped)
+    assert "repository" not in blob
+    assert "repository_id" not in blob
+    assert private_repo not in blob
+    assert public_repo not in blob
+    assert "/Users/private/" not in blob
+    assert "cwd" not in blob
+    assert "worktree_path" not in blob
+
+    active = delegate_router.active_delegate_tasks(repository=public_repo)
+    assert active["total"] == 2
+    assert {t["task_id"] for t in active["tasks"]} == {
+        "public-running",
+        "public-spawning",
+    }
+    _assert_legacy_summary_shape(active["tasks"])
+    assert "repository" not in json.dumps(active)
+
+    # Default HTTP surface stays unscoped and free of repository/path metadata.
+    response = client.get("/api/delegate/tasks?status=all&limit=500")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == unscoped["total"]
+    _assert_legacy_summary_shape(data["tasks"])
+    http_blob = json.dumps(data)
+    assert "repository" not in http_blob
+    assert "repository_id" not in http_blob
+    assert private_repo not in http_blob
+    assert "/Users/private/" not in http_blob
+    assert "worktree_path" not in http_blob
+
+    active_http = client.get("/api/delegate/active")
+    assert active_http.status_code == 200
+    active_data = active_http.json()
+    _assert_legacy_summary_shape(active_data["tasks"])
+    active_http_blob = json.dumps(active_data)
+    assert "repository" not in active_http_blob
+    assert "repository_id" not in active_http_blob
+    assert private_repo not in active_http_blob
+
+    # repository query param is not a free-form public selector
+    response_q = client.get(
+        f"/api/delegate/tasks?status=all&limit=50&repository={public_repo}"
+    )
+    assert response_q.status_code == 200
+    # Unknown query keys are ignored by FastAPI; response stays unscoped.
+    assert response_q.json()["total"] == unscoped["total"]
+    _assert_legacy_summary_shape(response_q.json()["tasks"])
+
+
+def test_delegate_http_redacts_repository_even_when_task_state_has_private(
+    tmp_path, monkeypatch
+):
+    """Unscoped /tasks and /active must never serialize repository/repository_id."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    private_repo = "secret-org/secret-private-infra"
+    public_repo = "learn-ukrainian/learn-ukrainian.github.io"
+    now = datetime.now(UTC)
+    _write_task(
+        tasks_dir / "private-running.json",
+        _task_payload(
+            "private-running",
+            status="running",
+            pid=222,
+            started_at=_iso(now),
+            repository=private_repo,
+            repository_id=private_repo,
+            cwd=f"/Users/private/{private_repo}",
+        ),
+    )
+    _write_task(
+        tasks_dir / "public-done.json",
+        _task_payload(
+            "public-done",
+            status="done",
+            started_at=_iso(now - timedelta(minutes=1)),
+            repository=public_repo,
+        ),
+    )
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+
+    tasks_resp = client.get("/api/delegate/tasks?status=all&limit=50")
+    active_resp = client.get("/api/delegate/active")
+    assert tasks_resp.status_code == 200
+    assert active_resp.status_code == 200
+    tasks_body = tasks_resp.json()
+    active_body = active_resp.json()
+    assert tasks_body["total"] == 2
+    assert active_body["total"] == 1
+    _assert_legacy_summary_shape(tasks_body["tasks"])
+    _assert_legacy_summary_shape(active_body["tasks"])
+    for body in (tasks_body, active_body):
+        blob = json.dumps(body)
+        assert "repository" not in blob
+        assert "repository_id" not in blob
+        assert private_repo not in blob
+        assert public_repo not in blob
+        assert "secret-org" not in blob
+        assert "/Users/private/" not in blob

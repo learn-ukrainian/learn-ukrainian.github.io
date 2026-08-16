@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/work_projection.v1.json",
+  "title": "WorkProjectionV1",
+  "description": "Authoritative public-safe Work control-plane projection schema. Private adapter pins this file by commit + SHA-256; it must not fork fields.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "cache_age_s",
+    "budget",
+    "sources",
+    "items",
+    "attention",
+    "denominator",
+    "capabilities",
+    "foundation_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "work-projection.v1"
+    },
+    "generated_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cache_age_s": {
+      "type": "number",
+      "minimum": 0
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["warm_target_s", "timeout_s"],
+      "properties": {
+        "warm_target_s": { "type": "number", "const": 2 },
+        "timeout_s": { "type": "number", "const": 5 }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sourceEnvelope" }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/workObject" }
+    },
+    "attention": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["work_id", "attention_rank", "health", "safe_next_action"],
+        "properties": {
+          "work_id": { "type": "string", "minLength": 1 },
+          "attention_rank": { "type": "integer" },
+          "health": { "$ref": "#/$defs/health" },
+          "safe_next_action": { "$ref": "#/$defs/safeNextAction" },
+          "title": { "type": "string" },
+          "resource_kind": { "$ref": "#/$defs/resourceKind" },
+          "repository_id": { "type": "string" },
+          "remote_id": { "type": "string" }
+        }
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issues_open",
+        "prs_open",
+        "streams_complete",
+        "class4",
+        "omissions"
+      ],
+      "properties": {
+        "issues_open": { "type": "integer", "minimum": 0 },
+        "prs_open": { "type": "integer", "minimum": 0 },
+        "streams_complete": { "type": "boolean" },
+        "class4": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["delegate_active", "delegate_tasks", "fleet_reviews"],
+          "properties": {
+            "delegate_active": { "type": "boolean" },
+            "delegate_tasks": { "type": "boolean" },
+            "fleet_reviews": { "type": "boolean" }
+          }
+        },
+        "omissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/omission" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mutation", "private_source"],
+      "properties": {
+        "mutation": { "const": false },
+        "private_source": { "$ref": "#/$defs/privateCapability" }
+      }
+    },
+    "foundation_status": {
+      "const": "FOUNDATION_COMPLETE"
+    },
+    "filters_applied": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "health": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/health" },
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "resource_kind": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/resourceKind" },
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "lifecycle": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["open", "draft", "running", "failed"]
+          },
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "orphan": { "type": "boolean" },
+        "repository_id": {
+          "type": "array",
+          "items": {
+            "const": "learn-ukrainian/learn-ukrainian.github.io"
+          },
+          "maxItems": 1,
+          "uniqueItems": true
+        },
+        "source_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["public-monitor", "private-local-adapter"]
+          },
+          "maxItems": 2,
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "health": {
+      "type": "string",
+      "enum": ["ON_TRACK", "AT_RISK", "OFF_TRACK", "UNKNOWN"]
+    },
+    "resourceKind": {
+      "type": "string",
+      "enum": [
+        "issue",
+        "pr",
+        "task",
+        "review",
+        "verification",
+        "arc",
+        "milestone"
+      ]
+    },
+    "sourceStatus": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "degraded",
+        "unavailable",
+        "permission_denied",
+        "timeout",
+        "unsupported_version",
+        "truncated",
+        "stale"
+      ]
+    },
+    "sourceEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "status",
+        "freshness",
+        "capabilities",
+        "truncation",
+        "sections"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "enum": ["public-monitor", "private-local-adapter"]
+        },
+        "status": { "$ref": "#/$defs/sourceStatus" },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observed_at", "age_s"],
+          "properties": {
+            "observed_at": { "type": ["string", "null"] },
+            "age_s": { "type": ["number", "null"], "minimum": 0 }
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mutation", "private_fields"],
+          "properties": {
+            "mutation": { "type": "boolean" },
+            "private_fields": { "type": "boolean" }
+          }
+        },
+        "truncation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["issues", "prs", "limit"],
+          "properties": {
+            "issues": { "type": "boolean" },
+            "prs": { "type": "boolean" },
+            "limit": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "sections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status"],
+            "properties": {
+              "status": { "$ref": "#/$defs/sourceStatus" },
+              "reason": { "type": "string" },
+              "age_s": { "type": ["number", "null"] },
+              "count": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "reason": { "type": "string" }
+      }
+    },
+    "privateCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "available",
+        "schema_version",
+        "endpoint",
+        "capabilities",
+        "redaction",
+        "reason_if_unavailable"
+      ],
+      "properties": {
+        "source_id": { "const": "private-local-adapter" },
+        "available": { "type": "boolean" },
+        "schema_version": { "const": "work-projection.v1" },
+        "schema_digest_sha256": { "type": ["string", "null"] },
+        "public_schema_commit": { "type": ["string", "null"] },
+        "endpoint": {
+          "type": ["string", "null"],
+          "description": "Loopback HTTP endpoint only; never a filesystem path."
+        },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "redaction": { "type": "string" },
+        "reason_if_unavailable": {
+          "type": ["string", "null"],
+          "enum": [
+            null,
+            "not_configured",
+            "unreachable",
+            "schema_mismatch",
+            "permission_denied",
+            "timeout"
+          ]
+        }
+      }
+    },
+    "safeNextAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "reason_codes"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "TRIAGE_ORPHAN",
+            "RESOLVE_MULTI_HOME",
+            "LINK_PENDING_NATIVE",
+            "WAIT_CI",
+            "FIX_CI",
+            "REQUEST_CF_REVIEW",
+            "WAIT_REVIEW",
+            "ADDRESS_REVIEW",
+            "MERGE_WHEN_READY",
+            "INSPECT_UNKNOWN",
+            "RESOLVE_BLOCKER",
+            "CONTINUE_DISPATCH",
+            "OPEN_GITHUB"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "omission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "reason"],
+      "properties": {
+        "class": { "type": "string" },
+        "reason": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "workObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "work_id",
+        "source_id",
+        "repository_id",
+        "resource_kind",
+        "remote_id",
+        "title",
+        "lifecycle",
+        "labels",
+        "urls",
+        "timestamps",
+        "projections",
+        "relationships",
+        "health",
+        "attention_rank",
+        "safe_next_action",
+        "authority",
+        "omissions"
+      ],
+      "properties": {
+        "work_id": { "type": "string", "minLength": 1 },
+        "source_id": {
+          "type": "string",
+          "enum": ["public-monitor", "private-local-adapter"]
+        },
+        "repository_id": { "type": "string", "minLength": 1 },
+        "resource_kind": { "$ref": "#/$defs/resourceKind" },
+        "remote_id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "lifecycle": { "type": "string" },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "assignees": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "urls": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "html": { "type": ["string", "null"] }
+          }
+        },
+        "timestamps": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "created_at": { "type": ["string", "null"] },
+            "updated_at": { "type": ["string", "null"] }
+          }
+        },
+        "projections": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stream", "dispatch", "review", "verification"],
+          "properties": {
+            "stream": { "type": "object" },
+            "dispatch": { "type": "object" },
+            "review": { "type": "object" },
+            "verification": { "type": "object" }
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "target_id", "evidence"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "blocks",
+                  "blocked_by",
+                  "duplicate_of",
+                  "supersedes",
+                  "superseded_by",
+                  "related"
+                ]
+              },
+              "target_id": { "type": "string" },
+              "evidence": { "type": "string" }
+            }
+          }
+        },
+        "health": { "$ref": "#/$defs/health" },
+        "attention_rank": { "type": "integer" },
+        "safe_next_action": { "$ref": "#/$defs/safeNextAction" },
+        "authority": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["domain", "observed_at", "age_s", "stale"],
+            "properties": {
+              "domain": { "type": "string" },
+              "observed_at": { "type": ["string", "null"] },
+              "age_s": { "type": ["number", "null"] },
+              "stale": { "type": "boolean" }
+            }
+          }
+        },
+        "omissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/omission" }
+        },
+        "flags": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

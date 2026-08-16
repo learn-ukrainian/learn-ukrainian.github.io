@@ -2028,19 +2028,29 @@ def fleet_reviews(
     kind: str | None = Query(default=None),
     state: str | None = Query(default=None),
     source: str | None = Query(default=None),
+    repository: str | None = Query(
+        default=None,
+        description="Exact repository identity (owner/name). Applied in SQL before count/pagination.",
+    ),
     pr: int | None = Query(default=None, ge=1),
     since: str | None = Query(default=None),
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
 ) -> dict[str, Any]:
-    """Formal-review jobs, attempts, and publication counts without sealed blobs."""
+    """Formal-review jobs, attempts, and publication counts without sealed blobs.
+
+    Optional ``repository`` is an exact match on ``formal_review_jobs.repository``
+    and participates in COUNT / LIMIT / OFFSET so foreign rows cannot consume the
+    page budget of a repository-scoped consumer (e.g. public Work projection).
+    """
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
         "kind": kind,
         "state": state,
         "source": source,
+        "repository": repository,
         "pr": pr,
         "since": since_value,
         "until": until_value,
@@ -2084,6 +2094,10 @@ def fleet_reviews(
             params.append(state)
         if source is not None and source != "formal-review":
             clauses.append("1 = 0")
+        if repository is not None:
+            # Exact match only — no LIKE / suffix / casefold — privacy boundary.
+            clauses.append("review.repository = ?")
+            params.append(repository)
         if pr is not None:
             clauses.append("review.pr_number = ?")
             params.append(pr)

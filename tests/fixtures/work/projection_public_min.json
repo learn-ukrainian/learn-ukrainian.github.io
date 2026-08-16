@@ -1,0 +1,102 @@
+{
+  "schema_version": "work-projection.v1",
+  "generated_at": "2026-08-16T00:00:00Z",
+  "cache_age_s": 0,
+  "budget": { "warm_target_s": 2, "timeout_s": 5 },
+  "sources": [
+    {
+      "source_id": "public-monitor",
+      "status": "ok",
+      "freshness": { "observed_at": "2026-08-16T00:00:00Z", "age_s": 0 },
+      "capabilities": { "mutation": false, "private_fields": false },
+      "truncation": { "issues": false, "prs": false, "limit": 1000 },
+      "sections": {
+        "issues": { "status": "ok", "count": 1 },
+        "prs": { "status": "ok", "count": 1 },
+        "streams": { "status": "ok", "count": 1 },
+        "delegate_active": { "status": "ok", "count": 0 },
+        "delegate_tasks": { "status": "ok", "count": 0 },
+        "fleet_reviews": { "status": "ok", "count": 0 }
+      }
+    },
+    {
+      "source_id": "private-local-adapter",
+      "status": "unavailable",
+      "freshness": { "observed_at": null, "age_s": null },
+      "capabilities": { "mutation": false, "private_fields": false },
+      "truncation": { "issues": false, "prs": false, "limit": 1000 },
+      "sections": {},
+      "reason": "not_configured"
+    }
+  ],
+  "items": [
+    {
+      "work_id": "wp1:public-monitor:learn-ukrainian/learn-ukrainian.github.io:issue:5921",
+      "source_id": "public-monitor",
+      "repository_id": "learn-ukrainian/learn-ukrainian.github.io",
+      "resource_kind": "issue",
+      "remote_id": "5921",
+      "title": "Work control plane public foundation",
+      "lifecycle": "open",
+      "labels": ["infrastructure"],
+      "assignees": [],
+      "urls": { "html": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5921" },
+      "timestamps": { "created_at": "2026-08-16T00:00:00Z", "updated_at": "2026-08-16T00:00:00Z" },
+      "projections": {
+        "stream": { "status": "orphan", "streams": [], "fresh": true, "authority_missing": false },
+        "dispatch": { "task_ids": [], "statuses": [], "unresolved": false },
+        "review": { "review_ids": [], "states": [], "sealed_verdict_available": false },
+        "verification": { "kind": "none", "state": "n/a" }
+      },
+      "relationships": [],
+      "health": "AT_RISK",
+      "attention_rank": 0,
+      "safe_next_action": { "code": "TRIAGE_ORPHAN", "reason_codes": ["stream_orphan"] },
+      "authority": [
+        { "domain": "github", "observed_at": "2026-08-16T00:00:00Z", "age_s": 0, "stale": false }
+      ],
+      "omissions": [],
+      "flags": { "has_blocker": false }
+    }
+  ],
+  "attention": [
+    {
+      "work_id": "wp1:public-monitor:learn-ukrainian/learn-ukrainian.github.io:issue:5921",
+      "attention_rank": 0,
+      "health": "AT_RISK",
+      "safe_next_action": { "code": "TRIAGE_ORPHAN", "reason_codes": ["stream_orphan"] },
+      "title": "Work control plane public foundation",
+      "resource_kind": "issue",
+      "repository_id": "learn-ukrainian/learn-ukrainian.github.io",
+      "remote_id": "5921"
+    }
+  ],
+  "denominator": {
+    "issues_open": 1,
+    "prs_open": 1,
+    "streams_complete": true,
+    "class4": {
+      "delegate_active": true,
+      "delegate_tasks": true,
+      "fleet_reviews": true
+    },
+    "omissions": [
+      { "class": "private_adapter", "reason": "not_configured", "count": 0 }
+    ]
+  },
+  "capabilities": {
+    "mutation": false,
+    "private_source": {
+      "source_id": "private-local-adapter",
+      "available": false,
+      "schema_version": "work-projection.v1",
+      "schema_digest_sha256": null,
+      "public_schema_commit": null,
+      "endpoint": null,
+      "capabilities": [],
+      "redaction": "allowlist_v1",
+      "reason_if_unavailable": "not_configured"
+    }
+  },
+  "foundation_status": "FOUNDATION_COMPLETE"
+}

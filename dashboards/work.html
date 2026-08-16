@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work - ukraine-ops</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/monitor.css">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+button, input, select { font: inherit; }
+.topbar { display: flex; align-items: center; gap: 16px; padding: 15px 24px; position: sticky; top: 0; z-index: 10; }
+.brand { min-width: 200px; }
+.brand h1 { margin: 0; font-family: Charter, Georgia, serif; font-size: 25px; letter-spacing: -.02em; }
+.brand p { margin: 3px 0 0; color: var(--text3); font-size: 12px; }
+.spacer { flex: 1; }
+.refresh { appearance: none; background: var(--text); border: 1px solid var(--text); border-radius: 4px; color: var(--bg); cursor: pointer; font-weight: 700; padding: 8px 11px; }
+.refresh:hover, .refresh:focus-visible { background: var(--accent); border-color: var(--accent); }
+.refresh:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, .work-row:focus-visible, .cmd-item:focus-visible {
+  outline: 3px solid rgba(122, 28, 32, .28); outline-offset: 2px;
+}
+.wrap { max-width: 1480px; margin: 0 auto; padding: 24px 24px 64px; }
+.hero { border-bottom: 1px solid var(--text); display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .4fr); gap: 24px; padding: 4px 0 18px; }
+.eyebrow { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.hero h2 { font-family: Charter, Georgia, serif; font-size: clamp(28px, 4vw, 42px); font-weight: 700; letter-spacing: -.04em; line-height: 1; margin: 8px 0 10px; }
+.hero p { color: var(--text2); line-height: 1.5; margin: 0; max-width: 720px; }
+.signal-card { align-self: end; background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 14px 16px; }
+.signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 18px; margin-bottom: 4px; }
+.signal-card p { color: var(--text3); font-size: 12px; margin: 0; line-height: 1.4; }
+.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(5, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.field select, .field input { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; background: var(--bg); color: var(--text); }
+.filter-actions { align-self: end; display: flex; gap: 8px; }
+.layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr); }
+.panel { background: var(--bg2); border: 1px solid var(--border); min-width: 0; }
+.panel-head { align-items: baseline; border-bottom: 1px solid var(--border); display: flex; gap: 12px; justify-content: space-between; padding: 12px 14px; }
+.panel-head h3 { font-family: Charter, Georgia, serif; font-size: 18px; margin: 0; }
+.panel-head p { color: var(--text3); font-size: 11px; margin: 0; text-align: right; }
+.list { max-height: min(70vh, 760px); overflow: auto; }
+.work-row {
+  align-items: stretch; border-bottom: 1px solid rgba(212, 205, 184, .68); cursor: pointer;
+  display: grid; gap: 10px; grid-template-columns: 18px minmax(0, 1fr) auto; padding: 10px 12px;
+}
+.work-row:hover, .work-row[aria-selected="true"] { background: rgba(122, 28, 32, .04); }
+.work-row[aria-selected="true"] { box-shadow: inset 3px 0 0 var(--accent); }
+.rail { display: grid; gap: 3px; padding-top: 3px; }
+.rail i { border-radius: 1px; display: block; height: 10px; width: 4px; background: var(--gray); }
+.rail i.on { background: var(--green); }
+.rail i.risk { background: var(--yellow); }
+.rail i.off { background: var(--red); }
+.rail i.unk { background: var(--gray); }
+.rail i.tick { background: var(--blue); opacity: .85; }
+.row-main { min-width: 0; }
+.row-title { font-size: 13px; font-weight: 650; line-height: 1.3; overflow-wrap: anywhere; }
+.row-meta { color: var(--text3); display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; margin-top: 4px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+.pill { border: 1px solid var(--border); border-radius: 999px; color: var(--text2); display: inline-block; font-size: 10px; font-weight: 750; padding: 2px 6px; white-space: nowrap; }
+.pill.ON_TRACK { background: rgba(61, 107, 74, .12); border-color: rgba(61, 107, 74, .3); color: var(--green); }
+.pill.AT_RISK { background: rgba(168, 132, 43, .12); border-color: rgba(168, 132, 43, .3); color: var(--yellow); }
+.pill.OFF_TRACK { background: rgba(156, 40, 40, .11); border-color: rgba(156, 40, 40, .3); color: var(--red); }
+.pill.UNKNOWN { background: rgba(138, 131, 119, .12); border-color: rgba(138, 131, 119, .3); color: var(--gray); }
+.detail { padding: 14px 16px 18px; }
+.detail h4 { font-family: Charter, Georgia, serif; font-size: 20px; margin: 0 0 8px; overflow-wrap: anywhere; }
+.detail dl { display: grid; gap: 8px; margin: 12px 0 0; }
+.detail dt { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.detail dd { margin: 2px 0 0; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.empty, .error { color: var(--text3); font-size: 13px; line-height: 1.5; padding: 18px 14px; }
+.error { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); margin: 0 0 14px; }
+.source-strip { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 16px; }
+.source-card { background: var(--bg2); border: 1px solid var(--border); padding: 11px 12px; }
+.source-card strong { display: block; font-size: 13px; }
+.source-card span { color: var(--text3); display: block; font-size: 11px; margin-top: 4px; line-height: 1.35; }
+.kbd { border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 3px; color: var(--text2); font-size: 10px; padding: 1px 5px; }
+.cmd { display: none; position: fixed; inset: 0; z-index: 40; background: rgba(26, 26, 26, .28); align-items: flex-start; justify-content: center; padding: 12vh 16px 16px; }
+.cmd.open { display: flex; }
+.cmd-panel { background: var(--bg); border: 1px solid var(--border); box-shadow: 0 18px 48px rgba(26, 26, 26, .16); max-width: 520px; width: 100%; }
+.cmd-panel input { border: 0; border-bottom: 1px solid var(--border); font-size: 15px; padding: 14px 16px; width: 100%; background: transparent; color: var(--text); }
+.cmd-list { max-height: 320px; overflow: auto; }
+.cmd-item { border-bottom: 1px solid rgba(212, 205, 184, .5); cursor: pointer; display: block; padding: 10px 14px; text-align: left; width: 100%; background: transparent; border-left: 0; border-right: 0; border-top: 0; color: var(--text); }
+.cmd-item:hover, .cmd-item.active { background: rgba(122, 28, 32, .05); }
+.hidden { display: none !important; }
+.footnote { color: var(--text3); font-size: 11px; line-height: 1.5; margin-top: 18px; }
+@media (max-width: 960px) {
+  .layout, .hero, .source-strip, .filter-strip { grid-template-columns: 1fr; }
+  .filter-actions { justify-content: flex-start; }
+}
+@media (max-width: 420px) {
+  .wrap { padding: 16px 12px 48px; }
+  .topbar { flex-wrap: wrap; padding: 12px; }
+  .brand { min-width: 0; }
+  .work-row { grid-template-columns: 14px minmax(0, 1fr); }
+  .row-side { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <h1>Work</h1>
+    <p>Public attention projection · read-only</p>
+  </div>
+  <div class="spacer"></div>
+  <button class="refresh" type="button" id="btn-refresh">Refresh</button>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/fleet.html">Fleet</a>
+    <a class="active" href="/work.html">Work</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+    <a href="/docs">API</a>
+  </nav>
+</header>
+
+<main class="wrap" data-read-only="true" data-foundation-status="FOUNDATION_COMPLETE">
+  <section class="hero" aria-labelledby="work-title">
+    <div>
+      <div class="eyebrow">Evidence rail · public foundation</div>
+      <h2 id="work-title">What needs attention now.</h2>
+      <p>GitHub issues and PRs remain the source of truth. This surface projects open public work with stream membership, dispatch/review summaries, health, and a safe next action. The private source is an optional local adapter and stays unavailable until configured in the browser — never via the public server.</p>
+    </div>
+    <aside class="signal-card" aria-label="Foundation status">
+      <strong id="foundation-label">FOUNDATION_COMPLETE</strong>
+      <p id="foundation-copy">No mutations. No dispatch buttons. Private data is never fetched by this page from a public proxy.</p>
+    </aside>
+  </section>
+
+  <div id="error-banner" class="error hidden" role="status"></div>
+
+  <section class="source-strip" aria-label="Source freshness">
+    <article class="source-card" id="source-public">
+      <strong>public-monitor</strong>
+      <span id="source-public-meta">Loading…</span>
+    </article>
+    <article class="source-card" id="source-private">
+      <strong>private-local-adapter</strong>
+      <span id="source-private-meta">Checking capability…</span>
+    </article>
+  </section>
+
+  <section class="filter-strip" aria-label="Public-safe filters">
+    <div class="field">
+      <label for="filter-health">Health</label>
+      <select id="filter-health">
+        <option value="">All</option>
+        <option value="OFF_TRACK">OFF_TRACK</option>
+        <option value="AT_RISK">AT_RISK</option>
+        <option value="UNKNOWN">UNKNOWN</option>
+        <option value="ON_TRACK">ON_TRACK</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filter-kind">Kind</label>
+      <select id="filter-kind">
+        <option value="">All</option>
+        <option value="issue">issue</option>
+        <option value="pr">pr</option>
+        <option value="task">task</option>
+        <option value="review">review</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filter-lifecycle">Lifecycle</label>
+      <select id="filter-lifecycle">
+        <option value="">All</option>
+        <option value="open">open</option>
+        <option value="draft">draft</option>
+        <option value="running">running</option>
+        <option value="failed">failed</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filter-orphan">Orphan</label>
+      <select id="filter-orphan">
+        <option value="">All</option>
+        <option value="true">true</option>
+        <option value="false">false</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filter-repo">Repository</label>
+      <select id="filter-repo">
+        <option value="">All public</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="refresh" type="button" id="btn-apply" style="background:var(--bg2);color:var(--text);border-color:var(--border)">Apply</button>
+      <button class="refresh" type="button" id="btn-palette" style="background:var(--bg2);color:var(--text);border-color:var(--border)" title="Command palette (⌘K / Ctrl+K)">⌘K</button>
+    </div>
+  </section>
+
+  <section class="layout">
+    <article class="panel" aria-labelledby="attention-heading">
+      <div class="panel-head">
+        <h3 id="attention-heading">Attention</h3>
+        <p id="attention-meta">Deterministic rank · keyboard j/k · Enter peek</p>
+      </div>
+      <div id="attention-list" class="list" role="listbox" aria-label="Attention list" tabindex="0"></div>
+    </article>
+    <article class="panel" aria-labelledby="detail-heading">
+      <div class="panel-head">
+        <h3 id="detail-heading">Detail</h3>
+        <p>Authority · freshness · next action</p>
+      </div>
+      <div id="detail-panel" class="detail empty">Select a row to inspect ownership, evidence, and the safe next action.</div>
+    </article>
+  </section>
+
+  <p class="footnote"><strong>Keys:</strong> <span class="kbd">j</span>/<span class="kbd">k</span> move · <span class="kbd">Enter</span> open · <span class="kbd">Esc</span> clear · <span class="kbd">⌘K</span> palette. Saved-view URLs keep only public-safe enums and IDs — never free text or private endpoints.</p>
+</main>
+
+<div id="cmd" class="cmd" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+  <div class="cmd-panel">
+    <input id="cmd-input" type="text" placeholder="Filter by title or id (local only; not saved to URL)" autocomplete="off" />
+    <div id="cmd-list" class="cmd-list"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id']);
+  const state = {
+    projection: null,
+    itemsById: new Map(),
+    attention: [],
+    selectedId: null,
+    selectedIndex: -1,
+  };
+
+  const els = {
+    error: document.getElementById('error-banner'),
+    list: document.getElementById('attention-list'),
+    detail: document.getElementById('detail-panel'),
+    publicMeta: document.getElementById('source-public-meta'),
+    privateMeta: document.getElementById('source-private-meta'),
+    attentionMeta: document.getElementById('attention-meta'),
+    foundation: document.getElementById('foundation-label'),
+    health: document.getElementById('filter-health'),
+    kind: document.getElementById('filter-kind'),
+    lifecycle: document.getElementById('filter-lifecycle'),
+    orphan: document.getElementById('filter-orphan'),
+    repo: document.getElementById('filter-repo'),
+    cmd: document.getElementById('cmd'),
+    cmdInput: document.getElementById('cmd-input'),
+    cmdList: document.getElementById('cmd-list'),
+  };
+
+  function showError(msg) {
+    if (!msg) {
+      els.error.classList.add('hidden');
+      els.error.textContent = '';
+      return;
+    }
+    els.error.classList.remove('hidden');
+    els.error.textContent = msg;
+  }
+
+  function readFiltersFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const out = {};
+    for (const [key, value] of params.entries()) {
+      if (!ALLOWED_FILTER_KEYS.has(key)) continue;
+      if (!value || value.length > 64) continue;
+      out[key] = value;
+    }
+    return out;
+  }
+
+  function applyFiltersToControls(filters) {
+    els.health.value = filters.health || '';
+    els.kind.value = filters.kind || '';
+    els.lifecycle.value = filters.lifecycle || '';
+    els.orphan.value = filters.orphan || '';
+    els.repo.value = filters.repository_id || '';
+  }
+
+  function controlsToFilters() {
+    const filters = {};
+    if (els.health.value) filters.health = els.health.value;
+    if (els.kind.value) filters.kind = els.kind.value;
+    if (els.lifecycle.value) filters.lifecycle = els.lifecycle.value;
+    if (els.orphan.value) filters.orphan = els.orphan.value;
+    if (els.repo.value) filters.repository_id = els.repo.value;
+    return filters;
+  }
+
+  function writeFiltersToUrl(filters) {
+    const params = new URLSearchParams();
+    Object.keys(filters).sort().forEach((key) => {
+      if (!ALLOWED_FILTER_KEYS.has(key)) return;
+      const value = String(filters[key]);
+      if (!value || value.length > 64) return;
+      // Free text and private endpoint values are rejected client-side.
+      if (key === 'endpoint' || key === 'q' || key === 'private_endpoint') return;
+      params.set(key, value);
+    });
+    const qs = params.toString();
+    const next = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    window.history.replaceState({}, '', next);
+  }
+
+  function queryString(filters) {
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([k, v]) => params.set(k, v));
+    const qs = params.toString();
+    return qs ? `?${qs}` : '';
+  }
+
+  function railClasses(item) {
+    const health = item.health || 'UNKNOWN';
+    const stream = (item.projections && item.projections.stream) || {};
+    const dispatch = (item.projections && item.projections.dispatch) || {};
+    const review = (item.projections && item.projections.review) || {};
+    const verification = (item.projections && item.projections.verification) || {};
+    const healthClass = health === 'ON_TRACK' ? 'on' : health === 'AT_RISK' ? 'risk' : health === 'OFF_TRACK' ? 'off' : 'unk';
+    const streamTick = stream.status && stream.status !== 'unknown' && stream.status !== 'n/a' ? 'tick' : 'unk';
+    const dispatchTick = (dispatch.task_ids && dispatch.task_ids.length) ? 'tick' : 'unk';
+    const reviewTick = (review.review_ids && review.review_ids.length) || review.review_decision ? 'tick' : 'unk';
+    const verifyTick = verification.ci_state === 'passing' || verification.state === 'passing' ? 'on'
+      : verification.ci_state === 'failing' ? 'off'
+      : verification.ci_state === 'pending' ? 'risk' : 'unk';
+    return [healthClass, streamTick, dispatchTick, reviewTick, verifyTick];
+  }
+
+  function renderList() {
+    const attention = state.attention;
+    if (!attention.length) {
+      els.list.innerHTML = '<div class="empty">No attention items for the current public-safe filters. Sources may be empty or degraded — check the source strip.</div>';
+      return;
+    }
+    els.list.innerHTML = attention.map((row, index) => {
+      const item = state.itemsById.get(row.work_id) || row;
+      const rail = railClasses(item);
+      const selected = row.work_id === state.selectedId;
+      return `<div class="work-row" role="option" tabindex="-1" data-id="${escapeAttr(row.work_id)}" data-index="${index}" aria-selected="${selected ? 'true' : 'false'}">
+        <div class="rail" aria-hidden="true">${rail.map((c) => `<i class="${c}"></i>`).join('')}</div>
+        <div class="row-main">
+          <div class="row-title">${escapeHtml(item.title || row.title || row.work_id)}</div>
+          <div class="row-meta">
+            <span class="mono">${escapeHtml(item.repository_id || row.repository_id || '')}</span>
+            <span class="pill">${escapeHtml(item.resource_kind || row.resource_kind || '')} #${escapeHtml(String(item.remote_id || row.remote_id || ''))}</span>
+            <span class="pill ${escapeAttr(item.health || row.health || 'UNKNOWN')}">${escapeHtml(item.health || row.health || 'UNKNOWN')}</span>
+          </div>
+        </div>
+        <div class="row-side mono">${escapeHtml((item.safe_next_action && item.safe_next_action.code) || (row.safe_next_action && row.safe_next_action.code) || '')}</div>
+      </div>`;
+    }).join('');
+    els.list.querySelectorAll('.work-row').forEach((node) => {
+      node.addEventListener('click', () => selectIndex(Number(node.dataset.index)));
+    });
+  }
+
+  function renderDetail(item) {
+    if (!item) {
+      els.detail.className = 'detail empty';
+      els.detail.textContent = 'Select a row to inspect ownership, evidence, and the safe next action.';
+      return;
+    }
+    const stream = item.projections.stream || {};
+    const dispatch = item.projections.dispatch || {};
+    const review = item.projections.review || {};
+    const verification = item.projections.verification || {};
+    const action = item.safe_next_action || {};
+    const authorities = (item.authority || []).map((a) =>
+      `${a.domain}: age=${a.age_s == null ? '—' : a.age_s + 's'}${a.stale ? ' stale' : ''}`
+    ).join(' · ');
+    const rels = (item.relationships || []).map((r) => `${r.type} → ${r.target_id}`).join('; ') || 'none';
+    els.detail.className = 'detail';
+    els.detail.innerHTML = `
+      <h4>${escapeHtml(item.title || item.work_id)}</h4>
+      <div class="row-meta">
+        <span class="pill ${escapeAttr(item.health)}">${escapeHtml(item.health)}</span>
+        <span class="pill">${escapeHtml(item.resource_kind)} #${escapeHtml(item.remote_id)}</span>
+        <span class="mono">${escapeHtml(item.repository_id)}</span>
+      </div>
+      <dl>
+        <div><dt>Work id</dt><dd class="mono">${escapeHtml(item.work_id)}</dd></div>
+        <div><dt>Lifecycle</dt><dd>${escapeHtml(item.lifecycle || '—')}</dd></div>
+        <div><dt>Stream</dt><dd>${escapeHtml(stream.status || '—')}${(stream.streams && stream.streams.length) ? ' · ' + escapeHtml(stream.streams.join(', ')) : ''}</dd></div>
+        <div><dt>Dispatch</dt><dd>${escapeHtml((dispatch.task_ids || []).join(', ') || 'none')} ${(dispatch.statuses || []).map(escapeHtml).join(', ')}</dd></div>
+        <div><dt>Review</dt><dd>${escapeHtml(review.review_decision || (review.states || []).join(', ') || 'none')}${review.sealed_verdict_available ? ' · sealed available' : ''}</dd></div>
+        <div><dt>Verification</dt><dd>${escapeHtml(verification.ci_state || verification.state || '—')}</dd></div>
+        <div><dt>Relationships</dt><dd class="mono">${escapeHtml(rels)}</dd></div>
+        <div><dt>Authority / freshness</dt><dd>${escapeHtml(authorities || '—')}</dd></div>
+        <div><dt>Safe next action</dt><dd><strong>${escapeHtml(action.code || 'NONE')}</strong> · ${(action.reason_codes || []).map(escapeHtml).join(', ')}</dd></div>
+        <div><dt>URL</dt><dd>${item.urls && item.urls.html ? `<a href="${escapeAttr(item.urls.html)}" target="_blank" rel="noopener">${escapeHtml(item.urls.html)}</a>` : '—'}</dd></div>
+      </dl>`;
+  }
+
+  function selectIndex(index) {
+    if (!state.attention.length) return;
+    const clamped = Math.max(0, Math.min(state.attention.length - 1, index));
+    state.selectedIndex = clamped;
+    state.selectedId = state.attention[clamped].work_id;
+    renderList();
+    renderDetail(state.itemsById.get(state.selectedId));
+    const node = els.list.querySelector(`.work-row[data-index="${clamped}"]`);
+    if (node) node.focus({ preventScroll: false });
+  }
+
+  function renderSources(projection) {
+    const sources = projection.sources || [];
+    const pub = sources.find((s) => s.source_id === 'public-monitor') || {};
+    const priv = sources.find((s) => s.source_id === 'private-local-adapter') || {};
+    const den = projection.denominator || {};
+    els.publicMeta.textContent = [
+      `status=${pub.status || '—'}`,
+      `cache_age_s=${projection.cache_age_s ?? '—'}`,
+      `issues=${den.issues_open ?? '—'}`,
+      `prs=${den.prs_open ?? '—'}`,
+      `streams=${den.streams_complete ? 'complete' : 'incomplete'}`,
+      `class4 d1=${den.class4 && den.class4.delegate_active} d2=${den.class4 && den.class4.delegate_tasks} r1=${den.class4 && den.class4.fleet_reviews}`,
+    ].join(' · ');
+    const cap = (projection.capabilities && projection.capabilities.private_source) || {};
+    els.privateMeta.textContent = priv.available
+      ? `status=${priv.status}`
+      : `unavailable · ${cap.reason_if_unavailable || priv.reason || 'not_configured'} (public server never proxies private data)`;
+    els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
+    els.attentionMeta.textContent = `${(projection.attention || []).length} ranked · cache ${projection.cache_age_s ?? 0}s`;
+
+    const repos = new Set();
+    (projection.items || []).forEach((item) => {
+      if (item.repository_id) repos.add(item.repository_id);
+    });
+    const current = els.repo.value;
+    els.repo.innerHTML = '<option value="">All public</option>' +
+      Array.from(repos).sort().map((r) => `<option value="${escapeAttr(r)}">${escapeHtml(r)}</option>`).join('');
+    if (current) els.repo.value = current;
+  }
+
+  async function loadProjection(opts) {
+    const filters = controlsToFilters();
+    writeFiltersToUrl(filters);
+    showError('');
+    const qs = queryString(filters);
+    const finalUrl = `/api/work/v1/projection${qs}${opts && opts.fresh ? (qs ? '&' : '?') + 'fresh=true' : ''}`;
+    try {
+      const res = await fetch(finalUrl, { headers: { Accept: 'application/json' } });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body.detail && body.detail.message) || body.detail || `HTTP ${res.status}`);
+      }
+      const projection = await res.json();
+      state.projection = projection;
+      state.itemsById = new Map((projection.items || []).map((i) => [i.work_id, i]));
+      state.attention = projection.attention || [];
+      renderSources(projection);
+      if (state.selectedId && state.itemsById.has(state.selectedId)) {
+        state.selectedIndex = state.attention.findIndex((a) => a.work_id === state.selectedId);
+      } else if (state.attention.length) {
+        state.selectedIndex = 0;
+        state.selectedId = state.attention[0].work_id;
+      } else {
+        state.selectedIndex = -1;
+        state.selectedId = null;
+      }
+      renderList();
+      renderDetail(state.selectedId ? state.itemsById.get(state.selectedId) : null);
+    } catch (err) {
+      showError(`Work projection unavailable: ${err.message || err}`);
+      els.list.innerHTML = '<div class="empty">Projection failed. Public sources may still be healthy independently — retry refresh.</div>';
+    }
+  }
+
+  function openPalette() {
+    els.cmd.hidden = false;
+    els.cmd.classList.add('open');
+    els.cmdInput.value = '';
+    renderPalette('');
+    els.cmdInput.focus();
+  }
+
+  function closePalette() {
+    els.cmd.classList.remove('open');
+    els.cmd.hidden = true;
+    els.list.focus();
+  }
+
+  function renderPalette(q) {
+    const needle = (q || '').toLowerCase();
+    const rows = state.attention.filter((row) => {
+      const item = state.itemsById.get(row.work_id) || row;
+      if (!needle) return true;
+      return String(item.title || '').toLowerCase().includes(needle)
+        || String(item.work_id || '').toLowerCase().includes(needle)
+        || String(item.remote_id || '').includes(needle);
+    }).slice(0, 30);
+    els.cmdList.innerHTML = rows.map((row, i) => {
+      const item = state.itemsById.get(row.work_id) || row;
+      return `<button type="button" class="cmd-item${i === 0 ? ' active' : ''}" data-id="${escapeAttr(row.work_id)}">${escapeHtml(item.title || row.work_id)} <span class="mono">${escapeHtml(item.resource_kind)} #${escapeHtml(String(item.remote_id))}</span></button>`;
+    }).join('') || '<div class="empty">No matches</div>';
+    els.cmdList.querySelectorAll('.cmd-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const index = state.attention.findIndex((a) => a.work_id === id);
+        closePalette();
+        if (index >= 0) selectIndex(index);
+      });
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/'/g, '&#39;');
+  }
+
+  document.getElementById('btn-refresh').addEventListener('click', () => loadProjection({ fresh: true }));
+  document.getElementById('btn-apply').addEventListener('click', () => loadProjection());
+  document.getElementById('btn-palette').addEventListener('click', openPalette);
+  els.cmdInput.addEventListener('input', () => renderPalette(els.cmdInput.value));
+  els.cmd.addEventListener('click', (e) => { if (e.target === els.cmd) closePalette(); });
+
+  document.addEventListener('keydown', (e) => {
+    const inField = /^(INPUT|SELECT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (els.cmd.classList.contains('open')) closePalette();
+      else openPalette();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (els.cmd.classList.contains('open')) {
+        e.preventDefault();
+        closePalette();
+        return;
+      }
+      state.selectedId = null;
+      state.selectedIndex = -1;
+      renderList();
+      renderDetail(null);
+      return;
+    }
+    if (els.cmd.classList.contains('open')) return;
+    if (inField) return;
+    if (e.key === 'j' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectIndex((state.selectedIndex < 0 ? 0 : state.selectedIndex + 1));
+    } else if (e.key === 'k' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectIndex((state.selectedIndex < 0 ? 0 : state.selectedIndex - 1));
+    } else if (e.key === 'Enter' && state.selectedIndex >= 0) {
+      e.preventDefault();
+      selectIndex(state.selectedIndex);
+    }
+  });
+
+  applyFiltersToControls(readFiltersFromUrl());
+  loadProjection();
+})();
+</script>
+</body>
+</html>
