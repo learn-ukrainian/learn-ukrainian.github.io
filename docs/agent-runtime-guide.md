@@ -106,9 +106,9 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
   `tool_config={"acpx_shadow": True, "target_agent": "grok"}`.
-  Fixed effective model/effort `grok-4.5` / `high`. Custom agent command
+  Fixed effective model/effort `grok-4.6` / `high`. Custom agent command
   (never built-in `grok-build`): absolute Grok binary +
-  `agent --model grok-4.5 --reasoning-effort high --agent-profile
+  `agent --model grok-4.6 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`. The project-owned
   profile is digest-checked before every spawn and removes write, shell,
   subagent, memory, web, MCP, and LSP tools at the Grok server boundary.

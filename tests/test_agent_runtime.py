@@ -411,7 +411,7 @@ def test_kimi_entry_is_well_formed():
 def test_grok_build_entry_is_well_formed():
     entry = get_agent_entry("grok-build")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-    assert entry["default_model"] == "grok-4.5"
+    assert entry["default_model"] == "grok-4.6"
     assert entry["default_effort"] == "high"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "never"
@@ -539,7 +539,7 @@ def test_load_adapter_grok_native_seat():
     adapter = _load_adapter("grok")
     assert adapter.__class__.__name__ == "GrokBuildAdapter"
     assert adapter.name == "grok"
-    assert adapter.default_model == "grok-4.5"
+    assert adapter.default_model == "grok-4.6"
 
 
 def test_load_adapter_glm():

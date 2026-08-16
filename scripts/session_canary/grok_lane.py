@@ -33,7 +33,7 @@ Usage
   .venv/bin/python -m scripts.session_canary.grok_lane questions
   .venv/bin/python -m scripts.session_canary.grok_lane score \\
       --answers .claude/atlas-epic/canary/answers.json \\
-      --context-tokens 250000 --model grok-4.5
+      --context-tokens 250000 --model grok-4.6
   .venv/bin/python -m scripts.session_canary.grok_lane protocol --epic atlas
   .venv/bin/python -m scripts.session_canary.grok_lane status --epic atlas
 """
@@ -799,7 +799,7 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
 .venv/bin/python -m scripts.session_canary.grok_lane score \\
   --epic {epic} \\
   --answers {canary}/answers.json \\
-  --context-tokens <N> --model grok-4.5
+  --context-tokens <N> --model grok-4.6
 ```
 4. rc 0 = PASS → auto diary stamp with canary line.
    rc 2 = FAIL-HANDOFF → auto **STATE AT HANDBACK** block; close stream; `/quit`.
@@ -918,7 +918,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--out-dir", default=None)
     score.add_argument("--answers", required=True, help="JSON map id→answer from memory")
     score.add_argument("--context-tokens", type=int, default=0)
-    score.add_argument("--model", default="grok-4.5")
+    score.add_argument("--model", default="grok-4.6")
     score.add_argument("--pass-ratio", type=float, default=DEFAULT_PASS_RATIO, help="Default 0.8 (8/10)")
     score.add_argument("--threshold", type=float, default=DEFAULT_SIM_THRESHOLD, help="Per-anchor sim threshold")
     score.add_argument("--handoff", default=None, help="Dual-write diary path override")

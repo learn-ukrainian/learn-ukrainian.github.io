@@ -56,7 +56,7 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
         ("codex", "gpt-5.6-terra", "gpt-5.6-terra"),
         ("codex", "gpt-5.6-sol", "openai_frontier"),
         ("glm", "glm-5.3", "glm-5.3"),
-        ("grok", "grok-4.5", "grok-4.5"),
+        ("grok", "grok-4.6", "grok-4.6"),
     ],
 )
 def test_explicit_model_selects_every_formally_eligible_native_route(
@@ -80,8 +80,8 @@ def test_model_only_pin_ignores_non_formal_fallback_with_same_model():
         == "claude-fable-5"
     )
     assert (
-        resolve_requested_review_candidate("auto", "grok-4.5", REVIEW_CANDIDATES)
-        == "grok-4.5"
+        resolve_requested_review_candidate("auto", "grok-4.6", REVIEW_CANDIDATES)
+        == "grok-4.6"
     )
 
 
@@ -126,7 +126,7 @@ def test_review_pr_dry_run_emits_model_and_effort(capsys):
         background = False
         no_timeout = False
         initiator = "grok/orchestrator"
-        author_model = "grok-4.5"
+        author_model = "grok-4.6"
         author_family = "xai"
 
     rc = handle_review_pr(Args())

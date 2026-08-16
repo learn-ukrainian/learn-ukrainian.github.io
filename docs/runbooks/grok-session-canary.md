@@ -135,7 +135,7 @@ Default `85` leaves little runway for a deliberate close after the banner.
   --epic atlas \
   --answers .claude/atlas-epic/canary/answers.json \
   --context-tokens 250000 \
-  --model grok-4.5
+  --model grok-4.6
 
 .venv/bin/python -m scripts.session_canary.grok_lane status --epic atlas
 .venv/bin/python -m scripts.session_canary.grok_lane protocol --epic atlas

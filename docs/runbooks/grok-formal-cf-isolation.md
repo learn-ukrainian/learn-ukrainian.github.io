@@ -12,8 +12,8 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 | Sealed evidence | Parent-owned MCP plus hash-pinned `acpx-grok-sealed-review.md` | Only the sealed review tools are exposed |
 | Sealed snapshot cwd + OS sandbox | Active through ACPX confinement | No primary-checkout or general filesystem access |
 | `review-pr --reviewer grok` | Implemented | Same reservation, authority, and publication path |
-| Registry `formal_review_eligible` | `true` for native `grok-4.5` | Catalog endpoint is authoritative |
-| Cursor explicit `grok-4.5` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
+| Registry `formal_review_eligible` | `true` for native `grok-4.6` | Catalog endpoint is authoritative |
+| Cursor explicit `grok-4.6` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
 
 **Proof command:**
 
@@ -29,15 +29,15 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 The native Grok ACP route is eligible only when the runtime selects its
 hash-pinned sealed-review profile and validates the parent-owned MCP config.
 The ordinary no-tool profile remains unchanged for non-review conversations.
-Cursor-pinned `grok-4.5` remains a native-dark implementation/advisory
+Cursor-pinned `grok-4.6` remains a native-dark implementation/advisory
 fallback and is not an interchangeable formal-review route.
 
 ## Live lane (non-formal)
 
-- `delegate.py --agent grok --model grok-4.5`
+- `delegate.py --agent grok --model grok-4.6`
 - `ai_agent_bridge ask-grok` / `ask-grok-build`
 - Native Grok Build TUI / CLI cold-start
-- Cursor **explicit** `--model grok-4.5` if native path dark (never Cursor `auto` as identity)
+- Cursor **explicit** `--model grok-4.6` if native path dark (never Cursor `auto` as identity)
 - **Orchestrator seat** (fleet-comms): same pin; requests CF via `review-pr`, does not self-seal
 
 ## Substitute formal CF
@@ -46,7 +46,7 @@ fallback and is not an interchangeable formal-review route.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # LOCAL-ONLY
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer grok    # grok-4.5 @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer grok    # grok-4.6 @ high
 ```
 
 ## Invariants

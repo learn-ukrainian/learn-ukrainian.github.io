@@ -1222,7 +1222,7 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
 @pytest.mark.parametrize(
     ("first_provider", "second_provider", "first_model", "second_model"),
     (
-        ("grok", "codex", "grok-4.5", "gpt-5.6-sol"),
+        ("grok", "codex", "grok-4.6", "gpt-5.6-sol"),
         ("claude", "gemini", "claude-fable-5", "gemini-3.1-pro-high"),
     ),
 )

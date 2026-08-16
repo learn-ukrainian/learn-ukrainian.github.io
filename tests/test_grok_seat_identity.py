@@ -125,8 +125,8 @@ def test_historical_grok_build_transport_string_frozen_in_judge_material():
 
     cfg = layerb_judge_bridge.BridgeConfig(
         family="grok",
-        model="grok-4.5",
-        model_version="grok-4.5",
+        model="grok-4.6",
+        model_version="grok-4.6",
         timeout_seconds=120.0,
     )
     assert cfg.transport == "grok-build-subscription-traced.v1"
@@ -149,8 +149,8 @@ def test_no_live_judge_path_selects_hermes_grok_as_default():
     # Building a grok-family judge config must not require hermes.
     cfg = BridgeConfig(
         family="grok",
-        model="grok-4.5",
-        model_version="grok-4.5",
+        model="grok-4.6",
+        model_version="grok-4.6",
         timeout_seconds=60.0,
     )
     assert "hermes" not in cfg.transport

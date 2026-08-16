@@ -524,7 +524,7 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
                 "ts": _iso(today - timedelta(minutes=2)),
                 "agent": "acpx-grok-shadow",
                 "entrypoint": "runner",
-                "model": "grok-4.5",
+                "model": "grok-4.6",
                 "duration_s": 6.25,
                 "outcome": "ok",
                 "task_id": "must-not-leak",

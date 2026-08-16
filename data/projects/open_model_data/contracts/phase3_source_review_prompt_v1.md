@@ -3,7 +3,7 @@
 You occupy only the Phase 3 v2.1 functional role `ukrainian_source_reviewer`.
 
 Canonical task identity: `phase3-v2-1-ukrainian-source-review`.
-Exact model/family/harness: `grok-4.5` / `xai` / `opencode`.
+Exact model/family/harness: `grok-4.6` / `xai` / `opencode`.
 Task family: `open-model-data-correction-factory`.
 Track: `open-model-data`.
 

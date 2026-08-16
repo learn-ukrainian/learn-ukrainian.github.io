@@ -1265,7 +1265,7 @@ def _build_grok(
 def test_grok_adapter_identity_is_read_only_only():
     adapter = AcpxGrokShadowAdapter()
     assert adapter.name == "acpx-grok-shadow"
-    assert adapter.default_model == "grok-4.5"
+    assert adapter.default_model == "grok-4.6"
     assert adapter.supported_modes == frozenset({"read-only"})
 
 
@@ -1480,7 +1480,7 @@ def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch)
             shlex.quote(str(grok)),
             "agent",
             "--model",
-            "grok-4.5",
+            "grok-4.6",
             "--reasoning-effort",
             "high",
             "--agent-profile",
@@ -1496,7 +1496,7 @@ def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch)
     assert tokens[1:] == [
         "agent",
         "--model",
-        "grok-4.5",
+        "grok-4.6",
         "--reasoning-effort",
         "high",
         "--agent-profile",
@@ -1549,7 +1549,7 @@ def test_grok_sealed_review_selects_hash_pinned_tool_profile(tmp_path, monkeypat
         str(grok),
         "agent",
         "--model",
-        "grok-4.5",
+        "grok-4.6",
         "--reasoning-effort",
         "high",
         "--agent-profile",
@@ -1577,9 +1577,9 @@ def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, 
     _stub_grok(monkeypatch, tmp_path)
     adapter = AcpxGrokShadowAdapter()
 
-    for model, effort in ((None, None), ("grok-4.5", None), (None, "high"), ("grok-4.5", "high")):
+    for model, effort in ((None, None), ("grok-4.6", None), (None, "high"), ("grok-4.6", "high")):
         plan = _build_grok(adapter, cwd=tmp_path, model=model, effort=effort)
-        assert plan.metadata["model"] == "grok-4.5"
+        assert plan.metadata["model"] == "grok-4.6"
         assert plan.metadata["effort"] == "high"
         assert plan.metadata["target_agent"] == "grok"
         assert plan.metadata["grok_cli_version"] == "0.2.118"
@@ -2090,7 +2090,7 @@ def test_kimicc_rejects_a_caller_model_other_than_its_exact_pin(tmp_path, monkey
 def test_supported_participant_registry_has_only_fixed_direct_seats():
     assert ACPX_SUPPORTED_PARTICIPANTS == {
         "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
-        "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": "grok-4.5"},
+        "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": "grok-4.6"},
         "claude": {
             "seat": "acpx-claude-shadow",
             "agent": "claude",
@@ -2506,7 +2506,7 @@ def test_build_grok_agent_command_quotes_absolute_paths_with_spaces(tmp_path):
     assert tokens[1:] == [
         "agent",
         "--model",
-        "grok-4.5",
+        "grok-4.6",
         "--reasoning-effort",
         "high",
         "--agent-profile",

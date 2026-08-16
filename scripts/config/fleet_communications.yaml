@@ -24,7 +24,7 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #   codex → gpt-5.6-terra @ high · claude → claude-sonnet-5 @ high · glm → glm-5.3 @ high (advisory max)
 #   claude formal pins also: claude-fable-5, claude-opus-5, claude-opus-4-8
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
-#   grok dark → Cursor explicit grok-4.5
+#   grok dark → Cursor explicit grok-4.6 (rotated from 4.5, operator order 2026-08-16, #6865)
 #   agy → gemini-3.7-flash-high @ high (orchestrator seat; text-only ACP wrapper is not a formal-review route)
 # Automatic authority Sol/Fable selection stays on the critical ladder.
 # An explicit operator pin may select either model at another risk while every

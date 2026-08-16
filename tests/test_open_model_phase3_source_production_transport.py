@@ -507,13 +507,13 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)
     assert result["completed"] == 1
     assert commands[-1][:2] == ["opencode", "run"]
-    assert "xai/grok-4.5" in commands[-1] and commands[-1][4:6] == ["--variant", "high"]
+    assert "xai/grok-4.6" in commands[-1] and commands[-1][4:6] == ["--variant", "high"]
     assert "ask-opencode" not in commands[-1]
 
 
 def test_opencode_prelude_extracts_one_exact_trailing_response() -> None:
     response = {"schema_version": "fixture", "reviews": []}
-    payload = b"OpenCode UI prelude\nmodel: xai/grok-4.5\n" + transport.canonical_json(response).encode()
+    payload = b"OpenCode UI prelude\nmodel: xai/grok-4.6\n" + transport.canonical_json(response).encode()
     assert json.loads(transport._trailing_json_response(payload, "review")) == response
     with pytest.raises(transport.SourceProductionError, match="unambiguous trailing JSON"):
         transport._trailing_json_response(payload + b"\ntrailing prose", "review")

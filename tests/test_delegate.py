@@ -1927,7 +1927,7 @@ def _finalize_mock_result():
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "grok-4.5",
+            "model": "grok-4.6",
             "effort": "high",
             "cli_version": "0.2.111",
         },

@@ -18,7 +18,7 @@ versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 YAML edits** — this module must not hard-code a second ladder. As of the
 fleet-comms practical-CF pin (#5512): ``critical`` keeps authority-first
 (Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Terra, Sonnet 5,
-Gemini 3.6 Flash, Grok native + Cursor-explicit ``grok-4.5`` fallback, …).
+Gemini 3.6 Flash, Grok native + Cursor-explicit ``grok-4.6`` fallback, …).
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
 """
@@ -276,8 +276,8 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 TERRA = REVIEW_CANDIDATES["gpt-5.6-terra"]
-GROK_4_5 = REVIEW_CANDIDATES["grok-4.5"]
-GROK_4_5_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.5-cursor-fallback"]
+GROK_4_6 = REVIEW_CANDIDATES["grok-4.6"]
+GROK_4_6_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.6-cursor-fallback"]
 SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]
 GEMINI_3_7_FLASH = REVIEW_CANDIDATES["gemini-3.7-flash"]
 GEMINI_3_6_FLASH = REVIEW_CANDIDATES["gemini-3.6-flash"]

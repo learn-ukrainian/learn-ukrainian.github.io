@@ -658,7 +658,7 @@ def test_shipped_config_declares_no_grok_chain():
     for lane in ("grok", "grok-build", "grok-hermes"):
         chain = load_failover_chain(
             lane,
-            effective_model="grok-4.5",
+            effective_model="grok-4.6",
             path=default_failover_config_path(),
         )
         assert chain is None, (

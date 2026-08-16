@@ -89,15 +89,15 @@ ROLE_TASKS = {
 
 ROLE_EXECUTION = {
     "scope_circularity_critic": {"exact_model": "composer-2.5", "model_family": "cursor", "harness": "cursor", "capability_class": "contract_scope_review"},
-    "ukrainian_source_reviewer": {"exact_model": "grok-4.5", "model_family": "xai", "harness": "opencode", "capability_class": "ukrainian_decision"},
+    "ukrainian_source_reviewer": {"exact_model": "grok-4.6", "model_family": "xai", "harness": "opencode", "capability_class": "ukrainian_decision"},
     "rule_author_extractor": {"exact_model": "gemini-3.6-flash-high", "model_family": "gemini", "harness": "agy", "capability_class": "ukrainian_rule_proposal"},
     "heldout_steward": {"exact_model": "phase3-heldout-partition-v1", "model_family": "deterministic", "harness": "local-python", "capability_class": "heldout_custody"},
     "heldout_label_reviewer": {"exact_model": "gpt-5.6-sol", "model_family": "openai", "harness": "codex", "capability_class": "ukrainian_decision"},
     "scorer": {"exact_model": "phase3-evaluation-scorer-v1", "model_family": "deterministic", "harness": "local-python", "capability_class": "evaluation_scoring"},
     "outsider_reproducer": {"exact_model": "glm-5", "model_family": "zhipu", "harness": "opencode", "capability_class": "independent_reproduction"},
-    "cross_family_code_infra_reviewer": {"exact_model": "grok-4.5", "model_family": "xai", "harness": "opencode", "capability_class": "cross_family_code_review"},
+    "cross_family_code_infra_reviewer": {"exact_model": "grok-4.6", "model_family": "xai", "harness": "opencode", "capability_class": "cross_family_code_review"},
     "disposition_auditor": {"exact_model": "claude-opus-4-6", "model_family": "anthropic", "harness": "claude-code", "capability_class": "ukrainian_decision"},
-    "textbook_nonhit_auditor": {"exact_model": "grok-4.5", "model_family": "xai", "harness": "opencode", "capability_class": "ukrainian_decision"},
+    "textbook_nonhit_auditor": {"exact_model": "grok-4.6", "model_family": "xai", "harness": "opencode", "capability_class": "ukrainian_decision"},
 }
 
 ROLE_PERMISSIONS = {

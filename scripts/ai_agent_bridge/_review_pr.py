@@ -47,7 +47,7 @@ EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
     REVIEWER_CLAUDE: "claude-sonnet-5",
     REVIEWER_AGY: "gemini-3.7-flash",
     REVIEWER_GLM: "glm-5.3",
-    REVIEWER_GROK: "grok-4.5",
+    REVIEWER_GROK: "grok-4.6",
     REVIEWER_KIMI: "kimi-k3",
     "kimicc": "kimi-k3",
 }
@@ -58,7 +58,7 @@ FORMAL_CF_MODEL: dict[str, str] = {
     REVIEWER_CLAUDE: "claude-sonnet-5",
     REVIEWER_AGY: "gemini-3.7-flash-high",
     REVIEWER_GLM: "glm-5.3",
-    REVIEWER_GROK: "grok-4.5",
+    REVIEWER_GROK: "grok-4.6",
     REVIEWER_KIMI: "kimi-code/k3",
     "kimicc": "kimi-code/k3",
 }

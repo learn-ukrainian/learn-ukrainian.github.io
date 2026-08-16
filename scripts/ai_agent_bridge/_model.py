@@ -13,7 +13,7 @@ from agent_runtime.adapters.kimi import KimiAdapter, resolve_kimi_model
 
 from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, AGY_CLI
 
-GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
+GROK_BUILD_DEFAULT_MODEL = "grok-4.6"  # operator order 2026-08-16 (#6865)
 GROK_BUILD_DEFAULT_EFFORT = "high"
 
 DEFAULT_CHECK_MODEL_TIMEOUT = int(os.environ.get("AB_CHECK_MODEL_TIMEOUT", "90"))

@@ -20,7 +20,7 @@ def _grok_bridge_message() -> dict[str, str]:
         "to": "grok",
         "type": "query",
         "content": "answer this",
-        "data": '{"to_model": "grok-4.5"}',
+        "data": '{"to_model": "grok-4.6"}',
         "timestamp": "now",
     }
 
@@ -46,7 +46,7 @@ def _run_grok_turn_with_events(monkeypatch, tmp_path, events: list[dict] | None)
             ok=True,
             response="captured preamble",
             session_id="session-5891",
-            model="grok-4.5",
+            model="grok-4.6",
         ),
     )
     monkeypatch.setattr(_grok_build, "send_message", lambda **kwargs: sent.append(kwargs) or 8)
@@ -122,7 +122,7 @@ def test_ask_grok_build_parser_accepts_first_class_args():
             "--from-model",
             "gpt-5.5",
             "--to-model",
-            "grok-4.5",
+            "grok-4.6",
             "--no-timeout",
             "--review",
         ]
@@ -133,7 +133,7 @@ def test_ask_grok_build_parser_accepts_first_class_args():
     assert args.new_session is True
     assert args.from_llm == "codex"
     assert args.from_model == "gpt-5.5"
-    assert args.to_model == "grok-4.5"
+    assert args.to_model == "grok-4.6"
     assert args.no_timeout is True
     assert args.review is True
 
@@ -165,7 +165,7 @@ def test_process_grok_build_invokes_native_registry_key(monkeypatch):
             "to": "grok-build",
             "type": "query",
             "content": "answer this",
-            "data": '{"to_model": "grok-4.5"}',
+            "data": '{"to_model": "grok-4.6"}',
             "timestamp": "now",
         },
     )
@@ -175,7 +175,7 @@ def test_process_grok_build_invokes_native_registry_key(monkeypatch):
 
     def fake_invoke(*args, **kwargs):
         invoke_calls.append((args, kwargs))
-        return SimpleNamespace(ok=True, response="native reply", session_id="sid-1", model="grok-4.5")
+        return SimpleNamespace(ok=True, response="native reply", session_id="sid-1", model="grok-4.6")
 
     monkeypatch.setattr(_grok_build.agent_runner, "invoke", fake_invoke)
 
@@ -183,7 +183,7 @@ def test_process_grok_build_invokes_native_registry_key(monkeypatch):
 
     args, kwargs = invoke_calls[0]
     assert args[0] == "grok"  # prefer-WRITE canonical seat
-    assert kwargs["model"] == "grok-4.5"
+    assert kwargs["model"] == "grok-4.6"
     assert kwargs["effort"] == _grok_build.GROK_BUILD_DEFAULT_EFFORT
     assert kwargs["entrypoint"] == "bridge"
 
@@ -238,7 +238,7 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
         _grok_build.agent_runner,
         "invoke",
         lambda *args, **kwargs: captured.update({"prompt": args[1], **kwargs})
-        or SimpleNamespace(ok=True, response="reply", session_id=None, model="grok-4.5"),
+        or SimpleNamespace(ok=True, response="reply", session_id=None, model="grok-4.6"),
     )
 
     _grok_build.process_for_grok_build(9, review=True)
@@ -251,7 +251,7 @@ def test_grok_build_registry_key_resolves_native_adapter():
     for key in ("grok", "grok-build"):
         entry = get_agent_entry(key)
         assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-        assert entry["default_model"] == "grok-4.5"
+        assert entry["default_model"] == "grok-4.6"
         assert entry["default_effort"] == "high"
 
 
@@ -268,5 +268,5 @@ def test_grok_build_dispatch_start_telemetry_has_defaults():
                 requested_model=None,
                 requested_effort=None,
             )
-            assert telemetry.model == "grok-4.5"
+            assert telemetry.model == "grok-4.6"
             assert telemetry.effort == "high"

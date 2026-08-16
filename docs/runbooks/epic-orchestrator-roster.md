@@ -22,10 +22,10 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
 | **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh --epic devops` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
-| **atlas** (Word Atlas + Practice Hub product) | Grok 4.5 | `./start-grok-driver.sh --epic atlas` |
-| **hramatka** (teacher lesson service) | Grok 4.5 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
-| **folk** (curriculum track) | Grok 4.5 † | `./start-grok-driver.sh --epic folk` |
-| **bio** (curriculum track) | Grok 4.5 | `./start-grok-driver.sh --epic bio` |
+| **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
+| **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
+| **folk** (curriculum track) | Grok 4.6 † | `./start-grok-driver.sh --epic folk` |
+| **bio** (curriculum track) | Grok 4.6 | `./start-grok-driver.sh --epic bio` |
 | **any epic** — incident · architecture cutover · contested review | Opus 5 @ xhigh (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
 | **any epic** — Fable alternate | Fable 5 | `./start-claude-driver.sh --epic <epic> --model claude-fable-5` |
 | **any epic** — routine Anthropic alternate | Sonnet-5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5` |
@@ -76,7 +76,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | gemini-3.7-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-fable-5 | high | gpt-5.6-sol | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
-| grok | grok-4.5 | high | grok-4.5 | high |
+| grok | grok-4.6 | high | grok-4.6 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
 <!-- fleet-roster-projection:begin formal_review_eligible -->
