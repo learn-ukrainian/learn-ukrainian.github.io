@@ -62,6 +62,30 @@ def _warn_unknown(field: str, agent_name: str, detail: str) -> None:
     )
 
 
+def _metadata_text(plan: InvocationPlan | None, *keys: str) -> str | None:
+    if plan is None:
+        return None
+    for key in keys:
+        raw = plan.metadata.get(key)
+        if isinstance(raw, str) and raw.strip():
+            return raw.strip()
+    return None
+
+
+def _is_acp_shadow_identity(
+    agent_name: str, plan: InvocationPlan | None = None
+) -> bool:
+    name = str(agent_name).strip().lower()
+    if name.startswith("acpx-") and name.endswith("-shadow"):
+        return True
+    if plan is None:
+        return False
+    return any(
+        plan.metadata.get(flag) is True
+        for flag in ("acpx_discussion", "acpx_transport", "acpx_shadow")
+    ) or isinstance(plan.metadata.get("acpx_cli_version"), str)
+
+
 def _arg_after(cmd: list[str], *flags: str) -> str | None:
     for index, token in enumerate(cmd):
         if token in flags and index + 1 < len(cmd):
@@ -173,6 +197,12 @@ def _hermes_configured_effort() -> str | None:
 
 
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
+    if _is_acp_shadow_identity(agent_name, plan):
+        return (
+            _metadata_text(plan, "model")
+            or _arg_after(plan.cmd, "-m", "--model")
+            or _NOT_EXPOSED
+        )
     if agent_name == "kimi" and plan.metadata.get("harness") == "kimicc":
         alias = plan.metadata.get("kimicc_alias")
         return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
@@ -180,6 +210,11 @@ def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | Non
 
 
 def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
+    if _is_acp_shadow_identity(agent_name, plan):
+        # ACP adapters stamp fixed effort when the seat has one. Seats with
+        # no per-invocation knob (gemma, kimi, cursor, pool, unpinned
+        # codex) must record the honest marker, not warn as unknown (#6852).
+        return _metadata_text(plan, "effort") or _NOT_EXPOSED
     if agent_name == "codex":
         return _config_override(plan.cmd, "model_reasoning_effort")
     from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
@@ -239,6 +274,8 @@ def _resolve_model_from_defaults(
         return requested_model or KimiccHarness.default_model
     if requested_model:
         return requested_model
+    if _is_acp_shadow_identity(agent_name):
+        return _default_model_for(agent_name) or _NOT_EXPOSED
     if agent_name == "codex":
         # The codex adapter ALWAYS passes an explicit ``-m {registry default}``
         # when no override is given (adapters/codex.py::build_invocation), so
@@ -276,6 +313,8 @@ def _resolve_effort_from_defaults(
     # routine task state look broken (#4837).
     from .agent_identity import is_hermes_grok_seat
 
+    if _is_acp_shadow_identity(agent_name):
+        return requested_effort or _NOT_EXPOSED
     if agent_name in {"agy", "cursor", "gemini"}:
         return _NOT_EXPOSED
     if agent_name in {"deepseek", "hermes-deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
@@ -430,6 +469,17 @@ def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",), cwd: str | None = None
 
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
     probe_cwd = str(plan.cwd) if plan is not None else None
+    if _is_acp_shadow_identity(agent_name, plan):
+        stamped = _metadata_text(
+            plan,
+            "provider_cli_version",
+            "grok_cli_version",
+            "acpx_cli_version",
+        )
+        if stamped:
+            return stamped
+        prefix = (plan.cmd[0],) if plan is not None and plan.cmd else ("acpx",)
+        return _probe_version_at(prefix, probe_cwd)
     if agent_name == "codex":
         prefix = _codex_version_prefix(plan.cmd) if plan is not None else ("codex",)
         return codex_cli_version(prefix, probe_cwd)

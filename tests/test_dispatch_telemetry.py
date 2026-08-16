@@ -338,6 +338,97 @@ def test_resolve_dispatch_start_telemetry_kimi_resolves_binary(tmp_path, monkeyp
     assert telemetry_with_plan.cli_version == "0.42.1"
 
 
+def test_acp_gemma_shadow_reads_stamped_plan_metadata(tmp_path, caplog):
+    """#6852: gemma ACP plans already carry model/version; do not warn unknown."""
+    plan = InvocationPlan(
+        cmd=["acpx", "--model", "google-ais/gemma-4-31b-it", "gemma", "exec", "-f", "-"],
+        cwd=tmp_path,
+        metadata={
+            "acpx_transport": True,
+            "target_agent": "gemma",
+            "model": "google-ais/gemma-4-31b-it",
+            "acpx_cli_version": "0.14.7",
+            "provider_cli": "opencode",
+            "provider_cli_version": "1.2.3",
+        },
+    )
+    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    telemetry = resolve_invocation_telemetry(
+        agent_name="acpx-gemma-shadow",
+        plan=plan,
+        requested_model=None,
+        requested_effort=None,
+    )
+    assert telemetry.model == "google-ais/gemma-4-31b-it"
+    assert telemetry.effort == "not-exposed"
+    assert telemetry.cli_version == "1.2.3"
+    assert "dispatch telemetry for" not in caplog.text
+
+
+def test_acp_kimi_shadow_does_not_warn_unknown_effort_or_version(tmp_path, caplog):
+    """#6852 sibling: kimi ACP shadow has the same identity-mapping gap."""
+    plan = InvocationPlan(
+        cmd=["acpx", "kimi", "exec", "-f", "-"],
+        cwd=tmp_path,
+        metadata={
+            "acpx_transport": True,
+            "target_agent": "kimi",
+            "acpx_cli_version": "0.14.7",
+        },
+    )
+    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    telemetry = resolve_invocation_telemetry(
+        agent_name="acpx-kimi-shadow",
+        plan=plan,
+        requested_model=None,
+        requested_effort=None,
+    )
+    assert telemetry.effort == "not-exposed"
+    assert telemetry.cli_version == "0.14.7"
+    assert "could not resolve effort" not in caplog.text
+    assert "could not resolve cli_version" not in caplog.text
+
+
+def test_acp_shadow_adapters_resolve_effort_and_cli_version_from_identity(tmp_path, caplog):
+    """Sibling sweep: every ACP shadow seat maps identity, never warns unknown."""
+    from scripts.agent_runtime.adapters.acpx import (
+        ACPX_PARTICIPANT_EFFORTS,
+        ACPX_SUPPORTED_PARTICIPANTS,
+    )
+
+    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    for seat, spec in ACPX_SUPPORTED_PARTICIPANTS.items():
+        adapter = str(spec["seat"])
+        stamped_effort = ACPX_PARTICIPANT_EFFORTS.get(seat)
+        metadata = {
+            "acpx_transport": True,
+            "target_agent": spec["agent"],
+            "acpx_cli_version": "0.14.7",
+        }
+        if spec["model"]:
+            metadata["model"] = spec["model"]
+        if stamped_effort:
+            metadata["effort"] = stamped_effort
+        plan = InvocationPlan(
+            cmd=["acpx", seat, "exec", "-f", "-"],
+            cwd=tmp_path,
+            metadata=metadata,
+        )
+        telemetry = resolve_invocation_telemetry(
+            agent_name=adapter,
+            plan=plan,
+            requested_model=None,
+            requested_effort=None,
+        )
+        assert telemetry.effort == (stamped_effort or "not-exposed"), adapter
+        assert telemetry.cli_version == "0.14.7", adapter
+        if spec["model"]:
+            assert telemetry.model == spec["model"], adapter
+        else:
+            assert telemetry.model == "not-exposed", adapter
+    assert "dispatch telemetry for" not in caplog.text
+
+
 def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
     plan = InvocationPlan(
         cmd=["kimicc_headless.sh", "--model", "k3", "--effort", "high"],
