@@ -1,0 +1,105 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/work-control-plane-public-p1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Grok fix brief — PR #6842 review and CodeQL blockers
+
+You are the original Grok author repairing exactly two approved in-scope
+blockers on public PR #6842. Work only in the supplied existing dispatch
+worktree on branch `grok/work-control-plane-public-p1`. You are not alone in
+the repository: preserve unrelated work and do not expand scope.
+
+## Exact starting point
+
+- Required starting HEAD: `df3b707c6c6c9b230f673386585ada0d6df6a534`.
+- Frozen merge base: `a73b689a5bbcad3ee9dea0118245b5df1eaafcfe`.
+- Public issue: `learn-ukrainian/learn-ukrainian.github.io#5921`.
+- PR: `learn-ukrainian/learn-ukrainian.github.io#6842`.
+- Read the current repository rules and verify the starting HEAD before edits.
+- This is a bounded review-fix cycle, not an opportunity to refactor the
+  foundation or implement infra-private P2.
+
+## Approved blocker 1 — exact dispatch identity matching
+
+Claude Sonnet 5 independently confirmed that `_match_dispatch` in
+`scripts/work/normalize.py` uses unanchored substring checks. Issue `#1` can
+match a task for issue `#19`, and PR `#10` can match a task for PR `#100`.
+This can attach unrelated dispatch state and corrupt deterministic health and
+safe-next-action output.
+
+Repair the matcher at the root cause. Match only explicit, boundary-safe issue
+or PR identifiers supported by the current contract; do not broaden fuzzy
+matching, parse private bodies, or add per-item calls. Preserve valid existing
+identifier forms. Add regression tests that prove at minimum:
+
+- issue 1 does not match issue 19;
+- PR 10 does not match PR 100;
+- the corresponding exact issue/PR identifiers still match;
+- unrelated numeric text does not become authority for a match.
+
+Prefer tests in the existing Work contract/API suite. Do not weaken any
+existing assertion.
+
+## Approved blocker 2 — CodeQL dead URL construction
+
+CodeQL check-run `95089637772` reports at `dashboards/work.html:442`:
+
+- high: incomplete string escaping or encoding;
+- medium: replacement of a substring with itself.
+
+The flagged `url` construction and its `fresh` helper are dead code; the next
+`finalUrl` line is the request actually fetched. Remove only the dead
+construction. Add or tighten a dashboard/static regression assertion so the
+self-replacement pattern cannot return. Do not alter the public request or
+saved-view contract.
+
+## Explicitly unrelated CI failure
+
+Python shard 1 failed only
+`tests/ai_agent_bridge/test_module_identity.py::test_bare_bridge_identity_not_loaded`
+after 3,966 passes. The failure concerns simultaneous
+`ai_agent_bridge`/`scripts.ai_agent_bridge` module identities and does not
+touch this PR's frozen files. Do not modify bridge/runtime code or its tests.
+The new push will rerun CI; report it as residual if it recurs.
+
+## Owned paths
+
+Only these files may change:
+
+- `scripts/work/normalize.py`
+- `dashboards/work.html`
+- `tests/test_work_contract.py`
+- `tests/test_work_api.py` only if the regression belongs at the API seam
+- `tests/test_work_dashboard.py`
+
+If the correct fix requires anything else, stop and report instead of
+expanding scope.
+
+## Required verification
+
+Use the absolute shared interpreter, never a worktree `.venv`:
+
+```text
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_work_contract.py tests/test_work_api.py tests/test_work_privacy.py tests/test_work_dashboard.py -q
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_monitor_route_contracts.py tests/test_monitor_ui_contracts.py -q
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m ruff check scripts/work/normalize.py tests/test_work_contract.py tests/test_work_api.py tests/test_work_dashboard.py
+```
+
+Also run focused new regression tests explicitly. Inspect the exact diff and
+confirm the worktree contains no unrelated tracked changes.
+
+Commit with trailer:
+
+`X-Agent: grok/work-control-plane-public-p1-fix`
+
+Push the existing PR branch. Do not merge, approve, close the issue, or claim
+review approval. Final response must give new head SHA, exact changed paths,
+test commands/results, proof for both regressions, push status, and residuals.
