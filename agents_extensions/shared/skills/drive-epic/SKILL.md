@@ -26,6 +26,12 @@ If any claim you are about to make (a lane name, a cap, a word/stress/morphology
 a gate status, a count) is not in fresh tool output, **STOP and run the tool** — every
 verifiable claim is tool-backed (deterministic-over-hallucination).
 
+**Work-board orientation surface:** `GET http://127.0.0.1:8765/api/work/v1/projection`
+returns the merged work board — issues, PRs, dispatch tasks, and reviews — with each item
+carrying a rule-derived `health` (`ON_TRACK` / `AT_RISK` / `OFF_TRACK`), an `attention_rank`,
+and a `safe_next_action`. Query it at orient and again when picking the next unblocked action
+(§2); it is a queue INPUT alongside your stream/GH/issue sources, never a replacement for them.
+
 ---
 
 ## The loop (run it every cycle)
@@ -109,9 +115,10 @@ stale in-context snapshot. For per-lane budget health before dispatch:
 
 ### 2. Pick the next unblocked action
 
-Source of next work: your epic's stream tail / handoff, open GH issues for the epic, and
-the build/review queue. **Step 0 of any dispatch:** `gh pr list --state all --search
-"<issue-nr>"` by issue reference (an open issue ≠ unfixed; a sibling PR may already
+Source of next work: your epic's stream tail / handoff, open GH issues for the epic, the
+build/review queue, and the Work API projection's ranked attention list (§0) — cross-check
+against it before committing to an action. **Step 0 of any dispatch:** `gh pr list --state all
+--search "<issue-nr>"` by issue reference (an open issue ≠ unfixed; a sibling PR may already
 carry it). If nothing genuinely fits a free lane, log it and leave it idle — never
 manufacture busywork (quality > utilization).
 
@@ -124,6 +131,14 @@ manufacture busywork (quality > utilization).
 - Never relabel unfinished work as an intentional skip without issue text or tool proof.
 - Before "done" or handback, quote the tool residual count; `residual > 0` requires a
   next dispatch in the same session.
+
+### 2b. Grok-bot QA findings — queue input, not a fleet seat
+
+Grok Bot (`app/cursor`) is an **external QA observer** — it reads CI/site signals and files
+labeled GitHub issues; drivers consume those issues through the normal loop above like any
+other open issue. It is **never** a dispatch target: no `--agent grok-bot`, no `ask-grok-bot`,
+no fleet-comms seat. If Grok Bot ever authors a PR, same-family Grok must not CF it — route to
+an outside-family reviewer per §6. Full contract: `docs/runbooks/grok-bot-qa-observer.md`.
 
 ### 3. Route by model × harness fit
 
