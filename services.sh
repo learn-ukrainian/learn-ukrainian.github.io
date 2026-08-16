@@ -10,12 +10,14 @@
 #   ./services.sh restart api        # Restart specific service
 #   ./services.sh start api --live   # Emergency mutable-checkout API mode
 #   ./services.sh status             # Show what's running
+#   ./services.sh status work        # Show one service
+#   ./services.sh logs work          # Show the latest service log
 #   ./services.sh supervise api install|status|uninstall
 #   ./services.sh build astro        # Run Astro production build (no dev server)
 #   ./services.sh clean astro        # Remove Astro build/cache outputs
 #   ./services.sh rebuild astro      # Run Astro clean then build
 #
-# Services: sources, api, astro
+# Services: sources, api, astro, work
 #
 # Note: the `sources` service was historically called `rag`. It serves
 # SQLite FTS5 indices over textbook chunks, dictionaries, VESUM, literary
@@ -31,6 +33,17 @@ SVC_LSOF_BIN="${SVC_LSOF_BIN:-lsof}"
 LOGS_DIR="$PROJECT_ROOT/logs"
 PIDS_DIR="$PROJECT_ROOT/.pids"
 VENV="$PROJECT_ROOT/.venv/bin"
+
+# Resolve the human-owned primary checkout even when this script runs from a
+# dispatch worktree. The private Work adapter lives in a deterministic sibling
+# checkout; tests and nonstandard layouts may override only that filesystem
+# root, never the browser endpoint or bind address.
+PUBLIC_PRIMARY_ROOT="$PROJECT_ROOT"
+git_common_dir="$(git -C "$PROJECT_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+if [[ -n "$git_common_dir" && "$(basename "$git_common_dir")" == ".git" ]]; then
+    PUBLIC_PRIMARY_ROOT="$(cd "$(dirname "$git_common_dir")" && pwd)"
+fi
+WORK_PRIVATE_ROOT="${LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT:-$(dirname "$PUBLIC_PRIMARY_ROOT")/learn-ukrainian-infra-private}"
 
 mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 
@@ -56,6 +69,14 @@ SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
 SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
 SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
 
+SVC_CMD[work]="$WORK_PRIVATE_ROOT/.venv/bin/python -m work_projection"
+SVC_PORT[work]=8769
+SVC_HOST[work]=127.0.0.1
+SVC_LOG[work]="$WORK_PRIVATE_ROOT/logs/work-projection.log"
+SVC_DESC[work]="Private Work Projection Adapter (read-only, sibling checkout)"
+SVC_HEALTH[work]="http://127.0.0.1:8769/v1/health"
+SVC_MATCH[work]="-m work_projection"
+
 SVC_CMD[astro]="npm run dev --prefix site -- --host 127.0.0.1 --port 4321 --force"
 SVC_PORT[astro]=4321
 SVC_HOST[astro]=127.0.0.1
@@ -67,7 +88,7 @@ SVC_HEALTH_ALT[astro]="http://localhost:4321/"
 # installs still expose ``astro.mjs dev``. Match either argv form.
 SVC_MATCH[astro]=".bin/astro dev|astro.mjs dev"
 
-ALL_SERVICES="sources api astro"
+ALL_SERVICES="sources api astro work"
 
 # Legacy aliases: rewrite old service names when passed as CLI args.
 # Accept shell history + scripts that still say `./services.sh start rag`
@@ -372,8 +393,43 @@ _reconcile_api_pid() {
     fi
 }
 
+_work_unavailable_reason() {
+    if [[ ! -d "$WORK_PRIVATE_ROOT/.git" && ! -f "$WORK_PRIVATE_ROOT/.git" ]]; then
+        echo "private_checkout_missing"
+    elif [[ ! -x "$WORK_PRIVATE_ROOT/.venv/bin/python" ]]; then
+        echo "private_venv_missing"
+    elif [[ ! -d "$WORK_PRIVATE_ROOT/work_projection" ]]; then
+        echo "private_module_missing"
+    fi
+    return 0
+}
+
 _service_state() {
     local name="$1"
+
+    # The Work health path is not identity. A foreign listener can return 2xx
+    # from /v1/health, so require a matching argv before declaring it running.
+    if [[ "$name" == "work" ]]; then
+        if _known_service_pid "$name" >/dev/null; then
+            if _health_check "$name"; then
+                echo "running"
+            else
+                echo "degraded"
+            fi
+            return 0
+        fi
+        if _foreign_port_pid "$name" >/dev/null; then
+            echo "blocked"
+            return 0
+        fi
+        if [[ -n "$(_work_unavailable_reason)" ]]; then
+            echo "unavailable"
+            return 0
+        fi
+        echo "stopped"
+        return 0
+    fi
+
     if _health_check "$name"; then
         echo "running"
         return 0
@@ -452,6 +508,10 @@ _start_service() {
         echo "  $name process exists but is unhealthy (PID ${pid:-unknown}); restart it instead"
         return 0
     fi
+    if [[ "$state" == "unavailable" ]]; then
+        echo "  work unavailable ($(_work_unavailable_reason)); public services remain independent"
+        return 0
+    fi
 
     # Self-heal astro deps before spawning the dev server (node_modules can be wiped).
     if [[ "$name" == "astro" ]]; then
@@ -488,7 +548,14 @@ _start_service() {
     cd "$PROJECT_ROOT"
 
     local pid=""
-    if [[ "$name" == "astro" ]] && command -v tmux >/dev/null 2>&1; then
+    if [[ "$name" == "work" ]]; then
+        mkdir -p "$(dirname "${SVC_LOG[work]}")"
+        (
+            cd "$WORK_PRIVATE_ROOT"
+            exec "$WORK_PRIVATE_ROOT/.venv/bin/python" -m work_projection
+        ) </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
+        pid=$!
+    elif [[ "$name" == "astro" ]] && command -v tmux >/dev/null 2>&1; then
         local session
         session="$(_tmux_session_name "$name")"
         tmux kill-session -t "$session" 2>/dev/null || true
@@ -505,6 +572,28 @@ _start_service() {
         # shellcheck disable=SC2086
         nohup ${SVC_CMD[$name]} </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
         pid=$!
+    fi
+
+    if [[ "$name" == "work" ]]; then
+        local healthy=0
+        local listener_pid=""
+        for _ in $(seq 1 20); do
+            if ! kill -0 "$pid" 2>/dev/null; then
+                break
+            fi
+            listener_pid="$(_verified_port_pid work || true)"
+            if [[ "$listener_pid" == "$pid" ]] && _health_check work; then
+                healthy=1
+                break
+            fi
+            sleep 0.25
+        done
+        if [[ "$healthy" -ne 1 ]]; then
+            kill "$pid" 2>/dev/null || true
+            rm -f "$(_pid_file work)"
+            echo "  work failed to become healthy; inspect with: $0 logs work" >&2
+            return 1
+        fi
     fi
 
     if [[ -n "$pid" ]]; then
@@ -698,10 +787,16 @@ _rebuild_astro() {
 }
 
 _status() {
-    printf "%-12s %-8s %-8s %s\n" "SERVICE" "STATUS" "PID" "PORT"
-    printf "%-12s %-8s %-8s %s\n" "-------" "------" "---" "----"
-    for name in $ALL_SERVICES; do
-        local state pid
+    local selected="${*:-$ALL_SERVICES}"
+    printf "%-12s %-11s %-8s %-15s %s\n" "SERVICE" "STATUS" "PID" "PORT" "DETAIL"
+    printf "%-12s %-11s %-8s %-15s %s\n" "-------" "------" "---" "----" "------"
+    for name in $selected; do
+        if [[ -z "${SVC_CMD[$name]+x}" ]]; then
+            printf "%-12s %-11s %-8s %-15s %s\n" "$name" "unknown" "-" "-" "not_managed"
+            continue
+        fi
+
+        local state pid detail="-"
         state="$(_service_state "$name")"
         pid="$(_known_service_pid "$name" || true)"
         if [[ -z "$pid" ]]; then
@@ -710,16 +805,34 @@ _status() {
 
         case "$state" in
             running)
-                printf "%-12s \033[32m%-8s\033[0m %-8s %s\n" "$name" "$state" "$pid" "${SVC_PORT[$name]}"
+                printf "%-12s \033[32m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "$detail"
                 ;;
             degraded)
-                printf "%-12s \033[33m%-8s\033[0m %-8s %s\n" "$name" "$state" "$pid" "${SVC_PORT[$name]}"
+                printf "%-12s \033[33m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "health_check_failed"
+                ;;
+            blocked)
+                printf "%-12s \033[31m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "foreign_listener"
+                ;;
+            unavailable)
+                detail="$(_work_unavailable_reason)"
+                printf "%-12s \033[33m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "$detail"
                 ;;
             *)
-                printf "%-12s \033[31m%-8s\033[0m %-8s %s\n" "$name" "$state" "$pid" "${SVC_PORT[$name]}"
+                printf "%-12s \033[31m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "$detail"
                 ;;
         esac
     done
+}
+
+_logs() {
+    local name="$1"
+    local logfile="${SVC_LOG[$name]}"
+    echo "Log: $logfile"
+    if [[ ! -f "$logfile" ]]; then
+        echo "  No log has been created for $name yet."
+        return 0
+    fi
+    tail -n 80 "$logfile"
 }
 
 # Parse arguments
@@ -750,15 +863,21 @@ fi
 case "$action" in
     start)
         echo "Starting services..."
+        start_failed=0
         for svc in $services; do
             if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
                 echo "  Unknown service: $svc (available: $ALL_SERVICES)"
                 continue
             fi
-            _start_service "$svc"
+            if ! _start_service "$svc"; then
+                start_failed=1
+            fi
         done
         echo ""
         _status
+        if [[ "$start_failed" -ne 0 ]]; then
+            exit 1
+        fi
         ;;
     stop)
         echo "Stopping services..."
@@ -783,6 +902,7 @@ case "$action" in
         trap _release_restart_lock EXIT INT TERM
 
         echo "Restarting services..."
+        restart_failed=0
         for svc in $services; do
             if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
                 echo "  Unknown service: $svc"
@@ -792,10 +912,15 @@ case "$action" in
                 _reconcile_api_pid
             fi
             _stop_service "$svc"
-            _start_service "$svc"
+            if ! _start_service "$svc"; then
+                restart_failed=1
+            fi
         done
         echo ""
         _status
+        if [[ "$restart_failed" -ne 0 ]]; then
+            exit 1
+        fi
         ;;
     supervise)
         supervisor_service="${remaining_args[0]:-}"
@@ -878,11 +1003,25 @@ case "$action" in
         fi
         ;;
     status)
-        _reconcile_api_pid
-        _status
+        if [[ " $services " == *" api "* ]]; then
+            _reconcile_api_pid
+        fi
+        _status "$services"
+        ;;
+    logs)
+        if [[ "${#remaining_args[@]}" -ne 1 ]]; then
+            echo "Usage: $0 logs <service>" >&2
+            exit 1
+        fi
+        log_service="${remaining_args[0]}"
+        if [[ -z "${SVC_CMD[$log_service]+x}" ]]; then
+            echo "Unknown service: $log_service (available: $ALL_SERVICES)" >&2
+            exit 1
+        fi
+        _logs "$log_service"
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status|supervise|build|clean|rebuild} [service ...]"
+        echo "Usage: $0 {start|stop|restart|status|logs|supervise|build|clean|rebuild} [service ...]"
         echo ""
         echo "Services:"
         for name in $ALL_SERVICES; do
@@ -892,6 +1031,7 @@ case "$action" in
         echo "Examples:"
         echo "  $0 start                  # Start all"
         echo "  $0 start sources api      # Start specific"
+        echo "  $0 start work             # Start the private sibling adapter"
         echo "  $0 start api --live       # Emergency API fallback (mutable checkout)"
         echo "  $0 stop sources           # Stop one"
         echo "  $0 restart                # Restart all"
@@ -901,6 +1041,8 @@ case "$action" in
         echo "  $0 clean astro            # Clean Astro cache/build outputs"
         echo "  $0 rebuild astro          # Clean then build Astro"
         echo "  $0 status                 # Show status"
+        echo "  $0 status work            # Show adapter status and typed failure reason"
+        echo "  $0 logs work              # Show the latest adapter log"
         echo ""
         echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'site' is accepted as a legacy alias for 'astro'."
         ;;

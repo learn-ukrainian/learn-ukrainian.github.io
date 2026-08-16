@@ -22,7 +22,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK_HTML = ROOT / "dashboards" / "work.html"
-PRIVATE_URL = "http://127.0.0.1:8766/v1/projection"
+PRIVATE_URL = "http://127.0.0.1:8769/v1/projection"
 PUBLIC_PATH = "/api/work/v1/projection"
 SCHEMA_DIGEST = "89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde"
 PUBLIC_COMMIT = "f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d"
@@ -31,7 +31,7 @@ PUBLIC_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 SYNTH_PRIVATE_REPO = "fixture-owner/fixture-repo"
 CANARY = "FX07_CANARY_SHOULD_NEVER_APPEAR_IN_DOM_OR_URL"
 FIXED_PUBLIC_PORT = 8765
-FIXED_PRIVATE_PORT = 8766
+FIXED_PRIVATE_PORT = 8769
 # Linux system Chrome/Chromium candidates for CI runners without Puppeteer's cache.
 LINUX_CHROME_CANDIDATES: tuple[str, ...] = (
     "/usr/bin/google-chrome",
@@ -574,7 +574,7 @@ def _browser_scenario(
     thread = threading.Thread(target=public_server.serve_forever, daemon=True)
     thread.start()
 
-    # Ephemeral private server is NOT used for the fixed URL — browser uses 8766.
+    # Ephemeral private server is NOT used for the fixed URL — browser uses 8769.
     # Intercept both URLs inside Chromium so proofs do not need free fixed ports.
     public_json = state.public_body.decode("utf-8") if state.public_body else "{}"
     private_json = state.private_body.decode("utf-8") if state.private_body else "{}"
@@ -814,7 +814,7 @@ try {{
 def test_static_private_url_is_exact_fixed_constant():
     html = WORK_HTML.read_text(encoding="utf-8")
     assert f"'{PRIVATE_URL}'" in html
-    assert html.count("127.0.0.1:8766") == html.count(PRIVATE_URL)
+    assert html.count("127.0.0.1:8769") == html.count(PRIVATE_URL)
     assert "localStorage" not in html
     assert "sessionStorage" not in html
     assert "document.cookie" not in html
@@ -1202,12 +1202,12 @@ def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
 
 
 def test_real_fixed_port_cors_http_and_browser_smoke():
-    """Live CORS on fixed ports 8765/8766 with real browser GET (no preflight)."""
+    """Live CORS on fixed ports 8765/8769 with real browser GET (no preflight)."""
     if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free(
         "127.0.0.1", FIXED_PRIVATE_PORT
     ):
         pytest.skip(
-            "fixed ports 8765/8766 busy; interception proofs already cover behavior"
+            "fixed ports 8765/8769 busy; interception proofs already cover behavior"
         )
 
     nm = _require_puppeteer()
@@ -1338,7 +1338,7 @@ def test_real_fixed_port_cors_localhost_origin_smoke():
         "127.0.0.1", FIXED_PRIVATE_PORT
     ):
         pytest.skip(
-            "fixed ports 8765/8766 busy; interception proofs already cover behavior"
+            "fixed ports 8765/8769 busy; interception proofs already cover behavior"
         )
 
     private_hits: dict[str, Any] = {"options": 0, "gets": []}

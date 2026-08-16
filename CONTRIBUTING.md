@@ -46,7 +46,7 @@ python -m venv .venv
 cd starlight && npm install && cd ..
 
 # 4. Start services
-./services.sh start   # RAG on 8766, API on 8765, Starlight on 4321
+./services.sh start   # Sources 8766, Monitor 8765, Astro 4321, private Work 8769
 
 # 5. Verify
 ./services.sh status
@@ -58,12 +58,15 @@ cd starlight && npm install && cd ..
 |---------|------|---------|
 | MCP sources server | 8766 | `./services.sh start` |
 | Monitor API | 8765 | `./services.sh start` |
-| Starlight dev | 4321 | `./services.sh start` |
+| Astro dev | 4321 | `./services.sh start` |
+| Private Work adapter | 8769 | `./services.sh start` |
 
 ```bash
 ./services.sh start    # Start all
 ./services.sh stop     # Stop all
 ./services.sh status   # Check status
+./services.sh status work  # Typed private-adapter status
+./services.sh logs work    # Latest adapter log (stored in private checkout)
 ```
 
 ---
