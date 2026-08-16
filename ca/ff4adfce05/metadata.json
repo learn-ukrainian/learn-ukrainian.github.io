@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "caff4adfce05",
+  "strategy": "manual-commit",
+  "branch": "agy/work-6850-actionable-default",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/work.html",
+    "tests/test_work_dashboard.py",
+    "tests/test_work_dashboard_private_integration.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ca/ff4adfce05/0/metadata.json",
+      "transcript": "/ca/ff4adfce05/0/full.jsonl",
+      "compact_transcript": "/ca/ff4adfce05/0/transcript.jsonl",
+      "content_hash": "/ca/ff4adfce05/0/content_hash.txt",
+      "prompt": "/ca/ff4adfce05/0/prompt.txt"
+    }
+  ]
+}
