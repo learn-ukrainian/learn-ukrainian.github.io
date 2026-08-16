@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2448f9105799",
+  "session_id": "session_d1b74b79-6cf4-46ee-9864-97f8313f6f75",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T01:16:47.567061Z",
+  "branch": "kimi/atlas-6812-identity-flake",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/comms_router.py",
+    "scripts/api/preload.py",
+    "tests/ai_agent_bridge/test_module_identity.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "3e6690deacfc",
+  "token_usage": {
+    "input_tokens": 97954,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7549952,
+    "output_tokens": 35286,
+    "api_call_count": 104
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T01:16:47.51099Z",
+    "agent_lines": 37,
+    "agent_removed": 15,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 37,
+    "total_lines_changed": 52,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

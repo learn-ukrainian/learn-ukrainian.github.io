@@ -1,0 +1,43 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/atlas-6812-identity-flake
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch: #6812 identity test flakes under pytest-xdist (blocks #6838)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: kimi / k3-256k
+- why_this_tier: mechanical test isolation; 5h window free
+- advisor_packet: n/a
+- owned_paths: `tests/ai_agent_bridge/test_module_identity.py`, any test that loads bare `ai_agent_bridge`
+- acceptance_cmd: `.venv/bin/python -m pytest -q tests/ai_agent_bridge/test_module_identity.py -n 2` plus a second run that would have failed if another test imported the bare identity
+- alternatives_considered: claude (used for #6839), cursor (hot), codex (deficit)
+- parallel_free_seats: claude, glm
+
+## CAPACITY_CARD
+pick=kimi status=5h-cool avoid=codex,cursor source=codexbar
+
+## Fact
+PR #6838 (CSS, unrelated) failed CI twice on:
+`tests/ai_agent_bridge/test_module_identity.py::test_bare_bridge_identity_not_loaded`
+3960 passed / 1 failed. Same fail on `main` after #6812. xdist gw1, late in the shard — order-dependent: some other test loaded the bare `ai_agent_bridge` identity into `sys.modules`.
+
+## Work
+1. Find who loads the bare identity at runtime (not just static import scan).
+2. Fix the root cause (canonical import) **or**, if a third-party/path hook is unavoidable, isolate the assertion so it is not an xdist landmine — but prefer stopping the double load.
+3. Do **not** weaken the #6812 contract ("single module identity").
+4. Tests. PR. No auto-merge. Do not touch #6838's CSS files.
+5. Comment on #6838 that the red check is this flake, not the contrast change.
+
+## Done means
+PR open that makes the identity test pass under xdist; #6838 unblocked after this merges or after a documented rebase.
+
+X-Agent: grok-atlas
