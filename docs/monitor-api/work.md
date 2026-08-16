@@ -24,7 +24,8 @@ At a query instant the projection represents exactly once (or counts in a typed 
 4. Class-4 summaries only:
    - `GET /api/delegate/active`
    - `GET /api/delegate/tasks?status=all&limit<=500`
-   - `GET /api/fleet/reviews`  
+   - `GET /api/fleet/reviews`
+
    Never delegate task detail bodies or sealed review blobs.
 
 ## Identity
@@ -41,7 +42,8 @@ At a query instant the projection represents exactly once (or counts in a typed 
 
 ## Saved-view URL filters
 
-Allowed query keys only: `health`, `kind`, `lifecycle`, `orphan`, `repository_id`, `source_id`.  
+Allowed query keys only: `health`, `kind`, `lifecycle`, `orphan`, `repository_id`, `source_id`.
+
 Unknown keys, free text, private endpoints, and overlong values are rejected (`400 invalid_saved_view`).
 
 ## Privacy

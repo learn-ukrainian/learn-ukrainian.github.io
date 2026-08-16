@@ -1,8 +1,8 @@
 # ADR-019: Work control plane (public foundation)
 
-**Status**: Accepted (public foundation P1)  
-**Date**: 2026-08-16  
-**Deciders**: Operator brief v3 + design inspection GO; implementation on public issue #5921  
+**Status**: Accepted (public foundation P1)
+**Date**: 2026-08-16
+**Deciders**: Operator brief v3 + design inspection GO; implementation on public issue #5921
 **Completion vocabulary**: `FOUNDATION_COMPLETE` (never product `COMPLETE`)
 
 ## Context
