@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "966f978f9b4e",
+  "strategy": "manual-commit",
+  "branch": "grok/work-control-plane-public-p1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/monitor-api/work.md",
+    "scripts/work/sources_public.py",
+    "tests/test_work_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/96/6f978f9b4e/0/metadata.json",
+      "transcript": "/96/6f978f9b4e/0/full.jsonl",
+      "compact_transcript": "/96/6f978f9b4e/0/transcript.jsonl",
+      "content_hash": "/96/6f978f9b4e/0/content_hash.txt",
+      "prompt": "/96/6f978f9b4e/0/prompt.txt"
+    }
+  ]
+}

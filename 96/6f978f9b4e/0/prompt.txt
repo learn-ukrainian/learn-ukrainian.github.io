@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/work-control-plane-public-p1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+You are the Grok implementation owner for public PR #6842 in the existing dispatch worktree.
+
+Exact head: `14f6057111d11114dd2b74c8342e5c50b6901829`.
+
+The exact-head review found one remaining P1 trust-boundary defect:
+
+- `fetch_delegate_active` and `fetch_delegate_tasks` treat every injected loader as `trusted_scoped=True`. An injected payload without authoritative repository claims can therefore be stamped public and emitted, including a private task ID.
+
+Fix the contract so trusted scoped provenance exists only for the fixed production loader path that calls `active_delegate_tasks(repository=allowed)` / `list_delegate_tasks(..., repository=allowed)`. Any caller-supplied/injected loader is untrusted and every returned row must carry an exact authoritative public `repository`/`repository_id` claim (with the existing ambiguity/foreign checks) before it may be retained. Do not serialize repository fields in delegate summaries or generic endpoints.
+
+Make scoped provenance explicit and unforgeable through the ordinary injectable loader return shape—e.g. select the trust mode from `loader is None`, not from payload content. Keep strict normalization for injected section payloads.
+
+Add regressions proving:
+- an injected claim-less/foreign/ambiguous loader row is dropped and never appears in Work;
+- an injected exact-public claimed row can be admitted but the claim is redacted from the summary/projection as required;
+- fixed production scoped loaders still admit claim-less redacted summaries after upstream filtering;
+- private/unclassified volume cannot affect production totals/limits;
+- generic delegate responses still never serialize repository identity.
+
+Run delegate API, complete Work/API/privacy/dashboard, fleet observer/dashboard, Monitor contracts, Ruff, and `git diff --check`. Schema remains untouched at digest `89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde`.
+
+Commit with trailer `X-Agent: grok/work-control-plane-public-p1-fix11`, push if permitted, do not merge or change PR state. Return exact verification and residual risk.
