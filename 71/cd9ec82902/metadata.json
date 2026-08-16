@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "71cd9ec82902",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6869-gh-shim",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/shims/gh",
+    "tests/test_agent_runtime.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/71/cd9ec82902/0/metadata.json",
+      "transcript": "/71/cd9ec82902/0/full.jsonl",
+      "compact_transcript": "/71/cd9ec82902/0/transcript.jsonl",
+      "content_hash": "/71/cd9ec82902/0/content_hash.txt",
+      "prompt": "/71/cd9ec82902/0/prompt.txt"
+    }
+  ]
+}

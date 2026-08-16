@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "71cd9ec82902",
+  "session_id": "fleet-2782bd584e894e1db95af716d53628e9",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T17:32:08.586911Z",
+  "branch": "agy/infra-6869-gh-shim",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/shims/gh",
+    "tests/test_agent_runtime.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "c48894ea4cbf",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T17:32:08.583241Z",
+    "agent_lines": 46,
+    "agent_removed": 19,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 46,
+    "total_lines_changed": 65,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
