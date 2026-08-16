@@ -251,6 +251,83 @@ def _public_min() -> dict[str, Any]:
     }
 
 
+def _healthy_public_item(*, remote_id: str = "5922", title: str = "Healthy public issue") -> dict[str, Any]:
+    work_id = f"wp1:public-monitor:{PUBLIC_REPO}:issue:{remote_id}"
+    return {
+        "work_id": work_id,
+        "source_id": "public-monitor",
+        "repository_id": PUBLIC_REPO,
+        "resource_kind": "issue",
+        "remote_id": remote_id,
+        "title": title,
+        "lifecycle": "open",
+        "labels": ["healthy"],
+        "assignees": [],
+        "urls": {
+            "html": f"https://github.com/{PUBLIC_REPO}/issues/{remote_id}",
+        },
+        "timestamps": {
+            "created_at": "2026-08-16T00:00:00Z",
+            "updated_at": "2026-08-16T00:00:00Z",
+        },
+        "projections": {
+            "stream": {
+                "status": "on_track",
+                "streams": [],
+                "fresh": True,
+                "authority_missing": False,
+            },
+            "dispatch": {"task_ids": [], "statuses": [], "unresolved": False},
+            "review": {
+                "review_ids": [],
+                "states": [],
+                "sealed_verdict_available": False,
+            },
+            "verification": {"kind": "none", "state": "n/a"},
+        },
+        "relationships": [],
+        "health": "ON_TRACK",
+        "attention_rank": 1,
+        "safe_next_action": {
+            "code": "OPEN_GITHUB",
+            "reason_codes": ["healthy_on_track"],
+        },
+        "authority": [
+            {
+                "domain": "github",
+                "observed_at": "2026-08-16T00:00:00Z",
+                "age_s": 0,
+                "stale": False,
+            }
+        ],
+        "omissions": [],
+        "flags": {"orphan": False, "has_blocker": False},
+    }
+
+
+def _public_with_healthy_item() -> dict[str, Any]:
+    doc = _public_min()
+    healthy = _healthy_public_item()
+    doc["items"].append(healthy)
+    doc["attention"].append(
+        {
+            "work_id": healthy["work_id"],
+            "attention_rank": healthy["attention_rank"],
+            "health": healthy["health"],
+            "safe_next_action": healthy["safe_next_action"],
+            "title": healthy["title"],
+            "resource_kind": healthy["resource_kind"],
+            "repository_id": healthy["repository_id"],
+            "remote_id": healthy["remote_id"],
+        }
+    )
+    doc["denominator"]["issues_open"] = 2
+    for src in doc["sources"]:
+        if src["source_id"] == "public-monitor":
+            src["sections"]["issues"]["count"] = 2
+    return doc
+
+
 def _private_ok(*, remote_id: str = "7", kind: str = "issue", rank: int = 0) -> dict[str, Any]:
     title = f"private-{kind}-{remote_id}"
     work_id = f"wp1:private-local-adapter:{SYNTH_PRIVATE_REPO}:{kind}:{remote_id}"
@@ -1153,14 +1230,16 @@ def test_browser_refresh_uses_fresh_on_public_only():
 
 def test_browser_actionable_default_view_filters_non_actionable_rows():
     """Default view without query params renders only actionable items."""
-    public = _public_min()
-    # Public item is AT_RISK (actionable); private item is UNKNOWN / INSPECT_UNKNOWN (non-actionable).
+    # Public item 1 is AT_RISK (actionable); public item 2 is ON_TRACK / OPEN_GITHUB (healthy non-actionable);
+    # private item is UNKNOWN / INSPECT_UNKNOWN (non-actionable).
+    public = _public_with_healthy_item()
     private = _private_ok()
     result = _browser_scenario(public_doc=public, private_doc=private)
     snap = result["snapshot"]
     # In default view, only public actionable item renders.
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
+    assert "Healthy public issue" not in snap["listText"]
     assert "private-issue-7" not in snap["listText"]
     # URL search remains clean without query params
     assert snap["search"] == ""
@@ -1168,14 +1247,15 @@ def test_browser_actionable_default_view_filters_non_actionable_rows():
 
 def test_browser_switch_view_between_actionable_and_all():
     """Switching view via dropdown + apply updates visible rows and URL."""
-    public = _public_min()
+    public = _public_with_healthy_item()
     private = _private_ok()
     # Step 1: Start at default actionable view -> 1 row
     result_default = _browser_scenario(public_doc=public, private_doc=private)
     assert result_default["snapshot"]["rowCount"] == 1
+    assert "Healthy public issue" not in result_default["snapshot"]["listText"]
     assert result_default["snapshot"]["search"] == ""
 
-    # Step 2: Switch to 'all' via UI select + apply -> 2 rows, URL is ?view=all
+    # Step 2: Switch to 'all' via UI select + apply -> 3 rows, URL is ?view=all
     result_all = _browser_scenario(
         public_doc=public,
         private_doc=private,
@@ -1186,8 +1266,9 @@ def test_browser_switch_view_between_actionable_and_all():
         ],
     )
     snap_all = result_all["snapshot"]
-    assert snap_all["rowCount"] == 2
+    assert snap_all["rowCount"] == 3
     assert "Public attention item" in snap_all["listText"]
+    assert "Healthy public issue" in snap_all["listText"]
     assert "private-issue-7" in snap_all["listText"]
     assert "view=all" in snap_all["search"]
 
@@ -1205,18 +1286,20 @@ def test_browser_switch_view_between_actionable_and_all():
     snap_back = result_back["snapshot"]
     assert snap_back["rowCount"] == 1
     assert "Public attention item" in snap_back["listText"]
+    assert "Healthy public issue" not in snap_back["listText"]
     assert "private-issue-7" not in snap_back["listText"]
     assert snap_back["search"] == ""
 
 
 def test_browser_direct_actionable_url_normalizes_to_clean_path():
     """Navigating directly to ?view=actionable renders actionable view and normalizes URL."""
-    public = _public_min()
+    public = _public_with_healthy_item()
     private = _private_ok()
     result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=actionable")
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
+    assert "Healthy public issue" not in snap["listText"]
     assert "private-issue-7" not in snap["listText"]
     # Normalizes to clean URL
     assert snap["search"] == ""
@@ -1224,19 +1307,21 @@ def test_browser_direct_actionable_url_normalizes_to_clean_path():
 
 def test_browser_actionable_with_kind_and_health_filters():
     """Existing filters like kind and health continue working in actionable default view."""
-    public = _public_min()
+    public = _public_with_healthy_item()
     private = _private_ok()
     # Filter by health=AT_RISK on actionable default
     result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?health=AT_RISK")
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
+    assert "Healthy public issue" not in snap["listText"]
     assert "health=AT_RISK" in snap["search"]
     # Filter by kind=issue on actionable default
     result_kind = _browser_scenario(public_doc=public, private_doc=private, filter_query="?kind=issue")
     snap_kind = result_kind["snapshot"]
     assert snap_kind["rowCount"] == 1
     assert "Public attention item" in snap_kind["listText"]
+    assert "Healthy public issue" not in snap_kind["listText"]
     assert "kind=issue" in snap_kind["search"]
 
 

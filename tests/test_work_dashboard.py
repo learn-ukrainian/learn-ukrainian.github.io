@@ -158,5 +158,7 @@ def test_work_page_actionable_default_view_contracts():
     assert '<option value="all">All</option>' in html
     assert "isActionable" in html
     assert "INSPECT_UNKNOWN" in html
+    assert "OPEN_GITHUB" in html
+    assert "NONE" in html
     assert "OFF_TRACK" in html
     assert "AT_RISK" in html
