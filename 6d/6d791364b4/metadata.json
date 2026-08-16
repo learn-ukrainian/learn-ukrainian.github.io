@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6d6d791364b4",
+  "strategy": "manual-commit",
+  "branch": "grok/atlas-job-protocol",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/atlas_jobs_router.py",
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/api/test_atlas_jobs_router.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6d/6d791364b4/0/metadata.json",
+      "transcript": "/6d/6d791364b4/0/full.jsonl",
+      "compact_transcript": "/6d/6d791364b4/0/transcript.jsonl",
+      "content_hash": "/6d/6d791364b4/0/content_hash.txt",
+      "prompt": "/6d/6d791364b4/0/prompt.txt"
+    }
+  ]
+}
