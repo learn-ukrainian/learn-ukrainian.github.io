@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bf51edb6fceb",
+  "session_id": "fleet-ec7c503601d14af28f03f0b17f2242b0",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T02:55:17.650466Z",
+  "branch": "grok/work-control-plane-public-p1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/fleet_router.py",
+    "scripts/api/work_router.py",
+    "scripts/work/sources_public.py",
+    "tests/test_fleet_observer_api.py",
+    "tests/test_work_contract.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "206b6f987bcd",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T02:55:17.646076Z",
+    "agent_lines": 361,
+    "agent_removed": 61,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 361,
+    "total_lines_changed": 422,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

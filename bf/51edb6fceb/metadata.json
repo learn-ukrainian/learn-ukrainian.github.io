@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bf51edb6fceb",
+  "strategy": "manual-commit",
+  "branch": "grok/work-control-plane-public-p1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/fleet_router.py",
+    "scripts/api/work_router.py",
+    "scripts/work/sources_public.py",
+    "tests/test_fleet_observer_api.py",
+    "tests/test_work_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/bf/51edb6fceb/0/metadata.json",
+      "transcript": "/bf/51edb6fceb/0/full.jsonl",
+      "compact_transcript": "/bf/51edb6fceb/0/transcript.jsonl",
+      "content_hash": "/bf/51edb6fceb/0/content_hash.txt",
+      "prompt": "/bf/51edb6fceb/0/prompt.txt"
+    }
+  ]
+}
