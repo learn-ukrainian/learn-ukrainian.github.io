@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -500,3 +501,213 @@ def test_status_does_not_print_proc_on_missing_procfs(temp_services_sh, mock_lso
         if proc.poll() is None:
             proc.terminate()
             proc.wait(timeout=5)
+
+
+def test_work_status_reports_typed_missing_checkout(tmp_path, mock_lsof_env) -> None:
+    """A missing private sibling is explicit and does not crash public status."""
+    _, _, env = mock_lsof_env
+    env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(tmp_path / "missing-private")
+    result = subprocess.run(
+        [str(SERVICES_SH), "status", "work"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "work" in result.stdout
+    assert "unavailable" in result.stdout
+    assert "private_checkout_missing" in result.stdout
+    assert "sources" not in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("create_venv", "create_module", "reason"),
+    [
+        (False, False, "private_venv_missing"),
+        (True, False, "private_module_missing"),
+    ],
+)
+def test_work_status_reports_other_typed_prerequisite_failures(
+    tmp_path, mock_lsof_env, create_venv: bool, create_module: bool, reason: str
+) -> None:
+    """Every private prerequisite failure has a stable operator-facing type."""
+    _, _, env = mock_lsof_env
+    private_root = tmp_path / "private"
+    (private_root / ".git").mkdir(parents=True)
+    if create_venv:
+        (private_root / ".venv" / "bin").mkdir(parents=True)
+        (private_root / ".venv" / "bin" / "python").symlink_to(VENV_PYTHON)
+    if create_module:
+        (private_root / "work_projection").mkdir()
+    env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
+
+    result = subprocess.run(
+        [str(SERVICES_SH), "status", "work"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "unavailable" in result.stdout
+    assert reason in result.stdout
+
+
+def test_work_status_rejects_foreign_health_listener(tmp_path, mock_lsof_env) -> None:
+    """A foreign 8767 owner is blocked even if it could answer the health path."""
+    set_pids, _, env = mock_lsof_env
+    private_root = tmp_path / "private"
+    (private_root / ".git").mkdir(parents=True)
+    (private_root / ".venv" / "bin").mkdir(parents=True)
+    (private_root / "work_projection").mkdir()
+    (private_root / ".venv" / "bin" / "python").symlink_to(VENV_PYTHON)
+    env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
+
+    proc = subprocess.Popen([str(VENV_PYTHON), "-c", "import time; time.sleep(30)"])
+    reap_process_on_exit(proc)
+    set_pids([proc.pid])
+    try:
+        result = subprocess.run(
+            [str(SERVICES_SH), "status", "work"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert "blocked" in result.stdout
+        assert "foreign_listener" in result.stdout
+        assert "running" not in result.stdout
+    finally:
+        proc.terminate()
+        proc.wait(timeout=5)
+
+
+def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> None:
+    """Start/status/stop owns the adapter without a manual private-repo command."""
+    port = find_free_port()
+    script_path = tmp_path / "services.sh"
+    script_path.write_text(
+        SERVICES_SH.read_text(encoding="utf-8").replace("8767", str(port)),
+        encoding="utf-8",
+    )
+    script_path.chmod(0o755)
+
+    private_root = tmp_path / "private"
+    (private_root / ".git").mkdir(parents=True)
+    (private_root / ".venv" / "bin").mkdir(parents=True)
+    module = private_root / "work_projection"
+    module.mkdir()
+    (private_root / ".venv" / "bin" / "python").symlink_to(VENV_PYTHON)
+    (module / "__init__.py").write_text("", encoding="utf-8")
+    (module / "__main__.py").write_text(
+        """from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
+
+with open(os.environ["WORK_FAKE_PID_FILE"], "w", encoding="utf-8") as pid_file:
+    pid_file.write(str(os.getpid()))
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path != "/v1/health":
+            self.send_response(404)
+            self.end_headers()
+            return
+        body = b'{"status":"ok"}'
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+    def log_message(self, *_args):
+        return
+
+HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_forever()
+""",
+        encoding="utf-8",
+    )
+
+    env = os.environ.copy()
+    fake_pid_file = tmp_path / "work.pid"
+    mock_lsof = tmp_path / "mock_lsof"
+    mock_lsof.write_text(
+        "#!/bin/sh\n"
+        f"if [ -f '{fake_pid_file}' ]; then\n"
+        f"  pid=$(cat '{fake_pid_file}')\n"
+        "  if kill -0 \"$pid\" 2>/dev/null; then echo \"$pid\"; fi\n"
+        "fi\n",
+        encoding="utf-8",
+    )
+    mock_lsof.chmod(0o755)
+    env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
+    env["WORK_TEST_PORT"] = str(port)
+    env["WORK_FAKE_PID_FILE"] = str(fake_pid_file)
+    env["SVC_LSOF_BIN"] = str(mock_lsof)
+    start = subprocess.run(
+        [str(script_path), "start", "work"],
+        capture_output=True,
+        text=True,
+        cwd=str(tmp_path),
+        env=env,
+        timeout=30,
+    )
+    try:
+        assert start.returncode == 0, f"{start.stdout}\n{start.stderr}"
+        status = None
+        for _ in range(40):
+            status = subprocess.run(
+                [str(script_path), "status", "work"],
+                capture_output=True,
+                text=True,
+                cwd=str(tmp_path),
+                env=env,
+                timeout=30,
+            )
+            if "running" in status.stdout:
+                break
+            time.sleep(0.1)
+        assert status is not None
+        assert status.returncode == 0, status.stderr
+        assert "running" in status.stdout
+        assert f"127.0.0.1:{port}" in status.stdout
+        assert str(private_root / "logs" / "work-projection.log") in start.stdout
+    finally:
+        stop = subprocess.run(
+            [str(script_path), "stop", "work"],
+            capture_output=True,
+            text=True,
+            cwd=str(tmp_path),
+            env=env,
+            timeout=30,
+        )
+        assert stop.returncode == 0, f"{stop.stdout}\n{stop.stderr}"
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.settimeout(1)
+        assert probe.connect_ex(("127.0.0.1", port)) != 0
+
+
+def test_local_service_ports_do_not_collide_with_kubedojo() -> None:
+    """Frozen Learn Ukrainian ports remain disjoint from KubeDojo declarations."""
+    assignment = re.compile(r"^SVC_PORT\[([^]]+)\]=\"?(\d+)\"?$", re.MULTILINE)
+    learn_ports = {
+        name: int(port)
+        for name, port in assignment.findall(SERVICES_SH.read_text(encoding="utf-8"))
+    }
+    assert learn_ports == {"sources": 8766, "api": 8765, "work": 8767, "astro": 4321}
+
+    # CI has no sibling checkout, so the reviewed KubeDojo contract is frozen
+    # here and cross-checked against its real services.sh whenever available.
+    kubedojo_ports = {"api": 8768, "dev": 4333}
+    kubedojo_script = main_checkout_root(PROJECT_ROOT).parent / "kubedojo" / "services.sh"
+    if kubedojo_script.exists():
+        declared = {
+            name: int(port)
+            for name, port in assignment.findall(kubedojo_script.read_text(encoding="utf-8"))
+        }
+        assert {name: declared[name] for name in kubedojo_ports} == kubedojo_ports
+
+    assert set(learn_ports.values()).isdisjoint(kubedojo_ports.values())

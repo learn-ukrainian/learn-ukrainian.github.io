@@ -130,9 +130,10 @@ python -m venv .venv
 # 2. Frontend
 cd starlight && npm install && cd ..
 
-# 3. Services (RAG on 8766, monitor API on 8765, Starlight on 4321)
+# 3. Services (Sources 8766, Monitor 8765, Astro 4321, private Work 8767)
 ./services.sh start
 ./services.sh status
+# Work adapter diagnostics: ./services.sh status work && ./services.sh logs work
 
 # 4. Pre-commit hooks — mirror CI locally
 pip install pre-commit && pre-commit install

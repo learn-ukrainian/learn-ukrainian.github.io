@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "dashboards" / "work.html"
 INDEX = ROOT / "dashboards" / "index.html"
 
-PRIVATE_URL = "http://127.0.0.1:8766/v1/projection"
+PRIVATE_URL = "http://127.0.0.1:8767/v1/projection"
 SCHEMA_DIGEST = "89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde"
 PUBLIC_COMMIT = "f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d"
 

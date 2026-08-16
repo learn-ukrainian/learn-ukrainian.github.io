@@ -42,7 +42,7 @@ browser-rendered error text.
 6. **Private source is browser-local only.** The public server never fetches,
    proxies, persists, configures, or logs the private adapter. Only
    `dashboards/work.html` may GET the fixed constant
-   `http://127.0.0.1:8766/v1/projection` with a 5s abort budget, CORS-safelisted
+   `http://127.0.0.1:8767/v1/projection` with a 5s abort budget, CORS-safelisted
    headers, `credentials: omit`, and no query string. The endpoint is not
    configurable and never enters shareable saved-view state.
 7. **Independent dual-source settlement.** The browser uses `Promise.allSettled`
@@ -61,6 +61,11 @@ browser-rendered error text.
 10. **Saved views**: URL query only; stricter shareable allowlist than local
     filters so private repository slugs and `private-local-adapter` never enter
     transferable state.
+11. **Local topology**: public `services.sh` owns the optional sibling adapter
+    lifecycle on loopback port `8767`. Sources remains on `8766`; KubeDojo's API
+    and Astro ports remain `8768` and `4333`. Missing private prerequisites are
+    typed `unavailable`, a foreign listener is `blocked`, and neither condition
+    prevents the public Monitor or Sources services from running.
 
 ## Consequences
 

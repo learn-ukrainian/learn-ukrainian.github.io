@@ -16,7 +16,7 @@ from scripts.work.sources_public import SectionResult, private_capability_seam
 
 ROOT = Path(__file__).resolve().parents[1]
 CANARY_FILE = ROOT / "tests" / "fixtures" / "work" / "fx07_canaries.txt"
-PRIVATE_URL = "http://127.0.0.1:8766/v1/projection"
+PRIVATE_URL = "http://127.0.0.1:8767/v1/projection"
 # Product + fixture surfaces only. Privacy tests may inject canaries as inputs;
 # the oracle asserts they never appear in public outputs or non-test artifacts.
 WORK_OWNED = [
@@ -153,7 +153,7 @@ def test_private_capability_seam_is_truthful_and_non_proxying():
     assert "private-local-adapter" in source or "private_capability" in source
     # Public server must never hardcode the private loopback adapter URL.
     assert PRIVATE_URL not in source
-    assert "127.0.0.1:8766" not in source
+    assert "127.0.0.1:8767" not in source
 
 
 def test_saved_view_urls_reject_private_values():
@@ -222,4 +222,4 @@ def test_public_server_owned_python_never_imports_private_adapter_url():
         for file in files:
             text = file.read_text(encoding="utf-8", errors="replace")
             assert PRIVATE_URL not in text, f"{file} embeds private adapter URL"
-            assert "8766/v1/projection" not in text, f"{file} embeds private adapter path"
+            assert "8767/v1/projection" not in text, f"{file} embeds private adapter path"

@@ -29,7 +29,7 @@ UI: [`/work.html`](../../dashboards/work.html) — Evidence rail attention list
 
 Only browser JavaScript in `dashboards/work.html` may fetch the fixed constant:
 
-`http://127.0.0.1:8766/v1/projection`
+`http://127.0.0.1:8767/v1/projection`
 
 Invariants:
 
@@ -121,6 +121,25 @@ preflight because `Accept` is CORS-safelisted. Fixture proofs cover real
 cross-origin browser smoke on those fixed loopback ports in addition to request
 interception tests.
 
+### Local service lifecycle
+
+Run `./services.sh start` from the public checkout to start Sources (`8766`),
+Monitor (`8765`), Astro (`4321`), and the sibling private Work adapter (`8767`).
+The sibling checkout is discovered as `../learn-ukrainian-infra-private`; a
+nonstandard layout may set `LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT` to its root.
+The browser endpoint and loopback bind remain fixed.
+
+Use `./services.sh status work`, `./services.sh restart work`,
+`./services.sh stop work`, and `./services.sh logs work` for the adapter. Status
+reports `unavailable` with a typed reason when the checkout, virtualenv, or
+module is missing, and `blocked` when a foreign process owns `127.0.0.1:8767`.
+An unavailable adapter does not prevent the public services from starting.
+Adapter logs remain in the private checkout at `logs/work-projection.log`; the
+public tree never stores private adapter output.
+
+The local port allocation is collision-free with KubeDojo: its API and Astro
+development server remain on `8768` and `4333`, respectively.
+
 ## Denominator (public server)
 
 At a query instant the public projection represents exactly once (or counts in a
@@ -168,7 +187,7 @@ curl -sS 'http://127.0.0.1:8765/api/work/v1/capabilities' | .venv/bin/python -m 
 curl -sS 'http://127.0.0.1:8765/api/work/v1/projection?fresh=true' | .venv/bin/python -m json.tool | head
 # Private adapter (loopback only; never via public Monitor):
 curl -sS -H 'Accept: application/json' -H 'Origin: http://127.0.0.1:8765' \
-  'http://127.0.0.1:8766/v1/projection' | .venv/bin/python -m json.tool | head
+  'http://127.0.0.1:8767/v1/projection' | .venv/bin/python -m json.tool | head
 ```
 
 See also: [ADR-019](../decisions/ADR-019-work-control-plane.md).
