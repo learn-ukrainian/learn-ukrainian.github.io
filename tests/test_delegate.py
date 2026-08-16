@@ -2485,13 +2485,27 @@ def _write_read_only_runtime_state(repo: Path) -> None:
         target.write_text("harness runtime state\n", encoding="utf-8")
 
 
+_READ_ONLY_DEPLOY_TARGET_DIR_NAMES = frozenset(
+    {".agents", ".claude", ".codex", ".cursor", ".gemini"}
+)
+_UNTRACKED_CLAUDE_HOOKS_PATH = ".claude/hooks/planted.sh"
+
+
 def test_read_only_runtime_state_path_classification():
     """#6860: harness/tooling residue is exempt; #4840 leaks and tracked files are not."""
     for path in _READ_ONLY_RUNTIME_STATE_PATHS:
         assert delegate._is_read_only_runtime_state_path(path)
     assert delegate._is_read_only_runtime_state_path(".agent/session-streams/v1/session-streams.sqlite3-wal")
-    assert delegate._is_read_only_runtime_state_path(".claude/projects/session.json")
     assert delegate._is_read_only_runtime_state_path("data/sources.sqlite3-shm")
+    assert _READ_ONLY_DEPLOY_TARGET_DIR_NAMES.isdisjoint(
+        delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
+    )
+    assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert not delegate._is_read_only_runtime_state_path(".claude/projects/session.json")
+    assert not delegate._is_read_only_runtime_state_path(".codex/hooks/planted.sh")
+    assert not delegate._is_read_only_runtime_state_path(".gemini/settings.json")
+    assert not delegate._is_read_only_runtime_state_path(".cursor/hooks/planted.sh")
+    assert not delegate._is_read_only_runtime_state_path(".agents/skills/planted.md")
     assert not delegate._is_read_only_runtime_state_path(".cache/lemma-frequency-c1-999.json")
     assert not delegate._is_read_only_runtime_state_path("tracked.txt")
     assert not delegate._is_read_only_runtime_state_path(
@@ -2520,6 +2534,11 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
         delegate._read_only_mutation_paths({}, {tracked_session: " M"})
         == [tracked_session]
     )
+
+    # Deploy-target untracked files stay visible (#6860 r2).
+    assert delegate._read_only_mutation_paths(
+        {}, {_UNTRACKED_CLAUDE_HOOKS_PATH: "??"}
+    ) == [_UNTRACKED_CLAUDE_HOOKS_PATH]
 
 
 @pytest.mark.parametrize(
@@ -2629,6 +2648,84 @@ def test_read_only_dispatch_still_fails_on_tracked_mutation_with_runtime_state(
     assert "tracked.txt" in state["read_only_checkout_post"]
     for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
         assert state["read_only_checkout_post"][relative_path] == "!!"
+
+
+def test_read_only_dispatch_fails_on_untracked_claude_hooks_file(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6860 r2 / #M-16: an untracked deploy-target drop still fails read-only."""
+    checkout = (tmp_path / "claude-hooks-drop").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = "read-only-untracked-claude-hooks"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+    planted = checkout / _UNTRACKED_CLAUDE_HOOKS_PATH
+
+    def plant_untracked_hook(*_args, **_kwargs):
+        planted.parent.mkdir(parents=True, exist_ok=True)
+        planted.write_text("#!/bin/sh\necho planted\n", encoding="utf-8")
+        planted.chmod(0o755)
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=plant_untracked_hook):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [_UNTRACKED_CLAUDE_HOOKS_PATH]
+    assert state["last_error"] == (
+        f"read-only checkout mutation detected: {_UNTRACKED_CLAUDE_HOOKS_PATH}"
+    )
+    assert state["read_only_checkout_post"][_UNTRACKED_CLAUDE_HOOKS_PATH] == "??"
+    assert planted.exists()
+
+
+def test_read_only_deploy_target_dir_exemption_mutation_check(monkeypatch):
+    """#6860 r2 / #M-16: re-adding ``.claude`` would silently exempt a hooks drop.
+
+    1. Current set: untracked ``.claude/hooks/`` is a mutation.
+    2. Mutate the set to include ``.claude``: the same path is exempted.
+    3. Restore: the path is a mutation again.
+    """
+    planted = {_UNTRACKED_CLAUDE_HOOKS_PATH: "??"}
+
+    assert ".claude" not in delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
+    assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert delegate._read_only_mutation_paths({}, planted) == [
+        _UNTRACKED_CLAUDE_HOOKS_PATH
+    ]
+
+    monkeypatch.setattr(
+        delegate,
+        "_READ_ONLY_RUNTIME_STATE_DIR_NAMES",
+        frozenset({*delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES, ".claude"}),
+    )
+    assert delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert delegate._read_only_mutation_paths({}, planted) == []
+
+    monkeypatch.undo()
+    assert ".claude" not in delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
+    assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert delegate._read_only_mutation_paths({}, planted) == [
+        _UNTRACKED_CLAUDE_HOOKS_PATH
+    ]
 
 
 def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(

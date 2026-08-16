@@ -2149,17 +2149,17 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # false-fails: ``.agent/sessions/*.json``, fleet-comms sqlite ``-shm/-wal``,
 # ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
 # (harness/session/cache residue), not task-authored leaks such as ``.cache/``
-# (#4840). Tracked files under these names still fail via porcelain status.
+# (#4840). Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
+# ``.cursor``, ``.agents``) are not in this set: they hold tracked,
+# harness-executed content, so an untracked new file there (e.g.
+# ``.claude/hooks/``) must still fail a read-only task. Exempt an exact
+# subpath later if a genuine runtime false-positive appears. Tracked
+# files under these names still fail via porcelain status.
 _READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
     {
         ".agent",
-        ".agents",
         ".antigravitycli",
-        ".claude",
-        ".codex",
-        ".cursor",
         ".deploy-state",
-        ".gemini",
         ".pytest_breadcrumbs",
         ".pytest_cache",
         ".runtime",
