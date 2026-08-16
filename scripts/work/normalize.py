@@ -67,6 +67,8 @@ def _stream_index(streams: dict[str, Any] | None) -> dict[str, Any]:
             "multi": {},
             "pending": set(),
             "titles": {},
+            "membership": {},
+            "epic_of": {},
             "fresh": False,
             "missing": True,
             "generated_at": None,
@@ -84,12 +86,35 @@ def _stream_index(streams: dict[str, Any] | None) -> dict[str, Any]:
             pending.add(int(entry["number"]))
         elif isinstance(entry, int):
             pending.add(entry)
+    # Public-safe open-issue→stream-names map (#6880) and the registry's
+    # epic→stream map; both power stream-scoped pick lists in /next.
+    membership: dict[int, list[str]] = {}
+    for key, names in (streams.get("open_stream_membership") or {}).items():
+        try:
+            number = int(key)
+        except (TypeError, ValueError):
+            continue
+        if isinstance(names, list):
+            clean = [str(s) for s in names if isinstance(s, str) and s]
+            if clean:
+                membership[number] = clean
+    epic_of: dict[int, str] = {}
+    registry = streams.get("streams")
+    if isinstance(registry, dict):
+        for name, epics in registry.items():
+            for epic in epics or []:
+                try:
+                    epic_of[int(epic)] = str(name)
+                except (TypeError, ValueError):
+                    continue
     missing = bool(streams.get("error") or streams.get("status") == "no-cache")
     stale = bool(streams.get("stale"))
     return {
         "orphans": orphans,
         "multi": multi,
         "pending": pending,
+        "membership": membership,
+        "epic_of": epic_of,
         "fresh": not missing and not stale,
         "missing": missing,
         "stale": stale,
@@ -211,12 +236,15 @@ def _build_issue_item(
     elif number in stream_idx["pending"]:
         stream_status = "pending_native"
         epic_streams = []
+    elif number in stream_idx.get("epic_of", {}):
+        stream_status = "epic"
+        epic_streams = [stream_idx["epic_of"][number]]
     elif stream_idx["missing"]:
         stream_status = "unknown"
         epic_streams = []
     else:
         stream_status = "homed"
-        epic_streams = []
+        epic_streams = stream_idx.get("membership", {}).get(number, [])
 
     dispatch = _match_dispatch(tasks, issue_number=number, pr_number=None)
     streams_section = section_times.get("streams")

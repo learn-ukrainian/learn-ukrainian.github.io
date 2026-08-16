@@ -348,6 +348,38 @@ def fetch_open_prs(
     )
 
 
+def public_open_stream_membership(report: dict[str, Any]) -> dict[str, list[str]]:
+    """Public-safe issue→stream-names map for OPEN issues only (#6880).
+
+    Derived from the ADR-011 P4 private index BEFORE it is stripped. Keeps only
+    stream NAMES — already public via the registry ``streams`` key and the
+    ``multi_homed`` rows — for issues in the open set. Epic ownership, closed
+    issues, and the via/uniqueness proofs never leave the private cache.
+    """
+    membership = report.get("effective_membership")
+    open_numbers = report.get("open_issue_numbers")
+    if not isinstance(membership, dict) or not isinstance(open_numbers, list):
+        return {}
+    open_set: set[int] = set()
+    for n in open_numbers:
+        try:
+            open_set.add(int(n))
+        except (TypeError, ValueError):
+            continue
+    out: dict[str, list[str]] = {}
+    for key, entry in membership.items():
+        try:
+            number = int(key)
+        except (TypeError, ValueError):
+            continue
+        if number not in open_set or not isinstance(entry, dict):
+            continue
+        streams = sorted({str(s) for s in entry.get("streams") or [] if isinstance(s, str) and s})
+        if streams:
+            out[str(number)] = streams
+    return out
+
+
 def fetch_streams_projection(
     loader: Callable[[], dict[str, Any]] | None = None,
 ) -> SectionResult:
@@ -366,13 +398,18 @@ def fetch_streams_projection(
         )
         if report is not None:
             payload = _strip_private_index(report)
+            membership = public_open_stream_membership(report)
             status = "ok"
         elif stale is not None:
             payload = {**_strip_private_index(stale), "stale": True}
+            membership = public_open_stream_membership(stale)
             status = "stale"
         else:
             payload = {"status": "no-cache", "ok": None}
+            membership = {}
             status = "unavailable"
+        if membership:
+            payload["open_stream_membership"] = membership
         return {"_status": status, **_with_refresh(payload, state)}
 
     try:
@@ -381,11 +418,16 @@ def fetch_streams_projection(
         return SectionResult("streams", "unavailable", reason=f"streams_error:{type(exc).__name__}")
 
     status = str(payload.pop("_status", "ok"))
+    # Injected loaders may hand up a raw audit report; derive the public-safe
+    # membership map before the hard gate drops the private index below.
+    membership = public_open_stream_membership(payload)
     # Privacy hard gate: never forward private index keys even if a loader errs.
     from scripts.orchestration.issue_stream_audit import PRIVATE_CACHE_KEYS
 
     for key in PRIVATE_CACHE_KEYS:
         payload.pop(key, None)
+    if membership and "open_stream_membership" not in payload:
+        payload["open_stream_membership"] = membership
     if payload.get("stale"):
         status = "stale"
     if payload.get("error") or payload.get("status") == "no-cache":

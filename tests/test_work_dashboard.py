@@ -162,3 +162,40 @@ def test_work_page_actionable_default_view_contracts():
     assert "NONE" in html
     assert "OFF_TRACK" in html
     assert "AT_RISK" in html
+
+
+def test_work_page_actionable_predicate_parity_with_server_ssot():
+    """The JS isActionable predicate must match scripts/work/attention.py (#6880).
+
+    The server-side predicate is the SSOT for /api/work/v1/next; the dashboard
+    keeps a JS mirror. Deny-list drift or a dropped OFF_TRACK/AT_RISK inclusion
+    would silently fork the Actionable view from the machine pick list.
+    """
+    from scripts.work.attention import NON_ACTIONABLE_ACTION_CODES, is_actionable
+
+    html = WORK.read_text(encoding="utf-8")
+    match = re.search(r"NON_ACTIONABLE_ACTION_CODES = new Set\(\[(.*?)\]\)", html)
+    assert match, "JS deny-list constant missing from work.html"
+    js_codes = set(re.findall(r"'([A-Z_]+)'", match.group(1)))
+    assert js_codes == set(NON_ACTIONABLE_ACTION_CODES)
+
+    start = html.index("function isActionable(")
+    end = html.index("function ", start + 1)
+    body = html[start:end]
+    # Health inclusion mirrors the Python short-circuit exactly.
+    assert "item.health === 'OFF_TRACK' || item.health === 'AT_RISK'" in body
+    assert "return true" in body
+    # Fallback path consults the same deny list on safe_next_action.code.
+    assert "safe_next_action" in body
+    assert "NON_ACTIONABLE_ACTION_CODES.has(code)" in body
+    assert "!!code" in body
+
+    # Truth table over the Python SSOT — the semantics both sides must share.
+    assert is_actionable({"health": "OFF_TRACK", "safe_next_action": {"code": "NONE"}})
+    assert is_actionable({"health": "AT_RISK", "safe_next_action": {"code": "OPEN_GITHUB"}})
+    assert is_actionable({"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}})
+    for denied in sorted(NON_ACTIONABLE_ACTION_CODES):
+        assert not is_actionable({"health": "ON_TRACK", "safe_next_action": {"code": denied}})
+        assert not is_actionable({"health": "UNKNOWN", "safe_next_action": {"code": denied}})
+    assert not is_actionable({"health": "ON_TRACK", "safe_next_action": {}})
+    assert not is_actionable(None)

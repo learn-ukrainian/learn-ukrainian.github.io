@@ -11,7 +11,9 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request
 
-from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
+from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set
+from scripts.orchestration.issue_stream_audit import load_registry
+from scripts.work.attention import is_actionable
 from scripts.work.normalize import build_public_projection
 from scripts.work.schema import (
     SchemaValidationError,
@@ -28,6 +30,13 @@ CACHE_KEY = "work:v1:projection"
 CACHE_TTL_S = 30.0
 WARM_TARGET_S = 2.0
 TIMEOUT_S = 5.0
+
+NEXT_DEFAULT_LIMIT = 7
+NEXT_MAX_LIMIT = 25
+NEXT_RETRY_AFTER_S = 3.0
+NEXT_TOP_BLOCKERS = 3
+STREAM_REGISTRY_CACHE_KEY = "work:v1:stream-registry"
+STREAM_REGISTRY_TTL_S = 60.0
 
 
 def _filters_from_request(request: Request) -> dict[str, Any]:
@@ -181,6 +190,138 @@ async def work_projection(
     return out
 
 
+def _known_streams() -> list[str] | None:
+    """Registry stream keys with a small TTL cache; None when unreadable (fail open)."""
+    cached = cache_get(STREAM_REGISTRY_CACHE_KEY, STREAM_REGISTRY_TTL_S)
+    if isinstance(cached, list):
+        return cached
+    try:
+        names = sorted(load_registry().keys())
+    except Exception:
+        return None
+    cache_set(STREAM_REGISTRY_CACHE_KEY, names)
+    return names
+
+
+def _item_streams(item: dict[str, Any]) -> list[str]:
+    streams = ((item.get("projections") or {}).get("stream") or {}).get("streams")
+    if not isinstance(streams, list):
+        return []
+    return [s for s in streams if isinstance(s, str) and s]
+
+
+def _next_rank_key(item: dict[str, Any]) -> tuple[int, str]:
+    return (int(item.get("attention_rank") or 0), str(item.get("work_id") or ""))
+
+
+@router.get("/v1/next")
+async def work_next(
+    stream: str = Query(
+        ...,
+        min_length=1,
+        max_length=64,
+        description="Stream key from scripts/config/issue_streams.yaml (the caller's lane epic).",
+    ),
+    limit: int = Query(NEXT_DEFAULT_LIMIT, ge=1, le=NEXT_MAX_LIMIT),
+) -> dict[str, Any]:
+    """Stream-scoped actionable pick list served strictly from the warm cache (#6880).
+
+    Never builds a cold projection: absent cache → 503 ``building`` with
+    ``retry_after_s``. A present-but-expired cache is served as-is (honest
+    ``cache_age_s``) while the shared single-flight refresh runs in the
+    background so /next-only pollers converge without ever blocking.
+    """
+    known = _known_streams()
+    if known is not None and stream not in known:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "unknown_stream",
+                "message": f"unknown stream {stream!r}",
+                "valid_streams": known,
+            },
+        )
+
+    key = projection_cache_key({})
+    cached = cache_get_with_age(key, float("inf"))
+    if cached is None or not isinstance(cached[0], dict):
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "building",
+                "message": "work projection cache is cold; retry shortly",
+                "retry_after_s": NEXT_RETRY_AFTER_S,
+            },
+            headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
+        )
+    payload, age = cached
+    if age >= CACHE_TTL_S:
+        _get_or_create_build_task(key, {})
+
+    items = [i for i in payload.get("items") or [] if isinstance(i, dict)]
+    actionable = [i for i in items if is_actionable(i)]
+
+    scoped = sorted(
+        (i for i in actionable if stream in _item_streams(i)), key=_next_rank_key
+    )
+    queue = [
+        {
+            "work_id": i.get("work_id"),
+            "resource_kind": i.get("resource_kind"),
+            "remote_id": i.get("remote_id"),
+            "title": i.get("title") or "",
+            "health": i.get("health"),
+            "safe_next_action": i.get("safe_next_action") or {},
+            "attention_rank": i.get("attention_rank"),
+            "url": (i.get("urls") or {}).get("html"),
+        }
+        for i in scoped[:limit]
+    ]
+
+    counts: dict[str, int] = {name: 0 for name in known or [] if name != stream}
+    unscoped = 0
+    for i in actionable:
+        streams_of = _item_streams(i)
+        if not streams_of:
+            unscoped += 1
+            continue
+        for name in streams_of:
+            if name != stream:
+                counts[name] = counts.get(name, 0) + 1
+
+    top_blockers = [
+        {
+            "work_id": i.get("work_id"),
+            "resource_kind": i.get("resource_kind"),
+            "title": i.get("title") or "",
+            "health": i.get("health"),
+            "action_code": str(((i.get("safe_next_action") or {}).get("code")) or ""),
+            "streams": _item_streams(i),
+        }
+        for i in sorted(
+            (i for i in actionable if i.get("health") == "OFF_TRACK"),
+            key=_next_rank_key,
+        )[:NEXT_TOP_BLOCKERS]
+    ]
+
+    return {
+        "schema_version": "work-next.v1",
+        "stream": stream,
+        "generated_at": payload.get("generated_at"),
+        "cache_age_s": float(age),
+        "limit": limit,
+        "queue": queue,
+        "digest": {
+            "other_streams": {
+                "actionable_counts_by_stream": {k: counts[k] for k in sorted(counts)},
+                "top_blockers": top_blockers,
+            },
+            "unscoped_actionable_count": unscoped,
+        },
+        "capabilities": {"mutation": False},
+    }
+
+
 @router.get("/v1/capabilities")
 async def work_capabilities() -> dict[str, Any]:
     """Public-safe capability + optional private-source seam metadata."""
@@ -201,6 +342,17 @@ async def work_capabilities() -> dict[str, Any]:
         "saved_view_keys": sorted(
             {"health", "kind", "lifecycle", "orphan", "repository_id", "source_id"}
         ),
+        "next_queue": {
+            "route": "GET /api/work/v1/next",
+            "params": {
+                "stream": (
+                    "required — stream key from scripts/config/issue_streams.yaml; "
+                    "the pick list is scoped to it"
+                ),
+                "limit": f"optional int, default {NEXT_DEFAULT_LIMIT}, max {NEXT_MAX_LIMIT}",
+            },
+            "served_from": "warm projection cache only; 503 building + retry_after_s when cold",
+        },
     }
 
 
