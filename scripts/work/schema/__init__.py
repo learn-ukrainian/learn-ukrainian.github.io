@@ -84,10 +84,21 @@ def validate_projection(payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def canonicalize_multivalue(values: list[str]) -> list[str]:
+    """Deduplicate and deterministically sort multivalue filter members.
+
+    Permanent projection cache keys must not diverge for equivalent query forms
+    such as ``?health=A&health=B`` vs ``?health=B&health=A&health=A``.
+    """
+    return sorted(set(values))
+
+
 def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str, Any]:
     """Validate public-safe saved-view query parameters.
 
     Rejects unknown keys, free text, overlong values, and private endpoint keys.
+    Multivalue filters are always returned as deduplicated, sorted sequences so
+    permanent cache keys stay canonical across duplicate/reordered query forms.
     """
     filters: dict[str, Any] = {}
     for key, value in raw.items():
@@ -112,17 +123,17 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
             bad = [v for v in cleaned if v not in ALLOWED_HEALTH]
             if bad:
                 raise SchemaValidationError(f"invalid health filter: {bad[0]}")
-            filters["health"] = cleaned
+            filters["health"] = canonicalize_multivalue(cleaned)
         elif key == "kind":
             bad = [v for v in cleaned if v not in ALLOWED_KINDS]
             if bad:
                 raise SchemaValidationError(f"invalid kind filter: {bad[0]}")
-            filters["resource_kind"] = cleaned
+            filters["resource_kind"] = canonicalize_multivalue(cleaned)
         elif key == "lifecycle":
             bad = [v for v in cleaned if v not in ALLOWED_LIFECYCLES]
             if bad:
                 raise SchemaValidationError(f"invalid lifecycle filter: {bad[0]}")
-            filters["lifecycle"] = cleaned
+            filters["lifecycle"] = canonicalize_multivalue(cleaned)
         elif key == "orphan":
             if len(cleaned) != 1 or cleaned[0] not in {"true", "false", "1", "0"}:
                 raise SchemaValidationError("orphan must be true or false")
@@ -139,12 +150,12 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
                     raise SchemaValidationError(f"invalid repository_id: {item}")
                 if item != allowed_repo:
                     raise SchemaValidationError(f"invalid repository_id: {item}")
-            filters["repository_id"] = cleaned
+            filters["repository_id"] = canonicalize_multivalue(cleaned)
         elif key == "source_id":
             bad = [v for v in cleaned if v not in ALLOWED_SOURCES]
             if bad:
                 raise SchemaValidationError(f"invalid source_id: {bad[0]}")
-            filters["source_id"] = cleaned
+            filters["source_id"] = canonicalize_multivalue(cleaned)
     return filters
 
 
@@ -153,6 +164,7 @@ __all__ = [
     "SCHEMA_FILENAME",
     "SCHEMA_VERSION",
     "SchemaValidationError",
+    "canonicalize_multivalue",
     "load_schema",
     "parse_saved_view_params",
     "schema_digest_sha256",

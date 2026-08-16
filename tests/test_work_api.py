@@ -182,6 +182,61 @@ def test_projection_rejects_private_filter_keys(monkeypatch):
     assert bad.json()["detail"]["error"] == "invalid_saved_view"
 
 
+def test_source_id_filter_echoed_and_schema_valid(monkeypatch):
+    """?source_id=public-monitor is accepted and appears in filters_applied."""
+    cache_invalidate("work:v1:projection")
+    sections = _sections_with_canary()
+    builds: list[dict] = []
+
+    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        builds.append(dict(filters or {}))
+        return build_projection(
+            sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s
+        )
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+    response = client.get("/api/work/v1/projection?source_id=public-monitor")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["filters_applied"]["source_id"] == ["public-monitor"]
+    assert builds and builds[0]["source_id"] == ["public-monitor"]
+    assert all(item["source_id"] == "public-monitor" for item in data["items"])
+
+
+def test_duplicate_multivalue_filters_share_cache_entry(monkeypatch):
+    """Reordered/duplicated multivalue query forms must not create distinct cache keys."""
+    cache_invalidate("work:v1:projection")
+    sections = _sections_with_canary()
+    build_count = {"n": 0}
+
+    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        build_count["n"] += 1
+        return build_projection(
+            sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s
+        )
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+
+    first = client.get(
+        "/api/work/v1/projection?health=ON_TRACK&health=AT_RISK&kind=pr&kind=issue"
+    )
+    second = client.get(
+        "/api/work/v1/projection?health=AT_RISK&health=ON_TRACK&health=AT_RISK"
+        "&kind=issue&kind=pr"
+    )
+    assert first.status_code == 200, first.text
+    assert second.status_code == 200, second.text
+    assert build_count["n"] == 1
+    assert first.json()["filters_applied"] == second.json()["filters_applied"]
+    assert first.json()["filters_applied"]["health"] == ["AT_RISK", "ON_TRACK"]
+    assert first.json()["filters_applied"]["resource_kind"] == ["issue", "pr"]
+
+    # Distinct canonical filters still get their own entry.
+    third = client.get("/api/work/v1/projection?health=OFF_TRACK")
+    assert third.status_code == 200, third.text
+    assert build_count["n"] == 2
+
+
 def test_independent_degradation_when_one_section_fails(monkeypatch):
     cache_invalidate("work:v1:projection")
     sections = _sections_with_canary()

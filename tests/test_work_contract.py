@@ -20,9 +20,10 @@ from scripts.work.schema import (
     SchemaValidationError,
     load_schema,
     parse_saved_view_params,
+    schema_digest_sha256,
     validate_projection,
 )
-from scripts.work.sources_public import SectionResult
+from scripts.work.sources_public import SectionResult, fetch_fleet_reviews
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "work" / "projection_public_min.json"
@@ -77,6 +78,221 @@ def test_saved_view_repository_id_allowlist():
     assert ok["repository_id"] == [configured]
     with pytest.raises(SchemaValidationError, match="invalid repository_id"):
         parse_saved_view_params({"repository_id": "some-owner/random-repo-not-configured"})
+
+
+def test_saved_view_multivalue_filters_are_canonical():
+    """Duplicate / reordered multivalue query forms share one canonical filter dict."""
+    from scripts.work.sources_public import public_repository_id
+
+    configured = public_repository_id()
+    a = parse_saved_view_params(
+        {
+            "health": ["ON_TRACK", "AT_RISK", "AT_RISK"],
+            "kind": ["pr", "issue"],
+            "lifecycle": ["draft", "open", "open"],
+            "source_id": ["private-local-adapter", "public-monitor"],
+            "repository_id": [configured, configured],
+        }
+    )
+    b = parse_saved_view_params(
+        {
+            "health": ["AT_RISK", "ON_TRACK"],
+            "kind": ["issue", "pr"],
+            "lifecycle": ["open", "draft"],
+            "source_id": ["public-monitor", "private-local-adapter"],
+            "repository_id": configured,
+        }
+    )
+    assert a == b
+    assert a["health"] == ["AT_RISK", "ON_TRACK"]
+    assert a["resource_kind"] == ["issue", "pr"]
+    assert a["lifecycle"] == ["draft", "open"]
+    assert a["source_id"] == ["private-local-adapter", "public-monitor"]
+    assert a["repository_id"] == [configured]
+
+    from scripts.api.work_router import projection_cache_key
+
+    assert projection_cache_key(a) == projection_cache_key(b)
+
+
+def test_filters_applied_source_id_is_schema_backed():
+    """Closed filters_applied object advertises enum-backed source_id."""
+    schema = load_schema()
+    props = schema["properties"]["filters_applied"]["properties"]
+    assert "source_id" in props
+    assert props["source_id"]["items"]["enum"] == [
+        "public-monitor",
+        "private-local-adapter",
+    ]
+    # Digest is content-addressed; any filters_applied change must recompute.
+    digest = schema_digest_sha256()
+    assert len(digest) == 64
+    assert all(ch in "0123456789abcdef" for ch in digest)
+
+    payload = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    payload["filters_applied"] = {"source_id": ["public-monitor"]}
+    validate_projection(payload)
+    with pytest.raises(SchemaValidationError):
+        payload["filters_applied"] = {"source_id": ["not-a-source"]}
+        validate_projection(payload)
+
+
+def test_fleet_reviews_and_projection_reject_mixed_repositories():
+    """Formal-review rows for non-public repositories never enter the projection."""
+    private_repo = "other-org/other-private-repo"
+    suffix_cousin = "evil-org/learn-ukrainian.github.io"
+
+    def loader(limit: int, offset: int) -> dict:
+        if offset:
+            return {"total": 3, "reviews": []}
+        return {
+            "total": 3,
+            "reviews": [
+                {
+                    "review_id": "rev-public",
+                    "repository": REPO,
+                    "pr_number": 42,
+                    "state": "running",
+                    "sealed_verdict_available": False,
+                },
+                {
+                    "review_id": "rev-private",
+                    "repository": private_repo,
+                    "pr_number": 7,
+                    "state": "running",
+                    "sealed_verdict_available": True,
+                },
+                {
+                    "review_id": "rev-suffix",
+                    "repository": suffix_cousin,
+                    "pr_number": 99,
+                    "state": "running",
+                    "sealed_verdict_available": True,
+                },
+            ],
+        }
+
+    section = fetch_fleet_reviews(loader=loader, repository_id=REPO)
+    assert section.status == "ok"
+    assert section.count == 1
+    assert section.payload["reviews"][0]["review_id"] == "rev-public"
+    assert section.payload["reviews"][0]["repository"] == REPO
+
+    mixed_rows = [
+        {
+            "review_id": "rev-public-unlinked",
+            "repository": REPO,
+            "pr_number": 5001,
+            "state": "pending",
+            "sealed_verdict_available": False,
+        },
+        {
+            "review_id": "rev-private-unlinked",
+            "repository": private_repo,
+            "pr_number": 5002,
+            "state": "pending",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "rev-suffix-unlinked",
+            "repository": suffix_cousin,
+            "pr_number": 5003,
+            "state": "pending",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "rev-missing-repo",
+            "repository": None,
+            "pr_number": 5004,
+            "state": "pending",
+            "sealed_verdict_available": True,
+        },
+        {
+            # Same PR number as an open public PR but foreign repository: must not match.
+            "review_id": "rev-foreign-linked",
+            "repository": private_repo,
+            "pr_number": 100,
+            "state": "running",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "rev-public-linked",
+            "repository": REPO,
+            "pr_number": 100,
+            "state": "running",
+            "sealed_verdict_available": False,
+        },
+    ]
+    sections = {
+        "issues": SectionResult("issues", "ok", payload=[], count=0),
+        "prs": SectionResult(
+            "prs",
+            "ok",
+            payload=[
+                {
+                    "number": 100,
+                    "title": "Public PR",
+                    "state": "OPEN",
+                    "isDraft": False,
+                    "reviewDecision": "REVIEW_REQUIRED",
+                    "statusCheckRollup": [{"state": "SUCCESS"}],
+                    "mergeStateStatus": "CLEAN",
+                    "labels": [],
+                    "assignees": [],
+                    "url": f"https://github.com/{REPO}/pull/100",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "headRefOid": "deadbeef",
+                    "headRefName": "feat/work",
+                }
+            ],
+            count=1,
+        ),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "open_total": 0,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=0,
+        ),
+        "delegate_active": SectionResult(
+            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "delegate_tasks": SectionResult(
+            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "fleet_reviews": SectionResult(
+            "fleet_reviews",
+            "ok",
+            payload={"total": len(mixed_rows), "reviews": mixed_rows},
+            count=len(mixed_rows),
+        ),
+    }
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+    repos = {item["repository_id"] for item in projection["items"]}
+    assert repos == {REPO}
+    review_ids = {
+        rid
+        for item in projection["items"]
+        for rid in ((item.get("projections") or {}).get("review") or {}).get("review_ids")
+        or []
+    }
+    assert "rev-public-linked" in review_ids
+    assert "rev-public-unlinked" in review_ids
+    assert "rev-private-unlinked" not in review_ids
+    assert "rev-suffix-unlinked" not in review_ids
+    assert "rev-missing-repo" not in review_ids
+    assert "rev-foreign-linked" not in review_ids
+    blob = json.dumps(projection)
+    assert private_repo not in blob
+    assert suffix_cousin not in blob
 
 
 def test_relations_and_cycle_detection():

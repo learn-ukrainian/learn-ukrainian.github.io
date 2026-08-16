@@ -314,8 +314,15 @@ def fetch_delegate_tasks(
 
 def fetch_fleet_reviews(
     loader: Callable[[int, int], dict[str, Any]] | None = None,
+    *,
+    repository_id: str | None = None,
 ) -> SectionResult:
-    """Page fleet review summaries; never open sealed verdict blobs."""
+    """Page fleet review summaries for the exact public repository only.
+
+    Never open sealed verdict blobs. Rows whose ``repository`` is missing or
+    not exactly the configured public repository are dropped (no suffix match).
+    """
+    allowed = repository_id or public_repository_id()
 
     def _default_page(limit: int, offset: int) -> dict[str, Any]:
         from scripts.api.fleet_router import fleet_reviews
@@ -326,6 +333,7 @@ def fetch_fleet_reviews(
     items: list[dict[str, Any]] = []
     total = 0
     offset = 0
+    raw_seen = 0
     try:
         while offset < FLEET_REVIEW_HARD_CAP:
             page = page_fn(FLEET_REVIEW_PAGE, offset)
@@ -338,11 +346,14 @@ def fetch_fleet_reviews(
             for row in batch:
                 if not isinstance(row, dict):
                     continue
+                raw_seen += 1
+                if str(row.get("repository") or "") != allowed:
+                    continue
                 # Explicit allowlist — sealed blobs never enter the projection.
                 items.append(
                     {
                         "review_id": row.get("review_id"),
-                        "repository": row.get("repository"),
+                        "repository": allowed,
                         "pr_number": row.get("pr_number"),
                         "head_sha": row.get("head_sha"),
                         "gate_kind": row.get("gate_kind"),
@@ -354,7 +365,7 @@ def fetch_fleet_reviews(
                         "sealed_verdict_available": bool(row.get("sealed_verdict_available")),
                     }
                 )
-            if not batch or len(items) >= total or len(batch) < FLEET_REVIEW_PAGE:
+            if not batch or raw_seen >= total or len(batch) < FLEET_REVIEW_PAGE:
                 break
             offset += FLEET_REVIEW_PAGE
     except Exception as exc:
@@ -363,11 +374,12 @@ def fetch_fleet_reviews(
             "unavailable",
             reason=f"fleet_reviews_error:{type(exc).__name__}",
         )
-    truncated = total > len(items)
+    # Truncation reflects the upstream page budget, not post-filter keep count.
+    truncated = total > raw_seen
     return SectionResult(
         "fleet_reviews",
         "truncated" if truncated else "ok",
-        payload={"total": total, "reviews": items},
+        payload={"total": len(items), "reviews": items},
         count=len(items),
         truncated=truncated,
     )
@@ -406,7 +418,9 @@ def collect_public_sections(
         "streams": lambda: fetch_streams_projection(loader=streams_loader),
         "delegate_active": lambda: fetch_delegate_active(loader=delegate_active_loader),
         "delegate_tasks": lambda: fetch_delegate_tasks(loader=delegate_tasks_loader),
-        "fleet_reviews": lambda: fetch_fleet_reviews(loader=fleet_reviews_loader),
+        "fleet_reviews": lambda: fetch_fleet_reviews(
+            loader=fleet_reviews_loader, repository_id=repo
+        ),
     }
     results: dict[str, SectionResult] = {}
     with ThreadPoolExecutor(max_workers=max_workers) as pool:

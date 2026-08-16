@@ -153,15 +153,13 @@ def _match_reviews(reviews: list[dict[str, Any]], *, pr_number: int | None, repo
             "sealed_verdict_available": False,
             "review_decision": None,
         }
+    # Exact repository match only — never suffix/owner-agnostic matching, and
+    # never treat a missing repository as public.
     matched = [
         r
         for r in reviews
         if int(r.get("pr_number") or 0) == pr_number
-        and (
-            not r.get("repository")
-            or str(r.get("repository")) == repository_id
-            or str(r.get("repository")).endswith(repository_id.split("/")[-1])
-        )
+        and str(r.get("repository") or "") == repository_id
     ]
     return {
         "review_ids": [str(r.get("review_id")) for r in matched if r.get("review_id")],
@@ -440,17 +438,20 @@ def _build_unlinked_reviews(
         review_id = str(review.get("review_id") or "")
         if not review_id or review_id in linked_review_ids:
             continue
+        # Public projection admits only the exact configured repository; never
+        # emit a supplied non-public repository_id from an unlinked review row.
+        if str(review.get("repository") or "") != repository_id:
+            continue
         pr_number = review.get("pr_number")
         # Still surface formal-review jobs whose PR is not in the open list
         # (merged residual path uses R1 only for foundation).
         if pr_number is not None and int(pr_number) in open_pr_numbers:
             continue
-        repo = str(review.get("repository") or repository_id)
         items.append(
             {
-                "work_id": review_work_id(repo, review_id),
+                "work_id": review_work_id(repository_id, review_id),
                 "source_id": SOURCE_PUBLIC,
-                "repository_id": repo,
+                "repository_id": repository_id,
                 "resource_kind": "review",
                 "remote_id": review_id,
                 "title": f"formal-review:{review_id}",
@@ -485,7 +486,7 @@ def _build_unlinked_reviews(
                     [
                         {
                             "type": "related",
-                            "target_id": pr_work_id(repo, int(pr_number)),
+                            "target_id": pr_work_id(repository_id, int(pr_number)),
                             "evidence": "fleet_review_pr_number",
                         }
                     ]

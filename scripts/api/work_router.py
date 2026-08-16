@@ -69,6 +69,15 @@ def _filters_from_request(request: Request) -> dict[str, Any]:
         ) from exc
 
 
+def projection_cache_key(filters: dict[str, Any]) -> str:
+    """Permanent warm-cache key for a canonical filter dict.
+
+    Callers must pass already-canonicalized multivalue filters (see
+    ``parse_saved_view_params``) so equivalent query forms collide.
+    """
+    return f"{CACHE_KEY}:{sorted(filters.items())!r}"
+
+
 def _build_sync(filters: dict[str, Any], *, cache_age_s: float = 0.0) -> dict[str, Any]:
     payload = build_public_projection(filters=filters or None, cache_age_s=cache_age_s)
     return validate_projection(payload)
@@ -81,8 +90,7 @@ async def work_projection(
 ) -> dict[str, Any]:
     """Normalized public attention list with source envelopes and degradation."""
     filters = _filters_from_request(request)
-    cache_suffix = repr(sorted(filters.items()))
-    key = f"{CACHE_KEY}:{cache_suffix}"
+    key = projection_cache_key(filters)
 
     if not fresh:
         cached = cache_get_with_age(key, CACHE_TTL_S)

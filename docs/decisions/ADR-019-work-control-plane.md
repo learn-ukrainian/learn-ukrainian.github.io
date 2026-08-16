@@ -11,7 +11,7 @@ Operators need a single local Work surface that answers what needs attention acr
 
 ## Decision
 
-1. **Public owns the schema.** Authoritative contract: `scripts/work/schema/work_projection.v1.json` (`schema_version: work-projection.v1`). The future private adapter pins this file by public commit + SHA-256 and must not fork fields.
+1. **Public owns the schema.** Authoritative contract: `scripts/work/schema/work_projection.v1.json` (`schema_version: work-projection.v1`). The future private adapter pins this file by public commit + SHA-256 (`schema_digest_sha256` from `/api/work/v1/capabilities`) and must not fork fields. `filters_applied` is a closed object that includes enum-backed `source_id` alongside health/kind/lifecycle/orphan/repository_id.
 2. **Public Monitor serves a read-only projection** at `GET /api/work/v1/projection` (plus `/v1/capabilities`, `/v1/health`) and a UI at `/work.html`.
 3. **Canonical identity** is `(source_id, repository_id, resource_kind, remote_id)` serialized as `wp1:{source_id}:{repository_id}:{resource_kind}:{remote_id}`.
 4. **Warm refresh denominator (public)**:
