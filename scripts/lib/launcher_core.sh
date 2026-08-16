@@ -356,6 +356,20 @@ launcher_validate_mode() {
 }
 
 launcher_validate_driver_certification() {
+  # Interactive Grok: empty --model keeps the last TUI selection; an explicit
+  # pin must be the certified native model (refuse retired grok-4.5, #6870).
+  if [ "$LC_MODE" = "interactive" ] && [ "$LC_PROVIDER" = "grok" ]; then
+    if [ -z "${LC_MODEL:-}" ]; then
+      return 0
+    fi
+    case "$LC_MODEL" in
+      grok-4.6) return 0 ;;
+      *)
+        launcher_error "model '$LC_MODEL' is not certified for the grok launcher (use grok-4.6, or omit --model)."
+        exit 4
+        ;;
+    esac
+  fi
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
   # Claude/Grok may omit --model so the TUI keeps the last session selection.

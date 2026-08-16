@@ -53,22 +53,18 @@ def test_chat_completions_codex_round_trip(monkeypatch):
     assert body["choices"][0]["finish_reason"] == "stop"
 
 
-def test_chat_completions_grok_via_hermes(monkeypatch):
-    def backend(model, messages, **kwargs):
-        return proxy.CompletionResponse(content="hello from grok")
-
-    monkeypatch.setitem(proxy._ROUTABLE_MODELS, "grok-4.5", _route_with_backend("grok-4.5", backend))
-
+def test_chat_completions_retired_grok_45_returns_404():
+    """#6870: grok-4.5 → Hermes mapping is gone; retired pin must 404."""
+    assert "grok-4.5" not in proxy._ROUTABLE_MODELS
     response = _client().post(
         "/v1/chat/completions",
         json={"model": "grok-4.5", "messages": [{"role": "user", "content": "hello"}]},
     )
 
+    assert response.status_code == 404
     body = response.json()
-    assert response.status_code == 200
-    assert body["model"] == "grok-4.5"
-    assert body["choices"][0]["message"]["content"] == "hello from grok"
-    assert body["choices"][0]["finish_reason"] == "stop"
+    assert body["error"]["code"] == "model_not_found"
+    assert "grok-4.5" in body["error"]["message"]
 
 
 def test_chat_completions_gemini_round_trip(monkeypatch):

@@ -39,6 +39,14 @@ policy:
       Operator order 2026-08-16 (#6865) retires the 2026-07-27 ruling that sanctioned opencode
       first-party xai/grok-4.5 for orchestrator seats — opencode is no longer a sanctioned grok
       route for any seat. Hermes and OpenRouter grok routes remain banned.
+    - >-
+      EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION
+      still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer /
+      cross_family_code_infra_reviewer / textbook_nonhit_auditor (and OPENCODE_REVIEW_MODEL
+      xai/grok-4.5). Those pins live in hash-bound v2.1 evidence/validator artifacts
+      (phase3_functional_roles.py validator_sha256 + phase3_source_production_transport.py
+      inventory sha); rotating or rewriting them is outside the fleet seat list and requires
+      a separate open-model-data rebind (#6870 item 3). Fleet routing must not read them.
     - Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.
 
 # Canonical sealed formal-review transports. Resolver policy consumes these
