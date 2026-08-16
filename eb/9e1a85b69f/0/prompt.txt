@@ -1,0 +1,37 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok-build/infra-6860-guard-allowlist
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Issue #6860 — read-only mutation guard: stop false-failing successful tasks on harness runtime state
+
+Read GitHub issue #6860 in full — THREE successful tasks were mislabeled `failed` today
+(evidence on the issue): flagged paths were `.agent/sessions/*.json`, fleet-comms sqlite
+`-shm/-wal` side-files, `.pytest_cache/*`, `.pytest_breadcrumbs/*` — all gitignored
+harness/tooling runtime state, not repository mutations. Guard lives in
+`scripts/delegate.py` ("read-only checkout mutation detected").
+
+ROUTING_CARD_V1: tier=practical · grok-4.6 × native grok CLI (grok-build seat) ·
+owned_paths: scripts/delegate.py, tests/** · alternatives: kimi (on #6805, adjacent
+surfaces — coordinate: do NOT touch scripts/ai_agent_bridge/**), agy (on #6869-fix2).
+
+## Fix at the right layer (issue names it)
+Evaluate mutations against TRACKED content (`git status --porcelain -uno`-equivalent) or
+an explicit runtime-state allowlist — the issue lists the four path classes observed;
+sweep for siblings (any gitignored-by-default runtime dirs a worker's own tooling
+writes). A read-only worker editing a TRACKED file must still hard-fail — do not weaken
+that; mutation-check it (#M-16: fake a tracked-file edit in a read-only dispatch test →
+must fail).
+
+## Steps
+Worktree → implement → regression tests: (a) runtime-state writes → task stays
+successful, (b) tracked-file write → still fails, both mutation-checked → pytest + ruff
+→ conventional commit referencing #6860 → push → PR. NO auto-merge. Evidence quoted
+(#M-4).

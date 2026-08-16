@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "eb9e1a85b69f",
+  "strategy": "manual-commit",
+  "branch": "grok-build/infra-6860-guard-allowlist",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/eb/9e1a85b69f/0/metadata.json",
+      "transcript": "/eb/9e1a85b69f/0/full.jsonl",
+      "compact_transcript": "/eb/9e1a85b69f/0/transcript.jsonl",
+      "content_hash": "/eb/9e1a85b69f/0/content_hash.txt",
+      "prompt": "/eb/9e1a85b69f/0/prompt.txt"
+    }
+  ]
+}
