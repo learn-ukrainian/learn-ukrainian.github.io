@@ -557,7 +557,7 @@ def test_work_status_reports_other_typed_prerequisite_failures(
 
 
 def test_work_status_rejects_foreign_health_listener(tmp_path, mock_lsof_env) -> None:
-    """A foreign 8767 owner is blocked even if it could answer the health path."""
+    """A foreign 8769 owner is blocked even if it could answer the health path."""
     set_pids, _, env = mock_lsof_env
     private_root = tmp_path / "private"
     (private_root / ".git").mkdir(parents=True)
@@ -592,7 +592,7 @@ def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> No
     port = find_free_port()
     script_path = tmp_path / "services.sh"
     script_path.write_text(
-        SERVICES_SH.read_text(encoding="utf-8").replace("8767", str(port)),
+        SERVICES_SH.read_text(encoding="utf-8").replace("8769", str(port)),
         encoding="utf-8",
     )
     script_path.chmod(0o755)
@@ -690,14 +690,25 @@ HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_fore
         assert probe.connect_ex(("127.0.0.1", port)) != 0
 
 
-def test_local_service_ports_do_not_collide_with_kubedojo() -> None:
-    """Frozen Learn Ukrainian ports remain disjoint from KubeDojo declarations."""
+def test_local_service_ports_do_not_collide_with_bridge_or_kubedojo() -> None:
+    """Frozen Learn Ukrainian ports avoid the bridge and KubeDojo declarations."""
     assignment = re.compile(r"^SVC_PORT\[([^]]+)\]=\"?(\d+)\"?$", re.MULTILINE)
     learn_ports = {
         name: int(port)
         for name, port in assignment.findall(SERVICES_SH.read_text(encoding="utf-8"))
     }
-    assert learn_ports == {"sources": 8766, "api": 8765, "work": 8767, "astro": 4321}
+    assert learn_ports == {"sources": 8766, "api": 8765, "work": 8769, "astro": 4321}
+
+    bridge_source = (PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "_cli.py").read_text(
+        encoding="utf-8"
+    )
+    bridge_port_match = re.search(
+        r'add_argument\(\s*"--port",\s*type=int,\s*default=(\d+),', bridge_source
+    )
+    assert bridge_port_match is not None
+    openai_compat_proxy_port = int(bridge_port_match.group(1))
+    assert openai_compat_proxy_port == 8767
+    assert learn_ports["work"] != openai_compat_proxy_port
 
     # CI has no sibling checkout, so the reviewed KubeDojo contract is frozen
     # here and cross-checked against its real services.sh whenever available.

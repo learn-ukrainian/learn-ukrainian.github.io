@@ -130,7 +130,7 @@ python -m venv .venv
 # 2. Frontend
 cd starlight && npm install && cd ..
 
-# 3. Services (Sources 8766, Monitor 8765, Astro 4321, private Work 8767)
+# 3. Services (Sources 8766, Monitor 8765, Astro 4321, private Work 8769)
 ./services.sh start
 ./services.sh status
 # Work adapter diagnostics: ./services.sh status work && ./services.sh logs work

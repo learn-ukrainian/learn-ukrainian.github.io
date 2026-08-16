@@ -70,11 +70,11 @@ SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
 SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
 
 SVC_CMD[work]="$WORK_PRIVATE_ROOT/.venv/bin/python -m work_projection"
-SVC_PORT[work]=8767
+SVC_PORT[work]=8769
 SVC_HOST[work]=127.0.0.1
 SVC_LOG[work]="$WORK_PRIVATE_ROOT/logs/work-projection.log"
 SVC_DESC[work]="Private Work Projection Adapter (read-only, sibling checkout)"
-SVC_HEALTH[work]="http://127.0.0.1:8767/v1/health"
+SVC_HEALTH[work]="http://127.0.0.1:8769/v1/health"
 SVC_MATCH[work]="-m work_projection"
 
 SVC_CMD[astro]="npm run dev --prefix site -- --host 127.0.0.1 --port 4321 --force"
