@@ -1,4 +1,4 @@
-"""Privacy oracle for the public Work foundation (FX-07)."""
+"""Privacy oracle for the public Work foundation + browser-local private boundary."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ from scripts.work.sources_public import SectionResult, private_capability_seam
 
 ROOT = Path(__file__).resolve().parents[1]
 CANARY_FILE = ROOT / "tests" / "fixtures" / "work" / "fx07_canaries.txt"
+PRIVATE_URL = "http://127.0.0.1:8766/v1/projection"
 # Product + fixture surfaces only. Privacy tests may inject canaries as inputs;
 # the oracle asserts they never appear in public outputs or non-test artifacts.
 WORK_OWNED = [
@@ -25,6 +26,9 @@ WORK_OWNED = [
     ROOT / "tests" / "fixtures" / "work",
     ROOT / "docs" / "decisions" / "ADR-019-work-control-plane.md",
     ROOT / "docs" / "monitor-api" / "work.md",
+    ROOT / "tests" / "test_work_dashboard.py",
+    ROOT / "tests" / "test_work_privacy.py",
+    ROOT / "tests" / "test_work_dashboard_private_integration.py",
 ]
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -119,9 +123,11 @@ def test_fx07_canaries_never_enter_public_api_payload(monkeypatch):
     monkeypatch.setattr(
         work_router,
         "build_public_projection",
-        lambda **kwargs: build_projection(sections, repository_id="learn-ukrainian/learn-ukrainian.github.io", **{
-            k: v for k, v in kwargs.items() if k in {"filters", "cache_age_s"}
-        }),
+        lambda **kwargs: build_projection(
+            sections,
+            repository_id="learn-ukrainian/learn-ukrainian.github.io",
+            **{k: v for k, v in kwargs.items() if k in {"filters", "cache_age_s"}},
+        ),
     )
 
     response = client.get("/api/work/v1/projection")
@@ -145,6 +151,9 @@ def test_private_capability_seam_is_truthful_and_non_proxying():
     assert "requests.get" not in source
     assert "httpx" not in source
     assert "private-local-adapter" in source or "private_capability" in source
+    # Public server must never hardcode the private loopback adapter URL.
+    assert PRIVATE_URL not in source
+    assert "127.0.0.1:8766" not in source
 
 
 def test_saved_view_urls_reject_private_values():
@@ -180,14 +189,37 @@ def test_owned_paths_and_work_html_have_no_canaries_or_private_paths():
             assert private_path_re.search(text) is None, f"{file}: private checkout path"
 
 
-def test_work_html_is_read_only_and_public_api_only():
+def test_work_html_is_read_only_and_browser_local_private_only():
     html = (ROOT / "dashboards" / "work.html").read_text(encoding="utf-8")
     assert 'data-read-only="true"' in html
     assert "FOUNDATION_COMPLETE" in html
     assert "/api/work/v1/projection" in html
+    assert PRIVATE_URL in html
     assert "method: 'POST'" not in html
     assert 'method: "POST"' not in html
+    assert "method: 'PUT'" not in html
+    assert "method: 'PATCH'" not in html
+    assert "method: 'DELETE'" not in html
     assert "dispatch" in html.lower()  # mention only
+    # Fixed private URL only; no configurability surfaces.
+    assert "localStorage" not in html
+    assert "sessionStorage" not in html
+    assert "document.cookie" not in html
+    assert "private_endpoint" in html  # explicitly rejected
     # Must not hardcode private absolute paths or private host canaries
     for canary in _load_canaries():
         assert canary not in html
+
+
+def test_public_server_owned_python_never_imports_private_adapter_url():
+    """Architecture invariant: only browser JS may fetch the fixed private URL."""
+    server_paths = [
+        ROOT / "scripts" / "api" / "work_router.py",
+        ROOT / "scripts" / "work",
+    ]
+    for path in server_paths:
+        files = [path] if path.is_file() else sorted(path.rglob("*.py"))
+        for file in files:
+            text = file.read_text(encoding="utf-8", errors="replace")
+            assert PRIVATE_URL not in text, f"{file} embeds private adapter URL"
+            assert "8766/v1/projection" not in text, f"{file} embeds private adapter path"

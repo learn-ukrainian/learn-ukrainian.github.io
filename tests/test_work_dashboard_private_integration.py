@@ -1,0 +1,1229 @@
+"""Browser-local dual-source Work projection proofs (unified P3).
+
+Source-blind fixtures only. Never prints private payloads. Does not require a
+real private repository or live adapter process.
+"""
+
+from __future__ import annotations
+
+import json
+import socket
+import subprocess
+import threading
+import time
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import Any
+from urllib.request import Request, urlopen
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+WORK_HTML = ROOT / "dashboards" / "work.html"
+PRIVATE_URL = "http://127.0.0.1:8766/v1/projection"
+PUBLIC_PATH = "/api/work/v1/projection"
+SCHEMA_DIGEST = "89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde"
+PUBLIC_COMMIT = "f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d"
+PUBLIC_REPO = "learn-ukrainian/learn-ukrainian.github.io"
+# Source-blind synthetic private slug — not a real private repository identifier.
+SYNTH_PRIVATE_REPO = "fixture-owner/fixture-repo"
+CANARY = "FX07_CANARY_SHOULD_NEVER_APPEAR_IN_DOM_OR_URL"
+FIXED_PUBLIC_PORT = 8765
+FIXED_PRIVATE_PORT = 8766
+
+
+def _node_modules() -> Path | None:
+    candidates: list[Path] = [ROOT / "node_modules"]
+    # Dispatch worktrees live under .worktrees/dispatch/<agent>/<task>/
+    if len(ROOT.parents) >= 4:
+        candidates.append(ROOT.parents[3] / "node_modules")
+    try:
+        common = subprocess.check_output(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=ROOT,
+            text=True,
+            timeout=5,
+        ).strip()
+        # git-common-dir is <repo>/.git → parents[0] is repo root when bare path ends with .git
+        git_path = Path(common)
+        repo_root = git_path.parent if git_path.name == ".git" else git_path
+        candidates.append(repo_root / "node_modules")
+    except (subprocess.SubprocessError, OSError):
+        pass
+    seen: set[Path] = set()
+    for candidate in candidates:
+        resolved = candidate.resolve() if candidate.exists() else candidate
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        if (candidate / "puppeteer").exists():
+            return candidate
+    return None
+
+
+def _require_puppeteer() -> Path:
+    nm = _node_modules()
+    if nm is None:
+        pytest.skip("puppeteer not available for headless browser proofs")
+    return nm
+
+
+def _public_min() -> dict[str, Any]:
+    item = {
+        "work_id": f"wp1:public-monitor:{PUBLIC_REPO}:issue:5921",
+        "source_id": "public-monitor",
+        "repository_id": PUBLIC_REPO,
+        "resource_kind": "issue",
+        "remote_id": "5921",
+        "title": "Public attention item",
+        "lifecycle": "open",
+        "labels": ["infrastructure"],
+        "assignees": [],
+        "urls": {
+            "html": f"https://github.com/{PUBLIC_REPO}/issues/5921",
+        },
+        "timestamps": {
+            "created_at": "2026-08-16T00:00:00Z",
+            "updated_at": "2026-08-16T00:00:00Z",
+        },
+        "projections": {
+            "stream": {
+                "status": "orphan",
+                "streams": [],
+                "fresh": True,
+                "authority_missing": False,
+            },
+            "dispatch": {"task_ids": [], "statuses": [], "unresolved": False},
+            "review": {
+                "review_ids": [],
+                "states": [],
+                "sealed_verdict_available": False,
+            },
+            "verification": {"kind": "none", "state": "n/a"},
+        },
+        "relationships": [],
+        "health": "AT_RISK",
+        "attention_rank": 0,
+        "safe_next_action": {
+            "code": "TRIAGE_ORPHAN",
+            "reason_codes": ["stream_orphan"],
+        },
+        "authority": [
+            {
+                "domain": "github",
+                "observed_at": "2026-08-16T00:00:00Z",
+                "age_s": 0,
+                "stale": False,
+            }
+        ],
+        "omissions": [],
+        "flags": {"orphan": True, "has_blocker": False},
+    }
+    return {
+        "schema_version": "work-projection.v1",
+        "generated_at": "2026-08-16T00:00:00Z",
+        "cache_age_s": 1.0,
+        "budget": {"warm_target_s": 2, "timeout_s": 5},
+        "sources": [
+            {
+                "source_id": "public-monitor",
+                "status": "ok",
+                "freshness": {"observed_at": "2026-08-16T00:00:00Z", "age_s": 1.0},
+                "capabilities": {"mutation": False, "private_fields": False},
+                "truncation": {"issues": False, "prs": False, "limit": 1000},
+                "sections": {
+                    "issues": {"status": "ok", "count": 1},
+                    "prs": {"status": "ok", "count": 0},
+                    "streams": {"status": "ok", "count": 1},
+                    "delegate_active": {"status": "ok", "count": 0},
+                    "delegate_tasks": {"status": "ok", "count": 0},
+                    "fleet_reviews": {"status": "ok", "count": 0},
+                },
+            },
+            {
+                "source_id": "private-local-adapter",
+                "status": "unavailable",
+                "freshness": {"observed_at": None, "age_s": None},
+                "capabilities": {"mutation": False, "private_fields": False},
+                "truncation": {"issues": False, "prs": False, "limit": 1000},
+                "sections": {},
+                "reason": "not_configured",
+            },
+        ],
+        "items": [item],
+        "attention": [
+            {
+                "work_id": item["work_id"],
+                "attention_rank": 0,
+                "health": item["health"],
+                "safe_next_action": item["safe_next_action"],
+                "title": item["title"],
+                "resource_kind": item["resource_kind"],
+                "repository_id": item["repository_id"],
+                "remote_id": item["remote_id"],
+            }
+        ],
+        "denominator": {
+            "issues_open": 1,
+            "prs_open": 0,
+            "streams_complete": True,
+            "class4": {
+                "delegate_active": True,
+                "delegate_tasks": True,
+                "fleet_reviews": True,
+            },
+            "omissions": [
+                {"class": "private_adapter", "reason": "not_configured", "count": 0}
+            ],
+        },
+        "capabilities": {
+            "mutation": False,
+            "private_source": {
+                "source_id": "private-local-adapter",
+                "available": False,
+                "schema_version": "work-projection.v1",
+                "schema_digest_sha256": None,
+                "public_schema_commit": None,
+                "endpoint": None,
+                "capabilities": [],
+                "redaction": "allowlist_v1",
+                "reason_if_unavailable": "not_configured",
+            },
+        },
+        "foundation_status": "FOUNDATION_COMPLETE",
+    }
+
+
+def _private_ok(*, remote_id: str = "7", kind: str = "issue", rank: int = 0) -> dict[str, Any]:
+    title = f"private-{kind}-{remote_id}"
+    work_id = f"wp1:private-local-adapter:{SYNTH_PRIVATE_REPO}:{kind}:{remote_id}"
+    item = {
+        "work_id": work_id,
+        "source_id": "private-local-adapter",
+        "repository_id": SYNTH_PRIVATE_REPO,
+        "resource_kind": kind,
+        "remote_id": remote_id,
+        "title": title,
+        "lifecycle": "open" if kind == "issue" else "draft",
+        "labels": [],
+        "assignees": [],
+        "urls": {"html": None},
+        "timestamps": {"created_at": "2026-08-16T00:00:00Z", "updated_at": None},
+        "projections": {
+            "stream": {},
+            "dispatch": {},
+            "review": {},
+            "verification": {},
+        },
+        "relationships": [],
+        "health": "UNKNOWN",
+        "attention_rank": rank,
+        "safe_next_action": {
+            "code": "INSPECT_UNKNOWN",
+            "reason_codes": [
+                "private_metadata_redacted",
+                "no_private_authority_evidence",
+            ],
+        },
+        "authority": [],
+        "omissions": [
+            {"class": "private_content", "reason": "redacted"},
+            {"class": "stream_authority", "reason": "not_collected"},
+            {"class": "review_authority", "reason": "not_collected"},
+        ],
+    }
+    issue_count = 1 if kind == "issue" else 0
+    pr_count = 1 if kind == "pr" else 0
+    return {
+        "schema_version": "work-projection.v1",
+        "generated_at": "2026-08-16T00:00:00Z",
+        "cache_age_s": 3.0,
+        "budget": {"warm_target_s": 2, "timeout_s": 5},
+        "sources": [
+            {
+                "source_id": "private-local-adapter",
+                "status": "ok",
+                "freshness": {"observed_at": "2026-08-16T00:00:00Z", "age_s": 3.0},
+                "capabilities": {"mutation": False, "private_fields": False},
+                "truncation": {"issues": False, "prs": False, "limit": 1000},
+                "sections": {
+                    "issues": {"status": "ok", "count": issue_count},
+                    "prs": {"status": "ok", "count": pr_count},
+                },
+            }
+        ],
+        "items": [item],
+        "attention": [
+            {
+                "work_id": work_id,
+                "attention_rank": rank,
+                "health": "UNKNOWN",
+                "safe_next_action": item["safe_next_action"],
+                "title": title,
+                "resource_kind": kind,
+                "repository_id": SYNTH_PRIVATE_REPO,
+                "remote_id": remote_id,
+            }
+        ],
+        "denominator": {
+            "issues_open": issue_count,
+            "prs_open": pr_count,
+            "streams_complete": True,
+            "class4": {
+                "delegate_active": False,
+                "delegate_tasks": False,
+                "fleet_reviews": False,
+            },
+            "omissions": [],
+        },
+        "capabilities": {
+            "mutation": False,
+            "private_source": {
+                "source_id": "private-local-adapter",
+                "available": True,
+                "schema_version": "work-projection.v1",
+                "schema_digest_sha256": SCHEMA_DIGEST,
+                "public_schema_commit": PUBLIC_COMMIT,
+                "endpoint": PRIVATE_URL,
+                "capabilities": ["projection", "capabilities", "health"],
+                "redaction": "strict-metadata-only",
+                "reason_if_unavailable": None,
+            },
+        },
+        "foundation_status": "FOUNDATION_COMPLETE",
+    }
+
+
+def _private_with_extra_canary() -> dict[str, Any]:
+    doc = _private_ok()
+    # Closed-world rejection: free-text / canary-shaped extra key.
+    doc["canary_note"] = CANARY
+    return doc
+
+
+def _public_with_private_id_collision(private_doc: dict[str, Any]) -> dict[str, Any]:
+    pub = _public_min()
+    # Duplicate the private work_id into public items so merge detects collision.
+    clone = json.loads(json.dumps(private_doc["items"][0]))
+    # Public may carry arbitrary work_id strings under loose public admission.
+    pub["items"].append(clone)
+    pub["attention"].append(
+        {
+            "work_id": clone["work_id"],
+            "attention_rank": 1,
+            "health": clone["health"],
+            "safe_next_action": clone["safe_next_action"],
+            "title": clone["title"],
+            "resource_kind": clone["resource_kind"],
+            "repository_id": clone["repository_id"],
+            "remote_id": clone["remote_id"],
+        }
+    )
+    return pub
+
+
+class _FixtureState:
+    def __init__(self) -> None:
+        self.public_body: bytes | None = None
+        self.public_status = 200
+        self.private_body: bytes | None = None
+        self.private_status = 200
+        self.private_delay_s = 0.0
+        self.public_requests: list[dict[str, Any]] = []
+        self.private_requests: list[dict[str, Any]] = []
+        self.options_count = 0
+        self.html = WORK_HTML.read_bytes()
+
+
+def _make_handler(state: _FixtureState, *, role: str, allowed_origins: set[str]):
+    class Handler(BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, format: str, *args: Any) -> None:
+            return
+
+        def _send(
+            self,
+            code: int,
+            body: bytes,
+            *,
+            content_type: str,
+            origin: str | None,
+            extra: dict[str, str] | None = None,
+        ) -> None:
+            self.send_response(code)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            if origin in allowed_origins:
+                self.send_header("Access-Control-Allow-Origin", origin)
+                self.send_header("Vary", "Origin")
+            if extra:
+                for key, value in extra.items():
+                    self.send_header(key, value)
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_OPTIONS(self) -> None:
+            state.options_count += 1
+            origin = self.headers.get("Origin")
+            self._send(204, b"", content_type="text/plain", origin=origin)
+
+        def do_GET(self) -> None:
+            origin = self.headers.get("Origin")
+            path = self.path.split("?", 1)[0]
+            accept = self.headers.get("Accept", "")
+            record = {
+                "path": self.path,
+                "path_only": path,
+                "accept": accept,
+                "origin": origin,
+                "method": "GET",
+            }
+            if role == "public":
+                state.public_requests.append(record)
+                if path == "/work.html":
+                    self._send(200, state.html, content_type="text/html; charset=utf-8", origin=origin)
+                    return
+                if path == PUBLIC_PATH:
+                    body = state.public_body if state.public_body is not None else b"{}"
+                    self._send(
+                        state.public_status,
+                        body,
+                        content_type="application/json",
+                        origin=origin,
+                    )
+                    return
+                self._send(404, b"missing", content_type="text/plain", origin=origin)
+                return
+
+            # private role
+            state.private_requests.append(record)
+            if state.private_delay_s:
+                time.sleep(state.private_delay_s)
+            if path != "/v1/projection":
+                self._send(404, b"missing", content_type="text/plain", origin=origin)
+                return
+            body = state.private_body if state.private_body is not None else b"{}"
+            self._send(
+                state.private_status,
+                body,
+                content_type="application/json",
+                origin=origin,
+            )
+
+    return Handler
+
+
+def _port_free(host: str, port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            sock.bind((host, port))
+        except OSError:
+            return False
+    return True
+
+
+def _start_server(
+    host: str,
+    port: int,
+    handler: type[BaseHTTPRequestHandler],
+) -> ThreadingHTTPServer:
+    server = ThreadingHTTPServer((host, port), handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server
+
+
+def _run_puppeteer(script: str, *, node_modules: Path, timeout: int = 60) -> dict[str, Any]:
+    env = {
+        **dict(**{k: v for k, v in __import__("os").environ.items()}),
+        "NODE_PATH": str(node_modules),
+    }
+    # Avoid color warnings noise
+    env.pop("NO_COLOR", None)
+    env.pop("FORCE_COLOR", None)
+    # CommonJS + async: wrap user script body so top-level await is legal.
+    wrapped = (
+        "(async () => {\n"
+        + script
+        + "\n})().catch((err) => { console.error(err && err.stack ? err.stack : err); process.exit(1); });\n"
+    )
+    proc = subprocess.run(
+        ["node", "-e", wrapped],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=timeout,
+        cwd=str(ROOT),
+    )
+    if proc.returncode != 0:
+        raise AssertionError(
+            f"puppeteer script failed rc={proc.returncode}\nstdout={proc.stdout}\nstderr={proc.stderr}"
+        )
+    # Last JSON line is the result; never print fixture payloads from Python.
+    lines = [ln for ln in proc.stdout.splitlines() if ln.strip().startswith("{")]
+    assert lines, f"no JSON result from puppeteer\nstdout={proc.stdout}\nstderr={proc.stderr}"
+    return json.loads(lines[-1])
+
+
+def _browser_scenario(
+    *,
+    public_doc: dict[str, Any] | None,
+    private_doc: dict[str, Any] | None,
+    public_status: int = 200,
+    private_status: int = 200,
+    private_delay_ms: int = 0,
+    private_raw: bytes | None = None,
+    public_raw: bytes | None = None,
+    filter_query: str = "",
+    actions: list[dict[str, Any]] | None = None,
+    viewport: dict[str, int] | None = None,
+) -> dict[str, Any]:
+    """Serve work.html on an ephemeral public origin and intercept both GETs."""
+    nm = _require_puppeteer()
+    state = _FixtureState()
+    if public_raw is not None:
+        state.public_body = public_raw
+    elif public_doc is not None:
+        state.public_body = json.dumps(public_doc, separators=(",", ":")).encode("utf-8")
+    else:
+        state.public_status = public_status if public_status != 200 else 503
+        state.public_body = b'{"detail":"down"}'
+    if public_status != 200:
+        state.public_status = public_status
+
+    if private_raw is not None:
+        state.private_body = private_raw
+    elif private_doc is not None:
+        state.private_body = json.dumps(private_doc, separators=(",", ":")).encode("utf-8")
+    else:
+        state.private_status = private_status if private_status != 200 else 503
+        state.private_body = b"nope"
+    if private_status != 200:
+        state.private_status = private_status
+    state.private_delay_s = private_delay_ms / 1000.0
+
+    # Ephemeral public server for HTML + public projection (same origin).
+    public_handler = _make_handler(
+        state, role="public", allowed_origins={"http://127.0.0.1", "http://localhost"}
+    )
+    public_server = ThreadingHTTPServer(("127.0.0.1", 0), public_handler)
+    public_port = public_server.server_address[1]
+    thread = threading.Thread(target=public_server.serve_forever, daemon=True)
+    thread.start()
+
+    # Ephemeral private server is NOT used for the fixed URL — browser uses 8766.
+    # Intercept both URLs inside Chromium so proofs do not need free fixed ports.
+    public_json = state.public_body.decode("utf-8") if state.public_body else "{}"
+    private_json = state.private_body.decode("utf-8") if state.private_body else "{}"
+    actions_json = json.dumps(actions or [])
+    viewport = viewport or {"width": 1280, "height": 800}
+    origin = f"http://127.0.0.1:{public_port}"
+    page_url = f"{origin}/work.html{filter_query}"
+
+    script = f"""
+const puppeteer = require('puppeteer');
+const PUBLIC_STATUS = {state.public_status};
+const PRIVATE_STATUS = {state.private_status};
+const PRIVATE_DELAY_MS = {private_delay_ms};
+const PUBLIC_JSON = {json.dumps(public_json)};
+const PRIVATE_JSON = {json.dumps(private_json)};
+const PAGE_URL = {json.dumps(page_url)};
+const ACTIONS = {actions_json};
+const VIEWPORT = {json.dumps(viewport)};
+const PRIVATE_URL = {json.dumps(PRIVATE_URL)};
+const CANARY = {json.dumps(CANARY)};
+
+const observed = {{ public: [], private: [], options: 0, consoleErrors: [], pageErrors: [] }};
+
+const browser = await puppeteer.launch({{
+  headless: 'new',
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+}});
+try {{
+  const page = await browser.newPage();
+  await page.setViewport(VIEWPORT);
+  page.on('console', (msg) => {{
+    if (msg.type() === 'error') observed.consoleErrors.push(msg.text());
+  }});
+  page.on('pageerror', (err) => observed.pageErrors.push(String(err && err.message ? err.message : err)));
+
+  await page.setRequestInterception(true);
+  // Fulfill every request exactly once. networkidle0 hangs on some non-2xx
+  // cross-origin fulfills under interception; settle via DOM instead.
+  page.on('request', (req) => {{
+    const finish = async () => {{
+      try {{
+        const url = req.url();
+        const method = req.method();
+        if (method === 'OPTIONS') observed.options += 1;
+        if (url.includes('/api/work/v1/projection')) {{
+          observed.public.push({{
+            url,
+            method,
+            headers: req.headers(),
+          }});
+          await req.respond({{
+            status: PUBLIC_STATUS,
+            contentType: 'application/json',
+            body: PUBLIC_JSON,
+            headers: {{ 'Cache-Control': 'no-store' }},
+          }});
+          return;
+        }}
+        if (url === PRIVATE_URL || url.startsWith(PRIVATE_URL + '?')) {{
+          observed.private.push({{
+            url,
+            method,
+            headers: req.headers(),
+          }});
+          if (PRIVATE_DELAY_MS > 0) {{
+            await new Promise((r) => setTimeout(r, PRIVATE_DELAY_MS));
+          }}
+          const originHeader = 'http://127.0.0.1:' + (new URL(PAGE_URL)).port;
+          await req.respond({{
+            status: PRIVATE_STATUS,
+            contentType: 'application/json',
+            body: PRIVATE_JSON,
+            headers: {{
+              'Cache-Control': 'no-store',
+              'Access-Control-Allow-Origin': originHeader,
+              'Vary': 'Origin',
+            }},
+          }});
+          return;
+        }}
+        await req.continue();
+      }} catch (err) {{
+        try {{
+          await req.abort('failed');
+        }} catch (_e) {{
+          // already handled
+        }}
+      }}
+    }};
+    finish();
+  }});
+
+  // domcontentloaded: dual GETs settle after navigation; do not use networkidle0
+  // (non-2xx intercept fulfills can leave the lifecycle watcher pending).
+  await page.goto(PAGE_URL, {{ waitUntil: 'domcontentloaded', timeout: 30000 }});
+  await page.waitForSelector('#source-private-meta', {{ timeout: 15000 }});
+  // Wait until dual-source settlement replaces the loading placeholders.
+  const settleBudget = Math.max(10000, PRIVATE_DELAY_MS + 3000);
+  await page.waitForFunction(() => {{
+    const priv = (document.getElementById('source-private-meta')?.textContent || '').trim();
+    const pub = (document.getElementById('source-public-meta')?.textContent || '').trim();
+    const err = document.getElementById('error-banner');
+    const errText = (err && err.textContent) || '';
+    const errHidden = !err || err.classList.contains('hidden');
+    const loadingPriv = !priv || priv === 'Checking capability…';
+    const loadingPub = !pub || pub === 'Loading…';
+    if (!errHidden && errText.includes('Work projection unavailable')) return true;
+    if (!loadingPriv && !loadingPub) return true;
+    // Private-only path sets public meta to status=unavailable|schema_mismatch.
+    if (!loadingPriv && pub.startsWith('status=')) return true;
+    return false;
+  }}, {{ timeout: settleBudget }});
+  await new Promise((r) => setTimeout(r, 150));
+
+  for (const action of ACTIONS) {{
+    if (action.type === 'select') {{
+      await page.select(action.selector, action.value);
+    }} else if (action.type === 'click') {{
+      await page.click(action.selector);
+    }} else if (action.type === 'key') {{
+      await page.keyboard.press(action.key);
+    }} else if (action.type === 'wait') {{
+      await new Promise((r) => setTimeout(r, action.ms || 200));
+    }}
+  }}
+  await new Promise((r) => setTimeout(r, 200));
+
+  const snapshot = await page.evaluate((canary) => {{
+    const rows = Array.from(document.querySelectorAll('.work-row')).map((row) => ({{
+      id: row.getAttribute('data-id'),
+      text: row.textContent || '',
+    }}));
+    const overflow = document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      || document.body.scrollWidth > document.body.clientWidth + 1;
+    return {{
+      publicMeta: document.getElementById('source-public-meta')?.textContent || '',
+      privateMeta: document.getElementById('source-private-meta')?.textContent || '',
+      error: document.getElementById('error-banner')?.textContent || '',
+      errorHidden: document.getElementById('error-banner')?.classList.contains('hidden') ?? true,
+      listText: document.getElementById('attention-list')?.textContent || '',
+      rowCount: rows.length,
+      rowIds: rows.map((r) => r.id),
+      rowTexts: rows.map((r) => r.text),
+      href: location.href,
+      search: location.search,
+      hash: location.hash,
+      localStorageKeys: Object.keys(localStorage || {{}}),
+      sessionStorageKeys: Object.keys(sessionStorage || {{}}),
+      cookie: document.cookie || '',
+      bodyText: document.body.innerText || '',
+      hasCanary: (document.documentElement.outerHTML || '').includes(canary),
+      overflow,
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }};
+  }}, CANARY);
+
+  console.log(JSON.stringify({{
+    ok: true,
+    observed: {{
+      publicCount: observed.public.length,
+      privateCount: observed.private.length,
+      options: observed.options,
+      public: observed.public,
+      private: observed.private,
+      consoleErrors: observed.consoleErrors,
+      pageErrors: observed.pageErrors,
+    }},
+    snapshot,
+  }}));
+}} finally {{
+  await browser.close();
+}}
+"""
+    try:
+        return _run_puppeteer(script, node_modules=nm, timeout=90)
+    finally:
+        public_server.shutdown()
+        public_server.server_close()
+
+
+# ---------------------------------------------------------------------------
+# Static / unit contracts
+# ---------------------------------------------------------------------------
+
+
+def test_static_private_url_is_exact_fixed_constant():
+    html = WORK_HTML.read_text(encoding="utf-8")
+    assert f"'{PRIVATE_URL}'" in html
+    assert html.count("127.0.0.1:8766") == html.count(PRIVATE_URL)
+    assert "localStorage" not in html
+    assert "sessionStorage" not in html
+    assert "document.cookie" not in html
+    assert "Promise.allSettled" in html
+    assert "admitPrivateDocument" in html
+    assert "identity_collision" in html
+    assert SCHEMA_DIGEST in html
+    assert PUBLIC_COMMIT in html
+
+
+def test_private_fixture_shape_is_source_blind():
+    doc = _private_ok()
+    blob = json.dumps(doc)
+    assert "learn-ukrainian-infra" not in blob
+    assert "/Users/" not in blob
+    assert CANARY not in blob
+    assert doc["capabilities"]["private_source"]["endpoint"] == PRIVATE_URL
+    assert doc["capabilities"]["private_source"]["schema_digest_sha256"] == SCHEMA_DIGEST
+
+
+# ---------------------------------------------------------------------------
+# Headless browser behavioral proofs (request interception)
+# ---------------------------------------------------------------------------
+
+
+def test_browser_dual_success_merges_exactly_once():
+    public = _public_min()
+    private = _private_ok()
+    result = _browser_scenario(public_doc=public, private_doc=private)
+    snap = result["snapshot"]
+    obs = result["observed"]
+    assert obs["publicCount"] >= 1
+    assert obs["privateCount"] >= 1
+    assert obs["options"] == 0
+    priv_req = obs["private"][0]
+    assert priv_req["url"] == PRIVATE_URL
+    assert priv_req["method"] == "GET"
+    assert "accept" in {k.lower() for k in priv_req["headers"]}
+    # No query string on private
+    assert "?" not in priv_req["url"]
+    assert snap["rowCount"] == 2
+    assert len(set(snap["rowIds"])) == 2
+    assert any("Public attention item" in t for t in snap["rowTexts"])
+    assert any("private-issue-7" in t for t in snap["rowTexts"])
+    assert "status=ok" in snap["privateMeta"]
+    assert "issues=2" in snap["publicMeta"] or "issues=2" in snap["bodyText"]
+    assert snap["errorHidden"] is True
+    assert CANARY not in snap["bodyText"]
+    assert not snap["hasCanary"]
+    assert not obs["pageErrors"]
+    assert not any(CANARY in e for e in obs["consoleErrors"])
+
+
+def test_browser_private_unreachable_leaves_public_usable():
+    result = _browser_scenario(public_doc=_public_min(), private_doc=None, private_status=503)
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "unavailable · unreachable" in snap["privateMeta"]
+    assert snap["errorHidden"] is True
+
+
+def test_browser_private_timeout_leaves_public_usable():
+    # AbortController budget is 5s; delay beyond that.
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        private_delay_ms=5500,
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "unavailable · timeout" in snap["privateMeta"]
+    assert snap["errorHidden"] is True
+
+
+def test_browser_private_schema_mismatch_and_canary_rejected():
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_with_extra_canary(),
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "unavailable · schema_mismatch" in snap["privateMeta"]
+    assert not snap["hasCanary"]
+    assert CANARY not in snap["bodyText"]
+    assert CANARY not in snap["error"]
+    assert CANARY not in snap["href"]
+    assert CANARY not in snap["search"]
+    assert CANARY not in snap["listText"]
+
+
+def test_browser_identity_collision_keeps_public():
+    private = _private_ok()
+    public = _public_with_private_id_collision(private)
+    result = _browser_scenario(public_doc=public, private_doc=private)
+    snap = result["snapshot"]
+    # Public remains usable; private rejected for collision.
+    assert "unavailable · identity_collision" in snap["privateMeta"]
+    assert snap["errorHidden"] is True
+    # Public rows still render (may include the colliding id from public side once).
+    assert snap["rowCount"] >= 1
+    assert "Public attention item" in snap["listText"]
+
+
+def test_browser_public_failure_private_success():
+    result = _browser_scenario(
+        public_doc=None,
+        public_status=503,
+        private_doc=_private_ok(),
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "private-issue-7" in snap["listText"]
+    assert "status=unavailable" in snap["publicMeta"]
+    assert "status=ok" in snap["privateMeta"]
+    assert snap["errorHidden"] is True
+
+
+def test_browser_public_schema_mismatch_private_success():
+    result = _browser_scenario(
+        public_doc={"not": "valid"},
+        private_doc=_private_ok(),
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "private-issue-7" in snap["listText"]
+    assert "status=schema_mismatch" in snap["publicMeta"]
+
+
+def test_browser_both_failures_typed_banner():
+    result = _browser_scenario(
+        public_doc=None,
+        public_status=503,
+        private_doc=None,
+        private_status=503,
+    )
+    snap = result["snapshot"]
+    assert snap["errorHidden"] is False
+    assert (
+        snap["error"]
+        == "Work projection unavailable · public=unreachable · private=unreachable"
+    )
+    assert snap["listText"].strip() == "No source projection is available. Retry refresh."
+    assert "HTTP" not in snap["error"]
+    assert "TypeError" not in snap["error"]
+    assert "fetch" not in snap["error"].lower()
+
+
+def test_browser_filters_apply_locally_and_never_hit_private_query():
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        actions=[
+            {"type": "select", "selector": "#filter-health", "value": "AT_RISK"},
+            {"type": "click", "selector": "#btn-apply"},
+            {"type": "wait", "ms": 200},
+        ],
+    )
+    snap = result["snapshot"]
+    obs = result["observed"]
+    # After apply (local only), only public AT_RISK remains.
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "private-issue-7" not in snap["listText"]
+    for req in obs["private"]:
+        assert req["url"] == PRIVATE_URL
+        assert "?" not in req["url"]
+    # Shareable URL may keep health
+    assert "health=AT_RISK" in snap["search"]
+
+
+def test_browser_private_repo_filter_not_shareable_in_url():
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        actions=[
+            {
+                "type": "select",
+                "selector": "#filter-repo",
+                "value": SYNTH_PRIVATE_REPO,
+            },
+            {"type": "click", "selector": "#btn-apply"},
+            {"type": "wait", "ms": 200},
+        ],
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "private-issue-7" in snap["listText"]
+    assert SYNTH_PRIVATE_REPO not in snap["search"]
+    assert "private-local-adapter" not in snap["search"]
+    assert snap["hash"] == ""
+    assert snap["localStorageKeys"] == []
+    assert snap["sessionStorageKeys"] == []
+    assert snap["cookie"] == ""
+
+
+def test_browser_dense_order_and_no_duplicate_ids():
+    public = _public_min()
+    # Public ON_TRACK + private UNKNOWN + public OFF_TRACK-like via health change
+    public["items"][0]["health"] = "ON_TRACK"
+    public["attention"][0]["health"] = "ON_TRACK"
+    private = _private_ok(remote_id="3", rank=0)
+    result = _browser_scenario(public_doc=public, private_doc=private)
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 2
+    assert len(set(snap["rowIds"])) == 2
+    # UNKNOWN before ON_TRACK
+    assert snap["rowIds"][0].startswith("wp1:private-local-adapter:")
+    assert snap["rowIds"][1].startswith("wp1:public-monitor:")
+
+
+def test_browser_mobile_viewport_no_horizontal_overflow_and_keyboard():
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        viewport={"width": 390, "height": 844},
+        actions=[
+            {"type": "key", "key": "ArrowDown"},
+            {"type": "wait", "ms": 100},
+        ],
+    )
+    snap = result["snapshot"]
+    obs = result["observed"]
+    assert snap["overflow"] is False
+    assert snap["scrollWidth"] <= snap["clientWidth"] + 1
+    assert not obs["pageErrors"]
+    # Uncaught console errors only (ignore optional 3rd-party noise if empty)
+    assert snap["rowCount"] == 2
+
+
+def test_browser_public_only_when_adapter_absent():
+    result = _browser_scenario(public_doc=_public_min(), private_doc=None, private_status=404)
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "unavailable · unreachable" in snap["privateMeta"]
+    assert "status=ok" in snap["publicMeta"]
+
+
+def test_browser_refresh_uses_fresh_on_public_only():
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        actions=[{"type": "click", "selector": "#btn-refresh"}, {"type": "wait", "ms": 400}],
+    )
+    obs = result["observed"]
+    assert obs["publicCount"] >= 2
+    assert obs["privateCount"] >= 2
+    public_urls = [r["url"] for r in obs["public"]]
+    assert any("fresh=true" in u for u in public_urls)
+    for req in obs["private"]:
+        assert req["url"] == PRIVATE_URL
+
+
+# ---------------------------------------------------------------------------
+# Real fixed-port CORS smoke (no payload printing)
+# ---------------------------------------------------------------------------
+
+
+def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
+    class Handler(BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, format: str, *args: Any) -> None:
+            return
+
+        def do_OPTIONS(self) -> None:
+            hits["options"] = hits.get("options", 0) + 1
+            self.send_response(204)
+            self.end_headers()
+
+        def do_GET(self) -> None:
+            origin = self.headers.get("Origin")
+            path = self.path.split("?", 1)[0]
+            hits.setdefault("gets", []).append(
+                {
+                    "path": self.path,
+                    "path_only": path,
+                    "method": "GET",
+                    "accept": self.headers.get("Accept"),
+                    "origin": origin,
+                }
+            )
+            if path != "/v1/projection":
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            if origin in allowed:
+                self.send_header("Access-Control-Allow-Origin", origin)
+                self.send_header("Vary", "Origin")
+            # No Access-Control-Allow-Credentials
+            self.end_headers()
+            self.wfile.write(body)
+
+    return Handler
+
+
+def test_real_fixed_port_cors_http_and_browser_smoke():
+    """Live CORS on fixed ports 8765/8766 with real browser GET (no preflight)."""
+    if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free(
+        "127.0.0.1", FIXED_PRIVATE_PORT
+    ):
+        pytest.skip(
+            "fixed ports 8765/8766 busy; interception proofs already cover behavior"
+        )
+
+    nm = _require_puppeteer()
+    private_hits: dict[str, Any] = {"options": 0, "gets": []}
+    public_hits: dict[str, Any] = {"options": 0, "gets": []}
+    private_body = json.dumps(_private_ok(), separators=(",", ":")).encode("utf-8")
+    public_body = json.dumps(_public_min(), separators=(",", ":")).encode("utf-8")
+    html = WORK_HTML.read_bytes()
+
+    class PublicHandler(BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, format: str, *args: Any) -> None:
+            return
+
+        def do_OPTIONS(self) -> None:
+            public_hits["options"] = public_hits.get("options", 0) + 1
+            self.send_response(204)
+            self.end_headers()
+
+        def do_GET(self) -> None:
+            path = self.path.split("?", 1)[0]
+            public_hits.setdefault("gets", []).append(
+                {"path": self.path, "path_only": path, "accept": self.headers.get("Accept")}
+            )
+            if path == "/work.html":
+                body = html
+                ctype = "text/html; charset=utf-8"
+            elif path == PUBLIC_PATH:
+                body = public_body
+                ctype = "application/json"
+            else:
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+    private_handler = _cors_handler_factory(
+        private_hits,
+        allowed={"http://127.0.0.1:8765", "http://localhost:8765"},
+        body=private_body,
+    )
+    public_server = _start_server("127.0.0.1", FIXED_PUBLIC_PORT, PublicHandler)
+    private_server = _start_server("127.0.0.1", FIXED_PRIVATE_PORT, private_handler)
+    try:
+        # Pure HTTP CORS probe (no browser) — asserts headers + request shape.
+        req = Request(
+            PRIVATE_URL,
+            headers={
+                "Accept": "application/json",
+                "Origin": "http://127.0.0.1:8765",
+            },
+            method="GET",
+        )
+        with urlopen(req, timeout=5) as resp:
+            assert resp.status == 200
+            assert resp.headers.get("Access-Control-Allow-Origin") == "http://127.0.0.1:8765"
+            assert resp.headers.get("Vary") == "Origin"
+            assert resp.headers.get("Access-Control-Allow-Credentials") in (None, "")
+            # Drain body without printing
+            _ = resp.read()
+
+        assert private_hits["options"] == 0
+        assert private_hits["gets"], "private fixture received no GET"
+        got = private_hits["gets"][-1]
+        assert got["path_only"] == "/v1/projection"
+        assert got["path"] == "/v1/projection"  # exact no-query path
+        assert got["accept"] == "application/json"
+        assert got["origin"] == "http://127.0.0.1:8765"
+
+        # Browser smoke from exact Monitor origin.
+        script = """
+const puppeteer = require('puppeteer');
+const browser = await puppeteer.launch({
+  headless: 'new',
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
+try {
+  const page = await browser.newPage();
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(String(e.message || e)));
+  await page.goto('http://127.0.0.1:8765/work.html', {
+    waitUntil: 'domcontentloaded',
+    timeout: 30000,
+  });
+  await page.waitForFunction(() => {
+    const el = document.getElementById('source-private-meta');
+    return el && (el.textContent || '').includes('status=');
+  }, { timeout: 15000 });
+  const snap = await page.evaluate(() => ({
+    privateMeta: document.getElementById('source-private-meta')?.textContent || '',
+    rowCount: document.querySelectorAll('.work-row').length,
+    errorHidden: document.getElementById('error-banner')?.classList.contains('hidden') ?? true,
+  }));
+  console.log(JSON.stringify({ ok: true, snap, errors, privateGets: true }));
+} finally {
+  await browser.close();
+}
+"""
+        result = _run_puppeteer(script, node_modules=nm, timeout=60)
+        assert result["snap"]["rowCount"] == 2
+        assert "status=ok" in result["snap"]["privateMeta"]
+        assert result["snap"]["errorHidden"] is True
+        assert not result["errors"]
+        assert private_hits["options"] == 0
+        # At least the HTTP probe + browser GET
+        assert len(private_hits["gets"]) >= 2
+        for entry in private_hits["gets"]:
+            assert entry["path"] == "/v1/projection"
+            assert entry["accept"] == "application/json"
+    finally:
+        public_server.shutdown()
+        public_server.server_close()
+        private_server.shutdown()
+        private_server.server_close()
+
+
+def test_real_fixed_port_cors_localhost_origin_smoke():
+    """Second smoke: page addressed as http://localhost:8765 admits that origin."""
+    if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free(
+        "127.0.0.1", FIXED_PRIVATE_PORT
+    ):
+        pytest.skip(
+            "fixed ports 8765/8766 busy; interception proofs already cover behavior"
+        )
+
+    private_hits: dict[str, Any] = {"options": 0, "gets": []}
+    private_body = json.dumps(_private_ok(), separators=(",", ":")).encode("utf-8")
+
+    class PublicHandler(BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, format: str, *args: Any) -> None:
+            return
+
+        def do_GET(self) -> None:
+            path = self.path.split("?", 1)[0]
+            if path == "/work.html":
+                body = WORK_HTML.read_bytes()
+                ctype = "text/html; charset=utf-8"
+            elif path == PUBLIC_PATH:
+                body = json.dumps(_public_min(), separators=(",", ":")).encode("utf-8")
+                ctype = "application/json"
+            else:
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+    private_handler = _cors_handler_factory(
+        private_hits,
+        allowed={"http://127.0.0.1:8765", "http://localhost:8765"},
+        body=private_body,
+    )
+    public_server = _start_server("127.0.0.1", FIXED_PUBLIC_PORT, PublicHandler)
+    private_server = _start_server("127.0.0.1", FIXED_PRIVATE_PORT, private_handler)
+    nm = _require_puppeteer()
+    try:
+        req = Request(
+            PRIVATE_URL,
+            headers={
+                "Accept": "application/json",
+                "Origin": "http://localhost:8765",
+            },
+            method="GET",
+        )
+        with urlopen(req, timeout=5) as resp:
+            assert resp.headers.get("Access-Control-Allow-Origin") == "http://localhost:8765"
+            assert resp.headers.get("Vary") == "Origin"
+            _ = resp.read()
+
+        script = """
+const puppeteer = require('puppeteer');
+const browser = await puppeteer.launch({
+  headless: 'new',
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
+try {
+  const page = await browser.newPage();
+  await page.goto('http://localhost:8765/work.html', {
+    waitUntil: 'domcontentloaded',
+    timeout: 30000,
+  });
+  await page.waitForFunction(() => {
+    const el = document.getElementById('source-private-meta');
+    return el && (el.textContent || '').includes('status=');
+  }, { timeout: 15000 });
+  const snap = await page.evaluate(() => ({
+    privateMeta: document.getElementById('source-private-meta')?.textContent || '',
+    rowCount: document.querySelectorAll('.work-row').length,
+  }));
+  console.log(JSON.stringify({ ok: true, snap }));
+} finally {
+  await browser.close();
+}
+"""
+        result = _run_puppeteer(script, node_modules=nm, timeout=60)
+        assert result["snap"]["rowCount"] == 2
+        assert "status=ok" in result["snap"]["privateMeta"]
+        assert private_hits["options"] == 0
+        assert any(g.get("origin") == "http://localhost:8765" for g in private_hits["gets"])
+    finally:
+        public_server.shutdown()
+        public_server.server_close()
+        private_server.shutdown()
+        private_server.server_close()
