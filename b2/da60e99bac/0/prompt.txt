@@ -1,0 +1,55 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6863-ci-fix
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix red CI on PR #6866 (issue #6863 hardening) — same branch follow-up
+
+You authored PR #6866. Three CI failures on the exact head — auto-merge is armed and will
+fire once you make it green. Work on branch `kimi/infra-6863-root-dir-leak-forensics`.
+
+```
+ROUTING_CARD_V1
+tier: practical
+model_x_harness: kimi-k3 × native kimi CLI
+why_this_tier: authoring lane fixes its own red CI (#0 lane model)
+advisor_packet: n/a
+owned_paths: scripts/fleet_comms/paths.py, scripts/hygiene/root_entry_guard.py, agents_extensions/shared/hooks/session-setup.sh, tests/**
+acceptance_cmd: the three named tests pass + your prior suites stay green
+alternatives_considered: none — CI fixes return to the author
+parallel_free_seats: n/a
+```
+
+## The three failures (exact, from CI run 31957379662)
+1. `tests/test_entire_context_recall.py::test_acp_root_reuses_canonical_fleet_resolution_and_override_order`
+   — `PlaneRootAnchorError` at a pytest tmp non-git dir.
+2. `tests/test_fleet_comms_bottleneck_alerts.py::test_duplicate_scan_posts_one_action_required_system_alert`
+   — same error class, tmp non-git dir.
+3. `tests/test_codex_hooks_contract.py::test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent`
+   — `assert 601 < 500`: your canary block pushed ordinary hook output past the
+   conciseness contract.
+
+## Fix directions (decide per call site, at the right layer)
+- For 1–2: determine whether the production code path each test exercises can
+  legitimately run outside a git repo. If it is test-fixture-only, fix the TEST
+  (git-anchored fixture, FLEET_COMMS_ROOT, or explicit `allow_non_git=True`) and state
+  why. If a production caller genuinely runs non-git, that caller — not the default —
+  should opt in explicitly with a comment citing #6863. Do not weaken the hard-fail
+  default.
+- For 3: make the canary silent-when-clean — alert-only means output ONLY on findings
+  (plus at most a one-line marker if the contract allows). Do not raise the 500 budget.
+- Keep every mutation-checked guard property intact; re-run the mutation checks touched
+  by these edits and say so.
+
+## Steps
+Reuse/attach the branch worktree → fix → run the three named tests + your previous
+affected sets + the hooks contract suite → ruff/shellcheck → commit referencing #6863 →
+push (auto-merge fires on green — do NOT touch auto-merge). Post a short delta comment
+on PR #6866 with the evidence.
