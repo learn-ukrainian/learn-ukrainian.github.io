@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3cc756146a67",
+  "session_id": "fleet-81e9bc41e904472bbb63834e92b88b4c",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T11:21:04.214012Z",
+  "branch": "grok/storage-topology-v1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/storage-topology.md",
+    "docs/runbooks/storage-topology.md",
+    "scripts/storage/cli.py",
+    "scripts/storage/topology.py",
+    "scripts/storage/windows/Verify-BulkSources.ps1",
+    "scripts/wiki/config.py",
+    "tests/test_deploy_script_idempotency.py",
+    "tests/test_storage_resolver.py",
+    "tests/test_storage_windows_scripts.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "5c6e25a92852",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T11:21:04.207236Z",
+    "agent_lines": 176,
+    "agent_removed": 29,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 176,
+    "total_lines_changed": 205,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
