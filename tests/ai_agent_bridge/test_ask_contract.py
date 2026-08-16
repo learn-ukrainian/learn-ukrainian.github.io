@@ -28,6 +28,7 @@ ASK_SEATS = (
     ("ask-agy", "_handle_ask_agy", "agy"),
     ("ask-grok", "_handle_ask_grok_build", "grok"),
     ("ask-glm", "_handle_ask_glm", "glm"),
+    ("ask-gemma", "_handle_ask_gemma", "gemma"),
     ("ask-kimi", "_handle_ask_kimi", "kimi"),
     ("ask-cursor", "_handle_ask_cursor", "cursor"),
     ("ask-hermes", "_handle_ask_hermes", "hermes"),
@@ -36,7 +37,6 @@ ASK_SEATS = (
 
 RETIRED_ASK_SEATS = (
     ("ask-opencode", "_handle_ask_opencode", "opencode"),
-    ("ask-gemma", "_handle_ask_gemma", "gemma"),
 )
 
 
@@ -82,6 +82,12 @@ def test_terminal_failure_replays_without_invoking_provider_again(
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
     invoke = Mock(side_effect=RuntimeError("protected primary refused"))
     monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    # Hermetic from host PATH state: the reachability probe is stubbed, and
+    # the replay path must never call it — only the real invocation may.
+    probe = Mock(return_value=None)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability", probe
+    )
 
     with pytest.raises(RuntimeError, match="protected primary refused"):
         _acp_compat.run_compat_ask(
@@ -114,6 +120,9 @@ def test_terminal_failure_replays_without_invoking_provider_again(
         "transport": "acp",
     }
     assert invoke.call_count == 1
+    # The probe fires once — for the call that actually invoked the provider —
+    # and never for the terminal replay.
+    assert probe.call_count == 1
 
 
 def test_terminalization_conflict_preserves_completed_provider_response(
@@ -121,6 +130,8 @@ def test_terminalization_conflict_preserves_completed_provider_response(
 ) -> None:
     """A bookkeeping collision must not hide the completed provider response."""
     from scripts.fleet_comms.authority import AuthorityStaleLeaseError
+
+    claim_state = {"claimed": False}
 
     class TerminalConflictAuthority:
         def __enter__(self):
@@ -133,10 +144,19 @@ def test_terminalization_conflict_preserves_completed_provider_response(
             return SimpleNamespace(job_id="job-6367", state="queued")
 
         def claim_job(self, *_args, **_kwargs):
+            claim_state["claimed"] = True
             return SimpleNamespace(fence_token=1)
 
         def finish_job(self, *_args, **_kwargs):
             raise AuthorityStaleLeaseError("terminalization_conflict")
+
+    def probe_after_claim(_participant: str) -> str | None:
+        # Hermetic from host PATH state, and order-sensitive: the probe is
+        # legitimate only once a job was claimed — i.e. only when a real
+        # provider invocation is about to occur, never at admission.
+        if not claim_state["claimed"]:
+            return "probe fired before any provider invocation was due"
+        return None
 
     @contextmanager
     def execution_cwd(*_args, **_kwargs):
@@ -159,6 +179,10 @@ def test_terminalization_conflict_preserves_completed_provider_response(
     monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", TerminalConflictAuthority)
     monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
     monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        probe_after_claim,
+    )
 
     with pytest.raises(RuntimeError, match="terminal bookkeeping failed after provider response"):
         _acp_compat._run_compat_ask_impl(
@@ -216,8 +240,14 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
             return _acp_compat._result_receipt(replay_result)
 
     invoke = Mock(side_effect=AssertionError("terminal job reinvoked provider"))
+    # Hermetic from host PATH state, and order-sensitive: a claim-race replay
+    # must never reach the reachability probe at all.
+    probe = Mock(return_value="probe fired on a terminal-replay path")
     monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", ConcurrentTerminalAuthority)
     monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability", probe
+    )
 
     result = _acp_compat._run_compat_ask_impl(
         "agy",
@@ -233,6 +263,7 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
     assert result.usage_record["from_model"] == "gemini-3.6-flash-high"
     assert result.usage_record["harness"] == "acp"
     assert invoke.call_count == 0
+    assert probe.call_count == 0
 
 
 def test_cli_returns_nonzero_for_replayed_or_live_failure(
@@ -260,6 +291,76 @@ def test_ask_target_without_an_enabled_acp_route_fails_closed(
     )
     with pytest.raises(SystemExit, match=f"{target!r} has no enabled ACP route"):
         getattr(_cli, handler_name)(args)
+
+
+class _RecordingAuthority:
+    """Minimal in-memory authority: enqueue + claim succeed, finish_job records."""
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        self.finished: list[dict[str, object]] = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return None
+
+    def enqueue_request(self, **_kwargs):
+        return SimpleNamespace(job_id="job-dead-seat", state="queued")
+
+    def claim_job(self, *_args, **_kwargs):
+        return SimpleNamespace(fence_token=1)
+
+    def finish_job(self, _job_id, **kwargs):
+        self.finished.append(kwargs)
+
+
+def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#6805: a dead seat fails before the provider is invoked, with the
+    actionable remediation and documented route — not mid-review at spawn.
+    The authority job is enqueued and claimed first: terminal-replay paths
+    must stay reachable even when the provider CLI is absent."""
+    from scripts.agent_runtime.adapters import acpx as acpx_module
+
+    invoke = Mock(side_effect=AssertionError("dead seat invoked the provider"))
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.authority.AuthorityService", _RecordingAuthority
+    )
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+
+    with pytest.raises(ValueError) as exc_info:
+        _acp_compat._run_compat_ask_impl("hermes", "question", task_id="dead-seat")
+
+    message = str(exc_info.value)
+    assert "hermes binary not found on PATH" in message
+    assert "docs/runbooks/agent-seat-onboarding.md" in message
+    assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
+    assert invoke.call_count == 0
+
+
+def test_ask_hermes_cli_surfaces_remediation_when_binary_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#6805: the CLI exits nonzero with the remediation the caller reroutes on."""
+    from scripts.agent_runtime.adapters import acpx as acpx_module
+
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.authority.AuthorityService", _RecordingAuthority
+    )
+    args = _cli._build_parser().parse_args(
+        ["ask-hermes", "question", "--task-id", "dead-seat", "--from", "codex"]
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        _cli._handle_ask_hermes(args)
+
+    message = str(exc_info.value)
+    assert "hermes binary not found on PATH" in message
+    assert "delegate.py dispatch --agent deepseek" in message
 
 
 @pytest.mark.parametrize("effort", EFFORT_CHOICES)

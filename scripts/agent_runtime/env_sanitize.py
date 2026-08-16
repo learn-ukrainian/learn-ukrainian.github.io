@@ -124,6 +124,12 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         # denied for the native ACP participant.
         "OPENCODE_CONFIG_CONTENT",
     },
+    "acpx-gemma-shadow": {
+        # Same OpenCode ACP auth selector and deny-all policy JSON as the GLM
+        # seat; both values are non-secret (#6805).
+        "ACPX_AUTH_OPENCODE_LOGIN",
+        "OPENCODE_CONFIG_CONTENT",
+    },
     "gemini": {
         "GEMINI_AUTH_MODE",
     },

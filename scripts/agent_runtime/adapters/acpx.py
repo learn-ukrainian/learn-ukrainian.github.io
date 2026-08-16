@@ -168,6 +168,11 @@ CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
+# $0 toolless Gemma seat (#6805): the canonical catalog id doubles as the
+# opencode invocation id on the Google AI Studio direct provider. Gemma has no
+# paid SKU on the Gemini API (pricing verified 2026-07-07) and runs toolless —
+# the deny-all OpenCode config below keeps the ACP participant chat-only.
+GEMMA_ACP_MODEL = "google-ais/gemma-4-31b-it"
 # OpenCode advertises its existing local login as ACP auth method
 # ``opencode-login``. ACPX maps that method ID deterministically to this
 # non-secret selector; the value is never a credential.
@@ -584,6 +589,7 @@ ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
     "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
     "agy": {"seat": "acpx-agy-shadow", "agent": "agy", "model": AGY_ACP_MODEL},
     "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": GLM_ACP_MODEL},
+    "gemma": {"seat": "acpx-gemma-shadow", "agent": "gemma", "model": GEMMA_ACP_MODEL},
     "deepseek": {
         "seat": "acpx-deepseek-shadow",
         "agent": "deepseek",
@@ -607,6 +613,7 @@ ACPX_PARTICIPANT_CATALOG_TRANSPORTS: dict[str, str] = {
     "pool": "opencode",
     "agy": "agy",
     "glm": "opencode",
+    "gemma": "opencode",
     "deepseek": "hermes",
 }
 ACPX_PARTICIPANT_EFFORTS: dict[str, str] = {
@@ -1456,6 +1463,78 @@ _PARTICIPANT_COMPATIBILITY_CONTRACTS = {
     "hermes": HERMES_CLI_COMPATIBILITY_CONTRACT,
 }
 
+# Actionable remediation for a missing provider CLI (#6805): a bare "not found
+# on PATH" died mid-review with no install pointer and no reroute. Each entry
+# names the provisioning step or standing reroute, the runbook that owns it,
+# and the documented fallback substitution so the caller can degrade instead
+# of dying.
+_MISSING_BINARY_REMEDIATION: dict[str, str] = {
+    # Hermes is permanently removed from this host (operator order
+    # 2026-08-16) — there is no reinstall path. The DeepSeek seat's standing
+    # route is first-party via opencode.
+    "hermes": (
+        "Remediation: Hermes was permanently removed from this host "
+        "(operator order 2026-08-16) — do not reinstall. The DeepSeek seat "
+        "routes first-party via opencode as the standing path: one-shot "
+        "review/research runs `opencode run --model "
+        "deepseek-direct/deepseek-v4-flash --variant high`; tool-heavy work "
+        "goes to `delegate.py dispatch --agent deepseek`. See "
+        "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
+        "recovery'."
+    ),
+    "opencode": (
+        "Remediation: reinstall the opencode CLI on this host and verify "
+        "`opencode --version`; see docs/runbooks/agent-seat-onboarding.md "
+        "'Reviewer-seat transport recovery'."
+    ),
+    "agy": (
+        "Remediation: reinstall the agy CLI on this host and verify "
+        "`agy --version`; see docs/runbooks/agent-seat-onboarding.md "
+        "'Reviewer-seat transport recovery'."
+    ),
+}
+
+# Provider executable each ACP participant's catalog transport shells out to.
+# Seats reached through an ACPX built-in (codex/grok/claude/kimi/cursor/pool)
+# resolve no external provider binary here and are not probed by this map.
+_PARTICIPANT_PROVIDER_BINARIES: dict[str, str] = {
+    "agy": "agy",
+    "glm": "opencode",
+    "gemma": "opencode",
+    "deepseek": "hermes",
+}
+
+
+def _missing_binary_message(executable: str, *, adapter_label: str) -> str:
+    contract = _PARTICIPANT_COMPATIBILITY_CONTRACTS[executable]
+    remediation = _MISSING_BINARY_REMEDIATION.get(
+        executable,
+        "Remediation: reinstall the provider CLI on this host; see "
+        "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport recovery'.",
+    )
+    return (
+        f"{adapter_label}: {executable} binary not found on PATH; required for "
+        f"compatibility contract {contract!r}. {remediation}"
+    )
+
+
+def probe_participant_reachability(participant: str) -> str | None:
+    """Return an actionable error when a participant's provider CLI is absent.
+
+    Cheap preflight (PATH lookup only — never spawns a subprocess) run only
+    when a real provider invocation is about to occur: terminal-replay paths
+    in the ask shim never reach it, so a missing provider CLI cannot fail the
+    replay of an already-durable result. The adapter's compatibility probe
+    remains the enforcement point immediately before spawn; this surfaces the
+    failure earlier with the remediation and documented fallback attached.
+    """
+    executable = _PARTICIPANT_PROVIDER_BINARIES.get(participant)
+    if executable is None or shutil.which(executable):
+        return None
+    return _missing_binary_message(
+        executable, adapter_label=f"ACP participant {participant!r}"
+    )
+
 
 def _resolve_participant_binary(
     executable: str,
@@ -1467,8 +1546,7 @@ def _resolve_participant_binary(
     found = shutil.which(executable)
     if not found:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: {executable} binary not found on PATH; required for "
-            f"compatibility contract {contract!r}"
+            _missing_binary_message(executable, adapter_label=adapter_label)
         )
     resolved = Path(found).resolve()
     if not resolved.is_file():
@@ -2275,6 +2353,48 @@ class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
                 else _OPENCODE_DENY_ALL_CONFIG
             ),
         }
+
+
+class AcpxGemmaShadowAdapter(_AcpxDiscussionAdapter):
+    """Native OpenCode ACP participant pinned to the $0 AIS-direct Gemma seat.
+
+    Same confined shape as the GLM seat (``opencode acp --pure`` with the
+    deny-all OpenCode config, which keeps the chat-only model toolless), but
+    the google-ais provider is Western-hosted, so no egress guard applies
+    (#6805). The catalog id doubles as the invocation id — there is no
+    separate ``acpx_model``.
+    """
+
+    name = "acpx-gemma-shadow"
+    target_agent = "gemma"
+    fixed_model = GEMMA_ACP_MODEL
+    default_model = fixed_model
+
+    def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
+        _ = cwd
+        binary, version = _resolve_participant_binary(
+            "opencode",
+            adapter_label=type(self).__name__,
+        )
+        return shlex.join([binary, "acp", "--pure"]), {
+            "provider_cli": "opencode",
+            "provider_cli_version": version,
+            "provider_cli_compatibility": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
+            "provider_route": GEMMA_ACP_MODEL,
+            "tool_policy": "deny-all",
+        }
+
+    def _env_overrides(
+        self,
+        *,
+        sealed_review_mcp_config: str | None = None,
+    ) -> dict[str, str]:
+        _ = sealed_review_mcp_config
+        return {
+            GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
+            "OPENCODE_CONFIG_CONTENT": _OPENCODE_DENY_ALL_CONFIG,
+        }
+
 
 class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
     """Text-only, first-party DeepSeek ACP participant via isolated Hermes."""
