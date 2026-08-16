@@ -1,0 +1,30 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/6876-agy-freedisk
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# 6876 AGY — submit free-disk preflight
+
+CAPACITY_CARD: pick=agy status=cool(gemini 64%) will_last=true avoid=codex source=routing-budget
+ROUTING_CARD_V1: tier=practical model_x_harness=agy/gemini-3.7-flash-high why=operator use AGY; protocol residual named at #6867 merge; agentic script
+
+Campaign #6876. Branch from origin/main. Trailer `X-Agent: agy/6876-freedisk`.
+Do not merge. Do not flip pointers. Do not edit launch_reenrich_class_b.sh (Kimi owns venv). Do not edit atlas_jobs_router.py (GLM review).
+
+## Outcome
+`atlas_job.submit()` refuses a new restic-sink (or any) job when the **host** free disk is below a documented floor (e.g. 5G, env-overridable). Fail closed: non-zero, no unit start, registry journal records the refusal. Fake host adapter in tests — no live SSH required.
+
+Also: if `.restic-sink-blocked` is set, submit still refuses restic-sink jobs (already partly there — extend tests if missing).
+
+Owned paths:
+- scripts/lexicon/runner/atlas_job.py
+- tests/test_atlas_job_protocol.py
+
+`.venv/bin/python -m pytest tests/test_atlas_job_protocol.py -q` + ruff on touched files. PR linked to #6876.

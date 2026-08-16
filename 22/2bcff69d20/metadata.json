@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "222bcff69d20",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-freedisk",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/22/2bcff69d20/0/metadata.json",
+      "transcript": "/22/2bcff69d20/0/full.jsonl",
+      "compact_transcript": "/22/2bcff69d20/0/transcript.jsonl",
+      "content_hash": "/22/2bcff69d20/0/content_hash.txt",
+      "prompt": "/22/2bcff69d20/0/prompt.txt"
+    }
+  ]
+}
