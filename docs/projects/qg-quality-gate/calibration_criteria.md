@@ -161,3 +161,36 @@ tool calls → telemetry warning, never a cell failure; the hard 40-call cap sta
 - Human spot-check of live seminar fact-check findings until the alignment gap closes;
 - Ownership: the infra driver runs canaries and commits evidence; the USER approves the first
   broad live batch.
+
+---
+
+## 6. Seat-Decision Thresholds v1 (#4797 decision metric — replaces lift as go/no-go)
+
+Computed by `scripts/audit/qg_seat_decision.py` (offline-only: stored bakeoff artifacts, or a
+committed scorecard in explicitly-labeled degraded mode). The tooled−bare lift is an ablation
+diagnostic and is NEVER an input to these decisions. The metric consumes only the EFFECTIVE
+(post-gate) verdict stream — grounding admissibility is a hard precondition on credit — and is
+only meaningful on the SOUND gate (v2 anchoring + #4791/#4792/#4795/#6835 matcher fixes).
+
+**Floors are minimums (non-negotiable rules): never lowered to make a seat pass. Any change is
+a reviewed commit to this file.**
+
+| threshold | value | rule on breach | provenance |
+| --- | --- | --- | --- |
+| Unsafe accepts (admissible `CONFIRMED` on planted-false) | 0 outside reviewed claim-level allowlist | `NOT_VIABLE` / `UNSAFE_ACCEPT` | E3(d); the −100 fatal score |
+| U-recall (pure-fabrication catch, effective verdicts; missing claims count as NOT caught) | ≥ 0.75 | `NOT_VIABLE` / `U_RECALL_FLOOR` | E3(c) honesty ≥ 3/4 |
+| M-recall (misattribution catch, same rules) | ≥ 4/7 ≈ 0.571 | `NOT_VIABLE` / `M_RECALL_FLOOR` | E3(b) alignment ≥ 4/7 |
+| True-claim retention (`CONFIRMED`-on-true) | ≥ 0.5 | `NOT_VIABLE` / `TRUE_RETENTION_FLOOR` | NEW v1 floor — operator signs off together with the paid re-sweep |
+| Refuted-on-true rate | ≤ 0.1 | `NOT_VIABLE` / `TRUE_REFUTED_GUARDRAIL` | NEW v1 guardrail (refuting true content is the −50 event) |
+| Coverage (matched claims / fixture claims; anti-gaming) | ≥ 0.9 | `NOT_VIABLE` / `COVERAGE_FLOOR` | E3(b) missing=0, scaled to a 17-fixture multi-transport matrix |
+| Per-domain floors (folk/history/bio) | same floors per domain when domain denominator ≥ 4 | `NOT_VIABLE` / `DOMAIN_FLOOR_<domain>_<metric>` | issue #4797 residual spec |
+| Domain denominator < 4 | flagged, not judged | audit note `DOMAIN_LOW_N_<domain>` | small-N honesty |
+| CI reporting | Wilson 95% interval on every rate; `low-N` below denominator 10 | published alongside the decision (decision on the point estimate) | issue #4797 residual spec |
+
+Decisions: `VIABLE` · `VIABLE_WITH_AUDIT` (audit notes but no floor breach — includes ALL
+degraded-input runs, where unsafe accepts and true retention are unrecoverable) · `NOT_VIABLE`
+(≥1 floor breach, reasons listed) · `INSUFFICIENT_DATA` (a fabrication-class denominator is 0).
+
+Relation to E3 (§5): E3 remains the LIVE Tier-2 arming canary (4 pinned folk fixtures,
+all-must-pass). The seat decision is the BAKEOFF go/no-go over the 17-fixture matrix. Passing
+one never substitutes for the other.
