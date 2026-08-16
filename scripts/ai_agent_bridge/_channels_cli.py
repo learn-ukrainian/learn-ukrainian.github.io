@@ -807,25 +807,24 @@ def _print_inbox_run_summary(summary: Any, *, duration_s: float) -> None:
 
 
 def _query_inbox_show(agent: str) -> dict[str, Any]:
-    """Return read-only inbox status details for one agent."""
+    """Return inbox status details for one agent.
+
+    Pending counts use the same live-pending authority query as the
+    backlog banner (#6864). TTL-elapsed rows are expired first so the
+    janitor side effect still runs on show; the count itself is the
+    post-TTL live set either way.
+    """
     from ._db import get_db
 
     _channels.expire_stale_deliveries()
 
     now = _now_utc()
     failed_cutoff = (now - timedelta(hours=24)).isoformat()
+    live = _channels.live_pending_for_agent(agent, now=now.isoformat())
+    preview = _channels.oldest_live_pending_preview(agent, now=now.isoformat())
 
     conn = get_db()
     try:
-        pending = conn.execute(
-            """
-            SELECT COUNT(*) AS count, MIN(cm.created_at) AS oldest_created_at
-            FROM deliveries d
-            JOIN channel_messages cm ON cm.message_id = d.message_id
-            WHERE d.to_agent = ? AND d.status = 'pending'
-            """,
-            (agent,),
-        ).fetchone()
         processing = conn.execute(
             """
             SELECT COUNT(*) AS count, MIN(d.lease_until) AS lease_until
@@ -845,37 +844,12 @@ def _query_inbox_show(agent: str) -> dict[str, Any]:
             """,
             (agent, failed_cutoff),
         ).fetchone()
-        oldest = conn.execute(
-            """
-            SELECT cm.channel, cm.thread_id, cm.from_agent, cm.body
-            FROM deliveries d
-            JOIN channel_messages cm ON cm.message_id = d.message_id
-            WHERE d.to_agent = ? AND d.status = 'pending'
-            ORDER BY cm.created_at ASC, d.delivery_id ASC
-            LIMIT 1
-            """,
-            (agent,),
-        ).fetchone()
     finally:
         conn.close()
 
-    preview = None
-    if oldest is not None:
-        body = str(oldest["body"]).replace("\n", " ").strip()
-        preview = {
-            "channel": str(oldest["channel"]),
-            "thread_id": str(oldest["thread_id"]),
-            "from_agent": str(oldest["from_agent"]),
-            "body": body[:60] + ("..." if len(body) > 60 else ""),
-        }
-
     return {
-        "pending_count": int(pending["count"]) if pending else 0,
-        "oldest_created_at": (
-            str(pending["oldest_created_at"])
-            if pending and pending["oldest_created_at"]
-            else None
-        ),
+        "pending_count": int(live["count"]),
+        "oldest_created_at": live["oldest_created_at"],
         "processing_count": int(processing["count"]) if processing else 0,
         "processing_lease_until": (
             str(processing["lease_until"])
@@ -888,55 +862,43 @@ def _query_inbox_show(agent: str) -> dict[str, Any]:
 
 
 def _pending_backlog_rows() -> list[dict[str, Any]]:
-    """Return pending-delivery backlog rows used for the warning banner.
+    """Return live pending-delivery backlog rows for the warning banner.
 
-    Dead lanes (e.g. retired ``gemini`` → ``agy``) are excluded: they never
-    get drained by ``ab inbox run``, and nagging every CLI invocation is
-    pure noise (#5113). Expire them via ``ab cleanup --expire`` instead.
+    Uses the same authority query as ``inbox show``
+    (``_channels.live_pending_by_agent``): only within-TTL ``pending``
+    rows. Dead lanes are excluded (#5113) — expire them via
+    ``cleanup --expire`` instead of nagging every CLI invocation.
     """
-    from ._db import get_db
-
     dead = _channels.dead_lane_agents()
-    conn = get_db()
-    try:
-        rows = conn.execute(
-            """
-            SELECT d.to_agent, COUNT(*) AS count, MIN(cm.created_at) AS oldest_created_at
-            FROM deliveries d
-            JOIN channel_messages cm ON cm.message_id = d.message_id
-            WHERE d.status = 'pending'
-            GROUP BY d.to_agent
-            ORDER BY d.to_agent ASC
-            """
-        ).fetchall()
-    finally:
-        conn.close()
-
     return [
         {
-            "agent": str(row["to_agent"]),
+            "agent": row["agent"],
             "count": int(row["count"]),
             "oldest_created_at": str(row["oldest_created_at"]),
         }
-        for row in rows
-        if row["oldest_created_at"] and str(row["to_agent"]) not in dead
+        for row in _channels.live_pending_by_agent()
+        if row["oldest_created_at"] and row["agent"] not in dead
     ]
 
 
 def _maybe_print_backlog_warnings() -> None:
     """Emit one stderr warning per *live* agent with stale pending deliveries.
 
-    Intentionally read-only — see ``run_delivery_expiry_cleanup`` (``ab
-    cleanup --expire``) and the Monitor API server's periodic sweep
+    Intentionally read-only — see ``run_delivery_expiry_cleanup``
+    (``cleanup --expire``) and the Monitor API server's periodic sweep
     (``scripts/api/comms_router.py``) for where the TTL policy actually
     mutates rows (#4837 item 4). This function only warns; a print-a-
     warning helper mutating the DB on every single CLI invocation —
-    including e.g. ``ab cleanup --dry-run`` — would be a surprising,
+    including e.g. ``cleanup --dry-run`` — would be a surprising,
     hard-to-predict side effect and would break dry-run's no-mutation
     contract.
 
+    Counts match ``inbox show`` via ``live_pending_by_agent`` (#6864).
+    The hint names the live driver-session drain (drive-epic §0a); never
+    recommend the retired ``inbox run`` path or the bare ``ab`` alias.
+
     Dead-lane queues are never warned here (#5113); run
-    ``ab cleanup --expire`` (or the Monitor sweep) to bulk-expire them.
+    ``cleanup --expire`` (or the Monitor sweep) to bulk-expire them.
     """
     threshold = timedelta(hours=_parse_backlog_warn_hours())
     now = _now_utc()
@@ -946,7 +908,8 @@ def _maybe_print_backlog_warnings() -> None:
         age = _format_age(row["oldest_created_at"], now=now)
         print(
             f"⚠️  {row['agent']} has {row['count']} pending deliveries "
-            f"(oldest {age}). Run 'ab inbox run {row['agent']}' to drain.",
+            f"(oldest {age}). Drain in the live driver session "
+            f"(drive-epic §0a).",
             file=sys.stderr,
         )
 

@@ -504,7 +504,14 @@ def test_backlog_banner_triggers_for_old_pending_delivery(monkeypatch, capsys):
     assert exit_code == 0
     captured = capsys.readouterr()
     assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
-    assert "Run 'ab inbox run codex' to drain." in captured.err
+    assert "Drain in the live driver session (drive-epic §0a)." in captured.err
+    # #6864: never recommend retired inbox run or bare `ab` alias
+    assert "inbox run" not in captured.err
+    assert " ab " not in f" {captured.err} "
+    assert not any(
+        token == "ab" or token.startswith("ab ")
+        for token in captured.err.replace(".", " ").split()
+    )
 
 
 def test_backlog_banner_does_not_trigger_for_fresh_pending_delivery(monkeypatch, capsys):
@@ -516,6 +523,51 @@ def test_backlog_banner_does_not_trigger_for_fresh_pending_delivery(monkeypatch,
     assert exit_code == 0
     captured = capsys.readouterr()
     assert captured.err == ""
+
+
+def test_backlog_banner_count_matches_inbox_show_excluding_ttl_elapsed(
+    monkeypatch, capsys
+):
+    """#6864: banner live-pending count equals inbox show (not raw pending).
+
+    Seed one within-TTL pending + one past channel TTL. Banner must report
+    only the live row (1), matching inbox show after expire, not the raw
+    pending total (2).
+    """
+    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
+    _channels.create_channel("topic", description="ttl fixture")
+    _channels.set_channel_ttl("topic", 24)
+
+    live = _channels.post(
+        "topic", "user", "still live", to_agents=["codex"], auto_snapshot=False
+    )
+    stale = _channels.post(
+        "topic", "user", "past ttl", to_agents=["codex"], auto_snapshot=False
+    )
+    live_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
+    stale_ts = (datetime.now(UTC) - timedelta(hours=30)).isoformat()
+    _set_message_created_at(str(live["message_id"]), live_ts)
+    _set_message_created_at(str(stale["message_id"]), stale_ts)
+
+    # Authority query (shared) already excludes TTL-elapsed before show mutates.
+    live_rows = {
+        row["agent"]: row for row in _channels.live_pending_by_agent()
+    }
+    assert live_rows["codex"]["count"] == 1
+
+    exit_code = _run_cli(["inbox", "show", "codex"])
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
+    assert "pending:    1 (oldest 6h12m ago)" in captured.out
+    assert "inbox run" not in captured.err
+    assert "ab inbox" not in captured.err
+    # Stale row expired by show janitor; live row remains pending.
+    statuses = {
+        row["body"]: row["status"] for row in _delivery_statuses() if row["to_agent"] == "codex"
+    }
+    assert statuses["still live"] == "pending"
+    assert statuses["past ttl"] == "expired"
 
 
 def test_post_model_flag_stores_delivery_target_model(capsys):
