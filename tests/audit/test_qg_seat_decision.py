@@ -298,6 +298,32 @@ class TestDecideSeat:
         assert report.decision == qsd.DECISION_INSUFFICIENT_DATA
         assert report.reasons == ["INSUFFICIENT_DATA"]
 
+    def test_unsafe_accept_dominates_empty_class_short_circuit(self) -> None:
+        # CF finding on #6883: zero tolerance must dominate — a counted unsafe
+        # accept is NOT_VIABLE even when an empty U/M class would otherwise
+        # short-circuit the decision to INSUFFICIENT_DATA.
+        # Both classes empty: the only false claim is unclassified and CONFIRMED.
+        observations = [_obs(is_true=False, fabrication_class=None, verdict="CONFIRMED", claim_id="planted")]
+        report = qsd.decide_seat(SEAT, observations)
+        assert report.unsafe_accepts is not None and report.unsafe_accepts.numerator == 1
+        assert report.decision == qsd.DECISION_NOT_VIABLE
+        assert "UNSAFE_ACCEPT" in report.reasons
+        assert "INSUFFICIENT_DATA" not in report.reasons
+        # One class empty (no M rows): still NOT_VIABLE, never INSUFFICIENT_DATA.
+        observations = [_obs(is_true=False, fabrication_class="U", verdict="CONFIRMED", claim_id="planted")]
+        report = qsd.decide_seat(SEAT, observations)
+        assert report.decision == qsd.DECISION_NOT_VIABLE
+        assert "UNSAFE_ACCEPT" in report.reasons
+        # Allowlisted, the unsafe accept no longer counts, so the empty-class
+        # short-circuit applies again.
+        report = qsd.decide_seat(
+            SEAT,
+            observations,
+            unsafe_accept_allowlist=[{"fixture": "fix-a", "claim_id": "planted"}],
+        )
+        assert report.decision == qsd.DECISION_INSUFFICIENT_DATA
+        assert report.reasons == ["INSUFFICIENT_DATA"]
+
 
 def _artifact(
     *,

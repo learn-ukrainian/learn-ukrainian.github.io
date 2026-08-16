@@ -298,7 +298,10 @@ def decide_seat(
 
 def _apply_decision(report: SeatReport) -> None:
     """Shared decision logic for full and degraded (scorecard) inputs."""
-    if report.u_recall.denominator == 0 or report.m_recall.denominator == 0:
+    # Zero tolerance dominates: a counted unsafe accept is NOT_VIABLE even when
+    # an empty U/M class would otherwise short-circuit to INSUFFICIENT_DATA.
+    has_unsafe_accept = report.unsafe_accepts is not None and report.unsafe_accepts.numerator > 0
+    if not has_unsafe_accept and (report.u_recall.denominator == 0 or report.m_recall.denominator == 0):
         report.decision = DECISION_INSUFFICIENT_DATA
         report.reasons = ["INSUFFICIENT_DATA"]
         return
