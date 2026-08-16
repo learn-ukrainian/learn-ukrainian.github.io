@@ -424,3 +424,162 @@ def test_close_and_cli_reject_unsafe_job_id(
     assert atlas_job.main(["close", "../escape", "--skip-pull", "--skip-restic"]) == 2
     assert atlas_job.main(["pull", "--job-id", "../escape"]) == 2
     assert list(tmp_path.iterdir()) == []
+
+
+def test_min_free_disk_bytes_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_BYTES", raising=False)
+    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GIB", raising=False)
+    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GB", raising=False)
+    assert atlas_job.min_free_disk_bytes() == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
+    assert atlas_job.min_free_disk_bytes() == 5 * 1024 * 1024 * 1024
+
+    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", "10737418240")
+    assert atlas_job.min_free_disk_bytes() == 10 * 1024 * 1024 * 1024
+
+    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_BYTES")
+    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_GIB", "2.5")
+    assert atlas_job.min_free_disk_bytes() == int(2.5 * 1024 * 1024 * 1024)
+
+    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GIB")
+    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_GB", "4")
+    assert atlas_job.min_free_disk_bytes() == 4 * 1024 * 1024 * 1024
+
+    # Invalid string fallbacks to default when other env vars are unset.
+    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GB")
+    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", "invalid")
+    assert atlas_job.min_free_disk_bytes() == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
+
+
+def test_submit_refuses_when_host_free_disk_below_floor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    # 1 GiB free disk is below the 5 GiB default floor.
+    _isolate_host.free_disk_bytes_value = 1 * 1024 * 1024 * 1024
+
+    plan = _plan(id="low-disk-job")
+    rc = atlas_job.submit(plan, dry_run=False, host_adapter=_isolate_host)
+    assert rc == 2
+
+    # Journal records the refusal fail-closed.
+    row = atlas_job.load_registry("low-disk-job")
+    assert row is not None
+    assert row["state"] == "rejected"
+    assert "insufficient host free disk" in row["refusal_reason"]
+    assert row["free_disk_bytes"] == 1 * 1024 * 1024 * 1024
+    assert row["min_free_disk_bytes"] == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
+
+
+def test_submit_honors_env_override_min_free_disk_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    # Override floor to 100 MB.
+    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", str(100 * 1024 * 1024))
+    _isolate_host.free_disk_bytes_value = 200 * 1024 * 1024
+
+    launched: list[list[str]] = []
+
+    def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
+        launched.append(cmd)
+        return 0
+
+    monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
+
+    plan = _plan(id="override-ok-job")
+    rc = atlas_job.submit(plan, dry_run=False, host_adapter=_isolate_host)
+    assert rc == 0
+    assert len(launched) == 1
+
+    row = atlas_job.load_registry("override-ok-job")
+    assert row is not None
+    assert row["state"] == "running"
+
+
+def test_submit_honors_env_override_min_free_disk_gib(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    # Higher override via GIB causes refusal.
+    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_GIB", "10")
+    _isolate_host.free_disk_bytes_value = 6 * 1024 * 1024 * 1024
+    plan_refused = _plan(id="override-refused-job")
+    rc_refused = atlas_job.submit(plan_refused, dry_run=False, host_adapter=_isolate_host)
+    assert rc_refused == 2
+    row_refused = atlas_job.load_registry("override-refused-job")
+    assert row_refused is not None
+    assert row_refused["state"] == "rejected"
+    assert row_refused["min_free_disk_bytes"] == 10 * 1024 * 1024 * 1024
+
+
+def test_submit_refuses_when_free_disk_check_errors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+
+    def fake_free_disk_err(host: str, path: str | None = None) -> int:
+        raise ConnectionError("host disk probe failed")
+
+    monkeypatch.setattr(_isolate_host, "free_disk_bytes", fake_free_disk_err)
+
+    plan = _plan(id="disk-err-job")
+    rc = atlas_job.submit(plan, dry_run=False, host_adapter=_isolate_host)
+    assert rc == 2
+
+    row = atlas_job.load_registry("disk-err-job")
+    assert row is not None
+    assert row["state"] == "rejected"
+    assert "host free disk check failed" in row["refusal_reason"]
+
+
+def test_submit_refuses_restic_sink_when_restic_sink_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    atlas_job.set_restic_sink_blocked("doctor failed")
+
+    # sink='restic' is refused
+    plan_restic = _plan(id="restic-job", result_sink="restic")
+    rc = atlas_job.submit(plan_restic, dry_run=False, host_adapter=_isolate_host)
+    assert rc == 2
+    row = atlas_job.load_registry("restic-job")
+    assert row is not None
+    assert row["state"] == "rejected"
+    assert "restic sink blocked" in row["refusal_reason"]
+
+    # sink='both' is refused
+    plan_both = _plan(id="both-job", result_sink="both")
+    rc_both = atlas_job.submit(plan_both, dry_run=False, host_adapter=_isolate_host)
+    assert rc_both == 2
+    row_both = atlas_job.load_registry("both-job")
+    assert row_both is not None
+    assert row_both["state"] == "rejected"
+    assert "restic sink blocked" in row_both["refusal_reason"]
+
+
+def test_submit_allows_git_sink_when_restic_sink_blocked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    atlas_job.set_restic_sink_blocked("doctor failed")
+
+    def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
+        return 0
+
+    monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
+
+    # sink='git' is NOT blocked by restic sink block
+    plan_git = _plan(id="git-job", result_sink="git")
+    rc = atlas_job.submit(plan_git, dry_run=False, host_adapter=_isolate_host)
+    assert rc == 0
+    row = atlas_job.load_registry("git-job")
+    assert row is not None
+    assert row["state"] == "running"
+
+
+def test_ssh_host_adapter_free_disk_bytes_source() -> None:
+    import inspect
+
+    src = inspect.getsource(atlas_job.SshHostAdapter.free_disk_bytes)
+    assert "shutil.disk_usage" in src
+    assert "while not p.exists()" in src

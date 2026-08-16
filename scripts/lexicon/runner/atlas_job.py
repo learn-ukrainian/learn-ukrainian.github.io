@@ -4,7 +4,8 @@
 
 Batch kinds run on atlas-runner only. Registry lives under batch_state/atlas-jobs/
 (restic-covered). Close writes a fail-closed result receipt; large artifacts go
-through durable_mirror + backup-data.sh. Publish/pointer flip is never this module.
+through durable_mirror + backup-data.sh. Publish/pointer flip is never this module. Submit enforces a host free-disk
+floor (default 5 GiB, ATLAS_MIN_FREE_DISK_BYTES / ATLAS_MIN_FREE_DISK_GIB).
 """
 
 from __future__ import annotations
@@ -73,8 +74,36 @@ _HOSTNAME_HINT = re.compile(
 )
 DEFAULT_TIMEOUT_SECONDS = 86400
 DEFAULT_RUN_ROOT = "/home/ops/atlas-runner"
+DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
 
 _HOST = None  # set via set_host_adapter(); typed as HostAdapter | None
+
+
+def min_free_disk_bytes() -> int:
+    """Return the configured host free disk floor in bytes (default 5 GiB).
+
+    Overridable via ATLAS_MIN_FREE_DISK_BYTES (raw integer bytes) or
+    ATLAS_MIN_FREE_DISK_GIB / ATLAS_MIN_FREE_DISK_GB (in GiB / GB).
+    """
+    override = os.environ.get("ATLAS_MIN_FREE_DISK_BYTES")
+    if override:
+        try:
+            val = int(override)
+            if val >= 0:
+                return val
+        except ValueError:
+            pass
+    gib_override = os.environ.get("ATLAS_MIN_FREE_DISK_GIB") or os.environ.get(
+        "ATLAS_MIN_FREE_DISK_GB"
+    )
+    if gib_override:
+        try:
+            val_f = float(gib_override)
+            if val_f >= 0:
+                return int(val_f * 1024 * 1024 * 1024)
+        except ValueError:
+            pass
+    return DEFAULT_MIN_FREE_DISK_BYTES
 
 
 class HostAdapter(Protocol):
@@ -92,6 +121,9 @@ class HostAdapter(Protocol):
     def reachable(self, host: str) -> bool:
         """True when SSH (or fake) host checks can run."""
 
+    def free_disk_bytes(self, host: str, path: str | None = None) -> int:
+        """Return available free disk space in bytes on the host for path (or run root)."""
+
 
 @dataclass
 class FakeHostAdapter:
@@ -101,6 +133,8 @@ class FakeHostAdapter:
     exit_status_by_workdir: dict[str, dict[str, Any]] = field(default_factory=dict)
     pgrep_lines: list[str] = field(default_factory=list)
     online: bool = True
+    free_disk_bytes_value: int = 50 * 1024 * 1024 * 1024  # 50 GiB default healthy
+    free_disk_by_path: dict[str, int] = field(default_factory=dict)
 
     def list_atlas_job_units(self, host: str) -> list[dict[str, Any]]:
         del host
@@ -123,6 +157,14 @@ class FakeHostAdapter:
     def reachable(self, host: str) -> bool:
         del host
         return self.online
+
+    def free_disk_bytes(self, host: str, path: str | None = None) -> int:
+        del host
+        if not self.online:
+            raise ConnectionError("host unreachable")
+        if path is not None and path in self.free_disk_by_path:
+            return self.free_disk_by_path[path]
+        return self.free_disk_bytes_value
 
 
 class SshHostAdapter:
@@ -196,6 +238,26 @@ class SshHostAdapter:
     def reachable(self, host: str) -> bool:
         proc = _ssh(host, "true")
         return proc.returncode == 0
+
+    def free_disk_bytes(self, host: str, path: str | None = None) -> int:
+        target = path or str(_run_root())
+        remote = (
+            "python3 - <<'PY'\n"
+            "import shutil\n"
+            "from pathlib import Path\n"
+            f"p = Path({target!r})\n"
+            "while not p.exists() and p != p.parent:\n"
+            "    p = p.parent\n"
+            "print(shutil.disk_usage(str(p)).free)\n"
+            "PY"
+        )
+        proc = _ssh(host, remote)
+        if proc.returncode != 0:
+            raise ConnectionError(f"free-disk check failed on {host}: rc={proc.returncode}")
+        text = (proc.stdout or "").strip()
+        if not text.isdigit():
+            raise ValueError(f"invalid free disk output from {host}: {text!r}")
+        return int(text)
 
 
 def _ssh(host: str, remote: str) -> subprocess.CompletedProcess[str]:
@@ -717,62 +779,8 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
     job_id = str(plan["id"])
     host = str(plan["host"])
     sink = plan.get("result_sink")
-    if sink in {"restic", "both"} and restic_sink_blocked() and not dry_run:
-        print(
-            "restic sink blocked until backup-data.sh doctor is green "
-            f"({restic_block_path()})",
-            file=sys.stderr,
-        )
-        return 2
-    existing = load_registry(job_id)
-    if existing and existing.get("state") == "running":
-        print(f"job {job_id} is already running", file=sys.stderr)
-        return 2
-    adapter = host_adapter or get_host_adapter()
-    if not dry_run:
-        try:
-            if not adapter.reachable(host):
-                print(f"host {host} unreachable", file=sys.stderr)
-                return 2
-            busy_units = active_host_units(host, adapter)
-        except (ConnectionError, OSError, ValueError) as exc:
-            print(f"host unit check failed: {exc}", file=sys.stderr)
-            return 2
-        if busy_units:
-            print(
-                f"host {host} already has active unit {busy_units[0].get('name')} "
-                "(systemd is the mutex; registry is journal only)",
-                file=sys.stderr,
-            )
-            return 2
-        journal_busy = running_on_host(host)
-        if journal_busy:
-            # Journal says running but host has no unit — reconcile hole; still refuse.
-            print(
-                f"registry journal has running job {journal_busy[0].get('id')} "
-                "with no active host unit; close/reconcile before submit",
-                file=sys.stderr,
-            )
-            return 2
     unit = unit_name(job_id)
     workdir = work_dir_for(job_id, plan)
-    args = list(plan.get("args") or [])
-    if "--no-poll" not in args:
-        args.append("--no-poll")
-    env = os.environ.copy()
-    env["ATLAS_RUNNER_HOST"] = host
-    env["ATLAS_RE_ENRICH_UNIT"] = unit
-    env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
-    env["ATLAS_RE_ENRICH_OUT_DIR"] = str(local_pull_dir(job_id))
-    env["ATLAS_JOB_EXIT_STATUS_FILE"] = f"{workdir}/exit-status.json"
-    env["ATLAS_RE_ENRICH_RUNTIME_MAX_SEC"] = str(
-        plan.get("timeout_seconds", DEFAULT_TIMEOUT_SECONDS)
-    )
-    env["ATLAS_RE_ENRICH_RESTART"] = "no"
-    slugs = plan.get("slugs_file")
-    if isinstance(slugs, str) and slugs:
-        env["ATLAS_RE_ENRICH_RESIDUAL"] = slugs
-    cmd = ["bash", str(_launcher()), *args]
     plan_blob = json.dumps(plan, sort_keys=True).encode()
     row = {
         "id": job_id,
@@ -791,6 +799,108 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
         "submitted_at": _now(),
         "plan": plan,
     }
+
+    if sink in {"restic", "both"} and restic_sink_blocked() and not dry_run:
+        print(
+            "restic sink blocked until backup-data.sh doctor is green "
+            f"({restic_block_path()})",
+            file=sys.stderr,
+        )
+        row["state"] = "rejected"
+        row["refusal_reason"] = f"restic sink blocked ({restic_block_path()})"
+        save_registry(row)
+        return 2
+    existing = load_registry(job_id)
+    if existing and existing.get("state") == "running":
+        print(f"job {job_id} is already running", file=sys.stderr)
+        return 2
+    adapter = host_adapter or get_host_adapter()
+    if not dry_run:
+        try:
+            if not adapter.reachable(host):
+                print(f"host {host} unreachable", file=sys.stderr)
+                row["state"] = "rejected"
+                row["refusal_reason"] = f"host {host} unreachable"
+                save_registry(row)
+                return 2
+            busy_units = active_host_units(host, adapter)
+        except (ConnectionError, OSError, ValueError) as exc:
+            print(f"host unit check failed: {exc}", file=sys.stderr)
+            row["state"] = "rejected"
+            row["refusal_reason"] = f"host unit check failed: {exc}"
+            save_registry(row)
+            return 2
+        if busy_units:
+            print(
+                f"host {host} already has active unit {busy_units[0].get('name')} "
+                "(systemd is the mutex; registry is journal only)",
+                file=sys.stderr,
+            )
+            row["state"] = "rejected"
+            row["refusal_reason"] = (
+                f"host {host} already has active unit {busy_units[0].get('name')}"
+            )
+            save_registry(row)
+            return 2
+        journal_busy = running_on_host(host)
+        if journal_busy:
+            # Journal says running but host has no unit — reconcile hole; still refuse.
+            print(
+                f"registry journal has running job {journal_busy[0].get('id')} "
+                "with no active host unit; close/reconcile before submit",
+                file=sys.stderr,
+            )
+            row["state"] = "rejected"
+            row["refusal_reason"] = (
+                f"registry journal has running job {journal_busy[0].get('id')} with no active host unit"
+            )
+            save_registry(row)
+            return 2
+
+        # Free disk preflight check: refuse when host free disk is below floor.
+        min_free = min_free_disk_bytes()
+        try:
+            free_bytes = adapter.free_disk_bytes(host, workdir)
+        except (ConnectionError, OSError, ValueError) as exc:
+            print(f"host free disk check failed: {exc}", file=sys.stderr)
+            row["state"] = "rejected"
+            row["refusal_reason"] = f"host free disk check failed: {exc}"
+            save_registry(row)
+            return 2
+
+        if free_bytes < min_free:
+            print(
+                f"refusing submit: host {host} free disk ({free_bytes} bytes) "
+                f"is below required floor ({min_free} bytes)",
+                file=sys.stderr,
+            )
+            row["state"] = "rejected"
+            row["refusal_reason"] = (
+                f"insufficient host free disk: {free_bytes} bytes < {min_free} bytes floor"
+            )
+            row["free_disk_bytes"] = free_bytes
+            row["min_free_disk_bytes"] = min_free
+            save_registry(row)
+            return 2
+
+    args = list(plan.get("args") or [])
+    if "--no-poll" not in args:
+        args.append("--no-poll")
+    env = os.environ.copy()
+    env["ATLAS_RUNNER_HOST"] = host
+    env["ATLAS_RE_ENRICH_UNIT"] = unit
+    env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
+    env["ATLAS_RE_ENRICH_OUT_DIR"] = str(local_pull_dir(job_id))
+    env["ATLAS_JOB_EXIT_STATUS_FILE"] = f"{workdir}/exit-status.json"
+    env["ATLAS_RE_ENRICH_RUNTIME_MAX_SEC"] = str(
+        plan.get("timeout_seconds", DEFAULT_TIMEOUT_SECONDS)
+    )
+    env["ATLAS_RE_ENRICH_RESTART"] = "no"
+    slugs = plan.get("slugs_file")
+    if isinstance(slugs, str) and slugs:
+        env["ATLAS_RE_ENRICH_RESIDUAL"] = slugs
+    cmd = ["bash", str(_launcher()), *args]
+    plan_blob = json.dumps(plan, sort_keys=True).encode()
     if dry_run:
         print("host", host)
         print("unit", unit)
