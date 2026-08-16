@@ -120,26 +120,15 @@ _run_with_secondary_rate_limit_retry() {
   local base_delay_s
   base_delay_s="$(_nonnegative_integer_or_default "${AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS:-}" 60)"
 
-  _agent_gh_retry_stdin_file=""
   _agent_gh_retry_sleep_pid=""
   _agent_gh_retry_stdout_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdout.XXXXXX")" || return 1
   _agent_gh_retry_stderr_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stderr.XXXXXX")" || {
     rm -f "$_agent_gh_retry_stdout_file"
     return 1
   }
-  if [[ ! -t 0 ]]; then
-    _agent_gh_retry_stdin_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdin.XXXXXX")" || {
-      rm -f "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
-      return 1
-    }
-    cat >"$_agent_gh_retry_stdin_file" || {
-      rm -f "$_agent_gh_retry_stdin_file" "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
-      return 1
-    }
-  fi
 
   _cleanup_secondary_retry_tempfiles() {
-    rm -f "$_agent_gh_retry_stdin_file" "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
+    rm -f "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
   }
 
   _abort_secondary_retry() {
@@ -165,13 +154,7 @@ _run_with_secondary_rate_limit_retry() {
   local http_status=""
   local retries_exhausted=false
   while :; do
-    if [[ -n "$_agent_gh_retry_stdin_file" ]]; then
-      if "$real_gh" "$@" <"$_agent_gh_retry_stdin_file" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
-        exit_status=0
-      else
-        exit_status=$?
-      fi
-    elif "$real_gh" "$@" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
+    if "$real_gh" "$@" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
       exit_status=0
     else
       exit_status=$?
@@ -198,6 +181,7 @@ _run_with_secondary_rate_limit_retry() {
       "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
     # Bash's wait builtin returns when TERM interrupts it, letting the abort
     # trap kill the tracked backoff child immediately.
+    # shellcheck disable=SC2217
     sleep "$delay_s" </dev/null >/dev/null 2>&1 &
     _agent_gh_retry_sleep_pid=$!
     wait "$_agent_gh_retry_sleep_pid" 2>/dev/null || true

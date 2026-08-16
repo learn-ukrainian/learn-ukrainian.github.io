@@ -4562,6 +4562,49 @@ def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_
     assert "throttled; retrying" not in proc.stderr
 
 
+def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path):
+    """Secondary rate-limit retries must complete bounded when stdin is closed (#6869)."""
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    attempts = tmp_path / "attempts"
+    fake_gh.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        f"attempts={attempts!s}\n"
+        "count=0\n"
+        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        "count=$((count + 1))\n"
+        "printf '%s' \"$count\" >\"$attempts\"\n"
+        "if [[ \"$count\" == 1 ]]; then\n"
+        "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
+        "  exit 1\n"
+        "fi\n"
+        "printf 'real-gh %s (success)\\n' \"$*\"\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        ["bash", "-c", f'exec 0<&-; "{shim}" issue list'],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
+            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode == 0
+    assert attempts.read_text(encoding="utf-8") == "2"
+    assert proc.stdout.strip() == "real-gh issue list (success)"
+    assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
+
+
 def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):
     shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "git"
     fake_git = tmp_path / "real-git"
