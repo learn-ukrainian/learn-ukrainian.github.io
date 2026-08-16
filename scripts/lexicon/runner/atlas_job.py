@@ -10,6 +10,7 @@ through durable_mirror + backup-data.sh. Publish/pointer flip is never this modu
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -924,10 +925,8 @@ def close_job(
             receipt["git_pr"] = None
             receipt["git_error"] = str(exc)
             print(f"git receipt rejected: {exc}", file=sys.stderr)
-            try:
+            with contextlib.suppress(ValueError):
                 write_git_receipt(job_id, receipt)
-            except ValueError:
-                pass
     else:
         # Even for restic-only, land a schema-capped local receipt for visibility.
         try:
