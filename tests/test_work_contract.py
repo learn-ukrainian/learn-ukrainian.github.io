@@ -68,6 +68,17 @@ def test_saved_view_lifecycle_allowlist():
         parse_saved_view_params({"lifecycle": "nonce-xyz-not-a-lifecycle"})
 
 
+def test_saved_view_repository_id_allowlist():
+    """Public P1 accepts only the configured public repository_id singleton."""
+    from scripts.work.sources_public import public_repository_id
+
+    configured = public_repository_id()
+    ok = parse_saved_view_params({"repository_id": configured})
+    assert ok["repository_id"] == [configured]
+    with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+        parse_saved_view_params({"repository_id": "some-owner/random-repo-not-configured"})
+
+
 def test_relations_and_cycle_detection():
     body = "This blocks #2 and is blocked by #3. Duplicate of #4. Superseded-by: #5"
     rels = extract_body_relations(body, repository_id=REPO, self_number=1)
