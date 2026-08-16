@@ -231,14 +231,27 @@ def require_safe_job_id(job_id: object) -> str:
     """Reject non-token job ids before any filesystem path join.
 
     Raises ValueError when ``job_id`` is not a str matching ``_SAFE_ID``.
+    Returns the matched token (``Match.group(0)``), never the raw argument,
+    so path joins are not fed a CodeQL-tainted string.
     """
-    if not isinstance(job_id, str) or not _SAFE_ID.match(job_id):
+    if not isinstance(job_id, str):
         raise ValueError("job_id must be a filesystem/systemd-safe token")
-    return job_id
+    matched = _SAFE_ID.fullmatch(job_id)
+    if matched is None:
+        raise ValueError("job_id must be a filesystem/systemd-safe token")
+    return matched.group(0)
 
 
 def _run_root() -> Path:
     return Path(os.environ.get("ATLAS_RUN_ROOT", DEFAULT_RUN_ROOT))
+
+
+def _safe_id_token(part: str) -> str:
+    """Return ``_SAFE_ID`` match text for a path segment, or raise."""
+    matched = _SAFE_ID.fullmatch(part)
+    if matched is None:
+        raise ValueError("workdir must be a safe token path")
+    return matched.group(0)
 
 
 def require_safe_workdir(workdir: object) -> str:
@@ -246,6 +259,9 @@ def require_safe_workdir(workdir: object) -> str:
 
     Rejects ``..``, absolute paths outside ``ATLAS_RUN_ROOT`` / default run
     root, and any path whose segments are not ``_SAFE_ID`` tokens.
+    Returns a newly constructed path from validated tokens (or
+    ``str(resolved)`` for absolute paths under the run root), never the
+    original relative ``workdir`` string.
     """
     if not isinstance(workdir, str) or not workdir:
         raise ValueError("workdir must be a non-empty safe token path")
@@ -263,14 +279,14 @@ def require_safe_workdir(workdir: object) -> str:
             raise ValueError("workdir must be under ATLAS_RUN_ROOT") from exc
         if not rel.parts:
             raise ValueError("workdir must be a subdirectory of ATLAS_RUN_ROOT")
-        for part in rel.parts:
-            if not _SAFE_ID.match(part):
-                raise ValueError("workdir must be a safe token path")
-        return str(resolved)
+        safe_rel = [_safe_id_token(part) for part in rel.parts]
+        return str(run_root.joinpath(*safe_rel))
+    safe_parts: list[str] = []
     for part in raw.parts:
-        if part in {".", ""} or not _SAFE_ID.match(part):
+        if part in {".", ""}:
             raise ValueError("workdir must be a safe token path")
-    return workdir
+        safe_parts.append(_safe_id_token(part))
+    return str(Path(*safe_parts))
 
 
 def registry_path(job_id: str) -> Path:
@@ -327,7 +343,7 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     if plan.get("schema") != SCHEMA:
         errors.append(f"schema must be {SCHEMA}")
     job_id = plan.get("id")
-    if not isinstance(job_id, str) or not _SAFE_ID.match(job_id):
+    if not isinstance(job_id, str) or _SAFE_ID.fullmatch(job_id) is None:
         errors.append("id must be a filesystem/systemd-safe token")
     host = plan.get("host")
     if host not in {"atlas-runner", "hramatka"}:

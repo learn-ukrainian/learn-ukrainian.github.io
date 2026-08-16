@@ -372,6 +372,7 @@ def test_require_safe_job_id_rejects_traversal_and_bool() -> None:
         with pytest.raises(ValueError):
             atlas_job.require_safe_job_id(bad)  # type: ignore[arg-type]
     assert atlas_job.require_safe_job_id("missing-tr-example") == "missing-tr-example"
+    assert atlas_job.require_safe_job_id("ab") == "ab"
 
 
 def test_path_builders_reject_unsafe_job_id(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
