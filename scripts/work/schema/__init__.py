@@ -26,6 +26,8 @@ ALLOWED_HEALTH = frozenset({"ON_TRACK", "AT_RISK", "OFF_TRACK", "UNKNOWN"})
 ALLOWED_KINDS = frozenset(
     {"issue", "pr", "task", "review", "verification", "arc", "milestone"}
 )
+# UI-exposed lifecycle chips only; arbitrary values would never-evict cache keys.
+ALLOWED_LIFECYCLES = frozenset({"open", "draft", "running", "failed"})
 ALLOWED_SOURCES = frozenset({"public-monitor", "private-local-adapter"})
 
 
@@ -117,6 +119,9 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
                 raise SchemaValidationError(f"invalid kind filter: {bad[0]}")
             filters["resource_kind"] = cleaned
         elif key == "lifecycle":
+            bad = [v for v in cleaned if v not in ALLOWED_LIFECYCLES]
+            if bad:
+                raise SchemaValidationError(f"invalid lifecycle filter: {bad[0]}")
             filters["lifecycle"] = cleaned
         elif key == "orphan":
             if len(cleaned) != 1 or cleaned[0] not in {"true", "false", "1", "0"}:

@@ -61,6 +61,13 @@ def test_saved_view_rejects_free_text_and_private_keys():
     assert ok["orphan"] is True
 
 
+def test_saved_view_lifecycle_allowlist():
+    ok = parse_saved_view_params({"lifecycle": "open"})
+    assert ok["lifecycle"] == ["open"]
+    with pytest.raises(SchemaValidationError, match="invalid lifecycle filter"):
+        parse_saved_view_params({"lifecycle": "nonce-xyz-not-a-lifecycle"})
+
+
 def test_relations_and_cycle_detection():
     body = "This blocks #2 and is blocked by #3. Duplicate of #4. Superseded-by: #5"
     rels = extract_body_relations(body, repository_id=REPO, self_number=1)
