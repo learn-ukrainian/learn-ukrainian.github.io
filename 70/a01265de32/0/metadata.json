@@ -1,0 +1,55 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "70a01265de32",
+  "session_id": "session_b432fb32-c3d3-4684-858c-edf0cbef0796",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T18:33:34.808579Z",
+  "branch": "kimi/infra-6805-residual",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/agent-runtime-guide.md",
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/env_sanitize.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/ai_agent_bridge/_acp_compat.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/config/model_catalog.yaml",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/ai_agent_bridge/test_ask_contract.py",
+    "tests/test_agent_runtime.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "f56006296446",
+  "token_usage": {
+    "input_tokens": 167881,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 16459264,
+    "output_tokens": 59519,
+    "api_call_count": 132
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T18:33:34.76109Z",
+    "agent_lines": 464,
+    "agent_removed": 73,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 464,
+    "total_lines_changed": 537,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

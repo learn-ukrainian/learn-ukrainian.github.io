@@ -1,0 +1,51 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6805-residual
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Issue #6805 residual — reviewer-seat transport: DeepSeek ask route + outcome validation for review asks
+
+Read GitHub issue #6805 in full including the 2026-08-16 comment (DeepSeek seat has a
+documented standing route — `opencode run --model deepseek-direct/deepseek-v4-flash` —
+but NO working bridge ask path: `ask-deepseek` does not exist and `ask-opencode` fails
+with "no enabled ACP route"; a review had to be rerouted to kimi). You fixed the
+adjacent #6805 CI/gemma work in PR #6837 — this is the residual.
+
+```
+ROUTING_CARD_V1
+tier: practical
+model_x_harness: kimi-k3 × native kimi CLI
+why_this_tier: transport/adapter work with fresh context from PR #6837 in the same files
+advisor_packet: n/a
+owned_paths: scripts/ai_agent_bridge/**, scripts/agent_runtime/adapters/**, tests/**
+acceptance_cmd: live ask through the DeepSeek seat returns a real reply (quoted), OR the
+  seat is explicitly documented delegate-only with the reviewer-routing guidance updated
+alternatives_considered: agy/grok (taken by parallel wave tasks), codex (capped)
+parallel_free_seats: see batch_state/briefs/ for the concurrent wave
+```
+
+## Scope
+1. **DeepSeek ask route:** decide-and-implement one of: (a) enable the ACP route for the
+   DeepSeek seat so `ask-opencode`/an `ask-deepseek` compat name works (mirroring the
+   gemma pattern you shipped in #6837), or (b) prove bridge-level DeepSeek asks are
+   delegate-only BY DESIGN and update the served reviewer-seat guidance + remediation
+   text so no driver retries a dead path again. Outcome (a) preferred if the standing
+   opencode route supports it; justify the choice on the issue.
+2. **Outcome validation for review-type asks** (the issue's core residual): transport-ok
+   currently masks garbage (glm garble + 2× non-evidentiary reviews documented on the
+   issue). Add a minimal semantic validity check for `--type review` asks: the reply
+   must contain a VERDICT token and at least one finding/evidence line, else the ask
+   terminalizes as `failed:non_evidentiary` (never silently `replied`). Keep it cheap
+   and deterministic — no LLM judge in the transport layer.
+3. Mutation-check both behaviors (#M-16); evidence quoted (#M-4).
+
+## Steps
+Worktree → implement → live-probe the DeepSeek decision path → pytest + ruff →
+conventional commit referencing #6805 → push → PR. NO auto-merge.
