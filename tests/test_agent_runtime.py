@@ -352,7 +352,7 @@ def test_acpx_grok_shadow_entry_is_direct_only():
         (
             "acpx-deepseek-shadow",
             "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
-            "deepseek-v4-pro",
+            "deepseek-v4-flash",
         ),
     ],
 )

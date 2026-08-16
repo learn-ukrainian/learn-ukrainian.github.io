@@ -167,7 +167,14 @@ CLAUDE_ACP_MODEL = "claude-sonnet-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
-DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
+# DeepSeek ACP seat (#6805): Hermes was permanently removed from this host
+# (operator order 2026-08-16), so the seat now mirrors the confined GLM/Gemma
+# shape on the standing first-party opencode route. Flash is the catalog pin —
+# Pro stays off the routine review ladder (operator GO 2026-08-13, canary
+# #6703). The bare catalog id is fleet identity; the ``deepseek-direct/``
+# prefix is the opencode invocation detail, same split as the GLM seat.
+DEEPSEEK_ACP_MODEL = "deepseek-v4-flash"
+DEEPSEEK_ACP_INVOCATION_MODEL = "deepseek-direct/deepseek-v4-flash"
 # $0 toolless Gemma seat (#6805): the canonical catalog id doubles as the
 # opencode invocation id on the Google AI Studio direct provider. Gemma has no
 # paid SKU on the Gemini API (pricing verified 2026-07-07) and runs toolless —
@@ -614,13 +621,14 @@ ACPX_PARTICIPANT_CATALOG_TRANSPORTS: dict[str, str] = {
     "agy": "agy",
     "glm": "opencode",
     "gemma": "opencode",
-    "deepseek": "hermes",
+    "deepseek": "opencode",
 }
 ACPX_PARTICIPANT_EFFORTS: dict[str, str] = {
     "claude": "high",
     "grok": GROK_SHADOW_EFFORT,
     "agy": "high",
     "glm": "high",
+    "deepseek": "high",
 }
 
 # Raw ACPX JSON-RPC traffic has a separate, larger bound in runner.py because
@@ -1470,15 +1478,20 @@ _PARTICIPANT_COMPATIBILITY_CONTRACTS = {
 # of dying.
 _MISSING_BINARY_REMEDIATION: dict[str, str] = {
     # Hermes is permanently removed from this host (operator order
-    # 2026-08-16) — there is no reinstall path. The DeepSeek seat's standing
-    # route is first-party via opencode.
+    # 2026-08-16) — there is no reinstall path. The DeepSeek seat routes
+    # first-party via opencode: bridge asks use `ask-deepseek` (or the
+    # `ask-hermes` alias) on the acpx-deepseek-shadow ACP seat; direct
+    # one-shot review/research runs `opencode run --model
+    # deepseek-direct/deepseek-v4-flash --variant high`; tool-heavy work goes
+    # to `delegate.py dispatch --agent deepseek`.
     "hermes": (
         "Remediation: Hermes was permanently removed from this host "
         "(operator order 2026-08-16) — do not reinstall. The DeepSeek seat "
-        "routes first-party via opencode as the standing path: one-shot "
+        "routes first-party via opencode as the standing path: bridge asks "
+        "use `ask-deepseek` (or the `ask-hermes` alias), direct one-shot "
         "review/research runs `opencode run --model "
-        "deepseek-direct/deepseek-v4-flash --variant high`; tool-heavy work "
-        "goes to `delegate.py dispatch --agent deepseek`. See "
+        "deepseek-direct/deepseek-v4-flash --variant high`, and tool-heavy "
+        "work goes to `delegate.py dispatch --agent deepseek`. See "
         "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
         "recovery'."
     ),
@@ -1497,11 +1510,13 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
 # Provider executable each ACP participant's catalog transport shells out to.
 # Seats reached through an ACPX built-in (codex/grok/claude/kimi/cursor/pool)
 # resolve no external provider binary here and are not probed by this map.
+# DeepSeek rides the same native ``opencode acp --pure`` transport as GLM and
+# Gemma since the Hermes removal (operator order 2026-08-16, #6805).
 _PARTICIPANT_PROVIDER_BINARIES: dict[str, str] = {
     "agy": "agy",
     "glm": "opencode",
     "gemma": "opencode",
-    "deepseek": "hermes",
+    "deepseek": "opencode",
 }
 
 
@@ -2397,36 +2412,60 @@ class AcpxGemmaShadowAdapter(_AcpxDiscussionAdapter):
 
 
 class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
-    """Text-only, first-party DeepSeek ACP participant via isolated Hermes."""
+    """Native OpenCode ACP participant pinned to first-party DeepSeek (#6805).
+
+    Same confined shape as the GLM seat (``opencode acp --pure`` with the
+    deny-all OpenCode config). The previous Hermes text-agent route is
+    retired: Hermes was permanently removed from this host (operator order
+    2026-08-16) and the documented standing route is first-party
+    ``deepseek-direct/deepseek-v4-flash --variant high`` via opencode.
+    First-party DeepSeek is China-hosted, so CI runs are refused — same
+    guard as the dispatch adapter.
+    """
 
     name = "acpx-deepseek-shadow"
     target_agent = "deepseek"
     fixed_model = DEEPSEEK_ACP_MODEL
+    acpx_model = DEEPSEEK_ACP_INVOCATION_MODEL
     default_model = fixed_model
-    forward_model_to_acpx = False
+    fixed_effort = "high"
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
         _ = cwd
-        if is_deepseek_first_party_forbidden_in_ci("deepseek", DEEPSEEK_ACP_MODEL):
+        if is_deepseek_first_party_forbidden_in_ci(
+            "deepseek-direct", DEEPSEEK_ACP_INVOCATION_MODEL
+        ):
             raise AcpxShadowRefusalError(
                 deepseek_first_party_error(
-                    provider="deepseek",
-                    model=DEEPSEEK_ACP_MODEL,
+                    provider="deepseek-direct",
+                    model=DEEPSEEK_ACP_INVOCATION_MODEL,
                     source=type(self).__name__,
                 )
             )
-        command, _binary, version = _build_text_agent_command(
+        binary, version = _resolve_participant_binary(
+            "opencode",
             adapter_label=type(self).__name__,
-            provider="deepseek",
-            model=DEEPSEEK_ACP_MODEL,
-            executable="hermes",
         )
-        return command, {
-            "provider_cli": "hermes",
+        return shlex.join([binary, "acp", "--pure"]), {
+            "provider_cli": "opencode",
             "provider_cli_version": version,
-            "provider_cli_compatibility": HERMES_CLI_COMPATIBILITY_CONTRACT,
-            "provider_route": "deepseek",
-            "text_only_adapter": True,
+            "provider_cli_compatibility": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
+            "provider_route": DEEPSEEK_ACP_INVOCATION_MODEL,
+            "tool_policy": "deny-all",
+        }
+
+    def _env_overrides(
+        self,
+        *,
+        sealed_review_mcp_config: str | None = None,
+    ) -> dict[str, str]:
+        return {
+            GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
+            "OPENCODE_CONFIG_CONTENT": (
+                _OPENCODE_SEALED_REVIEW_CONFIG
+                if sealed_review_mcp_config is not None
+                else _OPENCODE_DENY_ALL_CONFIG
+            ),
         }
 
 

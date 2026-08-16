@@ -95,9 +95,10 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   use rolling compatibility contracts. Before each spawn, the adapter probes
   the exact command/flag surface it will invoke; observed versions are
   telemetry, never allowlists. The contracts are `json-one-shot-v1` (ACPX),
-  `agent-stdio-v1` (Grok), `text-plan-sandbox-v1` (AGY),
-  `native-acp-pure-v1` (OpenCode/GLM), and
-  `text-oneshot-isolated-v1` (Hermes/DeepSeek).
+  `agent-stdio-v1` (Grok), `text-plan-sandbox-v1` (AGY), and
+  `native-acp-pure-v1` (OpenCode — GLM, Gemma, and DeepSeek since the Hermes
+  removal, #6805). The Hermes `text-oneshot-isolated-v1` contract remains
+  only for legacy direct-Hermes resolution errors.
 - ACPX built-ins are validated at the ACPX boundary (`<seat> exec --file`);
   the project does not duplicate ACPX's responsibility by pinning hidden
   Claude, Kimi, Codex, Cursor, or Pool executables. The project text ACP server

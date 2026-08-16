@@ -178,9 +178,10 @@ AGENTS: dict[str, AgentEntry] = {
         # dispatch default (operator 2026-08-13): Flash default, --variant high,
         # native Entire capture. Pro is reachable via --model deepseek-v4-pro
         # for hard implement tasks only (complex multi-file, hard lookup —
-        # operator GO 2026-08-13, canary #6703); the Hermes adapter
-        # (hermes_deepseek.py) remains for ask-hermes only via the
-        # hermes-deepseek seat below. First-party DeepSeek is China-hosted →
+        # operator GO 2026-08-13, canary #6703). Bridge asks (`ask-deepseek`,
+        # `ask-hermes` alias) ride the acpx-deepseek-shadow ACP seat on the
+        # same first-party opencode route since the Hermes removal (operator
+        # order 2026-08-16, #6805). First-party DeepSeek is China-hosted →
         # CI runs are refused by the adapter.
         "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
         "default_model": "deepseek-v4-flash",
@@ -199,9 +200,11 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "hermes-deepseek": {
-        # Bridge-only Hermes seat for ask-hermes. Must not be the dispatch
-        # default (that is OpenCode DeepSeekAdapter on ``deepseek`` above).
-        # Kept as its own registry key so ask-hermes never spawns opencode.
+        # Legacy Hermes-backed DeepSeek seat for the `_hermes.py` review path.
+        # Hermes was permanently removed from this host (operator order
+        # 2026-08-16): invocations refuse at binary resolution with the
+        # documented opencode fallbacks. Bridge `ask-deepseek`/`ask-hermes`
+        # asks route through the acpx-deepseek-shadow opencode seat (#6805).
         "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
         "default_model": "deepseek-v4-flash",
         "cost_tier": "low",
@@ -396,8 +399,11 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-deepseek-shadow": {
+        # Native opencode ACP transport (``opencode acp --pure``, deny-all)
+        # pinned to first-party deepseek-direct — the standing route since
+        # Hermes was permanently removed (operator order 2026-08-16, #6805).
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
-        "default_model": "deepseek-v4-pro",
+        "default_model": "deepseek-v4-flash",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,
