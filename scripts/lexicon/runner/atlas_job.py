@@ -131,7 +131,7 @@ class SshHostAdapter:
     def list_atlas_job_units(self, host: str) -> list[dict[str, Any]]:
         remote = (
             "systemctl --user list-units 'atlas-job-*.service' --all --no-legend --no-pager "
-            "2>/dev/null || true"
+            "--plain 2>/dev/null || true"
         )
         proc = _ssh(host, remote)
         if proc.returncode not in {0, 1}:
@@ -292,7 +292,7 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     if sink not in RESULT_SINKS:
         errors.append("result_sink must be git, restic, or both")
     denom = plan.get("denominator")
-    if not isinstance(denom, int) or denom < 0:
+    if not isinstance(denom, int) or isinstance(denom, bool) or denom < 0:
         errors.append("denominator must be an integer >= 0")
     success = plan.get("success")
     if not isinstance(success, dict):
@@ -311,13 +311,13 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     if slugs is not None and not isinstance(slugs, str):
         errors.append("slugs_file must be a string path when set")
     issue = plan.get("issue")
-    if not isinstance(issue, int) or issue <= 0:
+    if not isinstance(issue, int) or isinstance(issue, bool) or issue <= 0:
         errors.append("issue must be a positive GitHub campaign/kind issue number")
     resume = plan.get("resume", "never")
     if resume not in RESUME_MODES:
         errors.append(f"resume must be one of {sorted(RESUME_MODES)}")
     timeout = plan.get("timeout_seconds", DEFAULT_TIMEOUT_SECONDS)
-    if not isinstance(timeout, int) or timeout <= 0:
+    if not isinstance(timeout, int) or isinstance(timeout, bool) or timeout <= 0:
         errors.append("timeout_seconds must be a positive integer")
     return errors
 

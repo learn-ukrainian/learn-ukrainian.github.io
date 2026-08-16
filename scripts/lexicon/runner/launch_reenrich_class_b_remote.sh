@@ -280,6 +280,17 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
   if [[ -n "${ATLAS_RE_ENRICH_UNIT:-}" ]]; then
     remote_cmd+=" ATLAS_RE_ENRICH_UNIT=$(printf '%q' "$ATLAS_RE_ENRICH_UNIT")"
   fi
+  # Forward atlas_job.submit() protocol env so remote systemd gets RuntimeMaxSec,
+  # exit-status file path, and Restart=no (same printf %q style as UNIT).
+  if [[ -n "${ATLAS_RE_ENRICH_RUNTIME_MAX_SEC:-}" ]]; then
+    remote_cmd+=" ATLAS_RE_ENRICH_RUNTIME_MAX_SEC=$(printf '%q' "$ATLAS_RE_ENRICH_RUNTIME_MAX_SEC")"
+  fi
+  if [[ -n "${ATLAS_JOB_EXIT_STATUS_FILE:-}" ]]; then
+    remote_cmd+=" ATLAS_JOB_EXIT_STATUS_FILE=$(printf '%q' "$ATLAS_JOB_EXIT_STATUS_FILE")"
+  fi
+  if [[ -n "${ATLAS_RE_ENRICH_RESTART:-}" ]]; then
+    remote_cmd+=" ATLAS_RE_ENRICH_RESTART=$(printf '%q' "$ATLAS_RE_ENRICH_RESTART")"
+  fi
   remote_cmd+=" bash $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
   # macOS ships bash 3.2, where "${arr[@]}" on a zero-element array throws
   # "unbound variable" under `set -u` (fixed upstream in bash 4.4+) — guard

@@ -68,6 +68,51 @@ def test_requires_campaign_issue() -> None:
     assert any("issue" in e for e in errors)
 
 
+def test_rejects_bool_for_numeric_fields() -> None:
+    """bool is a subclass of int; plans must not accept true/false as numbers."""
+    for field, value in (
+        ("issue", True),
+        ("issue", False),
+        ("denominator", True),
+        ("denominator", False),
+        ("timeout_seconds", True),
+        ("timeout_seconds", False),
+    ):
+        errors = atlas_job.validate_plan(_plan(**{field: value}))
+        assert any(field in e for e in errors), (field, value, errors)
+
+
+def test_remote_launcher_forwards_protocol_env() -> None:
+    """atlas_job.submit sets protocol env; remote_cmd must forward them over SSH."""
+    source = (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "lexicon"
+        / "runner"
+        / "launch_reenrich_class_b_remote.sh"
+    ).read_text(encoding="utf-8")
+    # Each var must be appended to remote_cmd with the same printf %q style as UNIT.
+    for var in (
+        "ATLAS_RE_ENRICH_RUNTIME_MAX_SEC",
+        "ATLAS_JOB_EXIT_STATUS_FILE",
+        "ATLAS_RE_ENRICH_RESTART",
+    ):
+        assert f'if [[ -n "${{{var}:-}}" ]]; then' in source
+        assert f'remote_cmd+=" {var}=$(printf \'%q\' "${var}")"' in source
+    # UNIT already forwarded; protocol vars must appear after that block.
+    unit_fwd = source.index('remote_cmd+=" ATLAS_RE_ENRICH_UNIT=$(printf')
+    runtime_fwd = source.index("ATLAS_RE_ENRICH_RUNTIME_MAX_SEC=$(printf")
+    assert runtime_fwd > unit_fwd
+
+
+def test_ssh_host_adapter_list_units_uses_plain() -> None:
+    import inspect
+
+    src = inspect.getsource(atlas_job.SshHostAdapter.list_atlas_job_units)
+    assert "--plain" in src
+    assert "list-units" in src
+
+
 def test_submit_dry_run_sets_host_and_workdir(capsys: pytest.CaptureFixture[str]) -> None:
     rc = atlas_job.submit(_plan(), dry_run=True)
     assert rc == 0
