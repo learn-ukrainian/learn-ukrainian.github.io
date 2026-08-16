@@ -12,7 +12,6 @@ Warm path rules (frozen):
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import time
 from collections.abc import Callable
@@ -28,6 +27,8 @@ DELEGATE_TASK_LIMIT = 500
 FLEET_REVIEW_PAGE = 100
 FLEET_REVIEW_HARD_CAP = 2000
 SECTION_TIMEOUT_S = 4.5  # leave headroom under the 5s typed-degradation budget
+# Sole public repository for the Work projection. Closed identity: not overridable
+# by environment, config, or free-form caller input (privacy boundary).
 DEFAULT_PUBLIC_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
 
 
@@ -40,10 +41,31 @@ def _iso_now() -> str:
 
 
 def public_repository_id() -> str:
-    configured = os.environ.get("WORK_PUBLIC_REPOSITORY", "").strip()
-    if configured:
-        return configured
+    """Return the sole public repository identity.
+
+    Closed and non-overridable in production. Environment variables (including
+    any historical ``WORK_PUBLIC_REPOSITORY``) and free-form configuration must
+    never repoint collectors or the public projection at another repository.
+    """
     return DEFAULT_PUBLIC_REPOSITORY
+
+
+def admit_public_repository_id(repository_id: str | None = None) -> str:
+    """Admit only the canonical public repository; fail closed on any other id.
+
+    Returns the sole public repository when *repository_id* is omitted or
+    exactly matches. Raises ``ValueError`` for any other value so callers cannot
+    silently repoint GitHub enumerations, fleet-review filters, cache identity,
+    or emitted projection rows at a private repository.
+    """
+    allowed = public_repository_id()
+    if repository_id is None or repository_id == "":
+        return allowed
+    if repository_id != allowed:
+        raise ValueError(
+            f"public repository_id must be exactly {allowed!r}; got {repository_id!r}"
+        )
+    return allowed
 
 
 @dataclass
@@ -320,9 +342,9 @@ def fetch_fleet_reviews(
     """Page fleet review summaries for the exact public repository only.
 
     Never open sealed verdict blobs. Rows whose ``repository`` is missing or
-    not exactly the configured public repository are dropped (no suffix match).
+    not exactly the canonical public repository are dropped (no suffix match).
     """
-    allowed = repository_id or public_repository_id()
+    allowed = admit_public_repository_id(repository_id)
 
     def _default_page(limit: int, offset: int) -> dict[str, Any]:
         from scripts.api.fleet_router import fleet_reviews
@@ -411,7 +433,7 @@ def collect_public_sections(
     max_workers: int = 6,
 ) -> dict[str, SectionResult]:
     """Collect all public sections with independent typed degradation."""
-    repo = repository_id or public_repository_id()
+    repo = admit_public_repository_id(repository_id)
     jobs: dict[str, Callable[[], SectionResult]] = {
         "issues": lambda: fetch_open_issues(repo, runner=gh_runner),
         "prs": lambda: fetch_open_prs(repo, runner=gh_runner),

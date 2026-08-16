@@ -44,9 +44,9 @@ At a query instant the projection represents exactly once (or counts in a typed 
 
 Allowed query keys only: `health`, `kind`, `lifecycle`, `orphan`, `repository_id`, `source_id`.
 
-Multivalue filters are canonicalized (deduplicated + sorted) before permanent warm-cache keys and `filters_applied` are formed, so duplicate/reordered query forms share one entry. `repository_id` accepts only the configured public repository singleton. `source_id` is enum-backed (`public-monitor` | `private-local-adapter`) both as a query key and inside the closed `filters_applied` object.
+Multivalue filters are canonicalized (deduplicated + sorted) before permanent warm-cache keys and `filters_applied` are formed, so duplicate/reordered query forms share one entry. `repository_id` accepts only the closed public repository singleton (`learn-ukrainian/learn-ukrainian.github.io`); it is not overridable by environment. `source_id` is enum-backed (`public-monitor` | `private-local-adapter`) both as a query key and inside the closed `filters_applied` object.
 
-Formal-review rows are admitted only for the exact configured public repository (no suffix matching; missing/foreign repositories are dropped at collection and normalization).
+Formal-review rows are admitted only for that exact public repository (no suffix matching; missing/foreign repositories are dropped at collection and normalization).
 
 Unknown keys, free text, private endpoints, and overlong values are rejected (`400 invalid_saved_view`).
 

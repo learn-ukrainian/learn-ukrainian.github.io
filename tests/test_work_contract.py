@@ -70,14 +70,119 @@ def test_saved_view_lifecycle_allowlist():
 
 
 def test_saved_view_repository_id_allowlist():
-    """Public P1 accepts only the configured public repository_id singleton."""
+    """Public P1 accepts only the closed public repository_id singleton."""
     from scripts.work.sources_public import public_repository_id
 
     configured = public_repository_id()
+    assert configured == REPO
     ok = parse_saved_view_params({"repository_id": configured})
     assert ok["repository_id"] == [configured]
     with pytest.raises(SchemaValidationError, match="invalid repository_id"):
         parse_saved_view_params({"repository_id": "some-owner/random-repo-not-configured"})
+
+
+def test_public_repository_identity_ignores_env_override(monkeypatch):
+    """WORK_PUBLIC_REPOSITORY must not repoint source, query, cache, or projection."""
+    from fastapi.testclient import TestClient
+
+    from scripts.api.main import app
+    from scripts.api.state_helpers import cache_invalidate
+    from scripts.api.work_router import projection_cache_key
+    from scripts.work.sources_public import (
+        DEFAULT_PUBLIC_REPOSITORY,
+        admit_public_repository_id,
+        collect_public_sections,
+        public_repository_id,
+    )
+
+    foreign = "evil-org/private-infra-must-not-project"
+    monkeypatch.setenv("WORK_PUBLIC_REPOSITORY", foreign)
+
+    assert public_repository_id() == DEFAULT_PUBLIC_REPOSITORY == REPO
+    assert admit_public_repository_id() == REPO
+    assert admit_public_repository_id(REPO) == REPO
+    with pytest.raises(ValueError, match="public repository_id must be exactly"):
+        admit_public_repository_id(foreign)
+
+    # Saved-view allowlist still admits only the closed singleton, not the env value.
+    ok = parse_saved_view_params({"repository_id": REPO})
+    assert ok["repository_id"] == [REPO]
+    with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+        parse_saved_view_params({"repository_id": foreign})
+    assert projection_cache_key(ok) == projection_cache_key({"repository_id": [REPO]})
+    assert foreign not in projection_cache_key(ok)
+
+    # Collectors must query the closed public repo even when env names another.
+    seen_repos: list[str] = []
+
+    def gh_runner(args: list[str], timeout_s: float) -> tuple[int, str, str]:
+        if "--repo" in args:
+            seen_repos.append(args[args.index("--repo") + 1])
+        return 0, "[]", ""
+
+    def fleet_loader(limit: int, offset: int) -> dict:
+        if offset:
+            return {"total": 2, "reviews": []}
+        return {
+            "total": 2,
+            "reviews": [
+                {
+                    "review_id": "rev-public",
+                    "repository": REPO,
+                    "pr_number": 1,
+                    "state": "running",
+                    "sealed_verdict_available": False,
+                },
+                {
+                    "review_id": "rev-foreign",
+                    "repository": foreign,
+                    "pr_number": 2,
+                    "state": "running",
+                    "sealed_verdict_available": True,
+                },
+            ],
+        }
+
+    sections = collect_public_sections(
+        gh_runner=gh_runner,
+        streams_loader=lambda: {
+            "_status": "ok",
+            "open_total": 0,
+            "orphans": [],
+            "multi_homed": [],
+            "pending_native_link": [],
+            "ok": True,
+        },
+        delegate_active_loader=lambda: {"total": 0, "tasks": []},
+        delegate_tasks_loader=lambda: {"total": 0, "tasks": []},
+        fleet_reviews_loader=fleet_loader,
+    )
+    assert set(seen_repos) == {REPO}
+    assert foreign not in seen_repos
+    assert sections["fleet_reviews"].count == 1
+    assert sections["fleet_reviews"].payload["reviews"][0]["repository"] == REPO
+
+    projection = build_projection(sections)
+    validate_projection(projection)
+    assert {item["repository_id"] for item in projection["items"]} <= {REPO}
+    blob = json.dumps(projection)
+    assert foreign not in blob
+
+    # Explicit foreign repository_id parameter also fails closed.
+    with pytest.raises(ValueError, match="public repository_id must be exactly"):
+        collect_public_sections(repository_id=foreign, gh_runner=gh_runner)
+    with pytest.raises(ValueError, match="public repository_id must be exactly"):
+        build_projection(sections, repository_id=foreign)
+    with pytest.raises(ValueError, match="public repository_id must be exactly"):
+        fetch_fleet_reviews(loader=fleet_loader, repository_id=foreign)
+
+    # Capabilities surface remains pinned to the closed identity under env poison.
+    cache_invalidate("work:v1:projection")
+    client = TestClient(app, raise_server_exceptions=False)
+    caps = client.get("/api/work/v1/capabilities")
+    assert caps.status_code == 200
+    assert caps.json()["public_repository_id"] == REPO
+    assert foreign not in caps.text
 
 
 def test_saved_view_multivalue_filters_are_canonical():

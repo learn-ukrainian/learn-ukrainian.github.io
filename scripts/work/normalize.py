@@ -22,10 +22,10 @@ from scripts.work.relations import (
 from scripts.work.sources_public import (
     GH_ENUM_LIMIT,
     SectionResult,
+    admit_public_repository_id,
     collect_public_sections,
     private_capability_seam,
     private_source_envelope,
-    public_repository_id,
     public_source_envelope,
 )
 
@@ -548,7 +548,7 @@ def build_projection(
     filters: dict[str, Any] | None = None,
     cache_age_s: float = 0.0,
 ) -> dict[str, Any]:
-    repo = repository_id or public_repository_id()
+    repo = admit_public_repository_id(repository_id)
     issues_section = sections.get("issues") or SectionResult("issues", "unavailable")
     prs_section = sections.get("prs") or SectionResult("prs", "unavailable")
     streams_section = sections.get("streams") or SectionResult("streams", "unavailable")

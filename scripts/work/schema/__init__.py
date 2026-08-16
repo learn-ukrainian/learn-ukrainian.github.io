@@ -139,9 +139,9 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
                 raise SchemaValidationError("orphan must be true or false")
             filters["orphan"] = cleaned[0] in {"true", "1"}
         elif key == "repository_id":
-            # Public P1: exactly one configured repository. Arbitrary owner/name
-            # strings would each create a never-evicted projection cache key and
-            # force two GitHub enumerations. Private P2 stays browser-local.
+            # Public P1: exactly one closed public repository. Arbitrary
+            # owner/name strings (and env overrides) must never create cache
+            # keys or repoint collectors. Private P2 stays browser-local.
             from scripts.work.sources_public import public_repository_id
 
             allowed_repo = public_repository_id()
