@@ -24,7 +24,12 @@ from scripts.work.schema import (
     schema_digest_sha256,
     validate_projection,
 )
-from scripts.work.sources_public import SectionResult, fetch_fleet_reviews
+from scripts.work.sources_public import (
+    SectionResult,
+    fetch_fleet_reviews,
+    fetch_streams_projection,
+    public_source_envelope,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "work" / "projection_public_min.json"
@@ -2000,3 +2005,208 @@ def test_build_projection_joins_sources_deterministically():
     # Deterministic: same inputs → same first attention id
     again = build_projection(sections, repository_id=REPO)
     assert again["attention"][0]["work_id"] == projection["attention"][0]["work_id"]
+
+
+def test_fetch_fleet_reviews_production_default_loader():
+    """Default loader in fetch_fleet_reviews calls fleet_reviews directly without
+    raising AttributeError on Query sentinels (#6849)."""
+    section = fetch_fleet_reviews(loader=None, repository_id=REPO)
+    assert isinstance(section, SectionResult)
+    assert section.status in {"ok", "truncated"}
+    assert section.reason is None
+    assert isinstance(section.payload, dict)
+    assert "reviews" in section.payload
+    assert all(r["repository"] == REPO for r in section.payload["reviews"])
+
+
+def test_public_source_envelope_independent_degradation_matrix():
+    """Verify source envelope status classification under various section health states (#6849)."""
+
+    def _base_sections(issues_st="ok", prs_st="ok"):
+        return {
+            "issues": SectionResult("issues", issues_st, count=5),
+            "prs": SectionResult("prs", prs_st, count=2),
+            "streams": SectionResult("streams", "ok", count=5),
+            "delegate_active": SectionResult("delegate_active", "ok", count=0),
+            "delegate_tasks": SectionResult("delegate_tasks", "ok", count=1),
+            "fleet_reviews": SectionResult("fleet_reviews", "ok", count=3),
+        }
+
+    # 1. All sections ok -> source ok
+    env_all_ok = public_source_envelope(_base_sections())
+    assert env_all_ok["status"] == "ok"
+
+    # 2. Core ok, optional truncated -> source truncated
+    sec_trunc = _base_sections()
+    sec_trunc["delegate_tasks"] = SectionResult("delegate_tasks", "truncated", count=500, truncated=True)
+    env_trunc = public_source_envelope(sec_trunc)
+    assert env_trunc["status"] == "truncated"
+
+    # 3. Core ok, optional stale -> source stale
+    sec_stale = _base_sections()
+    sec_stale["streams"] = SectionResult("streams", "stale", count=5, reason="stale")
+    env_stale = public_source_envelope(sec_stale)
+    assert env_stale["status"] == "stale"
+
+    # 4. Core ok, optional section unavailable -> source degraded (NOT unavailable)
+    sec_unavail = _base_sections()
+    sec_unavail["fleet_reviews"] = SectionResult("fleet_reviews", "unavailable", reason="db_error")
+    env_unavail = public_source_envelope(sec_unavail)
+    assert env_unavail["status"] == "degraded"
+    assert env_unavail["sections"]["fleet_reviews"]["status"] == "unavailable"
+    assert env_unavail["sections"]["issues"]["status"] == "ok"
+
+    # 5. Core ok, optional section timeout -> source degraded (NOT timeout)
+    sec_timeout = _base_sections()
+    sec_timeout["streams"] = SectionResult("streams", "timeout", reason="timeout")
+    env_timeout = public_source_envelope(sec_timeout)
+    assert env_timeout["status"] == "degraded"
+    assert env_timeout["sections"]["streams"]["status"] == "timeout"
+
+    # 6. Core issues unavailable -> source unavailable (reflects core failure)
+    sec_core_fail = _base_sections(issues_st="unavailable")
+    env_core_fail = public_source_envelope(sec_core_fail)
+    assert env_core_fail["status"] == "unavailable"
+
+    # 7. Core prs timeout -> source timeout (reflects core failure)
+    sec_core_timeout = _base_sections(prs_st="timeout")
+    env_core_timeout = public_source_envelope(sec_core_timeout)
+    assert env_core_timeout["status"] == "timeout"
+
+
+def test_missing_streams_cache_and_simulated_restart_behavior():
+    """Simulate missing streams cache at Monitor start:
+    - issues derive UNKNOWN health / INSPECT_UNKNOWN action (honest health)
+    - public PRs with real signals sort ahead of UNKNOWN issues
+    - source envelope is degraded (not unavailable)
+    - denominator omissions records streams unavailable
+    (#6849 Scope item 3)."""
+    sections = {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 2353,
+                    "title": "Oldest issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": None,
+                    "createdAt": "2026-01-01T00:00:00Z",
+                    "updatedAt": "2026-01-01T00:00:00Z",
+                    "url": f"https://github.com/{REPO}/issues/2353",
+                    "state": "OPEN",
+                },
+                {
+                    "number": 6847,
+                    "title": "Current issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": None,
+                    "createdAt": "2026-08-16T00:00:00Z",
+                    "updatedAt": "2026-08-16T00:00:00Z",
+                    "url": f"https://github.com/{REPO}/issues/6847",
+                    "state": "OPEN",
+                },
+            ],
+            count=2,
+        ),
+        "prs": SectionResult(
+            "prs",
+            "ok",
+            payload=[
+                {
+                    "number": 6848,
+                    "title": "Failing CI PR",
+                    "state": "OPEN",
+                    "isDraft": False,
+                    "reviewDecision": "NONE",
+                    "statusCheckRollup": [{"state": "FAILURE"}],
+                    "mergeStateStatus": "BLOCKED",
+                    "labels": [],
+                    "assignees": [],
+                    "url": f"https://github.com/{REPO}/pull/6848",
+                    "createdAt": "2026-08-16T00:00:00Z",
+                    "updatedAt": "2026-08-16T00:00:00Z",
+                    "headRefOid": "deadbeef",
+                    "headRefName": "fix/ci",
+                },
+                {
+                    "number": 6809,
+                    "title": "PR waiting review",
+                    "state": "OPEN",
+                    "isDraft": False,
+                    "reviewDecision": "REVIEW_REQUIRED",
+                    "statusCheckRollup": [{"state": "SUCCESS"}],
+                    "mergeStateStatus": "BLOCKED",
+                    "labels": [],
+                    "assignees": [],
+                    "url": f"https://github.com/{REPO}/pull/6809",
+                    "createdAt": "2026-08-15T00:00:00Z",
+                    "updatedAt": "2026-08-15T00:00:00Z",
+                    "headRefOid": "feedface",
+                    "headRefName": "feat/cf",
+                },
+            ],
+            count=2,
+        ),
+        # Missing streams cache (fresh start)
+        "streams": SectionResult("streams", "unavailable", reason="no-cache"),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+
+    # 1. Source envelope is degraded, not unavailable
+    public_src = next(s for s in projection["sources"] if s["source_id"] == "public-monitor")
+    assert public_src["status"] == "degraded"
+    assert public_src["sections"]["streams"]["status"] == "unavailable"
+
+    # 2. Streams omission is tracked
+    assert any(
+        o["class"] == "streams" and o["reason"] == "no-cache" for o in projection["denominator"]["omissions"]
+    )
+    assert projection["denominator"]["streams_complete"] is False
+
+    # 3. Honest health: issues have UNKNOWN health and INSPECT_UNKNOWN safe_next_action
+    items_by_num = {item["remote_id"]: item for item in projection["items"]}
+    assert items_by_num["2353"]["health"] == "UNKNOWN"
+    assert items_by_num["2353"]["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert items_by_num["6847"]["health"] == "UNKNOWN"
+    assert items_by_num["6847"]["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+
+    # 4. PRs have correct real health
+    assert items_by_num["6848"]["health"] == "OFF_TRACK"
+    assert items_by_num["6848"]["safe_next_action"]["code"] == "FIX_CI"
+    assert items_by_num["6809"]["health"] == "AT_RISK"
+    assert items_by_num["6809"]["safe_next_action"]["code"] == "REQUEST_CF_REVIEW"
+
+    # 5. Real PR signals rank at the top of the Attention list ahead of the UNKNOWN issues
+    att = projection["attention"]
+    assert att[0]["remote_id"] == "6848"
+    assert att[0]["health"] == "OFF_TRACK"
+    assert att[1]["remote_id"] == "6809"
+    assert att[1]["health"] == "AT_RISK"
+    assert att[2]["health"] == "UNKNOWN"
+    assert att[3]["health"] == "UNKNOWN"
+
+
+def test_fetch_streams_projection_default_loader_schedules_refresh_when_missing(monkeypatch):
+    """When streams cache is missing, fetch_streams_projection schedules background refresh (#6849)."""
+    from scripts.orchestration import issue_stream_audit as audit
+
+    scheduled = []
+    monkeypatch.setattr(audit, "read_cache", lambda max_age_s: None)
+    monkeypatch.setattr(
+        audit,
+        "schedule_refresh",
+        lambda *, force=False: scheduled.append(force) or audit._default_refresh_state(),
+    )
+
+    sec = fetch_streams_projection(loader=None)
+    assert sec.status == "unavailable"
+    assert len(scheduled) == 1
+    assert scheduled[0] is False

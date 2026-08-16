@@ -579,6 +579,26 @@ def test_discussion_review_and_dead_letter_metadata_stay_read_only(
     assert dead_letters.json()["dead_letters"][0]["via"] == "fleet-comms"
 
 
+def test_fleet_reviews_direct_python_call_with_defaults(fleet_root: Path) -> None:
+    """Calling fleet_reviews directly as a Python function with defaults must not
+    raise AttributeError or pass Query sentinel objects into SQL/filters (#6849)."""
+    _seed_plane(fleet_root)
+    from scripts.api.fleet_router import fleet_reviews
+
+    public_repo = "learn-ukrainian/learn-ukrainian.github.io"
+    result = fleet_reviews(limit=10, offset=0, repository=public_repo)
+    assert isinstance(result, dict)
+    assert result["total"] >= 1
+    assert "reviews" in result
+    assert result["filters"]["kind"] is None
+    assert result["filters"]["state"] is None
+    assert result["filters"]["source"] is None
+    assert result["filters"]["since"] is None
+    assert result["filters"]["until"] is None
+    assert result["filters"]["pr"] is None
+    assert result["filters"]["repository"] == public_repo
+
+
 def test_reviews_repository_filter_applies_before_count_and_pagination(
     client: TestClient, fleet_root: Path
 ) -> None:

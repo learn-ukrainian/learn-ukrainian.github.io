@@ -359,7 +359,11 @@ def fetch_streams_projection(
 
         report = audit.read_cache(max_age_s=3600)
         stale = None if report is not None else audit.read_cache(max_age_s=7 * 24 * 3600)
-        state = audit.read_refresh_state()
+        state = (
+            audit.schedule_refresh(force=False)
+            if report is None
+            else audit.read_refresh_state()
+        )
         if report is not None:
             payload = _strip_private_index(report)
             status = "ok"
@@ -712,9 +716,18 @@ def public_source_envelope(sections: dict[str, SectionResult]) -> dict[str, Any]
             worst = section.status
     issues = sections.get("issues")
     prs = sections.get("prs")
+    core_ok = (
+        issues is not None
+        and issues.status in {"ok", "truncated"}
+        and prs is not None
+        and prs.status in {"ok", "truncated"}
+    )
+    source_status = (
+        "degraded" if core_ok and rank.get(worst, 0) > rank.get("degraded", 0) else worst
+    )
     return {
         "source_id": SOURCE_PUBLIC,
-        "status": worst,
+        "status": source_status,
         "freshness": {
             "observed_at": _iso_now(),
             "age_s": max(ages) if ages else 0.0,

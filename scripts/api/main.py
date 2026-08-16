@@ -38,6 +38,7 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+from scripts.orchestration import issue_stream_audit as isa
 from scripts.orchestration.reap_worktrees import primary_checkout_root, reap_worktrees
 
 from . import delegate_router as delegate_api
@@ -119,6 +120,10 @@ async def _lifespan(_app: FastAPI):
         initialize_hramatka_store()
     except (OSError, RuntimeError, sqlite3.Error) as exc:
         logger.error("Hramatka store initialization failed; readyz will remain unhealthy: %s", exc)
+    try:
+        isa.schedule_refresh(force=False)
+    except Exception as exc:
+        logger.warning("Issue stream audit refresh schedule on startup failed: %s", exc)
     start_periodic_refresh()
     try:
         yield

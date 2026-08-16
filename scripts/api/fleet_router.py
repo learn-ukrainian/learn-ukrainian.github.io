@@ -19,7 +19,7 @@ from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
@@ -2025,18 +2025,20 @@ def _review_item(row: sqlite3.Row) -> dict[str, Any]:
 
 @router.get("/reviews")
 def fleet_reviews(
-    kind: str | None = Query(default=None),
-    state: str | None = Query(default=None),
-    source: str | None = Query(default=None),
-    repository: str | None = Query(
-        default=None,
-        description="Exact repository identity (owner/name). Applied in SQL before count/pagination.",
-    ),
-    pr: int | None = Query(default=None, ge=1),
-    since: str | None = Query(default=None),
-    until: str | None = Query(default=None),
-    limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
-    offset: int = Query(default=0, ge=0),
+    kind: Annotated[str | None, Query()] = None,
+    state: Annotated[str | None, Query()] = None,
+    source: Annotated[str | None, Query()] = None,
+    repository: Annotated[
+        str | None,
+        Query(
+            description="Exact repository identity (owner/name). Applied in SQL before count/pagination.",
+        ),
+    ] = None,
+    pr: Annotated[int | None, Query(ge=1)] = None,
+    since: Annotated[str | None, Query()] = None,
+    until: Annotated[str | None, Query()] = None,
+    limit: Annotated[int, Query(ge=1, le=MAX_PAGE_SIZE)] = DEFAULT_PAGE_SIZE,
+    offset: Annotated[int, Query(ge=0)] = 0,
 ) -> dict[str, Any]:
     """Formal-review jobs, attempts, and publication counts without sealed blobs.
 
