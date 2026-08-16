@@ -93,16 +93,11 @@ REVIEWER = {
     "role_id": "ukrainian_source_reviewer",
     "task_id": "phase3-v2-1-ukrainian-source-review",
     "provider": "xai",
-    "exact_model": "grok-4.6",
+    "exact_model": "grok-4.5",
     "model_family": "xai",
-    # NOTE (#6865): the fleet-wide operator order retires opencode as a
-    # sanctioned grok route (dispatch/ask/reviewer seats now go through the
-    # native grok CLI only). This pipeline's opencode harness is out of that
-    # PR's scope — batch/API-style review calls here predate the order and
-    # are a separate open_model_data decision; only the model id is rotated.
     "harness": "opencode",
 }
-OPENCODE_REVIEW_MODEL = "xai/grok-4.6"
+OPENCODE_REVIEW_MODEL = "xai/grok-4.5"
 SMALL_REVIEW_FAMILIES = frozenset(
     {"antonenko_style_guide", "calque_inventory", "pravopys_2019_complete", "pravopys_2026_complete"}
 )
