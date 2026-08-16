@@ -1,0 +1,50 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/work-control-plane-public-p1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Fix the remaining blocking cache-cardinality finding on public PR #6842 at
+exact head 8cd603c06e9b2e63874dfcb6cea11e22aeac447c.
+
+You are the Grok implementation bot in the existing dispatch worktree and
+branch. Preserve all existing work; do not revert others or expand scope.
+
+Finding: repository_id saved-view values are only shape-checked. Arbitrary
+owner/name strings each create a distinct never-evicted projection cache key
+and force the two GitHub enumerations. For public P1 exactly one public
+repository is configured. In scripts/work/schema/__init__.py, validate
+repository_id against the singleton value returned by
+scripts.work.sources_public.public_repository_id(), after the existing basic
+shape checks. The reviewer verified this import has no circular dependency.
+Reject any other value with SchemaValidationError. Do not expose or hardcode
+the private repository identifier; private P2 remains browser-local and the
+public server remains public-only.
+
+Add focused regression coverage in tests/test_work_contract.py: the configured
+public repository ID is accepted and a valid-looking random owner/name is
+rejected. Add a minimal API assertion in tests/test_work_api.py only if needed
+to prove a 400 and no backend build. Do not alter other filter semantics.
+
+Owned paths only:
+- scripts/work/schema/__init__.py
+- tests/test_work_contract.py
+- tests/test_work_api.py only if strictly necessary
+
+Run with the absolute shared interpreter and PYTHONDONTWRITEBYTECODE=1:
+- Work contract/API/privacy/dashboard suite
+- Monitor route/UI contracts
+- targeted Ruff
+- git diff --check
+
+Inspect the exact diff/status. Commit and push with trailer:
+X-Agent: grok/work-control-plane-public-p1-fix3
+
+Do not merge, approve, close, or mutate GitHub metadata. Report exact results,
+commit SHA, and changed paths.
