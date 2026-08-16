@@ -231,9 +231,7 @@ def _public_min() -> dict[str, Any]:
                 "delegate_tasks": True,
                 "fleet_reviews": True,
             },
-            "omissions": [
-                {"class": "private_adapter", "reason": "not_configured", "count": 0}
-            ],
+            "omissions": [{"class": "private_adapter", "reason": "not_configured", "count": 0}],
         },
         "capabilities": {
             "mutation": False,
@@ -251,6 +249,83 @@ def _public_min() -> dict[str, Any]:
         },
         "foundation_status": "FOUNDATION_COMPLETE",
     }
+
+
+def _healthy_public_item(*, remote_id: str = "5922", title: str = "Healthy public issue") -> dict[str, Any]:
+    work_id = f"wp1:public-monitor:{PUBLIC_REPO}:issue:{remote_id}"
+    return {
+        "work_id": work_id,
+        "source_id": "public-monitor",
+        "repository_id": PUBLIC_REPO,
+        "resource_kind": "issue",
+        "remote_id": remote_id,
+        "title": title,
+        "lifecycle": "open",
+        "labels": ["healthy"],
+        "assignees": [],
+        "urls": {
+            "html": f"https://github.com/{PUBLIC_REPO}/issues/{remote_id}",
+        },
+        "timestamps": {
+            "created_at": "2026-08-16T00:00:00Z",
+            "updated_at": "2026-08-16T00:00:00Z",
+        },
+        "projections": {
+            "stream": {
+                "status": "on_track",
+                "streams": [],
+                "fresh": True,
+                "authority_missing": False,
+            },
+            "dispatch": {"task_ids": [], "statuses": [], "unresolved": False},
+            "review": {
+                "review_ids": [],
+                "states": [],
+                "sealed_verdict_available": False,
+            },
+            "verification": {"kind": "none", "state": "n/a"},
+        },
+        "relationships": [],
+        "health": "ON_TRACK",
+        "attention_rank": 1,
+        "safe_next_action": {
+            "code": "OPEN_GITHUB",
+            "reason_codes": ["healthy_on_track"],
+        },
+        "authority": [
+            {
+                "domain": "github",
+                "observed_at": "2026-08-16T00:00:00Z",
+                "age_s": 0,
+                "stale": False,
+            }
+        ],
+        "omissions": [],
+        "flags": {"orphan": False, "has_blocker": False},
+    }
+
+
+def _public_with_healthy_item() -> dict[str, Any]:
+    doc = _public_min()
+    healthy = _healthy_public_item()
+    doc["items"].append(healthy)
+    doc["attention"].append(
+        {
+            "work_id": healthy["work_id"],
+            "attention_rank": healthy["attention_rank"],
+            "health": healthy["health"],
+            "safe_next_action": healthy["safe_next_action"],
+            "title": healthy["title"],
+            "resource_kind": healthy["resource_kind"],
+            "repository_id": healthy["repository_id"],
+            "remote_id": healthy["remote_id"],
+        }
+    )
+    doc["denominator"]["issues_open"] = 2
+    for src in doc["sources"]:
+        if src["source_id"] == "public-monitor":
+            src["sections"]["issues"]["count"] = 2
+    return doc
 
 
 def _private_ok(*, remote_id: str = "7", kind: str = "issue", rank: int = 0) -> dict[str, Any]:
@@ -566,9 +641,7 @@ def _browser_scenario(
     state.private_delay_s = private_delay_ms / 1000.0
 
     # Ephemeral public server for HTML + public projection (same origin).
-    public_handler = _make_handler(
-        state, role="public", allowed_origins={"http://127.0.0.1", "http://localhost"}
-    )
+    public_handler = _make_handler(state, role="public", allowed_origins={"http://127.0.0.1", "http://localhost"})
     public_server = ThreadingHTTPServer(("127.0.0.1", 0), public_handler)
     public_port = public_server.server_address[1]
     thread = threading.Thread(target=public_server.serve_forever, daemon=True)
@@ -855,8 +928,7 @@ def test_puppeteer_launch_options_ignores_missing_env_and_picks_first_candidate(
             "/usr/bin/chromium",
             "/usr/bin/chromium-browser",
         ),
-        is_executable=lambda path: path
-        in {"/usr/bin/chromium", "/usr/bin/chromium-browser"},
+        is_executable=lambda path: path in {"/usr/bin/chromium", "/usr/bin/chromium-browser"},
     )
     assert opts["executablePath"] == "/usr/bin/chromium"
 
@@ -897,7 +969,7 @@ def test_resolve_chrome_executable_order_matches_linux_candidates():
 def test_browser_dual_success_merges_exactly_once():
     public = _public_min()
     private = _private_ok()
-    result = _browser_scenario(public_doc=public, private_doc=private)
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=all")
     snap = result["snapshot"]
     obs = result["observed"]
     assert obs["publicCount"] >= 1
@@ -928,6 +1000,7 @@ def test_browser_private_unreachable_leaves_public_usable():
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
     assert "unavailable · unreachable" in snap["privateMeta"]
+    assert "status=ok" in snap["publicMeta"]
     assert snap["errorHidden"] is True
 
 
@@ -1009,6 +1082,7 @@ def test_browser_public_failure_private_success():
         public_doc=None,
         public_status=503,
         private_doc=_private_ok(),
+        filter_query="?view=all",
     )
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
@@ -1022,6 +1096,7 @@ def test_browser_public_schema_mismatch_private_success():
     result = _browser_scenario(
         public_doc={"not": "valid"},
         private_doc=_private_ok(),
+        filter_query="?view=all",
     )
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
@@ -1038,10 +1113,7 @@ def test_browser_both_failures_typed_banner():
     )
     snap = result["snapshot"]
     assert snap["errorHidden"] is False
-    assert (
-        snap["error"]
-        == "Work projection unavailable · public=unreachable · private=unreachable"
-    )
+    assert snap["error"] == "Work projection unavailable · public=unreachable · private=unreachable"
     assert snap["listText"].strip() == "No source projection is available. Retry refresh."
     assert "HTTP" not in snap["error"]
     assert "TypeError" not in snap["error"]
@@ -1075,6 +1147,7 @@ def test_browser_private_repo_filter_not_shareable_in_url():
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
+        filter_query="?view=all",
         actions=[
             {
                 "type": "select",
@@ -1102,7 +1175,7 @@ def test_browser_dense_order_and_no_duplicate_ids():
     public["items"][0]["health"] = "ON_TRACK"
     public["attention"][0]["health"] = "ON_TRACK"
     private = _private_ok(remote_id="3", rank=0)
-    result = _browser_scenario(public_doc=public, private_doc=private)
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=all")
     snap = result["snapshot"]
     assert snap["rowCount"] == 2
     assert len(set(snap["rowIds"])) == 2
@@ -1115,6 +1188,7 @@ def test_browser_mobile_viewport_no_horizontal_overflow_and_keyboard():
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
+        filter_query="?view=all",
         viewport={"width": 390, "height": 844},
         actions=[
             {"type": "key", "key": "ArrowDown"},
@@ -1152,6 +1226,103 @@ def test_browser_refresh_uses_fresh_on_public_only():
     assert any("fresh=true" in u for u in public_urls)
     for req in obs["private"]:
         assert req["url"] == PRIVATE_URL
+
+
+def test_browser_actionable_default_view_filters_non_actionable_rows():
+    """Default view without query params renders only actionable items."""
+    # Public item 1 is AT_RISK (actionable); public item 2 is ON_TRACK / OPEN_GITHUB (healthy non-actionable);
+    # private item is UNKNOWN / INSPECT_UNKNOWN (non-actionable).
+    public = _public_with_healthy_item()
+    private = _private_ok()
+    result = _browser_scenario(public_doc=public, private_doc=private)
+    snap = result["snapshot"]
+    # In default view, only public actionable item renders.
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "Healthy public issue" not in snap["listText"]
+    assert "private-issue-7" not in snap["listText"]
+    # URL search remains clean without query params
+    assert snap["search"] == ""
+
+
+def test_browser_switch_view_between_actionable_and_all():
+    """Switching view via dropdown + apply updates visible rows and URL."""
+    public = _public_with_healthy_item()
+    private = _private_ok()
+    # Step 1: Start at default actionable view -> 1 row
+    result_default = _browser_scenario(public_doc=public, private_doc=private)
+    assert result_default["snapshot"]["rowCount"] == 1
+    assert "Healthy public issue" not in result_default["snapshot"]["listText"]
+    assert result_default["snapshot"]["search"] == ""
+
+    # Step 2: Switch to 'all' via UI select + apply -> 3 rows, URL is ?view=all
+    result_all = _browser_scenario(
+        public_doc=public,
+        private_doc=private,
+        actions=[
+            {"type": "select", "selector": "#filter-view", "value": "all"},
+            {"type": "click", "selector": "#btn-apply"},
+            {"type": "wait", "ms": 200},
+        ],
+    )
+    snap_all = result_all["snapshot"]
+    assert snap_all["rowCount"] == 3
+    assert "Public attention item" in snap_all["listText"]
+    assert "Healthy public issue" in snap_all["listText"]
+    assert "private-issue-7" in snap_all["listText"]
+    assert "view=all" in snap_all["search"]
+
+    # Step 3: Switch back to 'actionable' via UI select + apply -> 1 row, clean URL
+    result_back = _browser_scenario(
+        public_doc=public,
+        private_doc=private,
+        filter_query="?view=all",
+        actions=[
+            {"type": "select", "selector": "#filter-view", "value": "actionable"},
+            {"type": "click", "selector": "#btn-apply"},
+            {"type": "wait", "ms": 200},
+        ],
+    )
+    snap_back = result_back["snapshot"]
+    assert snap_back["rowCount"] == 1
+    assert "Public attention item" in snap_back["listText"]
+    assert "Healthy public issue" not in snap_back["listText"]
+    assert "private-issue-7" not in snap_back["listText"]
+    assert snap_back["search"] == ""
+
+
+def test_browser_direct_actionable_url_normalizes_to_clean_path():
+    """Navigating directly to ?view=actionable renders actionable view and normalizes URL."""
+    public = _public_with_healthy_item()
+    private = _private_ok()
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=actionable")
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "Healthy public issue" not in snap["listText"]
+    assert "private-issue-7" not in snap["listText"]
+    # Normalizes to clean URL
+    assert snap["search"] == ""
+
+
+def test_browser_actionable_with_kind_and_health_filters():
+    """Existing filters like kind and health continue working in actionable default view."""
+    public = _public_with_healthy_item()
+    private = _private_ok()
+    # Filter by health=AT_RISK on actionable default
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?health=AT_RISK")
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "Healthy public issue" not in snap["listText"]
+    assert "health=AT_RISK" in snap["search"]
+    # Filter by kind=issue on actionable default
+    result_kind = _browser_scenario(public_doc=public, private_doc=private, filter_query="?kind=issue")
+    snap_kind = result_kind["snapshot"]
+    assert snap_kind["rowCount"] == 1
+    assert "Public attention item" in snap_kind["listText"]
+    assert "Healthy public issue" not in snap_kind["listText"]
+    assert "kind=issue" in snap_kind["search"]
 
 
 # ---------------------------------------------------------------------------
@@ -1203,12 +1374,8 @@ def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
 
 def test_real_fixed_port_cors_http_and_browser_smoke():
     """Live CORS on fixed ports 8765/8769 with real browser GET (no preflight)."""
-    if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free(
-        "127.0.0.1", FIXED_PRIVATE_PORT
-    ):
-        pytest.skip(
-            "fixed ports 8765/8769 busy; interception proofs already cover behavior"
-        )
+    if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free("127.0.0.1", FIXED_PRIVATE_PORT):
+        pytest.skip("fixed ports 8765/8769 busy; interception proofs already cover behavior")
 
     nm = _require_puppeteer()
     private_hits: dict[str, Any] = {"options": 0, "gets": []}
@@ -1296,7 +1463,7 @@ try {{
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e.message || e)));
-  await page.goto('http://127.0.0.1:8765/work.html', {{
+  await page.goto('http://127.0.0.1:8765/work.html?view=all', {{
     waitUntil: 'domcontentloaded',
     timeout: 30000,
   }});
@@ -1334,12 +1501,8 @@ try {{
 
 def test_real_fixed_port_cors_localhost_origin_smoke():
     """Second smoke: page addressed as http://localhost:8765 admits that origin."""
-    if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free(
-        "127.0.0.1", FIXED_PRIVATE_PORT
-    ):
-        pytest.skip(
-            "fixed ports 8765/8769 busy; interception proofs already cover behavior"
-        )
+    if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free("127.0.0.1", FIXED_PRIVATE_PORT):
+        pytest.skip("fixed ports 8765/8769 busy; interception proofs already cover behavior")
 
     private_hits: dict[str, Any] = {"options": 0, "gets": []}
     private_body = json.dumps(_private_ok(), separators=(",", ":")).encode("utf-8")
@@ -1401,7 +1564,7 @@ const LAUNCH_OPTIONS = {launch_options_json};
 const browser = await puppeteer.launch(LAUNCH_OPTIONS);
 try {{
   const page = await browser.newPage();
-  await page.goto('http://localhost:8765/work.html', {{
+  await page.goto('http://localhost:8765/work.html?view=all', {{
     waitUntil: 'domcontentloaded',
     timeout: 30000,
   }});

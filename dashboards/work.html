@@ -28,7 +28,7 @@ button, input, select { font: inherit; }
 .signal-card { align-self: end; background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 14px 16px; }
 .signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 18px; margin-bottom: 4px; }
 .signal-card p { color: var(--text3); font-size: 12px; margin: 0; line-height: 1.4; }
-.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(6, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
+.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(7, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
 .field { display: grid; gap: 4px; min-width: 0; }
 .field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .field select, .field input { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; background: var(--bg); color: var(--text); }
@@ -145,6 +145,13 @@ button, input, select { font: inherit; }
 
   <section class="filter-strip" aria-label="Public-safe filters">
     <div class="field">
+      <label for="filter-view">View</label>
+      <select id="filter-view">
+        <option value="actionable">Actionable</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+    <div class="field">
       <label for="filter-health">Health</label>
       <select id="filter-health">
         <option value="">All</option>
@@ -230,7 +237,7 @@ button, input, select { font: inherit; }
 
 <script>
 (function () {
-  const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id']);
+  const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id', 'view']);
   const PUBLIC_SINGLETON_REPO = 'learn-ukrainian/learn-ukrainian.github.io';
   const PUBLIC_PROJECTION_URL = '/api/work/v1/projection';
   // Fixed constant — never configurable, never persisted, never rendered into shareable state.
@@ -272,6 +279,7 @@ button, input, select { font: inherit; }
     privateMeta: document.getElementById('source-private-meta'),
     attentionMeta: document.getElementById('attention-meta'),
     foundation: document.getElementById('foundation-label'),
+    view: document.getElementById('filter-view'),
     health: document.getElementById('filter-health'),
     kind: document.getElementById('filter-kind'),
     lifecycle: document.getElementById('filter-lifecycle'),
@@ -635,6 +643,15 @@ button, input, select { font: inherit; }
     return { ok: true, doc: merged };
   }
 
+  const NON_ACTIONABLE_ACTION_CODES = new Set(['INSPECT_UNKNOWN', 'OPEN_GITHUB', 'NONE']);
+
+  function isActionable(item) {
+    if (!item) return false;
+    if (item.health === 'OFF_TRACK' || item.health === 'AT_RISK') return true;
+    const code = (item.safe_next_action && item.safe_next_action.code) || '';
+    return !!code && !NON_ACTIONABLE_ACTION_CODES.has(code);
+  }
+
   function readFiltersFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const out = {};
@@ -647,12 +664,15 @@ button, input, select { font: inherit; }
       if (key === 'kind' && !['issue', 'pr', 'task', 'review'].includes(value)) continue;
       if (key === 'lifecycle' && !['open', 'draft', 'running', 'failed'].includes(value)) continue;
       if (key === 'orphan' && value !== 'true' && value !== 'false') continue;
+      if (key === 'view' && !['actionable', 'all'].includes(value)) continue;
       out[key] = value;
     }
+    if (!out.view) out.view = 'actionable';
     return out;
   }
 
   function applyFiltersToControls(filters) {
+    if (els.view) els.view.value = filters.view || 'actionable';
     els.health.value = filters.health || '';
     els.kind.value = filters.kind || '';
     els.lifecycle.value = filters.lifecycle || '';
@@ -663,6 +683,8 @@ button, input, select { font: inherit; }
 
   function controlsToFilters() {
     const filters = {};
+    if (els.view && els.view.value) filters.view = els.view.value;
+    else filters.view = 'actionable';
     if (els.health.value) filters.health = els.health.value;
     if (els.kind.value) filters.kind = els.kind.value;
     if (els.lifecycle.value) filters.lifecycle = els.lifecycle.value;
@@ -681,6 +703,7 @@ button, input, select { font: inherit; }
       if (key === 'endpoint' || key === 'q' || key === 'private_endpoint') return;
       if (key === 'repository_id' && value !== PUBLIC_SINGLETON_REPO) return;
       if (key === 'source_id' && value !== PUBLIC_SOURCE_ID) return;
+      if (key === 'view' && value === 'actionable') return;
       out[key] = value;
     });
     return out;
@@ -697,7 +720,9 @@ button, input, select { font: inherit; }
 
   function applyLocalFilters(projection, filters) {
     if (!projection) return { items: [], attention: [] };
+    const view = filters.view || 'actionable';
     const items = (projection.items || []).filter((item) => {
+      if (view === 'actionable' && !isActionable(item)) return false;
       if (filters.health && item.health !== filters.health) return false;
       if (filters.kind && item.resource_kind !== filters.kind) return false;
       if (filters.lifecycle && item.lifecycle !== filters.lifecycle) return false;
@@ -826,7 +851,7 @@ button, input, select { font: inherit; }
         'class4 d1=' + (den.class4 && den.class4.delegate_active) + ' d2=' + (den.class4 && den.class4.delegate_tasks) + ' r1=' + (den.class4 && den.class4.fleet_reviews),
       ].join(' · ');
       els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
-      els.attentionMeta.textContent = ((projection.attention || []).length) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
+      els.attentionMeta.textContent = (state.attention ? state.attention.length : ((projection.attention || []).length)) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
     } else if (publicStatusOverride) {
       els.publicMeta.textContent = 'status=' + publicStatusOverride;
     }

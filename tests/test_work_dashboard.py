@@ -74,6 +74,7 @@ def test_saved_view_client_writes_only_allowlisted_keys():
     assert "health" in keys
     assert "kind" in keys
     assert "source_id" in keys
+    assert "view" in keys
     assert "q" not in keys
     assert "endpoint" not in keys
 
@@ -148,3 +149,16 @@ def test_work_page_shareable_url_strips_private_selectors():
     # Private source/repo must not be written into transferable saved-view state.
     assert "value !== PUBLIC_SINGLETON_REPO" in html or "value !== PUBLIC_SINGLETON_REPO" in html
     assert "value !== PUBLIC_SOURCE_ID" in html
+
+
+def test_work_page_actionable_default_view_contracts():
+    html = WORK.read_text(encoding="utf-8")
+    assert 'id="filter-view"' in html
+    assert '<option value="actionable">Actionable</option>' in html
+    assert '<option value="all">All</option>' in html
+    assert "isActionable" in html
+    assert "INSPECT_UNKNOWN" in html
+    assert "OPEN_GITHUB" in html
+    assert "NONE" in html
+    assert "OFF_TRACK" in html
+    assert "AT_RISK" in html
