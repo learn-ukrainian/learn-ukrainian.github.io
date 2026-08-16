@@ -409,7 +409,7 @@ def test_saved_view_multivalue_filters_are_canonical():
             "kind": ["pr", "issue"],
             "lifecycle": ["draft", "open", "open"],
             "source_id": ["private-local-adapter", "public-monitor"],
-            "repository_id": [configured, configured],
+            "repository_id": configured,
         }
     )
     b = parse_saved_view_params(
@@ -449,10 +449,12 @@ def test_projection_cache_key_direct_call_rejects_and_canonicalizes():
         projection_cache_key({"health": "not-a-health"})
 
     # Raw reordered/duplicate multivalues collide with already-parsed forms.
+    # repository_id is a singleton domain (raw maxItems=1); health/kind allow
+    # duplicates only within their finite domain bounds.
     raw_a = {
         "health": ["ON_TRACK", "AT_RISK", "AT_RISK"],
         "kind": ["pr", "issue"],
-        "repository_id": [REPO, REPO],
+        "repository_id": REPO,
     }
     raw_b = {
         "health": ["AT_RISK", "ON_TRACK"],
@@ -484,6 +486,8 @@ def test_filters_applied_source_id_is_schema_backed():
         "public-monitor",
         "private-local-adapter",
     ]
+    assert props["source_id"]["maxItems"] == 2
+    assert props["source_id"]["uniqueItems"] is True
     # Digest is content-addressed; any filters_applied change must recompute.
     digest = schema_digest_sha256()
     assert len(digest) == 64
@@ -495,6 +499,155 @@ def test_filters_applied_source_id_is_schema_backed():
     with pytest.raises(SchemaValidationError):
         payload["filters_applied"] = {"source_id": ["not-a-source"]}
         validate_projection(payload)
+
+
+def test_filters_applied_schema_enforces_cardinality_and_enums():
+    """filters_applied schema mirrors parser bounds, enums, and uniqueItems."""
+    from scripts.work.schema import FILTER_MAX_RAW_ITEMS
+
+    schema = load_schema()
+    props = schema["properties"]["filters_applied"]["properties"]
+    assert props["health"]["maxItems"] == FILTER_MAX_RAW_ITEMS["health"]
+    assert props["health"]["uniqueItems"] is True
+    assert props["resource_kind"]["maxItems"] == FILTER_MAX_RAW_ITEMS["kind"]
+    assert props["resource_kind"]["uniqueItems"] is True
+    assert props["lifecycle"]["maxItems"] == FILTER_MAX_RAW_ITEMS["lifecycle"]
+    assert props["lifecycle"]["uniqueItems"] is True
+    assert set(props["lifecycle"]["items"]["enum"]) == {
+        "open",
+        "draft",
+        "running",
+        "failed",
+    }
+    assert props["repository_id"]["maxItems"] == 1
+    assert props["repository_id"]["uniqueItems"] is True
+    assert props["repository_id"]["items"]["const"] == REPO
+
+    payload = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    # Noncanonical (duplicate) arrays fail uniqueItems even when members are valid.
+    with pytest.raises(SchemaValidationError):
+        payload["filters_applied"] = {"health": ["AT_RISK", "AT_RISK"]}
+        validate_projection(payload)
+    with pytest.raises(SchemaValidationError):
+        payload["filters_applied"] = {"resource_kind": ["issue", "issue"]}
+        validate_projection(payload)
+    with pytest.raises(SchemaValidationError):
+        payload["filters_applied"] = {"lifecycle": ["open", "not-a-lifecycle"]}
+        validate_projection(payload)
+    with pytest.raises(SchemaValidationError):
+        payload["filters_applied"] = {"repository_id": ["evil-org/private"]}
+        validate_projection(payload)
+    with pytest.raises(SchemaValidationError):
+        payload["filters_applied"] = {"repository_id": [REPO, REPO]}
+        validate_projection(payload)
+    # Canonical forms still validate.
+    payload["filters_applied"] = {
+        "health": ["AT_RISK", "ON_TRACK"],
+        "resource_kind": ["issue", "pr"],
+        "lifecycle": ["draft", "open"],
+        "repository_id": [REPO],
+        "source_id": ["public-monitor"],
+        "orphan": True,
+    }
+    validate_projection(payload)
+
+
+def test_saved_view_rejects_oversized_raw_multivalue_before_canonicalize():
+    """Raw repetitions beyond the finite domain bound fail before admit work."""
+    from scripts.work.schema import ALLOWED_HEALTH, FILTER_MAX_RAW_ITEMS
+
+    oversized_health = ["ON_TRACK"] * (FILTER_MAX_RAW_ITEMS["health"] + 1)
+    with pytest.raises(SchemaValidationError, match="exceeds max"):
+        parse_saved_view_params({"health": oversized_health})
+    # Even when the unique set would fit, raw length is the bound.
+    assert len(set(oversized_health)) == 1
+    assert len(oversized_health) > len(ALLOWED_HEALTH)
+
+    with pytest.raises(SchemaValidationError, match="exceeds max"):
+        parse_saved_view_params(
+            {"kind": ["issue"] * (FILTER_MAX_RAW_ITEMS["kind"] + 1)}
+        )
+    with pytest.raises(SchemaValidationError, match="exceeds max"):
+        parse_saved_view_params({"repository_id": [REPO, REPO]})
+    with pytest.raises(SchemaValidationError, match="exceeds max"):
+        parse_saved_view_params({"orphan": ["true", "false"]})
+
+    # Duplicates within the allowed raw bound still canonicalize.
+    ok = parse_saved_view_params(
+        {
+            "health": ["ON_TRACK", "AT_RISK", "AT_RISK", "ON_TRACK"],
+            "lifecycle": ["open", "open", "draft"],
+        }
+    )
+    assert ok["health"] == ["AT_RISK", "ON_TRACK"]
+    assert ok["lifecycle"] == ["draft", "open"]
+
+
+def test_build_projection_admits_filters_directly():
+    """Direct build_projection / build_public_projection re-enter saved-view admission."""
+    from scripts.work.normalize import build_public_projection
+    from scripts.work.schema import SchemaValidationError
+
+    empty = {
+        "issues": SectionResult("issues", "ok", payload=[], count=0),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "open_total": 0,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=0,
+        ),
+        "delegate_active": SectionResult(
+            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "delegate_tasks": SectionResult(
+            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "fleet_reviews": SectionResult(
+            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
+        ),
+    }
+
+    # Foreign repository_id never appears in filters_applied.
+    with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+        build_projection(
+            empty,
+            repository_id=REPO,
+            filters={"repository_id": ["other-org/foreign-repository"]},
+        )
+    with pytest.raises(SchemaValidationError, match="saved-view key not allowed"):
+        build_projection(empty, repository_id=REPO, filters={"q": "secret"})
+    with pytest.raises(SchemaValidationError, match="invalid health filter"):
+        build_projection(empty, repository_id=REPO, filters={"health": ["NOPE"]})
+
+    # kind alias and resource_kind both canonicalize; only canonical form is emitted.
+    via_kind = build_projection(
+        empty, repository_id=REPO, filters={"kind": ["pr", "issue", "issue"]}
+    )
+    via_resource = build_projection(
+        empty, repository_id=REPO, filters={"resource_kind": ["issue", "pr"]}
+    )
+    assert via_kind["filters_applied"] == via_resource["filters_applied"]
+    assert via_kind["filters_applied"]["resource_kind"] == ["issue", "pr"]
+    assert "kind" not in via_kind["filters_applied"]
+
+    # build_public_projection shares the same gate (before collect).
+    def no_collect(**_kwargs):
+        raise AssertionError("collect must not run after filter rejection")
+
+    with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+        build_public_projection(
+            repository_id=REPO,
+            filters={"repository_id": "evil-org/private"},
+            gh_runner=no_collect,
+        )
 
 
 def test_fleet_reviews_and_projection_reject_mixed_repositories():
@@ -663,6 +816,208 @@ def test_fleet_reviews_and_projection_reject_mixed_repositories():
     assert suffix_cousin not in blob
 
 
+def test_delegate_requires_authoritative_public_repository():
+    """Foreign/unclassified delegate rows never enter payload or link to public work.
+
+    Authoritative attribution is only ``repository`` / ``repository_id``. Paths,
+    branches, and task_id numbers must not admit a row or attach it to a
+    same-number public issue/PR. Totals are public-admitted only.
+    """
+    from scripts.work.sources_public import (
+        DELEGATE_TASK_LIMIT,
+        fetch_delegate_active,
+        fetch_delegate_tasks,
+    )
+
+    private_repo = "other-org/other-private-repo"
+    suffix_cousin = "evil-org/learn-ukrainian.github.io"
+    same_number = 42
+
+    mixed = [
+        {
+            "task_id": f"codex-issue-{same_number}-public",
+            "agent": "codex",
+            "status": "running",
+            "repository": REPO,
+        },
+        {
+            "task_id": f"claude-pr-{same_number}-public",
+            "agent": "claude",
+            "status": "running",
+            "repository_id": REPO,
+        },
+        # Same task_id shape as a public issue number, but foreign repository.
+        {
+            "task_id": f"codex-issue-{same_number}-foreign",
+            "agent": "codex",
+            "status": "running",
+            "repository": private_repo,
+        },
+        {
+            "task_id": f"codex-issue-{same_number}-suffix",
+            "agent": "codex",
+            "status": "running",
+            "repository": suffix_cousin,
+        },
+        # Unclassified: no authoritative field (path/branch/task_id alone).
+        {
+            "task_id": f"codex-issue-{same_number}-unclassified",
+            "agent": "codex",
+            "status": "running",
+            "worktree_path": f"/Users/private/.worktrees/dispatch/codex/issue-{same_number}",
+            "worktree_branch": f"codex/issue-{same_number}",
+            "cwd": f"/Users/private/projects/{private_repo}",
+        },
+        # Ambiguous: conflicting authoritative fields.
+        {
+            "task_id": f"codex-issue-{same_number}-ambiguous",
+            "agent": "codex",
+            "status": "running",
+            "repository": REPO,
+            "repository_id": private_repo,
+        },
+        # Empty / whitespace claim is unclassified.
+        {
+            "task_id": f"codex-issue-{same_number}-blank",
+            "agent": "codex",
+            "status": "running",
+            "repository": "  ",
+        },
+    ]
+    # Private-heavy volume must not inflate public totals or force truncation.
+    private_pad = [
+        {
+            "task_id": f"private-pad-{i}",
+            "agent": "codex",
+            "status": "done",
+            "repository": private_repo,
+        }
+        for i in range(DELEGATE_TASK_LIMIT + 50)
+    ]
+    universe = [*private_pad, *mixed]
+
+    active = fetch_delegate_active(
+        loader=lambda: {"total": len(universe), "tasks": universe}
+    )
+    tasks = fetch_delegate_tasks(
+        loader=lambda: {"total": len(universe), "tasks": universe}
+    )
+    assert active.status == "ok"
+    assert active.truncated is False
+    assert active.count == 2
+    assert active.payload["total"] == 2
+    assert {t["task_id"] for t in active.payload["tasks"]} == {
+        f"codex-issue-{same_number}-public",
+        f"claude-pr-{same_number}-public",
+    }
+    assert all(t["repository"] == REPO for t in active.payload["tasks"])
+    assert tasks.status == "ok"
+    assert tasks.truncated is False
+    assert tasks.count == 2
+    assert tasks.payload["total"] == 2
+    blob = json.dumps({"active": active.payload, "tasks": tasks.payload})
+    assert private_repo not in blob
+    assert suffix_cousin not in blob
+    assert f"codex-issue-{same_number}-foreign" not in blob
+    assert f"codex-issue-{same_number}-unclassified" not in blob
+    assert f"codex-issue-{same_number}-ambiguous" not in blob
+    assert "/Users/private/" not in blob
+
+    # Normalization: foreign/unclassified never link to same-number public issue/PR.
+    sections = {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": same_number,
+                    "title": "Public issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": f"https://github.com/{REPO}/issues/{same_number}",
+                    "state": "OPEN",
+                }
+            ],
+            count=1,
+        ),
+        "prs": SectionResult(
+            "prs",
+            "ok",
+            payload=[
+                {
+                    "number": same_number,
+                    "title": "Public PR",
+                    "state": "OPEN",
+                    "isDraft": False,
+                    "reviewDecision": "REVIEW_REQUIRED",
+                    "statusCheckRollup": [{"state": "SUCCESS"}],
+                    "mergeStateStatus": "CLEAN",
+                    "labels": [],
+                    "assignees": [],
+                    "url": f"https://github.com/{REPO}/pull/{same_number}",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "headRefOid": "deadbeef",
+                    "headRefName": "feat/work",
+                }
+            ],
+            count=1,
+        ),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "open_total": 1,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=1,
+        ),
+        "delegate_active": active,
+        "delegate_tasks": SectionResult(
+            "delegate_tasks",
+            "ok",
+            # Inject the raw mixed universe to prove normalize re-admits.
+            payload={"total": len(universe), "tasks": universe},
+            count=len(universe),
+        ),
+        "fleet_reviews": SectionResult(
+            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
+        ),
+    }
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+    issue = next(i for i in projection["items"] if i["resource_kind"] == "issue")
+    pr = next(i for i in projection["items"] if i["resource_kind"] == "pr")
+    assert set(issue["projections"]["dispatch"]["task_ids"]) == {
+        f"codex-issue-{same_number}-public"
+    }
+    assert set(pr["projections"]["dispatch"]["task_ids"]) == {
+        f"claude-pr-{same_number}-public"
+    }
+    task_ids = {
+        i["remote_id"]
+        for i in projection["items"]
+        if i["resource_kind"] == "task"
+    }
+    assert f"codex-issue-{same_number}-foreign" not in task_ids
+    assert f"codex-issue-{same_number}-unclassified" not in task_ids
+    assert f"codex-issue-{same_number}-ambiguous" not in task_ids
+    # Public linked tasks are attached to issue/PR, not re-emitted unlinked.
+    assert f"codex-issue-{same_number}-public" not in task_ids
+    assert f"claude-pr-{same_number}-public" not in task_ids
+    proj_blob = json.dumps(projection)
+    assert private_repo not in proj_blob
+    assert suffix_cousin not in proj_blob
+    assert "/Users/private/" not in proj_blob
+
+
 def test_fleet_reviews_repository_filter_before_hard_cap():
     """Foreign volume above the public scan cap must not hide public reviews.
 
@@ -772,30 +1127,30 @@ def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
     Regression: unanchored ``#1`` matched ``#19``; ``pr-10`` matched ``pr-100``.
     """
     tasks = [
-        {"task_id": "codex-#19-fix", "status": "running", "agent": "codex"},
-        {"task_id": "codex-issue-19", "status": "running", "agent": "codex"},
-        {"task_id": "codex-issue_19", "status": "running", "agent": "codex"},
-        {"task_id": "codex/19/work", "status": "running", "agent": "codex"},
-        {"task_id": "worker-19", "status": "running", "agent": "codex"},
-        {"task_id": "codex-#1-fix", "status": "running", "agent": "claude"},
-        {"task_id": "codex-issue-1", "status": "running", "agent": "claude"},
-        {"task_id": "codex-issue_1", "status": "running", "agent": "claude"},
-        {"task_id": "codex/1/work", "status": "running", "agent": "claude"},
-        {"task_id": "worker-1", "status": "running", "agent": "claude"},
-        {"task_id": "agy-pr-100", "status": "running", "agent": "agy"},
-        {"task_id": "agy-pr_100", "status": "running", "agent": "agy"},
-        {"task_id": "agy-pr/100", "status": "running", "agent": "agy"},
-        {"task_id": "review-pr100", "status": "running", "agent": "agy"},
-        {"task_id": "agy-pr-10", "status": "running", "agent": "kimi"},
-        {"task_id": "agy-pr_10", "status": "running", "agent": "kimi"},
-        {"task_id": "agy-pr/10", "status": "running", "agent": "kimi"},
-        {"task_id": "review-pr10", "status": "running", "agent": "kimi"},
+        {"task_id": "codex-#19-fix", "status": "running", "agent": "codex", "repository": REPO},
+        {"task_id": "codex-issue-19", "status": "running", "agent": "codex", "repository": REPO},
+        {"task_id": "codex-issue_19", "status": "running", "agent": "codex", "repository": REPO},
+        {"task_id": "codex/19/work", "status": "running", "agent": "codex", "repository": REPO},
+        {"task_id": "worker-19", "status": "running", "agent": "codex", "repository": REPO},
+        {"task_id": "codex-#1-fix", "status": "running", "agent": "claude", "repository": REPO},
+        {"task_id": "codex-issue-1", "status": "running", "agent": "claude", "repository": REPO},
+        {"task_id": "codex-issue_1", "status": "running", "agent": "claude", "repository": REPO},
+        {"task_id": "codex/1/work", "status": "running", "agent": "claude", "repository": REPO},
+        {"task_id": "worker-1", "status": "running", "agent": "claude", "repository": REPO},
+        {"task_id": "agy-pr-100", "status": "running", "agent": "agy", "repository": REPO},
+        {"task_id": "agy-pr_100", "status": "running", "agent": "agy", "repository": REPO},
+        {"task_id": "agy-pr/100", "status": "running", "agent": "agy", "repository": REPO},
+        {"task_id": "review-pr100", "status": "running", "agent": "agy", "repository": REPO},
+        {"task_id": "agy-pr-10", "status": "running", "agent": "kimi", "repository": REPO},
+        {"task_id": "agy-pr_10", "status": "running", "agent": "kimi", "repository": REPO},
+        {"task_id": "agy-pr/10", "status": "running", "agent": "kimi", "repository": REPO},
+        {"task_id": "review-pr10", "status": "running", "agent": "kimi", "repository": REPO},
         # Unrelated numeric text must not become authority for a match.
-        {"task_id": "retrycount1of19", "status": "running", "agent": "cursor"},
-        {"task_id": "shard10of100", "status": "running", "agent": "cursor"},
-        {"task_id": "build100timeout", "status": "running", "agent": "cursor"},
-        {"task_id": "page1", "status": "running", "agent": "cursor"},
-        {"task_id": "v10-release", "status": "running", "agent": "cursor"},
+        {"task_id": "retrycount1of19", "status": "running", "agent": "cursor", "repository": REPO},
+        {"task_id": "shard10of100", "status": "running", "agent": "cursor", "repository": REPO},
+        {"task_id": "build100timeout", "status": "running", "agent": "cursor", "repository": REPO},
+        {"task_id": "page1", "status": "running", "agent": "cursor", "repository": REPO},
+        {"task_id": "v10-release", "status": "running", "agent": "cursor", "repository": REPO},
     ]
 
     issue_1 = _match_dispatch(tasks, issue_number=1, pr_number=None)
@@ -963,6 +1318,7 @@ def test_build_projection_joins_sources_deterministically():
                         "agent": "codex",
                         "status": "running",
                         "started_at": "2026-08-16T00:00:00Z",
+                        "repository": REPO,
                     }
                 ],
             },

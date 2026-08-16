@@ -44,13 +44,19 @@ At a query instant the projection represents exactly once (or counts in a typed 
 
 Allowed query keys only: `health`, `kind`, `lifecycle`, `orphan`, `repository_id`, `source_id`.
 
-Multivalue filters are canonicalized (deduplicated + sorted) before permanent warm-cache keys and `filters_applied` are formed, so duplicate/reordered query forms share one entry. `repository_id` accepts only the closed public repository singleton (`learn-ukrainian/learn-ukrainian.github.io`); it is not overridable by environment. `source_id` is enum-backed (`public-monitor` | `private-local-adapter`) both as a query key and inside the closed `filters_applied` object.
+Multivalue filters are bounded by finite per-key raw cardinality (domain size for health/kind/lifecycle/source_id; singleton for orphan and `repository_id`) **before** canonicalization, then deduplicated + sorted so duplicate/reordered forms within the bound share one permanent warm-cache key and one `filters_applied` object. Excess raw repetitions reject with `400 invalid_saved_view`.
+
+`repository_id` accepts only the closed public repository singleton (`learn-ukrainian/learn-ukrainian.github.io`); it is not overridable by environment. `source_id` is enum-backed (`public-monitor` | `private-local-adapter`) both as a query key and inside the closed `filters_applied` object. The authoritative schema enforces matching `maxItems`, `uniqueItems`, lifecycle enum, and repository `const` on `filters_applied`.
+
+Every projection-builder entry point (`build_projection`, `build_public_projection`, cache-key minting, HTTP) re-enters the shared saved-view admission gate; unknown keys and foreign repository IDs cannot bypass via direct calls.
 
 Formal-review rows are admitted only for that exact public repository (no suffix matching; missing/foreign repositories are dropped at collection and normalization).
 
-Unknown keys, free text, private endpoints, and overlong values are rejected (`400 invalid_saved_view`).
+Delegate class-4 rows are admitted only when they carry an exact canonical public claim on the authoritative attribution fields `repository` or `repository_id` (both must agree when present). Missing, ambiguous, path/branch/task_id-inferred, and foreign rows are omitted **before** public totals/truncation/normalization, so private volume cannot inflate public counts or attach same-number private task IDs to public issues/PRs. Bodies and result files are never read.
 
-Schema provenance: `GET /api/work/v1/capabilities` returns live `schema_digest_sha256` over `scripts/work/schema/work_projection.v1.json` (private adapters pin that digest + public commit).
+Unknown keys, free text, private endpoints, overlong values, and oversized repeated filter values are rejected (`400 invalid_saved_view`).
+
+Schema provenance: `GET /api/work/v1/capabilities` returns live `schema_digest_sha256` over `scripts/work/schema/work_projection.v1.json` (private adapters pin that digest + public commit). Any change to the closed `filters_applied` contract (including maxItems/uniqueItems/enums/const) changes that digest.
 
 ## Privacy
 

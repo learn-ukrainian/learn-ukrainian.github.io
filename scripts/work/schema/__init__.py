@@ -30,6 +30,22 @@ ALLOWED_KINDS = frozenset(
 ALLOWED_LIFECYCLES = frozenset({"open", "draft", "running", "failed"})
 ALLOWED_SOURCES = frozenset({"public-monitor", "private-local-adapter"})
 
+# Finite per-key raw cardinality bounds derived from each closed domain.
+# Reject excess raw repetitions *before* canonicalization so request work is
+# bounded even when values are duplicates. Singleton domains (orphan,
+# repository_id) accept at most one raw value.
+FILTER_MAX_RAW_ITEMS: dict[str, int] = {
+    "health": len(ALLOWED_HEALTH),
+    "kind": len(ALLOWED_KINDS),
+    "lifecycle": len(ALLOWED_LIFECYCLES),
+    "orphan": 1,
+    "repository_id": 1,
+    "source_id": len(ALLOWED_SOURCES),
+}
+
+# Parsed key emitted for query key ``kind``.
+_PARSED_KIND_KEY = "resource_kind"
+
 
 class SchemaValidationError(ValueError):
     """Raised when a projection payload fails the authoritative schema."""
@@ -93,12 +109,56 @@ def canonicalize_multivalue(values: list[str]) -> list[str]:
     return sorted(set(values))
 
 
+def filters_to_saved_view_raw(
+    filters: dict[str, Any],
+) -> dict[str, str | list[str] | None]:
+    """Normalize a filter dict (raw or already-parsed) for ``parse_saved_view_params``.
+
+    Accepts both query-shaped keys (``kind``) and the parser's internal
+    ``resource_kind`` so endpoint-canonical and direct-call filters re-enter the
+    same admission path without encoding drift.
+    """
+    raw: dict[str, str | list[str] | None] = {}
+    for key, value in filters.items():
+        if key == _PARSED_KIND_KEY:
+            out_key = "kind"
+        elif key in ALLOWED_SAVED_VIEW_KEYS:
+            out_key = key
+        else:
+            raise SchemaValidationError(f"saved-view key not allowed: {key}")
+        if value is None or value == "":
+            continue
+        if isinstance(value, bool):
+            if out_key != "orphan":
+                raise SchemaValidationError(f"boolean not allowed for saved-view: {out_key}")
+            raw[out_key] = "true" if value else "false"
+        elif isinstance(value, (list, tuple)):
+            raw[out_key] = [str(item) for item in value]
+        else:
+            raw[out_key] = str(value)
+    return raw
+
+
+def admit_projection_filters(filters: dict[str, Any] | None) -> dict[str, Any]:
+    """Canonicalize and validate filters at every projection-builder entry point.
+
+    Direct ``build_projection`` / ``build_public_projection`` callers cannot
+    bypass saved-view admission: unknown keys and foreign ``repository_id``
+    values raise; aliases (``kind`` / ``resource_kind``) collapse to one form.
+    """
+    if not filters:
+        return {}
+    return parse_saved_view_params(filters_to_saved_view_raw(filters))
+
+
 def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str, Any]:
     """Validate public-safe saved-view query parameters.
 
-    Rejects unknown keys, free text, overlong values, and private endpoint keys.
-    Multivalue filters are always returned as deduplicated, sorted sequences so
-    permanent cache keys stay canonical across duplicate/reordered query forms.
+    Rejects unknown keys, free text, overlong values, private endpoint keys, and
+    raw multivalue lists that exceed the finite per-key domain bound (checked
+    before canonicalization). Multivalue filters are always returned as
+    deduplicated, sorted sequences so permanent cache keys stay canonical across
+    duplicate/reordered query forms within the allowed raw bound.
     """
     filters: dict[str, Any] = {}
     for key, value in raw.items():
@@ -107,6 +167,12 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
         if key not in ALLOWED_SAVED_VIEW_KEYS:
             raise SchemaValidationError(f"saved-view key not allowed: {key}")
         values = value if isinstance(value, list) else [value]
+        # Bound raw request work before any membership / admit work.
+        max_items = FILTER_MAX_RAW_ITEMS[key]
+        if len(values) > max_items:
+            raise SchemaValidationError(
+                f"saved-view {key} exceeds max {max_items} values"
+            )
         cleaned: list[str] = []
         for item in values:
             text = str(item).strip()
@@ -160,11 +226,18 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
 
 
 __all__ = [
+    "ALLOWED_HEALTH",
+    "ALLOWED_KINDS",
+    "ALLOWED_LIFECYCLES",
     "ALLOWED_SAVED_VIEW_KEYS",
+    "ALLOWED_SOURCES",
+    "FILTER_MAX_RAW_ITEMS",
     "SCHEMA_FILENAME",
     "SCHEMA_VERSION",
     "SchemaValidationError",
+    "admit_projection_filters",
     "canonicalize_multivalue",
+    "filters_to_saved_view_raw",
     "load_schema",
     "parse_saved_view_params",
     "schema_digest_sha256",

@@ -30,6 +30,9 @@ SECTION_TIMEOUT_S = 4.5  # leave headroom under the 5s typed-degradation budget
 # Sole public repository for the Work projection. Closed identity: not overridable
 # by environment, config, or free-form caller input (privacy boundary).
 DEFAULT_PUBLIC_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
+# Authoritative repository-attribution fields accepted from a delegate task row.
+# Paths, branch names, cwd, worktree_path, and task_id are never used for admission.
+DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
 
 
 def _utc_now() -> datetime:
@@ -66,6 +69,96 @@ def admit_public_repository_id(repository_id: str | None = None) -> str:
             f"public repository_id must be exactly {allowed!r}; got {repository_id!r}"
         )
     return allowed
+
+
+def _authoritative_delegate_repository(row: dict[str, Any]) -> str | None:
+    """Return the single authoritative repository claim from a delegate row.
+
+    Only ``repository_id`` and ``repository`` are accepted. When both are
+    present they must agree after strip. Missing, empty, or conflicting claims
+    are unclassified (``None``). Callers must never fall back to path, branch,
+    cwd, worktree, or task_id inference.
+    """
+    claimed: list[str] = []
+    for attr_name in DELEGATE_REPOSITORY_ATTR_FIELDS:
+        raw = row.get(attr_name)
+        if raw is None or raw == "":
+            continue
+        text = str(raw).strip()
+        if not text:
+            continue
+        claimed.append(text)
+    if not claimed:
+        return None
+    unique = set(claimed)
+    if len(unique) != 1:
+        return None
+    return claimed[0]
+
+
+def admit_delegate_task_row(
+    row: dict[str, Any],
+    *,
+    repository_id: str | None = None,
+) -> dict[str, Any] | None:
+    """Admit one delegate summary row for the public projection.
+
+    Requires an exact canonical public-repository claim via the authoritative
+    attribution fields. Foreign, missing, ambiguous, or non-dict rows are
+    omitted. Never reads result bodies or private metadata; only copies the
+    public-safe summary allowlist plus the admitted repository identity.
+    """
+    if not isinstance(row, dict):
+        return None
+    allowed = admit_public_repository_id(repository_id)
+    claimed = _authoritative_delegate_repository(row)
+    if claimed is None:
+        return None
+    try:
+        admitted = admit_public_repository_id(claimed)
+    except ValueError:
+        return None
+    if admitted != allowed:
+        return None
+    return {
+        "task_id": row.get("task_id"),
+        "agent": row.get("agent"),
+        "model": row.get("model"),
+        "effort": row.get("effort"),
+        "status": row.get("status"),
+        "started_at": row.get("started_at"),
+        "duration_s": row.get("duration_s"),
+        "age_s": row.get("age_s"),
+        "alive": row.get("alive"),
+        # Always the closed public singleton — never echo a foreign claim.
+        "repository": admitted,
+    }
+
+
+def filter_public_delegate_tasks(
+    rows: list[Any] | None,
+    *,
+    repository_id: str | None = None,
+    limit: int | None = None,
+) -> tuple[list[dict[str, Any]], int, bool]:
+    """Filter delegate rows to public-admitted summaries before count/truncation.
+
+    Returns ``(page_rows, public_total, truncated)`` where *public_total* is the
+    full admitted count (never private volume) and *truncated* is true only when
+    that public set exceeds *limit*.
+    """
+    allowed = admit_public_repository_id(repository_id)
+    admitted: list[dict[str, Any]] = []
+    for row in rows or []:
+        summary = admit_delegate_task_row(row, repository_id=allowed)
+        if summary is not None:
+            admitted.append(summary)
+    total = len(admitted)
+    if limit is None:
+        return admitted, total, False
+    cap = max(0, int(limit))
+    truncated = total > cap
+    return admitted[:cap], total, truncated
 
 
 @dataclass
@@ -259,7 +352,17 @@ def fetch_streams_projection(
 
 def fetch_delegate_active(
     loader: Callable[[], dict[str, Any]] | None = None,
+    *,
+    repository_id: str | None = None,
 ) -> SectionResult:
+    """Summarize active delegate tasks for the exact public repository only.
+
+    Authoritative ``repository`` / ``repository_id`` admission runs before
+    count. Foreign, unclassified, and ambiguous rows are omitted so public
+    totals never depend on private volume. Paths/branches/task IDs are never
+    used for repository attribution. Bodies and result files are never read.
+    """
+    allowed = admit_public_repository_id(repository_id)
     try:
         if loader is None:
             from scripts.api.delegate_router import active_delegate_tasks
@@ -276,35 +379,31 @@ def fetch_delegate_active(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_active", "degraded", reason="delegate_active_shape")
-    # Summary fields only — never retain result/result_file bodies.
-    summary = []
-    for row in tasks:
-        if not isinstance(row, dict):
-            continue
-        summary.append(
-            {
-                "task_id": row.get("task_id"),
-                "agent": row.get("agent"),
-                "model": row.get("model"),
-                "effort": row.get("effort"),
-                "status": row.get("status"),
-                "started_at": row.get("started_at"),
-                "duration_s": row.get("duration_s"),
-                "age_s": row.get("age_s"),
-                "alive": row.get("alive"),
-            }
-        )
+    # Admit before count — private volume must not appear in total/status.
+    summary, total, _truncated = filter_public_delegate_tasks(
+        tasks, repository_id=allowed
+    )
     return SectionResult(
         "delegate_active",
         "ok",
-        payload={"total": len(summary), "tasks": summary},
-        count=len(summary),
+        payload={"total": total, "tasks": summary},
+        count=total,
     )
 
 
 def fetch_delegate_tasks(
     loader: Callable[[], dict[str, Any]] | None = None,
+    *,
+    repository_id: str | None = None,
 ) -> SectionResult:
+    """Summarize delegate task inventory for the exact public repository only.
+
+    Authoritative repository admission and public-side truncation happen before
+    totals are formed. Loader-provided ``total`` is ignored when it could
+    include private/foreign volume; public count is derived only from admitted
+    rows. Never reads result bodies.
+    """
+    allowed = admit_public_repository_id(repository_id)
     try:
         if loader is None:
             from scripts.api.delegate_router import list_delegate_tasks
@@ -321,28 +420,17 @@ def fetch_delegate_tasks(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_shape")
-    summary = []
-    for row in tasks:
-        if not isinstance(row, dict):
-            continue
-        summary.append(
-            {
-                "task_id": row.get("task_id"),
-                "agent": row.get("agent"),
-                "model": row.get("model"),
-                "effort": row.get("effort"),
-                "status": row.get("status"),
-                "started_at": row.get("started_at"),
-                "duration_s": row.get("duration_s"),
-                "age_s": row.get("age_s"),
-                "alive": row.get("alive"),
-            }
-        )
+    # Filter then apply the public enumeration cap so private volume cannot
+    # inflate totals or force truncated=true.
+    summary, total, truncated = filter_public_delegate_tasks(
+        tasks, repository_id=allowed, limit=DELEGATE_TASK_LIMIT
+    )
     return SectionResult(
         "delegate_tasks",
-        "ok",
-        payload={"total": int(payload.get("total") or len(summary)), "tasks": summary},
+        "truncated" if truncated else "ok",
+        payload={"total": total, "tasks": summary},
         count=len(summary),
+        truncated=truncated,
     )
 
 
@@ -459,8 +547,12 @@ def collect_public_sections(
         "issues": lambda: fetch_open_issues(repo, runner=gh_runner),
         "prs": lambda: fetch_open_prs(repo, runner=gh_runner),
         "streams": lambda: fetch_streams_projection(loader=streams_loader),
-        "delegate_active": lambda: fetch_delegate_active(loader=delegate_active_loader),
-        "delegate_tasks": lambda: fetch_delegate_tasks(loader=delegate_tasks_loader),
+        "delegate_active": lambda: fetch_delegate_active(
+            loader=delegate_active_loader, repository_id=repo
+        ),
+        "delegate_tasks": lambda: fetch_delegate_tasks(
+            loader=delegate_tasks_loader, repository_id=repo
+        ),
         "fleet_reviews": lambda: fetch_fleet_reviews(
             loader=fleet_reviews_loader, repository_id=repo
         ),

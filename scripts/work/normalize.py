@@ -19,11 +19,13 @@ from scripts.work.relations import (
     review_work_id,
     task_work_id,
 )
+from scripts.work.schema import admit_projection_filters
 from scripts.work.sources_public import (
     GH_ENUM_LIMIT,
     SectionResult,
     admit_public_repository_id,
     collect_public_sections,
+    filter_public_delegate_tasks,
     private_capability_seam,
     private_source_envelope,
     public_source_envelope,
@@ -549,6 +551,9 @@ def build_projection(
     cache_age_s: float = 0.0,
 ) -> dict[str, Any]:
     repo = admit_public_repository_id(repository_id)
+    # Projection boundary: every filter path (HTTP, direct call, cache key) must
+    # re-enter the shared saved-view admission gate before filter/echo.
+    canonical_filters = admit_projection_filters(filters)
     issues_section = sections.get("issues") or SectionResult("issues", "unavailable")
     prs_section = sections.get("prs") or SectionResult("prs", "unavailable")
     streams_section = sections.get("streams") or SectionResult("streams", "unavailable")
@@ -560,13 +565,20 @@ def build_projection(
     tasks_payload = (tasks_section.payload or {}) if tasks_section.payload else {}
     active_payload = (active_section.payload or {}) if active_section.payload else {}
     # Prefer the broader inventory; merge active IDs that might not yet be in the list.
-    task_rows = list(tasks_payload.get("tasks") or [])
-    seen_task_ids = {str(t.get("task_id")) for t in task_rows if t.get("task_id")}
+    # Re-admit at normalize so injected/bypass section payloads cannot attach
+    # foreign or unclassified task IDs to public issues/PRs.
+    raw_task_rows = list(tasks_payload.get("tasks") or [])
+    seen_task_ids = {str(t.get("task_id")) for t in raw_task_rows if isinstance(t, dict) and t.get("task_id")}
     for row in active_payload.get("tasks") or []:
+        if not isinstance(row, dict):
+            continue
         tid = str(row.get("task_id") or "")
         if tid and tid not in seen_task_ids:
-            task_rows.append(row)
+            raw_task_rows.append(row)
             seen_task_ids.add(tid)
+    task_rows, _task_total, _task_truncated = filter_public_delegate_tasks(
+        raw_task_rows, repository_id=repo
+    )
     review_rows = list((reviews_section.payload or {}).get("reviews") or [])
 
     items: list[dict[str, Any]] = []
@@ -633,7 +645,7 @@ def build_projection(
         "timeout",
     }
     attention = apply_health_and_actions(items, source_ok=source_ok)
-    filtered_items = apply_filters(items, filters)
+    filtered_items = apply_filters(items, canonical_filters or None)
     filtered_ids = {i["work_id"] for i in filtered_items}
     attention = [row for row in attention if row["work_id"] in filtered_ids]
     # Re-rank after filter for a dense attention list.
@@ -729,8 +741,8 @@ def build_projection(
         },
         "foundation_status": "FOUNDATION_COMPLETE",
     }
-    if filters:
-        payload["filters_applied"] = filters
+    if canonical_filters:
+        payload["filters_applied"] = canonical_filters
     return payload
 
 
@@ -741,11 +753,15 @@ def build_public_projection(
     cache_age_s: float = 0.0,
     **collect_kwargs: Any,
 ) -> dict[str, Any]:
+    # Admit filters at this entry point too so collect-only callers cannot
+    # skip the shared saved-view gate when they only reach build_projection
+    # after an expensive collect (fail closed early on foreign keys).
+    canonical_filters = admit_projection_filters(filters)
     sections = collect_public_sections(repository_id=repository_id, **collect_kwargs)
     return build_projection(
         sections,
         repository_id=repository_id,
-        filters=filters,
+        filters=canonical_filters or None,
         cache_age_s=cache_age_s,
     )
 

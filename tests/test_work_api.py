@@ -182,6 +182,31 @@ def test_projection_rejects_private_filter_keys(monkeypatch):
     assert bad.json()["detail"]["error"] == "invalid_saved_view"
 
 
+def test_projection_rejects_oversized_repeated_filters(monkeypatch):
+    """Endpoint 400 when raw multivalue exceeds the finite per-key domain bound."""
+    from scripts.work.schema import FILTER_MAX_RAW_ITEMS
+
+    cache_invalidate("work:v1:projection")
+
+    def fake_build(**_kwargs):
+        raise AssertionError("build must not run after oversized filter rejection")
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+    qs = "&".join(["health=ON_TRACK"] * (FILTER_MAX_RAW_ITEMS["health"] + 1))
+    response = client.get(f"/api/work/v1/projection?{qs}")
+    assert response.status_code == 400
+    detail = response.json()["detail"]
+    assert detail["error"] == "invalid_saved_view"
+    assert "exceeds max" in detail["message"]
+
+    # Singleton repository_id also 400s on raw repetition.
+    dup_repo = client.get(
+        f"/api/work/v1/projection?repository_id={REPO}&repository_id={REPO}"
+    )
+    assert dup_repo.status_code == 400
+    assert dup_repo.json()["detail"]["error"] == "invalid_saved_view"
+
+
 def test_source_id_filter_echoed_and_schema_valid(monkeypatch):
     """?source_id=public-monitor is accepted and appears in filters_applied."""
     cache_invalidate("work:v1:projection")

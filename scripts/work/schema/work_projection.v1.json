@@ -112,27 +112,42 @@
       "properties": {
         "health": {
           "type": "array",
-          "items": { "$ref": "#/$defs/health" }
+          "items": { "$ref": "#/$defs/health" },
+          "maxItems": 4,
+          "uniqueItems": true
         },
         "resource_kind": {
           "type": "array",
-          "items": { "$ref": "#/$defs/resourceKind" }
+          "items": { "$ref": "#/$defs/resourceKind" },
+          "maxItems": 7,
+          "uniqueItems": true
         },
         "lifecycle": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string",
+            "enum": ["open", "draft", "running", "failed"]
+          },
+          "maxItems": 4,
+          "uniqueItems": true
         },
         "orphan": { "type": "boolean" },
         "repository_id": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "const": "learn-ukrainian/learn-ukrainian.github.io"
+          },
+          "maxItems": 1,
+          "uniqueItems": true
         },
         "source_id": {
           "type": "array",
           "items": {
             "type": "string",
             "enum": ["public-monitor", "private-local-adapter"]
-          }
+          },
+          "maxItems": 2,
+          "uniqueItems": true
         }
       }
     }
