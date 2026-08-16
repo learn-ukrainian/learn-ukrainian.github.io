@@ -1,0 +1,21 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6886-failure-code
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Issue #6886 — finish_job rejects non_evidentiary; gate fires then bookkeeping crashes
+
+Read GitHub issue #6886 in full — first live firing of YOUR #6878 gate correctly caught a garbage DSML reply, then authority.py's failure-code allowlist rejected the new code and the ask crashed (traceback on the issue).
+
+ROUTING_CARD_V1: tier=practical · kimi-k3 × native kimi CLI (authored #6878; owns the seam) · owned_paths: scripts/fleet_comms/authority.py, scripts/ai_agent_bridge/**, tests/**
+
+Scope: (1) extend the authority failure-code allowlist with non_evidentiary; (2) add the END-TO-END seam regression the #6878 tests missed: non-evidentiary reply → gate fires → finish_job terminalizes failed:non_evidentiary cleanly, no stranded lease — mutation-checked (#M-16); (3) check whether the crashed ask (review-6884, ~19:5x) stranded a claimed job in the authority store — if so, terminalize it via the public API and note it; (4) the issue's note (a): one sentence in the runbook/reviewer guidance that deepseek ASKS are toolless/self-contained (repo-access reviews → delegate); note (b) optional: the DSML sample as a gate fixture.
+
+Steps: worktree → implement → pytest + ruff quoted (#M-4) → conventional commit referencing #6886 → push → PR. NO auto-merge.

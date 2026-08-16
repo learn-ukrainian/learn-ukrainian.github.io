@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "23ecf7c67ee0",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-6886-failure-code",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/fleet_comms/authority.py",
+    "tests/ai_agent_bridge/test_ask_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/23/ecf7c67ee0/0/metadata.json",
+      "transcript": "/23/ecf7c67ee0/0/full.jsonl",
+      "content_hash": "/23/ecf7c67ee0/0/content_hash.txt",
+      "prompt": "/23/ecf7c67ee0/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 78950,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4032000,
+    "output_tokens": 21147,
+    "api_call_count": 63
+  }
+}

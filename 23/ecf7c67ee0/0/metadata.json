@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "23ecf7c67ee0",
+  "session_id": "session_82bfe349-cba2-4c26-a0bd-52b7cd946105",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T20:04:50.048268Z",
+  "branch": "kimi/infra-6886-failure-code",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/fleet_comms/authority.py",
+    "tests/ai_agent_bridge/test_ask_contract.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "e75dba3c0716",
+  "token_usage": {
+    "input_tokens": 78950,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4032000,
+    "output_tokens": 21147,
+    "api_call_count": 63
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T20:04:50.025696Z",
+    "agent_lines": 78,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 78,
+    "total_lines_changed": 78,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
