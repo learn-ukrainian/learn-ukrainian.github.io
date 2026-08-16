@@ -2279,7 +2279,9 @@ def test_gemma_shadow_seat_rejects_a_caller_model_other_than_its_pin(tmp_path, m
 
 def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatch):
     """Key guard (#6805): a dead DeepSeek seat must surface an actionable
-    remediation plus the documented fallback route — never a bare not-found."""
+    remediation plus the documented route — never a bare not-found. Hermes is
+    permanently removed (operator order 2026-08-16), so the message points at
+    the opencode standing path, never at a reinstall."""
     monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
 
     with pytest.raises(AcpxShadowRefusalError) as exc_info:
@@ -2291,9 +2293,11 @@ def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatc
     assert "hermes binary not found on PATH" in message
     assert "text-oneshot-isolated-v1" in message
     assert "docs/runbooks/agent-seat-onboarding.md" in message
-    assert "hermes --version" in message
+    assert "permanently removed" in message
+    assert "do not reinstall" in message
     assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
     assert "delegate.py dispatch --agent deepseek" in message
+    assert "hermes --version" not in message
 
 
 def test_probe_participant_reachability_reports_only_missing_provider_binaries(monkeypatch):

@@ -330,17 +330,6 @@ def _run_compat_ask_impl(
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
 
-    # Admission preflight (#6805): a participant whose provider CLI is absent
-    # fails here — before an authority job is enqueued — with the actionable
-    # remediation and documented fallback, instead of dying mid-review at
-    # spawn time. The adapter's own compatibility probe still enforces the
-    # full contract immediately before spawn.
-    from scripts.agent_runtime.adapters.acpx import probe_participant_reachability
-
-    reachability_error = probe_participant_reachability(participant)
-    if reachability_error is not None:
-        raise ValueError(reachability_error)
-
     prompt = content
     if data:
         prompt += "\n\n--- attached inert text ---\n" + data
@@ -393,6 +382,20 @@ def _run_compat_ask_impl(
             previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
             os.environ["LU_ACPX_TRANSPORT"] = "active"
             try:
+                # Reachability preflight (#6805): probe only now that a real
+                # provider invocation is about to occur. Terminal-replay paths
+                # above never reach this probe, so a provider CLI missing from
+                # the host cannot fail the replay of an already-durable
+                # result. A refusal here is terminalized as a durable failure
+                # by the except below. The adapter's own compatibility probe
+                # still enforces the full contract immediately before spawn.
+                from scripts.agent_runtime.adapters.acpx import (
+                    probe_participant_reachability,
+                )
+
+                reachability_error = probe_participant_reachability(participant)
+                if reachability_error is not None:
+                    raise ValueError(reachability_error)
                 from ._acp_execution import acp_execution_cwd
 
                 with acp_execution_cwd(REPO_ROOT, task_id=task_id) as execution_cwd:

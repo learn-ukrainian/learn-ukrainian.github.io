@@ -1465,18 +1465,22 @@ _PARTICIPANT_COMPATIBILITY_CONTRACTS = {
 
 # Actionable remediation for a missing provider CLI (#6805): a bare "not found
 # on PATH" died mid-review with no install pointer and no reroute. Each entry
-# names the provisioning step, the runbook that owns it, and the documented
-# fallback substitution so the caller can degrade instead of dying.
+# names the provisioning step or standing reroute, the runbook that owns it,
+# and the documented fallback substitution so the caller can degrade instead
+# of dying.
 _MISSING_BINARY_REMEDIATION: dict[str, str] = {
+    # Hermes is permanently removed from this host (operator order
+    # 2026-08-16) — there is no reinstall path. The DeepSeek seat's standing
+    # route is first-party via opencode.
     "hermes": (
-        "Remediation: Hermes is a host-level, operator-owned install (never "
-        "project-provisioned) — reinstall per docs/runbooks/agent-seat-onboarding.md "
-        "'Reviewer-seat transport recovery', then verify `hermes --version` prints "
-        "'Hermes Agent v<semver>'. Documented fallback while the seat is down "
-        "(agents_extensions/shared/rules/model-assignment.md): one-shot DeepSeek "
-        "review runs first-party via `opencode run --model "
-        "deepseek-direct/deepseek-v4-flash --variant high`; tool-heavy work goes to "
-        "`delegate.py dispatch --agent deepseek`."
+        "Remediation: Hermes was permanently removed from this host "
+        "(operator order 2026-08-16) — do not reinstall. The DeepSeek seat "
+        "routes first-party via opencode as the standing path: one-shot "
+        "review/research runs `opencode run --model "
+        "deepseek-direct/deepseek-v4-flash --variant high`; tool-heavy work "
+        "goes to `delegate.py dispatch --agent deepseek`. See "
+        "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
+        "recovery'."
     ),
     "opencode": (
         "Remediation: reinstall the opencode CLI on this host and verify "
@@ -1517,11 +1521,12 @@ def _missing_binary_message(executable: str, *, adapter_label: str) -> str:
 def probe_participant_reachability(participant: str) -> str | None:
     """Return an actionable error when a participant's provider CLI is absent.
 
-    Cheap admission preflight (PATH lookup only — never spawns a subprocess)
-    so a dead seat fails before an authority job is enqueued instead of
-    mid-review. The adapter's compatibility probe remains the enforcement
-    point immediately before spawn; this only surfaces the failure early with
-    the remediation and documented fallback attached.
+    Cheap preflight (PATH lookup only — never spawns a subprocess) run only
+    when a real provider invocation is about to occur: terminal-replay paths
+    in the ask shim never reach it, so a missing provider CLI cannot fail the
+    replay of an already-durable result. The adapter's compatibility probe
+    remains the enforcement point immediately before spawn; this surfaces the
+    failure earlier with the remediation and documented fallback attached.
     """
     executable = _PARTICIPANT_PROVIDER_BINARIES.get(participant)
     if executable is None or shutil.which(executable):

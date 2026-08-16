@@ -691,50 +691,47 @@ memorized mode, refuses to treat discuss as CF, and leaves a clean worktree.
 
 ## Reviewer-seat transport recovery
 
-Dead reviewer seats must fail at admission with an actionable error — never
-mid-review with a bare "not found on PATH" (#6805). The `ask-*` compatibility
-shim runs a PATH-only preflight
+Dead reviewer seats must fail with an actionable error — never mid-review
+with a bare "not found on PATH" (#6805). The `ask-*` compatibility shim runs
+a PATH-only preflight
 (`scripts/agent_runtime/adapters/acpx.py::probe_participant_reachability`)
-before an authority job is enqueued; the adapter re-checks the full
-compatibility contract immediately before spawn. Both paths emit the same
-remediation text.
+only when a real provider invocation is about to occur — terminal-replay
+paths never reach it, so a missing provider CLI cannot fail the replay of an
+already-durable result. The adapter re-checks the full compatibility contract
+immediately before spawn. Both paths emit the same remediation text.
 
 ### Symptom → meaning
 
 | Error excerpt | Meaning |
 | --- | --- |
-| `hermes binary not found on PATH` | Host-level Hermes install is gone (e.g. clobbered PATH or uninstalled) — the DeepSeek ACP seat is down |
+| `hermes binary not found on PATH` | Hermes was permanently removed from this host (operator order 2026-08-16) — the DeepSeek ACP seat refuses; route via opencode (below) |
 | `opencode binary not found on PATH` | The GLM, Gemma, and Pool ACP seats are down |
 | `agy binary not found on PATH` | The AGY ACP seat is down |
 | `legacy ask target '<x>' has no enabled ACP route` | The seat is not wired under authority mode; do not assume a fallback — check this runbook and #6805 |
 
-### Hermes provisioning (host-level, operator-owned)
+### Hermes permanently removed — DeepSeek routes via opencode
 
-Hermes is a full agent platform with operator-owned credentials under
-`~/.hermes/` — it is **never** provisioned by project tooling or from a
-dispatch worktree. The machine-local install recipe is deliberately not
-tracked (operator OPSEC policy 2026-07-05): see the gitignored
-`docs/references/private/hermes-usage.md` on the operator's machine, or
-re-derive it from the operator's private infra notes if that copy is absent.
-Do not reconstruct machine specifics in any tracked file.
+Hermes was permanently removed from this host (operator order 2026-08-16) —
+it is **not** awaiting reinstall, and no provisioning recipe applies anymore.
+The DeepSeek seat's **standing route** is first-party via opencode:
 
-After reinstalling, verify the compatibility contract surface:
+- One-shot review/research runs
+  `opencode run --model deepseek-direct/deepseek-v4-flash --variant high`
+  (native Entire capture).
+- Tool-heavy work goes to `delegate.py dispatch --agent deepseek` from a
+  dispatch worktree.
 
-```bash
-hermes --version   # must print 'Hermes Agent v<semver>'
-hermes --help      # must list: --ignore-rules, --oneshot, --model, --provider
-```
+Any route that still names a `hermes` binary keeps the admission-time
+refusal; its message points at the opencode route above, not at a reinstall.
 
 ### Documented fallbacks while a seat is down
 
 Per `agents_extensions/shared/rules/model-assignment.md` (the error text
 quotes the same substitutions):
 
-- **ask-hermes (DeepSeek seat) down:** one-shot review/research runs
-  first-party via
-  `opencode run --model deepseek-direct/deepseek-v4-flash --variant high`
-  (native Entire capture); tool-heavy work goes to
-  `delegate.py dispatch --agent deepseek` from a dispatch worktree.
+- **ask-hermes (DeepSeek seat):** Hermes is permanently removed, so the
+  opencode first-party route above is the standing path — not a temporary
+  fallback. Record the substitution in the artifact all the same.
 - **ask-glm / ask-gemma / ask-pool down (opencode missing):** reinstall
   opencode first — three seats share the binary. There is no second host for
   the opencode ACP transport.
