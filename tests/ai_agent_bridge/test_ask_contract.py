@@ -705,3 +705,112 @@ def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> 
     # ABSENT in full driver prompt
     full_driver_prompt = _build_full_execution_prompt(dummy_msg, delimiters=None)
     assert NATIVE_ASK_TOOL_CONTRACT not in full_driver_prompt
+
+
+# --- #6877: per-seat ask timeout profiles -------------------------------
+
+
+def test_ask_hard_timeout_profile_table_is_exact() -> None:
+    """Mutation-check (#M-16): every compat seat resolves its exact profile.
+
+    Kimi is the only max-effort-only seat on the compat routes (K3; long
+    deliberation before first output is designed behavior), so it gets 1800s.
+    Every other seat — claude/grok/agy/glm/deepseek are pinned at "high", not
+    max-only — keeps the generic 300s default. Exact equality here means a
+    silent profile-table edit fails this test.
+    """
+    assert _acp_compat.ASK_HARD_TIMEOUT_DEFAULT_S == 300
+    assert _acp_compat.ASK_HARD_TIMEOUT_PROFILES == {"kimi": 1800}
+    for target in _acp_compat._TARGETS:
+        expected = 1800 if target == "kimi" else 300
+        assert _acp_compat.ask_hard_timeout(target) == expected, target
+    assert _acp_compat.ask_hard_timeout("no-such-seat") == 300
+
+
+def test_compat_ask_resolves_seat_timeout_profile(monkeypatch: pytest.MonkeyPatch) -> None:
+    """hard_timeout=None resolves the seat profile before the provider call."""
+    authority = _RecordingAuthority()
+    invoke = _stub_live_invocation(monkeypatch, authority, _make_ok_result("OK"))
+
+    _acp_compat._run_compat_ask_impl("kimi", "review this diff", task_id="kimi-profile")
+    assert invoke.call_args.kwargs["hard_timeout"] == 1800
+
+    _acp_compat._run_compat_ask_impl("glm", "ping", task_id="glm-profile")
+    assert invoke.call_args.kwargs["hard_timeout"] == 300
+
+
+def test_compat_ask_explicit_timeout_beats_profile(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An explicit hard_timeout (--no-timeout's 86400) bypasses the profile."""
+    authority = _RecordingAuthority()
+    invoke = _stub_live_invocation(monkeypatch, authority, _make_ok_result("OK"))
+
+    _acp_compat._run_compat_ask_impl(
+        "kimi", "review this diff", task_id="kimi-no-timeout", hard_timeout=86400
+    )
+    assert invoke.call_args.kwargs["hard_timeout"] == 86400
+
+
+@pytest.mark.parametrize(
+    ("command", "handler_name", "expected"),
+    [
+        ("ask-kimi", "_handle_ask_kimi", None),  # None → compat resolves 1800s
+        ("ask-claude", "_handle_ask_claude", None),  # None → compat resolves 300s
+    ],
+)
+def test_cli_defers_timeout_to_seat_profile(
+    command: str, handler_name: str, expected: int | None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(
+        _acp_compat,
+        "run_compat_ask",
+        lambda *args, **kwargs: captured.update(kwargs) or SimpleNamespace(ok=True),
+    )
+    args = _cli._build_parser().parse_args(
+        [command, "question", "--task-id", "profile-forward", "--from", "codex"]
+    )
+
+    getattr(_cli, handler_name)(args)
+
+    assert captured["hard_timeout"] is expected
+
+
+def test_cli_no_timeout_still_bypasses_profile(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(
+        _acp_compat,
+        "run_compat_ask",
+        lambda *args, **kwargs: captured.update(kwargs) or SimpleNamespace(ok=True),
+    )
+    args = _cli._build_parser().parse_args(
+        ["ask-kimi", "question", "--task-id", "no-timeout", "--from", "codex", "--no-timeout"]
+    )
+
+    _cli._handle_ask_kimi(args)
+
+    assert captured["hard_timeout"] == 86400
+
+
+def test_timeout_error_names_seat_profile_and_no_timeout_escape(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#6877: the timeout exit text names the seat's profile and the escape."""
+    from agent_runtime.errors import AgentTimeoutError
+
+    def raise_timeout(*args: object, **kwargs: object) -> object:
+        raise AgentTimeoutError("acpx-kimi-shadow", 1800)
+
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", raise_timeout)
+    args = _cli._build_parser().parse_args(
+        ["ask-kimi", "question", "--task-id", "slow-review", "--from", "codex"]
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        _cli._handle_ask_kimi(args)
+
+    message = str(exc_info.value)
+    assert "ask-kimi" in message
+    assert "hard_timeout=1800s" in message
+    assert "defaults to 1800s" in message
+    assert "generic default 300s" in message
+    assert "--no-timeout" in message

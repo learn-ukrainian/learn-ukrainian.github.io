@@ -44,6 +44,26 @@ def require_compat_target(command_target: str) -> str:
         ) from exc
 
 
+# Per-seat default hard timeouts for compat asks (#6877). The generic 300s
+# ceiling is mis-sized for Kimi: K3 is a max-effort-only model whose long
+# deliberation before first output is designed behavior, and the fleet routes
+# hard reviews to this seat — a live CF review was killed at exactly 300.0s
+# and completed in ~10+ min only when retried with --no-timeout. Kimi gets a
+# 1800s profile aligned with that review workload; every other seat keeps the
+# generic default (none of the remaining compat seats is max-effort-only —
+# claude/grok/agy/glm/deepseek are pinned at "high"). ``--no-timeout``
+# (86400s) is unchanged and bypasses every profile.
+ASK_HARD_TIMEOUT_DEFAULT_S = 300
+ASK_HARD_TIMEOUT_PROFILES: dict[str, int] = {
+    "kimi": 1800,
+}
+
+
+def ask_hard_timeout(command_target: str) -> int:
+    """Default hard timeout in seconds for one compat ask to this seat (#6877)."""
+    return ASK_HARD_TIMEOUT_PROFILES.get(command_target, ASK_HARD_TIMEOUT_DEFAULT_S)
+
+
 def _result_receipt(
     result: object,
     *,
@@ -327,7 +347,7 @@ def run_compat_ask(
     review: bool = False,
     output_path: str | None = None,
     stdout_only: bool = False,
-    hard_timeout: int = 300,
+    hard_timeout: int | None = None,
 ) -> object:
     """Execute one normal ACP ask with fail-open body-free usage telemetry."""
     participant = require_compat_target(command_target)
@@ -376,7 +396,7 @@ def _run_compat_ask_impl(
     review: bool = False,
     output_path: str | None = None,
     stdout_only: bool = False,
-    hard_timeout: int = 300,
+    hard_timeout: int | None = None,
 ) -> object:
     """Execute the authority/ACP path after telemetry admission.
 
@@ -384,10 +404,15 @@ def _run_compat_ask_impl(
     cross-family round with the verdict posted on the PR by the requester
     (operator order 2026-08-06). The sealed ``review-pr`` path is opt-in for
     high-risk code only.
+
+    ``hard_timeout=None`` resolves the seat's profile default (#6877); an
+    explicit value always wins.
     """
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
+    if hard_timeout is None:
+        hard_timeout = ask_hard_timeout(command_target)
 
     prompt = content
     if data:
