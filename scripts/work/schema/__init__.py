@@ -142,14 +142,14 @@ def parse_saved_view_params(raw: dict[str, str | list[str] | None]) -> dict[str,
             # Public P1: exactly one closed public repository. Arbitrary
             # owner/name strings (and env overrides) must never create cache
             # keys or repoint collectors. Private P2 stays browser-local.
-            from scripts.work.sources_public import public_repository_id
+            # Same admission gate as collectors / normalize — no sibling bypass.
+            from scripts.work.sources_public import admit_public_repository_id
 
-            allowed_repo = public_repository_id()
             for item in cleaned:
-                if "/" not in item or item.startswith("/") or ".." in item:
-                    raise SchemaValidationError(f"invalid repository_id: {item}")
-                if item != allowed_repo:
-                    raise SchemaValidationError(f"invalid repository_id: {item}")
+                try:
+                    admit_public_repository_id(item)
+                except ValueError as exc:
+                    raise SchemaValidationError(f"invalid repository_id: {item}") from exc
             filters["repository_id"] = canonicalize_multivalue(cleaned)
         elif key == "source_id":
             bad = [v for v in cleaned if v not in ALLOWED_SOURCES]

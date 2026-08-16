@@ -97,12 +97,18 @@ def _run_gh(args: list[str], timeout_s: float = SECTION_TIMEOUT_S) -> tuple[int,
 
 
 def fetch_open_issues(
-    repository_id: str,
+    repository_id: str | None = None,
     *,
     limit: int = GH_ENUM_LIMIT,
     runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
 ) -> SectionResult:
-    """One open-issue list enumeration (no per-item detail calls)."""
+    """One open-issue list enumeration (no per-item detail calls).
+
+    *repository_id* is admitted against the closed public identity before any
+    runner or GitHub invocation. Foreign, cased, suffixed, or whitespace-padded
+    ids fail closed and never reach ``gh``.
+    """
+    repo = admit_public_repository_id(repository_id)
     run = runner or _run_gh
     code, stdout, stderr = run(
         [
@@ -110,7 +116,7 @@ def fetch_open_issues(
             "issue",
             "list",
             "--repo",
-            repository_id,
+            repo,
             "--state",
             "open",
             "--limit",
@@ -145,12 +151,18 @@ def fetch_open_issues(
 
 
 def fetch_open_prs(
-    repository_id: str,
+    repository_id: str | None = None,
     *,
     limit: int = GH_ENUM_LIMIT,
     runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
 ) -> SectionResult:
-    """One open-PR list enumeration with rollup fields only (no detail fan-out)."""
+    """One open-PR list enumeration with rollup fields only (no detail fan-out).
+
+    *repository_id* is admitted against the closed public identity before any
+    runner or GitHub invocation. Foreign, cased, suffixed, or whitespace-padded
+    ids fail closed and never reach ``gh``.
+    """
+    repo = admit_public_repository_id(repository_id)
     run = runner or _run_gh
     code, stdout, stderr = run(
         [
@@ -158,7 +170,7 @@ def fetch_open_prs(
             "pr",
             "list",
             "--repo",
-            repository_id,
+            repo,
             "--state",
             "open",
             "--limit",

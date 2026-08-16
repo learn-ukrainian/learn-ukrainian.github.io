@@ -185,6 +185,201 @@ def test_public_repository_identity_ignores_env_override(monkeypatch):
     assert foreign not in caps.text
 
 
+def test_collector_entry_points_fail_closed_before_runner():
+    """Direct collector invocation must admit repo identity before any runner call.
+
+    Foreign / cased / suffixed / whitespace-padded repository ids must raise and
+    must not touch issues, PRs, reviews, normalization, cache keys, filters, or
+    emitted projection payloads.
+    """
+    from scripts.api.work_router import projection_cache_key
+    from scripts.work.normalize import build_projection, build_public_projection
+    from scripts.work.sources_public import (
+        admit_public_repository_id,
+        collect_public_sections,
+        fetch_fleet_reviews,
+        fetch_open_issues,
+        fetch_open_prs,
+        public_repository_id,
+    )
+
+    foreign_exact = "evil-org/private-infra-must-not-project"
+    # Forms that must fail closed at admit/collector boundaries (exact match only).
+    adversarial_ids = [
+        foreign_exact,
+        "LEARN-UKRAINIAN/learn-ukrainian.github.io",  # casing
+        "learn-ukrainian/learn-ukrainian.github.io-evil",  # suffix
+        "learn-ukrainian/learn-ukrainian.github.io ",  # trailing whitespace
+        " learn-ukrainian/learn-ukrainian.github.io",  # leading whitespace
+        "other-owner/learn-ukrainian.github.io",  # same-name different owner
+        "learn-ukrainian/learn-ukrainian.github.io/extra",  # path suffix
+        "..",
+        "not-a-repo",
+        " ",
+        "\t",
+    ]
+    # Saved-view parser strips then allowlists; whitespace-only becomes a no-op
+    # (not a foreign filter). Non-canonical non-empty strings still reject.
+    saved_view_rejected = [
+        foreign_exact,
+        "LEARN-UKRAINIAN/learn-ukrainian.github.io",
+        "learn-ukrainian/learn-ukrainian.github.io-evil",
+        "other-owner/learn-ukrainian.github.io",
+        "learn-ukrainian/learn-ukrainian.github.io/extra",
+        "..",
+        "not-a-repo",
+    ]
+
+    runner_calls: list[list[str]] = []
+
+    def tracking_runner(args: list[str], timeout_s: float) -> tuple[int, str, str]:
+        runner_calls.append(list(args))
+        return 0, "[]", ""
+
+    def tracking_fleet(limit: int, offset: int) -> dict:
+        runner_calls.append(["fleet", str(limit), str(offset)])
+        return {"total": 0, "reviews": []}
+
+    # Canonical / omitted ids still reach the runner with the closed identity.
+    assert admit_public_repository_id() == REPO
+    assert admit_public_repository_id(None) == REPO
+    assert admit_public_repository_id("") == REPO
+    assert admit_public_repository_id(REPO) == REPO
+    assert public_repository_id() == REPO
+
+    issues_ok = fetch_open_issues(REPO, runner=tracking_runner)
+    prs_ok = fetch_open_prs(None, runner=tracking_runner)
+    assert issues_ok.status == "ok"
+    assert prs_ok.status == "ok"
+    assert len(runner_calls) == 2
+    for args in runner_calls:
+        assert "--repo" in args
+        assert args[args.index("--repo") + 1] == REPO
+    runner_calls.clear()
+
+    # Every non-canonical form fails closed with zero runner side effects.
+    for bad in adversarial_ids:
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            admit_public_repository_id(bad)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            fetch_open_issues(bad, runner=tracking_runner)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            fetch_open_prs(bad, runner=tracking_runner)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            fetch_fleet_reviews(loader=tracking_fleet, repository_id=bad)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            collect_public_sections(repository_id=bad, gh_runner=tracking_runner)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            build_public_projection(repository_id=bad, gh_runner=tracking_runner)
+
+    for bad in saved_view_rejected:
+        with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+            parse_saved_view_params({"repository_id": bad})
+    # Whitespace-only / empty saved-view values cannot install a foreign filter.
+    assert parse_saved_view_params({"repository_id": " "}) == {}
+    assert parse_saved_view_params({"repository_id": "\t"}) == {}
+    assert parse_saved_view_params({"repository_id": ""}) == {}
+
+    assert runner_calls == [], "foreign repository_id must never invoke runners"
+
+    # Normalize / filters / cache keys / projection emit stay pinned when sections
+    # already exist; foreign repository_id cannot re-label or leak into output.
+    clean_sections = {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 9,
+                    "title": "public issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "blocked by #1",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-01T00:00:00Z",
+                    "url": f"https://github.com/{REPO}/issues/9",
+                    "state": "OPEN",
+                }
+            ],
+            count=1,
+        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "open_total": 1,
+                "open_issue_numbers": [9],
+            },
+            count=1,
+        ),
+        "delegate_active": SectionResult(
+            "delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "delegate_tasks": SectionResult(
+            "delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0
+        ),
+        "fleet_reviews": SectionResult(
+            "fleet_reviews",
+            "ok",
+            payload={
+                "total": 1,
+                "reviews": [
+                    {
+                        "review_id": "rev-foreign-try",
+                        "repository": foreign_exact,
+                        "pr_number": 9,
+                        "state": "running",
+                        "sealed_verdict_available": True,
+                    }
+                ],
+            },
+            count=1,
+        ),
+    }
+
+    for bad in adversarial_ids:
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            build_projection(clean_sections, repository_id=bad)
+
+    projection = build_projection(clean_sections, repository_id=REPO)
+    validate_projection(projection)
+    assert {item["repository_id"] for item in projection["items"]} == {REPO}
+    blob = json.dumps(projection)
+    cache_key = projection_cache_key(
+        parse_saved_view_params({"repository_id": REPO})
+    )
+    for bad in adversarial_ids:
+        if not bad.strip():
+            # Whitespace-only forms are not embeddable repository ids; skip
+            # substring checks that would false-positive on normal JSON.
+            continue
+        assert bad not in blob
+        assert bad not in cache_key
+    assert foreign_exact not in blob
+    assert foreign_exact not in cache_key
+
+    ok_filters = parse_saved_view_params({"repository_id": REPO})
+    assert ok_filters["repository_id"] == [REPO]
+    assert projection_cache_key(ok_filters) == projection_cache_key(
+        {"repository_id": [REPO]}
+    )
+    # Foreign filter values never become cache-key material.
+    for bad in saved_view_rejected:
+        with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+            projection_cache_key(parse_saved_view_params({"repository_id": bad}))
+    # Padded canonical forms: parser strips before admit, so exact public id
+    # remains the only cache-key identity.
+    padded = parse_saved_view_params(
+        {"repository_id": f"  {REPO}  "}
+    )
+    assert padded["repository_id"] == [REPO]
+    assert projection_cache_key(padded) == projection_cache_key(ok_filters)
+
+
 def test_saved_view_multivalue_filters_are_canonical():
     """Duplicate / reordered multivalue query forms share one canonical filter dict."""
     from scripts.work.sources_public import public_repository_id
