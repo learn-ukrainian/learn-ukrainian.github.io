@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "38e966fa89a7",
+  "session_id": "fleet-2856a501527d4fcea717d67d4902aa4a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T17:44:52.95281Z",
+  "branch": "grok/atlas-job-protocol",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "4a545d3b33e1",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T17:44:52.946709Z",
+    "agent_lines": 26,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 26,
+    "total_lines_changed": 35,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
