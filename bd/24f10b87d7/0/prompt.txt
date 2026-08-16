@@ -1,0 +1,61 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/work-6850-actionable-default
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Implement issue #6850 — Work board: actionable-only default view for QA
+
+You are an implementation agent in a dispatch worktree. Read GitHub issue #6850 in full
+before writing code — the request and constraints are specified there by the QA reporter.
+
+```
+ROUTING_CARD_V1
+tier: practical
+model_x_harness: gemini-3.7-flash-high × agy
+why_this_tier: small, fully-specified dashboard UX change; no design ambiguity
+advisor_packet: n/a (tier=practical)
+owned_paths: dashboards/work.html, tests/**
+acceptance_cmd: see "Acceptance" below
+alternatives_considered: kimi-K3 (cost overkill), codex (lane capped until ~2026-08-20)
+parallel_free_seats: parallel agy task carries #6849 (backend, disjoint owned paths)
+```
+
+## Evidence discipline (#M-4)
+Every claim in your PR description and final report must be tool-backed: name the
+deterministic command and quote its raw output.
+
+## Scope (from #6850)
+- Default the board's Attention list (or add a first-class saved view that IS the
+  default) to actionable-only: `OFF_TRACK` + `AT_RISK`, plus any row whose safe next
+  action is not `INSPECT_UNKNOWN`.
+- Keep the current All view reachable behind a filter.
+- Preserve the existing public-safe URL rule: never put private source/repo into the URL.
+- The existing `?kind=` / `?health=` filters must keep working, including shareable URLs.
+
+Non-goals: no backend/projection changes (that is #6849, running in a parallel task —
+do not touch `scripts/work/` or `scripts/api/`); no private-adapter changes.
+
+## Steps
+1. Work only in your dispatch worktree (already created for you).
+2. Read issue #6850. Probe the current board behavior first
+   (`curl -s http://127.0.0.1:8765/api/work/v1/projection` for the data shape the page
+   consumes) and quote what the default view shows today.
+3. Implement. If the dashboard has any JS-testable logic covered by the frontend test
+   setup, add coverage for the default-view filter; otherwise document a manual
+   verification transcript (URL → what renders) in the PR body.
+4. Run the frontend checks that apply to the touched surface; quote results.
+5. Conventional commit (e.g. `feat(work): ...`), reference `#6850`.
+6. Push the branch; open a PR titled for #6850 with the evidence in the body.
+7. Do NOT enable auto-merge and do NOT merge — the infra driver owns review + merge.
+
+## Acceptance
+- Opening the board with no query params shows only actionable rows per Scope; the All
+  view is one visible interaction away; existing filter URLs unchanged in behavior.
+- No private source/repo strings appear in any generated URL.
