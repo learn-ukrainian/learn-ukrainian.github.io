@@ -437,10 +437,7 @@ button, input, select { font: inherit; }
     const filters = controlsToFilters();
     writeFiltersToUrl(filters);
     showError('');
-    const fresh = opts && opts.fresh ? '&fresh=true' : '';
     const qs = queryString(filters);
-    const url = `/api/work/v1/projection${qs}${qs ? fresh.replace('&', '&') : (fresh ? '?' + fresh.slice(1) : '')}`;
-    // Fix fresh flag composition
     const finalUrl = `/api/work/v1/projection${qs}${opts && opts.fresh ? (qs ? '&' : '?') + 'fresh=true' : ''}`;
     try {
       const res = await fetch(finalUrl, { headers: { Accept: 'application/json' } });

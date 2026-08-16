@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from scripts.work.attention import derive_health, derive_safe_next_action
-from scripts.work.normalize import build_projection
+from scripts.work.normalize import _match_dispatch, build_projection
 from scripts.work.relations import (
     detect_dependency_cycles,
     extract_body_relations,
@@ -87,6 +87,88 @@ def test_relations_and_cycle_detection():
     cycles = detect_dependency_cycles(items)
     assert cycles
     assert issue_work_id(REPO, 1) in cycles[0]
+
+
+def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
+    """Substring prefixes must not attach unrelated dispatch state.
+
+    Regression: unanchored ``#1`` matched ``#19``; ``pr-10`` matched ``pr-100``.
+    """
+    tasks = [
+        {"task_id": "codex-#19-fix", "status": "running", "agent": "codex"},
+        {"task_id": "codex-issue-19", "status": "running", "agent": "codex"},
+        {"task_id": "codex-issue_19", "status": "running", "agent": "codex"},
+        {"task_id": "codex/19/work", "status": "running", "agent": "codex"},
+        {"task_id": "worker-19", "status": "running", "agent": "codex"},
+        {"task_id": "codex-#1-fix", "status": "running", "agent": "claude"},
+        {"task_id": "codex-issue-1", "status": "running", "agent": "claude"},
+        {"task_id": "codex-issue_1", "status": "running", "agent": "claude"},
+        {"task_id": "codex/1/work", "status": "running", "agent": "claude"},
+        {"task_id": "worker-1", "status": "running", "agent": "claude"},
+        {"task_id": "agy-pr-100", "status": "running", "agent": "agy"},
+        {"task_id": "agy-pr_100", "status": "running", "agent": "agy"},
+        {"task_id": "agy-pr/100", "status": "running", "agent": "agy"},
+        {"task_id": "review-pr100", "status": "running", "agent": "agy"},
+        {"task_id": "agy-pr-10", "status": "running", "agent": "kimi"},
+        {"task_id": "agy-pr_10", "status": "running", "agent": "kimi"},
+        {"task_id": "agy-pr/10", "status": "running", "agent": "kimi"},
+        {"task_id": "review-pr10", "status": "running", "agent": "kimi"},
+        # Unrelated numeric text must not become authority for a match.
+        {"task_id": "retrycount1of19", "status": "running", "agent": "cursor"},
+        {"task_id": "shard10of100", "status": "running", "agent": "cursor"},
+        {"task_id": "build100timeout", "status": "running", "agent": "cursor"},
+        {"task_id": "page1", "status": "running", "agent": "cursor"},
+        {"task_id": "v10-release", "status": "running", "agent": "cursor"},
+    ]
+
+    issue_1 = _match_dispatch(tasks, issue_number=1, pr_number=None)
+    assert set(issue_1["task_ids"]) == {
+        "codex-#1-fix",
+        "codex-issue-1",
+        "codex-issue_1",
+        "codex/1/work",
+        "worker-1",
+    }
+    assert "codex-#19-fix" not in issue_1["task_ids"]
+    assert "codex-issue-19" not in issue_1["task_ids"]
+    assert "retrycount1of19" not in issue_1["task_ids"]
+    assert "page1" not in issue_1["task_ids"]
+
+    issue_19 = _match_dispatch(tasks, issue_number=19, pr_number=None)
+    assert set(issue_19["task_ids"]) == {
+        "codex-#19-fix",
+        "codex-issue-19",
+        "codex-issue_19",
+        "codex/19/work",
+        "worker-19",
+    }
+    assert "codex-#1-fix" not in issue_19["task_ids"]
+    assert "codex-issue-1" not in issue_19["task_ids"]
+    assert "retrycount1of19" not in issue_19["task_ids"]
+
+    pr_10 = _match_dispatch(tasks, issue_number=None, pr_number=10)
+    assert set(pr_10["task_ids"]) == {
+        "agy-pr-10",
+        "agy-pr_10",
+        "agy-pr/10",
+        "review-pr10",
+    }
+    assert "agy-pr-100" not in pr_10["task_ids"]
+    assert "review-pr100" not in pr_10["task_ids"]
+    assert "shard10of100" not in pr_10["task_ids"]
+    assert "v10-release" not in pr_10["task_ids"]
+
+    pr_100 = _match_dispatch(tasks, issue_number=None, pr_number=100)
+    assert set(pr_100["task_ids"]) == {
+        "agy-pr-100",
+        "agy-pr_100",
+        "agy-pr/100",
+        "review-pr100",
+    }
+    assert "agy-pr-10" not in pr_100["task_ids"]
+    assert "review-pr10" not in pr_100["task_ids"]
+    assert "build100timeout" not in pr_100["task_ids"]
+    assert "shard10of100" not in pr_100["task_ids"]
 
 
 def test_health_never_uses_activity_and_pr_rules():

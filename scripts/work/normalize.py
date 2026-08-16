@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 from typing import Any
 
@@ -95,26 +96,46 @@ def _stream_index(streams: dict[str, Any] | None) -> dict[str, Any]:
     }
 
 
+def _has_bounded_issue_id(hay: str, number: int) -> bool:
+    """True when hay contains an explicit issue id for *number* (not a longer id).
+
+    Supported forms match the prior contract: ``#N``, ``issue-N``, ``issue_N``,
+    path ``/N``, or a trailing ``-N``. A trailing non-digit (or end) after the
+    number prevents ``#1`` from matching ``#19`` and ``issue-10`` from matching
+    ``issue-100``.
+    """
+    n = str(int(number))
+    return bool(
+        re.search(rf"#{n}(?!\d)", hay)
+        or re.search(rf"issue[-_]{n}(?!\d)", hay)
+        or re.search(rf"/{n}(?!\d)", hay)
+        or hay.endswith(f"-{n}")
+    )
+
+
+def _has_bounded_pr_id(hay: str, number: int) -> bool:
+    """True when hay contains an explicit PR id for *number* (not a longer id).
+
+    Supported forms match the prior contract: ``pr-N``, ``pr_N``, ``pr/N``, or
+    trailing ``-prN``. A trailing non-digit (or end) after the number prevents
+    ``pr-10`` from matching ``pr-100``.
+    """
+    n = str(int(number))
+    return bool(
+        re.search(rf"pr[-_/]{n}(?!\d)", hay)
+        or hay.endswith(f"-pr{n}")
+    )
+
+
 def _match_dispatch(tasks: list[dict[str, Any]], *, issue_number: int | None, pr_number: int | None) -> dict[str, Any]:
     matched: list[dict[str, Any]] = []
     for task in tasks:
         task_id = str(task.get("task_id") or "")
         hay = task_id.lower()
-        if issue_number is not None and (
-            f"#{issue_number}" in hay
-            or f"issue-{issue_number}" in hay
-            or f"issue_{issue_number}" in hay
-            or hay.endswith(f"-{issue_number}")
-            or f"/{issue_number}" in hay
-        ):
+        if issue_number is not None and _has_bounded_issue_id(hay, issue_number):
             matched.append(task)
             continue
-        if pr_number is not None and (
-            f"pr-{pr_number}" in hay
-            or f"pr_{pr_number}" in hay
-            or f"pr/{pr_number}" in hay
-            or hay.endswith(f"-pr{pr_number}")
-        ):
+        if pr_number is not None and _has_bounded_pr_id(hay, pr_number):
             matched.append(task)
     return {
         "task_ids": [str(t.get("task_id")) for t in matched if t.get("task_id")],

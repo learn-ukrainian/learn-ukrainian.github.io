@@ -71,3 +71,18 @@ def test_saved_view_client_writes_only_allowlisted_keys():
     assert "kind" in keys
     assert "q" not in keys
     assert "endpoint" not in keys
+
+
+def test_work_page_has_no_dead_fresh_url_self_replacement():
+    """CodeQL: dead url construction used no-op replace('&','&') before finalUrl."""
+    html = WORK.read_text(encoding="utf-8")
+    assert "fresh.replace(" not in html
+    assert ".replace('&', '&')" not in html
+    assert '.replace("&", "&")' not in html
+    # Single live composition for the projection request (public contract).
+    assert "fetch(finalUrl" in html
+    assert re.search(
+        r"const finalUrl = `/api/work/v1/projection\$\{qs\}\$\{opts && opts\.fresh",
+        html,
+    )
+    assert html.count("/api/work/v1/projection") == 1
