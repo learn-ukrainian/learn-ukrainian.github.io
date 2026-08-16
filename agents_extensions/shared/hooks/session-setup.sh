@@ -285,7 +285,10 @@ if [ "$ROOT_GUARD_RC" -eq 0 ] && [ -n "$ROOT_GUARD_JSON" ]; then
   fi
   unset ROOT_GUARD_COUNT ROOT_GUARD_NAMES
 else
-  ISSUES+=("ROOT HYGIENE CHECK COULD NOT RUN (rc=$ROOT_GUARD_RC): unexpected repo-root entries would go undetected this session (#6863).")
+  # Alert-only means output ONLY on findings: a skipped canary is not a
+  # finding, so it goes to stderr and must not eat the concise-session
+  # context budget (ordinary Codex starts are contracted under 500 bytes).
+  echo "WARNING: root-hygiene canary could not run (rc=$ROOT_GUARD_RC): unexpected repo-root entries would go undetected this session (#6863)." >&2
 fi
 unset ROOT_GUARD_RC ROOT_GUARD_JSON
 

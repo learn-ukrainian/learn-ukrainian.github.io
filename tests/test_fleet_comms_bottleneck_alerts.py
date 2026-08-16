@@ -17,8 +17,13 @@ NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
 
 
 @pytest.fixture(autouse=True)
-def isolate_broker(tmp_path: Path):
+def isolate_broker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     broker_db = tmp_path / "messages.db"
+    # The scan's production caller (scripts/ai_agent_bridge/_inbox.py) always
+    # passes an in-repo REPO_ROOT, so default_plane_root anchors to the primary
+    # checkout. These fixtures are plain non-git tmp dirs; since #6863 the
+    # default hard-fails there, so they use the explicit operator override.
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
     with patch("scripts.ai_agent_bridge._config.DB_PATH", broker_db), patch(
         "scripts.ai_agent_bridge._db.DB_PATH", broker_db
     ):
