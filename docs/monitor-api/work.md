@@ -19,8 +19,36 @@ Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/work/v1/projection` | Normalized attention list, work items, source envelopes, denominator, cache age |
+| `GET` | `/api/work/v1/next` | Stream-scoped actionable pick list for orchestrators (#6880) |
 | `GET` | `/api/work/v1/capabilities` | Schema digest, budgets, class-4 endpoint freeze, private-source seam |
 | `GET` | `/api/work/v1/health` | Cheap Work surface liveness |
+
+### `GET /api/work/v1/next` (next-queue, #6880)
+
+Machine contract for "what should this lane do next" — a driver never needs the
+586-row projection dump. Params: `stream=<stream key>` (required; keys from
+`scripts/config/issue_streams.yaml`, unknown keys 400 with `valid_streams`) and
+`limit` (default 7, max 25).
+
+- **Pick list is stream-scoped** (operator addendum on #6880): only actionable
+  rows whose `projections.stream.streams` membership includes the requested
+  stream. Items with no stream membership (orphans, pending-native, PRs, tasks)
+  are NEVER pick items — they appear only as `digest.unscoped_actionable_count`.
+- **Actionable** is the server-side SSOT `scripts/work/attention.py::is_actionable`
+  (OFF_TRACK/AT_RISK always; otherwise `safe_next_action.code` outside the
+  `INSPECT_UNKNOWN`/`OPEN_GITHUB`/`NONE` deny list). `dashboards/work.html`
+  mirrors it in JS under a parity contract test.
+- **Digest, never a queue**: `other_streams.actionable_counts_by_stream`
+  (counts only), `other_streams.top_blockers` (≤3 repo-wide OFF_TRACK
+  pointers), `unscoped_actionable_count`.
+- **Warm cache only**: serves strictly from the unfiltered projection cache
+  (single-flight, #6861). Cold → `503 {"error": "building", "retry_after_s"}`
+  and never triggers a build; expired-but-present entries are served with an
+  honest `cache_age_s` while the shared background refresh runs. Warm calls
+  measure ~1ms locally.
+- **Deterministic**: rank is the projection's `attention_rank` with a
+  `work_id` tie-break; two calls over an unchanged projection return identical
+  order.
 
 UI: [`/work.html`](../../dashboards/work.html) — Evidence rail attention list
 (Monitor paper language).
