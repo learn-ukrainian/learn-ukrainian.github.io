@@ -53,7 +53,18 @@ _MTIME_POLL_INTERVAL_S = 5.0
 # demonstrably doing work. Poll slowly; stdout/stderr/liveness file events remain
 # the primary cheap signals.
 _PROCESS_ACTIVITY_POLL_INTERVAL_S = 5.0
-_PROCESS_ACTIVITY_MIN_CPU_SECONDS = 0.05
+# Work-grade CPU bar for one poll window. The previous 0.05s value was below
+# idle-runtime noise: a completely idle `agy` CLI burns ~0.03s CPU per 5s and
+# spikes past 0.05s (measured 0.066s in a 30s sample of a wedged/idle process,
+# #6888). Every such blip refreshed ``last_activity``, so an agy session that
+# stalled with zero stdout/stderr for the full run still never tripped
+# ``stdout_silence_timeout``/``initial_response_timeout`` and burned the entire
+# 7200s hard-timeout — twice on 2026-08-16 (work-6862-historical-reviews,
+# infra-6869-fix2). 0.5s per 5s (~10% of one core) sits ~8x above the observed
+# idle-noise ceiling and far below genuine build/test/tool work, so quiet-but-
+# productive phases keep their protection while wedged idle trees now starve
+# the clock as intended.
+_PROCESS_ACTIVITY_MIN_CPU_SECONDS = 0.5
 
 # Maximum number of liveness paths to poll. Adapters returning more than
 # this many paths will only have the first _MAX_LIVENESS_PATHS polled.
