@@ -268,6 +268,30 @@ if [ -f "$LANE_PROBE_SCRIPT" ]; then
 fi
 unset LANE_PROBE_SCRIPT
 
+# Root-hygiene canary (#6863). A transport/quoting leak once materialized
+# garbage dirs at the primary checkout root — verbatim ACP event-stream JSON
+# lines and word-split tokens of them, including a literal `-rf` — and empty
+# dirs are invisible to git status, so the class sat undetected until one grew
+# a shadow comms DB and swallowed a message. Advisory only: the guard alerts
+# here and NEVER deletes (garbage root entries are forensic evidence).
+ROOT_GUARD_RC=0
+ROOT_GUARD_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
+  -m scripts.hygiene.root_entry_guard --repo-root "$CANONICAL_ROOT" --json 2>/dev/null) || ROOT_GUARD_RC=$?
+if [ "$ROOT_GUARD_RC" -eq 0 ] && [ -n "$ROOT_GUARD_JSON" ]; then
+  ROOT_GUARD_COUNT=$(printf '%s' "$ROOT_GUARD_JSON" | jq -r '.unexpected_count // 0' 2>/dev/null || echo 0)
+  if [ "${ROOT_GUARD_COUNT:-0}" -gt 0 ]; then
+    ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | jq -r '[.unexpected[].name] | join(", ")' 2>/dev/null || true)
+    ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_COUNT unexpected top-level entries in the primary checkout ($ROOT_GUARD_NAMES). Inspect and remove MANUALLY — the guard never auto-deletes (evidence preservation, #6863). Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard")
+  fi
+  unset ROOT_GUARD_COUNT ROOT_GUARD_NAMES
+else
+  # Alert-only means output ONLY on findings: a skipped canary is not a
+  # finding, so it goes to stderr and must not eat the concise-session
+  # context budget (ordinary Codex starts are contracted under 500 bytes).
+  echo "WARNING: root-hygiene canary could not run (rc=$ROOT_GUARD_RC): unexpected repo-root entries would go undetected this session (#6863)." >&2
+fi
+unset ROOT_GUARD_RC ROOT_GUARD_JSON
+
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
 MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
 MEMORY_FILE="$MEMORY_DIR/MEMORY.md"

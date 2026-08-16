@@ -72,6 +72,8 @@ from scripts.entire_context.resolvers import (
     rollover_projection_digest,
 )
 from scripts.entire_context.store import AdmitOutcome, AdmitResult, ContextLinkStore
+from scripts.fleet_comms.paths import ENV_ROOT as FLEET_COMMS_ROOT_ENV
+from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.orchestration import task_identity
 from scripts.orchestration.task_family import rollover, rollover_registry
 
@@ -417,7 +419,15 @@ def test_acp_root_reuses_canonical_fleet_resolution_and_override_order(
     isolated = tmp_path / "isolated"
     isolated.mkdir()
     monkeypatch.delenv(ENV_ACP_ROOT)
-    assert acp_root(isolated) == isolated / "batch_state" / "fleet-comms" / "v1"
+    # Non-git anchors HARD-FAIL since #6863 (a silent fallback once grew a
+    # shadow comms DB under a garbage cwd); every production acp_root caller
+    # (CLI, service) runs inside the repo, so only the explicit
+    # FLEET_COMMS_ROOT operator override rescues an isolated directory.
+    with pytest.raises(PlaneRootAnchorError):
+        acp_root(isolated)
+    fleet_override = tmp_path / "fleet-override"
+    monkeypatch.setenv(FLEET_COMMS_ROOT_ENV, str(fleet_override))
+    assert acp_root(isolated) == fleet_override
 
 
 def test_cli_automatically_uses_service_acp_root(
@@ -1694,6 +1704,10 @@ def test_rollover_bootstrap_then_search_explain_and_handoff(tmp_path: Path, caps
         ROLLOVER_LINEAGE,
         "--repo",
         str(tmp_path),
+        # Explicit plane: this fixture is an isolated non-git state dir, and
+        # the default ACP anchor hard-fails outside a git repo since #6863.
+        "--acp-root",
+        str(tmp_path / "acp-plane"),
         "--rollover-root",
         str(root),
         "--db",
@@ -1723,6 +1737,8 @@ def test_rollover_bootstrap_then_search_explain_and_handoff(tmp_path: Path, caps
         ROLLOVER_CANONICAL_ID,
         "--repo",
         str(tmp_path),
+        "--acp-root",
+        str(tmp_path / "acp-plane"),
         "--rollover-root",
         str(root),
         "--db",
@@ -1745,6 +1761,8 @@ def test_rollover_bootstrap_then_search_explain_and_handoff(tmp_path: Path, caps
         card["locator_id"],
         "--repo",
         str(tmp_path),
+        "--acp-root",
+        str(tmp_path / "acp-plane"),
         "--rollover-root",
         str(root),
         "--db",

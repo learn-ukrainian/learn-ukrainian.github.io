@@ -23,7 +23,11 @@ def _client() -> TestClient:
 
 def test_read_plane_status_defaults_to_configured_mode(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
-    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    # Every production caller (Monitor API routers, CLI) passes an in-repo
+    # PROJECT_ROOT; this fixture is a non-git tmp dir, and since #6863 the
+    # default plane root hard-fails there, so anchor via the explicit
+    # operator override. The default under test is the plane MODE.
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
     monkeypatch.delenv("FLEET_COMMS_PLANE_TELEMETRY", raising=False)
     status = read_plane_status(repo_root=tmp_path)
     # The final migration gate promotes durable authority as the default.
