@@ -1,0 +1,101 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/6812-preload-identity-repair-r2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Bridge identity preload repair — frozen implementation brief v1
+
+## Outcome
+
+Restore the public repository's required CI gate so the already-reviewed Work
+projection PR #6842 can merge. The user-visible outcome is that API preload and
+the full pytest shard load the bridge only as `scripts.ai_agent_bridge`; the
+duplicate bare `ai_agent_bridge` identity never enters `sys.modules`.
+
+## Exact evidence and denominator
+
+- PR #6842 run `31917860260`, shard 1: exactly one failure after 3,967 passes:
+  `tests/ai_agent_bridge/test_module_identity.py::test_bare_bridge_identity_not_loaded`.
+- Main run `31908853114` failed the same assertion before the Work PR rerun.
+- Minimal local reproduction at public head `c66fa8d8b22638d003bc2990cf80e149b3adb1a8`:
+  `tests/api/test_import_pinning.py::test_lifespan_preload` followed by
+  `test_bare_bridge_identity_not_loaded` gives 1 pass, 1 fail.
+- Root cause: `scripts/api/preload.py::OPTIONAL_MODULES` explicitly imports
+  `ai_agent_bridge`, `ai_agent_bridge._channels`, and `ai_agent_bridge._db`
+  before also importing the canonical `scripts.ai_agent_bridge` identity.
+- Denominator: every bridge entry in `OPTIONAL_MODULES`, the focused two-test
+  reproduction, the complete import-pinning module, bridge identity guards,
+  and repository CI.
+
+## Scope and owned paths
+
+Grok owns only:
+
+- `scripts/api/preload.py`
+- `tests/api/test_import_pinning.py`
+
+Do not edit the Work projection PR, bridge package implementation, workflow
+files, lint/test configuration, or any other path. You are not alone in the
+repository: preserve all unrelated edits and do not revert other work.
+
+## Required implementation
+
+1. Remove every bare `ai_agent_bridge` preload entry.
+2. Preserve the canonical `scripts.ai_agent_bridge` preload and canonicalize
+   the `_channels` and `_db` submodule entries.
+3. Add a regression assertion in `tests/api/test_import_pinning.py` that
+   rejects both `ai_agent_bridge` and every `ai_agent_bridge.*` entry in
+   `OPTIONAL_MODULES` while proving these three hard-coded canonical entries
+   are present: `scripts.ai_agent_bridge`,
+   `scripts.ai_agent_bridge._channels`, and
+   `scripts.ai_agent_bridge._db`. Do not derive the expected names from
+   `OPTIONAL_MODULES`; the test must be independent of the list it checks.
+4. Do not alias the two package names, delete the runtime guard, suppress the
+   test, or special-case CI.
+
+## Verification
+
+Run with the project interpreter:
+
+```bash
+.venv/bin/python -m pytest \
+  tests/api/test_import_pinning.py::test_lifespan_preload \
+  tests/ai_agent_bridge/test_module_identity.py::test_bare_bridge_identity_not_loaded -q
+.venv/bin/python -m pytest tests/api/test_import_pinning.py \
+  tests/ai_agent_bridge/test_module_identity.py -q
+.venv/bin/python -m ruff check scripts/api/preload.py tests/api/test_import_pinning.py
+git diff --check
+```
+
+The orchestrator will run independent checks and use required GitHub CI as the
+held-out evaluation.
+
+## Role map and completion terms
+
+- Accountable orchestrator: Codex/Sol root.
+- Implementer: Grok (xAI family), in a dispatch worktree.
+- Independent exact-head reviewer: Claude/Sonnet (Anthropic family).
+- Held-out evaluator: required GitHub Actions CI on the repair PR, then PR
+  #6842 after refreshing it onto the repaired main.
+
+Completion vocabulary:
+
+- `IMPLEMENTED`: focused tests and lint pass, branch pushed, ready PR open.
+- `REVIEWED`: independent cross-family exact-head review approves.
+- `MERGED`: required CI is green, repair PR is merged, and merged main is
+  verified.
+- This dependency repair is not the Work-control foundation completion.
+
+## Stop and residual policy
+
+Stop without expanding scope if the focused reproduction still fails after
+canonicalizing `OPTIONAL_MODULES`, if a different failure appears, or if any
+additional production path must change. Report the exact residual evidence;
+do not weaken gates or broaden the branch.

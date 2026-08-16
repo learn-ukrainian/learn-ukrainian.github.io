@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "77d50395ac0d",
+  "strategy": "manual-commit",
+  "branch": "grok/6812-preload-identity-repair-r2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/comms_router.py",
+    "scripts/api/preload.py",
+    "tests/api/test_import_pinning.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/77/d50395ac0d/0/metadata.json",
+      "transcript": "/77/d50395ac0d/0/full.jsonl",
+      "compact_transcript": "/77/d50395ac0d/0/transcript.jsonl",
+      "content_hash": "/77/d50395ac0d/0/content_hash.txt",
+      "prompt": "/77/d50395ac0d/0/prompt.txt"
+    }
+  ]
+}
