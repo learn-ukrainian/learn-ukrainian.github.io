@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
+from agent_runtime.errors import AgentTimeoutError
 
 from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import maybe_print_timeout_notice, print_asks, process_background_ask
@@ -1448,7 +1449,12 @@ def _handle_acp_compat(args, target: str) -> None:
     task_id = getattr(args, "task_id", None)
     if not task_id:
         raise SystemExit(f"ask-{target} requires --task-id")
-    from ._acp_compat import require_compat_target, run_compat_ask
+    from ._acp_compat import (
+        ASK_HARD_TIMEOUT_DEFAULT_S,
+        ask_hard_timeout,
+        require_compat_target,
+        run_compat_ask,
+    )
 
     try:
         require_compat_target(target)
@@ -1468,7 +1474,9 @@ def _handle_acp_compat(args, target: str) -> None:
             ),
             output_path=getattr(args, "output_path", None),
             stdout_only=bool(getattr(args, "stdout_only", False)),
-            hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else 300,
+            # None resolves the seat's per-seat timeout profile (#6877);
+            # --no-timeout bypasses every profile as before.
+            hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
         )
         if not bool(getattr(result, "ok", False)):
             raise SystemExit(
@@ -1476,6 +1484,13 @@ def _handle_acp_compat(args, target: str) -> None:
             )
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
+    except AgentTimeoutError as exc:
+        raise SystemExit(
+            f"ask-{target} exceeded hard_timeout={exc.hard_timeout}s "
+            f"(seat profile: ask-{target} defaults to {ask_hard_timeout(target)}s, "
+            f"generic default {ASK_HARD_TIMEOUT_DEFAULT_S}s). "
+            "Retry with --no-timeout to lift the wall-clock cap for this ask."
+        ) from exc
 
 
 def _handle_ask_claude(args):
