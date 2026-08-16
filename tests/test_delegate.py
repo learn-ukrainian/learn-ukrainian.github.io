@@ -2220,7 +2220,7 @@ _ENTIRE_HARNESS_TELEMETRY_PATHS = (
 
 
 def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
-    """Git repo with production-shaped ``.entire/`` ignore rules + one tracked file."""
+    """Git repo with production-shaped ignore rules + one tracked file."""
     _init_git_repo_for_test(repo, monkeypatch)
     entire = repo / ".entire"
     entire.mkdir(parents=True, exist_ok=True)
@@ -2228,8 +2228,26 @@ def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
         "tmp/\nsettings.local.json\nmetadata/\nlogs/\nredactors/local/\n",
         encoding="utf-8",
     )
+    (repo / ".gitignore").write_text(
+        ".agent/\n"
+        "batch_state/\n"
+        ".pytest_cache/\n"
+        ".pytest_breadcrumbs/\n"
+        ".ruff_cache/\n"
+        "__pycache__/\n"
+        ".runtime/\n"
+        "*.sqlite3-wal\n"
+        "*.sqlite3-shm\n"
+        "*.sqlite3-journal\n",
+        encoding="utf-8",
+    )
     (repo / "tracked.txt").write_text("baseline\n", encoding="utf-8")
-    subprocess.run(["git", "add", ".entire/.gitignore", "tracked.txt"], cwd=repo, check=True, timeout=30)
+    subprocess.run(
+        ["git", "add", ".entire/.gitignore", ".gitignore", "tracked.txt"],
+        cwd=repo,
+        check=True,
+        timeout=30,
+    )
     subprocess.run(
         ["git", "commit", "-m", "fixture"],
         cwd=repo,
@@ -2447,6 +2465,267 @@ def test_read_only_dispatch_fails_on_force_added_entire_metadata_mutation(
     assert state["read_only_mutation_paths"] == [relative]
     assert state["last_error"] == f"read-only checkout mutation detected: {relative}"
     assert state["read_only_checkout_post"][relative] == " M"
+
+
+_READ_ONLY_RUNTIME_STATE_PATHS = (
+    ".agent/sessions/a60b06a0-review.json",
+    "batch_state/fleet-comms/v1/comms.sqlite3-shm",
+    "batch_state/fleet-comms/v1/comms.sqlite3-wal",
+    ".pytest_cache/v/cache/nodeids",
+    ".pytest_breadcrumbs/breadcrumb_master.txt",
+    ".ruff_cache/CACHEDIR.TAG",
+    "scripts/__pycache__/delegate.cpython-312.pyc",
+)
+
+
+def _write_read_only_runtime_state(repo: Path) -> None:
+    for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
+        target = repo / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("harness runtime state\n", encoding="utf-8")
+
+
+_READ_ONLY_DEPLOY_TARGET_DIR_NAMES = frozenset(
+    {".agents", ".claude", ".codex", ".cursor", ".gemini"}
+)
+_UNTRACKED_CLAUDE_HOOKS_PATH = ".claude/hooks/planted.sh"
+
+
+def test_read_only_runtime_state_path_classification():
+    """#6860: harness/tooling residue is exempt; #4840 leaks and tracked files are not."""
+    for path in _READ_ONLY_RUNTIME_STATE_PATHS:
+        assert delegate._is_read_only_runtime_state_path(path)
+    assert delegate._is_read_only_runtime_state_path(".agent/session-streams/v1/session-streams.sqlite3-wal")
+    assert delegate._is_read_only_runtime_state_path("data/sources.sqlite3-shm")
+    assert _READ_ONLY_DEPLOY_TARGET_DIR_NAMES.isdisjoint(
+        delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
+    )
+    assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert not delegate._is_read_only_runtime_state_path(".claude/projects/session.json")
+    assert not delegate._is_read_only_runtime_state_path(".codex/hooks/planted.sh")
+    assert not delegate._is_read_only_runtime_state_path(".gemini/settings.json")
+    assert not delegate._is_read_only_runtime_state_path(".cursor/hooks/planted.sh")
+    assert not delegate._is_read_only_runtime_state_path(".agents/skills/planted.md")
+    assert not delegate._is_read_only_runtime_state_path(".cache/lemma-frequency-c1-999.json")
+    assert not delegate._is_read_only_runtime_state_path("tracked.txt")
+    assert not delegate._is_read_only_runtime_state_path(
+        "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md"
+    )
+    assert not delegate._is_read_only_runtime_state_path(".entire/settings.json")
+
+
+def test_read_only_mutation_paths_ignore_runtime_state_only():
+    """Unit half of #6860: runtime-state-only delta is empty; mixed delta keeps real edits."""
+    before: dict[str, str] = {}
+    after_runtime = {path: "!!" for path in _READ_ONLY_RUNTIME_STATE_PATHS}
+    assert delegate._read_only_mutation_paths(before, after_runtime) == []
+
+    after_mixed = {**after_runtime, "tracked.txt": " M"}
+    assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
+
+    after_cache_leak = {**after_runtime, ".cache/lemma-frequency-c1-999.json": "!!"}
+    assert delegate._read_only_mutation_paths(before, after_cache_leak) == [
+        ".cache/lemma-frequency-c1-999.json"
+    ]
+
+    # Force-added tracked file under an exempted prefix must still trip (#6803 r2 / #6860).
+    tracked_session = ".agent/sessions/force-added.json"
+    assert (
+        delegate._read_only_mutation_paths({}, {tracked_session: " M"})
+        == [tracked_session]
+    )
+
+    # Deploy-target untracked files stay visible (#6860 r2).
+    assert delegate._read_only_mutation_paths(
+        {}, {_UNTRACKED_CLAUDE_HOOKS_PATH: "??"}
+    ) == [_UNTRACKED_CLAUDE_HOOKS_PATH]
+
+
+@pytest.mark.parametrize(
+    ("layout", "repo_relative"),
+    [
+        ("repo-root", Path(".")),
+        ("worktree", Path(".worktrees") / "dispatch" / "grok-build" / "infra-6860-guard-allowlist"),
+    ],
+    ids=["repo-root", "worktree"],
+)
+def test_read_only_dispatch_allows_harness_runtime_state(
+    layout,
+    repo_relative,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6860: gitignored harness/tooling residue alone must not fail read-only."""
+    checkout = (tmp_path / repo_relative).resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = f"read-only-runtime-state-{layout}"
+    state_path = delegate._state_path(task_id)
+    state = {"task_id": task_id, "cwd": str(checkout)}
+    if layout == "worktree":
+        state["worktree_path"] = str(checkout)
+        state["worktree_base"] = "main"
+    delegate._write_state_atomic(state_path, state)
+
+    def runtime_state_only_side_effect(*_args, **_kwargs):
+        _write_read_only_runtime_state(checkout)
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=runtime_state_only_side_effect):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["last_error"] is None
+    for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
+        assert state["read_only_checkout_post"][relative_path] == "!!"
+        assert (checkout / relative_path).exists()
+
+
+@pytest.mark.parametrize(
+    ("layout", "repo_relative"),
+    [
+        ("repo-root", Path(".")),
+        ("worktree", Path(".worktrees") / "dispatch" / "grok-build" / "infra-6860-guard-allowlist"),
+    ],
+    ids=["repo-root", "worktree"],
+)
+def test_read_only_dispatch_still_fails_on_tracked_mutation_with_runtime_state(
+    layout,
+    repo_relative,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6860 / #M-16: a tracked-file edit still fails even with harness residue present."""
+    checkout = (tmp_path / repo_relative).resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = f"read-only-runtime-state-plus-edit-{layout}"
+    state_path = delegate._state_path(task_id)
+    state = {"task_id": task_id, "cwd": str(checkout)}
+    if layout == "worktree":
+        state["worktree_path"] = str(checkout)
+        state["worktree_base"] = "main"
+    delegate._write_state_atomic(state_path, state)
+
+    def mixed_side_effect(*_args, **_kwargs):
+        _write_read_only_runtime_state(checkout)
+        (checkout / "tracked.txt").write_text("task authored edit\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=mixed_side_effect):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["tracked.txt"]
+    assert state["last_error"] == "read-only checkout mutation detected: tracked.txt"
+    assert "tracked.txt" in state["read_only_checkout_post"]
+    for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
+        assert state["read_only_checkout_post"][relative_path] == "!!"
+
+
+def test_read_only_dispatch_fails_on_untracked_claude_hooks_file(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6860 r2 / #M-16: an untracked deploy-target drop still fails read-only."""
+    checkout = (tmp_path / "claude-hooks-drop").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = "read-only-untracked-claude-hooks"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+    planted = checkout / _UNTRACKED_CLAUDE_HOOKS_PATH
+
+    def plant_untracked_hook(*_args, **_kwargs):
+        planted.parent.mkdir(parents=True, exist_ok=True)
+        planted.write_text("#!/bin/sh\necho planted\n", encoding="utf-8")
+        planted.chmod(0o755)
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=plant_untracked_hook):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [_UNTRACKED_CLAUDE_HOOKS_PATH]
+    assert state["last_error"] == (
+        f"read-only checkout mutation detected: {_UNTRACKED_CLAUDE_HOOKS_PATH}"
+    )
+    assert state["read_only_checkout_post"][_UNTRACKED_CLAUDE_HOOKS_PATH] == "??"
+    assert planted.exists()
+
+
+def test_read_only_deploy_target_dir_exemption_mutation_check(monkeypatch):
+    """#6860 r2 / #M-16: re-adding ``.claude`` would silently exempt a hooks drop.
+
+    1. Current set: untracked ``.claude/hooks/`` is a mutation.
+    2. Mutate the set to include ``.claude``: the same path is exempted.
+    3. Restore: the path is a mutation again.
+    """
+    planted = {_UNTRACKED_CLAUDE_HOOKS_PATH: "??"}
+
+    assert ".claude" not in delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
+    assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert delegate._read_only_mutation_paths({}, planted) == [
+        _UNTRACKED_CLAUDE_HOOKS_PATH
+    ]
+
+    monkeypatch.setattr(
+        delegate,
+        "_READ_ONLY_RUNTIME_STATE_DIR_NAMES",
+        frozenset({*delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES, ".claude"}),
+    )
+    assert delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert delegate._read_only_mutation_paths({}, planted) == []
+
+    monkeypatch.undo()
+    assert ".claude" not in delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
+    assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
+    assert delegate._read_only_mutation_paths({}, planted) == [
+        _UNTRACKED_CLAUDE_HOOKS_PATH
+    ]
 
 
 def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
