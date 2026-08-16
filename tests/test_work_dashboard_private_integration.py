@@ -475,6 +475,7 @@ def _browser_scenario(
     public_status: int = 200,
     private_status: int = 200,
     private_delay_ms: int = 0,
+    private_hang_json: bool = False,
     private_raw: bytes | None = None,
     public_raw: bytes | None = None,
     filter_query: str = "",
@@ -522,12 +523,16 @@ def _browser_scenario(
     viewport = viewport or {"width": 1280, "height": 800}
     origin = f"http://127.0.0.1:{public_port}"
     page_url = f"{origin}/work.html{filter_query}"
+    hang_json_js = "true" if private_hang_json else "false"
+    # Hang-json proofs still need the 5s abort budget + small settle margin.
+    settle_floor_ms = 9000 if private_hang_json else 10000
 
     script = f"""
 const puppeteer = require('puppeteer');
 const PUBLIC_STATUS = {state.public_status};
 const PRIVATE_STATUS = {state.private_status};
 const PRIVATE_DELAY_MS = {private_delay_ms};
+const PRIVATE_HANG_JSON = {hang_json_js};
 const PUBLIC_JSON = {json.dumps(public_json)};
 const PRIVATE_JSON = {json.dumps(private_json)};
 const PAGE_URL = {json.dumps(page_url)};
@@ -549,6 +554,48 @@ try {{
     if (msg.type() === 'error') observed.consoleErrors.push(msg.text());
   }});
   page.on('pageerror', (err) => observed.pageErrors.push(String(err && err.message ? err.message : err)));
+
+  // Source-blind body-stall mock: fulfilled 200 Response whose json() never
+  // settles unless AbortSignal fires. Proves the private 5s budget covers body
+  // parse, not only response headers. No real private service is contacted.
+  if (PRIVATE_HANG_JSON) {{
+    await page.evaluateOnNewDocument((privateUrl) => {{
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, init) {{
+        const url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (url === privateUrl || url.startsWith(privateUrl + '?')) {{
+          const signal = init && init.signal;
+          const body = new ReadableStream({{
+            start(controller) {{
+              const fail = () => {{
+                try {{
+                  controller.error(new DOMException('The user aborted a request.', 'AbortError'));
+                }} catch (_e) {{
+                  // already errored/closed
+                }}
+              }};
+              if (signal) {{
+                if (signal.aborted) {{
+                  fail();
+                  return;
+                }}
+                signal.addEventListener('abort', fail, {{ once: true }});
+              }}
+              // Never enqueue/close — body/json() hangs until abort.
+            }},
+          }});
+          return Promise.resolve(new Response(body, {{
+            status: 200,
+            headers: {{
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            }},
+          }}));
+        }}
+        return originalFetch(input, init);
+      }};
+    }}, PRIVATE_URL);
+  }}
 
   await page.setRequestInterception(true);
   // Fulfill every request exactly once. networkidle0 hangs on some non-2xx
@@ -579,6 +626,11 @@ try {{
             method,
             headers: req.headers(),
           }});
+          // Body-stall proofs are owned by the page-level fetch mock; leave any
+          // native private request pending rather than fulfilling a body.
+          if (PRIVATE_HANG_JSON) {{
+            return;
+          }}
           if (PRIVATE_DELAY_MS > 0) {{
             await new Promise((r) => setTimeout(r, PRIVATE_DELAY_MS));
           }}
@@ -612,7 +664,7 @@ try {{
   await page.goto(PAGE_URL, {{ waitUntil: 'domcontentloaded', timeout: 30000 }});
   await page.waitForSelector('#source-private-meta', {{ timeout: 15000 }});
   // Wait until dual-source settlement replaces the loading placeholders.
-  const settleBudget = Math.max(10000, PRIVATE_DELAY_MS + 3000);
+  const settleBudget = Math.max({settle_floor_ms}, PRIVATE_DELAY_MS + 3000);
   await page.waitForFunction(() => {{
     const priv = (document.getElementById('source-private-meta')?.textContent || '').trim();
     const pub = (document.getElementById('source-public-meta')?.textContent || '').trim();
@@ -779,6 +831,36 @@ def test_browser_private_timeout_leaves_public_usable():
     assert "Public attention item" in snap["listText"]
     assert "unavailable · timeout" in snap["privateMeta"]
     assert snap["errorHidden"] is True
+
+
+def test_browser_private_stalled_json_body_is_typed_timeout():
+    """Fulfilled headers + never-settling json() must still hit the 5s budget.
+
+    Source-blind page fetch mock only — no real private adapter process.
+    """
+    started = time.monotonic()
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        private_hang_json=True,
+    )
+    elapsed = time.monotonic() - started
+    snap = result["snapshot"]
+    obs = result["observed"]
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "unavailable · timeout" in snap["privateMeta"]
+    assert snap["errorHidden"] is True
+    # Typed meta only — never raw abort/exception text in banner or strip.
+    assert "AbortError" not in snap["privateMeta"]
+    assert "AbortError" not in snap["error"]
+    assert "TypeError" not in snap["error"]
+    assert "Failed to fetch" not in snap["error"]
+    # Budget is 5s; allow Chromium/settle overhead but refuse unbounded hang.
+    assert elapsed < 12.0, f"stalled-body timeout took too long: {elapsed:.2f}s"
+    assert elapsed >= 4.0, f"stalled-body timed out too early: {elapsed:.2f}s"
+    assert not any("AbortError" in e for e in obs.get("pageErrors") or [])
+    assert not any("AbortError" in e for e in obs.get("consoleErrors") or [])
 
 
 def test_browser_private_schema_mismatch_and_canary_rejected():

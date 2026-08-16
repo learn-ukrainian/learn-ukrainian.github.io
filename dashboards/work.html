@@ -517,13 +517,20 @@ button, input, select { font: inherit; }
       if (row.remote_id !== item.remote_id) return { ok: false, code: 'schema_mismatch' };
     }
 
-    const terminal = new Set(['unavailable', 'permission_denied', 'timeout']);
+    // Terminal section statuses admit neither counts nor items (degraded included).
+    const terminal = new Set(['unavailable', 'permission_denied', 'timeout', 'degraded']);
     const issuesStatus = source.sections.issues.status;
     const prsStatus = source.sections.prs.status;
-    const expectedIssueSection = terminal.has(issuesStatus) ? 0 : issueCount;
-    const expectedPrSection = terminal.has(prsStatus) ? 0 : prCount;
-    if (source.sections.issues.count !== expectedIssueSection) return { ok: false, code: 'schema_mismatch' };
-    if (source.sections.prs.count !== expectedPrSection) return { ok: false, code: 'schema_mismatch' };
+    if (terminal.has(issuesStatus)) {
+      if (source.sections.issues.count !== 0 || issueCount !== 0) return { ok: false, code: 'schema_mismatch' };
+    } else if (source.sections.issues.count !== issueCount) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
+    if (terminal.has(prsStatus)) {
+      if (source.sections.prs.count !== 0 || prCount !== 0) return { ok: false, code: 'schema_mismatch' };
+    } else if (source.sections.prs.count !== prCount) {
+      return { ok: false, code: 'schema_mismatch' };
+    }
     if (den.issues_open !== source.sections.issues.count) return { ok: false, code: 'schema_mismatch' };
     if (den.prs_open !== source.sections.prs.count) return { ok: false, code: 'schema_mismatch' };
 
@@ -757,7 +764,7 @@ button, input, select { font: inherit; }
 
   function renderDetail(item) {
     if (!item) {
-      els.detail.className = 'detail empty';
+      els.detail.classList.add('empty');
       els.detail.textContent = 'Select a row to inspect ownership, evidence, and the safe next action.';
       return;
     }
@@ -770,7 +777,7 @@ button, input, select { font: inherit; }
       a.domain + ': age=' + (a.age_s == null ? '—' : a.age_s + 's') + (a.stale ? ' stale' : '')
     ).join(' · ');
     const rels = (item.relationships || []).map((r) => r.type + ' → ' + r.target_id).join('; ') || 'none';
-    els.detail.className = 'detail';
+    els.detail.classList.remove('empty');
     els.detail.innerHTML =
       '<h4>' + escapeHtml(item.title || item.work_id) + '</h4>' +
       '<div class="row-meta">' +
@@ -839,7 +846,6 @@ button, input, select { font: inherit; }
 
     if (els.source) {
       const currentSource = els.source.value;
-      const sourceOptions = ['public-monitor', 'private-local-adapter'].filter((s) => sourcesPresent.has(s) || s === PUBLIC_SOURCE_ID);
       // Only list private source after an admitted private payload contributed items or source.
       const hasPrivate = sources.some((s) => s && s.source_id === PRIVATE_SOURCE_ID && s.status !== 'unavailable') || sourcesPresent.has(PRIVATE_SOURCE_ID);
       const opts = ['<option value="">All sources</option>', '<option value="public-monitor">public-monitor</option>'];
@@ -864,25 +870,41 @@ button, input, select { font: inherit; }
       referrerPolicy: 'no-referrer',
     };
     if (controller) init.signal = controller.signal;
+    const aborted = function (err) {
+      return (err && err.name === 'AbortError')
+        || (controller && controller.signal && controller.signal.aborted);
+    };
+    // Keep the abort timer active through status checks and full JSON body parse.
+    // Clear only once in the terminal finalization path so a stalled body still
+    // respects the private five-second budget.
     return fetch(url, init).then(async (res) => {
-      if (timer) clearTimeout(timer);
       if (!res.ok) {
+        // Prefer timeout when the abort budget fired mid-flight.
+        if (aborted(null)) {
+          const err = new Error('timeout');
+          err.code = 'timeout';
+          throw err;
+        }
         const err = new Error('http_error');
         err.code = 'unreachable';
         throw err;
       }
-      let body;
       try {
-        body = await res.json();
-      } catch (_e) {
+        return await res.json();
+      } catch (parseErr) {
+        // Abort during body read must be typed timeout (never raw / schema_mismatch).
+        if (aborted(parseErr)) {
+          const err = new Error('timeout');
+          err.code = 'timeout';
+          throw err;
+        }
         const err = new Error('parse_error');
         err.code = 'schema_mismatch';
         throw err;
       }
-      return body;
     }).catch((err) => {
-      if (timer) clearTimeout(timer);
-      if (err && err.name === 'AbortError') {
+      if (aborted(err) || (err && err.code === 'timeout')) {
+        if (err && err.code === 'timeout') throw err;
         const e = new Error('timeout');
         e.code = 'timeout';
         throw e;
@@ -891,6 +913,11 @@ button, input, select { font: inherit; }
       const e = new Error('unreachable');
       e.code = 'unreachable';
       throw e;
+    }).finally(() => {
+      if (timer != null) {
+        clearTimeout(timer);
+        timer = null;
+      }
     });
   }
 

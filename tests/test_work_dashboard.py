@@ -119,6 +119,27 @@ def test_work_page_closed_private_status_vocabulary():
     assert "console.log" not in html
 
 
+def test_work_page_fetchjson_keeps_timeout_through_json_parse():
+    """Private AbortController budget must cover status handling + body parse."""
+    html = WORK.read_text(encoding="utf-8")
+    start = html.index("function fetchJson(")
+    end = html.index("function classifyPublicFailure(", start)
+    body = html[start:end]
+    # Single finalization path clears the timer after settlement.
+    assert ".finally(" in body
+    assert body.count("clearTimeout(timer)") == 1
+    # Abort during body read is typed timeout, not schema_mismatch / raw error.
+    assert "aborted(parseErr)" in body
+    assert "err.code = 'timeout'" in body or 'err.code = "timeout"' in body
+    # Degraded sections are terminal (no admitted counts/items).
+    assert "'degraded'" in html
+    terminal_line = [
+        line for line in html.splitlines() if "new Set(['unavailable', 'permission_denied', 'timeout'" in line
+    ]
+    assert terminal_line, "terminal section status set missing"
+    assert "degraded" in terminal_line[0]
+
+
 def test_work_page_shareable_url_strips_private_selectors():
     html = WORK.read_text(encoding="utf-8")
     assert "PUBLIC_SINGLETON_REPO" in html
