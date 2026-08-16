@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "67dc19a93dcd",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6870-grok-rotation-cleanup-r2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/openai_proxy.py",
+    "scripts/config/model_catalog.yaml",
+    "scripts/lib/launcher_core.sh",
+    "tests/ai_agent_bridge/test_openai_proxy.py",
+    "tests/test_grok_build_adapter.py",
+    "tests/test_layerb_judge_bridge.py",
+    "tests/test_start_grok_launcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/67/dc19a93dcd/0/metadata.json",
+      "transcript": "/67/dc19a93dcd/0/full.jsonl",
+      "compact_transcript": "/67/dc19a93dcd/0/transcript.jsonl",
+      "content_hash": "/67/dc19a93dcd/0/content_hash.txt",
+      "prompt": "/67/dc19a93dcd/0/prompt.txt"
+    }
+  ]
+}
