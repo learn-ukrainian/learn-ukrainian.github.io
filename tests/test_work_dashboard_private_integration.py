@@ -1185,6 +1185,7 @@ def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
             )
             if path != "/v1/projection":
                 self.send_response(404)
+                self.send_header("Content-Length", "0")
                 self.end_headers()
                 return
             self.send_response(200)
@@ -1235,11 +1236,15 @@ def test_real_fixed_port_cors_http_and_browser_smoke():
             if path == "/work.html":
                 body = html
                 ctype = "text/html; charset=utf-8"
+            elif path == "/monitor.css":
+                body = b""
+                ctype = "text/css; charset=utf-8"
             elif path == PUBLIC_PATH:
                 body = public_body
                 ctype = "application/json"
             else:
                 self.send_response(404)
+                self.send_header("Content-Length", "0")
                 self.end_headers()
                 return
             self.send_response(200)
@@ -1350,11 +1355,15 @@ def test_real_fixed_port_cors_localhost_origin_smoke():
             if path == "/work.html":
                 body = WORK_HTML.read_bytes()
                 ctype = "text/html; charset=utf-8"
+            elif path == "/monitor.css":
+                body = b""
+                ctype = "text/css; charset=utf-8"
             elif path == PUBLIC_PATH:
                 body = json.dumps(_public_min(), separators=(",", ":")).encode("utf-8")
                 ctype = "application/json"
             else:
                 self.send_response(404)
+                self.send_header("Content-Length", "0")
                 self.end_headers()
                 return
             self.send_response(200)
