@@ -2145,20 +2145,76 @@ _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES = (
     ".entire/redactors/local",
 )
 _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
+# Gitignored-by-default dirs a worker's own tooling writes (#6860). Observed
+# false-fails: ``.agent/sessions/*.json``, fleet-comms sqlite ``-shm/-wal``,
+# ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
+# (harness/session/cache residue), not task-authored leaks such as ``.cache/``
+# (#4840). Tracked files under these names still fail via porcelain status.
+_READ_ONLY_RUNTIME_STATE_DIR_NAMES = frozenset(
+    {
+        ".agent",
+        ".agents",
+        ".antigravitycli",
+        ".claude",
+        ".codex",
+        ".cursor",
+        ".deploy-state",
+        ".gemini",
+        ".pytest_breadcrumbs",
+        ".pytest_cache",
+        ".runtime",
+        ".ruff_cache",
+        "__pycache__",
+        "batch_state",
+    }
+)
+_READ_ONLY_RUNTIME_STATE_SUFFIXES = (
+    ".db-journal",
+    ".db-shm",
+    ".db-wal",
+    ".sqlite-journal",
+    ".sqlite-shm",
+    ".sqlite-wal",
+    ".sqlite3-journal",
+    ".sqlite3-shm",
+    ".sqlite3-wal",
+)
 _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES = frozenset({"??", "!!"})
+
+
+def _normalize_read_only_relpath(path: str) -> str:
+    """Normalize a checkout-relative path for read-only guard matching."""
+    normalized = path.replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized
 
 
 def _is_read_only_runtime_telemetry_path(path: str) -> bool:
     """Return whether a path is harness Entire telemetry, not a task mutation."""
-    normalized = path.replace("\\", "/")
-    while normalized.startswith("./"):
-        normalized = normalized[2:]
+    normalized = _normalize_read_only_relpath(path)
     if normalized in _READ_ONLY_RUNTIME_TELEMETRY_FILES:
         return True
     return any(
         normalized == prefix or normalized.startswith(f"{prefix}/")
         for prefix in _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES
     )
+
+
+def _is_read_only_runtime_state_path(path: str) -> bool:
+    """Return whether a path is harness/tooling runtime state, not repo content.
+
+    Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
+    sidecars that false-failed successful read-only tasks (#6860). Task-authored
+    ignored leaks such as ``.cache/`` stay visible to the guard (#4840).
+    """
+    if _is_read_only_runtime_telemetry_path(path):
+        return True
+    normalized = _normalize_read_only_relpath(path)
+    parts = tuple(part for part in normalized.split("/") if part and part != ".")
+    if any(part in _READ_ONLY_RUNTIME_STATE_DIR_NAMES for part in parts):
+        return True
+    return any(normalized.endswith(suffix) for suffix in _READ_ONLY_RUNTIME_STATE_SUFFIXES)
 
 
 def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
@@ -2173,11 +2229,11 @@ def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
     return state[:2] in _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES
 
 
-def _is_read_only_runtime_telemetry_exemption(
+def _is_read_only_runtime_state_exemption(
     path: str, *, before_state: str | None, after_state: str | None
 ) -> bool:
-    """Exempt harness telemetry only when it is not tracked at snapshot time."""
-    if not _is_read_only_runtime_telemetry_path(path):
+    """Exempt harness runtime state only when it is not tracked at snapshot time."""
+    if not _is_read_only_runtime_state_path(path):
         return False
     return _is_read_only_untracked_or_ignored_status(
         before_state
@@ -2189,16 +2245,16 @@ def _read_only_mutation_paths(
 ) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
-    Harness-generated ``.entire/`` telemetry is excluded when it is ignored or
+    Gitignored harness/tooling runtime state is excluded when it is ignored or
     untracked: the runtime owns those writes, so they are not evidence that a
-    read-only worker mutated the tree. Tracked paths under the same prefixes
-    (including force-added files) still trip the guard.
+    read-only worker mutated the tree (#6803, #6860). Tracked paths under the
+    same prefixes (including force-added files) still trip the guard.
     """
     return sorted(
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
-        and not _is_read_only_runtime_telemetry_exemption(
+        and not _is_read_only_runtime_state_exemption(
             path,
             before_state=before.get(path),
             after_state=after.get(path),
