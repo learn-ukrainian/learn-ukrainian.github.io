@@ -282,3 +282,10 @@ def test_independent_degradation_when_one_section_fails(monkeypatch):
     assert data["denominator"]["class4"]["fleet_reviews"] is False
     assert any(o["class"] == "fleet_reviews" for o in data["denominator"]["omissions"])
     assert any(o["class"] == "streams" for o in data["denominator"]["omissions"])
+    # Source status must be degraded (NOT unavailable) when core enumerations succeed
+    public_source = next(s for s in data["sources"] if s["source_id"] == "public-monitor")
+    assert public_source["status"] == "degraded"
+    assert public_source["sections"]["fleet_reviews"]["status"] == "timeout"
+    assert public_source["sections"]["streams"]["status"] == "stale"
+    assert public_source["sections"]["issues"]["status"] == "ok"
+    assert public_source["sections"]["prs"]["status"] == "ok"
