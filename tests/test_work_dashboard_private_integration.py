@@ -7,10 +7,12 @@ real private repository or live adapter process.
 from __future__ import annotations
 
 import json
+import os
 import socket
 import subprocess
 import threading
 import time
+from collections.abc import Callable, Mapping, Sequence
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -30,6 +32,13 @@ SYNTH_PRIVATE_REPO = "fixture-owner/fixture-repo"
 CANARY = "FX07_CANARY_SHOULD_NEVER_APPEAR_IN_DOM_OR_URL"
 FIXED_PUBLIC_PORT = 8765
 FIXED_PRIVATE_PORT = 8766
+# Linux system Chrome/Chromium candidates for CI runners without Puppeteer's cache.
+LINUX_CHROME_CANDIDATES: tuple[str, ...] = (
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+)
 
 
 def _node_modules() -> Path | None:
@@ -66,6 +75,56 @@ def _require_puppeteer() -> Path:
     if nm is None:
         pytest.skip("puppeteer not available for headless browser proofs")
     return nm
+
+
+def _path_is_executable(path: str) -> bool:
+    candidate = Path(path)
+    return candidate.is_file() and os.access(candidate, os.X_OK)
+
+
+def _resolve_chrome_executable(
+    *,
+    env: Mapping[str, str] | None = None,
+    candidates: Sequence[str] | None = None,
+    is_executable: Callable[[str], bool] | None = None,
+) -> str | None:
+    """Pick a Chrome/Chromium binary for Puppeteer, or None for managed browser.
+
+    Order:
+    1. ``PUPPETEER_EXECUTABLE_PATH`` when it names an existing executable
+    2. First existing Linux system candidate
+    3. None — omit ``executablePath`` so local Puppeteer uses its cache
+    """
+    check = is_executable or _path_is_executable
+    environ = env if env is not None else os.environ
+    env_path = (environ.get("PUPPETEER_EXECUTABLE_PATH") or "").strip()
+    if env_path and check(env_path):
+        return env_path
+    for candidate in candidates if candidates is not None else LINUX_CHROME_CANDIDATES:
+        if check(candidate):
+            return candidate
+    return None
+
+
+def _puppeteer_launch_options(
+    *,
+    env: Mapping[str, str] | None = None,
+    candidates: Sequence[str] | None = None,
+    is_executable: Callable[[str], bool] | None = None,
+) -> dict[str, Any]:
+    """Deterministic launch options shared by every Puppeteer script here."""
+    options: dict[str, Any] = {
+        "headless": "new",
+        "args": ["--no-sandbox", "--disable-setuid-sandbox"],
+    }
+    executable = _resolve_chrome_executable(
+        env=env,
+        candidates=candidates,
+        is_executable=is_executable,
+    )
+    if executable is not None:
+        options["executablePath"] = executable
+    return options
 
 
 def _public_min() -> dict[str, Any]:
@@ -438,7 +497,7 @@ def _start_server(
 
 def _run_puppeteer(script: str, *, node_modules: Path, timeout: int = 60) -> dict[str, Any]:
     env = {
-        **dict(**{k: v for k, v in __import__("os").environ.items()}),
+        **dict(**{k: v for k, v in os.environ.items()}),
         "NODE_PATH": str(node_modules),
     }
     # Avoid color warnings noise
@@ -526,6 +585,7 @@ def _browser_scenario(
     hang_json_js = "true" if private_hang_json else "false"
     # Hang-json proofs still need the 5s abort budget + small settle margin.
     settle_floor_ms = 9000 if private_hang_json else 10000
+    launch_options_json = json.dumps(_puppeteer_launch_options())
 
     script = f"""
 const puppeteer = require('puppeteer');
@@ -540,13 +600,11 @@ const ACTIONS = {actions_json};
 const VIEWPORT = {json.dumps(viewport)};
 const PRIVATE_URL = {json.dumps(PRIVATE_URL)};
 const CANARY = {json.dumps(CANARY)};
+const LAUNCH_OPTIONS = {launch_options_json};
 
 const observed = {{ public: [], private: [], options: 0, consoleErrors: [], pageErrors: [] }};
 
-const browser = await puppeteer.launch({{
-  headless: 'new',
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-}});
+const browser = await puppeteer.launch(LAUNCH_OPTIONS);
 try {{
   const page = await browser.newPage();
   await page.setViewport(VIEWPORT);
@@ -775,6 +833,60 @@ def test_private_fixture_shape_is_source_blind():
     assert CANARY not in blob
     assert doc["capabilities"]["private_source"]["endpoint"] == PRIVATE_URL
     assert doc["capabilities"]["private_source"]["schema_digest_sha256"] == SCHEMA_DIGEST
+
+
+def test_puppeteer_launch_options_honors_env_executable():
+    opts = _puppeteer_launch_options(
+        env={"PUPPETEER_EXECUTABLE_PATH": "/custom/chrome"},
+        candidates=("/usr/bin/google-chrome",),
+        is_executable=lambda path: path == "/custom/chrome",
+    )
+    assert opts["executablePath"] == "/custom/chrome"
+    assert opts["headless"] == "new"
+    assert opts["args"] == ["--no-sandbox", "--disable-setuid-sandbox"]
+
+
+def test_puppeteer_launch_options_ignores_missing_env_and_picks_first_candidate():
+    opts = _puppeteer_launch_options(
+        env={"PUPPETEER_EXECUTABLE_PATH": "/missing/chrome"},
+        candidates=(
+            "/usr/bin/google-chrome",
+            "/usr/bin/google-chrome-stable",
+            "/usr/bin/chromium",
+            "/usr/bin/chromium-browser",
+        ),
+        is_executable=lambda path: path
+        in {"/usr/bin/chromium", "/usr/bin/chromium-browser"},
+    )
+    assert opts["executablePath"] == "/usr/bin/chromium"
+
+
+def test_puppeteer_launch_options_omits_path_when_none_available():
+    opts = _puppeteer_launch_options(
+        env={},
+        candidates=("/nope/a", "/nope/b"),
+        is_executable=lambda _path: False,
+    )
+    assert "executablePath" not in opts
+    assert opts["headless"] == "new"
+    assert "--no-sandbox" in opts["args"]
+    assert "--disable-setuid-sandbox" in opts["args"]
+
+
+def test_resolve_chrome_executable_order_matches_linux_candidates():
+    seen: list[str] = []
+
+    def probe(path: str) -> bool:
+        seen.append(path)
+        return path == "/usr/bin/chromium-browser"
+
+    resolved = _resolve_chrome_executable(
+        env={},
+        candidates=LINUX_CHROME_CANDIDATES,
+        is_executable=probe,
+    )
+    assert resolved == "/usr/bin/chromium-browser"
+    assert seen == list(LINUX_CHROME_CANDIDATES)
 
 
 # ---------------------------------------------------------------------------
@@ -1170,33 +1282,32 @@ def test_real_fixed_port_cors_http_and_browser_smoke():
         assert got["origin"] == "http://127.0.0.1:8765"
 
         # Browser smoke from exact Monitor origin.
-        script = """
+        launch_options_json = json.dumps(_puppeteer_launch_options())
+        script = f"""
 const puppeteer = require('puppeteer');
-const browser = await puppeteer.launch({
-  headless: 'new',
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-});
-try {
+const LAUNCH_OPTIONS = {launch_options_json};
+const browser = await puppeteer.launch(LAUNCH_OPTIONS);
+try {{
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e.message || e)));
-  await page.goto('http://127.0.0.1:8765/work.html', {
+  await page.goto('http://127.0.0.1:8765/work.html', {{
     waitUntil: 'domcontentloaded',
     timeout: 30000,
-  });
-  await page.waitForFunction(() => {
+  }});
+  await page.waitForFunction(() => {{
     const el = document.getElementById('source-private-meta');
     return el && (el.textContent || '').includes('status=');
-  }, { timeout: 15000 });
-  const snap = await page.evaluate(() => ({
+  }}, {{ timeout: 15000 }});
+  const snap = await page.evaluate(() => ({{
     privateMeta: document.getElementById('source-private-meta')?.textContent || '',
     rowCount: document.querySelectorAll('.work-row').length,
     errorHidden: document.getElementById('error-banner')?.classList.contains('hidden') ?? true,
-  }));
-  console.log(JSON.stringify({ ok: true, snap, errors, privateGets: true }));
-} finally {
+  }}));
+  console.log(JSON.stringify({{ ok: true, snap, errors, privateGets: true }}));
+}} finally {{
   await browser.close();
-}
+}}
 """
         result = _run_puppeteer(script, node_modules=nm, timeout=60)
         assert result["snap"]["rowCount"] == 2
@@ -1274,30 +1385,29 @@ def test_real_fixed_port_cors_localhost_origin_smoke():
             assert resp.headers.get("Vary") == "Origin"
             _ = resp.read()
 
-        script = """
+        launch_options_json = json.dumps(_puppeteer_launch_options())
+        script = f"""
 const puppeteer = require('puppeteer');
-const browser = await puppeteer.launch({
-  headless: 'new',
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-});
-try {
+const LAUNCH_OPTIONS = {launch_options_json};
+const browser = await puppeteer.launch(LAUNCH_OPTIONS);
+try {{
   const page = await browser.newPage();
-  await page.goto('http://localhost:8765/work.html', {
+  await page.goto('http://localhost:8765/work.html', {{
     waitUntil: 'domcontentloaded',
     timeout: 30000,
-  });
-  await page.waitForFunction(() => {
+  }});
+  await page.waitForFunction(() => {{
     const el = document.getElementById('source-private-meta');
     return el && (el.textContent || '').includes('status=');
-  }, { timeout: 15000 });
-  const snap = await page.evaluate(() => ({
+  }}, {{ timeout: 15000 }});
+  const snap = await page.evaluate(() => ({{
     privateMeta: document.getElementById('source-private-meta')?.textContent || '',
     rowCount: document.querySelectorAll('.work-row').length,
-  }));
-  console.log(JSON.stringify({ ok: true, snap }));
-} finally {
+  }}));
+  console.log(JSON.stringify({{ ok: true, snap }}));
+}} finally {{
   await browser.close();
-}
+}}
 """
         result = _run_puppeteer(script, node_modules=nm, timeout=60)
         assert result["snap"]["rowCount"] == 2
