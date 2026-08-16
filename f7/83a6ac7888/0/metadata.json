@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f783a6ac7888",
+  "session_id": "session_1ce5a607-03bd-46c2-8915-9959f5aef780",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T21:03:20.534286Z",
+  "branch": "kimi/infra-6888-agy-watchdog",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/watchdog.py",
+    "tests/test_agent_runtime.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "5e64e7cd7853",
+  "token_usage": {
+    "input_tokens": 72114,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2726400,
+    "output_tokens": 25342,
+    "api_call_count": 46
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T21:03:20.512835Z",
+    "agent_lines": 63,
+    "agent_removed": 2,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 63,
+    "total_lines_changed": 65,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
