@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f80ae505d695",
+  "session_id": "fleet-b6abe38b8a0a4c7d83865cd690cfccf7",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T03:10:20.099946Z",
+  "branch": "grok/work-control-plane-public-p1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/decisions/ADR-019-work-control-plane.md",
+    "docs/monitor-api/work.md",
+    "scripts/api/work_router.py",
+    "scripts/work/normalize.py",
+    "scripts/work/schema/__init__.py",
+    "scripts/work/schema/work_projection.v1.json",
+    "scripts/work/sources_public.py",
+    "tests/test_work_api.py",
+    "tests/test_work_contract.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "fee65e5c1364",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T03:10:20.09608Z",
+    "agent_lines": 675,
+    "agent_removed": 124,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 675,
+    "total_lines_changed": 799,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
