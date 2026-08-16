@@ -60,6 +60,9 @@ write_restic_gate_receipt() {
   local staged_mirror_root="$STAGED_ROOT/data/lexicon/runner-mirror"
   local live_mirror_root="$SOURCE/lexicon/runner-mirror"
   local git_sha
+  local project_python
+  local common_dir
+  local primary_root
 
   # The staged tree is the copy restic uploaded. Do not create unrelated data
   # paths when it has no mirror; if a live mirror appeared after staging, it is
@@ -71,10 +74,32 @@ write_restic_gate_receipt() {
   fi
   [[ ! -L "$staged_mirror_root" && -d "$staged_mirror_root" ]] ||
     die "Staged runner mirror root must be a real directory: $staged_mirror_root"
-  [[ -x "$REPO_ROOT/.venv/bin/python" ]] ||
-    die "Runner mirror receipt writer requires $REPO_ROOT/.venv/bin/python"
+
+  # Layout A: dispatch worktrees have no local .venv. Prefer an explicit
+  # override, then the script checkout's .venv, then the primary checkout
+  # resolved via REPO_ROOT's git common dir (not PROJECT_ROOT — fixtures and
+  # LU_BACKUP_PROJECT_ROOT overrides are often separate git trees).
+  project_python="${LU_BACKUP_PYTHON:-}"
+  if [[ -z "$project_python" || ! -x "$project_python" ]]; then
+    if [[ -x "$REPO_ROOT/.venv/bin/python" ]]; then
+      project_python="$REPO_ROOT/.venv/bin/python"
+    else
+      common_dir="$(git -C "$REPO_ROOT" rev-parse --git-common-dir 2>/dev/null || true)"
+      case "$common_dir" in
+        /*) : ;;
+        "") common_dir="" ;;
+        *) common_dir="$REPO_ROOT/$common_dir" ;;
+      esac
+      if [[ -n "$common_dir" ]]; then
+        primary_root="$(cd "$common_dir/.." && pwd -P)"
+        project_python="$primary_root/.venv/bin/python"
+      fi
+    fi
+  fi
+  [[ -x "$project_python" ]] ||
+    die "Runner mirror receipt writer requires the shared project interpreter (.venv/bin/python via primary checkout)"
   git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
-  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
+  "$project_python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
     write-restic-gate-receipt \
     --mirror-root "$staged_mirror_root" \
     --receipt-root "$live_mirror_root" \

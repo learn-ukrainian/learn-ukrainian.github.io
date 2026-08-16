@@ -234,8 +234,13 @@ docs/damage-report-*.csv
 !jest.config.js
 !eslint.config.mjs
 
-# Batch runner state (generated at runtime)
-batch_state/
+# Batch runner state (generated at runtime). Allow schema-capped atlas-job
+# git receipts only — registry/result/pull trees stay ignored.
+batch_state/*
+!batch_state/atlas-jobs/
+batch_state/atlas-jobs/*
+!batch_state/atlas-jobs/receipts/
+!batch_state/atlas-jobs/receipts/**
 
 # Orchestration build artifacts — TRACKED for pipeline analytics
 # Lock files and raw LLM dumps are excluded; everything else is valuable data

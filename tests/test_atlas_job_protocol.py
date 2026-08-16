@@ -360,6 +360,71 @@ def test_git_receipt_rejects_absolute_paths() -> None:
     assert any("absolute path" in e for e in errors)
 
 
+def test_build_git_receipt_redacts_absolute_paths_in_backup_error() -> None:
+    full = {
+        "schema": "atlas-job-result.v1",
+        "id": "smoke",
+        "state": "succeeded",
+        "delivery": "ok",
+        "workdir": "/home/ops/atlas-runner/run-atlas-job-smoke",
+        "backup": {
+            "attempted": True,
+            "ok": False,
+            "snapshot_id": None,
+            "error": "needs /Users/me/proj/.venv/bin/python",
+        },
+        "summary": {
+            "targets": 5,
+            "consecutive_misses": 0,
+            "filled_translation": 0,
+            "circuit_breaker_tripped": False,
+        },
+    }
+    capped = atlas_job.build_git_receipt(full)
+    assert capped["workdir"] == "run-atlas-job-smoke"
+    assert "/Users/" not in json.dumps(capped)
+    assert "<abs>" in capped["backup"]["error"]
+    assert atlas_job.validate_git_receipt(capped) == []
+
+
+def test_close_writes_git_receipt_with_delivery_ok(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    plan = _plan(id="delivery-ok", result_sink="git")
+    workdir = atlas_job.work_dir_for(plan["id"], plan)
+    atlas_job.save_registry(
+        {
+            "id": plan["id"],
+            "state": "running",
+            "host": plan["host"],
+            "kind": plan["kind"],
+            "unit": atlas_job.unit_name(plan["id"]),
+            "workdir": workdir,
+            "issue": plan["issue"],
+            "plan_sha256": "abc",
+            "denominator": plan["denominator"],
+            "result_sink": "git",
+            "plan": plan,
+        }
+    )
+    _isolate_host.exit_status_by_workdir[workdir] = {
+        "service_result": "success",
+        "exit_status": "0",
+    }
+    rc = atlas_job.close_job(
+        plan["id"],
+        summary=_good_summary(),
+        skip_pull=True,
+        skip_restic=True,
+        host_adapter=_isolate_host,
+    )
+    assert rc == 0
+    receipt = json.loads(atlas_job.git_receipt_path(plan["id"]).read_text(encoding="utf-8"))
+    assert receipt["delivery"] == "ok"
+    assert receipt["state"] == "succeeded"
+
+
 def test_cli_validate_and_dry_submit(tmp_path: Path) -> None:
     path = tmp_path / "job.json"
     path.write_text(json.dumps(_plan()), encoding="utf-8")
