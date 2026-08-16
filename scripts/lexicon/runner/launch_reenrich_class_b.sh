@@ -184,10 +184,34 @@ WRAPPED="cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$CODE_ROOT"):\$P
 
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
+  # Protocol path (atlas_job): Restart=no, optional RuntimeMaxSec, ExecStopPost
+  # writes exit-status.json next to the per-job workdir. Default class-b runs
+  # keep prior memory caps and also default Restart=no (no double-processing).
+  EXIT_STATUS_FILE="${ATLAS_JOB_EXIT_STATUS_FILE:-$WORK_DIR/exit-status.json}"
+  cat > "$WORK_DIR/write-exit-status.sh" <<'EOS'
+#!/bin/bash
+set -eu
+out="${ATLAS_JOB_EXIT_STATUS_FILE:-}"
+if [[ -z "$out" ]]; then
+  exit 0
+fi
+printf '{"service_result":"%s","exit_code":"%s","exit_status":"%s"}\n' \
+  "${SERVICE_RESULT:-}" "${EXIT_CODE:-}" "${EXIT_STATUS:-}" > "$out"
+EOS
+  chmod +x "$WORK_DIR/write-exit-status.sh"
+  SYSTEMD_PROPS=(
+    --property=MemoryHigh=1536M
+    --property=MemoryMax=2048M
+    --property=Restart="${ATLAS_RE_ENRICH_RESTART:-no}"
+    --property="Environment=ATLAS_JOB_EXIT_STATUS_FILE=${EXIT_STATUS_FILE}"
+    --property="ExecStopPost=${WORK_DIR}/write-exit-status.sh"
+  )
+  if [[ -n "${ATLAS_RE_ENRICH_RUNTIME_MAX_SEC:-}" ]]; then
+    SYSTEMD_PROPS+=(--property="RuntimeMaxSec=${ATLAS_RE_ENRICH_RUNTIME_MAX_SEC}")
+  fi
   nohup systemd-run --user --wait --collect --unit="${UNIT%.service}" \
     --working-directory="$REPO" \
-    --property=MemoryHigh=1536M \
-    --property=MemoryMax=2048M \
+    "${SYSTEMD_PROPS[@]}" \
     /bin/bash -c "$WRAPPED" >> "$LOG" 2>&1 &
   wrapper_pid=$!
   printf '%s\n' "$wrapper_pid" > "$WRAPPER_PID_FILE"
@@ -195,7 +219,8 @@ if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run 
     driver_pid=$(systemctl --user show "$UNIT" --property=MainPID --value 2>/dev/null || true)
     if [[ "$driver_pid" =~ ^[1-9][0-9]*$ ]]; then
       printf '%s\n' "$driver_pid" > "$PID_FILE"
-      printf 'pid=%s wrapper_pid=%s unit=%s log=%s\n' "$driver_pid" "$wrapper_pid" "$UNIT" "$LOG"
+      printf 'pid=%s wrapper_pid=%s unit=%s log=%s workdir=%s\n' \
+        "$driver_pid" "$wrapper_pid" "$UNIT" "$LOG" "$WORK_DIR"
       exit 0
     fi
     if ! kill -0 "$wrapper_pid" 2>/dev/null; then

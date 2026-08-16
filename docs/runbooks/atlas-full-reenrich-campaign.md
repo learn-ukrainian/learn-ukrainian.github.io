@@ -1,6 +1,7 @@
 # Atlas Full-Reenrich Campaign Runbook (#6466)
 
 This runbook documents the operator and driver procedures for the full-catalog Atlas re-enrichment campaign tooling (#6466).
+Tracked submit/status/close: [`atlas-job-protocol.md`](atlas-job-protocol.md). Default host is `atlas-runner`.
 
 ## Overview & Campaign Architecture
 
@@ -62,12 +63,13 @@ From the Mac worktree, deploy the driver and launcher to the remote VPS and laun
 
 ```bash
 # Smoke test (small limit)
-ATLAS_RUNNER_HOST=ops@runner-vps scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
+# Prefer the job protocol (tracked plan + result). See atlas-job-protocol.md.
+ATLAS_RUNNER_HOST=atlas-runner scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
   --target full-catalog \
   --limit 10
 
 # Full campaign launch (detached systemd-run under 1.5G/2.0G memory limits)
-ATLAS_RUNNER_HOST=ops@runner-vps scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
+ATLAS_RUNNER_HOST=atlas-runner scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
   --target full-catalog \
   --no-poll
 ```
@@ -93,10 +95,10 @@ Check status and logs on the VPS runner:
 
 ```bash
 # Check if driver process is active
-ssh ops@runner-vps "ps aux | grep reenrich_thin_manifest_entries"
+ssh atlas-runner "ps aux | grep reenrich_thin_manifest_entries"
 
 # Inspect live log tail
-ssh ops@runner-vps "tail -n 60 /home/ops/atlas-runner/run-class-b-reenrich/reenrich.log"
+ssh atlas-runner "tail -n 60 /home/ops/atlas-runner/run-class-b-reenrich/reenrich.log"
 ```
 
 If 50 consecutive entries fail to hit any source/cache, the circuit breaker trips, returning exit code `70` (`CIRCUIT_BREAKER_EXIT_CODE`) and logging `circuit_breaker_tripped: true`.
@@ -108,7 +110,7 @@ If 50 consecutive entries fail to hit any source/cache, the circuit breaker trip
 Once complete, pull back the output manifest and run summary:
 
 ```bash
-ATLAS_RUNNER_HOST=ops@runner-vps scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
+ATLAS_RUNNER_HOST=atlas-runner scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
   --pull-only
 ```
 

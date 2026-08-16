@@ -20,7 +20,7 @@
 #   scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --pull-only  # just pull artifacts back
 #
 # Env overrides:
-#   ATLAS_RUNNER_HOST (default vps), ATLAS_RUN_ROOT, ATLAS_REPO,
+#   ATLAS_RUNNER_HOST (default atlas-runner), ATLAS_RUN_ROOT, ATLAS_REPO,
 #   ATLAS_PRIMARY_ROOT (default: primary checkout from shared .git common dir),
 #   ATLAS_RE_ENRICH_WORK_DIR, ATLAS_RE_ENRICH_RESIDUAL (local slugs dump),
 #   ATLAS_LOCAL_VESUM_DB, ATLAS_LOCAL_SLOVNYK_CACHE
@@ -50,7 +50,7 @@ esac
 PRIMARY_ROOT="${ATLAS_PRIMARY_ROOT:-$(cd "$_primary_common_dir/.." && pwd)}"
 PYTHON_BIN="${ATLAS_RE_ENRICH_PYTHON:-$PRIMARY_ROOT/.venv/bin/python}"
 
-HOST="${ATLAS_RUNNER_HOST:-vps}"
+HOST="${ATLAS_RUNNER_HOST:-atlas-runner}"
 RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
 REMOTE_REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 REMOTE_WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
@@ -276,7 +276,22 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
   echo "launching on $HOST"
   # ATLAS_RE_ENRICH_DRIVER pins the work-dir copy explicitly so a stale
   # in-repo checkout on the VPS can never win the launcher's auto-detection.
-  remote_cmd="ATLAS_RUN_ROOT=$(printf '%q' "$RUN_ROOT") ATLAS_REPO=$(printf '%q' "$REMOTE_REPO") ATLAS_RE_ENRICH_WORK_DIR=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_CODE_ROOT=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_DRIVER=$(printf '%q' "$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py") bash $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
+  remote_cmd="ATLAS_RUN_ROOT=$(printf '%q' "$RUN_ROOT") ATLAS_REPO=$(printf '%q' "$REMOTE_REPO") ATLAS_RE_ENRICH_WORK_DIR=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_CODE_ROOT=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_DRIVER=$(printf '%q' "$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py")"
+  if [[ -n "${ATLAS_RE_ENRICH_UNIT:-}" ]]; then
+    remote_cmd+=" ATLAS_RE_ENRICH_UNIT=$(printf '%q' "$ATLAS_RE_ENRICH_UNIT")"
+  fi
+  # Forward atlas_job.submit() protocol env so remote systemd gets RuntimeMaxSec,
+  # exit-status file path, and Restart=no (same printf %q style as UNIT).
+  if [[ -n "${ATLAS_RE_ENRICH_RUNTIME_MAX_SEC:-}" ]]; then
+    remote_cmd+=" ATLAS_RE_ENRICH_RUNTIME_MAX_SEC=$(printf '%q' "$ATLAS_RE_ENRICH_RUNTIME_MAX_SEC")"
+  fi
+  if [[ -n "${ATLAS_JOB_EXIT_STATUS_FILE:-}" ]]; then
+    remote_cmd+=" ATLAS_JOB_EXIT_STATUS_FILE=$(printf '%q' "$ATLAS_JOB_EXIT_STATUS_FILE")"
+  fi
+  if [[ -n "${ATLAS_RE_ENRICH_RESTART:-}" ]]; then
+    remote_cmd+=" ATLAS_RE_ENRICH_RESTART=$(printf '%q' "$ATLAS_RE_ENRICH_RESTART")"
+  fi
+  remote_cmd+=" bash $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
   # macOS ships bash 3.2, where "${arr[@]}" on a zero-element array throws
   # "unbound variable" under `set -u` (fixed upstream in bash 4.4+) — guard
   # the iteration instead of relying on the expansion alone.
