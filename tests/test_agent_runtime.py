@@ -4381,8 +4381,8 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
     assert proc.stdout.strip() == "real-gh pr merge 1234"
 
 
-def test_gh_shim_retries_mocked_secondary_rate_limit_and_replays_stdin(tmp_path):
-    """A GitHub 403 secondary limit retries without losing a PR/comment body."""
+def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_stdin(tmp_path):
+    """Piped stdin consumed on attempt 1 cannot be replayed on retry; emits warning (#6869)."""
     shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
@@ -4394,12 +4394,13 @@ def test_gh_shim_retries_mocked_secondary_rate_limit_and_replays_stdin(tmp_path)
         "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
         "count=$((count + 1))\n"
         "printf '%s' \"$count\" >\"$attempts\"\n"
+        "stdin_body=\"$(cat)\"\n"
         "if [[ \"$count\" == 1 ]]; then\n"
         "  printf 'retry-output-should-not-leak\\n'\n"
         "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
         "  exit 1\n"
         "fi\n"
-        "printf 'real-gh %s stdin=%s\\n' \"$*\" \"$(cat)\"\n",
+        "printf 'real-gh %s stdin=%s\\n' \"$*\" \"$stdin_body\"\n",
         encoding="utf-8",
     )
     fake_gh.chmod(0o755)
@@ -4422,10 +4423,14 @@ def test_gh_shim_retries_mocked_secondary_rate_limit_and_replays_stdin(tmp_path)
 
     assert proc.returncode == 0
     assert attempts.read_text(encoding="utf-8") == "2"
-    assert proc.stdout.strip() == "real-gh issue comment 5146 -F - stdin=preserved comment body"
+    assert proc.stdout.strip() == "real-gh issue comment 5146 -F - stdin="
     assert "retry-output-should-not-leak" not in proc.stdout
     assert "You have exceeded a secondary rate limit" not in proc.stderr
     assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
+    assert (
+        "agent-gh-shim: warning: piped stdin was consumed on attempt 1 and cannot be replayed for retried command: gh issue comment 5146 -F -"
+        in proc.stderr
+    )
     assert "github_secondary_rate_limited" not in proc.stderr
 
 

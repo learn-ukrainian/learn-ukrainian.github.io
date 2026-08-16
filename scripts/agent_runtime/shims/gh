@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+# scripts/agent_runtime/shims/gh — agent shim for GitHub CLI (gh).
+#
+# Intercepts gh commands to:
+# 1. Block prohibited PR merge/approval operations when AGENT_NO_MERGE=1 (#1403).
+# 2. Automatically retry operations throttled by GitHub secondary rate limits
+#    (HTTP 403 / 429) using bounded exponential backoff.
+#
+# Stdin handling limitation (#6869):
+# Standard input is passed directly to the underlying gh command without
+# capturing or buffering it in a temporary file. This prevents hangs in
+# non-interactive background processes where stdin is unclosed and avoids
+# EBADF errors when stdin is closed. Consequently, if a command that consumes
+# stdin (e.g., `gh pr comment --body-file -` or `gh api --input -`) is throttled
+# and retried, stdin will have already been consumed on the first attempt and
+# cannot be replayed on subsequent retry attempts. When retrying with non-terminal
+# stdin ([[ ! -t 0 ]]), a warning is emitted to stderr naming the command.
+
 set -euo pipefail
 
 _deny() {
@@ -179,6 +196,10 @@ _run_with_secondary_rate_limit_retry() {
     local delay_s=$((base_delay_s * (2 ** (attempt - 1))))
     printf 'agent-gh-shim: GitHub HTTP %s throttled; retrying gh in %ss (attempt %s/%s).\n' \
       "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
+    if [[ ! -t 0 ]]; then
+      printf 'agent-gh-shim: warning: piped stdin was consumed on attempt 1 and cannot be replayed for retried command: gh %s\n' \
+        "$*" >&2
+    fi
     # Bash's wait builtin returns when TERM interrupts it, letting the abort
     # trap kill the tracked backoff child immediately.
     # shellcheck disable=SC2217
