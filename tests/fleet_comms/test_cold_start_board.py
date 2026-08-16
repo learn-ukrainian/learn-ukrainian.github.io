@@ -399,6 +399,9 @@ def test_cli_cold_start_board_markdown(capsys):
 
 def test_probe_inbox_legacy_schema_ok(tmp_path: Path, monkeypatch) -> None:
     """Legacy deliveries without channel/recipient columns must not degrade."""
+    # #6863: default_plane_root hard-fails on non-git roots; the fixture must
+    # present a real anchor (a `.git` dir is enough for the fs fallback).
+    (tmp_path / ".git").mkdir()
     broker = tmp_path / "messages.db"
     _seed_legacy_broker(broker)
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")

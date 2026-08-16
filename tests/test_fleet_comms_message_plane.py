@@ -57,17 +57,25 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     assert default_plane_root(repo_root=worktree) == expected
 
 
-def test_default_plane_root_preserves_override_and_non_git_fallback(
+def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    from scripts.fleet_comms.paths import PlaneRootAnchorError
+
     isolated = tmp_path / "isolated"
     isolated.mkdir()
     override = tmp_path / "explicit-plane"
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(override))
     assert default_plane_root(repo_root=isolated) == override
 
+    # #6863: outside a git repository the default is a hard error, never a
+    # silent shadow tree under an unverifiable cwd.
     monkeypatch.delenv("FLEET_COMMS_ROOT")
-    assert default_plane_root(repo_root=isolated) == (
+    with pytest.raises(PlaneRootAnchorError):
+        default_plane_root(repo_root=isolated)
+
+    # Isolated non-git fixtures must opt in explicitly.
+    assert default_plane_root(repo_root=isolated, allow_non_git=True) == (
         isolated / "batch_state" / "fleet-comms" / "v1"
     )
 

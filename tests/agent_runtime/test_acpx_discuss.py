@@ -1264,6 +1264,9 @@ def test_optional_projection_failure_never_changes_complete_discussion_result(
 
     monkeypatch.setattr(acpx_discuss, "AcpxDiscussionController", FakeController)
     monkeypatch.setattr(reconcile, "project_terminal_acp_receipt", fail_projection)
+    # #6863: default_plane_root hard-fails on non-git roots; the fixture must
+    # present a real anchor (a `.git` dir is enough for the fs fallback).
+    (tmp_path / ".git").mkdir()
 
     result = acpx_discuss.run_discussion(cwd=tmp_path)
 
