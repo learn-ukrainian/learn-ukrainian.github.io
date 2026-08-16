@@ -28,9 +28,11 @@ verifiable claim is tool-backed (deterministic-over-hallucination).
 
 **Work-board orientation surface:** `GET http://127.0.0.1:8765/api/work/v1/projection`
 returns the merged work board — issues, PRs, dispatch tasks, and reviews — with each item
-carrying a rule-derived `health` (`ON_TRACK` / `AT_RISK` / `OFF_TRACK`), an `attention_rank`,
-and a `safe_next_action`. Query it at orient and again when picking the next unblocked action
-(§2); it is a queue INPUT alongside your stream/GH/issue sources, never a replacement for them.
+carrying a rule-derived `health` (`ON_TRACK` / `AT_RISK` / `OFF_TRACK` / `UNKNOWN` — authority
+missing/stale, pairs with the `INSPECT_UNKNOWN` safe action; see `HEALTH_RANK` in
+`scripts/work/attention.py`), an `attention_rank`, and a `safe_next_action`. Query it at orient
+and again when picking the next unblocked action (§2); it is a queue INPUT alongside your
+stream/GH/issue sources, never a replacement for them.
 
 ---
 
@@ -40,6 +42,7 @@ and a `safe_next_action`. Query it at orient and again when picking the next unb
 
 ```bash
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
+curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/projection" || true  # best-effort: local server, degraded/absent sources are normal
 .venv/bin/python -m scripts.fleet_comms plane-status        # message-plane mode/parity
 ```
 Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already

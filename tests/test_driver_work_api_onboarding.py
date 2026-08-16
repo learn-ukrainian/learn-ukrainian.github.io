@@ -10,27 +10,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from tests.test_launcher_contract import PUBLIC as PUBLIC_LAUNCHERS
+
 REPO = Path(__file__).resolve().parents[1]
 LAUNCHER_CORE = REPO / "scripts/lib/launcher_core.sh"
 SKILL = REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md"
 
-# All 12 start-*.sh launchers source launcher_core.sh (verified by
-# test_launcher_contract.py's PUBLIC tuple); this test guards the one
-# LC_DRIVER_PROMPT string they all forward.
-PUBLIC_LAUNCHERS = (
-    "start-claude.sh",
-    "start-claude-driver.sh",
-    "start-codex.sh",
-    "start-codex-driver.sh",
-    "start-gemini.sh",
-    "start-gemini-driver.sh",
-    "start-grok.sh",
-    "start-grok-driver.sh",
-    "start-kimi.sh",
-    "start-kimicc.sh",
-    "start-glm.sh",
-    "start-glmcc.sh",
-)
+# All 12 start-*.sh launchers source launcher_core.sh; PUBLIC_LAUNCHERS is
+# imported from test_launcher_contract.py's PUBLIC tuple (the allowlist SSOT,
+# guarded there by test_root_launcher_allowlist_is_exact) so the two lists
+# cannot silently drift. This test guards the one LC_DRIVER_PROMPT string
+# they all forward.
 
 
 def test_all_public_launchers_source_launcher_core() -> None:
@@ -71,3 +61,27 @@ def test_skill_teaches_grok_bot_with_hard_exclusions() -> None:
     assert "ask-grok-bot" in body
     assert "never" in body.lower() and "dispatch target" in body
     assert "same-family Grok must not CF" in body
+
+
+def test_skill_teaches_the_full_health_enum() -> None:
+    from scripts.work.attention import HEALTH_RANK
+
+    body = SKILL.read_text(encoding="utf-8")
+    # The taught enum must match HEALTH_RANK exactly, not a stale 3-state subset
+    # (UNKNOWN is authority-missing/stale, pairs with the INSPECT_UNKNOWN safe
+    # action) — assert against the source of truth so this cannot silently drift.
+    for state in HEALTH_RANK:
+        assert f"`{state}`" in body, f"skill must teach health state {state!r}"
+    assert "INSPECT_UNKNOWN" in body
+
+
+def test_no_launcher_prompt_branch_names_review_pr() -> None:
+    # Sealed formal review-pr is retired (operator 2026-08-07; the CLI fails
+    # closed) — no LC_DRIVER_PROMPT / fleet_clause branch a driver could be
+    # launched down may still instruct it.
+    core = LAUNCHER_CORE.read_text(encoding="utf-8")
+    cold_start = (REPO / "scripts/lib/fleet_comms_cold_start.sh").read_text(encoding="utf-8")
+    assert "review-pr" not in core
+    # The richer clause is allowed to name the retired command only to say
+    # "do not use" — never as an instruction to run it.
+    assert "RETIRED — do not use" in cold_start
