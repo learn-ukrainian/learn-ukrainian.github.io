@@ -200,10 +200,10 @@ def _maybe_run_delivery_expiry_sweep() -> None:
 
 def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
     try:
-        from ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
-        from ai_agent_bridge import _db as _ch_db  # noqa: PLC0415 — optional broker bridge
+        from scripts.ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
+        from scripts.ai_agent_bridge import _db as _ch_db  # noqa: PLC0415 — optional broker bridge
     except Exception:
-        logger.exception("bridge delivery-expiry sweep: ai_agent_bridge not importable")
+        logger.exception("bridge delivery-expiry sweep: scripts.ai_agent_bridge not importable")
         return
 
     # `_db.get_db()` reads its own module-level DB_PATH, bound once from
@@ -1377,7 +1377,7 @@ async def get_channel_endpoint(name: str):
     context_preview = ""
     context_sha = ""
     try:
-        from ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
+        from scripts.ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
 
         ctx_path = _ch.channel_context_path(name)
         if ctx_path.exists():

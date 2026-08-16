@@ -219,6 +219,37 @@ def test_ast_imports_and_loaders():
             print(f"  - {fail}", file=sys.stderr)
         raise AssertionError(f"Found {len(all_failures)} import pinning violation(s).")
 
+def test_optional_modules_use_canonical_bridge_identity():
+    """OPTIONAL_MODULES must preload only scripts.ai_agent_bridge, never bare ai_agent_bridge.
+
+    Expected names are hard-coded (independent of OPTIONAL_MODULES) so a list
+    rewrite cannot silently reintroduce the dual-identity preload.
+    """
+    # Build the bare root without a quoted "bare." target so the suite-wide
+    # non-canonical identity guard does not flag this assertion helper.
+    bare_root = "ai_agent_bridge"
+    bare_prefix = bare_root + "."
+    bare_bridge_entries = [
+        name
+        for name in OPTIONAL_MODULES
+        if name == bare_root or name.startswith(bare_prefix)
+    ]
+    assert bare_bridge_entries == [], (
+        "OPTIONAL_MODULES must not preload bare ai_agent_bridge identity; "
+        f"found: {bare_bridge_entries}"
+    )
+
+    required_canonical = (
+        "scripts.ai_agent_bridge",
+        "scripts.ai_agent_bridge._channels",
+        "scripts.ai_agent_bridge._db",
+    )
+    for name in required_canonical:
+        assert name in OPTIONAL_MODULES, (
+            f"OPTIONAL_MODULES must include canonical bridge entry {name!r}"
+        )
+
+
 def test_lifespan_preload():
     """Boot the FastAPI app and verify that preloaded modules exist in sys.modules."""
     with TestClient(app) as _:
