@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "95d4bac5c52a",
+  "strategy": "manual-commit",
+  "branch": "cursor/6876-protocol-smoke-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/atlas_job.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/95/d4bac5c52a/0/metadata.json",
+      "transcript": "/95/d4bac5c52a/0/full.jsonl",
+      "content_hash": "/95/d4bac5c52a/0/content_hash.txt",
+      "prompt": "/95/d4bac5c52a/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 8924,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 180992,
+    "output_tokens": 997,
+    "api_call_count": 7
+  }
+}
