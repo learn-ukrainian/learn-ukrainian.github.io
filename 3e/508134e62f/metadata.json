@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3e508134e62f",
+  "strategy": "manual-commit",
+  "branch": "cursor/6876-protocol-smoke-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitignore",
+    "batch_state/atlas-jobs/receipts/6876-smoke-limit5.json",
+    "scripts/backup-data.sh",
+    "scripts/lexicon/runner/atlas_job.py",
+    "scripts/lexicon/runner/launch_reenrich_class_b_remote.sh",
+    "tests/test_atlas_job_protocol.py",
+    "tests/test_launch_reenrich_target_detection.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/3e/508134e62f/0/metadata.json",
+      "transcript": "/3e/508134e62f/0/full.jsonl",
+      "compact_transcript": "/3e/508134e62f/0/transcript.jsonl",
+      "content_hash": "/3e/508134e62f/0/content_hash.txt",
+      "prompt": "/3e/508134e62f/0/prompt.txt"
+    }
+  ]
+}
