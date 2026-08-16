@@ -257,3 +257,109 @@ def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
     # Bound assertion: must execute in under 1 second (target < 3s SLA)
     assert duration_s < 1.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 1.0s bound)"
 
+
+def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_path, monkeypatch):
+    """Cold process restart loads persistent SQLite cache and skips reading terminal files."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    now = datetime.now(UTC)
+    for index in range(50):
+        _write_task(
+            tasks_dir / f"done-{index:03d}.json",
+            _task_payload(f"done-{index:03d}", started_at=_iso(now - timedelta(minutes=index))),
+        )
+    _write_task(
+        tasks_dir / "active.json",
+        _task_payload("active", status="spawning", pid=None, started_at=_iso(now)),
+    )
+
+    # 1. First run populates persistent SQLite cache
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+    res1 = delegate_router.active_delegate_tasks()
+    assert res1["total"] == 1
+    assert res1["tasks"][0]["task_id"] == "active"
+
+    # Verify SQLite cache exists on disk
+    cache_db = tasks_dir / ".task_cache.sqlite3"
+    assert cache_db.exists()
+
+    # 2. Simulate fresh process restart (in-memory cache cleared)
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+
+    read_calls = []
+    real_read = delegate_router._read_task_state
+
+    def spy_read(path):
+        read_calls.append(path)
+        return real_read(path)
+
+    monkeypatch.setattr(delegate_router, "_read_task_state", spy_read)
+
+    res2 = delegate_router.active_delegate_tasks()
+    assert res2["total"] == 1
+    assert res2["tasks"][0]["task_id"] == "active"
+    # None of the 50 cached done files were opened/parsed
+    assert len(read_calls) == 0
+
+
+def test_delegate_persistent_cache_invalidates_on_mtime_change(tmp_path, monkeypatch):
+    """When a task state file is updated on disk (mtime changes), the cache refreshes."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    task_file = tasks_dir / "task-1.json"
+    _write_task(task_file, _task_payload("task-1", status="spawning", pid=None))
+
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+    res1 = delegate_router.active_delegate_tasks()
+    assert res1["total"] == 1
+
+    # Modify task to done and update mtime
+    _write_task(task_file, _task_payload("task-1", status="done", pid=None))
+    future_mtime = task_file.stat().st_mtime + 5.0
+    import os
+    os.utime(str(task_file), (future_mtime, future_mtime))
+
+    # Simulate restart
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+
+    res2 = delegate_router.active_delegate_tasks()
+    assert res2["total"] == 0
+
+
+def test_delegate_persistent_cache_detects_dead_pid_on_restart(tmp_path, monkeypatch):
+    """Dead PIDs are reclassified as zombie even when loaded from persistent cache."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    _write_task(
+        tasks_dir / "crashed.json",
+        _task_payload("crashed", status="running", pid=99999),
+    )
+
+    # First run with alive PID
+    monkeypatch.setattr(delegate_router, "_pid_alive", lambda pid: True)
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+    res1 = delegate_router.active_delegate_tasks()
+    assert res1["total"] == 1
+    assert res1["tasks"][0]["status"] == "running"
+
+    # Simulate restart with dead PID
+    monkeypatch.setattr(delegate_router, "_pid_alive", lambda pid: False)
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+    res2 = delegate_router.active_delegate_tasks()
+    assert res2["total"] == 0
+
+    all_tasks = delegate_router.list_delegate_tasks(status="all")
+    assert all_tasks["total"] == 1
+    assert all_tasks["tasks"][0]["status"] == "zombie"
+    assert all_tasks["tasks"][0]["alive"] is False
+
+

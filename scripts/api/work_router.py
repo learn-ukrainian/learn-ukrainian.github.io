@@ -7,7 +7,6 @@ Never proxies private adapters or mutates GitHub / dispatch state.
 from __future__ import annotations
 
 import asyncio
-import time
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -88,6 +87,45 @@ def _build_sync(filters: dict[str, Any], *, cache_age_s: float = 0.0) -> dict[st
     return validate_projection(payload)
 
 
+_IN_FLIGHT_BUILDS: dict[str, asyncio.Task[dict[str, Any]]] = {}
+
+
+async def _run_build_job(key: str, filters: dict[str, Any]) -> dict[str, Any]:
+    try:
+        payload = await asyncio.to_thread(_build_sync, filters, cache_age_s=0.0)
+        payload["cache_age_s"] = 0.0
+        cache_set(key, payload)
+        return payload
+    finally:
+        _IN_FLIGHT_BUILDS.pop(key, None)
+
+
+def _get_or_create_build_task(
+    key: str, filters: dict[str, Any]
+) -> asyncio.Task[dict[str, Any]]:
+    task = _IN_FLIGHT_BUILDS.get(key)
+    if task is None or task.done():
+        task = asyncio.create_task(_run_build_job(key, filters))
+        _IN_FLIGHT_BUILDS[key] = task
+    return task
+
+
+def warm_projection_cache(
+    filters: dict[str, Any] | None = None,
+) -> asyncio.Task[dict[str, Any]] | None:
+    """Schedule asynchronous background warm-up of the public projection cache."""
+    canonical = admit_projection_filters(filters or {})
+    key = projection_cache_key(canonical)
+    cached = cache_get_with_age(key, CACHE_TTL_S)
+    if cached is not None:
+        return None
+    try:
+        _ = asyncio.get_running_loop()
+    except RuntimeError:
+        return None
+    return _get_or_create_build_task(key, canonical)
+
+
 @router.get("/v1/projection")
 async def work_projection(
     request: Request,
@@ -110,13 +148,15 @@ async def work_projection(
     if fresh:
         cache_invalidate(CACHE_KEY)
 
-    started = time.monotonic()
+    task = _get_or_create_build_task(key, filters)
     try:
-        payload = await asyncio.wait_for(
-            asyncio.to_thread(_build_sync, filters, cache_age_s=0.0),
-            timeout=TIMEOUT_S,
-        )
+        payload = await asyncio.wait_for(asyncio.shield(task), timeout=TIMEOUT_S)
     except TimeoutError as exc:
+        stale = cache_get_with_age(key, float("inf"))
+        if stale is not None and isinstance(stale[0], dict):
+            out = dict(stale[0])
+            out["cache_age_s"] = float(stale[1])
+            return out
         # Typed degradation envelope — never a bare 500 hide of healthy sources.
         raise HTTPException(
             status_code=504,
@@ -137,10 +177,8 @@ async def work_projection(
             detail={"error": "work_projection_invalid", "message": str(exc)},
         ) from exc
 
-    _ = time.monotonic() - started  # elapsed retained for future metrics only
-    payload["cache_age_s"] = 0.0
-    cache_set(key, payload)
-    return payload
+    out = dict(payload)
+    return out
 
 
 @router.get("/v1/capabilities")

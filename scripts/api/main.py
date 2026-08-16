@@ -103,6 +103,7 @@ from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
 from .work_router import router as work_router
+from .work_router import warm_projection_cache
 from .worktrees_router import router as worktrees_router
 
 
@@ -124,6 +125,10 @@ async def _lifespan(_app: FastAPI):
         isa.schedule_refresh(force=False)
     except Exception as exc:
         logger.warning("Issue stream audit refresh schedule on startup failed: %s", exc)
+    try:
+        warm_projection_cache()
+    except Exception as exc:
+        logger.warning("Work projection warmup schedule on startup failed: %s", exc)
     start_periodic_refresh()
     try:
         yield

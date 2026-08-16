@@ -5,8 +5,10 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import sqlite3
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query
@@ -152,8 +154,133 @@ def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
     return claimed[0]
 
 
-_TASK_STATE_CACHE: dict[str, tuple[float, dict[str, Any] | None, str, bool]] = {}
+_TASK_STATE_CACHE: dict[
+    str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
+] = {}
 _LAST_TASKS_DIR_STR: str = ""
+
+
+def _task_cache_db_path(tasks_dir_str: str) -> Path:
+    return Path(tasks_dir_str) / ".task_cache.sqlite3"
+
+
+def _init_task_cache_db(db_path: Path) -> sqlite3.Connection | None:
+    try:
+        conn = sqlite3.connect(str(db_path), timeout=5.0)
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS task_cache (
+                path TEXT PRIMARY KEY,
+                mtime REAL NOT NULL,
+                task_id TEXT NOT NULL,
+                status TEXT NOT NULL,
+                derived_status TEXT NOT NULL,
+                pid INTEGER,
+                alive INTEGER NOT NULL,
+                started_at TEXT,
+                duration_s REAL,
+                agent TEXT,
+                model TEXT,
+                effort TEXT,
+                cli_version TEXT,
+                substitution TEXT,
+                claimed_repo TEXT
+            )
+            """
+        )
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
+        conn.commit()
+        return conn
+    except (OSError, sqlite3.Error):
+        return None
+
+
+def _load_task_cache_from_db(
+    tasks_dir_str: str,
+) -> dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]]:
+    db_path = _task_cache_db_path(tasks_dir_str)
+    if not db_path.exists():
+        return {}
+    try:
+        conn = sqlite3.connect(str(db_path), timeout=2.0)
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT path, mtime, task_id, status, derived_status, pid, alive,
+                   started_at, duration_s, agent, model, effort, cli_version,
+                   substitution, claimed_repo
+            FROM task_cache
+            """
+        )
+        rows = cursor.fetchall()
+        conn.close()
+        cache: dict[
+            str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
+        ] = {}
+        for row in rows:
+            (
+                path_str,
+                mtime,
+                task_id,
+                raw_status,
+                derived_status,
+                pid,
+                alive_int,
+                started_at,
+                duration_s,
+                agent,
+                model,
+                effort,
+                cli_version,
+                subst_str,
+                claimed_repo,
+            ) = row
+            subst = None
+            if subst_str:
+                try:
+                    subst = json.loads(subst_str)
+                except (json.JSONDecodeError, TypeError):
+                    subst = subst_str
+            summary = {
+                "task_id": task_id,
+                "agent": agent,
+                "model": model,
+                "effort": effort,
+                "cli_version": cli_version,
+                "substitution": subst,
+                "status": raw_status,
+                "started_at": started_at,
+                "duration_s": duration_s,
+            }
+            cache[path_str] = (
+                float(mtime),
+                summary,
+                str(derived_status),
+                bool(alive_int),
+                claimed_repo,
+                int(pid) if pid is not None else None,
+            )
+        return cache
+    except (OSError, sqlite3.Error):
+        return {}
+
+
+def _save_task_cache_entries(tasks_dir_str: str, records: list[tuple]) -> None:
+    db_path = _task_cache_db_path(tasks_dir_str)
+    try:
+        conn = _init_task_cache_db(db_path)
+        if conn is None:
+            return
+        conn.executemany(
+            """
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            records,
+        )
+        conn.commit()
+        conn.close()
+    except (OSError, sqlite3.Error):
+        pass
 
 
 def _delegate_task_rows(
@@ -177,6 +304,7 @@ def _delegate_task_rows(
     tasks_dir_str = str(TASKS_DIR)
     if tasks_dir_str != _LAST_TASKS_DIR_STR:
         _TASK_STATE_CACHE.clear()
+        _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str))
         _LAST_TASKS_DIR_STR = tasks_dir_str
 
     repo_predicate = _normalize_repository_predicate(repository)
@@ -185,12 +313,14 @@ def _delegate_task_rows(
     if not TASKS_DIR.exists():
         return rows
 
-    is_active_query = (statuses == ACTIVE_TASK_STATUSES)
+    is_active_query = statuses == ACTIVE_TASK_STATUSES
 
     try:
         entries = list(os.scandir(tasks_dir_str))
     except OSError:
         return rows
+
+    dirty_records: list[tuple] = []
 
     for entry in entries:
         if not entry.name.endswith(".json"):
@@ -204,52 +334,102 @@ def _delegate_task_rows(
         path_str = entry.path
         cached = _TASK_STATE_CACHE.get(path_str)
 
-        if cached and cached[0] == mtime:
-            _, task, derived_status, alive = cached
+        if cached is not None and cached[0] == mtime:
+            _, summary, derived_status, alive, claimed_repo, pid = cached
             if is_active_query and derived_status not in statuses:
                 continue
-            if task is None:
-                task = _read_task_state(path_str)
-                if task is None:
-                    continue
-                derived_status, alive = _derived_task_status(task)
-                _TASK_STATE_CACHE[path_str] = (mtime, task, derived_status, alive)
+            if derived_status == "running" and pid:
+                alive = _pid_alive(pid)
+                if not alive:
+                    derived_status = "zombie"
         else:
             task = _read_task_state(path_str)
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)
-            if derived_status not in ACTIVE_TASK_STATUSES:
-                _TASK_STATE_CACHE[path_str] = (mtime, task, derived_status, alive)
-
-        if statuses is not None and derived_status not in statuses:
-            continue
-
-        # Scope applies on raw task state only — never re-emit repository identity.
-        if repo_predicate is not None:
             claimed_repo = _authoritative_task_repository(task)
-            if claimed_repo is None or claimed_repo != repo_predicate:
-                continue
-
-        task_id = task.get("task_id") or entry.name[:-5]
-        rows.append(
-            {
+            pid = task.get("pid")
+            pid_int = int(pid) if pid and str(pid).isdigit() else None
+            task_id = str(task.get("task_id") or entry.name[:-5])
+            raw_status = str(task.get("status") or "")
+            subst = task.get("substitution")
+            summary = {
                 "task_id": task_id,
                 "agent": task.get("agent"),
                 "model": task.get("model"),
                 "effort": task.get("effort"),
                 "cli_version": task.get("cli_version"),
-                "substitution": task.get("substitution"),
-                "status": derived_status,
+                "substitution": subst,
+                "status": raw_status,
                 "started_at": task.get("started_at"),
                 "duration_s": task.get("duration_s"),
-                "age_s": _task_age_seconds(task.get("started_at")),
+            }
+            cached_tuple = (
+                mtime,
+                summary,
+                derived_status,
+                alive,
+                claimed_repo,
+                pid_int,
+            )
+            _TASK_STATE_CACHE[path_str] = cached_tuple
+            subst_str = (
+                json.dumps(subst)
+                if isinstance(subst, dict)
+                else (str(subst) if subst is not None else None)
+            )
+            dirty_records.append(
+                (
+                    path_str,
+                    mtime,
+                    task_id,
+                    raw_status,
+                    derived_status,
+                    pid_int,
+                    1 if alive else 0,
+                    summary["started_at"],
+                    summary["duration_s"],
+                    summary["agent"],
+                    summary["model"],
+                    summary["effort"],
+                    summary["cli_version"],
+                    subst_str,
+                    claimed_repo,
+                )
+            )
+
+        if statuses is not None and derived_status not in statuses:
+            continue
+
+        # Scope applies on raw task state only — never re-emit repository identity.
+        if repo_predicate is not None and (
+            claimed_repo is None or claimed_repo != repo_predicate
+        ):
+            continue
+
+        task_id = summary["task_id"]
+        rows.append(
+            {
+                "task_id": task_id,
+                "agent": summary.get("agent"),
+                "model": summary.get("model"),
+                "effort": summary.get("effort"),
+                "cli_version": summary.get("cli_version"),
+                "substitution": summary.get("substitution"),
+                "status": derived_status,
+                "started_at": summary.get("started_at"),
+                "duration_s": summary.get("duration_s"),
+                "age_s": _task_age_seconds(summary.get("started_at")),
                 "alive": alive,
             }
         )
 
+    if dirty_records:
+        _save_task_cache_entries(tasks_dir_str, dirty_records)
+
     rows.sort(
-        key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
+        key=lambda item: _parse_iso_datetime(item.get("started_at"))
+        or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
     return rows
