@@ -351,25 +351,29 @@ def fetch_streams_projection(
 
 
 def fetch_delegate_active(
-    loader: Callable[[], dict[str, Any]] | None = None,
+    loader: Callable[[str], dict[str, Any]] | None = None,
     *,
     repository_id: str | None = None,
 ) -> SectionResult:
     """Summarize active delegate tasks for the exact public repository only.
 
-    Authoritative ``repository`` / ``repository_id`` admission runs before
-    count. Foreign, unclassified, and ambiguous rows are omitted so public
-    totals never depend on private volume. Paths/branches/task IDs are never
-    used for repository attribution. Bodies and result files are never read.
+    The admitted public repository is passed into the production loader so
+    filtering and total construction happen **before** any page budget is
+    consumed. Injectable loaders must accept that exact repository and apply
+    the same pre-count filter. Defense-in-depth re-admission still runs on
+    the returned rows. Paths/branches/task IDs are never used for repository
+    attribution. Bodies and result files are never read.
     """
     allowed = admit_public_repository_id(repository_id)
-    try:
-        if loader is None:
-            from scripts.api.delegate_router import active_delegate_tasks
 
-            payload = active_delegate_tasks()
-        else:
-            payload = loader()
+    def _default_active(repository: str) -> dict[str, Any]:
+        from scripts.api.delegate_router import active_delegate_tasks
+
+        return active_delegate_tasks(repository=repository)
+
+    try:
+        page_fn = loader or _default_active
+        payload = page_fn(allowed)
     except Exception as exc:
         return SectionResult(
             "delegate_active",
@@ -379,7 +383,7 @@ def fetch_delegate_active(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_active", "degraded", reason="delegate_active_shape")
-    # Admit before count — private volume must not appear in total/status.
+    # Defense in depth: re-admit even when the loader already scoped.
     summary, total, _truncated = filter_public_delegate_tasks(
         tasks, repository_id=allowed
     )
@@ -392,25 +396,32 @@ def fetch_delegate_active(
 
 
 def fetch_delegate_tasks(
-    loader: Callable[[], dict[str, Any]] | None = None,
+    loader: Callable[[str], dict[str, Any]] | None = None,
     *,
     repository_id: str | None = None,
 ) -> SectionResult:
     """Summarize delegate task inventory for the exact public repository only.
 
-    Authoritative repository admission and public-side truncation happen before
-    totals are formed. Loader-provided ``total`` is ignored when it could
-    include private/foreign volume; public count is derived only from admitted
-    rows. Never reads result bodies.
+    The admitted public repository is passed into the production loader so
+    repository filtering, total, and limit slicing happen **before** the
+    public enumeration cap is applied. Private/unclassified volume therefore
+    cannot starve public rows or inflate totals/truncation. Injectable
+    loaders must accept that exact repository and apply the same pre-page
+    filter. Defense-in-depth re-admission still runs on returned rows. Never
+    reads result bodies.
     """
     allowed = admit_public_repository_id(repository_id)
-    try:
-        if loader is None:
-            from scripts.api.delegate_router import list_delegate_tasks
 
-            payload = list_delegate_tasks(status="all", limit=DELEGATE_TASK_LIMIT)
-        else:
-            payload = loader()
+    def _default_tasks(repository: str) -> dict[str, Any]:
+        from scripts.api.delegate_router import list_delegate_tasks
+
+        return list_delegate_tasks(
+            status="all", limit=DELEGATE_TASK_LIMIT, repository=repository
+        )
+
+    try:
+        page_fn = loader or _default_tasks
+        payload = page_fn(allowed)
     except Exception as exc:
         return SectionResult(
             "delegate_tasks",
@@ -420,8 +431,7 @@ def fetch_delegate_tasks(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_shape")
-    # Filter then apply the public enumeration cap so private volume cannot
-    # inflate totals or force truncated=true.
+    # Defense in depth + public enumeration cap on already-scoped rows.
     summary, total, truncated = filter_public_delegate_tasks(
         tasks, repository_id=allowed, limit=DELEGATE_TASK_LIMIT
     )
@@ -536,8 +546,8 @@ def collect_public_sections(
     repository_id: str | None = None,
     gh_runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
     streams_loader: Callable[[], dict[str, Any]] | None = None,
-    delegate_active_loader: Callable[[], dict[str, Any]] | None = None,
-    delegate_tasks_loader: Callable[[], dict[str, Any]] | None = None,
+    delegate_active_loader: Callable[[str], dict[str, Any]] | None = None,
+    delegate_tasks_loader: Callable[[str], dict[str, Any]] | None = None,
     fleet_reviews_loader: Callable[[int, int, str], dict[str, Any]] | None = None,
     max_workers: int = 6,
 ) -> dict[str, SectionResult]:

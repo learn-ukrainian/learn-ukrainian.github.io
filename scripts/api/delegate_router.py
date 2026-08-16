@@ -20,6 +20,9 @@ RESULT_BYTES_LIMIT = 64 * 1024
 TASK_READ_RETRIES = 2
 TASK_READ_RETRY_SECONDS = 0.01
 ACTIVE_TASK_STATUSES = {"running", "spawning"}
+# Authoritative repository-attribution fields on task state. Paths, branch names,
+# cwd, worktree, and task_id are never used for repository matching.
+DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -116,17 +119,64 @@ def _derived_task_status(task: dict[str, Any]) -> tuple[str, bool]:
     return status, alive
 
 
+def _normalize_repository_predicate(repository: str | None) -> str | None:
+    """Return a non-empty exact repository predicate, or None when unscoped."""
+    if repository is None:
+        return None
+    text = str(repository).strip()
+    return text or None
+
+
+def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
+    """Return the single authoritative repository claim from task state.
+
+    Only ``repository_id`` and ``repository`` are accepted. When both are
+    present they must agree after strip. Missing, blank, or conflicting claims
+    are unclassified (``None``). Paths, branch, cwd, worktree, and task_id are
+    never consulted.
+    """
+    claimed: list[str] = []
+    for attr_name in DELEGATE_REPOSITORY_ATTR_FIELDS:
+        raw = task.get(attr_name)
+        if raw is None or raw == "":
+            continue
+        text = str(raw).strip()
+        if not text:
+            continue
+        claimed.append(text)
+    if not claimed:
+        return None
+    unique = set(claimed)
+    if len(unique) != 1:
+        return None
+    return claimed[0]
+
+
 _TASK_STATE_CACHE: dict[str, tuple[float, dict[str, Any] | None, str, bool]] = {}
 _LAST_TASKS_DIR_STR: str = ""
 
 
-def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]]:
+def _delegate_task_rows(
+    statuses: set[str] | None = None,
+    *,
+    repository: str | None = None,
+) -> list[dict[str, Any]]:
+    """Load public-safe task summaries, optionally scoped to one repository.
+
+    When *repository* is set, task state is filtered by the authoritative
+    ``repository`` / ``repository_id`` contract **before** totals, sorting, and
+    any caller-side pagination. Unscoped calls (Monitor HTTP + other consumers)
+    keep the historical full inventory. Repository is never inferred from path,
+    cwd, worktree, branch, or task id.
+    """
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
     tasks_dir_str = str(TASKS_DIR)
     if tasks_dir_str != _LAST_TASKS_DIR_STR:
         _TASK_STATE_CACHE.clear()
         _LAST_TASKS_DIR_STR = tasks_dir_str
+
+    repo_predicate = _normalize_repository_predicate(repository)
 
     rows: list[dict[str, Any]] = []
     if not TASKS_DIR.exists():
@@ -172,8 +222,15 @@ def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]
         if statuses is not None and derived_status not in statuses:
             continue
 
+        # Repository scope must apply on raw task state before summary/total.
+        claimed_repo = _authoritative_task_repository(task)
+        if repo_predicate is not None and (
+            claimed_repo is None or claimed_repo != repo_predicate
+        ):
+            continue
+
         task_id = task.get("task_id") or entry.name[:-5]
-        rows.append({
+        row: dict[str, Any] = {
             "task_id": task_id,
             "agent": task.get("agent"),
             "model": task.get("model"),
@@ -185,14 +242,17 @@ def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]
             "duration_s": task.get("duration_s"),
             "age_s": _task_age_seconds(task.get("started_at")),
             "alive": alive,
-        })
+        }
+        # Surface only the agreed authoritative claim — never path/cwd metadata.
+        if claimed_repo is not None:
+            row["repository"] = claimed_repo
+        rows.append(row)
 
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
     return rows
-
 
 
 def list_delegate_tasks(
@@ -202,10 +262,17 @@ def list_delegate_tasks(
         "needs_finalize", "no_deliverable", "all",
     ] = "all",
     limit: int = 50,
+    repository: str | None = None,
 ) -> dict[str, Any]:
+    """List delegate task summaries.
+
+    Optional *repository* is an internal exact-match predicate applied before
+    total/count and limit slicing. Not exposed on the public HTTP query surface
+    (Work passes the already-admitted public singleton via the Python loader).
+    """
     task_limit = min(max(1, int(limit)), 500)
     statuses = None if status == "all" else {status}
-    rows = _delegate_task_rows(statuses)
+    rows = _delegate_task_rows(statuses, repository=repository)
     return {"total": len(rows), "tasks": rows[:task_limit]}
 
 
@@ -239,8 +306,13 @@ def active_delegate_count() -> int:
     return len(_delegate_task_rows(ACTIVE_TASK_STATUSES))
 
 
-def active_delegate_tasks() -> dict[str, Any]:
-    active = _delegate_task_rows(ACTIVE_TASK_STATUSES)
+def active_delegate_tasks(*, repository: str | None = None) -> dict[str, Any]:
+    """Return active (running/spawning) task summaries.
+
+    Optional *repository* filters task state before total construction. Internal
+    only — the HTTP ``/active`` route remains unscoped for other Monitor consumers.
+    """
+    active = _delegate_task_rows(ACTIVE_TASK_STATUSES, repository=repository)
     return {"total": len(active), "tasks": active}
 
 

@@ -18,7 +18,7 @@ Operators need a single local Work surface that answers what needs attention acr
    - open public issues (one GH list enumeration, cap 1000, `truncated=true` if incomplete)
    - open public PRs (one GH list enumeration, same cap)
    - complete public `/api/issues/streams` projection (never raw cache private keys)
-   - class-4 summaries only: `GET /api/delegate/active`, `GET /api/delegate/tasks?status=all&limit<=500`, `GET /api/fleet/reviews`
+   - class-4 summaries only: `GET /api/delegate/active`, `GET /api/delegate/tasks?status=all&limit<=500`, `GET /api/fleet/reviews` (Work's production collectors pass the admitted public repository into internal delegate/fleet loaders so filtering precedes pagination/counting; HTTP surfaces stay unscoped except fleet's exact `repository` query)
 5. **No mutations** in the foundation. FX-10 mutation preview/idempotency remains design-only.
 6. **Private source seam**: public server never fetches, proxies, persists, or renders private-repository data. Capability object reports `available: false` / `not_configured` until a browser-local private adapter exists (P2).
 7. **Health** is rule-derived (`ON_TRACK` / `AT_RISK` / `OFF_TRACK` / `UNKNOWN`). Activity volume is never health evidence.

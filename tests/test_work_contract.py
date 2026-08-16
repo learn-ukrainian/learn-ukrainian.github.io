@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -161,8 +162,8 @@ def test_public_repository_identity_ignores_env_override(monkeypatch):
             "pending_native_link": [],
             "ok": True,
         },
-        delegate_active_loader=lambda: {"total": 0, "tasks": []},
-        delegate_tasks_loader=lambda: {"total": 0, "tasks": []},
+        delegate_active_loader=lambda repository: {"total": 0, "tasks": []},
+        delegate_tasks_loader=lambda repository: {"total": 0, "tasks": []},
         fleet_reviews_loader=fleet_loader,
     )
     assert set(seen_repos) == {REPO}
@@ -896,12 +897,29 @@ def test_delegate_requires_authoritative_public_repository():
     ]
     universe = [*private_pad, *mixed]
 
-    active = fetch_delegate_active(
-        loader=lambda: {"total": len(universe), "tasks": universe}
-    )
-    tasks = fetch_delegate_tasks(
-        loader=lambda: {"total": len(universe), "tasks": universe}
-    )
+    def _scoped_loader(repository: str) -> dict:
+        # Production contract: filter before total/page so private volume never
+        # consumes the public enumeration budget.
+        assert repository == REPO
+        scoped = [
+            row
+            for row in universe
+            if row.get("repository") == repository
+            or row.get("repository_id") == repository
+        ]
+        # Drop ambiguous/blank/unclassified the way the real loader does.
+        cleaned = []
+        for row in scoped:
+            rid = row.get("repository")
+            rid2 = row.get("repository_id")
+            claims = {c for c in (rid, rid2) if c not in (None, "")}
+            claims = {str(c).strip() for c in claims if str(c).strip()}
+            if claims == {repository}:
+                cleaned.append(row)
+        return {"total": len(cleaned), "tasks": cleaned}
+
+    active = fetch_delegate_active(loader=_scoped_loader)
+    tasks = fetch_delegate_tasks(loader=_scoped_loader)
     assert active.status == "ok"
     assert active.truncated is False
     assert active.count == 2
@@ -1016,6 +1034,235 @@ def test_delegate_requires_authoritative_public_repository():
     assert private_repo not in proj_blob
     assert suffix_cousin not in proj_blob
     assert "/Users/private/" not in proj_blob
+
+
+def test_delegate_repository_filter_before_pagination_starvation():
+    """Foreign volume above the public task cap must not hide older public tasks.
+
+    Repository filtering (and the filtered total) happens in the delegate
+    loader before limit/total, so private/unclassified rows never consume
+    DELEGATE_TASK_LIMIT and cannot starve older public rows out of the page.
+    """
+    from scripts.work.sources_public import DELEGATE_TASK_LIMIT, fetch_delegate_active, fetch_delegate_tasks
+
+    private_repo = "other-org/other-private-repo"
+    public_count = 7
+    foreign_count = DELEGATE_TASK_LIMIT + 50
+    assert foreign_count > DELEGATE_TASK_LIMIT
+
+    # Newer foreign/unclassified first (higher started_at rank would win if
+    # pagination ran before repository filter).
+    foreign_newer = [
+        {
+            "task_id": f"private-new-{i:04d}",
+            "agent": "codex",
+            "status": "done",
+            "started_at": f"2026-08-16T12:{i % 60:02d}:00Z",
+            "repository": private_repo,
+            "cwd": f"/Users/private/{private_repo}",
+            "worktree_path": f"/Users/private/.worktrees/dispatch/codex/private-{i}",
+        }
+        for i in range(foreign_count)
+    ]
+    unclassified_newer = [
+        {
+            "task_id": f"unclassified-new-{i:04d}",
+            "agent": "codex",
+            "status": "done",
+            "started_at": f"2026-08-16T11:{i % 60:02d}:00Z",
+            "cwd": f"/Users/private/projects/{REPO}",
+            "worktree_path": f"/Users/private/.worktrees/dispatch/codex/issue-{i}",
+            "worktree_branch": f"codex/issue-{i}",
+        }
+        for i in range(30)
+    ]
+    public_older = [
+        {
+            "task_id": f"public-old-{i:04d}",
+            "agent": "claude",
+            "status": "done",
+            "started_at": f"2026-08-01T0{i}:00:00Z",
+            "repository": REPO,
+        }
+        for i in range(public_count)
+    ]
+    public_active = [
+        {
+            "task_id": "public-running",
+            "agent": "codex",
+            "status": "running",
+            "started_at": "2026-08-01T00:00:00Z",
+            "repository": REPO,
+            "alive": True,
+        },
+        {
+            "task_id": "public-spawning",
+            "agent": "kimi",
+            "status": "spawning",
+            "started_at": "2026-08-01T00:01:00Z",
+            "repository_id": REPO,
+            "alive": False,
+        },
+    ]
+    universe = [*foreign_newer, *unclassified_newer, *public_older, *public_active]
+    seen_repos: list[str] = []
+
+    def _scope(repository: str, *, active_only: bool) -> list[dict]:
+        assert repository == REPO
+        # Exact pre-pagination filter — private volume never enters the page.
+        scoped = []
+        for row in universe:
+            if active_only and row.get("status") not in {"running", "spawning"}:
+                continue
+            claims = []
+            for key in ("repository", "repository_id"):
+                raw = row.get(key)
+                if raw is None or raw == "":
+                    continue
+                text = str(raw).strip()
+                if text:
+                    claims.append(text)
+            if not claims:
+                continue
+            if len(set(claims)) != 1:
+                continue
+            if claims[0] != repository:
+                continue
+            scoped.append(row)
+        return scoped
+
+    def active_loader(repository: str) -> dict:
+        seen_repos.append(repository)
+        scoped = _scope(repository, active_only=True)
+        return {"total": len(scoped), "tasks": scoped}
+
+    def tasks_loader(repository: str) -> dict:
+        seen_repos.append(repository)
+        scoped = _scope(repository, active_only=False)
+        # Apply the same limit the production list path uses after filter.
+        page = scoped[:DELEGATE_TASK_LIMIT]
+        return {"total": len(scoped), "tasks": page}
+
+    active = fetch_delegate_active(loader=active_loader, repository_id=REPO)
+    tasks = fetch_delegate_tasks(loader=tasks_loader, repository_id=REPO)
+
+    assert seen_repos == [REPO, REPO]
+    assert active.status == "ok"
+    assert active.truncated is False
+    assert active.count == 2
+    assert active.payload["total"] == 2
+    assert {t["task_id"] for t in active.payload["tasks"]} == {
+        "public-running",
+        "public-spawning",
+    }
+    assert all(t["repository"] == REPO for t in active.payload["tasks"])
+
+    assert tasks.status == "ok"
+    assert tasks.truncated is False
+    # Full public set is inside the page; foreign volume did not force truncation.
+    assert tasks.payload["total"] == public_count + 2
+    assert tasks.count == public_count + 2
+    public_ids = {t["task_id"] for t in tasks.payload["tasks"]}
+    assert public_ids == {
+        *(f"public-old-{i:04d}" for i in range(public_count)),
+        "public-running",
+        "public-spawning",
+    }
+    assert all(t["repository"] == REPO for t in tasks.payload["tasks"])
+    blob = json.dumps({"active": active.payload, "tasks": tasks.payload})
+    assert private_repo not in blob
+    assert "private-new-" not in blob
+    assert "unclassified-new-" not in blob
+    assert "/Users/private/" not in blob
+
+
+def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
+    """End-to-end: production list/active loaders filter by public repo before limit."""
+    import scripts.api.delegate_router as delegate_router
+    from scripts.work.sources_public import (
+        DELEGATE_TASK_LIMIT,
+        fetch_delegate_active,
+        fetch_delegate_tasks,
+    )
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+    private_repo = "other-org/other-private-repo"
+    now = datetime.now(UTC)
+
+    def _write(task_id: str, **overrides):
+        payload = {
+            "task_id": task_id,
+            "agent": "codex",
+            "model": "gpt-5.5",
+            "status": "done",
+            "pid": 1,
+            "started_at": now.isoformat().replace("+00:00", "Z"),
+            "duration_s": 1.0,
+        }
+        payload.update(overrides)
+        (tasks_dir / f"{task_id}.json").write_text(
+            json.dumps(payload), encoding="utf-8"
+        )
+
+    for i in range(DELEGATE_TASK_LIMIT + 40):
+        _write(
+            f"foreign-{i:04d}",
+            started_at=(now - timedelta(seconds=i)).isoformat().replace("+00:00", "Z"),
+            repository=private_repo,
+            cwd=f"/Users/private/{private_repo}",
+        )
+    for i in range(5):
+        _write(
+            f"public-old-{i:04d}",
+            started_at=(now - timedelta(days=2, minutes=i))
+            .isoformat()
+            .replace("+00:00", "Z"),
+            repository=REPO,
+        )
+    _write(
+        "public-running",
+        status="running",
+        pid=111,
+        started_at=(now - timedelta(days=3)).isoformat().replace("+00:00", "Z"),
+        repository=REPO,
+        duration_s=None,
+    )
+    _write(
+        "public-spawning",
+        status="spawning",
+        pid=None,
+        started_at=(now - timedelta(days=3, minutes=1))
+        .isoformat()
+        .replace("+00:00", "Z"),
+        repository_id=REPO,
+        duration_s=None,
+    )
+
+    # Production path: no injectable loader — uses scoped active/list helpers.
+    active = fetch_delegate_active(repository_id=REPO)
+    tasks = fetch_delegate_tasks(repository_id=REPO)
+
+    assert active.status == "ok"
+    assert active.payload["total"] == 2
+    assert {t["task_id"] for t in active.payload["tasks"]} == {
+        "public-running",
+        "public-spawning",
+    }
+    assert tasks.status == "ok"
+    assert tasks.truncated is False
+    assert tasks.payload["total"] == 7
+    assert {t["task_id"] for t in tasks.payload["tasks"]} == {
+        *(f"public-old-{i:04d}" for i in range(5)),
+        "public-running",
+        "public-spawning",
+    }
+    blob = json.dumps({"active": active.payload, "tasks": tasks.payload})
+    assert private_repo not in blob
+    assert "/Users/private/" not in blob
+    assert "foreign-" not in blob
 
 
 def test_fleet_reviews_repository_filter_before_hard_cap():

@@ -52,7 +52,7 @@ Every projection-builder entry point (`build_projection`, `build_public_projecti
 
 Formal-review rows are admitted only for that exact public repository (no suffix matching; missing/foreign repositories are dropped at collection and normalization).
 
-Delegate class-4 rows are admitted only when they carry an exact canonical public claim on the authoritative attribution fields `repository` or `repository_id` (both must agree when present). Missing, ambiguous, path/branch/task_id-inferred, and foreign rows are omitted **before** public totals/truncation/normalization, so private volume cannot inflate public counts or attach same-number private task IDs to public issues/PRs. Bodies and result files are never read.
+Delegate class-4 rows are admitted only when they carry an exact canonical public claim on the authoritative attribution fields `repository` or `repository_id` (both must agree when present). Missing, ambiguous, path/branch/task_id-inferred, and foreign rows are omitted **before** public totals/truncation/normalization, so private volume cannot inflate public counts or attach same-number private task IDs to public issues/PRs. The production loaders receive the already-admitted public singleton and apply that exact repository predicate on task state **before** sort/limit/total (Work still re-admits defense-in-depth). The public HTTP `/api/delegate/*` routes remain unscoped for other Monitor consumers and do not expose a free-form repository selector. Bodies and result files are never read.
 
 Unknown keys, free text, private endpoints, overlong values, and oversized repeated filter values are rejected (`400 invalid_saved_view`).
 
