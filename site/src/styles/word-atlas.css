@@ -330,19 +330,22 @@
   text-transform: uppercase;
 }
 
-.word-title {
+/* Must beat `.lu-content h1` (0,1,1) from course.css — bare `.word-title`
+   (0,1,0) loses and paints --lu-text on the teal hero (#6823). */
+.word-hero .word-title {
   margin: 0 0 4px;
-  color: white;
+  color: #fff;
   font-size: 44px;
   font-weight: 700;
   line-height: 1.1;
 }
 
-.word-stress {
+.word-hero .word-stress {
   margin-left: 14px;
   font-family: "SF Mono", Menlo, monospace;
   font-size: 26px;
   font-weight: 400;
+  color: #fff;
   opacity: 0.85;
 }
 
@@ -360,8 +363,10 @@
   align-items: center;
 }
 
-/* Atlas → Practice CTA sits in the teal word hero; keep white chrome for contrast. */
-.word-hero .practice-cta-hero {
+/* Atlas → Practice CTA sits in the teal word hero; keep white chrome for contrast.
+   Must beat `.lu-content .word-atlas a` (0,2,1) — bare `.word-hero .practice-cta-hero`
+   (0,2,0) loses and paints --blue on teal (#6823). */
+.lu-content .word-atlas .word-hero .practice-cta-hero {
   display: inline-flex;
   align-items: center;
   min-height: 2rem;
@@ -377,21 +382,21 @@
   white-space: nowrap;
 }
 
-.word-hero .practice-cta-hero:hover,
-.word-hero .practice-cta-hero:focus-visible {
+.lu-content .word-atlas .word-hero .practice-cta-hero:hover,
+.lu-content .word-atlas .word-hero .practice-cta-hero:focus-visible {
   background: rgba(255, 255, 255, 0.28);
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
 }
 
-.word-hero .practice-cta-hero--disabled {
+.lu-content .word-atlas .word-hero .practice-cta-hero--disabled {
   opacity: 0.78;
   cursor: not-allowed;
   border-style: dashed;
   pointer-events: none;
 }
 
-html[data-theme='dark'] .word-hero .practice-cta-hero {
+html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   border-color: rgba(255, 255, 255, 0.75);
   background: rgba(0, 0, 0, 0.18);
 }
@@ -1324,11 +1329,11 @@ html[data-theme='dark'] .word-hero .practice-cta-hero {
     flex-direction: column;
   }
 
-  .word-title {
+  .word-hero .word-title {
     font-size: 34px;
   }
 
-  .word-stress {
+  .word-hero .word-stress {
     display: block;
     margin: 6px 0 0;
     font-size: 20px;
