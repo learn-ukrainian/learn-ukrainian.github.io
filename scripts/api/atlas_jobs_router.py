@@ -28,6 +28,13 @@ class CloseBody(BaseModel):
     skip_restic: bool = False
 
 
+def _require_job_id(job_id: str) -> str:
+    try:
+        return atlas_job.require_safe_job_id(job_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
 @router.get("")
 def list_jobs() -> dict[str, Any]:
     rows = atlas_job.list_registry()
@@ -50,7 +57,7 @@ def submit_job(body: SubmitBody) -> dict[str, Any]:
     if errors:
         raise HTTPException(status_code=400, detail={"errors": errors})
     rc = atlas_job.submit(body.plan, dry_run=body.dry_run)
-    job_id = str(body.plan.get("id"))
+    job_id = atlas_job.require_safe_job_id(str(body.plan.get("id")))
     row = atlas_job.load_registry(job_id)
     if rc != 0:
         raise HTTPException(
@@ -62,6 +69,7 @@ def submit_job(body: SubmitBody) -> dict[str, Any]:
 
 @router.get("/{job_id}")
 def job_status(job_id: str, host: str = "atlas-runner", audit: bool = False) -> dict[str, Any]:
+    job_id = _require_job_id(job_id)
     row = atlas_job.load_registry(job_id)
     if row is None:
         raise HTTPException(status_code=404, detail=f"no registry row for {job_id}")
@@ -82,13 +90,17 @@ def job_status(job_id: str, host: str = "atlas-runner", audit: bool = False) -> 
 
 @router.post("/{job_id}/close")
 def close_job(job_id: str, body: CloseBody | None = None) -> dict[str, Any]:
+    job_id = _require_job_id(job_id)
     payload = body or CloseBody()
-    rc = atlas_job.close_job(
-        job_id,
-        summary=payload.summary,
-        skip_pull=payload.skip_pull,
-        skip_restic=payload.skip_restic,
-    )
+    try:
+        rc = atlas_job.close_job(
+            job_id,
+            summary=payload.summary,
+            skip_pull=payload.skip_pull,
+            skip_restic=payload.skip_restic,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     row = atlas_job.load_registry(job_id)
     result = None
     result_file = atlas_job.result_path(job_id)

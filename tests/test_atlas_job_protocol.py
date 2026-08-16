@@ -365,3 +365,61 @@ def test_cli_validate_and_dry_submit(tmp_path: Path) -> None:
     path.write_text(json.dumps(_plan()), encoding="utf-8")
     assert atlas_job.main(["validate", str(path)]) == 0
     assert atlas_job.main(["submit", str(path), "--dry-run"]) == 0
+
+
+def test_require_safe_job_id_rejects_traversal_and_bool() -> None:
+    for bad in ("../escape", "/etc/passwd", True, False, "", "a/b", "job id", None, 12):
+        with pytest.raises(ValueError):
+            atlas_job.require_safe_job_id(bad)  # type: ignore[arg-type]
+    assert atlas_job.require_safe_job_id("missing-tr-example") == "missing-tr-example"
+
+
+def test_path_builders_reject_unsafe_job_id(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    for bad in ("../escape", "/etc/passwd", "true/../x"):
+        with pytest.raises(ValueError):
+            atlas_job.registry_path(bad)
+        with pytest.raises(ValueError):
+            atlas_job.result_path(bad)
+        with pytest.raises(ValueError):
+            atlas_job.git_receipt_path(bad)
+        with pytest.raises(ValueError):
+            atlas_job.local_pull_dir(bad)
+        with pytest.raises(ValueError):
+            atlas_job.mirror_dir_for(bad)
+        with pytest.raises(ValueError):
+            atlas_job.unit_name(bad)
+        with pytest.raises(ValueError):
+            atlas_job.work_dir_for(bad)
+        with pytest.raises(ValueError):
+            atlas_job.load_registry(bad)
+    # No files created outside the registry root for a traversal id attempt.
+    assert list(tmp_path.iterdir()) == []
+    assert not (tmp_path / "escape.json").exists()
+    assert not (tmp_path.parent / "escape.json").exists()
+
+
+def test_workdir_honored_only_when_safe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "runs"))
+    job = "safe-job"
+    nested = tmp_path / "runs" / "run-atlas-job-safe-job"
+    assert atlas_job.work_dir_for(job, {"workdir": str(nested)}) == str(nested.resolve())
+    assert atlas_job.work_dir_for(job, {"workdir": "run-atlas-job-safe-job"}) == (
+        "run-atlas-job-safe-job"
+    )
+    for bad in ("../escape", "/etc/passwd", "/tmp/evil", "foo/../../etc", "has space"):
+        with pytest.raises(ValueError):
+            atlas_job.work_dir_for(job, {"workdir": bad})
+        errors = atlas_job.validate_plan(_plan(workdir=bad))
+        assert errors, bad
+
+
+def test_close_and_cli_reject_unsafe_job_id(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    with pytest.raises(ValueError):
+        atlas_job.close_job("../escape", skip_pull=True, skip_restic=True)
+    assert atlas_job.main(["close", "../escape", "--skip-pull", "--skip-restic"]) == 2
+    assert atlas_job.main(["pull", "--job-id", "../escape"]) == 2
+    assert list(tmp_path.iterdir()) == []

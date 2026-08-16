@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
@@ -110,3 +111,38 @@ def test_status_reconciles(
     resp = client.get(f"/api/atlas-jobs/{plan['id']}")
     assert resp.status_code == 200
     assert resp.json()["job"]["state"] == "needs_finalize"
+
+
+def test_api_rejects_path_injection_job_id(
+    tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Unsafe job_id must 400 before any Path join; no writes outside registry."""
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    outside = tmp_path.parent / "escape-marker"
+    if outside.exists():
+        outside.unlink()
+
+    # Single-segment unsafe tokens reach the atlas-jobs handler (encoded
+    # ``../`` is often normalized by the ASGI stack before routing).
+    for bad in ("..escape", ".hidden", "-leading-dash", "has%20space"):
+        get_resp = client.get(f"/api/atlas-jobs/{bad}")
+        assert get_resp.status_code == 400, (bad, get_resp.status_code, get_resp.text)
+        close_resp = client.post(
+            f"/api/atlas-jobs/{bad}/close",
+            json={"summary": {}, "skip_pull": True, "skip_restic": True},
+        )
+        assert close_resp.status_code == 400, (bad, close_resp.status_code, close_resp.text)
+
+    # Explicit path-param values that CodeQL flags (handler-level, not URL routing).
+    from scripts.api import atlas_jobs_router as router_mod
+
+    for bad in ("../../tmp", "../escape", "/etc/passwd"):
+        with pytest.raises(HTTPException) as excinfo:
+            router_mod.job_status(bad)
+        assert excinfo.value.status_code == 400
+        with pytest.raises(HTTPException) as excinfo:
+            router_mod.close_job(bad, router_mod.CloseBody(skip_pull=True, skip_restic=True))
+        assert excinfo.value.status_code == 400
+
+    assert not outside.exists()
+    assert list(tmp_path.iterdir()) == []

@@ -227,16 +227,65 @@ def registry_dir() -> Path:
     return repo_root() / "batch_state" / "atlas-jobs"
 
 
+def require_safe_job_id(job_id: object) -> str:
+    """Reject non-token job ids before any filesystem path join.
+
+    Raises ValueError when ``job_id`` is not a str matching ``_SAFE_ID``.
+    """
+    if not isinstance(job_id, str) or not _SAFE_ID.match(job_id):
+        raise ValueError("job_id must be a filesystem/systemd-safe token")
+    return job_id
+
+
+def _run_root() -> Path:
+    return Path(os.environ.get("ATLAS_RUN_ROOT", DEFAULT_RUN_ROOT))
+
+
+def require_safe_workdir(workdir: object) -> str:
+    """Fail closed for plan/registry workdirs used in path and SSH contexts.
+
+    Rejects ``..``, absolute paths outside ``ATLAS_RUN_ROOT`` / default run
+    root, and any path whose segments are not ``_SAFE_ID`` tokens.
+    """
+    if not isinstance(workdir, str) or not workdir:
+        raise ValueError("workdir must be a non-empty safe token path")
+    if "\0" in workdir:
+        raise ValueError("workdir must not contain null bytes")
+    raw = Path(workdir)
+    if ".." in raw.parts:
+        raise ValueError("workdir must not contain ..")
+    run_root = _run_root().resolve()
+    if raw.is_absolute():
+        resolved = raw.resolve()
+        try:
+            rel = resolved.relative_to(run_root)
+        except ValueError as exc:
+            raise ValueError("workdir must be under ATLAS_RUN_ROOT") from exc
+        if not rel.parts:
+            raise ValueError("workdir must be a subdirectory of ATLAS_RUN_ROOT")
+        for part in rel.parts:
+            if not _SAFE_ID.match(part):
+                raise ValueError("workdir must be a safe token path")
+        return str(resolved)
+    for part in raw.parts:
+        if part in {".", ""} or not _SAFE_ID.match(part):
+            raise ValueError("workdir must be a safe token path")
+    return workdir
+
+
 def registry_path(job_id: str) -> Path:
-    return registry_dir() / f"{job_id}.json"
+    safe = require_safe_job_id(job_id)
+    return registry_dir() / f"{safe}.json"
 
 
 def result_path(job_id: str) -> Path:
-    return registry_dir() / f"{job_id}.result.json"
+    safe = require_safe_job_id(job_id)
+    return registry_dir() / f"{safe}.result.json"
 
 
 def git_receipt_path(job_id: str) -> Path:
-    return registry_dir() / "receipts" / f"{job_id}.json"
+    safe = require_safe_job_id(job_id)
+    return registry_dir() / "receipts" / f"{safe}.json"
 
 
 def restic_block_path() -> Path:
@@ -244,22 +293,26 @@ def restic_block_path() -> Path:
 
 
 def unit_name(job_id: str) -> str:
-    return f"atlas-job-{job_id}.service"
+    safe = require_safe_job_id(job_id)
+    return f"atlas-job-{safe}.service"
 
 
 def work_dir_for(job_id: str, plan: dict[str, Any] | None = None) -> str:
+    safe = require_safe_job_id(job_id)
     if plan and isinstance(plan.get("workdir"), str) and plan["workdir"]:
-        return str(plan["workdir"])
-    run_root = os.environ.get("ATLAS_RUN_ROOT", DEFAULT_RUN_ROOT)
-    return f"{run_root.rstrip('/')}/run-atlas-job-{job_id}"
+        return require_safe_workdir(plan["workdir"])
+    run_root = str(_run_root()).rstrip("/")
+    return f"{run_root}/run-atlas-job-{safe}"
 
 
 def local_pull_dir(job_id: str) -> Path:
-    return registry_dir() / "pulled" / job_id
+    safe = require_safe_job_id(job_id)
+    return registry_dir() / "pulled" / safe
 
 
 def mirror_dir_for(job_id: str) -> Path:
-    return repo_root() / "data" / "lexicon" / "runner-mirror" / job_id
+    safe = require_safe_job_id(job_id)
+    return repo_root() / "data" / "lexicon" / "runner-mirror" / safe
 
 
 def load_plan(path: Path) -> dict[str, Any]:
@@ -319,6 +372,12 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     timeout = plan.get("timeout_seconds", DEFAULT_TIMEOUT_SECONDS)
     if not isinstance(timeout, int) or isinstance(timeout, bool) or timeout <= 0:
         errors.append("timeout_seconds must be a positive integer")
+    workdir = plan.get("workdir")
+    if workdir is not None:
+        try:
+            require_safe_workdir(workdir)
+        except ValueError as exc:
+            errors.append(str(exc))
     return errors
 
 
@@ -336,7 +395,7 @@ def save_registry(row: dict[str, Any]) -> Path:
 
 
 def load_registry(job_id: str) -> dict[str, Any] | None:
-    path = registry_path(job_id)
+    path = registry_path(require_safe_job_id(job_id))
     if not path.is_file():
         return None
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -741,6 +800,7 @@ def close_job(
     skip_restic: bool = False,
     host_adapter: HostAdapter | None = None,
 ) -> int:
+    job_id = require_safe_job_id(job_id)
     row = load_registry(job_id)
     if row is None:
         print(f"no registry row for {job_id}", file=sys.stderr)
@@ -1018,6 +1078,10 @@ def pull(
     if host in HRAMATKA_ALIASES:
         print("pull for batch jobs must use atlas-runner", file=sys.stderr)
         return 2
+    if job_id is not None:
+        job_id = require_safe_job_id(job_id)
+    if workdir:
+        workdir = require_safe_workdir(workdir)
     env = os.environ.copy()
     env["ATLAS_RUNNER_HOST"] = host
     if workdir:
@@ -1078,23 +1142,33 @@ def main(argv: list[str] | None = None) -> int:
         summary = None
         if args.summary_file:
             summary = json.loads(args.summary_file.read_text(encoding="utf-8"))
-        return close_job(
-            args.job_id,
-            summary=summary,
-            skip_pull=args.skip_pull,
-            skip_restic=args.skip_restic,
-        )
+        try:
+            return close_job(
+                args.job_id,
+                summary=summary,
+                skip_pull=args.skip_pull,
+                skip_restic=args.skip_restic,
+            )
+        except ValueError as exc:
+            print(exc, file=sys.stderr)
+            return 2
     if args.cmd == "list":
         for row in list_registry():
             print(row.get("state"), row.get("id"), row.get("host"))
         return 0
     if args.cmd == "pull":
-        workdir = None
-        if args.job_id:
-            row = load_registry(args.job_id)
-            if row:
-                workdir = str(row.get("workdir") or "")
-        return pull(host=args.host, job_id=args.job_id, workdir=workdir or None)
+        try:
+            if args.job_id:
+                require_safe_job_id(args.job_id)
+            workdir = None
+            if args.job_id:
+                row = load_registry(args.job_id)
+                if row:
+                    workdir = str(row.get("workdir") or "")
+            return pull(host=args.host, job_id=args.job_id, workdir=workdir or None)
+        except ValueError as exc:
+            print(exc, file=sys.stderr)
+            return 2
     return 2
 
 
