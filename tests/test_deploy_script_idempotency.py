@@ -76,6 +76,7 @@ CLAUDE_RULE_FILES = (
     "activity-yaml.md",
     "mcp-sources-and-dictionaries.md",
     "pipeline.md",
+    "storage-topology.md",
     "ukrainian-linguistics.md",
 )
 

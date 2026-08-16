@@ -4,7 +4,6 @@ Supports ALL tracks: core levels (A1-C2) and seminar tracks.
 Each track maps to wiki domains where its articles live.
 """
 
-import os
 from pathlib import Path
 
 # ── Paths ──────────────────────────────────────────────────────────
@@ -14,46 +13,48 @@ WIKI_STATE_DIR = WIKI_DIR / ".state"
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 
+def _import_resolve_bulk_root():
+    """Load the shared bulk-root resolver (project root or scripts/ on path)."""
+    try:
+        from scripts.storage.topology import (
+            resolve_bulk_root,
+            unresolved_bulk_placeholder,
+        )
+    except ImportError:  # pragma: no cover - legacy ``scripts/``-on-path imports
+        from storage.topology import (  # type: ignore
+            resolve_bulk_root,
+            unresolved_bulk_placeholder,
+        )
+    return resolve_bulk_root, unresolved_bulk_placeholder
+
+
 def _resolve_gdrive_data_dir() -> Path:
-    """Resolve the Google Drive data directory path.
+    """Resolve the bulk raw-source root for rebuild consumers.
 
-    Resolution order:
+    Name retained as ``GDRIVE_DATA`` for call-site compatibility. The single
+    source of truth is ``scripts.storage.topology.resolve_bulk_root``:
 
-    1. ``LU_GDRIVE_DATA`` env var — explicit override. Set this in
-       ``~/.bash_secrets`` (or wherever you keep per-machine env vars)
-       so the path doesn't have to be hardcoded in committed code.
-    2. Glob ``~/Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data``
-       and return the first existing match. macOS Google Drive Desktop
-       creates per-user mount points named ``GoogleDrive-<email>/``;
-       globbing avoids hardcoding the email (#1577 Phase 1 Q4 —
-       wartime contributor exposure risk).
-    3. Fall through to a placeholder Path that does not exist on disk.
-       Callers that hit the filesystem will get a clear
-       ``FileNotFoundError``; setting ``LU_GDRIVE_DATA`` fixes it.
-       Keeping this module-importable even when the mount is absent
-       matters for tests / CI that don't have a real GDrive folder.
+    1. ``LU_BULK_ROOT`` when marker-valid (invalid → unavailable)
+    2. Marker-valid Windows ``UkrainianData`` SMB mirror
+       (``…/raw-sources/learn-ukrainian-data``)
+    3. Explicit ``LU_GDRIVE_DATA`` when marker-valid (invalid → fail closed;
+       no silent fallback to other Drive roots)
+    4. Auto-discovered marker-valid Google Drive File Provider path
+    5. Non-existent placeholder so imports still succeed when neither root is
+       present (tests/CI without mounts)
+
+    Required markers: ``literary_texts/`` and ``textbook_chunks/``.
+    See ``docs/runbooks/storage-topology.md``.
     """
-    explicit = os.environ.get("LU_GDRIVE_DATA")
-    if explicit:
-        return Path(explicit)
-
-    cloudstorage = Path.home() / "Library" / "CloudStorage"
-    if cloudstorage.exists():
-        for mount in sorted(cloudstorage.glob("GoogleDrive-*")):
-            candidate = mount / "My Drive" / "Projects" / "learn-ukrainian-data"
-            if candidate.exists():
-                return candidate
-
-    # Unresolved placeholder — never matches a real path. Module import
-    # still succeeds; access errors only fire on actual filesystem ops.
-    return (
-        Path.home()
-        / "Library" / "CloudStorage" / "GoogleDrive-UNSET"
-        / "My Drive" / "Projects" / "learn-ukrainian-data"
-    )
+    resolve_bulk_root, unresolved_bulk_placeholder = _import_resolve_bulk_root()
+    result = resolve_bulk_root()
+    if result.available and result.path is not None:
+        return result.path
+    # Import-safe placeholder — never a real path.
+    return unresolved_bulk_placeholder()
 
 
-# Source data on Google Drive (resolved at import; override via LU_GDRIVE_DATA)
+# Bulk raw-source root (SMB preferred, Drive fallback). Legacy name GDRIVE_DATA.
 GDRIVE_DATA = _resolve_gdrive_data_dir()
 LITERARY_DIR = GDRIVE_DATA / "literary_texts"
 TEXTBOOK_CHUNKS_DIR = GDRIVE_DATA / "textbook_chunks"
