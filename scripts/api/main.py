@@ -50,6 +50,7 @@ from .admin_router import router as admin_router
 from .agent_monitor_router import router as agent_monitor_router
 from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
+from .atlas_jobs_router import router as atlas_jobs_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
@@ -174,6 +175,7 @@ app.include_router(admin_router, prefix="/api/admin")
 app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
 app.include_router(agent_monitor_router, prefix="/api/agent-monitor")
 app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
+app.include_router(atlas_jobs_router, prefix="/api/atlas-jobs", tags=["atlas-jobs"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
