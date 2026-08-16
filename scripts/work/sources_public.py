@@ -104,16 +104,19 @@ def admit_delegate_task_row(
 ) -> dict[str, Any] | None:
     """Admit one delegate summary row for the public projection.
 
-    When *trusted_scoped* is false (normalize / mixed inventory), requires an
-    exact canonical public-repository claim via the authoritative attribution
-    fields. Foreign, missing, ambiguous, or non-dict rows are omitted.
+    When *trusted_scoped* is false (normalize, mixed inventory, or any
+    caller-injected loader), requires an exact canonical public-repository
+    claim via the authoritative attribution fields. Foreign, missing,
+    ambiguous, or non-dict rows are omitted.
 
-    When *trusted_scoped* is true (rows already filtered by a repository-scoped
-    loader before pagination), missing claims are admitted under that contract
-    and stamped with the closed public singleton. Present claims still face
-    defense-in-depth exact-match admission so a misbehaving loader cannot pass
-    foreign identity through. Never reads result bodies; only copies the
-    public-safe summary allowlist plus Work's own admitted repository metadata.
+    When *trusted_scoped* is true, use only for the fixed production loader
+    path that already filtered by repository before pagination and redacted
+    claim fields from the generic summary shape. Missing claims are then
+    admitted under that contract and stamped with the closed public singleton.
+    Present claims still face defense-in-depth exact-match admission so a
+    misbehaving loader cannot pass foreign identity through. Never reads
+    result bodies; only copies the public-safe summary allowlist plus Work's
+    own admitted repository metadata (never re-emits raw repository_id).
     """
     if not isinstance(row, dict):
         return None
@@ -159,8 +162,8 @@ def filter_public_delegate_tasks(
     that public set exceeds *limit*.
 
     *trusted_scoped* matches :func:`admit_delegate_task_row`: use true only for
-    rows already filtered by a repository-scoped loader (claim fields may be
-    absent after API redaction).
+    the fixed production scoped loaders (claim fields may be absent after
+    generic API redaction). Caller-injected loaders must pass false.
     """
     allowed = admit_public_repository_id(repository_id)
     admitted: list[dict[str, Any]] = []
@@ -376,14 +379,24 @@ def fetch_delegate_active(
 
     The admitted public repository is passed into the production loader so
     filtering and total construction happen **before** any page budget is
-    consumed. Injectable loaders must accept that exact repository and apply
-    the same pre-count filter. Loader rows may omit repository fields (generic
-    delegate summaries never re-emit them); Work stamps the admitted public
-    singleton under the trusted scoped-loader contract and still drops any
-    present foreign claim. Paths/branches/task IDs are never used for
-    repository attribution. Bodies and result files are never read.
+    consumed. Trust is selected from the call shape, not payload content:
+    ``loader is None`` uses the fixed production path
+    (``active_delegate_tasks(repository=allowed)``), which already filtered
+    upstream and redacts repository fields; those claim-less redacted rows
+    may be stamped with Work's admitted public singleton under
+    ``trusted_scoped=True``. Any caller-supplied/injected loader is untrusted
+    (``trusted_scoped=False``): every retained row must carry an exact
+    authoritative public ``repository`` / ``repository_id`` claim (with the
+    existing ambiguity/foreign checks). Present foreign claims are always
+    dropped. Paths/branches/task IDs are never used for repository
+    attribution. Bodies and result files are never read. Work stamps only
+    its own admitted repository metadata on retained rows; generic delegate
+    summaries never re-emit repository identity.
     """
     allowed = admit_public_repository_id(repository_id)
+    # Provenance is unforgeable via payload shape: only the fixed production
+    # path (no injectable loader) is trusted_scoped.
+    trusted_scoped = loader is None
 
     def _default_active(repository: str) -> dict[str, Any]:
         from scripts.api.delegate_router import active_delegate_tasks
@@ -391,7 +404,7 @@ def fetch_delegate_active(
         return active_delegate_tasks(repository=repository)
 
     try:
-        page_fn = loader or _default_active
+        page_fn = loader if loader is not None else _default_active
         payload = page_fn(allowed)
     except Exception as exc:
         return SectionResult(
@@ -402,9 +415,8 @@ def fetch_delegate_active(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_active", "degraded", reason="delegate_active_shape")
-    # Trusted scoped load already filtered; re-admit without requiring re-emitted claims.
     summary, total, _truncated = filter_public_delegate_tasks(
-        tasks, repository_id=allowed, trusted_scoped=True
+        tasks, repository_id=allowed, trusted_scoped=trusted_scoped
     )
     return SectionResult(
         "delegate_active",
@@ -424,13 +436,21 @@ def fetch_delegate_tasks(
     The admitted public repository is passed into the production loader so
     repository filtering, total, and limit slicing happen **before** the
     public enumeration cap is applied. Private/unclassified volume therefore
-    cannot starve public rows or inflate totals/truncation. Injectable
-    loaders must accept that exact repository and apply the same pre-page
-    filter. Loader rows may omit repository fields; Work stamps the admitted
-    public singleton under the trusted scoped-loader contract and still drops
-    any present foreign claim. Never reads result bodies.
+    cannot starve public rows or inflate totals/truncation. Trust is selected
+    from the call shape, not payload content: ``loader is None`` uses the
+    fixed production path (``list_delegate_tasks(..., repository=allowed)``),
+    which already filtered upstream and redacts repository fields; those
+    claim-less redacted rows may be stamped under ``trusted_scoped=True``.
+    Any caller-supplied/injected loader is untrusted: every retained row must
+    carry an exact authoritative public ``repository`` / ``repository_id``
+    claim (with ambiguity/foreign checks). Never reads result bodies. Work
+    stamps only its own admitted repository metadata; generic delegate
+    summaries never re-emit repository identity.
     """
     allowed = admit_public_repository_id(repository_id)
+    # Provenance is unforgeable via payload shape: only the fixed production
+    # path (no injectable loader) is trusted_scoped.
+    trusted_scoped = loader is None
 
     def _default_tasks(repository: str) -> dict[str, Any]:
         from scripts.api.delegate_router import list_delegate_tasks
@@ -440,7 +460,7 @@ def fetch_delegate_tasks(
         )
 
     try:
-        page_fn = loader or _default_tasks
+        page_fn = loader if loader is not None else _default_tasks
         payload = page_fn(allowed)
     except Exception as exc:
         return SectionResult(
@@ -451,12 +471,11 @@ def fetch_delegate_tasks(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_shape")
-    # Trusted scoped load already filtered; public cap on redacted summary rows.
     summary, total, truncated = filter_public_delegate_tasks(
         tasks,
         repository_id=allowed,
         limit=DELEGATE_TASK_LIMIT,
-        trusted_scoped=True,
+        trusted_scoped=trusted_scoped,
     )
     return SectionResult(
         "delegate_tasks",

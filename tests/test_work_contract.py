@@ -897,35 +897,23 @@ def test_delegate_requires_authoritative_public_repository():
     ]
     universe = [*private_pad, *mixed]
 
-    def _scoped_loader(repository: str) -> dict:
-        # Production contract: filter before total/page so private volume never
-        # consumes the public enumeration budget, then redact repository fields
-        # the way the generic delegate API does.
+    def _injected_claimed_loader(repository: str) -> dict:
+        # Injected loaders are untrusted: rows must keep exact public claims so
+        # admission can verify provenance. Filter before total so private volume
+        # never consumes the public enumeration budget.
         assert repository == REPO
-        scoped = [
-            row
-            for row in universe
-            if row.get("repository") == repository
-            or row.get("repository_id") == repository
-        ]
-        # Drop ambiguous/blank/unclassified the way the real loader does.
         cleaned = []
-        for row in scoped:
+        for row in universe:
             rid = row.get("repository")
             rid2 = row.get("repository_id")
             claims = {c for c in (rid, rid2) if c not in (None, "")}
             claims = {str(c).strip() for c in claims if str(c).strip()}
             if claims == {repository}:
-                redacted = {
-                    k: v
-                    for k, v in row.items()
-                    if k not in {"repository", "repository_id"}
-                }
-                cleaned.append(redacted)
+                cleaned.append(dict(row))
         return {"total": len(cleaned), "tasks": cleaned}
 
-    active = fetch_delegate_active(loader=_scoped_loader)
-    tasks = fetch_delegate_tasks(loader=_scoped_loader)
+    active = fetch_delegate_active(loader=_injected_claimed_loader)
+    tasks = fetch_delegate_tasks(loader=_injected_claimed_loader)
     assert active.status == "ok"
     assert active.truncated is False
     assert active.count == 2
@@ -1116,7 +1104,8 @@ def test_delegate_repository_filter_before_pagination_starvation():
     def _scope(repository: str, *, active_only: bool) -> list[dict]:
         assert repository == REPO
         # Exact pre-pagination filter — private volume never enters the page.
-        # Redact repository fields to match generic delegate summary redaction.
+        # Keep claims: injected loaders are untrusted and must prove public
+        # provenance via authoritative fields (production redaction is separate).
         scoped = []
         for row in universe:
             if active_only and row.get("status") not in {"running", "spawning"}:
@@ -1135,9 +1124,7 @@ def test_delegate_repository_filter_before_pagination_starvation():
                 continue
             if claims[0] != repository:
                 continue
-            scoped.append(
-                {k: v for k, v in row.items() if k not in {"repository", "repository_id"}}
-            )
+            scoped.append(dict(row))
         return scoped
 
     def active_loader(repository: str) -> dict:
@@ -1183,6 +1170,162 @@ def test_delegate_repository_filter_before_pagination_starvation():
     assert "private-new-" not in blob
     assert "unclassified-new-" not in blob
     assert "/Users/private/" not in blob
+
+
+def test_delegate_injected_loader_is_untrusted_without_public_claim():
+    """Injected loaders never get trusted_scoped; claim-less/foreign rows drop.
+
+    Trust is selected from ``loader is None`` (fixed production path), not from
+    payload content. An injectable loader that returns claim-less, foreign, or
+    ambiguous rows must not stamp private task IDs public or admit them into
+    Work. Exact public claims may be admitted, but Work stamps only its own
+    admitted repository singleton on the summary (raw claim fields are not
+    re-emitted as repository_id).
+    """
+    from scripts.work.sources_public import fetch_delegate_active, fetch_delegate_tasks
+
+    private_repo = "other-org/other-private-repo"
+    suffix_cousin = "evil-org/learn-ukrainian.github.io"
+    private_task_id = "private-claimless-task-id-must-never-leak"
+    public_task_id = "public-claimed-ok"
+    foreign_task_id = "foreign-claimed"
+    ambiguous_task_id = "ambiguous-claimed"
+    blank_task_id = "blank-claimed"
+
+    def _poison_loader(repository: str) -> dict:
+        assert repository == REPO
+        # Misbehaving injectable: claim-less private ID + foreign/ambiguous
+        # noise + one exact public claim that should still be admitted.
+        return {
+            "total": 5,
+            "tasks": [
+                {
+                    "task_id": private_task_id,
+                    "agent": "codex",
+                    "status": "running",
+                    "alive": True,
+                    # No repository / repository_id — must not be stamped public.
+                },
+                {
+                    "task_id": foreign_task_id,
+                    "agent": "codex",
+                    "status": "running",
+                    "repository": private_repo,
+                },
+                {
+                    "task_id": ambiguous_task_id,
+                    "agent": "codex",
+                    "status": "running",
+                    "repository": REPO,
+                    "repository_id": private_repo,
+                },
+                {
+                    "task_id": blank_task_id,
+                    "agent": "codex",
+                    "status": "running",
+                    "repository": "  ",
+                },
+                {
+                    "task_id": public_task_id,
+                    "agent": "claude",
+                    "status": "running",
+                    "repository": REPO,
+                    "alive": True,
+                },
+                {
+                    "task_id": "public-via-repository_id",
+                    "agent": "kimi",
+                    "status": "spawning",
+                    "repository_id": REPO,
+                },
+            ],
+        }
+
+    active = fetch_delegate_active(loader=_poison_loader, repository_id=REPO)
+    tasks = fetch_delegate_tasks(loader=_poison_loader, repository_id=REPO)
+
+    for section in (active, tasks):
+        assert section.status == "ok"
+        assert section.truncated is False
+        ids = {t["task_id"] for t in section.payload["tasks"]}
+        assert ids == {public_task_id, "public-via-repository_id"}
+        assert section.payload["total"] == 2
+        assert private_task_id not in ids
+        assert foreign_task_id not in ids
+        assert ambiguous_task_id not in ids
+        assert blank_task_id not in ids
+        # Work stamps admitted public singleton; raw dual-field claims not echoed.
+        for row in section.payload["tasks"]:
+            assert row["repository"] == REPO
+            assert "repository_id" not in row
+
+    blob = json.dumps({"active": active.payload, "tasks": tasks.payload})
+    assert private_task_id not in blob
+    assert private_repo not in blob
+    assert suffix_cousin not in blob
+    assert foreign_task_id not in blob
+    assert ambiguous_task_id not in blob
+
+    # End-to-end into Work: claim-less/foreign never attach or surface as tasks.
+    sections = {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 7,
+                    "title": "Public issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": f"https://github.com/{REPO}/issues/7",
+                    "state": "OPEN",
+                }
+            ],
+            count=1,
+        ),
+        "prs": SectionResult(
+            "prs", "ok", payload=[], count=0
+        ),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "open_total": 1,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=1,
+        ),
+        "delegate_active": active,
+        "delegate_tasks": tasks,
+        "fleet_reviews": SectionResult(
+            "fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0
+        ),
+    }
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+    proj_blob = json.dumps(projection)
+    assert private_task_id not in proj_blob
+    assert private_repo not in proj_blob
+    assert foreign_task_id not in proj_blob
+    assert ambiguous_task_id not in proj_blob
+    # Admitted public tasks surface unlinked; projection uses repository_id only.
+    task_remote = {
+        i["remote_id"]
+        for i in projection["items"]
+        if i["resource_kind"] == "task"
+    }
+    assert task_remote == {public_task_id, "public-via-repository_id"}
+    for item in projection["items"]:
+        if item["resource_kind"] == "task":
+            assert item["repository_id"] == REPO
+            assert "repository" not in item
 
 
 def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
