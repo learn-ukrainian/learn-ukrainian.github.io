@@ -247,7 +247,18 @@ _SLOVNYK_BASE = "https://slovnyk.me"
 # `scripts/lexicon/migrate_slovnyk_cache_v3.py` applies the same reset directly
 # to on-disk cache files (no network needed) to purge the residue immediately
 # instead of waiting for each lemma's next live touch.
-_SLOVNYK_CACHE_SCHEMA_VERSION = 3
+# v4 (#6809, operator GO 2026-08-16): bumped because the Aug 14-15 cache run
+# wrote `ukreng: null` known-miss rows that a live slovnyk.me lookup
+# contradicts for ~57% of a 40-slug random sample -- there is no TTL/
+# re-attest path for a cached miss, so those false negatives can never
+# self-heal (#6840 fixed two extraction bugs feeding this same symptom, but
+# the stale-negative-cache root cause is separate and needs the wholesale
+# reset below). Same lever as v3: this bump makes `_slovnyk_cache()` discard
+# every non-current row (v3 `ukreng: null` included) and refetch live.
+# `scripts/lexicon/migrate_slovnyk_cache_v4.py` applies that reset directly
+# to on-disk cache files. The live 19k-slug refetch itself is a separate,
+# later drive step -- this bump only makes existing rows retryable.
+_SLOVNYK_CACHE_SCHEMA_VERSION = 4
 _OFFLINE_VALUES = {"1", "true", "yes", "on"}
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 

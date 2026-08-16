@@ -47,7 +47,14 @@ def _entry_with_card(lemma: str, card_id: str, definitions: list[str]) -> dict:
     }
 
 
-def _write_cache(cache_dir, lemma: str, slug: str, text: str, *, schema_version: int = 3) -> None:
+def _write_cache(
+    cache_dir,
+    lemma: str,
+    slug: str,
+    text: str,
+    *,
+    schema_version: int = enrich_manifest._SLOVNYK_CACHE_SCHEMA_VERSION,
+) -> None:
     payload = {
         "schema_version": schema_version,
         "lookups": {slug: {"text": text, "word": lemma, "source_url": f"https://slovnyk.me/dict/{slug}/{lemma}"}},

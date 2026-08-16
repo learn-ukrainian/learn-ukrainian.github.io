@@ -1637,6 +1637,46 @@ def test_slovnyk_cache_discards_v2_rows_built_with_the_corrupted_join(monkeypatc
     assert "кн и га" not in persisted["lookups"]["orthoepy"]["text"]
 
 
+def test_slovnyk_cache_discards_v3_ukreng_null_known_misses(monkeypatch, tmp_path) -> None:
+    """#6809: the v3->v4 bump exists because Aug 14-15 cached ``ukreng: null`` rows
+    are contradicted by a live slovnyk.me lookup for ~57% of a 40-slug sample --
+    there is no TTL/re-attest path for a cached miss, so a v3 row must be treated
+    as stale (same as the v1/v2 precedents) and refetched, not read as a confirmed
+    absence."""
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("ukreng",))
+
+    cache_path = enrich_manifest_module._slovnyk_cache_path("аршин")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 3,
+                "lemma": "аршин",
+                "lookup_word": "аршин",
+                "fetched_at": "2026-08-15T00:00:00+00:00",
+                "lookups": {"ukreng": None},
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    def fake_fetch(lemma: str, lookup_word: str, slug: str) -> dict[str, str]:
+        return {"dictionary_slug": slug, "text": "arshine (= 71,1 cm or 28 inches)"}
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
+
+    cache = _slovnyk_cache("аршин")
+    persisted = json.loads(cache_path.read_text(encoding="utf-8"))
+
+    assert cache["schema_version"] == enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
+    assert cache["lookups"]["ukreng"]["text"] == "arshine (= 71,1 cm or 28 inches)"
+    assert persisted["schema_version"] == enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
+    assert persisted["lookups"]["ukreng"]["text"] == "arshine (= 71,1 cm or 28 inches)"
+
+
 def test_read_cached_slovnyk_rows_rejects_stale_schema(monkeypatch, tmp_path) -> None:
     """#6524 P2 (codex re-verdict): ``_read_cached_slovnyk_rows`` feeds definition and
     homonym generation directly and read the cache file unconditionally, so a v2 row

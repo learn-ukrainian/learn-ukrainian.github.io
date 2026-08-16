@@ -91,7 +91,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "d8db8c533821f69abbacf6f7e679e81501c5de208257a2d60016c46a7b52ed7e"
+        "sha256": "a33401d12412d701961df57a1775119921ddb8cb4b5f6a7ba443fde3b9a2010f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -168,6 +168,10 @@
       {
         "path": "scripts/lexicon/migrate_slovnyk_cache_v3.py",
         "sha256": "7001edca9a5f6cc7faf290376e13de2d798b17fd92182dcc2a9228aa9816193c"
+      },
+      {
+        "path": "scripts/lexicon/migrate_slovnyk_cache_v4.py",
+        "sha256": "ba5fdc11236ce2f0320a11cd5af50284a7626c48e5ed4097ee3d754e66dbb49d"
       },
       {
         "path": "scripts/lexicon/migrate_source_labels.py",
