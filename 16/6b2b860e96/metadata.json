@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "166b2b860e96",
+  "strategy": "manual-commit",
+  "branch": "grok/atlas-job-protocol",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/atlas-job-protocol.md",
+    "scripts/api/atlas_jobs_router.py",
+    "scripts/api/main.py",
+    "scripts/lexicon/runner/atlas_job.py",
+    "scripts/lexicon/runner/launch_reenrich_class_b.sh",
+    "tests/api/test_atlas_jobs_router.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/16/6b2b860e96/0/metadata.json",
+      "transcript": "/16/6b2b860e96/0/full.jsonl",
+      "compact_transcript": "/16/6b2b860e96/0/transcript.jsonl",
+      "content_hash": "/16/6b2b860e96/0/content_hash.txt",
+      "prompt": "/16/6b2b860e96/0/prompt.txt"
+    }
+  ]
+}

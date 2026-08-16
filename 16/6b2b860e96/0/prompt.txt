@@ -1,0 +1,95 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6867-recut-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# 6867 recut — Cursor (operator-redirected from Kimi)
+
+CAPACITY_CARD: pick=cursor status=cool will_last=true free=agy,gemini,glm,deepseek avoid=codex(near_cap 92% deficit will_last=false) source=codexbar
+CodexBar Cursor Ultra 2026-08-16: Total 87% left (3% deficit, 21d remaining); Auto 90% left on pace lasts-until-reset; API 75% left. Kimi CodexBar token expired (401).
+
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: cursor:auto (Ultra month first pick; operator 2026-08-16 “redirect kimi to cursor”)
+- why_this_tier: infra/protocol recut after advisor + CF REQUEST CHANGES; not language-lane; not advisor/authority
+- advisor_packet: Fable atlas-job-fable-adv.result + Sol atlas-job-sol-adv.result + Cursor CF review-6867-atlas-job-cursor.result
+- owned_paths: scripts/lexicon/runner/ docs/runbooks/atlas-job-protocol.md tests/test_atlas_job_protocol.py scripts/api/ scripts/api/main.py
+- acceptance_cmd: `.venv/bin/python -m pytest tests/test_atlas_job_protocol.py tests/api -q` (narrow to new API tests if added) && `.venv/bin/ruff check` on touched files
+- alternatives_considered: agy (cool, 65% weekly) as implement fallback; deepseek-flash for volume CF after this recut; kimi blocked (token 401 + already timed out ACP); codex refused (near_cap)
+- parallel_free_seats: agy, gemini, glm, deepseek (kimi infra-6863 still in flight)
+- NOTE force-agent only if --check-budget empties: operator named Cursor + CodexBar Auto 90% left
+
+## Outcome (user-visible)
+PR #6867 at head 2c9f188b4df0265fae7ec47454a98828eb7a9f3e becomes merge-ready for the v1 protocol:
+1. systemd on the host is truth; local registry is a journal
+2. every job ends with a fail-closed result (no empty-summary success)
+3. restic/pull match the runbook; backup failure ≠ job success; never delete workdir on backup fail
+4. lightweight Monitor HTTP facade for list/submit/status/close
+5. six already-confirmed invariants stay true
+
+Denominator: advisor P0s (Fable 1–4 + Sol overlap) + Cursor P0s (empty-summary close, restic/pull lie) + operator API request.
+
+Non-goals: do not merge; do not flip any pointer; do not run jobs on hramatka; do not put IPs/hostnames/secrets in git receipts; do not invent a new message bus.
+
+## Do this on branch `grok/atlas-job-protocol` (updates PR #6867)
+
+Work in `.worktrees/dispatch/cursor/<task>/` only. Conventional commit + push to the same PR branch. `X-Agent: cursor/6867-recut` trailer. Do **not** merge. Do **not** arm auto-merge.
+
+### P0 — close is fail-closed
+`close JOB_ID` without a real summary must **not** treat `{}` as succeeded. Require summary evidence or host exit-status file; else exit non-zero / state `needs_finalize` or `failed`. Test this.
+
+### P0 — restic / pull match runbook
+- `backup-data.sh doctor` failing must not allow `backup.ok=true` or job-success-via-sink
+- actually call the documented sink (`durable_mirror snapshot` then `backup-data.sh backup --execute`) when result_sink requires it
+- `pulled` must be true only after `pull()` ran
+- result schema: `backup: {attempted, ok, snapshot_id|error}`
+- on backup fail: keep real job outcome; **never delete** workdir; still land schema-capped git receipt; stop accepting new restic-sink submits until doctor green
+
+### P0 — host systemd is truth
+- `submit` checks host `systemctl list-units 'atlas-job-*'` over SSH before accept
+- unit is the mutex; registry is journal/mirror
+- `status` reconciles: unit inactive + registry `running` ⇒ `needs_finalize` (never silent running)
+- `ExecStopPost=` (or wrapper) writes exit-status file next to workdir
+- `RuntimeMaxSec=` so timeout is real
+- default `Restart=no`; reboot/crash ⇒ `crashed` unless plan `resume` says otherwise
+
+### P1 — per-job workdir + audit
+- set `ATLAS_RE_ENRICH_WORK_DIR` per job, not only `ATLAS_RE_ENRICH_UNIT`
+- orphan test: systemd cgroup / MainPID first; pgrep secondary
+- `--audit` must not flag a legit tracked driver as untracked
+
+### P1 — git receipts schema-capped
+Allowlist fields, ~10KB cap, denylist absolute paths/hostnames/credentials. Reject, don’t warn. `git_pr` path implemented or runbook stops promising it.
+
+### P1 — campaign GH issue
+One issue per campaign/kind; receipts link to it. Not one issue per job.
+
+### P1 — Monitor API (operator: easy + lightweight)
+Thin facade on existing Monitor app (`scripts/api/main.py` include_router). Suggested prefix `/api/atlas-jobs` (or `/api/work/v1/atlas-jobs` if that fits Work API without inventing a bus).
+- GET list
+- POST submit (validate + host check)
+- GET status (reconcile)
+- POST close
+Wrap `scripts/lexicon/runner/atlas_job.py`. No new daemon. Tests for the router.
+
+### Keep (already confirmed — do not regress)
+- host policy rejects hramatka for reenrich (no override)
+- `pointer_write` must be False
+- `consecutive_misses == targets` is failed
+- close without registry exits 2
+- audit flags *true* untracked drivers
+- no pointer flip
+
+Runbook: `docs/runbooks/atlas-job-protocol.md` — lead with “systemd on the host is truth; registry is journal”. Use `.venv/bin/python`, not bare `python`.
+
+Tests: extend `tests/test_atlas_job_protocol.py` for empty-summary close, restic fail ≠ success, audit-with-running-id, per-job workdir, host-check submit.
+
+## Stop / residual
+If a P0 is blocked (SSH fixture, live host), implement the interface + unit tests with a fake host adapter; do not ship fail-open. Record residual in the PR body. Do not invent “done enough”.

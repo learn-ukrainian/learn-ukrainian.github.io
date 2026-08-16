@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "166b2b860e96",
+  "session_id": "fleet-c4d99ce0c0e842da8af111f73bc6a04f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T17:13:48.477252Z",
+  "branch": "grok/atlas-job-protocol",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/atlas-job-protocol.md",
+    "scripts/api/atlas_jobs_router.py",
+    "scripts/api/main.py",
+    "scripts/lexicon/runner/atlas_job.py",
+    "scripts/lexicon/runner/launch_reenrich_class_b.sh",
+    "tests/api/test_atlas_jobs_router.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "a71b5118e08c",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T17:13:48.465974Z",
+    "agent_lines": 1273,
+    "agent_removed": 84,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1273,
+    "total_lines_changed": 1357,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
