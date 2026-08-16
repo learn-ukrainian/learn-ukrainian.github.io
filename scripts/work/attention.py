@@ -112,14 +112,15 @@ def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
         return "UNKNOWN"
 
     if kind == "review":
+        # formal_review_jobs is the retired sealed-CF era dataset (operator
+        # 2026-08-07); the current direct ask-<lane> CF flow writes nothing
+        # there. Only rows still in flight can be attention-driving — every
+        # terminal state (failed/rejected/error/complete/completed/published),
+        # sealed or not, is historical and must read neutral, never OFF_TRACK
+        # (issue #6862).
         state = str(item.get("lifecycle") or "")
-        sealed = bool(review.get("sealed_verdict_available"))
-        if state in {"failed", "rejected", "error"}:
-            return "OFF_TRACK"
         if state in {"running", "queued", "pending"}:
             return "AT_RISK"
-        if sealed or state in {"complete", "completed", "published"}:
-            return "ON_TRACK"
         return "UNKNOWN"
 
     return "UNKNOWN"
@@ -182,7 +183,11 @@ def derive_safe_next_action(item: dict[str, Any]) -> dict[str, Any]:
             return {"code": "WAIT_REVIEW", "reason_codes": ["formal_review_pending"]}
         if review.get("sealed_verdict_available"):
             return {"code": "NONE", "reason_codes": ["sealed_verdict_available"]}
-        return {"code": "REQUEST_CF_REVIEW", "reason_codes": ["formal_review_open"]}
+        # Retired sealed-CF era rows (terminal or unresolved "open" jobs the
+        # dead pipeline never sealed) never ask for a CF review themselves —
+        # that ask belongs to the PR row under the current direct ask-<lane>
+        # flow (issue #6862).
+        return {"code": "NONE", "reason_codes": ["formal_review_terminal_historical"]}
 
     if item.get("health") == "UNKNOWN":
         return {"code": "INSPECT_UNKNOWN", "reason_codes": ["unknown_health"]}
