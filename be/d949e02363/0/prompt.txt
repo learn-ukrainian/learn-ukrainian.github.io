@@ -1,0 +1,33 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6877-timeout-profiles
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Issue #6877 — per-seat ask timeout profiles (kimi 300s cap kills legitimate slow reviews)
+
+Read GitHub issue #6877 in full — measured evidence and the fix direction are there. You
+just shipped #6878 in the same compat layer; this is the adjacent sizing fix.
+
+ROUTING_CARD_V1: tier=practical · kimi-k3 × native kimi CLI (fresh context in
+`_acp_compat` from #6878) · owned_paths: scripts/ai_agent_bridge/**, tests/** ·
+alternatives: agy (on #6869-fix2), grok-build (on #6860), claude (on #6830).
+
+## Scope
+1. Per-seat timeout profiles for compat asks: kimi ≥1800s default (max-effort-only
+   model, review workload); other seats keep current defaults; `--no-timeout` unchanged.
+   Profile selection mutation-checked (#M-16).
+2. Timeout error text names the seat's profile and the `--no-timeout` escape.
+3. Sibling sweep: any other max-effort/slow-first-token seat pinned at 300s — apply the
+   same reasoning, justify per seat on the PR.
+4. Evidence (#M-4): quote the profile table before/after; run the compat test suite.
+
+## Steps
+Worktree → implement → tests + ruff → conventional commit referencing #6877 → push →
+PR. NO auto-merge.

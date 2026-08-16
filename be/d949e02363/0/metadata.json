@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bed949e02363",
+  "session_id": "session_55c9ac85-e2f2-432d-ad1a-d5f93ac661ff",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T19:15:59.033673Z",
+  "branch": "kimi/infra-6877-timeout-profiles",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_acp_compat.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "tests/ai_agent_bridge/test_ask_contract.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "4858298d1e59",
+  "token_usage": {
+    "input_tokens": 67396,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1972480,
+    "output_tokens": 14707,
+    "api_call_count": 34
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T19:15:59.009796Z",
+    "agent_lines": 153,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 153,
+    "total_lines_changed": 157,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
