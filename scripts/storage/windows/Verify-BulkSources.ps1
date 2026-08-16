@@ -161,6 +161,10 @@ $payloadDrive = New-Object -TypeName IO.DriveInfo -ArgumentList ([IO.Path]::GetP
 if ($payloadDrive.DriveType -eq [IO.DriveType]::Network) {
     throw 'PayloadRoot is on a network drive; verify only via local NTFS'
 }
+$destinationIsLocalNtfs = ($payloadDrive.DriveFormat -ceq 'NTFS')
+if (-not $destinationIsLocalNtfs) {
+    throw "PayloadRoot is not backed by local NTFS (DriveFormat=$($payloadDrive.DriveFormat))"
+}
 
 $markerList = @($RequiredMarkers.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 foreach ($marker in $markerList) {
@@ -236,7 +240,7 @@ $receiptObject = [ordered]@{
     timestamp_utc = $TimestampUtc
     share_name = $ShareName
     payload_root = $payloadFull
-    destination_is_local_ntfs = $true
+    destination_is_local_ntfs = $destinationIsLocalNtfs
     required_markers = $markerList
     manifest_path = if ([string]::IsNullOrWhiteSpace($ManifestPath)) { $null } else { [IO.Path]::GetFullPath($ManifestPath) }
     manifest_rows = $manifestRows

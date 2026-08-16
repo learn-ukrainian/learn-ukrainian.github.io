@@ -21,23 +21,26 @@ unavailable (no guessing).
 Read-only status (never materializes cloud-only files):
 
 ```bash
-# Prefer the primary project interpreter from any worktree
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m scripts.storage status
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m scripts.storage status --json
+# Primary checkout (or any tree that already has the shared project venv)
+.venv/bin/python -m scripts.storage status
+.venv/bin/python -m scripts.storage status --json
+
+# Dispatch worktree: use the primary checkout interpreter, never a worktree .venv
+<path-to-primary-checkout>/.venv/bin/python -m scripts.storage status
 ```
 
 Environment overrides (optional):
 
 | Variable | Purpose |
 | --- | --- |
-| `LU_BULK_ROOT` | Force bulk root (must be marker-valid) |
+| `LU_BULK_ROOT` | Force bulk root (must be marker-valid; invalid → unavailable) |
 | `LU_SMB_BULK_ROOT` | Preferred SMB bulk path candidate |
-| `LU_GDRIVE_DATA` | Preferred Drive bulk path candidate |
+| `LU_GDRIVE_DATA` | Force Drive bulk path when SMB is absent (must be marker-valid). Authoritative over auto/caller Drive candidates; **invalid values fail closed** (no silent fallback to other Drive roots). |
 | `LU_SOURCES_DB` | Override active DB path (**network paths are refused**) |
 
 Rebuild consumers (`scripts/wiki/config.py` → `GDRIVE_DATA`) use the same
-resolver: SMB first, then Drive. The legacy name `GDRIVE_DATA` is retained for
-call-site compatibility.
+resolver: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
+The legacy name `GDRIVE_DATA` is retained for call-site compatibility.
 
 ## Windows maintenance
 

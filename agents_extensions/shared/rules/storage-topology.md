@@ -41,10 +41,12 @@ as directories. If roots are missing or ambiguous, treat bulk as **unavailable**
 
 | Variable | Meaning |
 | --- | --- |
-| `LU_BULK_ROOT` | Force bulk root (must be marker-valid) |
+| `LU_BULK_ROOT` | Force bulk root (must be marker-valid; invalid → unavailable) |
 | `LU_SMB_BULK_ROOT` | SMB candidate |
-| `LU_GDRIVE_DATA` | Drive candidate |
+| `LU_GDRIVE_DATA` | Force Drive bulk path when SMB is absent (marker-valid). Authoritative over auto/caller Drive candidates; **invalid → fail closed** (no silent Drive fallback). |
 | `LU_SOURCES_DB` | Active DB override; **network paths are refused** |
+
+Precedence: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
 
 ## Privacy
 

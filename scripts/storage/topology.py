@@ -274,7 +274,18 @@ def resolve_bulk_root(
     smb_candidates: Iterable[Path] | None = None,
     drive_candidates: Iterable[Path] | None = None,
 ) -> BulkRootResolution:
-    """Resolve the bulk raw-source root: override → SMB → Drive → unavailable."""
+    """Resolve the bulk raw-source root.
+
+    Precedence (fail-closed at each override step):
+
+    1. ``LU_BULK_ROOT`` — must be marker-valid or bulk is unavailable
+    2. Marker-valid SMB candidates (caller list or discovery)
+    3. ``LU_GDRIVE_DATA`` — env path is authoritative over caller
+       ``drive_candidates``; invalid/missing markers fail closed (no silent
+       fallback to auto-discovered Drive roots)
+    4. Auto / caller Drive candidates when the env override is unset
+    5. Unavailable
+    """
     environ = os.environ if env is None else env
     reports: list[CandidateReport] = []
 
@@ -328,19 +339,17 @@ def resolve_bulk_root(
             candidates=tuple(reports),
         )
 
-    drive_list = (
-        list(drive_candidates)
-        if drive_candidates is not None
-        else discover_drive_bulk_candidates(env=environ, home=home)
-    )
-    # Explicit LU_GDRIVE_DATA is never ambiguous with itself.
-    if environ.get(ENV_GDRIVE_DATA) and drive_list:
-        report = _candidate("gdrive", drive_list[0], reason="LU_GDRIVE_DATA")
+    # Explicit LU_GDRIVE_DATA always wins over caller/auto drive candidates.
+    # Invalid override is fail-closed (do not fall through to other Drive roots).
+    explicit_drive = environ.get(ENV_GDRIVE_DATA)
+    if explicit_drive:
+        path = Path(explicit_drive).expanduser()
+        report = _candidate("gdrive", path, reason="LU_GDRIVE_DATA")
         reports.append(report)
         if report.marker_valid:
             return BulkRootResolution(
                 available=True,
-                path=drive_list[0],
+                path=path,
                 source="gdrive",
                 reason="LU_GDRIVE_DATA marker-valid",
                 candidates=tuple(reports),
@@ -352,6 +361,12 @@ def resolve_bulk_root(
             reason="drive_override_not_marker_valid",
             candidates=tuple(reports),
         )
+
+    drive_list = (
+        list(drive_candidates)
+        if drive_candidates is not None
+        else discover_drive_bulk_candidates(env=environ, home=home)
+    )
 
     valid_drive: list[Path] = []
     for cand in drive_list:

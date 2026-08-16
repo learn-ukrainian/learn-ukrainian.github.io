@@ -97,8 +97,34 @@ def test_verify_rejects_unc_and_requires_markers(verify_text: str) -> None:
     assert "3187bdff0d41ed213e9d653e2f53b49bd46086f6f5f7daa49a47217ad71b24ec" not in verify_text
 
 
+def test_verify_destination_is_local_ntfs_derived_from_drive_format(
+    verify_text: str,
+) -> None:
+    """Receipt field must come from DriveFormat, not a hardcoded $true."""
+    assert "DriveFormat" in verify_text
+    assert re.search(
+        r"\$destinationIsLocalNtfs\s*=\s*\(\s*\$payloadDrive\.DriveFormat\s+-ceq\s*'NTFS'\s*\)",
+        verify_text,
+    )
+    assert re.search(
+        r"destination_is_local_ntfs\s*=\s*\$destinationIsLocalNtfs",
+        verify_text,
+    )
+    # Must not hardcode the receipt boolean independently of the format check.
+    assert not re.search(
+        r"destination_is_local_ntfs\s*=\s*\$true\b",
+        verify_text,
+    )
+    # Fail closed when the payload root is not NTFS.
+    assert "not backed by local NTFS" in verify_text
+
+
 def test_no_operator_secrets_or_hosts(copy_text: str, verify_text: str) -> None:
     blob = copy_text + "\n" + verify_text
     assert "kriszpc" not in blob.lower()
     assert "@gmail.com" not in blob.lower()
     assert re.search(r"\b\d{1,3}(\.\d{1,3}){3}\b", blob) is None
+    assert re.search(
+        r"(?:/Users|/home)/[A-Za-z0-9._-]+/projects/learn-ukrainian",
+        blob,
+    ) is None

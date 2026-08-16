@@ -34,12 +34,13 @@ def _resolve_gdrive_data_dir() -> Path:
     Name retained as ``GDRIVE_DATA`` for call-site compatibility. The single
     source of truth is ``scripts.storage.topology.resolve_bulk_root``:
 
-    1. ``LU_BULK_ROOT`` when marker-valid
+    1. ``LU_BULK_ROOT`` when marker-valid (invalid → unavailable)
     2. Marker-valid Windows ``UkrainianData`` SMB mirror
        (``…/raw-sources/learn-ukrainian-data``)
-    3. Marker-valid Google Drive File Provider path
-       (``LU_GDRIVE_DATA`` or CloudStorage glob)
-    4. Non-existent placeholder so imports still succeed when neither root is
+    3. Explicit ``LU_GDRIVE_DATA`` when marker-valid (invalid → fail closed;
+       no silent fallback to other Drive roots)
+    4. Auto-discovered marker-valid Google Drive File Provider path
+    5. Non-existent placeholder so imports still succeed when neither root is
        present (tests/CI without mounts)
 
     Required markers: ``literary_texts/`` and ``textbook_chunks/``.

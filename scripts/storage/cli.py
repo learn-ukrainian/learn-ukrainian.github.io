@@ -27,10 +27,13 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python "
-            "-m scripts.storage status\n"
+            "  .venv/bin/python -m scripts.storage status\n"
             "  .venv/bin/python -m scripts.storage status --json\n"
             "  .venv/bin/python -m scripts.storage status --repo /path/to/checkout\n"
+            "\n"
+            "From a dispatch worktree, use the primary checkout interpreter:\n"
+            "  <primary-checkout>/.venv/bin/python -m scripts.storage status\n"
+            "Never create or use a worktree-local .venv for project commands.\n"
             "\n"
             "Outputs:\n"
             "  Human text or JSON on stdout. No files written. No cloud materialization.\n"
