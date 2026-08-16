@@ -37,6 +37,23 @@ ruff>=0.15.21
 # Database
 aiosqlite>=0.22
 
+# Process / file-locking / fuzzy-match utilities (#6830 manifest-debt fix —
+# these were installed transitively and worked until a from-scratch venv
+# rebuild had nothing to reinstall them from; declare them directly).
+psutil>=7.2      # scripts/agent_runtime/{livenessprobe,watchdog}.py, agent_monitor_router.py
+filelock>=3.24   # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
+rapidfuzz>=3.14  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
+
+# Document parsing (#6830 import-scan sweep — same restore-gap class as
+# above: unconditionally imported by production scripts/, only ever pulled
+# in transitively before, so pytest collection itself breaks on a
+# from-scratch `requirements.txt`-only install: `test_esum_abbyy_parser.py`,
+# `test_plan_latin_fix.py`, and 15 `test_open_model_phase3_*` modules).
+lxml>=6.1         # scripts/ingest/esum_abbyy_parser.py
+pypdf>=6.15       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py
+PyMuPDF>=1.28     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
+ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
+
 # MCP protocol (sources + trails MCP servers ported to 2.0 API)
 mcp>=2,<3
 

@@ -1382,6 +1382,36 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
     )
 
 
+def _warn_venv_integrity() -> None:
+    """Advisory-only primary-venv integrity probe (#6830 follow-up).
+
+    A mid-session venv rebuild can leave `.venv` empty (every import fails)
+    or with console-script launchers pointing at a deleted worktree venv
+    (`pytest`/`py.test`/`cbor2` live finding). This probe DETECTS and RECORDS
+    such corruption; it never blocks a dispatch and never repairs here —
+    reinstalling packages is a package mutation, gated to an explicit
+    operator command (see check_venv_integrity.py). Fails open on any probe
+    error, same contract as the sibling integrity watchdogs.
+    """
+    try:
+        try:
+            from scripts.audit.check_venv_integrity import check_venv_integrity
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_venv_integrity import check_venv_integrity
+
+        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+    except Exception as exc:
+        print(
+            f"⚠️  venv-integrity probe errored ({type(exc).__name__}: {exc}); "
+            "proceeding — detection only, never blocks dispatch",
+            file=sys.stderr,
+        )
+        return
+
+    if not ok:
+        print(f"⚠️  {message}", file=sys.stderr)
+
+
 def _warn_node_modules_integrity() -> None:
     """Advisory-only node_modules symlink-corruption probe (#6818 follow-up).
 
@@ -4136,6 +4166,31 @@ def _run_worker(
             file=sys.stderr,
         )
 
+    # Post-worker venv-integrity sweep (#6830 follow-up): same shape as the
+    # node_modules-integrity sweep above, but for an empty/broken primary
+    # venv. ALERT-only — never blocks, never repairs; attributes this
+    # worker's task_id/agent/pid while they're still known.
+    try:
+        try:
+            from scripts.audit.check_venv_integrity import check_venv_integrity
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_venv_integrity import check_venv_integrity
+
+        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        if not vi_ok:
+            _append_dispatch_event(
+                "venv_integrity_post_worker",
+                task_id=task_id,
+                agent=agent,
+                ok=vi_ok,
+                detail=vi_message,
+            )
+    except Exception as vi_exc:
+        print(
+            f"[delegate] WARNING: venv-integrity post-worker sweep failed: {type(vi_exc).__name__}: {vi_exc}",
+            file=sys.stderr,
+        )
+
     if timed_out:
         _append_dispatch_event(
             "dispatch_silence_timeout",
@@ -4263,6 +4318,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         return 2
 
     _warn_node_modules_integrity()
+    _warn_venv_integrity()
 
     _warn_if_monitor_api_unreachable()
     if bool(getattr(args, "dry_run", False)):

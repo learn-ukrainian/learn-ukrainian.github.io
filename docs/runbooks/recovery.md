@@ -42,14 +42,55 @@ git pull --ff-only
 
 PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.8
 pyenv local 3.12.8
-python -m venv .venv
+uv venv --python 3.12.8 .venv
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -e .
+uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
 ```
 
 If `pyenv install` reports that 3.12.8 already exists, retain that interpreter;
-do not substitute another Python version. Add any project dependencies required
-by the checked-out revision using its tracked installation instructions.
+do not substitute another Python version.
+
+**`pip install -e .` does NOT work on this tree — do not use it.** `pyproject.toml`
+declares no `[build-system]`/`[tool.setuptools]` table, so an editable install
+falls back to setuptools flat-layout auto-discovery, which refuses to guess a
+single top-level package when the repo root holds multiple top-level
+directories (`scripts/`, `wiki/`, `docs/`, …) — the install fails outright.
+`uv pip install -r requirements.txt` (a plain dependency install, not a
+project install) is the working replacement — but it was NOT sufficient on
+its own until #6830 closed a manifest-debt gap: `psutil`, `filelock`,
+`rapidfuzz`, `lxml`, `pypdf`, `PyMuPDF`, and `ruamel.yaml` were previously
+only pulled in transitively, so a from-scratch `requirements.txt`-only
+install left `pytest --collect-only` unable to collect 17 test modules (see
+`requirements.txt`).
+
+### The `.pth` story
+
+Neither `requirements.txt` nor an editable install puts this repo's own code
+on `sys.path` — there is no `scripts` distribution to install. Two internal
+import spellings are both live in the tree: `scripts.audit.foo` (repo root on
+`sys.path`, what `tests/conftest.py` sets up for pytest) and bare `audit.foo`
+(`scripts/` itself on `sys.path`, used by scripts invoked directly and by
+tools that shell out to a script's own directory — see the dual-identity
+note in `check_node_modules_integrity.py` and #6812). Outside pytest — a
+direct venv `python -c "import ..."`, an MCP server subprocess, a cron job —
+nothing sets either path up. A `.pth` file in site-packages is the standard
+mechanism for adding paths to every interpreter start in a venv:
+
+```bash
+cat > .venv/lib/python3.12/site-packages/learn-ukrainian-paths.pth <<'EOF'
+/absolute/path/to/clean/learn-ukrainian
+/absolute/path/to/clean/learn-ukrainian/scripts
+EOF
+```
+
+Use the venv's actual `python3.NN` directory name (`ls .venv/lib/`) and the
+clone's real absolute path — a `.pth` is not portable across clones or Python
+minor versions; regenerate it, don't copy it from another checkout. #6812
+tracks retiring the bare `scripts/`-rooted identity, which will let this file
+shrink to the repo-root line only.
+
+Add any further project dependencies required by the checked-out revision
+using its tracked installation instructions.
 
 ## 2. Restore data databases from the release
 
