@@ -2210,3 +2210,178 @@ def test_fetch_streams_projection_default_loader_schedules_refresh_when_missing(
     assert sec.status == "unavailable"
     assert len(scheduled) == 1
     assert scheduled[0] is False
+
+
+def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
+    """Multiple concurrent requests on a cold restart share a single background build task (#6859)."""
+    import asyncio
+    import time
+
+    from httpx import ASGITransport, AsyncClient
+
+    import scripts.api.main as api_main
+    import scripts.api.work_router as work_router
+    from scripts.api.state_helpers import cache_invalidate
+
+    cache_invalidate(work_router.CACHE_KEY)
+    work_router._IN_FLIGHT_BUILDS.clear()
+
+    build_calls = 0
+    real_build_sync = work_router._build_sync
+
+    def slow_build(filters, *, cache_age_s=0.0):
+        nonlocal build_calls
+        build_calls += 1
+        time.sleep(0.05)
+        return real_build_sync(filters, cache_age_s=cache_age_s)
+
+    monkeypatch.setattr(work_router, "_build_sync", slow_build)
+
+    async def run_concurrent():
+        async with AsyncClient(
+            transport=ASGITransport(app=api_main.app), base_url="http://test"
+        ) as ac:
+            tasks = [ac.get("/api/work/v1/projection") for _ in range(8)]
+            responses = await asyncio.gather(*tasks)
+            return responses
+
+    responses = asyncio.run(run_concurrent())
+
+    for resp in responses:
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["schema_version"] == "work-projection.v1"
+        assert "attention" in data
+
+    # 8 concurrent requests resulted in only 1 build execution
+    assert build_calls == 1
+
+
+def test_work_projection_cold_timeout_completes_in_background_and_converges_on_retry(monkeypatch):
+    """When a cold build exceeds request timeout, the background build continues and warms cache for retry (#6859)."""
+    import asyncio
+    import time
+
+    from httpx import ASGITransport, AsyncClient
+
+    import scripts.api.main as api_main
+    import scripts.api.work_router as work_router
+    from scripts.api.state_helpers import cache_invalidate
+
+    cache_invalidate(work_router.CACHE_KEY)
+    work_router._IN_FLIGHT_BUILDS.clear()
+
+    real_build_sync = work_router._build_sync
+
+    def slow_build(filters, *, cache_age_s=0.0):
+        time.sleep(0.1)
+        return real_build_sync(filters, cache_age_s=cache_age_s)
+
+    monkeypatch.setattr(work_router, "_build_sync", slow_build)
+
+    async def run_flow():
+        async with AsyncClient(
+            transport=ASGITransport(app=api_main.app), base_url="http://test"
+        ) as ac:
+            # Request 1: with a tiny timeout (0.02s) to simulate client-side 504 timeout
+            monkeypatch.setattr(work_router, "TIMEOUT_S", 0.02)
+            resp1 = await ac.get("/api/work/v1/projection")
+            assert resp1.status_code == 504
+            assert resp1.json()["detail"]["error"] == "work_projection_timeout"
+
+            # Wait for the background build to complete (0.15s)
+            await asyncio.sleep(0.15)
+
+            # Request 2 (retry): should immediately succeed with 200 OK from warm cache
+            monkeypatch.setattr(work_router, "TIMEOUT_S", 5.0)
+            resp2 = await ac.get("/api/work/v1/projection")
+            assert resp2.status_code == 200
+            data = resp2.json()
+            assert data["schema_version"] == "work-projection.v1"
+
+    asyncio.run(run_flow())
+
+
+def test_work_projection_serves_stale_on_rebuild_timeout(monkeypatch):
+    """When a warm cache expires or fresh rebuild times out, stale cache is served with age (#6859)."""
+    import asyncio
+    import time
+
+    from httpx import ASGITransport, AsyncClient
+
+    import scripts.api.main as api_main
+    import scripts.api.work_router as work_router
+    from scripts.api.state_helpers import cache_invalidate, cache_set
+
+    cache_invalidate(work_router.CACHE_KEY)
+    work_router._IN_FLIGHT_BUILDS.clear()
+
+    # Populate stale cache
+    key = work_router.projection_cache_key({})
+    stale_payload = {
+        "schema_version": "work-projection.v1",
+        "schema_digest_sha256": "abc",
+        "generated_at": "2026-08-16T00:00:00Z",
+        "cache_age_s": 120.0,
+        "repository_id": REPO,
+        "attention": [],
+        "sections": {},
+        "items": [],
+        "denominator": {
+            "streams_complete": True,
+            "issues_open_count": 0,
+            "prs_open_count": 0,
+            "omissions": [],
+        },
+        "source_envelope": {
+            "worst_status": "ok",
+            "sections": {},
+            "capabilities": {"mutation": False, "private_source": "absent"},
+        },
+        "filters_applied": {
+            "health": None,
+            "kind": None,
+            "lifecycle": None,
+            "orphan": None,
+            "repository_id": REPO,
+            "source_id": None,
+        },
+    }
+    cache_set(key, stale_payload)
+
+    # Set tiny timeout and slow build
+    monkeypatch.setattr(work_router, "TIMEOUT_S", 0.01)
+    monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: (time.sleep(0.1) or stale_payload))
+
+    async def run_flow():
+        async with AsyncClient(
+            transport=ASGITransport(app=api_main.app), base_url="http://test"
+        ) as ac:
+            resp = await ac.get("/api/work/v1/projection")
+            assert resp.status_code == 200
+            data = resp.json()
+            assert data["schema_version"] == "work-projection.v1"
+            assert data["cache_age_s"] >= 0.0
+
+    asyncio.run(run_flow())
+
+
+def test_warm_projection_cache_schedules_startup_task():
+    """Startup warmup schedules background task without blocking (#6859)."""
+    import asyncio
+
+    import scripts.api.work_router as work_router
+    from scripts.api.state_helpers import cache_invalidate
+
+    cache_invalidate(work_router.CACHE_KEY)
+    work_router._IN_FLIGHT_BUILDS.clear()
+
+    async def run_warmup():
+        task = work_router.warm_projection_cache()
+        assert task is not None
+        assert not task.done()
+        result = await task
+        assert result["schema_version"] == "work-projection.v1"
+
+    asyncio.run(run_warmup())
+
