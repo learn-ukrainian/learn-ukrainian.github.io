@@ -282,8 +282,9 @@ def test_grok_build_lane_defaults_to_grok_46():
 
 
 def test_grok_build_rejects_retired_model_pin(tmp_path):
-    with pytest.raises(ValueError, match="unsupported Grok model"):
-        _build("x", tmp_path, model="grok-build", effort="high")
+    """#6870: pin the literal retired model id, not the grok-build agent alias."""
+    with pytest.raises(ValueError, match=r"unsupported Grok model 'grok-4\.5'"):
+        _build("x", tmp_path, model="grok-4.5", effort="high")
 
 
 def test_grok_build_default_model_is_listed_by_cli():

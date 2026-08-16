@@ -20,10 +20,19 @@ def test_grok_interactive_defaults_to_native_harness_and_rejects_epic() -> None:
     assert "interactive launchers reject --epic" in epic.stderr
 
 
-def test_grok_explicit_model_still_pins() -> None:
+def test_grok_explicit_retired_model_is_refused() -> None:
+    """#6870: interactive start-grok.sh must refuse retired grok-4.5."""
     result = run_launcher("start-grok.sh", "--model", "grok-4.5")
+    assert result.returncode == 4, result.stderr
+    assert "not certified" in result.stderr
+    assert "grok-4.5" in result.stderr
+    assert "--model grok-4.5" not in result.stdout
+
+
+def test_grok_explicit_certified_model_still_pins() -> None:
+    result = run_launcher("start-grok.sh", "--model", "grok-4.6")
     assert result.returncode == 0, result.stderr
-    assert "--model grok-4.5" in result.stdout
+    assert "--model grok-4.6" in result.stdout
 
 
 def test_grok_effort_injects_reasoning_effort_only_when_set() -> None:

@@ -1473,8 +1473,9 @@ def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
 
 
 def test_grok_print_config_rejects_retired_model_pin(capsys: pytest.CaptureFixture[str]) -> None:
+    """#6870: pin the literal retired model id, not the grok-build agent alias."""
     assert layerb_judge_bridge.main(
-        ["--judge-family", "grok", "--judge-model", "grok-build", "--print-config"]
+        ["--judge-family", "grok", "--judge-model", "grok-4.5", "--print-config"]
     ) == 2
     assert "Grok Layer-B judges must use grok-4.6" in capsys.readouterr().err
 

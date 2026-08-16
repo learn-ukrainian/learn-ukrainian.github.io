@@ -315,7 +315,9 @@ _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
-    "grok-4.5": ModelRoute(family="xai", backend=_hermes_backend),
+    # grok-4.5 → Hermes removed (#6870 / #6865): Hermes is banned for grok;
+    # requests for grok-4.5 (or any grok id) 404 via the normal unknown-model path.
+    # Native grok-4.6 is not an openai_proxy route — use the grok CLI / GrokBuildAdapter.
 }
 
 
