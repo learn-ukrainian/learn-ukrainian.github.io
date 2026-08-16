@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "407c05d08f5d",
+  "strategy": "manual-commit",
+  "branch": "agy/work-6849-projection-health",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/fleet_router.py",
+    "scripts/api/main.py",
+    "scripts/work/sources_public.py",
+    "tests/test_fleet_observer_api.py",
+    "tests/test_work_api.py",
+    "tests/test_work_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/40/7c05d08f5d/0/metadata.json",
+      "transcript": "/40/7c05d08f5d/0/full.jsonl",
+      "compact_transcript": "/40/7c05d08f5d/0/transcript.jsonl",
+      "content_hash": "/40/7c05d08f5d/0/content_hash.txt",
+      "prompt": "/40/7c05d08f5d/0/prompt.txt"
+    }
+  ]
+}
