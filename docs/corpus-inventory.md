@@ -18,7 +18,8 @@
   `search_literary`, etc. hit this file.
 - It holds **137.7K literary chunks + 55.0K textbook chunks + ~1M dictionary rows +
   22.4K wiki + Wikipedia** across ~27 content/dictionary tables.
-- It is **BUILT from a Google Drive mount**, not local `data/`. That split is the #1
+- It is **BUILT from the bulk raw-source root** (SMB mirror preferred, Google Drive
+  fallback), not from local scraper output under `data/`. That split is the #1
   gotcha — see
   [§ Architecture](#architecture--where-the-data-lives-the-1-gotcha).
 - **What we have a LOT of:** chronicles (litopys/izbornyk), Грушевський, encyclopedias,
@@ -38,17 +39,34 @@
         │
         ▼
   build_sources_db.py  (scripts/wiki/)
-        │ reads literary + textbooks ← GDRIVE_DATA  ←  Google Drive mount, NOT local data/!
+        │ reads literary + textbooks ← GDRIVE_DATA  ←  bulk raw-source root (see below)
         │ reads external             ← data/external_articles/  (local)
         ▼
   data/sources.db  (1.8 GB SQLite + FTS5)  ←  what the MCP `sources` server serves
+                                               (ALWAYS local — never open from SMB)
 ```
 
-- **`GDRIVE_DATA`** is resolved by `scripts/wiki/config.py` from
-  `LU_GDRIVE_DATA` or the standard Google Drive mount pattern. It contains 229
-  `literary_texts/*.jsonl` files and 158 public
-  `textbook_chunks/grade-*/*.jsonl` files. Never commit an operator-specific
-  mount path. This is the rebuild source of record.
+### Storage topology v1 (bulk root + local DB)
+
+- **Active DB:** `data/sources.db` stays on the Mac repository volume. Sources MCP
+  and ordinary tests depend on this local file; an SMB outage must not break them.
+- **Bulk raw-source root** (legacy name `GDRIVE_DATA` in `scripts/wiki/config.py`)
+  is resolved by `scripts.storage.topology.resolve_bulk_root`:
+  1. `LU_BULK_ROOT` when marker-valid
+  2. Windows **UkrainianData** SMB mirror
+     (`…/raw-sources/learn-ukrainian-data`) when mounted and marker-valid
+  3. Google Drive File Provider
+     (`My Drive/Projects/learn-ukrainian-data` or `LU_GDRIVE_DATA`) when marker-valid
+  4. Structured **unavailable** (no path guessing)
+- **Markers:** both `literary_texts/` and `textbook_chunks/` must exist.
+- **Status CLI (read-only):** `.venv/bin/python -m scripts.storage status`
+- **Windows mirror maintenance:** `scripts/storage/windows/` (`rclone copy` only;
+  verify before receipt). Full contract: [`docs/runbooks/storage-topology.md`](runbooks/storage-topology.md).
+
+- **`GDRIVE_DATA`** is the bulk-root alias above (SMB preferred, Drive fallback).
+  It contains 229 `literary_texts/*.jsonl` files and 158 public
+  `textbook_chunks/grade-*/*.jsonl` files on the full mirror. Never commit an
+  operator-specific mount path. This is the rebuild source of record.
 - **⚠️ DIR MISMATCH:** scrapers write to LOCAL `data/literary_texts/`, but `build_sources_db.py`
   reads literary from **`GDRIVE_DATA/literary_texts/`**. A freshly-scraped jsonl in `data/`
   is **invisible** to a `--force` rebuild until it's also placed on the GDrive mount.
