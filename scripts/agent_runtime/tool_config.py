@@ -53,7 +53,7 @@ def _canonical_agent_name(agent: str) -> str | None:
     if agent.startswith("grok-hermes") or is_hermes_grok_seat(agent):
         return HERMES_GROK_SEAT
     if agent.startswith("grok"):
-        # Bare / versioned labels such as "grok-4.5-tools" → native seat.
+        # Bare / versioned labels such as "grok-4.6-tools" → native seat.
         return NATIVE_GROK_SEAT
     if agent.startswith("glm"):
         return "glm"

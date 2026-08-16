@@ -136,8 +136,8 @@ def test_unsupported_mode_raises(tmp_path):
 
 
 def test_model_and_effort_flags(tmp_path):
-    plan = _build("x", tmp_path, model="grok-4.5", effort="high")
-    assert _val(plan.cmd, "-m") == "grok-4.5"
+    plan = _build("x", tmp_path, model="grok-4.6", effort="high")
+    assert _val(plan.cmd, "-m") == "grok-4.6"
     assert _val(plan.cmd, "--effort") == "high"
 
 
@@ -275,10 +275,10 @@ def test_registry_native_grok_distinct_from_hermes_grok():
     assert "grok-hermes" in registry.AGENTS
 
 
-def test_grok_build_lane_defaults_to_grok_45():
-    assert registry.get_agent_entry("grok")["default_model"] == "grok-4.5"
-    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.5"
-    assert GROK_BUILD_DEFAULT_MODEL == "grok-4.5"
+def test_grok_build_lane_defaults_to_grok_46():
+    assert registry.get_agent_entry("grok")["default_model"] == "grok-4.6"
+    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.6"
+    assert GROK_BUILD_DEFAULT_MODEL == "grok-4.6"
 
 
 def test_grok_build_rejects_retired_model_pin(tmp_path):

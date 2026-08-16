@@ -166,7 +166,7 @@ first. Then query CodexBar as the local quota/config/health probe:
 Use the live model catalog and rules as authority. Standing task-fit defaults:
 
 - Ukrainian pedagogy, CEFR, authoring, or content review uses only `agy`,
-  `codex`, `claude`, or `grok-4.5`, with AGY
+  `codex`, `claude`, or `grok-4.6`, with AGY
   `gemini-3.7-flash-high` first for current Ukrainian teaching voice and
   `gemini-3.1-pro-high` for deep work when live policy permits. Require
   `sources`/VESUM evidence for linguistic claims.

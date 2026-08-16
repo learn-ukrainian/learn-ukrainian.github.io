@@ -875,7 +875,7 @@ def test_route_matrix_is_lineage_aware_and_gpt_v21_is_not_deferred() -> None:
 
 def _grok_route() -> layerb_qualify.EffectiveRoute:
     return layerb_qualify.EffectiveRoute.from_mapping(
-        {**ROUTE.to_dict(), "family": "grok", "resolved_model": "grok-4.5", "resolved_model_version": "grok-4.5"}
+        {**ROUTE.to_dict(), "family": "grok", "resolved_model": "grok-4.6", "resolved_model_version": "grok-4.6"}
     )
 
 

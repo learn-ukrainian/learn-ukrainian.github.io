@@ -29,10 +29,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-08-13"
-    assert catalog_age_days(catalog, as_of=date(2026, 8, 13)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 9, 11))
-    assert catalog_is_stale(catalog, as_of=date(2026, 9, 13))
+    assert catalog["reviewed_on"] == "2026-08-16"
+    assert catalog_age_days(catalog, as_of=date(2026, 8, 16)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 9, 14))
+    assert catalog_is_stale(catalog, as_of=date(2026, 9, 16))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -48,7 +48,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "gemini-3.7-flash-high",
         "gemini-3.6-flash-high",
         "gemini-3.5-flash-high",
-        "grok-4.5",
+        "grok-4.6",
         "kimi-code/k3",
         "kimi-k3-max",
         "glm-5.3",
@@ -263,12 +263,12 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert candidates["gpt-5.6-terra"]["transport"] == "native_codex"
-    assert candidates["grok-4.5"]["transport"] == "native_grok"
+    assert candidates["grok-4.6"]["transport"] == "native_grok"
     # Explicit Cursor pin when native grok is dark — never Cursor auto.
-    assert candidates["grok-4.5-cursor-fallback"]["transport"] == "cursor"
-    assert candidates["grok-4.5-cursor-fallback"]["model_id"] == "grok-4.5"
-    assert candidates["grok-4.5-cursor-fallback"]["invocation"].endswith(
-        "--agent cursor --model grok-4.5"
+    assert candidates["grok-4.6-cursor-fallback"]["transport"] == "cursor"
+    assert candidates["grok-4.6-cursor-fallback"]["model_id"] == "grok-4.6"
+    assert candidates["grok-4.6-cursor-fallback"]["invocation"].endswith(
+        "--agent cursor --model grok-4.6"
     )
 
 
@@ -309,7 +309,7 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
     assert defaults["glm"]["escalate_model_id"] == "glm-5.3"
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
-    assert defaults["grok"]["fallback_model_id"] == "grok-4.5"
+    assert defaults["grok"]["fallback_model_id"] == "grok-4.6"
     assert defaults["agy"]["model_id"] == "gemini-3.7-flash-high"
     assert defaults["agy"]["effort"] == "high"
     assert defaults["agy"]["formal_review_eligible"] is False
@@ -329,7 +329,7 @@ def test_orchestrator_seats_include_agy_flash_37_high():
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
     assert seats["claude"]["model_id"] == "claude-fable-5"
-    assert seats["grok"]["fallback_model_id"] == "grok-4.5"
+    assert seats["grok"]["fallback_model_id"] == "grok-4.6"
 
 
 def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
@@ -356,7 +356,7 @@ def test_practical_ladders_exclude_authority_seats():
         assert "gpt-5.6-terra" in names
         assert "claude-sonnet-5" in names
         assert "pool" in names
-        assert "grok-4.5-cursor-fallback" in names
+        assert "grok-4.6-cursor-fallback" in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
     assert "claude-fable-5" in critical
@@ -399,7 +399,7 @@ def test_catalog_rejects_missing_risk_ladder():
 
 def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["grok-4.5"]["transport"] = "hermes"
+    broken["review_candidates"]["grok-4.6"]["transport"] = "hermes"
     with pytest.raises(ModelCatalogError, match="is not listed"):
         validate_catalog(broken)
 
@@ -414,7 +414,7 @@ def test_catalog_rejects_bare_cursor_model_identity():
 
 def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
     broken = deepcopy(load_model_catalog())
-    broken["models"]["grok-4.5"]["transports"].append("hermes")
+    broken["models"]["grok-4.6"]["transports"].append("hermes")
     with pytest.raises(ModelCatalogError, match="must not route"):
         validate_catalog(broken)
 

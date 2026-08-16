@@ -96,7 +96,7 @@ def _detect_caller_identity_from_env() -> str | None:
         return "codex"
     # The native `grok` CLI hardcodes `export GROK_AGENT=1` in every tool-shell
     # bootstrap (verified 2026-07-15 in the grok-0.2.101 binary's
-    # xai_grok_tools::computer::local::shell_state; model-independent — grok-4.5,
+    # xai_grok_tools::computer::local::shell_state; model-independent — grok-4.6,
     # grok-5, … all inherit it), and it is the only grok-intrinsic identity
     # marker available: GROK_HOME, GROK_SESSION*, XAI_*, AI_AGENT, and
     # SESSION_HANDOFF_AGENT are all unset in grok shells. The native CLI IS the

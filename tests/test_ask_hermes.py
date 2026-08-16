@@ -730,7 +730,7 @@ def test_start_failure_cleans_private_spool(
             host_harness="grok",
             runner_agent="grok-build",
             entrypoint="bridge",
-            requested_model="grok-4.5",
+            requested_model="grok-4.6",
             prompt="fixture",
             repo_path=tmp_path,
             runtime_repo_root=tmp_path,

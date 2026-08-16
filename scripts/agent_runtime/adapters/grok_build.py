@@ -2,7 +2,8 @@
 
 Registry seat id is canonical ``grok`` (historical alias ``grok-build``).
 DISTINCT from the Hermes-backed ``grok-hermes`` agent (``HermesGrokAdapter``,
-``grok-4.5`` via the Hermes OAuth API path). This adapter drives
+a banned/demoted route pinned to its own legacy model, via the Hermes OAuth
+API path). This adapter drives
 the local ``grok`` CLI binary (``~/.local/bin/grok``) in
 single-turn headless mode:
 
@@ -88,9 +89,10 @@ _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
     "search_replace",
     "Bash",
 )
-GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
+# Operator order 2026-08-16 (issue #6865): grok is at 4.6; retire the 4.5 pin.
+GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.6"})
 GROK_SUPPORTED_EFFORTS: frozenset[str] = frozenset({"low", "medium", "high"})
-GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
+GROK_BUILD_DEFAULT_MODEL = "grok-4.6"
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 _TRAIL_ISOLATION_TOOL_CONFIG_KEYS: frozenset[str] = frozenset(
     {

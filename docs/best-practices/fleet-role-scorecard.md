@@ -30,7 +30,7 @@
 | UI / visual product design | K3 | Sol (systems UX adjudication only) | K3 `high`; Sol `xhigh` | provisional (K3 UI primacy needs bakeoffs) |
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
 | Critical CF review | Sol ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
-| Ukrainian language | Gemini 3.1 Pro (AGY) | LANGUAGE-LANES: codex/claude/grok-4.5 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated) |
+| Ukrainian language | Gemini 3.1 Pro (AGY) | LANGUAGE-LANES: codex/claude/grok-4.6 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated) |
 | Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | Luna `max` with exact owned paths + objective scope ceiling; others `medium`–`high`; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.

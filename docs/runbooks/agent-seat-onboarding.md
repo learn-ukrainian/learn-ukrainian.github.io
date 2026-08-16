@@ -309,12 +309,13 @@ not permanent routing weights and do not override current CodexBar headroom.
   controller).
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
   Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek.
-- Grok fixed effective model/effort: `grok-4.5` / `high` (caller may pass
+- Grok fixed effective model/effort: `grok-4.6` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
+  Rotated from `grok-4.5` by operator order 2026-08-16 (#6865).
 - Grok ACP server command (single custom agent argument; never built-in
   `grok-build`, which cannot force `--no-leader`): absolute resolved Grok
   binary plus exact argv order
-  `agent --model grok-4.5 --reasoning-effort high --agent-profile
+  `agent --model grok-4.6 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`.
 - The project-owned Grok profile is digest-checked before every spawn. Its
   empty tool allowlist plus explicit denylist removes write, shell, subagent,

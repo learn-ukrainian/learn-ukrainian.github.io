@@ -1549,7 +1549,7 @@ def test_grok_adapter_uses_sealed_prompt_file_for_large_review_evidence(
         prompt=prompt,
         mode="read-only",
         cwd=snapshot,
-        model="grok-4.5",
+        model="grok-4.6",
         task_id="review-5285",
         session_id=None,
         tool_config={

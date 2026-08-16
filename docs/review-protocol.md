@@ -223,7 +223,7 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --scope-json '{"owner_boundary":"scripts/verify_review.py"}' \
   --author-model 'gpt-5.6-sol' --author-family openai --author-harness codex \
   --author-selection-reason 'accountable-author' \
-  --reviewer-model 'grok-4.5' --reviewer-family xai --reviewer-harness grok-build \
+  --reviewer-model 'grok-4.6' --reviewer-family xai --reviewer-harness grok-build \
   --reviewer-selection-reason 'cross-family-gate' \
   --tests-json '{"commands":["pytest tests/test_verify_review.py"],"passed":true}' \
   --behavior-proof-state-file "$STATE_FILE" \

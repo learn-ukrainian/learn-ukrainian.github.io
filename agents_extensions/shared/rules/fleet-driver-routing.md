@@ -30,7 +30,7 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
 | **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design, high-stakes CF of record | **claude-fable-5** (Fable), **gpt-5.6-sol** (Sol), Opus-class when roster says so |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | gpt-5.6-terra, claude-sonnet-5, gemini-3.6-flash-high, kimi K3, grok-4.5 (review/CF not judge) |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | gpt-5.6-terra, claude-sonnet-5, gemini-3.6-flash-high, kimi K3, grok-4.6 (review/CF not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded implement after a complete advisory envelope | **gpt-5.6-luna** (max), Flash-class, other volume seats |
 
 **Standing operator preference (2026-08-06):** Fable remains the Anthropic

@@ -16,8 +16,8 @@ from scripts.review.reviewer_resolver import (
     DEEPSEEK_V4_FLASH,
     DEEPSEEK_V4_PRO,
     GLM,
-    GROK_4_5,
-    GROK_4_5_CURSOR_FALLBACK,
+    GROK_4_6,
+    GROK_4_6_CURSOR_FALLBACK,
     KIMI_K3,
     POOL,
     QWEN,
@@ -53,7 +53,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         "grok": "xai",
         "grok-build": "xai",
         "grok-hermes": "xai",
-        "grok-4.5": "xai",
+        "grok-4.6": "xai",
         "deepseek-v4-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
         "pool": "poolside",
@@ -205,7 +205,7 @@ def test_critical_uses_authority_while_routine_uses_practical_defaults():
 def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
     assert resolution.selected is not None
-    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.name == "grok-4.6"
     assert resolution.selected.suitability_rank == 0
 
 
@@ -277,7 +277,7 @@ def test_low_risk_pool_author_gets_terra_before_economical_routes():
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "deterministic-formal-routing.v2"
-    assert resolution.catalog_reviewed_on == "2026-08-13"
+    assert resolution.catalog_reviewed_on == "2026-08-16"
     assert resolution.resolved_risk == "high"
 
 
@@ -398,7 +398,7 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.name == "grok-4.6"
     terra = next(item for item in resolution.trace if item.name == "gpt-5.6-terra")
     assert terra.status == "excluded"
     assert "automatic assignments are prohibited" in terra.reason
@@ -432,7 +432,7 @@ def test_native_grok_dark_falls_to_explicit_cursor_grok():
         ResolverInputs(author_model="claude", risk="high", routing_snapshot=snapshot)
     )
     assert resolution.selected is None
-    assert next(item for item in resolution.trace if item.name == "grok-4.5-cursor-fallback").status == "excluded"
+    assert next(item for item in resolution.trace if item.name == "grok-4.6-cursor-fallback").status == "excluded"
 
 
 def test_missing_health_signal_is_fail_open():
@@ -543,7 +543,7 @@ def test_required_capabilities_and_isolation_fail_closed():
     assert "capabilities" in missing.reason
 
     isolation = evaluate_candidate(
-        GROK_4_5_CURSOR_FALLBACK,
+        GROK_4_6_CURSOR_FALLBACK,
         ResolverInputs(author_model="claude", isolation_required=True, formal_review=False),
         author_family="anthropic",
     )
@@ -553,7 +553,7 @@ def test_required_capabilities_and_isolation_fail_closed():
 
 def test_review_profile_is_a_hard_eligibility_filter():
     result = evaluate_candidate(
-        GROK_4_5,
+        GROK_4_6,
         ResolverInputs(author_model="claude", review_profile="content", formal_review=False),
         author_family="anthropic",
     )
@@ -681,7 +681,7 @@ def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authori
 
 
 def test_ineligible_kimi_k3_never_receives_automatic_review_load():
-    counts = {"grok-4.5": 0, "kimi-k3": 0}
+    counts = {"grok-4.6": 0, "kimi-k3": 0}
     assigned_bytes = {"grok": 0, "kimi": 0}
 
     for index in range(20):
@@ -704,14 +704,14 @@ def test_ineligible_kimi_k3_never_receives_automatic_review_load():
         )
         selected = resolution.selected
         assert selected is not None
-        assert selected.name == "grok-4.5"
+        assert selected.name == "grok-4.6"
         counts[selected.name] += 1
         assigned_bytes[selected.quota_bucket] += 1_000
         kimi_trace = next(item for item in resolution.trace if item.name == "kimi-k3")
         assert kimi_trace.status == "excluded"
         assert "authenticated K3 sealed MCP canary" in kimi_trace.reason
 
-    assert counts == {"grok-4.5": 20, "kimi-k3": 0}
+    assert counts == {"grok-4.6": 20, "kimi-k3": 0}
     assert assigned_bytes == {"grok": 20_000, "kimi": 0}
 
 
@@ -797,10 +797,10 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate():
     unsafe = resolve_reviewer(
         ResolverInputs(
             author_model="gemini",
-            pinned_candidate="grok-4.5-cursor-fallback",
+            pinned_candidate="grok-4.6-cursor-fallback",
             pressure_override_reason="native capacity incident",
         ),
-        ladder=((REVIEW_CANDIDATES["grok-4.5-cursor-fallback"],),),
+        ladder=((REVIEW_CANDIDATES["grok-4.6-cursor-fallback"],),),
     )
     assert unsafe.selected is None
     assert "hard eligibility" in unsafe.fail_closed_reason
@@ -935,7 +935,7 @@ def test_practical_ladder_starts_with_terra_then_sonnet():
             "glm-5.3",
             "gemini-3.7-flash",
         ]
-        assert ladder[4][0].name == "grok-4.5"
+        assert ladder[4][0].name == "grok-4.6"
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -946,11 +946,11 @@ def test_candidate_constants_preserve_expected_identity():
     assert POOL.invocation.endswith("ask-pool")
     assert GLM.requires_data_egress_policy == "local_interactive"
     assert GLM.invocation.endswith("ask-glm")
-    assert GROK_4_5.transport == "native_grok"
-    from scripts.review.reviewer_resolver import GROK_4_5_CURSOR_FALLBACK, SONNET_5
+    assert GROK_4_6.transport == "native_grok"
+    from scripts.review.reviewer_resolver import GROK_4_6_CURSOR_FALLBACK, SONNET_5
 
-    assert GROK_4_5_CURSOR_FALLBACK.transport == "cursor"
-    assert GROK_4_5_CURSOR_FALLBACK.concrete_model == "grok-4.5"
+    assert GROK_4_6_CURSOR_FALLBACK.transport == "cursor"
+    assert GROK_4_6_CURSOR_FALLBACK.concrete_model == "grok-4.6"
     assert SONNET_5.concrete_model == "claude-sonnet-5"
 
 

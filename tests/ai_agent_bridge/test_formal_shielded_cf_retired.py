@@ -20,7 +20,7 @@ def test_handle_review_pr_refuses_when_formal_disabled(monkeypatch, capsys) -> N
             pr="9999",
             reviewer="codex",
             initiator="test",
-            author_model="grok-4.5",
+            author_model="grok-4.6",
             author_family="xai",
         )
     )

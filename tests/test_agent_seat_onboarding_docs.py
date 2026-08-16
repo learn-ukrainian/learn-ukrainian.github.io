@@ -428,7 +428,7 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "not a new coordination plane" in lower or "not** a new coordination plane" in lower
     assert "agent-stdio-v1" in onboarding
     assert "observed" in lower and "not an allowlist" in lower
-    assert "grok-4.5" in onboarding
+    assert "grok-4.6" in onboarding
     assert "--no-leader" in onboarding
     assert "--agent-profile" in onboarding
     assert "digest-checked" in lower

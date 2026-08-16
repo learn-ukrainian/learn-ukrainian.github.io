@@ -176,7 +176,7 @@ def test_exact_two_thousand_and_frozen_partition_denominators_fail_closed(tmp_pa
     "actor",
     [
         {"provider": "google", "model_family": "gemini", "harness": "agy", "exact_model": "gemini-3.6-flash-high"},
-        {"provider": "xai", "model_family": "xai", "harness": "grok", "exact_model": "grok-4.5"},
+        {"provider": "xai", "model_family": "xai", "harness": "grok", "exact_model": "grok-4.6"},
         {
             "role_id": "rule_author_extractor",
             "task_id": "phase3-v2-1-rule-author-extraction",

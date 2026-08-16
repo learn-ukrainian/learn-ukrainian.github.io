@@ -231,7 +231,7 @@ _GROK_REQUIRED_AGENT_FLAGS: tuple[str, ...] = (
     "--agent-profile",
     "--no-leader",
 )
-GROK_SHADOW_MODEL = "grok-4.5"
+GROK_SHADOW_MODEL = "grok-4.6"  # operator order 2026-08-16 (#6865)
 GROK_SHADOW_EFFORT = "high"
 _GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
 _GROK_PROFILE_SHA256 = "5831398f7204be279e908371b5f0990d5e5e725a323091232e184083649d7158"
@@ -1383,7 +1383,7 @@ def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
 
     Exact token order (parent flags before ``stdio``)::
 
-        ABS_GROK agent --model grok-4.5 --reasoning-effort high
+        ABS_GROK agent --model grok-4.6 --reasoning-effort high
         --agent-profile ABS_PROFILE --no-leader stdio
 
     Never uses the ACPX built-in ``grok-build`` name.
@@ -2444,7 +2444,7 @@ class AcpxGrokShadowAdapter:
       a fail-closed capability probe, never the built-in ``grok-build`` name
     - exact hash-pinned project profile with no tools plus an explicit
       write/shell/subagent/web/MCP/memory denylist
-    - fixed model/effort ``grok-4.5`` / ``high`` inside that agent command
+    - fixed model/effort ``grok-4.6`` / ``high`` inside that agent command
     - ``ACPX_AUTH_CACHED_TOKEN=1`` under ``--auth-policy fail``, with ambient
       XAI API-key auth selectors scrubbed
     - one-shot ``exec``, no session, deny-all / no-fs / no-terminal
@@ -2484,7 +2484,7 @@ class AcpxGrokShadowAdapter:
         - project-local acpx missing or lacking the required command surface
         - Grok binary missing or lacking the required command/flag surface
         - no-tool profile missing or changed from its reviewed digest
-        - caller ``model`` is not ``None`` or ``grok-4.5``
+        - caller ``model`` is not ``None`` or ``grok-4.6``
         - caller ``effort`` is not ``None`` or ``high``
         - missing/blank/oversized/unsafe local metadata fields
         """

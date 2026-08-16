@@ -959,9 +959,9 @@ def _failed_formal_substitution_fixture(
         original = ledger.reserve_selection(
             original_request,
             lambda _context: RoutingSelection(
-                candidate="grok-4.5",
+                candidate="grok-4.6",
                 route="grok",
-                model="grok-4.5",
+                model="grok-4.6",
                 family="xai",
                 quota_bucket="grok-weekly",
                 credential_bucket="grok-key-a",
