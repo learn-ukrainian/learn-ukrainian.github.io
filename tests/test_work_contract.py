@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.work.attention import derive_health, derive_safe_next_action
+from scripts.work.attention import apply_health_and_actions, derive_health, derive_safe_next_action
 from scripts.work.normalize import _match_dispatch, build_projection
 from scripts.work.relations import (
     detect_dependency_cycles,
@@ -1869,6 +1869,86 @@ def test_health_never_uses_activity_and_pr_rules():
     assert derive_safe_next_action(orphan)["code"] == "TRIAGE_ORPHAN"
 
     assert derive_health(orphan, source_ok=False) == "UNKNOWN"
+
+
+def _is_actionable(item: dict) -> bool:
+    """Mirror dashboards/work.html's isActionable() for a Python-side check."""
+    if item["health"] in {"OFF_TRACK", "AT_RISK"}:
+        return True
+    code = item.get("safe_next_action", {}).get("code") or ""
+    return bool(code) and code not in {"INSPECT_UNKNOWN", "OPEN_GITHUB", "NONE"}
+
+
+def _review_item(lifecycle: str, *, sealed: bool = False) -> dict:
+    return {
+        "work_id": f"review:{lifecycle}:{sealed}",
+        "resource_kind": "review",
+        "lifecycle": lifecycle,
+        "flags": {},
+        "projections": {
+            "stream": {},
+            "dispatch": {},
+            "review": {"sealed_verdict_available": sealed},
+            "verification": {},
+        },
+    }
+
+
+def test_historical_review_rows_never_off_track_or_request_cf_review():
+    """Issue #6862: retired sealed-CF era rows (formal_review_jobs) must read
+    as history, never as attention-driving work. Terminal rows (failed /
+    complete / rejected, sealed or not) get neutral health, safe action NONE,
+    and are excluded from the actionable default view. No review row emits
+    REQUEST_CF_REVIEW, including the one still-open row (that ask belongs to
+    the PR row under the current direct ask-<lane> flow)."""
+    items = [
+        _review_item("failed"),
+        _review_item("rejected"),
+        _review_item("error"),
+        _review_item("complete", sealed=False),
+        _review_item("complete", sealed=True),
+        _review_item("completed", sealed=True),
+        _review_item("published", sealed=True),
+        _review_item("open", sealed=False),
+        _review_item("running"),
+        _review_item("queued"),
+        _review_item("pending"),
+    ]
+    # apply_health_and_actions mutates `items` in place (sets health/
+    # safe_next_action) and returns a stripped attention-list projection that
+    # drops lifecycle; assert against the mutated originals instead.
+    apply_health_and_actions(items, source_ok=True)
+    resolved = items
+
+    terminal_lifecycles = {
+        "failed",
+        "rejected",
+        "error",
+        "complete",
+        "completed",
+        "published",
+        "open",
+    }
+    in_flight_lifecycles = {"running", "queued", "pending"}
+
+    for item in resolved:
+        code = item["safe_next_action"]["code"]
+        assert code != "REQUEST_CF_REVIEW", item
+        if item["lifecycle"] in terminal_lifecycles:
+            assert item["health"] != "OFF_TRACK", item
+            assert code == "NONE", item
+            assert not _is_actionable(item), item
+        elif item["lifecycle"] in in_flight_lifecycles:
+            assert item["health"] == "AT_RISK"
+            assert code == "WAIT_REVIEW"
+
+    off_track_reviews = [i for i in resolved if i["health"] == "OFF_TRACK"]
+    request_cf_review_reviews = [
+        i for i in resolved if i["safe_next_action"]["code"] == "REQUEST_CF_REVIEW"
+    ]
+    assert off_track_reviews == []
+    assert request_cf_review_reviews == []
+    assert not any(_is_actionable(i) for i in resolved if i["lifecycle"] in terminal_lifecycles)
 
 
 def test_build_projection_joins_sources_deterministically():
