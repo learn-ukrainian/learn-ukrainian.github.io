@@ -1,0 +1,68 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e3306e57d408",
+  "session_id": "session_f81d7d2a-23ca-46c8-be80-ada05088683d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-16T15:58:16.188982Z",
+  "branch": "kimi/infra-6863-root-dir-leak-forensics",
+  "checkpoints_count": 4,
+  "save_step_count": 3,
+  "files_touched": [
+    ".gitignore",
+    "agents_extensions/shared/hooks/session-setup.sh",
+    "scripts/fleet_comms/paths.py",
+    "scripts/hygiene/root_entry_guard.py",
+    "tests/agent_runtime/test_acpx_discuss.py",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/hygiene/test_root_entry_guard.py",
+    "tests/test_fleet_comms_message_plane.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "1fac71a62c9e",
+  "token_usage": {
+    "input_tokens": 94939,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7421696,
+    "output_tokens": 32168,
+    "api_call_count": 97
+  },
+  "session_metrics": {
+    "turn_count": 4
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-16T15:58:16.165798Z",
+    "agent_lines": 416,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 416,
+    "total_lines_changed": 422,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

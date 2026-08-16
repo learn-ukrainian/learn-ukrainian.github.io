@@ -1,0 +1,68 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6863-root-dir-leak-forensics
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Issue #6863 — forensic hunt + hardening: transport leaks JSON/shell fragments as repo-root directories
+
+You are a forensic implementation agent in a dispatch worktree. Read GitHub issue #6863 in
+full first — it carries the complete evidence dossier (what was found, what is preserved
+where, what was already ruled out). The operator classified this "very dangerous" (a dir
+literally named `-rf` was created; the reversed failure is a destructive rm).
+
+```
+ROUTING_CARD_V1
+tier: authority
+model_x_harness: kimi-k3 × native kimi CLI
+why_this_tier: cross-file forensic debugging of a transport/quoting defect with a
+  destructive near-miss; strongest available debugger (codex capped)
+advisor_packet: n/a
+owned_paths: scripts/ai_agent_bridge/**, scripts/agent_runtime/**, scripts/fleet_comms/paths.py, scripts/hygiene/**, tests/**
+acceptance_cmd: see Acceptance below
+alternatives_considered: agy (authored adjacent code — fresh-eyes preferred for forensics),
+  codex (capped until ~2026-08-20)
+parallel_free_seats: agy carries work-6862 (disjoint paths — do not touch scripts/work/)
+```
+
+## Evidence discipline (#M-4)
+Every claim tool-backed with quoted output. The preserved shadow DB is at
+`/tmp/lu-leak-evidence/shadow-comms-aug13.sqlite3` on this host.
+
+## Deliverables (in priority order)
+1. **Pin the creator.** Trace the Aug-13-era `bridge-ask` agy path and the acpx/opencode
+   invocation chain for the defect class the issue names: unquoted shell expansion of
+   transport output, paths/argv built from event lines, acpx output/session path handling.
+   Name the exact line(s). If the historical code has since changed, identify whether the
+   defect is fixed, latent, or moved.
+2. **Pin the sweeper** that removed the three empty garbage dirs on 2026-08-16 ~14:40
+   local (candidates: hygiene/retention engine, dispatch preflight sweeps, adapter
+   cleanup) — quote its log/code path. The sweeper's existence means recurrences
+   self-erase; that must stop or at least log loudly.
+3. **Harden `default_plane_root`** (scripts/fleet_comms/paths.py): creating a plane root
+   whose base is not the primary checkout / explicit override must hard-fail with a clear
+   error, never silently materialize a shadow comms DB (that converted this bug into
+   silent message loss).
+4. **Root-hygiene guard**: deterministic detection of unexpected repo-root entries
+   (including empty dirs, which git cannot see) — session-start sweep hook + an advisory
+   check; alert, do not auto-delete (evidence preservation).
+5. Mutation-check every guard test (#M-16). If you find the live defect, fix it at the
+   root cause layer; if the defect is in the retired bridge-ask path, say so explicitly
+   with proof and harden the surviving paths.
+
+## Steps
+Worktree only → investigate (read-only across the named surfaces; you may run harmless
+local repros) → implement 3+4 (+1's fix if live) → tests → ruff → conventional commit
+referencing #6863 → push → PR with the full forensic narrative. NO auto-merge.
+
+## Acceptance
+- Issue #6863 gets a comment (or PR body section) answering: creator identified (or
+  bounded with proof), sweeper identified, defect live/latent/retired.
+- Plane-root hardening + root-hygiene guard land with mutation-checked tests; all
+  affected suites green.

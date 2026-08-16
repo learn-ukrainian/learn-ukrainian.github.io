@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e3306e57d408",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-6863-root-dir-leak-forensics",
+  "checkpoints_count": 4,
+  "files_touched": [
+    ".gitignore",
+    "agents_extensions/shared/hooks/session-setup.sh",
+    "scripts/fleet_comms/paths.py",
+    "scripts/hygiene/root_entry_guard.py",
+    "tests/agent_runtime/test_acpx_discuss.py",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/hygiene/test_root_entry_guard.py",
+    "tests/test_fleet_comms_message_plane.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e3/306e57d408/0/metadata.json",
+      "transcript": "/e3/306e57d408/0/full.jsonl",
+      "content_hash": "/e3/306e57d408/0/content_hash.txt",
+      "prompt": "/e3/306e57d408/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 94939,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7421696,
+    "output_tokens": 32168,
+    "api_call_count": 97
+  }
+}
