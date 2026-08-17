@@ -1,0 +1,56 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6962-thrash-guard-hermetic
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6962 (part 1) — make review-pr suites hermetic against the live githubstatus thrash-guard probe
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto (workspace-write, fresh dispatch worktree)
+- why_this_tier: mechanical test-hermeticity fix; cursor is the free strong worker seat (grok+agy busy on their own deltas)
+- advisor_packet: n/a
+- owned_paths: tests/ai_agent_bridge/test_review_pr.py, tests/ai_agent_bridge/test_review_pr_lifecycle.py, and ONLY if a shared fixture is the cleaner seam: their conftest or scripts/ai_agent_bridge/_review_pr_thrash.py test hooks
+- acceptance_cmd: /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/ai_agent_bridge/test_review_pr.py tests/ai_agent_bridge/test_review_pr_lifecycle.py -q
+- alternatives_considered: (1) agy — REJECTED: busy on PR #6961 delta in the same test dir (path overlap); (2) wait for outage to clear — REJECTED: latent landmine re-fires on every future outage
+- parallel_free_seats: none needed
+
+## Evidence preamble (#M-4 — binding)
+Every claim in your report must quote raw tool output from THIS run.
+
+## Context (read issue #6962 + its latest comment first: `gh issue view 6962 --comments`)
+The review-pr CLI's thrash guard (`scripts/ai_agent_bridge/_review_pr_thrash.py`) live-queries
+githubstatus and exits 2 when GitHub Actions is degraded. The test suites
+`tests/ai_agent_bridge/test_review_pr.py` / `test_review_pr_lifecycle.py` do NOT mock that
+probe, so ~9 tests fail (exit code 2 where 1 expected, `assert 2 == 1`) everywhere — local AND
+CI — exactly while GitHub is in outage. This turned main CI red today (run at bfa9476) and is
+red-flagging unrelated PRs' shards. Verified repro stderr:
+`review-pr: thrash guard: GitHub Actions is in outage/degraded (githubstatus)...`
+
+## Shippable unit
+ONE PR making these suites hermetic: every test that drives the review-pr CLI path pins the
+thrash-guard probe to a deterministic healthy state (autouse fixture or explicit mock at the
+guard's seam — follow the repo's existing mock conventions in those files). Add one NEW test
+asserting the guard-tripped path itself (probe mocked to degraded → exit 2 + the stderr
+message), so the guard keeps its own coverage. NO behavior change to the CLI or the guard.
+Out of scope: the sealed-machinery deletion question (part 2 of #6962), test_review_worktree.py's
+genuinely worktree-hostile test, any other suite.
+
+## Steps
+1. `gh issue view 6962 --comments`. Step 0: `gh pr list --state all --search "6962"` — if a
+   sibling PR carries this, STOP and report.
+2. Read `scripts/ai_agent_bridge/_review_pr_thrash.py` to find the probe seam; quote it.
+3. Implement the hermetic pin + the new guard-tripped test.
+4. Acceptance: both suites green via the acceptance_cmd REGARDLESS of live GitHub state (quote
+   full tail); ruff clean on changed files. Note the `.venv/bin/pytest` launcher shebang is
+   broken (known) — use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest`.
+5. Conventional commit `test(bridge): pin review-pr thrash-guard probe, hermetic against live
+   githubstatus (#6962)`; push; open PR referencing #6962. NO auto-merge.
+6. Report: PR number, probe-seam quote, before/after test tails, ruff tail.

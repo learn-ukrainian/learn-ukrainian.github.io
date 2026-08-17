@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cc1256abb51a",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6962-thrash-guard-hermetic",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/ai_agent_bridge/conftest.py",
+    "tests/ai_agent_bridge/test_review_pr.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/cc/1256abb51a/0/metadata.json",
+      "transcript": "/cc/1256abb51a/0/full.jsonl",
+      "compact_transcript": "/cc/1256abb51a/0/transcript.jsonl",
+      "content_hash": "/cc/1256abb51a/0/content_hash.txt",
+      "prompt": "/cc/1256abb51a/0/prompt.txt"
+    }
+  ]
+}

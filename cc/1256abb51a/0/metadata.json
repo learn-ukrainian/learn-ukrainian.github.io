@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cc1256abb51a",
+  "session_id": "fleet-3a40f10eea6147cda97984a265ed7d4d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T15:59:46.330969Z",
+  "branch": "cursor/infra-6962-thrash-guard-hermetic",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/ai_agent_bridge/conftest.py",
+    "tests/ai_agent_bridge/test_review_pr.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "77bc59b15927",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T15:59:46.320893Z",
+    "agent_lines": 65,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 65,
+    "total_lines_changed": 65,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
