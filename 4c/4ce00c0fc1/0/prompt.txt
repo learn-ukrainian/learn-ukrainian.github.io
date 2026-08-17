@@ -1,0 +1,76 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6956-cursor-launcher
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6956 — start-cursor-driver.sh TUI launcher + drive-epic seat (no new router)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto (workspace-write, fresh dispatch worktree) — operator directive: cursor-first for implement units
+- why_this_tier: mechanical extension of the existing launcher pattern (four sibling launchers share launcher_core.sh); identity keys landed on main via #6964
+- advisor_packet: n/a
+- owned_paths: start-cursor-driver.sh (new), scripts/lib/launcher_core.sh (only if a seat hook is required), agents_extensions/shared/skills/drive-epic/SKILL.md (roster row), docs/runbooks/epic-orchestrator-roster.md, tests (launcher seat enumeration)
+- acceptance_cmd: see issue Verify block + the tests you add
+- alternatives_considered: (1) agy — REJECTED: carried five deltas on #6964 today, and operator wants cursor maximized; (2) grok — REJECTED: no affinity advantage for launcher shell work
+- parallel_free_seats: agy, grok
+- CF note: your PR will be reviewed under the NEW union rule (single reviewer outside {xAI, Moonshot}) that landed in #6964
+
+## Evidence preamble (#M-4 — binding)
+Every claim in your final report must quote raw tool output from THIS run. Acceptance outputs
+must be copy-ready for pasting on issue #6956.
+
+## Context — read FIRST
+`gh issue view 6956` (this unit — its Frozen policy + Acceptance are binding) and
+`gh issue view 6952` (parent charter). The identity contract you depend on is on main
+(merged #6964): `orchestrator_seats.cursor` exists in `scripts/config/model_catalog.yaml`
+with the Auto allowlist + attestation rules; `docs/runbooks/cursor-driver.md` is the charter.
+Study the four existing launchers (`start-claude-driver.sh`, `start-codex-driver.sh`,
+`start-gemini-driver.sh`, `start-grok-driver.sh`) and `scripts/lib/launcher_core.sh` — match
+their shape exactly.
+
+## Shippable unit
+ONE PR:
+1. `start-cursor-driver.sh` — executable, sources `scripts/lib/launcher_core.sh`, calls
+   `launcher_main cursor driver`, `--help`/usage mentions `--epic`, launching without an
+   operator `--epic` must NOT silently claim main orchestrator (match the fail-closed behavior
+   of the siblings).
+2. Wire the cursor seat wherever `launcher_core.sh` enumerates driver seats (only if actually
+   required — quote the enumeration site either way).
+3. `drive-epic` roster/docs: list Cursor as a driver seat (edit ONLY
+   `agents_extensions/shared/skills/drive-epic/SKILL.md` — deploy trees are overwritten) +
+   `docs/runbooks/epic-orchestrator-roster.md` if it exists (verify, quote).
+4. Concurrency-1: per the issue's frozen policy, holding a Cursor driver lease must fail closed
+   if someone also dispatches `--agent cursor` on the same lane — OR document the exact existing
+   serialization if the runtime already serializes (investigate `scripts/delegate.py` /lease
+   machinery and QUOTE what you find; do not guess).
+5. Tests: launcher seat enumeration next to the grok/claude/codex/agy coverage (find the
+   existing launcher test file via grep; extend it; if none exists, add one — do not claim done
+   on grep alone).
+
+Out of scope: C0 runtime proof (#6953), CF smoke (#6957), any new router/playbook binary,
+GUI protocol, pstack/Graphite/Benny, self-merge.
+
+## Steps
+1. Read both issues. Step 0: `gh pr list --state all --search "6956"` — sibling PR → STOP and report.
+2. Implement per the unit above; `bash -n` + shellcheck the new script if shellcheck is available
+   (quote result either way).
+3. Acceptance (quote ALL):
+   - `test -x start-cursor-driver.sh && echo EXECUTABLE`
+   - `grep -n 'launcher_main cursor' start-cursor-driver.sh`
+   - `./start-cursor-driver.sh --help 2>&1 | head` (must mention --epic)
+   - targeted pytest for the launcher/seat tests via
+     `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest` (the
+     `.venv/bin/pytest` launcher shebang is broken — known)
+   - ruff on any changed Python
+4. Conventional commit `feat(launchers): start-cursor-driver.sh + drive-epic cursor seat
+   (#6956)`; push; open PR referencing #6956 + #6952. NO auto-merge; the driver handles
+   review + merge.
+5. Report: PR number + all acceptance outputs.

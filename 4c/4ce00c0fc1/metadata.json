@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4c4ce00c0fc1",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6956-cursor-launcher",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "docs/runbooks/cursor-driver.md",
+    "docs/runbooks/epic-orchestrator-roster.md",
+    "scripts/launchers/cursor.sh",
+    "scripts/lib/handoff_identity.sh",
+    "scripts/lib/launcher_core.sh",
+    "start-cursor-driver.sh",
+    "tests/test_fleet_comms_launcher_awareness.py",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_handoff_identity.py",
+    "tests/test_launcher_contract.py",
+    "tests/test_start_cursor_launcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/4c/4ce00c0fc1/0/metadata.json",
+      "transcript": "/4c/4ce00c0fc1/0/full.jsonl",
+      "compact_transcript": "/4c/4ce00c0fc1/0/transcript.jsonl",
+      "content_hash": "/4c/4ce00c0fc1/0/content_hash.txt",
+      "prompt": "/4c/4ce00c0fc1/0/prompt.txt"
+    }
+  ]
+}
