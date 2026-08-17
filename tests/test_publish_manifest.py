@@ -498,3 +498,57 @@ def test_bootstrap_publish_requires_no_canonical_baseline(tmp_path: Path, monkey
             bootstrap_no_baseline=True,
             allow_richness_regression_reason="not applicable",
         )
+
+
+def test_publish_manifest_cli_verify_only_dry_run(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    import sys
+
+    from scripts.lexicon.publish_manifest import main
+
+    fingerprint = {"schema_version": 1, "fingerprint": "abc123"}
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    fingerprint_path = tmp_path / "lexicon-manifest.fingerprint.json"
+    gzip_path = tmp_path / "lexicon-manifest.json.gz"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    _write_json(
+        manifest_path,
+        {
+            "version": "0.1",
+            "manifest_fingerprint": fingerprint,
+            "richness_summary": _richness_summary(thin=0, gloss=0, anchor=0),
+            "entries": [],
+        },
+    )
+    _write_json(fingerprint_path, fingerprint)
+    _install_richness_audit(monkeypatch)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.download_published_manifest",
+        lambda **kwargs: {"richness_summary": _richness_summary(thin=0, gloss=0, anchor=0), "entries": []},
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "publish_manifest.py",
+            "--manifest",
+            str(manifest_path),
+            "--fingerprint",
+            str(fingerprint_path),
+            "--gzip",
+            str(gzip_path),
+            "--pointer",
+            str(pointer_path),
+            "--verify-only",
+        ],
+    )
+
+    exit_code = main()
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "would publish" in captured.out
+    assert not pointer_path.exists()

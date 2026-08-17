@@ -14,11 +14,16 @@ import gzip
 import hashlib
 import json
 import subprocess
+import sys
 import tempfile
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.manifest_fingerprint import (
     DEFAULT_FINGERPRINT,
@@ -26,7 +31,6 @@ from scripts.lexicon.manifest_fingerprint import (
     sidecar_payload,
 )
 
-ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-manifest.pointer.json"
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-manifest.json.gz"
@@ -117,9 +121,7 @@ def validate_manifest_fingerprint(
     """Require the built manifest to embed the sidecar fingerprint digest."""
     embedded = manifest.get("manifest_fingerprint")
     if not isinstance(embedded, dict):
-        raise ManifestPublishError(
-            f"{manifest_path} lacks manifest_fingerprint; run `make atlas` before publishing."
-        )
+        raise ManifestPublishError(f"{manifest_path} lacks manifest_fingerprint; run `make atlas` before publishing.")
 
     expected_schema = fingerprint.get("schema_version")
     expected_fingerprint = fingerprint.get("fingerprint")
@@ -130,13 +132,11 @@ def validate_manifest_fingerprint(
         )
     if embedded.get("schema_version") != expected_schema:
         raise ManifestPublishError(
-            "manifest_fingerprint.schema_version does not match "
-            "site/src/data/lexicon-manifest.fingerprint.json"
+            "manifest_fingerprint.schema_version does not match site/src/data/lexicon-manifest.fingerprint.json"
         )
     if embedded.get("fingerprint") != expected_fingerprint:
         raise ManifestPublishError(
-            "manifest_fingerprint.fingerprint does not match "
-            "site/src/data/lexicon-manifest.fingerprint.json"
+            "manifest_fingerprint.fingerprint does not match site/src/data/lexicon-manifest.fingerprint.json"
         )
 
 
@@ -310,9 +310,7 @@ def download_published_manifest(
 ) -> dict[str, Any]:
     """Return the canonical live Atlas manifest used as the publish baseline."""
     try:
-        manifest_bytes = gzip.decompress(
-            _download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo)
-        )
+        manifest_bytes = gzip.decompress(_download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo))
         manifest = json.loads(manifest_bytes.decode("utf-8"))
     except (subprocess.CalledProcessError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         excerpt = _stderr_excerpt(exc) if isinstance(exc, subprocess.CalledProcessError) else ""
@@ -413,10 +411,7 @@ def assert_manifest_richness_publishable(
         "override_reason": reason,
     }
     if regressions and reason is None:
-        details = ", ".join(
-            f"{key} {values['baseline']}→{values['candidate']}"
-            for key, values in regressions.items()
-        )
+        details = ", ".join(f"{key} {values['baseline']}→{values['candidate']}" for key, values in regressions.items())
         raise ManifestPublishError(
             f"publish blocked (#4515): Atlas POC richness regressed versus the canonical "
             f"published manifest ({details}). Enrich the affected entries before publishing "
@@ -477,13 +472,10 @@ def evaluate_manifest_pointer_write_gate(
     """Run the one required richness decision before any Atlas pointer packaging."""
     if bootstrap_no_baseline:
         if allow_richness_regression_reason is not None:
-            raise ManifestPublishError(
-                "--bootstrap-no-baseline cannot be combined with --allow-richness-regression"
-            )
+            raise ManifestPublishError("--bootstrap-no-baseline cannot be combined with --allow-richness-regression")
         if canonical_published_manifest_exists(release_tag=release_tag, repo=repo):
             raise ManifestPublishError(
-                "--bootstrap-no-baseline is only valid when the canonical published Atlas manifest "
-                "does not exist"
+                "--bootstrap-no-baseline is only valid when the canonical published Atlas manifest does not exist"
             )
         return assert_manifest_richness_bootstrap_publishable(manifest_path)
 
@@ -566,7 +558,13 @@ def main() -> int:
     parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
     parser.add_argument("--repo", default=DEFAULT_REPO)
-    parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading or writing pointer")
+    parser.add_argument(
+        "--dry-run",
+        "--verify-only",
+        dest="dry_run",
+        action="store_true",
+        help="Build metadata without uploading or writing pointer",
+    )
     parser.add_argument(
         "--allow-richness-regression",
         metavar="REASON",
