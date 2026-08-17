@@ -271,15 +271,10 @@ def process_and_respond(
     error message back to the sender and always cleans up the PID file.
 
     ``model`` defaults to the AGY seat's live ACP registry pin (or ``AB_GEMINI_MODEL``
-    env override). Legacy ``gemini*`` slugs remap through ``resolve_compat_model``
-    (#6894/#6959).
+    env override) (#6959).
     """
-    from ._acp_compat import resolve_compat_model
-
-    selected = resolve_compat_model("gemini", model)
-    if selected is None:
-        selected = default_gemini_model()
-    model = selected
+    if model is None:
+        model = default_gemini_model()
 
     msg = read_message(message_id, quiet=stdout_only)
     if not msg:

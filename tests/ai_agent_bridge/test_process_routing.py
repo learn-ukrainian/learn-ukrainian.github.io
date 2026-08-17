@@ -426,6 +426,23 @@ def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> No
     assert captured["model"] == "env-model-override"
 
 
+def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bridge_db, monkeypatch) -> None:
+    """#6959: AB_GEMINI_MODEL override survives through ask_gemini -> process_and_respond -> _run_gemini_sync."""
+    from scripts.ai_agent_bridge._gemini import ask_gemini
+
+    monkeypatch.setenv("AB_GEMINI_MODEL", "gemini-3.1-pro-high")
+    captured: dict[str, object] = {}
+
+    def _fake_run_sync(msg, msg_id, model, *args, **kwargs):
+        captured["model"] = model
+        return "response text"
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._gemini._run_gemini_sync", _fake_run_sync)
+
+    ask_gemini("hello", task_id="issue-6959")
+    assert captured["model"] == "gemini-3.1-pro-high"
+
+
 def test_process_model_override_must_match_registry(bridge_db, monkeypatch):
     """Explicit overrides pass through to registry validation (loud mismatch)."""
     message_id = _send("cursor")

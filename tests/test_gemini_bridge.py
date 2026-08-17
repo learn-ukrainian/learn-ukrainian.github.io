@@ -477,3 +477,20 @@ def test_process_and_respond_resolves_registry_pin(bridge_db, monkeypatch) -> No
 
     process_and_respond(message_id)
     assert captured["model"] == "gemini-9.9-flash-high"
+
+
+def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bridge_db, monkeypatch) -> None:
+    """#6959: AB_GEMINI_MODEL override survives through ask_gemini -> process_and_respond -> _run_gemini_sync."""
+    from scripts.ai_agent_bridge._gemini import ask_gemini
+
+    monkeypatch.setenv("AB_GEMINI_MODEL", "gemini-3.1-pro-high")
+    captured: dict[str, object] = {}
+
+    def _fake_run_sync(msg, msg_id, model, *args, **kwargs):
+        captured["model"] = model
+        return "response text"
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._gemini._run_gemini_sync", _fake_run_sync)
+
+    ask_gemini("hello", task_id="issue-6959")
+    assert captured["model"] == "gemini-3.1-pro-high"
