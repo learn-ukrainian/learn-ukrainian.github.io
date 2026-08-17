@@ -63,3 +63,47 @@ The following tools and frameworks are explicitly rejected and must not be vendo
 - **No Benny:** No external automated workflow bots.
 - **No N-Implementation Arenas (`/arena`):** Contest is handled via `ab discuss`, followed by a single dispatched owner.
 - **No Second Comms Bus:** No `cursor-discuss` or custom socket daemon; comms uses the existing C0 fleet-comms plane.
+
+## Fleet-comms (C0)
+
+Cursor TUI drivers talk to the **existing** message plane only. Entry point is
+the primary interpreter + bridge module (same bus as every other seat — not a
+second discuss API):
+
+```bash
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+  scripts/ai_agent_bridge/__main__.py discuss <channel> "<topic>" \
+  --with <a>,<b> [--max-rounds N]
+```
+
+| Verb | How |
+| --- | --- |
+| **inbox** | `… __main__.py inbox show\|ack …` (fleet-comms dual-write) |
+| **dispatch** | `scripts/delegate.py dispatch --agent <non-cursor> …` (Cursor driver holds concurrency 1 — do not self-dispatch) |
+| **discuss** | `ab discuss` via the venv bridge above → ACPX controller (`LU_ACPX_TRANSPORT=active`) on the same plane |
+| **receipts** | `batch_state/tasks/<task-id>.json` + channel/thread ids; Cursor receipts must carry `resolved_model` / `resolved_model_known` / `resolved_model_source` |
+
+### ACPX / Node jail (#6953)
+
+`node_modules/.bin/acpx` is a `#!/usr/bin/env node` shim. A jail PATH of
+`/usr/bin:/bin` (no Homebrew) fails as `env: node: No such file or directory`
+in ~8s / 0 tokens. The ACPX adapter now:
+
+1. Resolves an absolute host `node` (PATH, then `/opt/homebrew/bin`,
+   `/usr/local/bin`, `~/.hermes/node/bin`).
+2. Spawns `[node, <acpx-entry>, …]` so the shebang is never consulted.
+3. Prepends Node's directory onto the child `PATH` for nested agent shebangs.
+
+No deploy step outside the worktree is required for this repair — it is code
+on the adapter path. If `node` is absent on the host entirely, discuss fails
+closed with an actionable refusal (install Node; do not invent a second bus).
+
+### Attestation on receipts
+
+- Attested: concrete `resolved_model` (e.g. `composer-2.5`) +
+  `resolved_model_known: true` + source (`cursor-stream-json` / transcript /
+  stderr-json).
+- Unattested Auto: `resolved_model: "unattested-harness"`,
+  `resolved_model_known: false`, `resolved_model_source: "unattested-harness"`.
+  That session is **not** driver-of-record. CF for unknown-Auto worker PRs
+  still follows the allowlist-union / #6489 rules in `model-assignment.md`.

@@ -300,7 +300,7 @@ def test_cursor_adapter_does_not_infer_model_from_assistant_text(adapter):
     assert result.substitution is not None
     assert result.substitution["actual_model"] is None
     assert result.substitution["actual_model_known"] is False
-    assert result.substitution["source"] == "unknown"
+    assert result.substitution["source"] == "unattested-harness"
 
 
 def test_cursor_adapter_reads_concrete_model_from_session_transcript(adapter, monkeypatch):
@@ -351,7 +351,7 @@ def test_cursor_adapter_does_not_use_unrelated_existing_transcript_model(adapter
     assert result.substitution is not None
     assert result.substitution["actual_model"] is None
     assert result.substitution["actual_model_known"] is False
-    assert result.substitution["source"] == "unknown"
+    assert result.substitution["source"] == "unattested-harness"
 
 
 def test_cursor_adapter_successful_echoed_rate_limit_text_is_not_rate_limited(adapter):

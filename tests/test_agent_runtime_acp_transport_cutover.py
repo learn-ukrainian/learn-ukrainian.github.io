@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import importlib
+import os
 import threading
 import time
+from pathlib import Path
 
 import pytest
 
@@ -140,6 +142,8 @@ def test_inter_agent_rejects_spoofed_provenance_and_unknown_source_before_spawn(
         "CLAUDE_AGENT_NAME",
         "GROK_AGENT",
         "GEMINI_SESSION",
+        "LU_RUNTIME_INITIATOR",
+        "LU_RUNTIME_INITIATOR_SOURCE",
     ):
         monkeypatch.delenv(variable, raising=False)
 
@@ -259,8 +263,20 @@ def test_adapter_transport_metadata_and_auth_selector_are_non_secret(tmp_path, m
     assert plan.metadata["via"] == "acp"
     assert plan.metadata["acpx_discussion"] is False
     assert plan.metadata["acpx_transport"] is True
-    assert plan.env_overrides == {"ACPX_AUTH_LOGIN": "1"}
+    # Auth selector + Node-bearing PATH for jail repair (#6953). PATH is
+    # operational (not a secret); it must still start with the validated
+    # host Node dir that `_acpx_runtime_env_overrides` prepends.
+    assert plan.env_overrides["ACPX_AUTH_LOGIN"] == "1"
+    assert set(plan.env_overrides) == {"ACPX_AUTH_LOGIN", "PATH"}
+    node_dir = str(
+        acpx_module._resolve_host_node_binary(
+            adapter_label="AcpxKimiShadowAdapter"
+        ).parent
+    )
+    assert plan.env_overrides["PATH"].split(os.pathsep)[0] == node_dir
+    assert Path(node_dir).joinpath("node").is_file()
     assert env["ACPX_AUTH_LOGIN"] == "1"
+    assert env["PATH"].split(os.pathsep)[0] == node_dir
     assert "KIMI_API_KEY" not in env
     assert secret not in repr(plan)
     assert secret not in repr(env)

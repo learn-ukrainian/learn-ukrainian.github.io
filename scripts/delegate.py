@@ -954,8 +954,12 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
     """,
 )
 _NO_DELIVERABLE_STATUS = "no_deliverable"
-_CURSOR_UNKNOWN_MODEL = "unknown"
-_NON_CONCRETE_MODEL_VALUES = frozenset({"", "auto", "default", "unknown", "none", "null", "n/a"})
+# Explicit unattested classification for Cursor Auto when no concrete model was
+# extracted (#6964 / #6953). Never record a bare ``"unknown"`` here.
+_CURSOR_UNKNOWN_MODEL = "unattested-harness"
+_NON_CONCRETE_MODEL_VALUES = frozenset(
+    {"", "auto", "default", "unknown", "none", "null", "n/a", "unattested-harness"}
+)
 
 
 def _cursor_model_state(
@@ -982,7 +986,7 @@ def _cursor_model_state(
         }
 
     actual_model: object = None
-    source = "unknown"
+    source = "unattested-harness"
     known_raw: object = None
     if isinstance(substitution, dict):
         actual_model = substitution.get("actual_model")
@@ -996,6 +1000,10 @@ def _cursor_model_state(
     explicitly_unknown = str(known_raw).strip().casefold() in {"false", "0", "no"}
     resolved_model = concrete if is_concrete and not explicitly_unknown else _CURSOR_UNKNOWN_MODEL
     known = resolved_model != _CURSOR_UNKNOWN_MODEL
+    if not known and source.casefold() in {"unknown", "pending", ""}:
+        # Receipts must carry the explicit unattested classification, not a
+        # bare "unknown" placeholder (#6953 / #6964).
+        source = _CURSOR_UNKNOWN_MODEL
 
     state = {
         "resolved_model": resolved_model,
