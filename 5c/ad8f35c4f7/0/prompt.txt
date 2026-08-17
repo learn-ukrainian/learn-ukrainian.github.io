@@ -1,0 +1,80 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-6955-cursor-identity
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6955 — Cursor driver-seat identity contract (catalog + Auto allowlist + attestation)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: gemini-3.5-flash-high × agy ACP wrapper (workspace-write, fresh dispatch worktree)
+- why_this_tier: design is FROZEN in the issue (operator charter dump); this is disciplined transcription into catalog/rules/runbook + lint tests — the mechanical-code lane fits
+- advisor_packet: n/a
+- owned_paths: scripts/config/model_catalog.yaml, agents_extensions/shared/rules/model-assignment.md, docs/runbooks/cursor-driver.md (new), tests/ (catalog-shape lint tests)
+- acceptance_cmd: .venv/bin/python scripts/lint/lint_model_catalog.py && targeted pytest
+- alternatives_considered: (1) cursor — REJECTED: writing its own seat charter + #6489 quorum overhead; (2) grok — REJECTED: agy leads pick order and grok carried three tasks today
+- parallel_free_seats: grok, cursor
+
+## Evidence preamble (#M-4 — binding)
+Every claim in your final report must quote raw tool output from THIS run. Acceptance outputs
+will be pasted on issue #6955 by the driver — make them copy-ready.
+
+## Context — READ FIRST, the design is frozen, do not redesign
+`gh issue view 6952` (parent charter — Frozen decisions section is BINDING) and
+`gh issue view 6955` (this unit's scope + acceptance). The operator already decided:
+- Keep Cursor **Auto**; allowlist NOW = may resolve to `grok-4.6` or `composer-2.5`; refresh under
+  the catalog's ~30-day contract; never freeze one SKU.
+- Driver-of-record and single-reviewer CF require **attested `resolved_model`** (extraction
+  already exists in scripts/delegate.py / scripts/agent_runtime/adapters/cursor.py — reference,
+  do not rewrite).
+- `cursor:auto` + `resolved_model=null` → `unattested-harness` → can NEVER be driver-of-record or
+  a formal-review identity. #6489 dual-family quorum stays, unchanged, for already-authored Auto
+  WORKER PRs.
+- Family facts for CF checks: Cursor `composer-2.5` = Moonshot family (not native Kimi); Cursor
+  `grok-4.6` = xAI via Cursor (not the native Grok seat). Same-family refusal uses the ATTESTED
+  family, never the harness name.
+- GUI Cursor = human supervision only; canonical driver = TUI launcher (separate child #6956 —
+  NOT yours).
+- Do not vendor pstack / Graphite / Benny / N-implementation arenas — state this in the docs.
+
+## Shippable unit
+ONE PR landing the identity contract:
+1. `scripts/config/model_catalog.yaml`: add `orchestrator_seats.cursor` with the Auto allowlist
+   (`grok-4.6`, `composer-2.5`), the attestation rule, and a note that Auto is permitted only
+   inside the allowlist. Match existing catalog style/keys for the other seats (claude/codex/
+   grok/agy) — read them first.
+2. `agents_extensions/shared/rules/model-assignment.md`: a concise section — Cursor driver-of-
+   record requires attested resolved_model; unattested Auto fail-closed; #6489 quorum unchanged
+   for worker Auto PRs. (Rules are deploy-synced; edit ONLY the agents_extensions source.)
+3. `docs/runbooks/cursor-driver.md` (new): the charter — driver vs GUI supervision, identity/
+   attestation, allowlist refresh contract, the do-not-vendor list. Keep it tight; link #6952.
+4. Tests: extend/add catalog-shape lint coverage so `lint_model_catalog.py` FAILS if
+   `cursor:auto` is ever treated as a formal-review identity, and passes with the new seat.
+
+Out of scope: the launcher (#6956), C0 (#6953), CF smoke (#6957), any change to #6489 quorum
+mechanics, any second router.
+
+## Steps
+1. `gh issue view 6952` + `gh issue view 6955`. Step 0: `gh pr list --state all --search "6955"`
+   — sibling PR exists → STOP and report.
+2. Read the existing `orchestrator_seats` entries + `scripts/lint/lint_model_catalog.py` to match
+   shape; quote the relevant existing keys.
+3. Implement the four items above.
+4. Acceptance (quote full output):
+   - `.venv/bin/python scripts/lint/lint_model_catalog.py`
+   - `.venv/bin/python -c "import yaml; p=yaml.safe_load(open('scripts/config/model_catalog.yaml')); s=p['orchestrator_seats']['cursor']; print(s)"` — must show the allowlist + attestation rule
+   - targeted pytest for the lint/catalog tests via
+     `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest` (the
+     `.venv/bin/pytest` launcher is broken — known)
+   - ruff on changed Python files
+5. Conventional commit `feat(catalog): cursor orchestrator seat with Auto allowlist + attested
+   identity (#6955)`; push; open PR referencing #6955 + parent #6952. NO auto-merge; the driver
+   handles review + merge.
+6. Report: PR number, acceptance outputs, and the catalog seat block.

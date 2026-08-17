@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5cad8f35c4f7",
+  "session_id": "fleet-80fa704760f649da9833284296ad86cb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T16:29:39.594161Z",
+  "branch": "agy/infra-6955-cursor-identity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/runbooks/cursor-driver.md",
+    "docs/runbooks/epic-orchestrator-roster.md",
+    "docs/runbooks/fleet-comms-open-gaps.md",
+    "scripts/config/model_catalog.yaml",
+    "scripts/review/model_catalog.py",
+    "tests/test_lint_fleet_roster.py",
+    "tests/test_model_catalog.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "22b5f25c0e55",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T16:29:39.584885Z",
+    "agent_lines": 262,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 262,
+    "total_lines_changed": 268,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
