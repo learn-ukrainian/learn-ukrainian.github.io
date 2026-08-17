@@ -19,7 +19,7 @@ _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
 
 
 def _git(cwd: Path, *args: str) -> str:
-    return subprocess.check_output(["git", *args], cwd=cwd, text=True).strip()
+    return subprocess.check_output(["git", *args], cwd=cwd, text=True, timeout=30).strip()
 
 
 def _init_fixture_repo(root: Path) -> dict[str, str]:
