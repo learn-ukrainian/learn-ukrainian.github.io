@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "61ff941c0275",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6968-test-guards",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_atlas_fill_local.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/61/ff941c0275/0/metadata.json",
+      "transcript": "/61/ff941c0275/0/full.jsonl",
+      "compact_transcript": "/61/ff941c0275/0/transcript.jsonl",
+      "content_hash": "/61/ff941c0275/0/content_hash.txt",
+      "prompt": "/61/ff941c0275/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "61ff941c0275",
+  "session_id": "fleet-06253f4f62e345489f5996641d488374",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T20:46:33.388701Z",
+  "branch": "agy/infra-6968-test-guards",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_atlas_fill_local.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "d72c53be7971",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T20:46:33.381262Z",
+    "agent_lines": 4,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 4,
+    "total_lines_changed": 4,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
