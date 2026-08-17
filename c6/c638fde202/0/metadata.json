@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c6c638fde202",
+  "session_id": "fleet-76f46db8a44f452ab373a63362522af1",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T23:44:18.335851Z",
+  "branch": "agy/infra-6987-flaky-race",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/authority.py",
+    "scripts/fleet_comms/formal_review_jobs.py",
+    "scripts/fleet_comms/request_executor.py",
+    "scripts/fleet_comms/routing_reservations.py",
+    "tests/test_fleet_comms_authority_cutover.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "5957282adf6f",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T23:44:18.330882Z",
+    "agent_lines": 62,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 62,
+    "total_lines_changed": 68,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
