@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9f25bcd5a300",
+  "session_id": "fleet-307bed19428942f1b5ae4ba4a03db63a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T07:49:13.512655Z",
+  "branch": "cursor/infra-6922-import-guard",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_fleet_routing_open_model_data_import_guard.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "c140edf05295",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T07:49:13.506435Z",
+    "agent_lines": 119,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 119,
+    "total_lines_changed": 119,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

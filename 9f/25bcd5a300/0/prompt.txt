@@ -1,0 +1,33 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6922-import-guard
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6922 — mechanical guard: fleet routing code must not import open_model_data pins
+
+ROUTING_CARD_V1
+- tier: heap/mechanical
+- model_x_harness: cursor:auto (native Cursor CLI)
+- why_this_tier: single guard-test/lint PR per a banked review note; pure mechanical
+- advisor_packet: kimi review note on PR #6898 (banked in issue #6922)
+- owned_paths: tests/ (new guard test only; no source edits expected)
+- acceptance_cmd: .venv/bin/pytest (the new guard) + ruff clean + CI green on PR
+- alternatives_considered: glm (fine, but cursor free + first pick), deepseek (busy on #6858)
+- parallel_free_seats: glm
+
+## Evidence rules (#M-4)
+Mutation-check is the acceptance: add a dummy `from scripts.projects.open_model_data...` import to a fleet module locally → guard FAILS; remove → passes. Quote both runs in the PR body.
+
+## Steps
+1. Read issue #6922. Implement the tripwire it describes: a small pytest (or ruff/lint rule if the repo has an established custom-lint pattern — check first, prefer the existing mechanism) asserting that no module under the fleet routing surfaces (scripts/delegate.py, scripts/agent_runtime/**, scripts/ai_agent_bridge/**, launcher shell scripts via their python helpers) imports from scripts/projects/open_model_data.
+2. Scan imports statically (AST or import-name grep at the AST level — not raw text grep). Keep the surface list in ONE place in the test with a comment pointing at #6870 item 3 / #6898 for WHY.
+3. Work ONLY in your dispatch worktree. No changes to the routing sources themselves.
+4. Mutation-check per the evidence rule. Run the guard + ruff. Conventional commit, push, PR (Fixes #6922).
+5. Do NOT arm auto-merge and do NOT merge.
