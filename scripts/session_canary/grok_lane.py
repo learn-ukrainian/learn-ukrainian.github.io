@@ -52,20 +52,34 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-# Epic slug → default stream id (aligned with start-grok.sh)
-EPIC_STREAM_DEFAULTS: dict[str, str] = {
-    "atlas": "epic:4387",
-    "practice": "epic:4387",
-    "practice-hub": "epic:4387",
-    "harness": "epic:4707",
-    "infra": "epic:4707",
-    "devops": "epic:5703",
-    "hramatka": "epic:4542",
-    "folk": "epic:2836",
-    "seminars-folk": "epic:2836",
-    "bio": "epic:4431",
-    "seminars-bio": "epic:4431",
-}
+
+def _infra_harness_stream_id(repo_root: Path | None = None) -> str:
+    """Live infra stream id from the issue-stream registry (infra-harness anchor)."""
+    from agents_extensions.shared.session_streams.inventory import stream_anchor_id
+
+    return stream_anchor_id("infra-harness", repo_root or ROOT)
+
+
+def _epic_stream_defaults() -> dict[str, str]:
+    infra = _infra_harness_stream_id()
+    return {
+        "atlas": "epic:4387",
+        "practice": "epic:4387",
+        "practice-hub": "epic:4387",
+        "harness": infra,
+        "infra": infra,
+        "devops": "epic:5703",
+        "hramatka": "epic:4542",
+        "folk": "epic:2836",
+        "seminars-folk": "epic:2836",
+        "bio": "epic:4431",
+        "seminars-bio": "epic:4431",
+    }
+
+
+# Epic slug → default stream id (aligned with start-grok.sh). Infra/harness
+# derive from issue_streams.yaml so epic succession needs no canary edit.
+EPIC_STREAM_DEFAULTS: dict[str, str] = _epic_stream_defaults()
 
 DEFAULT_PASS_RATIO = 0.8
 DEFAULT_SIM_THRESHOLD = 0.75

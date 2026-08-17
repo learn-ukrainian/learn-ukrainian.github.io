@@ -11,6 +11,7 @@ silently regress.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -22,6 +23,23 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_handoff_identity.sh"
 _HANDOFF_IDENTITY = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+_LAUNCH_PATH_MINTS = (
+    _HANDOFF_IDENTITY,
+    _REPO_ROOT / "scripts" / "lib" / "launcher_core.sh",
+    _REPO_ROOT / "scripts" / "session_canary" / "grok_lane.py",
+)
+
+
+def _infra_harness_stream_id() -> str:
+    """Anchor on the live infra-harness epic so succession cannot stale this suite."""
+    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"][
+        "epics"
+    ]
+    assert epics, "infra-harness must list at least one epic in issue_streams.yaml"
+    return f"epic:{int(epics[0])}"
+
+
+INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -66,7 +84,7 @@ def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str
 @pytest.mark.parametrize(
     ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot"),
     [
-        ("infra.fleet-comms", "infra", "epic:4707", "claude-infra", "gemini-infra", "grok-infra"),
+        ("infra.fleet-comms", "infra", INFRA_STREAM_ID, "claude-infra", "gemini-infra", "grok-infra"),
         ("infra.devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
         ("devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
@@ -139,8 +157,10 @@ def test_unknown_selector_fails_closed() -> None:
 def test_devops_epic_is_registered_separately_from_infra() -> None:
     registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
 
-    assert registry["infra-harness"]["epics"] == [6943]
+    assert registry["infra-harness"]["epics"]
     assert registry["devops"]["epics"] == [5703]
+    assert registry["infra-harness"]["epics"] != registry["devops"]["epics"]
+    assert f"epic:{int(registry['infra-harness']['epics'][0])}" == INFRA_STREAM_ID
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -188,3 +208,125 @@ def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[s
     assert result.returncode == expected_code
     assert "unknown lane selector 'unknown'" in result.stderr
     assert "Valid lane selectors:" in result.stderr
+
+
+def test_infra_launcher_stream_matches_registry_anchor() -> None:
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; launcher_selector_stream infra',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == INFRA_STREAM_ID
+
+
+def test_infra_stream_follows_registry_mutation(tmp_path: Path) -> None:
+    """A registry change must flow through the launcher with zero script edits."""
+    fresh_epic = 888001
+    fixture = tmp_path / "issue_streams.yaml"
+    fixture.write_text(
+        yaml.safe_dump(
+            {
+                "schema_version": 1,
+                "streams": {
+                    "infra-harness": {
+                        "title": "Infra fixture",
+                        "epics": [fresh_epic],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env["HANDOFF_ISSUE_STREAMS_YAML"] = str(fixture)
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; printf "%s|%s|%s" "$(launcher_selector_stream infra)" "$(launcher_selector_stream harness)" "$(launcher_selector_stream infra.fleet-comms)"',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr
+    expected = f"epic:{fresh_epic}"
+    assert result.stdout == f"{expected}|{expected}|{expected}"
+    assert expected != INFRA_STREAM_ID
+
+
+def test_launch_path_does_not_literal_mint_infra_epic() -> None:
+    """Reintroducing a literal epic:4707 mint on the launch path must fail."""
+    for path in _LAUNCH_PATH_MINTS:
+        text = path.read_text(encoding="utf-8")
+        assert "epic:4707" not in text, f"{path} reminted epic:4707"
+        assert "4707" not in text, f"{path} still hard-codes 4707"
+
+
+def test_fresh_infra_stream_capsule_is_registered(tmp_path: Path) -> None:
+    """A successor infra epic gets registered dual-write + non-empty handoff paths."""
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder
+    from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.session_supervisor import LaunchRole, SessionSupervisor
+
+    fresh_epic = 888001
+    stream_id = f"epic:{fresh_epic}"
+    repo = tmp_path / "repo"
+    cfg = repo / "scripts" / "config"
+    cfg.mkdir(parents=True)
+    (cfg / "issue_streams.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "schema_version": 1,
+                "streams": {
+                    "infra-harness": {
+                        "title": "Infra fixture",
+                        "epics": [fresh_epic],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"))
+    registration = register_manifest_inventory(store, repo)
+    assert stream_id in registration.registered_stream_ids
+    assert registration.modes[stream_id] == "inventory"
+
+    supervisor = SessionSupervisor(store, repo_root=repo)
+    lease = supervisor.open_driver(
+        role=LaunchRole.DRIVER,
+        stream_id=stream_id,
+        holder=LeaseHolder(
+            agent="probe",
+            harness="probe",
+            instance_id="fresh-infra-capsule",
+            process_id=os.getpid(),
+        ),
+        lineage_id="lineage-fresh-infra",
+        ttl_seconds=60,
+    )
+    capsule = supervisor.build_capsule(
+        role=LaunchRole.DRIVER, stream_id=stream_id, lease=lease
+    ).as_dict()
+    assert capsule["identity"]["stream_id"] == stream_id
+    assert capsule["dual_write"]["mode"] == "inventory"
+    assert capsule["dual_write"]["handoff_paths"]
+    assert any("harness-epic" in path for path in capsule["dual_write"]["handoff_paths"])
+    supervisor.close_driver(role=LaunchRole.DRIVER, lease=lease)

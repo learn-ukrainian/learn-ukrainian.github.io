@@ -18,7 +18,8 @@ DEFAULT_STREAMS_YAML = Path("scripts/config/issue_streams.yaml")
 
 # Optional explicit handoff path overrides (relative to repo root).
 # First existing path wins when resolving a live mirror source.
-# Keys are stream ids ``epic:<number>``.
+# Keys are stream ids ``epic:<number>`` or issue-stream names. Infra is keyed
+# by stream name so the harness-epic paths survive epic succession (#6949).
 HANDOFF_PATH_OVERRIDES: dict[str, tuple[str, ...]] = {
     "epic:4387": (
         ".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
@@ -28,7 +29,7 @@ HANDOFF_PATH_OVERRIDES: dict[str, tuple[str, ...]] = {
         ".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
         ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md",
     ),
-    "epic:4707": (
+    "infra-harness": (
         ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md",
         "docs/session-state/current.claude-infra.md",
     ),
@@ -87,10 +88,30 @@ def _load_streams_doc(path: Path) -> dict[str, Any]:
     return streams
 
 
+def stream_anchor_id(
+    stream_name: str,
+    repo_root: Path,
+    *,
+    streams_yaml: Path | None = None,
+) -> str:
+    """Return ``epic:<first>`` for a registered issue-stream name.
+
+    The first listed epic is the live anchor. Launchers and canaries must
+    derive this instead of minting a literal so epic succession needs no
+    code change.
+    """
+    epics = stream_map(repo_root, streams_yaml=streams_yaml).get(stream_name) or []
+    if not epics:
+        raise ValueError(f"stream {stream_name!r} has no epics in issue_streams.yaml")
+    return f"epic:{epics[0]}"
+
+
 def _handoff_candidates_for(stream_name: str, epic_number: int) -> tuple[str, ...]:
     stream_id = f"epic:{epic_number}"
     if stream_id in HANDOFF_PATH_OVERRIDES:
         return HANDOFF_PATH_OVERRIDES[stream_id]
+    if stream_name in HANDOFF_PATH_OVERRIDES:
+        return HANDOFF_PATH_OVERRIDES[stream_name]
     # Lazy import: this module is deployed/copied into contexts (e2e sandboxes,
     # standalone supervisor runs) where the repo-root ``scripts`` package does not
     # exist. A module-level import crashed the session supervisor there (#5857 r3);
