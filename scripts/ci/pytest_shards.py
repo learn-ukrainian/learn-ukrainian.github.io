@@ -255,6 +255,12 @@ def run_nodeids(nodeids_path: Path, pytest_args: Sequence[str]) -> int:
     """Invoke pytest with a planner-produced node-ID list (not shell @file)."""
     import pytest
 
+    if __package__ in (None, ""):
+        # Invoked directly as `python scripts/ci/pytest_shards.py`, so the repo
+        # root (needed for `scripts.ci.stall_watch`) is not yet on sys.path.
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.ci.stall_watch import StallWatcher
+
     nodeids = [line.strip() for line in nodeids_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     if not nodeids:
         raise RuntimeError(f"node-id file {nodeids_path} is empty")
@@ -263,7 +269,11 @@ def run_nodeids(nodeids_path: Path, pytest_args: Sequence[str]) -> int:
     args = list(pytest_args)
     if args and args[0] == "--":
         args = args[1:]
-    return int(pytest.main([*args, *nodeids]))
+    # Controller-side stall watch (#5776 leftover): pytest-timeout only fires
+    # inside xdist workers, so a hang in the controller or a full worker pipe
+    # is otherwise silent until the job's timeout-minutes cancels it.
+    with StallWatcher.from_env():
+        return int(pytest.main([*args, *nodeids]))
 
 
 def _parser() -> argparse.ArgumentParser:
