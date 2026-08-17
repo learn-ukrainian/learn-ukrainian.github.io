@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6a0961112983",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6930-mergebase-scope",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_frontend_change_scope.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6a/0961112983/0/metadata.json",
+      "transcript": "/6a/0961112983/0/full.jsonl",
+      "compact_transcript": "/6a/0961112983/0/transcript.jsonl",
+      "content_hash": "/6a/0961112983/0/content_hash.txt",
+      "prompt": "/6a/0961112983/0/prompt.txt"
+    }
+  ]
+}
