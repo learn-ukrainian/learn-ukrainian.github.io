@@ -1,0 +1,26 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/6948-agy-results-json
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix CF REQUEST_CHANGES on PR #6948
+
+Claude `6948-claude-cf` VERDICT: REQUEST_CHANGES at head `f309bbd`.
+
+Blocking: `GET /api/atlas-jobs/results` iterates every `{id}.result.json` and calls `_read_result_receipt` with no exception handling. One corrupt/truncated receipt raises `JSONDecodeError` and 500s the entire listing. Claude reproduced with a hand-corrupted fixture.
+
+Fix:
+- Skip-and-continue on bad JSON / non-object (same fail-soft as invalid job IDs already in that loop).
+- Do not 500 the list. Optionally count skipped in a `skipped` field (keep small).
+- Add a regression test with a truncated/corrupt `.result.json` next to a valid one; list still 200s and returns only the valid allowlisted row.
+
+Push same branch `agy/6944-agy-atlas-jobs-load`. Trailer `X-Agent: agy/6948-results-json`. Body `Refs #6944`. Never close #6876. Do not merge.
+
+pytest `tests/api/test_atlas_jobs_router.py` + ruff on touched files.

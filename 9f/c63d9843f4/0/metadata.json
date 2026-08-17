@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9fc63d9843f4",
+  "session_id": "fleet-1fb434f88dd3480bbd0db82abd98f3ce",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T12:13:51.706457Z",
+  "branch": "agy/6944-agy-atlas-jobs-load",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/atlas_jobs_router.py",
+    "tests/api/test_atlas_jobs_router.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "d4f08d32f61a",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T12:13:51.697557Z",
+    "agent_lines": 93,
+    "agent_removed": 43,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 93,
+    "total_lines_changed": 136,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
