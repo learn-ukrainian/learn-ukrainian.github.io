@@ -15,9 +15,11 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 `cursor:auto` is a dynamic harness selector, never a concrete model identity. The identity contract enforces:
 
-1. **Attested `resolved_model` Required:** Driver-of-record and single-reviewer cross-family (CF) review require an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/delegate.py` and `scripts/agent_runtime/adapters/cursor.py`).
-2. **Unattested Auto Fails Closed:** `cursor:auto` with `resolved_model=null` (or an unrecognized selector) is classified as `unattested-harness`. An unattested harness can **never** be driver-of-record and can **never** serve as a formal cross-family review identity.
-3. **Dual-Family Quorum for Worker PRs (#6489):** The dual-family quorum rule remains unchanged as the fallback for already-authored Auto **worker** PRs. A driver-of-record cannot use the quorum fallback; driver identity must be attested.
+1. **Attested `resolved_model` Required for Driver-of-Record:** Driver-of-record requires an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/delegate.py` and `scripts/agent_runtime/adapters/cursor.py`). An unattested run or unknown-Auto can **never** be driver-of-record.
+2. **Unknown-Auto Resolves to Allowlist-Union Family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, resolve its identity to the **allowlist-union family {xAI, Moonshot}** (`grok-4.6` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum:
+   - **Cursor-Authored PR:** Single cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, Pool, GLM). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (dual-family quorum text remains as fallback history).
+   - **Cursor-as-Reviewer:** Eligible only against author models outside {xAI, Moonshot}.
+   - **Validity Condition:** The union bound holds strictly while the Auto allowlist contract holds (~30-day catalog refresh; lint enforces the pair). Allowlist rotation invalidates the bound (refresh first).
 
 ## Auto Allowlist & ~30-Day Refresh Contract
 
@@ -28,11 +30,12 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Family Attribution for Cross-Family (CF) Checks
 
-Cross-family independence checks evaluate the **attested concrete model family**, never the harness name (`cursor`):
+Cross-family independence checks evaluate either the **attested concrete model family** or the **allowlist-union family**:
 
-- **Cursor `composer-2.5`:** Belongs to the **Moonshot** family (conservatively shares Moonshot independence lineage with Kimi; not native Kimi).
-- **Cursor `grok-4.6`:** Belongs to the **xAI** family (xAI via Cursor; distinct transport from the native Grok seat).
-- **Same-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. Kimi reviewing Composer 2.5, or Grok reviewing Cursor `grok-4.6`).
+- **Attested Cursor `composer-2.5`:** Belongs to the **Moonshot** family (conservatively shares Moonshot independence lineage with Kimi; not native Kimi).
+- **Attested Cursor `grok-4.6`:** Belongs to the **xAI** family (xAI via Cursor; distinct transport from the native Grok seat).
+- **Unknown `cursor:auto`:** Belongs to the **union family {xAI, Moonshot}**. Reviewers must be strictly outside both families.
+- **Same-Family / Union-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. Kimi reviewing Composer 2.5, or Grok reviewing Cursor `grok-4.6`) or if an unknown-Auto head is reviewed by any member of {xAI, Moonshot}.
 
 ## Operating Constraints & Concurrency
 

@@ -246,6 +246,23 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                         f"orchestrator_seats.cursor.auto_allowlist must reference active models, got {allowed!r}"
                     )
             _require_string(seat.get("attestation_rule"), "orchestrator_seats.cursor.attestation_rule")
+            resolution = _require_string(
+                seat.get("unknown_auto_family_resolution"),
+                "orchestrator_seats.cursor.unknown_auto_family_resolution",
+            )
+            if resolution != "union_family":
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.unknown_auto_family_resolution must be 'union_family', got {resolution!r}"
+                )
+            union_families = _require_string_list(
+                seat.get("unknown_auto_union_families"),
+                "orchestrator_seats.cursor.unknown_auto_union_families",
+            )
+            expected_families = sorted({models[m]["family"] for m in allowlist})
+            if sorted(union_families) != expected_families:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.unknown_auto_union_families must match allowlist model families {expected_families}, got {sorted(union_families)}"
+                )
         else:
             model_id = seat["model_id"]
             if model_id not in models:

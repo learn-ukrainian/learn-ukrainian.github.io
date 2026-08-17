@@ -906,17 +906,24 @@ orchestrator_seats:
     auto_allowlist:
       - grok-4.6
       - composer-2.5
-    attestation_rule: driver_of_record_and_cf_require_attested_resolved_model
+    attestation_rule: driver_of_record_requires_attested_resolved_model
+    unknown_auto_family_resolution: union_family
+    unknown_auto_union_families:
+      - xai
+      - moonshot
     note: >-
       Cursor Auto orchestrator seat (parent #6952, #6955). Auto is permitted only when
-      it resolves within the explicit allowlist (currently grok-4.6, composer-2.5; refresh
-      under the catalog ~30-day contract without freezing a single SKU). Driver-of-record
-      and formal review require an attested concrete resolved_model from the run. Unattested
-      cursor:auto (resolved_model=null) is unattested-harness and cannot be driver-of-record
-      or a formal-review identity (#6489 dual-family quorum remains for worker Auto PRs).
-      Family attribution for CF checks uses the attested concrete model family (composer-2.5 is
-      Moonshot family, grok-4.6 is xAI via Cursor). Concurrency is 1 (the driver session is the
-      Cursor lane; do not dispatch --agent cursor from within the driver session).
+      it resolves within the explicit allowlist (currently grok-4.6 [xAI], composer-2.5 [Moonshot];
+      refresh under the catalog ~30-day contract without freezing a single SKU). When cursor:auto
+      reports resolved_model=unknown, resolve its identity to the allowlist-union family
+      {xAI, Moonshot} instead of unattested-harness-with-quorum: Cursor-authored PRs require a single
+      cross-family reviewer from outside {xAI, Moonshot} (superseding #6489 dual-family quorum as the
+      default; quorum remains valid as fallback history); Cursor-as-reviewer is eligible only against
+      authors outside {xAI, Moonshot}. The union bound holds strictly while the Auto allowlist
+      contract holds (~30-day refresh; lint enforces the pair; allowlist rotation invalidates the bound).
+      Driver-of-record still requires an attested concrete resolved_model from the run (unattested or
+      unknown-Auto cannot be driver-of-record). Concurrency is 1 (the driver session is the Cursor lane;
+      do not dispatch --agent cursor from within the driver session).
 
 # Formal CF transport defaults for review-pr (model + effort). Advisor/authority
 # seats (Sol/Fable and other designated-authority seats) are critical-ladder only —

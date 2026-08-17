@@ -222,7 +222,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.6` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.6` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.7-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Pro deep single-shot |
-  | **cursor** | `auto` @ high (allowlist: `grok-4.6`, `composer-2.5`) | **`gpt-5.6-sol` @ xhigh** | Driver-of-record requires attested `resolved_model`; unattested Auto fails closed; #6489 quorum remains for worker Auto PRs; concurrency 1 |
+  | **cursor** | `auto` @ high (allowlist: `grok-4.6`, `composer-2.5`) | **`gpt-5.6-sol` @ xhigh** | Driver-of-record requires attested `resolved_model`; unknown-Auto resolves to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
   | seat | model_id | effort | escalate_model_id | escalate_effort |
@@ -240,11 +240,13 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
 ### Cursor driver seat — identity contract and attestation (#6952 / #6955)
 
-* **Driver-of-record requires attested `resolved_model`:** Cursor is an orchestrator seat with default model `auto`. Because Auto is a dynamic selector rather than a concrete model identity, a Cursor driver session requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/delegate.py` / `scripts/agent_runtime/adapters/cursor.py`).
-* **Unattested Auto fails closed for driver-of-record:** If `cursor:auto` runs with `resolved_model=null` (or resolves to an unattested harness), it is classified as `unattested-harness`. An unattested run can **never** be driver-of-record and can **never** serve as a formal-review identity.
-* **Worker Auto PRs retain #6489 dual-family quorum:** The dual-family quorum rule (#6489) remains unchanged as the fallback for already-authored Auto **worker** PRs. It does not apply to drivers: drivers must have an attested concrete identity.
+* **Driver-of-record requires attested `resolved_model`:** Cursor is an orchestrator seat with default model `auto`. Because Auto is a dynamic selector rather than a concrete model identity, a Cursor driver session requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/delegate.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
+* **Unknown-Auto resolves to allowlist-union family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, its identity resolves to the **allowlist-union family {xAI, Moonshot}** (`grok-4.6` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum.
+  * **Cursor-authored PRs:** Require a **single** cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, Pool, GLM). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (#6489 quorum remains valid as fallback history).
+  * **Cursor-as-reviewer:** Eligible only against authors outside {xAI, Moonshot}.
+  * **Validity condition:** The union bound holds strictly while the Auto allowlist contract holds (~30-day catalog refresh; lint enforces the pair). Allowlist rotation invalidates the bound (refresh first).
 * **Auto allowlist and ~30-day refresh contract:** Cursor Auto is permitted only within an explicit allowlist (currently `grok-4.6` and `composer-2.5`), refreshed under the catalog's ~30-day freshness contract without freezing a single SKU.
-* **Family attribution for CF checks:** Cross-family review checks use the **attested** model family (e.g. Cursor `composer-2.5` = Moonshot family, Cursor `grok-4.6` = xAI via Cursor), never the `cursor` harness name.
+* **Family attribution for CF checks:** When `resolved_model` is attested, cross-family review checks use the **attested** model family (e.g. Cursor `composer-2.5` = Moonshot family, Cursor `grok-4.6` = xAI via Cursor). When `resolved_model=unknown`, the union family {xAI, Moonshot} applies.
 * **Operating constraints:** Concurrency is 1 (the driver session is the Cursor lane; do not dispatch `--agent cursor` from inside the session). Canonical driver = launched TUI session (`start-cursor-driver.sh`, #6956); GUI Cursor IDE is human supervision only. Do not vendor pstack, Graphite, Benny, or N-implementation arenas.
 
 ## Orchestration operating pattern (operator 2026-07-26 — binding)

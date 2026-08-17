@@ -335,7 +335,9 @@ def test_orchestrator_seats_include_agy_flash_37_high():
     assert seats["cursor"]["escalate_model_id"] == "gpt-5.6-sol"
     assert seats["cursor"]["escalate_effort"] == "xhigh"
     assert seats["cursor"]["auto_allowlist"] == ["grok-4.6", "composer-2.5"]
-    assert seats["cursor"]["attestation_rule"] == "driver_of_record_and_cf_require_attested_resolved_model"
+    assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
+    assert seats["cursor"]["unknown_auto_family_resolution"] == "union_family"
+    assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
 
 
 def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
@@ -442,6 +444,41 @@ def test_catalog_rejects_cursor_orchestrator_without_attestation_rule():
     del broken["orchestrator_seats"]["cursor"]["attestation_rule"]
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.attestation_rule"):
         validate_catalog(broken)
+
+
+def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():
+    catalog = load_model_catalog()
+    cursor_seat = catalog["orchestrator_seats"]["cursor"]
+    assert cursor_seat["unknown_auto_family_resolution"] == "union_family"
+    assert cursor_seat["unknown_auto_union_families"] == ["xai", "moonshot"]
+    assert cursor_seat["auto_allowlist"] == ["grok-4.6", "composer-2.5"]
+    models = catalog["models"]
+    assert models["grok-4.6"]["family"] == "xai"
+    assert models["composer-2.5"]["family"] == "moonshot"
+
+    # Reject missing unknown_auto_family_resolution
+    broken_missing_res = deepcopy(catalog)
+    del broken_missing_res["orchestrator_seats"]["cursor"]["unknown_auto_family_resolution"]
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_family_resolution"):
+        validate_catalog(broken_missing_res)
+
+    # Reject invalid unknown_auto_family_resolution
+    broken_invalid_res = deepcopy(catalog)
+    broken_invalid_res["orchestrator_seats"]["cursor"]["unknown_auto_family_resolution"] = "single_family"
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_family_resolution must be 'union_family'"):
+        validate_catalog(broken_invalid_res)
+
+    # Reject missing unknown_auto_union_families
+    broken_missing_fams = deepcopy(catalog)
+    del broken_missing_fams["orchestrator_seats"]["cursor"]["unknown_auto_union_families"]
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_union_families"):
+        validate_catalog(broken_missing_fams)
+
+    # Reject mismatched unknown_auto_union_families (e.g. wrong family or missing family)
+    broken_mismatched_fams = deepcopy(catalog)
+    broken_mismatched_fams["orchestrator_seats"]["cursor"]["unknown_auto_union_families"] = ["openai", "moonshot"]
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_union_families must match allowlist model families"):
+        validate_catalog(broken_mismatched_fams)
 
 
 def test_catalog_rejects_cursor_orchestrator_non_auto_model_id():
