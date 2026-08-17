@@ -917,7 +917,8 @@ def isolated_context_root(tmp_path, monkeypatch):
 def test_channel_context_path_returns_expected_location(isolated_context_root):
     """Verify channel_context_path resolves to {CONTEXT_ROOT}/{channel}/context.md."""
     p = _channels.channel_context_path("pipeline")
-    assert p == isolated_context_root / "pipeline" / "context.md"
+    expected = (isolated_context_root / "pipeline" / "context.md").resolve()
+    assert p.resolve() == expected
 
 
 def test_load_channel_context_missing_returns_empty_body(isolated_context_root):
