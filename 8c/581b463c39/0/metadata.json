@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8c581b463c39",
+  "session_id": "fleet-c4437f709d1d4e609015ef1d5894612f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T18:40:21.80127Z",
+  "branch": "agy/infra-6955-cursor-identity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_review_closeout_cli.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "f037cc342790",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T18:40:21.760463Z",
+    "agent_lines": 7,
+    "agent_removed": 10,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 7,
+    "total_lines_changed": 17,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
