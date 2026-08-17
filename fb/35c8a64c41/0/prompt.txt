@@ -1,0 +1,30 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/6876-agy-adverb
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# 6876 AGY — deadjectival adverb fallback (291)
+
+CAPACITY_CARD: pick=agy status=cool gemini avoid=codex source=routing-budget
+#6876 stays OPEN. 1311 unresolved. Dry-run: second missing-anchor pass fills **0**.
+
+Largest *code* layer: **291** deadjectival adverbs in `-о`/`-е` whose adjective base already has EN.
+
+## Outcome
+Add a fail-closed fallback in the reenrich/translation path:
+- If entry is an adverb (`pos`) ending `-о`/`-е`, look up the adjective base in the **same manifest** (VESUM-check the adverb lemma exists; do not invent Ukrainian).
+- If the base adjective has `enrichment.translation.en`, derive the adverb EN from that existing sourced translation (e.g. attach a transparent adverbial gloss). Do **not** invent EN when the adjective has no EN.
+- Tests: at least `абстрактно` ← `абстрактний` if that pair exists in the pulled 6876 manifest; no fill when adjective missing EN; no UK lemma invention.
+
+Worktree origin/main. PR linked to #6876. Trailer `X-Agent: agy/6876-adverb`.
+Do not close #6876. Do not pointer-flip. Do not run a full VPS job.
+
+Owned: `scripts/lexicon/reenrich_thin_manifest_entries.py`, `scripts/lexicon/enrich_manifest.py` only if that is where `_translation_for_entry` lives, plus tests.
+`.venv/bin/python -m pytest` on touched tests + ruff.

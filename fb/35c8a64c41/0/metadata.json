@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fb35c8a64c41",
+  "session_id": "fleet-de1c5f13afe34e6a96cf0367f2f42083",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T00:18:38.119688Z",
+  "branch": "agy/6876-agy-adverb",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "73990372139e",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T00:18:38.113201Z",
+    "agent_lines": 368,
+    "agent_removed": 34,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 368,
+    "total_lines_changed": 402,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

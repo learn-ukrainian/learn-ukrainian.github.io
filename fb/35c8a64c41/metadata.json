@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fb35c8a64c41",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-adverb",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/fb/35c8a64c41/0/metadata.json",
+      "transcript": "/fb/35c8a64c41/0/full.jsonl",
+      "compact_transcript": "/fb/35c8a64c41/0/transcript.jsonl",
+      "content_hash": "/fb/35c8a64c41/0/content_hash.txt",
+      "prompt": "/fb/35c8a64c41/0/prompt.txt"
+    }
+  ]
+}
