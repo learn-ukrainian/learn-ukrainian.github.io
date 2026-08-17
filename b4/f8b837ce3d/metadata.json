@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b4f8b837ce3d",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6917-ci-cheap-exit",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    "scripts/ci/frontend_change_denominator.json",
+    "scripts/ci/frontend_change_scope.py",
+    "tests/test_frontend_change_scope.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b4/f8b837ce3d/0/metadata.json",
+      "transcript": "/b4/f8b837ce3d/0/full.jsonl",
+      "compact_transcript": "/b4/f8b837ce3d/0/transcript.jsonl",
+      "content_hash": "/b4/f8b837ce3d/0/content_hash.txt",
+      "prompt": "/b4/f8b837ce3d/0/prompt.txt"
+    }
+  ]
+}

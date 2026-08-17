@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6917-ci-cheap-exit
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: implement issue #6917 as specified by the advised version (driver comment on the issue)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto (native Cursor CLI)
+- why_this_tier: CI workflow + guard-test change against a fully reviewed spec; mechanical-with-judgment, Cursor first pick; the cursor seat also authored the underlying denominator analysis
+- advisor_packet: issue #6917 body (operator) + the driver's advised-version comment (2026-08-17, incorporates the cursor advisor analysis verified against ci.yml)
+- owned_paths: .github/workflows/ci.yml, tests (new guard test), the single-source denominator file
+- acceptance_cmd: actionlint green + .venv/bin/pytest (new guard test + affected) + ruff clean + CI green on the PR itself
+- alternatives_considered: kimi (no advantage here), codex (capped), agy (stall-watch)
+- parallel_free_seats: kimi, deepseek
+
+## Evidence rules (#M-4)
+Every claim tool-backed. The guard test must be mutation-checked: remove a denominator entry locally → guard fails; restore. State this with output in the PR body.
+
+## Steps
+1. Read issue #6917 (body = the operator's constraints: required jobs stay unconditional, first-step exit 0, no second workflow, no label control plane, pytest untouched) AND the driver's "advised version" comment on it — that comment is the implementation spec (denominator table, in-job diff base pattern, loud auditable exit, drift guard, single-source denominator). Do not narrow or widen it.
+2. Work ONLY in your dispatch worktree.
+3. Implementation order: single-source denominator → frontend + frontend-e2e first-step check (one checkout, git diff --name-only against pull_request.base.sha || merge_group.base_sha || github.event.before; loud one-line decision log + $GITHUB_STEP_SUMMARY) → drift-guard pytest (resolves the hydrate entrypoints site/package.json actually invokes and asserts each resolved script path is inside the denominator).
+4. Constraints from the issue are hard: no job-level if: skips on required jobs, no path-skip of any pytest job, no second workflow, ci-gate.needs unchanged.
+5. Run actionlint on the workflow, the new guard test, ruff on any Python. Conventional commit, push, open a PR that Fixes #6917.
+6. Do NOT arm auto-merge and do NOT merge. The driver handles review + merge.
