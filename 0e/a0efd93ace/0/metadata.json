@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0ea0efd93ace",
+  "session_id": "fleet-87bdb2adf622486b8a558a3ed6dfa1e3",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T22:15:16.808337Z",
+  "branch": "claude/5776-controller-stall-watch",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/stall_watch.py",
+    "tests/test_ci_attribution.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "5776c7323a10",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T22:15:16.79878Z",
+    "agent_lines": 17,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 17,
+    "total_lines_changed": 21,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0ea0efd93ace",
+  "strategy": "manual-commit",
+  "branch": "claude/5776-controller-stall-watch",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/stall_watch.py",
+    "tests/test_ci_attribution.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0e/a0efd93ace/0/metadata.json",
+      "transcript": "/0e/a0efd93ace/0/full.jsonl",
+      "compact_transcript": "/0e/a0efd93ace/0/transcript.jsonl",
+      "content_hash": "/0e/a0efd93ace/0/content_hash.txt",
+      "prompt": "/0e/a0efd93ace/0/prompt.txt"
+    }
+  ]
+}
