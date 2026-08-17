@@ -4,8 +4,9 @@
 Reads grow ``needs_review`` candidates plus ``needs-review-triage.json`` and emits
 a fail-closed ``atlas_grow_needs_review_decisions`` YAML ledger: one decision per
 held entry, bound to both file SHA digests. CODE maps triage actions only —
-``promote_with_gloss`` → approve (+ approved_gloss), ``truly_missing`` /
-``heritage_flag`` → deferred (heritage rows carry ``heritage: true``).
+``promote_with_gloss`` → approve (+ approved_gloss) when the gloss passes the
+#5411 inject guard, otherwise deferred; ``truly_missing`` / ``heritage_flag`` →
+deferred (heritage rows carry ``heritage: true``).
 
 When to use: after triage has ranked held grow lemmas and before
 ``promote_grow_candidates.py --needs-review-ledger`` promotes the approve set.
@@ -31,9 +32,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lexicon.build_data_manifest import _slug_for_url
 from scripts.lexicon.promote_grow_candidates import (
     NEEDS_REVIEW_LEDGER_KIND,
     _held_rows,
+    approved_gloss_refusal_reason,
     index_by_decision_key,
     require_exact_decision_coverage,
 )
@@ -102,8 +105,26 @@ def decision_from_triage(row: Mapping[str, Any]) -> dict[str, Any]:
         source = str(gloss.get("source") or "").strip()
         if not text or not source:
             raise ValueError(f"promote_with_gloss best_gloss incomplete: {lemma!r}")
+        matched_lemma = str(gloss.get("lemma") or lemma).strip()
+        matched_slug = str(gloss.get("slug") or gloss.get("url_slug") or "").strip()
+        if not matched_slug:
+            matched_slug = _slug_for_url(matched_lemma)
+        approved_gloss: dict[str, str] = {
+            "text": text,
+            "source": source,
+            "lemma": matched_lemma,
+            "slug": matched_slug,
+        }
+        # Fail-closed (#5411): do not emit approve rows that inject would refuse.
+        candidate = {"lemma": lemma, "pos": pos, "url_slug": _slug_for_url(lemma)}
+        refusal = approved_gloss_refusal_reason(candidate, approved_gloss)
+        if refusal is not None:
+            base["decision"] = "deferred"
+            base["reason"] = refusal
+            base["held_reason"] = f"inject_guard:{refusal}"
+            return base
         base["decision"] = "approve"
-        base["approved_gloss"] = {"text": text, "source": source}
+        base["approved_gloss"] = approved_gloss
         return base
 
     if action == MACHINE_MISSING:

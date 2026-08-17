@@ -29,6 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lexicon.build_data_manifest import _slug_for_url
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_words
 from scripts.wiki import sources_db as sdb
@@ -148,15 +149,34 @@ def extract_gloss_text(source_key: str, hit: Mapping[str, Any]) -> str | None:
     return None
 
 
+def _hit_matched_lemma(hit: Mapping[str, Any]) -> str | None:
+    """Dictionary headword that produced this hit (exact or prefix-fallback)."""
+    for key in ("word", "lemma", "headword", "canonical_headword"):
+        value = str(hit.get(key) or "").strip()
+        if value:
+            return strip_acute_stress(value)
+    return None
+
+
 def choose_best_gloss(
     hits_by_source: Mapping[str, Sequence[Mapping[str, Any]]],
 ) -> dict[str, str] | None:
-    """First non-empty gloss in GLOSS_SOURCE_PRIORITY order."""
+    """First non-empty gloss in GLOSS_SOURCE_PRIORITY order.
+
+    Attaches the matched dictionary headword as ``lemma`` / ``slug`` so the
+    needs_review inject guard can refuse prefix-fallback mismatches (#5411).
+    """
     for source_key in GLOSS_SOURCE_PRIORITY:
         for hit in hits_by_source.get(source_key) or []:
             text = extract_gloss_text(source_key, hit)
-            if text:
-                return {"text": text, "source": source_key}
+            if not text:
+                continue
+            gloss: dict[str, str] = {"text": text, "source": source_key}
+            matched = _hit_matched_lemma(hit)
+            if matched:
+                gloss["lemma"] = matched
+                gloss["slug"] = _slug_for_url(matched)
+            return gloss
     return None
 
 

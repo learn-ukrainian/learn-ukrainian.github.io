@@ -54,7 +54,12 @@ def test_gloss_priority_order_sum11_over_dmklinger() -> None:
     )
     assert len(records) == 1
     rec = records[0]
-    assert rec["best_gloss"] == {"text": "СУМ gloss", "source": "sum11"}
+    assert rec["best_gloss"] == {
+        "text": "СУМ gloss",
+        "source": "sum11",
+        "lemma": "хата",
+        "slug": "хата",
+    }
     assert rec["machine_action"] == triage.MACHINE_PROMOTE
     assert rec["cefr"] == "A1"
     assert rec["vesum_valid"] is True
@@ -79,7 +84,12 @@ def test_gloss_priority_falls_through_to_dmklinger() -> None:
         lookups=lookups,
         vesum_fn=lambda words: {w: [] for w in words},
     )
-    assert records[0]["best_gloss"] == {"text": "work", "source": "dmklinger"}
+    assert records[0]["best_gloss"] == {
+        "text": "work",
+        "source": "dmklinger",
+        "lemma": "робота",
+        "slug": "робота",
+    }
     assert records[0]["machine_action"] == triage.MACHINE_PROMOTE
     assert records[0]["vesum_valid"] is False
 

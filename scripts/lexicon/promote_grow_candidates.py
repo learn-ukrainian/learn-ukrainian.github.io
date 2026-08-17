@@ -24,6 +24,7 @@ import argparse
 import bisect
 import hashlib
 import json
+import re
 import sys
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
@@ -714,7 +715,10 @@ def _approved_needs_review_entries(
                 raise ValueError(f"needs-review ledger approved_gloss.text is empty: {key!r}")
             if not source:
                 raise ValueError(f"needs-review ledger approved_gloss.source is empty: {key!r}")
-            approved.append(inject_approved_gloss(row.entry, {"text": text, "source": source}))
+            gloss_payload = dict(gloss)
+            gloss_payload["text"] = text
+            gloss_payload["source"] = source
+            approved.append(inject_approved_gloss(row.entry, gloss_payload))
             approve_count += 1
         else:
             # deferred / reject stay held; heritage rows are always deferred by generator.
@@ -837,20 +841,102 @@ def require_exact_decision_coverage(
     raise ValueError(f"{ledger_label} does not exactly cover {scope_label} ({', '.join(details)})")
 
 
+_LATIN_LETTER_RE = re.compile(r"[A-Za-z]")
+_CYRILLIC_LETTER_RE = re.compile(r"[А-Яа-яЁёЄєІіЇїҐґ]")
+# СУМ-11 cross-ref / participle stubs are never learner-English anchors (#5411).
+_SUM11_STUB_MARKER_RE = re.compile(
+    r"(?i)(?:дієпр|див\.|те\s+саме,?\s+що)",
+)
+
+
+def approved_gloss_refusal_reason(
+    candidate: Mapping[str, Any],
+    approved_gloss: Mapping[str, Any],
+) -> str | None:
+    """Return a stable refusal reason, or None when inject is allowed (#5411).
+
+    Blocks three defect classes only:
+    1. no Latin / overwhelmingly Cyrillic text (Russian or Ukrainian definition
+       shipped as ``translation.en``)
+    2. СУМ-11 stub shapes (``дієпр`` / ``див.`` / ``те саме, що``) with no Latin
+    3. approved lemma/slug that does not match the candidate lemma/slug
+    """
+    text = str(approved_gloss.get("text") or "").strip()
+    if not text:
+        return "empty_gloss"
+
+    latin_n = len(_LATIN_LETTER_RE.findall(text))
+    cyrillic_n = len(_CYRILLIC_LETTER_RE.findall(text))
+
+    # Stub classification precedes the generic non-English gate so callers can
+    # distinguish СУМ-11 cross-ref rows from other Cyrillic definitions.
+    if latin_n == 0 and _SUM11_STUB_MARKER_RE.search(text):
+        return "sum11_stub_gloss"
+
+    if latin_n == 0 or cyrillic_n > latin_n:
+        return "non_english_gloss"
+
+    candidate_lemma = strip_acute_stress(_candidate_lemma(candidate))
+    candidate_slug = str(candidate.get("url_slug") or "").strip() or _slug_for_url(candidate_lemma)
+
+    approved_lemma = str(approved_gloss.get("lemma") or "").strip()
+    if approved_lemma and _lemma_key(strip_acute_stress(approved_lemma)) != _lemma_key(candidate_lemma):
+        return "lemma_mismatch"
+
+    approved_slug = str(
+        approved_gloss.get("slug") or approved_gloss.get("url_slug") or ""
+    ).strip()
+    if approved_slug and _slug_for_url(approved_slug) != _slug_for_url(candidate_slug):
+        return "lemma_mismatch"
+
+    return None
+
+
+def require_injectable_approved_gloss(
+    candidate: Mapping[str, Any],
+    approved_gloss: Mapping[str, Any],
+) -> str:
+    """Validate approved gloss for inject; return stripped text or raise."""
+    text = str(approved_gloss.get("text") or "").strip()
+    if not text:
+        raise ValueError("approved_gloss.text must be non-empty")
+    reason = approved_gloss_refusal_reason(candidate, approved_gloss)
+    if reason == "non_english_gloss":
+        raise ValueError(
+            "approved_gloss.text must be learner English (Latin letters; "
+            "not overwhelmingly Cyrillic)"
+        )
+    if reason == "sum11_stub_gloss":
+        raise ValueError(
+            "approved_gloss.text looks like a СУМ-11 stub "
+            "(дієпр / див. / те саме, що) and is not learner English"
+        )
+    if reason == "lemma_mismatch":
+        raise ValueError(
+            "approved_gloss lemma/slug does not match candidate lemma/slug"
+        )
+    if reason == "empty_gloss":
+        raise ValueError("approved_gloss.text must be non-empty")
+    if reason is not None:
+        raise ValueError(f"approved_gloss refused: {reason}")
+    return text
+
+
 def inject_approved_gloss(
     candidate: Mapping[str, Any],
-    approved_gloss: Mapping[str, str],
+    approved_gloss: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Inject ledger-approved gloss as definition/anchor on a needs_review entry.
 
     Sets top-level ``gloss`` (satisfies the learner-English anchor check) and
     seeds ``enrichment.meaning`` / ``enrichment.translation`` so the existing
     anchor-fill short-circuit and attribution pass see a grounded definition.
+
+    Fail-closed for #5411: refuses Cyrillic/non-English anchors, СУМ-11 stubs,
+    and lemma/slug mismatches from prefix-fallback dictionary hits.
     """
-    text = str(approved_gloss.get("text") or "").strip()
+    text = require_injectable_approved_gloss(candidate, approved_gloss)
     source = str(approved_gloss.get("source") or "").strip()
-    if not text:
-        raise ValueError("approved_gloss.text must be non-empty")
     entry = dict(candidate)
     entry["gloss"] = text
     enrichment_raw = entry.get("enrichment")

@@ -49,7 +49,12 @@ def test_generator_round_trip_maps_actions(tmp_path: Path) -> None:
 
     by_lemma = {row["lemma"]: row for row in payload["decisions"]}
     assert by_lemma["хата"]["decision"] == "approve"
-    assert by_lemma["хата"]["approved_gloss"] == {"text": "house; home", "source": "dmklinger"}
+    assert by_lemma["хата"]["approved_gloss"] == {
+        "text": "house; home",
+        "source": "dmklinger",
+        "lemma": "хата",
+        "slug": "хата",
+    }
     assert by_lemma["абонплата"]["decision"] == "deferred"
     assert by_lemma["абонплата"]["reason"] == "truly_missing"
     assert by_lemma["верф"]["decision"] == "deferred"
@@ -234,7 +239,7 @@ def test_inject_approved_gloss_sets_anchor_fields() -> None:
     }
     injected = promote.inject_approved_gloss(
         candidate,
-        {"text": "house", "source": "sum11"},
+        {"text": "house", "source": "sum11", "lemma": "хата", "slug": "хата"},
     )
     assert injected["gloss"] == "house"
     assert injected["enrichment"]["meaning"]["definitions"] == ["house"]
@@ -242,6 +247,104 @@ def test_inject_approved_gloss_sets_anchor_fields() -> None:
     assert injected["enrichment"]["translation"]["en"] == ["house"]
     assert "sum11" in injected["enrichment"]["sources"]
     assert injected["enrichment"]["cefr"] == {"level": "A1"}
+
+
+def test_inject_approved_gloss_refuses_russian_cyrillic_definition() -> None:
+    candidate = {"lemma": "а-а-а", "pos": "interjection", "url_slug": "а-а-а"}
+    with pytest.raises(ValueError, match="learner English"):
+        promote.inject_approved_gloss(
+            candidate,
+            {
+                "text": "Колыбельный припев: бай-бай!",
+                "source": "grinchenko",
+                "lemma": "а-а-а",
+            },
+        )
+
+
+def test_inject_approved_gloss_refuses_sum11_stub() -> None:
+    candidate = {"lemma": "атакуючи", "pos": "adverb", "url_slug": "атакуючи"}
+    with pytest.raises(ValueError, match="СУМ-11 stub"):
+        promote.inject_approved_gloss(
+            candidate,
+            {
+                "text": "Дієпр. акт. теп. ч. до атакува́ти",
+                "source": "sum11",
+                "lemma": "атакуючи",
+            },
+        )
+
+
+def test_inject_approved_gloss_refuses_lemma_mismatch() -> None:
+    candidate = {"lemma": "багатити", "pos": "verb", "url_slug": "багатити"}
+    with pytest.raises(ValueError, match="lemma/slug"):
+        promote.inject_approved_gloss(
+            candidate,
+            {
+                "text": "to enrich; to make wealthy",
+                "source": "grinchenko",
+                "lemma": "багатитися",
+                "slug": "багатитися",
+            },
+        )
+
+
+def test_inject_approved_gloss_allows_dictionary_style_english_note() -> None:
+    candidate = {"lemma": "баль", "pos": "noun", "url_slug": "баль"}
+    note = (
+        "historical spelling of бал ('ball, dance'); older orthography note"
+    )
+    injected = promote.inject_approved_gloss(
+        candidate,
+        {"text": note, "source": "wiktionary", "lemma": "баль", "slug": "баль"},
+    )
+    assert injected["gloss"] == note
+    assert injected["enrichment"]["translation"]["en"] == [note]
+
+
+def test_generator_defers_non_injectable_promote_with_gloss(tmp_path: Path) -> None:
+    held = [
+        {
+            "entry": _candidate("а-а-а", enrichment={"sources": ["VESUM"]}),
+            "reason": "missing dictionary definition",
+        }
+    ]
+    candidates_path = _write_candidates(tmp_path, [], held)
+    triage_path = tmp_path / "triage.json"
+    triage_path.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {
+                        "lemma": "а-а-а",
+                        "pos": "noun",
+                        "held_reason": "missing dictionary definition",
+                        "best_gloss": {
+                            "text": "Колыбельный припев: бай-бай!",
+                            "source": "grinchenko",
+                            "lemma": "а-а-а",
+                        },
+                        "machine_action": "promote_with_gloss",
+                    }
+                ]
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    result = gen.generate_needs_review_ledger(
+        candidates_path=candidates_path,
+        triage_path=triage_path,
+        out_path=tmp_path / "ledger.yaml",
+        write=True,
+    )
+    assert result.approve_count == 0
+    assert result.deferred_count == 1
+    payload = yaml.safe_load((tmp_path / "ledger.yaml").read_text(encoding="utf-8"))
+    assert payload["decisions"][0]["decision"] == "deferred"
+    assert payload["decisions"][0]["reason"] == "non_english_gloss"
 
 
 def test_needs_review_and_auto_merge_ledgers_compose(tmp_path: Path) -> None:
