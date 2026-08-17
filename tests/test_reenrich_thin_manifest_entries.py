@@ -215,6 +215,7 @@ def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> 
 
     monkeypatch.setattr(enrich_manifest, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest, "query_goroh_translate", lambda lemma: [])
     monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {"lookups": {}})
     monkeypatch.setattr(enrich_manifest, "_fetch_slovnyk_entry", fail_fetch)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
@@ -224,6 +225,31 @@ def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> 
         _reenrich_translation_only(conn, entry, {}, cached_slovnyk_only=True)
 
     assert "translation" not in entry["enrichment"]
+
+
+def test_reenrich_thin_manifest_entries_fills_from_goroh_fixture(monkeypatch) -> None:
+    entry = {"lemma": "анімізм", "pos": "noun", "enrichment": {}}
+
+    monkeypatch.setattr(enrich_manifest, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {"lookups": {"ukreng": None}})
+    monkeypatch.setattr(
+        enrich_manifest,
+        "query_goroh_translate",
+        lambda lemma: ["animism"] if lemma == "анімізм" else [],
+    )
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+
+    with sqlite3.connect(":memory:") as conn:
+        conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+        _reenrich_translation_only(conn, entry, {})
+
+    assert entry["enrichment"]["translation"] == {
+        "en": ["animism"],
+        "source": "Горох (переклад)",
+        "mirror_source_url": "https://goroh.pp.ua/Переклад/%D0%B0%D0%BD%D1%96%D0%BC%D1%96%D0%B7%D0%BC",
+    }
+    assert "Горох (переклад)" in entry["enrichment"]["sources"]
 
 
 def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path, monkeypatch) -> None:

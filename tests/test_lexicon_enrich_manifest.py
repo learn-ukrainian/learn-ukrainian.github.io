@@ -84,6 +84,7 @@ from scripts.lexicon.enrich_manifest import (
 )
 from scripts.lexicon.source_attribution import (
     DAVYDOV_LABEL,
+    GOROH_LABEL,
     HOLOSKEVYCH_LABEL,
     MIYKLAS_LABEL,
     ORTHOEPY_LABEL,
@@ -2687,6 +2688,7 @@ def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
 
     assert _translation(conn, "неіснуючеслово") is None
 
@@ -2701,6 +2703,7 @@ def test_translation_uses_unambiguous_reverse_balla_after_source_misses(monkeypa
     )
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
     _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
 
     assert _translation(conn, "помішувати", {}, entry_pos="verb") is None
@@ -2727,6 +2730,7 @@ def test_translation_skips_ambiguous_reverse_balla(monkeypatch) -> None:
     )
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
     _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
 
     assert (
@@ -2745,6 +2749,7 @@ def test_translation_prefers_kaikki_over_reverse_balla(monkeypatch) -> None:
     )
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
     _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
 
     assert _translation(conn, "помішувати", {"помішувати": {"glosses": ["to stir"]}}) == {
@@ -2763,6 +2768,7 @@ def test_translation_reverse_balla_ignores_example_sentences(monkeypatch) -> Non
     )
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
     _patch_vesum_analyses(monkeypatch, {"книга": "noun"})
 
     assert _translation(conn, "книга", {}, entry_pos="noun", gloss_hints={"dash"}) is None
@@ -2778,6 +2784,7 @@ def test_translation_reverse_balla_requires_single_token_segment(monkeypatch) ->
     )
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
     _patch_vesum_analyses(monkeypatch, {"базування": "noun", "дім": "noun"})
 
     assert _translation(conn, "базування", {}, entry_pos="noun", gloss_hints={"home"}) is None
@@ -2812,6 +2819,7 @@ def test_translation_uses_curated_learner_gloss_after_source_misses(monkeypatch)
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
 
     assert _translation(conn, "ого", {}) == {
         "en": ["wow", "whoa"],
@@ -2990,11 +2998,153 @@ def test_translation_prefers_kaikki_over_curated_learner_gloss(monkeypatch) -> N
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
 
     assert _translation(conn, "ого", {"ого": {"glosses": ["oh wow"]}}) == {
         "en": ["oh wow"],
         "source": KAIKKI_SOURCE,
     }
+
+
+def test_translation_uses_goroh_after_source_misses(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_goroh_translate",
+        lambda lemma: ["Albanian", "Albanians"] if lemma == "албанці" else [],
+    )
+
+    translation = _translation(conn, "албанці", {})
+    assert translation == {
+        "en": ["Albanian", "Albanians"],
+        "source": GOROH_LABEL,
+        "mirror_source_url": "https://goroh.pp.ua/Переклад/%D0%B0%D0%BB%D0%B1%D0%B0%D0%BD%D1%86%D1%96",
+    }
+    assert "source_url" not in translation
+    assert translation["source"] == "Горох (переклад)"
+
+
+def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
+        ("basilica", "n базиліка", ""),
+    )
+    _patch_vesum_analyses(monkeypatch, {"базиліка": "noun"})
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+
+    goroh_calls: list[str] = []
+
+    def mock_goroh(lemma: str) -> list[str]:
+        goroh_calls.append(lemma)
+        return ["basilica", "basilicas"]
+
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", mock_goroh)
+
+    # 1. dmklinger wins over everything
+    conn.execute(
+        "INSERT INTO dmklinger_uk_en (word, pos, translations) VALUES (?, ?, ?)",
+        ("базиліка", "noun", '["basilica"]'),
+    )
+    enrich_manifest_module._DMKLINGER_INDEX = None
+    res_dmklinger = _translation(conn, "базиліка", {"базиліка": {"glosses": ["wikt-basilica"]}})
+    assert res_dmklinger is not None
+    assert res_dmklinger["source"] == enrich_manifest_module._TRANSLATION_SOURCE
+    assert not goroh_calls
+
+    # 2. Kaikki wins when dmklinger misses
+    conn.execute("DELETE FROM dmklinger_uk_en")
+    enrich_manifest_module._DMKLINGER_INDEX = None
+    res_kaikki = _translation(conn, "базиліка", {"базиліка": {"glosses": ["wikt-basilica"]}})
+    assert res_kaikki is not None
+    assert res_kaikki["source"] == KAIKKI_SOURCE
+    assert not goroh_calls
+
+    # 3. Balla reverse wins when dmklinger and Kaikki miss
+    res_balla = _translation(conn, "базиліка", {}, entry_pos="noun", gloss_hints={"basilica"})
+    assert res_balla is not None
+    assert res_balla["source"] == _BALLA_REVERSE_SOURCE
+    assert not goroh_calls
+
+    # 4. Slovnyk ukreng wins when Balla reverse misses
+    slovnyk_cache = {
+        "lookups": {
+            "ukreng": {
+                "dictionary_slug": "ukreng",
+                "text": "базиліка базиліка arch. basilica",
+                "source_url": "https://slovnyk.me/dict/ukreng/базиліка",
+            }
+        }
+    }
+    res_slovnyk = _translation(conn, "базиліка", {}, slovnyk_cache=slovnyk_cache)
+    assert res_slovnyk is not None
+    assert res_slovnyk["source"] == _SLOVNYK_UKRENG_SOURCE
+    assert not goroh_calls
+
+    # 5. Goroh wins when all previous miss
+    empty_cache = {"lookups": {"ukreng": None}}
+    res_goroh = _translation(conn, "базиліка", {}, slovnyk_cache=empty_cache)
+    assert res_goroh is not None
+    assert res_goroh["source"] == GOROH_LABEL
+    assert res_goroh["en"] == ["basilica", "basilicas"]
+    assert goroh_calls == ["базиліка"]
+
+
+def test_goroh_translation_filters_non_english_and_caps_at_6(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_goroh_translate",
+        lambda lemma: [
+            "one",
+            "two",
+            "три (тільки кирилиця)",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+        ],
+    )
+    translation = _translation(conn, "багатослів", {})
+    assert translation is not None
+    assert translation["en"] == ["one", "two", "three", "four", "five", "six"]
+    assert translation["source"] == GOROH_LABEL
+
+
+def test_goroh_translate_mock_html_parsing(monkeypatch) -> None:
+    from scripts.rag.source_query import goroh_translate
+
+    sample_html = """
+    <!DOCTYPE html>
+    <html>
+    <body>
+      <div class="def">
+        <h3>Англійська</h3>
+        <p>
+          <a href="/Переклад/артикул">article</a>,
+          <a href="/Переклад/артикул">clause</a>,
+          <a href="/Переклад/артикул">item</a>
+        </p>
+      </div>
+    </body>
+    </html>
+    """
+
+    class FakeResponse:
+        status_code = 200
+        text = sample_html
+
+    monkeypatch.setattr("scripts.rag.source_query._get", lambda url, **kwargs: FakeResponse())
+    assert goroh_translate("артикул") == ["article", "clause", "item"]
 
 
 def test_wiki_reference_success(monkeypatch, tmp_path) -> None:

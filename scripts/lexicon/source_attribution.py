@@ -58,6 +58,7 @@ SYNONYM_VERDICTS_LABEL = "редакторські вердикти синоні
 ORTHOGRAPHY_LABEL = "Орфографічний словник української мови"
 HOLOSKEVYCH_LABEL = "Правописний словник Голоскевича (1929)"
 ORTHOEPY_LABEL = "Орфоепічний словник української мови"
+GOROH_LABEL = "Горох (переклад)"
 
 
 RELATION_PAIRS_PREFIX = "relation_pairs/"
@@ -92,6 +93,10 @@ LEGACY_LABEL_ALIASES: dict[str, str] = {
     SUM20_SHORT_LABEL: SUM20_ACADEMIC_LABEL,
     VTS_SHORT_LABEL: VTS_ACADEMIC_LABEL,
     "Грінченко": GRINCHENKO_LABEL,
+    "Горох": GOROH_LABEL,
+    "goroh.pp.ua": GOROH_LABEL,
+    "Горох (переклад)": GOROH_LABEL,
+    "Горох: Переклад": GOROH_LABEL,
 }
 
 KNOWN_ACADEMIC_LABELS = frozenset(
@@ -237,6 +242,8 @@ def normalize_academic_label(label: str) -> str:
         return label.strip()
     if cleaned.casefold().startswith("slovnyk.me correction"):
         return CORRECTION_DICTIONARIES_LABEL
+    if cleaned.casefold().startswith("goroh.pp.ua"):
+        return GOROH_LABEL
     if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
         return _remap_relation_pairs_label(cleaned)
     if cleaned in LEGACY_LABEL_ALIASES:
