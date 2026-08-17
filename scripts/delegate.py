@@ -4643,6 +4643,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # destroyed receipt evidence. Must run BEFORE ownership admission
     # so a rejected duplicate cannot DELETE/replace live write claims
     # (#5643 CF F001). --force-new archives first; it never clobbers.
+    # --force-new has no escape for a live running/spawning pid: archiving
+    # that record and spawning again is the duplicate-worker race the
+    # pre-#6980 guard refused with no override (#6981 F1 / #5643 CF F001).
     existing = _read_state(state_path)
     record_exists = state_path.exists()
     result_exists = _result_path(task_id).exists()
@@ -4656,6 +4659,27 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 "Dispatch refuses to reuse a task-id in any state. "
                 "Use a unique --task-id, or pass --force-new to archive "
                 "the prior record+result first.",
+                file=sys.stderr,
+            )
+            return 2
+        status = existing.get("status") if existing else None
+        pid = existing.get("pid") if existing else None
+        live_pid = False
+        if status in ("running", "spawning") and not isinstance(pid, bool):
+            try:
+                live_pid = (
+                    isinstance(pid, (int, str))
+                    and int(pid) > 0
+                    and _pid_alive(int(pid))
+                )
+            except (TypeError, ValueError):
+                live_pid = False
+        if live_pid:
+            print(
+                f"❌ task_id {task_id!r} is already {status} (pid={pid}) "
+                "and that process is still alive. --force-new has no escape "
+                "for live tasks; refusing to archive a live worker and spawn "
+                "a duplicate.",
                 file=sys.stderr,
             )
             return 2
@@ -5955,7 +5979,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Reuse an existing --task-id by first archiving the prior record "
             "and result alongside (never clobber). Required when the task "
-            "record already exists in any state (#6980)."
+            "record already exists in a non-live state (#6980). Refuses when "
+            "a running/spawning record still has a live pid (#6981 F1)."
         ),
     )
     d.add_argument(

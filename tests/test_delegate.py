@@ -1565,6 +1565,44 @@ def test_dispatch_refuses_existing_task_record_in_any_state(
     assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
 
 
+@pytest.mark.parametrize("status", ["running", "spawning"])
+def test_dispatch_force_new_refuses_live_running_or_spawning(
+    tmp_tasks_dir, capsys, monkeypatch, status
+):
+    """#6981 F1: --force-new has no escape for a live running/spawning pid.
+
+    Archiving that record and spawning again is the duplicate-worker race
+    the pre-#6980 guard refused with no override (#5643 CF F001).
+    """
+    task_id = f"live-{status}-force-new"
+    path = delegate._state_path(task_id)
+    result_path = path.with_suffix(".result")
+    original = {
+        "task_id": task_id,
+        "status": status,
+        "pid": os.getpid(),  # alive
+        "receipt": f"do-not-archive-live-{status}",
+        "result_file": str(result_path),
+    }
+    delegate._write_state_atomic(path, original)
+    result_path.write_text(f"live {status} receipt\n", encoding="utf-8")
+
+    def _unexpected_spawn(*_args, **_kwargs):
+        raise AssertionError("live task + --force-new must not spawn a worker")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
+
+    rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id, force_new=True))
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert f"already {status}" in captured.err
+    assert "no escape for live tasks" in captured.err
+    assert delegate._read_state(path) == original
+    assert result_path.read_text(encoding="utf-8") == f"live {status} receipt\n"
+    assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json")) == []
+    assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
+
+
 def test_dispatch_force_new_archives_state_and_result_then_proceeds(
     tmp_tasks_dir, capsys
 ):
