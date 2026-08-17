@@ -486,7 +486,11 @@ def _extract_effort(msg: dict) -> str | None:
 
 
 def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:
-    """Send bridge error back to sender."""
+    """Send bridge error back to sender; the inbound row stays unacknowledged.
+
+    No ack on failure (#6915): the message remains unconsumed/retryable, the
+    same deferral shape as the rate-limited path below.
+    """
     print(f"\n❌ Codex CLI error: {error_msg[:500]}")
     from ._ask_contract import failed_response_provenance
 
@@ -502,7 +506,6 @@ def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:
         data=data,
         from_model=from_model,
     )
-    acknowledge(message_id)
     record_ask_failure(
         message_id,
         error_msg,

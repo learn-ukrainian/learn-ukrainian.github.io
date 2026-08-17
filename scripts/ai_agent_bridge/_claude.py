@@ -346,7 +346,6 @@ def _run_claude_sync_via_runtime(
             data=provenance_data, from_model=from_model,
         )
         _response_sent = True
-        acknowledge(message_id)
         record_ask_failure(message_id, str(exc))
     except (AgentStalledError, AgentTimeoutError) as exc:
         timeout_mins = timeout_val // 60
@@ -362,7 +361,6 @@ def _run_claude_sync_via_runtime(
             data=provenance_data, from_model=from_model,
         )
         _response_sent = True
-        acknowledge(message_id)
         record_ask_failure(message_id, str(exc), timed_out=True)
     except AgentUnavailableError:
         print("❌ claude CLI not found. Is it installed?")
@@ -374,7 +372,8 @@ def _run_claude_sync_via_runtime(
             data=provenance_data, from_model=from_model,
         )
         _response_sent = True
-        acknowledge(message_id)  # Must ack incoming msg to prevent stuck queue
+        # No ack on failure (#6915): the message stays unconsumed/retryable;
+        # broker_cleanup force-acks only after the stuck-age threshold.
         record_ask_failure(message_id, "Claude CLI not found")
     except ReviewWorktreeError as exc:
         provenance_data, from_model = _claude_error_provenance(
@@ -387,7 +386,6 @@ def _run_claude_sync_via_runtime(
             data=provenance_data, from_model=from_model,
         )
         _response_sent = True
-        acknowledge(message_id)
         record_ask_failure(message_id, str(exc))
     finally:
         if not _response_sent:
@@ -526,7 +524,11 @@ def _launch_claude_background(msg, message_id, new_session):
 
 
 def _handle_claude_error(msg, message_id, stderr):
-    """Handle Claude CLI non-zero exit. Returns True (response_sent)."""
+    """Handle Claude CLI non-zero exit. Returns True (response_sent).
+
+    Sends the honest typed-error reply but never acknowledges the inbound
+    message (#6915): a failed processing leaves it unconsumed/retryable.
+    """
     error_msg = redact_text(stderr.strip()) or "Unknown error"
     print(f"\n❌ Claude CLI error: {error_msg[:500]}")
     sys.stdout.flush()
@@ -537,7 +539,6 @@ def _handle_claude_error(msg, message_id, stderr):
         task_id=msg['task_id'], msg_type="error",
         from_llm="claude", to_llm=msg['from'], data=provenance_data, from_model=from_model
     )
-    acknowledge(message_id)
     record_ask_failure(message_id, error_msg)
     return True
 
@@ -551,7 +552,6 @@ def _send_claude_fallback_error(msg, message_id):
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'], data=provenance_data, from_model=from_model
         )
-        acknowledge(message_id)
         record_ask_failure(message_id, "Claude process failed unexpectedly")
     except Exception:
         pass

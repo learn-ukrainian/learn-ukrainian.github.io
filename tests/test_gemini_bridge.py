@@ -13,6 +13,7 @@ from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
 from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
 
+from scripts.ai_agent_bridge._acp_compat import registered_participant_model
 from scripts.ai_agent_bridge._cli import _handle_ask_gemini
 from scripts.ai_agent_bridge._db import get_db, init_db
 from scripts.ai_agent_bridge._gemini import _run_gemini_sync
@@ -251,6 +252,8 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
     _handle_ask_gemini(_Args())
     assert captured["args"] == ("gemini", "hello")
     assert captured["kwargs"]["task_id"] == "task-1"
-    assert captured["kwargs"]["model"] == "gemini-3.6-flash-high"
+    # #6894: legacy gemini* slugs map to the live registry pin, so assert
+    # against that pin — never a literal slug that goes stale on rotation.
+    assert captured["kwargs"]["model"] == registered_participant_model("agy")
     assert captured["kwargs"]["stdout_only"] is False
     assert captured["kwargs"]["output_path"] is None

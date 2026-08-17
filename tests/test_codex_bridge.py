@@ -759,7 +759,10 @@ def test_rate_limit_error_defers_message(bridge_db):
     assert int(reply[6]) == 0
 
 
-def test_other_errors_still_ack_inbound(bridge_db):
+def test_other_errors_leave_inbound_unconsumed(bridge_db):
+    """#6915: a stalled Codex run no longer acks the inbound message — the
+    message stays unconsumed/retryable while the sender still gets the honest
+    error reply."""
     task_id = "issue-1183-stalled"
     message_id = send_message(
         "Please handle stall",
@@ -786,14 +789,16 @@ def test_other_errors_still_ack_inbound(bridge_db):
     ):
         process_for_codex(message_id)
 
-    assert _message_acknowledged(message_id) == 1
+    # New contract (#6915): no ack on failure — the inbound message stays
+    # unconsumed/retryable, same as the rate-limited path above.
+    assert _message_acknowledged(message_id) == 0
 
     rows = _task_messages(task_id)
     assert len(rows) == 2
     reply = rows[1]
     assert reply[3] == "codex-bridge-error"
     assert "[Bridge Error] Codex CLI failed:" in reply[5]
-    # Re-prove inbound-ack guarantee: inbound message_id was acked (1 above), error reply is NOT acked (0)
+    # The error reply is itself NOT acked.
     assert int(reply[6]) == 0
 
 

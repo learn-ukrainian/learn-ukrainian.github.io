@@ -429,10 +429,12 @@ class TestSendGeminiError:
         with (
             patch("scripts.ai_agent_bridge._gemini.send_message", return_value=99) as sm,
             patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("scripts.ai_agent_bridge._gemini.record_ask_failure"),
         ):
             f(msg, 42)
             sm.assert_called_once()
-            ack.assert_called_once_with(42)
+            # #6915: a failed processing must NOT consume the inbound message.
+            ack.assert_not_called()
 
     def test_exception_suppressed(self):
         f = self._import()

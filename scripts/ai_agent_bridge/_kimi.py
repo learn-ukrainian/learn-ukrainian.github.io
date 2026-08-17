@@ -182,7 +182,11 @@ def _build_kimi_prompt(
 
 
 def _handle_kimi_error(msg: dict, message_id: int, reason: str) -> None:
-    """Persist a terminal Kimi failure and unblock the original ask."""
+    """Persist a terminal Kimi failure and notify the sender; no ack (#6915).
+
+    The inbound message stays unacknowledged so a later drain can retry it;
+    acknowledgement happens only after a successful routed reply.
+    """
     from ._ask_contract import failed_response_provenance
 
     data, from_model = failed_response_provenance(
@@ -192,5 +196,4 @@ def _handle_kimi_error(msg: dict, message_id: int, reason: str) -> None:
         content=f"[Kimi error] {reason}", task_id=msg["task_id"], msg_type="error",
         from_llm="kimi", to_llm=msg["from"], data=data, from_model=from_model,
     )
-    acknowledge(message_id)
     record_ask_failure(message_id, reason, timed_out="timeout" in reason.lower() or "stalled" in reason.lower())
