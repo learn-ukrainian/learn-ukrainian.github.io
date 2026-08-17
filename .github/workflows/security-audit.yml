@@ -2,27 +2,24 @@ name: Security Audit (advisory)
 
 # Report-only dependency-vulnerability visibility over the dependabot backlog.
 # This NEVER blocks a PR — it is a dashboard, not a gate. Deterministic merge
-# gating stays with `Test (pytest)` (branch protection) and code-level findings
-# stay with CodeQL. Promote a step to a hard gate (drop `continue-on-error`)
-# only once the existing backlog is drained, or branch protection would wedge.
+# gating stays with `CI Gate` (branch protection / merge queue) and code-level
+# findings stay with CodeQL. Promote a step to a hard gate (drop
+# `continue-on-error`) only once the existing backlog is drained, or branch
+# protection would wedge.
+#
+# Merge-queue cutover (#6943 stage 2): removed from pull_request after verifying
+# required contexts == ["CI Gate"] only. Weekly schedule + manual dispatch.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 on:
-  pull_request:
-    paths:
-      - 'requirements*.txt'
-      - 'requirements.lock'
-      - 'pyproject.toml'
-      - 'site/package*.json'
-      - '.github/workflows/security-audit.yml'
   schedule:
-    # Weekly Monday 09:00 UTC — surfaces newly-disclosed advisories between PRs.
+    # Weekly Monday 09:00 UTC — surfaces newly-disclosed advisories between landings.
     - cron: '0 9 * * 1'
   workflow_dispatch: {}
 
