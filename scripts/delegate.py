@@ -14,7 +14,7 @@ CLI:
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
         --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-5.6-terra]
-        [--allow-merge]
+        [--allow-merge] [--force-new]
 
     # Check status without blocking.
     delegate.py status my-task
@@ -309,6 +309,43 @@ def _state_path(task_id: str) -> Path:
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
     return _TASKS_DIR / f"{safe}.json"
+
+
+def _result_path(task_id: str) -> Path:
+    return _state_path(task_id).with_suffix(".result")
+
+
+def _archive_stamp() -> str:
+    return datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
+
+
+def _archived_artifact_path(path: Path, stamp: str) -> Path:
+    dest = path.with_name(f"{path.stem}.{stamp}.archived{path.suffix}")
+    if dest.exists():
+        dest = path.with_name(f"{path.stem}.{stamp}.{os.getpid()}.archived{path.suffix}")
+    return dest
+
+
+def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
+    """Move the prior record and result aside. Never overwrite an archive."""
+    stamp = stamp or _archive_stamp()
+    archived: list[Path] = []
+    for path in (_state_path(task_id), _result_path(task_id)):
+        if not path.exists():
+            continue
+        dest = _archived_artifact_path(path, stamp)
+        os.replace(path, dest)
+        archived.append(dest)
+    return archived
+
+
+def _existing_task_status(state_path: Path, existing: dict[str, Any] | None) -> str:
+    status = existing.get("status") if existing else None
+    if isinstance(status, str) and status.strip():
+        return status
+    if state_path.exists():
+        return "unreadable"
+    return "result-only"
 
 
 def _core_terminal_fields(
@@ -4599,26 +4636,39 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
 
-    # Refuse to clobber a task that's still alive — whether it's in
-    # "running" (worker up and executing) OR "spawning" (worker created
-    # but not yet past its own state-update step). Without the
-    # "spawning" check, a fast second dispatch during the tiny window
-    # between Popen and _run_worker's first state write could overwrite
-    # state and launch a duplicate worker for the same task_id.
-    # Codex 2026-04-10 review finding.
-    # Must run BEFORE ownership admission so a rejected duplicate cannot
-    # DELETE/replace the live task's write claims (#5643 CF F001).
+    # #6980: fail closed when the task record (or its .result) already
+    # exists in ANY state. The previous guard only refused live
+    # running/spawning PIDs, so a dispatch with a completed task-id
+    # silently overwrote batch_state/tasks/<id>.json + .result and
+    # destroyed receipt evidence. Must run BEFORE ownership admission
+    # so a rejected duplicate cannot DELETE/replace live write claims
+    # (#5643 CF F001). --force-new archives first; it never clobbers.
     existing = _read_state(state_path)
-    if existing and existing.get("status") in ("running", "spawning"):
-        pid = existing.get("pid")
-        if pid and _pid_alive(int(pid)):
+    record_exists = state_path.exists()
+    result_exists = _result_path(task_id).exists()
+    if record_exists or result_exists:
+        if not bool(getattr(args, "force_new", False)):
+            status = _existing_task_status(state_path, existing)
+            pid = existing.get("pid") if existing else None
+            pid_part = f" (pid={pid})" if pid not in (None, "") else ""
             print(
-                f"❌ task_id {task_id!r} is already {existing['status']} "
-                f"(pid={pid}). Use 'delegate.py status {task_id}' to check, "
-                f"or pick a different task-id.",
+                f"❌ task_id {task_id!r} is already {status}{pid_part}. "
+                "Dispatch refuses to reuse a task-id in any state. "
+                "Use a unique --task-id, or pass --force-new to archive "
+                "the prior record+result first.",
                 file=sys.stderr,
             )
             return 2
+        try:
+            archived = _archive_task_artifacts(task_id)
+        except OSError as exc:
+            print(
+                f"❌ failed to archive prior task artifacts for {task_id!r}: {exc}",
+                file=sys.stderr,
+            )
+            return 1
+        for dest in archived:
+            print(f"📦 archived prior task artifact: {dest.name}", file=sys.stderr)
 
     # Resolve prompt: literal --prompt, or - for stdin, or --prompt-file.
     if args.prompt_file:
@@ -5899,6 +5949,15 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
+    d.add_argument(
+        "--force-new",
+        action="store_true",
+        help=(
+            "Reuse an existing --task-id by first archiving the prior record "
+            "and result alongside (never clobber). Required when the task "
+            "record already exists in any state (#6980)."
+        ),
+    )
     d.add_argument(
         "--initiator",
         default=None,

@@ -1048,30 +1048,54 @@ def test_dispatch_accepts_native_grok_effort_vocabulary(agent, effort):
     """The dispatch guard admits every native Grok CLI effort level."""
     delegate._validate_dispatch_effort(agent, effort)
 
+def _minimal_dispatch_args(task_id: str, **overrides):
+    import argparse
+
+    args = {
+        "agent": "codex",
+        "task_id": task_id,
+        "prompt": "test",
+        "prompt_file": None,
+        "mode": "read-only",
+        "model": None,
+        "cwd": None,
+        "worktree": None,
+        "hard_timeout": 3600,
+    }
+    args.update(overrides)
+    return argparse.Namespace(**args)
+
+
+def _fake_worker_popen():
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 12345
+        stdin = _FakeStdin()
+
+    return _FakeProc()
+
+
 def test_dispatch_refuses_to_clobber_running_task(tmp_tasks_dir, capsys):
     """Dispatching with a task-id that's already running must fail fast."""
     path = delegate._state_path("duplicate-task")
-    delegate._write_state_atomic(path, {
+    original = {
         "task_id": "duplicate-task",
         "status": "running",
         "pid": os.getpid(),  # alive
-    })
-    import argparse
-    args = argparse.Namespace(
-        agent="codex",
-        task_id="duplicate-task",
-        prompt="test",
-        prompt_file=None,
-        mode="read-only",
-        model=None,
-        cwd=None,
-        worktree=None,
-        hard_timeout=3600,
-    )
-    rc = delegate.cmd_dispatch(args)
+        "receipt": "do-not-clobber-running",
+    }
+    delegate._write_state_atomic(path, original)
+    rc = delegate.cmd_dispatch(_minimal_dispatch_args("duplicate-task"))
     assert rc == 2
     captured = capsys.readouterr()
     assert "already running" in captured.err
+    assert delegate._read_state(path) == original
 
 
 def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
@@ -1478,74 +1502,123 @@ def test_dispatch_clobber_guard_rejects_spawning_status(tmp_tasks_dir, capsys):
     duplicate worker for the same task_id.
     """
     path = delegate._state_path("spawning-clobber")
-    delegate._write_state_atomic(path, {
+    original = {
         "task_id": "spawning-clobber",
         "status": "spawning",
         "pid": os.getpid(),  # alive
-    })
-    import argparse
-    args = argparse.Namespace(
-        agent="codex",
-        task_id="spawning-clobber",
-        prompt="test",
-        prompt_file=None,
-        mode="read-only",
-        model=None,
-        cwd=None,
-        worktree=None,
-        hard_timeout=3600,
-    )
-    rc = delegate.cmd_dispatch(args)
+        "receipt": "do-not-clobber-spawning",
+    }
+    delegate._write_state_atomic(path, original)
+    rc = delegate.cmd_dispatch(_minimal_dispatch_args("spawning-clobber"))
     assert rc == 2, "must reject duplicate dispatch during spawning window"
     captured = capsys.readouterr()
-    assert "spawning" in captured.err
+    assert "already spawning" in captured.err
+    assert delegate._read_state(path) == original
 
 
-def test_dispatch_allows_new_task_when_prior_crashed(tmp_tasks_dir, capsys):
-    """If the old state is terminal, dispatching should proceed (not tested
-    end-to-end here — we just verify the guard doesn't trip). We patch
-    subprocess.Popen so no real worker is spawned."""
-    path = delegate._state_path("prior-crashed")
-    delegate._write_state_atomic(path, {
-        "task_id": "prior-crashed",
-        "status": "crashed",
-        "pid": 999_999_998,
-    })
-    import argparse
-    args = argparse.Namespace(
-        agent="codex",
-        task_id="prior-crashed",
-        prompt="test",
-        prompt_file=None,
-        mode="read-only",
-        model=None,
-        cwd=None,
-        worktree=None,
-        hard_timeout=3600,
-    )
+@pytest.mark.parametrize(
+    ("task_id", "status", "pid"),
+    [
+        ("prior-done", "done", None),
+        ("prior-failed", "failed", None),
+        ("prior-timeout", "timeout", None),
+        ("prior-crashed", "crashed", 999_999_998),
+        ("prior-rate-limited", "rate_limited", None),
+        ("prior-needs-finalize", "needs_finalize", None),
+        ("prior-no-deliverable", "no_deliverable", None),
+        ("prior-dead-running", "running", 999_999_996),
+        ("prior-dead-spawning", "spawning", 999_999_995),
+    ],
+)
+def test_dispatch_refuses_existing_task_record_in_any_state(
+    tmp_tasks_dir, capsys, monkeypatch, task_id, status, pid
+):
+    """#6980: a task-id already on disk is fail-closed, including terminal
+    receipts and dead-PID running/spawning records. The previous guard only
+    refused live running/spawning PIDs and silently clobbered everything else.
+    """
+    path = delegate._state_path(task_id)
+    result_path = path.with_suffix(".result")
+    original = {
+        "task_id": task_id,
+        "status": status,
+        "pid": pid,
+        "receipt": f"attestation-{task_id}",
+        "result_file": str(result_path),
+    }
+    delegate._write_state_atomic(path, original)
+    result_path.write_text(f"receipt body for {task_id}\n", encoding="utf-8")
 
-    # Patch Popen so we don't actually spawn a worker.
-    class _FakeStdin:
-        def write(self, _data): pass
-        def close(self): pass
+    def _unexpected_spawn(*_args, **_kwargs):
+        raise AssertionError("existing task-id must not spawn a worker")
 
-    class _FakeProc:
-        pid = 12345  # parent writes this into state for zombie detection
-        stdin = _FakeStdin()
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
 
-    with patch("delegate.subprocess.Popen", return_value=_FakeProc()):
-        rc = delegate.cmd_dispatch(args)
+    rc = delegate.cmd_dispatch(_minimal_dispatch_args(task_id))
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert f"already {status}" in captured.err
+    assert "--force-new" in captured.err
+    assert delegate._read_state(path) == original
+    assert result_path.read_text(encoding="utf-8") == f"receipt body for {task_id}\n"
+    assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.json")) == []
+    assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
+
+
+def test_dispatch_force_new_archives_state_and_result_then_proceeds(
+    tmp_tasks_dir, capsys
+):
+    """#6980: --force-new is the only reuse escape, and it must archive both
+    the prior record and the prior result before writing a new spawn state.
+    """
+    path = delegate._state_path("force-new-task")
+    result_path = path.with_suffix(".result")
+    original = {
+        "task_id": "force-new-task",
+        "status": "done",
+        "pid": None,
+        "receipt": "keep-this-attestation",
+        "result_file": str(result_path),
+    }
+    delegate._write_state_atomic(path, original)
+    result_path.write_text("completed receipt evidence\n", encoding="utf-8")
+
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
+        rc = delegate.cmd_dispatch(
+            _minimal_dispatch_args("force-new-task", force_new=True)
+        )
 
     assert rc == 0
-    # State file should have been rewritten with status=spawning AND
-    # the parent should have written the fake proc's PID into state
-    # immediately after Popen (Gemini fix: catches early-crash zombies).
+    archived_json = list(tmp_tasks_dir.glob("force-new-task.*.archived.json"))
+    archived_result = list(tmp_tasks_dir.glob("force-new-task.*.archived.result"))
+    assert len(archived_json) == 1
+    assert len(archived_result) == 1
+    assert json.loads(archived_json[0].read_text(encoding="utf-8")) == original
+    assert archived_result[0].read_text(encoding="utf-8") == "completed receipt evidence\n"
     state = delegate._read_state(path)
+    assert state is not None
     assert state["status"] == "spawning"
-    assert state["pid"] == 12345, (
-        "parent MUST write Popen child's PID into state file immediately "
-        "after spawn, before the worker gets a chance to run"
+    assert state["pid"] == 12345
+    assert state.get("receipt") != "keep-this-attestation"
+    captured = capsys.readouterr()
+    assert archived_json[0].name in captured.err
+    assert archived_result[0].name in captured.err
+
+
+def test_dispatch_parser_accepts_force_new_flag():
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "reuse-me",
+            "--prompt",
+            "hi",
+            "--force-new",
+        ]
     )
+    assert args.force_new is True
 
 
 def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
