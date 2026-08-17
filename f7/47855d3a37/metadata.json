@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f747855d3a37",
+  "strategy": "manual-commit",
+  "branch": "agy/6944-agy-atlas-jobs-load",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/MONITOR-API.md",
+    "docs/runbooks/atlas-job-protocol.md",
+    "scripts/api/atlas_jobs_router.py",
+    "scripts/api/route_contracts.py",
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/api/test_atlas_jobs_router.py",
+    "tests/test_monitor_route_contracts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f7/47855d3a37/0/metadata.json",
+      "transcript": "/f7/47855d3a37/0/full.jsonl",
+      "compact_transcript": "/f7/47855d3a37/0/transcript.jsonl",
+      "content_hash": "/f7/47855d3a37/0/content_hash.txt",
+      "prompt": "/f7/47855d3a37/0/prompt.txt"
+    }
+  ]
+}
