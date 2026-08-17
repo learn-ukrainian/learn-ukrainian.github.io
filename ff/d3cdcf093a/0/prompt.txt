@@ -1,0 +1,72 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-ci-mergequeue-b
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# PR-B (cutover): two-tier gating via merge queue — PUBLIC repo (stage 2 of 2)
+
+DISPATCH ONLY AFTER PR-A (slow-split + guards) IS MERGED. Advisory-reviewed (Sol + grok-4.6,
+GO-WITH-CHANGES); their conditions below are BINDING. One PR + one settings change + one canary,
+all completed in this wave — "queue later" is unacceptable.
+
+## Goal
+PR pushes get a 1–3 min required tier; the full fast suite runs once per landing on the QUEUED
+MERGED TREE via GitHub merge queue (`merge_group` event). Strictly stronger than today: the
+suite validates the tree that actually lands, not a stale PR head.
+
+## Design (conditions encoded)
+
+1. **One ci.yml, two events**: `pull_request` + `merge_group`. No workflow-level path filters.
+   Checkout the EVENT SHA (merge_group tests the merge-group SHA — never the PR head). Guard
+   every use of PR-event payload so merge_group runs don't dereference missing fields.
+   Concurrency: separate group for merge_group runs; never cancel queued merge-group runs from
+   PR pushes.
+2. **CI Gate stays the single required context** (verified: the only pinned context), reporting
+   on BOTH events, fail-closed: it must REJECT failed, cancelled, MISSING, or unexpectedly
+   skipped dependencies as failure — skipped ≠ success.
+3. **Event-aware needs**:
+   - pull_request tier: ruff + fastlane (changed, not-slow) + schema contracts + frontend build.
+   - merge_group tier: SUPERSET — those checks PLUS planner + all 4 shards (full fast set,
+     unfiltered by diff) + coverage floor. The merge tier is never smaller than today's gate.
+4. **Ordering (hard)**: do NOT shrink the pull_request tier in the same commit that adds
+   merge_group. Sequence inside this PR's rollout: (a) dual-event CI lands with PR tier
+   unchanged; (b) driver enables the merge queue on main (ruleset/protection — driver action,
+   evidence recorded); (c) one real canary PR goes through the queue green; (d) only then the
+   PR-tier reduction commit lands. All steps this wave, each with quoted evidence.
+5. **Advisory fan-out trim**: move Hygiene / Security Audit / UI Policy advisory workflows to
+   appropriate triggers (schedule / merge_group / targeted paths where they are genuinely
+   advisory). Only after inventorying required contexts (only CI Gate is pinned — verify at
+   implementation time and quote). If independence from enforcement cannot be proven for a
+   workflow, leave it and say so — do not guess.
+6. **Timing acceptance (operator directive: 1–2 min)**: measure the PR tier wall-clock on the
+   canary. If measured >2 min, report the number + the largest remaining cost (likely contracts
+   ~2.7 min) to the driver — the operator decides trim vs accept. Never silently miss the
+   target, never silently cut a check to hit it.
+
+## Failure modes to test for (from advisory review)
+Event/context mismatch (required check never reports on merge_group → queue hangs), wrong-SHA
+checkout, PR-payload dereference in merge_group, skipped-deps-as-success, queue-wide stalls,
+batch bisection semantics, `gh pr merge --auto` entering the queue vs "merged" confusion.
+
+## Proof
+- actionlint + a dry `workflow_dispatch`-style validation of the dual-event logic where
+  testable; quoted canary run URLs and timings for both tiers.
+- CI Gate observed green AND red paths (one deliberate red dependency in a scratch branch —
+  mutation-check the fail-closed aggregation).
+
+## Ship
+One PR vs main. Refs #6943. Conventional commit, X-Agent trailer, NO auto-merge; the driver
+performs the settings enable + canary + merge sequence.
+
+## Routing card (ROUTING_CARD_V1)
+tier=practical · model_x_harness=cursor(Auto attested) — same lane as PR-A for continuity ·
+owned_paths=.github/workflows/** · acceptance_cmd=canary run URLs + measured PR-tier minutes ·
+alternatives=agy (busy private), codex (embargoed), grok (stood down) ·
+research_classification=generic (deliberate)

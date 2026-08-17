@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ffd3cdcf093a",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-ci-mergequeue-b",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/hygiene.yml",
+    ".github/workflows/security-audit.yml",
+    ".github/workflows/ui-policy-gate.yml",
+    "scripts/ci/gate_required_results.py",
+    "tests/test_ci_gate_required_results.py",
+    "tests/test_ci_queue_starvation.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ff/d3cdcf093a/0/metadata.json",
+      "transcript": "/ff/d3cdcf093a/0/full.jsonl",
+      "compact_transcript": "/ff/d3cdcf093a/0/transcript.jsonl",
+      "content_hash": "/ff/d3cdcf093a/0/content_hash.txt",
+      "prompt": "/ff/d3cdcf093a/0/prompt.txt"
+    }
+  ]
+}
