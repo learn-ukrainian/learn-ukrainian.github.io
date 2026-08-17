@@ -23,8 +23,11 @@ dispatch worktree.
 ### `com.learn-ukrainian.monitor-api`
 
 - Purpose: keeps the Monitor API running under launchd supervision.
-- Program: the primary checkout's `.venv/bin/python -m
-  scripts.api.launchd_supervisor run --repo-root <primary checkout>`.
+- Program: `/bin/bash --noprofile --norc
+  scripts/api/run_monitor_api_supervisor.sh run --repo-root <primary
+  checkout>`. The wrapper execs the primary `.venv/bin/python -m
+  scripts.api.launchd_supervisor`. `Program` must stay `/bin/bash` so a
+  venv rebuild cannot invalidate launchd LWCR (exit 78; #6937, #6941).
 - Schedule: `RunAtLoad`; `KeepAlive.SuccessfulExit=false` restarts only
   unexpected exits; `ThrottleInterval=30` bounds crash-loop respawns.
 - Delete authority: none. It starts and restarts the API only.
@@ -74,9 +77,11 @@ dispatch worktree.
 ### `com.learn-ukrainian.codex-archived-thread-cleanup`
 
 - Purpose: deterministic cleanup of old archived Codex threads.
-- Program: the primary checkout's `.venv/bin/python
-  scripts/orchestration/archived_thread_cleanup.py --apply --retention-days 30
-  --observation-interval-days 7` with an absolute `--codex-binary`.
+- Program: `/bin/bash --noprofile --norc
+  scripts/orchestration/run_archived_thread_cleanup.sh --apply` with both
+  `--repo-root` and an absolute `--codex-binary`. The wrapper execs the
+  primary `.venv/bin/python`. `Program` must stay `/bin/bash` so a venv
+  rebuild cannot invalidate launchd LWCR (exit 78; #6937, #6941).
 - Schedule: Sundays at 03:00 local (`StartCalendarInterval`, weekday 0);
   `RunAtLoad` is false.
 - Delete authority: `codex delete --force` through the supported Codex CLI,
