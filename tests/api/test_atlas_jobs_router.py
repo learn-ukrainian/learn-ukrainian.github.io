@@ -255,8 +255,18 @@ def test_load_endpoint_ip_sanitization_and_forbidden_fields(
     data = resp.json()
     for host_data in data["hosts"].values():
         forbidden = {
-            "pid", "main_pid", "user", "port", "hostname", "ip",
-            "ssh", "stderr", "logs", "config", "path", "workdir",
+            "pid",
+            "main_pid",
+            "user",
+            "port",
+            "hostname",
+            "ip",
+            "ssh",
+            "stderr",
+            "logs",
+            "config",
+            "path",
+            "workdir",
         }
         assert not any(k.lower() in forbidden for k in host_data)
 
@@ -392,9 +402,18 @@ def test_results_allowlist_and_sorting(
     assert data["results"][1]["filled_translation"] == 85
 
     expected_keys = {
-        "id", "host", "kind", "state", "closed_at", "issue",
-        "denominator", "delivery", "pulled", "targets",
-        "filled_translation", "circuit_breaker_tripped",
+        "id",
+        "host",
+        "kind",
+        "state",
+        "closed_at",
+        "issue",
+        "denominator",
+        "delivery",
+        "pulled",
+        "targets",
+        "filled_translation",
+        "circuit_breaker_tripped",
     }
     for item in data["results"]:
         assert set(item.keys()) == expected_keys
@@ -465,3 +484,55 @@ def test_results_pagination_and_filters(
     assert failed_data["count"] == 2
     assert all(r["state"] == "failed" for r in failed_data["results"])
 
+
+def test_results_skips_corrupt_and_non_object_receipts(
+    tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Corrupt or non-object .result.json files must be skipped fail-soft without 500ing."""
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+
+    # 1. Valid receipt
+    valid_receipt = {
+        "schema": "atlas-job-result.v1",
+        "id": "job-valid",
+        "host": "atlas-runner",
+        "kind": "reenrich",
+        "state": "succeeded",
+        "closed_at": "2026-08-17T12:00:00Z",
+        "issue": 6867,
+        "denominator": 5,
+        "delivery": "ok",
+        "pulled": True,
+        "summary": {
+            "targets": 20,
+            "filled_translation": 18,
+            "circuit_breaker_tripped": False,
+        },
+    }
+    (tmp_path / "job-valid.result.json").write_text(json.dumps(valid_receipt), encoding="utf-8")
+
+    # 2. Corrupt / truncated JSON
+    (tmp_path / "job-corrupt.result.json").write_text(
+        '{"id": "job-corrupt", "host": "atlas-runner", "state": ', encoding="utf-8"
+    )
+
+    # 3. Empty file
+    (tmp_path / "job-empty.result.json").write_text("", encoding="utf-8")
+
+    # 4. Non-object JSON (list)
+    (tmp_path / "job-array.result.json").write_text("[1, 2, 3]", encoding="utf-8")
+
+    # 5. Non-object JSON (string)
+    (tmp_path / "job-scalar.result.json").write_text('"just a string"', encoding="utf-8")
+
+    # GET /api/atlas-jobs/results must return 200 and only the valid row
+    resp = client.get("/api/atlas-jobs/results")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["count"] == 1
+    assert data["total"] == 1
+    assert len(data["results"]) == 1
+    assert data["results"][0]["id"] == "job-valid"
+    assert data["results"][0]["host"] == "atlas-runner"
+    assert data["results"][0]["targets"] == 20
+    assert data["results"][0]["filled_translation"] == 18

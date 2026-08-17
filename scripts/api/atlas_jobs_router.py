@@ -63,11 +63,7 @@ def set_host_load_cache(
     """Explicitly set host load cache entry (used by tests and manual warmers)."""
     canonical = atlas_job._canonical_host(host)
     m_ts = time.monotonic() if mono_ts is None else mono_ts
-    i_ts = (
-        datetime.now(UTC).isoformat().replace("+00:00", "Z")
-        if iso_ts is None
-        else iso_ts
-    )
+    i_ts = datetime.now(UTC).isoformat().replace("+00:00", "Z") if iso_ts is None else iso_ts
     _HOST_LOAD_CACHE[canonical] = (data, m_ts, i_ts)
 
 
@@ -100,26 +96,23 @@ def _require_job_id(job_id: str) -> str:
 
 def _read_result_receipt(job_id: str) -> dict[str, Any] | None:
     """Load ``{job_id}.result.json`` only when contained under the registry root."""
-    result_file = atlas_job.result_path(job_id)
-    root_real = os.path.realpath(str(atlas_job.registry_dir()))
-    candidate = os.path.realpath(str(result_file))
-    if not candidate.startswith(root_real + os.sep):
+    try:
+        result_file = atlas_job.result_path(job_id)
+        root_real = os.path.realpath(str(atlas_job.registry_dir()))
+        candidate = os.path.realpath(str(result_file))
+        if not candidate.startswith(root_real + os.sep):
+            return None
+        path = Path(candidate)
+        if not path.is_file():
+            return None
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else None
+    except Exception:
         return None
-    path = Path(candidate)
-    if not path.is_file():
-        return None
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return data if isinstance(data, dict) else None
 
 
 def _canonical_allowed_hosts() -> list[str]:
-    return sorted(
-        {
-            atlas_job._canonical_host(h)
-            for hosts in atlas_job.ALLOWED_HOSTS.values()
-            for h in hosts
-        }
-    )
+    return sorted({atlas_job._canonical_host(h) for hosts in atlas_job.ALLOWED_HOSTS.values() for h in hosts})
 
 
 def _probe_host_load_sync(host: str) -> tuple[dict[str, Any] | None, str]:
@@ -208,12 +201,7 @@ def _decode_cursor(cursor: str) -> tuple[str, str] | None:
     try:
         raw = base64.urlsafe_b64decode(cursor.encode("ascii")).decode("utf-8")
         data = json.loads(raw)
-        if (
-            isinstance(data, list)
-            and len(data) == 2
-            and isinstance(data[0], str)
-            and isinstance(data[1], str)
-        ):
+        if isinstance(data, list) and len(data) == 2 and isinstance(data[0], str) and isinstance(data[1], str):
             return data[0], data[1]
     except Exception:
         pass
@@ -293,11 +281,7 @@ def results_jobs(
             if state is not None and item_state != state:
                 continue
 
-            summary_data = (
-                receipt.get("summary")
-                if isinstance(receipt.get("summary"), dict)
-                else {}
-            )
+            summary_data = receipt.get("summary") if isinstance(receipt.get("summary"), dict) else {}
             summary_row: dict[str, Any] = {
                 "id": safe_id,
                 "host": item_host,
@@ -326,12 +310,7 @@ def results_jobs(
         if decoded is None:
             raise HTTPException(status_code=400, detail="invalid cursor")
         cur_closed, cur_id = decoded
-        items = [
-            x
-            for x in items
-            if (str(x.get("closed_at") or ""), str(x.get("id") or ""))
-            < (cur_closed, cur_id)
-        ]
+        items = [x for x in items if (str(x.get("closed_at") or ""), str(x.get("id") or "")) < (cur_closed, cur_id)]
 
     page = items[:limit]
     next_cursor = None
