@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "596dbf2f7c06",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6987-flaky-race",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/review_publisher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/59/6dbf2f7c06/0/metadata.json",
+      "transcript": "/59/6dbf2f7c06/0/full.jsonl",
+      "compact_transcript": "/59/6dbf2f7c06/0/transcript.jsonl",
+      "content_hash": "/59/6dbf2f7c06/0/content_hash.txt",
+      "prompt": "/59/6dbf2f7c06/0/prompt.txt"
+    }
+  ]
+}
