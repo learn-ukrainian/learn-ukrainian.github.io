@@ -44,6 +44,43 @@ def require_compat_target(command_target: str) -> str:
         ) from exc
 
 
+def registered_participant_model(participant: str) -> str | None:
+    """Return the live model pin for an ACP participant from the adapter registry.
+
+    The registry (``ACPX_SUPPORTED_PARTICIPANTS``) is the single source of
+    truth the route resolver enforces; consumers must read it instead of
+    carrying an independently hardcoded slug that goes stale on every model
+    rotation (#6894). Returns None for unknown or deliberately unpinned seats.
+    """
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    entry = ACPX_SUPPORTED_PARTICIPANTS.get(participant)
+    if not entry:
+        return None
+    model = entry.get("model")
+    return str(model) if model else None
+
+
+def resolve_compat_model(command_target: str, model: str | None) -> str | None:
+    """Resolve a legacy ``--model`` value against the live participant registry.
+
+    ``None`` stays ``None`` so the route resolver applies the participant's
+    registered pin — a default can never drift from the registry (#6894).
+    Legacy ``gemini*`` slugs (including retired display labels) aimed at the
+    AGY seat map to that seat's current pin, the only model the seat accepts.
+    Anything else passes through unchanged and is validated loudly by the
+    route resolver.
+    """
+    participant = require_compat_target(command_target)
+    if not model:
+        return None
+    if participant == "agy":
+        pin = registered_participant_model("agy")
+        if pin and model != pin and model.strip().lower().startswith("gemini"):
+            return pin
+    return model
+
+
 # Per-seat default hard timeouts for compat asks (#6877). The generic 300s
 # ceiling is mis-sized for Kimi: K3 is a max-effort-only model whose long
 # deliberation before first output is designed behavior, and the fleet routes

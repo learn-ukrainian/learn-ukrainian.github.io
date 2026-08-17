@@ -42,7 +42,20 @@ from ._review_worktree import (
 
 _DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS = 900
 _NO_TIMEOUT_AGY_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
-_DEFAULT_AGY_MODEL = "gemini-3.7-flash-high"
+
+
+def _default_agy_model() -> str:
+    """The AGY seat's model, read from the live ACP participant registry.
+
+    Never an independently hardcoded slug: the registry pin is what the route
+    resolver enforces, so deriving the default from it makes stale-slug drift
+    impossible (#6894).
+    """
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
+    assert pin is not None  # the agy participant is always pinned
+    return pin
 
 
 def _agy_ask_scratch_cwd() -> Path:
@@ -124,7 +137,7 @@ def ask_agy(
         # Refuse formal/exact-target review on AGY before any worktree or send.
         raise ValueError(AGY_SEALED_REVIEW_UNSUPPORTED)
     effective_model = resolve_model_selection(
-        lane="ask-agy", to_model=to_model, model=None, default=_DEFAULT_AGY_MODEL
+        lane="ask-agy", to_model=to_model, model=None, default=_default_agy_model()
     )
     msg_id = send_message(
         content,
@@ -188,7 +201,7 @@ def process_for_agy(
 
     _ = new_session  # No-op for now; Agy bridge calls are always fresh.
     timeout_val = _resolve_agy_bridge_timeout(no_timeout)
-    model = _extract_target_model(msg) or _DEFAULT_AGY_MODEL
+    model = _extract_target_model(msg) or _default_agy_model()
     effort = requested_effort(msg)
     effort_applied, effort_reason = unsupported_effort_note(
         lane="agy",
@@ -387,7 +400,11 @@ def _extract_target_model(msg: dict) -> str | None:
 
 
 def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
-    """Record an Agy failure as a response message and acknowledge."""
+    """Record an Agy failure as a response message; no ack (#6915).
+
+    The inbound message stays unacknowledged so the failure is retryable;
+    acknowledgement happens only after a successful routed reply.
+    """
     print(f"\n❌ Agy error for message #{message_id}: {reason}")
     from ._ask_contract import failed_response_provenance
 
@@ -403,7 +420,6 @@ def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
         data=data,
         from_model=from_model,
     )
-    acknowledge(message_id)
     record_ask_failure(
         message_id,
         reason,

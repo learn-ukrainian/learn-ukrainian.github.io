@@ -179,19 +179,18 @@ def test_ask_codex_infers_from_claude_agent_name(
     assert captured["from_llm"] == "claude"
 
 
-def test_legacy_gemini_model_slugs_map_to_agy_slugs() -> None:
-    assert (
-        _cli._map_legacy_gemini_model_to_agy("gemini-3.1-pro-preview")
-        == "gemini-3.1-pro-high"
-    )
-    assert (
-        _cli._map_legacy_gemini_model_to_agy("gemini-3.0-flash-preview")
-        == "gemini-3.7-flash-high"
-    )
-    assert (
-        _cli._map_legacy_gemini_model_to_agy("Gemini 3.1 Pro (High)")
-        == "Gemini 3.1 Pro (High)"
-    )
+def test_legacy_gemini_model_slugs_map_to_live_agy_pin() -> None:
+    """Legacy gemini* slugs resolve to the AGY seat's live registry pin (#6894)."""
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+
+    pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
+    assert resolve_compat_model("gemini", "gemini-3.1-pro-preview") == pin
+    assert resolve_compat_model("gemini", "gemini-3.0-flash-preview") == pin
+    assert resolve_compat_model("gemini", "Gemini 3.1 Pro (High)") == pin
+    # No explicit model → None, so the route resolver applies the pin itself.
+    assert resolve_compat_model("gemini", None) is None
 
 
 def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
@@ -223,6 +222,9 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
     assert captured["content"] == "hello"
     assert captured["task_id"] == "task-1"
     assert captured["source"] == "codex"
-    assert captured["model"] == "gemini-3.1-pro-high"
+    # Legacy slugs map to the AGY seat's live registry pin, not a static slug.
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    assert captured["model"] == ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
     assert captured["target"] == "gemini"
     assert captured["stdout_only"] is True

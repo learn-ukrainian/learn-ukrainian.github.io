@@ -25,7 +25,7 @@ from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
 from secret_redactor import redact_text
 
-from ._ask_lifecycle import register_ask
+from ._ask_lifecycle import record_ask_failure, register_ask
 from ._broker import (
     _git_status_snapshot,
     _is_task_locked,
@@ -616,7 +616,12 @@ def _route_gemini_response(msg, message_id, model, response, stdout_only, output
 
 
 def _send_gemini_error(msg, message_id):
-    """Send error message when Gemini process fails without sending a response."""
+    """Notify the sender when Gemini processing fails WITHOUT consuming the message.
+
+    The inbound message stays unacknowledged so a later drain can retry it
+    (#6915): acking here made the queue look drained while no analysis
+    happened.
+    """
     try:
         # Route error back to the actual sender, not always to claude
         reply_to = msg.get("from", "claude")
@@ -625,6 +630,6 @@ def _send_gemini_error(msg, message_id):
             task_id=msg['task_id'], msg_type="error",
             from_llm="gemini", to_llm=reply_to, from_model="gemini-bridge-error"
         )
-        acknowledge(message_id)
+        record_ask_failure(message_id, f"Gemini process failed for message #{message_id}")
     except Exception:
         pass

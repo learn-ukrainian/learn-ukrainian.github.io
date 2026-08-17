@@ -19,7 +19,6 @@ from ._codex import (
     process_all_codex,
     process_for_codex,
 )
-from ._config import GEMINI_DEFAULT_MODEL
 from ._cursor import CURSOR_DEFAULT_MODEL
 from ._db import get_db
 from ._dispatch_wrappers import (
@@ -28,7 +27,7 @@ from ._dispatch_wrappers import (
     handle_dispatch_fix,
     handle_review_deep,
 )
-from ._gemini import converse_gemini, process_and_respond
+from ._gemini import converse_gemini
 from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
     process_for_grok_build,
@@ -52,6 +51,7 @@ from ._opencode import (
     POOL_DEFAULT_VARIANT,
     POOL_MODEL,
 )
+from ._process import process_message_for_recipient
 
 _CALLER_IDENTITY_ENV_HINTS = (
     # Order mirrors _detect_caller_identity_from_env; SESSION_HANDOFF_AGENT is
@@ -65,20 +65,6 @@ _CALLER_IDENTITY_ENV_HINTS = (
     "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
     "GEMINI_SESSION",
 )
-
-_LEGACY_GEMINI_TO_AGY_MODEL = {
-    "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
-    "gemini-3.0-flash-preview": "gemini-3.7-flash-high",
-    "gemini-3.5-flash": "gemini-3.5-flash-high",
-    "gemini-3.6-flash": "gemini-3.6-flash-high",
-    "gemini-3.7-flash": "gemini-3.7-flash-high",
-}
-
-
-def _map_legacy_gemini_model_to_agy(model: str | None) -> str | None:
-    if not model:
-        return None
-    return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
 
 
 def _detect_caller_identity_from_env() -> str | None:
@@ -183,13 +169,18 @@ def _dispatch_interactive(action: str, parts: list[str]):
     elif action == "conv" and len(parts) > 1:
         get_conversation(parts[1])
     elif action == "process" and len(parts) > 1:
-        process_and_respond(int(parts[1]))
+        process_message_for_recipient(int(parts[1]))
     else:
         print("Unknown command or missing arguments.")
 
 
-def process_all_gemini(model: str = GEMINI_DEFAULT_MODEL):
-    """Process ALL unread messages for Gemini in batch."""
+def process_all_gemini(model: str | None = None):
+    """Process ALL unread messages for the Gemini seat (routed to AGY via ACP).
+
+    Each message is routed through its recipient seat's registered ACP
+    participant (#6915); a message is consumed only when the routed seat
+    replies successfully, so failures stay in the inbox for retry.
+    """
     conn = get_db()
     cursor = conn.cursor()
 
@@ -218,9 +209,12 @@ def process_all_gemini(model: str = GEMINI_DEFAULT_MODEL):
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
-            process_and_respond(msg_id, model)
-            success += 1
-            print("    ✅ Done\n")
+            if process_message_for_recipient(msg_id, model=model):
+                success += 1
+                print("    ✅ Done\n")
+            else:
+                failed += 1
+                print("    ❌ Failed (message left unconsumed)\n")
         except Exception as e:
             failed += 1
             print(f"    ❌ Failed: {e}\n")
@@ -517,10 +511,17 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     thread_parser.add_argument("identifier", help="Task ID or numeric message ID")
 
-    # process (for Gemini)
-    proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
+    # process — recipient-derived: routes via the message's To: seat (#6915)
+    proc_parser = subparsers.add_parser(
+        "process",
+        help="Process a broker message via its recipient seat's registered ACP route",
+    )
     proc_parser.add_argument("message_id", type=int, help="Message ID to process")
-    proc_parser.add_argument("--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model")
+    proc_parser.add_argument(
+        "--model",
+        default=None,
+        help="Optional model override; must equal the recipient seat's registered ACP pin",
+    )
     proc_parser.add_argument(
         "--no-timeout",
         dest="no_timeout",
@@ -655,7 +656,10 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
     ask_gemini_parser.add_argument(
-        "--model", default=GEMINI_DEFAULT_MODEL, help="Legacy Gemini model slug; mapped to AGY where needed"
+        "--model",
+        default=None,
+        help="Legacy Gemini model slug; mapped to the AGY seat's live registry pin "
+        "(default: the pin itself — never an independently hardcoded slug)",
     )
     ask_gemini_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_gemini_parser.add_argument(
@@ -721,7 +725,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_agy_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_agy_parser.add_argument(
-        "--to-model", dest="to_model", help="Target Agy model ID (default: gemini-3.7-flash-high)"
+        "--to-model",
+        dest="to_model",
+        help="Target Agy model ID (default: the agy seat's live ACP registry pin)",
     )
     ask_agy_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_agy_parser.add_argument(
@@ -965,8 +971,15 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-all
-    proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
-    proc_all_parser.add_argument("--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model")
+    proc_all_parser = subparsers.add_parser(
+        "process-all",
+        help="Process ALL unread messages for the Gemini seat via its ACP route (agy)",
+    )
+    proc_all_parser.add_argument(
+        "--model",
+        default=None,
+        help="Optional model override; must equal the seat's registered ACP pin",
+    )
 
     # process-claude-all
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
@@ -1279,7 +1292,9 @@ def _dispatch_command(args):
     elif args.command == "thread":
         resolve_thread(args.identifier)
     elif args.command == "process":
-        process_and_respond(args.message_id, args.model, no_timeout=args.no_timeout)
+        process_message_for_recipient(
+            args.message_id, model=args.model, no_timeout=args.no_timeout
+        )
     elif args.command == "process-claude":
         process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
     elif args.command == "process-codex":
@@ -1559,7 +1574,11 @@ def _handle_ask_gemini(args):
     """Compatibility shim: ask-gemini is retired and delegates to ask-agy."""
     if not getattr(args, "stdout_only", False):
         print("⚠️ ask-gemini is retired; routing through ACP participant agy.", file=sys.stderr)
-    args.to_model = _map_legacy_gemini_model_to_agy(getattr(args, "model", None)) or "gemini-3.7-flash-high"
+    from ._acp_compat import resolve_compat_model
+
+    # None (the default) lets the route resolver apply the AGY seat's live
+    # registry pin; legacy gemini* slugs map to that same pin (#6894).
+    args.to_model = resolve_compat_model("gemini", getattr(args, "model", None))
     _handle_acp_compat(args, "gemini")
 
 

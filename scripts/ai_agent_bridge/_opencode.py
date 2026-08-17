@@ -578,7 +578,8 @@ def _handle_opencode_incomplete_turn(
         data=json.dumps(metadata, sort_keys=True),
         from_model=actual_model,
     )
-    acknowledge(message_id)
+    # No ack on failure (#6915): an aborted turn leaves the inbound message
+    # unconsumed/retryable; only a completed reply consumes it.
     record_ask_failure(message_id, f"opencode turn aborted ({detail}: {reason})")
 
 

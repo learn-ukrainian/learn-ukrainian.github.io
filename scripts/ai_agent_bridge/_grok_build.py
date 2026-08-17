@@ -505,7 +505,8 @@ def _handle_grok_build_incomplete_turn(
         data=json.dumps(metadata, sort_keys=True),
         from_model=actual_model,
     )
-    acknowledge(message_id)
+    # No ack on failure (#6915): an incomplete turn leaves the inbound
+    # message unconsumed/retryable; only a completed reply consumes it.
     record_ask_failure(message_id, f"native Grok turn not completed: {detail}")
 
 
@@ -602,7 +603,11 @@ Standing rules for bridge Q&A:
 
 
 def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
-    """Record a Grok Build failure as a response message and acknowledge."""
+    """Record a Grok Build failure as a response message; no ack (#6915).
+
+    The inbound message stays unacknowledged so the failure is retryable;
+    acknowledgement happens only after a successful routed reply.
+    """
     print(f"\nGrok Build error for message #{message_id}: {reason}")
     from ._ask_contract import failed_response_provenance
 
@@ -618,7 +623,6 @@ def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
         data=data,
         from_model=from_model,
     )
-    acknowledge(message_id)
     record_ask_failure(
         message_id,
         reason,
