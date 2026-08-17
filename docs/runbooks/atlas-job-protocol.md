@@ -69,7 +69,7 @@ Optional: `resume` (`idempotent` | `checkpoint` | `never`, default `never`),
 | Sink | What comes back |
 | --- | --- |
 | `git` | Schema-capped receipt (~10 KB allowlist). Reject absolute paths / hostnames / credential-like text. Never commit manifests, slovnyk cache, or `sources.db`. |
-| `restic` | `durable_mirror.py snapshot` → `data/lexicon/runner-mirror/<id>/` then `backup-data.sh backup --execute`. Result field: `backup: {attempted, ok, snapshot_id\|error}`. |
+| `restic` | `durable_mirror.py snapshot` → primary `data/lexicon/runner-mirror/<id>/` then `backup-data.sh backup --execute`. Result field: `backup: {attempted, ok, snapshot_id\|error}`. |
 | `both` | Both of the above. |
 
 Backup failure policy:
@@ -80,6 +80,9 @@ Backup failure policy:
 - Schema-capped git receipt still lands.
 - New restic-sink submits are refused until `backup-data.sh doctor` is green
   (`.restic-sink-blocked` gate).
+- Doctor/backup always target the **primary checkout** (`LU_BACKUP_PROJECT_ROOT`
+  via git common-dir) and load `~/.secrets/learn-ukrainian-backup.env` when
+  present — dispatch worktrees lack `.agent` / `.claude/*-epic` recovery roots.
 
 `pulled` is true only after `pull()` actually ran successfully.
 

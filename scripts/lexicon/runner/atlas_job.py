@@ -76,6 +76,12 @@ _HOSTNAME_HINT = re.compile(
 DEFAULT_TIMEOUT_SECONDS = 86400
 DEFAULT_RUN_ROOT = "/home/ops/atlas-runner"
 DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
+# Same operator env file as ~/.local/bin/learn-ukrainian-backup (launchd wrapper).
+DEFAULT_BACKUP_ENV_FILE = Path.home() / ".secrets" / "learn-ukrainian-backup.env"
+_ENV_ASSIGNMENT = re.compile(
+    r"^(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)=(.*)$"
+)
+_ENV_VAR_REF = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)")
 
 _HOST = None  # set via set_host_adapter(); typed as HostAdapter | None
 
@@ -283,6 +289,31 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def primary_checkout_root() -> Path:
+    """Return the layout-A primary checkout (shared ``.git`` common dir parent).
+
+    Dispatch worktrees lack recovery roots (``.agent``, ``.claude/*-epic``) and
+    must not be used as ``LU_BACKUP_PROJECT_ROOT`` for ``backup-data.sh doctor``.
+    """
+    try:
+        common = subprocess.check_output(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=str(repo_root()),
+            text=True,
+        ).strip()
+        common_path = Path(common)
+        if not common_path.is_absolute():
+            common_path = (repo_root() / common_path).resolve()
+        else:
+            common_path = common_path.resolve()
+        primary = common_path.parent
+        if primary.is_dir():
+            return primary
+    except (OSError, subprocess.CalledProcessError):
+        pass
+    return repo_root()
+
+
 def registry_dir() -> Path:
     override = os.environ.get("ATLAS_JOB_REGISTRY")
     if override:
@@ -391,7 +422,9 @@ def local_pull_dir(job_id: str) -> Path:
 
 def mirror_dir_for(job_id: str) -> Path:
     safe = require_safe_job_id(job_id)
-    return repo_root() / "data" / "lexicon" / "runner-mirror" / safe
+    # Mirror into the primary checkout's data/ so backup-data.sh (which doctors
+    # and backs up LU_BACKUP_PROJECT_ROOT) covers the snapshot.
+    return primary_checkout_root() / "data" / "lexicon" / "runner-mirror" / safe
 
 
 def load_plan(path: Path) -> dict[str, Any]:
@@ -612,30 +645,71 @@ def _python_bin() -> str:
     override = os.environ.get("ATLAS_RE_ENRICH_PYTHON")
     if override:
         return override
-    # Resolve primary checkout .venv via shared git common dir (layout A).
-    try:
-        common = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=str(repo_root()),
-            text=True,
-        ).strip()
-        common_path = Path(common)
-        if not common_path.is_absolute():
-            common_path = (repo_root() / common_path).resolve()
-        primary = common_path.parent
-        candidate = primary / ".venv" / "bin" / "python"
-        if candidate.is_file():
-            return str(candidate)
-    except (OSError, subprocess.CalledProcessError):
-        pass
+    candidate = primary_checkout_root() / ".venv" / "bin" / "python"
+    if candidate.is_file():
+        return str(candidate)
     fallback = repo_root() / ".venv" / "bin" / "python"
     return str(fallback)
+
+
+def _expand_env_value(value: str, env: dict[str, str]) -> str:
+    """Expand ``~``, ``$VAR``, and ``${VAR}`` against ``env`` (order-preserving)."""
+    expanded = os.path.expanduser(value)
+
+    def repl(match: re.Match[str]) -> str:
+        name = match.group(1) or match.group(2)
+        assert name is not None
+        return env.get(name, match.group(0))
+
+    previous = None
+    while previous != expanded:
+        previous = expanded
+        expanded = _ENV_VAR_REF.sub(repl, expanded)
+    return expanded
+
+
+def _load_backup_env_file(path: Path) -> dict[str, str]:
+    """Parse KEY=VALUE assignments from the operator backup env file (no shell)."""
+    loaded: dict[str, str] = {}
+    text = path.read_text(encoding="utf-8")
+    merged = dict(os.environ)
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        match = _ENV_ASSIGNMENT.match(stripped)
+        if match is None:
+            continue
+        key, raw = match.group(1), match.group(2).strip()
+        if (raw.startswith('"') and raw.endswith('"')) or (
+            raw.startswith("'") and raw.endswith("'")
+        ):
+            raw = raw[1:-1]
+        value = _expand_env_value(raw, merged)
+        merged[key] = value
+        loaded[key] = value
+    return loaded
+
+
+def _backup_subprocess_env() -> dict[str, str]:
+    """Env for backup-data.sh: operator secrets + primary recovery checkout."""
+    env = dict(os.environ)
+    env_file = Path(
+        os.environ.get("LU_BACKUP_ENV_FILE", str(DEFAULT_BACKUP_ENV_FILE))
+    ).expanduser()
+    if env_file.is_file():
+        env.update(_load_backup_env_file(env_file))
+    # Explicit override wins; otherwise always doctor/backup the primary tree.
+    if "LU_BACKUP_PROJECT_ROOT" not in os.environ:
+        env["LU_BACKUP_PROJECT_ROOT"] = str(primary_checkout_root())
+    return env
 
 
 def _run_backup_doctor() -> int:
     return subprocess.call(
         ["bash", str(repo_root() / "scripts" / "backup-data.sh"), "doctor"],
         cwd=str(repo_root()),
+        env=_backup_subprocess_env(),
     )
 
 
@@ -757,6 +831,7 @@ def run_restic_sink(
         capture_output=True,
         text=True,
         check=False,
+        env=_backup_subprocess_env(),
     )
     if backup_proc.returncode != 0:
         backup["error"] = (backup_proc.stderr or backup_proc.stdout or "backup --execute failed").strip()[
