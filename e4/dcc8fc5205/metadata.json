@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e4dcc8fc5205",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6980-taskid-guard",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_dispatch_wrappers.py",
+    "scripts/delegate.py",
+    "tests/test_ab_dispatch_wrappers.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e4/dcc8fc5205/0/metadata.json",
+      "transcript": "/e4/dcc8fc5205/0/full.jsonl",
+      "compact_transcript": "/e4/dcc8fc5205/0/transcript.jsonl",
+      "content_hash": "/e4/dcc8fc5205/0/content_hash.txt",
+      "prompt": "/e4/dcc8fc5205/0/prompt.txt"
+    }
+  ]
+}
