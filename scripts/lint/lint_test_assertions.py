@@ -22,8 +22,10 @@ from __future__ import annotations
 
 import argparse
 import ast
+import io
 import re
 import sys
+import tokenize
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -50,9 +52,15 @@ _SYNTHETIC_EPIC_IDS: frozenset[str] = frozenset(
     }
 )
 
-# Inline directive comments that explicitly allow hard-coded literals with line-scoped intent
+# Inline directive comments that explicitly allow hard-coded literals with line-scoped intent.
+# Directives require a non-empty reason after the colon (e.g. 'allow-hardcoded-epic: <reason>'),
+# or a standard noqa tag (e.g. 'noqa: epic-id', 'noqa: stale-pinned-epic').
 _ALLOW_DIRECTIVE_RE = re.compile(
-    r"#\s*(?:noqa:\s*epic-id|noqa:\s*stale-pinned-epic|allow-hardcoded-epic|designated-fixture)\b",
+    r"#\s*(?:"
+    r"noqa:\s*(?:epic-id|stale-pinned-epic)\b"
+    r"|"
+    r"(?:allow-hardcoded-epic|designated-fixture)\s*:\s*\S+"
+    r")",
     re.IGNORECASE,
 )
 
@@ -205,16 +213,34 @@ def _find_positive_epic_violations(test_node: ast.AST, env: _Environment, polari
     return set()
 
 
-def _has_allow_directive(lines: list[str], start_line: int, end_line: int) -> bool:
-    """Check if any line from start_line to end_line or preceding line contains an explicit allow directive."""
+def _extract_suppressed_comment_lines(source_code: str) -> set[int]:
+    """Parse comments via Python tokenize module and extract line numbers with valid allow directives."""
+    suppressed_lines: set[int] = set()
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(source_code).readline)
+        for tok in tokens:
+            if tok.type == tokenize.COMMENT and _ALLOW_DIRECTIVE_RE.search(tok.string):
+                suppressed_lines.add(tok.start[0])
+    except (tokenize.TokenError, IndentationError, SyntaxError):
+        pass
+    return suppressed_lines
+
+
+def _has_allow_directive(
+    suppressed_lines: set[int],
+    lines: list[str],
+    start_line: int,
+    end_line: int,
+) -> bool:
+    """Check if any line from start_line to end_line or preceding standalone comment line contains an allow directive."""
     # Check lines of the assert statement itself (start_line to end_line)
-    for idx in range(max(0, start_line - 1), min(len(lines), end_line)):
-        if _ALLOW_DIRECTIVE_RE.search(lines[idx]):
+    for lineno in range(start_line, end_line + 1):
+        if lineno in suppressed_lines:
             return True
     # Check immediate preceding line ONLY IF it is a standalone comment line
-    if start_line >= 2:
+    if start_line >= 2 and (start_line - 1) in suppressed_lines:
         prev_line = lines[start_line - 2].strip()
-        if prev_line.startswith("#") and _ALLOW_DIRECTIVE_RE.search(prev_line):
+        if prev_line.startswith("#"):
             return True
     return False
 
@@ -236,6 +262,7 @@ def _bind_targets(targets: Sequence[ast.AST], value: object | None, env: _Enviro
 def _scan_block(
     stmts: Sequence[ast.stmt],
     env: _Environment,
+    suppressed_lines: set[int],
     lines: list[str],
     content: str,
     rel_path: str,
@@ -258,7 +285,7 @@ def _scan_block(
         elif isinstance(stmt, ast.Assert):
             lineno = stmt.lineno
             end_lineno = getattr(stmt, "end_lineno", lineno) or lineno
-            if not _has_allow_directive(lines, lineno, end_lineno):
+            if not _has_allow_directive(suppressed_lines, lines, lineno, end_lineno):
                 epics = _find_positive_epic_violations(stmt.test, env, polarity=True)
                 if epics:
                     snippet = (ast.get_source_segment(content, stmt) or "").strip()
@@ -278,22 +305,22 @@ def _scan_block(
                         )
         elif isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
             func_env = _Environment(parent=env)
-            _scan_block(stmt.body, func_env, lines, content, rel_path, violations)
+            _scan_block(stmt.body, func_env, suppressed_lines, lines, content, rel_path, violations)
         elif isinstance(stmt, ast.ClassDef):
             class_env = _Environment(parent=env)
-            _scan_block(stmt.body, class_env, lines, content, rel_path, violations)
+            _scan_block(stmt.body, class_env, suppressed_lines, lines, content, rel_path, violations)
         elif isinstance(stmt, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.With, ast.AsyncWith)):
-            _scan_block(stmt.body, env, lines, content, rel_path, violations)
+            _scan_block(stmt.body, env, suppressed_lines, lines, content, rel_path, violations)
             if hasattr(stmt, "orelse") and stmt.orelse:
-                _scan_block(stmt.orelse, env, lines, content, rel_path, violations)
+                _scan_block(stmt.orelse, env, suppressed_lines, lines, content, rel_path, violations)
         elif isinstance(stmt, ast.Try):
-            _scan_block(stmt.body, env, lines, content, rel_path, violations)
+            _scan_block(stmt.body, env, suppressed_lines, lines, content, rel_path, violations)
             for handler in stmt.handlers:
-                _scan_block(handler.body, env, lines, content, rel_path, violations)
+                _scan_block(handler.body, env, suppressed_lines, lines, content, rel_path, violations)
             if stmt.orelse:
-                _scan_block(stmt.orelse, env, lines, content, rel_path, violations)
+                _scan_block(stmt.orelse, env, suppressed_lines, lines, content, rel_path, violations)
             if stmt.finalbody:
-                _scan_block(stmt.finalbody, env, lines, content, rel_path, violations)
+                _scan_block(stmt.finalbody, env, suppressed_lines, lines, content, rel_path, violations)
 
 
 def scan_file(file_path: Path, repo_root: Path | None = None) -> list[AssertionViolation]:
@@ -308,9 +335,10 @@ def scan_file(file_path: Path, repo_root: Path | None = None) -> list[AssertionV
         return []
 
     lines = content.splitlines()
+    suppressed_lines = _extract_suppressed_comment_lines(content)
     violations: list[AssertionViolation] = []
     module_env = _Environment()
-    _scan_block(tree.body, module_env, lines, content, rel_path, violations)
+    _scan_block(tree.body, module_env, suppressed_lines, lines, content, rel_path, violations)
 
     return violations
 

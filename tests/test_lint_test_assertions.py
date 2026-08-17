@@ -170,6 +170,46 @@ def test_lint_respects_inline_directives(tmp_path: Path) -> None:
     assert violations == []
 
 
+def test_lint_rejects_bare_or_empty_directive(tmp_path: Path) -> None:
+    """Bare directives without a reason or with an empty reason must NOT suppress violations."""
+    test_file = tmp_path / "test_example.py"
+    test_file.write_text(
+        "def test_bare():\n"
+        '    assert "epic:4707" in out  # allow-hardcoded-epic\n'
+        '    assert "epic:5703" in out  # allow-hardcoded-epic:\n'
+        "    # designated-fixture\n"
+        '    assert "epic:6943" in out\n'
+        "    # designated-fixture:\n"
+        '    assert "epic:4387" in out\n',
+        encoding="utf-8",
+    )
+
+    violations = lint_test_assertions.scan_file(test_file, repo_root=tmp_path)
+    assert len(violations) == 4
+    epics = {v.epic_id for v in violations}
+    assert "epic:4707" in epics  # allow-hardcoded-epic: test linter detection
+    assert "epic:5703" in epics  # allow-hardcoded-epic: test linter detection
+    assert "epic:6943" in epics  # allow-hardcoded-epic: test linter detection
+    assert "epic:4387" in epics  # allow-hardcoded-epic: test linter detection
+
+
+def test_lint_rejects_directive_inside_string(tmp_path: Path) -> None:
+    """Directive text inside a string literal (e.g. assertion message) must NOT suppress violations."""
+    test_file = tmp_path / "test_example.py"
+    test_file.write_text(
+        "def test_in_string():\n"
+        '    assert "epic:4707" in out, "# allow-hardcoded-epic: message string"\n'
+        '    assert "epic:5703" in out, "# designated-fixture: in string message"\n',
+        encoding="utf-8",
+    )
+
+    violations = lint_test_assertions.scan_file(test_file, repo_root=tmp_path)
+    assert len(violations) == 2
+    epics = {v.epic_id for v in violations}
+    assert "epic:4707" in epics  # allow-hardcoded-epic: test linter detection
+    assert "epic:5703" in epics  # allow-hardcoded-epic: test linter detection
+
+
 def test_lint_cli_main_exit_codes(tmp_path: Path, capsys) -> None:
     """CLI returns 0 on clean scan and 1 on violations."""
     clean_file = tmp_path / "test_clean.py"
