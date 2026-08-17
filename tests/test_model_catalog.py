@@ -317,7 +317,7 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
 
 def test_orchestrator_seats_include_agy_flash_37_high():
     seats = load_model_catalog()["orchestrator_seats"]
-    assert set(seats) >= {"claude", "grok", "agy", "codex"}
+    assert set(seats) >= {"claude", "grok", "agy", "codex", "cursor"}
     # codex was dropped as a DRIVER 2026-07-22 (272K window not worth session rollover
     # overhead), then re-added 2026-07-23 as the named harness/infra/devops alternate:
     # HydrationCapsuleV1's score-from-memory + ~100ms capsule hydrate changed that
@@ -330,6 +330,12 @@ def test_orchestrator_seats_include_agy_flash_37_high():
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
     assert seats["claude"]["model_id"] == "claude-fable-5"
     assert seats["grok"]["fallback_model_id"] == "grok-4.6"
+    assert seats["cursor"]["model_id"] == "auto"
+    assert seats["cursor"]["effort"] == "high"
+    assert seats["cursor"]["escalate_model_id"] == "gpt-5.6-sol"
+    assert seats["cursor"]["escalate_effort"] == "xhigh"
+    assert seats["cursor"]["auto_allowlist"] == ["grok-4.6", "composer-2.5"]
+    assert seats["cursor"]["attestation_rule"] == "driver_of_record_and_cf_require_attested_resolved_model"
 
 
 def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
@@ -410,6 +416,84 @@ def test_catalog_rejects_bare_cursor_model_identity():
     broken["review_candidates"]["composer-2.5"]["model_id"] = "auto"
     with pytest.raises(ModelCatalogError, match="concrete Cursor model id"):
         validate_catalog(broken)
+
+
+def test_catalog_rejects_cursor_orchestrator_without_allowlist():
+    broken = deepcopy(load_model_catalog())
+    del broken["orchestrator_seats"]["cursor"]["auto_allowlist"]
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist"):
+        validate_catalog(broken)
+
+
+def test_catalog_rejects_cursor_orchestrator_with_unknown_or_retired_allowlist_model():
+    broken = deepcopy(load_model_catalog())
+    broken["orchestrator_seats"]["cursor"]["auto_allowlist"].append("unknown-model")
+    with pytest.raises(ModelCatalogError, match=r"unknown model 'unknown-model'"):
+        validate_catalog(broken)
+
+    broken_retired = deepcopy(load_model_catalog())
+    broken_retired["orchestrator_seats"]["cursor"]["auto_allowlist"].append("grok-4.5")
+    with pytest.raises(ModelCatalogError, match=r"must reference active models, got 'grok-4\.5'"):
+        validate_catalog(broken_retired)
+
+
+def test_catalog_rejects_cursor_orchestrator_without_attestation_rule():
+    broken = deepcopy(load_model_catalog())
+    del broken["orchestrator_seats"]["cursor"]["attestation_rule"]
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.attestation_rule"):
+        validate_catalog(broken)
+
+
+def test_catalog_rejects_cursor_orchestrator_non_auto_model_id():
+    broken = deepcopy(load_model_catalog())
+    broken["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.model_id must be 'auto'"):
+        validate_catalog(broken)
+
+
+def test_catalog_rejects_cursor_auto_as_formal_review_identity():
+    # In review_scheduler.endpoints
+    broken_ep = deepcopy(load_model_catalog())
+    broken_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
+    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor must remain formal_review_eligible: false"):
+        validate_catalog(broken_ep)
+
+    broken_ep_models = deepcopy(load_model_catalog())
+    broken_ep_models["review_scheduler"]["endpoints"]["cursor"]["models"] = ["auto"]
+    with pytest.raises(ModelCatalogError, match=r"cannot treat 'auto' as a formal review identity"):
+        validate_catalog(broken_ep_models)
+
+    # In formal_cf_defaults
+    broken_cf = deepcopy(load_model_catalog())
+    broken_cf["formal_cf_defaults"]["cursor"] = {"model_id": "auto", "effort": "high"}
+    with pytest.raises(ModelCatalogError, match=r"cannot use 'auto' as formal CF default"):
+        validate_catalog(broken_cf)
+
+    # In review_candidates (cursor transport)
+    broken_rc = deepcopy(load_model_catalog())
+    broken_rc["review_candidates"]["cursor-auto"] = {
+        "model_id": "auto",
+        "route": "cursor",
+        "transport": "cursor",
+        "invocation": ".venv/bin/python scripts/delegate.py dispatch --agent cursor",
+        "review_profiles": ["code", "infra"],
+        "capabilities": ["code_review"],
+    }
+    with pytest.raises(ModelCatalogError, match=r"requires a concrete Cursor model id, not 'auto'"):
+        validate_catalog(broken_rc)
+
+    # In review_candidates (generic transport)
+    broken_rc_gen = deepcopy(load_model_catalog())
+    broken_rc_gen["review_candidates"]["grok-auto"] = {
+        "model_id": "auto",
+        "route": "grok",
+        "transport": "native_grok",
+        "invocation": ".venv/bin/python scripts/delegate.py dispatch --agent grok",
+        "review_profiles": ["code", "infra"],
+        "capabilities": ["code_review"],
+    }
+    with pytest.raises(ModelCatalogError, match=r"cannot use 'auto' as a formal review candidate"):
+        validate_catalog(broken_rc_gen)
 
 
 def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
