@@ -37,6 +37,7 @@ REPO = "learn-ukrainian/learn-ukrainian.github.io"
 
 
 def test_schema_loads_and_fixture_validates():
+    """FX-10 design-only: fixture projection stays mutation:false / FOUNDATION_COMPLETE."""
     schema = load_schema()
     assert schema["properties"]["schema_version"]["const"] == SCHEMA_VERSION
     payload = json.loads(FIXTURE.read_text(encoding="utf-8"))
@@ -47,6 +48,7 @@ def test_schema_loads_and_fixture_validates():
 
 
 def test_identity_serialization_is_collision_safe():
+    """FX-01: work_id serialization stays collision-safe across sources."""
     a = make_work_id("public-monitor", REPO, "issue", "1")
     b = make_work_id("private-local-adapter", REPO, "issue", "1")
     assert a != b
@@ -55,6 +57,7 @@ def test_identity_serialization_is_collision_safe():
 
 
 def test_saved_view_rejects_free_text_and_private_keys():
+    """FX-09: saved-view allowlist rejects free-text and private endpoint keys."""
     with pytest.raises(SchemaValidationError):
         parse_saved_view_params({"q": "secret search"})
     with pytest.raises(SchemaValidationError):
@@ -1731,6 +1734,7 @@ def test_fleet_reviews_repository_filter_before_hard_cap():
 
 
 def test_relations_and_cycle_detection():
+    """FX-04: relationship extraction and dependency-cycle detection."""
     body = "This blocks #2 and is blocked by #3. Duplicate of #4. Superseded-by: #5"
     rels = extract_body_relations(body, repository_id=REPO, self_number=1)
     types = {r["type"] for r in rels}
@@ -1841,6 +1845,7 @@ def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
 
 
 def test_health_never_uses_activity_and_pr_rules():
+    """FX-05: health is rule-derived; activity volume is never health evidence."""
     pr_fail = {
         "resource_kind": "pr",
         "lifecycle": "open",
@@ -2100,7 +2105,7 @@ def test_fetch_fleet_reviews_production_default_loader():
 
 
 def test_public_source_envelope_independent_degradation_matrix():
-    """Verify source envelope status classification under various section health states (#6849)."""
+    """FX-02 adjacent: public source envelope degrades independently per section (#6849)."""
 
     def _base_sections(issues_st="ok", prs_st="ok"):
         return {
@@ -2155,7 +2160,9 @@ def test_public_source_envelope_independent_degradation_matrix():
 
 
 def test_missing_streams_cache_and_simulated_restart_behavior():
-    """Simulate missing streams cache at Monitor start:
+    """FX-03 adjacent: missing streams → UNKNOWN health; envelope stays degraded (#6849).
+
+    Simulate missing streams cache at Monitor start:
     - issues derive UNKNOWN health / INSPECT_UNKNOWN action (honest health)
     - public PRs with real signals sort ahead of UNKNOWN issues
     - source envelope is degraded (not unavailable)
