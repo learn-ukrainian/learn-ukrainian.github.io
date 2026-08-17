@@ -1,0 +1,13 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-6968-test-guards
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Delta on your PR #6972 (worktree .worktrees/dispatch/agy/infra-6968-test-guards, head b541b92920): re-review resolved all 3 prior findings but found ONE new blocker in your suppression matcher — scripts/lint/lint_test_assertions.py:54 searches raw source lines, so (a) a bare '# allow-hardcoded-epic' with NO reason suppresses, and (b) the directive text inside an assertion-message STRING suppresses (both reviewer probes returned []). Unit: ONE commit — parse actual COMMENT tokens (Python tokenize module: token.type==COMMENT), require 'allow-hardcoded-epic: <non-empty reason>' (reject bare/empty-reason), and add BOTH reviewer probes as red-then-green tests (bare directive must NOT suppress; directive-in-string must NOT suppress; proper comment-with-reason must suppress). Verify existing suppressions in the 11 migrated files still parse (they carry reasons — confirm with the lint CLI, quote zero). Acceptance: guard+lint suites green via /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest; lint CLI zero; ruff clean. Conventional commit fix(lint): comment-token suppression parsing with required reason (#6968); push. NO auto-merge. Evidence preamble binds (#M-4).

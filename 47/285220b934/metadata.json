@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "47285220b934",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6968-test-guards",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lint/lint_test_assertions.py",
+    "tests/test_lint_test_assertions.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/47/285220b934/0/metadata.json",
+      "transcript": "/47/285220b934/0/full.jsonl",
+      "compact_transcript": "/47/285220b934/0/transcript.jsonl",
+      "content_hash": "/47/285220b934/0/content_hash.txt",
+      "prompt": "/47/285220b934/0/prompt.txt"
+    }
+  ]
+}
