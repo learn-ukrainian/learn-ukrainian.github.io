@@ -248,39 +248,121 @@ def _assert_acpx_env_overrides(env: dict, *, expected: dict[str, str]) -> None:
     )
 
 
+def _fake_node_binary(directory: Path, *, version: str) -> Path:
+    """Writable ``node`` stub that answers ``--version`` with a Node semver line."""
+    directory.mkdir(parents=True, exist_ok=True)
+    node = directory / "node"
+    node.write_text(
+        "#!/bin/sh\n"
+        'if [ "$1" = "--version" ]; then printf "%s\\n" '
+        f"'{version}'; exit 0; fi\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    node.chmod(0o755)
+    return node
+
+
+def _isolate_node_fallbacks(monkeypatch, *roots: Path) -> None:
+    """Disable keg + host fallbacks except the supplied dirs (hermetic)."""
+    monkeypatch.setattr(acpx_module, "_versioned_node_keg_dirs", lambda _major: ())
+    monkeypatch.setattr(acpx_module, "_NODE_HOST_BIN_DIRS", tuple(roots))
+
+
+def test_resolve_host_node_skips_wrong_version_on_path_for_contract_fallback(
+    tmp_path, monkeypatch
+):
+    """#6953 CF: wrong-version PATH node is rejected; contract fallback wins."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    wrong = _fake_node_binary(tmp_path / "wrong", version=f"v{required + 4}.0.0")
+    correct = _fake_node_binary(tmp_path / "correct", version=f"v{required}.14.0")
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str(wrong) if name == "node" else None,
+    )
+    _isolate_node_fallbacks(monkeypatch, correct.parent)
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == correct.resolve()
+
+    script = tmp_path / "acpx"
+    script.write_text("#!/usr/bin/env node\n", encoding="utf-8")
+    script.chmod(0o755)
+    argv = acpx_module._acpx_spawn_argv(str(script), adapter_label="test")
+    assert argv[0] == str(correct.resolve())
+    env = acpx_module._acpx_runtime_env_overrides(adapter_label="test")
+    assert env["PATH"].split(os.pathsep)[0] == str(correct.parent.resolve())
+
+
+def test_resolve_host_node_rejects_masquerading_non_node_executable(
+    tmp_path, monkeypatch
+):
+    """#6953 CF: a shell script named ``node`` is not admitted."""
+    impostor = tmp_path / "node"
+    impostor.write_text("#!/bin/sh\nexec /bin/echo stub-node\n", encoding="utf-8")
+    impostor.chmod(0o755)
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str(impostor) if name == "node" else None,
+    )
+    _isolate_node_fallbacks(monkeypatch)
+
+    with pytest.raises(AcpxShadowRefusalError, match=r"no Node \d+\.x binary"):
+        acpx_module._resolve_host_node_binary(adapter_label="test")
+
+
+def test_resolve_host_node_fails_loudly_when_none_qualify(tmp_path, monkeypatch):
+    """#6953 CF: every candidate wrong/non-Node → loud refusal."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    wrong = _fake_node_binary(tmp_path / "wrong", version=f"v{required + 1}.0.0")
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str(wrong) if name == "node" else None,
+    )
+    _isolate_node_fallbacks(monkeypatch)
+
+    with pytest.raises(
+        AcpxShadowRefusalError,
+        match=rf"no Node {required}\.x binary.*--version matching \.nvmrc",
+    ):
+        acpx_module._resolve_host_node_binary(adapter_label="test")
+
+
 def test_acpx_spawn_argv_pins_absolute_node_when_shebang_uses_env(tmp_path, monkeypatch):
     """#6953: jail PATH=/usr/bin:/bin must not yield ``env: node: No such file``."""
+    # Resolve the real contract node before hermetic PATH isolation.
+    host_node = acpx_module._resolve_host_node_binary(adapter_label="test-host")
+
+    required = acpx_module._required_node_major(adapter_label="test")
     script = tmp_path / "acpx"
     script.write_text("#!/usr/bin/env node\nconsole.log('ok')\n", encoding="utf-8")
     script.chmod(0o755)
-    node = tmp_path / "node"
-    node.write_text("#!/bin/sh\nexec /bin/echo stub-node\n", encoding="utf-8")
-    node.chmod(0o755)
-    monkeypatch.setattr(acpx_module.shutil, "which", lambda name: str(node) if name == "node" else None)
-    monkeypatch.setattr(acpx_module, "_NODE_HOST_BIN_DIRS", ())
+    node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str(node) if name == "node" else None,
+    )
+    _isolate_node_fallbacks(monkeypatch)
 
     argv = acpx_module._acpx_spawn_argv(str(script), adapter_label="test")
     assert argv == [str(node.resolve()), str(script.resolve())]
 
-    # Ambient PATH lacks node; absolute argv still executes.
-    env = {"PATH": "/usr/bin:/bin", "HOME": str(tmp_path)}
-    # Real host node is required to evaluate the JS shebang script; prove the
-    # probe helper survives a stripped PATH by using the runtime env override.
-    host_node = acpx_module._resolve_host_node_binary(adapter_label="test-host")
     monkeypatch.setattr(
         acpx_module.shutil,
         "which",
         lambda name: str(host_node) if name == "node" else None,
     )
-    monkeypatch.setattr(acpx_module, "_NODE_HOST_BIN_DIRS", (host_node.parent,))
-    # Point at the real project-local acpx when present.
+    _isolate_node_fallbacks(monkeypatch, host_node.parent)
     primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/node_modules/.bin/acpx")
     if not primary.is_file():
         pytest.skip("project-local acpx not installed")
-    jail_env = acpx_module._acpx_runtime_env_overrides()
-    jail_env["PATH"] = "/usr/bin:/bin"  # ambient stripped; argv carries node
-    spawn = acpx_module._acpx_spawn_argv(str(primary))
-    assert spawn[0].endswith("/node") or Path(spawn[0]).name == "node"
+    jail_env = acpx_module._acpx_runtime_env_overrides(adapter_label="test-host")
+    spawn = acpx_module._acpx_spawn_argv(str(primary), adapter_label="test-host")
+    assert Path(spawn[0]).resolve() == host_node.resolve()
     proc = subprocess.run(
         [*spawn, "--version"],
         capture_output=True,
@@ -2293,12 +2375,17 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
 ):
     _stub_binary(monkeypatch, tmp_path)
     binaries = {}
+    required = acpx_module._required_node_major(adapter_label="test")
     for name in ("node", provider_binary):
         path = tmp_path / name
-        path.write_text("#!/bin/sh\n", encoding="utf-8")
-        path.chmod(0o755)
+        if name == "node":
+            path = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
+        else:
+            path.write_text("#!/bin/sh\n", encoding="utf-8")
+            path.chmod(0o755)
         binaries[name] = str(path)
     monkeypatch.setattr(acpx_module.shutil, "which", lambda name: binaries.get(name))
+    _isolate_node_fallbacks(monkeypatch)
     monkeypatch.setattr(
         acpx_module,
         "_probe_participant_cli_compatibility",
@@ -2555,16 +2642,17 @@ def test_probe_participant_reachability_flags_deepseek_when_opencode_is_missing(
 
 def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, monkeypatch):
     _stub_binary(monkeypatch, tmp_path)
+    required = acpx_module._required_node_major(adapter_label="test")
     agy = tmp_path / "agy"
-    node = tmp_path / "node"
-    for path in (agy, node):
-        path.write_text("#!/bin/sh\n", encoding="utf-8")
-        path.chmod(0o755)
+    agy.write_text("#!/bin/sh\n", encoding="utf-8")
+    agy.chmod(0o755)
+    node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
     monkeypatch.setattr(
         acpx_module.shutil,
         "which",
         lambda name: str({"agy": agy, "node": node}[name]),
     )
+    _isolate_node_fallbacks(monkeypatch)
     monkeypatch.setattr(
         acpx_module,
         "_probe_participant_cli_compatibility",
@@ -2593,16 +2681,17 @@ def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, 
 
 def test_new_fleet_discussion_seat_rejects_missing_provider_capability(tmp_path, monkeypatch):
     _stub_binary(monkeypatch, tmp_path)
+    required = acpx_module._required_node_major(adapter_label="test")
     agy = tmp_path / "agy"
-    node = tmp_path / "node"
-    for path in (agy, node):
-        path.write_text("#!/bin/sh\n", encoding="utf-8")
-        path.chmod(0o755)
+    agy.write_text("#!/bin/sh\n", encoding="utf-8")
+    agy.chmod(0o755)
+    node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
     monkeypatch.setattr(
         acpx_module.shutil,
         "which",
         lambda name: str({"agy": agy, "node": node}[name]),
     )
+    _isolate_node_fallbacks(monkeypatch)
     monkeypatch.setattr(
         acpx_module,
         "_probe_participant_cli_compatibility",
@@ -2649,8 +2738,12 @@ def test_acpx_compatibility_probe_checks_global_and_builtin_exec_surfaces(monkey
             self.returncode = returncode
 
     root_help = " ".join((*acpx_module._ACPX_REQUIRED_GLOBAL_FLAGS, "codex participant"))
+    required = acpx_module._required_node_major(adapter_label="test")
 
     def _compatible(argv, **_kwargs):
+        # Compatibility probes build a Node-bearing child PATH (#6953).
+        if Path(argv[0]).name == "node" and argv[-1] == "--version":
+            return _Proc(f"v{required}.14.0\n")
         if argv[-1] == "--version":
             return _Proc("0.14.7\n")
         if argv[1:] == ["--help"]:
@@ -2823,8 +2916,12 @@ def test_probe_grok_cli_compatibility_checks_required_command_surface(monkeypatc
             self.returncode = returncode
 
     agent_help = " ".join(acpx_module._GROK_REQUIRED_AGENT_FLAGS)
+    required = acpx_module._required_node_major(adapter_label="test")
 
     def _compatible(argv, **_kwargs):
+        # Grok help rides ``_probe_cli_help`` → Node-bearing PATH (#6953).
+        if Path(argv[0]).name == "node" and argv[-1] == "--version":
+            return _Proc(f"v{required}.14.0\n")
         if argv[-1] == "--version":
             return _Proc("grok 0.3.7 (rolling)\n")
         if argv[1:] == ["agent", "--help"]:

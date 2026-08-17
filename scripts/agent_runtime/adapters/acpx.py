@@ -197,11 +197,17 @@ _DEFAULT_ACPX_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 _ACPX_BINARY = _DEFAULT_ACPX_BINARY
 # Fixed host install locations for Node. Ambient PATH alone is not enough:
 # Cursor sandboxes / review jails often set PATH=/usr/bin:/bin, and the
-# project-local acpx shim is ``#!/usr/bin/env node`` (#6953).
+# project-local acpx shim is ``#!/usr/bin/env node`` (#6953). Linked
+# Homebrew ``node`` is often newer than ``.nvmrc``; keg-only
+# ``node@<major>`` paths are appended at resolve time from that contract.
 _NODE_HOST_BIN_DIRS = (
     Path("/opt/homebrew/bin"),
     Path("/usr/local/bin"),
     Path.home() / ".hermes" / "node" / "bin",
+)
+# ``node --version`` prints a single line like ``v22.23.2``.
+_NODE_VERSION_LINE_RE = re.compile(
+    r"^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+][0-9A-Za-z.-]+)?$"
 )
 _CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp"
 _CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
@@ -841,18 +847,75 @@ class AcpxShadowRefusalError(ValueError):
         self.failure_code = failure_code
 
 
-def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
-    """Resolve an absolute ``node`` for ACPX shebang scripts.
+def _required_node_major(*, adapter_label: str = "ACPX") -> int:
+    """Return the repo Node major from ``.nvmrc`` (engines pin the same major).
 
-    Prefer PATH when it already contains a usable ``node``, then fall back to
-    fixed host install locations. Never invent a Node runtime or consult an
-    unreviewed global acpx install as a substitute.
+    Read from the adapter source checkout (``Path(__file__)``), not the
+    patchable ``_REPO_ROOT`` used for project-local acpx binary resolution.
     """
+    nvmrc = Path(__file__).resolve().parents[3] / ".nvmrc"
+    try:
+        raw = nvmrc.read_text(encoding="utf-8").strip().splitlines()[0].strip()
+    except (OSError, IndexError) as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: cannot read Node major from {nvmrc}",
+        ) from exc
+    raw = raw.lstrip("vV").strip()
+    major_token = raw.split(".", 1)[0]
+    if not major_token.isdigit():
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: .nvmrc Node major is not an integer: {raw!r}",
+        )
+    return int(major_token)
+
+
+def _versioned_node_keg_dirs(required_major: int) -> tuple[Path, ...]:
+    """Homebrew keg-only ``node@<major>`` bins (not linked into ``*/bin``)."""
+    return (
+        Path(f"/opt/homebrew/opt/node@{required_major}/bin"),
+        Path(f"/usr/local/opt/node@{required_major}/bin"),
+    )
+
+
+def _probe_node_semver(candidate: Path) -> tuple[int, int, int] | None:
+    """Run ``<candidate> --version`` once; return semver if it is Node-shaped."""
+    try:
+        proc = subprocess.run(
+            [str(candidate), "--version"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    observed = (proc.stdout or "").strip() or (proc.stderr or "").strip()
+    if not observed:
+        return None
+    first = observed.splitlines()[0].strip()
+    match = _NODE_VERSION_LINE_RE.fullmatch(first)
+    if match is None:
+        return None
+    return int(match.group(1)), int(match.group(2)), int(match.group(3))
+
+
+def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
+    """Resolve an absolute contract-matching ``node`` for ACPX shebang scripts.
+
+    Prefer PATH when it already contains a usable ``node``, then fall back
+    through Homebrew keg-only ``node@<major>`` (from ``.nvmrc``) and the
+    fixed host install locations. Each candidate is validated once via
+    ``node --version`` (Node semver + major contract). Never invent a Node
+    runtime or consult an unreviewed global acpx install as a substitute.
+    """
+    required_major = _required_node_major(adapter_label=adapter_label)
     candidates: list[Path] = []
     which = shutil.which("node")
     if which:
         candidates.append(Path(which))
-    for root in _NODE_HOST_BIN_DIRS:
+    for root in (*_versioned_node_keg_dirs(required_major), *_NODE_HOST_BIN_DIRS):
         candidates.append(root / "node")
     seen: set[str] = set()
     for candidate in candidates:
@@ -864,12 +927,21 @@ def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
         if key in seen:
             continue
         seen.add(key)
-        if resolved.is_file() and os.access(resolved, os.X_OK):
-            return resolved
+        if not (resolved.is_file() and os.access(resolved, os.X_OK)):
+            continue
+        version = _probe_node_semver(resolved)
+        if version is None:
+            continue
+        if version[0] != required_major:
+            continue
+        return resolved
     raise AcpxShadowRefusalError(
-        f"{adapter_label}: node binary not found on PATH or fixed host install "
-        "locations (/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); "
-        "required by the project-local acpx ``#!/usr/bin/env node`` shim (#6953)"
+        f"{adapter_label}: no Node {required_major}.x binary found on PATH or "
+        "fixed host install locations (Homebrew node@{major} keg, "
+        "/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); each candidate "
+        "must report a Node semver via --version matching .nvmrc "
+        f"(required major {required_major}); required by the project-local acpx "
+        "``#!/usr/bin/env node`` shim (#6953)"
     )
 
 
