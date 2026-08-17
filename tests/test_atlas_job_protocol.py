@@ -654,3 +654,69 @@ def test_ssh_host_adapter_free_disk_bytes_source() -> None:
     src = inspect.getsource(atlas_job.SshHostAdapter.free_disk_bytes)
     assert "shutil.disk_usage" in src
     assert "while not p.exists()" in src
+
+
+def test_load_backup_env_file_expands_home_and_refs(tmp_path: Path) -> None:
+    env_file = tmp_path / "backup.env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "export LU_BACKUP_REPOSITORY=rclone:example:restic",
+                'RESTIC_PASSWORD_FILE="$HOME/.secrets/demo.password"',
+                "RESTIC_REPOSITORY=$LU_BACKUP_REPOSITORY",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    loaded = atlas_job._load_backup_env_file(env_file)
+    assert loaded["LU_BACKUP_REPOSITORY"] == "rclone:example:restic"
+    assert loaded["RESTIC_REPOSITORY"] == "rclone:example:restic"
+    assert loaded["RESTIC_PASSWORD_FILE"] == str(
+        Path.home() / ".secrets" / "demo.password"
+    )
+
+
+def test_backup_subprocess_env_defaults_project_root_to_primary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    env_file = tmp_path / "backup.env"
+    env_file.write_text(
+        "LU_BACKUP_REPOSITORY=rclone:example:restic\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("LU_BACKUP_ENV_FILE", str(env_file))
+    monkeypatch.delenv("LU_BACKUP_PROJECT_ROOT", raising=False)
+    monkeypatch.setattr(
+        atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
+    )
+
+    env = atlas_job._backup_subprocess_env()
+    assert env["LU_BACKUP_PROJECT_ROOT"] == "/tmp/primary-checkout"
+    assert env["LU_BACKUP_REPOSITORY"] == "rclone:example:restic"
+
+
+def test_backup_subprocess_env_keeps_explicit_project_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    env_file = tmp_path / "backup.env"
+    env_file.write_text("LU_BACKUP_HOST=learn-ukrainian\n", encoding="utf-8")
+    monkeypatch.setenv("LU_BACKUP_ENV_FILE", str(env_file))
+    monkeypatch.setenv("LU_BACKUP_PROJECT_ROOT", "/explicit/project")
+    monkeypatch.setattr(
+        atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
+    )
+
+    env = atlas_job._backup_subprocess_env()
+    assert env["LU_BACKUP_PROJECT_ROOT"] == "/explicit/project"
+
+
+def test_mirror_dir_for_uses_primary_data(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
+    )
+    assert atlas_job.mirror_dir_for("job-1") == Path(
+        "/tmp/primary-checkout/data/lexicon/runner-mirror/job-1"
+    )
