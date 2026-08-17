@@ -17,7 +17,7 @@ sentence-transformers>=5.6.1
 torch>=2.13.0
 
 # NLP / Ukrainian
-pyahocorasick>=2.3
+pyahocorasick>=2.3.1
 pymorphy2>=0.9
 pymorphy3>=2.0
 pymorphy3-dicts-ru
