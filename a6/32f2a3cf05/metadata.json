@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a632f2a3cf05",
+  "strategy": "manual-commit",
+  "branch": "glm/6876-glm-hramatka-root",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/launch_reenrich_class_b.sh",
+    "scripts/lexicon/runner/launch_reenrich_class_b_remote.sh",
+    "tests/test_launch_reenrich_target_detection.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a6/32f2a3cf05/0/metadata.json",
+      "transcript": "/a6/32f2a3cf05/0/full.jsonl",
+      "compact_transcript": "/a6/32f2a3cf05/0/transcript.jsonl",
+      "content_hash": "/a6/32f2a3cf05/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 76175,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1376256,
+    "output_tokens": 4198,
+    "api_call_count": 26
+  }
+}
