@@ -1,0 +1,55 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "65120a769bd1",
+  "session_id": "session_c73e2afc-48db-4ad5-af80-41c21ce9f259",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T08:08:25.014285Z",
+  "branch": "kimi/infra-6915-bridge-routing",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_acp_compat.py",
+    "scripts/ai_agent_bridge/_agy.py",
+    "scripts/ai_agent_bridge/_claude.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_codex.py",
+    "scripts/ai_agent_bridge/_gemini.py",
+    "scripts/ai_agent_bridge/_grok_build.py",
+    "scripts/ai_agent_bridge/_kimi.py",
+    "scripts/ai_agent_bridge/_opencode.py",
+    "scripts/ai_agent_bridge/_process.py",
+    "tests/ai_agent_bridge/test_ab_discuss_bugs.py",
+    "tests/ai_agent_bridge/test_process_routing.py",
+    "tests/test_coverage_misc.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "963a6760d935",
+  "token_usage": {
+    "input_tokens": 170856,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 16556032,
+    "output_tokens": 59007,
+    "api_call_count": 126
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T08:08:24.934019Z",
+    "agent_lines": 731,
+    "agent_removed": 69,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 731,
+    "total_lines_changed": 800,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

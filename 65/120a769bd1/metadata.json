@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "65120a769bd1",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-6915-bridge-routing",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_acp_compat.py",
+    "scripts/ai_agent_bridge/_agy.py",
+    "scripts/ai_agent_bridge/_claude.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_codex.py",
+    "scripts/ai_agent_bridge/_gemini.py",
+    "scripts/ai_agent_bridge/_grok_build.py",
+    "scripts/ai_agent_bridge/_kimi.py",
+    "scripts/ai_agent_bridge/_opencode.py",
+    "scripts/ai_agent_bridge/_process.py",
+    "tests/ai_agent_bridge/test_ab_discuss_bugs.py",
+    "tests/ai_agent_bridge/test_process_routing.py",
+    "tests/test_coverage_misc.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/65/120a769bd1/0/metadata.json",
+      "transcript": "/65/120a769bd1/0/full.jsonl",
+      "content_hash": "/65/120a769bd1/0/content_hash.txt",
+      "prompt": "/65/120a769bd1/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 170856,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 16556032,
+    "output_tokens": 59007,
+    "api_call_count": 126
+  }
+}
