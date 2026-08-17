@@ -31,7 +31,6 @@ from typing import Any
 
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
-from scripts.fleet_comms.migrations import apply_migrations
 from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
     PublicationPlan,
@@ -412,7 +411,6 @@ def ensure_job_row_for_receipt(
         FormalReviewJobService,
     )
 
-    apply_migrations(store.connection)
     # Do not close the service: it shares the caller's ArtifactStore connection.
     service = FormalReviewJobService(store=store)
     existing = service.find_job(
@@ -493,7 +491,6 @@ def publish_sealed_verdict(
     already_key: str | None = None
     if store is not None:
         conn = store.connection
-        apply_migrations(conn)
         already_key = already_published_key_for_job(
             conn, sealed, status_context=status_context
         )
