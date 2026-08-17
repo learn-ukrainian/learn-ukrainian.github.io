@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "765d1135bad0",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6949-launcher-epic",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/MONITOR-API.md",
+    "docs/WORKSTREAMS.md",
+    "docs/runbooks/atlas-job-protocol.md",
+    "scripts/api/atlas_jobs_router.py",
+    "scripts/api/route_contracts.py",
+    "scripts/config/issue_streams.yaml",
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/api/test_atlas_jobs_router.py",
+    "tests/test_atlas_job_protocol.py",
+    "tests/test_lexicon_runner_pr2_ledger.py",
+    "tests/test_monitor_route_contracts.py",
+    "tests/test_session_streams_dual_write_status.py",
+    "tests/test_session_supervisor.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/76/5d1135bad0/0/metadata.json",
+      "transcript": "/76/5d1135bad0/0/full.jsonl",
+      "compact_transcript": "/76/5d1135bad0/0/transcript.jsonl",
+      "content_hash": "/76/5d1135bad0/0/content_hash.txt",
+      "prompt": "/76/5d1135bad0/0/prompt.txt"
+    }
+  ]
+}

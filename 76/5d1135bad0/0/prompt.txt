@@ -1,0 +1,76 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6949-launcher-epic
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta: merge main into grok/infra-6949-launcher-epic (PR #6950)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok-4.5 × native grok CLI (workspace-write, existing dispatch worktree)
+- why_this_tier: authoring-lane fix (grok authored PR #6950); mechanical single-hunk merge resolution, no authority-tier judgment needed
+- advisor_packet: n/a (not heap)
+- owned_paths: tests/test_handoff_identity.py (merge commit only)
+- acceptance_cmd: /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_handoff_identity.py -q
+- alternatives_considered: (1) driver resolves inline — REJECTED: orchestrator must not author code on a lane's branch (rule 11b); (2) cursor:auto delta — REJECTED: out-of-lane authorship on grok's PR muddies the CF re-stamp
+- parallel_free_seats: agy, cursor (no other work bound to this PR)
+
+## Evidence preamble (#M-4 — binding)
+Every claim in your final report must be backed by quoted raw tool output produced in THIS run
+(git rev-parse, git status, pytest tail). No claim without its command + output excerpt.
+
+## Context
+You are grok, author of PR #6950 (`fix(launchers): derive infra epic id from the issue-stream
+registry`, Fixes #6949). Main moved under your PR: merged PR #6945 changed
+`tests/test_handoff_identity.py` line `assert registry["infra-harness"]["epics"] == [4707]` →
+`== [6943]`. Your branch rewrote that same region to be derivation-based (INFRA_STREAM_ID read
+from `scripts/config/issue_streams.yaml`). GitHub reports mergeStateStatus=DIRTY, exactly ONE
+conflicted file: `tests/test_handoff_identity.py`.
+
+Your working directory IS the existing dispatch worktree
+`/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6949-launcher-epic`
+on branch `grok/infra-6949-launcher-epic` at head 1b5cbde1ef (verified clean pre-dispatch).
+Use ABSOLUTE paths in every shell command.
+
+## Shippable unit
+One merge commit on `grok/infra-6949-launcher-epic` that merges `origin/main` and resolves the
+single test-file conflict, leaving the derivation-based assertions intact and the suite green.
+Out of scope: any other file, any refactor, push, PR mutation, auto-merge.
+
+## Steps (numbered — do in order)
+1. Verify preconditions:
+   `git -C /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6949-launcher-epic status --porcelain` (must be empty) and
+   `git -C ... rev-parse HEAD` (must be 1b5cbde1ef1dd3bd764a42385a91e862544cff82). If either differs, STOP and report.
+2. `git -C ... fetch origin main` then `git -C ... merge origin/main` — expect exactly ONE
+   conflict: `tests/test_handoff_identity.py`.
+3. Resolve that conflict in `test_devops_epic_is_registered_separately_from_infra` by keeping
+   THIS BRANCH's derivation-based block:
+   ```python
+   assert registry["infra-harness"]["epics"]
+   assert registry["devops"]["epics"] == [5703]
+   assert registry["infra-harness"]["epics"] != registry["devops"]["epics"]
+   assert f"epic:{int(registry['infra-harness']['epics'][0])}" == INFRA_STREAM_ID
+   ```
+   and DISCARDING main's hard-coded `assert registry["infra-harness"]["epics"] == [6943]` — the
+   derivation subsumes it (the registry on merged main lists 6943, via #6945). If any OTHER
+   conflict appears, resolve preferring branch semantics (derivation over hard-coding) and list
+   it explicitly in the report.
+4. `git -C ... add tests/test_handoff_identity.py` and complete the merge commit with message:
+   `merge: main into grok/infra-6949-launcher-epic (resolve #6945 vs #6950 test conflict)`.
+5. Acceptance: run
+   `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_handoff_identity.py -q`
+   from the worktree root — must pass (this includes the launcher_selector_stream infra →
+   epic:6943 live assertions). Then
+   `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check tests/test_handoff_identity.py`
+   — must be clean.
+6. DO NOT push (your harness cannot; the driver finalizes the push). DO NOT touch the PR,
+   auto-merge, or any other branch.
+7. Report: merged HEAD SHA (`git rev-parse HEAD`), `git log --oneline -3`, the full pytest tail,
+   ruff output, and a one-paragraph statement of how the conflict was resolved.
