@@ -27,6 +27,7 @@ import pytest
 
 from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import (
+    ACPX_EXIT_PERMISSION_DENIED,
     ACPX_PARSED_RESPONSE_LIMIT_BYTES,
     ACPX_SUPPORTED_PARTICIPANTS,
     AcpxAdapter,
@@ -128,6 +129,46 @@ _DUPLICATE_REPLAY_NDJSON = (
     '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-005",'
     '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"pong"}}}}\n'
     '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+)
+
+# Cursor (and any seat that emits session/request_permission) uses an
+# agent-originated JSON-RPC id space that overlaps client ids 0/1/2.
+# A permission result for id=0 must not match the initialize receipt.
+_PERMISSION_ID_REUSE_NDJSON = (
+    '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
+    '"clientCapabilities":{"fs":{"readTextFile":false,"writeTextFile":false},"terminal":false},'
+    '"clientInfo":{"name":"acpx","version":"0.13.0"}}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"protocolVersion":1,"agentCapabilities":{}}}\n'
+    '{"jsonrpc":"2.0","id":1,"method":"session/new","params":{"cwd":"/repo","mcpServers":[]}}\n'
+    '{"jsonrpc":"2.0","id":1,"result":{"sessionId":"sess-fixture-perm-001"}}\n'
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-perm-001",'
+    '"prompt":[{"type":"text","text":"ping"}]}}\n'
+    '{"jsonrpc":"2.0","id":0,"method":"session/request_permission","params":{"sessionId":'
+    '"sess-fixture-perm-001","toolCall":{"toolCallId":"call-1","title":"Read"},'
+    '"options":[{"optionId":"allow_once","name":"Allow","kind":"allow_once"},'
+    '{"optionId":"reject_once","name":"Reject","kind":"reject_once"}]}}\n'
+    '{"jsonrpc":"2.0","id":0,"result":{"outcome":{"outcome":"selected","optionId":"reject_once"}}}\n'
+    '{"jsonrpc":"2.0","id":1,"method":"session/request_permission","params":{"sessionId":'
+    '"sess-fixture-perm-001","toolCall":{"toolCallId":"call-2","title":"Read"},'
+    '"options":[{"optionId":"allow_once","name":"Allow","kind":"allow_once"},'
+    '{"optionId":"reject_once","name":"Reject","kind":"reject_once"}]}}\n'
+    '{"jsonrpc":"2.0","id":1,"result":{"outcome":{"outcome":"selected","optionId":"reject_once"}}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-perm-001",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"pong"}}}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+)
+
+# A later session/prompt that reuses id=2 is a fresh request, not a replay
+# of the prior receipt for that id.
+_FRESH_PROMPT_REUSES_ID_NDJSON = (
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-fresh",'
+    '"prompt":[{"type":"text","text":"first"}]}}\n'
+    '{"jsonrpc":"2.0","id":2,"result":{"sessionId":"sess-fixture-fresh"}}\n'
+    '{"jsonrpc":"2.0","id":2,"method":"session/prompt","params":{"sessionId":"sess-fixture-fresh",'
+    '"prompt":[{"type":"text","text":"second"}]}}\n'
+    '{"jsonrpc":"2.0","method":"session/update","params":{"sessionId":"sess-fixture-fresh",'
+    '"update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"ok"}}}}\n'
     '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
 )
 
@@ -1109,7 +1150,64 @@ def test_parse_response_duplicate_terminal_replay_fails_closed():
     )
     assert result.ok is False
     assert result.response == ""
-    assert "duplicate" in result.stderr_excerpt.lower()
+    excerpt = result.stderr_excerpt or ""
+    assert "duplicate" in excerpt.lower()
+    assert "request id 2" in excerpt
+    assert "session/prompt" in excerpt
+
+
+def test_parse_response_permission_id_reuse_is_not_replay():
+    """Agent permission RPCs reuse client JSON-RPC ids; that is not a replay (#6916)."""
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_PERMISSION_ID_REUSE_NDJSON,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "pong"
+    assert "duplicate" not in (result.stderr_excerpt or "").lower()
+
+
+@pytest.mark.parametrize(
+    "adapter_class",
+    [AcpxAdapter, AcpxCursorShadowAdapter, AcpxGrokShadowAdapter, AcpxKimiShadowAdapter],
+)
+def test_parse_response_permission_id_reuse_is_seat_agnostic(adapter_class):
+    result = adapter_class().parse_response(
+        stdout=_PERMISSION_ID_REUSE_NDJSON,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "pong"
+
+
+def test_parse_response_fresh_request_supersedes_prior_receipt():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_FRESH_PROMPT_REUSES_ID_NDJSON,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "ok"
+
+
+def test_parse_response_permission_denied_exit_with_completed_prompt_succeeds():
+    """ACPX rc=5 after deny-all is confinement, not a failed completed turn."""
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_PERMISSION_ID_REUSE_NDJSON,
+        stderr="",
+        returncode=ACPX_EXIT_PERMISSION_DENIED,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "pong"
 
 
 # ---------------------------------------------------------------------------
