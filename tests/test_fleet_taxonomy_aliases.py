@@ -30,9 +30,7 @@ _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
 
 
 def _infra_harness_stream_id() -> str:
-    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"][
-        "epics"
-    ]
+    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"]["epics"]
     assert epics
     return f"epic:{int(epics[0])}"
 
@@ -106,9 +104,9 @@ def test_resolve_area_by_epic_number() -> None:
 
     # string epic lookup
     assert resolve_area("4707").id == "infra"
-    assert resolve_area("epic:4707").id == "infra"
+    assert resolve_area("epic:4707").id == "infra"  # allow-hardcoded-epic: taxonomy alias reverse lookup
     assert resolve_area_by_epic(4707).id == "infra"
-    assert resolve_area_by_epic("epic:5703").id == "devops"
+    assert resolve_area_by_epic("epic:5703").id == "devops"  # allow-hardcoded-epic: taxonomy alias reverse lookup
 
 
 def test_resolve_area_unknown_raises_typed_error() -> None:

@@ -1,4 +1,4 @@
-"""Unit tests for the top-level socket-guard autouse fixture (#6968)."""
+"""Unit tests for the top-level package-wide socket-guard (#6968)."""
 
 from __future__ import annotations
 
@@ -13,6 +13,23 @@ from tests.conftest import (
     _is_localhost_address,
     _is_localhost_host,
 )
+
+
+@pytest.fixture(scope="module")
+def probe_module_fixture_blocked() -> str:
+    """Adversarial module-scoped fixture probe verifying guard is active before module fixtures."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        with pytest.raises(SocketBlockedError):
+            s.connect_ex(("93.184.216.34", 80))
+        return "blocked_verified"
+    finally:
+        s.close()
+
+
+def test_adversarial_module_scoped_fixture_probe_is_blocked(probe_module_fixture_blocked: str) -> None:
+    """The socket guard must be installed before module-scoped fixtures execute (#6968)."""
+    assert probe_module_fixture_blocked == "blocked_verified"
 
 
 def test_is_localhost_host_resolution() -> None:
@@ -88,6 +105,26 @@ def test_unmarked_socket_sendto_fails() -> None:
         assert "Outbound network connection to '8.8.8.8' blocked by socket-guard" in str(exc_info.value)
     finally:
         s.close()
+
+
+def test_unmarked_socket_sendmsg_fails() -> None:
+    """An unmarked socket.sendmsg to an external address must fail closed."""
+    if not hasattr(socket.socket, "sendmsg"):
+        pytest.skip("socket.sendmsg not supported on this platform")
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        with pytest.raises(SocketBlockedError) as exc_info:
+            s.sendmsg([b"ping"], [], 0, ("8.8.8.8", 53))
+        assert "Outbound network connection to '8.8.8.8' blocked by socket-guard" in str(exc_info.value)
+    finally:
+        s.close()
+
+
+def test_unmarked_create_connection_fails() -> None:
+    """An unmarked socket.create_connection to an external host must fail closed."""
+    with pytest.raises(SocketBlockedError) as exc_info:
+        socket.create_connection(("93.184.216.34", 80), timeout=1.0)
+    assert "Outbound network connection to '93.184.216.34' blocked by socket-guard" in str(exc_info.value)
 
 
 def test_unmarked_urlopen_fails() -> None:

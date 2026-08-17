@@ -9,14 +9,13 @@ Hard-coding derivable state stales tests across epic succession and turns
 unrelated provider or schema transitions into red CI gates.
 
 Designated exceptions:
-1. Synthetic/test epic IDs: epic:9999, epic:999999, epic:1001, epic:1002,
-   epic:2001, epic:3001, epic:123, epic:4700, epic:4220, epic:0, or prefixed
-   with fixture/mock/synthetic.
+1. Synthetic/test epic IDs: epic:0, epic:123, epic:1001, epic:1002,
+   epic:2001, epic:3001, epic:4220, epic:4700, epic:9999, epic:999999, epic:888001.
 2. Negative assertions verifying obsolete/old epics are NOT emitted:
-   e.g. `assert "epic:4707" not in text`.
-3. Designated fixture patterns / local parameter tests annotated with
-   `# noqa: epic-id`, `# allow-hardcoded-epic`, `# fixture`, or `# designated-fixture`.
-4. Legacy taxonomy lookup tests covered by the explicit allowlist below.
+   e.g. `assert "epic:4707" not in text` or `assert out != "epic:4707"`.
+3. Explicit line-scoped directives:
+   `# noqa: epic-id`, `# noqa: stale-pinned-epic`, `# allow-hardcoded-epic: <reason>`,
+   or `# designated-fixture: <reason>`.
 """
 
 from __future__ import annotations
@@ -47,33 +46,14 @@ _SYNTHETIC_EPIC_IDS: frozenset[str] = frozenset(
         "epic:4700",
         "epic:9999",
         "epic:999999",
+        "epic:888001",
     }
 )
 
-# Inline directive comments that allow hard-coded literals for designated fixtures
-_ALLOW_DIRECTIVES: tuple[str, ...] = (
-    "# noqa: epic-id",
-    "# allow-hardcoded-epic",
-    "# fixture",
-    "# test-fixture",
-    "# designated-fixture",
-)
-
-# Scoped allowlist for legacy tests exercising static lookup maps / historical records
-_LEGACY_ALLOWLIST: frozenset[str] = frozenset(
-    {
-        "tests/fleet_comms/test_cold_start_board.py",
-        "tests/orchestration/test_thread_restart_e2e.py",
-        "tests/test_codex_lane_canary.py",
-        "tests/test_fleet_taxonomy_aliases.py",
-        "tests/test_fleet_taxonomy_slot_addressing.py",
-        "tests/test_grok_lane_session_canary.py",
-        "tests/test_kimi_lane_bootstrap.py",
-        "tests/test_lint_test_assertions.py",
-        "tests/test_session_streams_api.py",
-        "tests/test_session_streams_dual_write_status.py",
-        "tests/test_session_supervisor_shell.py",
-    }
+# Inline directive comments that explicitly allow hard-coded literals with line-scoped intent
+_ALLOW_DIRECTIVE_RE = re.compile(
+    r"#\s*(?:noqa:\s*epic-id|noqa:\s*stale-pinned-epic|allow-hardcoded-epic|designated-fixture)\b",
+    re.IGNORECASE,
 )
 
 
@@ -88,37 +68,238 @@ class AssertionViolation:
     reason: str
 
 
-def _is_negative_assertion(node: ast.Assert, source_segment: str) -> bool:
-    """Return True if this assertion verifies absence (e.g. `not in` or `!=`)."""
-    if " not in " in source_segment or " != " in source_segment:
-        return True
-    test = node.test
-    if isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.Not):
-        return True
-    if isinstance(test, ast.Compare):
-        for op in test.ops:
-            if isinstance(op, (ast.NotIn, ast.IsNot, ast.NotEq)):
-                return True
+class _Environment:
+    """Scoped variable binding environment for AST semantic evaluation."""
+
+    def __init__(self, parent: _Environment | None = None) -> None:
+        self.parent = parent
+        self.bindings: dict[str, object] = {}
+
+    def get(self, name: str) -> object | None:
+        if name in self.bindings:
+            return self.bindings[name]
+        if self.parent is not None:
+            return self.parent.get(name)
+        return None
+
+    def set(self, name: str, value: object) -> None:
+        self.bindings[name] = value
+
+
+def _eval_expr(node: ast.AST, env: _Environment) -> object | None:
+    """Statically evaluate literal, string-concatenation, alias, and f-string expressions."""
+    if isinstance(node, ast.Constant):
+        return node.value
+
+    if isinstance(node, ast.Name):
+        return env.get(node.id)
+
+    if isinstance(node, ast.NamedExpr):
+        val = _eval_expr(node.value, env)
+        if isinstance(node.target, ast.Name):
+            env.set(node.target.id, val)
+        return val
+
+    if isinstance(node, ast.BinOp):
+        left = _eval_expr(node.left, env)
+        right = _eval_expr(node.right, env)
+        if isinstance(node.op, ast.Add):
+            if isinstance(left, str) and isinstance(right, str):
+                return left + right
+            if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+                return left + right
+        elif isinstance(node.op, ast.Mod):
+            if isinstance(left, str):
+                try:
+                    return left % right
+                except Exception:
+                    return None
+
+    if isinstance(node, ast.JoinedStr):
+        parts: list[str] = []
+        for value_node in node.values:
+            if isinstance(value_node, ast.Constant):
+                parts.append(str(value_node.value))
+            elif isinstance(value_node, ast.FormattedValue):
+                val = _eval_expr(value_node.value, env)
+                if val is not None:
+                    parts.append(str(val))
+                else:
+                    return None
+            else:
+                return None
+        return "".join(parts)
+
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "str" and len(node.args) == 1:
+        val = _eval_expr(node.args[0], env)
+        if val is not None:
+            return str(val)
+
+    if isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+        return [_eval_expr(el, env) for el in node.elts]
+
+    if isinstance(node, ast.Dict):
+        res: dict[object, object] = {}
+        for k, v in zip(node.keys, node.values, strict=False):
+            if k is not None:
+                kval = _eval_expr(k, env)
+                vval = _eval_expr(v, env)
+                if isinstance(kval, (str, int, float, bool, bytes, type(None))):
+                    res[kval] = vval
+                else:
+                    res[str(kval)] = vval
+        return res
+
+    return None
+
+
+def _extract_epic_ids(val: object) -> set[str]:
+    """Extract all non-synthetic epic IDs found in a statically evaluated value."""
+    results: set[str] = set()
+    if isinstance(val, str):
+        for match in _EPIC_ID_RE.finditer(val):
+            epic_id = match.group(0).lower()
+            if epic_id not in _SYNTHETIC_EPIC_IDS:
+                results.add(match.group(0))
+    elif isinstance(val, (list, tuple, set, frozenset)):
+        for item in val:
+            results.update(_extract_epic_ids(item))
+    elif isinstance(val, dict):
+        for k, v in val.items():
+            results.update(_extract_epic_ids(k))
+            results.update(_extract_epic_ids(v))
+    return results
+
+
+def _find_positive_epic_violations(test_node: ast.AST, env: _Environment, polarity: bool = True) -> set[str]:
+    """Inspect an assertion AST node for epic IDs in positive assertion contexts."""
+    if isinstance(test_node, ast.UnaryOp) and isinstance(test_node.op, ast.Not):
+        return _find_positive_epic_violations(test_node.operand, env, not polarity)
+
+    if isinstance(test_node, ast.BoolOp):
+        found: set[str] = set()
+        for val in test_node.values:
+            found.update(_find_positive_epic_violations(val, env, polarity))
+        return found
+
+    if isinstance(test_node, ast.Compare):
+        found = set()
+        current_left = test_node.left
+        for op, comp in zip(test_node.ops, test_node.comparators, strict=False):
+            is_negative_op = isinstance(op, (ast.NotIn, ast.IsNot, ast.NotEq))
+            cmp_polarity = (not polarity) if is_negative_op else polarity
+            if cmp_polarity:
+                for target_node in (current_left, comp):
+                    for sub in ast.walk(target_node):
+                        val = _eval_expr(sub, env)
+                        found.update(_extract_epic_ids(val))
+            current_left = comp
+        return found
+
+    if polarity:
+        found = set()
+        for sub in ast.walk(test_node):
+            val = _eval_expr(sub, env)
+            found.update(_extract_epic_ids(val))
+        return found
+    return set()
+
+
+def _has_allow_directive(lines: list[str], start_line: int, end_line: int) -> bool:
+    """Check if any line from start_line to end_line or preceding line contains an explicit allow directive."""
+    # Check lines of the assert statement itself (start_line to end_line)
+    for idx in range(max(0, start_line - 1), min(len(lines), end_line)):
+        if _ALLOW_DIRECTIVE_RE.search(lines[idx]):
+            return True
+    # Check immediate preceding line ONLY IF it is a standalone comment line
+    if start_line >= 2:
+        prev_line = lines[start_line - 2].strip()
+        if prev_line.startswith("#") and _ALLOW_DIRECTIVE_RE.search(prev_line):
+            return True
     return False
 
 
-def _has_allow_directive(lines: list[str], lineno: int) -> bool:
-    """Check if the assertion line or previous line contains an allow directive."""
-    for idx in (lineno - 1, lineno - 2):
-        if 0 <= idx < len(lines):
-            line = lines[idx]
-            if any(directive in line for directive in _ALLOW_DIRECTIVES):
-                return True
-    return False
+def _bind_targets(targets: Sequence[ast.AST], value: object | None, env: _Environment) -> None:
+    for target in targets:
+        if isinstance(target, ast.Name):
+            env.set(target.id, value)
+        elif (
+            isinstance(target, (ast.Tuple, ast.List))
+            and isinstance(value, (list, tuple))
+            and len(target.elts) == len(value)
+        ):
+            for sub_t, sub_v in zip(target.elts, value, strict=True):
+                if isinstance(sub_t, ast.Name):
+                    env.set(sub_t.id, sub_v)
+
+
+def _scan_block(
+    stmts: Sequence[ast.stmt],
+    env: _Environment,
+    lines: list[str],
+    content: str,
+    rel_path: str,
+    violations: list[AssertionViolation],
+) -> None:
+    for stmt in stmts:
+        if isinstance(stmt, ast.Assign):
+            val = _eval_expr(stmt.value, env)
+            _bind_targets(stmt.targets, val, env)
+        elif isinstance(stmt, ast.AnnAssign):
+            if stmt.value is not None:
+                val = _eval_expr(stmt.value, env)
+                _bind_targets([stmt.target], val, env)
+        elif isinstance(stmt, ast.AugAssign):
+            if isinstance(stmt.target, ast.Name):
+                old_val = env.get(stmt.target.id)
+                inc_val = _eval_expr(stmt.value, env)
+                if isinstance(stmt.op, ast.Add) and isinstance(old_val, str) and isinstance(inc_val, str):
+                    env.set(stmt.target.id, old_val + inc_val)
+        elif isinstance(stmt, ast.Assert):
+            lineno = stmt.lineno
+            end_lineno = getattr(stmt, "end_lineno", lineno) or lineno
+            if not _has_allow_directive(lines, lineno, end_lineno):
+                epics = _find_positive_epic_violations(stmt.test, env, polarity=True)
+                if epics:
+                    snippet = (ast.get_source_segment(content, stmt) or "").strip()
+                    for epic in sorted(epics):
+                        violations.append(
+                            AssertionViolation(
+                                path=rel_path,
+                                line_number=lineno,
+                                snippet=snippet,
+                                epic_id=epic,
+                                reason=(
+                                    f"hard-coded stream literal '{epic}' in assertion; "
+                                    "derive from issue_streams.yaml or use a designated fixture pattern "
+                                    "(e.g. # noqa: epic-id, # allow-hardcoded-epic: <reason>, or synthetic epic ID)"
+                                ),
+                            )
+                        )
+        elif isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            func_env = _Environment(parent=env)
+            _scan_block(stmt.body, func_env, lines, content, rel_path, violations)
+        elif isinstance(stmt, ast.ClassDef):
+            class_env = _Environment(parent=env)
+            _scan_block(stmt.body, class_env, lines, content, rel_path, violations)
+        elif isinstance(stmt, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.With, ast.AsyncWith)):
+            _scan_block(stmt.body, env, lines, content, rel_path, violations)
+            if hasattr(stmt, "orelse") and stmt.orelse:
+                _scan_block(stmt.orelse, env, lines, content, rel_path, violations)
+        elif isinstance(stmt, ast.Try):
+            _scan_block(stmt.body, env, lines, content, rel_path, violations)
+            for handler in stmt.handlers:
+                _scan_block(handler.body, env, lines, content, rel_path, violations)
+            if stmt.orelse:
+                _scan_block(stmt.orelse, env, lines, content, rel_path, violations)
+            if stmt.finalbody:
+                _scan_block(stmt.finalbody, env, lines, content, rel_path, violations)
 
 
 def scan_file(file_path: Path, repo_root: Path | None = None) -> list[AssertionViolation]:
     """Scan a single Python test file for forbidden hard-coded epic assertions."""
     root = (repo_root or REPO_ROOT).resolve()
     rel_path = file_path.resolve().relative_to(root).as_posix()
-
-    if rel_path in _LEGACY_ALLOWLIST:
-        return []
 
     try:
         content = file_path.read_text(encoding="utf-8")
@@ -128,38 +309,8 @@ def scan_file(file_path: Path, repo_root: Path | None = None) -> list[AssertionV
 
     lines = content.splitlines()
     violations: list[AssertionViolation] = []
-
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Assert):
-            continue
-
-        lineno = node.lineno
-        if _has_allow_directive(lines, lineno):
-            continue
-
-        source_segment = (ast.get_source_segment(content, node) or "").strip()
-        if _is_negative_assertion(node, source_segment):
-            continue
-
-        for child in ast.walk(node):
-            if isinstance(child, ast.Constant) and isinstance(child.value, str):
-                for match in _EPIC_ID_RE.finditer(child.value):
-                    epic_id = match.group(0)
-                    if epic_id.lower() in _SYNTHETIC_EPIC_IDS:
-                        continue
-                    violations.append(
-                        AssertionViolation(
-                            path=rel_path,
-                            line_number=lineno,
-                            snippet=source_segment,
-                            epic_id=epic_id,
-                            reason=(
-                                f"hard-coded stream literal '{epic_id}' in assertion; "
-                                "derive from issue_streams.yaml or use a designated fixture pattern "
-                                "(e.g. # noqa: epic-id or synthetic epic ID)"
-                            ),
-                        )
-                    )
+    module_env = _Environment()
+    _scan_block(tree.body, module_env, lines, content, rel_path, violations)
 
     return violations
 

@@ -26,10 +26,10 @@ def test_inventory_covers_repo_issue_streams():
     # issue_streams.yaml has more than the old hard-coded four epics
     assert len(records) >= 10
     ids = {r.stream_id for r in records}
-    assert "epic:4387" in ids
-    assert "epic:6943" in ids
-    assert "epic:4542" in ids
-    assert "epic:2836" in ids  # folk — was not in the hard-coded four
+    assert "epic:4387" in ids  # allow-hardcoded-epic: historical inventory stream coverage
+    assert "epic:6943" in ids  # allow-hardcoded-epic: historical inventory stream coverage
+    assert "epic:4542" in ids  # allow-hardcoded-epic: historical inventory stream coverage
+    assert "epic:2836" in ids  # allow-hardcoded-epic: historical inventory stream coverage
 
 
 def test_list_handoff_candidates_marks_missing(tmp_path: Path):

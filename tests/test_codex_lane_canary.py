@@ -14,7 +14,9 @@ def _allowed_capsule() -> dict[str, object]:
     return {"execution_allowed": True}
 
 
-def test_score_pass_hydrates_then_continues(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+def test_score_pass_hydrates_then_continues(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     monkeypatch.setattr(codex_lane, "_with_codex_handoffs", lambda function, args: 0)
     monkeypatch.setattr(codex_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane: _allowed_capsule())
 
@@ -58,9 +60,7 @@ def test_score_closes_lease_when_post_pass_hydration_blocks(monkeypatch: pytest.
 def test_lease_environment_parser_reuses_gemini_reader(tmp_path: Path) -> None:
     env_path = tmp_path / "session-lease.env"
     env_path.write_text(
-        "export SESSION_STREAM_PROCESS_ID=\"1234\"\n"
-        "export SESSION_STREAM_GENERATION='2'\n"
-        "unrelated=value\n",
+        "export SESSION_STREAM_PROCESS_ID=\"1234\"\nexport SESSION_STREAM_GENERATION='2'\nunrelated=value\n",
         encoding="utf-8",
     )
 
@@ -112,14 +112,14 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
 def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
     assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "devops"]) == 0
 
-    board = (tmp_path / ".claude" / "devops-epic" / "CODEX-COLD-START.md").read_text(
-        encoding="utf-8"
-    )
-    assert "**Stream:** `epic:5703`" in board
+    board = (tmp_path / ".claude" / "devops-epic" / "CODEX-COLD-START.md").read_text(encoding="utf-8")
+    assert "**Stream:** `epic:5703`" in board  # allow-hardcoded-epic: devops stream canary pin
 
 
 def test_stream_defaults_require_canonical_devops_selector() -> None:
-    assert codex_lane.EPIC_STREAM_DEFAULTS["devops"] == "epic:5703"
+    assert (
+        codex_lane.EPIC_STREAM_DEFAULTS["devops"] == "epic:5703"
+    )  # allow-hardcoded-epic: devops stream defaults lookup
     assert "infra.devops" not in codex_lane.EPIC_STREAM_DEFAULTS
 
 
@@ -141,9 +141,7 @@ def test_bootstrap_records_exact_rollover_without_rendering_lease_credentials(
     assert "credentials not rendered" in board
 
 
-def test_bootstrap_rejects_partial_rollover_environment(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_bootstrap_rejects_partial_rollover_environment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID", "lineage-partial")
     monkeypatch.delenv("CODEX_LAUNCHER_ROLLOVER_AGENT", raising=False)
     monkeypatch.delenv("CODEX_LAUNCHER_ROLLOVER_ID", raising=False)

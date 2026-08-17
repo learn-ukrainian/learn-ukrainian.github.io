@@ -94,7 +94,7 @@ def _base(session_db: Path, state_db: Path) -> list[str]:
         "--task-id",
         TASK_ID,
         "--stream-id",
-        "epic:4707",
+        "epic:9999",
     ]
 
 
@@ -326,7 +326,7 @@ def test_cli_recovery_requires_archived_predecessor_and_is_exactly_replayable(
         "--task-id",
         PREDECESSOR_ID,
         "--stream-id",
-        "epic:4707",
+        "epic:9999",
     ]
     assert (
         gui_session_lease.main(
