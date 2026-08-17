@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
@@ -60,6 +62,60 @@ def test_site_touch_runs_frontend() -> None:
     assert run is True
     assert matched == ["site/src/pages/index.astro"]
     assert "decision=run" in line
+
+
+def test_cyrillic_site_path_runs_frontend() -> None:
+    """Non-ASCII under site/ must decide run (F1: quotePath must not C-quote it away)."""
+    path = "site/src/слово.ts"
+    run, line, matched = scope.decide_from_changed([path])
+    assert run is True
+    assert matched == [path]
+    assert "decision=run" in line
+
+
+def test_changed_files_uses_quote_path_false_and_nul_split(tmp_path: Path) -> None:
+    """NUL-split + quotePath=false keeps Cyrillic / quote / backslash names literal."""
+    cyrillic = "site/src/слово.ts"
+    quoted_name = 'site/src/weird"name.ts'
+    backslash_name = r"site/src/weird\name.ts"
+    payload = "\0".join([cyrillic, quoted_name, backslash_name, ""]).encode("utf-8")
+
+    fake = MagicMock()
+    fake.stdout = payload
+    fake.returncode = 0
+
+    with patch("subprocess.run", return_value=fake) as run_mock:
+        paths = scope.changed_files("base...HEAD", cwd=tmp_path)
+
+    assert paths == sorted([cyrillic, quoted_name, backslash_name])
+    cmd = run_mock.call_args.args[0]
+    assert cmd[:3] == ["git", "-c", "core.quotePath=false"]
+    assert "--name-only" in cmd
+    assert "-z" in cmd
+    assert run_mock.call_args.kwargs.get("text") is not True
+
+
+def test_changed_files_rejects_c_quoted_octal_as_site_prefix() -> None:
+    """Guard: C-quoted octal (legacy quotePath=true) must NOT match site/."""
+    # What default quotePath emits for site/src/слово.ts — must not cheap-exit-match.
+    c_quoted = '"site/src/\\321\\201\\320\\273\\320\\276\\320\\262\\320\\276.ts"'
+    assert not scope.path_in_denominator(c_quoted, ["site/"])
+
+
+def test_git_diff_failed_writes_step_summary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    summary = tmp_path / "summary.md"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+
+    def boom(*_args: object, **_kwargs: object) -> None:
+        raise subprocess.CalledProcessError(128, ["git", "diff"])
+
+    with patch.object(scope, "changed_files", side_effect=boom):
+        assert scope.main(["--base", "abc123"]) == 0
+
+    text = summary.read_text(encoding="utf-8")
+    assert "reason=git_diff_failed" in text
+    assert "decision=run" in text
 
 
 def test_resolve_hydrate_entrypoints_from_package_json() -> None:

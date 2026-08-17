@@ -26,9 +26,7 @@ PACKAGE_JSON_REL = "site/package.json"
 HYDRATE_ROOT_SCRIPT = "hydrate"
 
 _NPM_RUN_RE = re.compile(r"\bnpm\s+run\s+([A-Za-z0-9:_-]+)")
-_NODE_SCRIPT_RE = re.compile(
-    r"\bnode(?:\s+--experimental-strip-types)?\s+(\./scripts/[^\s]+|scripts/[^\s]+)"
-)
+_NODE_SCRIPT_RE = re.compile(r"\bnode(?:\s+--experimental-strip-types)?\s+(\./scripts/[^\s]+|scripts/[^\s]+)")
 _PYTHON_MODULE_RE = re.compile(r"(?:^|[\s\"'])-m\s+(scripts(?:\.[A-Za-z0-9_]+)+)")
 _PYTHON_FILE_RE = re.compile(r"(?:^|[\s\"'])(scripts/[A-Za-z0-9_./-]+\.py)\b")
 
@@ -76,21 +74,30 @@ def comparison_range(base: str, head: str = "HEAD") -> str:
     return base if "..." in base else f"{base}...{head}"
 
 
+def _parse_nul_delimited_paths(raw: bytes) -> list[str]:
+    """Decode ``git diff --name-only -z`` bytes without misparsing odd filenames."""
+    return sorted(path.decode("utf-8", errors="surrogateescape") for path in raw.split(b"\0") if path)
+
+
 def changed_files(git_range: str, *, cwd: Path | None = None) -> list[str]:
+    # core.quotePath=false + -z: non-ASCII / quote / backslash names stay literal
+    # (default quotePath C-quotes them and breaks denominator prefix matching).
     result = subprocess.run(
         [
             "git",
+            "-c",
+            "core.quotePath=false",
             "diff",
             "--no-ext-diff",
             "--name-only",
+            "-z",
             git_range,
         ],
         check=True,
         capture_output=True,
         cwd=cwd or repo_root(),
-        text=True,
     )
-    return sorted(path for path in result.stdout.splitlines() if path)
+    return _parse_nul_delimited_paths(result.stdout)
 
 
 def _module_to_path(module: str) -> str:
@@ -243,11 +250,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         changed = changed_files(comparison_range(base, args.head))
     except subprocess.CalledProcessError as exc:
-        print(
+        line = (
             f"frontend-scope: decision=run denominator_version={denominator['version']} "
-            f"changed_files=-1 matched=-1 reason=git_diff_failed exit={exc.returncode}",
-            file=sys.stderr,
+            f"changed_files=-1 matched=-1 reason=git_diff_failed exit={exc.returncode}"
         )
+        print(line, file=sys.stderr)
+        write_step_summary(line)
         write_github_output(True)
         return 0
 
