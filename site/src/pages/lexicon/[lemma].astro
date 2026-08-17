@@ -15,43 +15,15 @@
 import CourseLayout from "../../layouts/CourseLayout.astro";
 import WordAtlasPageShell from "../../lexicon/WordAtlasPageShell.astro";
 import WordAtlasClientShell from "../../lexicon/WordAtlasClientShell";
-import { SqliteAtlasDataSource } from "../../lib/lexicon/sqlite-atlas-data-source";
+import { buildAtlasStaticPaths } from "../../lib/lexicon/atlas-static-paths";
 import type { EntryRecord } from "../../lib/lexicon/atlas-data-source";
 import type { WordAtlasPageState } from "../../lib/lexicon/word-atlas-page-state";
 
 export async function getStaticPaths() {
-  // The normal site build consumes the committed public projections and lets
-  // the Atlas client shell resolve article detail through the published runtime
-  // tree. The optional publisher-only SSG mode keeps the SQLite parity path
-  // explicit instead of making every local build depend on data/atlas.db.
-  if (process.env.ATLAS_STATIC_ROUTES !== "1") return [];
-  const source = new SqliteAtlasDataSource();
-  const catalog = source.getStaticCatalog();
-  const paths: Array<{
-    params: { lemma: string };
-    props: { record: EntryRecord; generatedAt: string; manifestVersion: string };
-  }> = [];
-
-  for (const slug of catalog.routeSlugs) {
-    const result = await source.getEntry(slug, {
-      expectedVersion: catalog.sourceVersion,
-    });
-    if (result.kind === "missing") {
-      throw new Error(
-        `Atlas static catalog slug missing under pinned version ${catalog.sourceVersion}: ${JSON.stringify(slug)}`,
-      );
-    }
-    paths.push({
-      params: { lemma: slug },
-      props: {
-        record: result.record,
-        generatedAt: catalog.generatedAt,
-        manifestVersion: catalog.manifestVersion,
-      },
-    });
-  }
-
-  return paths;
+  // Publisher builds (`npm run build`) set ATLAS_STATIC_ROUTES=1 after hydrate
+  // so Astro prerenders from data/atlas.db. Shell/dev builds leave it unset and
+  // serve the client shell from committed public projections.
+  return buildAtlasStaticPaths();
 }
 
 const { record, generatedAt, manifestVersion } = Astro.props as Partial<{
