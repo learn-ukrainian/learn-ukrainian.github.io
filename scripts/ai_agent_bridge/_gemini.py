@@ -37,8 +37,8 @@ from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
     _PARENT_ENV,
-    GEMINI_DEFAULT_MODEL,
     REPO_ROOT,
+    default_gemini_model,
 )
 from ._db import get_db
 from ._github import _post_review_to_github
@@ -54,50 +54,74 @@ from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt
 
 
-def converse_gemini(content: str, task_id: str, model: str | None = None,
-                    skip_github: bool = False, auth_mode: str | None = None):
+def converse_gemini(
+    content: str, task_id: str, model: str | None = None, skip_github: bool = False, auth_mode: str | None = None
+):
     """Multi-turn conversation with Gemini. Includes conversation history in prompt.
 
     Each call adds to the conversation thread (via task_id) and Gemini sees
     all previous messages for context.
 
-    ``model`` defaults to the AGY seat's live ACP registry pin. Legacy
-    ``gemini*`` slugs remap through ``resolve_compat_model`` so a pin
-    rotation cannot leave converse on a stale default (#6929).
+    ``model`` defaults to the AGY seat's live ACP registry pin (or ``AB_GEMINI_MODEL``
+    env override). Legacy ``gemini*`` slugs remap through ``resolve_compat_model``
+    so a pin rotation cannot leave converse on a stale default (#6929/#6959).
     """
-    from ._acp_compat import registered_participant_model, resolve_compat_model
+    from ._acp_compat import resolve_compat_model
 
     selected = resolve_compat_model("gemini", model)
     if selected is None:
-        selected = registered_participant_model("agy")
+        selected = default_gemini_model()
 
     history, msg_count = get_conversation_context(task_id)
 
     if history:
-        full_content = (
-            f"## Conversation History\n\n{history}\n\n"
-            f"===\n\n## Current Message\n\n{content}"
-        )
+        full_content = f"## Conversation History\n\n{history}\n\n===\n\n## Current Message\n\n{content}"
         print(f"📜 Conversation '{task_id}' — turn {msg_count + 1}")
     else:
         full_content = content
         print(f"📜 Starting conversation '{task_id}'")
 
     return ask_gemini(
-        full_content, task_id=task_id, msg_type="query",
-        model=selected, skip_github=skip_github, auth_mode=auth_mode,
+        full_content,
+        task_id=task_id,
+        msg_type="query",
+        model=selected,
+        skip_github=skip_github,
+        auth_mode=auth_mode,
     )
 
 
-def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query",
-               data: str | None = None, model: str = GEMINI_DEFAULT_MODEL,
-               from_llm: str | None = None, from_model: str | None = None,
-               async_mode: bool = False, stdout_only: bool = False,
-               output_path: str | None = None, extract_tags: list | None = None,
-               skip_model_check: bool = False, allow_write: bool = False,
-               delimiters: str | None = None, skip_github: bool = False,
-               auth_mode: str | None = None, review: bool = False):
-    """Send message to Gemini AND optionally invoke Gemini to process it."""
+def ask_gemini(
+    content: str,
+    task_id: str | None = None,
+    msg_type: str = "query",
+    data: str | None = None,
+    model: str | None = None,
+    from_llm: str | None = None,
+    from_model: str | None = None,
+    async_mode: bool = False,
+    stdout_only: bool = False,
+    output_path: str | None = None,
+    extract_tags: list | None = None,
+    skip_model_check: bool = False,
+    allow_write: bool = False,
+    delimiters: str | None = None,
+    skip_github: bool = False,
+    auth_mode: str | None = None,
+    review: bool = False,
+):
+    """Send message to Gemini AND optionally invoke Gemini to process it.
+
+    ``model`` defaults to the AGY seat's live ACP registry pin (or ``AB_GEMINI_MODEL``
+    env override). Legacy ``gemini*`` slugs remap through ``resolve_compat_model``
+    (#6894/#6959).
+    """
+    from ._acp_compat import resolve_compat_model
+
+    selected = resolve_compat_model("gemini", model)
+    if selected is None:
+        selected = default_gemini_model()
+    model = selected
     # Model cache management
     if skip_model_check and model in _MODEL_CACHE:
         del _MODEL_CACHE[model]
@@ -120,8 +144,9 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
     _warn_long_handoff(content, msg_type, task_id)
 
     # Send the message
-    msg_id = _send_gemini_message(content, task_id, msg_type, data, from_llm,
-                                  from_model, model, stdout_only, output_path)
+    msg_id = _send_gemini_message(
+        content, task_id, msg_type, data, from_llm, from_model, model, stdout_only, output_path
+    )
 
     # Invoke Gemini or queue
     if async_mode:
@@ -131,10 +156,17 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
     else:
         if not stdout_only:
             print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        response = process_and_respond(msg_id, model, stdout_only=stdout_only,
-                                       output_path=output_path, allow_write=allow_write,
-                                       delimiters=delimiters, skip_github=skip_github,
-                                       auth_mode=auth_mode, review=review)
+        response = process_and_respond(
+            msg_id,
+            model,
+            stdout_only=stdout_only,
+            output_path=output_path,
+            allow_write=allow_write,
+            delimiters=delimiters,
+            skip_github=skip_github,
+            auth_mode=auth_mode,
+            review=review,
+        )
 
         # Post-process: extract delimited content
         if extract_tags is not None and response:
@@ -155,34 +187,45 @@ def _warn_long_handoff(content: str, msg_type: str, task_id: str | None):
         print()
 
 
-def _send_gemini_message(content, task_id, msg_type, data, from_llm, from_model, model,
-                         stdout_only, output_path):
+def _send_gemini_message(content, task_id, msg_type, data, from_llm, from_model, model, stdout_only, output_path):
     """Send the message and handle pre-acknowledgement."""
     if output_path:
         if from_llm:
             msg_id = send_message(
-                content, task_id, msg_type, data, from_llm=from_llm,
-                to_llm="gemini", from_model=from_model, to_model=model,
+                content,
+                task_id,
+                msg_type,
+                data,
+                from_llm=from_llm,
+                to_llm="gemini",
+                from_model=from_model,
+                to_model=model,
                 quiet=stdout_only,
             )
         else:
-            msg_id = send_to_gemini(content, task_id, msg_type, data,
-                                    from_model=from_model, to_model=model,
-                                    quiet=stdout_only)
+            msg_id = send_to_gemini(
+                content, task_id, msg_type, data, from_model=from_model, to_model=model, quiet=stdout_only
+            )
         acknowledge(msg_id, quiet=stdout_only)
         if not stdout_only:
             print("   Pre-acknowledged (file output mode — no broker traffic)")
     else:
         if from_llm:
             msg_id = send_message(
-                content, task_id, msg_type, data, from_llm=from_llm,
-                to_llm="gemini", from_model=from_model, to_model=model,
+                content,
+                task_id,
+                msg_type,
+                data,
+                from_llm=from_llm,
+                to_llm="gemini",
+                from_model=from_model,
+                to_model=model,
                 quiet=stdout_only,
             )
         else:
-            msg_id = send_to_gemini(content, task_id, msg_type, data,
-                                    from_model=from_model, to_model=model,
-                                    quiet=stdout_only)
+            msg_id = send_to_gemini(
+                content, task_id, msg_type, data, from_model=from_model, to_model=model, quiet=stdout_only
+            )
         if stdout_only:
             acknowledge(msg_id, quiet=stdout_only)
     register_ask(msg_id)
@@ -193,6 +236,7 @@ def _extract_and_print(response: str, extract_tags: list):
     """Extract delimited content from response and print it."""
     from gemini_output import ALL_TAGS, find_complete_pairs
     from gemini_output import extract_delimited as _extract
+
     tags = extract_tags if extract_tags else find_complete_pairs(response, ALL_TAGS)
     if tags:
         print(f"\n{'═' * 40}")
@@ -208,37 +252,54 @@ def _extract_and_print(response: str, extract_tags: list):
         print("\n⚠️  No complete delimiter pairs found in output.")
 
 
-def process_and_respond(message_id: int, model: str = GEMINI_DEFAULT_MODEL,
-                        fire_and_forget: bool = False, no_timeout: bool = False,
-                        stdout_only: bool = False, output_path: str | None = None,
-                        allow_write: bool = False, delimiters: str | None = None,
-                        skip_github: bool = False, auth_mode: str | None = None,
-                        review: bool = False):
+def process_and_respond(
+    message_id: int,
+    model: str | None = None,
+    fire_and_forget: bool = False,
+    no_timeout: bool = False,
+    stdout_only: bool = False,
+    output_path: str | None = None,
+    allow_write: bool = False,
+    delimiters: str | None = None,
+    skip_github: bool = False,
+    auth_mode: str | None = None,
+    review: bool = False,
+):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
     error message back to the sender and always cleans up the PID file.
+
+    ``model`` defaults to the AGY seat's live ACP registry pin (or ``AB_GEMINI_MODEL``
+    env override) (#6959).
     """
+    if model is None:
+        model = default_gemini_model()
+
     msg = read_message(message_id, quiet=stdout_only)
     if not msg:
         return
 
-    prompt = build_gemini_prompt(
-        msg, stdout_only, output_path, allow_write, delimiters, review
-    )
+    prompt = build_gemini_prompt(msg, stdout_only, output_path, allow_write, delimiters, review)
 
     if fire_and_forget:
         _launch_gemini_background(msg, message_id, model, prompt, auth_mode=auth_mode)
     else:
-        return _run_gemini_sync(msg, message_id, model, prompt, no_timeout, stdout_only,
-                                output_path, allow_write, skip_github, auth_mode)
+        return _run_gemini_sync(
+            msg, message_id, model, prompt, no_timeout, stdout_only, output_path, allow_write, skip_github, auth_mode
+        )
 
 
 def _launch_gemini_background(
-    msg: dict, message_id: int, model: str, prompt: str, *, auth_mode: str | None,
+    msg: dict,
+    message_id: int,
+    model: str,
+    prompt: str,
+    *,
+    auth_mode: str | None,
 ):
     """Launch the bridge itself as a background process (fire-and-forget mode)."""
-    task_key = msg['task_id'] or str(message_id)
+    task_key = msg["task_id"] or str(message_id)
 
     if _is_task_locked("gemini", task_key):
         print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
@@ -256,41 +317,53 @@ def _launch_gemini_background(
         # Use .venv/bin/python explicitly to avoid wrong interpreter
         venv_python = str(Path(__file__).parents[2] / ".venv" / "bin" / "python")
         bridge_cmd = [
-            venv_python, str(Path(__file__).parent / "__main__.py"),
-            "process", str(message_id),
-            "--model", model,
-            "--no-timeout"
+            venv_python,
+            str(Path(__file__).parent / "__main__.py"),
+            "process",
+            str(message_id),
+            "--model",
+            model,
+            "--no-timeout",
         ]
         if auth_mode:
             bridge_cmd.extend(["--auth", auth_mode])
         lf = open(log_file, "w")  # noqa: SIM115 — fd passed to Popen, closed after
         proc = subprocess.Popen(
-            bridge_cmd,
-            stdout=lf,
-            stderr=subprocess.STDOUT,
-            cwd=str(REPO_ROOT),
-            env=_PARENT_ENV,
-            start_new_session=True
+            bridge_cmd, stdout=lf, stderr=subprocess.STDOUT, cwd=str(REPO_ROOT), env=_PARENT_ENV, start_new_session=True
         )
         lf.close()
         print(f"   PID: {proc.pid}")
 
-        _write_pid_file("gemini", task_key, {
-            "message_id": message_id,
-            "task_id": msg.get('task_id'),
-            "model": model,
-            "mode": "fire-and-forget",
-        }, pid=proc.pid)
+        _write_pid_file(
+            "gemini",
+            task_key,
+            {
+                "message_id": message_id,
+                "task_id": msg.get("task_id"),
+                "model": model,
+                "mode": "fire-and-forget",
+            },
+            pid=proc.pid,
+        )
 
     except FileNotFoundError:
         print("❌ Python or bridge script not found")
 
 
-def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
-                     no_timeout: bool, stdout_only: bool, output_path: str | None,
-                     allow_write: bool, skip_github: bool, auth_mode: str | None):
+def _run_gemini_sync(
+    msg: dict,
+    message_id: int,
+    model: str,
+    prompt: str,
+    no_timeout: bool,
+    stdout_only: bool,
+    output_path: str | None,
+    allow_write: bool,
+    skip_github: bool,
+    auth_mode: str | None,
+):
     """Run Gemini synchronously with streaming output and retry logic."""
-    task_key = msg.get('task_id') or str(message_id)
+    task_key = msg.get("task_id") or str(message_id)
     timeout_val = None if no_timeout else 1800
     mode_label = "no-timeout" if no_timeout else "sync, 30 min timeout"
 
@@ -302,12 +375,16 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
         print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
         sys.stdout.flush()
 
-    _write_pid_file("gemini", task_key, {
-        "message_id": message_id,
-        "task_id": msg.get('task_id'),
-        "model": model,
-        "mode": mode_label,
-    })
+    _write_pid_file(
+        "gemini",
+        task_key,
+        {
+            "message_id": message_id,
+            "task_id": msg.get("task_id"),
+            "model": model,
+            "mode": mode_label,
+        },
+    )
     atexit.register(_remove_pid_file, "gemini", task_key)
 
     max_retries = 5
@@ -322,10 +399,23 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
 
     try:
         for attempt in range(max_retries):
-            result = _run_gemini_attempt(msg, message_id, current_model, requested_model, prompt,
-                                         timeout_val, stdout_only, output_path, skip_github,
-                                         attempt, max_retries, base_delay, rate_limit_state,
-                                         auth_mode, allow_write)
+            result = _run_gemini_attempt(
+                msg,
+                message_id,
+                current_model,
+                requested_model,
+                prompt,
+                timeout_val,
+                stdout_only,
+                output_path,
+                skip_github,
+                attempt,
+                max_retries,
+                base_delay,
+                rate_limit_state,
+                auth_mode,
+                allow_write,
+            )
             if isinstance(result, dict) and result.get("action") == "fallback":
                 current_model = str(result["model"])
                 continue
@@ -345,9 +435,23 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
         _remove_pid_file("gemini", task_key)
 
 
-def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout_val,
-                        stdout_only, output_path, skip_github, attempt, max_retries,
-                        base_delay, rate_limit_state, auth_mode, allow_write=False):
+def _run_gemini_attempt(
+    msg,
+    message_id,
+    model,
+    requested_model,
+    prompt,
+    timeout_val,
+    stdout_only,
+    output_path,
+    skip_github,
+    attempt,
+    max_retries,
+    base_delay,
+    rate_limit_state,
+    auth_mode,
+    allow_write=False,
+):
     """Run a single Gemini CLI attempt via agent_runtime.
 
     Returns None to retry, False to stop, or (response, sent).
@@ -364,9 +468,12 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
         # preamble silently corrupts the parser — every score regex misses
         # and dims default to 0.0. The wiki review pipeline regressed this
         # way until the 2026-04-18 Phase A canary surfaced it.
-        prompt_preview = prompt[:200].replace('\n', ' ')
-        print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
-              f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
+        prompt_preview = prompt[:200].replace("\n", " ")
+        print(
+            f"  [gemini] attempt {attempt + 1}/{max_retries}, model={model}, "
+            f"prompt={len(prompt)} chars: {prompt_preview}...",
+            flush=True,
+        )
 
     pre_snapshot = None
     if output_path:
@@ -393,8 +500,8 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
             task_id=msg.get("task_id"),
             initiator=msg.get("from"),
             session_id=None,  # Gemini CLI has no --resume; bridge multi-turn
-                              # is handled via conversation context injection
-                              # in the prompt builder, not CLI-level resume.
+            # is handled via conversation context injection
+            # in the prompt builder, not CLI-level resume.
             tool_config=tool_config,
             entrypoint="bridge",
             hard_timeout=max(timeout_val or 1800, 300),
@@ -413,7 +520,7 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
         # Rate-limited: treat as retryable per legacy behavior
         print(f"\n⏳ Gemini rate limited: {exc}")
         if attempt < max_retries - 1:
-            delay = base_delay * (2 ** attempt)
+            delay = base_delay * (2**attempt)
             print(f"⏳ Backing off for {delay}s...")
             time.sleep(delay)
             return None
@@ -463,8 +570,7 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
         _print_completion_status(output_path, response)
 
     # Route response
-    _route_gemini_response(msg, message_id, model, response, stdout_only, output_path,
-                           skip_github)
+    _route_gemini_response(msg, message_id, model, response, stdout_only, output_path, skip_github)
 
     acknowledge(message_id, quiet=stdout_only)
     return (response, True)
@@ -483,7 +589,7 @@ def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
         return "stop"
 
     if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
-        delay = base_delay * (2 ** attempt)
+        delay = base_delay * (2**attempt)
         if attempt < max_retries - 1:
             print(f"\n⏳ Rate limited (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
             sys.stdout.flush()
@@ -588,8 +694,7 @@ def _print_completion_status(output_path, response):
     sys.stdout.flush()
 
 
-def _route_gemini_response(msg, message_id, model, response, stdout_only, output_path,
-                           skip_github):
+def _route_gemini_response(msg, message_id, model, response, stdout_only, output_path, skip_github):
     """Route Gemini's response to the appropriate destination."""
     if output_path:
         if not stdout_only:
@@ -610,19 +715,29 @@ def _route_gemini_response(msg, message_id, model, response, stdout_only, output
         reply_to = msg.get("from", "claude")
         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
         send_message(
-            content=summary, task_id=msg['task_id'], msg_type="response",
-            from_llm="gemini", to_llm=reply_to, from_model=model, to_model=None,
-            quiet=stdout_only
+            content=summary,
+            task_id=msg["task_id"],
+            msg_type="response",
+            from_llm="gemini",
+            to_llm=reply_to,
+            from_model=model,
+            to_model=None,
+            quiet=stdout_only,
         )
     else:
         # Route reply back to the actual sender, not always to claude
         reply_to = msg.get("from", "claude")
         send_message(
-            content=response, task_id=msg['task_id'], msg_type="response",
-            from_llm="gemini", to_llm=reply_to, from_model=model, to_model=None
+            content=response,
+            task_id=msg["task_id"],
+            msg_type="response",
+            from_llm="gemini",
+            to_llm=reply_to,
+            from_model=model,
+            to_model=None,
         )
         if not skip_github:
-            _post_review_to_github(msg['task_id'], response, model)
+            _post_review_to_github(msg["task_id"], response, model)
 
 
 def _send_gemini_error(msg, message_id):
@@ -637,8 +752,11 @@ def _send_gemini_error(msg, message_id):
         reply_to = msg.get("from", "claude")
         send_message(
             content=f"[Bridge Error] Gemini process failed for message #{message_id}. Check logs.",
-            task_id=msg['task_id'], msg_type="error",
-            from_llm="gemini", to_llm=reply_to, from_model="gemini-bridge-error"
+            task_id=msg["task_id"],
+            msg_type="error",
+            from_llm="gemini",
+            to_llm=reply_to,
+            from_model="gemini-bridge-error",
         )
         record_ask_failure(message_id, f"Gemini process failed for message #{message_id}")
     except Exception:

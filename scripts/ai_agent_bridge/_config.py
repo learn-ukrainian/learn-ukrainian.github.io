@@ -15,9 +15,7 @@ if str(_local_repo_root) not in sys.path:
 from scripts.common.repo_root import resolve_repo_root
 
 # Repo root for path resolution
-REPO_ROOT = Path(
-    os.environ.get("AB_REPO_ROOT", str(Path(__file__).parent.parent.parent))
-)
+REPO_ROOT = Path(os.environ.get("AB_REPO_ROOT", str(Path(__file__).parent.parent.parent)))
 
 PRIMARY_REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 
@@ -43,31 +41,55 @@ PID_DIR = Path(
 # Second probe: the default native install target ~/.local/bin/claude covers
 # callers whose PATH omits it (mirrors start-claude.sh:33; review-4881).
 _CLAUDE_BIN = shutil.which("claude") or (
-    str(Path.home() / ".local/bin/claude")
-    if (Path.home() / ".local/bin/claude").is_file()
-    else None
+    str(Path.home() / ".local/bin/claude") if (Path.home() / ".local/bin/claude").is_file() else None
 )
 CLAUDE_CMD = [_CLAUDE_BIN] if _CLAUDE_BIN else ["npx", "@anthropic-ai/claude-code@latest"]
 AGY_CLI = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 CODEX_CLI = shutil.which("codex") or "codex"
-GEMINI_DEFAULT_MODEL = os.environ.get("AB_GEMINI_MODEL", "")
-if not GEMINI_DEFAULT_MODEL:
-    try:
-        from batch_gemini_config import FLASH_MODEL
 
-        GEMINI_DEFAULT_MODEL = FLASH_MODEL
-    except ImportError:
-        GEMINI_DEFAULT_MODEL = "gemini-2.0-flash"
+
+def default_gemini_model() -> str:
+    """Resolve the default Gemini model from environment or ACP registry pin (#6959).
+
+    Resolution chain:
+    1. ``AB_GEMINI_MODEL`` environment override.
+    2. AGY seat pin from the live ACP participant registry (``agent_runtime.adapters.acpx.ACPX_SUPPORTED_PARTICIPANTS``).
+
+    Raises RuntimeError if neither is configured (fails loudly rather than pinning
+    a stale literal fallback).
+    """
+    env_override = os.environ.get("AB_GEMINI_MODEL")
+    if env_override:
+        return env_override
+
+    try:
+        from ._acp_compat import registered_participant_model
+
+        pin = registered_participant_model("agy")
+        if pin:
+            return pin
+    except Exception:
+        pass
+
+    raise RuntimeError(
+        "No default Gemini model configured: 'AB_GEMINI_MODEL' is unset and "
+        "the ACP participant registry ('agy') has no model pin."
+    )
+
+
+def __getattr__(name: str):
+    if name == "GEMINI_DEFAULT_MODEL":
+        return default_gemini_model()
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 # Snapshot environment for passing to detached children. Use a narrow env so
 # background bridge processes do not inherit shell tokens that agents can print.
 # Set GEMINI_SESSION so .bashrc disables hostile aliases (eza, bat, zoxide)
 _PARENT_ENV = build_agent_env(os.environ, repo_root=REPO_ROOT)
 _PARENT_ENV["GEMINI_SESSION"] = "1"
-_PIPELINE_ENV_KEY = os.environ.get(
-    "AB_PIPELINE_ENV_KEY", "LEARN_UKRAINIAN_PIPELINE"
-)
+_PIPELINE_ENV_KEY = os.environ.get("AB_PIPELINE_ENV_KEY", "LEARN_UKRAINIAN_PIPELINE")
 _PARENT_ENV[_PIPELINE_ENV_KEY] = "1"  # Suppress inbox hooks during pipeline runs
 
 # Model availability cache: {model: (available: bool, timestamp: float)}
