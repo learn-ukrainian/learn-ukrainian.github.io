@@ -717,6 +717,6 @@ def test_mirror_dir_for_uses_primary_data(
     monkeypatch.setattr(
         atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
     )
-    assert atlas_job.mirror_dir_for("job-1") == Path(
+    assert atlas_job.mirror_dir_for("job-1").resolve() == Path(
         "/tmp/primary-checkout/data/lexicon/runner-mirror/job-1"
-    )
+    ).resolve()

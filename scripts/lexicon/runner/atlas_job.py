@@ -349,6 +349,22 @@ def _safe_id_token(part: str) -> str:
     return matched.group(0)
 
 
+def _path_under(root: Path, *parts: str) -> Path:
+    """Join ``parts`` under ``root`` with a CodeQL-recognized containment check.
+
+    ``os.path.realpath`` + ``startswith(root + os.sep)`` is the sanitizer idiom
+    CodeQL's ``py/path-injection`` query recognizes (pathlib ``relative_to`` /
+    ``is_relative_to`` alone does not clear the alert).
+    """
+    if not parts:
+        raise ValueError("path parts required")
+    root_real = os.path.realpath(str(root))
+    candidate = os.path.realpath(os.path.join(root_real, *parts))
+    if not candidate.startswith(root_real + os.sep):
+        raise ValueError("path escapes configured root")
+    return Path(candidate)
+
+
 def require_safe_workdir(workdir: object) -> str:
     """Fail closed for plan/registry workdirs used in path and SSH contexts.
 
@@ -367,16 +383,17 @@ def require_safe_workdir(workdir: object) -> str:
         raise ValueError("workdir must not contain ..")
     run_root = _run_root()
     if raw.is_absolute():
-        try:
-            rel = raw.relative_to(run_root)
-        except ValueError as exc:
-            try:
-                rel = raw.resolve().relative_to(run_root.resolve())
-            except ValueError:
-                raise ValueError("workdir must be under ATLAS_RUN_ROOT") from exc
-        if not rel.parts:
+        # CodeQL-recognized containment (realpath + startswith), not relative_to.
+        run_root_real = os.path.realpath(str(run_root))
+        candidate = os.path.realpath(str(raw))
+        if candidate != run_root_real and not candidate.startswith(run_root_real + os.sep):
+            raise ValueError("workdir must be under ATLAS_RUN_ROOT")
+        rel = os.path.relpath(candidate, run_root_real)
+        if rel in {".", ""} or rel.startswith(".." + os.sep) or rel == "..":
             raise ValueError("workdir must be a subdirectory of ATLAS_RUN_ROOT")
-        safe_rel = [_safe_id_token(part) for part in rel.parts]
+        safe_rel = [_safe_id_token(part) for part in Path(rel).parts]
+        # Reconstruct under the configured root Path (not platform realpath /
+        # firmlink form). Containment was already proven via realpath above.
         return str(run_root.joinpath(*safe_rel))
     safe_parts: list[str] = []
     for part in raw.parts:
@@ -388,17 +405,17 @@ def require_safe_workdir(workdir: object) -> str:
 
 def registry_path(job_id: str) -> Path:
     safe = require_safe_job_id(job_id)
-    return registry_dir() / f"{safe}.json"
+    return _path_under(registry_dir(), f"{safe}.json")
 
 
 def result_path(job_id: str) -> Path:
     safe = require_safe_job_id(job_id)
-    return registry_dir() / f"{safe}.result.json"
+    return _path_under(registry_dir(), f"{safe}.result.json")
 
 
 def git_receipt_path(job_id: str) -> Path:
     safe = require_safe_job_id(job_id)
-    return registry_dir() / "receipts" / f"{safe}.json"
+    return _path_under(registry_dir(), "receipts", f"{safe}.json")
 
 
 def restic_block_path() -> Path:
@@ -420,14 +437,14 @@ def work_dir_for(job_id: str, plan: dict[str, Any] | None = None) -> str:
 
 def local_pull_dir(job_id: str) -> Path:
     safe = require_safe_job_id(job_id)
-    return registry_dir() / "pulled" / safe
+    return _path_under(registry_dir(), "pulled", safe)
 
 
 def mirror_dir_for(job_id: str) -> Path:
     safe = require_safe_job_id(job_id)
     # Mirror into the primary checkout's data/ so backup-data.sh (which doctors
     # and backs up LU_BACKUP_PROJECT_ROOT) covers the snapshot.
-    return primary_checkout_root() / "data" / "lexicon" / "runner-mirror" / safe
+    return _path_under(primary_checkout_root() / "data" / "lexicon" / "runner-mirror", safe)
 
 
 def load_plan(path: Path) -> dict[str, Any]:

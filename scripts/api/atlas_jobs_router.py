@@ -7,6 +7,8 @@ Prefix: ``/api/atlas-jobs``.
 from __future__ import annotations
 
 import json
+import os
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -33,6 +35,20 @@ def _require_job_id(job_id: str) -> str:
         return atlas_job.require_safe_job_id(job_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+def _read_result_receipt(job_id: str) -> dict[str, Any] | None:
+    """Load ``{job_id}.result.json`` only when contained under the registry root."""
+    result_file = atlas_job.result_path(job_id)
+    root_real = os.path.realpath(str(atlas_job.registry_dir()))
+    candidate = os.path.realpath(str(result_file))
+    if not candidate.startswith(root_real + os.sep):
+        return None
+    path = Path(candidate)
+    if not path.is_file():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data if isinstance(data, dict) else None
 
 
 @router.get("")
@@ -76,13 +92,9 @@ def job_status(job_id: str, host: str = "atlas-runner", audit: bool = False) -> 
     # Reconcile the journal against host systemd truth.
     rc = atlas_job.status(host=host, audit=audit)
     row = atlas_job.load_registry(job_id) or row
-    result = None
-    result_file = atlas_job.result_path(job_id)
-    if result_file.is_file():
-        result = json.loads(result_file.read_text(encoding="utf-8"))
     return {
         "job": row,
-        "result": result,
+        "result": _read_result_receipt(job_id),
         "status_exit_code": rc,
         "restic_sink_blocked": atlas_job.restic_sink_blocked(),
     }
@@ -102,10 +114,7 @@ def close_job(job_id: str, body: CloseBody | None = None) -> dict[str, Any]:
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     row = atlas_job.load_registry(job_id)
-    result = None
-    result_file = atlas_job.result_path(job_id)
-    if result_file.is_file():
-        result = json.loads(result_file.read_text(encoding="utf-8"))
+    result = _read_result_receipt(job_id)
     if rc == 2:
         raise HTTPException(status_code=404, detail={"exit_code": rc, "message": "no registry row"})
     response = {"exit_code": rc, "job": row, "result": result}

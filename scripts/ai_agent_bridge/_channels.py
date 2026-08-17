@@ -52,6 +52,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import urllib.request
 import uuid
 from datetime import UTC, datetime, timedelta
@@ -277,9 +278,16 @@ def context_sha256(path: Path) -> str:
     Returns empty string if the file doesn't exist or is unreadable —
     we'd rather log an empty rev than block a post on a missing
     context file. The absence itself is meaningful signal during debug.
+
+    Paths must stay under ``CONTEXT_ROOT`` (CodeQL ``py/path-injection``
+    barrier: ``os.path.realpath`` + ``startswith(root + os.sep)``).
     """
+    root_real = os.path.realpath(str(CONTEXT_ROOT))
+    candidate = os.path.realpath(str(path))
+    if not candidate.startswith(root_real + os.sep):
+        return ""
     try:
-        return hashlib.sha256(path.read_bytes()).hexdigest()
+        return hashlib.sha256(Path(candidate).read_bytes()).hexdigest()
     except (OSError, FileNotFoundError):
         return ""
 
@@ -453,6 +461,19 @@ def _delivery_queue_row(
 # ── B.2: Context loading ──────────────────────────────────────────────
 
 
+_CHANNEL_NAME = re.compile(r"^[a-z][a-z0-9-]{0,62}$")
+
+
+def require_safe_channel_name(channel: str) -> str:
+    """Return a filesystem-safe channel token, or raise ValueError."""
+    if not isinstance(channel, str):
+        raise ValueError("channel name must be a lowercase-kebab-case token")
+    matched = _CHANNEL_NAME.fullmatch(channel)
+    if matched is None:
+        raise ValueError(f"channel name must be lowercase-kebab-case; got '{channel}'")
+    return matched.group(0)
+
+
 def channel_context_path(channel: str) -> Path:
     """Return the filesystem path to a channel's pinned context file.
 
@@ -460,8 +481,16 @@ def channel_context_path(channel: str) -> Path:
     The file does NOT have to exist — ``context_sha256`` returns
     empty string for missing files, and ``load_channel_context``
     treats a missing file as "no pinned context" rather than erroring.
+
+    Uses the CodeQL-recognized ``realpath`` + ``startswith`` containment
+    idiom so request-derived channel names cannot escape ``CONTEXT_ROOT``.
     """
-    return CONTEXT_ROOT / channel / "context.md"
+    safe = require_safe_channel_name(channel)
+    root_real = os.path.realpath(str(CONTEXT_ROOT))
+    candidate = os.path.realpath(os.path.join(root_real, safe, "context.md"))
+    if not candidate.startswith(root_real + os.sep):
+        raise ValueError("channel context path escapes CONTEXT_ROOT")
+    return Path(candidate)
 
 
 def load_channel_context(
@@ -857,8 +886,7 @@ def create_channel(
     """
     if not name or not name.strip():
         raise ValueError("channel name cannot be empty")
-    if name != name.strip().lower().replace(" ", "-"):
-        raise ValueError(f"channel name must be lowercase-kebab-case; got '{name}'")
+    name = require_safe_channel_name(name.strip())
 
     include = include or []
     subscribers = subscribers or []
