@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f7a8daae0868",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-wire-diminutive",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/derived_en_fallback.py",
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "tests/test_derived_en_fallback.py",
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f7/a8daae0868/0/metadata.json",
+      "transcript": "/f7/a8daae0868/0/full.jsonl",
+      "compact_transcript": "/f7/a8daae0868/0/transcript.jsonl",
+      "content_hash": "/f7/a8daae0868/0/content_hash.txt",
+      "prompt": "/f7/a8daae0868/0/prompt.txt"
+    }
+  ]
+}
