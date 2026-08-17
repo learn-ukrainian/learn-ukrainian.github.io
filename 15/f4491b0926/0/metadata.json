@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "15f4491b0926",
+  "session_id": "fleet-fb59d28bd54744439baf2d0ffc3ac335",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T20:43:01.696567Z",
+  "branch": "cursor/infra-6953-c0-transport",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_agent_runtime_acp_transport_cutover.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "fedb57bfd035",
+  "checkpoint_transcript_start": 2,
+  "transcript_lines_at_start": 2,
+  "compact_transcript_start": 1,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T20:43:01.676824Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}

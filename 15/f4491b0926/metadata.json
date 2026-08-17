@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "15f4491b0926",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6953-c0-transport",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_agent_runtime_acp_transport_cutover.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/15/f4491b0926/0/metadata.json",
+      "transcript": "/15/f4491b0926/0/full.jsonl",
+      "compact_transcript": "/15/f4491b0926/0/transcript.jsonl",
+      "content_hash": "/15/f4491b0926/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
