@@ -297,6 +297,7 @@ def test_enrich_entry_merges_pointer_synonym_relations(monkeypatch):
     monkeypatch.setattr(enrich_manifest, "_wiki_reference", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest, "_vesum_valid_synonym", lambda term: bool(term))
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
 
     entry = {"lemma": "тестслово", "pos": "noun"}
     conn = sqlite3.connect(":memory:")

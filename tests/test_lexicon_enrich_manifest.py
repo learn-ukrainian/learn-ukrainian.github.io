@@ -2519,6 +2519,7 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_ensure_grac_frequency_cache", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
 
     assert enrich_manifest_module.enrich() == (1, 1)
@@ -2625,6 +2626,7 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_ensure_grac_frequency_cache", lambda *args, **kwargs: None)
     _patch_vesum_analyses(monkeypatch, {"воля": "noun", "ув'язнення": "noun"})
 
     assert enrich_manifest_module.enrich() == (1, 1)
@@ -4089,6 +4091,7 @@ def test_ключ_does_not_read_ukrajinet_and_uses_mphdict_synonyms(monkeypatch)
     monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_wiki_reference", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
 
     entry = {"lemma": "ключ", "pos": "noun"}
     assert enrich_manifest_module.enrich_entry(
