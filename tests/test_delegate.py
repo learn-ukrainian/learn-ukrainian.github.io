@@ -2750,6 +2750,204 @@ def test_read_only_deploy_target_dir_exemption_mutation_check(monkeypatch):
     ]
 
 
+_SIBLING_DISPATCH_SANDBOX = ".worktrees/dispatch/cursor/codeql-path-injection-fix"
+_SIBLING_DISPATCH_SANDBOX_PATHS = (
+    f"{_SIBLING_DISPATCH_SANDBOX}/",
+    f"{_SIBLING_DISPATCH_SANDBOX}/README.md",
+    f"{_SIBLING_DISPATCH_SANDBOX}/scripts/foo.py",
+)
+
+
+def test_read_only_dispatch_sandbox_root_classification():
+    """#6938: only layout-A dispatch sandboxes map to a sibling-root key."""
+    assert (
+        delegate._read_only_dispatch_sandbox_root(f"{_SIBLING_DISPATCH_SANDBOX}/README.md")
+        == _SIBLING_DISPATCH_SANDBOX
+    )
+    assert (
+        delegate._read_only_dispatch_sandbox_root(f"{_SIBLING_DISPATCH_SANDBOX}/")
+        == _SIBLING_DISPATCH_SANDBOX
+    )
+    assert delegate._read_only_dispatch_sandbox_root(".worktrees/other/sandbox/file") is None
+    assert delegate._read_only_dispatch_sandbox_root("tracked.txt") is None
+    assert delegate._read_only_dispatch_sandbox_root(".worktrees/dispatch/cursor") is None
+
+
+def test_read_only_mutation_paths_ignore_new_sibling_dispatch_sandbox_only():
+    """#6938 unit half: new sibling sandbox is empty; own writes and existing-sibling writes stay."""
+    before: dict[str, str] = {}
+    after_sibling = {path: "!!" for path in _SIBLING_DISPATCH_SANDBOX_PATHS}
+    assert delegate._read_only_mutation_paths(before, after_sibling) == []
+
+    after_mixed = {**after_sibling, "tracked.txt": " M"}
+    assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
+
+    existing = f"{_SIBLING_DISPATCH_SANDBOX}/README.md"
+    planted = f"{_SIBLING_DISPATCH_SANDBOX}/evil.txt"
+    assert delegate._read_only_mutation_paths(
+        {existing: "!!"},
+        {existing: "!!", planted: "!!"},
+    ) == [planted]
+
+
+def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6938: concurrent ``git worktree add`` under ``.worktrees/`` must not fail read-only."""
+    checkout = (tmp_path / "repo-root").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    gitignore = checkout / ".gitignore"
+    gitignore.write_text(gitignore.read_text(encoding="utf-8") + ".worktrees/\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".gitignore"], cwd=checkout, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "ignore worktrees"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    # Detach HEAD so ``git worktree add -b`` can create a sibling branch without
+    # fighting the fixture branch checked out in this repo.
+    subprocess.run(
+        ["git", "checkout", "--detach", "HEAD"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    task_id = "read-only-concurrent-sibling-worktree"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+
+    sibling = checkout / ".worktrees" / "dispatch" / "cursor" / "codeql-path-injection-fix"
+
+    def concurrent_sibling_worktree(*_args, **_kwargs):
+        sibling.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            [
+                "git",
+                "worktree",
+                "add",
+                "-b",
+                "cursor/codeql-path-injection-fix",
+                str(sibling),
+                "HEAD",
+            ],
+            cwd=checkout,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=concurrent_sibling_worktree):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["last_error"] is None
+    assert sibling.exists()
+    post = state["read_only_checkout_post"]
+    assert any(
+        delegate._read_only_dispatch_sandbox_root(path) == _SIBLING_DISPATCH_SANDBOX
+        for path in post
+    )
+
+
+def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_worktree(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#6938 inverse: a file the read-only task itself writes still fails the guard."""
+    checkout = (tmp_path / "repo-root").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    gitignore = checkout / ".gitignore"
+    gitignore.write_text(gitignore.read_text(encoding="utf-8") + ".worktrees/\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".gitignore"], cwd=checkout, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "ignore worktrees"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "checkout", "--detach", "HEAD"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    task_id = "read-only-sibling-plus-task-write"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+
+    sibling = checkout / ".worktrees" / "dispatch" / "cursor" / "codeql-path-injection-fix"
+
+    def sibling_plus_task_write(*_args, **_kwargs):
+        sibling.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            [
+                "git",
+                "worktree",
+                "add",
+                "-b",
+                "cursor/codeql-path-injection-fix",
+                str(sibling),
+                "HEAD",
+            ],
+            cwd=checkout,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+        (checkout / "tracked.txt").write_text("task authored edit\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=sibling_plus_task_write):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["tracked.txt"]
+    assert state["last_error"] == "read-only checkout mutation detected: tracked.txt"
+    assert sibling.exists()
+
+
 def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
     tmp_tasks_dir,
     tmp_path,

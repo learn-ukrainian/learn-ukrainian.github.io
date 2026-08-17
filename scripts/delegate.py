@@ -2279,6 +2279,11 @@ _READ_ONLY_RUNTIME_STATE_SUFFIXES = (
     ".sqlite3-wal",
 )
 _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES = frozenset({"??", "!!"})
+# Dispatch sandboxes live at ``.worktrees/dispatch/<agent>/<task>/`` (layout A).
+# Concurrent ``git worktree add`` under that prefix must not false-fail a
+# read-only task that is scanning the shared primary checkout (#6938).
+_READ_ONLY_DISPATCH_SANDBOX_PREFIX = (".worktrees", "dispatch")
+_READ_ONLY_DISPATCH_SANDBOX_ROOT_PARTS = 4  # .worktrees / dispatch / agent / task
 
 
 def _normalize_read_only_relpath(path: str) -> str:
@@ -2286,7 +2291,7 @@ def _normalize_read_only_relpath(path: str) -> str:
     normalized = path.replace("\\", "/")
     while normalized.startswith("./"):
         normalized = normalized[2:]
-    return normalized
+    return normalized.rstrip("/")
 
 
 def _is_read_only_runtime_telemetry_path(path: str) -> bool:
@@ -2314,6 +2319,45 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     if any(part in _READ_ONLY_RUNTIME_STATE_DIR_NAMES for part in parts):
         return True
     return any(normalized.endswith(suffix) for suffix in _READ_ONLY_RUNTIME_STATE_SUFFIXES)
+
+
+def _read_only_dispatch_sandbox_root(path: str) -> str | None:
+    """Return ``.worktrees/dispatch/<agent>/<task>`` when *path* is under one.
+
+    Paths outside the dispatch sandbox layout (including other ``.worktrees/``
+    entries) return ``None`` so the guard still sees them as ordinary mutations.
+    """
+    normalized = _normalize_read_only_relpath(path)
+    parts = tuple(part for part in normalized.split("/") if part and part != ".")
+    if len(parts) < _READ_ONLY_DISPATCH_SANDBOX_ROOT_PARTS:
+        return None
+    if parts[:2] != _READ_ONLY_DISPATCH_SANDBOX_PREFIX:
+        return None
+    return "/".join(parts[:_READ_ONLY_DISPATCH_SANDBOX_ROOT_PARTS])
+
+
+def _read_only_dispatch_sandbox_roots(snapshot: dict[str, str]) -> frozenset[str]:
+    """Collect dispatch sandbox roots visible in a read-only checkout snapshot."""
+    return frozenset(
+        root
+        for path in snapshot
+        if (root := _read_only_dispatch_sandbox_root(path)) is not None
+    )
+
+
+def _is_read_only_new_sibling_dispatch_sandbox_path(
+    path: str, *, before_roots: frozenset[str]
+) -> bool:
+    """Return whether *path* belongs to a sibling sandbox absent from *before*.
+
+    Only newly appeared ``.worktrees/dispatch/<agent>/<task>/`` trees are
+    exempt (#6938). A write under a sandbox root that already appeared in the
+    pre-snapshot still counts as a mutation when the root checkout can see it.
+    """
+    root = _read_only_dispatch_sandbox_root(path)
+    if root is None:
+        return False
+    return root not in before_roots
 
 
 def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
@@ -2348,7 +2392,14 @@ def _read_only_mutation_paths(
     untracked: the runtime owns those writes, so they are not evidence that a
     read-only worker mutated the tree (#6803, #6860). Tracked paths under the
     same prefixes (including force-added files) still trip the guard.
+
+    Newly appeared sibling dispatch sandboxes under
+    ``.worktrees/dispatch/<agent>/<task>/`` are also excluded (#6938): concurrent
+    ``git worktree add`` on the shared primary checkout is not this task's
+    mutation. Writes under a sandbox that already existed in the pre-snapshot
+    remain visible.
     """
+    before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
         path
         for path in set(before) | set(after)
@@ -2357,6 +2408,9 @@ def _read_only_mutation_paths(
             path,
             before_state=before.get(path),
             after_state=after.get(path),
+        )
+        and not _is_read_only_new_sibling_dispatch_sandbox_path(
+            path, before_roots=before_roots
         )
     )
 
