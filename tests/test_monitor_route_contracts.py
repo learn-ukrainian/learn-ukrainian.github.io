@@ -102,3 +102,29 @@ def test_routing_assignments_has_specific_observability_contract():
     assert "decision-time snapshots" in contract.freshness
     assert "all-time" in contract.stale_risk
     assert contract.mutates is False
+
+
+def test_every_atlas_jobs_route_matches_contracts():
+    atlas_paths = [
+        path for path in app.openapi()["paths"]
+        if path.startswith("/api/atlas-jobs")
+    ]
+    assert "/api/atlas-jobs" in atlas_paths
+    assert "/api/atlas-jobs/health" in atlas_paths
+    assert "/api/atlas-jobs/load" in atlas_paths
+    assert "/api/atlas-jobs/results" in atlas_paths
+    assert "/api/atlas-jobs/submit" in atlas_paths
+    assert "/api/atlas-jobs/{job_id}" in atlas_paths
+    assert "/api/atlas-jobs/{job_id}/close" in atlas_paths
+
+    for path in atlas_paths:
+        contract = contract_for_route(path, "http")
+        assert contract is not None, f"missing contract for {path}"
+        assert contract.source_of_truth
+        assert contract.freshness
+        assert contract.recommendation
+        if path in {"/api/atlas-jobs/submit", "/api/atlas-jobs/{job_id}", "/api/atlas-jobs/{job_id}/close"}:
+            assert contract.mutates is True, f"{path} must have mutates=True"
+        else:
+            assert contract.mutates is False, f"{path} must have mutates=False"
+

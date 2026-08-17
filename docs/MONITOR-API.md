@@ -3074,3 +3074,106 @@ HTTP status, and aggregate counts.
 feature truth independently. Their failure never changes
 `recall.available`, task disposition, or any canonical GitHub/Fleet/Monitor
 state. Cache age and `stale` are returned explicitly.
+
+---
+
+## Atlas VPS Job Protocol — `/api/atlas-jobs`
+
+Lightweight Monitor facade for the Atlas VPS job execution protocol.
+Wraps `scripts.lexicon.runner.atlas_job` with zero new daemons or external message buses.
+Runbook: [`docs/runbooks/atlas-job-protocol.md`](runbooks/atlas-job-protocol.md).
+
+### `GET /api/atlas-jobs`
+Returns all local journal rows in `batch_state/atlas-jobs/*.json`.
+
+```bash
+curl -s http://localhost:8765/api/atlas-jobs | python3 -m json.tool
+```
+
+### `GET /api/atlas-jobs/health`
+Health check reporting schema version (`atlas-job.v1`), whether the restic sink is blocked (`.restic-sink-blocked`), and the registry directory path.
+
+### `GET /api/atlas-jobs/load[?host=x][&fresh=true]`
+Non-blocking host capacity, system load, memory, disk, and active `atlas-job-*` unit telemetry across canonical hosts (`atlas-runner`, `hramatka`).
+
+- **Cache-Control**: `no-store`. Always returns HTTP 200.
+- **Freshness**: In-process stale-while-revalidate cache (fresh ≤30s, stale ≤300s). Never probes SSH synchronously on the request path.
+- **Query params**:
+  - `host`: Filter to canonical host (`atlas-runner` or `hramatka`). `vps` is normalized to `hramatka`.
+  - `fresh`: When `true`, triggers a non-blocking background probe while immediately returning cached/LKG metrics.
+- **Privacy & Safety**: Never emits IP addresses, raw paths, PIDs, user names, ports, unit logs, or SSH errors. Dead hosts return `{"status": "unavailable", "error": "unreachable"}` without blocking sibling hosts.
+
+Sample response:
+```json
+{
+  "schema": "atlas-jobs-load.v1",
+  "observed_at": "2026-08-17T12:00:00Z",
+  "hosts": {
+    "atlas-runner": {
+      "status": "fresh",
+      "observed_at": "2026-08-17T12:00:00Z",
+      "age_seconds": 1.5,
+      "cpu_count": 4,
+      "loadavg": [0.15, 0.22, 0.18],
+      "mem": {
+        "available_bytes": 8589934592,
+        "total_bytes": 17179869184,
+        "pct": 50.0
+      },
+      "disk": {
+        "available_bytes": 53687091200,
+        "total_bytes": 107374182400,
+        "pct": 50.0
+      },
+      "job_unit": {
+        "active_count": 0,
+        "job_id": null,
+        "state": null
+      }
+    },
+    "hramatka": {
+      "status": "fresh",
+      "observed_at": "2026-08-17T12:00:00Z",
+      "age_seconds": 2.0,
+      "cpu_count": 8,
+      "loadavg": [0.35, 0.40, 0.38],
+      "mem": {
+        "available_bytes": 17179869184,
+        "total_bytes": 34359738368,
+        "pct": 50.0
+      },
+      "disk": {
+        "available_bytes": 107374182400,
+        "total_bytes": 214748364800,
+        "pct": 50.0
+      },
+      "job_unit": {
+        "active_count": 0,
+        "job_id": null,
+        "state": null
+      }
+    }
+  }
+}
+```
+
+### `GET /api/atlas-jobs/results[?host=x][&state=x][&limit=50][&cursor=x]`
+Allowlisted summary of sealed job result receipts (`batch_state/atlas-jobs/*.result.json`).
+Zero SSH, zero journal reconcile.
+
+- **Ordering**: Newest-first sorted by `(closed_at, id)`.
+- **Pagination**: Keyset cursor pagination (`limit` default 50, max 200; `next_cursor` provided when more items exist).
+- **Allowlist**: Every result row contains strictly: `id`, `host`, `kind`, `state`, `closed_at`, `issue`, `denominator`, `delivery`, `pulled`, `targets`, `filled_translation`, `circuit_breaker_tripped`. Never dumps raw receipts.
+
+### `POST /api/atlas-jobs/submit`
+Validates a job plan and submits an `atlas-job-*` systemd service unit to the specified host.
+Body: `{"plan": {...}, "dry_run": false}`.
+
+### `GET /api/atlas-jobs/{job_id}`
+Retrieves job status and reconciles local journal state against host systemd truth.
+Query params: `host` (default `atlas-runner`), `audit` (default `false`).
+
+### `POST /api/atlas-jobs/{job_id}/close`
+Closes a completed or crashed job, captures exit status, pulls mirror artifacts, runs restic backup, and seals a fail-closed result receipt (`.result.json`).
+Body: `{"summary": {...}, "skip_pull": false, "skip_restic": false}`.
+
