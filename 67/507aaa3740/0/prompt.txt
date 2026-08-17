@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6917-delta-quotepath
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: apply the required review delta on PR #6919 (your own branch cursor/infra-6917-ci-cheap-exit)
+
+ROUTING_CARD_V1
+- tier: heap/mechanical
+- model_x_harness: cursor:auto (authoring lane — review findings return to the author)
+- why_this_tier: bounded review delta with an exact reproduction and prescribed fix
+- advisor_packet: kimi review finding F1 on PR #6919 (driver comment, 2026-08-17)
+- owned_paths: scripts/ci/frontend_change_scope.py, tests/test_frontend_change_scope.py, scripts/ci/frontend_change_denominator.json
+- acceptance_cmd: .venv/bin/pytest tests/test_frontend_change_scope.py + ruff clean + actionlint if the workflow changes
+- alternatives_considered: n/a — author-lane delta by process
+- parallel_free_seats: n/a
+
+## Evidence rules (#M-4)
+Reproduce F1 first (Cyrillic path under site/ cheap-exits at the current head), quote the before/after helper output in the PR comment/commit body.
+
+## Steps
+1. Read the driver's split-verdict comment on PR #6919 (2026-08-17). Blocking finding F1: default core.quotePath C-quotes non-ASCII paths so the denominator prefix match misses them → silent cheap-exit on a real site/ change.
+2. Work on the EXISTING branch cursor/infra-6917-ci-cheap-exit in your dispatch worktree.
+3. Fix as prescribed: `git -c core.quotePath=false diff --name-only -z` with NUL-split parsing in scripts/ci/frontend_change_scope.py. Add regression tests: a Cyrillic path under site/ (must decide run), plus double-quote and backslash filename cases.
+4. Fold in the two non-blocking notes if trivial: write $GITHUB_STEP_SUMMARY on the git_diff_failed decision path too; add a hardening comment in the denominator JSON noting the resolver's uncovered npm-run forms (npm run -s, npx).
+5. Run the test file + ruff (+ actionlint if ci.yml changed). Push to the same branch. Comment on PR #6919 with the delta evidence.
+6. Do NOT arm auto-merge and do NOT merge.
