@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "32e5ffda7e5c",
+  "session_id": "session_11aab52f-362a-421d-87f5-2f7967b875fd",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T00:29:34.308746Z",
+  "branch": "kimi/6876-kimi-diminutive",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/derived_en_fallback.py",
+    "tests/test_derived_en_fallback.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "4439ec84ce65",
+  "token_usage": {
+    "input_tokens": 46100,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1586944,
+    "output_tokens": 17523,
+    "api_call_count": 32
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T00:29:34.295117Z",
+    "agent_lines": 373,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 373,
+    "total_lines_changed": 373,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

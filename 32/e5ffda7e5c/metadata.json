@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "32e5ffda7e5c",
+  "strategy": "manual-commit",
+  "branch": "kimi/6876-kimi-diminutive",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/derived_en_fallback.py",
+    "tests/test_derived_en_fallback.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/32/e5ffda7e5c/0/metadata.json",
+      "transcript": "/32/e5ffda7e5c/0/full.jsonl",
+      "content_hash": "/32/e5ffda7e5c/0/content_hash.txt",
+      "prompt": "/32/e5ffda7e5c/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 46100,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1586944,
+    "output_tokens": 17523,
+    "api_call_count": 32
+  }
+}
