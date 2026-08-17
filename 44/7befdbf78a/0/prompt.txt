@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6981-f1-fix
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix review finding F1 on YOUR PR #6981 (delegate --force-new live-task guard)
+
+You are grok, addressing the cross-family review verdict (FAIL, one blocking finding) posted on
+your PR #6981 (fix(delegate): fail closed on task-id reuse, archive on --force-new). One
+bounded change; do not start other work.
+
+## Finding F1 (from the review comment on the PR — read it in full first)
+The `--force-new` branch in `cmd_dispatch` has no alive-PID check: for an existing record with
+`status in {running, spawning}` and a LIVE pid, `--force-new` archives the live worker's state
+file and spawns a duplicate worker under the same task-id — the duplicate-worker race the old
+guard refused with NO escape (#5643 CF F001). `build_dispatch_fix_command` passes `--force-new`
+unconditionally, so the wrapper path hits this automatically.
+
+## Steps
+1. Work in your existing dispatch worktree for this branch
+   (`.worktrees/dispatch/grok/infra-6980-taskid-guard`, branch `grok/infra-6980-taskid-guard`).
+2. Inside the `force_new` branch of the #6980 guard in `scripts/delegate.py`: when
+   `existing.get("status") in ("running", "spawning")` AND `_pid_alive(int(pid))`, REFUSE
+   (rc 2) with a message stating force-new has no escape for live tasks — before any
+   archiving.
+3. Test (mutation-proof, matching the existing style): live-pid running record +
+   `force_new=True` → rc 2, state file unchanged, NO archive files created, `subprocess.Popen`
+   not called (monkeypatch it to raise). Parametrize running + spawning.
+4. Run: `.venv/bin/python -m pytest tests/test_delegate.py tests/test_ab_dispatch_wrappers.py`
+   and `.venv/bin/ruff check scripts/delegate.py tests/test_delegate.py`. Quote output.
+5. Commit (conventional, references #6980 + the F1 comment). You cannot push — leave the
+   worktree committed and clean; report the new head SHA. The driver pushes and re-requests
+   the delta review.
+6. NO auto-merge, NO merge.
+
+## Evidence rule (#M-4): every claim backed by quoted raw tool output.
+
+## Routing card (ROUTING_CARD_V1)
+tier=practical · model_x_harness=grok-4.6/native · why=authoring lane fixes its own review
+findings (#0); codexbar: grok 21% in reserve · owned_paths=scripts/delegate.py,
+tests/test_delegate.py · acceptance_cmd=`python -m pytest tests/test_delegate.py` ·
+alternatives=none (authoring-lane rule) · research_classification=generic (deliberate)

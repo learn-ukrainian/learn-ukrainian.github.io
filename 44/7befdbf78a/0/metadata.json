@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "447befdbf78a",
+  "session_id": "fleet-b60074f1c47343aca79139e4e162d315",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T23:22:51.329118Z",
+  "branch": "grok/infra-6981-f1-fix-on-pr",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "51669764f5a1",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T23:22:51.319902Z",
+    "agent_lines": 279,
+    "agent_removed": 84,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 279,
+    "total_lines_changed": 363,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

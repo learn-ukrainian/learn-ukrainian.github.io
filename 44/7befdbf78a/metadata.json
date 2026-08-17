@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "447befdbf78a",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6981-f1-fix-on-pr",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/44/7befdbf78a/0/metadata.json",
+      "transcript": "/44/7befdbf78a/0/full.jsonl",
+      "compact_transcript": "/44/7befdbf78a/0/transcript.jsonl",
+      "content_hash": "/44/7befdbf78a/0/content_hash.txt",
+      "prompt": "/44/7befdbf78a/0/prompt.txt"
+    }
+  ]
+}
