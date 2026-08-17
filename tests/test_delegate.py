@@ -5721,6 +5721,15 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
 # ---------------------------------------------------------------------------
 
 
+def _init_sibling_pair(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """Two independent git roots: ``(primary, sibling, sibling_worktree)``."""
+    (tmp_path / "primary").mkdir()
+    (tmp_path / "sibling").mkdir()
+    primary, _ = _init_repo_with_worktree(tmp_path / "primary")
+    sibling, sibling_wt = _init_repo_with_worktree(tmp_path / "sibling")
+    return primary, sibling, sibling_wt
+
+
 def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     """Build a real primary checkout + one registered dispatch worktree.
 
@@ -5802,6 +5811,7 @@ def _write_args(**overrides):
         "model": None,
         "cwd": None,
         "worktree": None,
+        "branch": None,
         "base": "main",
         "hard_timeout": 3600,
         "allow_merge": False,
@@ -5890,6 +5900,155 @@ def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     assert "primary checkout" in err
 
 
+# --- #6900 cross-repo binding (sibling git root vs _REPO_ROOT) --------------
+
+
+def test_auto_worktree_path_ignores_sibling_invocation_cwd(tmp_path, monkeypatch):
+    """#6900 repro: a second git root as cwd still derives under _REPO_ROOT."""
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(sibling)
+
+    derived = delegate._auto_worktree_path("codex", "private-492-private-increment")
+
+    assert derived == (
+        primary / ".worktrees" / "dispatch" / "codex" / "private-492-private-increment"
+    )
+    assert derived.is_relative_to(primary)
+    assert not derived.is_relative_to(sibling)
+
+
+def test_cross_repo_guard_allows_primary_invocation(tmp_path, monkeypatch):
+    primary, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    assert delegate._resolve_cross_repo_binding_error(
+        worktree_arg="auto",
+        cwd_arg=None,
+        requested_branch=None,
+        invocation_cwd=primary,
+    ) is None
+
+
+def test_cross_repo_guard_refuses_worktree_from_sibling(tmp_path, monkeypatch):
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    err = delegate._resolve_cross_repo_binding_error(
+        worktree_arg="auto",
+        cwd_arg=None,
+        requested_branch=None,
+        invocation_cwd=sibling,
+    )
+
+    assert err is not None
+    assert "different git root" in err
+    assert str(primary) in err
+    assert str(sibling) in err
+    assert "--worktree" in err
+    assert "primary checkout" in err
+
+
+def test_cross_repo_guard_refuses_branch_from_sibling(tmp_path, monkeypatch):
+    """--branch has the same primary-only fetch/attach blindness as --worktree."""
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    err = delegate._resolve_cross_repo_binding_error(
+        worktree_arg="auto",
+        cwd_arg=None,
+        requested_branch="codex/existing-pr",
+        invocation_cwd=sibling,
+    )
+
+    assert err is not None
+    assert "different git root" in err
+    assert "--branch" in err
+
+
+def test_cross_repo_guard_refuses_default_primary_cwd_from_sibling(tmp_path, monkeypatch):
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    err = delegate._resolve_cross_repo_binding_error(
+        worktree_arg=None,
+        cwd_arg=None,
+        requested_branch=None,
+        invocation_cwd=sibling,
+    )
+
+    assert err is not None
+    assert "silently run in the primary checkout" in err
+
+
+def test_cross_repo_guard_allows_explicit_cwd_from_sibling(tmp_path, monkeypatch):
+    primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    assert delegate._resolve_cross_repo_binding_error(
+        worktree_arg=None,
+        cwd_arg=str(sibling_wt),
+        requested_branch=None,
+        invocation_cwd=sibling,
+    ) is None
+
+
+def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch):
+    (tmp_path / "primary").mkdir()
+    primary, _ = _init_repo_with_worktree(tmp_path / "primary")
+    loose = tmp_path / "not-a-repo"
+    loose.mkdir()
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    assert delegate._resolve_cross_repo_binding_error(
+        worktree_arg="auto",
+        cwd_arg=None,
+        invocation_cwd=loose,
+    ) is None
+
+
+def test_cross_repo_guard_allows_invocation_from_primary_worktree(tmp_path, monkeypatch):
+    """A dispatch worktree of the primary still resolves to the same git root."""
+    primary, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    assert delegate._resolve_cross_repo_binding_error(
+        worktree_arg="auto",
+        cwd_arg=None,
+        requested_branch=None,
+        invocation_cwd=dispatch_wt,
+    ) is None
+
+
+def test_cross_repo_guard_mutation_check(tmp_path, monkeypatch):
+    """#6900 / #M-4: treating the sibling root as primary would re-silence the bind.
+
+    1. Current comparison: sibling cwd + --worktree refuses.
+    2. Mutate ``_fs_main_root`` to always return ``_REPO_ROOT``: the same call is silent.
+    3. Restore: the sibling call refuses again.
+    """
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    wc = delegate._load_worktree_containment()
+    original_resolve = wc._fs_main_root
+
+    def _call():
+        return delegate._resolve_cross_repo_binding_error(
+            worktree_arg="auto",
+            cwd_arg=None,
+            requested_branch=None,
+            invocation_cwd=sibling,
+        )
+
+    assert _call() is not None
+
+    monkeypatch.setattr(wc, "_fs_main_root", lambda _start: wc.canonicalize(primary))
+    assert _call() is None
+
+    monkeypatch.setattr(wc, "_fs_main_root", original_resolve)
+    assert _call() is not None
+
+
 def _primary_dirty_status(main: Path) -> dict:
     return delegate._load_worktree_containment().primary_checkout_dirty_status(main)
 
@@ -5960,6 +6119,7 @@ def test_dispatch_read_only_allows_dirty_primary_checkout(
     main, _ = _init_repo_with_worktree(tmp_path)
     (main / "tracked.txt").write_text("dirty\n")
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
     args = _write_args(task_id="ro-dirty-main", mode="read-only", cwd=None, worktree=None)
 
@@ -5977,6 +6137,7 @@ def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
     main, _ = _init_repo_with_worktree(tmp_path)
     (main / "tracked.txt").write_text("dirty\n")
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     args = _write_args(
         task_id="dirty-main",
         mode="workspace-write",
@@ -6078,6 +6239,7 @@ def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monke
     # Route delegate's worktree machinery at the throwaway repo so reuse
     # validation and provisioning never touch the real checkout or network.
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
     _patch_worker_popen(monkeypatch)
     args = _write_args(
         agent="codex",
@@ -6095,6 +6257,82 @@ def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monke
     assert state is not None
     assert state["worktree_reused"] is True
     assert Path(state["cwd"]) == dispatch_wt
+
+
+def test_dispatch_refuses_worktree_from_sibling_repo(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+):
+    """#6900: --worktree invoked from a sibling git root must not bind primary."""
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(sibling)
+    args = _write_args(
+        task_id="sibling-misbind",
+        mode="workspace-write",
+        cwd=None,
+        worktree="auto",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("sibling-misbind")) is None
+    err = capsys.readouterr().err
+    assert "different git root" in err
+    assert "--worktree" in err
+    derived = primary / ".worktrees" / "dispatch" / "codex" / "sibling-misbind"
+    assert not derived.exists()
+
+
+def test_dispatch_refuses_branch_from_sibling_repo(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+):
+    """#6900: --branch fetches/attaches in the primary, same silent bind."""
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(sibling)
+    args = _write_args(
+        task_id="sibling-branch",
+        mode="workspace-write",
+        cwd=None,
+        worktree=None,
+        branch="codex/existing-pr",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("sibling-branch")) is None
+    err = capsys.readouterr().err
+    assert "different git root" in err
+    assert "--branch" in err
+    derived = primary / ".worktrees" / "dispatch" / "codex" / "sibling-branch"
+    assert not derived.exists()
+
+
+def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """Documented sibling flow: manual worktree + --cwd, no --worktree."""
+    primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(sibling)
+    _patch_worker_popen(monkeypatch)
+    args = _write_args(
+        task_id="sibling-cwd",
+        mode="workspace-write",
+        cwd=str(sibling_wt),
+        worktree=None,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("sibling-cwd"))
+    assert state is not None
+    assert Path(state["cwd"]) == sibling_wt
+    assert Path(state["worktree_path"]) == sibling_wt
 
 
 def test_dispatch_help_omits_deprecated_cwd_dot_example():
