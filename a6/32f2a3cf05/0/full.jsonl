@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 76175,
-      "output": 4198,
-      "reasoning": 10403,
+      "input": 76770,
+      "output": 4803,
+      "reasoning": 10516,
       "cache": {
-        "read": 1376256,
+        "read": 1527424,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786967121072,
-      "updated": 1786967540444
+      "updated": 1786967551060
     }
   },
   "messages": [
@@ -2887,19 +2887,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
-          "reasoning": 0,
+          "total": 75994,
+          "input": 151,
+          "output": 241,
+          "reasoning": 82,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 75520
           }
         },
         "modelID": "glm-5.3",
         "providerID": "zai-coding-plan",
         "time": {
-          "created": 1786967540443
+          "created": 1786967540443,
+          "completed": 1786967551055
         },
+        "finish": "tool-calls",
         "id": "msg_00f90c2db001ilpOLFJvcQtJMT",
         "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC"
       },
@@ -2938,20 +2941,127 @@
           "tool": "bash",
           "callID": "call_4113dba9900a4792afa94a53",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/lexicon/runner/launch_reenrich_class_b_remote.sh scripts/lexicon/runner/launch_reenrich_class_b.sh tests/test_launch_reenrich_target_detection.py && git commit -m \"fix(atlas): per-host ATLAS_RUN_ROOT default in reenrich launchers (refs #6876)\n\nJobs on hramatka/vps now default their run root to /home/ops/atlas-jobs;\nevery other host keeps /home/ops/atlas-runner. An explicit ATLAS_RUN_ROOT\nstill wins. The remote wrapper materializes the run root on the host\nbefore any scp/rsync writes into it (fresh hramatka layouts have no\natlas-jobs dir yet), and the on-host launcher derives the same default\nfrom its own hostname for direct invocation. Job space stays under\n/home/ops — nothing writes /opt/hramatka.\n\nX-Agent: glm/6876-hramatka-root\" && git log --oneline -1 && git status --short"
             },
+            "output": "[glm/6876-glm-hramatka-root 44772a2736] fix(atlas): per-host ATLAS_RUN_ROOT default in reenrich launchers (refs #6876)\n 3 files changed, 166 insertions(+), 6 deletions(-)\n44772a2736 fix(atlas): per-host ATLAS_RUN_ROOT default in reenrich launchers (refs #6876)\n",
+            "metadata": {
+              "output": "[glm/6876-glm-hramatka-root 44772a2736] fix(atlas): per-host ATLAS_RUN_ROOT default in reenrich launchers (refs #6876)\n 3 files changed, 166 insertions(+), 6 deletions(-)\n44772a2736 fix(atlas): per-host ATLAS_RUN_ROOT default in reenrich launchers (refs #6876)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/lexicon/runner/launch_reenrich_class_b_remote.sh scripts/lexicon/runner/launch_reenrich_class_b.sh tests/test_launch_reenrich_target_detection.py && git commit -m \"fix(atlas): per-host ATLAS_RUN_ROOT default in reenrich launchers (refs #6876)\n\nJobs on hramatka/vps now default their run root to /home/ops/atlas-jobs;\nevery other host keeps /home/ops/atlas-runner. An explicit ATLAS_RUN_ROOT\nstill wins. The remote wrapper materializes the run root on the host\nbefore any scp/rsync writes into it (fresh hramatka layouts have no\natlas-jobs dir yet), and the on-host launcher derives the same default\nfrom its own hostname for direct invocation. Job space stays under\n/home/ops — nothing writes /opt/hramatka.\n\nX-Agent: glm/6876-hramatka-root\" && git log --oneline -1 && git status --short",
             "time": {
-              "start": 1786967548545
+              "start": 1786967550853,
+              "end": 1786967550902
             }
           },
           "id": "prt_00f90e2750019eFBJt70uRc3Uv",
           "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC",
           "messageID": "msg_00f90c2db001ilpOLFJvcQtJMT"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c3503a6baf182b61584363b75727a21cbd173dd2",
+          "type": "step-finish",
+          "tokens": {
+            "total": 75994,
+            "input": 151,
+            "output": 241,
+            "reasoning": 82,
+            "cache": {
+              "write": 0,
+              "read": 75520
+            }
+          },
+          "cost": 0,
+          "id": "prt_00f90ec02001SjDyfwKGnWuTI6",
+          "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC",
+          "messageID": "msg_00f90c2db001ilpOLFJvcQtJMT"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00f8a5ce0001yFpfawCPNrio2U",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6876-glm-hramatka-root",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6876-glm-hramatka-root"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 76487,
+          "input": 444,
+          "output": 364,
+          "reasoning": 31,
+          "cache": {
+            "write": 0,
+            "read": 75648
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786967551058,
+          "completed": 1786967562842
+        },
+        "finish": "stop",
+        "id": "msg_00f90ec52001gVIIZ5vr9iNBln",
+        "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC"
+      },
+      "parts": [
+        {
+          "snapshot": "c3503a6baf182b61584363b75727a21cbd173dd2",
+          "type": "step-start",
+          "id": "prt_00f910a26001r0GMoD644oEaqH",
+          "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC",
+          "messageID": "msg_00f90ec52001gVIIZ5vr9iNBln"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed cleanly. Working tree clean. Summarize per completion policy: changed files, commands/results, branch state, outcome, residual. Keep concise.",
+          "time": {
+            "start": 1786967558699,
+            "end": 1786967558706
+          },
+          "id": "prt_00f910a2b001f4PHIRMf3dcB67",
+          "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC",
+          "messageID": "msg_00f90ec52001gVIIZ5vr9iNBln"
+        },
+        {
+          "type": "text",
+          "text": "Done — commit `44772a2736` on `glm/6876-gramatka-root`… correction: branch `glm/6876-hramatka-root`, working tree clean.\n\n**Changed (3 files, +166/−6):**\n- `scripts/lexicon/runner/launch_reenrich_class_b_remote.sh` — `ATLAS_RUN_ROOT` now defaults per host (`hramatka|vps` → `/home/ops/atlas-jobs`, else `/home/ops/atlas-runner`; explicit override wins), and `ssh mkdir -p $RUN_ROOT` runs right after the SSH reachability check, before the first rsync/scp. No `/opt/hramatka` anywhere.\n- `scripts/lexicon/runner/launch_reenrich_class_b.sh` — same per-host default derived from the machine's own hostname for direct on-host invocation (wrapper path unaffected: it forwards `ATLAS_RUN_ROOT` explicitly).\n- `tests/test_launch_reenrich_target_detection.py` — 12 new tests: per-host defaults both launchers, override precedence, mkdir-before-first-transfer ordering, `/opt/hramatka` ban.\n\n**Verification:** `bash -n` both scripts; shellcheck clean; `pytest tests/test_launch_reenrich_target_detection.py tests/test_launch_reenrich_venv_preflight.py tests/test_atlas_job_protocol.py` → 81 passed.\n\n**Residual:** live hramatka end-to-end run not exercised (local-only implement); `ALLOWED_HOSTS` in `atlas_job.py` still restricts `reenrich` plans to `atlas-runner` — widening that is a separate decision. Issue #6876 left open.",
+          "time": {
+            "start": 1786967558707,
+            "end": 1786967562657
+          },
+          "id": "prt_00f910a330013cMF435UYC5VHN",
+          "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC",
+          "messageID": "msg_00f90ec52001gVIIZ5vr9iNBln"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "c3503a6baf182b61584363b75727a21cbd173dd2",
+          "type": "step-finish",
+          "tokens": {
+            "total": 76487,
+            "input": 444,
+            "output": 364,
+            "reasoning": 31,
+            "cache": {
+              "write": 0,
+              "read": 75648
+            }
+          },
+          "cost": 0,
+          "id": "prt_00f911a0a001Evt984ma9inhS6",
+          "sessionID": "ses_ff075a34fffeqgNt0N0fLnYRaC",
+          "messageID": "msg_00f90ec52001gVIIZ5vr9iNBln"
         }
       ]
     }
