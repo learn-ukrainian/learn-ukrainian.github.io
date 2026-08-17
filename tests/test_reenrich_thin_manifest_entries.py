@@ -645,3 +645,240 @@ def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> No
             assert "abstractly" in res["en"][0]
             assert "base form абстрактний" in str(res.get("source"))
 
+
+def test_diminutive_fallback_fills_in_reenrich_thin_entries(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "білка",
+                "pos": "noun",
+                "url_slug": "білка",
+                "enrichment": {
+                    "translation": {
+                        "en": ["squirrel"],
+                        "source": "dmklinger",
+                    },
+                    "sources": ["dmklinger"],
+                },
+            },
+            {
+                "lemma": "білочка",
+                "pos": "noun",
+                "url_slug": "білочка",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    dim_entry = manifest["entries"][1]
+    assert summary["filled_translation"] == 1
+    assert dim_entry["enrichment"]["translation"] == {
+        "en": ["squirrel (diminutive)"],
+        "source": "dmklinger (diminutive of білка)",
+    }
+    assert "dmklinger (diminutive of білка)" in dim_entry["enrichment"]["sources"]
+
+
+def test_augmentative_fallback_fills_in_reenrich_thin_entries(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "вовк",
+                "pos": "noun",
+                "url_slug": "вовк",
+                "enrichment": {
+                    "translation": {
+                        "en": ["wolf"],
+                        "source": "slovnyk.me: fixture",
+                    },
+                    "sources": ["slovnyk.me: fixture"],
+                },
+            },
+            {
+                "lemma": "вовчище",
+                "pos": "noun",
+                "url_slug": "вовчище",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    aug_entry = manifest["entries"][1]
+    assert summary["filled_translation"] == 1
+    assert aug_entry["enrichment"]["translation"] == {
+        "en": ["wolf (augmentative)"],
+        "source": "slovnyk.me: fixture (augmentative of вовк)",
+    }
+    assert "slovnyk.me: fixture (augmentative of вовк)" in aug_entry["enrichment"]["sources"]
+
+
+def test_diminutive_fallback_no_fill_when_base_missing_en(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "білка",
+                "pos": "noun",
+                "url_slug": "білка",
+                "enrichment": {
+                    "sources": ["VESUM"],
+                },
+            },
+            {
+                "lemma": "білочка",
+                "pos": "noun",
+                "url_slug": "білочка",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    dim_entry = manifest["entries"][1]
+    assert summary["filled_translation"] == 0
+    assert "translation" not in dim_entry.get("enrichment", {})
+
+
+def test_diminutive_fallback_precedence_after_direct_and_base_lookup(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "білка",
+                "pos": "noun",
+                "url_slug": "білка",
+                "enrichment": {
+                    "translation": {
+                        "en": ["squirrel"],
+                        "source": "dmklinger",
+                    },
+                    "sources": ["dmklinger"],
+                },
+            },
+            {
+                "lemma": "білочка",
+                "pos": "noun",
+                "url_slug": "білочка",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    # Case 1: Direct translation succeeds -> direct wins
+    def direct_trans(conn, lemma, *args, **kwargs):
+        if lemma == "білочка":
+            return {"en": ["little squirrel"], "source": "direct source"}
+        return None
+
+    monkeypatch.setattr(enrich_manifest, "_translation", direct_trans)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    manifest_index = reenrich.manifest_lemma_index(manifest)
+    with sqlite3.connect(":memory:") as conn:
+        trans = reenrich._translation_for_entry(
+            conn,
+            manifest["entries"][1],
+            {},
+            manifest_index=manifest_index,
+        )
+
+    assert trans == {"en": ["little squirrel"], "source": "direct source"}
+
+    # Case 2: Direct misses, base lookup succeeds -> base lookup wins
+    def base_trans(conn, lemma, *args, **kwargs):
+        if lemma == "білка_base":
+            return {"en": ["squirrel base"], "source": "base source"}
+        return None
+
+    monkeypatch.setattr(enrich_manifest, "_translation", base_trans)
+    monkeypatch.setattr(
+        enrich_manifest, "_base_lookup_for_entry", lambda lemma, pos: "білка_base" if lemma == "білочка" else None
+    )
+
+    with sqlite3.connect(":memory:") as conn:
+        trans2 = reenrich._translation_for_entry(
+            conn,
+            manifest["entries"][1],
+            {},
+            manifest_index=manifest_index,
+        )
+
+    assert trans2 == {"en": ["squirrel base"], "source": "base source (base form білка_base)"}
+
+
+def test_diminutive_fallback_fails_closed_when_vesum_rejects(monkeypatch) -> None:
+    import scripts.verification.vesum
+
+    manifest = {
+        "entries": [
+            {
+                "lemma": "неіснуючабілка",
+                "pos": "noun",
+                "url_slug": "неіснуючабілка",
+                "enrichment": {
+                    "translation": {
+                        "en": ["fake squirrel"],
+                        "source": "fixture",
+                    },
+                },
+            },
+            {
+                "lemma": "неіснуючабілочка",
+                "pos": "noun",
+                "url_slug": "неіснуючабілочка",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+    # Mock verify_word in scripts.verification.vesum: return empty list for fake words
+    monkeypatch.setattr(scripts.verification.vesum, "verify_word", lambda word, pos_filter=None: [])
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    dim_entry = manifest["entries"][1]
+    assert summary["filled_translation"] == 0
+    assert "translation" not in dim_entry.get("enrichment", {})
