@@ -28,6 +28,8 @@ from agent_runtime.adapters.grok_build import (
     _adapt_prompt_for_grok_build_mcp,
     _parse_json_object,
     _translate_mcp_prefix_for_grok_build,
+    grok_session_dir,
+    resolve_grok_home,
 )
 
 FAKE_GROK = "/usr/local/bin/grok"
@@ -310,6 +312,106 @@ def test_conforms_to_agent_adapter_protocol():
     assert isinstance(GrokBuildAdapter(), AgentAdapter)
 
 
-def test_liveness_signal_paths_returns_tuple(tmp_path):
+def test_liveness_signal_paths_returns_tuple(tmp_path, monkeypatch):
+    from urllib.parse import quote
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
     paths = GrokBuildAdapter().liveness_signal_paths(InvocationPlan(cmd=[], cwd=tmp_path))
     assert isinstance(paths, tuple)
+    # Always cwd-scoped sessions root — never the shared ~/.grok home (#6933).
+    assert paths == (fake_home / ".grok" / "sessions" / quote(str(tmp_path.resolve()), safe=""),)
+
+
+def test_liveness_signal_paths_ignore_peer_session_and_shared_home(tmp_path, monkeypatch):
+    """Two sessions under the same cwd: only OUR session is a liveness path.
+
+    Mutation check (#6933): reverting ``_liveness_paths_for_cwd`` to return the
+    shared ``GROK_HOME`` root makes ``assert grok_home not in paths`` fail.
+    """
+    from urllib.parse import quote
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    project = tmp_path / "project"
+    project.mkdir()
+    grok_home = resolve_grok_home()
+    peer = grok_session_dir(grok_home, project, "peer-session-aaaa")
+    peer.mkdir(parents=True)
+    peer_events = peer / "events.jsonl"
+    peer_events.write_text("{}\n", encoding="utf-8")
+    # Shared-home contaminants from the #6921 campaign.
+    (grok_home / "logs").mkdir(parents=True)
+    (grok_home / "logs" / "unified.jsonl").write_text("peer\n", encoding="utf-8")
+    (grok_home / "active_sessions.json").write_text("[]\n", encoding="utf-8")
+
+    adapter = GrokBuildAdapter()
+    with patch(
+        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
+    ):
+        plan = adapter.build_invocation(
+            prompt="do the work",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+    # Peer was snapshotted at build_invocation — must not bind as ours.
+    assert peer in adapter._session_dir_snapshot
+
+    ours = grok_session_dir(grok_home, project, "our-session-bbbb")
+    ours.mkdir(parents=True)
+    our_events = ours / "events.jsonl"
+    our_events.write_text("{}\n", encoding="utf-8")
+
+    # Peer + shared home keep moving while ours is the only new session.
+    peer_events.write_text("{}\n{}\n", encoding="utf-8")
+    (grok_home / "logs" / "unified.jsonl").write_text("peer\nmore\n", encoding="utf-8")
+    grok_home.touch()
+
+    paths = adapter.liveness_signal_paths(plan)
+    sessions_root = grok_home / "sessions" / quote(str(project.resolve()), safe="")
+
+    assert grok_home not in paths
+    assert (grok_home / "logs" / "unified.jsonl") not in paths
+    assert peer not in paths
+    assert peer_events not in paths
+    assert sessions_root in paths
+    assert ours in paths
+    assert our_events in paths
+
+
+def test_liveness_signal_paths_resume_binds_exact_session(tmp_path, monkeypatch):
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    project = tmp_path / "project"
+    project.mkdir()
+    grok_home = resolve_grok_home()
+    peer = grok_session_dir(grok_home, project, "peer-session")
+    peer.mkdir(parents=True)
+    (peer / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    target = grok_session_dir(grok_home, project, "resume-me")
+    target.mkdir(parents=True)
+    (target / "events.jsonl").write_text("{}\n", encoding="utf-8")
+
+    plan = _build(
+        "continue",
+        project,
+        session_id="resume-me",
+        tool_config={"resume": True},
+    )
+    paths = GrokBuildAdapter().liveness_signal_paths(plan)
+    # Fresh adapter instance: resume id comes from plan.metadata.
+    assert paths == (target, target / "events.jsonl")
+    assert grok_home not in paths
+    assert peer not in paths
