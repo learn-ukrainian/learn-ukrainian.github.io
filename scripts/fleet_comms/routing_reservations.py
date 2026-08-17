@@ -282,7 +282,8 @@ class RoutingReservationLedger:
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self._conn = self.store.connection
-        apply_migrations(self._conn)
+        if self._owns_store:
+            apply_migrations(self._conn)
 
     def close(self) -> None:
         if self._owns_store:

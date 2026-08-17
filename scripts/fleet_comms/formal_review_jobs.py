@@ -126,11 +126,14 @@ class FormalReviewJobService:
         root: Path | None = None,
     ) -> None:
         self.store = store or ArtifactStore(root=root)
+        self._owns_store = store is None
         self._conn = self.store.connection
-        apply_migrations(self._conn)
+        if self._owns_store:
+            apply_migrations(self._conn)
 
     def close(self) -> None:
-        self.store.close()
+        if self._owns_store:
+            self.store.close()
 
     def __enter__(self) -> FormalReviewJobService:
         return self
