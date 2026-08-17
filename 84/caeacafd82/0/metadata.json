@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "84caeacafd82",
+  "session_id": "fleet-9e41c2a3f953413a883575997dcf0fb1",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T07:48:04.704385Z",
+  "branch": "grok/infra-6916-acp-replay-wedge",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/acpx.py",
+    "tests/agent_runtime/test_acpx_adapter.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "e2cd0251b791",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T07:48:04.699257Z",
+    "agent_lines": 166,
+    "agent_removed": 17,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 166,
+    "total_lines_changed": 183,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

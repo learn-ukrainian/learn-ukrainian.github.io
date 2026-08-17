@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "84caeacafd82",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6916-acp-replay-wedge",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/acpx.py",
+    "tests/agent_runtime/test_acpx_adapter.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/84/caeacafd82/0/metadata.json",
+      "transcript": "/84/caeacafd82/0/full.jsonl",
+      "compact_transcript": "/84/caeacafd82/0/transcript.jsonl",
+      "content_hash": "/84/caeacafd82/0/content_hash.txt",
+      "prompt": "/84/caeacafd82/0/prompt.txt"
+    }
+  ]
+}

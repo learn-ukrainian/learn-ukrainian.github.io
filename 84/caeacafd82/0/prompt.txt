@@ -1,0 +1,35 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6916-acp-replay-wedge
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6916 — ask-cursor ACP route wedged on 'duplicate terminal response replay detected for the same request id'
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok:grok-4.6 (native Grok CLI)
+- why_this_tier: bounded state-machine debugging with a live wedged reproduction available on this machine; grok healthy and free
+- advisor_packet: issue #6916 (live repro, twice with distinct task-ids)
+- owned_paths: scripts/agent_runtime/** (ACP controller/replay state), related tests
+- acceptance_cmd: .venv/bin/pytest (runtime/acp tests) + ruff clean + a live ask-cursor round-trip succeeding + CI green on PR
+- alternatives_considered: kimi (taking #6915), cursor (conflict of interest — its own route, and taking #6920)
+- parallel_free_seats: deepseek, glm
+
+## Evidence rules (#M-4)
+The wedge is LIVE right now — inspect the actual stored state before changing anything; quote the offending receipt/request rows. Every claim tool-backed.
+
+## Steps
+1. Read issue #6916. Root-cause FIRST: find the stored terminal receipt that replays against fresh request ids on the cursor route, and explain WHY the replay guard matches it (key collision? seat-scoped dedup key? stale in-flight row?).
+2. Fix at the root-cause layer: the guard must never match a fresh request id, and a recovery path must exist that does not require manual state surgery. Make the error message name the offending request/receipt id (the issue's second ask).
+3. Sibling check: can any other seat's route wedge the same way? Cover it in the same fix.
+4. Guard test required, mutation-checked (revert fix → test fails; state it with output).
+5. PROVE recovery live: after your fix, a real `ask-cursor` round-trip on this machine must succeed — quote it in the PR body.
+6. Work ONLY in your dispatch worktree. pytest + ruff. Conventional commit, push, PR (Fixes #6916).
+7. Do NOT arm auto-merge and do NOT merge.
