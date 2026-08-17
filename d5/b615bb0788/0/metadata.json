@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d5b615bb0788",
+  "session_id": "fleet-d5c4e7a1b9de4fbaa68e1a17d49d757f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T12:32:52.615675Z",
+  "branch": "cursor/infra-registry-6943-swap",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_session_supervisor.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "8cf4577c5b58",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T12:32:52.60807Z",
+    "agent_lines": 35,
+    "agent_removed": 20,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 35,
+    "total_lines_changed": 55,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
