@@ -16,12 +16,12 @@ from scripts.build.module_size_policy import (
 )
 from scripts.build.phases.implementation_map import seed_implementation_map
 
-PROMPT_FIXTURES: tuple[tuple[str, str], ...] = (
+PROMPT_FIXTURES = (
     ("a1", "sounds-letters-and-hello"),
     ("a2", "a2-bridge"),
     ("b1", "adjectives-comparative"),
     ("b2", "academic-writing"),
-    ("bio", "andrii-malyshko"),
+    pytest.param("bio", "andrii-malyshko", marks=pytest.mark.slow),
     ("folk", "kolomyiky"),
     ("c1", "abstract-writing"),
     ("c2", "academic-publishing"),

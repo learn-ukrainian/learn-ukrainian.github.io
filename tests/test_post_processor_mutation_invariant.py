@@ -68,9 +68,9 @@ _ALL_FIXTURES: list[Fixture] = _POST_PROCESSOR_CORPUS + [
 # the Stanza Ukrainian model, which is non-hermetic and flakes Stanza's md5
 # check under parallel CI (`ValueError: md5 for .../uk/tokenize/iu.pt ...`).
 # Their parametrizations are marked `slow` so the required pytest selection
-# (`-k "not slow"`) excludes them — keeping the required gate hermetic per the
-# #2691 invariant — while every other processor's invariant check still runs.
-# They continue to run in the slow/nightly path. See
+# (`-m "not atlas_release and not slow"`) excludes them — keeping the required
+# gate hermetic per the #2691 invariant — while every other processor's invariant
+# check still runs. They continue to run in the slow/nightly path. See
 # docs/bug-autopsies/stanza-model-md5-flake.md.
 _MODEL_BACKED_PROCESSORS = {"pipeline.stress_annotator.annotate_stress"}
 

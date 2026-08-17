@@ -34,6 +34,7 @@ def _canonical_python() -> Path:
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.slow
 def test_session_setup_hook_handoff_fixtures() -> None:
     assert _HOOK_TEST.is_file(), f"missing hook test: {_HOOK_TEST}"
     result = subprocess.run(
