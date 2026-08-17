@@ -6,6 +6,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -52,7 +53,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport
   fi
   exit "${{PROBE_STUB_EXIT:-0}}"
 fi
-exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
+exec {sys.executable!r} "$@"
 """,
         encoding="utf-8",
     )
