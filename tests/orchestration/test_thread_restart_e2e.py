@@ -12,6 +12,7 @@ import os
 import shutil
 import sqlite3
 import subprocess
+import sys
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -183,7 +184,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport
   fi
   exit "${{PROBE_STUB_EXIT:-0}}"
 fi
-exec {os.fspath(REPO_ROOT / ".venv" / "bin" / "python")!r} "$@"
+exec {sys.executable!r} "$@"
 """,
         encoding="utf-8",
     )
