@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "db642cef8806",
+  "session_id": "fleet-40588a1061ea441bbb97bc70375a5166",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T21:04:02.131325Z",
+  "branch": "agy/6876-agy-merge-publish",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/publish_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/test_lexicon_manifest_fingerprint.py",
+    "tests/test_publish_manifest.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "3e0cfb4f661e",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T21:04:02.1207Z",
+    "agent_lines": 75,
+    "agent_removed": 23,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 75,
+    "total_lines_changed": 98,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

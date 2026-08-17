@@ -1,0 +1,54 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/6876-agy-merge-publish
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6876 + #6370 — merge pulled EN fills + publish the one unpublished Ohoiko lemma
+
+## CAPACITY_CARD
+pick=agy status=cool will_last=? free=agy,kimi,glm,claude avoid=codex(deficit) source=capacity_pick+delegate/active
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy / gemini-3.7-flash-high
+- why_this_tier: lexicon merge + promote is implement work, not architecture
+- owned_paths: scripts/lexicon/merge_translation_delta.py, scripts/lexicon/promote_grow_candidates.py, scripts/lexicon/publish_manifest.py
+- acceptance_cmd: merge report overwrite_proof_modified_nonempty_en==0 AND old_gate_not_rising==true; забоятися present in candidate manifest
+- alternatives_considered: kimi (also free; held for CF of #6975), glm (local-only; this needs gh PR)
+- parallel_free_seats: kimi (CF #6975), glm (#5478 measure)
+
+## Do this
+
+### A. Merge adverb + diminutive pulled fills (do not wait for slovnyk job)
+Pulled donors (read from primary checkout; do not delete):
+- `batch_state/atlas-jobs/pulled/6876-adverb-401/manifest.json` (217 EN fills)
+- `batch_state/atlas-jobs/pulled/6876-diminutive-77/manifest.json` (77 EN fills)
+
+Follow `docs/runbooks/atlas-full-reenrich-campaign.md` § merge:
+1. Hydrate / obtain the **current live** catalog as `--live` (published pointer lineage). Never invent entries.
+2. Run `scripts/lexicon/merge_translation_delta.py` adverb first, then diminutive, onto a worktree-local live copy.
+3. Hard invariants: `overwrite_proof_modified_nonempty_en == 0`, `old_gate_not_rising == true`, live entry count unchanged.
+4. Write `batch_state/atlas-drive/6876-merge-report.json` (gitignored ok) and quote counts on the PR.
+
+### B. Promote the one #6370 unpublished approved lemma
+Claude re-measure 2026-08-17: **`забоятися`** is approved in `2026-08-14-ohoiko-ulp-ocr-space-collapse-approve.yaml` (PR #6820) and **absent** from the live 20,112-entry manifest. Promote via the existing grow/promote path (VESUM-check first). Do **not** promote the 3 russianism holds (`кримчанин`, `переключити`, `просвітитель`). Do **not** invent a policy for `поліцейський` (VESUM gap — leave named).
+
+### C. Publish gate
+- Run `publish_manifest.py --verify-only` on the candidate.
+- If verify-only is green: produce the pointer/fingerprint sidecar the repo already uses. **Do not** `gh release upload` unless that is the established worker path in the runbook you just read; if upload is operator-gated, PR the merge+promote code/report and say so.
+- Do **not** commit a 187MB `manifest.json`.
+
+## Non-goals
+- Do not close #6876 (slovnyk 2078 job still running; residual EN not 0).
+- Do not close #6370 (29 named fragments + 3 holds remain).
+- Do not merge. Do not start #4696. Do not merge draft #6809.
+- Do not scrape slovnyk.me hrinchenko (offline grinchenko already shipped #6464 / PR #6510).
+
+PR: `Refs #6876 #6370`. Trailer `X-Agent: agy/6876-merge-publish`. Tests for any code you touch. pytest + ruff on changed Python.

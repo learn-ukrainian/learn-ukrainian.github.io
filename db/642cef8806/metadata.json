@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "db642cef8806",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-merge-publish",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/publish_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/test_lexicon_manifest_fingerprint.py",
+    "tests/test_publish_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/db/642cef8806/0/metadata.json",
+      "transcript": "/db/642cef8806/0/full.jsonl",
+      "compact_transcript": "/db/642cef8806/0/transcript.jsonl",
+      "content_hash": "/db/642cef8806/0/content_hash.txt",
+      "prompt": "/db/642cef8806/0/prompt.txt"
+    }
+  ]
+}
