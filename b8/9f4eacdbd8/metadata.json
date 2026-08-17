@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b89f4eacdbd8",
+  "strategy": "manual-commit",
+  "branch": "cursor/4385-cursor-atlas-db",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lib/lexicon/atlas-static-paths.ts",
+    "site/src/pages/lexicon/[lemma].astro",
+    "site/tests/unit/atlas-static-routes-ssg.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b8/9f4eacdbd8/0/metadata.json",
+      "transcript": "/b8/9f4eacdbd8/0/full.jsonl",
+      "compact_transcript": "/b8/9f4eacdbd8/0/transcript.jsonl",
+      "content_hash": "/b8/9f4eacdbd8/0/content_hash.txt",
+      "prompt": "/b8/9f4eacdbd8/0/prompt.txt"
+    }
+  ]
+}
