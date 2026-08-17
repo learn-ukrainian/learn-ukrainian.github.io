@@ -1,0 +1,14 @@
+{
+  "schema_version": "frontend_change_denominator_v1",
+  "version": "1",
+  "description": "Changed-path denominator for frontend / frontend-e2e cheap-exit (#6917). Jobs stay unconditionally scheduled; a first-step path check exits 0 when nothing here changed. Prefixes end with /; other entries are exact paths. Hardening: the hydrate-entrypoint resolver only matches plain `npm run <name>` (not `npm run -s` / `npm run --silent`) and does not expand `npx` invocations — keep hydrate scripts on the covered forms or extend the resolver before adding those.",
+  "paths": [
+    "site/",
+    "scripts/atlas/",
+    "scripts/lexicon/",
+    "scripts/audit/generate_search_index.py",
+    "scripts/audit/generate_daily_pool.py",
+    ".python-version",
+    ".github/workflows/ci.yml"
+  ]
+}
