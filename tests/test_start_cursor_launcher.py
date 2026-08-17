@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import shutil
 from pathlib import Path
 
 import pytest
@@ -23,6 +25,34 @@ def test_cursor_driver_help_mentions_epic() -> None:
     assert result.returncode == 0, result.stderr
     assert "--epic" in result.stdout
     assert "Usage:" in result.stdout
+    assert "./start-cursor-driver.sh" in result.stdout
+    assert "start-cursor.sh" not in result.stdout
+
+
+def test_cursor_driver_rejects_dummy_agent_on_path(tmp_path: Path) -> None:
+    """CF #6969: a bare ``agent`` on PATH must not claim the Cursor seat.
+
+    Reviewer probe: with only a dummy ``agent`` executable visible, the
+    launcher previously dry-ran ``would exec agent`` while leasing as
+    ``agent=cursor harness=cursor-agent``. Require ``cursor-agent``.
+    """
+    shell = shutil.which("bash")
+    assert shell is not None
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "bash").symlink_to(shell)
+    dummy_agent = bin_dir / "agent"
+    dummy_agent.write_text("#!/bin/sh\necho impostor-agent\n", encoding="utf-8")
+    dummy_agent.chmod(0o755)
+    probe_path = f"{bin_dir}{os.pathsep}{os.defpath}"
+    assert shutil.which("agent", path=probe_path) == str(dummy_agent)
+    assert shutil.which("cursor-agent", path=probe_path) is None
+
+    result = run_launcher(DRIVER, "--epic", "infra", env={"PATH": probe_path})
+    assert result.returncode == 0, result.stderr
+    assert "would exec agent" not in result.stdout
+    assert "would require binary cursor-agent" in result.stdout
+    assert "would exec cursor-agent" in result.stdout
 
 
 def test_cursor_driver_requires_epic_fail_closed() -> None:

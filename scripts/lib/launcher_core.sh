@@ -80,8 +80,8 @@ EXIT CODES:
   5  Provider transport is degraded; use the stated external-fleet disposition.
 
 Examples:
-  ./start-${LC_PROVIDER}.sh --help
-  LAUNCHER_DRY_RUN=1 ./start-${LC_PROVIDER}.sh --model ${LC_MODEL:-MODEL}
+  ./${name} --help
+  LAUNCHER_DRY_RUN=1 ./${name} --model ${LC_MODEL:-MODEL}
   $example_three
 EOF
   if [ "$LC_MODE" = "driver" ]; then

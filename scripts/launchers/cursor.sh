@@ -8,15 +8,9 @@ launcher_adapter_validate() {
 }
 launcher_adapter_preflight() {
   LC_AUTH_SOURCE='cursor-cli-oauth'
-  # Prefer the unambiguous cursor-agent binary. A generic ``agent`` on PATH can
-  # be a different tool (Grok Build TUI); mirror scripts/agent_runtime/adapters/cursor.py.
-  if command -v cursor-agent >/dev/null 2>&1; then
-    LC_CURSOR_BIN=cursor-agent
-  elif command -v agent >/dev/null 2>&1; then
-    LC_CURSOR_BIN=agent
-  else
-    LC_CURSOR_BIN=cursor-agent
-  fi
+  # Require the unambiguous cursor-agent binary. A generic ``agent`` on PATH can
+  # be a different tool (Grok Build TUI) and must not claim this seat (#6969).
+  LC_CURSOR_BIN=cursor-agent
   launcher_require_binary "$LC_CURSOR_BIN" 'Cursor agent executable (cursor-agent) is unavailable.' 3 || exit $?
 }
 launcher_adapter_canary() {
