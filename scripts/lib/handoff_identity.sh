@@ -288,3 +288,13 @@ handoff_identity_for_grok_epic() {
   lane="$(launcher_selector_lane "$1")" || return 1
   printf 'grok-%s' "$lane"
 }
+
+# handoff_identity_for_cursor_epic "<selector>"
+# Cursor TUI driver rollover slot. Provider-specific so a Cursor seat never
+# adopts Claude/Codex/Grok/Gemini packets (#6956).
+handoff_identity_for_cursor_epic() {
+  local lane=''
+  [ -n "${1:-}" ] || return 0
+  lane="$(launcher_selector_lane "$1")" || return 1
+  printf 'cursor-%s' "$lane"
+}

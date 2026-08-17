@@ -24,6 +24,7 @@ launcher_usage() {
                              Approved local-proxy settings for --harness claude-code.' ;;
     gemini) provider_env='  AGY_*                    AGY-managed Gemini authentication and configuration.' ;;
     grok) provider_env='  GROK_*                   Grok CLI authentication and configuration.' ;;
+    cursor) provider_env='  CURSOR_API_KEY           Optional Cursor API key (otherwise CLI login / oauth).' ;;
     kimi) provider_env='  KIMICC_AUTH_TOKEN, MOONSHOT_API_KEY, KIMI_API_KEY
                              Explicit Kimi credentials for --harness claude-code.' ;;
     glm) provider_env='  GLMCC_AUTH_TOKEN, ZAI_API_KEY, ZHIPU_API_KEY, GLM_API_KEY
@@ -160,6 +161,12 @@ launcher_defaults() {
       # the Grok TUI keeps the last session selection.
       LC_MODEL="${LAUNCHER_MODEL:-}"
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
+      ;;
+    cursor)
+      # Orchestrator seat defaults to Auto (catalog allowlist + attestation).
+      # Pin grok-4.6 / composer-2.5 when family independence must be frozen.
+      LC_MODEL="${LAUNCHER_MODEL:-auto}"
+      LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
     kimi)
       LC_MODEL="${LAUNCHER_MODEL:-k3-256k}"
@@ -377,7 +384,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6|cursor:auto|cursor:grok-4.6|cursor:composer-2.5)
       return 0
       ;;
     *)
@@ -394,6 +401,7 @@ launcher_prepare_driver_identity() {
     codex) handoff="$(handoff_identity_for_codex_epic "$LC_EPIC")"; harness="codex-cli" ;;
     gemini) handoff="$(handoff_identity_for_gemini_epic "$LC_EPIC")"; harness="agy" ;;
     grok) handoff="$(handoff_identity_for_grok_epic "$LC_EPIC")"; harness="grok-tui" ;;
+    cursor) handoff="$(handoff_identity_for_cursor_epic "$LC_EPIC")"; harness="cursor-agent" ;;
   esac
   LC_DRIVER_HANDOFF="$handoff"
   LC_DRIVER_HARNESS="$harness"

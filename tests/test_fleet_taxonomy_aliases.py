@@ -253,6 +253,7 @@ def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
         "start-codex-driver.sh",
         "start-gemini-driver.sh",
         "start-grok-driver.sh",
+        "start-cursor-driver.sh",
     ],
 )
 def test_launcher_static_selector_wiring(launcher: str) -> None:
@@ -272,6 +273,7 @@ def test_launcher_static_selector_wiring(launcher: str) -> None:
         ("start-codex-driver.sh", "invalid_selector_xyz", 2),
         ("start-gemini-driver.sh", "invalid_selector_xyz", 2),
         ("start-grok-driver.sh", "invalid_selector_xyz", 2),
+        ("start-cursor-driver.sh", "invalid_selector_xyz", 2),
     ],
 )
 def test_hermetic_launcher_unknown_selector_fails_closed_contract(

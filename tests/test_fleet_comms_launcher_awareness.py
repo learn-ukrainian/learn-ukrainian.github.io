@@ -17,6 +17,7 @@ LAUNCHERS = (
     "start-gemini-driver.sh",
     "start-claude-driver.sh",
     "start-codex-driver.sh",
+    "start-cursor-driver.sh",
 )
 
 
@@ -120,6 +121,7 @@ def test_driver_wrappers_use_the_shared_core() -> None:
         "start-gemini-driver.sh",
         "start-claude-driver.sh",
         "start-codex-driver.sh",
+        "start-cursor-driver.sh",
     ):
         path = REPO / name
         assert path.is_file(), f"missing {name}"
@@ -127,6 +129,7 @@ def test_driver_wrappers_use_the_shared_core() -> None:
         assert "launcher_core.sh" in text
     core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     assert "drive-epic" in core
+    assert "cursor) handoff=" in core or 'cursor)' in core
 
 
 def test_cold_clause_resolves_live_mode_when_env_unset() -> None:

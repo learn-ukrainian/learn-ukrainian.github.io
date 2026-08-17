@@ -29,14 +29,32 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **any epic** — incident · architecture cutover · contested review | Opus 5 @ xhigh (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
 | **any epic** — Fable alternate | Fable 5 | `./start-claude-driver.sh --epic <epic> --model claude-fable-5` |
 | **any epic** — routine Anthropic alternate | Sonnet-5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5` |
+| **any epic** — Cursor TUI driver (Auto; attested after run) | Cursor Auto | `./start-cursor-driver.sh --epic <epic>` |
 
 **Driver launcher convention:** `./start-<provider>-driver.sh --epic <epic>` where `<provider>` ∈
-`codex · grok · gemini · claude`. The core owns all launcher flags; provider
+`codex · grok · gemini · claude · cursor`. The core owns all launcher flags; provider
 CLI flags follow `--`. Each driver validates the lane, claims the lease, runs
 the provider canary, and injects the `drive-epic` binding before the provider
 process starts. Codex additionally performs its transport-health probe during
 adapter preflight, before it claims the lease; a degraded probe refuses the
 launch without acquiring a lane.
+
+**Cursor concurrency (documented serialization, #6956):** A Cursor driver session
+**is** the Cursor lane (`fleet_communications.yaml` `concurrency_limit: 1`). Do not
+also `delegate.py dispatch --agent cursor` from that session. What the runtime
+already enforces today:
+
+- **Stream lease (drivers only):** `SessionStreamStore.open_session` refuses a second
+  live driver on the same epic stream with
+  `stream {id} already has live session …` (`agents_extensions/shared/session_streams/store.py`).
+- **Worker dispatch:** `scripts/delegate.py` `_check_capacity_hint` is explicitly
+  **non-blocking** — it prints a note when the lane is busy; it does **not** refuse
+  `dispatch --agent cursor` because a Cursor driver holds a stream lease.
+- **Fleet endpoint metadata:** `concurrency_limit: 1` on the `cursor` endpoint is
+  declarative / API-surfaced; it is not a dispatch mutex against the TUI driver.
+
+Policy fail-closed therefore remains operator/driver discipline until a future unit
+wires lease↔dispatch coupling. Full charter: `docs/runbooks/cursor-driver.md`.
 
 **Opus 5 @ xhigh is the DEFAULT Anthropic driver seat** (operator decision 2026-08-03).
 `./start-claude-driver.sh --epic <epic>` pins Opus 5 with `--effort xhigh` by default;
@@ -172,7 +190,7 @@ Everything else the driver runs to completion and reports past-tense — no "sho
 
 1. **This PR:** the `drive-epic` skill, this runbook, and the provider driver launchers
    (`start-grok-driver.sh` / `start-gemini-driver.sh` / `start-claude-driver.sh` /
-   `start-codex-driver.sh`). Cross-family reviewed;
+   `start-codex-driver.sh` / `start-cursor-driver.sh`). Cross-family reviewed;
    advisor-looped on the skill contract.
 2. **Follow-up PR:** rewire the `start-grok.sh` / `start-gemini.sh` / `start-kimi.sh`
    cold-prompt `case` blocks to invoke `$drive-epic` (replacing the hand-written per-epic
