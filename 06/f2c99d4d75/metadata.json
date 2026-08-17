@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "06f2c99d4d75",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6968-ci-step-retries",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/06/f2c99d4d75/0/metadata.json",
+      "transcript": "/06/f2c99d4d75/0/full.jsonl",
+      "compact_transcript": "/06/f2c99d4d75/0/transcript.jsonl",
+      "content_hash": "/06/f2c99d4d75/0/content_hash.txt",
+      "prompt": "/06/f2c99d4d75/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "06f2c99d4d75",
+  "session_id": "fleet-6dd3aafb4e4e4c698055172c25454d59",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T19:03:08.518537Z",
+  "branch": "grok/infra-6968-ci-step-retries",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "a4b3cd54c616",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T19:03:08.512234Z",
+    "agent_lines": 17,
+    "agent_removed": 2,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 17,
+    "total_lines_changed": 19,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
