@@ -1,0 +1,30 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6929-converse-registry
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6929 — route the converse command's legacy gemini default through the #6928 registry resolver
+
+ROUTING_CARD_V1
+- tier: heap/mechanical
+- model_x_harness: kimi:k3-256k (author of the #6928 resolver — natural continuity for its declared residual)
+- why_this_tier: small alignment PR onto freshly merged machinery
+- advisor_packet: issue #6929 (author-declared residual from PR #6928)
+- owned_paths: scripts/ai_agent_bridge/** (converse path only), tests
+- acceptance_cmd: .venv/bin/pytest (converse/bridge tests incl. tests/test_gemini_bridge.py tests/test_codex_bridge.py — the top-level flats your #6928 selection gap missed) + ruff clean + CI green on PR
+- alternatives_considered: cursor (busy on #6930 arc), grok (no advantage)
+- parallel_free_seats: grok, deepseek
+
+## Steps
+1. Read issue #6929. #6928 is now MERGED to main — branch fresh from main and use its resolve_compat_model / registry-derived resolution for the converse command's module-level legacy gemini default. No new mechanism; alignment only.
+2. Sweep the converse path for any OTHER hardcoded model slugs while you are there — same drift class; fix in the same PR if trivial, else bank on the issue.
+3. Test: converse default under simulated pin rotation (mirror your test_resolve_compat_model_tracks_pin_rotation pattern). Mutation-check.
+4. Run acceptance (NOTE: include the top-level flat test files, not just tests/ai_agent_bridge/) + ruff. Conventional commit, push, PR (Fixes #6929).
+5. Do NOT arm auto-merge and do NOT merge.
