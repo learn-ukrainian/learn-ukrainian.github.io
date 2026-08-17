@@ -1,0 +1,32 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6935-liveness-pin
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6935 — pin the discovered grok liveness session onto plan.metadata
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto (native Cursor CLI — author of #6934, continuity on its own banked residual)
+- why_this_tier: prescribed hardening with exact spec from the #6934 grok review seat
+- advisor_packet: issue #6935 (grok seat findings on PR #6934, PASS non-blocking)
+- owned_paths: scripts/agent_runtime/** (grok adapter liveness only), tests/test_grok_build_adapter.py
+- acceptance_cmd: .venv/bin/pytest tests/test_grok_build_adapter.py + ruff clean + CI green on PR
+- alternatives_considered: grok (own-lane plumbing, and it authored the spec — keep author/spec separation), kimi (hot)
+- parallel_free_seats: grok, deepseek
+
+## Evidence rules (#M-4)
+Mutation-check the new guards; quote runs.
+
+## Steps
+1. Read issue #6935 — it carries the exact prescription from the #6934 review: (a) pin the first-discovered post-snapshot session id onto plan.metadata once bound, so later same-cwd sessions cannot steal the bind and a plan-only poller can reproduce it; (b) tolerate/document the pre-mkdir startup window against the stall timer; (c) tests: newest-steals-bind (must FAIL against unpinned re-pick, pass with pin), split-instance non-resume, GROK_HOME override.
+2. Work ONLY in your dispatch worktree, on top of merged #6934.
+3. Run acceptance + ruff. Conventional commit, push, PR (Fixes #6935).
+4. Do NOT arm auto-merge and do NOT merge.

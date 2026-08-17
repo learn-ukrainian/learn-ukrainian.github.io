@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4b5f3591ab18",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6935-liveness-pin",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/grok_build.py",
+    "tests/test_grok_build_adapter.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/4b/5f3591ab18/0/metadata.json",
+      "transcript": "/4b/5f3591ab18/0/full.jsonl",
+      "compact_transcript": "/4b/5f3591ab18/0/transcript.jsonl",
+      "content_hash": "/4b/5f3591ab18/0/content_hash.txt",
+      "prompt": "/4b/5f3591ab18/0/prompt.txt"
+    }
+  ]
+}
