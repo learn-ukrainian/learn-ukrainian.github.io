@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b4704213e57d",
+  "strategy": "manual-commit",
+  "branch": "claude/6876-claude-dual-host",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b4/704213e57d/0/metadata.json",
+      "transcript": "/b4/704213e57d/0/full.jsonl",
+      "compact_transcript": "/b4/704213e57d/0/transcript.jsonl",
+      "content_hash": "/b4/704213e57d/0/content_hash.txt",
+      "prompt": "/b4/704213e57d/0/prompt.txt"
+    }
+  ]
+}
