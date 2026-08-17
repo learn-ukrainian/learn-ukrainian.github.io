@@ -478,6 +478,16 @@ def test_deadjectival_adverb_fallback_fills_abstractly(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+    monkeypatch.setattr(
+        reenrich,
+        "verify_word",
+        lambda word, pos_filter=None, **kwargs: (
+            [{"lemma": word, "pos": pos_filter or "adv"}]
+            if (word == "абстрактно" and pos_filter in ("adv", None))
+            or (word == "абстрактний" and pos_filter in ("adj", None))
+            else []
+        ),
+    )
 
     with sqlite3.connect(":memory:") as conn:
         summary = reenrich.reenrich_thin_entries(
@@ -520,6 +530,16 @@ def test_deadjectival_adverb_fallback_no_fill_when_adjective_missing_en(monkeypa
     monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+    monkeypatch.setattr(
+        reenrich,
+        "verify_word",
+        lambda word, pos_filter=None, **kwargs: (
+            [{"lemma": word, "pos": pos_filter or "adv"}]
+            if (word == "гамірно" and pos_filter in ("adv", None))
+            or (word == "гамірний" and pos_filter in ("adj", None))
+            else []
+        ),
+    )
 
     with sqlite3.connect(":memory:") as conn:
         summary = reenrich.reenrich_thin_entries(
@@ -535,6 +555,16 @@ def test_deadjectival_adverb_fallback_no_fill_when_adjective_missing_en(monkeypa
 
 
 def test_deadjectival_adverb_fallback_no_uk_lemma_invention(monkeypatch) -> None:
+    # Attest only real lemmas in VESUM mock
+    def fake_verify(word: str, pos_filter: str | None = None, **kwargs) -> list[dict]:
+        if word == "абстрактно" and pos_filter in ("adv", None):
+            return [{"lemma": "абстрактно", "pos": "adv"}]
+        if word == "абстрактний" and pos_filter in ("adj", None):
+            return [{"lemma": "абстрактний", "pos": "adj"}]
+        return []
+
+    monkeypatch.setattr(reenrich, "verify_word", fake_verify)
+
     # 1. Made-up adverb lemma not in VESUM
     fake_adv_entry = {
         "lemma": "вигаданоневідомо",
@@ -564,8 +594,42 @@ def test_deadjectival_adverb_fallback_no_uk_lemma_invention(monkeypatch) -> None
     assert res2 is None
 
 
-def test_deadjectival_adverb_fallback_on_loaded_manifest_pair() -> None:
+def test_deadjectival_adverb_fallback_fails_closed_on_vesum_error(monkeypatch) -> None:
+    def raise_vesum_error(*args, **kwargs):
+        raise FileNotFoundError("vesum.db not found")
+
+    monkeypatch.setattr(reenrich, "verify_word", raise_vesum_error)
+
+    adv_entry = {
+        "lemma": "абстрактно",
+        "pos": "adverb",
+        "url_slug": "абстрактно",
+        "enrichment": {},
+    }
+    manifest_index = {
+        "абстрактний": {
+            "lemma": "абстрактний",
+            "pos": "adjective",
+            "enrichment": {"translation": {"en": ["abstract"], "source": "test"}},
+        }
+    }
+    res = reenrich._deadjectival_adverb_translation(adv_entry, manifest_index)
+    assert res is None
+
+
+def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> None:
     from scripts.lexicon.manifest_io import load_manifest
+
+    monkeypatch.setattr(
+        reenrich,
+        "verify_word",
+        lambda word, pos_filter=None, **kwargs: (
+            [{"lemma": word, "pos": pos_filter or "adv"}]
+            if (word == "абстрактно" and pos_filter in ("adv", None))
+            or (word == "абстрактний" and pos_filter in ("adj", None))
+            else []
+        ),
+    )
 
     manifest = load_manifest()
     by_lemma = {e.get("lemma"): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
@@ -580,3 +644,4 @@ def test_deadjectival_adverb_fallback_on_loaded_manifest_pair() -> None:
             assert isinstance(res.get("en"), list)
             assert "abstractly" in res["en"][0]
             assert "base form абстрактний" in str(res.get("source"))
+
