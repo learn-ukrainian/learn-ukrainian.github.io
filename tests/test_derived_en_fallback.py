@@ -93,6 +93,27 @@ def test_vesum_gate_blocks_unattested_forms() -> None:
     assert derived_translation_fallback({"lemma": "білочка", "pos": "noun"}, index, vesum_verify=reject_surface) is None
 
 
+def test_pronoun_pos_is_not_treated_as_noun() -> None:
+    index = _index(
+        _base_entry("білка", ["squirrel"]),
+        {"lemma": "вовк", "pos": "pronoun", "enrichment": {"translation": {"en": ["wolf"], "source": "fixture"}}},
+    )
+
+    assert derived_translation_fallback({"lemma": "білочка", "pos": "pronoun"}, index, vesum_verify=False) is None
+    assert derived_translation_fallback({"lemma": "вовчище", "pos": "noun"}, index, vesum_verify=False) is None
+
+
+def test_annotated_noun_pos_variants_still_accepted() -> None:
+    index = _index(
+        {"lemma": "білка", "pos": "noun, masc", "enrichment": {"translation": {"en": ["squirrel"], "source": "fixture"}}}
+    )
+
+    translation = derived_translation_fallback({"lemma": "білочка", "pos": "noun:pl"}, index, vesum_verify=False)
+
+    assert translation is not None
+    assert translation["en"] == ["squirrel (diminutive)"]
+
+
 def test_manifest_lemma_index_normalizes_stress_and_case() -> None:
     index = _index(_base_entry("Бі́лка", ["squirrel"]))
 

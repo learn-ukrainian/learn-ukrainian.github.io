@@ -243,7 +243,8 @@ def _vesum_accepts(verify: VesumVerify | None, surface: str, base: str) -> bool:
 
 
 def _is_noun_pos(pos: object) -> bool:
-    return "noun" in str(pos or "").casefold()
+    normalized = str(pos or "").strip().casefold()
+    return bool(re.match(r"noun(?![a-z])", normalized))
 
 
 def _stem_before_suffix(lemma: str, suffix: str) -> str | None:
