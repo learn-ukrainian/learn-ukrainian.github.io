@@ -10,8 +10,7 @@ Configuration:
 - ``AB_CONTEXT_DIR``: defaults to ``{REPO_ROOT}/docs/agent-channels``.
 - ``AB_WAKE_DIR``: defaults to ``{REPO_ROOT}/.agent/wake``.
 - ``AB_MONITOR_URL``: defaults to empty string (Monitor API disabled).
-- ``AB_GEMINI_MODEL``: defaults to ``batch_gemini_config.FLASH_MODEL`` when importable,
-  else ``gemini-2.0-flash``.
+- ``AB_GEMINI_MODEL``: defaults to the AGY seat pin from the ACP participant registry.
 - ``AB_PIPELINE_ENV_KEY``: defaults to ``LEARN_UKRAINIAN_PIPELINE``.
 
 All public functions are re-exported here for backward compatibility.
@@ -46,10 +45,10 @@ from ._config import (
     CODEX_CLI,
     DB_PATH,
     GEMINI_CLI,
-    GEMINI_DEFAULT_MODEL,
     GH_CHAR_LIMIT,
     PID_DIR,
     REPO_ROOT,
+    default_gemini_model,
 )
 from ._db import get_db, get_session, init_db, set_session
 from ._gemini import ask_gemini, process_and_respond
@@ -112,6 +111,7 @@ __all__ = [
     "build_gemini_prompt",
     "check_inbox",
     "check_model",
+    "default_gemini_model",
     "detect_sender",
     "get_conversation",
     "get_db",
@@ -132,3 +132,11 @@ __all__ = [
     "send_to_gemini",
     "set_session",
 ]
+
+
+def __getattr__(name: str):
+    if name == "GEMINI_DEFAULT_MODEL":
+        from ._config import default_gemini_model
+
+        return default_gemini_model()
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

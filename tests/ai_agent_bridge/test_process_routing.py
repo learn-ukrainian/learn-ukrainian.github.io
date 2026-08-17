@@ -56,9 +56,7 @@ def _send(to: str, *, task_id: str = "task-6915", sender: str = "qa-engineer") -
 def _row(message_id: int):
     conn = get_db()
     try:
-        return conn.execute(
-            "SELECT acknowledged, status FROM messages WHERE id = ?", (message_id,)
-        ).fetchone()
+        return conn.execute("SELECT acknowledged, status FROM messages WHERE id = ?", (message_id,)).fetchone()
     finally:
         conn.close()
 
@@ -77,7 +75,10 @@ def _replies(message_id: int, task_id: str = "task-6915"):
 
 def _ok_result(response: str = "routed analysis", model: str = "registry-model"):
     return SimpleNamespace(
-        ok=True, response=response, model=model, stderr_excerpt=None,
+        ok=True,
+        response=response,
+        model=model,
+        stderr_excerpt=None,
         transport_outcome="ok",
     )
 
@@ -124,8 +125,7 @@ def test_process_gemini_recipient_resolves_to_agy_participant(bridge_db, monkeyp
     monkeypatch.setattr(
         _process,
         "run_compat_ask",
-        lambda target, content, **kwargs: captured.update(target=target, content=content, **kwargs)
-        or _ok_result(),
+        lambda target, content, **kwargs: captured.update(target=target, content=content, **kwargs) or _ok_result(),
     )
 
     assert _process.process_message_for_recipient(message_id) is not None
@@ -161,7 +161,10 @@ def test_process_failed_result_leaves_message_unconsumed(bridge_db, monkeypatch)
         _process,
         "run_compat_ask",
         lambda *a, **k: SimpleNamespace(
-            ok=False, response="", model="agy", stderr_excerpt="provider exploded",
+            ok=False,
+            response="",
+            model="agy",
+            stderr_excerpt="provider exploded",
             transport_outcome="error",
         ),
     )
@@ -263,7 +266,8 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     monkeypatch.setitem(
-        ACPX_SUPPORTED_PARTICIPANTS, "agy",
+        ACPX_SUPPORTED_PARTICIPANTS,
+        "agy",
         {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
     )
     assert registered_participant_model("agy") == "gemini-9.9-flash-high"
@@ -299,7 +303,8 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     from scripts.ai_agent_bridge._gemini import converse_gemini
 
     monkeypatch.setitem(
-        ACPX_SUPPORTED_PARTICIPANTS, "agy",
+        ACPX_SUPPORTED_PARTICIPANTS,
+        "agy",
         {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
     )
     captured: dict[str, object] = {}
@@ -308,9 +313,7 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
         captured.update(kwargs)
         return 1
 
-    monkeypatch.setattr(
-        "scripts.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini
-    )
+    monkeypatch.setattr("scripts.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini)
     monkeypatch.setattr(
         "scripts.ai_agent_bridge._gemini.get_conversation_context",
         lambda _task_id: ("", 0),
@@ -324,6 +327,103 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
 
     converse_gemini("hello", "t-1", model="not-a-gemini-model")
     assert captured["model"] == "not-a-gemini-model"
+
+
+def test_default_gemini_model_resolves_from_registry_and_tracks_rotation(monkeypatch) -> None:
+    """#6959: default_gemini_model resolves from the live ACP registry pin."""
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    import scripts.ai_agent_bridge as bridge
+    from scripts.ai_agent_bridge._config import default_gemini_model
+
+    monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
+    assert default_gemini_model() == registered_participant_model("agy")
+    assert registered_participant_model("agy") == bridge.GEMINI_DEFAULT_MODEL
+
+    monkeypatch.setitem(
+        ACPX_SUPPORTED_PARTICIPANTS,
+        "agy",
+        {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
+    )
+    assert default_gemini_model() == "gemini-9.9-flash-high"
+    assert bridge.GEMINI_DEFAULT_MODEL == "gemini-9.9-flash-high"
+
+
+def test_default_gemini_model_respects_env_override(monkeypatch) -> None:
+    """#6959: AB_GEMINI_MODEL environment override takes precedence."""
+    import scripts.ai_agent_bridge as bridge
+    from scripts.ai_agent_bridge._config import default_gemini_model
+
+    monkeypatch.setenv("AB_GEMINI_MODEL", "gemini-custom-override")
+    assert default_gemini_model() == "gemini-custom-override"
+    assert bridge.GEMINI_DEFAULT_MODEL == "gemini-custom-override"
+
+
+def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> None:
+    """#6959: missing registry pin fails loudly instead of falling back to stale literal."""
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    from scripts.ai_agent_bridge._config import default_gemini_model
+
+    monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
+    monkeypatch.setitem(
+        ACPX_SUPPORTED_PARTICIPANTS,
+        "agy",
+        {"seat": "acpx-agy-shadow", "agent": "agy", "model": None},
+    )
+    with pytest.raises(RuntimeError, match="No default Gemini model configured"):
+        default_gemini_model()
+
+
+def test_ask_gemini_and_process_and_respond_signatures_default_to_none() -> None:
+    """#6959: ask_gemini and process_and_respond signatures default model to None."""
+    import inspect
+
+    from scripts.ai_agent_bridge._gemini import ask_gemini, process_and_respond
+
+    assert inspect.signature(ask_gemini).parameters["model"].default is None
+    assert inspect.signature(process_and_respond).parameters["model"].default is None
+
+
+def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> None:
+    """#6959: ask_gemini resolves default from registry and remaps legacy slugs."""
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    from scripts.ai_agent_bridge._gemini import ask_gemini
+
+    monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
+    monkeypatch.setitem(
+        ACPX_SUPPORTED_PARTICIPANTS,
+        "agy",
+        {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
+    )
+    captured: dict[str, object] = {}
+
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._gemini._send_gemini_message",
+        lambda *args: 101,
+    )
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._gemini.process_and_respond",
+        lambda _msg_id, model=None, **kwargs: captured.update(model=model) or "resp",
+    )
+
+    # 1. Bare call (model=None) resolves to rotated pin
+    ask_gemini("hello", task_id="t-1")
+    assert captured["model"] == "gemini-9.9-flash-high"
+
+    # 2. Legacy slug remaps to rotated pin
+    ask_gemini("hello", task_id="t-1", model="gemini-2.0-flash")
+    assert captured["model"] == "gemini-9.9-flash-high"
+
+    # 3. Non-gemini model passes through
+    ask_gemini("hello", task_id="t-1", model="custom-provider/model-x")
+    assert captured["model"] == "custom-provider/model-x"
+
+    # 4. Env override takes precedence
+    monkeypatch.setenv("AB_GEMINI_MODEL", "env-model-override")
+    ask_gemini("hello", task_id="t-1")
+    assert captured["model"] == "env-model-override"
 
 
 def test_process_model_override_must_match_registry(bridge_db, monkeypatch):
@@ -347,9 +447,7 @@ def test_legacy_gemini_error_handler_never_acks(bridge_db):
     from scripts.ai_agent_bridge import _gemini
 
     message_id = _send("gemini")
-    _gemini._send_gemini_error(
-        {"task_id": "task-6915", "from": "qa-engineer"}, message_id
-    )
+    _gemini._send_gemini_error({"task_id": "task-6915", "from": "qa-engineer"}, message_id)
     acked, status = _row(message_id)
     assert acked == 0
     assert status.startswith("failed:")
@@ -392,9 +490,7 @@ def test_claude_fallback_error_never_acks(bridge_db):
     from scripts.ai_agent_bridge import _claude
 
     message_id = _send("claude")
-    _claude._send_claude_fallback_error(
-        {"task_id": "task-6915", "from": "qa-engineer"}, message_id
-    )
+    _claude._send_claude_fallback_error({"task_id": "task-6915", "from": "qa-engineer"}, message_id)
     acked, status = _row(message_id)
     assert acked == 0
     assert status.startswith("failed:")
@@ -405,8 +501,13 @@ def test_grok_incomplete_turn_never_acks(bridge_db):
 
     message_id = _send("grok")
     msg = {
-        "id": message_id, "task_id": "task-6915", "from": "qa-engineer",
-        "to": "grok", "type": "advisory", "content": "x", "data": None,
+        "id": message_id,
+        "task_id": "task-6915",
+        "from": "qa-engineer",
+        "to": "grok",
+        "type": "advisory",
+        "content": "x",
+        "data": None,
     }
     _grok_build._handle_grok_build_incomplete_turn(
         msg,
@@ -426,17 +527,20 @@ def test_opencode_incomplete_turn_never_acks(bridge_db):
 
     message_id = _send("glm")
     msg = {
-        "id": message_id, "task_id": "task-6915", "from": "qa-engineer",
-        "to": "glm", "type": "advisory", "content": "x", "data": None,
+        "id": message_id,
+        "task_id": "task-6915",
+        "from": "qa-engineer",
+        "to": "glm",
+        "type": "advisory",
+        "content": "x",
+        "data": None,
     }
     _opencode._handle_opencode_incomplete_turn(
         msg,
         message_id,
         "glm",
         "",
-        SimpleNamespace(
-            outcome="timeout", cancellation_category=None, reason="hard timeout"
-        ),
+        SimpleNamespace(outcome="timeout", cancellation_category=None, reason="hard timeout"),
         actual_model="glm-5.3",
         effort="high",
     )
