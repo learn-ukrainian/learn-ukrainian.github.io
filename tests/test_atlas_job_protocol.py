@@ -407,6 +407,21 @@ def test_pull_accepts_hramatka(monkeypatch: pytest.MonkeyPatch) -> None:
     assert launched
 
 
+def test_pull_forwards_per_host_run_root_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """hramatka pull must forward /home/ops/atlas-jobs (mirrors submit)."""
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    captured_env: dict[str, str] = {}
+
+    def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
+        captured_env.update(kwargs.get("env") or {})
+        return 0
+
+    monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
+    rc = atlas_job.pull(host="hramatka")
+    assert rc == 0
+    assert captured_env["ATLAS_RUN_ROOT"] == "/home/ops/atlas-jobs"
+
+
 def test_git_receipt_rejects_absolute_paths() -> None:
     bad = {
         "schema": "atlas-job-result.v1",

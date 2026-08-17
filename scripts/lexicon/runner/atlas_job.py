@@ -1347,6 +1347,11 @@ def pull(
         workdir = require_safe_workdir(workdir, host=host)
     env = os.environ.copy()
     env["ATLAS_RUNNER_HOST"] = host
+    # Mirror submit(): forward the per-host default run root so the
+    # remote pull resolves workdirs under the host actually targeted
+    # (e.g. /home/ops/atlas-jobs on hramatka), not atlas-runner's
+    # default, when ATLAS_RUN_ROOT isn't already set by the caller.
+    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     if workdir:
         env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
     if job_id:
