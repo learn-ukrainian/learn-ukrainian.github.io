@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f2189e5c22b4",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6937-cleanup-exit78",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/launchd-inventory.md",
+    "docs/runbooks/worktree-cleanup.md",
+    "scripts/api/main.py",
+    "scripts/api/preload.py",
+    "scripts/audit/check_worktree_cleanup_integrity.py",
+    "scripts/delegate.py",
+    "scripts/orchestration/install_worktree_cleanup_launchd.py",
+    "scripts/orchestration/run_scheduled_worktree_cleanup.sh",
+    "tests/orchestration/test_install_worktree_cleanup_launchd.py",
+    "tests/test_check_worktree_cleanup_integrity.py",
+    "tests/test_delegate.py",
+    "tests/test_orient_api.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f2/189e5c22b4/0/metadata.json",
+      "transcript": "/f2/189e5c22b4/0/full.jsonl",
+      "compact_transcript": "/f2/189e5c22b4/0/transcript.jsonl",
+      "content_hash": "/f2/189e5c22b4/0/content_hash.txt",
+      "prompt": "/f2/189e5c22b4/0/prompt.txt"
+    }
+  ]
+}

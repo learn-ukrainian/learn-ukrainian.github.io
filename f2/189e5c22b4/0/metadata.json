@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f2189e5c22b4",
+  "session_id": "fleet-13e7724defe6465fb9fe2e8da11f88c4",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T11:29:26.625983Z",
+  "branch": "grok/infra-6937-cleanup-exit78",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/launchd-inventory.md",
+    "docs/runbooks/worktree-cleanup.md",
+    "scripts/api/main.py",
+    "scripts/api/preload.py",
+    "scripts/audit/check_worktree_cleanup_integrity.py",
+    "scripts/delegate.py",
+    "scripts/orchestration/install_worktree_cleanup_launchd.py",
+    "scripts/orchestration/run_scheduled_worktree_cleanup.sh",
+    "tests/orchestration/test_install_worktree_cleanup_launchd.py",
+    "tests/test_check_worktree_cleanup_integrity.py",
+    "tests/test_delegate.py",
+    "tests/test_orient_api.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "94dd3e5afbe6",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T11:29:26.620378Z",
+    "agent_lines": 773,
+    "agent_removed": 17,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 773,
+    "total_lines_changed": 790,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

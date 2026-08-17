@@ -1,0 +1,33 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6937-cleanup-exit78
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6937 — worktree-cleanup launchd job failing exit 78 since 2026-08-15
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok:grok-4.6 (native Grok CLI — just surveyed this job's logs during the #6830 forensics; context continuity)
+- why_this_tier: bounded ops root-cause with logs already located
+- advisor_packet: issue #6937 + the #6830 forensics note (rules the job out as kill actor, pins last success 2026-08-15T14:43:10Z)
+- owned_paths: scripts/orchestration/scheduled_worktree_cleanup.py (or wherever the init failure roots), related tests
+- acceptance_cmd: .venv/bin/pytest (touched tests) + ruff clean + a PROVEN successful manual run of the job entrypoint + CI green on PR
+- alternatives_considered: cursor (taking #6938), kimi (spread)
+- parallel_free_seats: deepseek, glm
+
+## Evidence rules (#M-4)
+Quote the LWCR init failure from the job log; prove the fix with a successful manual invocation (quote the run + exit 0). Mutation-check any guard.
+
+## Steps
+1. Read issue #6937. Root-cause the LWCR init failure: what did the job expect that changed around 2026-08-15T14:43Z (repo layout? lease file? python env? the #6884 venv work landed near then)? Fix at that layer.
+2. Add the red-run alert the issue asks for: a failing scheduled run must surface (the repo has telemetry/canary patterns — reuse one; do NOT invent a new alerting system) so the job can never run dark for days again.
+3. Prove: manual run of the exact launchd entrypoint exits 0 and performs a real (or honestly-empty) cleanup pass.
+4. Work ONLY in your dispatch worktree. pytest + ruff. Conventional commit, push (if your harness cannot push, say so — the driver finalizes), PR (Fixes #6937).
+5. Do NOT arm auto-merge and do NOT merge.
