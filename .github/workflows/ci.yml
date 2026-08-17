@@ -265,8 +265,11 @@ jobs:
       # cold runner does not redownload it in every CI run. Version the key and
       # couple it to the lockfile: a model cache is valid only for the Stanza
       # dependency set that produced it.
+      # Cache-service errors are recoverable: continue to the provision path.
+      # A restore miss or outage must not kill the shard; provision is the gate.
       - name: Restore Stanza Ukrainian model cache
         id: stanza-model-cache
+        continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/stanza_resources
@@ -274,11 +277,23 @@ jobs:
 
       # Run this smoke regardless of cache state. Besides provisioning a cold
       # cache, it verifies a restored archive before pytest workers can start
-      # lazy model downloads.
+      # lazy model downloads. Bounded retry absorbs transient Hugging Face /
+      # GitHub network blips (3 attempts, 10s then 30s backoff).
       - name: Provision and verify Stanza Ukrainian model
         run: |
           set -euo pipefail
-          .venv/bin/python -c "from scripts.pipeline.stress_annotator import annotate_stress; print(annotate_stress('Мама читає книжку.'))"
+          for attempt in 1 2 3; do
+            echo "stanza provision attempt ${attempt}/3"
+            if .venv/bin/python -c "from scripts.pipeline.stress_annotator import annotate_stress; print(annotate_stress('Мама читає книжку.'))"; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Provision and verify Stanza Ukrainian model failed after 3 attempts" >&2
+          exit 1
 
       - name: Save Stanza Ukrainian model cache
         if: steps.stanza-model-cache.outputs.cache-hit != 'true'
