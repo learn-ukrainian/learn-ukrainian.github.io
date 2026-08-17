@@ -7,16 +7,31 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+import yaml
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import LeaseConflictError, SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor, SupervisorError, main, strip_lease_credentials
 
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+
+
+def _infra_harness_stream_id() -> str:
+    """Anchor on the live infra-harness epic so succession cannot stale this suite."""
+    doc = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))
+    epics = doc["streams"]["infra-harness"]["epics"]
+    assert epics, "infra-harness must list at least one epic in issue_streams.yaml"
+    return f"epic:{int(epics[0])}"
+
+
+INFRA_STREAM_ID = _infra_harness_stream_id()
+
 
 def _supervisor(tmp_path: Path) -> SessionSupervisor:
     store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"))
-    return SessionSupervisor(store, repo_root=Path.cwd())
+    return SessionSupervisor(store, repo_root=_REPO_ROOT)
 
 
 def _holder() -> LeaseHolder:
@@ -33,14 +48,14 @@ def test_driver_open_heartbeat_close_and_capsule_are_fenced(tmp_path: Path) -> N
     supervisor = _supervisor(tmp_path)
     lease = supervisor.open_driver(
         role=LaunchRole.DRIVER,
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=_holder(),
         lineage_id="lineage-supervisor-test",
         ttl_seconds=300,
     )
 
-    capsule = supervisor.build_capsule(role=LaunchRole.DRIVER, stream_id="epic:4707", lease=lease).as_dict()
-    assert capsule["identity"]["stream_id"] == "epic:4707"
+    capsule = supervisor.build_capsule(role=LaunchRole.DRIVER, stream_id=INFRA_STREAM_ID, lease=lease).as_dict()
+    assert capsule["identity"]["stream_id"] == INFRA_STREAM_ID
     assert capsule["identity"]["lease"]["lease_id"] == lease.lease_id
     assert capsule["identity"]["lease_credentials_exported"] is False
     assert capsule["diagnostics"]["lease_actions"] == "supervisor-only"
@@ -58,7 +73,7 @@ def test_workers_cannot_acquire_or_receive_driver_lease(tmp_path: Path) -> None:
     with pytest.raises(SupervisorError, match="workers cannot acquire"):
         supervisor.open_driver(
             role=LaunchRole.WORKER,
-            stream_id="epic:4707",
+            stream_id=INFRA_STREAM_ID,
             holder=_holder(),
             lineage_id="lineage-worker-refusal",
             ttl_seconds=300,
@@ -66,18 +81,18 @@ def test_workers_cannot_acquire_or_receive_driver_lease(tmp_path: Path) -> None:
 
     lease = supervisor.open_driver(
         role="driver",
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=_holder(),
         lineage_id="lineage-worker-capsule",
         ttl_seconds=300,
     )
     with pytest.raises(SupervisorError, match="cannot receive"):
-        supervisor.build_capsule(role="worker", stream_id="epic:4707", lease=lease)
+        supervisor.build_capsule(role="worker", stream_id=INFRA_STREAM_ID, lease=lease)
 
-    worker = supervisor.build_capsule(role="worker", stream_id="epic:4707").as_dict()
+    worker = supervisor.build_capsule(role="worker", stream_id=INFRA_STREAM_ID).as_dict()
     assert worker["identity"]["lease"] is None
     with pytest.raises(SupervisorError, match="require an exact"):
-        supervisor.build_capsule(role="driver", stream_id="epic:4707")
+        supervisor.build_capsule(role="driver", stream_id=INFRA_STREAM_ID)
 
 
 def test_worker_environment_strips_every_lease_credential() -> None:
@@ -101,7 +116,7 @@ def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
 
     opened_at = utc_now() - timedelta(hours=7)
     supervisor.store.open_session(
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=LeaseHolder(
             agent="grok",
             harness="grok-tui",
@@ -115,7 +130,7 @@ def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
     )
     successor = supervisor.open_driver(
         role="driver",
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=LeaseHolder(
             agent="grok",
             harness="grok-tui",
@@ -142,7 +157,7 @@ def test_open_driver_auto_recovers_unexpired_dead_holder(tmp_path: Path) -> None
 
     # Opened moments ago with 6h launcher TTL; process already gone.
     supervisor.store.open_session(
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=LeaseHolder(
             agent="grok",
             harness="grok-tui",
@@ -156,7 +171,7 @@ def test_open_driver_auto_recovers_unexpired_dead_holder(tmp_path: Path) -> None
     )
     successor = supervisor.open_driver(
         role="driver",
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=LeaseHolder(
             agent="grok",
             harness="grok-tui",
@@ -174,7 +189,7 @@ def test_open_driver_refuses_live_unexpired_holder(tmp_path: Path) -> None:
     supervisor = _supervisor(tmp_path)
     live = supervisor.open_driver(
         role="driver",
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=_holder(),
         lineage_id="lineage-live",
         ttl_seconds=3600,
@@ -182,7 +197,7 @@ def test_open_driver_refuses_live_unexpired_holder(tmp_path: Path) -> None:
     with pytest.raises(SupervisorError, match="already has live session"):
         supervisor.open_driver(
             role="driver",
-            stream_id="epic:4707",
+            stream_id=INFRA_STREAM_ID,
             holder=LeaseHolder(
                 agent="grok",
                 harness="grok-tui",
@@ -204,7 +219,7 @@ def test_recover_expired_driver_force_closes_claimable(tmp_path: Path) -> None:
     dead_pid = 999_999_002
     assert not _pid_alive(dead_pid)
     supervisor.store.open_session(
-        stream_id="epic:4707",
+        stream_id=INFRA_STREAM_ID,
         holder=LeaseHolder(
             agent="grok",
             harness="grok-tui",
@@ -222,11 +237,11 @@ def test_recover_expired_driver_force_closes_claimable(tmp_path: Path) -> None:
         process_id=os.getpid(),
     )
     assert supervisor.recover_expired_driver(
-        role="driver", stream_id="epic:4707", holder=holder
+        role="driver", stream_id=INFRA_STREAM_ID, holder=holder
     ) is True
     # Second recover finds nothing open.
     assert supervisor.recover_expired_driver(
-        role="driver", stream_id="epic:4707", holder=holder
+        role="driver", stream_id=INFRA_STREAM_ID, holder=holder
     ) is False
 
 
@@ -246,12 +261,12 @@ def test_cli_refuses_worker_open_attempt(tmp_path: Path, capsys: pytest.CaptureF
             "--db",
             str(tmp_path / "streams.sqlite3"),
             "--repo-root",
-            str(Path.cwd()),
+            str(_REPO_ROOT),
             "open",
             "--role",
             "worker",
             "--stream",
-            "epic:4707",
+            INFRA_STREAM_ID,
             "--agent",
             "agy",
             "--harness",
