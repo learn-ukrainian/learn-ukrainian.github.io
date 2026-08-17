@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ce6380ad581b",
+  "session_id": "fleet-c32f3bd834c443dab411594618687525",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T12:49:08.049342Z",
+  "branch": "grok/infra-6949-launcher-epic",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/session_streams/inventory.py",
+    "scripts/lib/handoff_identity.sh",
+    "scripts/session_canary/grok_lane.py",
+    "tests/test_codex_lane_canary.py",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_gemini_lane_canary.py",
+    "tests/test_handoff_identity.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "66e4cec33785",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T12:49:08.044415Z",
+    "agent_lines": 277,
+    "agent_removed": 27,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 277,
+    "total_lines_changed": 304,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

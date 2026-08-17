@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ce6380ad581b",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6949-launcher-epic",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/session_streams/inventory.py",
+    "scripts/lib/handoff_identity.sh",
+    "scripts/session_canary/grok_lane.py",
+    "tests/test_codex_lane_canary.py",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_gemini_lane_canary.py",
+    "tests/test_handoff_identity.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ce/6380ad581b/0/metadata.json",
+      "transcript": "/ce/6380ad581b/0/full.jsonl",
+      "compact_transcript": "/ce/6380ad581b/0/transcript.jsonl",
+      "content_hash": "/ce/6380ad581b/0/content_hash.txt",
+      "prompt": "/ce/6380ad581b/0/prompt.txt"
+    }
+  ]
+}
