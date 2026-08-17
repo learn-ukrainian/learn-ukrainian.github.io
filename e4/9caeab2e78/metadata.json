@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e49caeab2e78",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-registry-6943-swap",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/WORKSTREAMS.md",
+    "scripts/config/issue_streams.yaml",
+    "tests/test_handoff_identity.py",
+    "tests/test_lexicon_runner_pr2_ledger.py",
+    "tests/test_session_streams_dual_write_status.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e4/9caeab2e78/0/metadata.json",
+      "transcript": "/e4/9caeab2e78/0/full.jsonl",
+      "compact_transcript": "/e4/9caeab2e78/0/transcript.jsonl",
+      "content_hash": "/e4/9caeab2e78/0/content_hash.txt",
+      "prompt": "/e4/9caeab2e78/0/prompt.txt"
+    }
+  ]
+}
