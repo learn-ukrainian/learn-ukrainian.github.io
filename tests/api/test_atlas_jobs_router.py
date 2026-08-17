@@ -53,10 +53,19 @@ def test_submit_dry_run_via_api(_isolate: atlas_job.FakeHostAdapter) -> None:
     assert resp.json()["exit_code"] == 0
 
 
-def test_submit_rejects_hramatka(_isolate: atlas_job.FakeHostAdapter) -> None:
+def test_submit_allows_hramatka(_isolate: atlas_job.FakeHostAdapter) -> None:
     resp = client.post(
         "/api/atlas-jobs/submit",
         json={"plan": _plan(host="hramatka"), "dry_run": True},
+    )
+    assert resp.status_code == 200
+    assert resp.json()["exit_code"] == 0
+
+
+def test_submit_rejects_unknown_host(_isolate: atlas_job.FakeHostAdapter) -> None:
+    resp = client.post(
+        "/api/atlas-jobs/submit",
+        json={"plan": _plan(host="mystery-host"), "dry_run": True},
     )
     assert resp.status_code == 400
 

@@ -12,13 +12,37 @@ and not a Hetzner snapshot.
 
 ## Hosts
 
+Atlas jobs may run on **both** `atlas-runner` and `hramatka` (operator GO
+2026-08-17). Each host is its own mutex — `submit` refuses a second active
+`atlas-job-*` unit on the *same* host, but the two hosts may run concurrently.
+
 | Host | Use | Never |
 | --- | --- | --- |
 | `atlas-runner` | Reenrich, later ULIF / slovnyk migrate | Teacher API, GH runners |
-| `hramatka` | Teacher API, Caddy, CI runners | Catalog reenrich / slovnyk refetch |
+| `hramatka` | Reenrich (class-B, memory-capped) **and** teacher API, Caddy, CI runners | Writing under `/opt/hramatka` or `/srv` (teacher-service data) |
 
-Default `ATLAS_RUNNER_HOST` is **`atlas-runner`**. A plan that puts `reenrich`
-on `hramatka` is rejected (no override).
+Default `ATLAS_RUNNER_HOST` is **`atlas-runner`**; pass `host: hramatka` (or
+the `vps` ssh alias — same machine, see `scripts/config/trails/estate.v1.yaml`)
+to target the other host. Unknown host strings are still rejected.
+
+Per-host default work root (only used when the plan omits `workdir`, and
+overridable via `ATLAS_RUN_ROOT`):
+
+| Host | Default root |
+| --- | --- |
+| `atlas-runner` | `/home/ops/atlas-runner` |
+| `hramatka` / `vps` | `/home/ops/atlas-jobs` (does not exist yet on the host — `submit`/the launcher `mkdir -p` it on first use) |
+
+`hramatka`'s reenrich work root is deliberately separate from its
+teacher-facing `/opt/hramatka` and `/srv` trees — never point a job's
+`workdir` there.
+
+**Memory on hramatka.** The class-B launcher (`launch_reenrich_class_b.sh`)
+already pins `systemd-run --property=MemoryHigh=1536M --property=MemoryMax=2048M`
+regardless of host — this is intentionally conservative on hramatka so a
+reenrich run cannot starve the teacher API / Caddy / GH runners sharing that
+box. Do not raise these limits for hramatka jobs without checking headroom
+against the resident services first.
 
 SSH aliases live in the operator `~/.ssh/config`. IAC: private
 `hramatka/ops/iac/` (merged #495).
@@ -110,11 +134,16 @@ Use the shared project interpreter (never bare `python`):
 .venv/bin/python -m scripts.lexicon.runner.atlas_job list
 ```
 
-`submit` refuses a second active `atlas-job-*` unit on the host. `close` seals
-a result after the unit is dead (or records `needs_finalize` when evidence is
-missing).
+`--host` accepts `atlas-runner` or `hramatka` (`vps` alias) everywhere above.
+`submit` refuses a second active `atlas-job-*` unit on that host — the other
+host may still have its own job running. `close` seals a result after the
+unit is dead (or records `needs_finalize` when evidence is missing).
 
 ## Memory
 
-The existing launcher still pins `MemoryHigh=1.5G` / `MemoryMax=2G` on the
-cx33. One heavy job. Two full-catalogs need a later host or a queue.
+The class-B launcher pins `MemoryHigh=1.5G` / `MemoryMax=2G` on every host —
+one heavy job at a time per host. On `hramatka` this cap is load-bearing (see
+Hosts above): it exists so a reenrich run cannot starve the teacher API / GH
+runners on the same box. Two full-catalog runs on one host need a later host
+or a queue; two hosts running one campaign each is the supported dual-host
+shape.

@@ -2,10 +2,13 @@
 
 **systemd on the host is truth; the local registry is a journal/mirror.**
 
-Batch kinds run on atlas-runner only. Registry lives under batch_state/atlas-jobs/
-(restic-covered). Close writes a fail-closed result receipt; large artifacts go
-through durable_mirror + backup-data.sh. Publish/pointer flip is never this module. Submit enforces a host free-disk
-floor (default 5 GiB, ATLAS_MIN_FREE_DISK_BYTES / ATLAS_MIN_FREE_DISK_GIB).
+Batch kinds run on atlas-runner or hramatka (each host is its own mutex —
+submit refuses a second active unit on the SAME host; the two hosts may run
+concurrently). Registry lives under batch_state/atlas-jobs/ (restic-covered).
+Close writes a fail-closed result receipt; large artifacts go through
+durable_mirror + backup-data.sh. Publish/pointer flip is never this module.
+Submit enforces a host free-disk floor (default 5 GiB,
+ATLAS_MIN_FREE_DISK_BYTES / ATLAS_MIN_FREE_DISK_GIB).
 """
 
 from __future__ import annotations
@@ -26,8 +29,10 @@ from typing import Any, Protocol
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"
 BATCH_KINDS = frozenset({"reenrich"})
-ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"})}
+# "vps" is the operator ssh alias for the hramatka host (hramatka-api's box;
+# see scripts/config/trails/estate.v1.yaml) — same machine, same allowance.
 HRAMATKA_ALIASES = frozenset({"hramatka", "vps"})
+ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"}) | HRAMATKA_ALIASES}
 RESULT_SINKS = frozenset({"git", "restic", "both"})
 RESUME_MODES = frozenset({"idempotent", "checkpoint", "never"})
 DRIVER_NEEDLES = (
@@ -75,6 +80,14 @@ _HOSTNAME_HINT = re.compile(
 )
 DEFAULT_TIMEOUT_SECONDS = 86400
 DEFAULT_RUN_ROOT = "/home/ops/atlas-runner"
+# hramatka's work root is separate from its teacher-facing /opt/hramatka and
+# /srv trees — reenrich jobs never touch those. Dir does not exist yet on the
+# host; submit/launcher mkdir it on first use.
+DEFAULT_HRAMATKA_RUN_ROOT = "/home/ops/atlas-jobs"
+DEFAULT_RUN_ROOTS = {
+    "atlas-runner": DEFAULT_RUN_ROOT,
+    "hramatka": DEFAULT_HRAMATKA_RUN_ROOT,
+}
 DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
 # Same operator env file as ~/.local/bin/learn-ukrainian-backup (launchd wrapper).
 DEFAULT_BACKUP_ENV_FILE = Path.home() / ".secrets" / "learn-ukrainian-backup.env"
@@ -247,7 +260,7 @@ class SshHostAdapter:
         return proc.returncode == 0
 
     def free_disk_bytes(self, host: str, path: str | None = None) -> int:
-        target = path or str(_run_root())
+        target = path or str(_run_root(host))
         remote = (
             "python3 - <<'PY'\n"
             "import shutil\n"
@@ -337,8 +350,19 @@ def require_safe_job_id(job_id: object) -> str:
     return matched.group(0)
 
 
-def _run_root() -> Path:
-    return Path(os.environ.get("ATLAS_RUN_ROOT", DEFAULT_RUN_ROOT))
+def _canonical_host(host: str | None) -> str:
+    """Map ssh-alias variants (``vps``) onto the canonical host name."""
+    if host in HRAMATKA_ALIASES:
+        return "hramatka"
+    return host or "atlas-runner"
+
+
+def _run_root(host: str | None = None) -> Path:
+    override = os.environ.get("ATLAS_RUN_ROOT")
+    if override:
+        return Path(override)
+    canonical = _canonical_host(host)
+    return Path(DEFAULT_RUN_ROOTS.get(canonical, DEFAULT_RUN_ROOT))
 
 
 def _safe_id_token(part: str) -> str:
@@ -365,14 +389,14 @@ def _path_under(root: Path, *parts: str) -> Path:
     return Path(candidate)
 
 
-def require_safe_workdir(workdir: object) -> str:
+def require_safe_workdir(workdir: object, host: str | None = None) -> str:
     """Fail closed for plan/registry workdirs used in path and SSH contexts.
 
-    Rejects ``..``, absolute paths outside ``ATLAS_RUN_ROOT`` / default run
-    root, and any path whose segments are not ``_SAFE_ID`` tokens.
-    Returns a newly constructed path from validated tokens (or
-    ``str(resolved)`` for absolute paths under the run root), never the
-    original relative ``workdir`` string.
+    Rejects ``..``, absolute paths outside ``ATLAS_RUN_ROOT`` / the
+    per-host default run root (see ``DEFAULT_RUN_ROOTS``), and any path
+    whose segments are not ``_SAFE_ID`` tokens. Returns a newly constructed
+    path from validated tokens (or ``str(resolved)`` for absolute paths
+    under the run root), never the original relative ``workdir`` string.
     """
     if not isinstance(workdir, str) or not workdir:
         raise ValueError("workdir must be a non-empty safe token path")
@@ -381,7 +405,7 @@ def require_safe_workdir(workdir: object) -> str:
     raw = Path(workdir)
     if ".." in raw.parts:
         raise ValueError("workdir must not contain ..")
-    run_root = _run_root()
+    run_root = _run_root(host)
     if raw.is_absolute():
         # CodeQL-recognized containment (realpath + startswith), not relative_to.
         run_root_real = os.path.realpath(str(run_root))
@@ -429,9 +453,10 @@ def unit_name(job_id: str) -> str:
 
 def work_dir_for(job_id: str, plan: dict[str, Any] | None = None) -> str:
     safe = require_safe_job_id(job_id)
+    host = plan.get("host") if plan else None
     if plan and isinstance(plan.get("workdir"), str) and plan["workdir"]:
-        return require_safe_workdir(plan["workdir"])
-    run_root = str(_run_root()).rstrip("/")
+        return require_safe_workdir(plan["workdir"], host=host)
+    run_root = str(_run_root(host)).rstrip("/")
     return f"{run_root}/run-atlas-job-{safe}"
 
 
@@ -462,15 +487,13 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     if not isinstance(job_id, str) or _SAFE_ID.fullmatch(job_id) is None:
         errors.append("id must be a filesystem/systemd-safe token")
     host = plan.get("host")
-    if host not in {"atlas-runner", "hramatka"}:
-        errors.append("host must be atlas-runner or hramatka")
+    if host != "atlas-runner" and host not in HRAMATKA_ALIASES:
+        errors.append("host must be atlas-runner, hramatka, or vps")
     kind = plan.get("kind")
     if kind not in BATCH_KINDS:
         errors.append(f"kind must be one of {sorted(BATCH_KINDS)}")
     elif host is not None and host not in ALLOWED_HOSTS[kind]:
         errors.append(f"kind {kind} cannot run on {host}")
-    if host in HRAMATKA_ALIASES and kind in BATCH_KINDS:
-        errors.append("batch kinds must not target hramatka/vps")
     if plan.get("pointer_write") is not False:
         errors.append("pointer_write must be false (publish is a separate gate)")
     sink = plan.get("result_sink")
@@ -507,7 +530,7 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     workdir = plan.get("workdir")
     if workdir is not None:
         try:
-            require_safe_workdir(workdir)
+            require_safe_workdir(workdir, host=host if isinstance(host, str) else None)
         except ValueError as exc:
             errors.append(str(exc))
     return errors
@@ -997,6 +1020,11 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
         args.append("--no-poll")
     env = os.environ.copy()
     env["ATLAS_RUNNER_HOST"] = host
+    # Forward the per-host default run root so the remote launcher's
+    # REMOTE_REPO derivation (RUN_ROOT/repo) matches the host actually
+    # targeted, not atlas-runner's default, when ATLAS_RUN_ROOT isn't
+    # already set by the caller.
+    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     env["ATLAS_RE_ENRICH_UNIT"] = unit
     env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
     env["ATLAS_RE_ENRICH_OUT_DIR"] = str(local_pull_dir(job_id))
@@ -1241,9 +1269,6 @@ def _unit_is_active(unit: dict[str, Any]) -> bool:
 
 
 def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None = None) -> int:
-    if host in HRAMATKA_ALIASES:
-        print("status for batch jobs must use atlas-runner", file=sys.stderr)
-        return 2
     adapter = host_adapter or get_host_adapter()
     try:
         if not adapter.reachable(host):
@@ -1316,15 +1341,17 @@ def pull(
     job_id: str | None = None,
     workdir: str | None = None,
 ) -> int:
-    if host in HRAMATKA_ALIASES:
-        print("pull for batch jobs must use atlas-runner", file=sys.stderr)
-        return 2
     if job_id is not None:
         job_id = require_safe_job_id(job_id)
     if workdir:
-        workdir = require_safe_workdir(workdir)
+        workdir = require_safe_workdir(workdir, host=host)
     env = os.environ.copy()
     env["ATLAS_RUNNER_HOST"] = host
+    # Mirror submit(): forward the per-host default run root so the
+    # remote pull resolves workdirs under the host actually targeted
+    # (e.g. /home/ops/atlas-jobs on hramatka), not atlas-runner's
+    # default, when ATLAS_RUN_ROOT isn't already set by the caller.
+    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     if workdir:
         env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
     if job_id:
