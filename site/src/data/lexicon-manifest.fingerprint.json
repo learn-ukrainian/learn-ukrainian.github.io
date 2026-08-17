@@ -219,7 +219,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "c7ab61b6c661dda8ba019049ec26ea46340b115a1dff0f2f0f81a8ce8fe6c08d"
+        "sha256": "9517d5fd7eeebc65bff91fd449ddffa58e8f6ec70b18d25b304be5e83d13290b"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",

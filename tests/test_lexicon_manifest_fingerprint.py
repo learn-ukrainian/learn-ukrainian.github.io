@@ -34,7 +34,7 @@ def _git(root: Path, *args: str) -> None:
     for name in GIT_SCOPE_ENV_VARS:
         env.pop(name, None)
     subprocess.run(
-        ["git", *args],
+        ["git", "-c", "core.hooksPath=/dev/null", *args],
         cwd=root,
         check=True,
         capture_output=True,
