@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "025e6a393563",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6953-c0-transport",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/acpx.py",
+    "tests/agent_runtime/test_acpx_adapter.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/02/5e6a393563/0/metadata.json",
+      "transcript": "/02/5e6a393563/0/full.jsonl",
+      "compact_transcript": "/02/5e6a393563/0/transcript.jsonl",
+      "content_hash": "/02/5e6a393563/0/content_hash.txt",
+      "prompt": "/02/5e6a393563/0/prompt.txt"
+    }
+  ]
+}
