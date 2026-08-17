@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "da6e9f2f3d74",
+  "strategy": "manual-commit",
+  "branch": "cursor/5411-cursor-inject-guard",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/generate_needs_review_ledger.py",
+    "scripts/lexicon/promote_grow_candidates.py",
+    "scripts/lexicon/triage_needs_review.py",
+    "tests/test_generate_needs_review_ledger.py",
+    "tests/test_triage_needs_review.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/da/6e9f2f3d74/0/metadata.json",
+      "transcript": "/da/6e9f2f3d74/0/full.jsonl",
+      "compact_transcript": "/da/6e9f2f3d74/0/transcript.jsonl",
+      "content_hash": "/da/6e9f2f3d74/0/content_hash.txt",
+      "prompt": "/da/6e9f2f3d74/0/prompt.txt"
+    }
+  ]
+}
