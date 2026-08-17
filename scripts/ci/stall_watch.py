@@ -30,7 +30,9 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-DEFAULT_STALL_BUDGET_SECONDS = 90.0
+# Must exceed pytest-timeout (120s in pyproject.toml) so the worker timeout
+# fires first; stall watch only catches controller/pipe hangs past that.
+DEFAULT_STALL_BUDGET_SECONDS = 150.0
 _STALL_BUDGET_ENV = "CI_STALL_WATCH_SECONDS"
 _POLL_INTERVAL_ENV = "CI_STALL_WATCH_POLL_SECONDS"
 _BREADCRUMB_DIR_ENV = "PYTEST_BREADCRUMB_DIR"
@@ -48,7 +50,10 @@ class StalledNode:
 
 
 def stall_budget_seconds() -> float:
-    """Stall budget in seconds; env-overridable so tests can shrink it."""
+    """Stall budget in seconds; env-overridable so tests can shrink it.
+
+    Default exceeds pytest-timeout (120s) so worker timeouts fire first.
+    """
     raw = os.environ.get(_STALL_BUDGET_ENV)
     return float(raw) if raw else DEFAULT_STALL_BUDGET_SECONDS
 

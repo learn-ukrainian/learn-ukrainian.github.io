@@ -11,6 +11,7 @@ from scripts.ci.stall_watch import (
     breadcrumb_dir_from_env,
     find_stalled_nodes,
     format_stall_message,
+    stall_budget_seconds,
 )
 from tests.conftest import _get_breadcrumb_file, pytest_runtest_logfinish, pytest_runtest_logstart
 
@@ -98,7 +99,14 @@ def test_breadcrumb_subprocess_pytest_run(tmp_path: Path) -> None:
 # pipe-full stall is otherwise invisible until the job's timeout-minutes
 # cancels it (docs/bug-autopsies/2026-07-25-ci-gate-reboot.md §3). These
 # tests exercise the watcher directly against fake breadcrumbs — they never
-# run the full suite to prove the fail-fast behavior.
+# run the full suite to prove the fail-fast behavior. Default stall budget
+# must exceed pytest-timeout (120s) so healthy slow tests are not false-killed.
+
+
+def test_stall_budget_default_exceeds_pytest_timeout(monkeypatch) -> None:
+    """Default budget stays above worker timeout so healthy slow tests survive."""
+    monkeypatch.delenv("CI_STALL_WATCH_SECONDS", raising=False)
+    assert stall_budget_seconds() > 120
 
 
 def test_find_stalled_nodes_flags_start_without_finish(tmp_path: Path) -> None:
@@ -243,7 +251,7 @@ def test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr() -> None:
 
     Runs the real `run` command as a subprocess (never the full suite) against
     one deliberately-hung test, with the stall budget shrunk via env so the
-    watcher fires in well under a second instead of the CI default 90s.
+    watcher fires in well under a second instead of the CI default 150s.
     """
     repo_root = Path(__file__).parents[1]
     test_file = repo_root / "tests" / "_temp_stall_hang_test.py"
