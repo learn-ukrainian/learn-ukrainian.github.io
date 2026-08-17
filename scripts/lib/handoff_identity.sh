@@ -15,15 +15,66 @@
 # Launcher lane selectors are intentionally allowlisted below.  Do not derive a
 # slot or stream id from arbitrary user input: that creates phantom handoff
 # files and can silently attach a session to the wrong stream.
+#
+# The infra stream id is the issue-stream registry anchor (infra-harness), not
+# a literal epic number. The next succession must not require a launcher edit.
+# Tests may point HANDOFF_ISSUE_STREAMS_YAML at a fixture registry.
+
+_HANDOFF_IDENTITY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+# _launcher_stream_anchor_epic "<stream-key>"
+# Print the first epic number listed for that key in issue_streams.yaml.
+# Fail closed (print nothing, return 1) when the registry is missing or the
+# stream has no numeric epic. Handles both `epics: [N]` and block-list forms.
+_launcher_stream_anchor_epic() {
+  local key="${1:-}"
+  local registry="${HANDOFF_ISSUE_STREAMS_YAML:-$_HANDOFF_IDENTITY_DIR/../config/issue_streams.yaml}"
+  local epic=""
+  [ -n "$key" ] && [ -f "$registry" ] || return 1
+  epic="$(
+    awk -v key="$key" '
+      $0 ~ "^  " key ":" { found = 1; next }
+      found && $0 ~ /^  [^[:space:]]/ { exit }
+      found && $0 ~ /^[[:space:]]+epics:/ {
+        if (match($0, /[0-9]+/)) {
+          print substr($0, RSTART, RLENGTH)
+          exit
+        }
+        list = 1
+        next
+      }
+      found && list && match($0, /[0-9]+/) {
+        print substr($0, RSTART, RLENGTH)
+        exit
+      }
+    ' "$registry"
+  )"
+  [ -n "$epic" ] || return 1
+  printf '%s' "$epic"
+}
+
+# _launcher_infra_stream_id
+# Print epic:<anchor> for the infra-harness registry stream.
+_launcher_infra_stream_id() {
+  local epic=""
+  epic="$(_launcher_stream_anchor_epic infra-harness)" || return 1
+  printf 'epic:%s' "$epic"
+}
 
 # launcher_selector_resolve "<lane-or-lane.topic>"
 # Print the canonical lane and stream id, separated by a tab.  This is the
 # single selector table shared by handoff identities and session supervision.
 # Unknown selectors return 1 and print nothing, so callers can fail closed.
 launcher_selector_resolve() {
+  local stream=""
   case "${1:-}" in
     infra|harness|infra.fleet-comms)
-      printf 'infra\tepic:4707\n'
+      stream="$(_launcher_infra_stream_id)" || return 1
+      case "$stream" in
+        epic:[1-9]*) ;;
+        *) return 1 ;;
+      esac
+      printf 'infra\t%s\n' "$stream"
       ;;
     devops|infra.devops)
       printf 'devops\tepic:5703\n'

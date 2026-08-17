@@ -5,9 +5,11 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 from agents_extensions.shared.session_streams.inventory import (
     _handoff_candidates_for,
@@ -24,6 +26,18 @@ from scripts.orchestration.fleet_taxonomy import (
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
+_ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+
+
+def _infra_harness_stream_id() -> str:
+    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"][
+        "epics"
+    ]
+    assert epics
+    return f"epic:{int(epics[0])}"
+
+
+INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
 # ---------------------------------------------------------------------------
@@ -132,9 +146,11 @@ def test_list_valid_names() -> None:
 
 def test_inventory_session_streams_wiring() -> None:
     """Verify session_streams inventory uses fleet_taxonomy resolution."""
-    # epic:4707 is in HANDOFF_PATH_OVERRIDES
+    # infra-harness is keyed by stream name so succession keeps harness-epic paths
     cands_infra = _handoff_candidates_for("infra-harness", 4707)
     assert any("harness-epic" in path for path in cands_infra)
+    cands_successor = _handoff_candidates_for("infra-harness", 888001)
+    assert any("harness-epic" in path for path in cands_successor)
 
     # A non-overridden stream name should use resolve_area to determine directory slug
     cands_core = _handoff_candidates_for("core-quality", 4274)
@@ -150,9 +166,9 @@ def test_inventory_session_streams_wiring() -> None:
 @pytest.mark.parametrize(
     ("selector", "expected_lane", "expected_stream"),
     [
-        ("infra", "infra", "epic:4707"),
-        ("harness", "infra", "epic:4707"),
-        ("infra.fleet-comms", "infra", "epic:4707"),
+        ("infra", "infra", INFRA_STREAM_ID),
+        ("harness", "infra", INFRA_STREAM_ID),
+        ("infra.fleet-comms", "infra", INFRA_STREAM_ID),
         ("devops", "devops", "epic:5703"),
         ("infra.devops", "devops", "epic:5703"),
         ("atlas", "atlas", "epic:4387"),
@@ -344,9 +360,9 @@ def test_session_setup_hook_epic_validation_contract(
         "SESSION_EPIC": session_epic,
         "CLAUDE_PROFILE_RESOLVER_SH": str(_REPO_ROOT / "scripts/lib/profile_resolver.sh"),
         "CLAUDE_PROFILE_RESOLVER_PY": str(_REPO_ROOT / "scripts/lib/context_profiles.py"),
-        "CLAUDE_PROFILE_RESOLVER_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "CLAUDE_PROFILE_RESOLVER_PYTHON": sys.executable,
         "CLAUDE_SESSION_RECORD_SCRIPT": str(_REPO_ROOT / "scripts/lib/session_record.py"),
-        "CLAUDE_SESSION_RECORD_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "CLAUDE_SESSION_RECORD_PYTHON": sys.executable,
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
     }

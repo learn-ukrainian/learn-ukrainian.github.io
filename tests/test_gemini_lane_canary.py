@@ -98,4 +98,7 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
     assert gemini_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", " HARNESS "]) == 0
 
     board = (tmp_path / ".claude" / "harness-epic" / "GEMINI-COLD-START.md").read_text(encoding="utf-8")
-    assert "**Stream:** `epic:4707`" in board
+    from agents_extensions.shared.session_streams.inventory import stream_anchor_id
+
+    infra_stream = stream_anchor_id("infra-harness", Path(__file__).resolve().parents[1])
+    assert f"**Stream:** `{infra_stream}`" in board
