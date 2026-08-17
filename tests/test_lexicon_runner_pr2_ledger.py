@@ -900,13 +900,16 @@ def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch
     assert len(candidate["entries"]) == 500
 
 
-def test_issue_streams_registers_5331_under_atlas_practice() -> None:
+def test_issue_streams_atlas_practice_drops_closed_5331() -> None:
     import yaml
 
     doc = yaml.safe_load(Path("scripts/config/issue_streams.yaml").read_text(encoding="utf-8"))
     epics = doc["streams"]["atlas-practice"]["epics"]
-    assert 5331 in epics
+    assert 5331 not in epics
     assert 4387 in epics
-    # Do not claim infra's issue.
+    assert 4700 in epics
+    # Do not claim infra's issue; infra anchors on successor #6943.
     infra = doc["streams"]["infra-harness"]["epics"]
     assert 5331 not in infra
+    assert 6943 in infra
+    assert 4707 not in infra

@@ -27,7 +27,7 @@ def test_inventory_covers_repo_issue_streams():
     assert len(records) >= 10
     ids = {r.stream_id for r in records}
     assert "epic:4387" in ids
-    assert "epic:4707" in ids
+    assert "epic:6943" in ids
     assert "epic:4542" in ids
     assert "epic:2836" in ids  # folk — was not in the hard-coded four
 

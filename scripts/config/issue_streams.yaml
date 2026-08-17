@@ -12,7 +12,7 @@ schema_version: 1
 streams:
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
-    epics: [4387, 4700, 5331]  # umbrella + UX-quality-wave + #5331 fill_local divergence
+    epics: [4387, 4700]  # umbrella + UX-quality-wave (closed #5331 fill_local divergence removed)
   atlas-intake:
     title: "Word Atlas full-corpus intake"
     epics: [4220, 4378, 5224]        # intake epic + entry-model DB epic
@@ -21,7 +21,7 @@ streams:
     epics: [4706]
   infra-harness:
     title: "Infra & fleet reliability (hooks, dispatch, routing)"
-    epics: [4707]
+    epics: [6943]  # successor to closed #4707
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
     epics: [5703]
