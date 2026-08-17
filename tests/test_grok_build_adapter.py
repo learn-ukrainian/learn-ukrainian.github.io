@@ -572,3 +572,132 @@ def test_liveness_respects_grok_home_override(tmp_path, monkeypatch):
         metadata={"liveness_session_dir_snapshot": []},
     )
     assert GrokBuildAdapter().liveness_signal_paths(plan_override) == (override_root,)
+
+
+def test_liveness_shared_adapter_two_plans_no_cross_pin(tmp_path, monkeypatch):
+    """#6935 delta: shared adapter must not hand plan A's pin to unpinned plan B.
+
+    Fleet shape: both plans already built, then interleaved polls. Plan B's
+    snapshot is stamped to exclude A's session as "new" so the only way B
+    can watch A's dir is via the forbidden instance bind.
+
+    Mutation check: restoring instance ``_liveness_session_id`` /
+    ``_resume_session_id`` fallback in ``_bound_liveness_session_id`` plus
+    writing the discover pin onto ``self._liveness_session_id`` makes plan B
+    resolve to A's session id (false-LIVE contamination).
+    """
+    from urllib.parse import quote
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    project = tmp_path / "project"
+    project.mkdir()
+    grok_home = resolve_grok_home()
+    sessions_root = grok_home / "sessions" / quote(str(project.resolve()), safe="")
+
+    adapter = GrokBuildAdapter()
+    with patch(
+        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
+    ):
+        plan_a = adapter.build_invocation(
+            prompt="plan A",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+        plan_b = adapter.build_invocation(
+            prompt="plan B",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+
+    # Treat A's forthcoming session as already known to B (peer / prior run),
+    # so unpinned B correctly stays on sessions_root unless instance-bound.
+    plan_b.metadata["liveness_session_dir_snapshot"] = ["plan-a-session"]
+
+    session_a = grok_session_dir(grok_home, project, "plan-a-session")
+    session_a.mkdir(parents=True)
+    (session_a / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    assert session_a in adapter.liveness_signal_paths(plan_a)
+    assert plan_a.metadata["liveness_session_id"] == "plan-a-session"
+    assert adapter.liveness_signal_paths(plan_a) == (
+        session_a,
+        session_a / "events.jsonl",
+    )
+
+    # Instance bind would hand B A's id here.
+    paths_b = adapter.liveness_signal_paths(plan_b)
+    assert paths_b == (sessions_root,)
+    assert session_a not in paths_b
+    assert "liveness_session_id" not in plan_b.metadata
+
+    session_b = grok_session_dir(grok_home, project, "plan-b-session")
+    session_b.mkdir(parents=True)
+    (session_b / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    paths_b_bound = adapter.liveness_signal_paths(plan_b)
+    assert session_b in paths_b_bound
+    assert plan_b.metadata["liveness_session_id"] == "plan-b-session"
+    assert session_a not in paths_b_bound
+    assert adapter.liveness_signal_paths(plan_b) == (
+        session_b,
+        session_b / "events.jsonl",
+    )
+    assert plan_a.metadata["liveness_session_id"] == "plan-a-session"
+
+
+def test_liveness_pinned_dir_deleted_mid_run_stays_bound(tmp_path, monkeypatch):
+    """#6935: deleted pinned session dir stays bound (false-dead OK).
+
+    Watching the missing path is preferred over re-picking a peer and going
+    false-LIVE — the stall timer will correctly treat the deleted pin as dead.
+    """
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    project = tmp_path / "project"
+    project.mkdir()
+    grok_home = resolve_grok_home()
+
+    adapter = GrokBuildAdapter()
+    with patch(
+        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
+    ):
+        plan = adapter.build_invocation(
+            prompt="supervised",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+
+    pinned = grok_session_dir(grok_home, project, "pinned-then-gone")
+    pinned.mkdir(parents=True)
+    (pinned / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    assert pinned in adapter.liveness_signal_paths(plan)
+    assert plan.metadata["liveness_session_id"] == "pinned-then-gone"
+    assert adapter.liveness_signal_paths(plan) == (pinned, pinned / "events.jsonl")
+
+    shutil.rmtree(pinned)
+    peer = grok_session_dir(grok_home, project, "alive-peer")
+    peer.mkdir(parents=True)
+    (peer / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    peer.touch()
+
+    after = adapter.liveness_signal_paths(plan)
+    assert after == (pinned, pinned / "events.jsonl")
+    assert peer not in after
+    assert plan.metadata["liveness_session_id"] == "pinned-then-gone"

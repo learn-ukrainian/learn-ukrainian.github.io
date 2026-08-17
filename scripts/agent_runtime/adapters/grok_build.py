@@ -348,7 +348,6 @@ class GrokBuildAdapter:
 
         snapshot = self._reset_per_invocation_state(
             cwd=execution_cwd,
-            resume_session_id=resume_session_id,
             env_overrides={},
         )
         metadata: dict[str, object] = {
@@ -457,19 +456,21 @@ class GrokBuildAdapter:
         )
         if discovered_id and not bound:
             # Mutate the plan-owned dict (InvocationPlan is frozen, metadata
-            # contents are not) so subsequent polls keep this bind.
+            # contents are not) so subsequent polls keep this bind. Never pin
+            # onto adapter instance state — a shared adapter serving two plans
+            # would otherwise hand plan B the session id pinned for plan A.
             metadata[_META_LIVENESS_SESSION_ID] = discovered_id
-            self._liveness_session_id = discovered_id
         return paths
 
     def _bound_liveness_session_id(self, metadata: dict[str, object]) -> str | None:
-        """Return resume or pinned liveness session id, if any."""
+        """Return resume or pinned liveness session id from plan metadata only.
+
+        Instance-level bind is intentionally absent: a shared adapter can
+        poll multiple plans, and an instance pin contaminates unpinned peers
+        (#6935 FAIL delta).
+        """
         for key in (_META_RESUME_SESSION_ID, _META_LIVENESS_SESSION_ID):
             raw = metadata.get(key)
-            if isinstance(raw, str) and raw:
-                return raw
-        for attr in ("_resume_session_id", "_liveness_session_id"):
-            raw = getattr(self, attr, None)
             if isinstance(raw, str) and raw:
                 return raw
         return None
@@ -494,12 +495,9 @@ class GrokBuildAdapter:
         self,
         *,
         cwd: Path,
-        resume_session_id: str | None,
         env_overrides: dict[str, str],
     ) -> set[Path]:
         """Snapshot pre-existing cwd-scoped session dirs before launch."""
-        self._resume_session_id = resume_session_id
-        self._liveness_session_id = resume_session_id
         self._session_dir_snapshot = self._snapshot_preexisting_session_dirs(
             cwd, env_overrides=env_overrides
         )
