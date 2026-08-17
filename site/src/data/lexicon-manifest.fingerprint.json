@@ -127,7 +127,7 @@
       },
       {
         "path": "scripts/lexicon/generate_needs_review_ledger.py",
-        "sha256": "6bc9a7fb4977a57e5d39a5a11af13842b8efd1b42ea203c9c0b5647b91079663"
+        "sha256": "bb2327ff06ca34a188c4c7398f3c3fdccfb9b9b3a83a3b931616752a155e1cb5"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
@@ -211,7 +211,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "d3d2f6a53de33af9653616d07ad68df7e91415f42065df93e5ad39e1215f9aa7"
+        "sha256": "8470daefaacadd1829977b97ad1cadeac6713409ce6c3acabeb22512b2f5eb16"
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
@@ -251,7 +251,7 @@
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
-        "sha256": "f9f954fdbebca4490702cf3bee46a774c87da23386a26c4634f7b81a7d4c2225"
+        "sha256": "412f7456d42f6adcfbc3f44157d2bbfb9d35b22b879620e258bf76ff3c2091eb"
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
