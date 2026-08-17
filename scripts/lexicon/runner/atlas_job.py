@@ -302,10 +302,11 @@ def primary_checkout_root() -> Path:
             text=True,
         ).strip()
         common_path = Path(common)
-        if not common_path.is_absolute():
-            common_path = (repo_root() / common_path).resolve()
-        else:
-            common_path = common_path.resolve()
+        common_path = (
+            (repo_root() / common_path).resolve()
+            if not common_path.is_absolute()
+            else common_path.resolve()
+        )
         primary = common_path.parent
         if primary.is_dir():
             return primary
