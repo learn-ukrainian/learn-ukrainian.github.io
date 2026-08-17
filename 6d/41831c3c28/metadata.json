@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6d41831c3c28",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6933-grok-liveness",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/grok_build.py",
+    "tests/test_grok_build_adapter.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6d/41831c3c28/0/metadata.json",
+      "transcript": "/6d/41831c3c28/0/full.jsonl",
+      "compact_transcript": "/6d/41831c3c28/0/transcript.jsonl",
+      "content_hash": "/6d/41831c3c28/0/content_hash.txt",
+      "prompt": "/6d/41831c3c28/0/prompt.txt"
+    }
+  ]
+}
