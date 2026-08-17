@@ -1360,8 +1360,10 @@ async def get_channel_endpoint(name: str):
 
     try:
         safe_name = _ch.require_safe_channel_name(name)
-    except ValueError as exc:
-        return JSONResponse(status_code=400, content={"error": str(exc)})
+    except ValueError:
+        # Stable client message only — never return exception text
+        # (CodeQL py/stack-trace-exposure).
+        return JSONResponse(status_code=400, content={"error": "invalid_channel_name"})
 
     conn = _get_db()
     if not conn:
