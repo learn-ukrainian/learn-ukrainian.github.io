@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/6876-agy-close
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# 6876 AGY — close residual job (do NOT close the GitHub issue)
+
+CAPACITY_CARD: pick=agy status=cool rem=64% avoid=codex source=routing-budget
+
+Job `6876-missing-anchor-2295` unit is **inactive**, Result=success, ExecMainStatus=0.
+Real summary on host (do not invent, do not use `{}`):
+
+- targets 2295
+- changed 984
+- filled_translation 984
+- gained_english_anchor 984
+- remaining_old_gate_no_english_anchor **1311**
+- UNRESOLVED_RESIDUAL 1311
+- circuit_breaker_tripped false
+- consecutive_misses 2
+
+## Do
+1. `atlas_job close 6876-missing-anchor-2295` with the **real** `--summary-file` pulled from the runner workdir (or scp then close). Never empty summary.
+2. Comment those counts on GitHub #6876.
+3. **Do not** `gh issue close 6876`. Residual 1311 is still in mandate.
+
+Worktree from origin/main. Trailer `X-Agent: agy/6876-close`. No pointer flip. No hramatka.

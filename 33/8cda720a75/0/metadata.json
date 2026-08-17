@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "338cda720a75",
+  "session_id": "fleet-6b47d3e7aced425d831f61f900d2fe1f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T00:04:01.440312Z",
+  "branch": "agy/6876-agy-close",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/atlas-jobs/receipts/6876-missing-anchor-2295.json",
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "d3cea87d12d5",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T00:04:01.43491Z",
+    "agent_lines": 65,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 65,
+    "total_lines_changed": 70,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

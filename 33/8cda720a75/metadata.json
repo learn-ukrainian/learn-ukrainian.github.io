@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "338cda720a75",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-close",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/atlas-jobs/receipts/6876-missing-anchor-2295.json",
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/33/8cda720a75/0/metadata.json",
+      "transcript": "/33/8cda720a75/0/full.jsonl",
+      "compact_transcript": "/33/8cda720a75/0/transcript.jsonl",
+      "content_hash": "/33/8cda720a75/0/content_hash.txt",
+      "prompt": "/33/8cda720a75/0/prompt.txt"
+    }
+  ]
+}
