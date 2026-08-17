@@ -41,7 +41,7 @@ aiosqlite>=0.22
 # these were installed transitively and worked until a from-scratch venv
 # rebuild had nothing to reinstall them from; declare them directly).
 psutil>=7.2      # scripts/agent_runtime/{livenessprobe,watchdog}.py, agent_monitor_router.py
-filelock>=3.24   # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
+filelock>=3.32.2   # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
 rapidfuzz>=3.14  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
 
 # Document parsing (#6830 import-scan sweep — same restore-gap class as
