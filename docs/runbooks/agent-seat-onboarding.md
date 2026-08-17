@@ -202,6 +202,38 @@ active environment; the merged-PR worktree reaper disposes of it safely.
 Workers implement inside `.worktrees/dispatch/<agent>/<task>/`. They do not
 become a second coordination plane.
 
+#### Sibling-repo dispatch
+
+`--worktree` and `--branch` always bind the Learn Ukrainian primary checkout
+that owns `scripts/delegate.py` (`_REPO_ROOT`). They do **not** follow the
+shell cwd. Invoking `dispatch --worktree` from a sibling repository (for
+example a private checkout next to this one) is refused: the worktree would
+otherwise be created under the primary while the brief still described the
+sibling.
+
+`--cwd` cannot be combined with `--worktree` or `--branch`. That refusal is
+intentional. The supported sibling-repo flow is:
+
+```bash
+# In the sibling repository — not via delegate --worktree:
+git -C /path/to/sibling worktree add .worktrees/dispatch/<agent>/<task> <base-or-branch>
+
+# Invoke this repo's delegate against that worktree (no --worktree).
+# Derive LU_PRIMARY from the Learn Ukrainian checkout, never from the sibling.
+LU_PRIMARY="$(dirname "$(git -C /path/to/learn-ukrainian rev-parse --path-format=absolute --git-common-dir)")"
+"$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/delegate.py" dispatch \
+  --agent <lane> --task-id <id> --prompt-file <path> \
+  --mode workspace-write --cwd /path/to/sibling/.worktrees/dispatch/<agent>/<task>
+```
+
+`--branch` has the same primary-only binding: it fetches and attaches a branch
+from the primary remote, not from the sibling. Follow-up work on a sibling PR
+uses the same manual-worktree + `--cwd` path.
+
+First-class `--repo` / cwd-derived worktree creation is out of scope for this
+v1: task state, the worktree reaper, sparse-checkout, and data-symlink
+provisioning all assume `_REPO_ROOT`.
+
 ### Luna bounded execution
 
 For bounded implementation or investigation, read the machine-readable

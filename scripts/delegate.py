@@ -899,7 +899,12 @@ def _derive_worktree_branch(agent: str, task_id: str) -> str:
 
 
 def _auto_worktree_path(agent: str, task_id: str) -> Path:
-    """Default worktree path for a fresh dispatch: ``.worktrees/dispatch/{agent}/{task}/``."""
+    """Default worktree path for a fresh dispatch: ``.worktrees/dispatch/{agent}/{task}/``.
+
+    Always under :data:`_REPO_ROOT`, never the invocation cwd. A sibling-repo
+    cwd therefore cannot retarget this path — :func:`_resolve_cross_repo_binding_error`
+    must refuse that case instead of letting the worker appear to run "here".
+    """
     normalized = _normalize_task_id(agent, task_id)
     # Slashes are fine in branch names but not in a single path component,
     # so flatten them here (task_id ``foo/bar`` → path ``foo-bar``).
@@ -1021,6 +1026,14 @@ _WRITE_WORKTREE_HINT = (
     "primary checkout. Preferred: pass bare `--worktree` to auto-create "
     ".worktrees/dispatch/<agent>/<task>/. Alternatively point `--cwd` at an "
     "existing added worktree there."
+)
+_CROSS_REPO_BINDING_HINT = (
+    "Dispatch binds the Learn Ukrainian primary checkout that owns this "
+    "script, not the invocation cwd. For a sibling repository, create a "
+    "worktree there manually (`git worktree add .worktrees/dispatch/"
+    "<agent>/<task> <base>`), then run `dispatch --mode workspace-write "
+    "--cwd <that-worktree>` without `--worktree` or `--branch`. See "
+    "docs/runbooks/agent-seat-onboarding.md (sibling-repo dispatch)."
 )
 
 
@@ -1169,6 +1182,62 @@ def _resolve_cwd_path(raw: str) -> Path:
     if not p.is_absolute():
         p = Path.cwd() / p
     return p.resolve()
+
+
+def _resolve_invocation_git_root(start: Path | str | None = None) -> Path | None:
+    """Primary checkout that owns ``start`` (default: process cwd), or None.
+
+    Walks ``.git`` on disk instead of calling ``git rev-parse``. The answer we
+    need is "same repository or a sibling?", and the filesystem shape already
+    distinguishes a primary ``.git`` directory from a linked worktree gitdir.
+    Avoiding a git subprocess also keeps this preflight independent of the
+    ``subprocess.Popen`` stubs used by dispatch tests and hook environments.
+    """
+    wc = _load_worktree_containment()
+    origin = wc.canonicalize(start if start is not None else Path.cwd())
+    probe = origin if origin.is_dir() else origin.parent
+    return wc._fs_main_root(probe)
+
+
+def _resolve_cross_repo_binding_error(
+    *,
+    worktree_arg: str | None,
+    cwd_arg: str | None,
+    requested_branch: str | None = None,
+    invocation_cwd: Path | str | None = None,
+) -> str | None:
+    """Refuse silent primary-repo binding when invoked from another git root.
+
+    ``--worktree`` and ``--branch`` always create or attach under
+    :data:`_REPO_ROOT` (see :func:`_auto_worktree_path`). An invocation cwd
+    whose git root is a sibling checkout used to look like "dispatch here"
+    while the worktree landed in the primary — issue #6900. First-class
+    ``--repo`` support would retarget fetch, ``git worktree add``, the
+    reaper, sparse-checkout, and data-symlink provisioning; v1 refuses
+    loudly and documents the existing manual-worktree + ``--cwd`` flow.
+    """
+    invocation_root = _resolve_invocation_git_root(invocation_cwd)
+    if invocation_root is None:
+        return None
+    wc = _load_worktree_containment()
+    primary = wc.canonicalize(_REPO_ROOT)
+    if invocation_root == primary:
+        return None
+    # Documented sibling flow: explicit --cwd, never --worktree/--branch.
+    # cmd_dispatch promotes a bare --branch to worktree_arg="auto" first.
+    if cwd_arg and not worktree_arg and not requested_branch:
+        return None
+    flags = [flag for flag, present in (("--worktree", worktree_arg), ("--branch", requested_branch)) if present]
+    flag_bit = (
+        " and ".join(flags) + " would silently create or attach a worktree under the primary"
+        if flags
+        else "the worker would silently run in the primary checkout"
+    )
+    return (
+        f"❌ dispatch targets the primary checkout ({primary}); "
+        f"invocation cwd resolves to a different git root ({invocation_root}). "
+        f"{flag_bit}.\n   {_CROSS_REPO_BINDING_HINT}"
+    )
 
 
 def _resolve_verified_worktree_path(path: Path) -> Path | None:
@@ -4350,6 +4419,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         return 2
 
+    # #6900: --worktree/--branch (and the default worker cwd) always bind
+    # _REPO_ROOT. Invoking from a sibling git root used to create the
+    # worktree in the primary while the shell cwd said otherwise.
+    cross_repo_error = _resolve_cross_repo_binding_error(
+        worktree_arg=worktree_arg,
+        cwd_arg=args.cwd,
+        requested_branch=requested_branch,
+    )
+    if cross_repo_error:
+        print(cross_repo_error, file=sys.stderr)
+        return 2
+
     # Write-capable modes (workspace-write / danger) must resolve to a verified
     # added worktree — never the primary checkout (#4445). Read-only dispatches
     # stay exempt so repo-root preflight keeps working. Evaluated before any
@@ -5744,9 +5825,11 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--cwd",
         default=None,
-        help="Working directory for the worker (default: repo root). "
+        help="Working directory for the worker (default: primary checkout). "
         "For workspace-write/danger it must be a verified added "
-        "worktree, never the primary checkout — prefer --worktree.",
+        "worktree, never the primary checkout — prefer --worktree. "
+        "Supported sibling-repo flow: manual `git worktree add` in that "
+        "repo, then `--cwd <that-worktree>` without `--worktree`.",
     )
     d.add_argument(
         "--worktree",
@@ -5757,8 +5840,10 @@ def build_parser() -> argparse.ArgumentParser:
             "Run inside this git worktree (created on demand). Required for "
             "write-capable modes (workspace-write, danger). Pass `--worktree` "
             "alone (recommended) to auto-derive `.worktrees/dispatch/{agent}/"
-            "{task}/`, or `--worktree PATH` to reuse a specific added worktree "
-            "(validated against the expected dispatch branch before reuse)."
+            "{task}/` under the primary checkout that owns this script, or "
+            "`--worktree PATH` to reuse a specific added worktree "
+            "(validated against the expected dispatch branch before reuse). "
+            "Refuses when the invocation cwd is a different git root (#6900)."
         ),
     )
     d.add_argument(
@@ -5767,10 +5852,11 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="EXISTING",
         help=(
             "Attach the dispatch to this existing remote branch instead of creating "
-            "{agent}/{task}. Fetches and validates the branch, then creates/reuses "
-            "an isolated worktree on it (--branch implies --worktree). Refuses "
-            "protected branches (main/master) and branches checked out in another "
-            "worktree. --branch must omit origin/ and refs/ prefixes."
+            "{agent}/{task}. Fetches and validates the branch from the primary "
+            "checkout, then creates/reuses an isolated worktree on it (--branch "
+            "implies --worktree). Refuses protected branches (main/master), "
+            "branches checked out in another worktree, and invocation from a "
+            "different git root (#6900). --branch must omit origin/ and refs/ prefixes."
         ),
     )
     d.add_argument(
