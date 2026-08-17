@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ea701088d98c",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-drive-epic-no-idle",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ea/701088d98c/0/metadata.json",
+      "transcript": "/ea/701088d98c/0/full.jsonl",
+      "compact_transcript": "/ea/701088d98c/0/transcript.jsonl",
+      "content_hash": "/ea/701088d98c/0/content_hash.txt",
+      "prompt": "/ea/701088d98c/0/prompt.txt"
+    }
+  ]
+}
