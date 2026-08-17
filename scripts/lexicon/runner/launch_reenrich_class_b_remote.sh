@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Mac-side orchestrator for #6369 Class-B residual EN re-enrich. Runs the job
-# on the pilot VPS (atlas-runner), never on this laptop.
+# on the remote Atlas host (atlas-runner by default, hramatka/vps per #6876),
+# never on this laptop.
 #
 # The VPS repo checkout is routinely stale (large data/ dirs deliberately
 # deleted for disk headroom, uncommitted local diffs) — this script never
@@ -20,7 +21,9 @@
 #   scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --pull-only  # just pull artifacts back
 #
 # Env overrides:
-#   ATLAS_RUNNER_HOST (default atlas-runner), ATLAS_RUN_ROOT, ATLAS_REPO,
+#   ATLAS_RUNNER_HOST (default atlas-runner), ATLAS_RUN_ROOT (default per
+#   host: /home/ops/atlas-jobs for hramatka/vps, /home/ops/atlas-runner
+#   otherwise), ATLAS_REPO,
 #   ATLAS_PRIMARY_ROOT (default: primary checkout from shared .git common dir),
 #   ATLAS_RE_ENRICH_WORK_DIR, ATLAS_RE_ENRICH_RESIDUAL (local slugs dump),
 #   ATLAS_LOCAL_VESUM_DB, ATLAS_LOCAL_SLOVNYK_CACHE
@@ -51,7 +54,14 @@ PRIMARY_ROOT="${ATLAS_PRIMARY_ROOT:-$(cd "$_primary_common_dir/.." && pwd)}"
 PYTHON_BIN="${ATLAS_RE_ENRICH_PYTHON:-$PRIMARY_ROOT/.venv/bin/python}"
 
 HOST="${ATLAS_RUNNER_HOST:-atlas-runner}"
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
+# Per-host run root (#6876): jobs on hramatka/vps live under
+# /home/ops/atlas-jobs; every other host keeps /home/ops/atlas-runner. An
+# explicit ATLAS_RUN_ROOT always wins.
+case "$HOST" in
+  hramatka|vps) DEFAULT_RUN_ROOT="/home/ops/atlas-jobs" ;;
+  *) DEFAULT_RUN_ROOT="/home/ops/atlas-runner" ;;
+esac
+RUN_ROOT="${ATLAS_RUN_ROOT:-$DEFAULT_RUN_ROOT}"
 REMOTE_REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 REMOTE_WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
 
@@ -112,6 +122,10 @@ if ! ssh_q "true" 2>/dev/null; then
   echo "cannot reach $HOST over SSH (BatchMode); check ~/.ssh/config" >&2
   exit 1
 fi
+
+# Materialize the per-host run root before any scp/rsync writes into it — a
+# fresh hramatka/vps layout has no /home/ops/atlas-jobs yet (#6876).
+ssh_q "mkdir -p $(printf '%q' "$RUN_ROOT")"
 
 # HARD GATE — sources.db on VPS must match local Mac (operator 2026-08-06).
 # Stale VPS DBs silently underfill EN residual. Compare byte size; rsync if

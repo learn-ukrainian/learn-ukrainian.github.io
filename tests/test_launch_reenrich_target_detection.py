@@ -220,3 +220,136 @@ def test_remote_wrapper_primary_root_override_wins() -> None:
     )
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout == "/tmp/custom-primary"
+
+
+def _remote_run_root_block(source: str) -> str:
+    """Extract the per-host RUN_ROOT default block verbatim."""
+    start = source.index('case "$HOST" in')
+    end = source.index("\n\n", start)
+    return source[start:end]
+
+
+@pytest.mark.parametrize(
+    "host,expected_run_root",
+    [
+        ("atlas-runner", "/home/ops/atlas-runner"),
+        ("hramatka", "/home/ops/atlas-jobs"),
+        ("vps", "/home/ops/atlas-jobs"),
+        ("hramatka-2", "/home/ops/atlas-runner"),
+        ("some-other-host", "/home/ops/atlas-runner"),
+    ],
+)
+def test_remote_wrapper_run_root_defaults_per_host(host: str, expected_run_root: str) -> None:
+    """#6876: hramatka/vps (exact aliases) run under /home/ops/atlas-jobs;
+    every other host keeps /home/ops/atlas-runner."""
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+    block = _remote_run_root_block(source)
+    proc = subprocess.run(
+        ["bash", "-c", f"HOST={host!r}\n{block}\nprintf '%s' \"$RUN_ROOT\""],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+        env={"PATH": "/usr/bin:/bin"},
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == expected_run_root
+
+
+def test_remote_wrapper_run_root_override_wins() -> None:
+    """An explicit ATLAS_RUN_ROOT beats the per-host default."""
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+    block = _remote_run_root_block(source)
+    proc = subprocess.run(
+        ["bash", "-c", "HOST=hramatka\n" + block + "\nprintf '%s' \"$RUN_ROOT\""],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+        env={"PATH": "/usr/bin:/bin", "ATLAS_RUN_ROOT": "/custom/run-root"},
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "/custom/run-root"
+
+
+def test_remote_wrapper_mkdirs_run_root_before_first_transfer() -> None:
+    """The per-host run root must be materialized on the remote before any
+    scp/rsync writes into it (a fresh hramatka layout has no atlas-jobs dir)."""
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+    mkdir_marker = 'ssh_q "mkdir -p $(printf \'%q\' "$RUN_ROOT")"'
+    assert mkdir_marker in source
+    mkdir_idx = source.index(mkdir_marker)
+    # Before the first outbound transfer in program order (sources.db rsync)
+    # and before the unconditional driver scp.
+    assert mkdir_idx < source.index('rsync -a --copy-links --partial "$LOCAL_SOURCES_DB"')
+    assert mkdir_idx < source.index('scp_q "$LOCAL_DRIVER"')
+    # But only after SSH reachability is confirmed.
+    assert mkdir_idx > source.index('ssh_q "true"')
+
+
+def test_launchers_never_reference_opt_hramatka() -> None:
+    """Job space is /home/ops/*; the /opt/hramatka tree must never be written."""
+    for launcher in (REMOTE_LAUNCHER, LOCAL_LAUNCHER):
+        assert "/opt/hramatka" not in launcher.read_text(encoding="utf-8")
+
+
+def _local_run_root_block(source: str) -> str:
+    """Extract the on-host RUN_ROOT default block verbatim."""
+    start = source.index('if [[ -n "${ATLAS_RUN_ROOT:-}" ]]; then')
+    end = source.index("\n\n", start)
+    return source[start:end]
+
+
+@pytest.mark.parametrize(
+    "hostname,expected_run_root",
+    [
+        ("hramatka", "/home/ops/atlas-jobs"),
+        ("hramatka.example.com", "/home/ops/atlas-jobs"),
+        ("vps", "/home/ops/atlas-jobs"),
+        ("atlas-runner", "/home/ops/atlas-runner"),
+        ("some-random-host", "/home/ops/atlas-runner"),
+    ],
+)
+def test_local_launcher_run_root_defaults_by_hostname(
+    tmp_path: Path, hostname: str, expected_run_root: str
+) -> None:
+    """Direct on-host invocation (no forwarded ATLAS_RUN_ROOT) must still
+    resolve the per-host run root from the machine's own hostname (#6876)."""
+    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
+    block = _local_run_root_block(source)
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_hostname = fake_bin / "hostname"
+    fake_hostname.write_text(f"#!/bin/sh\necho {hostname}\n", encoding="utf-8")
+    fake_hostname.chmod(0o755)
+    proc = subprocess.run(
+        ["bash", "-c", block + "\nprintf '%s' \"$RUN_ROOT\""],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+        env={"PATH": f"{fake_bin}:/usr/bin:/bin"},
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == expected_run_root
+
+
+def test_local_launcher_run_root_override_wins(tmp_path: Path) -> None:
+    """An explicit ATLAS_RUN_ROOT beats hostname-based defaulting."""
+    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
+    block = _local_run_root_block(source)
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_hostname = fake_bin / "hostname"
+    fake_hostname.write_text("#!/bin/sh\necho hramatka\n", encoding="utf-8")
+    fake_hostname.chmod(0o755)
+    proc = subprocess.run(
+        ["bash", "-c", block + "\nprintf '%s' \"$RUN_ROOT\""],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+        env={"PATH": f"{fake_bin}:/usr/bin:/bin", "ATLAS_RUN_ROOT": "/custom/run-root"},
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "/custom/run-root"
