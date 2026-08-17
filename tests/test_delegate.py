@@ -108,6 +108,27 @@ def _stub_venv_integrity_sweep(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _stub_worktree_cleanup_integrity_sweep(monkeypatch):
+    """Keep _run_worker/cmd_dispatch tests hermetic from the ambient host.
+
+    Same rationale as the venv stub (#6937 follow-up sweep, same shape): the
+    worktree-cleanup watchdog reads the real LaunchAgent and
+    ``~/.codex/worktree-cleanup/receipts/v2``. A host whose job is currently
+    red (exit 78 / stale receipt) would append
+    worktree_cleanup_integrity_post_worker to dispatch_events.jsonl and
+    break tests that assert on that file. The sweep itself is covered
+    against fixture homes in tests/test_check_worktree_cleanup_integrity.py.
+    """
+    import scripts.audit.check_worktree_cleanup_integrity as wci
+
+    monkeypatch.setattr(
+        wci,
+        "check_worktree_cleanup_integrity",
+        lambda *_args, **_kwargs: (True, "worktree-cleanup integrity ok (test stub)"),
+    )
+
+
+@pytest.fixture(autouse=True)
 def _fixture_runtime_tmp_root(tmp_path, monkeypatch):
     """Keep dispatch-time orphan sweeps inside each test fixture only."""
     runtime_tmp = tmp_path / "runtime-tmp"

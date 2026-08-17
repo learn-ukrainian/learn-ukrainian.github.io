@@ -241,12 +241,21 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
     assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
 
 
-def test_health_includes_core_bare_canary():
+def test_health_includes_core_bare_canary(monkeypatch):
     """#2842: the health section surfaces the git core.bare detection canary."""
+    # Keep this collector hermetic from the host LaunchAgent (#6937).
+    monkeypatch.setattr(api_main, "_worktree_cleanup_integrity_canary", lambda: True)
     health = api_main._collect_health_orient_data()
     assert "git_core_bare_ok" in health
     # This repo has a working tree, so core.bare must be false → canary reports ok.
     assert health["git_core_bare_ok"] is True
+
+
+def test_health_includes_worktree_cleanup_canary(monkeypatch):
+    """#6937: a red scheduled cleanup run must surface on /api/orient health."""
+    monkeypatch.setattr(api_main, "_worktree_cleanup_integrity_canary", lambda: False)
+    health = api_main._collect_health_orient_data()
+    assert health["worktree_cleanup_integrity_ok"] is False
 
 
 def test_health_canaries_do_not_apply_general_repairs(monkeypatch):

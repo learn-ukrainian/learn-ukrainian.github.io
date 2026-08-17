@@ -47,6 +47,8 @@ PRELOAD_MODULES = [
     "audit.check_node_modules_integrity",
     "scripts.audit.check_venv_integrity",
     "audit.check_venv_integrity",
+    "scripts.audit.check_worktree_cleanup_integrity",
+    "audit.check_worktree_cleanup_integrity",
     "scripts.build.phase_constants",
     "agent_runtime.adapters.gemini",
     "research_quality",
