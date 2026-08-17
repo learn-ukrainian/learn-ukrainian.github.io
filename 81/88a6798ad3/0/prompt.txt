@@ -1,0 +1,68 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-6955-cursor-identity
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta 2 on PR #6964: enforce the identity contract (CF FAIL findings 1-4)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: gemini-3.5-flash-high × agy (workspace-write, existing dispatch worktree)
+- why_this_tier: review-finding fixes belong to the authoring lane (agy authored PR #6964)
+- advisor_packet: n/a
+- owned_paths: scripts/review/reviewer_resolver.py, scripts/review/model_catalog.py, scripts/config/model_catalog.yaml, agents_extensions/shared/rules/model-assignment.md, docs/runbooks/cursor-driver.md, tests/
+- acceptance_cmd: see step 5 (lint + resolver execution probes + targeted pytest)
+- alternatives_considered: (1) driver fixes — REJECTED: lane owns its PR; (2) split resolver work to a new PR — REJECTED: contract declared-but-unenforced is exactly the FAIL
+- parallel_free_seats: cursor, grok
+
+## Evidence preamble (#M-4 — binding)
+Quote raw tool output for every claim. The CF FAIL was mutation-checked — your fix will be too.
+
+## Context — read the FAIL verdict on PR #6964 first (`gh pr view 6964 --comments`)
+Four findings at head 144b3f0da6:
+1. Resolver not wired: `scripts/review/reviewer_resolver.py:148` maps `cursor:auto` →
+   unattested-harness; `:889` selects two-family quorum. Live run returned Terra+Sonnet quorum;
+   `cursor:unknown` failed as unknown instead of resolving to the union {xAI, Moonshot}.
+2. Lint not fail-closed: `scripts/review/model_catalog.py:235` accepts any allowlisted models
+   whose families match; `:248` only requires a nonempty attestation string. Reviewer mutations
+   that PASSED (must RED after your fix): (a) adding `kimi-code/k3` to the Auto allowlist;
+   (b) replacing the attestation rule with `driver_of_record_allows_unknown`.
+3. Pool listed as reviewer example (formal_review_eligible: false) and GLM unqualified
+   (LOCAL-ONLY) in runbook ~:20 + model-assignment ~:245.
+4. Runbook missing the lineage fact: composer-2.5 derives from kimi 2.5; native Kimi K3 diverged
+   (operator amendment requires it recorded for future reassessment).
+
+## Shippable unit
+One (or two) commits on the PR branch making the contract ENFORCED, not declared:
+- Resolver: `cursor:auto`/`cursor:unknown` author → union-family {xAI, Moonshot}; single
+  cross-family reviewer resolved from OUTSIDE the union (no quorum); cursor-as-reviewer
+  ineligible against xAI/Moonshot-family authors; attested cursor (resolved_model present) →
+  that model's real family. Driver-of-record: attested-only (unchanged).
+- Lint: allowlist must equal exactly the declared pair (foreign entry → fail); attestation rule
+  must be the exact required contract (weakened rule → fail).
+- Tests: cover both reviewer mutations (they must fail the lint) + resolver behavior for
+  unknown-Auto author, attested author, cursor-as-reviewer exclusion.
+- Docs: remove Pool, qualify/remove GLM; add the lineage divergence fact to the runbook.
+
+## Steps
+1. Verify worktree HEAD 144b3f0da6, clean tree. Read the PR FAIL comment verbatim.
+2. Implement. Keep resolver changes tight — extend the existing seat/family machinery; do not
+   redesign the resolver.
+3. Self-mutation-check: apply each reviewer mutation ((a) and (b) above) to a scratch copy,
+   run the lint, QUOTE both failures, revert the mutation.
+4. Resolver execution probes (quote output):
+   - author=cursor unattested → selected reviewer family NOT in {xai, moonshot}, no quorum
+   - author=cursor attested grok-4.6 → treated as xAI family
+   - reviewer-candidate=cursor vs kimi-authored head → refused
+5. Acceptance: `.venv/bin/python scripts/lint/lint_model_catalog.py` + `scripts/lint/lint_fleet_roster.py`
+   + targeted pytest (`/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest` —
+   catalog/roster/resolver suites) + ruff on changed files.
+6. Conventional commit(s), push to the PR branch. NO auto-merge.
+7. Report: new HEAD, mutation-red proofs, probe outputs, test tails.
