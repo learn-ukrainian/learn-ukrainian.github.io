@@ -257,3 +257,52 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
     assert captured["kwargs"]["model"] == registered_participant_model("agy")
     assert captured["kwargs"]["stdout_only"] is False
     assert captured["kwargs"]["output_path"] is None
+
+
+def test_converse_default_model_is_none_so_registry_pin_applies() -> None:
+    """#6929: a bare converse carries no independently hardcoded slug."""
+    import inspect
+
+    from scripts.ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+    from scripts.ai_agent_bridge._gemini import converse_gemini
+
+    parser = _cli._build_parser()
+    args = parser.parse_args(["converse", "hello", "--task-id", "t-1"])
+    assert args.model is None
+    assert resolve_compat_model("gemini", args.model) is None
+    assert inspect.signature(converse_gemini).parameters["model"].default is None
+    assert registered_participant_model("agy") is not None
+
+
+def test_converse_gemini_default_tracks_pin_rotation(monkeypatch) -> None:
+    """#6929: rotating the AGY pin moves converse's default with it."""
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    from scripts.ai_agent_bridge._gemini import converse_gemini
+
+    monkeypatch.setitem(
+        ACPX_SUPPORTED_PARTICIPANTS,
+        "agy",
+        {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
+    )
+    captured: dict[str, object] = {}
+
+    def _fake_ask_gemini(*_args, **kwargs):
+        captured.update(kwargs)
+        return 1
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._gemini.get_conversation_context",
+        lambda _task_id: ("", 0),
+    )
+
+    converse_gemini("hello", "t-1")
+    assert captured["model"] == "gemini-9.9-flash-high"
+
+    converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
+    assert captured["model"] == "gemini-9.9-flash-high"
+
+    converse_gemini("hello", "t-1", model="not-a-gemini-model")
+    assert captured["model"] == "not-a-gemini-model"
