@@ -4,7 +4,24 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import yaml
+
 from scripts.session_canary import kimi_lane
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+
+
+def _infra_harness_stream_id() -> str:
+    """Anchor on the live infra-harness epic so succession cannot stale this suite."""
+    epics = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]["infra-harness"][
+        "epics"
+    ]
+    assert epics, "infra-harness must list at least one epic in issue_streams.yaml"
+    return f"epic:{int(epics[0])}"
+
+
+INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
 def test_cold_start_body_contains_binding_rules() -> None:
@@ -53,4 +70,4 @@ def test_protocol_prints_launcher(capsys) -> None:
     # Post-cutover (#5958): kimi has NO certified driver entrypoint; the
     # protocol points at certified provider drivers instead of start-kimi.sh.
     assert "no certified public driver entrypoint" in out
-    assert "epic:4707" in out
+    assert INFRA_STREAM_ID in out
