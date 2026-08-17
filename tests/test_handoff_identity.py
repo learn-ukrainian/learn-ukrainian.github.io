@@ -139,7 +139,7 @@ def test_unknown_selector_fails_closed() -> None:
 def test_devops_epic_is_registered_separately_from_infra() -> None:
     registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
 
-    assert registry["infra-harness"]["epics"] == [4707]
+    assert registry["infra-harness"]["epics"] == [6943]
     assert registry["devops"]["epics"] == [5703]
 
 
