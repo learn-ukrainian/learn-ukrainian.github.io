@@ -5,7 +5,9 @@ Provides reusable content snippets and module templates for testing.
 """
 
 import contextlib
+import ipaddress
 import os
+import socket
 import sqlite3
 import sys
 from collections.abc import Collection
@@ -149,6 +151,109 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     ledger_dir = tmp_path_factory.mktemp("write-ownership")
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(ledger_dir / "write-ownership.sqlite3"))
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
+
+
+class SocketBlockedError(RuntimeError):
+    """Raised when a unit test attempts an un-opted outbound network connection (#6968)."""
+
+
+def _is_localhost_host(host: object) -> bool:
+    """Return True if host is loopback or local machine identifier."""
+    if not host:
+        return True
+    if isinstance(host, bytes):
+        try:
+            host = host.decode("utf-8")
+        except UnicodeDecodeError:
+            return False
+    if not isinstance(host, str):
+        return False
+
+    host_lower = host.lower()
+    if host_lower in {"localhost", "127.0.0.1", "::1", "0.0.0.0", "::"}:
+        return True
+    if host_lower.endswith(".localhost"):
+        return True
+    with contextlib.suppress(OSError):
+        if host_lower in {socket.gethostname().lower(), socket.getfqdn().lower()}:
+            return True
+    try:
+        ip = ipaddress.ip_address(host)
+        return ip.is_loopback or ip.is_unspecified
+    except ValueError:
+        return False
+
+
+def _is_localhost_address(address: object) -> bool:
+    """Return True if address is AF_UNIX (str/bytes) or AF_INET(6) pointing to localhost."""
+    if address is None:
+        return True
+    if isinstance(address, (str, bytes)):
+        return True
+    if isinstance(address, tuple) and address:
+        return _is_localhost_host(address[0])
+    return False
+
+
+_ORIG_SOCKET_CONNECT = socket.socket.connect
+_ORIG_SOCKET_CONNECT_EX = socket.socket.connect_ex
+_ORIG_SOCKET_SENDTO = socket.socket.sendto
+
+
+def _guarded_connect(sock_self: socket.socket, address: object) -> object:
+    if getattr(sock_self, "family", None) == getattr(socket, "AF_UNIX", None):
+        return _ORIG_SOCKET_CONNECT(sock_self, address)
+    if _is_localhost_address(address):
+        return _ORIG_SOCKET_CONNECT(sock_self, address)
+    host = address[0] if isinstance(address, tuple) and address else address
+    raise SocketBlockedError(
+        f"Outbound network connection to '{host}' blocked by socket-guard. "
+        f"Unit tests must be hermetic and not rely on live external services. "
+        f"If this test legitimately requires live network, mark it with @pytest.mark.live_network."
+    )
+
+
+def _guarded_connect_ex(sock_self: socket.socket, address: object) -> int:
+    if getattr(sock_self, "family", None) == getattr(socket, "AF_UNIX", None):
+        return _ORIG_SOCKET_CONNECT_EX(sock_self, address)
+    if _is_localhost_address(address):
+        return _ORIG_SOCKET_CONNECT_EX(sock_self, address)
+    host = address[0] if isinstance(address, tuple) and address else address
+    raise SocketBlockedError(
+        f"Outbound network connection to '{host}' blocked by socket-guard. "
+        f"Unit tests must be hermetic and not rely on live external services. "
+        f"If this test legitimately requires live network, mark it with @pytest.mark.live_network."
+    )
+
+
+def _guarded_sendto(sock_self: socket.socket, data: bytes, *args: object) -> int:
+    address = args[-1] if args else None
+    if (
+        address is not None
+        and getattr(sock_self, "family", None) != getattr(socket, "AF_UNIX", None)
+        and not _is_localhost_address(address)
+    ):
+        host = address[0] if isinstance(address, tuple) and address else address
+        raise SocketBlockedError(
+            f"Outbound network connection to '{host}' blocked by socket-guard. "
+            f"Unit tests must be hermetic and not rely on live external services. "
+            f"If this test legitimately requires live network, mark it with @pytest.mark.live_network."
+        )
+    return _ORIG_SOCKET_SENDTO(sock_self, data, *args)
+
+
+@pytest.fixture(autouse=True)
+def _socket_guard(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Refuse outbound network connections to non-localhost hosts in unit tests (#6968).
+
+    Tests that legitimately make live network requests must be explicitly
+    marked with ``@pytest.mark.live_network``.
+    """
+    if request.node.get_closest_marker("live_network"):
+        return
+    monkeypatch.setattr(socket.socket, "connect", _guarded_connect)
+    monkeypatch.setattr(socket.socket, "connect_ex", _guarded_connect_ex)
+    monkeypatch.setattr(socket.socket, "sendto", _guarded_sendto)
 
 
 # =============================================================================

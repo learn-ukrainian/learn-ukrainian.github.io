@@ -21,6 +21,7 @@ markers = [
     "website: Docusaurus website integrity tests (links, frontmatter, sidebar)",
     "slow: tests that load ML models or require long execution time",
     "atlas_release: real-DB Atlas runtime-shard release gate (requires data/atlas.db; fails closed)",
+    "live_network: opt-out of socket-guard for integration tests requiring outbound network",
 ]
 
 [tool.ruff]
