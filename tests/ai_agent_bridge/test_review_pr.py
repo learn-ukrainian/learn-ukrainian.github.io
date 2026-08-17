@@ -180,6 +180,45 @@ def _run_invalid_response_lifecycle(
         pass
 
 
+def test_actions_outage_thrash_guard_exits_before_provider_spend(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """CLI path: degraded Actions probe → exit 2 + thrash stderr (pinned mock)."""
+    from scripts.ai_agent_bridge import _review_worktree
+
+    checkout = SimpleNamespace(
+        sha="a" * 40,
+        base_sha="b" * 40,
+        patch_digest="c" * 64,
+        changed_paths=("src/app.py",),
+        changed_line_numbers={"src/app.py": frozenset({1})},
+        path=tmp_path,
+        review_prompt_evidence=lambda _engine: "sealed-metadata",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
+        sealed_evidence_input_bytes=lambda: 123,
+    )
+
+    @contextmanager
+    def provision(*_args, **_kwargs):
+        yield checkout
+
+    monkeypatch.setattr(_review_worktree, "provision_review_worktree", provision)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._review_pr_thrash._load_approved_heads",
+        lambda **_kwargs: [],
+    )
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._review_pr_thrash.github_actions_outaged",
+        lambda **_kwargs: True,
+    )
+
+    assert review_pr.handle_review_pr(_invalid_response_args()) == 2
+    err = capsys.readouterr().err
+    assert "review-pr: thrash guard: GitHub Actions is in outage/degraded (githubstatus)" in err
+
+
 def test_invalid_json_is_captured_before_live_lease_failure_settlement(monkeypatch, tmp_path, capsys) -> None:
     code, events, formal_jobs = _run_invalid_response_lifecycle(
         monkeypatch,
