@@ -56,6 +56,7 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
     assert "--worktree" in command
     assert _option(command, "--base") == "origin/main"
     assert _option(command, "--task-id") == "1741"
+    assert "--force-new" in command
     assert _option(command, "--effort") == "high"
     assert "Existing acceptance criteria." in str(captured_prompt["text"])
     assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in str(captured_prompt["text"])
@@ -88,6 +89,7 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
     assert state["model"] is None
     assert state["effort"] == "high"
     assert _option(command, "--task-id") == "1701"
+    assert "--force-new" in command
     prompt_path = Path(state["prompt_file"])
     assert prompt_path.parent == lease_root
     prompt = prompt_path.read_text(encoding="utf-8")

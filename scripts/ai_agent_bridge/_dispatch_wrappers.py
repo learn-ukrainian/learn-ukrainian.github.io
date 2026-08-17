@@ -144,6 +144,7 @@ def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
         "origin/main",
         "--task-id",
         task_id,
+        "--force-new",
         "--effort",
         "high",
         "--prompt-file",
