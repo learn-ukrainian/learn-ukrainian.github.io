@@ -527,8 +527,11 @@ def _make_handler(state: _FixtureState, *, role: str, allowed_origins: set[str])
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
-            if origin in allowed_origins:
-                self.send_header("Access-Control-Allow-Origin", origin)
+            # Echo the allowlisted constant (not the request header) so CodeQL
+            # does not treat this as HTTP response splitting (py/http-response-splitting).
+            allowed_origin = next((item for item in allowed_origins if item == origin), None)
+            if allowed_origin is not None:
+                self.send_header("Access-Control-Allow-Origin", allowed_origin)
                 self.send_header("Vary", "Origin")
             if extra:
                 for key, value in extra.items():
@@ -1518,8 +1521,10 @@ def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
-            if origin in allowed:
-                self.send_header("Access-Control-Allow-Origin", origin)
+            # Use the allowlisted string, not the raw Origin header value.
+            allowed_origin = next((item for item in allowed if item == origin), None)
+            if allowed_origin is not None:
+                self.send_header("Access-Control-Allow-Origin", allowed_origin)
                 self.send_header("Vary", "Origin")
             # No Access-Control-Allow-Credentials
             self.end_headers()

@@ -1356,6 +1356,13 @@ async def list_channels_endpoint():
 @router.get("/channels/{name}")
 async def get_channel_endpoint(name: str):
     """Channel metadata + context preview + pending delivery count."""
+    from scripts.ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — canonical identity (#6812)
+
+    try:
+        safe_name = _ch.require_safe_channel_name(name)
+    except ValueError as exc:
+        return JSONResponse(status_code=400, content={"error": str(exc)})
+
     conn = _get_db()
     if not conn:
         return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
@@ -1363,17 +1370,19 @@ async def get_channel_endpoint(name: str):
     try:
         row = conn.execute(
             "SELECT name, description, include, subscribers, created_at FROM channels WHERE name = ?",
-            (name,),
+            (safe_name,),
         ).fetchone()
         if not row:
-            return JSONResponse(status_code=404, content={"error": f"channel '{name}' not found"})
+            return JSONResponse(status_code=404, content={"error": f"channel '{safe_name}' not found"})
 
-        msg_count = conn.execute("SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (name,)).fetchone()[0]
+        msg_count = conn.execute(
+            "SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (safe_name,)
+        ).fetchone()[0]
         pending = conn.execute(
             "SELECT COUNT(*) FROM deliveries d "
             "JOIN channel_messages cm ON cm.message_id = d.message_id "
             "WHERE cm.channel = ? AND d.status = 'pending'",
-            (name,),
+            (safe_name,),
         ).fetchone()[0]
     finally:
         conn.close()
@@ -1382,10 +1391,9 @@ async def get_channel_endpoint(name: str):
     context_preview = ""
     context_sha = ""
     try:
-        from scripts.ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — canonical identity (#6812)
-
-        ctx_path = _ch.channel_context_path(name)
-        if ctx_path.exists():
+        # safe_join enforces CodeQL-recognized containment under CONTEXT_ROOT.
+        ctx_path = safe_join(_ch.CONTEXT_ROOT, safe_name, "context.md")
+        if ctx_path.is_file():
             context_preview = ctx_path.read_text("utf-8")[:2000]
             context_sha = _ch.context_sha256(ctx_path)
     except Exception:
