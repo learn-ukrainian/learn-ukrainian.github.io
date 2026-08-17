@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "157bcfe4cf8f",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6977-note-revision",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "REVISED-NOTE.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/15/7bcfe4cf8f/0/metadata.json",
+      "transcript": "/15/7bcfe4cf8f/0/full.jsonl",
+      "compact_transcript": "/15/7bcfe4cf8f/0/transcript.jsonl",
+      "content_hash": "/15/7bcfe4cf8f/0/content_hash.txt",
+      "prompt": "/15/7bcfe4cf8f/0/prompt.txt"
+    }
+  ]
+}
