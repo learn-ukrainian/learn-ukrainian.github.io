@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f6a11fef8249",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-ci-mergequeue-b",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    "docs/runbooks/ci-gate.md",
+    "scripts/ci/gate_required_results.py",
+    "tests/test_ci_queue_starvation.py",
+    "tests/test_ci_shard_partition.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f6/a11fef8249/0/metadata.json",
+      "transcript": "/f6/a11fef8249/0/full.jsonl",
+      "compact_transcript": "/f6/a11fef8249/0/transcript.jsonl",
+      "content_hash": "/f6/a11fef8249/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
