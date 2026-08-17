@@ -59,7 +59,9 @@ _GITHUB_SECONDARY_RATE_LIMIT_MARKER = "agent-gh-shim: github_secondary_rate_limi
 # this boundary structural: assistant prose, tool input, and arbitrary log
 # text must never become model evidence merely because they contain the word
 # "model".
-_NON_CONCRETE_MODEL_VALUES = frozenset({"", "auto", "default", "unknown", "none", "null", "n/a"})
+_NON_CONCRETE_MODEL_VALUES = frozenset(
+    {"", "auto", "default", "unknown", "none", "null", "n/a", "unattested-harness"}
+)
 _MODEL_KEYS = frozenset(
     {
         "model",
@@ -466,13 +468,12 @@ class CursorAdapter:
             "requested_model": requested_model,
             "actual_provider": "cursor",
             # Keep the raw actual value empty when no trusted model was
-            # reported. The dispatch layer adds the human-readable
-            # ``resolved_model: unknown`` companion field without turning
-            # unknown into a fake provider/model route.
+            # reported. The dispatch layer records the explicit
+            # ``resolved_model: unattested-harness`` companion field (#6953).
             "actual_model": resolved_model,
             "actual_model_known": bool(resolved_model),
             "substituted": bool(resolved_model and resolved_model != requested_model),
-            "source": resolved_model_source or "unknown",
+            "source": resolved_model_source or "unattested-harness",
             "marker": None,
         }
 

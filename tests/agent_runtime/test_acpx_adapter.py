@@ -20,7 +20,9 @@ build-invocation tests mock binary resolution and version probes only.
 from __future__ import annotations
 
 import json
+import os
 import shlex
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -233,6 +235,63 @@ def _stub_binary(
         },
     )
     return binary
+
+
+def _assert_acpx_env_overrides(env: dict, *, expected: dict[str, str]) -> None:
+    """Seat auth/config keys plus a Node-bearing PATH (#6953)."""
+    for key, value in expected.items():
+        assert env.get(key) == value
+    assert "PATH" in env
+    path_parts = env["PATH"].split(os.pathsep)
+    assert any(Path(part).joinpath("node").exists() for part in path_parts) or any(
+        "node" in part for part in path_parts
+    )
+
+
+def test_acpx_spawn_argv_pins_absolute_node_when_shebang_uses_env(tmp_path, monkeypatch):
+    """#6953: jail PATH=/usr/bin:/bin must not yield ``env: node: No such file``."""
+    script = tmp_path / "acpx"
+    script.write_text("#!/usr/bin/env node\nconsole.log('ok')\n", encoding="utf-8")
+    script.chmod(0o755)
+    node = tmp_path / "node"
+    node.write_text("#!/bin/sh\nexec /bin/echo stub-node\n", encoding="utf-8")
+    node.chmod(0o755)
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda name: str(node) if name == "node" else None)
+    monkeypatch.setattr(acpx_module, "_NODE_HOST_BIN_DIRS", ())
+
+    argv = acpx_module._acpx_spawn_argv(str(script), adapter_label="test")
+    assert argv == [str(node.resolve()), str(script.resolve())]
+
+    # Ambient PATH lacks node; absolute argv still executes.
+    env = {"PATH": "/usr/bin:/bin", "HOME": str(tmp_path)}
+    # Real host node is required to evaluate the JS shebang script; prove the
+    # probe helper survives a stripped PATH by using the runtime env override.
+    host_node = acpx_module._resolve_host_node_binary(adapter_label="test-host")
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str(host_node) if name == "node" else None,
+    )
+    monkeypatch.setattr(acpx_module, "_NODE_HOST_BIN_DIRS", (host_node.parent,))
+    # Point at the real project-local acpx when present.
+    primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/node_modules/.bin/acpx")
+    if not primary.is_file():
+        pytest.skip("project-local acpx not installed")
+    jail_env = acpx_module._acpx_runtime_env_overrides()
+    jail_env["PATH"] = "/usr/bin:/bin"  # ambient stripped; argv carries node
+    spawn = acpx_module._acpx_spawn_argv(str(primary))
+    assert spawn[0].endswith("/node") or Path(spawn[0]).name == "node"
+    proc = subprocess.run(
+        [*spawn, "--version"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        env={**jail_env, "PATH": "/usr/bin:/bin"},
+        check=False,
+    )
+    assert proc.returncode == 0, (proc.stdout, proc.stderr)
+    assert "env: node: No such file" not in (proc.stderr or "")
+    assert (proc.stdout or "").strip()
 
 
 def _fake_installed_claude_adapter(tmp_path: Path, *, version: str = "0.64.2") -> Path:
@@ -1696,7 +1755,7 @@ def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(
     adapter = AcpxGrokShadowAdapter()
 
     plan = _build_grok(adapter, cwd=tmp_path)
-    assert plan.env_overrides == {"ACPX_AUTH_CACHED_TOKEN": "1"}
+    _assert_acpx_env_overrides(plan.env_overrides, expected={"ACPX_AUTH_CACHED_TOKEN": "1"})
     assert "XAI_API_KEY" in plan.env_unsets
     assert "GROK_API_KEY" in plan.env_unsets
     assert "ACPX_AUTH_XAI_API_KEY" in plan.env_unsets
@@ -1812,7 +1871,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
     assert "exec" in plan.cmd
     assert "--agent" not in plan.cmd
     assert "grok-build" not in plan.cmd
-    assert plan.env_overrides == {"ACPX_AUTH_CHAT_GPT": "1"}
+    _assert_acpx_env_overrides(plan.env_overrides, expected={"ACPX_AUTH_CHAT_GPT": "1"})
     assert build_agent_env(provider=adapter.name, overrides=plan.env_overrides)[
         "ACPX_AUTH_CHAT_GPT"
     ] == "1"
@@ -1877,7 +1936,10 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
 
     assert adapter.name == f"acpx-{participant}-shadow"
     assert plan.cmd[-4:] == [acpx_agent, "exec", "-f", "-"]
-    assert plan.env_overrides == ({} if auth_env is None else {auth_env: "1"})
+    _assert_acpx_env_overrides(
+        plan.env_overrides,
+        expected=({} if auth_env is None else {auth_env: "1"}),
+    )
     sanitized_env = build_agent_env(provider=adapter.name, overrides=plan.env_overrides)
     if auth_env is not None:
         assert sanitized_env[auth_env] == "1"
@@ -2290,10 +2352,13 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
         assert ("--model", invocation_model) in zip(
             plan.cmd, plan.cmd[1:], strict=False
         )
-        assert plan.env_overrides == {
-            "ACPX_AUTH_OPENCODE_LOGIN": "1",
-            "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}'
-        }
+        _assert_acpx_env_overrides(
+            plan.env_overrides,
+            expected={
+                "ACPX_AUTH_OPENCODE_LOGIN": "1",
+                "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}',
+            },
+        )
         assert build_agent_env(provider=adapter.name, overrides=plan.env_overrides)[
             "ACPX_AUTH_OPENCODE_LOGIN"
         ] == "1"
@@ -2302,7 +2367,7 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
         ] == plan.env_overrides["OPENCODE_CONFIG_CONTENT"]
     else:
         assert "--model" not in plan.cmd
-        assert plan.env_overrides == {}
+        _assert_acpx_env_overrides(plan.env_overrides, expected={})
 
 
 def test_gemma_shadow_seat_uses_a_confined_opencode_command(tmp_path, monkeypatch):
@@ -2351,10 +2416,13 @@ def test_gemma_shadow_seat_uses_a_confined_opencode_command(tmp_path, monkeypatc
     assert plan.metadata["provider_route"] == "google-ais/gemma-4-31b-it"
     assert plan.metadata["provider_cli_compatibility"] == "native-acp-pure-v1"
     assert plan.metadata["tool_policy"] == "deny-all"
-    assert plan.env_overrides == {
-        "ACPX_AUTH_OPENCODE_LOGIN": "1",
-        "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}',
-    }
+    _assert_acpx_env_overrides(
+        plan.env_overrides,
+        expected={
+            "ACPX_AUTH_OPENCODE_LOGIN": "1",
+            "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}',
+        },
+    )
     env = build_agent_env(provider=adapter.name, overrides=plan.env_overrides)
     assert env["ACPX_AUTH_OPENCODE_LOGIN"] == "1"
     assert env["OPENCODE_CONFIG_CONTENT"] == plan.env_overrides["OPENCODE_CONFIG_CONTENT"]

@@ -106,8 +106,12 @@ UNRESOLVED_AUTHOR_FAMILIES: frozenset[str] = frozenset(
 # Cursor-as-reviewer is ineligible against authors in {xAI, Moonshot}.
 CURSOR_AUTO_UNION_FAMILY = "cursor-auto-union"
 CURSOR_AUTO_UNION_FAMILIES: frozenset[str] = frozenset({"xai", "moonshot"})
-CURSOR_AUTO_MODEL_TOKENS: frozenset[str] = frozenset({"auto", "unknown"})
-CURSOR_AUTO_HARNESS_SEATS: frozenset[str] = frozenset({"cursor-auto", "cursor-auto-unknown"})
+CURSOR_AUTO_MODEL_TOKENS: frozenset[str] = frozenset(
+    {"auto", "unknown", "unattested-harness"}
+)
+CURSOR_AUTO_HARNESS_SEATS: frozenset[str] = frozenset(
+    {"cursor-auto", "cursor-auto-unknown", "cursor-auto-unattested-harness"}
+)
 
 UNATTESTED_MODEL_TOKENS: frozenset[str] = frozenset({"auto"})
 UNATTESTED_HARNESS_SEATS: frozenset[str] = frozenset({"cursor-auto"})

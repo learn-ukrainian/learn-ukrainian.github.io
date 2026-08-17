@@ -79,6 +79,7 @@ import shlex
 import shutil
 import stat
 import subprocess
+from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
@@ -194,6 +195,14 @@ _DEFAULT_ACPX_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # Keep this separately patchable for hermetic adapter tests.  An explicit
 # override is authoritative and must never silently fall back to another tree.
 _ACPX_BINARY = _DEFAULT_ACPX_BINARY
+# Fixed host install locations for Node. Ambient PATH alone is not enough:
+# Cursor sandboxes / review jails often set PATH=/usr/bin:/bin, and the
+# project-local acpx shim is ``#!/usr/bin/env node`` (#6953).
+_NODE_HOST_BIN_DIRS = (
+    Path("/opt/homebrew/bin"),
+    Path("/usr/local/bin"),
+    Path.home() / ".hermes" / "node" / "bin",
+)
 _CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp"
 _CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
 _CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
@@ -832,17 +841,118 @@ class AcpxShadowRefusalError(ValueError):
         self.failure_code = failure_code
 
 
+def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
+    """Resolve an absolute ``node`` for ACPX shebang scripts.
+
+    Prefer PATH when it already contains a usable ``node``, then fall back to
+    fixed host install locations. Never invent a Node runtime or consult an
+    unreviewed global acpx install as a substitute.
+    """
+    candidates: list[Path] = []
+    which = shutil.which("node")
+    if which:
+        candidates.append(Path(which))
+    for root in _NODE_HOST_BIN_DIRS:
+        candidates.append(root / "node")
+    seen: set[str] = set()
+    for candidate in candidates:
+        try:
+            resolved = candidate.resolve(strict=True)
+        except OSError:
+            continue
+        key = str(resolved)
+        if key in seen:
+            continue
+        seen.add(key)
+        if resolved.is_file() and os.access(resolved, os.X_OK):
+            return resolved
+    raise AcpxShadowRefusalError(
+        f"{adapter_label}: node binary not found on PATH or fixed host install "
+        "locations (/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); "
+        "required by the project-local acpx ``#!/usr/bin/env node`` shim (#6953)"
+    )
+
+
+def _shebang_uses_env_node(path: Path) -> bool:
+    """True when ``path`` is a script that resolves Node via ``/usr/bin/env``."""
+    try:
+        with path.open("rb") as handle:
+            first = handle.readline(120)
+    except OSError:
+        return False
+    if not first.startswith(b"#!"):
+        return False
+    text = first[2:].decode("ascii", errors="ignore").strip()
+    parts = text.split()
+    if len(parts) < 2 or not parts[0].endswith("env"):
+        return False
+    # ``#!/usr/bin/env node`` or ``#!/usr/bin/env -S node --…``
+    return "node" in parts[1:]
+
+
+def _acpx_spawn_argv(binary: str, *, adapter_label: str = "ACPX") -> list[str]:
+    """Return argv that can exec ``binary`` even when PATH lacks ``node``.
+
+    Project-local ``node_modules/.bin/acpx`` is a Node shebang script. Spawning
+    it under a jail PATH of ``/usr/bin:/bin`` fails with
+    ``env: node: No such file or directory`` (#6953). Pin absolute ``node`` +
+    the script path so the shebang is never consulted. Non-Node stubs (hermetic
+    tests) keep a single-element argv.
+    """
+    path = Path(binary)
+    try:
+        resolved = path.resolve(strict=True)
+    except OSError:
+        return [binary]
+    if not _shebang_uses_env_node(resolved):
+        return [str(resolved)]
+    node = _resolve_host_node_binary(adapter_label=adapter_label)
+    return [str(node), str(resolved)]
+
+
+def _acpx_path_with_node(node: Path, existing: str | None = None) -> str:
+    """Prepend Node's directory so ACPX child shebangs can still find ``node``."""
+    node_dir = str(node.parent)
+    parts = [node_dir]
+    for part in (existing or os.environ.get("PATH", "")).split(os.pathsep):
+        if part and part not in parts:
+            parts.append(part)
+    # Always keep the minimal system dirs so PATH never collapses to node-only.
+    for system in ("/usr/bin", "/bin"):
+        if system not in parts:
+            parts.append(system)
+    return os.pathsep.join(parts)
+
+
+def _acpx_runtime_env_overrides(
+    extra: Mapping[str, str] | None = None,
+    *,
+    adapter_label: str = "ACPX",
+) -> dict[str, str]:
+    """Merge seat env overrides with a Node-bearing PATH for ACPX children."""
+    node = _resolve_host_node_binary(adapter_label=adapter_label)
+    env: dict[str, str] = {"PATH": _acpx_path_with_node(node)}
+    if extra:
+        for key, value in extra.items():
+            if key == "PATH":
+                env["PATH"] = _acpx_path_with_node(node, value)
+            else:
+                env[key] = value
+    return env
+
+
 def _probe_acpx_version(binary: str) -> str:
     """Return ``<binary> --version`` output, or ``"unknown"`` on failure."""
     try:
         proc = subprocess.run(
-            [binary, "--version"],
+            [*_acpx_spawn_argv(binary), "--version"],
             capture_output=True,
             text=True,
             timeout=10,
             check=False,
+            env=_acpx_runtime_env_overrides(),
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, subprocess.TimeoutExpired, AcpxShadowRefusalError):
         return "unknown"
     observed = "\n".join(part for part in (proc.stdout, proc.stderr) if part).strip()
     return observed.splitlines()[0][:100] if proc.returncode == 0 and observed else "unknown"
@@ -852,13 +962,14 @@ def _probe_cli_help(binary: str, *args: str) -> str:
     """Return one exact command's help surface, or an empty string."""
     try:
         proc = subprocess.run(
-            [binary, *args, "--help"],
+            [*_acpx_spawn_argv(binary), *args, "--help"],
             capture_output=True,
             text=True,
             timeout=10,
             check=False,
+            env=_acpx_runtime_env_overrides(),
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, subprocess.TimeoutExpired, AcpxShadowRefusalError):
         return ""
     if proc.returncode != 0:
         return ""
@@ -1289,7 +1400,7 @@ def _confinement_prefix_argv(
             sealed_review_mcp_config,
         ]
     return [
-        binary,
+        *_acpx_spawn_argv(binary),
         "--cwd",
         str(cwd),
         "--format",
@@ -1629,11 +1740,7 @@ def _build_text_agent_command(
         executable,
         adapter_label=adapter_label,
     )
-    node_binary = shutil.which("node")
-    if not node_binary:
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: node binary not found on PATH; required by the text ACP server"
-        )
+    node_binary = str(_resolve_host_node_binary(adapter_label=adapter_label))
     node_path = Path(node_binary).resolve()
     if not node_path.is_file():
         raise AcpxShadowRefusalError(
@@ -1786,7 +1893,10 @@ class AcpxAdapter:
             # Non-secret selector for the existing Codex ChatGPT login. The
             # sanitizer allowlists only this literal route marker; no token is
             # read, stored, or forwarded by the controller.
-            env_overrides={"ACPX_AUTH_CHAT_GPT": "1"},
+            env_overrides=_acpx_runtime_env_overrides(
+                {"ACPX_AUTH_CHAT_GPT": "1"},
+                adapter_label="AcpxAdapter",
+            ),
             liveness_paths=(),
             metadata=metadata,
         )
@@ -2148,7 +2258,8 @@ class _AcpxDiscussionAdapter:
         sealed_review_mcp_config: str | None = None,
     ) -> dict[str, str]:
         _ = sealed_review_mcp_config
-        return {} if self.auth_env is None else {self.auth_env: "1"}
+        seat = {} if self.auth_env is None else {self.auth_env: "1"}
+        return _acpx_runtime_env_overrides(seat, adapter_label=type(self).__name__)
 
     def _env_unsets(self) -> tuple[str, ...]:
         return ()
@@ -2411,14 +2522,17 @@ class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
         *,
         sealed_review_mcp_config: str | None = None,
     ) -> dict[str, str]:
-        return {
-            GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
-            "OPENCODE_CONFIG_CONTENT": (
-                _OPENCODE_SEALED_REVIEW_CONFIG
-                if sealed_review_mcp_config is not None
-                else _OPENCODE_DENY_ALL_CONFIG
-            ),
-        }
+        return _acpx_runtime_env_overrides(
+            {
+                GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
+                "OPENCODE_CONFIG_CONTENT": (
+                    _OPENCODE_SEALED_REVIEW_CONFIG
+                    if sealed_review_mcp_config is not None
+                    else _OPENCODE_DENY_ALL_CONFIG
+                ),
+            },
+            adapter_label=type(self).__name__,
+        )
 
 
 class AcpxGemmaShadowAdapter(_AcpxDiscussionAdapter):
@@ -2456,10 +2570,13 @@ class AcpxGemmaShadowAdapter(_AcpxDiscussionAdapter):
         sealed_review_mcp_config: str | None = None,
     ) -> dict[str, str]:
         _ = sealed_review_mcp_config
-        return {
-            GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
-            "OPENCODE_CONFIG_CONTENT": _OPENCODE_DENY_ALL_CONFIG,
-        }
+        return _acpx_runtime_env_overrides(
+            {
+                GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
+                "OPENCODE_CONFIG_CONTENT": _OPENCODE_DENY_ALL_CONFIG,
+            },
+            adapter_label=type(self).__name__,
+        )
 
 
 class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
@@ -2510,14 +2627,17 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
         *,
         sealed_review_mcp_config: str | None = None,
     ) -> dict[str, str]:
-        return {
-            GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
-            "OPENCODE_CONFIG_CONTENT": (
-                _OPENCODE_SEALED_REVIEW_CONFIG
-                if sealed_review_mcp_config is not None
-                else _OPENCODE_DENY_ALL_CONFIG
-            ),
-        }
+        return _acpx_runtime_env_overrides(
+            {
+                GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
+                "OPENCODE_CONFIG_CONTENT": (
+                    _OPENCODE_SEALED_REVIEW_CONFIG
+                    if sealed_review_mcp_config is not None
+                    else _OPENCODE_DENY_ALL_CONFIG
+                ),
+            },
+            adapter_label=type(self).__name__,
+        )
 
 
 class AcpxGrokShadowAdapter:
@@ -2690,7 +2810,10 @@ class AcpxGrokShadowAdapter:
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,
-            env_overrides={GROK_AUTH_CACHED_TOKEN_ENV: "1"},
+            env_overrides=_acpx_runtime_env_overrides(
+                {GROK_AUTH_CACHED_TOKEN_ENV: "1"},
+                adapter_label="AcpxGrokShadowAdapter",
+            ),
             env_unsets=_GROK_XAI_API_KEY_ENV_UNSETS,
             liveness_paths=(),
             metadata=metadata,

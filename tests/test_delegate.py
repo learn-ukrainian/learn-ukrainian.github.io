@@ -1649,7 +1649,7 @@ def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_
     assert state["resolved_model_source"] == "cursor-stream-json"
 
 
-def test_run_worker_records_unknown_cursor_model_without_inventing_selector(
+def test_run_worker_records_unattested_harness_cursor_model_without_inventing_selector(
     tmp_tasks_dir,
     tmp_path,
 ):
@@ -1700,9 +1700,9 @@ def test_run_worker_records_unknown_cursor_model_without_inventing_selector(
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["model"] == "auto"
-    assert state["resolved_model"] == "unknown"
+    assert state["resolved_model"] == "unattested-harness"
     assert state["resolved_model_known"] is False
-    assert state["resolved_model_source"] == "unknown"
+    assert state["resolved_model_source"] == "unattested-harness"
 
 
 def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
