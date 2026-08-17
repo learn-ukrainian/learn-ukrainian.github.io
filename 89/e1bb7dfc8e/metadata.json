@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "89e1bb7dfc8e",
+  "strategy": "manual-commit",
+  "branch": "deepseek/infra-6858-wave2-sweep",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/orchestration/test_thread_restart_e2e.py",
+    "tests/test_start_codex_driver.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/89/e1bb7dfc8e/0/metadata.json",
+      "transcript": "/89/e1bb7dfc8e/0/full.jsonl",
+      "compact_transcript": "/89/e1bb7dfc8e/0/transcript.jsonl",
+      "content_hash": "/89/e1bb7dfc8e/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 54118,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 527360,
+    "output_tokens": 2597,
+    "api_call_count": 13
+  }
+}
