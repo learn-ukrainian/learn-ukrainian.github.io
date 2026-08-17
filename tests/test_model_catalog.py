@@ -427,23 +427,33 @@ def test_catalog_rejects_cursor_orchestrator_without_allowlist():
         validate_catalog(broken)
 
 
-def test_catalog_rejects_cursor_orchestrator_with_unknown_or_retired_allowlist_model():
+def test_catalog_rejects_cursor_orchestrator_foreign_allowlist_entry():
+    # Reviewer mutation (a): adding kimi-code/k3 to allowlist must fail
     broken = deepcopy(load_model_catalog())
-    broken["orchestrator_seats"]["cursor"]["auto_allowlist"].append("unknown-model")
-    with pytest.raises(ModelCatalogError, match=r"unknown model 'unknown-model'"):
+    broken["orchestrator_seats"]["cursor"]["auto_allowlist"].append("kimi-code/k3")
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist must equal exactly"):
         validate_catalog(broken)
 
-    broken_retired = deepcopy(load_model_catalog())
-    broken_retired["orchestrator_seats"]["cursor"]["auto_allowlist"].append("grok-4.5")
-    with pytest.raises(ModelCatalogError, match=r"must reference active models, got 'grok-4\.5'"):
-        validate_catalog(broken_retired)
+    broken_foreign = deepcopy(load_model_catalog())
+    broken_foreign["orchestrator_seats"]["cursor"]["auto_allowlist"] = ["grok-4.6", "claude-sonnet-5"]
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist must equal exactly"):
+        validate_catalog(broken_foreign)
 
 
-def test_catalog_rejects_cursor_orchestrator_without_attestation_rule():
+def test_catalog_rejects_cursor_orchestrator_without_or_weakened_attestation_rule():
     broken = deepcopy(load_model_catalog())
     del broken["orchestrator_seats"]["cursor"]["attestation_rule"]
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.attestation_rule"):
         validate_catalog(broken)
+
+    # Reviewer mutation (b): replacing attestation_rule with driver_of_record_allows_unknown must fail
+    broken_weak = deepcopy(load_model_catalog())
+    broken_weak["orchestrator_seats"]["cursor"]["attestation_rule"] = "driver_of_record_allows_unknown"
+    with pytest.raises(
+        ModelCatalogError,
+        match=r"orchestrator_seats\.cursor\.attestation_rule must be 'driver_of_record_requires_attested_resolved_model'",
+    ):
+        validate_catalog(broken_weak)
 
 
 def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():

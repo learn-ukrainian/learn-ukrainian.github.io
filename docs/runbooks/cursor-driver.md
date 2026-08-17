@@ -17,7 +17,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 1. **Attested `resolved_model` Required for Driver-of-Record:** Driver-of-record requires an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/delegate.py` and `scripts/agent_runtime/adapters/cursor.py`). An unattested run or unknown-Auto can **never** be driver-of-record.
 2. **Unknown-Auto Resolves to Allowlist-Union Family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, resolve its identity to the **allowlist-union family {xAI, Moonshot}** (`grok-4.6` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum:
-   - **Cursor-Authored PR:** Single cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, Pool, GLM). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (dual-family quorum text remains as fallback history).
+   - **Cursor-Authored PR:** Single cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, or GLM under local-only egress). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (dual-family quorum text remains as fallback history).
    - **Cursor-as-Reviewer:** Eligible only against author models outside {xAI, Moonshot}.
    - **Validity Condition:** The union bound holds strictly while the Auto allowlist contract holds (~30-day catalog refresh; lint enforces the pair). Allowlist rotation invalidates the bound (refresh first).
 
@@ -32,7 +32,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 Cross-family independence checks evaluate either the **attested concrete model family** or the **allowlist-union family**:
 
-- **Attested Cursor `composer-2.5`:** Belongs to the **Moonshot** family (conservatively shares Moonshot independence lineage with Kimi; not native Kimi).
+- **Attested Cursor `composer-2.5`:** Belongs to the **Moonshot** family (Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged, recorded for future reassessment. Composer 2.5 conservatively shares Moonshot independence lineage with Kimi; not native Kimi).
 - **Attested Cursor `grok-4.6`:** Belongs to the **xAI** family (xAI via Cursor; distinct transport from the native Grok seat).
 - **Unknown `cursor:auto`:** Belongs to the **union family {xAI, Moonshot}**. Reviewers must be strictly outside both families.
 - **Same-Family / Union-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. Kimi reviewing Composer 2.5, or Grok reviewing Cursor `grok-4.6`) or if an unknown-Auto head is reviewed by any member of {xAI, Moonshot}.

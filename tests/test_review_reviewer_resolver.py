@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
+    CURSOR_AUTO_UNION_FAMILY,
     DEEPSEEK_V4_FLASH,
     DEEPSEEK_V4_PRO,
     GLM,
@@ -24,7 +25,6 @@ from scripts.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     TERRA,
-    UNATTESTED_AUTHOR_FAMILY,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -96,78 +96,76 @@ def test_cursor_requires_concrete_model_identity():
     assert resolve_author_family("cursor:gpt-5.6-sol") == "openai"
     assert resolve_author_family("cursor:claude-opus-4-8") == "anthropic"
     assert resolve_author_family("cursor:composer-2.5") == "moonshot"
+    assert resolve_author_family("cursor:grok-4.6") == "xai"
     assert resolve_author_family("cursor", author_family="anthropic") == "anthropic"
 
 
-def test_cursor_auto_is_unattested_not_unknown():
-    # Cursor Auto positively attests no pinned model (model="auto",
-    # resolved_model=null) — distinct from a silent/bare harness record.
-    assert resolve_author_family("cursor:auto") == UNATTESTED_AUTHOR_FAMILY
-    assert resolve_author_family("cursor-auto") == UNATTESTED_AUTHOR_FAMILY
-    assert resolve_author_family("cursor-tools:auto") == UNATTESTED_AUTHOR_FAMILY
-    assert resolve_author_family("Cursor:AUTO") == UNATTESTED_AUTHOR_FAMILY
+def test_cursor_auto_is_union_family():
+    # Cursor Auto / unknown-Auto resolves to the allowlist-union family {xAI, Moonshot}.
+    assert resolve_author_family("cursor:auto") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor:unknown") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor-auto") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor-tools:auto") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor-tools:unknown") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("Cursor:AUTO") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("Cursor:UNKNOWN") == CURSOR_AUTO_UNION_FAMILY
 
 
 def test_author_family_override_against_auto_attestation_is_a_conflict():
-    # The harness attests the model was NOT pinned; a caller-asserted single
-    # family cannot be corroborated and must not dodge the quorum.
+    # The harness attests the model was Auto; a caller-asserted single family
+    # cannot be corroborated against Auto and is a fail-closed conflict.
     assert resolve_author_family("cursor:auto", author_family="openai") == CONFLICTING_AUTHOR_FAMILY
     assert resolve_author_family("cursor-auto", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
+    assert resolve_author_family("cursor:unknown", author_family="xai") == CONFLICTING_AUTHOR_FAMILY
     resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", author_family="openai"))
     assert resolution.selected is None
     assert resolution.quorum == ()
     assert resolution.fail_closed_reason
 
 
-def test_unattested_author_resolves_a_dual_family_quorum():
-    resolution = resolve_reviewer(ResolverInputs(author_model="cursor-auto", risk="medium"))
-    assert resolution.fail_closed_reason is None
-    # No single reviewer of record — the quorum is the formal gate.
-    assert resolution.selected is None
-    assert len(resolution.quorum) == 2
-    families = {seat.family for seat in resolution.quorum}
-    assert len(families) == 2
-    assert all(seat.status == "selected" for seat in resolution.quorum)
-    assert "exact-head" in resolution.quorum_rule
-    # Both seats are promoted in the trace, like a single selection would be.
-    selected_in_trace = [entry for entry in resolution.trace if entry.status == "selected"]
-    assert {entry.name for entry in selected_in_trace} == {seat.name for seat in resolution.quorum}
+def test_unknown_auto_author_resolves_single_reviewer_outside_union():
+    for token in ("cursor:auto", "cursor:unknown", "cursor-auto"):
+        for risk in ("low", "medium", "high", "critical"):
+            resolution = resolve_reviewer(ResolverInputs(author_model=token, risk=risk))
+            assert resolution.fail_closed_reason is None, (token, risk)
+            assert resolution.selected is not None, (token, risk)
+            assert resolution.selected.family not in {"xai", "moonshot"}, (token, risk)
+            assert resolution.quorum == (), (token, risk)
 
 
-def test_unattested_quorum_holds_at_every_risk():
-    for risk in ("low", "medium", "high", "critical"):
-        resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", risk=risk))
-        assert resolution.fail_closed_reason is None, risk
-        assert len(resolution.quorum) == 2, risk
-        assert len({seat.family for seat in resolution.quorum}) == 2, risk
+def test_unknown_auto_author_excludes_xai_and_moonshot_candidates():
+    inputs = ResolverInputs(author_model="cursor:auto", risk="medium")
+    resolution = resolve_reviewer(inputs)
+    for entry in resolution.trace:
+        if entry.family in {"xai", "moonshot"} or entry.transport == "cursor":
+            assert entry.status == "excluded", (entry.name, entry.family, entry.status)
 
 
-def test_unattested_author_with_single_eligible_family_fails_closed():
-    # A ladder that only offers one family cannot satisfy the quorum.
-    anthropic_only = (
-        (REVIEW_CANDIDATES["claude-sonnet-5"],),
-        (REVIEW_CANDIDATES["claude-fable-5"],),
-    )
-    resolution = resolve_reviewer(
-        ResolverInputs(author_model="cursor-auto", risk="medium"),
-        ladder=anthropic_only,
-    )
-    assert resolution.selected is None
-    assert resolution.quorum == ()
-    assert "dual-family quorum unsatisfiable" in resolution.fail_closed_reason
+def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
+    # Moonshot-family author: Cursor-transport candidates must be excluded
+    kimi_inputs = ResolverInputs(author_model="kimi-code/k3")
+    for cand_name in ("composer-2.5", "grok-4.6-cursor-fallback", "claude-fable-5-cursor-fallback"):
+        cand = REVIEW_CANDIDATES[cand_name]
+        res = evaluate_candidate(cand, kimi_inputs)
+        assert res.status == "excluded", (cand_name, res.status)
+
+    # xAI-family author: Cursor-transport candidates must be excluded
+    grok_inputs = ResolverInputs(author_model="grok-4.6")
+    for cand_name in ("composer-2.5", "grok-4.6-cursor-fallback", "claude-fable-5-cursor-fallback"):
+        cand = REVIEW_CANDIDATES[cand_name]
+        res = evaluate_candidate(cand, grok_inputs)
+        assert res.status == "excluded", (cand_name, res.status)
 
 
-def test_unattested_author_rejects_explicit_reviewer_pin():
-    resolution = resolve_reviewer(
-        ResolverInputs(
-            author_model="cursor-auto",
-            pinned_candidate="gpt-5.6-terra",
-            pressure_override_reason="operator request",
-        )
-    )
-    assert resolution.selected is None
-    assert resolution.quorum == ()
-    assert "pin cannot satisfy the dual-family quorum" in resolution.fail_closed_reason
+def test_attested_cursor_author_resolves_to_model_family():
+    assert resolve_author_family("cursor:grok-4.6") == "xai"
+    assert resolve_author_family("cursor:composer-2.5") == "moonshot"
+    res_grok = resolve_reviewer(ResolverInputs(author_model="cursor:grok-4.6", risk="medium"))
+    assert res_grok.selected is not None
+    assert res_grok.selected.family != "xai"
+    res_comp = resolve_reviewer(ResolverInputs(author_model="cursor:composer-2.5", risk="medium"))
+    assert res_comp.selected is not None
+    assert res_comp.selected.family != "moonshot"
 
 
 def test_invalid_or_conflicting_author_identity_fails_closed():

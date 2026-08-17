@@ -47,7 +47,9 @@ policy:
       (phase3_functional_roles.py validator_sha256 + phase3_source_production_transport.py
       inventory sha); rotating or rewriting them is outside the fleet seat list and requires
       a separate open-model-data rebind (#6870 item 3). Fleet routing must not read them.
-    - Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.
+    - >-
+      Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged. Composer 2.5
+      conservatively shares Moonshot independence lineage with Kimi.
 
 # Canonical sealed formal-review transports. Resolver policy consumes these
 # endpoint records before considering balance. A route with

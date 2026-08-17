@@ -68,6 +68,10 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
         "final_disposition",
     }
 )
+CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.6", "composer-2.5")
+CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
+CURSOR_AUTO_EXPECTED_RESOLUTION: str = "union_family"
+
 
 
 class ModelCatalogError(ValueError):
@@ -236,6 +240,10 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                 seat.get("auto_allowlist"),
                 "orchestrator_seats.cursor.auto_allowlist",
             )
+            if tuple(allowlist) != CURSOR_AUTO_EXPECTED_ALLOWLIST:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.auto_allowlist must equal exactly {list(CURSOR_AUTO_EXPECTED_ALLOWLIST)}, got {allowlist}"
+                )
             for allowed in allowlist:
                 if allowed not in models:
                     raise ModelCatalogError(
@@ -245,14 +253,21 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                     raise ModelCatalogError(
                         f"orchestrator_seats.cursor.auto_allowlist must reference active models, got {allowed!r}"
                     )
-            _require_string(seat.get("attestation_rule"), "orchestrator_seats.cursor.attestation_rule")
+            attestation_rule = _require_string(
+                seat.get("attestation_rule"),
+                "orchestrator_seats.cursor.attestation_rule",
+            )
+            if attestation_rule != CURSOR_AUTO_EXPECTED_ATTESTATION_RULE:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.attestation_rule must be {CURSOR_AUTO_EXPECTED_ATTESTATION_RULE!r}, got {attestation_rule!r}"
+                )
             resolution = _require_string(
                 seat.get("unknown_auto_family_resolution"),
                 "orchestrator_seats.cursor.unknown_auto_family_resolution",
             )
-            if resolution != "union_family":
+            if resolution != CURSOR_AUTO_EXPECTED_RESOLUTION:
                 raise ModelCatalogError(
-                    f"orchestrator_seats.cursor.unknown_auto_family_resolution must be 'union_family', got {resolution!r}"
+                    f"orchestrator_seats.cursor.unknown_auto_family_resolution must be {CURSOR_AUTO_EXPECTED_RESOLUTION!r}, got {resolution!r}"
                 )
             union_families = _require_string_list(
                 seat.get("unknown_auto_union_families"),
