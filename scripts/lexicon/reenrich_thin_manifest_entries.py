@@ -33,6 +33,10 @@ from scripts.audit.audit_atlas_thin_enriched import (
     thin_old_gate_entries,
 )
 from scripts.lexicon import enrich_manifest
+from scripts.lexicon.derived_en_fallback import (
+    derived_translation_fallback,
+    manifest_lemma_index,
+)
 from scripts.lexicon.manifest_io import load_manifest
 from scripts.lexicon.publish_manifest import (
     DEFAULT_GZIP,
@@ -460,7 +464,10 @@ def _translation_for_entry(
         if translation:
             return enrich_manifest._with_base_source_label(translation, fallback_base)
     if manifest_index is not None:
-        return _deadjectival_adverb_translation(entry, manifest_index)
+        adv_translation = _deadjectival_adverb_translation(entry, manifest_index)
+        if adv_translation:
+            return adv_translation
+        return derived_translation_fallback(entry, manifest_index)
     return None
 
 
@@ -565,7 +572,7 @@ def reenrich_thin_entries(
     if not refresh_wiki:
         enrich_manifest._wiki_reference = lambda *args, **kwargs: None
 
-    manifest_index = {str(e["lemma"]): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
+    manifest_index = manifest_lemma_index(manifest)
 
     changed = 0
     gained_anchor = 0
