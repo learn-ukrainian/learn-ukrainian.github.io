@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4cd6659481e4",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6953-c0-transport",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/cursor-driver.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/adapters/cursor.py",
+    "scripts/delegate.py",
+    "scripts/review/reviewer_resolver.py",
+    "tests/agent_runtime/adapters/test_cursor_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/4c/d6659481e4/0/metadata.json",
+      "transcript": "/4c/d6659481e4/0/full.jsonl",
+      "compact_transcript": "/4c/d6659481e4/0/transcript.jsonl",
+      "content_hash": "/4c/d6659481e4/0/content_hash.txt",
+      "prompt": "/4c/d6659481e4/0/prompt.txt"
+    }
+  ]
+}

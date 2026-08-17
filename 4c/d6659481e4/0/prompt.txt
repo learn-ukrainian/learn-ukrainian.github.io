@@ -1,0 +1,67 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6953-c0-transport
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6953 Part A — repair acpx/node jail OR tested venv-bridge fallback + cursor attestation receipts
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto (workspace-write, fresh dispatch worktree) — cursor-first directive; the fix serves the cursor driver seat
+- why_this_tier: transport repair + receipt plumbing on an established bus; runtime four-verb proof is Part B (driver-run, after merge)
+- advisor_packet: n/a
+- owned_paths: scripts/ai_agent_bridge/ acpx wiring, scripts/agent_runtime/adapters/cursor.py (receipt fields), docs/runbooks/cursor-driver.md (§fleet-comms), tests
+- acceptance_cmd: targeted pytest + the live discuss probe below
+- alternatives_considered: (1) agy — busy on #6972 rework chain; (2) grok — no transport affinity; codex capped for dispatch
+- parallel_free_seats: grok
+
+## Evidence preamble (#M-4 — binding)
+Quote raw tool output for every claim. This issue's own text warns: "not done when someone
+writes a runbook without a receipt."
+
+## Context — read `gh issue view 6953` + parent #6952 FIRST
+Known failure: a 2026-08-17 advisor consult via ACP `ab discuss` died in ~8s / 0 tokens with
+`env: node: No such file or directory` inside the acpx jail. Fleet-comms is C0 — mandatory,
+and NO second bus may be built (no `cursor-discuss`). Frozen: repair acpx/node in the jail OR
+document AND test the venv-bridge fallback on the SAME bus.
+
+Also required by the charter: the cursor adapter's receipts must carry attestation —
+`resolved_model`, `resolved_model_known`, `resolved_model_source` — and when unattested, the
+record must read `unattested-harness` (today's live receipts show `resolved_model: "unknown"`,
+`resolved_model_known: false` — see batch_state/tasks/infra-6962-thrash-guard-hermetic.json for
+a real example; extend, don't rewrite, the existing extraction in scripts/delegate.py /
+scripts/agent_runtime/adapters/cursor.py).
+
+## Shippable unit
+ONE PR:
+1. Root-cause the jail's `node: No such file or directory`: quote the acpx jail's PATH/env
+   construction, find where node should resolve from, and fix it (or, if repair is genuinely
+   the wrong layer — justify with evidence — implement the venv-bridge fallback path on the
+   same bus, wired + tested, documented in the runbook §fleet-comms).
+2. Receipt attestation: ensure the cursor adapter populates resolved_model /
+   resolved_model_known / resolved_model_source, and that an unknown resolution is recorded as
+   the explicit `unattested-harness` classification (per the merged #6964 contract), not a bare
+   "unknown". Tests for both attested and unattested shapes.
+3. Live probe (the part a unit test can't fake): from your session, run ONE `ab discuss`-class
+   ask over the repaired/fallback path and quote the transcript ids + that it returned tokens
+   (the 8s/0-token failure mode is the red baseline). If the jail repair requires a deploy step
+   outside the worktree, say so explicitly — the driver executes it post-merge instead.
+4. Runbook: §fleet-comms in docs/runbooks/cursor-driver.md — how the Cursor TUI driver talks to
+   the plane (verbs, fallback, attestation), tight.
+Out of scope: the four-verb driver-session proof (Part B, driver-run post-merge), any new bus,
+restart/double-dispatch logic changes (delegate.py already guards task-id reuse — do not touch).
+
+## Steps
+1. Both issues. Step 0: `gh pr list --state all --search "6953"` — sibling → STOP report.
+2. Implement; targeted pytest via /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python
+   -m pytest (broken .venv/bin/pytest launcher — known); ruff clean.
+3. Conventional commit `fix(transport): cursor C0 acpx/node repair + attested receipts (#6953)`;
+   push; open PR referencing #6953 + #6952. NO auto-merge.
+4. Report: PR number, root-cause quote, live-probe transcript evidence, test tails.

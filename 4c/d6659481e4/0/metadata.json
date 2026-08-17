@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4cd6659481e4",
+  "session_id": "fleet-66bad259ca6349a982c393b4519c35b5",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T19:48:10.902136Z",
+  "branch": "cursor/infra-6953-c0-transport",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/cursor-driver.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/adapters/cursor.py",
+    "scripts/delegate.py",
+    "scripts/review/reviewer_resolver.py",
+    "tests/agent_runtime/adapters/test_cursor_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "434f5dcc13af",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T19:48:10.895684Z",
+    "agent_lines": 308,
+    "agent_removed": 60,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 308,
+    "total_lines_changed": 368,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
