@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9180e769cd40",
+  "session_id": "fleet-8cbccf8e2b5d404684b3deae9fc1e33f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T19:31:58.161883Z",
+  "branch": "agy/infra-6968-test-guards",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/ai_agent_bridge/_review_worktree.py",
+    "scripts/lint/lint_test_assertions.py",
+    "tests/conftest.py",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/orchestration/test_thread_restart_e2e.py",
+    "tests/test_codex_lane_canary.py",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_fleet_taxonomy_slot_addressing.py",
+    "tests/test_grok_lane_session_canary.py",
+    "tests/test_gui_session_lease.py",
+    "tests/test_kimi_lane_bootstrap.py",
+    "tests/test_lint_test_assertions.py",
+    "tests/test_session_streams_api.py",
+    "tests/test_session_streams_dual_write_status.py",
+    "tests/test_session_supervisor_shell.py",
+    "tests/test_socket_guard.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "7534dc9d83f3",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T19:31:58.154475Z",
+    "agent_lines": 717,
+    "agent_removed": 542,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 717,
+    "total_lines_changed": 1259,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
