@@ -114,12 +114,15 @@ Backup failure policy:
 
 Thin facade on the existing Monitor app (no new daemon):
 
-| Method | Path | Wraps |
+| Method | Path | Wraps / Description |
 | --- | --- | --- |
-| GET | `/api/atlas-jobs` | list |
-| POST | `/api/atlas-jobs/submit` | validate + host check + submit |
-| GET | `/api/atlas-jobs/{id}` | status reconcile |
-| POST | `/api/atlas-jobs/{id}/close` | close |
+| GET | `/api/atlas-jobs` | List journal entries |
+| GET | `/api/atlas-jobs/health` | Service health & restic block status |
+| GET | `/api/atlas-jobs/load[?host=x][&fresh=true]` | Non-blocking host load & resource telemetry |
+| GET | `/api/atlas-jobs/results[?host=x][&state=x][&limit=n][&cursor=c]` | Allowlisted result receipts (newest-first keyset pagination) |
+| POST | `/api/atlas-jobs/submit` | Validate + host check + submit |
+| GET | `/api/atlas-jobs/{id}` | Status reconcile against host systemd |
+| POST | `/api/atlas-jobs/{id}/close` | Close & seal fail-closed receipt |
 
 ## Commands
 

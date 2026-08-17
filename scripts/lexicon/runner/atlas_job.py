@@ -144,6 +144,9 @@ class HostAdapter(Protocol):
     def free_disk_bytes(self, host: str, path: str | None = None) -> int:
         """Return available free disk space in bytes on the host for path (or run root)."""
 
+    def host_load(self, host: str) -> dict[str, Any]:
+        """Return host load and resource metrics: cpu_count, loadavg, mem, disk, job_unit."""
+
 
 @dataclass
 class FakeHostAdapter:
@@ -155,6 +158,8 @@ class FakeHostAdapter:
     online: bool = True
     free_disk_bytes_value: int = 50 * 1024 * 1024 * 1024  # 50 GiB default healthy
     free_disk_by_path: dict[str, int] = field(default_factory=dict)
+    host_load_by_host: dict[str, dict[str, Any]] = field(default_factory=dict)
+    default_host_load: dict[str, Any] | None = None
 
     def list_atlas_job_units(self, host: str) -> list[dict[str, Any]]:
         del host
@@ -185,6 +190,50 @@ class FakeHostAdapter:
         if path is not None and path in self.free_disk_by_path:
             return self.free_disk_by_path[path]
         return self.free_disk_bytes_value
+
+    def host_load(self, host: str) -> dict[str, Any]:
+        if not self.online:
+            raise ConnectionError("host unreachable")
+        if host in self.host_load_by_host:
+            return dict(self.host_load_by_host[host])
+        if self.default_host_load is not None:
+            return dict(self.default_host_load)
+        active_count = 0
+        active_job_id = None
+        active_state = None
+        for u in self.units:
+            if u.get("active") == "active":
+                active_count += 1
+                name = str(u.get("name") or "")
+                if name.startswith("atlas-job-") and name.endswith(".service"):
+                    active_job_id = name[len("atlas-job-") : -len(".service")]
+                    active_state = str(u.get("sub") or u.get("active"))
+        free_bytes = self.free_disk_bytes(host)
+        total_disk = 100 * 1024 * 1024 * 1024
+        disk_pct = (
+            round((total_disk - free_bytes) / total_disk * 100.0, 1)
+            if total_disk > 0
+            else 0.0
+        )
+        return {
+            "cpu_count": 4,
+            "loadavg": [0.15, 0.22, 0.18],
+            "mem": {
+                "available_bytes": 8 * 1024 * 1024 * 1024,
+                "total_bytes": 16 * 1024 * 1024 * 1024,
+                "pct": 50.0,
+            },
+            "disk": {
+                "available_bytes": free_bytes,
+                "total_bytes": total_disk,
+                "pct": disk_pct,
+            },
+            "job_unit": {
+                "active_count": active_count,
+                "job_id": active_job_id,
+                "state": active_state,
+            },
+        }
 
 
 class SshHostAdapter:
@@ -278,6 +327,113 @@ class SshHostAdapter:
         if not text.isdigit():
             raise ValueError(f"invalid free disk output from {host}: {text!r}")
         return int(text)
+
+    def host_load(self, host: str) -> dict[str, Any]:
+        target = str(_run_root(host))
+        remote = (
+            "python3 - <<'PY'\n"
+            "import json, os, shutil, subprocess\n"
+            "from pathlib import Path\n"
+            "\n"
+            "cpu_count = os.cpu_count() or 1\n"
+            "try:\n"
+            "    loadavg = [round(float(x), 2) for x in os.getloadavg()]\n"
+            "except Exception:\n"
+            "    loadavg = [0.0, 0.0, 0.0]\n"
+            "\n"
+            "mem_total = 0\n"
+            "mem_avail = 0\n"
+            "try:\n"
+            "    with open('/proc/meminfo', 'r') as f:\n"
+            "        for line in f:\n"
+            "            parts = line.split()\n"
+            "            if len(parts) >= 2:\n"
+            "                key = parts[0].rstrip(':')\n"
+            "                if key == 'MemTotal':\n"
+            "                    mem_total = int(parts[1]) * 1024\n"
+            "                elif key == 'MemAvailable':\n"
+            "                    mem_avail = int(parts[1]) * 1024\n"
+            "except Exception:\n"
+            "    pass\n"
+            "mem_pct = round((mem_total - mem_avail) / mem_total * 100.0, 1) if mem_total > 0 else 0.0\n"
+            "\n"
+            f"target = Path({target!r})\n"
+            "p = target\n"
+            "while not p.exists() and p != p.parent:\n"
+            "    p = p.parent\n"
+            "try:\n"
+            "    usage = shutil.disk_usage(str(p))\n"
+            "    disk_total = usage.total\n"
+            "    disk_avail = usage.free\n"
+            "    disk_pct = round((usage.total - usage.free) / usage.total * 100.0, 1) if usage.total > 0 else 0.0\n"
+            "except Exception:\n"
+            "    disk_total = 0\n"
+            "    disk_avail = 0\n"
+            "    disk_pct = 0.0\n"
+            "\n"
+            "active_count = 0\n"
+            "active_job_id = None\n"
+            "active_state = None\n"
+            "try:\n"
+            "    res = subprocess.run(\n"
+            "        ['systemctl', '--user', 'list-units', 'atlas-job-*.service', '--all', '--no-legend', '--no-pager', '--plain'],\n"
+            "        capture_output=True, text=True, check=False\n"
+            "    )\n"
+            "    for line in (res.stdout or '').splitlines():\n"
+            "        parts = line.split()\n"
+            "        if len(parts) >= 4:\n"
+            "            name, _load, active, sub = parts[0], parts[1], parts[2], parts[3]\n"
+            "            if name.startswith('atlas-job-') and name.endswith('.service'):\n"
+            "                if active == 'active':\n"
+            "                    active_count += 1\n"
+            "                    if active_job_id is None:\n"
+            "                        active_job_id = name[len('atlas-job-'):-len('.service')]\n"
+            "                        active_state = sub or active\n"
+            "except Exception:\n"
+            "    pass\n"
+            "\n"
+            "out = {\n"
+            "    'cpu_count': cpu_count,\n"
+            "    'loadavg': loadavg,\n"
+            "    'mem': {\n"
+            "        'available_bytes': mem_avail,\n"
+            "        'total_bytes': mem_total,\n"
+            "        'pct': mem_pct,\n"
+            "    },\n"
+            "    'disk': {\n"
+            "        'available_bytes': disk_avail,\n"
+            "        'total_bytes': disk_total,\n"
+            "        'pct': disk_pct,\n"
+            "    },\n"
+            "    'job_unit': {\n"
+            "        'active_count': active_count,\n"
+            "        'job_id': active_job_id,\n"
+            "        'state': active_state,\n"
+            "    },\n"
+            "}\n"
+            "print(json.dumps(out))\n"
+            "PY"
+        )
+        try:
+            proc = subprocess.run(
+                ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=3", host, remote],
+                capture_output=True,
+                text=True,
+                timeout=5.0,
+                check=False,
+            )
+        except (subprocess.TimeoutExpired, OSError) as exc:
+            raise ConnectionError(f"host_load failed on {host}: {exc}") from exc
+        if proc.returncode != 0:
+            raise ConnectionError(f"host_load failed on {host}: rc={proc.returncode}")
+        text = (proc.stdout or "").strip()
+        try:
+            data = json.loads(text)
+            if not isinstance(data, dict):
+                raise ValueError("host_load must return a JSON object")
+            return data
+        except Exception as exc:
+            raise ValueError(f"invalid JSON from host_load on {host}: {exc}") from exc
 
 
 def _ssh(host: str, remote: str) -> subprocess.CompletedProcess[str]:
