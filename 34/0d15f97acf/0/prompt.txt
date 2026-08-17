@@ -1,0 +1,83 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-ci-slowsplit-a
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# PR-A (prep): slow-split + integrity guards — PUBLIC repo (one PR, stage 1 of 2)
+
+You are implementing stage 1 of a two-PR CI overhaul in learn-ukrainian/learn-ukrainian.github.io.
+Advisory-reviewed (Sol + grok-4.6, GO-WITH-CHANGES; conditions below are BINDING). Do not start
+other work. Do not run the full 4-shard suite locally.
+
+**Stage boundary:** this PR changes WHICH tests are required and adds guards. It does NOT change
+gate topology, triggers, or branch protection — current full PR enforcement stays exactly as-is.
+(Stage 2 = merge-queue cutover, separate PR, already specified.)
+
+## Problem
+Required 4-shard pytest gate costs 16–30 min per push (~8–10 min/shard). Slow tests (model
+loads, live HTTP, long sleeps, harness matrices) sit unmarked in the required set. addopts is
+`-v --tb=short -m 'not atlas_release'`; the `slow` marker exists (pyproject line 22) but is
+mostly unused.
+
+FORBIDDEN (five shipped-regression incidents #3873 #4888 #4936 #5351 #5354; ci.yml header
+invariant stays intact): any diff/path/testmon/label-conditional selection of the required set.
+Also forbidden: raising timeouts as the fix; touching branch protection; putting `not slow`
+into global addopts (nightly would inherit it and collect nothing).
+
+## Work
+
+1. **Inventory** slow/robotic tests. Quote nodeids. Verify each candidate's cost is in test
+   setup/call — NOT import time, collection hooks, session fixtures, or autouse fixtures that
+   unmarked tests still trigger (deselection does not avoid those; an import-time model load
+   must be moved into a fixture, not just marked).
+2. **Mark precisely.** `@pytest.mark.slow` per test / per expensive param (pytest.param marks)
+   — never blanket module/class marks that kill cheap contract tests. Keep cheap mocked
+   contract tests for model-load/HTTP/bake behavior IN the required gate.
+3. **Required collection** = `-m 'not atlas_release and not slow'` passed via `-m` on the
+   planner (scripts/ci/pytest_shards.py), all 4 shard jobs, the fastlane selection, and
+   required coverage — the IDENTICAL expression everywhere. addopts unchanged.
+4. **Set-integrity assertions** (fail the gate, not warn): shard union == fast collection
+   exactly (no dupes/omissions); all 4 shards nonempty (empty-green shard = silent gate
+   collapse); `--strict-markers` on so marker typos fail.
+5. **Fastlane** applies the same `not slow` exclusion; if golden nodeid data exists, update it
+   in this PR — never disable the assertion.
+6. **Duration dataset**: refresh only if the planner mechanically requires exact membership or
+   imbalance is measured — no speculative churn. Quote the shard-balance evidence you relied on.
+7. **Nightly slow lane**: NEW workflow name (never a required name), `schedule` + 
+   `workflow_dispatch`, collects `-m 'slow and not atlas_release'`, own timeout/concurrency;
+   ON FAILURE it must create-or-update a labeled GitHub issue (owner: infra lane) — a silent
+   red nightly is the named rot mode. NOT referenced by CI Gate `needs`.
+8. **Coverage**: record the full before/after coverage report (artifact), not just the scalar.
+   `--fail-under=35` result quoted. If it dips below 35: STOP and report — never lower the
+   floor, never narrow inputs.
+9. Branch-protection fact (verified): only the `CI Gate` context is pinned. Do not rename
+   `CI Gate`. Internal job names may change if needed, but prefer stability.
+
+## Proof (quote raw output)
+- `pytest --collect-only -q -m 'not atlas_release and not slow'` and
+  `... -m 'slow and not atlas_release'` counts, before and after marking.
+- The set-integrity assertion passing (and failing when you mutate it once — mutation-check).
+- ruff on touched files; actionlint on edited workflows.
+- Coverage floor result on the fast set.
+
+## Ship
+One PR vs main. Refs #6943. In the PR description: list every test moved to `slow` — each is a
+reviewed gate-membership change. Conventional commit, X-Agent trailer, push, NO auto-merge
+(driver merges after cross-family review).
+
+## Evidence rule (#M-4): every claim backed by quoted raw tool output.
+
+## Routing card (ROUTING_CARD_V1)
+tier=practical · model_x_harness=cursor(Auto attested)/cursor-agent · why=operator cursor-first
+for implement units; codexbar: cursor ~2% ahead of pace, one unit OK ·
+owned_paths=.github/workflows/**, scripts/ci/**, pyproject.toml, tests/** (marks+fixture moves
+only) · acceptance_cmd=collect-only counts + set-integrity assertion ·
+alternatives=agy (takes private sibling), codex (5% weekly left — embargoed), grok (operator
+stood down from CI implement) · research_classification=generic (deliberate, no registry match)

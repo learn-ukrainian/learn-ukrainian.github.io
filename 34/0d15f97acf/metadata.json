@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "340d15f97acf",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-ci-slowsplit-a",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/pytest-slow-nightly.yml",
+    "scripts/ci/pytest_shards.py",
+    "tests/curriculum/test_seminar_plan_refs_titles.py",
+    "tests/orchestration/test_curriculum_lifecycle_pilot.py",
+    "tests/orchestration/test_reap_worktrees.py",
+    "tests/test_ci_shard_partition.py",
+    "tests/test_immersion_rule_ulp.py",
+    "tests/test_ohoiko_source_inventory_scope.py",
+    "tests/test_open_model_ready_view_production.py",
+    "tests/test_open_model_reference_build.py",
+    "tests/test_post_processor_mutation_invariant.py",
+    "tests/test_scrub_decision_ledger_keys.py",
+    "tests/test_session_setup_hook.py",
+    "tests/test_source_inventory_review_decisions.py",
+    "tests/test_video_discovery.py",
+    "tests/test_writer_size_policy.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/34/0d15f97acf/0/metadata.json",
+      "transcript": "/34/0d15f97acf/0/full.jsonl",
+      "compact_transcript": "/34/0d15f97acf/0/transcript.jsonl",
+      "content_hash": "/34/0d15f97acf/0/content_hash.txt",
+      "prompt": "/34/0d15f97acf/0/prompt.txt"
+    }
+  ]
+}
