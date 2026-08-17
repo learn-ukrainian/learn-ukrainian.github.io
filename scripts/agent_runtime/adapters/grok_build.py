@@ -124,6 +124,27 @@ def validate_grok_effort(effort: str | None) -> str | None:
     return effort
 
 
+def resolve_grok_home(*, env: dict[str, str] | None = None) -> Path:
+    """Return the active Grok home (``GROK_HOME`` or ``~/.grok``)."""
+    if env is not None and env.get("GROK_HOME"):
+        return Path(env["GROK_HOME"])
+    configured = os.environ.get("GROK_HOME")
+    if configured:
+        return Path(configured)
+    return Path.home() / ".grok"
+
+
+def grok_cwd_sessions_dir(grok_home: Path, cwd: Path) -> Path:
+    """Return the cwd-keyed sessions parent under ``grok_home``.
+
+    Native Grok stores one directory per session beneath
+    ``sessions/<urlquoted-resolved-cwd>/``. Peer sessions that share a cwd
+    still get distinct child directories; the shared ``GROK_HOME`` root must
+    never be treated as a liveness signal (#6933).
+    """
+    return grok_home / "sessions" / quote(str(cwd.resolve()), safe="")
+
+
 def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
     """Return Grok's session directory for ``cwd`` and ``session_id``.
 
@@ -132,7 +153,7 @@ def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
     Keep this in the adapter so bridge callers and trace validators use the
     identical, documented lookup rule.
     """
-    return grok_home / "sessions" / quote(str(cwd.resolve()), safe="") / session_id
+    return grok_cwd_sessions_dir(grok_home, cwd) / session_id
 
 
 class GrokBuildAdapter:
@@ -303,8 +324,9 @@ class GrokBuildAdapter:
 
         # Resume only if the caller explicitly opts in (delegate dispatch never
         # should — resume_policy=never — to avoid cross-worktree contamination).
-        if session_id and tc.get("resume"):
-            cmd.extend(["--resume", session_id])
+        resume_session_id = session_id if session_id and tc.get("resume") else None
+        if resume_session_id:
+            cmd.extend(["--resume", resume_session_id])
 
         _logger.debug(
             "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
@@ -315,18 +337,30 @@ class GrokBuildAdapter:
             effective_effort,
         )
 
+        self._reset_per_invocation_state(
+            cwd=execution_cwd,
+            resume_session_id=resume_session_id,
+            env_overrides={},
+        )
+        liveness_paths = self._liveness_paths_for_cwd(
+            execution_cwd,
+            resume_session_id=resume_session_id,
+            env_overrides={},
+        )
+
         return InvocationPlan(
             cmd=cmd,
             cwd=execution_cwd,
             stdin_payload="",
             output_file=None,
             env_overrides={},
-            liveness_paths=self._liveness_paths(),
+            liveness_paths=liveness_paths,
             metadata={
                 "entire_fleet": {
                     "requested_model": requested_model,
                     "actual_model": requested_model,
-                }
+                },
+                "resume_session_id": resume_session_id,
             },
             host_harness="grok",
         )
@@ -374,14 +408,104 @@ class GrokBuildAdapter:
         )
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
-        _ = plan
-        return self._liveness_paths()
+        """Return session-scoped paths for the watchdog mtime poller.
 
-    def _liveness_paths(self) -> tuple[Path, ...]:
-        # grok keeps session/leader state under ~/.grok; mtime bumps there are
-        # a liveness signal when stdout is quiet.
-        grok_home = Path.home() / ".grok"
-        return (grok_home,) if grok_home.exists() else ()
+        Issue #6933: the shared ``GROK_HOME`` / ``~/.grok`` directory mtime is
+        cross-session contaminated — any concurrent Grok process can bump it
+        and keep a wedged supervised session looking alive. Watch only the
+        cwd-keyed sessions parent plus this invocation's own session dir /
+        ``events.jsonl`` (resume id, or a session dir created after the
+        build-time snapshot).
+        """
+        resume_session_id = None
+        if isinstance(plan.metadata, dict):
+            raw = plan.metadata.get("resume_session_id")
+            if isinstance(raw, str) and raw:
+                resume_session_id = raw
+        if resume_session_id is None:
+            resume_session_id = getattr(self, "_resume_session_id", None)
+        return self._liveness_paths_for_cwd(
+            plan.cwd,
+            resume_session_id=resume_session_id,
+            env_overrides=plan.env_overrides or {},
+        )
+
+    def _reset_per_invocation_state(
+        self,
+        *,
+        cwd: Path,
+        resume_session_id: str | None,
+        env_overrides: dict[str, str],
+    ) -> None:
+        """Snapshot pre-existing cwd-scoped session dirs before launch."""
+        self._resume_session_id = resume_session_id
+        self._session_dir_snapshot = self._snapshot_preexisting_session_dirs(
+            cwd, env_overrides=env_overrides
+        )
+
+    def _snapshot_preexisting_session_dirs(
+        self,
+        cwd: Path,
+        *,
+        env_overrides: dict[str, str],
+    ) -> set[Path]:
+        sessions_root = grok_cwd_sessions_dir(
+            resolve_grok_home(env=env_overrides), cwd
+        )
+        try:
+            if not sessions_root.is_dir():
+                return set()
+            return {path for path in sessions_root.iterdir() if path.is_dir()}
+        except OSError:
+            return set()
+
+    def _liveness_paths_for_cwd(
+        self,
+        cwd: Path,
+        *,
+        resume_session_id: str | None = None,
+        env_overrides: dict[str, str] | None = None,
+    ) -> tuple[Path, ...]:
+        overrides = env_overrides or {}
+        grok_home = resolve_grok_home(env=overrides)
+        sessions_root = grok_cwd_sessions_dir(grok_home, cwd)
+        paths: list[Path] = []
+
+        if resume_session_id:
+            session_dir = grok_session_dir(grok_home, cwd, resume_session_id)
+            paths.append(session_dir)
+            paths.append(session_dir / "events.jsonl")
+            return tuple(paths)
+
+        # Startup signal: a new child session directory bumps this parent.
+        # Never return ``grok_home`` itself — that is the #6933 contamination
+        # channel (logs/, active_sessions.json, peer sessions, …).
+        paths.append(sessions_root)
+
+        snapshot: set[Path] = getattr(self, "_session_dir_snapshot", set()) or set()
+        try:
+            children = (
+                [path for path in sessions_root.iterdir() if path.is_dir()]
+                if sessions_root.is_dir()
+                else []
+            )
+        except OSError:
+            children = []
+
+        new_sessions = [path for path in children if path not in snapshot]
+        if new_sessions:
+            def _mtime(path: Path) -> float:
+                try:
+                    return path.stat().st_mtime
+                except OSError:
+                    return 0.0
+
+            newest = max(new_sessions, key=_mtime)
+            paths.append(newest)
+            paths.append(newest / "events.jsonl")
+
+        # Preserve order while dropping duplicates.
+        return tuple(dict.fromkeys(paths))
 
 
 def _translate_mcp_prefix_for_grok_build(prompt: str) -> str:
