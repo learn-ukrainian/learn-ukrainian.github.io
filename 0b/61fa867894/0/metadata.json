@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0b61fa867894",
+  "session_id": "fleet-f7a8a7f2f4814094bb6b1dd2d4812942",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T21:33:24.942539Z",
+  "branch": "agy/6876-agy-goroh",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "scripts/lexicon/source_attribution.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/test_lexicon_enrich_manifest.py",
+    "tests/test_reenrich_thin_manifest_entries.py",
+    "tests/test_source_attribution.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "9144c2757a28",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T21:33:24.937195Z",
+    "agent_lines": 266,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 266,
+    "total_lines_changed": 269,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
