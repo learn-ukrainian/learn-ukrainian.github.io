@@ -106,6 +106,15 @@ _TRAIL_ISOLATION_TOOL_CONFIG_KEYS: frozenset[str] = frozenset(
     }
 )
 
+# plan.metadata keys for liveness bind (#6935). Snapshot is the set of
+# cwd-scoped session *directory names* that already existed at
+# build_invocation; once a post-snapshot child is discovered, its id is
+# pinned so later same-cwd peers cannot steal the bind and a plan-only
+# poller can reproduce it without adapter instance state.
+_META_RESUME_SESSION_ID = "resume_session_id"
+_META_LIVENESS_SESSION_ID = "liveness_session_id"
+_META_LIVENESS_SNAPSHOT = "liveness_session_dir_snapshot"
+
 
 def validate_grok_effort(effort: str | None) -> str | None:
     """Return a native Grok effort after enforcing its CLI vocabulary.
@@ -337,14 +346,25 @@ class GrokBuildAdapter:
             effective_effort,
         )
 
-        self._reset_per_invocation_state(
+        snapshot = self._reset_per_invocation_state(
             cwd=execution_cwd,
-            resume_session_id=resume_session_id,
             env_overrides={},
         )
-        liveness_paths = self._liveness_paths_for_cwd(
+        metadata: dict[str, object] = {
+            "entire_fleet": {
+                "requested_model": requested_model,
+                "actual_model": requested_model,
+            },
+            _META_RESUME_SESSION_ID: resume_session_id,
+            # Plan-owned snapshot so a plan-only / split-instance poller can
+            # exclude pre-existing same-cwd peers without adapter instance
+            # state (#6935).
+            _META_LIVENESS_SNAPSHOT: sorted(path.name for path in snapshot),
+        }
+        liveness_paths, _discovered = self._liveness_paths_for_cwd(
             execution_cwd,
-            resume_session_id=resume_session_id,
+            bound_session_id=resume_session_id,
+            snapshot=snapshot,
             env_overrides={},
         )
 
@@ -355,13 +375,7 @@ class GrokBuildAdapter:
             output_file=None,
             env_overrides={},
             liveness_paths=liveness_paths,
-            metadata={
-                "entire_fleet": {
-                    "requested_model": requested_model,
-                    "actual_model": requested_model,
-                },
-                "resume_session_id": resume_session_id,
-            },
+            metadata=metadata,
             host_harness="grok",
         )
 
@@ -416,32 +430,78 @@ class GrokBuildAdapter:
         cwd-keyed sessions parent plus this invocation's own session dir /
         ``events.jsonl`` (resume id, or a session dir created after the
         build-time snapshot).
+
+        Issue #6935: once a post-snapshot session is discovered, pin its id
+        onto ``plan.metadata`` so later same-cwd peers cannot steal the bind
+        and a plan-only poller (fresh adapter instance) can reproduce it.
+        The build-time child-name snapshot is also stored on the plan for the
+        same reason.
+
+        Startup window (accepted tradeoff vs #6933): if ``sessions_root``
+        already exists, its mtime is stale until **this** child is created.
+        Until then the only path is that parent — a hang before mkdir (auth,
+        first download) looks dead to the stall timer, which is the intended
+        direction. The mtime poller already baselines missing paths at ``0.0``,
+        so a not-yet-created ``sessions_root`` is tolerated; Grok usually
+        creates the session dir in seconds while stall timeouts are minutes.
         """
-        resume_session_id = None
-        if isinstance(plan.metadata, dict):
-            raw = plan.metadata.get("resume_session_id")
-            if isinstance(raw, str) and raw:
-                resume_session_id = raw
-        if resume_session_id is None:
-            resume_session_id = getattr(self, "_resume_session_id", None)
-        return self._liveness_paths_for_cwd(
+        metadata = plan.metadata if isinstance(plan.metadata, dict) else {}
+        bound = self._bound_liveness_session_id(metadata)
+        snapshot = self._snapshot_paths_for_plan(plan)
+        paths, discovered_id = self._liveness_paths_for_cwd(
             plan.cwd,
-            resume_session_id=resume_session_id,
+            bound_session_id=bound,
+            snapshot=snapshot,
             env_overrides=plan.env_overrides or {},
         )
+        if discovered_id and not bound:
+            # Mutate the plan-owned dict (InvocationPlan is frozen, metadata
+            # contents are not) so subsequent polls keep this bind. Never pin
+            # onto adapter instance state — a shared adapter serving two plans
+            # would otherwise hand plan B the session id pinned for plan A.
+            metadata[_META_LIVENESS_SESSION_ID] = discovered_id
+        return paths
+
+    def _bound_liveness_session_id(self, metadata: dict[str, object]) -> str | None:
+        """Return resume or pinned liveness session id from plan metadata only.
+
+        Instance-level bind is intentionally absent: a shared adapter can
+        poll multiple plans, and an instance pin contaminates unpinned peers
+        (#6935 FAIL delta).
+        """
+        for key in (_META_RESUME_SESSION_ID, _META_LIVENESS_SESSION_ID):
+            raw = metadata.get(key)
+            if isinstance(raw, str) and raw:
+                return raw
+        return None
+
+    def _snapshot_paths_for_plan(self, plan: InvocationPlan) -> set[Path]:
+        """Resolve the build-time session-dir snapshot for this plan.
+
+        Prefer ``plan.metadata`` so a fresh adapter instance can still exclude
+        pre-existing same-cwd peers; fall back to instance state for callers
+        that have not yet stamped the plan.
+        """
+        metadata = plan.metadata if isinstance(plan.metadata, dict) else {}
+        raw = metadata.get(_META_LIVENESS_SNAPSHOT)
+        if isinstance(raw, (list, tuple)):
+            grok_home = resolve_grok_home(env=plan.env_overrides or {})
+            sessions_root = grok_cwd_sessions_dir(grok_home, plan.cwd)
+            names = [name for name in raw if isinstance(name, str) and name]
+            return {sessions_root / name for name in names}
+        return set(getattr(self, "_session_dir_snapshot", set()) or set())
 
     def _reset_per_invocation_state(
         self,
         *,
         cwd: Path,
-        resume_session_id: str | None,
         env_overrides: dict[str, str],
-    ) -> None:
+    ) -> set[Path]:
         """Snapshot pre-existing cwd-scoped session dirs before launch."""
-        self._resume_session_id = resume_session_id
         self._session_dir_snapshot = self._snapshot_preexisting_session_dirs(
             cwd, env_overrides=env_overrides
         )
+        return self._session_dir_snapshot
 
     def _snapshot_preexisting_session_dirs(
         self,
@@ -463,26 +523,36 @@ class GrokBuildAdapter:
         self,
         cwd: Path,
         *,
-        resume_session_id: str | None = None,
+        bound_session_id: str | None = None,
+        snapshot: set[Path] | None = None,
         env_overrides: dict[str, str] | None = None,
-    ) -> tuple[Path, ...]:
+    ) -> tuple[tuple[Path, ...], str | None]:
+        """Return ``(liveness_paths, newly_discovered_session_id_or_None)``.
+
+        When ``bound_session_id`` is set (resume or a prior #6935 pin), watch
+        only that session dir + ``events.jsonl``. Otherwise watch
+        ``sessions_root`` as a startup signal and, once a post-snapshot child
+        appears, bind the newest one — the caller must pin that id onto
+        ``plan.metadata`` so a later same-cwd sibling cannot steal it.
+        """
         overrides = env_overrides or {}
         grok_home = resolve_grok_home(env=overrides)
         sessions_root = grok_cwd_sessions_dir(grok_home, cwd)
-        paths: list[Path] = []
 
-        if resume_session_id:
-            session_dir = grok_session_dir(grok_home, cwd, resume_session_id)
-            paths.append(session_dir)
-            paths.append(session_dir / "events.jsonl")
-            return tuple(paths)
+        if bound_session_id:
+            session_dir = grok_session_dir(grok_home, cwd, bound_session_id)
+            return (session_dir, session_dir / "events.jsonl"), None
 
         # Startup signal: a new child session directory bumps this parent.
         # Never return ``grok_home`` itself — that is the #6933 contamination
         # channel (logs/, active_sessions.json, peer sessions, …).
-        paths.append(sessions_root)
+        # Until the child mkdir, an already-existing sessions_root is a
+        # stale-only signal against the stall timer (#6935 startup window).
+        paths: list[Path] = [sessions_root]
 
-        snapshot: set[Path] = getattr(self, "_session_dir_snapshot", set()) or set()
+        known: set[Path] = set(snapshot) if snapshot is not None else (
+            set(getattr(self, "_session_dir_snapshot", set()) or set())
+        )
         try:
             children = (
                 [path for path in sessions_root.iterdir() if path.is_dir()]
@@ -492,7 +562,8 @@ class GrokBuildAdapter:
         except OSError:
             children = []
 
-        new_sessions = [path for path in children if path not in snapshot]
+        new_sessions = [path for path in children if path not in known]
+        discovered_id: str | None = None
         if new_sessions:
             def _mtime(path: Path) -> float:
                 try:
@@ -503,9 +574,10 @@ class GrokBuildAdapter:
             newest = max(new_sessions, key=_mtime)
             paths.append(newest)
             paths.append(newest / "events.jsonl")
+            discovered_id = newest.name
 
         # Preserve order while dropping duplicates.
-        return tuple(dict.fromkeys(paths))
+        return tuple(dict.fromkeys(paths)), discovered_id
 
 
 def _translate_mcp_prefix_for_grok_build(prompt: str) -> str:
