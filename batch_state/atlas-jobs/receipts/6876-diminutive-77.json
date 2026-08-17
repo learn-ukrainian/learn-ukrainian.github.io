@@ -1,0 +1,52 @@
+{
+  "schema": "atlas-job-result.v1",
+  "closed_at": "2026-08-17T17:35:25+00:00",
+  "backup": {
+    "attempted": true,
+    "ok": true,
+    "snapshot_id": "0152f1aeb6da78219179fc6a0180c15ff569b7aae56408420d3d2ec1fc326836",
+    "error": null
+  },
+  "pulled": true,
+  "delivery": "ok",
+  "workdir": "run-atlas-job-6876-diminutive-77",
+  "git_pr": null,
+  "exit_status": {
+    "service_result": "success",
+    "exit_code": "exited",
+    "exit_status": "0"
+  },
+  "unit": "atlas-job-6876-diminutive-77.service",
+  "id": "6876-diminutive-77",
+  "issue": 6876,
+  "denominator": 77,
+  "summary": {
+    "target": "missing-translation",
+    "targets": 77,
+    "target_snapshot": {
+      "count": 77,
+      "sha256": "62fb49e130e3430eb96951ddf29b0612d8f8cce4d1fb32017c0fc27ad7b0c9ef"
+    },
+    "changed": 77,
+    "filled_translation": 77,
+    "gained_english_anchor": 77,
+    "remaining_old_gate_no_english_anchor": 2218,
+    "categorical_binning": {
+      "ENRICHED": 77,
+      "DETERMINISTIC_EXCLUSION": 0,
+      "UNRESOLVED_RESIDUAL": 0
+    },
+    "layer_counters": {
+      "proverbs": 0,
+      "usage_notes": 0,
+      "grinchenko": 0,
+      "forms": 74
+    },
+    "circuit_breaker_tripped": false,
+    "consecutive_misses": 0
+  },
+  "kind": "reenrich",
+  "state": "succeeded",
+  "host": "atlas-runner",
+  "plan_sha256": "6bd46b65a80697696cbb28b97e61ad90fb8044befc50aa7ddaf12af654465721"
+}

@@ -1,0 +1,52 @@
+{
+  "backup": {
+    "attempted": true,
+    "ok": true,
+    "snapshot_id": "079db733f60fc1b2446838b1c6d0f69b52c1550dda35f926ac48bca475663bb3",
+    "error": null
+  },
+  "unit": "atlas-job-6876-adverb-401.service",
+  "issue": 6876,
+  "id": "6876-adverb-401",
+  "pulled": true,
+  "summary": {
+    "target": "missing-translation",
+    "targets": 401,
+    "target_snapshot": {
+      "count": 401,
+      "sha256": "9a3122fac2f2c0e1c4d3faa0073f3093b42310a26ea079d60f89de3916145b41"
+    },
+    "changed": 217,
+    "filled_translation": 217,
+    "gained_english_anchor": 217,
+    "remaining_old_gate_no_english_anchor": 2078,
+    "categorical_binning": {
+      "ENRICHED": 217,
+      "DETERMINISTIC_EXCLUSION": 0,
+      "UNRESOLVED_RESIDUAL": 184
+    },
+    "layer_counters": {
+      "proverbs": 2,
+      "usage_notes": 0,
+      "grinchenko": 4,
+      "forms": 381
+    },
+    "circuit_breaker_tripped": false,
+    "consecutive_misses": 0
+  },
+  "kind": "reenrich",
+  "denominator": 401,
+  "host": "atlas-runner",
+  "schema": "atlas-job-result.v1",
+  "delivery": "ok",
+  "git_pr": null,
+  "state": "succeeded",
+  "plan_sha256": "402c8c483c3c7757c9e70029cde341d1a5ef834e7b4cf630c578af08fc380ab8",
+  "workdir": "run-atlas-job-6876-adverb-401",
+  "closed_at": "2026-08-17T17:14:23+00:00",
+  "exit_status": {
+    "service_result": "success",
+    "exit_code": "exited",
+    "exit_status": "0"
+  }
+}
