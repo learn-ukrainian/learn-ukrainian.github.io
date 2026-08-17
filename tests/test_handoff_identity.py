@@ -66,6 +66,7 @@ def test_handoff_identity_fixtures() -> None:
         ("handoff_identity_for_epic", "claude-devops"),
         ("handoff_identity_for_gemini_epic", "gemini-devops"),
         ("handoff_identity_for_codex_epic", "codex-devops"),
+        ("handoff_identity_for_cursor_epic", "cursor-devops"),
     ],
 )
 def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str) -> None:
@@ -171,6 +172,7 @@ def test_devops_epic_is_registered_separately_from_infra() -> None:
         "start-grok-driver.sh",
         "start-claude-driver.sh",
         "start-codex-driver.sh",
+        "start-cursor-driver.sh",
     ],
 )
 def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None:
@@ -195,6 +197,7 @@ def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None
         ("start-grok-driver.sh", ["unknown"], 2),
         ("start-claude-driver.sh", ["unknown"], 2),
         ("start-codex-driver.sh", ["unknown"], 2),
+        ("start-cursor-driver.sh", ["unknown"], 2),
     ],
 )
 def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[str], expected_code: int) -> None:

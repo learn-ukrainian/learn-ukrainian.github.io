@@ -24,6 +24,7 @@ PUBLIC = (
     "start-claude-driver.sh",
     "start-codex.sh",
     "start-codex-driver.sh",
+    "start-cursor-driver.sh",
     "start-gemini.sh",
     "start-gemini-driver.sh",
     "start-grok.sh",
