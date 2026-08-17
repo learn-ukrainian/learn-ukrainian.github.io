@@ -488,7 +488,10 @@ def registry_dir() -> Path:
     override = os.environ.get("ATLAS_JOB_REGISTRY")
     if override:
         return Path(override)
-    return repo_root() / "batch_state" / "atlas-jobs"
+    # Prefer layout-A primary over Path(__file__) repo_root: immutable API
+    # releases live under .runtime/api/releases/<sha>/ where parents[3] is the
+    # snapshot, not the writable checkout that owns batch_state/.
+    return primary_checkout_root() / "batch_state" / "atlas-jobs"
 
 
 def require_safe_job_id(job_id: object) -> str:

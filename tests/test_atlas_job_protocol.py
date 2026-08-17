@@ -3,11 +3,17 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
 
 from scripts.lexicon.runner import atlas_job
+
+
+def _git_env() -> dict[str, str]:
+    return {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
 
 
 def _plan(**overrides: object) -> dict:
@@ -762,6 +768,35 @@ def test_load_backup_env_file_expands_home_and_refs(tmp_path: Path) -> None:
     assert loaded["RESTIC_PASSWORD_FILE"] == str(
         Path.home() / ".secrets" / "demo.password"
     )
+
+
+def test_registry_dir_uses_primary_when_file_is_under_release_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """API release snapshots must not own batch_state/atlas-jobs."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main", str(primary)],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_git_env(),
+        timeout=30,
+    )
+
+    release_sha = "a4c8c4f9" + ("0" * 32)
+    fake_file = (
+        primary / ".runtime" / "api" / "releases" / release_sha / "scripts" / "lexicon" / "runner" / "atlas_job.py"
+    )
+    fake_file.parent.mkdir(parents=True)
+    fake_file.write_text("# fake release copy\n", encoding="utf-8")
+
+    monkeypatch.setattr(atlas_job, "__file__", str(fake_file))
+    monkeypatch.delenv("ATLAS_JOB_REGISTRY", raising=False)
+
+    assert atlas_job.repo_root() == (primary / ".runtime" / "api" / "releases" / release_sha).resolve()
+    assert atlas_job.registry_dir() == (primary.resolve() / "batch_state" / "atlas-jobs")
 
 
 def test_backup_subprocess_env_defaults_project_root_to_primary(
