@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bb6e45a29db7",
+  "strategy": "manual-commit",
+  "branch": "cursor/6876-cursor-restic-doctor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/atlas_job.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/bb/6e45a29db7/0/metadata.json",
+      "transcript": "/bb/6e45a29db7/0/full.jsonl",
+      "compact_transcript": "/bb/6e45a29db7/0/transcript.jsonl",
+      "content_hash": "/bb/6e45a29db7/0/content_hash.txt",
+      "prompt": "/bb/6e45a29db7/0/prompt.txt"
+    }
+  ]
+}
