@@ -68,7 +68,7 @@ hyperframe==6.1.0
 identify==2.6.19
 idna==3.18
 ifaddr==0.2.0
-ijson==3.5.0
+ijson==3.5.1
 iniconfig==2.3.0
 inscriptis==2.7.3
 ipa-uk @ git+https://github.com/lang-uk/ipa-uk.git@e7fc944faca090ca985d5ca09a24c59154d9dea1
