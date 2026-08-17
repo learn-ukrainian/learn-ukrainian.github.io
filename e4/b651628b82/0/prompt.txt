@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6900-delegate-repo-binding
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6900 — delegate dispatch must bind the target repo explicitly (sibling-repo misbinding is silent)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok:grok-4.6 (native Grok CLI)
+- why_this_tier: core dispatch-path change with a clear live reproduction; grok healthy and free
+- advisor_packet: issue #6900 (live repro from 2026-08-16: silent primary-repo binding while cwd was the sibling repo)
+- owned_paths: scripts/delegate.py, related tests, docs/runbooks (delegate runbook section)
+- acceptance_cmd: .venv/bin/pytest tests/test_delegate.py (+ new tests) + ruff clean + CI green on PR
+- alternatives_considered: kimi (busy on #6915), cursor (busy on #6922), codex (capped)
+- parallel_free_seats: deepseek, glm
+
+## Evidence rules (#M-4)
+Reproduce the misbinding at unit level (invocation cwd in a second git root → worktree derived under _REPO_ROOT) before fixing; quote before/after. Mutation-check new guards.
+
+## Steps
+1. Read issue #6900 in full — it names the three observed behaviors and the root-cause ask. Decide between the two sanctioned shapes: (a) first-class: an explicit `--repo` (or cwd-derived) binding that creates the dispatch worktree under THAT repo's .worktrees, or (b) refuse loudly when invocation cwd resolves to a different git root than _REPO_ROOT. Pick by smallest correct change — loud refusal (b) plus runbook documentation of the manual-worktree + --cwd flow is acceptable v1 if first-class support would ripple into task-state/reaper assumptions; say which you chose and why in the PR body.
+2. Whatever you choose: the silent primary-binding case from the repro must become impossible — that is the acceptance.
+3. Sibling check: does `--branch` (attach-to-existing-branch) have the same cross-repo blindness?
+4. Document the supported sibling-repo flow in the delegate runbook section the issue names.
+5. Work ONLY in your dispatch worktree. Tests (mutation-checked) + ruff. Conventional commit, push, PR (Fixes #6900).
+6. Do NOT arm auto-merge and do NOT merge.

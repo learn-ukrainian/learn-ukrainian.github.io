@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e4b651628b82",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6900-delegate-repo-binding",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e4/b651628b82/0/metadata.json",
+      "transcript": "/e4/b651628b82/0/full.jsonl",
+      "compact_transcript": "/e4/b651628b82/0/transcript.jsonl",
+      "content_hash": "/e4/b651628b82/0/content_hash.txt",
+      "prompt": "/e4/b651628b82/0/prompt.txt"
+    }
+  ]
+}

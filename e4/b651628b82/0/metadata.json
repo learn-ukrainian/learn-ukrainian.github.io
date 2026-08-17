@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e4b651628b82",
+  "session_id": "fleet-3b848705bba845eda8e150dd09fffd0f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T08:04:14.935559Z",
+  "branch": "grok/infra-6900-delegate-repo-binding",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.6",
+  "turn_id": "f82a4e072131",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T08:04:14.92595Z",
+    "agent_lines": 365,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 365,
+    "total_lines_changed": 374,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
