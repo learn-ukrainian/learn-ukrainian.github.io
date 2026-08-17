@@ -878,17 +878,26 @@ def test_concurrent_reply_to_same_parent():
 
 # 7. context_sha256 helper
 
-def test_context_sha256_existing_file(tmp_path):
-    """Verify sha256 computes correctly for an existing file."""
-    f = tmp_path / "context.md"
+def test_context_sha256_existing_file(isolated_context_root):
+    """Verify sha256 computes correctly for a context file under CONTEXT_ROOT."""
+    channel_dir = isolated_context_root / "pipeline"
+    channel_dir.mkdir()
+    f = channel_dir / "context.md"
     f.write_text("hello world")
     import hashlib
     expected = hashlib.sha256(b"hello world").hexdigest()
     assert _channels.context_sha256(f) == expected
 
-def test_context_sha256_missing_file_returns_empty_string(tmp_path):
+def test_context_sha256_missing_file_returns_empty_string(isolated_context_root):
     """Verify missing files return empty string rather than raising."""
-    f = tmp_path / "nope.md"
+    f = isolated_context_root / "pipeline" / "context.md"
+    assert _channels.context_sha256(f) == ""
+
+
+def test_context_sha256_rejects_paths_outside_context_root(tmp_path):
+    """Paths outside CONTEXT_ROOT must not be hashed (path-injection barrier)."""
+    f = tmp_path / "context.md"
+    f.write_text("hello world")
     assert _channels.context_sha256(f) == ""
 
 
