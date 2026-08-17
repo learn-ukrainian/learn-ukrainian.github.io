@@ -151,6 +151,44 @@ other open issue. It is **never** a dispatch target: no `--agent grok-bot`, no `
 no fleet-comms seat. If Grok Bot ever authors a PR, same-family Grok must not CF it — route to
 an outside-family reviewer per §6. Full contract: `docs/runbooks/grok-bot-qa-observer.md`.
 
+### 2c. No idle lanes — subscription min-max (binding, all driver seats)
+
+Idle paid lanes are direct financial loss (operator 2026-08-17). This generalizes the
+Grok-seat fleet-first *utilization* rule to **every** driver seat.
+
+**Definitions.** *Free lane* — healthy, budget-eligible seat with no live assignment.
+*Ready item* — queued work that is valuable, unblocked, and has an integration path.
+*Compatible / independent* — the item fits the free lane and does not collide with
+in-flight units (paths, review identity, or a hard dependency). *Settle event* — any
+dispatch/review/CI terminal or decision point. *Grace period* — the short fill window
+after a settle event before a hold is allowed. *Epic done* — operator goal met with
+tool-backed residual 0, or operator-accepted residual on the issue.
+
+**Precedence (strict):** correctness/quality → safety/resource bounds →
+dependency/critical-path → utilization. Later items never override earlier ones.
+
+1. **Waits are dispatch windows.** After any dispatch or review ask, **before** holding,
+   fill every free lane with a compatible ready item (unblocked work, banked follow-ups,
+   or prep the next program child whose dependency allows it). Idle free lane + ready
+   item = utilization failure.
+2. **Authorized idle is not a utilization failure.** A settle-hold must name one code:
+   `dependency_blocked | review_wip_cap | ci_capacity | disk_capacity | human_decision |
+   no_ready_work`. Silence is not a disposition.
+3. **Pipeline with a depth limit.** While CF/CI runs on unit N, author N+1 only up to
+   the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
+   Never serialize implement → review → delta with idle gaps.
+4. **Ready-work forecast.** An unfinished epic needs a current ready-work forecast. An
+   empty ready queue requires an explicit disposition, not silence. File banked
+   follow-ups as GitHub issues when identified. Empty stream `/next` is a driver defect
+   unless the epic is done or a disposition applies.
+5. **Anti-gaming.** No placeholder agents, artificial task splitting, premature PRs, or
+   speculative work without an integration path. §2 still binds: never manufacture
+   busywork (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
+   `.worktrees` before fan-out; reap first).
+
+Mechanical enforcement (settle-event reminder + eligibility-aware idle/disposition
+telemetry) lives on #6976 — keep this prose and that tooling aligned.
+
 ### 3. Route by model × harness fit
 
 Decide the lane from `/api/rules` + `model_catalog.yaml`, **never** from the provider
@@ -183,8 +221,8 @@ Before **every** implement `delegate.py dispatch`:
    .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24 --enforce
    ```
 
-Fixation on one practical seat while free lanes sit idle = utilization failure (same
-family as fleet-first / no-solo for Grok).
+Fixation on one practical seat while free lanes sit idle = utilization failure
+(§2c — all driver seats, not Grok-only).
 
 ### 3a. Pre-dispatch outcome adequacy (required before substantive phase/epic kickoff)
 
@@ -241,6 +279,7 @@ be missed between routing and worker launch. Read and apply every `unread` or
 ### 5. Settle-loop (never poll by hand)
 
 Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
+This wait is a §2c fill window, not an idle period: fill free lanes before holding.
 Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
 other terminal/attention states: `failed | timeout | rate_limited | cancelled |
 crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
@@ -420,16 +459,19 @@ stores are read-only migration/projection inputs, not a live write target.
 ## Per-model capability delta
 
 Same playbook; each seat adjusts on the axes the fleet has measured. This is the ONLY
-model-specific section — everything above is identical across seats.
+model-specific section — everything above is identical across seats. **§2c (no idle
+lanes / subscription min-max) is not a per-model delta** — it binds every driver seat.
+The Grok row's remaining seat-specific rule is no-solo *implementation* (driver-only),
+not the utilization half.
 
 | Seat | Delta |
 | --- | --- |
-| **Grok 4.5** | Higher hallucination rate than peers → enforce tool-backed-only **harder**: never assert a word/stress/gate/count/SHA without the raw tool output quoted. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing while free codex/claude/agy/kimi lanes sit idle. Idle free lane + open work = utilization failure. |
+| **Grok 4.5** | Higher hallucination rate than peers → enforce tool-backed-only **harder**: never assert a word/stress/gate/count/SHA without the raw tool output quoted. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
 | **Sonnet-5** | You are authority-capable (near-Opus judgment, 1M window) → make the judgment call and escalate **less**; still escalate the genuinely architecture/process class (below). CF reviews you route must go to a **non-Anthropic** family (you are Anthropic-family — avoid self/same-family review). |
 | **Gemini / AGY (gemini-3.7-flash-high)** | Harness/infra scope. MCP-leading tool use + 1M window + low cost = ideal infra driver. **Do not claim curriculum content lanes.** Route UK-language work to the sanctioned language lanes, not to yourself. |
 | **Kimi K3** | Frontier coder/reviewer + cross-family escalation authority (independent of Anthropic & OpenAI). `max-effort-only` makes a continuous loop costly — drive when assigned, else stay a reviewer/escalation seat. |
 | **Claude (when driving a track)** | Prefer **Sonnet-5** for routine track driving; reserve Opus for the hardest judgment + the CF review of record so Opus quota stays free. If the seat is **Opus 5**, apply the **Claude Opus 5** row below (do not restate its mitigations here). |
-| **Claude Opus 5 (when in the driver seat)** | **Documented damage modes** (Anthropic *Migrating to Claude Opus 5* + *Prompting Claude Opus 5* — encode, do not invent): scope expansion, over-delegation, verification loops when told to verify, premature done claims, verbose handoffs. **Routing:** routine driving → **Sonnet-5**; Opus 5 for judgment moments / reviews of record, **not** long solo drives (same preference as Claude row; seat adjustment, not a roster). **Scope (quote):** "Deliver what was asked, at the scope intended. Make routine judgment calls yourself, and check in only when different readings of the request would lead to materially different work. If the request seems mistaken or a better approach exists, say so in a sentence and continue with the task as asked rather than quietly narrowing, widening, or transforming it. Finish the whole task, and stop short of actions that are clearly beyond what was asked." **Delegation hard cap (Opus 5 over-delegates — inverse of lean-in for earlier Opus):** "Delegate to a subagent only for large tasks that are genuinely independent and parallelizable… Do not delegate work you can finish yourself in a handful of tool calls, and do not use subagents to verify or double-check your own work. If one subagent can complete the task, use one rather than several, and keep spawn counts low." Prefer `scripts/delegate.py` fleet dispatch over intra-session subagent spawn for real work. **Verification scaffolding — DELETE:** Opus 5 "verifies its own work without being told to"; remove / do not add explicit verify / double-check / "use a subagent to verify" instructions — they "cause over-verification". Self-correction already strong; avoid "re-verify before responding". **Handoffs / verbosity (effort ≠ length):** default responses and written deliverables run longer; lowering effort "reduces thinking volume without reliably shortening the visible response." Calibrate: keep handoffs brief, lead with outcome; "Match the length of written documents to what the task needs… do not pad with filler sections, redundant summaries, or boilerplate." **Corrections without rumination:** "Only correct an earlier statement when the error would change the user's code, conclusions, or decisions. State corrections plainly and briefly, then continue the task." **Thinking-config guards:** thinking is on by default; **never** `thinking: disabled` in the driver seat (prefer lower effort for cost). `thinking: {type: "disabled"}` + effort `xhigh`/`max` is a **rejected request** (400). Drive at `high`, bump `xhigh` for the hard judgment turn, then drop back. |
+| **Claude Opus 5 (when in the driver seat)** | **Documented damage modes** (Anthropic *Migrating to Claude Opus 5* + *Prompting Claude Opus 5* — encode, do not invent): scope expansion, over-delegation, verification loops when told to verify, premature done claims, verbose handoffs. **Routing:** routine driving → **Sonnet-5**; Opus 5 for judgment moments / reviews of record, **not** long solo drives (same preference as Claude row; seat adjustment, not a roster). **Scope (quote):** "Deliver what was asked, at the scope intended. Make routine judgment calls yourself, and check in only when different readings of the request would lead to materially different work. If the request seems mistaken or a better approach exists, say so in a sentence and continue with the task as asked rather than quietly narrowing, widening, or transforming it. Finish the whole task, and stop short of actions that are clearly beyond what was asked." **Delegation hard cap (Opus 5 over-delegates — inverse of lean-in for earlier Opus):** "Delegate to a subagent only for large tasks that are genuinely independent and parallelizable… Do not delegate work you can finish yourself in a handful of tool calls, and do not use subagents to verify or double-check your own work. If one subagent can complete the task, use one rather than several, and keep spawn counts low." Prefer `scripts/delegate.py` fleet dispatch over intra-session subagent spawn for real work. Filling free fleet lanes per §2c is required and is not intra-session subagent spawn. **Verification scaffolding — DELETE:** Opus 5 "verifies its own work without being told to"; remove / do not add explicit verify / double-check / "use a subagent to verify" instructions — they "cause over-verification". Self-correction already strong; avoid "re-verify before responding". **Handoffs / verbosity (effort ≠ length):** default responses and written deliverables run longer; lowering effort "reduces thinking volume without reliably shortening the visible response." Calibrate: keep handoffs brief, lead with outcome; "Match the length of written documents to what the task needs… do not pad with filler sections, redundant summaries, or boilerplate." **Corrections without rumination:** "Only correct an earlier statement when the error would change the user's code, conclusions, or decisions. State corrections plainly and briefly, then continue the task." **Thinking-config guards:** thinking is on by default; **never** `thinking: disabled` in the driver seat (prefer lower effort for cost). `thinking: {type: "disabled"}` + effort `xhigh`/`max` is a **rejected request** (400). Drive at `high`, bump `xhigh` for the hard judgment turn, then drop back. |
 | **Codex / GPT-5.6 Terra** | Named alternate only for harness / infra (`epic:4707`) and the independent DevOps stream (`epic:5703`). The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits and escalate hard judgment to Sol. |
 | **Cursor (Auto)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Keep Auto; pin `grok-4.6` / `composer-2.5` only when family independence must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. |
 
