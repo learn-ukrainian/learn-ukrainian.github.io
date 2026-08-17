@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a18f5e1aa687",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6941-launchagent-lwcr",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/best-practices/local-api-server.md",
+    "docs/runbooks/archived-thread-cleanup.md",
+    "docs/runbooks/launchd-inventory.md",
+    "scripts/api/launchd_supervisor.py",
+    "scripts/api/run_monitor_api_supervisor.sh",
+    "scripts/orchestration/install_archived_thread_cleanup_launchd.py",
+    "scripts/orchestration/run_archived_thread_cleanup.sh",
+    "tests/api/test_launchd_supervisor.py",
+    "tests/orchestration/test_install_archived_thread_cleanup_launchd.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a1/8f5e1aa687/0/metadata.json",
+      "transcript": "/a1/8f5e1aa687/0/full.jsonl",
+      "compact_transcript": "/a1/8f5e1aa687/0/transcript.jsonl",
+      "content_hash": "/a1/8f5e1aa687/0/content_hash.txt",
+      "prompt": "/a1/8f5e1aa687/0/prompt.txt"
+    }
+  ]
+}

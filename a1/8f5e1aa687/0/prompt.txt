@@ -1,0 +1,58 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6941-launchagent-lwcr
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6941 — apply the #6937 wrapper-entrypoint pattern to the two remaining LWCR-trapped LaunchAgents
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok-4.5 × native grok CLI (workspace-write, fresh dispatch worktree)
+- why_this_tier: grok authored #6937 (the pattern this issue extends) — lane affinity; mechanical application of a merged, proven pattern
+- advisor_packet: n/a (not heap)
+- owned_paths: the launchd plist templates + sanctioned installer scripts for com.learn-ukrainian.monitor-api and com.learn-ukrainian.codex-archived-thread-cleanup (locate them; do not touch other jobs)
+- acceptance_cmd: targeted pytest for the touched installer/orchestration paths + ruff on changed files
+- alternatives_considered: (1) cursor:auto — REJECTED: no affinity, and #6489 dual-family quorum adds review overhead; (2) agy — REJECTED: already carrying the #6959 unit this cycle
+- parallel_free_seats: cursor, agy(busy with #6959)
+
+## Evidence preamble (#M-4 — binding)
+Every claim in your final report must be backed by quoted raw tool output from THIS run (grep/ls
+of the plists, git diff --stat, pytest/ruff tails). No claim without command + output excerpt.
+
+## Context (from issue #6941 — read it first: `gh issue view 6941`)
+Your merged #6937 fixed the worktree-cleanup LaunchAgent's LWCR exit-78 trap (launchd Program
+pinned to `.venv/bin/python`, which dies when the venv is rebuilt) with a stable `/bin/bash`
+wrapper resolving the interpreter at run time. Issue #6941: two more LaunchAgents share the trap —
+`com.learn-ukrainian.monitor-api` and `com.learn-ukrainian.codex-archived-thread-cleanup` still
+register `.venv/bin/python` as their launchd Program. Refs #6937 #6830 #6942.
+
+## Shippable unit
+ONE PR that applies the same wrapper-entrypoint pattern to BOTH remaining LaunchAgents (plist
+template + sanctioned installer, mirroring #6937's shape), with tests. Out of scope: actually
+reinstalling/bouncing the live jobs (the driver does that post-merge — monitor-api is the live api
+service and needs #M-19 probe discipline), any other LaunchAgent, any refactor beyond the pattern.
+
+## Steps
+1. `gh issue view 6941` and `gh pr view 6942 --json files` / read the #6937 merged diff to load the
+   exact pattern. Step 0: `gh pr list --state all --search "6941"` — if a sibling PR already
+   carries this, STOP and report.
+2. Locate the two plists' templates + installers in the repo (grep for the job labels). Quote the
+   grep output.
+3. Apply the wrapper pattern to both, following #6937's conventions exactly (stable /bin/bash
+   wrapper, run-time interpreter resolution, same logging/env shape).
+4. Add/extend tests mirroring whatever guard tests #6937 added; run targeted pytest with
+   `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest` (the `.venv/bin/pytest`
+   launcher shebang is broken — known, operator-gated) + ruff on changed files.
+5. Conventional commit, push, open PR: title `fix(ops): wrapper entrypoints for monitor-api +
+   codex-archived-thread-cleanup LaunchAgents (#6941)`, body explains the LWCR trap + pattern
+   provenance (#6937), notes reinstall is a post-merge driver step (#M-19 for monitor-api).
+   If your harness cannot push, commit locally and report — the driver finalizes.
+6. NO auto-merge. Report: PR number (or local head SHA if push impossible), diff --stat, test+ruff
+   tails.
