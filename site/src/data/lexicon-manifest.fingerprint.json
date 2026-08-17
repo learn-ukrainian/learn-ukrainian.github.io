@@ -90,6 +90,10 @@
         "sha256": "f1bdaf5d37130e54532e8dc7fb5ac7c33b53dac3814409a99454ce23e8677a26"
       },
       {
+        "path": "scripts/lexicon/derived_en_fallback.py",
+        "sha256": "0db60aea4658f7a8616066b5c8f1c1bd1d4bc4baf6c9556b72cf69ec61df1208"
+      },
+      {
         "path": "scripts/lexicon/enrich_manifest.py",
         "sha256": "76b662b94b5c71919aa618d0ac1656fcdc032bf7ebd620067839d3daabd7f760"
       },
@@ -219,7 +223,7 @@
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "0ef7b15966f624423f7b6a799906e3fd55f7e78f3a1c9d53c304daf59760516a"
+        "sha256": "35b632889cea598aef2334b292972f4ad19f10c33e8396d86bfdad445dc152de"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",
