@@ -6,17 +6,14 @@ name: CI
 # duration-balanced file shards, and JUnit reconstruction inside CI Gate.
 #
 # Two-tier merge-queue cutover (#6943 stage 2): one workflow, two events.
-# `pull_request` keeps the historical full required set until the reduction
-# commit; `merge_group` validates the queued merged tree (event SHA) and is
-# where coverage floor is enforced. CI Gate remains the sole required context
-# and reports on both events.
+# pull_request tier (light): ruff + fastlane + contracts + frontend.
+# merge_group / push / workflow_dispatch tier (full): light PLUS planner +
+# four shards + coverage floor. CI Gate remains the sole required context,
+# reports on both events, and fail-closes on missing/skipped required deps.
 #
-# Invariant (encodes #3873 #4888 #4936 #5351 #5354): pytest must NEVER be
-# selected or skipped by changed files. Five separate incidents shipped a
-# regression to main because a data-only change skipped pytest under a
-# path-filtered required check. Every required job below is unconditional,
-# except that pytest-fastlane uses changed files only to choose its separate
-# early signal; it never alters the full-suite plan or its shard execution.
+# Invariant (encodes #3873 #4888 #4936 #5351 #5354): on the full tier, pytest
+# must NEVER be selected or skipped by changed files. pytest-fastlane uses
+# changed files only as an early signal; it never replaces the shard plan.
 
 concurrency:
   # Event-prefixed groups so a PR push never shares a bucket with a
@@ -40,11 +37,36 @@ on:
 
 jobs:
   # ---------------------------------------------------------------------
+  # 0. ruff — light, always-on lint for both tiers (extracted from python so
+  #    the pull_request tier can require it without the four-shard suite).
+  # ---------------------------------------------------------------------
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Install and run ruff
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ruff
+          python -m ruff check scripts/
+
+  # ---------------------------------------------------------------------
   # 1. pytest-plan — collect once, then produce all four LPT file plans from
   #    one duration dataset restored from a successful main run (#5744).
+  #    Full tier only (merge_group / push / workflow_dispatch).
   # ---------------------------------------------------------------------
   pytest-plan:
     name: Pytest plan
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -195,6 +217,7 @@ jobs:
   # #5776 hang investigation; one xdist session did not.
   python:
     name: Python (pytest) [${{ matrix.shard }}/4]
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -263,7 +286,6 @@ jobs:
           .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
             torch==2.13.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
-          .venv/bin/python -m pip install ruff
 
       - name: Save pip wheel cache
         if: steps.pip-wheel-cache.outputs.cache-hit != 'true'
@@ -313,9 +335,6 @@ jobs:
         with:
           path: ~/stanza_resources
           key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
-
-      - name: Ruff
-        run: .venv/bin/python -m ruff check scripts/
 
       - name: Download the single planner's shard plans
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -999,6 +1018,7 @@ jobs:
   # guarantee cross-family review flagged as a P1 when the reboot dropped it.
   coverage-floor:
     name: Coverage floor
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: [python]
@@ -1055,6 +1075,7 @@ jobs:
     timeout-minutes: 10
     if: always()
     needs:
+      - ruff
       - pytest-plan
       - pytest-fastlane
       - python
@@ -1069,20 +1090,22 @@ jobs:
         with:
           python-version-file: '.python-version'
       - name: Download pytest plans and JUnit results
+        if: github.event_name != 'pull_request'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: pytest-shard-*
           path: ci-artifacts
       - name: Verify pytest shard completeness
+        if: github.event_name != 'pull_request'
         run: python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts
-      - name: Report required-job results
+      - name: Fail unless every event-required job succeeded
         env:
-          RESULTS: ${{ join(needs.*.result, ',') }}
+          EVENT_NAME: ${{ github.event_name }}
+          # Explicit pairs — join(needs.*.result) loses job ids and cannot
+          # distinguish expected PR-tier skips from unexpected ones.
+          RESULTS: >-
+            ruff=${{ needs.ruff.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
         run: |
-          echo "required job results: $RESULTS"
-
-      - name: Fail unless every required job succeeded
-        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
-        run: |
-          echo "::error::A required CI job failed, was cancelled, or was unexpectedly skipped — see 'Report required-job results' for the per-job breakdown."
-          exit 1
+          python scripts/ci/gate_required_results.py \
+            --event "$EVENT_NAME" \
+            --results "$RESULTS"

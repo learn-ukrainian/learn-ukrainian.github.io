@@ -198,16 +198,17 @@ def test_ci_workflow_uses_single_planner_and_ci_gate_verifier() -> None:
     assert "pytest_shards.py plan" in workflow
     assert workflow.count("pytest_shards.py plan") == 1
     assert "pytest_shards.py verify-artifacts" in workflow
+    assert "gate_required_results.py" in workflow
     assert "--dist=loadfile" in workflow
     assert "-m 'not atlas_release and not slow'" in workflow
     assert workflow.count("-m 'not atlas_release and not slow'") >= 2
     assert "name: CI Gate" in workflow
+    assert "name: Ruff" in workflow
     assert "pytest-slow-nightly" not in workflow
     assert "-m 'slow and not atlas_release'" in nightly
     assert "Create or update infra issue on failure" in nightly
     assert "area:infra" in nightly
     assert nightly.splitlines()[0] == "name: Pytest slow nightly"
-
 
 def test_required_markexpr_constant_matches_ci_and_addopts_boundary() -> None:
     """addopts stays atlas-only; required gate adds not slow via CLI -m everywhere."""

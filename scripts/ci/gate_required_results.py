@@ -25,7 +25,8 @@ LIGHT_REQUIRED: tuple[str, ...] = (
 )
 
 # Merge-queue / main / dispatch tier: strictly a superset of the light tier.
-FULL_REQUIRED: tuple[str, ...] = LIGHT_REQUIRED + (
+FULL_REQUIRED: tuple[str, ...] = (
+    *LIGHT_REQUIRED,
     "pytest-plan",
     "python",
     "coverage-floor",

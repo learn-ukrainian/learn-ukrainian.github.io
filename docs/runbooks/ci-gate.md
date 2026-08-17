@@ -7,13 +7,21 @@ an operational guard, not a change to `ci.yml`'s job graph or `CI Gate` needs.
 ## CI Gate
 
 `CI Gate` is the repository's single required check. It is the final job in
-`.github/workflows/ci.yml` and succeeds only when its unconditional required
-dependencies succeed: pytest planning, the `pytest-fastlane` result, all four
-pytest shards, contracts, frontend, and the coverage floor. The fastlane's
-changed-file selection is only an early signal: it runs directly changed test
-modules first, but never selects, skips, or replaces the full-suite shard plan.
-The workflow remains the authoritative job composition; this runbook
-deliberately does not duplicate its YAML.
+`.github/workflows/ci.yml` and succeeds only when every dependency required
+*for that event* succeeds:
+
+- **pull_request (light tier):** `ruff`, `pytest-fastlane`, `contracts`,
+  `frontend`. Planner / four shards / coverage floor are intentionally skipped.
+- **merge_group / push / workflow_dispatch (full tier):** the light set plus
+  `pytest-plan`, all four `python` shards, and `coverage-floor`. Skipped ≠
+  success on this tier.
+
+Aggregation is `scripts/ci/gate_required_results.py` (fail-closed on missing,
+failed, cancelled, or unexpectedly skipped required jobs). The fastlane's
+changed-file selection is only an early signal: it never selects, skips, or
+replaces the full-suite shard plan on the full tier. The workflow remains the
+authoritative job composition; this runbook deliberately does not duplicate
+its YAML.
 
 The contracts job's BIO preparation validation is load-bearing. In particular,
 an active BIO hold must continue to fail closed (`PREPARATION_HOLD_ACTIVE`),

@@ -47,6 +47,7 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     assert "trufflesecurity/trufflehog@" in contracts_steps
     assert "lint_pr_closing_references.py" in contracts_steps
     assert set(jobs["ci-gate"]["needs"]) == {
+        "ruff",
         "pytest-plan",
         "pytest-fastlane",
         "python",
@@ -54,7 +55,15 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
         "frontend",
         "coverage-floor",
     }
-
+    assert jobs["pytest-plan"].get("if") == "github.event_name != 'pull_request'"
+    assert jobs["python"].get("if") == "github.event_name != 'pull_request'"
+    assert jobs["coverage-floor"].get("if") == "github.event_name != 'pull_request'"
+    assert "ruff" in jobs
+    gate_steps = "\n".join(
+        step.get("name", "") + "\n" + str(step.get("run", "")) for step in jobs["ci-gate"]["steps"]
+    )
+    assert "gate_required_results.py" in gate_steps
+    assert "contains(needs.*.result, 'skipped')" not in gate_steps
 
 def test_frontend_e2e_waits_for_ci_gate_success() -> None:
     e2e = _load(_CI)["jobs"]["frontend-e2e"]
