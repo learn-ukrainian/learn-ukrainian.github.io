@@ -2,7 +2,7 @@
 # Detached, idempotent launcher for #6369 Class-B residual EN re-enrich.
 # Mirrors launch_enrich.sh under MemoryHigh=1.5G MemoryMax=2.0G.
 #
-# Runs entirely against the atlas-runner *work-dir* — it never mutates the
+# Runs entirely against the remote-host *work-dir* — it never mutates the
 # VPS repo checkout at $REPO. This matters because the checkout there is
 # routinely stale/dirty (large data/ dirs deliberately deleted for disk
 # headroom); this launcher only ever reads from it (sources.db, kaikki
@@ -30,13 +30,26 @@
 #   scripts/lexicon/runner/launch_reenrich_class_b.sh --limit 5   # smoke
 #
 # Env overrides:
-#   ATLAS_RUN_ROOT, ATLAS_REPO, ATLAS_RE_ENRICH_WORK_DIR,
+#   ATLAS_RUN_ROOT (default per host: /home/ops/atlas-jobs on hramatka/vps,
+#   /home/ops/atlas-runner otherwise), ATLAS_REPO, ATLAS_RE_ENRICH_WORK_DIR,
 #   ATLAS_RE_ENRICH_CODE_ROOT, ATLAS_RE_ENRICH_RUNNER_PYTHON,
 #   ATLAS_RE_ENRICH_UNIT, ATLAS_RE_ENRICH_DRIVER, ATLAS_RE_ENRICH_SLUGS_FILE,
 #   ATLAS_SOURCES_DB, ATLAS_KAIKKI_JSON, ATLAS_LIVE_MANIFEST
 set -euo pipefail
 
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
+# Per-host run root (#6876): the Mac-side wrapper always forwards an explicit
+# ATLAS_RUN_ROOT, so this default only matters for direct on-host invocation.
+# hramatka/vps keep their run tree under /home/ops/atlas-jobs; every other
+# host keeps /home/ops/atlas-runner.
+if [[ -n "${ATLAS_RUN_ROOT:-}" ]]; then
+  RUN_ROOT="$ATLAS_RUN_ROOT"
+else
+  case "$(hostname -s 2>/dev/null || hostname)" in
+    hramatka*|vps*) RUN_ROOT="/home/ops/atlas-jobs" ;;
+    *) RUN_ROOT="/home/ops/atlas-runner" ;;
+  esac
+fi
+
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
 CODE_ROOT="${ATLAS_RE_ENRICH_CODE_ROOT:-$WORK_DIR}"
