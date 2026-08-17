@@ -28,6 +28,10 @@ mode) under a per-user macOS LaunchAgent:
   subprocesses that preserve their parent environment, so runtime imports
   cannot add `__pycache__` files that invalidate the release manifest.
 - Label: `com.learn-ukrainian.monitor-api`
+- launchd `Program` is `/bin/bash` plus
+  `scripts/api/run_monitor_api_supervisor.sh`, which execs the primary
+  `.venv/bin/python -m scripts.api.launchd_supervisor`. Binding `Program` to
+  the venv interpreter is the LWCR exit-78 trap (#6937, #6941).
 - Restart policy: `KeepAlive.SuccessfulExit=false`; the foreground runner turns
   any unexpected API exit, including an unexpected zero exit, into a failed
   launch-agent run.

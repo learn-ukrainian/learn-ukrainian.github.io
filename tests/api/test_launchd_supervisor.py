@@ -5,13 +5,12 @@ from __future__ import annotations
 import json
 import os
 import plistlib
+import stat
 import subprocess
+import sys
 from pathlib import Path
 
 from scripts.api import launchd_supervisor as supervisor
-
-_ROOT = Path(__file__).resolve().parents[2]
-_VENV_PYTHON = _ROOT / ".venv" / "bin" / "python"
 
 
 def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> None:
@@ -25,14 +24,17 @@ def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> 
         "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
     assert payload["RunAtLoad"] is True
+    assert payload["ProgramArguments"][0] == supervisor.STABLE_PROGRAM
     assert payload["ProgramArguments"] == [
-        str(repo / ".venv" / "bin" / "python"),
-        "-m",
-        "scripts.api.launchd_supervisor",
+        "/bin/bash",
+        "--noprofile",
+        "--norc",
+        str(repo.resolve() / "scripts" / "api" / "run_monitor_api_supervisor.sh"),
         "run",
         "--repo-root",
-        str(repo),
+        str(repo.resolve()),
     ]
+    assert not any(".venv/bin/python" in part for part in payload["ProgramArguments"])
 
 
 def test_api_child_disables_bytecode_writes(tmp_path: Path, monkeypatch) -> None:
@@ -57,7 +59,7 @@ def test_api_child_disables_bytecode_writes(tmp_path: Path, monkeypatch) -> None
 
     inherited = subprocess.run(
         [
-            str(_VENV_PYTHON),
+            sys.executable,
             "-B",
             "-c",
             (
@@ -84,6 +86,8 @@ def test_install_and_uninstall_preserve_crash_evidence(tmp_path: Path, monkeypat
     interpreter.write_text("#!/bin/sh\n", encoding="utf-8")
     interpreter.chmod(0o755)
     implementation.write_text("# installed by test\n", encoding="utf-8")
+    wrapper = repo / "scripts" / "api" / "run_monitor_api_supervisor.sh"
+    wrapper.write_text("#!/bin/bash\n", encoding="utf-8")
     home = tmp_path / "home"
 
     installed = supervisor.install(repo_root=repo, home=home)
@@ -200,7 +204,7 @@ def test_unexpected_exit_records_signal_and_stderr_tail(tmp_path: Path) -> None:
     ) -> tuple[list[str], Path, dict[str, str], str]:
         return (
             [
-                str(_VENV_PYTHON),
+                sys.executable,
                 "-c",
                 "import os, sys; sys.stderr.write('fatal before kill\\n'); sys.stderr.flush(); os.kill(os.getpid(), 9)",
             ],
@@ -226,7 +230,7 @@ def test_unexpected_clean_exit_is_recorded_and_restarted_by_launchd_contract(tmp
         _live: bool,
         _port: int,
     ) -> tuple[list[str], Path, dict[str, str], str]:
-        return [str(_VENV_PYTHON), "-c", "raise SystemExit(0)"], repo, os.environ.copy(), "test launch"
+        return [sys.executable, "-c", "raise SystemExit(0)"], repo, os.environ.copy(), "test launch"
 
     assert supervisor.run_managed_api(repo_root=repo, prepare_command=fake_prepare) == 1
 
@@ -245,3 +249,96 @@ def test_runner_rotates_api_log_before_each_launch(tmp_path: Path) -> None:
     rotated = log_path.with_name("api.log.1")
     assert rotated.exists()
     assert rotated.stat().st_size == supervisor._LOG_ROTATE_BYTES + 1
+
+
+def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch) -> None:
+    """Mutation-check: putting .venv/bin/python back in Program must fail status."""
+    repo = tmp_path / "repo"
+    home = tmp_path / "home"
+    destination = supervisor.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    payload = supervisor.build_plist(repo_root=repo)
+    payload["ProgramArguments"][0] = str(repo / ".venv" / "bin" / "python")
+    destination.write_bytes(plistlib.dumps(payload))
+    monkeypatch.setattr(
+        supervisor,
+        "_loaded_readback",
+        lambda: subprocess.CompletedProcess(["launchctl", "print"], 0, "loaded", ""),
+    )
+
+    result, return_code = supervisor.status(home=home)
+
+    assert return_code == 1
+    assert result["valid_plist"] is False
+    assert result["loaded"] is True
+
+
+_WRAPPER = Path(__file__).resolve().parents[2] / "scripts" / "api" / "run_monitor_api_supervisor.sh"
+
+
+def test_wrapper_exits_78_without_repo_root() -> None:
+    proc = subprocess.run(
+        ["/bin/bash", "--noprofile", "--norc", str(_WRAPPER)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 78
+    assert "missing --repo-root" in proc.stderr
+
+
+def test_wrapper_exits_78_when_interpreter_missing(tmp_path: Path) -> None:
+    proc = subprocess.run(
+        [
+            "/bin/bash",
+            "--noprofile",
+            "--norc",
+            str(_WRAPPER),
+            "run",
+            "--repo-root",
+            str(tmp_path),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 78
+    assert "missing interpreter" in proc.stderr
+    assert str(tmp_path / ".venv" / "bin" / "python") in proc.stderr
+
+
+def test_wrapper_execs_primary_interpreter(tmp_path: Path) -> None:
+    """Mutation-check: the wrapper must exec primary .venv python, not PATH python."""
+    primary = tmp_path / "primary"
+    python = primary / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.write_text(
+        "#!/bin/sh\n"
+        "printf '%s\\n' \"$@\"\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    python.chmod(python.stat().st_mode | stat.S_IXUSR)
+    proc = subprocess.run(
+        [
+            "/bin/bash",
+            "--noprofile",
+            "--norc",
+            str(_WRAPPER),
+            "run",
+            "--repo-root",
+            str(primary),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+        env={**os.environ, "PATH": "/usr/bin:/bin"},
+    )
+    assert proc.returncode == 0
+    assert "-m" in proc.stdout
+    assert "scripts.api.launchd_supervisor" in proc.stdout
+    assert "run" in proc.stdout
+    assert str(primary) in proc.stdout

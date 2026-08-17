@@ -16,6 +16,11 @@ from pathlib import Path
 LABEL = "com.learn-ukrainian.codex-archived-thread-cleanup"
 DEFAULT_WEEKDAY = "sunday"
 DEFAULT_HOUR = 3
+# launchd binds LWCR to ProgramArguments[0]. /bin/bash is Apple-signed and
+# survives a primary .venv rebuild; pointing Program at .venv/bin/python
+# is what produced exit 78 after the 2026-08-15 uv rewrite (#6937, #6941).
+STABLE_PROGRAM = "/bin/bash"
+WRAPPER_NAME = "run_archived_thread_cleanup.sh"
 WEEKDAYS = {
     "sunday": 0,
     "monday": 1,
@@ -57,6 +62,11 @@ def plist_path(home: Path) -> Path:
     return home / "Library" / "LaunchAgents" / f"{LABEL}.plist"
 
 
+def wrapper_path(repo_root: Path) -> Path:
+    """Return the stable bash wrapper launchd executes."""
+    return repo_root / "scripts" / "orchestration" / WRAPPER_NAME
+
+
 def state_dir(home: Path) -> Path:
     """Return the durable scheduler log and cleanup-state directory."""
     return home / ".codex" / "thread-cleanup"
@@ -82,16 +92,16 @@ def build_plist(
     *, repo_root: Path, home: Path, codex_binary: Path, weekday: str, hour: int
 ) -> dict[str, object]:
     """Build the launchd configuration without touching disk or launchd."""
-    cleanup_script = repo_root / "scripts" / "orchestration" / "archived_thread_cleanup.py"
-    interpreter = repo_root / ".venv" / "bin" / "python"
     log_dir = state_dir(home) / "logs"
     return {
         "Label": LABEL,
         "LowPriorityIO": True,
         "ProcessType": "Background",
         "ProgramArguments": [
-            str(interpreter),
-            str(cleanup_script),
+            STABLE_PROGRAM,
+            "--noprofile",
+            "--norc",
+            str(wrapper_path(repo_root)),
             "--apply",
             "--repo-root",
             str(repo_root),
@@ -193,10 +203,15 @@ def _failure(action: str, result: subprocess.CompletedProcess[str]) -> LaunchdEr
 def _validate_runtime(repo_root: Path, codex_binary: Path) -> None:
     interpreter = repo_root / ".venv" / "bin" / "python"
     cleanup_script = repo_root / "scripts" / "orchestration" / "archived_thread_cleanup.py"
+    wrapper = wrapper_path(repo_root)
     if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
         raise LaunchdError(f"required interpreter is missing or not executable: {interpreter}")
     if not cleanup_script.is_file():
         raise LaunchdError(f"cleanup script is missing: {cleanup_script}")
+    if not wrapper.is_file():
+        raise LaunchdError(f"cleanup wrapper is missing: {wrapper}")
+    if not os.access(STABLE_PROGRAM, os.X_OK):
+        raise LaunchdError(f"stable launchd program is missing: {STABLE_PROGRAM}")
     if not codex_binary.is_file() or not os.access(codex_binary, os.X_OK):
         raise LaunchdError(f"Codex CLI is missing or not executable: {codex_binary}")
 
@@ -280,10 +295,13 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
             valid_plist = (
                 parsed.get("Label") == LABEL
                 and isinstance(arguments, list)
-                and len(arguments) >= 3
+                and len(arguments) >= 5
                 and all(isinstance(argument, str) for argument in arguments)
-                and Path(arguments[1]).name == "archived_thread_cleanup.py"
+                and arguments[0] == STABLE_PROGRAM
+                and Path(arguments[3]).name == WRAPPER_NAME
                 and "--apply" in arguments
+                and "--repo-root" in arguments
+                and not any(".venv/bin/python" in argument for argument in arguments)
                 and isinstance(schedule, dict)
                 and isinstance(schedule.get("Weekday"), int)
             )

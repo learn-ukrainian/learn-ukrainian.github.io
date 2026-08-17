@@ -93,12 +93,18 @@ The installer atomically writes:
 ~/Library/LaunchAgents/com.learn-ukrainian.codex-archived-thread-cleanup.plist
 ```
 
-Its `ProgramArguments` use the checkout's explicit `.venv/bin/python` to run
-`scripts/orchestration/archived_thread_cleanup.py --apply --repo-root <checkout> --retention-days 30
---observation-interval-days 7`. The installer also resolves the supported Codex CLI to an absolute,
-executable path and persists it through `--codex-binary`; the scheduled job does not depend on
-`launchd`'s minimal `PATH`. Installation is idempotent: an unchanged loaded job is left in place; a
-changed job is unloaded, rewritten, loaded, and verified through `launchctl print`.
+Its `Program` is `/bin/bash` (Apple-signed, survives a `.venv` rebuild) plus
+`scripts/orchestration/run_archived_thread_cleanup.sh`, which execs the checkout's
+`.venv/bin/python` against `archived_thread_cleanup.py --apply --repo-root
+<checkout> --retention-days 30 --observation-interval-days 7`. Pointing `Program`
+at the venv interpreter is what produced exit 78 (`Unable to get updated LWCR
+... error 0x3`) after the 2026-08-15 venv rewrite (#6937, #6941). The installer
+also resolves the supported Codex CLI to an absolute, executable path and
+persists it through `--codex-binary`; the scheduled job does not depend on
+`launchd`'s minimal `PATH`. Installation is idempotent: an unchanged loaded job
+is left in place; a changed job is unloaded, rewritten, loaded, and verified
+through `launchctl print`. A venv rebuild does not require reinstall anymore;
+`status` still verifies the plist still binds `Program` to `/bin/bash`.
 
 If `codex` is not on the interactive shell's `PATH`, provide its absolute path explicitly:
 

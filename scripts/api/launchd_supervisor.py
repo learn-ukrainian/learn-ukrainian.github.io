@@ -28,6 +28,11 @@ LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
 THROTTLE_INTERVAL_SECONDS = 30
 _LAUNCHD_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+# launchd binds LWCR to ProgramArguments[0]. /bin/bash is Apple-signed and
+# survives a primary .venv rebuild; pointing Program at .venv/bin/python
+# is what produced exit 78 after the 2026-08-15 uv rewrite (#6937, #6941).
+STABLE_PROGRAM = "/bin/bash"
+WRAPPER_NAME = "run_monitor_api_supervisor.sh"
 _LOG_ROTATE_BYTES = 10 * 1024 * 1024
 _STOP_UNLOAD_TIMEOUT_SECONDS = 12.0
 _STOP_UNLOAD_POLL_SECONDS = 0.1
@@ -50,6 +55,11 @@ def default_home() -> Path:
 def plist_path(home: Path) -> Path:
     """Return the per-user LaunchAgent location."""
     return home / "Library" / "LaunchAgents" / f"{LABEL}.plist"
+
+
+def wrapper_path(repo_root: Path) -> Path:
+    """Return the stable bash wrapper launchd executes."""
+    return repo_root / "scripts" / "api" / WRAPPER_NAME
 
 
 def _pid_dir(repo_root: Path) -> Path:
@@ -128,14 +138,14 @@ def atomic_write(path: Path, content: bytes, *, mode: int = 0o600) -> bool:
 def build_plist(*, repo_root: Path) -> dict[str, object]:
     """Build the persistent LaunchAgent configuration without side effects."""
     root = repo_root.resolve()
-    interpreter = root / ".venv" / "bin" / "python"
     return {
         "Label": LABEL,
         "ProcessType": "Background",
         "ProgramArguments": [
-            str(interpreter),
-            "-m",
-            "scripts.api.launchd_supervisor",
+            STABLE_PROGRAM,
+            "--noprofile",
+            "--norc",
+            str(wrapper_path(root)),
             "run",
             "--repo-root",
             str(root),
@@ -161,10 +171,15 @@ def render_plist(*, repo_root: Path) -> bytes:
 def _validate_runtime(repo_root: Path) -> None:
     interpreter = repo_root / ".venv" / "bin" / "python"
     supervisor = repo_root / "scripts" / "api" / "launchd_supervisor.py"
+    wrapper = wrapper_path(repo_root)
     if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
         raise LaunchdError(f"required interpreter is missing or not executable: {interpreter}")
     if not supervisor.is_file():
         raise LaunchdError(f"required API supervisor is missing: {supervisor}")
+    if not wrapper.is_file():
+        raise LaunchdError(f"required API wrapper is missing: {wrapper}")
+    if not os.access(STABLE_PROGRAM, os.X_OK):
+        raise LaunchdError(f"stable launchd program is missing: {STABLE_PROGRAM}")
 
 
 def install(*, repo_root: Path, home: Path) -> dict[str, object]:
@@ -328,12 +343,18 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
     if installed:
         try:
             payload = plistlib.loads(destination.read_bytes())
+            arguments = payload.get("ProgramArguments") if isinstance(payload, dict) else None
             valid_plist = (
                 isinstance(payload, dict)
                 and payload.get("Label") == LABEL
                 and payload.get("KeepAlive") == {"SuccessfulExit": False}
                 and payload.get("ThrottleInterval") == THROTTLE_INTERVAL_SECONDS
                 and payload.get("EnvironmentVariables") == {"PATH": _LAUNCHD_PATH}
+                and isinstance(arguments, list)
+                and arguments
+                and arguments[0] == STABLE_PROGRAM
+                and WRAPPER_NAME in str(arguments)
+                and not any(".venv/bin/python" in str(part) for part in arguments)
             )
         except (OSError, ValueError, plistlib.InvalidFileException) as exc:
             parse_error = str(exc)
