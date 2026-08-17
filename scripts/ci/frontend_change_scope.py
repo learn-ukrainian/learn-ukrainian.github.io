@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Frontend / frontend-e2e changed-path scope for CI cheap-exit (#6917).
+"""Frontend / frontend-e2e changed-path scope for CI cheap-exit (#6917 / #6930).
 
 Required jobs stay unconditionally scheduled. After checkout, this helper
 decides whether the diff touches the single-source denominator. Out of scope
 → exit 0 with a loud auditable decision (job stays ``success``). In scope →
 continue the remaining job steps.
+
+PR / merge_group events use merge-base range semantics against the *event*
+head SHA (not the synthetic merge-commit checkout). Push keeps linear
+two-dot ``before..after``. Unresolvable merge-base fails open to ``run``.
 
 Stdlib only so GitHub runners can invoke it with system ``python3`` before
 ``actions/setup-python``.
@@ -25,10 +29,18 @@ DENOMINATOR_REL = "scripts/ci/frontend_change_denominator.json"
 PACKAGE_JSON_REL = "site/package.json"
 HYDRATE_ROOT_SCRIPT = "hydrate"
 
+# pull_request / merge_group: only the branch side of the fork counts (#6930).
+# push: linear before..after two-dot (three-dot would be wrong on non-ancestry).
+_MERGE_BASE_EVENTS = frozenset({"pull_request", "merge_group"})
+
 _NPM_RUN_RE = re.compile(r"\bnpm\s+run\s+([A-Za-z0-9:_-]+)")
 _NODE_SCRIPT_RE = re.compile(r"\bnode(?:\s+--experimental-strip-types)?\s+(\./scripts/[^\s]+|scripts/[^\s]+)")
 _PYTHON_MODULE_RE = re.compile(r"(?:^|[\s\"'])-m\s+(scripts(?:\.[A-Za-z0-9_]+)+)")
 _PYTHON_FILE_RE = re.compile(r"(?:^|[\s\"'])(scripts/[A-Za-z0-9_./-]+\.py)\b")
+
+
+class MergeBaseError(RuntimeError):
+    """Raised when ``git merge-base`` cannot resolve (shallow clone, missing refs)."""
 
 
 def repo_root() -> Path:
@@ -70,8 +82,61 @@ def matching_paths(changed: Iterable[str], patterns: Sequence[str]) -> list[str]
     return sorted({path for path in changed if path_in_denominator(path, patterns)})
 
 
+def range_mode_for_event(event_name: str) -> str:
+    """Map ``github.event_name`` to diff range mode."""
+    return "merge-base" if (event_name or "").strip() in _MERGE_BASE_EVENTS else "two-dot"
+
+
 def comparison_range(base: str, head: str = "HEAD") -> str:
+    """Legacy three-dot helper (merge-base semantics). Prefer ``resolve_git_range``."""
     return base if "..." in base else f"{base}...{head}"
+
+
+def two_dot_range(base: str, head: str = "HEAD") -> str:
+    """Linear ``base..head`` tree/range diff for push events."""
+    if ".." in base:
+        return base
+    return f"{base}..{head}"
+
+
+def git_merge_base(base: str, head: str, *, cwd: Path | None = None) -> str:
+    """Return the merge-base SHA, or raise ``MergeBaseError`` if unresolvable."""
+    try:
+        result = subprocess.run(
+            ["git", "merge-base", base, head],
+            check=True,
+            capture_output=True,
+            text=True,
+            # Prefer process cwd (CI checkout / test fixture) over this file's tree.
+            cwd=cwd or Path.cwd(),
+        )
+    except subprocess.CalledProcessError as exc:
+        detail = (exc.stderr or "").strip() or f"exit={exc.returncode}"
+        raise MergeBaseError(detail) from exc
+    mb = (result.stdout or "").strip()
+    if not mb:
+        raise MergeBaseError("empty merge-base")
+    return mb
+
+
+def resolve_git_range(
+    base: str,
+    head: str = "HEAD",
+    *,
+    mode: str = "merge-base",
+    cwd: Path | None = None,
+) -> str:
+    """Build the ``git diff`` range for the event mode.
+
+    ``merge-base``: ``$(git merge-base base head)..head`` (PR / merge_group).
+    ``two-dot``: ``base..head`` (push linear history).
+    """
+    if mode == "two-dot":
+        return two_dot_range(base, head)
+    if "..." in base:
+        return base
+    mb = git_merge_base(base, head, cwd=cwd)
+    return f"{mb}..{head}"
 
 
 def _parse_nul_delimited_paths(raw: bytes) -> list[str]:
@@ -95,7 +160,7 @@ def changed_files(git_range: str, *, cwd: Path | None = None) -> list[str]:
         ],
         check=True,
         capture_output=True,
-        cwd=cwd or repo_root(),
+        cwd=cwd or Path.cwd(),
     )
     return _parse_nul_delimited_paths(result.stdout)
 
@@ -222,7 +287,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         default="",
         help="base SHA/ref (pull_request.base.sha || merge_group.base_sha || before)",
     )
-    parser.add_argument("--head", default="HEAD", help="head SHA/ref (default: HEAD)")
+    parser.add_argument(
+        "--head",
+        default="HEAD",
+        help=(
+            "head SHA/ref (pull_request.head.sha || merge_group.head_sha || github.sha). "
+            "Must be the event head — not the PR merge commit checkout HEAD (#6930)."
+        ),
+    )
+    parser.add_argument(
+        "--event",
+        default="",
+        help="github.event_name: pull_request|merge_group → merge-base; push → two-dot",
+    )
     parser.add_argument(
         "--denominator",
         type=Path,
@@ -233,6 +310,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     denominator = load_denominator(args.denominator)
     base = (args.base or "").strip()
+    head = (args.head or "HEAD").strip() or "HEAD"
+    mode = range_mode_for_event(args.event)
     if not base or set(base) == {"0"}:
         line = decision_line(
             decision="run",
@@ -248,7 +327,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     try:
-        changed = changed_files(comparison_range(base, args.head))
+        git_range = resolve_git_range(base, head, mode=mode)
+        changed = changed_files(git_range)
+    except MergeBaseError:
+        line = (
+            f"frontend-scope: decision=run denominator_version={denominator['version']} "
+            f"changed_files=-1 matched=-1 reason=merge_base_unresolvable mode={mode}"
+        )
+        print(line, file=sys.stderr)
+        write_step_summary(line)
+        write_github_output(True)
+        return 0
     except subprocess.CalledProcessError as exc:
         line = (
             f"frontend-scope: decision=run denominator_version={denominator['version']} "
