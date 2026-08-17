@@ -110,14 +110,14 @@ def _seed_authority_plane(root: Path) -> Path:
 def test_all_probes_board_structure():
     """Board emitted contains expected top-level keys and all 10 diagnostic probes."""
     board = build_cold_start_board(
-        stream_id="epic:4707",
+        stream_id="epic:9999",
         agent="agy/cold-start-pr2-board",
         needle="board",
     )
 
     assert "timestamp" in board
     assert "board_status" in board
-    assert board["stream_id"] == "epic:4707"
+    assert board["stream_id"] == "epic:9999"
     assert board["agent"] == "agy/cold-start-pr2-board"
     assert board["needle"] == "board"
     assert "probes" in board
@@ -344,7 +344,7 @@ def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
 def test_markdown_path():
     """Verify markdown output path renders Summary then probe dump."""
     board = build_cold_start_board(
-        stream_id="epic:4707",
+        stream_id="epic:9999",
         agent="agy/cold-start-pr2-board",
         needle="board",
     )
@@ -356,7 +356,7 @@ def test_markdown_path():
     assert "- **schema_version:**" in md
     assert "- **inbox_pending:**" in md
     assert "- **board_status:**" in md
-    assert "- **stream_id:** `epic:4707`" in md
+    assert "- **stream_id:** `epic:9999`" in md
     assert "- **agent:** `agy/cold-start-pr2-board`" in md
     assert "## Diagnostic Probes" in md
     assert "### `capsule_session_env`" in md
@@ -366,12 +366,12 @@ def test_markdown_path():
 
 def test_cli_cold_start_board(capsys):
     """CLI subcommand cold-start-board runs cleanly and returns exit code 0."""
-    code = cli_main(["cold-start-board", "--stream-id", "epic:4707", "--agent", "test-agent"])
+    code = cli_main(["cold-start-board", "--stream-id", "epic:9999", "--agent", "test-agent"])
     assert code == EXIT_OK
 
     captured = capsys.readouterr()
     payload = json.loads(captured.out)
-    assert payload["stream_id"] == "epic:4707"
+    assert payload["stream_id"] == "epic:9999"
     assert payload["agent"] == "test-agent"
     assert "probes" in payload
 
@@ -384,7 +384,7 @@ def test_cli_cold_start_board_markdown(capsys):
             "--format",
             "markdown",
             "--stream-id",
-            "epic:4707",
+            "epic:9999",
             "--agent",
             "test-agent",
         ]
@@ -394,7 +394,7 @@ def test_cli_cold_start_board_markdown(capsys):
     captured = capsys.readouterr()
     assert "# Driver Cold Start Board" in captured.out
     assert "## Summary" in captured.out
-    assert "epic:4707" in captured.out
+    assert "epic:9999" in captured.out
 
 
 def test_probe_inbox_legacy_schema_ok(tmp_path: Path, monkeypatch) -> None:

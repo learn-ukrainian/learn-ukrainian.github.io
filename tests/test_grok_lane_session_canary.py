@@ -53,7 +53,7 @@ def test_build_facts_exactly_ten_from_stream_and_handoff() -> None:
     ids = [f["id"] for f in facts]
     assert len(set(ids)) == 10
     assert "lane-stream" in ids
-    assert facts[0]["a"] == "epic:4387"
+    assert facts[0]["a"] == "epic:4387"  # allow-hardcoded-epic: session canary stream facts fixture
     assert all(f["q"] and f["a"] for f in facts)
 
 
@@ -70,22 +70,28 @@ def test_build_facts_fails_when_insufficient(tmp_path: Path) -> None:
 
 def test_mint_score_roundtrip_pass_and_fail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # Avoid depending on live session DB
-    monkeypatch.setattr(gl, "_load_stream_entries", lambda *a, **k: [
-        {"type": "binding_order", "body": f"Pinned binding order text {i} with enough content."}
-        for i in range(1, 6)
-    ] + [
-        {"type": "negative_constraint", "body": "Do not lower quality gates."},
-        {"type": "negative_constraint", "body": "Do not bypass CI."},
-        {"type": "next_action", "body": "Dual-write handoff after each batch."},
-        {"type": "next_action", "body": "Re-score canary after auto-compact."},
-        {"type": "decision", "body": "Canary end signal is score not compact count."},
-    ])
+    monkeypatch.setattr(
+        gl,
+        "_load_stream_entries",
+        lambda *a, **k: (
+            [
+                {"type": "binding_order", "body": f"Pinned binding order text {i} with enough content."}
+                for i in range(1, 6)
+            ]
+            + [
+                {"type": "negative_constraint", "body": "Do not lower quality gates."},
+                {"type": "negative_constraint", "body": "Do not bypass CI."},
+                {"type": "next_action", "body": "Dual-write handoff after each batch."},
+                {"type": "next_action", "body": "Re-score canary after auto-compact."},
+                {"type": "decision", "body": "Canary end signal is score not compact count."},
+            ]
+        ),
+    )
 
     canary_dir = tmp_path / "canary"
     handoff = tmp_path / "handoff.md"
     handoff.write_text(
-        "## Next drive order\n- Keep dual-write current\n- Score canary after compact\n"
-        "## Hands-off\n- Foreign lanes\n",
+        "## Next drive order\n- Keep dual-write current\n- Score canary after compact\n## Hands-off\n- Foreign lanes\n",
         encoding="utf-8",
     )
 
@@ -170,7 +176,7 @@ def test_protocol_prints_epic(capsys: pytest.CaptureFixture[str]) -> None:
     rc = gl.main(["protocol", "--epic", "atlas"])
     assert rc == 0
     out = capsys.readouterr().out
-    assert "epic:4387" in out
+    assert "epic:4387" in out  # allow-hardcoded-epic: atlas epic protocol output
     assert "0.8" in out or "8/10" in out
     assert "FAIL-HANDOFF" in out
 

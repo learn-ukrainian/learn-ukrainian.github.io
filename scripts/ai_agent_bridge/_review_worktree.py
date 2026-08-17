@@ -152,9 +152,7 @@ def _validate_review_read_sizes(
     for rel_path in required_paths:
         size = (evidence_root / rel_path).stat().st_size
         if size > MAX_SEALED_REVIEW_FILE_BYTES:
-            raise ReviewWorktreeError(
-                f"review_evidence_split_required:file_bytes:{rel_path}:{size}"
-            )
+            raise ReviewWorktreeError(f"review_evidence_split_required:file_bytes:{rel_path}:{size}")
         total += size
     if total > MAX_SEALED_REVIEW_TOTAL_BYTES:
         raise ReviewWorktreeError(f"review_evidence_split_required:total_bytes:{total}")
@@ -173,8 +171,7 @@ def _inline_required_evidence(
         raw_total += len(data)
         if raw_total > MAX_CODEX_REQUIRED_TOTAL_BYTES:
             raise ReviewWorktreeError(
-                "review_evidence_split_required:"
-                f"codex_total_bytes={raw_total}:limit={MAX_CODEX_REQUIRED_TOTAL_BYTES}"
+                f"review_evidence_split_required:codex_total_bytes={raw_total}:limit={MAX_CODEX_REQUIRED_TOTAL_BYTES}"
             )
         try:
             content = data.decode("utf-8", errors="strict")
@@ -241,9 +238,7 @@ def _sealed_required_evidence_proof(
         try:
             before = path.lstat()
         except OSError as exc:
-            raise ReviewWorktreeError(
-                f"review_evidence_split_required:unreadable:{rel_path}"
-            ) from exc
+            raise ReviewWorktreeError(f"review_evidence_split_required:unreadable:{rel_path}") from exc
         if not stat.S_ISREG(before.st_mode):
             raise ReviewWorktreeError(f"review_evidence_not_regular:{rel_path}")
 
@@ -261,9 +256,7 @@ def _sealed_required_evidence_proof(
         except UnicodeDecodeError as exc:
             raise ReviewWorktreeError(f"review_evidence_not_utf8:{rel_path}") from exc
         except OSError as exc:
-            raise ReviewWorktreeError(
-                f"review_evidence_split_required:unreadable:{rel_path}"
-            ) from exc
+            raise ReviewWorktreeError(f"review_evidence_split_required:unreadable:{rel_path}") from exc
         if (
             before.st_dev,
             before.st_ino,
@@ -487,9 +480,7 @@ def _required_stream_requests(
     return requests
 
 
-def _all_required_requests(
-    *, evidence_root: Path, required_paths: tuple[str, ...]
-) -> list[dict[str, Any]]:
+def _all_required_requests(*, evidence_root: Path, required_paths: tuple[str, ...]) -> list[dict[str, Any]]:
     """Derive every bounded chunk for one all-required sealed read."""
     total_bytes = sum((evidence_root / rel_path).stat().st_size for rel_path in required_paths)
     if total_bytes > MAX_CODEX_REQUIRED_TOTAL_BYTES:
@@ -557,15 +548,14 @@ def _codex_sealed_read_requests(
             required_paths=required_paths,
             index=arguments.get("index", 0),
             offset=arguments.get("offset", 0),
-            max_chunks=arguments.get(
-                "max_chunks", MAX_CODEX_REQUIRED_READ_CHUNKS
-            ),
+            max_chunks=arguments.get("max_chunks", MAX_CODEX_REQUIRED_READ_CHUNKS),
             max_bytes=arguments.get("max_bytes", SEALED_READ_CHUNK_BYTES),
         )
-    if name == "read_required_all" or name.endswith(
-        "sealed_review__read_required_all"
-    ) or name.endswith("sealed_review.read_required_all") or name.endswith(
-        "sealed_review_read_required_all"
+    if (
+        name == "read_required_all"
+        or name.endswith("sealed_review__read_required_all")
+        or name.endswith("sealed_review.read_required_all")
+        or name.endswith("sealed_review_read_required_all")
     ):
         return _all_required_requests(
             evidence_root=evidence_root,
@@ -609,11 +599,7 @@ def _codex_sealed_read_requests(
         raw_requests = json.loads(batch_match.group("requests"))
     except json.JSONDecodeError:
         return []
-    if (
-        not isinstance(raw_requests, list)
-        or not raw_requests
-        or len(raw_requests) > MAX_CODEX_SEALED_READ_BATCH
-    ):
+    if not isinstance(raw_requests, list) or not raw_requests or len(raw_requests) > MAX_CODEX_SEALED_READ_BATCH:
         return []
     requests: list[dict[str, Any]] = []
     identities: set[tuple[str, int]] = set()
@@ -671,9 +657,7 @@ def _verify_codex_review_reads(
         if not requests and str(call.get("name") or ""):
             continue
         by_identity = {
-            (request["path"], request["offset"]): request
-            for request in requests
-            if request["path"] in coverage
+            (request["path"], request["offset"]): request for request in requests if request["path"] in coverage
         }
         for payload in _mcp_chunk_payloads(call.get("result")):
             identity = (payload.get("path"), payload.get("offset"))
@@ -928,9 +912,7 @@ class ReviewIsolationEvidenceBinder:
             raise ReviewWorktreeError("isolation_prompt_transport_missing")
         if outcome not in {"ok", "failed"}:
             raise ReviewWorktreeError("review_outcome_invalid")
-        if outcome == "ok" and (
-            response_sha256 is None or not re.fullmatch(r"[0-9a-f]{64}", response_sha256)
-        ):
+        if outcome == "ok" and (response_sha256 is None or not re.fullmatch(r"[0-9a-f]{64}", response_sha256)):
             raise ReviewWorktreeError("review_response_digest_missing")
         self.isolation_evidence = dict(evidence)
         self.expected_engine = engine
@@ -1020,15 +1002,10 @@ class ProvisionedReviewWorktree:
                 overall = payload.get("overall")
                 correctness = overall.get("correctness") if isinstance(overall, dict) else None
                 if correctness != "correct":
-                    raise ReviewWorktreeError(
-                        f"review_clean_verdict_not_correct:{correctness or 'missing'}"
-                    )
+                    raise ReviewWorktreeError(f"review_clean_verdict_not_correct:{correctness or 'missing'}")
                 engine_key = engine.strip().lower().replace("-build", "")
                 inline_mode = f"{engine_key}-parent-inline-complete"
-                if (
-                    engine_key in {"codex", "claude"}
-                    and inline_mode in self.prompt_evidence_modes
-                ):
+                if engine_key in {"codex", "claude"} and inline_mode in self.prompt_evidence_modes:
                     required_paths = _required_review_read_paths(
                         self.path,
                         self.changed_paths,
@@ -1120,15 +1097,15 @@ class ProvisionedReviewWorktree:
         from scripts.review.isolation import _stage_sealed_read_mcp
 
         python_bin = _REPO_ROOT / ".venv" / "bin" / "python"
+        if not python_bin.is_file() and sys.executable.endswith("/.venv/bin/python"):
+            python_bin = Path(sys.executable)
         if not python_bin.is_file() or not os.access(python_bin, os.X_OK):
             raise ReviewWorktreeError(f"sealed_acp_python_missing:{python_bin}")
         helper = self.exec_root / "sealed-read-mcp.py"
         if not helper.exists():
             helper = _stage_sealed_read_mcp(self.exec_root)
         config_path = self.write_root / (
-            "sealed-review-acpx-required-mcp.json"
-            if change_evidence_only
-            else "sealed-review-acpx-mcp.json"
+            "sealed-review-acpx-required-mcp.json" if change_evidence_only else "sealed-review-acpx-mcp.json"
         )
         helper_args = ["-I", "-S", str(helper), str(self.path)]
         if change_evidence_only:
@@ -1192,12 +1169,8 @@ class ProvisionedReviewWorktree:
         try:
             manifest_stat = manifest_path.lstat()
             patch_stat = patch_path.lstat()
-            if not stat.S_ISREG(manifest_stat.st_mode) or not stat.S_ISREG(
-                patch_stat.st_mode
-            ):
-                raise ReviewWorktreeError(
-                    "review_prompt_evidence_invalid:bundle_not_regular"
-                )
+            if not stat.S_ISREG(manifest_stat.st_mode) or not stat.S_ISREG(patch_stat.st_mode):
+                raise ReviewWorktreeError("review_prompt_evidence_invalid:bundle_not_regular")
             manifest_bytes = manifest_path.read_bytes()
             manifest_text = manifest_bytes.decode("utf-8", errors="strict")
             manifest = json.loads(manifest_text)
@@ -1224,9 +1197,7 @@ class ProvisionedReviewWorktree:
                 after.st_mtime_ns,
                 after.st_ctime_ns,
             ):
-                raise ReviewWorktreeError(
-                    f"review_prompt_evidence_invalid:{label}_read_race"
-                )
+                raise ReviewWorktreeError(f"review_prompt_evidence_invalid:{label}_read_race")
         if not isinstance(manifest, dict):
             raise ReviewWorktreeError("review_prompt_evidence_invalid:manifest_not_object")
 
@@ -1267,9 +1238,7 @@ class ProvisionedReviewWorktree:
             except ValueError as exc:
                 raise ReviewWorktreeError(f"review_prompt_evidence_invalid:path_traversal:{rel_path!r}") from exc
             if rel_path in deleted_paths or (
-                rel_path in deleted_evidence
-                and not target.exists()
-                and not target.is_symlink()
+                rel_path in deleted_evidence and not target.exists() and not target.is_symlink()
             ):
                 old_content = deleted_evidence.get(rel_path)
                 entry: dict[str, Any] = {"path": rel_path, "status": "deleted"}
@@ -1422,16 +1391,11 @@ class ProvisionedReviewWorktree:
                 try:
                     text = (self.path / rel_path).read_text(encoding="utf-8", errors="strict")
                 except (OSError, UnicodeDecodeError) as exc:
-                    raise ReviewWorktreeError(
-                        f"review_evidence_split_required:unreadable:{rel_path}"
-                    ) from exc
+                    raise ReviewWorktreeError(f"review_evidence_split_required:unreadable:{rel_path}") from exc
                 if any(
-                    len(line.encode("utf-8")) > MAX_BUILTIN_READ_LINE_BYTES
-                    for line in text.splitlines(keepends=True)
+                    len(line.encode("utf-8")) > MAX_BUILTIN_READ_LINE_BYTES for line in text.splitlines(keepends=True)
                 ):
-                    raise ReviewWorktreeError(
-                        f"review_evidence_split_required:long_line:{rel_path}"
-                    )
+                    raise ReviewWorktreeError(f"review_evidence_split_required:long_line:{rel_path}")
             read_protocol = {
                 "tool": "Read",
                 "unit": "lines",
@@ -1478,9 +1442,7 @@ class ProvisionedReviewWorktree:
                 "manifest_bytes": manifest_stat.st_size,
                 "patch_bytes": patch_stat.st_size,
                 "unique_evidence_bytes": sum((self.path / path).stat().st_size for path in required_read_paths),
-                "legacy_inline_serialized_bytes": (
-                    legacy_inline_bytes if inline_serialized is not None else None
-                ),
+                "legacy_inline_serialized_bytes": (legacy_inline_bytes if inline_serialized is not None else None),
             },
             "read_protocol": read_protocol,
             "clean_verdict_gate": (
@@ -1507,7 +1469,9 @@ class ProvisionedReviewWorktree:
             dossier["evidence_metrics"]["duplicate_bytes_avoided"] = (
                 legacy_inline_bytes
                 if inline_serialized is not None
-                else sealed_proof["raw_bytes"] if sealed_proof is not None else 0
+                else sealed_proof["raw_bytes"]
+                if sealed_proof is not None
+                else 0
             )
             updated = json.dumps(
                 dossier,
@@ -1566,15 +1530,15 @@ class ProvisionedReviewWorktree:
             "regression, api, tests, docs, performance, style, or other; aliases such "
             "as maintainability invalidate the entire review. "
             "Every finding sources value MUST be a non-empty array. Use exactly "
-            "[\"none\"] when no external source applies; otherwise use non-empty "
+            '["none"] when no external source applies; otherwise use non-empty '
             "source strings and never mix none with another value. "
             "For location, end_line is inclusive and must equal start_line + "
             "(number of lines in verbatim) - 1. A one-line verbatim on line 7 "
             "must have location start_line 7 and end_line 7. "
             "A clean review has this exact shape: "
-            "{\"schema_version\":\"code-review-findings.v1\",\"overall\":"
-            "{\"correctness\":\"correct\",\"explanation\":\"No actionable findings.\","
-            "\"confidence\":0.95},\"findings\":[]}. Do not invent enum aliases such "
+            '{"schema_version":"code-review-findings.v1","overall":'
+            '{"correctness":"correct","explanation":"No actionable findings.",'
+            '"confidence":0.95},"findings":[]}. Do not invent enum aliases such '
             "as pass. Target identity is "
             "bound by the trusted parent receipt, never supplied by reviewer output. "
             "Emit no markdown or trailing text.\n\n"
@@ -1613,6 +1577,7 @@ def append_review_prompt_evidence(
 
 def _strict_json_object(text: str) -> dict[str, Any]:
     """Parse exactly one JSON object and reject duplicate keys/trailing text."""
+
     def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         out: dict[str, Any] = {}
         for key, value in pairs:
@@ -1758,11 +1723,7 @@ def validate_code_review_response(
         canonical_lines = {path: set(lines) for path, lines in changed_lines.items()}
         manifest_path = evidence_root / ".review-bundle" / "manifest.json"
         try:
-            manifest = (
-                json.loads(manifest_path.read_text(encoding="utf-8"))
-                if manifest_path.is_file()
-                else {}
-            )
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
         except (OSError, json.JSONDecodeError) as exc:
             raise ReviewWorktreeError(f"review_deleted_evidence_manifest:{exc}") from exc
         if not isinstance(manifest, dict):
@@ -1773,9 +1734,7 @@ def validate_code_review_response(
             location = finding.get("location") if isinstance(finding, dict) else None
             path = location.get("path") if isinstance(location, dict) else None
             old_text = None
-            if isinstance(path, str) and (
-                path in final_deleted or not (evidence_root / path).is_file()
-            ):
+            if isinstance(path, str) and (path in final_deleted or not (evidence_root / path).is_file()):
                 old_text = deleted_evidence.get(path)
             finding_lines = canonical_lines
             if not isinstance(finding, dict):
@@ -1784,9 +1743,7 @@ def validate_code_review_response(
                 finding_lines = dict(canonical_lines)
                 old_line_count = len(split_lines_preserve_content(old_text))
                 finding_lines[path] = set(range(1, old_line_count + 1))
-                with tempfile.TemporaryDirectory(
-                    prefix="lu-review-deleted-evidence-"
-                ) as deleted_root_raw:
+                with tempfile.TemporaryDirectory(prefix="lu-review-deleted-evidence-") as deleted_root_raw:
                     deleted_root = Path(deleted_root_raw)
                     deleted_path = deleted_root / path
                     deleted_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1808,10 +1765,7 @@ def validate_code_review_response(
                 )
             if result.outcome != OUTCOME_VERIFIED:
                 finding_id = finding.get("id", "unknown") if isinstance(finding, dict) else "unknown"
-                raise ReviewWorktreeError(
-                    "review_response_evidence:"
-                    f"{finding_id}:{result.outcome}:{result.detail}"
-                )
+                raise ReviewWorktreeError(f"review_response_evidence:{finding_id}:{result.outcome}:{result.detail}")
     _ = (base_sha, head_sha, patch_sha256)
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(canonical).hexdigest()
@@ -1920,15 +1874,11 @@ def _github_git_transport_env(env: dict[str, str], *, gh_bin: Path) -> dict[str,
         return configured
     configured["GIT_CONFIG_COUNT"] = "1"
     configured["GIT_CONFIG_KEY_0"] = "credential.https://github.com.helper"
-    configured["GIT_CONFIG_VALUE_0"] = (
-        f"!{shlex.quote(str(gh_bin.resolve()))} auth git-credential"
-    )
+    configured["GIT_CONFIG_VALUE_0"] = f"!{shlex.quote(str(gh_bin.resolve()))} auth git-credential"
     return configured
 
 
-def _canonical_github_repository(
-    *, repo_root: Path, gh_bin: Path, env: dict[str, str]
-) -> tuple[str, str, str]:
+def _canonical_github_repository(*, repo_root: Path, gh_bin: Path, env: dict[str, str]) -> tuple[str, str, str]:
     """Resolve one canonical HTTPS GitHub repository without using Git remotes.
 
     The repository identity is an operator-owned constant, never inferred from
@@ -1958,8 +1908,7 @@ def _canonical_github_repository(
     default_branch = default_ref.get("name") if isinstance(default_ref, dict) else None
     if name != DEFAULT_REPOSITORY:
         raise ReviewWorktreeError(
-            "canonical repository identity mismatch:"
-            f"expected={DEFAULT_REPOSITORY!r}:actual={name!r}"
+            f"canonical repository identity mismatch:expected={DEFAULT_REPOSITORY!r}:actual={name!r}"
         )
     canonical = f"https://github.com/{DEFAULT_REPOSITORY}"
     if url not in {canonical, canonical + ".git"}:
@@ -1969,9 +1918,7 @@ def _canonical_github_repository(
     return DEFAULT_REPOSITORY, canonical + ".git", default_branch.strip()
 
 
-def _init_neutral_bare_repository(
-    *, git_bin: Path, env: dict[str, str]
-) -> Path:
+def _init_neutral_bare_repository(*, git_bin: Path, env: dict[str, str]) -> Path:
     """Create a private config-neutral object repository for one review."""
     root = create_review_temp_root(prefix="lu-review-git-")
     try:
@@ -2082,9 +2029,7 @@ def _fetch_exact_ref(
     return actual
 
 
-def _ls_remote_oid(
-    *, repo_root: Path, git_bin: Path, env: dict[str, str], remote_url: str, remote_ref: str
-) -> str:
+def _ls_remote_oid(*, repo_root: Path, git_bin: Path, env: dict[str, str], remote_url: str, remote_ref: str) -> str:
     """Read one exact remote ref OID without creating shared repository state."""
     raw = _run_command(
         [
@@ -2220,9 +2165,7 @@ def _repository_worktree_roots(repo_root: Path, *, git_bin: Path, env: dict[str,
     return tuple(sorted(roots))
 
 
-def _deleted_paths_from_manifest(
-    manifest: dict[str, Any], changed_paths: tuple[str, ...]
-) -> set[str]:
+def _deleted_paths_from_manifest(manifest: dict[str, Any], changed_paths: tuple[str, ...]) -> set[str]:
     """Return paths whose final review state is deleted.
 
     Git tracks files, not directories. A deleted file may therefore exist as
@@ -2361,15 +2304,11 @@ def _changed_lines_between_bytes(
         )
         if proc.returncode not in {0, 1}:
             detail = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
-            raise ReviewWorktreeError(
-                f"review_evidence_changed_lines_failed:{rel_path}:{detail}"
-            )
+            raise ReviewWorktreeError(f"review_evidence_changed_lines_failed:{rel_path}:{detail}")
         try:
             diff_text = (proc.stdout or b"").decode("utf-8", errors="strict")
         except UnicodeDecodeError as exc:
-            raise ReviewWorktreeError(
-                f"review_evidence_changed_lines_binary:{rel_path}"
-            ) from exc
+            raise ReviewWorktreeError(f"review_evidence_changed_lines_binary:{rel_path}") from exc
     return _new_side_lines(diff_text)
 
 
@@ -2427,9 +2366,7 @@ def _changed_line_numbers_for_snapshot(
                     current_bytes = current_path.read_bytes()
                     current_bytes.decode("utf-8", errors="strict")
                 except (OSError, UnicodeDecodeError) as exc:
-                    raise ReviewWorktreeError(
-                        f"review_evidence_current_file_invalid:{rel_path}:{exc}"
-                    ) from exc
+                    raise ReviewWorktreeError(f"review_evidence_current_file_invalid:{rel_path}:{exc}") from exc
                 base_bytes = _base_blob_bytes(
                     repo_root=repo_root,
                     git_bin=git_bin,
@@ -2439,9 +2376,7 @@ def _changed_line_numbers_for_snapshot(
                 try:
                     (base_bytes or b"").decode("utf-8", errors="strict")
                 except UnicodeDecodeError as exc:
-                    raise ReviewWorktreeError(
-                        f"review_evidence_base_file_binary:{copy_source}"
-                    ) from exc
+                    raise ReviewWorktreeError(f"review_evidence_base_file_binary:{copy_source}") from exc
                 remote_evidence[rel_path] = _changed_lines_between_bytes(
                     base_bytes or b"",
                     current_bytes,
@@ -2479,9 +2414,7 @@ def _changed_line_numbers_for_snapshot(
                 env=env,
             )
             if proc.returncode != 0:
-                raise ReviewWorktreeError(
-                    f"review_evidence_changed_lines_failed:{rel_path}:{proc.stderr.strip()}"
-                )
+                raise ReviewWorktreeError(f"review_evidence_changed_lines_failed:{rel_path}:{proc.stderr.strip()}")
             lines = _new_side_lines(proc.stdout or "")
             if pair is not None:
                 old_path, new_path = pair
@@ -2581,11 +2514,15 @@ def _reviewer_context_paths(snapshot: ReviewSnapshot) -> frozenset[str]:
         for name in filenames:
             source = base / name
             rel = source.relative_to(snapshot.path).as_posix()
-            if rel in {
-                ".review-snapshot-metadata.json",
-                REVIEW_TEMP_ROOT_MARKER_NAME,
-                REVIEW_TEMP_ROOT_MANIFEST_NAME,
-            } or rel in inert_unchanged:
+            if (
+                rel
+                in {
+                    ".review-snapshot-metadata.json",
+                    REVIEW_TEMP_ROOT_MARKER_NAME,
+                    REVIEW_TEMP_ROOT_MANIFEST_NAME,
+                }
+                or rel in inert_unchanged
+            ):
                 continue
             if rel.startswith(".review-bundle/"):
                 continue
@@ -2660,11 +2597,7 @@ def _create_reviewer_view(
     view = create_review_temp_root(prefix="lu-review-view-")
     try:
         try:
-            manifest = json.loads(
-                (snapshot.path / ".review-bundle" / "manifest.json").read_text(
-                    encoding="utf-8"
-                )
-            )
+            manifest = json.loads((snapshot.path / ".review-bundle" / "manifest.json").read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise ReviewWorktreeError(f"review_manifest_invalid:{exc}") from exc
         if not isinstance(manifest, dict):
@@ -2673,9 +2606,7 @@ def _create_reviewer_view(
         rel_paths = list(context_paths or tuple(sorted(_reviewer_context_paths(snapshot))))
         # View root already owns its own .lu-review-root(+.json) markers; never
         # hardlink those from the snap (EEXIST) or overwrite identity.
-        _skip_view_link = frozenset(
-            {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}
-        )
+        _skip_view_link = frozenset({REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME})
         for rel in rel_paths:
             if rel in deleted_paths:
                 continue
@@ -2698,10 +2629,7 @@ def _create_reviewer_view(
                 (Path(dirpath) / dirname).chmod(0o500)
         view.chmod(0o500)
         verify_paths = tuple(
-            p
-            for p in rel_paths
-            if p
-            not in {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}
+            p for p in rel_paths if p not in {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}
         )
         _verify_reviewer_view(view, snapshot, context_paths=verify_paths)
         return view
@@ -2856,9 +2784,7 @@ def provision_review_worktree(
     root = repo_root.resolve()
     git_bin, gh_bin = _trusted_bins(root)
     env = _github_git_transport_env(_isolation_env(root), gh_bin=gh_bin)
-    repository, remote_url, default_branch = _canonical_github_repository(
-        repo_root=root, gh_bin=gh_bin, env=env
-    )
+    repository, remote_url, default_branch = _canonical_github_repository(repo_root=root, gh_bin=gh_bin, env=env)
     reject_roots = _repository_worktree_roots(root, git_bin=git_bin, env=env)
     fetch_repo = _init_neutral_bare_repository(git_bin=git_bin, env=env)
 
@@ -3005,9 +2931,7 @@ def _provision_local_review_worktree(*, repo_root: Path) -> Iterator[Provisioned
 
     def _get_cleanup_args() -> tuple[Any, tuple[Path, ...]]:
         return state, tuple(
-            cleanup_root
-            for cleanup_root in (reviewer_view, write_root, exec_root)
-            if cleanup_root is not None
+            cleanup_root for cleanup_root in (reviewer_view, write_root, exec_root) if cleanup_root is not None
         )
 
     with _hardened_review_signal_handler(_get_cleanup_args):

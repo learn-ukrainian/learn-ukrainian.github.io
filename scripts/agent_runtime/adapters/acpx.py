@@ -79,6 +79,7 @@ import shlex
 import shutil
 import stat
 import subprocess
+import sys
 from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -213,9 +214,7 @@ _CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp"
 _CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
 _CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
 _CLAUDE_ACP_MANIFEST_LIMIT_BYTES = 64 * 1024
-_STRICT_SEMVER_RE = re.compile(
-    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$"
-)
+_STRICT_SEMVER_RE = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
 _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
 _TEXT_AGENT_SHA256 = "42761e2bd9ab0e66f5e5779826777b46bd0761cc4673e13285e1fc37418ea679"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
@@ -257,9 +256,7 @@ GROK_SHADOW_MODEL = "grok-4.6"  # operator order 2026-08-16 (#6865)
 GROK_SHADOW_EFFORT = "high"
 _GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
 _GROK_PROFILE_SHA256 = "5831398f7204be279e908371b5f0990d5e5e725a323091232e184083649d7158"
-_GROK_SEALED_REVIEW_PROFILE_PATH = (
-    _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-sealed-review.md"
-)
+_GROK_SEALED_REVIEW_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-sealed-review.md"
 _GROK_SEALED_REVIEW_PROFILE_SHA256 = "e6527f1f0f4b67f8b52fed9f7ca74f7ecd35e0e76920c54f23639465ddac5605"
 # Non-secret acpx 0.13.0 auth-method selector for a cached native Grok login.
 GROK_AUTH_CACHED_TOKEN_ENV = "ACPX_AUTH_CACHED_TOKEN"
@@ -298,9 +295,7 @@ _SEALED_REVIEW_TOOL_NAMES = (
     "mcp__sealed_review__read_required_all",
     "mcp__sealed_review__search_text",
 )
-_CLAUDE_SEALED_REVIEW_TOOL_NAMES = (
-    "mcp__sealed_review__read_required",
-)
+_CLAUDE_SEALED_REVIEW_TOOL_NAMES = ("mcp__sealed_review__read_required",)
 _CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT = (
     "You are a stateless read-only formal code reviewer. Follow the user's "
     "parent-authenticated sealed-evidence and output-schema instructions literally. "
@@ -368,6 +363,8 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     if set(server) != {"name", "command", "args", "env"} or server.get("name") != "sealed_review":
         raise AcpxShadowRefusalError(f"{adapter_label}: only the sealed_review server is permitted")
     expected_python = str(_REPO_ROOT / ".venv" / "bin" / "python")
+    if not (_REPO_ROOT / ".venv" / "bin" / "python").is_file() and sys.executable.endswith("/.venv/bin/python"):
+        expected_python = str(Path(sys.executable))
     args = server.get("args")
     if server.get("command") != expected_python or server.get("env") != []:
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP runtime is not parent-pinned")
@@ -435,25 +432,16 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
         config = json.loads(Path(config_path).read_text(encoding="utf-8"))
         server = config["mcpServers"][0]
         server_args = server["args"]
-        change_evidence_only = (
-            len(server_args) == 5
-            and server_args[4] == "change-evidence-only"
-        )
+        change_evidence_only = len(server_args) == 5 and server_args[4] == "change-evidence-only"
         snapshot = Path(server_args[3]).resolve(strict=True)
-        manifest = json.loads(
-            (snapshot / ".review-bundle" / "manifest.json").read_text(
-                encoding="utf-8"
-            )
-        )
+        manifest = json.loads((snapshot / ".review-bundle" / "manifest.json").read_text(encoding="utf-8"))
         changed_paths = manifest["changed_paths"]
     except (IndexError, KeyError, OSError, TypeError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise AcpxShadowRefusalError(
             "AcpxClaudeShadowAdapter: sealed review evidence manifest is invalid",
             failure_code="acp_review_evidence_invalid",
         ) from exc
-    if not isinstance(changed_paths, list) or not all(
-        isinstance(item, str) for item in changed_paths
-    ):
+    if not isinstance(changed_paths, list) or not all(isinstance(item, str) for item in changed_paths):
         raise AcpxShadowRefusalError(
             "AcpxClaudeShadowAdapter: sealed review changed paths are invalid",
             failure_code="acp_review_evidence_invalid",
@@ -463,12 +451,7 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
     seen = set(required)
     for raw in changed_paths:
         parsed = PurePosixPath(raw)
-        if (
-            not raw
-            or "\\" in raw
-            or parsed.is_absolute()
-            or any(part in {"", ".", ".."} for part in parsed.parts)
-        ):
+        if not raw or "\\" in raw or parsed.is_absolute() or any(part in {"", ".", ".."} for part in parsed.parts):
             raise AcpxShadowRefusalError(
                 "AcpxClaudeShadowAdapter: sealed review changed path is unsafe",
                 failure_code="acp_review_evidence_invalid",
@@ -592,6 +575,7 @@ def _claude_inline_chunk_count(
         offset = end
     return count
 
+
 # Fixed ACPX built-ins available only through the runner-owned inter-agent
 # transport boundary (or its bounded discussion controller).  This is
 # deliberately a small declarative registry, rather than a caller-selectable
@@ -710,15 +694,9 @@ def active_communication_scope(*, source: str, agent: str, target_agent: str):
         pattern=_SOURCE_METADATA_FIELD_RE,
     )
     if validated_source == "unknown":
-        raise AcpxShadowRefusalError(
-            "AcpxTransport: Source must resolve to a trusted non-unknown initiator"
-        )
-    validated_agent = _require_local_metadata_field(
-        "agent", agent, adapter_label="AcpxTransport"
-    )
-    validated_target_agent = _require_local_metadata_field(
-        "target_agent", target_agent, adapter_label="AcpxTransport"
-    )
+        raise AcpxShadowRefusalError("AcpxTransport: Source must resolve to a trusted non-unknown initiator")
+    validated_agent = _require_local_metadata_field("agent", agent, adapter_label="AcpxTransport")
+    validated_target_agent = _require_local_metadata_field("target_agent", target_agent, adapter_label="AcpxTransport")
     token = _ACTIVE_COMMUNICATION_PROVENANCE.set(
         AcpxTransportProvenance(
             source=validated_source,
@@ -736,6 +714,7 @@ def current_communication_provenance() -> AcpxTransportProvenance | None:
     """Return runner-sealed ACP provenance, never a caller-provided value."""
     return _ACTIVE_COMMUNICATION_PROVENANCE.get()
 
+
 # Bounds for task_id/correlation_id/idempotency_key: opaque local identifiers
 # used only for this adapter's own InvocationPlan.metadata (telemetry/dedup
 # bookkeeping upstream of this seat). Never sent as ACP protocol flags, argv,
@@ -750,9 +729,7 @@ _SOURCE_METADATA_FIELD_RE = re.compile(r"^[A-Za-z0-9._:-]+(?:/[A-Za-z0-9._:-]+)*
 # Real ACP `StopReason` values (agentclientprotocol/sdk schema.json
 # `$defs.StopReason`). "cancelled" is recognized but handled as its own
 # failure path.
-_STOP_REASONS = frozenset(
-    {"end_turn", "max_tokens", "max_turn_requests", "refusal", "cancelled"}
-)
+_STOP_REASONS = frozenset({"end_turn", "max_tokens", "max_turn_requests", "refusal", "cancelled"})
 _STOP_REASON_CANCELLED = "cancelled"
 _MISSING_STOP_REASON = object()
 # acpx EXIT_CODES.PERMISSION_DENIED: deny-all refused a tool/permission
@@ -775,6 +752,7 @@ def _duplicate_replay_reason(request_id: object, method: str | None) -> str:
     if method:
         labelled = f"{labelled} ({method})"
     return f"duplicate terminal response replay detected for {labelled}"
+
 
 _USAGE_TOTAL_FIELDS = ("total_tokens", "totalTokens")
 _USAGE_INPUT_FIELDS = ("input_tokens", "inputTokens")
@@ -802,12 +780,7 @@ def _usage_total_from_update(update: dict[str, Any]) -> tuple[int | None, str | 
     if not isinstance(usage, dict):
         return None, "usage_update carried a non-object usage payload"
 
-    fields = (
-        _USAGE_TOTAL_FIELDS
-        + _USAGE_INPUT_FIELDS
-        + _USAGE_OUTPUT_FIELDS
-        + _USAGE_CONTEXT_FIELDS
-    )
+    fields = _USAGE_TOTAL_FIELDS + _USAGE_INPUT_FIELDS + _USAGE_OUTPUT_FIELDS + _USAGE_CONTEXT_FIELDS
     for field in fields:
         if field not in usage:
             continue
@@ -1087,14 +1060,11 @@ def _require_local_metadata_field(
     protocol flags, argv, or stdin — see ``_ALLOWED_TOOL_CONFIG_KEYS``.
     """
     if value is None or not value.strip():
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: {name} must be a non-empty local identifier"
-        )
+        raise AcpxShadowRefusalError(f"{adapter_label}: {name} must be a non-empty local identifier")
     stripped = value.strip()
     if len(stripped) > _METADATA_FIELD_MAX_LEN:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: {name} exceeds the {_METADATA_FIELD_MAX_LEN}-char "
-            "bound for local metadata"
+            f"{adapter_label}: {name} exceeds the {_METADATA_FIELD_MAX_LEN}-char bound for local metadata"
         )
     if not pattern.fullmatch(stripped):
         raise AcpxShadowRefusalError(
@@ -1138,9 +1108,7 @@ def _require_shadow_tool_config(
     discussion = tc.get("acpx_discussion") is True
     communication = tc.get("acpx_transport") is True
     if discussion and communication:
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: acpx_discussion and acpx_transport are mutually exclusive"
-        )
+        raise AcpxShadowRefusalError(f"{adapter_label}: acpx_discussion and acpx_transport are mutually exclusive")
     if discussion:
         _require_discussion_transport(adapter_label=adapter_label)
     elif communication:
@@ -1215,8 +1183,7 @@ def _require_communication_transport(*, adapter_label: str) -> None:
     transport = os.environ.get(TRANSPORT_ENV, "off").strip().lower()
     if transport != "active" or current_communication_provenance() is None:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: active ACPX communication requires the runner-owned "
-            "transport selection boundary"
+            f"{adapter_label}: active ACPX communication requires the runner-owned transport selection boundary"
         )
 
 
@@ -1225,8 +1192,7 @@ def _require_communication_target(*, adapter_label: str, required_target: str) -
     provenance = current_communication_provenance()
     if provenance is None or provenance.target_agent != required_target:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: runner-sealed ACP target provenance does not match "
-            f"required target {required_target!r}"
+            f"{adapter_label}: runner-sealed ACP target provenance does not match required target {required_target!r}"
         )
 
 
@@ -1279,10 +1245,7 @@ def _require_compatible_acpx_binary(
         primary_hint = ""
         if _ACPX_BINARY == _DEFAULT_ACPX_BINARY:
             if main_root is not None:
-                primary_hint = (
-                    f"; canonical primary candidate is "
-                    f"{main_root / 'node_modules' / '.bin' / 'acpx'}"
-                )
+                primary_hint = f"; canonical primary candidate is {main_root / 'node_modules' / '.bin' / 'acpx'}"
             else:
                 primary_hint = "; cwd is not inside a Git checkout, so no canonical primary install is available"
         raise AcpxShadowRefusalError(
@@ -1318,13 +1281,9 @@ def _require_local_claude_acp_adapter(
     consult PATH or a package-exec cache as a substitute.
     """
     binary_path = Path(acpx_binary)
-    if (
-        binary_path.parent.name != ".bin"
-        or binary_path.parent.parent.name != "node_modules"
-    ):
+    if binary_path.parent.name != ".bin" or binary_path.parent.parent.name != "node_modules":
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: ACPX binary is not inside a project "
-            "node_modules/.bin tree",
+            f"{adapter_label}: ACPX binary is not inside a project node_modules/.bin tree",
             failure_code="acp_adapter_missing",
         )
     node_modules = binary_path.parent.parent
@@ -1349,8 +1308,7 @@ def _require_local_claude_acp_adapter(
         or len(manifest_bytes) > _CLAUDE_ACP_MANIFEST_LIMIT_BYTES
     ):
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} "
-            "ownership/mode/size is unsafe",
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} ownership/mode/size is unsafe",
             failure_code="acp_adapter_incompatible",
         )
     try:
@@ -1366,9 +1324,7 @@ def _require_local_claude_acp_adapter(
             failure_code="acp_adapter_incompatible",
         )
     version = manifest.get("version")
-    version_match = (
-        _STRICT_SEMVER_RE.fullmatch(version) if isinstance(version, str) else None
-    )
+    version_match = _STRICT_SEMVER_RE.fullmatch(version) if isinstance(version, str) else None
     if version_match is None:
         raise AcpxShadowRefusalError(
             f"{adapter_label}: project-local Claude ACP adapter version is not stable semver",
@@ -1382,9 +1338,7 @@ def _require_local_claude_acp_adapter(
             failure_code="acp_adapter_incompatible",
         )
     package_bin = manifest.get("bin")
-    relative_bin = (
-        package_bin.get("claude-agent-acp") if isinstance(package_bin, dict) else None
-    )
+    relative_bin = package_bin.get("claude-agent-acp") if isinstance(package_bin, dict) else None
     if (
         not isinstance(relative_bin, str)
         or not relative_bin
@@ -1433,20 +1387,10 @@ def _confinement_prefix_argv(
     """Shared confinement, optionally admitting only sealed review tools."""
     permission_args = ["--deny-all", "--allowed-tools", ""]
     if sealed_review_mcp_config is not None:
-        allowed_tools = (
-            _SEALED_REVIEW_TOOL_NAMES
-            if sealed_review_tool_names is None
-            else sealed_review_tool_names
-        )
-        if not allowed_tools or not set(allowed_tools).issubset(
-            _SEALED_REVIEW_TOOL_NAMES
-        ):
-            raise AcpxShadowRefusalError(
-                "ACPX sealed-review tool policy contains unsupported tools"
-            )
-        native_allowed_tools = tuple(
-            name.removeprefix("mcp__") for name in allowed_tools
-        )
+        allowed_tools = _SEALED_REVIEW_TOOL_NAMES if sealed_review_tool_names is None else sealed_review_tool_names
+        if not allowed_tools or not set(allowed_tools).issubset(_SEALED_REVIEW_TOOL_NAMES):
+            raise AcpxShadowRefusalError("ACPX sealed-review tool policy contains unsupported tools")
+        native_allowed_tools = tuple(name.removeprefix("mcp__") for name in allowed_tools)
         permission_policy = json.dumps(
             {
                 # ACP agents do not agree on MCP tool spelling. Claude/Kimi
@@ -1537,9 +1481,7 @@ def _probe_grok_cli_compatibility(binary: str) -> tuple[str, tuple[str, ...]]:
     if not agent_help:
         missing.append("agent")
     else:
-        missing.extend(
-            flag for flag in _GROK_REQUIRED_AGENT_FLAGS if flag not in agent_help
-        )
+        missing.extend(flag for flag in _GROK_REQUIRED_AGENT_FLAGS if flag not in agent_help)
     if not stdio_help:
         missing.append("agent stdio")
     return version, tuple(missing)
@@ -1559,25 +1501,20 @@ def _resolve_grok_binary() -> str:
         )
     resolved = Path(found).resolve()
     if not resolved.is_file():
-        raise AcpxShadowRefusalError(
-            f"AcpxGrokShadowAdapter: resolved grok path {resolved} is not a file"
-        )
+        raise AcpxShadowRefusalError(f"AcpxGrokShadowAdapter: resolved grok path {resolved} is not a file")
     return str(resolved)
 
 
 def _require_grok_profile(*, sealed_review: bool = False) -> str:
     """Return the exact project-owned profile for this invocation."""
     profile_path = _GROK_SEALED_REVIEW_PROFILE_PATH if sealed_review else _GROK_PROFILE_PATH
-    expected_sha256 = (
-        _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
-    )
+    expected_sha256 = _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
     profile_label = "sealed-review" if sealed_review else "no-tool"
     try:
         content = profile_path.read_bytes()
     except OSError as exc:
         raise AcpxShadowRefusalError(
-            f"AcpxGrokShadowAdapter: required {profile_label} Grok profile unavailable at "
-            f"{profile_path}: {exc}"
+            f"AcpxGrokShadowAdapter: required {profile_label} Grok profile unavailable at {profile_path}: {exc}"
         ) from exc
     observed = hashlib.sha256(content).hexdigest()
     if observed != expected_sha256:
@@ -1749,9 +1686,7 @@ def probe_participant_reachability(participant: str) -> str | None:
     executable = _PARTICIPANT_PROVIDER_BINARIES.get(participant)
     if executable is None or shutil.which(executable):
         return None
-    return _missing_binary_message(
-        executable, adapter_label=f"ACP participant {participant!r}"
-    )
+    return _missing_binary_message(executable, adapter_label=f"ACP participant {participant!r}")
 
 
 def _resolve_participant_binary(
@@ -1763,14 +1698,10 @@ def _resolve_participant_binary(
     contract = _PARTICIPANT_COMPATIBILITY_CONTRACTS[executable]
     found = shutil.which(executable)
     if not found:
-        raise AcpxShadowRefusalError(
-            _missing_binary_message(executable, adapter_label=adapter_label)
-        )
+        raise AcpxShadowRefusalError(_missing_binary_message(executable, adapter_label=adapter_label))
     resolved = Path(found).resolve()
     if not resolved.is_file():
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: resolved {executable} path {resolved} is not a file"
-        )
+        raise AcpxShadowRefusalError(f"{adapter_label}: resolved {executable} path {resolved} is not a file")
     observed, missing = _probe_participant_cli_compatibility(str(resolved), executable)
     if missing:
         raise AcpxShadowRefusalError(
@@ -1783,9 +1714,7 @@ def _resolve_participant_binary(
 def _require_text_agent(*, adapter_label: str) -> str:
     """Return the project-owned text ACP server path, or fail closed."""
     if not _TEXT_AGENT_PATH.is_file():
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: required text-only ACP server missing at {_TEXT_AGENT_PATH}"
-        )
+        raise AcpxShadowRefusalError(f"{adapter_label}: required text-only ACP server missing at {_TEXT_AGENT_PATH}")
     try:
         observed = hashlib.sha256(_TEXT_AGENT_PATH.read_bytes()).hexdigest()
     except OSError as exc:
@@ -1794,8 +1723,7 @@ def _require_text_agent(*, adapter_label: str) -> str:
         ) from exc
     if observed != _TEXT_AGENT_SHA256:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: text-only ACP server digest mismatch; refusing unreviewed "
-            "confinement code"
+            f"{adapter_label}: text-only ACP server digest mismatch; refusing unreviewed confinement code"
         )
     return str(_TEXT_AGENT_PATH)
 
@@ -1815,9 +1743,7 @@ def _build_text_agent_command(
     node_binary = str(_resolve_host_node_binary(adapter_label=adapter_label))
     node_path = Path(node_binary).resolve()
     if not node_path.is_file():
-        raise AcpxShadowRefusalError(
-            f"{adapter_label}: resolved node path {node_path} is not a file"
-        )
+        raise AcpxShadowRefusalError(f"{adapter_label}: resolved node path {node_path} is not a file")
     command = shlex.join(
         [
             str(node_path),
@@ -1925,11 +1851,7 @@ class AcpxAdapter:
             builtin_agent="codex",
         )
 
-        max_turns = (
-            ACPX_DEFAULT_MAX_TURNS
-            if sealed_review_mcp_config is not None
-            else ACPX_ORDINARY_ASK_MAX_TURNS
-        )
+        max_turns = ACPX_DEFAULT_MAX_TURNS if sealed_review_mcp_config is not None else ACPX_ORDINARY_ASK_MAX_TURNS
         cmd: list[str] = _confinement_prefix_argv(
             binary,
             cwd,
@@ -2211,8 +2133,7 @@ class AcpxAdapter:
         # expected confinement, not a crashed prompt. A completed
         # non-cancelled turn is the recovery path — no session-store surgery.
         if returncode != 0 and not (
-            returncode == ACPX_EXIT_PERMISSION_DENIED
-            and final_stop_reason != _STOP_REASON_CANCELLED
+            returncode == ACPX_EXIT_PERMISSION_DENIED and final_stop_reason != _STOP_REASON_CANCELLED
         ):
             return self._closed(
                 f"acpx exec exited rc={returncode} despite stopReason={final_stop_reason!r}",
@@ -2344,11 +2265,7 @@ class _AcpxDiscussionAdapter:
         return {}
 
     def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
-        return (
-            ACPX_DEFAULT_MAX_TURNS
-            if sealed_review_mcp_config is not None
-            else ACPX_ORDINARY_ASK_MAX_TURNS
-        )
+        return ACPX_DEFAULT_MAX_TURNS if sealed_review_mcp_config is not None else ACPX_ORDINARY_ASK_MAX_TURNS
 
     def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
         _ = sealed_review_mcp_config
@@ -2367,9 +2284,7 @@ class _AcpxDiscussionAdapter:
         effort: str | None = None,
     ) -> InvocationPlan:
         if mode not in self.supported_modes:
-            raise ValueError(
-                f"{type(self).__name__}: unsupported mode {mode!r}; only 'read-only' is permitted"
-            )
+            raise ValueError(f"{type(self).__name__}: unsupported mode {mode!r}; only 'read-only' is permitted")
         tc = _require_active_discussion_tool_config(
             tool_config,
             adapter_label=type(self).__name__,
@@ -2381,26 +2296,21 @@ class _AcpxDiscussionAdapter:
         )
         if self.fixed_model is not None and model not in {None, self.fixed_model}:
             raise AcpxShadowRefusalError(
-                f"{type(self).__name__}: model={model!r} rejected; caller may only pass None "
-                f"or {self.fixed_model!r}"
+                f"{type(self).__name__}: model={model!r} rejected; caller may only pass None or {self.fixed_model!r}"
             )
         if self.allowed_models and model is not None and model not in self.allowed_models:
             raise AcpxShadowRefusalError(
-                f"{type(self).__name__}: model={model!r} rejected; allowed pins are "
-                f"{sorted(self.allowed_models)!r}"
+                f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
             )
         if self.fixed_effort is not None and effort not in {None, self.fixed_effort}:
             raise AcpxShadowRefusalError(
-                f"{type(self).__name__}: effort={effort!r} rejected; caller may only pass None "
-                f"or {self.fixed_effort!r}"
+                f"{type(self).__name__}: effort={effort!r} rejected; caller may only pass None or {self.fixed_effort!r}"
             )
         if session_id is not None:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: session_id must be None; this seat is one-shot `exec` only"
             )
-        validated_task_id = _require_local_metadata_field(
-            "task_id", task_id, adapter_label=type(self).__name__
-        )
+        validated_task_id = _require_local_metadata_field("task_id", task_id, adapter_label=type(self).__name__)
         correlation_id = _require_local_metadata_field(
             "correlation_id", tc.get("correlation_id"), adapter_label=type(self).__name__
         )
@@ -2672,9 +2582,7 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
         _ = cwd
-        if is_deepseek_first_party_forbidden_in_ci(
-            "deepseek-direct", DEEPSEEK_ACP_INVOCATION_MODEL
-        ):
+        if is_deepseek_first_party_forbidden_in_ci("deepseek-direct", DEEPSEEK_ACP_INVOCATION_MODEL):
             raise AcpxShadowRefusalError(
                 deepseek_first_party_error(
                     provider="deepseek-direct",
@@ -2797,9 +2705,7 @@ class AcpxGrokShadowAdapter:
                 f"None or {GROK_SHADOW_EFFORT!r} (effective effort is always {GROK_SHADOW_EFFORT!r})"
             )
 
-        validated_task_id = _require_local_metadata_field(
-            "task_id", task_id, adapter_label="AcpxGrokShadowAdapter"
-        )
+        validated_task_id = _require_local_metadata_field("task_id", task_id, adapter_label="AcpxGrokShadowAdapter")
         correlation_id = _require_local_metadata_field(
             "correlation_id",
             tc.get("correlation_id"),
@@ -2835,15 +2741,9 @@ class AcpxGrokShadowAdapter:
 
         sealed_review = sealed_review_mcp_config is not None
         profile_path = _require_grok_profile(sealed_review=sealed_review)
-        profile_sha256 = (
-            _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
-        )
+        profile_sha256 = _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
         agent_command = _build_grok_agent_command(grok_binary, profile_path)
-        max_turns = (
-            ACPX_DEFAULT_MAX_TURNS
-            if sealed_review_mcp_config is not None
-            else ACPX_ORDINARY_ASK_MAX_TURNS
-        )
+        max_turns = ACPX_DEFAULT_MAX_TURNS if sealed_review_mcp_config is not None else ACPX_ORDINARY_ASK_MAX_TURNS
         cmd: list[str] = _confinement_prefix_argv(
             acpx_binary,
             cwd,

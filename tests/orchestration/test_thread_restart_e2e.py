@@ -269,9 +269,7 @@ def seed_driver_stream(
     instance_id: str = "fixture-seed",
     process_id: int | None = None,
 ) -> SessionStreamStore:
-    store = SessionStreamStore(
-        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
-    )
+    store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
     lease = store.open_session(
         stream_id=stream_id,
         holder=LeaseHolder(
@@ -700,7 +698,12 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(tmp_
     template = json.loads(template_path.read_text(encoding="utf-8"))
     assert template["lineage_id"] == packet["lineage_id"]
     assert template["rollover_id"] == packet["rollover_id"]
-    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [3, 3, 2, 2]
+    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [
+        3,
+        3,
+        2,
+        2,
+    ]
     assert all(not record["statement"] for record in template["goals"])
     assert all(not record["decision"] for record in template["decision_records"])
     assert all(not record["prohibition"] for record in template["constraint_records"])
@@ -1051,10 +1054,10 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
         "#!/bin/bash\n"
         "set -e\n"
         f"printf '%s\\n' \"$@\" > {os.fspath(argv_capture)!r}\n"
-        f"printf '%s\\n' '{{\"session_id\":\"{replacement_thread_id}\","
-        "\"source\":\"startup\",\"model\":\"gpt-5.6-sol\","
-        "\"agent_type\":\"orchestrator\"}' | "
-        f"CLAUDE_PROJECT_DIR=\"$PWD\" bash .codex/hooks/session-setup.sh > {os.fspath(hook_capture)!r}\n"
+        f'printf \'%s\\n\' \'{{"session_id":"{replacement_thread_id}",'
+        '"source":"startup","model":"gpt-5.6-sol",'
+        '"agent_type":"orchestrator"}\' | '
+        f'CLAUDE_PROJECT_DIR="$PWD" bash .codex/hooks/session-setup.sh > {os.fspath(hook_capture)!r}\n'
         ".venv/bin/python -m agents_extensions.shared.session_streams hook close >/dev/null\n",
         encoding="utf-8",
     )
@@ -1062,9 +1065,12 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
 
     env = os.environ.copy()
     for key in tuple(env):
-        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key.startswith(
-            "CODEX_LAUNCHER_ROLLOVER_"
-        ) or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}:
+        if (
+            key.startswith("SESSION_")
+            or key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_LAUNCHER_ROLLOVER_")
+            or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}
+        ):
             env.pop(key, None)
     env.update(
         {
@@ -1097,8 +1103,12 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
     argv = argv_capture.read_text(encoding="utf-8").splitlines()
     assert "resume" not in argv
     assert "fork" not in argv
-    assert store.dump_stream("epic:4707")["sessions"][-1]["state"] == "open"
-    assert store.dump_stream("epic:5703")["sessions"][-1]["state"] == "closed"
+    assert (
+        store.dump_stream("epic:4707")["sessions"][-1]["state"] == "open"
+    )  # allow-hardcoded-epic: e2e rollover fixture stream
+    assert (
+        store.dump_stream("epic:5703")["sessions"][-1]["state"] == "closed"
+    )  # allow-hardcoded-epic: e2e rollover fixture stream
     assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""
 
 
@@ -1134,9 +1144,12 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
 
     env = os.environ.copy()
     for key in tuple(env):
-        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key.startswith(
-            "CODEX_LAUNCHER_ROLLOVER_"
-        ) or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}:
+        if (
+            key.startswith("SESSION_")
+            or key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_LAUNCHER_ROLLOVER_")
+            or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}
+        ):
             env.pop(key, None)
     env.update(
         {
@@ -1156,8 +1169,10 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
     assert not started.exists()
     assert load_lease(primary, first)["replacement"]["status"] == "pending_start"
     assert load_lease(primary, second)["replacement"]["status"] == "pending_start"
-    assert len(store.dump_stream("epic:5703")["sessions"]) == 1
-    assert store.dump_stream("epic:5703")["sessions"][0]["state"] == "closed"
+    assert len(store.dump_stream("epic:5703")["sessions"]) == 1  # allow-hardcoded-epic: e2e rollover fixture stream
+    assert (
+        store.dump_stream("epic:5703")["sessions"][0]["state"] == "closed"
+    )  # allow-hardcoded-epic: e2e rollover fixture stream
 
 
 def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
@@ -1195,9 +1210,12 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
 
     env = os.environ.copy()
     for key in tuple(env):
-        if key.startswith("SESSION_") or key.startswith("LEARN_UKRAINIAN_") or key.startswith(
-            "CODEX_LAUNCHER_ROLLOVER_"
-        ) or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}:
+        if (
+            key.startswith("SESSION_")
+            or key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_LAUNCHER_ROLLOVER_")
+            or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}
+        ):
             env.pop(key, None)
     env.update(
         {
@@ -1215,8 +1233,10 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
     assert launched.returncode == 1
     assert "already has live session" in launched.stderr
     assert not started.exists()
-    assert len(store.dump_stream("epic:5703")["sessions"]) == 1
-    assert store.dump_stream("epic:5703")["sessions"][0]["state"] == "open"
+    assert len(store.dump_stream("epic:5703")["sessions"]) == 1  # allow-hardcoded-epic: e2e rollover fixture stream
+    assert (
+        store.dump_stream("epic:5703")["sessions"][0]["state"] == "open"
+    )  # allow-hardcoded-epic: e2e rollover fixture stream
     assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""
 
 
@@ -1302,9 +1322,7 @@ def test_real_grok_driver_refuses_expired_app_thread_holder_before_provider_exec
     tmp_path: Path,
 ) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
-    store = SessionStreamStore(
-        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
-    )
+    store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
     holder = LeaseHolder(
         agent="codex",
         harness="codex-desktop",

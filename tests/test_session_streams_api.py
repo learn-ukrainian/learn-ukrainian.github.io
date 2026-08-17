@@ -41,7 +41,7 @@ def test_session_stream_status_and_digest_for_harness() -> None:
     s = client.get("/api/session-streams/v1/status/epic:4707")
     assert s.status_code in {200, 404}
     if s.status_code == 200:
-        assert s.json()["stream_id"] == "epic:4707"
+        assert s.json()["stream_id"] == "epic:4707"  # allow-hardcoded-epic: session stream status api probe
 
     dig = client.get("/api/session-streams/v1/digest/epic:4707", params={"limit": 5})
     assert dig.status_code in {200, 404}
@@ -71,13 +71,7 @@ def test_session_streams_repo_root_uses_live_primary_under_release(
     db.write_bytes(b"")
 
     # Synthetic release path shape: .runtime/api/releases/<40-hex>
-    release = (
-        tmp_path
-        / ".runtime"
-        / "api"
-        / "releases"
-        / ("a" * 40)
-    )
+    release = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40)
     release.mkdir(parents=True)
 
     monkeypatch.setattr(ssr, "PROJECT_ROOT", release)

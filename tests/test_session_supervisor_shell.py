@@ -44,7 +44,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   "schema": "session-supervisor-bootstrap.v1",
   "identity": {{
     "role": "driver",
-    "stream_id": "epic:4542",
+    "stream_id": "epic:9999",
     "lease": {{
       "session_id": "sess-shell-789",
       "lease_id": "lease-shell-789",
@@ -94,7 +94,9 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
 
     env = _clean_environ()
     subprocess.run(["git", "init", "--quiet", str(project)], check=True, env=env, timeout=30)
-    subprocess.run(["git", "-C", str(project), "config", "user.email", "test@example.com"], check=True, env=env, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(project), "config", "user.email", "test@example.com"], check=True, env=env, timeout=30
+    )
     subprocess.run(["git", "-C", str(project), "config", "user.name", "Test"], check=True, env=env, timeout=30)
     (project / "README.md").write_text("# test", encoding="utf-8")
     subprocess.run(["git", "-C", str(project), "add", "."], check=True, env=env, timeout=30)
@@ -110,7 +112,7 @@ def test_claim_exports_all_session_stream_variables_and_writes_capsule(tmp_path:
     script = f"""
 set -euo pipefail
 source "{project}/scripts/lib/session_supervisor.sh"
-claim_session_supervisor_env "epic:4542" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "test-launcher.sh" "hramatka"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "test-launcher.sh" "hramatka"
 printf 'STREAM=%s\\n' "$SESSION_STREAM_ID"
 printf 'SESSION=%s\\n' "$SESSION_STREAM_SESSION_ID"
 printf 'LEASE=%s\\n' "$SESSION_STREAM_LEASE_ID"
@@ -132,7 +134,7 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
     )
     assert result.returncode == 0, result.stderr + result.stdout
     lines = {k: v for k, v in (line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)}
-    assert lines["STREAM"] == "epic:4542"
+    assert lines["STREAM"] == "epic:9999"
     assert lines["SESSION"] == "sess-shell-789"
     assert lines["LEASE"] == "lease-shell-789"
     assert lines["AGENT"] == "test-agent"
@@ -146,7 +148,7 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
 
     capsule = capsule_path.read_text(encoding="utf-8")
     assert '"schema_version": 1' in capsule
-    assert '"stream_id": "epic:4542"' in capsule
+    assert '"stream_id": "epic:9999"' in capsule
     assert '"launcher": "test-launcher.sh"' in capsule
     assert '"epic": "hramatka"' in capsule
     assert '"agent": "test-agent"' in capsule
@@ -154,7 +156,7 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
     assert '"task_id": "test-task"' in capsule
 
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
-    assert supervisor_args[supervisor_args.index("--stream") + 1] == "epic:4542"
+    assert supervisor_args[supervisor_args.index("--stream") + 1] == "epic:9999"
     assert supervisor_args[supervisor_args.index("--agent") + 1] == "test-agent"
     assert supervisor_args[supervisor_args.index("--harness") + 1] == "test-harness"
     assert supervisor_args[supervisor_args.index("--instance-id") + 1] == "test-instance"
@@ -166,7 +168,7 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
     receipt_path = project / ".claude" / "hramatka-epic" / "session-lease.env"
     assert receipt_path.is_file()
     expected_receipt = {
-        "SESSION_STREAM_ID": "epic:4542",
+        "SESSION_STREAM_ID": "epic:9999",
         "SESSION_STREAM_SESSION_ID": "sess-shell-789",
         "SESSION_STREAM_LEASE_ID": "lease-shell-789",
         "SESSION_STREAM_AGENT": "test-agent",
@@ -185,7 +187,7 @@ def test_claim_uses_default_instance_id_when_empty(tmp_path: Path) -> None:
     script = f"""
 set -euo pipefail
 source "{project}/scripts/lib/session_supervisor.sh"
-claim_session_supervisor_env "epic:4542" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka"
 printf 'INSTANCE=%s\\n' "$SESSION_STREAM_INSTANCE_ID"
 """
     result = subprocess.run(
@@ -238,7 +240,7 @@ exit 1
     script = f"""
 set -euo pipefail
 source "{project}/scripts/lib/session_supervisor.sh"
-claim_session_supervisor_env "epic:4542" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka" || exit 42
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka" || exit 42
 exit 0
 """
     result = subprocess.run(
@@ -266,7 +268,7 @@ exit 1
     script = f"""
 set -euo pipefail
 source "{project}/scripts/lib/session_supervisor.sh"
-claim_session_supervisor_env "epic:4542" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka" || exit 43
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka" || exit 43
 exit 0
 """
     result = subprocess.run(

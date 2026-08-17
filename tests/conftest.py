@@ -5,10 +5,13 @@ Provides reusable content snippets and module templates for testing.
 """
 
 import contextlib
+import ipaddress
 import os
+import socket
 import sqlite3
 import sys
-from collections.abc import Collection
+import threading
+from collections.abc import Collection, Generator
 from pathlib import Path
 
 import pytest
@@ -47,7 +50,6 @@ def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str])
     _append_breadcrumb(f"FINISH {nodeid}\n")
 
 
-
 def _require_data_artifact(
     relative_path: str,
     *,
@@ -63,18 +65,14 @@ def _require_data_artifact(
         try:
             with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
                 available_tables = {
-                    row[0]
-                    for row in connection.execute(
-                        "SELECT name FROM sqlite_master WHERE type = 'table'"
-                    )
+                    row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
                 }
         except sqlite3.Error:
             available_tables = set()
         missing_tables = sorted(set(required_sqlite_tables) - available_tables)
         if missing_tables:
             pytest.skip(
-                f"requires {relative_path} with SQLite tables: "
-                f"{', '.join(missing_tables)} (not provisioned in CI)"
+                f"requires {relative_path} with SQLite tables: {', '.join(missing_tables)} (not provisioned in CI)"
             )
     return artifact
 
@@ -109,9 +107,7 @@ def requires_vesum_db() -> Path:
 @pytest.fixture
 def requires_literary_wave12_jsonl() -> Path:
     """Skip a test requiring the uncommitted Wave 12 literary corpus fixture."""
-    return _require_data_artifact(
-        "data/literary_texts/wave12-krupnytsky-orlyk-biohrafiia.jsonl"
-    )
+    return _require_data_artifact("data/literary_texts/wave12-krupnytsky-orlyk-biohrafiia.jsonl")
 
 
 @pytest.fixture(autouse=True)
@@ -151,9 +147,191 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
 
 
+class SocketBlockedError(RuntimeError):
+    """Raised when a unit test attempts an un-opted outbound network connection (#6968)."""
+
+
+def _is_localhost_host(host: object) -> bool:
+    """Return True if host is loopback or local machine identifier."""
+    if not host:
+        return True
+    if isinstance(host, bytes):
+        try:
+            host = host.decode("utf-8")
+        except UnicodeDecodeError:
+            return False
+    if not isinstance(host, str):
+        return False
+
+    host_lower = host.lower()
+    if host_lower in {"localhost", "127.0.0.1", "::1", "0.0.0.0", "::"}:
+        return True
+    if host_lower.endswith(".localhost"):
+        return True
+    with contextlib.suppress(OSError):
+        if host_lower in {socket.gethostname().lower(), socket.getfqdn().lower()}:
+            return True
+    try:
+        ip = ipaddress.ip_address(host)
+        return ip.is_loopback or ip.is_unspecified
+    except ValueError:
+        return False
+
+
+def _is_localhost_address(address: object) -> bool:
+    """Return True if address is AF_UNIX (str/bytes) or AF_INET(6) pointing to localhost."""
+    if address is None:
+        return True
+    if isinstance(address, (str, bytes)):
+        return True
+    if isinstance(address, tuple) and address:
+        return _is_localhost_host(address[0])
+    return False
+
+
+_ORIG_SOCKET_CONNECT = socket.socket.connect
+_ORIG_SOCKET_CONNECT_EX = socket.socket.connect_ex
+_ORIG_SOCKET_SENDTO = socket.socket.sendto
+_ORIG_SOCKET_SENDMSG = getattr(socket.socket, "sendmsg", None)
+_ORIG_SOCKET_CREATE_CONNECTION = socket.create_connection
+
+_SOCKET_GUARD_TLS = threading.local()
+
+
+def _is_live_network_allowed() -> bool:
+    return getattr(_SOCKET_GUARD_TLS, "live_network_allowed", False)
+
+
+def _set_live_network_allowed(allowed: bool) -> None:
+    _SOCKET_GUARD_TLS.live_network_allowed = allowed
+
+
+def _raise_socket_blocked(address: object) -> None:
+    host = address[0] if isinstance(address, tuple) and address else address
+    raise SocketBlockedError(
+        f"Outbound network connection to '{host}' blocked by socket-guard. "
+        f"Unit tests must be hermetic and not rely on live external services. "
+        f"If this test legitimately requires live network, mark it with @pytest.mark.live_network."
+    )
+
+
+def _guarded_connect(sock_self: socket.socket, address: object) -> object:
+    if _is_live_network_allowed():
+        return _ORIG_SOCKET_CONNECT(sock_self, address)
+    if getattr(sock_self, "family", None) == getattr(socket, "AF_UNIX", None):
+        return _ORIG_SOCKET_CONNECT(sock_self, address)
+    if _is_localhost_address(address):
+        return _ORIG_SOCKET_CONNECT(sock_self, address)
+    _raise_socket_blocked(address)
+
+
+def _guarded_connect_ex(sock_self: socket.socket, address: object) -> int:
+    if _is_live_network_allowed():
+        return _ORIG_SOCKET_CONNECT_EX(sock_self, address)
+    if getattr(sock_self, "family", None) == getattr(socket, "AF_UNIX", None):
+        return _ORIG_SOCKET_CONNECT_EX(sock_self, address)
+    if _is_localhost_address(address):
+        return _ORIG_SOCKET_CONNECT_EX(sock_self, address)
+    _raise_socket_blocked(address)
+    return -1
+
+
+def _guarded_sendto(sock_self: socket.socket, data: bytes, *args: object, **kwargs: object) -> int:
+    if _is_live_network_allowed():
+        return _ORIG_SOCKET_SENDTO(sock_self, data, *args, **kwargs)
+    address = kwargs.get("address") or (args[-1] if args else None)
+    if (
+        address is not None
+        and getattr(sock_self, "family", None) != getattr(socket, "AF_UNIX", None)
+        and not _is_localhost_address(address)
+    ):
+        _raise_socket_blocked(address)
+    return _ORIG_SOCKET_SENDTO(sock_self, data, *args, **kwargs)
+
+
+def _guarded_sendmsg(
+    sock_self: socket.socket,
+    buffers: object,
+    *args: object,
+    **kwargs: object,
+) -> int:
+    if _is_live_network_allowed():
+        assert _ORIG_SOCKET_SENDMSG is not None
+        return _ORIG_SOCKET_SENDMSG(sock_self, buffers, *args, **kwargs)
+    address = kwargs.get("address")
+    if address is None and len(args) >= 3:
+        address = args[2]
+    if (
+        address is not None
+        and getattr(sock_self, "family", None) != getattr(socket, "AF_UNIX", None)
+        and not _is_localhost_address(address)
+    ):
+        _raise_socket_blocked(address)
+    assert _ORIG_SOCKET_SENDMSG is not None
+    return _ORIG_SOCKET_SENDMSG(sock_self, buffers, *args, **kwargs)
+
+
+def _guarded_create_connection(
+    address: object,
+    *args: object,
+    **kwargs: object,
+) -> socket.socket:
+    if _is_live_network_allowed():
+        return _ORIG_SOCKET_CREATE_CONNECTION(address, *args, **kwargs)
+    if not _is_localhost_address(address):
+        _raise_socket_blocked(address)
+    return _ORIG_SOCKET_CREATE_CONNECTION(address, *args, **kwargs)
+
+
+_SOCKET_GUARD_INSTALLED = False
+
+
+def _install_socket_guard() -> None:
+    """Install package-wide socket-guard hooks covering all outbound surfaces (#6968)."""
+    global _SOCKET_GUARD_INSTALLED
+    if _SOCKET_GUARD_INSTALLED:
+        return
+    socket.socket.connect = _guarded_connect
+    socket.socket.connect_ex = _guarded_connect_ex
+    socket.socket.sendto = _guarded_sendto
+    if _ORIG_SOCKET_SENDMSG is not None:
+        socket.socket.sendmsg = _guarded_sendmsg
+    socket.create_connection = _guarded_create_connection
+    _SOCKET_GUARD_INSTALLED = True
+
+
+# Install immediately upon conftest load (earliest hook preceding module/session fixtures)
+_install_socket_guard()
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    _install_socket_guard()
+
+
+def pytest_runtest_setup(item: pytest.Item) -> None:
+    if item.get_closest_marker("live_network"):
+        _set_live_network_allowed(True)
+
+
+def pytest_runtest_teardown(item: pytest.Item, nextitem: pytest.Item | None) -> None:
+    _set_live_network_allowed(False)
+
+
+@pytest.fixture(autouse=True)
+def _socket_guard(request: pytest.FixtureRequest) -> Generator[None, None, None]:
+    """Ensure per-test live_network marker status is respected and always reset (#6968)."""
+    is_live = bool(request.node.get_closest_marker("live_network"))
+    _set_live_network_allowed(is_live)
+    try:
+        yield
+    finally:
+        _set_live_network_allowed(False)
+
+
 # =============================================================================
 # MODULE TEMPLATES
 # =============================================================================
+
 
 @pytest.fixture
 def minimal_module_b1():
@@ -226,6 +404,7 @@ Production content here.
 # =============================================================================
 # ACTIVITY SNIPPETS
 # =============================================================================
+
 
 @pytest.fixture
 def valid_quiz_b1():
@@ -306,6 +485,7 @@ def valid_match_up():
 # VOCABULARY FIXTURES
 # =============================================================================
 
+
 @pytest.fixture
 def valid_vocab_table_b1():
     """Valid B1 vocabulary table (3 columns)."""
@@ -351,6 +531,7 @@ def invalid_vocab_missing_ipa():
 # =============================================================================
 # CONTENT WITH ISSUES
 # =============================================================================
+
 
 @pytest.fixture
 def content_with_russian_chars():
@@ -402,6 +583,7 @@ def quiz_with_short_prompts():
 # =============================================================================
 # PPP STRUCTURE FIXTURES
 # =============================================================================
+
 
 @pytest.fixture
 def valid_ppp_structure():

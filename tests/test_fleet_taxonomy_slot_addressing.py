@@ -249,7 +249,7 @@ def test_resolve_slot_holder_live_holder(session_db_fixture: Path) -> None:
     assert res.has_holder is True
     assert res.slot == "claude-atlas"
     assert res.area_id == "atlas"
-    assert res.stream_id == "epic:4387"
+    assert res.stream_id == "epic:4387"  # allow-hardcoded-epic: slot addressing taxonomy resolution
     assert res.session_id == "sess_atlas_123"
     assert res.holder_agent == "claude-infra"
     assert res.holder_harness == "claude"
@@ -325,7 +325,7 @@ def test_resolve_slot_holder_alias_slot(session_db_fixture: Path) -> None:
     assert res.has_holder is True
     assert res.slot == "claude-folk"
     assert res.area_id == "seminars"
-    assert res.stream_id == "epic:2836"
+    assert res.stream_id == "epic:2836"  # allow-hardcoded-epic: slot addressing alias resolution
     assert res.holder_agent == "grok-infra"
 
 
