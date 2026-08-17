@@ -965,7 +965,12 @@ def _build_parser() -> argparse.ArgumentParser:
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
     converse_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     converse_parser.add_argument("--task-id", required=True, help="Conversation thread ID (e.g., 'a1-1-planning')")
-    converse_parser.add_argument("--model", default="gemini-3.1-pro-preview", help="Gemini model")
+    converse_parser.add_argument(
+        "--model",
+        default=None,
+        help="Legacy Gemini model slug; mapped to the AGY seat's live registry pin "
+        "(default: the pin itself — never an independently hardcoded slug)",
+    )
     converse_parser.add_argument(
         "--no-github", dest="no_github", action="store_true", help="Skip auto-posting to GitHub"
     )
@@ -1342,8 +1347,13 @@ def _dispatch_command(args):
     elif args.command == "ask-kimi":
         _handle_ask_kimi(args)
     elif args.command == "converse":
+        from ._acp_compat import resolve_compat_model
+
         content = sys.stdin.read() if args.content == "-" else args.content
-        converse_gemini(content, args.task_id, args.model, getattr(args, "no_github", False))
+        # None (the default) lets converse_gemini apply the live registry pin;
+        # legacy gemini* slugs map to that same pin (#6929).
+        selected = resolve_compat_model("gemini", getattr(args, "model", None))
+        converse_gemini(content, args.task_id, selected, getattr(args, "no_github", False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

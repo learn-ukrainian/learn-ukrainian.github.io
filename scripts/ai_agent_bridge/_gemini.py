@@ -54,13 +54,23 @@ from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt
 
 
-def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-preview",
+def converse_gemini(content: str, task_id: str, model: str | None = None,
                     skip_github: bool = False, auth_mode: str | None = None):
     """Multi-turn conversation with Gemini. Includes conversation history in prompt.
 
     Each call adds to the conversation thread (via task_id) and Gemini sees
     all previous messages for context.
+
+    ``model`` defaults to the AGY seat's live ACP registry pin. Legacy
+    ``gemini*`` slugs remap through ``resolve_compat_model`` so a pin
+    rotation cannot leave converse on a stale default (#6929).
     """
+    from ._acp_compat import registered_participant_model, resolve_compat_model
+
+    selected = resolve_compat_model("gemini", model)
+    if selected is None:
+        selected = registered_participant_model("agy")
+
     history, msg_count = get_conversation_context(task_id)
 
     if history:
@@ -75,7 +85,7 @@ def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-pre
 
     return ask_gemini(
         full_content, task_id=task_id, msg_type="query",
-        model=model, skip_github=skip_github, auth_mode=auth_mode,
+        model=selected, skip_github=skip_github, auth_mode=auth_mode,
     )
 
 
