@@ -365,6 +365,7 @@ def test_liveness_signal_paths_ignore_peer_session_and_shared_home(tmp_path, mon
         )
     # Peer was snapshotted at build_invocation — must not bind as ours.
     assert peer in adapter._session_dir_snapshot
+    assert "peer-session-aaaa" in plan.metadata["liveness_session_dir_snapshot"]
 
     ours = grok_session_dir(grok_home, project, "our-session-bbbb")
     ours.mkdir(parents=True)
@@ -386,6 +387,7 @@ def test_liveness_signal_paths_ignore_peer_session_and_shared_home(tmp_path, mon
     assert sessions_root in paths
     assert ours in paths
     assert our_events in paths
+    assert plan.metadata["liveness_session_id"] == "our-session-bbbb"
 
 
 def test_liveness_signal_paths_resume_binds_exact_session(tmp_path, monkeypatch):
@@ -415,3 +417,158 @@ def test_liveness_signal_paths_resume_binds_exact_session(tmp_path, monkeypatch)
     assert paths == (target, target / "events.jsonl")
     assert grok_home not in paths
     assert peer not in paths
+
+
+def test_liveness_newest_post_snapshot_cannot_steal_bound_session(tmp_path, monkeypatch):
+    """#6935: pin the first post-snapshot child; a later sibling must not steal.
+
+    Mutation check: clearing ``liveness_session_id`` and re-picking newest on
+    every poll makes ``assert later not in paths_after`` fail.
+    """
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    project = tmp_path / "project"
+    project.mkdir()
+    grok_home = resolve_grok_home()
+
+    adapter = GrokBuildAdapter()
+    with patch(
+        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
+    ):
+        plan = adapter.build_invocation(
+            prompt="supervised",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+
+    ours = grok_session_dir(grok_home, project, "bound-first")
+    ours.mkdir(parents=True)
+    (ours / "events.jsonl").write_text("{}\n", encoding="utf-8")
+
+    paths_first = adapter.liveness_signal_paths(plan)
+    assert ours in paths_first
+    assert plan.metadata["liveness_session_id"] == "bound-first"
+
+    # Later same-cwd peer is newer; unpinned re-pick would bind it.
+    later = grok_session_dir(grok_home, project, "later-peer")
+    later.mkdir(parents=True)
+    (later / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    # Ensure later wins a pure-mtime newest contest.
+    later.touch()
+
+    paths_after = adapter.liveness_signal_paths(plan)
+    assert paths_after == (ours, ours / "events.jsonl")
+    assert later not in paths_after
+    assert plan.metadata["liveness_session_id"] == "bound-first"
+
+
+def test_liveness_split_instance_non_resume_uses_plan_snapshot(tmp_path, monkeypatch):
+    """#6935: plan-only poller must not treat pre-existing peers as new.
+
+    Mutation check: dropping ``liveness_session_dir_snapshot`` from metadata
+    makes a fresh adapter bind the pre-existing peer before ours appears.
+    """
+    from urllib.parse import quote
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    project = tmp_path / "project"
+    project.mkdir()
+    grok_home = resolve_grok_home()
+    peer = grok_session_dir(grok_home, project, "preexisting-peer")
+    peer.mkdir(parents=True)
+    (peer / "events.jsonl").write_text("{}\n", encoding="utf-8")
+
+    builder = GrokBuildAdapter()
+    with patch(
+        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
+    ):
+        plan = builder.build_invocation(
+            prompt="supervised",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+    assert "preexisting-peer" in plan.metadata["liveness_session_dir_snapshot"]
+
+    poller = GrokBuildAdapter()
+    sessions_root = grok_home / "sessions" / quote(str(project.resolve()), safe="")
+    before = poller.liveness_signal_paths(plan)
+    assert before == (sessions_root,)
+    assert peer not in before
+    assert "liveness_session_id" not in plan.metadata
+
+    ours = grok_session_dir(grok_home, project, "ours-after-build")
+    ours.mkdir(parents=True)
+    (ours / "events.jsonl").write_text("{}\n", encoding="utf-8")
+
+    after = poller.liveness_signal_paths(plan)
+    assert peer not in after
+    assert ours in after
+    assert plan.metadata["liveness_session_id"] == "ours-after-build"
+
+    # Pin must survive yet another fresh instance + a newer sibling.
+    later = grok_session_dir(grok_home, project, "even-later")
+    later.mkdir(parents=True)
+    (later / "events.jsonl").write_text("{}\n", encoding="utf-8")
+    later.touch()
+    pinned = GrokBuildAdapter().liveness_signal_paths(plan)
+    assert pinned == (ours, ours / "events.jsonl")
+    assert later not in pinned
+
+
+def test_liveness_respects_grok_home_override(tmp_path, monkeypatch):
+    """#6935: liveness paths follow GROK_HOME (env and plan.env_overrides)."""
+    from urllib.parse import quote
+
+    default_home = tmp_path / "default-home"
+    default_home.mkdir()
+    monkeypatch.setenv("HOME", str(default_home))
+    monkeypatch.delenv("GROK_HOME", raising=False)
+
+    custom = tmp_path / "custom-grok-home"
+    custom.mkdir()
+    project = tmp_path / "project"
+    project.mkdir()
+
+    monkeypatch.setenv("GROK_HOME", str(custom))
+    adapter = GrokBuildAdapter()
+    with patch(
+        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
+    ):
+        plan = adapter.build_invocation(
+            prompt="env home",
+            mode="danger",
+            cwd=project,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+    sessions_root = custom / "sessions" / quote(str(project.resolve()), safe="")
+    assert adapter.liveness_signal_paths(plan) == (sessions_root,)
+    assert not str(sessions_root).startswith(str(default_home / ".grok"))
+
+    override_home = tmp_path / "override-grok-home"
+    override_home.mkdir()
+    override_root = override_home / "sessions" / quote(str(project.resolve()), safe="")
+    plan_override = InvocationPlan(
+        cmd=[],
+        cwd=project,
+        env_overrides={"GROK_HOME": str(override_home)},
+        metadata={"liveness_session_dir_snapshot": []},
+    )
+    assert GrokBuildAdapter().liveness_signal_paths(plan_override) == (override_root,)
