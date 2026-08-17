@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "93e13bbcb095",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6956-cursor-launcher",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/launchers/cursor.sh",
+    "scripts/lib/launcher_core.sh",
+    "tests/test_start_cursor_launcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/93/e13bbcb095/0/metadata.json",
+      "transcript": "/93/e13bbcb095/0/full.jsonl",
+      "compact_transcript": "/93/e13bbcb095/0/transcript.jsonl",
+      "content_hash": "/93/e13bbcb095/0/content_hash.txt",
+      "prompt": "/93/e13bbcb095/0/prompt.txt"
+    }
+  ]
+}
