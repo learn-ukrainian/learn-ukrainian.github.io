@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "51fc8d71ac81",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6938-readonly-guard",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/51/fc8d71ac81/0/metadata.json",
+      "transcript": "/51/fc8d71ac81/0/full.jsonl",
+      "compact_transcript": "/51/fc8d71ac81/0/transcript.jsonl",
+      "content_hash": "/51/fc8d71ac81/0/content_hash.txt",
+      "prompt": "/51/fc8d71ac81/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6938-readonly-guard
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: resolve issue #6938 — read-only mutation guard false-fails on concurrent sibling dispatch worktrees
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto (native Cursor CLI)
+- why_this_tier: bounded guard-scoping fix with two live reproductions; mechanical-with-judgment
+- advisor_packet: issue #6938 (two task records from 2026-08-17 with intact deliverables marked failed)
+- owned_paths: scripts/delegate.py (read-only mutation guard), tests/test_delegate.py
+- acceptance_cmd: .venv/bin/pytest tests/test_delegate.py + ruff clean + CI green on PR
+- alternatives_considered: grok (taking #6937), kimi (spread)
+- parallel_free_seats: deepseek, glm
+
+## Evidence rules (#M-4)
+Reproduce the false-fail at unit level first (concurrent worktree-add during a read-only task flips status); quote before/after. Mutation-check the guard test.
+
+## Steps
+1. Read issue #6938 and the guard implementation in scripts/delegate.py. Decide the scoping: exclude `.worktrees/**` (sibling sandboxes) from a read-only task's mutation scan, or positively scope the scan to what the task could touch — pick the one that CANNOT mask a real violation (a read-only worker writing into ANOTHER task's worktree must still be caught if that is detectable; say what you chose and the residual honestly).
+2. Guard test per the issue: concurrent `git worktree add` during a read-only task ⇒ task status stays done; plus the inverse (task itself writes a file ⇒ still failed).
+3. Work ONLY in your dispatch worktree. pytest + ruff. Conventional commit, push, PR (Fixes #6938).
+4. Do NOT arm auto-merge and do NOT merge.
