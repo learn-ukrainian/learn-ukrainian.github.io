@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3e4b51b2d909",
+  "strategy": "manual-commit",
+  "branch": "cursor/6944-cursor-registry-primary",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/atlas_job.py",
+    "tests/test_atlas_job_protocol.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/3e/4b51b2d909/0/metadata.json",
+      "transcript": "/3e/4b51b2d909/0/full.jsonl",
+      "compact_transcript": "/3e/4b51b2d909/0/transcript.jsonl",
+      "content_hash": "/3e/4b51b2d909/0/content_hash.txt",
+      "prompt": "/3e/4b51b2d909/0/prompt.txt"
+    }
+  ]
+}

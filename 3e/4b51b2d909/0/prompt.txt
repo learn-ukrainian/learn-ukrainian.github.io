@@ -1,0 +1,25 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6944-cursor-registry-primary
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix Monitor atlas-jobs registry under release snapshots
+
+After #6948 merge + kickstart, live `GET /api/atlas-jobs/health` reports:
+`registry: .runtime/api/releases/a4c8c4f9…/batch_state/atlas-jobs`
+because `registry_dir()` uses `repo_root()` = `Path(__file__).parents[3]`, which inside an immutable API release is the snapshot, not the layout-A primary checkout.
+
+`primary_checkout_root()` already exists in `scripts/lexicon/runner/atlas_job.py` for restic/venv. Point `registry_dir()` (when `ATLAS_JOB_REGISTRY` is unset) at `primary_checkout_root() / "batch_state" / "atlas-jobs"`.
+
+Add a test that a fake `__file__` under `.runtime/api/releases/<sha>/` still resolves the primary registry.
+
+PR against main. Title: `fix(api): read atlas-jobs registry from primary checkout`
+Body: `Refs #6944`. Never close #6876. Trailer `X-Agent: cursor/6944-registry`.
+pytest tests/test_atlas_job_protocol.py tests/api/test_atlas_jobs_router.py + ruff. Do not merge.
