@@ -22,6 +22,11 @@ from scripts.orchestration import scheduled_worktree_cleanup
 LABEL = "com.learn-ukrainian.worktree-cleanup"
 DEFAULT_INTERVAL_MINUTES = 240
 LAUNCHD_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+# launchd binds LWCR to ProgramArguments[0]. /bin/bash is Apple-signed and
+# survives a primary .venv rebuild; pointing Program at .venv/bin/python
+# is what produced exit 78 after the 2026-08-15 uv rewrite (#6937).
+STABLE_PROGRAM = "/bin/bash"
+WRAPPER_NAME = "run_scheduled_worktree_cleanup.sh"
 
 
 class LaunchdError(RuntimeError):
@@ -40,6 +45,10 @@ def state_dir(home: Path) -> Path:
     return home / ".codex" / "worktree-cleanup"
 
 
+def wrapper_path(public_repo: Path) -> Path:
+    return public_repo / "scripts" / "orchestration" / WRAPPER_NAME
+
+
 def build_plist(
     *,
     public_repo: Path,
@@ -54,13 +63,10 @@ def build_plist(
         "LowPriorityIO": True,
         "ProcessType": "Background",
         "ProgramArguments": [
-            str(public_repo / ".venv" / "bin" / "python"),
-            str(
-                public_repo
-                / "scripts"
-                / "orchestration"
-                / "scheduled_worktree_cleanup.py"
-            ),
+            STABLE_PROGRAM,
+            "--noprofile",
+            "--norc",
+            str(wrapper_path(public_repo)),
             "--apply",
             "--repo-root",
             str(public_repo),
@@ -148,6 +154,11 @@ def _validate_primary(repo_root: Path, *, require_interpreter: bool = False) -> 
         )
         if not cleanup_script.is_file():
             raise LaunchdError(f"cleanup script is missing: {cleanup_script}")
+        wrapper = wrapper_path(repo_root)
+        if not wrapper.is_file():
+            raise LaunchdError(f"cleanup wrapper is missing: {wrapper}")
+        if not os.access(STABLE_PROGRAM, os.X_OK):
+            raise LaunchdError(f"stable launchd program is missing: {STABLE_PROGRAM}")
 
 
 def install(

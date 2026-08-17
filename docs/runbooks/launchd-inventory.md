@@ -52,9 +52,11 @@ dispatch worktree.
 ### `com.learn-ukrainian.worktree-cleanup`
 
 - Purpose: Git hygiene backstop for both Learn Ukrainian repositories.
-- Program: the primary checkout's `.venv/bin/python
-  scripts/orchestration/scheduled_worktree_cleanup.py --apply` with both
-  repository roots passed explicitly.
+- Program: `/bin/bash --noprofile --norc
+  scripts/orchestration/run_scheduled_worktree_cleanup.sh --apply` with both
+  repository roots passed explicitly. The wrapper execs the primary
+  `.venv/bin/python`. `Program` must stay `/bin/bash` so a venv rebuild
+  cannot invalidate launchd LWCR (exit 78; #6937).
 - Schedule: at load and every 4 hours (`StartInterval=14400`).
 - Delete authority: removes only clean worktrees with exact merged-PR head
   evidence, the separately guarded terminal-dispatch class, and gone branches

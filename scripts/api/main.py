@@ -1075,6 +1075,36 @@ def _venv_integrity_canary() -> bool:
     return ok
 
 
+def _worktree_cleanup_integrity_canary() -> bool:
+    """Read-only diagnostic for a dark/red worktree-cleanup LaunchAgent.
+
+    #6937 follow-up: launchd stopped starting the job after a venv rewrite
+    (LWCR init failure, exit 78) and no receipt landed for two days.
+    ALERT-only, same posture as `_venv_integrity_canary` — detects and
+    records, never reloads launchd. Never raises: the canary must not break
+    health collection.
+    """
+    try:
+        from scripts.audit.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
+            check_worktree_cleanup_integrity,
+        )
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
+            check_worktree_cleanup_integrity,
+        )
+    try:
+        ok, message = check_worktree_cleanup_integrity(
+            PROJECT_ROOT,
+            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+        )
+    except Exception:
+        logger.exception("worktree-cleanup-integrity canary failed to run")
+        return True  # fail-open: don't raise a false alarm on canary error
+    if not ok:
+        logger.warning("worktree-cleanup-integrity canary: %s", message)
+    return ok
+
+
 def _collect_health_orient_data() -> dict:
     return {
         "api": True,
@@ -1086,6 +1116,7 @@ def _collect_health_orient_data() -> dict:
         "primary_integrity_ok": _primary_integrity_canary(),
         "node_modules_integrity_ok": _node_modules_integrity_canary(),
         "venv_integrity_ok": _venv_integrity_canary(),
+        "worktree_cleanup_integrity_ok": _worktree_cleanup_integrity_canary(),
     }
 
 

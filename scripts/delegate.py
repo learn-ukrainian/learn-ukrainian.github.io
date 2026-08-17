@@ -1481,6 +1481,40 @@ def _warn_venv_integrity() -> None:
         print(f"⚠️  {message}", file=sys.stderr)
 
 
+def _warn_worktree_cleanup_integrity() -> None:
+    """Advisory-only worktree-cleanup launchd probe (#6937 follow-up).
+
+    A venv rebuild can leave launchd unable to start
+    ``com.learn-ukrainian.worktree-cleanup`` (LWCR init failure, exit 78)
+    with no new receipt for days. This probe DETECTS and RECORDS that
+    darkness; it never blocks a dispatch and never reloads launchd here —
+    reinstall is an explicit operator action from the merged primary.
+    Fails open on any probe error, same contract as the sibling integrity
+    watchdogs.
+    """
+    try:
+        try:
+            from scripts.audit.check_worktree_cleanup_integrity import (
+                check_worktree_cleanup_integrity,
+            )
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_worktree_cleanup_integrity import (
+                check_worktree_cleanup_integrity,
+            )
+
+        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+    except Exception as exc:
+        print(
+            f"⚠️  worktree-cleanup-integrity probe errored ({type(exc).__name__}: {exc}); "
+            "proceeding — detection only, never blocks dispatch",
+            file=sys.stderr,
+        )
+        return
+
+    if not ok:
+        print(f"⚠️  {message}", file=sys.stderr)
+
+
 def _warn_node_modules_integrity() -> None:
     """Advisory-only node_modules symlink-corruption probe (#6818 follow-up).
 
@@ -4370,6 +4404,37 @@ def _run_worker(
             file=sys.stderr,
         )
 
+    # Post-worker worktree-cleanup-integrity sweep (#6937 follow-up): same
+    # shape as the venv-integrity sweep above, but for a dark/red scheduled
+    # LaunchAgent. ALERT-only — never blocks, never reloads launchd.
+    try:
+        try:
+            from scripts.audit.check_worktree_cleanup_integrity import (
+                check_worktree_cleanup_integrity,
+            )
+        except ImportError:  # path-flavoured import for test/script contexts
+            from audit.check_worktree_cleanup_integrity import (
+                check_worktree_cleanup_integrity,
+            )
+
+        wci_ok, wci_message = check_worktree_cleanup_integrity(
+            _REPO_ROOT, tasks_dir=_TASKS_DIR
+        )
+        if not wci_ok:
+            _append_dispatch_event(
+                "worktree_cleanup_integrity_post_worker",
+                task_id=task_id,
+                agent=agent,
+                ok=wci_ok,
+                detail=wci_message,
+            )
+    except Exception as wci_exc:
+        print(
+            f"[delegate] WARNING: worktree-cleanup-integrity post-worker sweep failed: "
+            f"{type(wci_exc).__name__}: {wci_exc}",
+            file=sys.stderr,
+        )
+
     if timed_out:
         _append_dispatch_event(
             "dispatch_silence_timeout",
@@ -4510,6 +4575,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     _warn_node_modules_integrity()
     _warn_venv_integrity()
+    _warn_worktree_cleanup_integrity()
 
     _warn_if_monitor_api_unreachable()
     if bool(getattr(args, "dry_run", False)):

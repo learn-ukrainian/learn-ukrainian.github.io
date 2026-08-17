@@ -174,9 +174,13 @@ Render the plist without writing system configuration:
 .venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py render
 ```
 
-The job runs at load and every 4 hours. It uses the public checkout's exact
-`.venv/bin/python`, passes both repository roots explicitly, and persists logs
-under:
+The job runs at load and every 4 hours. launchd `Program` is `/bin/bash`
+(Apple-signed, survives a `.venv` rebuild) plus
+`scripts/orchestration/run_scheduled_worktree_cleanup.sh`, which execs the
+public checkout's `.venv/bin/python`. Pointing `Program` at the venv
+interpreter is what produced exit 78 (`Unable to get updated LWCR ... error
+0x3`) after the 2026-08-15 venv rewrite. The wrapper passes both repository
+roots explicitly and persists logs under:
 
 ```text
 ~/.codex/worktree-cleanup/logs/
@@ -204,7 +208,17 @@ Verify the persisted plist and live service:
 ```
 
 After installation, inspect the first receipt and confirm that protected
-worktrees appear as `skipped`, not `removed`.
+worktrees appear as `skipped`, not `removed`. A venv rebuild does not require
+reinstall anymore; `status` still verifies the plist still binds `Program` to
+`/bin/bash`.
+
+A red or missing scheduled run surfaces on the existing integrity canary
+(`/api/orient` `health.worktree_cleanup_integrity_ok`, plus the dispatch
+pre-flight warning). Probe:
+
+```bash
+.venv/bin/python scripts/audit/check_worktree_cleanup_integrity.py
+```
 
 ## Uninstall
 
