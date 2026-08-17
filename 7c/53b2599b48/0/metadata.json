@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7c53b2599b48",
+  "session_id": "fleet-1d5c9ac75bf94f219bac05242416250e",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T15:57:06.094188Z",
+  "branch": "agy/infra-6959-gemini-default-model",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_gemini.py",
+    "tests/ai_agent_bridge/test_process_routing.py",
+    "tests/test_gemini_bridge.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "d6d6f018bdb3",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T15:57:06.08001Z",
+    "agent_lines": 37,
+    "agent_removed": 8,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 37,
+    "total_lines_changed": 45,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
