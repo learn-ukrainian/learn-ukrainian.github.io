@@ -333,13 +333,15 @@ def require_safe_workdir(workdir: object) -> str:
     raw = Path(workdir)
     if ".." in raw.parts:
         raise ValueError("workdir must not contain ..")
-    run_root = _run_root().resolve()
+    run_root = _run_root()
     if raw.is_absolute():
-        resolved = raw.resolve()
         try:
-            rel = resolved.relative_to(run_root)
+            rel = raw.relative_to(run_root)
         except ValueError as exc:
-            raise ValueError("workdir must be under ATLAS_RUN_ROOT") from exc
+            try:
+                rel = raw.resolve().relative_to(run_root.resolve())
+            except ValueError:
+                raise ValueError("workdir must be under ATLAS_RUN_ROOT") from exc
         if not rel.parts:
             raise ValueError("workdir must be a subdirectory of ATLAS_RUN_ROOT")
         safe_rel = [_safe_id_token(part) for part in rel.parts]

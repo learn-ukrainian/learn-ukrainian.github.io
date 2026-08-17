@@ -1,0 +1,52 @@
+{
+  "issue": 6876,
+  "summary": {
+    "target": "missing-anchor",
+    "targets": 2295,
+    "target_snapshot": {
+      "count": 2295,
+      "sha256": "14e89c1c128f303aaa7ad24c27b5c5650622833fcf30bcab41306c02b5e27e6c"
+    },
+    "changed": 984,
+    "filled_translation": 984,
+    "gained_english_anchor": 984,
+    "remaining_old_gate_no_english_anchor": 1311,
+    "categorical_binning": {
+      "ENRICHED": 984,
+      "DETERMINISTIC_EXCLUSION": 0,
+      "UNRESOLVED_RESIDUAL": 1311
+    },
+    "layer_counters": {
+      "proverbs": 4,
+      "usage_notes": 1,
+      "grinchenko": 14,
+      "forms": 2088
+    },
+    "circuit_breaker_tripped": false,
+    "consecutive_misses": 2
+  },
+  "exit_status": {
+    "service_result": "success",
+    "exit_code": "exited",
+    "exit_status": "0"
+  },
+  "delivery": "ok",
+  "backup": {
+    "attempted": false,
+    "ok": false,
+    "snapshot_id": null,
+    "error": "skipped"
+  },
+  "closed_at": "2026-08-17T00:03:03+00:00",
+  "schema": "atlas-job-result.v1",
+  "unit": "atlas-job-6876-missing-anchor-2295.service",
+  "host": "atlas-runner",
+  "denominator": 2295,
+  "pulled": true,
+  "workdir": "run-atlas-job-6876-missing-anchor-2295",
+  "plan_sha256": "9af14c8b6e958acecd5a0409658f192f683b6126a6734c19129507cd622198bf",
+  "git_pr": null,
+  "id": "6876-missing-anchor-2295",
+  "kind": "reenrich",
+  "state": "succeeded"
+}

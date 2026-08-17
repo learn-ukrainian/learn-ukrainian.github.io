@@ -469,7 +469,7 @@ def test_workdir_honored_only_when_safe(tmp_path: Path, monkeypatch: pytest.Monk
     monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "runs"))
     job = "safe-job"
     nested = tmp_path / "runs" / "run-atlas-job-safe-job"
-    assert atlas_job.work_dir_for(job, {"workdir": str(nested)}) == str(nested.resolve())
+    assert atlas_job.work_dir_for(job, {"workdir": str(nested)}) in {str(nested), str(nested.resolve())}
     assert atlas_job.work_dir_for(job, {"workdir": "run-atlas-job-safe-job"}) == (
         "run-atlas-job-safe-job"
     )
@@ -478,6 +478,12 @@ def test_workdir_honored_only_when_safe(tmp_path: Path, monkeypatch: pytest.Monk
             atlas_job.work_dir_for(job, {"workdir": bad})
         errors = atlas_job.validate_plan(_plan(workdir=bad))
         assert errors, bad
+
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    assert (
+        atlas_job.require_safe_workdir("/home/ops/atlas-runner/run-atlas-job-test")
+        == "/home/ops/atlas-runner/run-atlas-job-test"
+    )
 
 
 def test_close_and_cli_reject_unsafe_job_id(
