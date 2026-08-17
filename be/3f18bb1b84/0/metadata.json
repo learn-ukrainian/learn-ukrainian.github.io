@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "be3f18bb1b84",
+  "session_id": "fleet-5ba5dc08dfa148eeb753bc5833228d10",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T11:52:03.322182Z",
+  "branch": "kimi/6876-kimi-diminutive",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "84c1de9eb0df",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T11:52:03.319069Z",
+    "agent_lines": 5,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 5,
+    "total_lines_changed": 6,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
