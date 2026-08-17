@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "714c962a9e62",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6949-launcher-epic",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_kimi_lane_bootstrap.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/71/4c962a9e62/0/metadata.json",
+      "transcript": "/71/4c962a9e62/0/full.jsonl",
+      "compact_transcript": "/71/4c962a9e62/0/transcript.jsonl",
+      "content_hash": "/71/4c962a9e62/0/content_hash.txt",
+      "prompt": "/71/4c962a9e62/0/prompt.txt"
+    }
+  ]
+}

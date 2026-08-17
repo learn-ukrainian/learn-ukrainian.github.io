@@ -1,0 +1,55 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/infra-6949-launcher-epic
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta 2 on PR #6950: fix the last stale hard-coded epic id (test_kimi_lane_bootstrap)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok-4.5 × native grok CLI (workspace-write, existing dispatch worktree)
+- why_this_tier: authoring-lane delta on grok's own PR #6950; single-test alignment to the PR's own established pattern
+- advisor_packet: n/a
+- owned_paths: tests/test_kimi_lane_bootstrap.py
+- acceptance_cmd: /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_kimi_lane_bootstrap.py tests/test_handoff_identity.py -q
+- alternatives_considered: (1) driver fixes inline — REJECTED: orchestrator does not author code on a lane's branch; (2) fresh lane — REJECTED: this is PR #6950's own CI red, belongs to its author
+- parallel_free_seats: cursor
+
+## Evidence preamble (#M-4 — binding)
+Every claim in your report must quote raw tool output from THIS run.
+
+## Context
+Your PR #6950 (branch grok/infra-6949-launcher-epic, worktree = your cwd, head e421cb69ec) went
+CI-red on exactly ONE real test: `tests/test_kimi_lane_bootstrap.py::test_protocol_prints_launcher`
+asserts the literal `'epic:4707'`, but the kimi-lane protocol output now correctly derives
+`epic:6943` from the registry — your PR working as designed, exposing the last stale hard-coded
+assertion. Driver verification at your head: 12 candidate live-derivation suites = 193 passed,
+this 1 failed. (Other CI shard failures are GitHub-outage infra casualties, being re-run.)
+
+## Shippable unit
+One commit on the PR branch: `tests/test_kimi_lane_bootstrap.py` derives its expected stream id
+from `scripts/config/issue_streams.yaml` exactly the way your own
+`tests/test_handoff_identity.py` does (INFRA_STREAM_ID pattern), replacing every hard-coded
+`epic:4707` **assertion against live derivation output** in that file. Leave pure-fixture uses
+(synthetic stream ids fed INTO a store) untouched — only expectations checked against derived
+output move to the registry read. Out of scope: every other file.
+
+## Steps
+1. Verify cwd is the worktree and `git rev-parse HEAD` = e421cb69eca37e05b1f7d9ef96587a7b50b16fc2;
+   tree clean. Else STOP and report.
+2. Read `tests/test_kimi_lane_bootstrap.py` fully; classify each `epic:4707` occurrence
+   (derivation-assert vs pure fixture input). Quote the classification.
+3. Apply the registry-derived pattern to the derivation-asserts.
+4. Acceptance: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest
+   tests/test_kimi_lane_bootstrap.py tests/test_handoff_identity.py -q` (all pass) +
+   `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check tests/test_kimi_lane_bootstrap.py`.
+5. Conventional commit: `test: derive kimi-lane expected stream id from registry (#6949)`.
+   DO NOT push (driver finalizes). DO NOT touch the PR/auto-merge.
+6. Report: HEAD SHA, classification table, pytest + ruff tails.
