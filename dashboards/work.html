@@ -999,6 +999,10 @@ button, input, select { font: inherit; }
   function formatAdmittedPrivateMeta(priv) {
     // Glanceable private inventory on the private card only (R-UI-2). Never
     // claim stream completeness; never print the private endpoint URL.
+    // Admitted unavailable: status only — zero section counts are not inventory.
+    if (priv.status === 'unavailable') {
+      return 'status=' + priv.status;
+    }
     const sections = (priv && priv.sections) || {};
     return 'status=' + priv.status
       + ' · issues=' + sectionCount(sections, 'issues')
@@ -1007,7 +1011,8 @@ button, input, select { font: inherit; }
 
   function isPlaceholderPrivateSource(priv) {
     if (!priv || priv.source_id !== PRIVATE_SOURCE_ID) return true;
-    if (priv.status === 'unavailable') return true;
+    // Public not_configured placeholder only — admitted status=unavailable still
+    // uses formatAdmittedPrivateMeta (status without issues=0 · prs=0).
     if (priv.reason === 'not_configured') return true;
     return false;
   }

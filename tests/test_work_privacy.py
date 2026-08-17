@@ -46,6 +46,7 @@ def _load_canaries() -> list[str]:
 
 
 def test_fx07_canaries_never_enter_public_api_payload(monkeypatch):
+    """FX-07: injected private canaries never appear in the public projection payload."""
     canaries = _load_canaries()
     cache_invalidate("work:v1:projection")
     body_canary, secret_canary, path_canary, *_rest = [*canaries, ""]
@@ -190,6 +191,7 @@ def test_owned_paths_and_work_html_have_no_canaries_or_private_paths():
 
 
 def test_work_html_is_read_only_and_browser_local_private_only():
+    """FX-10 + FX-09 adjacent: work.html stays read-only; private URL is fixed/non-configurable."""
     html = (ROOT / "dashboards" / "work.html").read_text(encoding="utf-8")
     assert 'data-read-only="true"' in html
     assert "FOUNDATION_COMPLETE" in html

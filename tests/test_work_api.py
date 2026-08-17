@@ -123,6 +123,7 @@ def _sections_with_canary() -> dict[str, SectionResult]:
 
 
 def test_capabilities_and_health_endpoints():
+    """FX-10 design-only: capabilities/health advertise mutation:false."""
     caps = client.get("/api/work/v1/capabilities")
     assert caps.status_code == 200
     data = caps.json()
@@ -171,6 +172,7 @@ def test_projection_endpoint_with_injected_sources(monkeypatch):
 
 
 def test_projection_rejects_private_filter_keys(monkeypatch):
+    """FX-09: public projection rejects private_endpoint and free-text saved-view keys."""
     cache_invalidate("work:v1:projection")
 
     def fake_build(**_kwargs):
@@ -252,6 +254,7 @@ def test_duplicate_multivalue_filters_share_cache_entry(monkeypatch):
 
 
 def test_independent_degradation_when_one_section_fails(monkeypatch):
+    """FX-02 adjacent: optional section failure degrades the public envelope, not unavailable."""
     cache_invalidate("work:v1:projection")
     sections = _sections_with_canary()
     sections["fleet_reviews"] = SectionResult("fleet_reviews", "timeout", reason="fleet_reviews_timeout")

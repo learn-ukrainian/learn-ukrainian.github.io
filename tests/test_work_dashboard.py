@@ -167,6 +167,26 @@ def test_work_page_shareable_url_strips_private_selectors():
     assert "value !== PUBLIC_SOURCE_ID" in html
 
 
+def test_work_page_admitted_unavailable_private_meta_omits_zero_counts():
+    """Admitted private status=unavailable shows status without issues=0 · prs=0."""
+    html = WORK.read_text(encoding="utf-8")
+    fmt_start = html.index("function formatAdmittedPrivateMeta(")
+    fmt_end = html.index("function isPlaceholderPrivateSource(", fmt_start)
+    fmt_body = html[fmt_start:fmt_end]
+    assert "priv.status === 'unavailable'" in fmt_body
+    assert "issues=" in fmt_body
+    assert "prs=" in fmt_body
+    # Early return for unavailable must precede the issues=/prs= inventory line.
+    assert fmt_body.index("priv.status === 'unavailable'") < fmt_body.index("' · issues='")
+
+    ph_start = html.index("function isPlaceholderPrivateSource(")
+    ph_end = html.index("function installView(", ph_start)
+    ph_body = html[ph_start:ph_end]
+    assert "not_configured" in ph_body
+    # Admitted unavailable is not a placeholder; only not_configured is.
+    assert "priv.status === 'unavailable'" not in ph_body
+
+
 def test_work_page_actionable_default_view_contracts():
     html = WORK.read_text(encoding="utf-8")
     assert 'id="filter-view"' in html
