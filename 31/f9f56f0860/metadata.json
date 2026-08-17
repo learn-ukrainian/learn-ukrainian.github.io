@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "31f9f56f0860",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-wire-diminutive",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/31/f9f56f0860/0/metadata.json",
+      "transcript": "/31/f9f56f0860/0/full.jsonl",
+      "compact_transcript": "/31/f9f56f0860/0/transcript.jsonl",
+      "content_hash": "/31/f9f56f0860/0/content_hash.txt",
+      "prompt": "/31/f9f56f0860/0/prompt.txt"
+    }
+  ]
+}
