@@ -68,6 +68,10 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
         "final_disposition",
     }
 )
+CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.6", "composer-2.5")
+CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
+CURSOR_AUTO_EXPECTED_RESOLUTION: str = "union_family"
+
 
 
 class ModelCatalogError(ValueError):
@@ -211,6 +215,112 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         )
 
 
+def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
+    seats = _require_mapping(raw, "orchestrator_seats")
+    for seat_name, raw_seat in seats.items():
+        _require_string(seat_name, "orchestrator seat name")
+        seat = _require_mapping(raw_seat, f"orchestrator_seats.{seat_name}")
+        for field in ("model_id", "effort", "escalate_model_id", "escalate_effort"):
+            _require_string(seat.get(field), f"orchestrator_seats.{seat_name}.{field}")
+        esc_model = seat["escalate_model_id"]
+        if esc_model not in models:
+            raise ModelCatalogError(
+                f"orchestrator_seats.{seat_name}.escalate_model_id references unknown model {esc_model!r}"
+            )
+        if models[esc_model]["lifecycle"] != "active":
+            raise ModelCatalogError(
+                f"orchestrator_seats.{seat_name}.escalate_model_id must reference an active model"
+            )
+
+        if seat_name == "cursor":
+            model_id = seat["model_id"]
+            if model_id != "auto":
+                raise ModelCatalogError(f"orchestrator_seats.cursor.model_id must be 'auto', got {model_id!r}")
+            allowlist = _require_string_list(
+                seat.get("auto_allowlist"),
+                "orchestrator_seats.cursor.auto_allowlist",
+            )
+            if tuple(allowlist) != CURSOR_AUTO_EXPECTED_ALLOWLIST:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.auto_allowlist must equal exactly {list(CURSOR_AUTO_EXPECTED_ALLOWLIST)}, got {allowlist}"
+                )
+            for allowed in allowlist:
+                if allowed not in models:
+                    raise ModelCatalogError(
+                        f"orchestrator_seats.cursor.auto_allowlist references unknown model {allowed!r}"
+                    )
+                if models[allowed]["lifecycle"] != "active":
+                    raise ModelCatalogError(
+                        f"orchestrator_seats.cursor.auto_allowlist must reference active models, got {allowed!r}"
+                    )
+            attestation_rule = _require_string(
+                seat.get("attestation_rule"),
+                "orchestrator_seats.cursor.attestation_rule",
+            )
+            if attestation_rule != CURSOR_AUTO_EXPECTED_ATTESTATION_RULE:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.attestation_rule must be {CURSOR_AUTO_EXPECTED_ATTESTATION_RULE!r}, got {attestation_rule!r}"
+                )
+            resolution = _require_string(
+                seat.get("unknown_auto_family_resolution"),
+                "orchestrator_seats.cursor.unknown_auto_family_resolution",
+            )
+            if resolution != CURSOR_AUTO_EXPECTED_RESOLUTION:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.unknown_auto_family_resolution must be {CURSOR_AUTO_EXPECTED_RESOLUTION!r}, got {resolution!r}"
+                )
+            union_families = _require_string_list(
+                seat.get("unknown_auto_union_families"),
+                "orchestrator_seats.cursor.unknown_auto_union_families",
+            )
+            expected_families = sorted({models[m]["family"] for m in allowlist})
+            if sorted(union_families) != expected_families:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.unknown_auto_union_families must match allowlist model families {expected_families}, got {sorted(union_families)}"
+                )
+        else:
+            model_id = seat["model_id"]
+            if model_id not in models:
+                raise ModelCatalogError(f"orchestrator_seats.{seat_name}.model_id references unknown model {model_id!r}")
+            if models[model_id]["lifecycle"] != "active":
+                raise ModelCatalogError(f"orchestrator_seats.{seat_name}.model_id must reference an active model")
+
+
+def _validate_review_scheduler(raw: Any) -> None:
+    if raw is None:
+        return
+    scheduler = _require_mapping(raw, "review_scheduler")
+    endpoints = _require_mapping(scheduler.get("endpoints"), "review_scheduler.endpoints")
+    for name, raw_ep in endpoints.items():
+        ep = _require_mapping(raw_ep, f"review_scheduler.endpoints.{name}")
+        ep_models = ep.get("models", [])
+        if not isinstance(ep_models, list):
+            raise ModelCatalogError(f"review_scheduler.endpoints.{name}.models must be a list")
+        for m in ep_models:
+            if not isinstance(m, str) or not m.strip():
+                raise ModelCatalogError(f"review_scheduler.endpoints.{name}.models contains invalid model id")
+            if m.casefold() in {"auto", "cursor:auto"}:
+                raise ModelCatalogError(
+                    f"review_scheduler.endpoints.{name}.models cannot treat {m!r} as a formal review identity"
+                )
+        if name == "cursor" and ep.get("formal_review_eligible") is True:
+            raise ModelCatalogError(
+                "review_scheduler.endpoints.cursor must remain formal_review_eligible: false"
+            )
+
+
+def _validate_formal_cf_defaults(raw: Any) -> None:
+    if raw is None:
+        return
+    defaults = _require_mapping(raw, "formal_cf_defaults")
+    for name, raw_def in defaults.items():
+        entry = _require_mapping(raw_def, f"formal_cf_defaults.{name}")
+        model_id = entry.get("model_id")
+        if isinstance(model_id, str) and model_id.casefold() in {"auto", "cursor:auto"}:
+            raise ModelCatalogError(f"formal_cf_defaults.{name}.model_id cannot use {model_id!r} as formal CF default")
+
+
+
 def validate_catalog(data: Any) -> dict[str, Any]:
     """Validate the catalog structure without enforcing wall-clock freshness."""
     # Normalize the top-level date without mutating the caller's object. This
@@ -312,12 +422,17 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     for name, raw in candidates.items():
         candidate = _require_mapping(raw, f"review_candidates.{name}")
         model_id = _require_string(candidate.get("model_id"), f"review_candidates.{name}.model_id")
+        transport_raw = candidate.get("transport")
+        if isinstance(transport_raw, str) and transport_raw == "cursor" and model_id.casefold() in {"auto", "cursor", "composer"}:
+            raise ModelCatalogError(f"review_candidates.{name} requires a concrete Cursor model id, not {model_id!r}")
+        if model_id.casefold() in {"auto", "cursor:auto"}:
+            raise ModelCatalogError(f"review_candidates.{name} cannot use {model_id!r} as a formal review candidate")
         if model_id not in models:
             raise ModelCatalogError(f"review_candidates.{name}.model_id references unknown model {model_id!r}")
         if models[model_id]["lifecycle"] != "active":
             raise ModelCatalogError(f"review candidate {name!r} must reference an active model")
         _require_string(candidate.get("route"), f"review_candidates.{name}.route")
-        transport = _require_string(candidate.get("transport"), f"review_candidates.{name}.transport")
+        transport = _require_string(transport_raw, f"review_candidates.{name}.transport")
         if transport not in models[model_id]["transports"]:
             raise ModelCatalogError(
                 f"review_candidates.{name}.transport {transport!r} is not listed in models.{model_id}.transports"
@@ -332,8 +447,6 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 f"review_candidates.{name}.review_profiles contains unsupported code-closeout "
                 f"profiles {unsupported_profiles}; expected only {sorted(VALID_REVIEW_PROFILES)}"
             )
-        if transport == "cursor" and model_id.casefold() in {"auto", "cursor", "composer"}:
-            raise ModelCatalogError(f"review_candidates.{name} requires a concrete Cursor model id, not {model_id!r}")
         health_keys = candidate.get("health_keys", [])
         if not isinstance(health_keys, list) or not all(isinstance(item, str) and item.strip() for item in health_keys):
             raise ModelCatalogError(f"review_candidates.{name}.health_keys must be a list of strings")
@@ -351,6 +464,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             values = candidate.get(field, [])
             if not isinstance(values, list) or not all(isinstance(item, str) and item.strip() for item in values):
                 raise ModelCatalogError(f"review_candidates.{name}.{field} must be a list of strings")
+
+    _validate_orchestrator_seats(catalog.get("orchestrator_seats"), models)
+    _validate_review_scheduler(catalog.get("review_scheduler"))
+    _validate_formal_cf_defaults(catalog.get("formal_cf_defaults"))
 
     ladders = _require_mapping(catalog.get("review_ladders"), "review_ladders")
     if set(ladders) != VALID_RISKS:

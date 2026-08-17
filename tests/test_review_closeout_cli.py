@@ -158,23 +158,20 @@ def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_
     assert json.loads(unknown_author.stdout)["selected"] is None
 
 
-def test_resolve_reviewer_cli_returns_dual_family_quorum_for_cursor_auto(tmp_path):
+def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_auto(tmp_path):
     state_file = tmp_path / "state.json"
-    quorum_proc = _run_cli(
+    proc = _run_cli(
         state_file,
         "resolve-reviewer",
         "--author-model",
         "cursor-auto",
     )
-    # A satisfiable dual-family quorum is a successful resolution (exit 0)
-    # even though no single reviewer of record is selected.
-    assert quorum_proc.returncode == 0, quorum_proc.stderr
-    payload = json.loads(quorum_proc.stdout)
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
     assert payload["fail_closed_reason"] is None
-    assert payload["selected"] is None
-    assert len(payload["quorum"]) == 2
-    assert len({seat["family"] for seat in payload["quorum"]}) == 2
-    assert "exact-head" in payload["quorum_rule"]
+    assert payload["selected"] is not None
+    assert payload["selected"]["family"] not in {"xai", "moonshot"}
+    assert payload["quorum"] == []
 
 
 def test_resolve_reviewer_cli_rejects_learner_semantic_profile_before_dispatch(tmp_path):

@@ -76,6 +76,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.6` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
 | **agy** | `gemini-3.7-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
+| **cursor** | `auto` @ high (allowlist: `grok-4.6`, `composer-2.5`) | **`gpt-5.6-sol` @ xhigh** | no — formal CF requires attested `resolved_model` |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
@@ -83,6 +84,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | agy | gemini-3.7-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-fable-5 | high | gpt-5.6-sol | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
+| cursor | auto | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.6 | high | grok-4.6 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 

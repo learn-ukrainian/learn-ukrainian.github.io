@@ -103,12 +103,13 @@ def test_committed_projections_match_machine_authorities():
     assert issues == [], [i.as_dict() for i in issues]
     seats = load_orchestrator_seats()
     assert "codex" in seats
-    assert set(seats) == {"claude", "codex", "grok", "agy"}
+    assert "cursor" in seats
+    assert set(seats) == {"claude", "codex", "grok", "agy", "cursor"}
     eligible = load_formal_review_eligible()
     assert eligible["codex"] is True
     assert eligible["claude"] is True
     assert eligible["grok"] is True
-    for name in ("agy", "kimi"):
+    for name in ("agy", "kimi", "cursor"):
         assert eligible[name] is False
 
 
