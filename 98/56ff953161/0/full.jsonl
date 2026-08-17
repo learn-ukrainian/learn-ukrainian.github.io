@@ -1,0 +1,1217 @@
+{
+  "info": {
+    "id": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+    "slug": "lucky-comet",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+    "path": "",
+    "title": "Fix _is_noun_pos pronoun mismatch in PR #6904",
+    "agent": "build",
+    "model": {
+      "id": "glm-5.3",
+      "providerID": "zai-coding-plan",
+      "variant": "high"
+    },
+    "version": "1.18.18",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 45024,
+      "output": 1142,
+      "reasoning": 3461,
+      "cache": {
+        "read": 302656,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1786951950585,
+      "updated": 1786952121694
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1786951950680
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "zai-coding-plan",
+          "modelID": "glm-5.3",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": [
+            {
+              "file": "scripts/lexicon/derived_en_fallback.py",
+              "patch": "Index: scripts/lexicon/derived_en_fallback.py\n===================================================================\n--- scripts/lexicon/derived_en_fallback.py\t\n+++ scripts/lexicon/derived_en_fallback.py\t\n@@ -1,267 +1,268 @@\n \"\"\"Diminutive/augmentative English gloss fallback for the reenrich translation path.\n \n Dictionaries index the root lemma, so derived nouns such as «білочка» or\n «вовчище» frequently come back from the sourced translation lookups with no\n English gloss of their own. When the base noun lives in the same manifest and\n already carries a sourced ``translation.en``, this module derives a labeled\n fallback gloss: base EN + ``\" (diminutive)\"`` / ``\" (augmentative)\"``.\n \n The fallback is deliberately conservative:\n \n - base candidates come from a small deterministic suffix table — never from\n   invented lemmas;\n - a candidate is accepted only when it exists as a noun entry in the same\n   manifest with a non-empty, sourced ``translation.en``;\n - when the in-repo VESUM database is reachable, both the surface form and the\n   base noun must be VESUM-attested (base as a noun); when VESUM is unavailable\n   the manifest-membership gate alone applies.\n \n Integration (#6876): call :func:`derived_translation_fallback` from the\n reenrich translation path (``scripts/lexicon/reenrich_thin_manifest_entries.py``,\n ``_translation_for_entry`` fallback chain) after the direct and VESUM-base\n lookups miss. It is intentionally not wired there yet to avoid colliding with\n the AGY adverb lane working in the same file.\n \"\"\"\n \n from __future__ import annotations\n \n import re\n from collections.abc import Callable, Iterable, Mapping\n from typing import Any\n \n DIMINUTIVE = \"diminutive\"\n AUGMENTATIVE = \"augmentative\"\n \n _ACUTE_RE = re.compile(\"[\\u0301\\u0300]\")\n _MIN_STEM_LEN = 3\n _HUSHING_TO_VELAR = {\"ж\": \"г\", \"ч\": \"к\", \"ш\": \"х\"}\n \n # verify callable shape: (word, pos_filter) -> list of VESUM match dicts.\n VesumVerify = Callable[[str, str | None], list[dict]]\n \n \n def derived_base_candidates(lemma: str) -> list[dict[str, str]]:\n     \"\"\"Return deterministic diminutive/augmentative base candidates for ``lemma``.\n \n     Rows have ``surface``, ``kind``, ``rule``, and ``base`` keys. This is not an\n     authenticity oracle: callers must confirm each candidate against the\n     manifest (and VESUM, when available) before accepting it.\n     \"\"\"\n     normalized = _normalize(lemma)\n     if not normalized:\n         return []\n \n     rows: list[dict[str, str]] = []\n     seen: set[str] = set()\n     for kind, rule, base in _iter_rule_bases(normalized):\n         if base == normalized or base in seen:\n             continue\n         if not _looks_like_single_ukrainian_token(base):\n             continue\n         seen.add(base)\n         rows.append({\"surface\": normalized, \"kind\": kind, \"rule\": rule, \"base\": base})\n     return rows\n \n \n def manifest_lemma_index(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:\n     \"\"\"Build a normalized-lemma → entry index over a manifest's entries.\"\"\"\n     index: dict[str, dict[str, Any]] = {}\n     entries = manifest.get(\"entries\")\n     if not isinstance(entries, list):\n         return index\n     for entry in entries:\n         if not isinstance(entry, dict):\n             continue\n         key = _normalize(entry.get(\"lemma\"))\n         if key and key not in index:\n             index[key] = entry\n     return index\n \n \n def derived_translation_fallback(\n     entry: dict[str, Any],\n     entries_by_lemma: Mapping[str, dict[str, Any]],\n     *,\n     vesum_verify: VesumVerify | bool | None = None,\n ) -> dict[str, Any] | None:\n     \"\"\"Derive a labeled EN translation for a diminutive/augmentative noun entry.\n \n     ``entries_by_lemma`` maps normalized lemmas to manifest entries (see\n     :func:`manifest_lemma_index`). ``vesum_verify`` controls the VESUM gate:\n     ``None`` auto-detects the in-repo VESUM database and degrades gracefully\n     when it is unreachable, ``False`` skips the check, and a callable is used\n     as-is (``(word, pos_filter) -> matches``).\n \n     Returns a ``{\"en\": [...], \"source\": ...}`` translation block, or ``None``\n     when no manifest-resident base noun with a sourced EN gloss exists.\n     \"\"\"\n     lemma = _normalize(entry.get(\"lemma\"))\n     if not lemma or not _is_noun_pos(entry.get(\"pos\")):\n         return None\n \n     verify = _resolve_vesum_verify(vesum_verify)\n     for candidate in derived_base_candidates(lemma):\n         base = candidate[\"base\"]\n         base_entry = entries_by_lemma.get(_normalize(base))\n         if base_entry is None or not _is_noun_pos(base_entry.get(\"pos\")):\n             continue\n         translation = _sourced_translation(base_entry)\n         if translation is None:\n             continue\n         if not _vesum_accepts(verify, lemma, base):\n             continue\n         return _build_translation(translation, candidate)\n     return None\n \n \n def _iter_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n     yield from _diminutive_rule_bases(lemma)\n     yield from _augmentative_rule_bases(lemma)\n \n \n def _diminutive_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n     for suffix in (\"очка\", \"ечка\"):\n         stem = _stem_before_suffix(lemma, suffix)\n         if stem:\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-ка\", f\"{stem}ка\"\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-а\", f\"{stem}а\"\n \n     for suffix in (\"онька\", \"енька\"):\n         stem = _stem_before_suffix(lemma, suffix)\n         if stem:\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-ка\", f\"{stem}ка\"\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-а\", f\"{stem}а\"\n             for velar in _hushing_to_velar_stems(stem):\n                 yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->velar-а\", f\"{velar}а\"\n \n     for suffix in (\"очко\", \"ечко\", \"енько\"):\n         stem = _stem_before_suffix(lemma, suffix)\n         if stem:\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-о\", f\"{stem}о\"\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-е\", f\"{stem}е\"\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-це\", f\"{stem}це\"\n \n     stem = _stem_before_suffix(lemma, \"енятко\")\n     if stem:\n         yield DIMINUTIVE, \"noun-diminutive:-енятко->-еня\", f\"{stem}еня\"\n         yield DIMINUTIVE, \"noun-diminutive:-енятко->-я\", f\"{stem}я\"\n         yield DIMINUTIVE, \"noun-diminutive:-енятко->-а\", f\"{stem}а\"\n \n     stem = _stem_before_suffix(lemma, \"ятко\")\n     if stem:\n         yield DIMINUTIVE, \"noun-diminutive:-ятко->-я\", f\"{stem}я\"\n         yield DIMINUTIVE, \"noun-diminutive:-ятко->-а\", f\"{stem}а\"\n \n     for suffix in (\"очок\", \"ечок\", \"ок\", \"ик\"):\n         stem = _stem_before_suffix(lemma, suffix)\n         if stem:\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->stem\", stem\n             for velar in _hushing_to_velar_stems(stem):\n                 yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->velar-stem\", velar\n             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-о\", f\"{stem}о\"\n \n \n def _augmentative_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n     for suffix in (\"ище\", \"іще\"):\n         stem = _stem_before_suffix(lemma, suffix)\n         if stem:\n             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->stem\", stem\n             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-а\", f\"{stem}а\"\n             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-о\", f\"{stem}о\"\n             for velar in _hushing_to_velar_stems(stem):\n                 yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-stem\", velar\n                 yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-а\", f\"{velar}а\"\n \n     for suffix in (\"ища\", \"іща\"):\n         stem = _stem_before_suffix(lemma, suffix)\n         if stem:\n             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-а\", f\"{stem}а\"\n             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->stem\", stem\n             for velar in _hushing_to_velar_stems(stem):\n                 yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-а\", f\"{velar}а\"\n \n     stem = _stem_before_suffix(lemma, \"юга\")\n     if stem:\n         yield AUGMENTATIVE, \"noun-augmentative:-юга->stem\", stem\n         yield AUGMENTATIVE, \"noun-augmentative:-юга->-а\", f\"{stem}а\"\n \n \n def _sourced_translation(base_entry: dict[str, Any]) -> dict[str, Any] | None:\n     enrichment = base_entry.get(\"enrichment\")\n     if not isinstance(enrichment, dict):\n         return None\n     translation = enrichment.get(\"translation\")\n     if not isinstance(translation, dict):\n         return None\n     terms = translation.get(\"en\")\n     if not isinstance(terms, list) or not any(str(term).strip() for term in terms):\n         return None\n     if not str(translation.get(\"source\") or \"\").strip():\n         return None\n     return translation\n \n \n def _build_translation(base_translation: dict[str, Any], candidate: dict[str, str]) -> dict[str, Any]:\n     kind = candidate[\"kind\"]\n     base = candidate[\"base\"]\n     first_en = next(str(term).strip() for term in base_translation[\"en\"] if str(term).strip())\n     source = str(base_translation.get(\"source\") or \"\").strip()\n     label = f\"{kind} of {base}\"\n     return {\n         \"en\": [f\"{first_en} ({kind})\"],\n         \"source\": f\"{source} ({label})\" if source else label,\n     }\n \n \n def _resolve_vesum_verify(vesum_verify: VesumVerify | bool | None) -> VesumVerify | None:\n     if vesum_verify is False:\n         return None\n     if callable(vesum_verify):\n         return vesum_verify\n \n     def _auto_verify(word: str, pos_filter: str | None) -> list[dict]:\n         from scripts.verification.vesum import verify_word\n \n         return verify_word(word, pos_filter=pos_filter)\n \n     try:\n         _auto_verify(\"вода\", \"noun\")\n     except Exception:\n         return None\n     return _auto_verify\n \n \n def _vesum_accepts(verify: VesumVerify | None, surface: str, base: str) -> bool:\n     if verify is None:\n         return True\n     try:\n         if not verify(surface, None):\n             return False\n         return bool(verify(base, \"noun\"))\n     except Exception:\n         return True\n \n \n def _is_noun_pos(pos: object) -> bool:\n-    return \"noun\" in str(pos or \"\").casefold()\n+    normalized = str(pos or \"\").strip().casefold()\n+    return bool(re.match(r\"noun(?![a-z])\", normalized))\n \n \n def _stem_before_suffix(lemma: str, suffix: str) -> str | None:\n     if not lemma.endswith(suffix) or len(lemma) < len(suffix) + _MIN_STEM_LEN:\n         return None\n     return lemma[: -len(suffix)]\n \n \n def _hushing_to_velar_stems(stem: str) -> Iterable[str]:\n     replacement = _HUSHING_TO_VELAR.get(stem[-1:])\n     if replacement:\n         yield f\"{stem[:-1]}{replacement}\"\n \n \n def _normalize(text: object) -> str:\n     normalized = _ACUTE_RE.sub(\"\", str(text or \"\").strip().casefold())\n     return normalized.replace(\"`\", \"ʼ\").replace(\"'\", \"ʼ\").replace(\"’\", \"ʼ\")\n \n \n def _looks_like_single_ukrainian_token(text: str) -> bool:\n     return bool(re.fullmatch(r\"[а-яєіїґʼ-]+\", text))\n",
+              "additions": 2,
+              "deletions": 1,
+              "status": "modified"
+            },
+            {
+              "file": "tests/test_derived_en_fallback.py",
+              "patch": "Index: tests/test_derived_en_fallback.py\n===================================================================\n--- tests/test_derived_en_fallback.py\t\n+++ tests/test_derived_en_fallback.py\t\n@@ -1,106 +1,127 @@\n from scripts.lexicon.derived_en_fallback import (\n     derived_base_candidates,\n     derived_translation_fallback,\n     manifest_lemma_index,\n )\n \n \n def _base_entry(lemma: str, en: list[str] | None, source: str = \"slovnyk.me: fixture\") -> dict:\n     entry: dict = {\"lemma\": lemma, \"pos\": \"noun\"}\n     if en is not None:\n         entry[\"enrichment\"] = {\"translation\": {\"en\": en, \"source\": source}}\n     return entry\n \n \n def _index(*entries: dict) -> dict:\n     return manifest_lemma_index({\"entries\": list(entries)})\n \n \n def test_candidates_cover_diminutive_and_augmentative_examples() -> None:\n     diminutive_bases = {row[\"base\"] for row in derived_base_candidates(\"білочка\")}\n     assert \"білка\" in diminutive_bases\n     assert all(row[\"kind\"] == \"diminutive\" for row in derived_base_candidates(\"білочка\"))\n \n     augmentative_rows = derived_base_candidates(\"вовчище\")\n     assert all(row[\"kind\"] == \"augmentative\" for row in augmentative_rows)\n     assert \"вовк\" in {row[\"base\"] for row in augmentative_rows}\n \n \n def test_diminutive_fill_from_manifest_base() -> None:\n     index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n \n     translation = derived_translation_fallback(\n         {\"lemma\": \"білочка\", \"pos\": \"noun\"},\n         index,\n         vesum_verify=False,\n     )\n \n     assert translation == {\n         \"en\": [\"squirrel (diminutive)\"],\n         \"source\": \"slovnyk.me: fixture (diminutive of білка)\",\n     }\n \n \n def test_augmentative_fill_from_manifest_base() -> None:\n     index = _index(_base_entry(\"вовк\", [\"wolf\"]))\n \n     translation = derived_translation_fallback(\n         {\"lemma\": \"вовчище\", \"pos\": \"noun\"},\n         index,\n         vesum_verify=False,\n     )\n \n     assert translation == {\n         \"en\": [\"wolf (augmentative)\"],\n         \"source\": \"slovnyk.me: fixture (augmentative of вовк)\",\n     }\n \n \n def test_no_fill_when_base_lacks_en() -> None:\n     index = _index(\n         _base_entry(\"білка\", None),\n         _base_entry(\"вовк\", []),\n         _base_entry(\"ведмідь\", [\"bear\"], source=\"\"),\n     )\n \n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n     assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n     assert derived_translation_fallback({\"lemma\": \"ведмедище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n \n \n def test_no_fill_when_base_missing_or_not_noun() -> None:\n     index = _index(\n         {\"lemma\": \"білка\", \"pos\": \"adjective\", \"enrichment\": {\"translation\": {\"en\": [\"white\"], \"source\": \"fixture\"}}}\n     )\n \n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n     assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"adjective\"}, index, vesum_verify=False) is None\n \n \n def test_vesum_gate_blocks_unattested_forms() -> None:\n     index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n \n     def attest_all(word: str, pos_filter: str | None) -> list[dict]:\n         return [{\"lemma\": word, \"pos\": pos_filter or \"noun\", \"tags\": \"\"}]\n \n     def reject_surface(word: str, pos_filter: str | None) -> list[dict]:\n         if pos_filter is None:\n             return []\n         return [{\"lemma\": word, \"pos\": \"noun\", \"tags\": \"\"}]\n \n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=attest_all) is not None\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n \n \n+def test_pronoun_pos_is_not_treated_as_noun() -> None:\n+    index = _index(\n+        _base_entry(\"білка\", [\"squirrel\"]),\n+        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n+    )\n+\n+    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n+    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n+\n+\n+def test_annotated_noun_pos_variants_still_accepted() -> None:\n+    index = _index(\n+        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n+    )\n+\n+    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n+\n+    assert translation is not None\n+    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n+\n+\n def test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n     index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n \n     translation = derived_translation_fallback(\n         {\"lemma\": \"біло́чка\", \"pos\": \"noun\"},\n         index,\n         vesum_verify=False,\n     )\n \n     assert translation is not None\n     assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n",
+              "additions": 21,
+              "deletions": 0,
+              "status": "modified"
+            }
+          ]
+        },
+        "id": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"[delegate worktree]\nRun all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos\nDo not switch branches in the main checkout.\nIf you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n\n[shared project interpreter]\nNever create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.\nSparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).\n\n[optional delivery signal]\nCommits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {\\\"outcome\\\":\\\"no_change\\\",\\\"reason\\\":\\\"why no changes are required\\\"}`. This line is optional — its absence never fails the dispatch.\n\nIMPLEMENT not review. PR #6904 helper scripts/lexicon/derived_en_fallback.py: tighten _is_noun_pos so 'pronoun' is not treated as noun (F1 from Cursor review). Exact token / startswith noun, not substring. Add a test. Push same branch. Trailer X-Agent: glm/6904-noun-pos. Never write 'closes #6876' or 'Does not close #6876' — use Refs 6876 only. Do not close GitHub issue 6876. Local-only implement. If rate-limited, stop and say so. NOTE force-agent: glm has no routing-budget row; operator said give GLM implement jobs not reviews.\"",
+          "id": "prt_00ea2e1a9001ut4wB40BJUbSaS",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea2e158001kkdUOzgqNMOKMS"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 25425,
+          "input": 25103,
+          "output": 74,
+          "reasoning": 120,
+          "cache": {
+            "write": 0,
+            "read": 128
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786951955568,
+          "completed": 1786951985933
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea2f470001o42kmcKU5whIFQ",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-start",
+          "id": "prt_00ea35da5001vMM90G7xmgj6te",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea2f470001o42kmcKU5whIFQ"
+        },
+        {
+          "type": "reasoning",
+          "text": "Let me start by understanding the task. I need to:\n1. Look at PR #6904's helper scripts/lexicon/derived_en_fallback.py\n2. Tighten `_is_noun_pos` so 'pronoun' is not treated as noun — exact token / startswith 'noun', not substring matching\n3. Add a test\n4. Push same branch with X-Agent: glm/6904-noun-pos trailer\n5. Use \"Refs 6876\" only, never close issue\n\nLet me first look at the worktree and the file.",
+          "time": {
+            "start": 1786951982515,
+            "end": 1786951983898
+          },
+          "id": "prt_00ea35db3001ZbF5QW4y5Zpcaf",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea2f470001o42kmcKU5whIFQ"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_ffe0dd5ed87041989c685b2f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git status && git log --oneline -5 && git branch --show-current"
+            },
+            "output": "On branch kimi/6876-kimi-diminutive\nYour branch is up to date with 'origin/kimi/6876-kimi-diminutive'.\n\nYou are in a sparse checkout with 27% of tracked files present.\n\nnothing to commit, working tree clean\n5b9bbad8f6 feat(lexicon): diminutive/augmentative EN gloss fallback helper (#6876)\ndf730778b9 fix(work): per-source Work board card counts and FX-03 dual-source proof (#6899)\n9d68532f30 fix(routing): close grok-4.6 rotation residuals from #6868 CF review (#6898)\n1c5b19277d fix(runtime): silence watchdog ignores idle-CPU noise from wedged agent CLIs (#6888) (#6897)\nb57a853329 fix(telemetry): record gemma and ACP shadow-adapter bridge usage (#6896)\nkimi/6876-kimi-diminutive\n",
+            "metadata": {
+              "output": "On branch kimi/6876-kimi-diminutive\nYour branch is up to date with 'origin/kimi/6876-kimi-diminutive'.\n\nYou are in a sparse checkout with 27% of tracked files present.\n\nnothing to commit, working tree clean\n5b9bbad8f6 feat(lexicon): diminutive/augmentative EN gloss fallback helper (#6876)\ndf730778b9 fix(work): per-source Work board card counts and FX-03 dual-source proof (#6899)\n9d68532f30 fix(routing): close grok-4.6 rotation residuals from #6868 CF review (#6898)\n1c5b19277d fix(runtime): silence watchdog ignores idle-CPU noise from wedged agent CLIs (#6888) (#6897)\nb57a853329 fix(telemetry): record gemma and ACP shadow-adapter bridge usage (#6896)\nkimi/6876-kimi-diminutive\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git status && git log --oneline -5 && git branch --show-current",
+            "time": {
+              "start": 1786951985554,
+              "end": 1786951985560
+            }
+          },
+          "id": "prt_00ea3631e0018bmOTnhLsScTGX",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea2f470001o42kmcKU5whIFQ"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_550611047db94bfb861b6a32",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py"
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py</path>\n<type>file</type>\n<content>\n1: \"\"\"Diminutive/augmentative English gloss fallback for the reenrich translation path.\n2: \n3: Dictionaries index the root lemma, so derived nouns such as «білочка» or\n4: «вовчище» frequently come back from the sourced translation lookups with no\n5: English gloss of their own. When the base noun lives in the same manifest and\n6: already carries a sourced ``translation.en``, this module derives a labeled\n7: fallback gloss: base EN + ``\" (diminutive)\"`` / ``\" (augmentative)\"``.\n8: \n9: The fallback is deliberately conservative:\n10: \n11: - base candidates come from a small deterministic suffix table — never from\n12:   invented lemmas;\n13: - a candidate is accepted only when it exists as a noun entry in the same\n14:   manifest with a non-empty, sourced ``translation.en``;\n15: - when the in-repo VESUM database is reachable, both the surface form and the\n16:   base noun must be VESUM-attested (base as a noun); when VESUM is unavailable\n17:   the manifest-membership gate alone applies.\n18: \n19: Integration (#6876): call :func:`derived_translation_fallback` from the\n20: reenrich translation path (``scripts/lexicon/reenrich_thin_manifest_entries.py``,\n21: ``_translation_for_entry`` fallback chain) after the direct and VESUM-base\n22: lookups miss. It is intentionally not wired there yet to avoid colliding with\n23: the AGY adverb lane working in the same file.\n24: \"\"\"\n25: \n26: from __future__ import annotations\n27: \n28: import re\n29: from collections.abc import Callable, Iterable, Mapping\n30: from typing import Any\n31: \n32: DIMINUTIVE = \"diminutive\"\n33: AUGMENTATIVE = \"augmentative\"\n34: \n35: _ACUTE_RE = re.compile(\"[\\u0301\\u0300]\")\n36: _MIN_STEM_LEN = 3\n37: _HUSHING_TO_VELAR = {\"ж\": \"г\", \"ч\": \"к\", \"ш\": \"х\"}\n38: \n39: # verify callable shape: (word, pos_filter) -> list of VESUM match dicts.\n40: VesumVerify = Callable[[str, str | None], list[dict]]\n41: \n42: \n43: def derived_base_candidates(lemma: str) -> list[dict[str, str]]:\n44:     \"\"\"Return deterministic diminutive/augmentative base candidates for ``lemma``.\n45: \n46:     Rows have ``surface``, ``kind``, ``rule``, and ``base`` keys. This is not an\n47:     authenticity oracle: callers must confirm each candidate against the\n48:     manifest (and VESUM, when available) before accepting it.\n49:     \"\"\"\n50:     normalized = _normalize(lemma)\n51:     if not normalized:\n52:         return []\n53: \n54:     rows: list[dict[str, str]] = []\n55:     seen: set[str] = set()\n56:     for kind, rule, base in _iter_rule_bases(normalized):\n57:         if base == normalized or base in seen:\n58:             continue\n59:         if not _looks_like_single_ukrainian_token(base):\n60:             continue\n61:         seen.add(base)\n62:         rows.append({\"surface\": normalized, \"kind\": kind, \"rule\": rule, \"base\": base})\n63:     return rows\n64: \n65: \n66: def manifest_lemma_index(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:\n67:     \"\"\"Build a normalized-lemma → entry index over a manifest's entries.\"\"\"\n68:     index: dict[str, dict[str, Any]] = {}\n69:     entries = manifest.get(\"entries\")\n70:     if not isinstance(entries, list):\n71:         return index\n72:     for entry in entries:\n73:         if not isinstance(entry, dict):\n74:             continue\n75:         key = _normalize(entry.get(\"lemma\"))\n76:         if key and key not in index:\n77:             index[key] = entry\n78:     return index\n79: \n80: \n81: def derived_translation_fallback(\n82:     entry: dict[str, Any],\n83:     entries_by_lemma: Mapping[str, dict[str, Any]],\n84:     *,\n85:     vesum_verify: VesumVerify | bool | None = None,\n86: ) -> dict[str, Any] | None:\n87:     \"\"\"Derive a labeled EN translation for a diminutive/augmentative noun entry.\n88: \n89:     ``entries_by_lemma`` maps normalized lemmas to manifest entries (see\n90:     :func:`manifest_lemma_index`). ``vesum_verify`` controls the VESUM gate:\n91:     ``None`` auto-detects the in-repo VESUM database and degrades gracefully\n92:     when it is unreachable, ``False`` skips the check, and a callable is used\n93:     as-is (``(word, pos_filter) -> matches``).\n94: \n95:     Returns a ``{\"en\": [...], \"source\": ...}`` translation block, or ``None``\n96:     when no manifest-resident base noun with a sourced EN gloss exists.\n97:     \"\"\"\n98:     lemma = _normalize(entry.get(\"lemma\"))\n99:     if not lemma or not _is_noun_pos(entry.get(\"pos\")):\n100:         return None\n101: \n102:     verify = _resolve_vesum_verify(vesum_verify)\n103:     for candidate in derived_base_candidates(lemma):\n104:         base = candidate[\"base\"]\n105:         base_entry = entries_by_lemma.get(_normalize(base))\n106:         if base_entry is None or not _is_noun_pos(base_entry.get(\"pos\")):\n107:             continue\n108:         translation = _sourced_translation(base_entry)\n109:         if translation is None:\n110:             continue\n111:         if not _vesum_accepts(verify, lemma, base):\n112:             continue\n113:         return _build_translation(translation, candidate)\n114:     return None\n115: \n116: \n117: def _iter_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n118:     yield from _diminutive_rule_bases(lemma)\n119:     yield from _augmentative_rule_bases(lemma)\n120: \n121: \n122: def _diminutive_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n123:     for suffix in (\"очка\", \"ечка\"):\n124:         stem = _stem_before_suffix(lemma, suffix)\n125:         if stem:\n126:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-ка\", f\"{stem}ка\"\n127:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-а\", f\"{stem}а\"\n128: \n129:     for suffix in (\"онька\", \"енька\"):\n130:         stem = _stem_before_suffix(lemma, suffix)\n131:         if stem:\n132:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-ка\", f\"{stem}ка\"\n133:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-а\", f\"{stem}а\"\n134:             for velar in _hushing_to_velar_stems(stem):\n135:                 yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->velar-а\", f\"{velar}а\"\n136: \n137:     for suffix in (\"очко\", \"ечко\", \"енько\"):\n138:         stem = _stem_before_suffix(lemma, suffix)\n139:         if stem:\n140:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-о\", f\"{stem}о\"\n141:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-е\", f\"{stem}е\"\n142:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-це\", f\"{stem}це\"\n143: \n144:     stem = _stem_before_suffix(lemma, \"енятко\")\n145:     if stem:\n146:         yield DIMINUTIVE, \"noun-diminutive:-енятко->-еня\", f\"{stem}еня\"\n147:         yield DIMINUTIVE, \"noun-diminutive:-енятко->-я\", f\"{stem}я\"\n148:         yield DIMINUTIVE, \"noun-diminutive:-енятко->-а\", f\"{stem}а\"\n149: \n150:     stem = _stem_before_suffix(lemma, \"ятко\")\n151:     if stem:\n152:         yield DIMINUTIVE, \"noun-diminutive:-ятко->-я\", f\"{stem}я\"\n153:         yield DIMINUTIVE, \"noun-diminutive:-ятко->-а\", f\"{stem}а\"\n154: \n155:     for suffix in (\"очок\", \"ечок\", \"ок\", \"ик\"):\n156:         stem = _stem_before_suffix(lemma, suffix)\n157:         if stem:\n158:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->stem\", stem\n159:             for velar in _hushing_to_velar_stems(stem):\n160:                 yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->velar-stem\", velar\n161:             yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-о\", f\"{stem}о\"\n162: \n163: \n164: def _augmentative_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n165:     for suffix in (\"ище\", \"іще\"):\n166:         stem = _stem_before_suffix(lemma, suffix)\n167:         if stem:\n168:             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->stem\", stem\n169:             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-а\", f\"{stem}а\"\n170:             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-о\", f\"{stem}о\"\n171:             for velar in _hushing_to_velar_stems(stem):\n172:                 yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-stem\", velar\n173:                 yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-а\", f\"{velar}а\"\n174: \n175:     for suffix in (\"ища\", \"іща\"):\n176:         stem = _stem_before_suffix(lemma, suffix)\n177:         if stem:\n178:             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-а\", f\"{stem}а\"\n179:             yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->stem\", stem\n180:             for velar in _hushing_to_velar_stems(stem):\n181:                 yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-а\", f\"{velar}а\"\n182: \n183:     stem = _stem_before_suffix(lemma, \"юга\")\n184:     if stem:\n185:         yield AUGMENTATIVE, \"noun-augmentative:-юга->stem\", stem\n186:         yield AUGMENTATIVE, \"noun-augmentative:-юга->-а\", f\"{stem}а\"\n187: \n188: \n189: def _sourced_translation(base_entry: dict[str, Any]) -> dict[str, Any] | None:\n190:     enrichment = base_entry.get(\"enrichment\")\n191:     if not isinstance(enrichment, dict):\n192:         return None\n193:     translation = enrichment.get(\"translation\")\n194:     if not isinstance(translation, dict):\n195:         return None\n196:     terms = translation.get(\"en\")\n197:     if not isinstance(terms, list) or not any(str(term).strip() for term in terms):\n198:         return None\n199:     if not str(translation.get(\"source\") or \"\").strip():\n200:         return None\n201:     return translation\n202: \n203: \n204: def _build_translation(base_translation: dict[str, Any], candidate: dict[str, str]) -> dict[str, Any]:\n205:     kind = candidate[\"kind\"]\n206:     base = candidate[\"base\"]\n207:     first_en = next(str(term).strip() for term in base_translation[\"en\"] if str(term).strip())\n208:     source = str(base_translation.get(\"source\") or \"\").strip()\n209:     label = f\"{kind} of {base}\"\n210:     return {\n211:         \"en\": [f\"{first_en} ({kind})\"],\n212:         \"source\": f\"{source} ({label})\" if source else label,\n213:     }\n214: \n215: \n216: def _resolve_vesum_verify(vesum_verify: VesumVerify | bool | None) -> VesumVerify | None:\n217:     if vesum_verify is False:\n218:         return None\n219:     if callable(vesum_verify):\n220:         return vesum_verify\n221: \n222:     def _auto_verify(word: str, pos_filter: str | None) -> list[dict]:\n223:         from scripts.verification.vesum import verify_word\n224: \n225:         return verify_word(word, pos_filter=pos_filter)\n226: \n227:     try:\n228:         _auto_verify(\"вода\", \"noun\")\n229:     except Exception:\n230:         return None\n231:     return _auto_verify\n232: \n233: \n234: def _vesum_accepts(verify: VesumVerify | None, surface: str, base: str) -> bool:\n235:     if verify is None:\n236:         return True\n237:     try:\n238:         if not verify(surface, None):\n239:             return False\n240:         return bool(verify(base, \"noun\"))\n241:     except Exception:\n242:         return True\n243: \n244: \n245: def _is_noun_pos(pos: object) -> bool:\n246:     return \"noun\" in str(pos or \"\").casefold()\n247: \n248: \n249: def _stem_before_suffix(lemma: str, suffix: str) -> str | None:\n250:     if not lemma.endswith(suffix) or len(lemma) < len(suffix) + _MIN_STEM_LEN:\n251:         return None\n252:     return lemma[: -len(suffix)]\n253: \n254: \n255: def _hushing_to_velar_stems(stem: str) -> Iterable[str]:\n256:     replacement = _HUSHING_TO_VELAR.get(stem[-1:])\n257:     if replacement:\n258:         yield f\"{stem[:-1]}{replacement}\"\n259: \n260: \n261: def _normalize(text: object) -> str:\n262:     normalized = _ACUTE_RE.sub(\"\", str(text or \"\").strip().casefold())\n263:     return normalized.replace(\"`\", \"ʼ\").replace(\"'\", \"ʼ\").replace(\"’\", \"ʼ\")\n264: \n265: \n266: def _looks_like_single_ukrainian_token(text: str) -> bool:\n267:     return bool(re.fullmatch(r\"[а-яєіїґʼ-]+\", text))\n\n(End of file - total 267 lines)\n</content>",
+            "metadata": {
+              "preview": "\"\"\"Diminutive/augmentative English gloss fallback for the reenrich translation path.\n\nDictionaries index the root lemma, so derived nouns such as «білочка» or\n«вовчище» frequently come back from the sourced translation lookups with no\nEnglish gloss of their own. When the base noun lives in the same manifest and\nalready carries a sourced ``translation.en``, this module derives a labeled\nfallback gloss: base EN + ``\" (diminutive)\"`` / ``\" (augmentative)\"``.\n\nThe fallback is deliberately conservative:\n\n- base candidates come from a small deterministic suffix table — never from\n  invented lemmas;\n- a candidate is accepted only when it exists as a noun entry in the same\n  manifest with a non-empty, sourced ``translation.en``;\n- when the in-repo VESUM database is reachable, both the surface form and the\n  base noun must be VESUM-attested (base as a noun); when VESUM is unavailable\n  the manifest-membership gate alone applies.\n\nIntegration (#6876): call :func:`derived_translation_fallback` from the\nreenrich translation path (``scripts/lexicon/reenrich_thin_manifest_entries.py``,",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py",
+                "text": "\"\"\"Diminutive/augmentative English gloss fallback for the reenrich translation path.\n\nDictionaries index the root lemma, so derived nouns such as «білочка» or\n«вовчище» frequently come back from the sourced translation lookups with no\nEnglish gloss of their own. When the base noun lives in the same manifest and\nalready carries a sourced ``translation.en``, this module derives a labeled\nfallback gloss: base EN + ``\" (diminutive)\"`` / ``\" (augmentative)\"``.\n\nThe fallback is deliberately conservative:\n\n- base candidates come from a small deterministic suffix table — never from\n  invented lemmas;\n- a candidate is accepted only when it exists as a noun entry in the same\n  manifest with a non-empty, sourced ``translation.en``;\n- when the in-repo VESUM database is reachable, both the surface form and the\n  base noun must be VESUM-attested (base as a noun); when VESUM is unavailable\n  the manifest-membership gate alone applies.\n\nIntegration (#6876): call :func:`derived_translation_fallback` from the\nreenrich translation path (``scripts/lexicon/reenrich_thin_manifest_entries.py``,\n``_translation_for_entry`` fallback chain) after the direct and VESUM-base\nlookups miss. It is intentionally not wired there yet to avoid colliding with\nthe AGY adverb lane working in the same file.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport re\nfrom collections.abc import Callable, Iterable, Mapping\nfrom typing import Any\n\nDIMINUTIVE = \"diminutive\"\nAUGMENTATIVE = \"augmentative\"\n\n_ACUTE_RE = re.compile(\"[\\u0301\\u0300]\")\n_MIN_STEM_LEN = 3\n_HUSHING_TO_VELAR = {\"ж\": \"г\", \"ч\": \"к\", \"ш\": \"х\"}\n\n# verify callable shape: (word, pos_filter) -> list of VESUM match dicts.\nVesumVerify = Callable[[str, str | None], list[dict]]\n\n\ndef derived_base_candidates(lemma: str) -> list[dict[str, str]]:\n    \"\"\"Return deterministic diminutive/augmentative base candidates for ``lemma``.\n\n    Rows have ``surface``, ``kind``, ``rule``, and ``base`` keys. This is not an\n    authenticity oracle: callers must confirm each candidate against the\n    manifest (and VESUM, when available) before accepting it.\n    \"\"\"\n    normalized = _normalize(lemma)\n    if not normalized:\n        return []\n\n    rows: list[dict[str, str]] = []\n    seen: set[str] = set()\n    for kind, rule, base in _iter_rule_bases(normalized):\n        if base == normalized or base in seen:\n            continue\n        if not _looks_like_single_ukrainian_token(base):\n            continue\n        seen.add(base)\n        rows.append({\"surface\": normalized, \"kind\": kind, \"rule\": rule, \"base\": base})\n    return rows\n\n\ndef manifest_lemma_index(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:\n    \"\"\"Build a normalized-lemma → entry index over a manifest's entries.\"\"\"\n    index: dict[str, dict[str, Any]] = {}\n    entries = manifest.get(\"entries\")\n    if not isinstance(entries, list):\n        return index\n    for entry in entries:\n        if not isinstance(entry, dict):\n            continue\n        key = _normalize(entry.get(\"lemma\"))\n        if key and key not in index:\n            index[key] = entry\n    return index\n\n\ndef derived_translation_fallback(\n    entry: dict[str, Any],\n    entries_by_lemma: Mapping[str, dict[str, Any]],\n    *,\n    vesum_verify: VesumVerify | bool | None = None,\n) -> dict[str, Any] | None:\n    \"\"\"Derive a labeled EN translation for a diminutive/augmentative noun entry.\n\n    ``entries_by_lemma`` maps normalized lemmas to manifest entries (see\n    :func:`manifest_lemma_index`). ``vesum_verify`` controls the VESUM gate:\n    ``None`` auto-detects the in-repo VESUM database and degrades gracefully\n    when it is unreachable, ``False`` skips the check, and a callable is used\n    as-is (``(word, pos_filter) -> matches``).\n\n    Returns a ``{\"en\": [...], \"source\": ...}`` translation block, or ``None``\n    when no manifest-resident base noun with a sourced EN gloss exists.\n    \"\"\"\n    lemma = _normalize(entry.get(\"lemma\"))\n    if not lemma or not _is_noun_pos(entry.get(\"pos\")):\n        return None\n\n    verify = _resolve_vesum_verify(vesum_verify)\n    for candidate in derived_base_candidates(lemma):\n        base = candidate[\"base\"]\n        base_entry = entries_by_lemma.get(_normalize(base))\n        if base_entry is None or not _is_noun_pos(base_entry.get(\"pos\")):\n            continue\n        translation = _sourced_translation(base_entry)\n        if translation is None:\n            continue\n        if not _vesum_accepts(verify, lemma, base):\n            continue\n        return _build_translation(translation, candidate)\n    return None\n\n\ndef _iter_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n    yield from _diminutive_rule_bases(lemma)\n    yield from _augmentative_rule_bases(lemma)\n\n\ndef _diminutive_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n    for suffix in (\"очка\", \"ечка\"):\n        stem = _stem_before_suffix(lemma, suffix)\n        if stem:\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-ка\", f\"{stem}ка\"\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-а\", f\"{stem}а\"\n\n    for suffix in (\"онька\", \"енька\"):\n        stem = _stem_before_suffix(lemma, suffix)\n        if stem:\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-ка\", f\"{stem}ка\"\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-а\", f\"{stem}а\"\n            for velar in _hushing_to_velar_stems(stem):\n                yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->velar-а\", f\"{velar}а\"\n\n    for suffix in (\"очко\", \"ечко\", \"енько\"):\n        stem = _stem_before_suffix(lemma, suffix)\n        if stem:\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-о\", f\"{stem}о\"\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-е\", f\"{stem}е\"\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-це\", f\"{stem}це\"\n\n    stem = _stem_before_suffix(lemma, \"енятко\")\n    if stem:\n        yield DIMINUTIVE, \"noun-diminutive:-енятко->-еня\", f\"{stem}еня\"\n        yield DIMINUTIVE, \"noun-diminutive:-енятко->-я\", f\"{stem}я\"\n        yield DIMINUTIVE, \"noun-diminutive:-енятко->-а\", f\"{stem}а\"\n\n    stem = _stem_before_suffix(lemma, \"ятко\")\n    if stem:\n        yield DIMINUTIVE, \"noun-diminutive:-ятко->-я\", f\"{stem}я\"\n        yield DIMINUTIVE, \"noun-diminutive:-ятко->-а\", f\"{stem}а\"\n\n    for suffix in (\"очок\", \"ечок\", \"ок\", \"ик\"):\n        stem = _stem_before_suffix(lemma, suffix)\n        if stem:\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->stem\", stem\n            for velar in _hushing_to_velar_stems(stem):\n                yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->velar-stem\", velar\n            yield DIMINUTIVE, f\"noun-diminutive:-{suffix}->-о\", f\"{stem}о\"\n\n\ndef _augmentative_rule_bases(lemma: str) -> Iterable[tuple[str, str, str]]:\n    for suffix in (\"ище\", \"іще\"):\n        stem = _stem_before_suffix(lemma, suffix)\n        if stem:\n            yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->stem\", stem\n            yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-а\", f\"{stem}а\"\n            yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-о\", f\"{stem}о\"\n            for velar in _hushing_to_velar_stems(stem):\n                yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-stem\", velar\n                yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-а\", f\"{velar}а\"\n\n    for suffix in (\"ища\", \"іща\"):\n        stem = _stem_before_suffix(lemma, suffix)\n        if stem:\n            yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->-а\", f\"{stem}а\"\n            yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->stem\", stem\n            for velar in _hushing_to_velar_stems(stem):\n                yield AUGMENTATIVE, f\"noun-augmentative:-{suffix}->velar-а\", f\"{velar}а\"\n\n    stem = _stem_before_suffix(lemma, \"юга\")\n    if stem:\n        yield AUGMENTATIVE, \"noun-augmentative:-юга->stem\", stem\n        yield AUGMENTATIVE, \"noun-augmentative:-юга->-а\", f\"{stem}а\"\n\n\ndef _sourced_translation(base_entry: dict[str, Any]) -> dict[str, Any] | None:\n    enrichment = base_entry.get(\"enrichment\")\n    if not isinstance(enrichment, dict):\n        return None\n    translation = enrichment.get(\"translation\")\n    if not isinstance(translation, dict):\n        return None\n    terms = translation.get(\"en\")\n    if not isinstance(terms, list) or not any(str(term).strip() for term in terms):\n        return None\n    if not str(translation.get(\"source\") or \"\").strip():\n        return None\n    return translation\n\n\ndef _build_translation(base_translation: dict[str, Any], candidate: dict[str, str]) -> dict[str, Any]:\n    kind = candidate[\"kind\"]\n    base = candidate[\"base\"]\n    first_en = next(str(term).strip() for term in base_translation[\"en\"] if str(term).strip())\n    source = str(base_translation.get(\"source\") or \"\").strip()\n    label = f\"{kind} of {base}\"\n    return {\n        \"en\": [f\"{first_en} ({kind})\"],\n        \"source\": f\"{source} ({label})\" if source else label,\n    }\n\n\ndef _resolve_vesum_verify(vesum_verify: VesumVerify | bool | None) -> VesumVerify | None:\n    if vesum_verify is False:\n        return None\n    if callable(vesum_verify):\n        return vesum_verify\n\n    def _auto_verify(word: str, pos_filter: str | None) -> list[dict]:\n        from scripts.verification.vesum import verify_word\n\n        return verify_word(word, pos_filter=pos_filter)\n\n    try:\n        _auto_verify(\"вода\", \"noun\")\n    except Exception:\n        return None\n    return _auto_verify\n\n\ndef _vesum_accepts(verify: VesumVerify | None, surface: str, base: str) -> bool:\n    if verify is None:\n        return True\n    try:\n        if not verify(surface, None):\n            return False\n        return bool(verify(base, \"noun\"))\n    except Exception:\n        return True\n\n\ndef _is_noun_pos(pos: object) -> bool:\n    return \"noun\" in str(pos or \"\").casefold()\n\n\ndef _stem_before_suffix(lemma: str, suffix: str) -> str | None:\n    if not lemma.endswith(suffix) or len(lemma) < len(suffix) + _MIN_STEM_LEN:\n        return None\n    return lemma[: -len(suffix)]\n\n\ndef _hushing_to_velar_stems(stem: str) -> Iterable[str]:\n    replacement = _HUSHING_TO_VELAR.get(stem[-1:])\n    if replacement:\n        yield f\"{stem[:-1]}{replacement}\"\n\n\ndef _normalize(text: object) -> str:\n    normalized = _ACUTE_RE.sub(\"\", str(text or \"\").strip().casefold())\n    return normalized.replace(\"`\", \"ʼ\").replace(\"'\", \"ʼ\").replace(\"’\", \"ʼ\")\n\n\ndef _looks_like_single_ukrainian_token(text: str) -> bool:\n    return bool(re.fullmatch(r\"[а-яєіїґʼ-]+\", text))",
+                "lineStart": 1,
+                "lineEnd": 267,
+                "totalLines": 267,
+                "truncated": false
+              }
+            },
+            "title": "scripts/lexicon/derived_en_fallback.py",
+            "time": {
+              "start": 1786951983932,
+              "end": 1786951983985
+            }
+          },
+          "id": "prt_00ea36332001GVoMEw8rE2qNy8",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea2f470001o42kmcKU5whIFQ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 25425,
+            "input": 25103,
+            "output": 74,
+            "reasoning": 120,
+            "cache": {
+              "write": 0,
+              "read": 128
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea36a66001eyI8k3HakkE1QE",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea2f470001o42kmcKU5whIFQ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 29704,
+          "input": 3947,
+          "output": 89,
+          "reasoning": 452,
+          "cache": {
+            "write": 0,
+            "read": 25216
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786951985937,
+          "completed": 1786952002578
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea36b11001HGaVowrjF3UnUS",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-start",
+          "id": "prt_00ea38740001AiMj3dE0SFcHdJ",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea36b11001HGaVowrjF3UnUS"
+        },
+        {
+          "type": "reasoning",
+          "text": "The issue: `_is_noun_pos` at line 245-246 uses `\"noun\" in str(pos or \"\").casefold()`, which matches \"pronoun\" too. I need to tighten it: exact token or startswith \"noun\", not substring.\n\nSo the logic should be: the POS string should be exactly \"noun\" or start with \"noun\" (e.g., \"noun-masc\"? or \"noun, masc\"?). But \"pronoun\" should NOT match because it doesn't start with \"noun\" — it contains \"noun\" but at position 2.\n\nLet me think about what forms POS might take. The task says \"Exact token / startswith noun, not substring.\" So:\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    if not normalized:\n        return False\n    # Split on token separators so \"noun, masc\" or \"noun;masc\" style values\n    # match per-token, and \"pronoun\" never matches.\n    tokens = re.split(r\"[^a-z]+\", normalized)  # hmm\n```\n\nSimpler interpretation per the task: \"Exact token / startswith noun, not substring\". So:\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    return normalized == \"noun\" or normalized.startswith(\"noun\")\n```\n\nWait, but \"startswith noun\" — \"noun\" itself starts with \"noun\". What about \"nouns\"? That'd match startswith. Hmm. The intent: things like \"noun\" or \"noun-masc\" or \"noun (masc)\" should match; \"pronoun\" should not. A token-based approach: split the string into tokens (on non-alphanumeric separators) and check whether any token equals \"noun\" or the whole string starts with \"noun\" followed by a separator/non-letter.\n\nLet me check what POS values look like in this codebase. Let me search for \"pos\" usage in the lexicon scripts and check existing tests.\n\nLet me look at existing tests for this module and how POS values look.",
+          "time": {
+            "start": 1786951993171,
+            "end": 1786952001303
+          },
+          "id": "prt_00ea387530012MV2jHR2jwnrOP",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea36b11001HGaVowrjF3UnUS"
+        },
+        {
+          "type": "tool",
+          "tool": "glob",
+          "callID": "call_63d0ac9c43bf44238f334520",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "scripts/lexicon/*.py"
+            },
+            "output": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/park_thin_entries.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/miyklas_relation_miner.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/source_attribution.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/migrate_source_labels.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/migrate_sum11_sovietization.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/content_lexicon_reconciler.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/manifest_fingerprint.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/manifest_io.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/merge_translation_delta.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/obvious_noise_classifier.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/assess_kaikki_fillability.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/migrate_slovnyk_cache_v4.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/fix_esum_garbled_etymologies.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/verify_manifest.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/load_relation_candidates.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/calque_corrections.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/ohoiko_paired_headword_split.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/backfill_course_usage.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/grow_lexicon_from_content.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/reenrich_thin_manifest_entries.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_slovnyk_mirror.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derivational_morphology.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_data_manifest.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/check_manifest_vocabulary_coverage.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/promote_grow_candidates.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/ohoiko_atlas_intake.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_synonym_verdicts_yaml.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/fill_from_content.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/atlas_intake_core.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curriculum_atlas_intake.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_kaikki_lookup.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/relation_pairs.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/repair_plural_noun_aliases.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/enrich_manifest.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_textbook_jsonl_repromote.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/vesum_form_key.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_teacher_deck_cloze.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/heritage_classifier.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/verify_synonym_pairs.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/measure_manifest_coverage.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/lemma_normalization.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/generate_vesum_aliases.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/__init__.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/publish_manifest.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_ohoiko_ulp_repromote.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/generate_vesum_form_shards.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/esum_garbled.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/apply_anchor_worksheet.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/relation_render_diff.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/sync_teacher_table_deck.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/export_open_dataset.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/repair_truncated_definition_cards.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/mine_wikipedia_relations.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/generate_antonym_candidates.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/anchor_curation_evidence.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/generate_needs_review_ledger.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/extract_book_headword_inventory.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/extract_grinchyshyn_paronym_candidates.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/admit_teacher_table.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/migrate_slovnyk_cache_v3.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/check_manifest_freshness.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/heritage_calque_wave.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/triage_needs_review.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_seed_atlas_admission.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/promote_teacher_lesson_intake.py\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_membership.py",
+            "metadata": {
+              "count": 67,
+              "truncated": false
+            },
+            "title": "",
+            "time": {
+              "start": 1786952001419,
+              "end": 1786952001977
+            }
+          },
+          "id": "prt_00ea3a736001KiE1gIk47oaUwe",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea36b11001HGaVowrjF3UnUS"
+        },
+        {
+          "type": "tool",
+          "tool": "glob",
+          "callID": "call_0524f43eb0d44dd7a559a613",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "**/test*derived*"
+            },
+            "output": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py",
+            "metadata": {
+              "count": 1,
+              "truncated": false
+            },
+            "title": "",
+            "time": {
+              "start": 1786952001535,
+              "end": 1786952001987
+            }
+          },
+          "id": "prt_00ea3a7d50016G00ijbWDkox3n",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea36b11001HGaVowrjF3UnUS"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_9103452830924937895b6bfc",
+          "state": {
+            "status": "completed",
+            "input": {
+              "include": "*.py",
+              "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts",
+              "pattern": "pronoun|_is_noun_pos"
+            },
+            "output": "Found 100 matches (more matches available)\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/content/video_discovery_helpers.py:\n  Line 114:     \"pronoun\": \"займенник\",\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/crawl/crawl_ulp_blog.py:\n  Line 82:     (\"ukrainian-personal-pronouns\", \"Ukrainian Personal Pronouns\",\n\n  Line 83:      \"grammar\", [\"pronouns\", \"grammar\", \"declension\"], \"A1\", \"guide\"),\n\n  Line 84:     (\"pronouns-this-that\", \"This and That in Ukrainian — Demonstrative Pronouns\",\n\n  Line 85:      \"grammar\", [\"demonstratives\", \"pronouns\", \"grammar\"], \"A1\", \"guide\"),\n\n  Line 86:     (\"possessive-pronouns-declension\", \"Possessive Pronouns Declension in Ukrainian\",\n\n  Line 87:      \"grammar\", [\"possessive\", \"pronouns\", \"declension\", \"grammar\"], \"A2\", \"guide\"),\n\n  Line 88:     (\"pronouns-ves-vsiakyi-kozhen\", \"Pronouns: весь, всякий, кожен in Ukrainian\",\n\n  Line 89:      \"grammar\", [\"pronouns\", \"grammar\", \"quantifiers\"], \"B1\", \"guide\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/crawl/crawl_dobraforma.py:\n  Line 7: nouns, pronouns, adjectives, verbs, and adverbs with contextualized exercises.\n\n  Line 83:     (\"12-1\", \"Possessive Pronouns (мій, твій, чий in Nominative)\", [\"possessive\", \"pronouns\", \"grammar\"], \"A1\"),\n\n  Line 84:     (\"12-2\", \"Possessive Pronouns (наш and ваш in Nominative)\", [\"possessive\", \"pronouns\", \"grammar\"], \"A1\"),\n\n  Line 85:     (\"12-3\", \"Possessive Pronouns (його, її and їхній in Nominative)\", [\"possessive\", \"pronouns\", \"grammar\"], \"A1\"),\n\n  Line 88:     (\"13-1\", \"Personal Pronouns (Nominative and Accusative Cases)\", [\"pronouns\", \"accusative\", \"grammar\"], \"A1\"),\n\n  Line 89:     (\"13-2\", \"Personal Pronouns (Accusative and Genitive Cases)\", [\"pronouns\", \"accusative\", \"genitive\", \"grammar\"], \"A2\"),\n\n  Line 90:     (\"13-3\", \"Personal Pronouns (Accusative and Genitive after Prepositions)\", [\"pronouns\", \"prepositions\", \"grammar\"], \"A2\"),\n\n  Line 91:     (\"14-1\", \"Personal Pronouns (Instrumental Case after з)\", [\"pronouns\", \"instrumental\", \"grammar\"], \"A2\"),\n\n  Line 92:     (\"14-2\", \"Personal Pronouns (Instrumental Case after Verbs)\", [\"pronouns\", \"instrumental\", \"verbs\", \"grammar\"], \"B1\"),\n\n  Line 93:     (\"15-1\", \"Personal Pronouns (Dative Case Forms)\", [\"pronouns\", \"dative\", \"grammar\"], \"A2\"),\n\n  Line 94:     (\"15-2\", \"Personal Pronouns (Dative Case for Indirect Object)\", [\"pronouns\", \"dative\", \"grammar\"], \"A2\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/crawl/crawl_talkukrainian.py:\n  Line 7: verb tenses, adjectives, adverbs, pronouns, prepositions, and vocabulary topics.\n\n  Line 50:     (\"personal-pronouns\", \"Personal Pronouns\",\n\n  Line 51:      [\"pronouns\", \"personal\", \"grammar\"], \"A1\", \"grammar\"),\n\n  Line 52:     (\"possessive-pronouns\", \"Possessive Pronouns – мій, твій vs свій\",\n\n  Line 53:      [\"possessive\", \"pronouns\", \"свій\", \"grammar\"], \"A1\", \"grammar\"),\n\n  Line 54:     (\"interrogative-relative-pronouns\", \"Interrogative and Relative Pronouns\",\n\n  Line 55:      [\"interrogative\", \"relative\", \"pronouns\", \"який\", \"grammar\"], \"A2\", \"grammar\"),\n\n  Line 56:     (\"indefinite-negative-pronouns\", \"Indefinite and Negative Pronouns\",\n\n  Line 57:      [\"indefinite\", \"negative\", \"pronouns\", \"grammar\"], \"A2\", \"grammar\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/vocab/vocab_enrich_nlp.py:\n  Line 86:     'NPRO': 'pron',  # pronoun\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/crawl/crawl_ulp.py:\n  Line 72:     (r\"pronoun|займен\", [\"grammar\", \"pronouns\"]),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/batch/batch_research.py:\n  Line 95:     (14, \"Possessive pronouns (мій/твій/наш/ваш/його/її)\"),\n\n  Line 109:     \"Possessive pronouns, prepositions, numbers, basic communication\",\n\n  Line 113:     (2, \"Dative case (pronouns)\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/curriculum_gap_analysis.py:\n  Line 61:     \"plural\", \"numeral\", \"pronoun\", \"adjective\", \"adverb\", \"verb\",\n\n  Line 79:     \"pronoun\": [\"pronoun\"],\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/add_dialogue_situations.py:\n  Line 430:     \"genitive-adjectives-pronouns\": [\n\n  Line 452:     \"dative-pronouns\": [\n\n  Line 457:          \"motivation\": \"Dative pronouns: мені, тобі, йому, їй with подарунок(m), книга(f)\"},\n\n  Line 466:     \"dative-adjectives-pronouns\": [\n\n  Line 515:     \"instrumental-adjectives-pronouns\": [\n\n  Line 753:     \"indefinite-negative-pronouns\": [\n\n  Line 1167:     \"advanced-pronouns\": [\n\n  Line 1172:          \"motivation\": \"Advanced pronouns: кожен, ніхто, дехто, будь-який, ті хто — in abstract discourse\"},\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/generate_mdx/wire_navigation.py:\n  Line 34:     \"a1\": (None, \"the-dative-i-pronouns\"),  # A1 → A2\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/generators/generate_a2_plans.py:\n  Line 541:         (r\"[Зз]айменник|pronoun\", \"Pronouns\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/build/build_module_direct.py:\n  Line 79:     \"ya-ty-vin\": 15,       # pronouns + conjugation\n\n  Line 95:     \"mene-tobi\": 8,        # pronoun forms (existing words)\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/enrich_manifest.py:\n  Line 507: #     gendered pair, not an opposite); він→ми (pronoun paradigm, not opposition —\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_textbook_jsonl_repromote.py:\n  Line 68:     \"pron\": \"pronoun\",\n\n  Line 69:     \"pronoun\": \"pronoun\",\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/build/quick_verify.py:\n  Line 344:         \"г vs ґ\": [\"вимова\", \"pronounc\", \"г vs ґ\", \"ґ\"],\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/scoring/metrics.py:\n  Line 145: # Ukrainian subject patterns (nominative case nouns/pronouns that indicate Ukrainian agency)\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_ohoiko_ulp_repromote.py:\n  Line 82:     \"pron\": \"pronoun\",\n\n  Line 83:     \"pronoun\": \"pronoun\",\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/pipeline/config_tables.py:\n  Line 88:         Look at the text on this page. What you are seeing are letters. Now, say a word out loud. What you just produced is a sound. This distinction is the absolute foundation of the Ukrainian language. There is a golden rule taught to every Ukrainian student in the first grade: **Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери**. We hear and pronounce sounds, but we see and write letters.\n\n  Line 238:     \"- Possessive pronouns: мій/моя/моє — from M06+\\n\\n\"\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py:\n  Line 99:     if not lemma or not _is_noun_pos(entry.get(\"pos\")):\n\n  Line 106:         if base_entry is None or not _is_noun_pos(base_entry.get(\"pos\")):\n\n  Line 245: def _is_noun_pos(pos: object) -> bool:\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/build/linear_pipeline.py:\n  Line 12041:     kept) and pronoun-noun terminology (`я-форма` = 1+5 chars, kept —\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/admit_teacher_table.py:\n  Line 76:     \"pron\": \"pronoun\",\n\n  Line 77:     \"pronoun\": \"pronoun\",\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/config.py:\n  Line 65:     # Заболотного, Авраменка). Sibling pronoun-form terms (`ти-форма`,\n\n  Line 161:         # Dative pronouns - but NOT їм which is also verb \"I eat\" from їсти\n\n  Line 167:         # The specific dative pronouns above are sufficient for detection\n\n  Line 190:         # Relative pronouns (який/яка/яке/які) - only flag when preceded by comma AND not followed by \"це\"\n\n  Line 1521: # Includes pronouns, conjunctions, prepositions, basic verbs, and high-frequency words\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/generate_practice_deck.py:\n  Line 525:         \"pronoun\",\n\n  Line 2116:     \"pronoun\": (\"займенник\", \"pronoun\", \"pron\", \"negative pronoun\"),\n\n  Line 2179:     \"pronoun\": (\"займенник\", \"pronoun\", \"pron\", \"pron\\\\.\"),\n\n  Line 2304:         \"pronoun\": (\"займенник\", \"pron.\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/lint_word_atlas.py:\n  Line 223:     \"pronoun\": \"pronoun\",\n\n  Line 224:     \"pron\": \"pronoun\",\n\n  Line 225:     \"займенник\": \"pronoun\",\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/checks/content_gaming.py:\n  Line 629:     Stop words (pronouns, prepositions, particles) are excluded to avoid\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/promote_teacher_lesson_intake.py:\n  Line 185:     \"pron\": \"pronoun\",\n\n  Line 186:     \"pronoun\": \"pronoun\",\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/checks/morphological_validator.py:\n  Line 594: # Words that VESUM tags as adj but function as pronouns/particles — skip in agreement\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/_judge_eval_lib.py:\n  Line 789: - Standard pronoun forms in their normal grammatical roles: `вас`, `вам`, `вами`, `усе`, `гаразд`\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/checks/activity_quality.py:\n  Line 223:     - Overuse of pronouns (я, він, вона when unnecessary)\n\n  Line 235:     # Check 1: Overuse of subject pronouns\n\n  Line 236:     # Count sentences and pronouns\n\n  Line 241:         pronoun_pattern = r'\\b(я|ти|він|вона|воно|ми|ви|вони)\\b'\n\n  Line 242:         pronoun_matches = re.findall(pronoun_pattern, text_lower)\n\n  Line 243:         pronoun_density = len(pronoun_matches) / len(sentences)\n\n  Line 245:         # If more than 1.5 pronouns per sentence on average (very high)\n\n  Line 246:         if pronoun_density > 1.5:\n\n  Line 248:                 f\"Overuse of pronouns: {len(pronoun_matches)} in {len(sentences)} sentences \"\n\n  Line 249:                 f\"({pronoun_density:.1f} per sentence)\"\n\n  Line 251:             suggestions.append(\"Ukrainian often omits subject pronouns - use ellipsis\")\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/checks/activity_validation.py:\n  Line 710: # Я = first-person pronoun, Ви = formal second-person pronoun.\n\n  Line 788: # (not pronouns) are being used. These are distinct from the taught dative\n\n  Line 789: # pronouns (мені, тобі, йому, їй, нам, вам, їм).\n\n  Line 814:     Dative nouns are taught in a separate module from dative pronouns.\n\n  Line 815:     Using them in a pronouns-only module introduces out-of-scope grammar.\n\n  Line 848:                             f\"not dative pronouns. Verify this grammar is in \"\n\n  Line 852:                             \"If this module only teaches dative pronouns \"\n\n  Line 853:                             \"(мені, тобі, йому…), replace with a dative pronoun. \"\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/audit/checks/learner_state.py:\n  Line 31:         # Personal and demonstrative pronouns: high-frequency reference words.\n\n\n(Results truncated. Consider using a more specific path or pattern.)",
+            "metadata": {
+              "matches": 100,
+              "truncated": true
+            },
+            "title": "pronoun|_is_noun_pos",
+            "time": {
+              "start": 1786952001675,
+              "end": 1786952002000
+            }
+          },
+          "id": "prt_00ea3a834001K2JrQnSoVdqCNk",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea36b11001HGaVowrjF3UnUS"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 29704,
+            "input": 3947,
+            "output": 89,
+            "reasoning": 452,
+            "cache": {
+              "write": 0,
+              "read": 25216
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea3ab15001Yh6I0S3O1ByL0v",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea36b11001HGaVowrjF3UnUS"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 36486,
+          "input": 7259,
+          "output": 48,
+          "reasoning": 59,
+          "cache": {
+            "write": 0,
+            "read": 29120
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952002586,
+          "completed": 1786952011181
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea3ac1a0015OQeuVn9Exbohb",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-start",
+          "id": "prt_00ea3c89c001K4Bv1cXvhw5boi",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3ac1a0015OQeuVn9Exbohb"
+        },
+        {
+          "type": "reasoning",
+          "text": "Now let me read the existing test file to understand the test conventions, and check what POS values look like in the manifest (to know what forms `_is_noun_pos` should accept — e.g. \"noun\", \"noun, masc\"? Let me check the manifest entries' pos values).",
+          "time": {
+            "start": 1786952009910,
+            "end": 1786952009951
+          },
+          "id": "prt_00ea3c8b6001M5xpt1OQz79tvu",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3ac1a0015OQeuVn9Exbohb"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_69702c3b672f4dfea0b19ebd",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py"
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py</path>\n<type>file</type>\n<content>\n1: from scripts.lexicon.derived_en_fallback import (\n2:     derived_base_candidates,\n3:     derived_translation_fallback,\n4:     manifest_lemma_index,\n5: )\n6: \n7: \n8: def _base_entry(lemma: str, en: list[str] | None, source: str = \"slovnyk.me: fixture\") -> dict:\n9:     entry: dict = {\"lemma\": lemma, \"pos\": \"noun\"}\n10:     if en is not None:\n11:         entry[\"enrichment\"] = {\"translation\": {\"en\": en, \"source\": source}}\n12:     return entry\n13: \n14: \n15: def _index(*entries: dict) -> dict:\n16:     return manifest_lemma_index({\"entries\": list(entries)})\n17: \n18: \n19: def test_candidates_cover_diminutive_and_augmentative_examples() -> None:\n20:     diminutive_bases = {row[\"base\"] for row in derived_base_candidates(\"білочка\")}\n21:     assert \"білка\" in diminutive_bases\n22:     assert all(row[\"kind\"] == \"diminutive\" for row in derived_base_candidates(\"білочка\"))\n23: \n24:     augmentative_rows = derived_base_candidates(\"вовчище\")\n25:     assert all(row[\"kind\"] == \"augmentative\" for row in augmentative_rows)\n26:     assert \"вовк\" in {row[\"base\"] for row in augmentative_rows}\n27: \n28: \n29: def test_diminutive_fill_from_manifest_base() -> None:\n30:     index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n31: \n32:     translation = derived_translation_fallback(\n33:         {\"lemma\": \"білочка\", \"pos\": \"noun\"},\n34:         index,\n35:         vesum_verify=False,\n36:     )\n37: \n38:     assert translation == {\n39:         \"en\": [\"squirrel (diminutive)\"],\n40:         \"source\": \"slovnyk.me: fixture (diminutive of білка)\",\n41:     }\n42: \n43: \n44: def test_augmentative_fill_from_manifest_base() -> None:\n45:     index = _index(_base_entry(\"вовк\", [\"wolf\"]))\n46: \n47:     translation = derived_translation_fallback(\n48:         {\"lemma\": \"вовчище\", \"pos\": \"noun\"},\n49:         index,\n50:         vesum_verify=False,\n51:     )\n52: \n53:     assert translation == {\n54:         \"en\": [\"wolf (augmentative)\"],\n55:         \"source\": \"slovnyk.me: fixture (augmentative of вовк)\",\n56:     }\n57: \n58: \n59: def test_no_fill_when_base_lacks_en() -> None:\n60:     index = _index(\n61:         _base_entry(\"білка\", None),\n62:         _base_entry(\"вовк\", []),\n63:         _base_entry(\"ведмідь\", [\"bear\"], source=\"\"),\n64:     )\n65: \n66:     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n67:     assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n68:     assert derived_translation_fallback({\"lemma\": \"ведмедище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n69: \n70: \n71: def test_no_fill_when_base_missing_or_not_noun() -> None:\n72:     index = _index(\n73:         {\"lemma\": \"білка\", \"pos\": \"adjective\", \"enrichment\": {\"translation\": {\"en\": [\"white\"], \"source\": \"fixture\"}}}\n74:     )\n75: \n76:     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n77:     assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n78:     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"adjective\"}, index, vesum_verify=False) is None\n79: \n80: \n81: def test_vesum_gate_blocks_unattested_forms() -> None:\n82:     index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n83: \n84:     def attest_all(word: str, pos_filter: str | None) -> list[dict]:\n85:         return [{\"lemma\": word, \"pos\": pos_filter or \"noun\", \"tags\": \"\"}]\n86: \n87:     def reject_surface(word: str, pos_filter: str | None) -> list[dict]:\n88:         if pos_filter is None:\n89:             return []\n90:         return [{\"lemma\": word, \"pos\": \"noun\", \"tags\": \"\"}]\n91: \n92:     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=attest_all) is not None\n93:     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n94: \n95: \n96: def test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n97:     index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n98: \n99:     translation = derived_translation_fallback(\n100:         {\"lemma\": \"біло́чка\", \"pos\": \"noun\"},\n101:         index,\n102:         vesum_verify=False,\n103:     )\n104: \n105:     assert translation is not None\n106:     assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n\n(End of file - total 106 lines)\n</content>",
+            "metadata": {
+              "preview": "from scripts.lexicon.derived_en_fallback import (\n    derived_base_candidates,\n    derived_translation_fallback,\n    manifest_lemma_index,\n)\n\n\ndef _base_entry(lemma: str, en: list[str] | None, source: str = \"slovnyk.me: fixture\") -> dict:\n    entry: dict = {\"lemma\": lemma, \"pos\": \"noun\"}\n    if en is not None:\n        entry[\"enrichment\"] = {\"translation\": {\"en\": en, \"source\": source}}\n    return entry\n\n\ndef _index(*entries: dict) -> dict:\n    return manifest_lemma_index({\"entries\": list(entries)})\n\n\ndef test_candidates_cover_diminutive_and_augmentative_examples() -> None:\n    diminutive_bases = {row[\"base\"] for row in derived_base_candidates(\"білочка\")}",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py",
+                "text": "from scripts.lexicon.derived_en_fallback import (\n    derived_base_candidates,\n    derived_translation_fallback,\n    manifest_lemma_index,\n)\n\n\ndef _base_entry(lemma: str, en: list[str] | None, source: str = \"slovnyk.me: fixture\") -> dict:\n    entry: dict = {\"lemma\": lemma, \"pos\": \"noun\"}\n    if en is not None:\n        entry[\"enrichment\"] = {\"translation\": {\"en\": en, \"source\": source}}\n    return entry\n\n\ndef _index(*entries: dict) -> dict:\n    return manifest_lemma_index({\"entries\": list(entries)})\n\n\ndef test_candidates_cover_diminutive_and_augmentative_examples() -> None:\n    diminutive_bases = {row[\"base\"] for row in derived_base_candidates(\"білочка\")}\n    assert \"білка\" in diminutive_bases\n    assert all(row[\"kind\"] == \"diminutive\" for row in derived_base_candidates(\"білочка\"))\n\n    augmentative_rows = derived_base_candidates(\"вовчище\")\n    assert all(row[\"kind\"] == \"augmentative\" for row in augmentative_rows)\n    assert \"вовк\" in {row[\"base\"] for row in augmentative_rows}\n\n\ndef test_diminutive_fill_from_manifest_base() -> None:\n    index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n\n    translation = derived_translation_fallback(\n        {\"lemma\": \"білочка\", \"pos\": \"noun\"},\n        index,\n        vesum_verify=False,\n    )\n\n    assert translation == {\n        \"en\": [\"squirrel (diminutive)\"],\n        \"source\": \"slovnyk.me: fixture (diminutive of білка)\",\n    }\n\n\ndef test_augmentative_fill_from_manifest_base() -> None:\n    index = _index(_base_entry(\"вовк\", [\"wolf\"]))\n\n    translation = derived_translation_fallback(\n        {\"lemma\": \"вовчище\", \"pos\": \"noun\"},\n        index,\n        vesum_verify=False,\n    )\n\n    assert translation == {\n        \"en\": [\"wolf (augmentative)\"],\n        \"source\": \"slovnyk.me: fixture (augmentative of вовк)\",\n    }\n\n\ndef test_no_fill_when_base_lacks_en() -> None:\n    index = _index(\n        _base_entry(\"білка\", None),\n        _base_entry(\"вовк\", []),\n        _base_entry(\"ведмідь\", [\"bear\"], source=\"\"),\n    )\n\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n    assert derived_translation_fallback({\"lemma\": \"ведмедище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n\n\ndef test_no_fill_when_base_missing_or_not_noun() -> None:\n    index = _index(\n        {\"lemma\": \"білка\", \"pos\": \"adjective\", \"enrichment\": {\"translation\": {\"en\": [\"white\"], \"source\": \"fixture\"}}}\n    )\n\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"adjective\"}, index, vesum_verify=False) is None\n\n\ndef test_vesum_gate_blocks_unattested_forms() -> None:\n    index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n\n    def attest_all(word: str, pos_filter: str | None) -> list[dict]:\n        return [{\"lemma\": word, \"pos\": pos_filter or \"noun\", \"tags\": \"\"}]\n\n    def reject_surface(word: str, pos_filter: str | None) -> list[dict]:\n        if pos_filter is None:\n            return []\n        return [{\"lemma\": word, \"pos\": \"noun\", \"tags\": \"\"}]\n\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=attest_all) is not None\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n\n\ndef test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n    index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n\n    translation = derived_translation_fallback(\n        {\"lemma\": \"біло́чка\", \"pos\": \"noun\"},\n        index,\n        vesum_verify=False,\n    )\n\n    assert translation is not None\n    assert translation[\"en\"] == [\"squirrel (diminutive)\"]",
+                "lineStart": 1,
+                "lineEnd": 106,
+                "totalLines": 106,
+                "truncated": false
+              }
+            },
+            "title": "tests/test_derived_en_fallback.py",
+            "time": {
+              "start": 1786952009992,
+              "end": 1786952010020
+            }
+          },
+          "id": "prt_00ea3c8e9001ghKXYkVLxIY3nJ",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3ac1a0015OQeuVn9Exbohb"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 36486,
+            "input": 7259,
+            "output": 48,
+            "reasoning": 59,
+            "cache": {
+              "write": 0,
+              "read": 29120
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea3cbaa001EukBACEP0TeOVS",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3ac1a0015OQeuVn9Exbohb"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 38049,
+          "input": 1497,
+          "output": 125,
+          "reasoning": 75,
+          "cache": {
+            "write": 0,
+            "read": 36352
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952011210,
+          "completed": 1786952021828
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea3cdca001dfRqbLP6GPXJls",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-start",
+          "id": "prt_00ea3f435001a3ybspK1q7mffp",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3cdca001dfRqbLP6GPXJls"
+        },
+        {
+          "type": "reasoning",
+          "text": "Now let me check what POS values actually appear in manifests, so I understand whether POS could be e.g. \"noun, masc\" or \"n\" or \"noun-masc\". Let me look at how `pos` is stored in manifest entries — check `reenrich_thin_manifest_entries.py` or `build_data_manifest.py` or a sample manifest data file.",
+          "time": {
+            "start": 1786952021065,
+            "end": 1786952021111
+          },
+          "id": "prt_00ea3f4480018em7lp6WEC7xUU",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3cdca001dfRqbLP6GPXJls"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_78befd294e87446aa74fec75",
+          "state": {
+            "status": "completed",
+            "input": {
+              "include": "*.py",
+              "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon",
+              "pattern": "pos.*=.*\"noun|\"pos\":|get\\(\"pos\"\\)"
+            },
+            "output": "Found 95 matches\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/admit_teacher_table.py:\n  Line 271:         _POS_MAP.get(str(analysis.get(\"pos\") or \"\").casefold())\n\n  Line 314:         \"pos\": pos,\n\n  Line 582:         pos = str(entry.get(\"pos\") or \"\")\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py:\n  Line 99:     if not lemma or not _is_noun_pos(entry.get(\"pos\")):\n\n  Line 106:         if base_entry is None or not _is_noun_pos(base_entry.get(\"pos\")):\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_ohoiko_ulp_repromote.py:\n  Line 103:     raw = str(hits[0].get(\"pos\") or \"\").strip().lower()\n\n  Line 158:                     \"pos\": _infer_pos(lemma, gloss),\n\n  Line 187:                     \"pos\": \"verb\",\n\n  Line 231:                 \"pos\": pos,\n\n  Line 263:             \"pos\": row[\"pos\"],\n\n  Line 439:             if not (entry.get(\"pos\") or \"\").strip():\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/triage_needs_review.py:\n  Line 107:         pos_raw = entry.get(\"pos\")\n\n  Line 304:                 \"pos\": item.pos,\n\n  Line 319:     pos_counts = Counter(str(r.get(\"pos\") or \"(none)\") for r in records)\n\n  Line 397:                         _md_cell(str(record.get(\"pos\") or \"\")),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_seed_atlas_admission.py:\n  Line 181:                 \"pos\": _vesum_pos(lemma),\n\n  Line 284:         if _text(entry.get(\"pos\")):\n\n  Line 389:         if _text(entry.get(\"lemma\")) and _text(entry.get(\"url_slug\")) and entry.get(\"pos\") != \"grammar term\"\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/generate_antonym_candidates.py:\n  Line 80:                         \"pos\": pos,\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/generate_needs_review_ledger.py:\n  Line 88:     pos = str(row.get(\"pos\") or \"\").strip()\n\n  Line 95:     base: dict[str, Any] = {\"lemma\": lemma, \"pos\": pos}\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/extract_book_headword_inventory.py:\n  Line 403:         item = {\"lemma\": lemma, \"pos\": pos}\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/heritage_calque_wave.py:\n  Line 170:         if entry.get(\"pos\") == \"proper noun\":\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/promote_teacher_lesson_intake.py:\n  Line 305:     mapped = sorted({_mapped_pos(row.get(\"pos\")) for row in analyses if _mapped_pos(row.get(\"pos\"))})\n\n  Line 475:                 \"pos\": pos,\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curated_textbook_jsonl_repromote.py:\n  Line 113:     raw = str(hits[0].get(\"pos\") or \"\").strip().lower()\n\n  Line 227:             raw = str(hits[0].get(\"pos\") or \"\").strip().lower()\n\n  Line 240:                 \"pos\": pos_by_lemma[lemma],\n\n  Line 258:             \"pos\": r[\"pos\"],\n\n  Line 425:             if not (entry.get(\"pos\") or \"\").strip():\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/atlas_intake_core.py:\n  Line 216:             normalised_text(match.get(\"pos\"))\n\n  Line 218:             if isinstance(match, Mapping) and normalised_text(match.get(\"pos\"))\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_data_manifest.py:\n  Line 107:     {\"lemma\": \"агенство\", \"gloss\": \"avoid: агенція\", \"pos\": \"noun\"},\n\n  Line 108:     {\"lemma\": \"авось\", \"gloss\": \"avoid: ану ж / а може\", \"pos\": \"adv\"},\n\n  Line 109:     {\"lemma\": \"автозагар\", \"gloss\": \"avoid: автозасмага\", \"pos\": \"noun\"},\n\n  Line 110:     {\"lemma\": \"всьо\", \"gloss\": \"avoid: все\", \"pos\": \"pron\"},\n\n  Line 111:     {\"lemma\": \"діюча\", \"gloss\": \"avoid: чинна\", \"pos\": \"adj\"},\n\n  Line 112:     {\"lemma\": \"міроприємство\", \"gloss\": \"avoid: захід\", \"pos\": \"noun\"},\n\n  Line 119:     {\"lemma\": \"слідуючий\", \"gloss\": \"avoid: наступний\", \"pos\": \"adj\"},\n\n  Line 123:     {\"lemma\": \"вельми\", \"gloss\": \"very, exceedingly\", \"pos\": \"adv\"},\n\n  Line 124:     {\"lemma\": \"глагол\", \"gloss\": \"archaic: word, speech\", \"pos\": \"noun\"},\n\n  Line 125:     {\"lemma\": \"гетьман\", \"gloss\": \"hetman\", \"pos\": \"noun\"},\n\n  Line 126:     {\"lemma\": \"опришок\", \"gloss\": \"opryshok\", \"pos\": \"noun\"},\n\n  Line 127:     {\"lemma\": \"десятина\", \"gloss\": \"tithe; historical land unit\", \"pos\": \"noun\"},\n\n  Line 128:     {\"lemma\": \"кобіта\", \"gloss\": \"regional: woman\", \"pos\": \"noun\"},\n\n  Line 269:                 \"pos\": entry.get(\"pos\"),\n\n  Line 321:     pos = str(rec.get(\"pos\") or \"\").strip().casefold()\n\n  Line 375:             surface_pos = aliased.get(\"pos\")\n\n  Line 440:                 \"pos\": rec.get(\"pos\"),\n\n  Line 458:             if rec.get(\"pos\"):\n\n  Line 489:             \"pos\": rec.get(\"pos\"),\n\n  Line 508:             \"pos\": rec.get(\"pos\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/enrich_manifest.py:\n  Line 930:             str(row.get(\"pos\") or \"\") == \"verb\"\n\n  Line 990:     if pos_raw == \"noun\":\n\n  Line 1704:         (str(row.get(\"lemma\") or \"\"), str(row.get(\"pos\") or \"\")) for row in rows if row.get(\"lemma\") and row.get(\"pos\")\n\n  Line 3194:     pos_raw = forms[0].get(\"pos\") or \"\"\n\n  Line 3239:         \"pos\": _POS_LABELS.get(pos_raw, pos_raw),\n\n  Line 3646:         if str(row.get(\"pos\") or \"\") != \"verb\":\n\n  Line 4425:                 \"pos\": pos,\n\n  Line 4965:         pos = str(relation.get(\"pos\") or \"\").strip()\n\n  Line 6579:     return \"proper noun\" in str(entry.get(\"pos\") or \"\").casefold()\n\n  Line 6811:     entry_pos = entry.get(\"pos\")\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/repair_plural_noun_aliases.py:\n  Line 85:         if \"pos='noun:pl'\" not in reason and 'pos=\"noun:pl\"' not in reason:\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/fill_from_content.py:\n  Line 324:         \"pos\": vocab_entry.get(\"pos\") or vesum_match.get(\"pos\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/check_manifest_vocabulary_coverage.py:\n  Line 147:                 \"pos\": entry.get(\"pos\"),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/ohoiko_paired_headword_split.py:\n  Line 199:                     \"pos\": hw.get(\"pos\"),\n\n  Line 305:                         \"pos\": parent.get(\"pos\"),\n\n  Line 352:         \"source_pos\": source_row.get(\"pos\"),\n\n  Line 458:                     \"pos\": candidate.get(\"source_pos\"),\n\n  Line 530:                     \"pos\": pos,\n\n  Line 560:             \"pos\": row[\"pos\"],\n\n  Line 669:                 \"pos\": _vesum_pos(collapsed) or \"unknown\",\n\n  Line 695:                 \"pos\": row[\"pos\"],\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/grow_lexicon_from_content.py:\n  Line 113:     if not str(entry.get(\"pos\") or \"\").strip():\n\n  Line 369:         pos = str(row.get(\"pos\") or \"\").strip()\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/build_kaikki_lookup.py:\n  Line 225:             pos = clean_text(obj.get(\"pos\"))\n\n  Line 238:                     \"pos\": [],\n\n  Line 259:             \"pos\": sorted(row[\"pos\"]),\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/curriculum_atlas_intake.py:\n  Line 584:             normalised_text(match.get(\"pos\"))\n\n  Line 586:             if isinstance(match, Mapping) and normalised_text(match.get(\"pos\"))\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/reenrich_thin_manifest_entries.py:\n  Line 20:     \"proverbs\": [{\"lemma\": \"вода\", \"pos\": \"noun\", \"url_slug\": \"вода\"}],\n\n  Line 21:     \"usage_notes\": [{\"lemma\": \"аби\", \"pos\": \"conjunction\", \"url_slug\": \"аби\"}],\n\n  Line 22:     \"grinchenko\": [{\"lemma\": \"хліб\", \"pos\": \"noun\", \"url_slug\": \"хліб\"}],\n\n  Line 23:     \"forms\": [{\"lemma\": \"свіжий\", \"pos\": \"adjective\", \"url_slug\": \"свіжий\"}],\n\n  Line 47:     pos = str(entry.get(\"pos\") or \"\").casefold()\n\n  Line 101:                 layer: [{\"lemma\": lemma, \"pos\": \"noun\", \"url_slug\": lemma} for lemma in canary_lemmas]\n\n  Line 251:     entry_pos = entry.get(\"pos\")\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/assess_kaikki_fillability.py:\n  Line 223:             pos = obj.get(\"pos\")\n\n  Line 253:                     \"pos\": pos_set,\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/promote_grow_candidates.py:\n  Line 302:     pos = _clean_optional_str(candidate.get(\"pos\"))\n\n  Line 305:         {\"translation\": gloss, \"gloss\": gloss, \"pos\": pos, \"ipa\": candidate.get(\"ipa\")},\n\n  Line 307:         {\"pos\": pos},\n\n  Line 317:         base_entry[\"pos\"] = candidate.get(\"pos\")\n\n  Line 887:     pos = str(candidate.get(\"pos\") or \"\").strip().casefold()\n\n\n/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/runner/generate_pr1_fixture.py:\n  Line 54:                 \"pos\": \"noun\" if i % 3 else \"verb\",\n",
+            "metadata": {
+              "matches": 95,
+              "truncated": false
+            },
+            "title": "pos.*=.*\"noun|\"pos\":|get\\(\"pos\"\\)",
+            "time": {
+              "start": 1786952021130,
+              "end": 1786952021336
+            }
+          },
+          "id": "prt_00ea3f47d001oKkquLyGbnZapo",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3cdca001dfRqbLP6GPXJls"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_7a9500e18c0748179a0dfcd5",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "rg -o '\"pos\": \"[^\"]+\"' data/lexicon/*.json 2>/dev/null | sed 's/.*\"pos\": //' | sort | uniq -c | sort -rn | head -30"
+            },
+            "output": "     26 \"adj\"\n     15 \"noun\"\n      4 \"adv\"\n",
+            "metadata": {
+              "output": "     26 \"adj\"\n     15 \"noun\"\n      4 \"adv\"\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "rg -o '\"pos\": \"[^\"]+\"' data/lexicon/*.json 2>/dev/null | sed 's/.*\"pos\": //' | sort | uniq -c | sort -rn | head -30",
+            "time": {
+              "start": 1786952021294,
+              "end": 1786952021299
+            }
+          },
+          "id": "prt_00ea3f48e001guRRQ46QZ4q7U1",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3cdca001dfRqbLP6GPXJls"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 38049,
+            "input": 1497,
+            "output": 125,
+            "reasoning": 75,
+            "cache": {
+              "write": 0,
+              "read": 36352
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea3f65c001nsSKguAlCOUDqs",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3cdca001dfRqbLP6GPXJls"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 43974,
+          "input": 3324,
+          "output": 174,
+          "reasoning": 2652,
+          "cache": {
+            "write": 0,
+            "read": 37824
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952021847,
+          "completed": 1786952086029
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea3f757001HPU3vQtH2t0YHx",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "type": "step-start",
+          "id": "prt_00ea41b92001JNVv1xPtA2aVJ6",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3f757001HPU3vQtH2t0YHx"
+        },
+        {
+          "type": "reasoning",
+          "text": "The POS values in the manifests look like plain tokens: \"noun\", \"verb\", \"adj\", \"adv\", \"proper noun\", \"pronoun\". Also possibly \"noun:pl\" appears in VESUM reasons but entry `pos` fields are like \"noun\".\n\nThe task says: \"Exact token / startswith noun, not substring.\" So implement:\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    if not normalized:\n        return False\n    tokens = re.split(r\"[^a-z:]+\", normalized)  # hmm what separators?\n```\n\nActually, the simplest faithful implementation of \"Exact token / startswith noun, not substring\":\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    if not normalized:\n        return False\n    if normalized == \"noun\":\n        return True\n    # \"noun-masc\", \"noun:pl\", \"noun, masc\" — noun followed by a separator.\n    return bool(re.match(r\"noun(?![a-z])\", normalized))\n```\n\nWait — \"startswith noun\" with a boundary check. `re.match(r\"noun(?![a-z])\", normalized)` matches strings starting with \"noun\" not followed by a letter. That would match \"noun\", \"noun:pl\", \"noun, masc\", \"noun-masc\". It would NOT match \"pronoun\" (starts with \"pro\"), and not \"pronoun:pers\" etc.\n\nBut wait — \"proper noun\" contains \"noun\" as a separate token. Should \"proper noun\" count? Hmm. Line 6579 of enrich_manifest.py: `return \"proper noun\" in str(entry.get(\"pos\") or \"\").casefold()` — that's their proper-noun check. Should \"proper noun\" be treated as noun by `_is_noun_pos`? The original substring check matched \"proper noun\". With \"startswith\", \"proper noun\" would NOT match since it starts with \"proper\".\n\nThe review's ask: \"tighten _is_noun_pos so 'pronoun' is not treated as noun (F1 from Cursor review). Exact token / startswith noun, not substring.\"\n\nSo the review asks: exact token \"noun\" or startswith \"noun\". \"proper noun\" starts with \"proper\", so it would be excluded. Is that desired? The base for a diminutive could be a proper noun? Diminutives of proper nouns (names like Оксанка ← Оксана) — but the fallback is for the lexicon manifest where entries pos are like \"noun\". The reviewer explicitly said: exact token / startswith noun. I'll follow that spec literally. The conservative fallback docstring says \"exists as a noun entry\". Excluding \"proper noun\" is a tightening, consistent with \"conservative\". I'll implement the spec as stated.\n\nBut to be careful about tokens: what about \"noun, plural\" or \"common noun\"? Those don't start with \"noun\" except \"noun, plural\" does start with \"noun\". OK.\n\nImplementation:\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    # Exact noun token or a \"noun…\" compound (\"noun:pl\", \"noun, masc\").\n    # Substring matching would wrongly accept \"pronoun\" — pronouns are not\n    # diminutive/augmentative noun bases.\n    return bool(re.fullmatch(r\"noun\", normalized)) or bool(re.match(r\"noun(?![a-z])\", normalized))\n```\n\nHmm, `re.match(r\"noun(?![a-z]\", ...)` already covers exact \"noun\" (since after \"noun\" end-of-string, negative lookahead passes). So simply:\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    return bool(re.match(r\"noun(?![a-z])\", normalized))\n```\n\nThis matches: \"noun\", \"noun:pl\", \"noun-masc\", \"noun, masc\", \"nouns\"? Wait — \"nouns\" would NOT match because 's' is a letter following \"noun\". Good — \"nouns\" isn't a pos anyway. \"pronoun\" doesn't match (doesn't start with \"noun\"). \"proper noun\" doesn't match — hmm, is that OK? Let me reconsider: the review says \"Exact token / startswith noun, not substring\". \"proper noun\" — starts with \"proper\". Under the new rule it's excluded. Given the reviewer's wording, that's the intended behavior. Also for diminutive derivation, using a proper-noun base (\"Вовчик\" ← name Володимир style) is not something the manifest translation path wants; base must be a common noun with sourced EN translation. This is a conservative tightening — fine.\n\nAlternatively interpret \"exact token\" as: any whitespace/punct-separated token equals \"noun\" — that would make \"proper noun\" match. But \"startswith noun\" explicitly excludes \"proper noun\" too since it doesn't start with noun. The two options given (exact token OR startswith) both exclude \"proper noun\". So follow that.\n\nAlso should I keep the casefold? Yes.\n\nSimpler without regex? Could do:\n\n```python\nnormalized == \"noun\" or normalized.startswith((\"noun \", \"noun-\", \"noun:\", \"noun,\", \"noun(\"))\n```\n\nBut regex with negative lookahead is cleaner: `re.match(r\"noun(?![a-z])\", normalized)`. Note `re` is already imported in the module.\n\nNow the test. Add to tests/test_derived_en_fallback.py:\n\n```python\ndef test_pronoun_pos_is_not_treated_as_noun() -> None:\n    index = _index(_base_entry(\"білка\", [\"squirrel\"]))\n\n    # \"pronoun\" contains \"noun\" as a substring but must not pass the noun gate.\n    assert derived_translation_fallback({\"lemma\": \"хтось\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n```\n\nHmm, but better to test the gate directly at both call sites (surface entry pos and base entry pos), plus boundary cases. The function `_is_noun_pos` is private; tests use the public API. Two behaviors:\n\n1. Surface entry with pos \"pronoun\" → no fallback even though a base candidate exists and manifest base exists.\n2. Base entry with pos \"pronoun\" → not accepted as base.\n\nFor (1): need a lemma whose surface is pronoun... e.g. \"хтосенький\"? That's contrived. Actually for surface, `derived_base_candidates` must produce candidates; for a pronoun surface like \"він\" there are no candidates anyway. Better: surface entry pos \"pronoun\" with lemma \"білочка\" — a mis-tagged entry. The gate should reject before even computing candidates. Test: `derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None`.\n\nFor (2): base entry pos \"pronoun\": manifest has {\"lemma\": \"білка\", \"pos\": \"pronoun\", ...} and surface \"білочка\" pos \"noun\" → None (base not noun).\n\nAlso test positive boundary: pos \"noun\" still works (existing tests cover), and maybe \"noun:pl\"-ish variant still passes — e.g. surface pos \"noun\" base pos \"noun\" covered. I could add a check that \"noun, masc\" style passes:\n\n```python\ndef test_is_noun_pos_boundaries...\n```\n\nBut _is_noun_pos is private. Via public API: surface entry pos \"noun:pl\"? Hmm entries use plain \"noun\". I can still test via public API with pos \"noun, masc\" for the base. Let me write:\n\n```python\ndef test_pronoun_pos_rejected_at_surface_and_base() -> None:\n    # \"pronoun\" contains \"noun\" as a substring; the noun gate must not match it.\n    index = _index(\n        _base_entry(\"білка\", [\"squirrel\"]),\n        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n    )\n\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n\n\ndef test_annotated_noun_pos_still_accepted() -> None:\n    index = _index(\n        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n    )\n\n    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n\n    assert translation is not None\n    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n```\n\nHmm wait, \"noun:pl\" as surface pos — fine as a test of startswith acceptance.\n\nLet me also update the module docstring? The docstring says \"a candidate is accepted only when it exists as a noun entry\" — still accurate. Maybe no docstring change needed. But there's a subtle behavior note: \"proper noun\" no longer accepted. Should I mention in docstring? The docstring's conservative list says noun entry. Keep it simple; maybe add a line to the _is_noun_pos docstring explaining the boundary. The instruction says no comments unless asked — but docstrings for functions are conventional here; the module has docstrings everywhere. I'll keep a brief docstring on _is_noun_pos explaining the rule (matches repo style of documenting helpers).\n\nRepo style check: other private helpers like `_sourced_translation` have no docstrings; some do (`_stem_before_suffix` doesn't). Actually `_resolve_vesum_verify` has none. Mixed. The original `_is_noun_pos` has no docstring. I'll keep it without docstring to match, or a short one? Original had none — keep none, keep it tight. But a brief comment explaining why substring was rejected could be valuable... instructions say \"DO NOT ADD ANY COMMENTS unless asked\". Keep code clean:\n\n```python\ndef _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    return bool(re.match(r\"noun(?![a-z])\", normalized))\n```\n\nWait — but `re.match` anchors at start; \"pronoun\" → match at position 0 fails (\"p\" != \"n\"). Good. Edge: empty string → no match → False. Good, and old behavior for empty was False too.\n\nHmm, one more consideration: `_is_noun_pos` old code casefolded; keep casefold.\n\nWhat about \"NOUN\" uppercase — casefold handles.\n\nNow check git remotes/branch naming. Current branch: `kimi/6876-kimi-diminutive` tracking origin. The dispatch says \"Push same branch\" — push this branch (same branch as the worktree). Commit with trailer `X-Agent: glm/6904-noun-pos`, message refs #6876 with \"Refs\" not \"closes\". Wait, the instruction says: 'Never write 'closes #6876' or 'Does not close #6876' — use Refs 6876 only.' So in the commit message use \"Refs #6876\".\n\nAlso check: is there a PR #6904 for this branch already? The task says \"PR #6904 helper scripts/lexicon/derived_en_fallback.py: tighten...\" — PR 6904 exists on this branch presumably. Pushing same branch updates the PR. Let me verify remote branch and PR with gh (may not be authenticated; skip if fails).\n\nNow implement. Steps:\n1. Edit `_is_noun_pos`.\n2. Add tests.\n3. Run tests with the prescribed interpreter: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_derived_en_fallback.py`.\n4. Check lint: repo likely has ruff. Check pyproject for lint config and run ruff on the two files if available.\n5. Commit with trailer, push.\n\nLet me do the edit.",
+          "time": {
+            "start": 1786952031156,
+            "end": 1786952082794
+          },
+          "id": "prt_00ea41bb4001qex5VksR6Qa05t",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3f757001HPU3vQtH2t0YHx"
+        },
+        {
+          "type": "text",
+          "text": "The bug is at `scripts/lexicon/derived_en_fallback.py:245` — `\"noun\" in str(pos)` matches \"pronoun\". Fixing with a boundary-anchored match, then adding tests.",
+          "time": {
+            "start": 1786952082835,
+            "end": 1786952084390
+          },
+          "id": "prt_00ea4e5900016k8suGiHnHcV6p",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3f757001HPU3vQtH2t0YHx"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_97fdb39f5cd149c390cddf56",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py",
+              "newString": "def _is_noun_pos(pos: object) -> bool:\n    normalized = str(pos or \"\").strip().casefold()\n    return bool(re.match(r\"noun(?![a-z])\", normalized))",
+              "oldString": "def _is_noun_pos(pos: object) -> bool:\n    return \"noun\" in str(pos or \"\").casefold()"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n@@ -242,9 +242,10 @@\n         return True\n \n \n def _is_noun_pos(pos: object) -> bool:\n-    return \"noun\" in str(pos or \"\").casefold()\n+    normalized = str(pos or \"\").strip().casefold()\n+    return bool(re.match(r\"noun(?![a-z])\", normalized))\n \n \n def _stem_before_suffix(lemma: str, suffix: str) -> str | None:\n     if not lemma.endswith(suffix) or len(lemma) < len(suffix) + _MIN_STEM_LEN:\n",
+              "filediff": {
+                "file": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py",
+                "patch": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py\n@@ -242,9 +242,10 @@\n         return True\n \n \n def _is_noun_pos(pos: object) -> bool:\n-    return \"noun\" in str(pos or \"\").casefold()\n+    normalized = str(pos or \"\").strip().casefold()\n+    return bool(re.match(r\"noun(?![a-z])\", normalized))\n \n \n def _stem_before_suffix(lemma: str, suffix: str) -> str | None:\n     if not lemma.endswith(suffix) or len(lemma) < len(suffix) + _MIN_STEM_LEN:\n",
+                "additions": 2,
+                "deletions": 1
+              },
+              "truncated": false
+            },
+            "title": "scripts/lexicon/derived_en_fallback.py",
+            "time": {
+              "start": 1786952084416,
+              "end": 1786952084423
+            }
+          },
+          "id": "prt_00ea4eb7a001uIA3ezuaGFzAbS",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3f757001HPU3vQtH2t0YHx"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a4a884155465d6844f19920e40e635f8f1a42d9c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 43974,
+            "input": 3324,
+            "output": 174,
+            "reasoning": 2652,
+            "cache": {
+              "write": 0,
+              "read": 37824
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea4edc5001g3i92TubnPEEY9",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3f757001HPU3vQtH2t0YHx"
+        },
+        {
+          "type": "patch",
+          "hash": "1f132658f416d4cded453e5007452bde1ba3f04d",
+          "files": [
+            "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/scripts/lexicon/derived_en_fallback.py"
+          ],
+          "id": "prt_00ea4f1c40014I5qg9a1Av0r58",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea3f757001HPU3vQtH2t0YHx"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 44403,
+          "input": 2894,
+          "output": 351,
+          "reasoning": 70,
+          "cache": {
+            "write": 0,
+            "read": 41088
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952086059,
+          "completed": 1786952098489
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea4f22b001VKjAC9B0vwZPN5",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "a4a884155465d6844f19920e40e635f8f1a42d9c",
+          "type": "step-start",
+          "id": "prt_00ea51eac001Nw0R8RIngWFUVW",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea4f22b001VKjAC9B0vwZPN5"
+        },
+        {
+          "type": "reasoning",
+          "text": "`re.match(r\"noun(?![a-z])\", ...)` accepts: \"noun\", \"noun:pl\", \"noun, masc\", \"noun-masc\"; rejects \"pronoun\", \"pronoun:pers\", \"proper noun\" (starts with \"proper\"), \"\" — exactly \"exact token / startswith noun\".\n\nNow add tests.",
+          "time": {
+            "start": 1786952097465,
+            "end": 1786952097485
+          },
+          "id": "prt_00ea51eb90016acnJme2wR9dcp",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea4f22b001VKjAC9B0vwZPN5"
+        },
+        {
+          "type": "text",
+          "text": "Now the tests:",
+          "time": {
+            "start": 1786952097488,
+            "end": 1786952097505
+          },
+          "id": "prt_00ea51ed0001Y7YMP2TxomYZ8X",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea4f22b001VKjAC9B0vwZPN5"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_5f177c7d6e0b4c97b95fa58e",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py",
+              "newString": "def test_pronoun_pos_is_not_treated_as_noun() -> None:\n    index = _index(\n        _base_entry(\"білка\", [\"squirrel\"]),\n        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n    )\n\n    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n\n\ndef test_annotated_noun_pos_variants_still_accepted() -> None:\n    index = _index(\n        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n    )\n\n    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n\n    assert translation is not None\n    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n\n\ndef test_manifest_lemma_index_normalizes_stress_and_case() -> None:",
+              "oldString": "def test_manifest_lemma_index_normalizes_stress_and_case() -> None:"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py\n@@ -92,8 +92,29 @@\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=attest_all) is not None\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n \n \n+def test_pronoun_pos_is_not_treated_as_noun() -> None:\n+    index = _index(\n+        _base_entry(\"білка\", [\"squirrel\"]),\n+        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n+    )\n+\n+    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n+    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n+\n+\n+def test_annotated_noun_pos_variants_still_accepted() -> None:\n+    index = _index(\n+        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n+    )\n+\n+    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n+\n+    assert translation is not None\n+    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n+\n+\n def test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n     index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n \n     translation = derived_translation_fallback(\n",
+              "filediff": {
+                "file": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py",
+                "patch": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py\n@@ -92,8 +92,29 @@\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=attest_all) is not None\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n \n \n+def test_pronoun_pos_is_not_treated_as_noun() -> None:\n+    index = _index(\n+        _base_entry(\"білка\", [\"squirrel\"]),\n+        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n+    )\n+\n+    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n+    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n+\n+\n+def test_annotated_noun_pos_variants_still_accepted() -> None:\n+    index = _index(\n+        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n+    )\n+\n+    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n+\n+    assert translation is not None\n+    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n+\n+\n def test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n     index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n \n     translation = derived_translation_fallback(\n",
+                "additions": 21,
+                "deletions": 0
+              },
+              "truncated": false
+            },
+            "title": "tests/test_derived_en_fallback.py",
+            "time": {
+              "start": 1786952097527,
+              "end": 1786952097551
+            }
+          },
+          "id": "prt_00ea51ed7001dfMMpZoI0rnY4L",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea4f22b001VKjAC9B0vwZPN5"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 44403,
+            "input": 2894,
+            "output": 351,
+            "reasoning": 70,
+            "cache": {
+              "write": 0,
+              "read": 41088
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea521bc0019ImxRRKaOXskt1",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea4f22b001VKjAC9B0vwZPN5"
+        },
+        {
+          "type": "patch",
+          "hash": "a4a884155465d6844f19920e40e635f8f1a42d9c",
+          "files": [
+            "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos/tests/test_derived_en_fallback.py"
+          ],
+          "id": "prt_00ea522b6001DM29a8fJhZAXIH",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea4f22b001VKjAC9B0vwZPN5"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 44453,
+          "input": 443,
+          "output": 42,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 43968
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952098494,
+          "completed": 1786952106624
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea522be001vVO3yh3TjIQSMj",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-start",
+          "id": "prt_00ea53a6c001Xul8K2KsOlppDV",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea522be001vVO3yh3TjIQSMj"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_d8d2a9dae22647d88d099723",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_derived_en_fallback.py -q"
+            },
+            "output": "============================= test session starts ==============================\nplatform darwin -- Python 3.12.8, pytest-8.4.2, pluggy-1.6.0\nrootdir: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos\nconfigfile: pyproject.toml\nplugins: cov-7.1.0, xdist-3.8.0, timeout-2.4.0, anyio-4.14.2\ntimeout: 120.0s\ntimeout method: thread\ntimeout func_only: False\ncollected 9 items\n\ntests/test_derived_en_fallback.py .........                              [100%]\n\n============================== 9 passed in 0.38s ===============================\n",
+            "metadata": {
+              "output": "============================= test session starts ==============================\nplatform darwin -- Python 3.12.8, pytest-8.4.2, pluggy-1.6.0\nrootdir: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos\nconfigfile: pyproject.toml\nplugins: cov-7.1.0, xdist-3.8.0, timeout-2.4.0, anyio-4.14.2\ntimeout: 120.0s\ntimeout method: thread\ntimeout func_only: False\ncollected 9 items\n\ntests/test_derived_en_fallback.py .........                              [100%]\n\n============================== 9 passed in 0.38s ===============================\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_derived_en_fallback.py -q",
+            "time": {
+              "start": 1786952105976,
+              "end": 1786952106072
+            }
+          },
+          "id": "prt_00ea53a8e001mm220hVKUgKghC",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea522be001vVO3yh3TjIQSMj"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 44453,
+            "input": 443,
+            "output": 42,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 43968
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea54193001G2LPH4X25w7JKg",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea522be001vVO3yh3TjIQSMj"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 44880,
+          "input": 273,
+          "output": 222,
+          "reasoning": 33,
+          "cache": {
+            "write": 0,
+            "read": 44352
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952106633,
+          "completed": 1786952116834
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea542890017nJmqEMJjsIlpF",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-start",
+          "id": "prt_00ea5661400196cCm5mp4mQwfn",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea542890017nJmqEMJjsIlpF"
+        },
+        {
+          "type": "reasoning",
+          "text": "All 9 tests pass (7 existing + 2 new). Now run lint — check what's configured. pyproject has configfile. Check for ruff.",
+          "time": {
+            "start": 1786952115743,
+            "end": 1786952115754
+          },
+          "id": "prt_00ea5661f00102ZQEEYj4CZmND",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea542890017nJmqEMJjsIlpF"
+        },
+        {
+          "type": "text",
+          "text": "All 9 pass. Now lint and quick sanity check of the helper directly:",
+          "time": {
+            "start": 1786952115759,
+            "end": 1786952115784
+          },
+          "id": "prt_00ea5662f0019k6D5IyfdLKIEy",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea542890017nJmqEMJjsIlpF"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_adf06ee5832f417cb3c1da43",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m ruff check scripts/lexicon/derived_en_fallback.py tests/test_derived_en_fallback.py 2>&1; /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c \"\nfrom scripts.lexicon.derived_en_fallback import _is_noun_pos\nassert _is_noun_pos('noun') and _is_noun_pos('Noun') and _is_noun_pos('noun:pl') and _is_noun_pos('noun, masc')\nassert not _is_noun_pos('pronoun') and not _is_noun_pos('pronoun:pers') and not _is_noun_pos('proper noun') and not _is_noun_pos('') and not _is_noun_pos(None) and not _is_noun_pos('verb')\nprint('boundary sanity OK')\""
+            },
+            "output": "All checks passed!\nboundary sanity OK\n",
+            "metadata": {
+              "output": "All checks passed!\nboundary sanity OK\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m ruff check scripts/lexicon/derived_en_fallback.py tests/test_derived_en_fallback.py 2>&1; /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c \"\nfrom scripts.lexicon.derived_en_fallback import _is_noun_pos\nassert _is_noun_pos('noun') and _is_noun_pos('Noun') and _is_noun_pos('noun:pl') and _is_noun_pos('noun, masc')\nassert not _is_noun_pos('pronoun') and not _is_noun_pos('pronoun:pers') and not _is_noun_pos('proper noun') and not _is_noun_pos('') and not _is_noun_pos(None) and not _is_noun_pos('verb')\nprint('boundary sanity OK')\"",
+            "time": {
+              "start": 1786952116245,
+              "end": 1786952116253
+            }
+          },
+          "id": "prt_00ea56637001OATKf3Ju6qeJj0",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea542890017nJmqEMJjsIlpF"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 44880,
+            "input": 273,
+            "output": 222,
+            "reasoning": 33,
+            "cache": {
+              "write": 0,
+              "read": 44352
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea56937001zjhozm2xqq1My9",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea542890017nJmqEMJjsIlpF"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 44909,
+          "input": 284,
+          "output": 17,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 44608
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952116845,
+          "completed": 1786952121672
+        },
+        "finish": "tool-calls",
+        "id": "msg_00ea56a6d001KzDjK89KI4S5ic",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-start",
+          "id": "prt_00ea577df001ZfTHjNCBoeROwz",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea56a6d001KzDjK89KI4S5ic"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_e9480e5316534afea361da5f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git diff && git status --short"
+            },
+            "output": "diff --git a/scripts/lexicon/derived_en_fallback.py b/scripts/lexicon/derived_en_fallback.py\nindex 1a3a26182f..dc73c0b265 100644\n--- a/scripts/lexicon/derived_en_fallback.py\n+++ b/scripts/lexicon/derived_en_fallback.py\n@@ -243,7 +243,8 @@ def _vesum_accepts(verify: VesumVerify | None, surface: str, base: str) -> bool:\n \n \n def _is_noun_pos(pos: object) -> bool:\n-    return \"noun\" in str(pos or \"\").casefold()\n+    normalized = str(pos or \"\").strip().casefold()\n+    return bool(re.match(r\"noun(?![a-z])\", normalized))\n \n \n def _stem_before_suffix(lemma: str, suffix: str) -> str | None:\ndiff --git a/tests/test_derived_en_fallback.py b/tests/test_derived_en_fallback.py\nindex edb374bdcf..2e4b04cb0e 100644\n--- a/tests/test_derived_en_fallback.py\n+++ b/tests/test_derived_en_fallback.py\n@@ -93,6 +93,27 @@ def test_vesum_gate_blocks_unattested_forms() -> None:\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n \n \n+def test_pronoun_pos_is_not_treated_as_noun() -> None:\n+    index = _index(\n+        _base_entry(\"білка\", [\"squirrel\"]),\n+        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n+    )\n+\n+    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n+    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n+\n+\n+def test_annotated_noun_pos_variants_still_accepted() -> None:\n+    index = _index(\n+        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n+    )\n+\n+    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n+\n+    assert translation is not None\n+    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n+\n+\n def test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n     index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n \n M scripts/lexicon/derived_en_fallback.py\n M tests/test_derived_en_fallback.py\n",
+            "metadata": {
+              "output": "diff --git a/scripts/lexicon/derived_en_fallback.py b/scripts/lexicon/derived_en_fallback.py\nindex 1a3a26182f..dc73c0b265 100644\n--- a/scripts/lexicon/derived_en_fallback.py\n+++ b/scripts/lexicon/derived_en_fallback.py\n@@ -243,7 +243,8 @@ def _vesum_accepts(verify: VesumVerify | None, surface: str, base: str) -> bool:\n \n \n def _is_noun_pos(pos: object) -> bool:\n-    return \"noun\" in str(pos or \"\").casefold()\n+    normalized = str(pos or \"\").strip().casefold()\n+    return bool(re.match(r\"noun(?![a-z])\", normalized))\n \n \n def _stem_before_suffix(lemma: str, suffix: str) -> str | None:\ndiff --git a/tests/test_derived_en_fallback.py b/tests/test_derived_en_fallback.py\nindex edb374bdcf..2e4b04cb0e 100644\n--- a/tests/test_derived_en_fallback.py\n+++ b/tests/test_derived_en_fallback.py\n@@ -93,6 +93,27 @@ def test_vesum_gate_blocks_unattested_forms() -> None:\n     assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun\"}, index, vesum_verify=reject_surface) is None\n \n \n+def test_pronoun_pos_is_not_treated_as_noun() -> None:\n+    index = _index(\n+        _base_entry(\"білка\", [\"squirrel\"]),\n+        {\"lemma\": \"вовк\", \"pos\": \"pronoun\", \"enrichment\": {\"translation\": {\"en\": [\"wolf\"], \"source\": \"fixture\"}}},\n+    )\n+\n+    assert derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"pronoun\"}, index, vesum_verify=False) is None\n+    assert derived_translation_fallback({\"lemma\": \"вовчище\", \"pos\": \"noun\"}, index, vesum_verify=False) is None\n+\n+\n+def test_annotated_noun_pos_variants_still_accepted() -> None:\n+    index = _index(\n+        {\"lemma\": \"білка\", \"pos\": \"noun, masc\", \"enrichment\": {\"translation\": {\"en\": [\"squirrel\"], \"source\": \"fixture\"}}}\n+    )\n+\n+    translation = derived_translation_fallback({\"lemma\": \"білочка\", \"pos\": \"noun:pl\"}, index, vesum_verify=False)\n+\n+    assert translation is not None\n+    assert translation[\"en\"] == [\"squirrel (diminutive)\"]\n+\n+\n def test_manifest_lemma_index_normalizes_stress_and_case() -> None:\n     index = _index(_base_entry(\"Бі́лка\", [\"squirrel\"]))\n \n M scripts/lexicon/derived_en_fallback.py\n M tests/test_derived_en_fallback.py\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git diff && git status --short",
+            "time": {
+              "start": 1786952120724,
+              "end": 1786952120732
+            }
+          },
+          "id": "prt_00ea577fc001QSAr3W998xs2hz",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea56a6d001KzDjK89KI4S5ic"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 44909,
+            "input": 284,
+            "output": 17,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 44608
+            }
+          },
+          "cost": 0,
+          "id": "prt_00ea57b32001ZBtX2n74JATxFr",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea56a6d001KzDjK89KI4S5ic"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_00ea2e158001kkdUOzgqNMOKMS",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6904-glm-noun-pos"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786952121690
+        },
+        "id": "msg_00ea57d5a001oMe5OMMiFneaoe",
+        "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G"
+      },
+      "parts": [
+        {
+          "snapshot": "a463dd20d0e7c71113da105a7a0ee7e2bb22af3f",
+          "type": "step-start",
+          "id": "prt_00ea5b222001A2onCSgCNRFG2w",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea57d5a001oMe5OMMiFneaoe"
+        },
+        {
+          "type": "reasoning",
+          "text": "Diff is clean and minimal. Now commit and push. Commit message: fix the noun-POS gate, \"Refs #6876\" only, never \"closes\". Trailer `X-Agent: glm/6904-noun-pos`.",
+          "time": {
+            "start": 1786952135295,
+            "end": 1786952135357
+          },
+          "id": "prt_00ea5b27f001yHrEJUDuErtQIj",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea57d5a001oMe5OMMiFneaoe"
+        },
+        {
+          "type": "text",
+          "text": "Committing and pushing the same branch:",
+          "time": {
+            "start": 1786952135362,
+            "end": 1786952135412
+          },
+          "id": "prt_00ea5b2c2001OpTggMjzA94TFW",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea57d5a001oMe5OMMiFneaoe"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_476078145fbf4183a3fee591",
+          "state": {
+            "metadata": {
+              "output": ""
+            },
+            "status": "running",
+            "input": {
+              "command": "git add scripts/lexicon/derived_en_fallback.py tests/test_derived_en_fallback.py && git commit -m \"fix(lexicon): noun POS gate must not match pronoun substring\n\n_is_noun_pos used substring matching, so a pos of \\\"pronoun\\\" passed the\nnoun gate and could feed pronoun entries into the diminutive/augmentative\nEN gloss fallback. Anchor the match at string start with a letter\nboundary: exact \\\"noun\\\" or annotated variants (\\\"noun:pl\\\", \\\"noun, masc\\\")\npass; \\\"pronoun\\\" and \\\"proper noun\\\" no longer do (PR #6904 review F1).\n\nRefs #6876\" -m \"X-Agent: glm/6904-noun-pos\" && git push origin kimi/6876-kimi-diminutive"
+            },
+            "time": {
+              "start": 1786952135402
+            }
+          },
+          "id": "prt_00ea5b2cf0011f8oqQQuaOA6GS",
+          "sessionID": "ses_ff15d1f07ffeZMoKy5o5Dg7P8G",
+          "messageID": "msg_00ea57d5a001oMe5OMMiFneaoe"
+        }
+      ]
+    }
+  ]
+}
