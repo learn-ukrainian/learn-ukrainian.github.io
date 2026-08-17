@@ -1,4 +1,4 @@
-"""Drift guard + unit coverage for frontend CI cheap-exit (#6917)."""
+"""Drift guard + unit coverage for frontend CI cheap-exit (#6917 / #6930)."""
 
 from __future__ import annotations
 
@@ -16,6 +16,68 @@ from scripts.ci import frontend_change_scope as scope
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
 _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
+
+
+def _git(cwd: Path, *args: str) -> str:
+    return subprocess.check_output(["git", *args], cwd=cwd, text=True).strip()
+
+
+def _init_fixture_repo(root: Path) -> dict[str, str]:
+    """Build a mini repo that reproduces the #6930 moved-base over-count.
+
+    Returns SHAs: fork_point, base_tip (main after denom advance), branch_head
+    (out-of-scope only), branch_head_in_scope (touches site/).
+    """
+    _git(root, "init")
+    _git(root, "config", "user.email", "ci@example.com")
+    _git(root, "config", "user.name", "ci")
+    (root / "docs").mkdir()
+    (root / "site").mkdir()
+    (root / "docs" / "a.md").write_text("docs\n", encoding="utf-8")
+    (root / "site" / "index.html").write_text("site\n", encoding="utf-8")
+    denom = {
+        "schema_version": "frontend_change_denominator_v1",
+        "version": "1",
+        "paths": ["site/", "scripts/lexicon/"],
+    }
+    (root / "scripts" / "ci").mkdir(parents=True)
+    (root / "scripts" / "ci" / "frontend_change_denominator.json").write_text(
+        json.dumps(denom),
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "root")
+    fork = _git(root, "rev-parse", "HEAD")
+    _git(root, "branch", "-M", "main")
+
+    _git(root, "checkout", "-b", "feature")
+    (root / "docs" / "feature.md").write_text("feature only\n", encoding="utf-8")
+    _git(root, "add", "docs/feature.md")
+    _git(root, "commit", "-m", "feature docs")
+    branch_out = _git(root, "rev-parse", "HEAD")
+
+    (root / "site" / "extra.html").write_text("in scope\n", encoding="utf-8")
+    _git(root, "add", "site/extra.html")
+    _git(root, "commit", "-m", "feature site")
+    branch_in = _git(root, "rev-parse", "HEAD")
+
+    # Reset feature tip to out-of-scope-only for the cheap_exit scenario, but
+    # keep branch_in SHA reachable via the object store.
+    _git(root, "reset", "--hard", branch_out)
+
+    _git(root, "checkout", "main")
+    (root / "site" / "package.json").write_text('{"name":"moved-base"}\n', encoding="utf-8")
+    _git(root, "add", "site/package.json")
+    _git(root, "commit", "-m", "main advances with denominator file")
+    base_tip = _git(root, "rev-parse", "HEAD")
+
+    return {
+        "fork": fork,
+        "base_tip": base_tip,
+        "branch_out": branch_out,
+        "branch_in": branch_in,
+        "denominator": str(root / "scripts" / "ci" / "frontend_change_denominator.json"),
+    }
 
 
 def test_denominator_is_single_source_and_loadable() -> None:
@@ -110,12 +172,175 @@ def test_git_diff_failed_writes_step_summary(tmp_path: Path, monkeypatch: pytest
     def boom(*_args: object, **_kwargs: object) -> None:
         raise subprocess.CalledProcessError(128, ["git", "diff"])
 
-    with patch.object(scope, "changed_files", side_effect=boom):
-        assert scope.main(["--base", "abc123"]) == 0
+    with (
+        patch.object(scope, "resolve_git_range", return_value="abc...HEAD"),
+        patch.object(scope, "changed_files", side_effect=boom),
+    ):
+        assert scope.main(["--base", "abc123", "--event", "pull_request"]) == 0
 
     text = summary.read_text(encoding="utf-8")
     assert "reason=git_diff_failed" in text
     assert "decision=run" in text
+
+
+def test_range_mode_for_event() -> None:
+    assert scope.range_mode_for_event("pull_request") == "merge-base"
+    assert scope.range_mode_for_event("merge_group") == "merge-base"
+    assert scope.range_mode_for_event("push") == "two-dot"
+    assert scope.range_mode_for_event("") == "two-dot"
+
+
+def test_moved_base_out_of_scope_cheap_exits(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """#6930: main advanced with a denominator file; branch only docs → cheap_exit."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    shas = _init_fixture_repo(repo)
+    monkeypatch.chdir(repo)
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+
+    two_dot = scope.changed_files(f"{shas['base_tip']}..{shas['branch_out']}", cwd=repo)
+    mb_range = scope.resolve_git_range(
+        shas["base_tip"],
+        shas["branch_out"],
+        mode="merge-base",
+        cwd=repo,
+    )
+    merge_base_files = scope.changed_files(mb_range, cwd=repo)
+
+    # Quote the over-count: two-dot includes main's site/package.json.
+    assert "site/package.json" in two_dot
+    assert "docs/feature.md" in two_dot
+    assert "site/package.json" not in merge_base_files
+    assert merge_base_files == ["docs/feature.md"]
+
+    assert (
+        scope.main(
+            [
+                "--base",
+                shas["base_tip"],
+                "--head",
+                shas["branch_out"],
+                "--event",
+                "pull_request",
+                "--denominator",
+                shas["denominator"],
+            ],
+        )
+        == 0
+    )
+
+
+def test_moved_base_out_of_scope_prints_cheap_exit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    shas = _init_fixture_repo(repo)
+    monkeypatch.chdir(repo)
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+
+    scope.main(
+        [
+            "--base",
+            shas["base_tip"],
+            "--head",
+            shas["branch_out"],
+            "--event",
+            "pull_request",
+            "--denominator",
+            shas["denominator"],
+        ],
+    )
+    out = capsys.readouterr().out
+    assert "decision=cheap_exit" in out
+    assert "matched=0" in out
+
+
+def test_moved_base_branch_touches_denominator_runs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Inverse: branch itself touches site/ after base moved → run."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    shas = _init_fixture_repo(repo)
+    monkeypatch.chdir(repo)
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+
+    scope.main(
+        [
+            "--base",
+            shas["base_tip"],
+            "--head",
+            shas["branch_in"],
+            "--event",
+            "pull_request",
+            "--denominator",
+            shas["denominator"],
+        ],
+    )
+    out = capsys.readouterr().out
+    assert "decision=run" in out
+    assert "matched=" in out
+    assert "matched=0" not in out
+
+
+def test_two_dot_mutation_defeats_moved_base_cheap_exit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Mutation check: force two-dot on a PR-shaped event → cheap_exit guard fails."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    shas = _init_fixture_repo(repo)
+    monkeypatch.chdir(repo)
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+
+    with patch.object(scope, "range_mode_for_event", return_value="two-dot"):
+        scope.main(
+            [
+                "--base",
+                shas["base_tip"],
+                "--head",
+                shas["branch_out"],
+                "--event",
+                "pull_request",
+                "--denominator",
+                shas["denominator"],
+            ],
+        )
+    out = capsys.readouterr().out
+    # Two-dot sees main's site/package.json → falsely decides run.
+    assert "decision=run" in out
+    assert "matched=0" not in out
+
+
+def test_merge_base_unresolvable_fails_open(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    summary = tmp_path / "summary.md"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+
+    with patch.object(scope, "git_merge_base", side_effect=scope.MergeBaseError("shallow")):
+        assert scope.main(["--base", "abc123", "--head", "def456", "--event", "pull_request"]) == 0
+
+    text = summary.read_text(encoding="utf-8")
+    assert "reason=merge_base_unresolvable" in text
+    assert "decision=run" in text
+
+
+def test_push_event_uses_two_dot_range(tmp_path: Path) -> None:
+    assert scope.resolve_git_range("aaa", "bbb", mode="two-dot", cwd=tmp_path) == "aaa..bbb"
 
 
 def test_resolve_hydrate_entrypoints_from_package_json() -> None:
@@ -169,6 +394,12 @@ def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> No
         assert "pull_request.base.sha" in scope_step["env"]["BASE_SHA"]
         assert "merge_group.base_sha" in scope_step["env"]["BASE_SHA"]
         assert "github.event.before" in scope_step["env"]["BASE_SHA"]
+        assert "pull_request.head.sha" in scope_step["env"]["HEAD_SHA"]
+        assert "merge_group.head_sha" in scope_step["env"]["HEAD_SHA"]
+        assert "github.sha" in scope_step["env"]["HEAD_SHA"]
+        assert scope_step["env"]["EVENT_NAME"] == "${{ github.event_name }}"
+        assert "--event" in scope_step["run"]
+        assert "--head" in scope_step["run"]
 
         checkout = steps[0]
         assert checkout["with"]["fetch-depth"] == 0
