@@ -740,6 +740,26 @@ _STOP_REASONS = frozenset(
 )
 _STOP_REASON_CANCELLED = "cancelled"
 _MISSING_STOP_REASON = object()
+# acpx EXIT_CODES.PERMISSION_DENIED: deny-all refused a tool/permission
+# request. The prompt can still complete with a valid stopReason.
+ACPX_EXIT_PERMISSION_DENIED = 5
+
+
+def _is_jsonrpc_id(value: object) -> bool:
+    """JSON-RPC request ids are string | number; JSON ``true``/``false`` are not."""
+    return value is not None and not isinstance(value, bool) and isinstance(value, (str, int, float))
+
+
+def _jsonrpc_id_text(value: object) -> str:
+    return json.dumps(value, separators=(",", ":"))
+
+
+def _duplicate_replay_reason(request_id: object, method: str | None) -> str:
+    """Name the colliding request so the operator can see which receipt is stuck."""
+    labelled = f"request id {_jsonrpc_id_text(request_id)}"
+    if method:
+        labelled = f"{labelled} ({method})"
+    return f"duplicate terminal response replay detected for {labelled}"
 
 _USAGE_TOTAL_FIELDS = ("total_tokens", "totalTokens")
 _USAGE_INPUT_FIELDS = ("input_tokens", "inputTokens")
@@ -1801,11 +1821,19 @@ class AcpxAdapter:
         Fails closed (``ok=False``) on any of: no output at all, a line that
         isn't valid JSON, a line that doesn't look like a JSON-RPC message, a
         duplicate terminal (``result``/``error``) message for the same
-        request id, more than one terminal ``stopReason`` response, a
-        terminal ``error`` object, a stream that ends without ever reaching
-        a terminal ``stopReason``, or ``stopReason == "cancelled"``. There
-        is no best-effort partial-success path — see module docstring and the
-        approved contract's "must fail closed" requirement. The last valid
+        request-id *generation*, more than one terminal ``stopReason``
+        response, a terminal ``error`` object, a stream that ends without
+        ever reaching a terminal ``stopReason``, or
+        ``stopReason == "cancelled"``. A fresh request (``method`` + ``id``,
+        no ``result``/``error``) opens a new generation for that id, so an
+        agent-originated ``session/request_permission`` that reuses ``0``/``1``
+        cannot match the client's ``initialize``/``session/new`` receipts.
+        Two terminals with no intervening request for that id are still a
+        replay and name the request id (and method, when known). There is no
+        best-effort partial-success path — see module docstring and the
+        approved contract's "must fail closed" requirement — except the
+        deny-all case where ACPX exits ``PERMISSION_DENIED`` (rc=5) after a
+        completed non-cancelled ``stopReason``. The last valid
         ``usage_update`` token total is retained when ACPX exposes one;
         malformed token fields in such an update also fail closed.
         """
@@ -1825,8 +1853,13 @@ class AcpxAdapter:
                 return self._closed(f"unrecognized NDJSON schema at line {index + 1}", stderr)
             events.append(event)
 
-        terminal_ids: set[Any] = set()
-        duplicate = False
+        # Terminal receipts are scoped to a request-id *generation*. A later
+        # request that reuses the same JSON-RPC id (agent permission RPCs
+        # share the 0/1/2 space with initialize/session/new/session/prompt)
+        # opens a new generation and must not match the prior receipt.
+        terminal_generations: set[Any] = set()
+        request_method_by_id: dict[Any, str] = {}
+        duplicate_id: object | None = None
         message_chunks: list[str] = []
         final_error: dict[str, Any] | None = None
         final_stop_reason: object = _MISSING_STOP_REASON
@@ -1901,9 +1934,15 @@ class AcpxAdapter:
 
             has_result = "result" in event
             has_error = "error" in event
+            event_id = event.get("id")
             if not has_result and not has_error:
                 # An echoed outgoing request (initialize, session/prompt, ...)
-                # or a notification we don't track. Not a terminal marker.
+                # or an agent-originated request (session/request_permission).
+                # A fresh request for an id supersedes any prior receipt.
+                method = event.get("method")
+                if _is_jsonrpc_id(event_id) and isinstance(method, str) and method:
+                    request_method_by_id[event_id] = method
+                    terminal_generations.discard(event_id)
                 continue
 
             if has_result and not isinstance(event["result"], dict):
@@ -1911,13 +1950,12 @@ class AcpxAdapter:
             if has_error and not isinstance(event["error"], dict):
                 return self._closed("unrecognized JSON-RPC error schema", stderr)
 
-            event_id = event.get("id")
             if event_id is not None:
-                if isinstance(event_id, bool) or not isinstance(event_id, (str, int, float)):
+                if not _is_jsonrpc_id(event_id):
                     return self._closed("unrecognized JSON-RPC response id schema", stderr)
-                if event_id in terminal_ids:
-                    duplicate = True
-                terminal_ids.add(event_id)
+                if event_id in terminal_generations:
+                    duplicate_id = event_id
+                terminal_generations.add(event_id)
 
             if has_error:
                 final_error = event["error"]
@@ -1927,8 +1965,14 @@ class AcpxAdapter:
                     final_stop_reason = result["stopReason"]
                     stop_reason_response_count += 1
 
-        if duplicate:
-            return self._closed("duplicate terminal response replay detected for the same request id", stderr)
+        if duplicate_id is not None:
+            return self._closed(
+                _duplicate_replay_reason(
+                    duplicate_id,
+                    request_method_by_id.get(duplicate_id),
+                ),
+                stderr,
+            )
 
         if stop_reason_response_count > 1:
             return self._closed("multiple terminal stopReason responses detected in one-shot exec stream", stderr)
@@ -1980,7 +2024,14 @@ class AcpxAdapter:
                 failure_code="transport_error",
             )
 
-        if returncode != 0:
+        # deny-all + --non-interactive-permissions fail: ACPX exits 5 when
+        # the agent requested a permission and none were approved. That is
+        # expected confinement, not a crashed prompt. A completed
+        # non-cancelled turn is the recovery path — no session-store surgery.
+        if returncode != 0 and not (
+            returncode == ACPX_EXIT_PERMISSION_DENIED
+            and final_stop_reason != _STOP_REASON_CANCELLED
+        ):
             return self._closed(
                 f"acpx exec exited rc={returncode} despite stopReason={final_stop_reason!r}",
                 stderr,
