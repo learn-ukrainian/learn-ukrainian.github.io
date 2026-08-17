@@ -230,7 +230,7 @@ The word **вода́** is useful in the morning because you see it in routines,
 # Loads the live Stanza Ukrainian model (run_ulp_fidelity_with_correction →
 # run_stress_annotation). Non-hermetic: the model download flakes the md5 check
 # in parallel CI. Marked `slow` so the required pytest selection
-# (`-k "not slow"`) excludes it; it still runs in the slow/nightly path.
+# (`-m "not atlas_release and not slow"`) excludes it; it still runs in the slow/nightly path.
 @pytest.mark.slow
 def test_ulp_fidelity_correction_reruns_stress_and_gate(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"

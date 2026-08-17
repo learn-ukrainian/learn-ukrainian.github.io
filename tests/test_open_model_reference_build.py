@@ -38,6 +38,7 @@ def reference_runs(tmp_path_factory: pytest.TempPathFactory) -> tuple[dict[str, 
     return manifest_a, first, second
 
 
+@pytest.mark.slow
 def test_reference_manifest_is_deterministic_and_strict(
     reference_runs: tuple[dict[str, Any], Path, Path],
 ) -> None:
@@ -57,6 +58,7 @@ def test_reference_manifest_is_deterministic_and_strict(
     assert manifest["determinism"]["timestamps_omitted"] is True
 
 
+@pytest.mark.slow
 def test_fixture_preserves_russian_interference_lineage(
     reference_runs: tuple[dict[str, Any], Path, Path],
 ) -> None:
@@ -94,6 +96,7 @@ def test_fixture_preserves_russian_interference_lineage(
     assert manifest["source_to_view_lineage"]["source_contract_admitted_records"] == 1
 
 
+@pytest.mark.slow
 def test_five_views_are_disjoint_and_never_train_fixture_rows(
     reference_runs: tuple[dict[str, Any], Path, Path],
 ) -> None:
@@ -121,6 +124,7 @@ def test_five_views_are_disjoint_and_never_train_fixture_rows(
     }
 
 
+@pytest.mark.slow
 def test_full_profile_denominators_and_unknowns_remain_explicit(
     reference_runs: tuple[dict[str, Any], Path, Path],
 ) -> None:
@@ -142,6 +146,7 @@ def test_full_profile_denominators_and_unknowns_remain_explicit(
     assert profile["tokenizer_diagnostics"].startswith("not_run;")
 
 
+@pytest.mark.slow
 def test_saved_baseline_reproduces_without_gold_or_model_generation(
     reference_runs: tuple[dict[str, Any], Path, Path],
 ) -> None:
@@ -165,6 +170,7 @@ def test_saved_baseline_reproduces_without_gold_or_model_generation(
     assert baseline["gold_firewall"]["model_generation_performed"] is False
 
 
+@pytest.mark.slow
 def test_observation_binds_manifest_and_denies_external_actions(
     reference_runs: tuple[dict[str, Any], Path, Path],
 ) -> None:

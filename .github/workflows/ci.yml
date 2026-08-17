@@ -173,6 +173,7 @@ jobs:
           fi
           .venv/bin/python -m pytest \
             --strict-markers --timeout=120 --timeout-method=thread --durations=10 \
+            -m 'not atlas_release and not slow' \
             "${test_files[@]}"
 
   # ---------------------------------------------------------------------
@@ -338,6 +339,7 @@ jobs:
           # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
           .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
             -n auto --dist=loadfile --strict-markers --timeout=120 --timeout-method=thread \
+            -m 'not atlas_release and not slow' \
             --junitxml=ci-artifacts/main-junit.xml --durations=0 $cov_args \
             2>&1 | tee ci-artifacts/main.log
 
@@ -1009,8 +1011,21 @@ jobs:
           echo "combining $i shard coverage files"
           if [ "$i" -eq 0 ]; then echo "::error::no coverage data — refusing to pass vacuously"; exit 1; fi
           python -m coverage combine
-          python -m coverage report --fail-under=35
+          python -m coverage report --fail-under=35 | tee coverage-report.txt
           python -m coverage xml -o coverage.xml
+          python -m coverage html -d coverage-html
+
+      - name: Upload full coverage report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-report
+          path: |
+            coverage-report.txt
+            coverage.xml
+            coverage-html/
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Not a main push — coverage is a trend floor, nothing to enforce
         if: "!(github.event_name == 'push' && github.ref == 'refs/heads/main')"

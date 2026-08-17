@@ -50,6 +50,7 @@ def test_matrix_is_complete_strict_and_shadow_only(pilot_matrix: dict[str, Any])
         pilot._validate(invalid, REPO_ROOT / pilot.MATRIX_SCHEMA_PATH, "fixture")
 
 
+@pytest.mark.slow
 def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost(
     shadow_report: dict[str, Any],
 ) -> None:
@@ -76,12 +77,14 @@ def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost(
     }
 
 
+@pytest.mark.slow
 def test_shadow_report_is_exactly_reproducible_at_one_source_tree(
     shadow_report: dict[str, Any],
 ) -> None:
     assert shadow_report == pilot.build_shadow_report(repo_root=REPO_ROOT)
 
 
+@pytest.mark.slow
 def test_built_level_profiles_do_not_leak_cross_level_policy(
     shadow_report: dict[str, Any],
 ) -> None:
@@ -107,6 +110,7 @@ def test_built_level_profiles_do_not_leak_cross_level_policy(
     )
 
 
+@pytest.mark.slow
 def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt(
     shadow_report: dict[str, Any],
 ) -> None:
@@ -118,6 +122,7 @@ def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt(
     assert row["prompt"]["profile"] == "seminar-bio"
 
 
+@pytest.mark.slow
 def test_fixture_rows_prove_owned_pause_resume_and_qg_modes(
     shadow_report: dict[str, Any],
 ) -> None:
@@ -131,6 +136,7 @@ def test_fixture_rows_prove_owned_pause_resume_and_qg_modes(
     assert rows["production-qg-disarmed"]["entry"]["state"] == "certified-final"
 
 
+@pytest.mark.slow
 def test_shadow_detects_any_learner_tree_change(
     shadow_report: dict[str, Any],
     monkeypatch: pytest.MonkeyPatch,
@@ -161,6 +167,7 @@ def test_shadow_detects_any_learner_tree_change(
     assert all(row["mutation_detected"] and not row["passed"] for row in report["rows"])
 
 
+@pytest.mark.slow
 def test_report_tampering_and_false_pass_fail_closed(
     pilot_matrix: dict[str, Any],
     shadow_report: dict[str, Any],
@@ -211,6 +218,7 @@ def test_report_tampering_and_false_pass_fail_closed(
         pilot.validate_report_value(report, matrix=matrix, repo_root=REPO_ROOT)
 
 
+@pytest.mark.slow
 def test_report_validation_rejects_contract_and_learner_drift(
     pilot_matrix: dict[str, Any],
     shadow_report: dict[str, Any],
@@ -240,6 +248,7 @@ def test_report_validation_rejects_contract_and_learner_drift(
         pilot.validate_report_value(report, matrix=matrix, repo_root=REPO_ROOT)
 
 
+@pytest.mark.slow
 def test_live_scope_rejects_fixture_historical_and_nonpassing_rows(
     shadow_report: dict[str, Any],
 ) -> None:
@@ -268,6 +277,7 @@ def test_live_scope_rejects_fixture_historical_and_nonpassing_rows(
         )
 
 
+@pytest.mark.slow
 def test_live_scope_enforces_maximum_mutating_modules(
     shadow_report: dict[str, Any],
 ) -> None:
@@ -294,6 +304,7 @@ def test_matrix_override_must_remain_repository_backed(tmp_path: Path) -> None:
         pilot.load_matrix(repo_root=REPO_ROOT, matrix_path=matrix_path)
 
 
+@pytest.mark.slow
 def test_same_family_live_authorization_is_rejected_before_scope_or_git_lookup(
     shadow_report: dict[str, Any],
     tmp_path: Path,

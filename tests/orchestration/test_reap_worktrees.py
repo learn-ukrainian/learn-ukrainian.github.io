@@ -304,6 +304,7 @@ def _raw_worktree_remove_callers(project_root: Path) -> dict[str, set[str]]:
     return actual
 
 
+@pytest.mark.slow
 def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
     """Reject a new raw deletion hand anywhere below production ``scripts/``."""
     project_root = Path(__file__).resolve().parents[2]

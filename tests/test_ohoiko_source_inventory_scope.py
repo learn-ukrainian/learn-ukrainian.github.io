@@ -4,6 +4,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.audit import source_inventory_review_decisions as decisions
@@ -45,6 +46,7 @@ def test_ohoiko_abetka_inventory_covers_all_committed_key_words() -> None:
     assert sum(ohoiko_rows.values()) == 33
 
 
+@pytest.mark.slow
 def test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows() -> None:
     records = read_source_inventory(OHOIKO_INVENTORY, project_root=PROJECT_ROOT)
     inventory_rows = Counter(

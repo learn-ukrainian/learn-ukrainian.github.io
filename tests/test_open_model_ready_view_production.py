@@ -222,6 +222,7 @@ def test_word_regex_keeps_ukrainian_apostrophe_forms() -> None:
     ]
 
 
+@pytest.mark.slow
 def test_prepare_payloads_runs_complete_admitted_scope_atomically(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -302,6 +303,7 @@ def test_prepare_payloads_runs_complete_admitted_scope_atomically(
     assert not list(tmp_path.glob("*.bak"))
 
 
+@pytest.mark.slow
 def test_tokenizer_diagnostics_runs_real_entry_point(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -361,6 +363,7 @@ def test_tokenizer_diagnostics_runs_real_entry_point(
     assert json.loads(output.read_text(encoding="utf-8")) == receipt
 
 
+@pytest.mark.slow
 def test_assemble_production_receipt_uses_payload_scoped_protection_counts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

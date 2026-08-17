@@ -5,6 +5,12 @@ The planner collects the selected suite exactly once, groups every selected
 node ID by test file, then uses deterministic longest-processing-time (LPT)
 assignment.  Workers execute only the planner-produced node-ID list; CI Gate
 reconstructs and verifies the complete partition from their JUnit artifacts.
+
+Required selection (stage-1 slow-split): the identical mark expression
+``not atlas_release and not slow`` is applied on the planner, every shard
+worker invocation path that re-collects, fastlane, and coverage inputs.
+``pyproject.toml`` ``addopts`` keeps ``-m 'not atlas_release'`` only — never
+put ``not slow`` in global addopts (nightly would inherit it).
 """
 
 from __future__ import annotations
@@ -23,7 +29,16 @@ from typing import Any
 SHARD_COUNT = 4
 PLAYGROUND_PERF_TEST = "tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
 SERIAL_TESTS = (PLAYGROUND_PERF_TEST,)
-COMMON_ARGS = ("tests/", f"--deselect={PLAYGROUND_PERF_TEST}")
+# Identical expression everywhere the required gate collects or filters.
+REQUIRED_MARKEXPR = "not atlas_release and not slow"
+SLOW_MARKEXPR = "slow and not atlas_release"
+COMMON_ARGS = (
+    "tests/",
+    f"--deselect={PLAYGROUND_PERF_TEST}",
+    "-m",
+    REQUIRED_MARKEXPR,
+    "--strict-markers",
+)
 _DURATION_LINE = re.compile(r"^\s*(?P<seconds>\d+(?:\.\d+)?)s\s+(?:call|setup|teardown)\s+(?P<nodeid>\S+)")
 _DATASET_VERSION = 1
 _P95_HISTORY_LIMIT = 40
@@ -119,14 +134,37 @@ def assign_shards(nodeids: Sequence[str], shard_count: int, durations: dict[str,
     return shard_groups
 
 
+def assert_set_integrity(nodeids: Sequence[str], shards: Sequence[Sequence[str]]) -> None:
+    """Fail closed unless shard union equals the fast collection exactly.
+
+    Empty shards are a silent gate collapse (green with zero work). Duplicates
+    or omissions mean the required set drifted from the planner collection.
+    """
+    if any(not assigned for assigned in shards):
+        empty = [index + 1 for index, assigned in enumerate(shards) if not assigned]
+        raise RuntimeError(f"planner produced empty shard(s): {empty}")
+    assigned = [nodeid for shard in shards for nodeid in shard]
+    if len(assigned) != len(set(assigned)):
+        raise RuntimeError("a collected test was assigned to more than one shard")
+    if set(assigned) != set(nodeids):
+        missing = sorted(set(nodeids) - set(assigned))
+        extra = sorted(set(assigned) - set(nodeids))
+        raise RuntimeError(
+            "shard union does not equal fast collection "
+            f"(missing={len(missing)}, extra={len(extra)})"
+        )
+    if len(assigned) != len(nodeids):
+        raise RuntimeError("shard assignment count does not match collected selection")
+
+
 def write_plans(*, durations_path: Path | None, output_dir: Path, shard_count: int = SHARD_COUNT) -> None:
     """Collect once and write every matrix-worker plan from one duration dataset."""
     nodeids = collect_nodeids()
     durations = load_durations(durations_path)
+    # Duration keys for deselected slow tests are ignored; unknown files use median.
+    # Refresh the committed/cache dataset only when membership imbalance is measured.
     shards = assign_shards(nodeids, shard_count, durations)
-    if any(not assigned for assigned in shards):
-        empty = [index + 1 for index, assigned in enumerate(shards) if not assigned]
-        raise RuntimeError(f"planner produced empty shard(s): {empty}")
+    assert_set_integrity(nodeids, shards)
     output_dir.mkdir(parents=True, exist_ok=True)
     weights = _file_weights(nodeids, durations)
     for shard_id, assigned in enumerate(shards, start=1):
@@ -143,6 +181,7 @@ def write_plans(*, durations_path: Path | None, output_dir: Path, shard_count: i
                 "collected_digest": _digest(nodeids),
                 "estimated_seconds": sum(weights[filename] for filename in assigned_files),
                 "grouping": "file",
+                "markexpr": REQUIRED_MARKEXPR,
                 "partition_mode": "lpt-durations",
                 "serial_nodeids": list(SERIAL_TESTS) if shard_id == 1 else [],
                 "shard_count": shard_count,
@@ -173,10 +212,16 @@ def verify_artifacts(artifact_dir: Path, shard_count: int) -> None:
         assigned = plan.get("assigned_nodeids")
         if not isinstance(assigned, list) or not all(isinstance(nodeid, str) for nodeid in assigned):
             raise RuntimeError(f"invalid assigned node IDs in {plan_path}")
+        if not assigned:
+            raise RuntimeError(f"empty shard {shard_id} collapses the required gate")
         if _digest(assigned) != plan.get("assigned_digest"):
             raise RuntimeError(f"assigned node ID digest mismatch in {plan_path}")
         if plan.get("partition_mode") != "lpt-durations" or plan.get("grouping") != "file":
             raise RuntimeError(f"invalid planner mode in {plan_path}")
+        if plan.get("markexpr") != REQUIRED_MARKEXPR:
+            raise RuntimeError(
+                f"plan markexpr must be {REQUIRED_MARKEXPR!r}, got {plan.get('markexpr')!r}"
+            )
         if _junit_count(main_junit) != len(assigned):
             raise RuntimeError(f"main JUnit count does not match plan for shard {shard_id}")
         serial = plan.get("serial_nodeids")

@@ -25,6 +25,7 @@ def _write_complete_artifacts(root: Path, selected: list[str]) -> None:
             "collected_count": len(selected),
             "collected_digest": digest,
             "grouping": "file",
+            "markexpr": pytest_shards.REQUIRED_MARKEXPR,
             "partition_mode": "lpt-durations",
             "serial_nodeids": list(pytest_shards.SERIAL_TESTS) if shard_id == 1 else [],
             "shard_count": len(selected),
@@ -121,7 +122,34 @@ def test_verify_artifacts_rejects_mispartitioned_plan(tmp_path: Path) -> None:
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
     _write_junit(tmp_path / "pytest-shard-4" / "main-junit.xml", 0)
 
-    with pytest.raises(RuntimeError, match="complete partition"):
+    with pytest.raises(RuntimeError, match=r"empty shard|complete partition"):
+        pytest_shards.verify_artifacts(tmp_path, 4)
+
+
+def test_assert_set_integrity_rejects_empty_shard_and_omissions() -> None:
+    nodeids = ["tests/a.py::test_a", "tests/b.py::test_b", "tests/c.py::test_c", "tests/d.py::test_d"]
+    shards = [["tests/a.py::test_a"], ["tests/b.py::test_b"], ["tests/c.py::test_c"], ["tests/d.py::test_d"]]
+    pytest_shards.assert_set_integrity(nodeids, shards)
+
+    with pytest.raises(RuntimeError, match="empty shard"):
+        pytest_shards.assert_set_integrity(nodeids, [["tests/a.py::test_a"], ["tests/b.py::test_b"], [], ["tests/d.py::test_d"]])
+
+    with pytest.raises(RuntimeError, match="does not equal fast collection"):
+        pytest_shards.assert_set_integrity(
+            nodeids,
+            [["tests/a.py::test_a"], ["tests/b.py::test_b"], ["tests/c.py::test_c"], ["tests/extra.py::test_x"]],
+        )
+
+
+def test_verify_artifacts_rejects_wrong_markexpr(tmp_path: Path) -> None:
+    selected = [f"tests/test_{number}.py::test_case" for number in range(4)]
+    _write_complete_artifacts(tmp_path, selected)
+    plan_path = tmp_path / "pytest-shard-1" / "plan.json"
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    plan["markexpr"] = "not atlas_release"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="plan markexpr"):
         pytest_shards.verify_artifacts(tmp_path, 4)
 
 
@@ -159,6 +187,9 @@ def test_run_nodeids_passes_exact_planner_output_to_pytest(tmp_path: Path, monke
 
 def test_ci_workflow_uses_single_planner_and_ci_gate_verifier() -> None:
     workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    nightly = (
+        Path(__file__).resolve().parents[1] / ".github" / "workflows" / "pytest-slow-nightly.yml"
+    ).read_text(encoding="utf-8")
 
     assert "pytest-plan:" in workflow
     assert "pytest-fastlane:" in workflow
@@ -168,3 +199,23 @@ def test_ci_workflow_uses_single_planner_and_ci_gate_verifier() -> None:
     assert workflow.count("pytest_shards.py plan") == 1
     assert "pytest_shards.py verify-artifacts" in workflow
     assert "--dist=loadfile" in workflow
+    assert "-m 'not atlas_release and not slow'" in workflow
+    assert workflow.count("-m 'not atlas_release and not slow'") >= 2
+    assert "name: CI Gate" in workflow
+    assert "pytest-slow-nightly" not in workflow
+    assert "-m 'slow and not atlas_release'" in nightly
+    assert "Create or update infra issue on failure" in nightly
+    assert "area:infra" in nightly
+    assert nightly.splitlines()[0] == "name: Pytest slow nightly"
+
+
+def test_required_markexpr_constant_matches_ci_and_addopts_boundary() -> None:
+    """addopts stays atlas-only; required gate adds not slow via CLI -m everywhere."""
+    pyproject = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+    assert "addopts = \"-v --tb=short -m 'not atlas_release'\"" in pyproject
+    assert "not slow" not in pyproject.split("addopts")[1].split("\n")[0]
+    assert pytest_shards.REQUIRED_MARKEXPR == "not atlas_release and not slow"
+    assert pytest_shards.SLOW_MARKEXPR == "slow and not atlas_release"
+    assert "-m" in pytest_shards.COMMON_ARGS
+    assert pytest_shards.REQUIRED_MARKEXPR in pytest_shards.COMMON_ARGS
+    assert "--strict-markers" in pytest_shards.COMMON_ARGS

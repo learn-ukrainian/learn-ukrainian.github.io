@@ -86,7 +86,11 @@ class TestSearchChannel:
             result = search_channel(["тест"], "@testchannel")
             assert result == []
 
+    @pytest.mark.slow
     def test_returns_empty_on_timeout(self):
+        # TimeoutExpired triggers _yt_dlp_search's retry sleeps (10s+20s) on both
+        # the channel search and the global fallback — ~60s of deliberate backoff.
+        # Cheap FileNotFoundError contract stays in the required gate above.
         import subprocess
         with patch("video_discovery.subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 30)):
             result = search_channel(["тест"], "@testchannel")

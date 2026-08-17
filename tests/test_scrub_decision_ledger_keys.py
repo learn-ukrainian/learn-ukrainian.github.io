@@ -74,6 +74,7 @@ def test_scrubbed_key_formula() -> None:
     assert scrubbed["surface_admission"] == sample_row["surface_admission"]
 
 
+@pytest.mark.slow
 def test_emitted_shards_contain_no_personal_identifier_substrings(
     migrated_shards: list[Path],
 ) -> None:
@@ -106,6 +107,7 @@ def test_emitted_shards_contain_no_personal_identifier_substrings(
                 assert pattern.search(gloss_val) is None, f"Leak in gloss: {gloss_val}"
 
 
+@pytest.mark.slow
 def test_shards_concatenate_to_original_decisions(
     migrated_shards: list[Path],
 ) -> None:
@@ -145,6 +147,7 @@ def test_shards_concatenate_to_original_decisions(
         assert recon["source_inventory"]["key"] == expected_key
 
 
+@pytest.mark.slow
 def test_shards_independently_pass_validation(
     migrated_shards: list[Path],
 ) -> None:

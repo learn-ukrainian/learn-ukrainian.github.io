@@ -131,10 +131,24 @@ def test_default_committed_decision_files_keep_aggregate_floors(
     assert decision_counts["approve_for_publish"] >= 20
 
 
+_SLOW_COMMITTED_DECISION_FILES = frozenset(
+    {
+        "2026-07-19-textbook-jsonl-curated-bulk-approve.yaml",
+        "2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml",
+    }
+)
+
+
 @pytest.mark.parametrize(
     "ledger_path",
-    COMMITTED_DECISION_FILES,
-    ids=lambda path: path.name,
+    [
+        pytest.param(
+            path,
+            id=path.name,
+            marks=(pytest.mark.slow,) if path.name in _SLOW_COMMITTED_DECISION_FILES else (),
+        )
+        for path in COMMITTED_DECISION_FILES
+    ],
 )
 def test_default_committed_decision_files_validate(
     ledger_path: Path,
@@ -430,6 +444,7 @@ def test_decision_validator_requires_committed_inventory_present(
         decisions.validate_committed_decision_files([path])
 
 
+@pytest.mark.slow
 def test_committed_ohoiko_batch_ledgers_validate() -> None:
     # The real committed per-batch Ohoiko ledgers validate with the regenerable
     # inventory JSON absent (its normal state in git).
