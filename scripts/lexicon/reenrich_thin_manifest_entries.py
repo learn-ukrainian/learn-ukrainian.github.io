@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -41,6 +42,7 @@ from scripts.lexicon.publish_manifest import (
     gzip_manifest,
     write_pointer,
 )
+from scripts.verification.vesum import verify_word
 
 
 def _is_proper_noun_entry(entry: dict[str, Any]) -> bool:
@@ -145,7 +147,6 @@ def write_target_snapshot(targets: list[dict[str, Any]], snapshot_file: Path) ->
     return snapshot
 
 
-
 def _load_kaikki_lookup(path: Path) -> dict[str, dict[str, Any]]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -240,12 +241,186 @@ def _add_source(enrichment: dict[str, Any], source: object) -> None:
     enrichment["sources"] = sorted(sources)
 
 
+def _derive_adverb_en_gloss(adj_gloss: str) -> str:
+    """Derive an adverbial English gloss from an adjective gloss.
+
+    Examples:
+    - 'abstract' -> 'abstractly'
+    - 'abstract (apart from practice or reality; not concrete)' -> 'abstractly (apart from practice or reality; not concrete)'
+    - 'heroic' -> 'heroically'
+    - 'flexible (easily bent without breaking)' -> 'flexibly (easily bent without breaking)'
+    - 'cloudless (without any clouds)' -> 'cloudlessly (without any clouds)'
+    - '(literally) cloudless, unclouded' -> '(literally) cloudlessly, uncloudedly'
+    - 'colourful (UK), colorful (US)' -> 'colourfully (UK), colorfully (US)'
+    """
+    if not adj_gloss or not isinstance(adj_gloss, str):
+        return ""
+
+    def split_commas_outside_parens(s: str) -> list[str]:
+        parts = []
+        cur: list[str] = []
+        depth = 0
+        for ch in s:
+            if ch in "([":
+                depth += 1
+                cur.append(ch)
+            elif ch in ")]":
+                depth = max(0, depth - 1)
+                cur.append(ch)
+            elif ch == "," and depth == 0:
+                parts.append("".join(cur).strip())
+                cur = []
+            else:
+                cur.append(ch)
+        if cur:
+            parts.append("".join(cur).strip())
+        return [p for p in parts if p]
+
+    def word_to_adverb(w: str) -> str:
+        w_lower = w.lower()
+        if w_lower.endswith("ly"):
+            return w
+        if w_lower == "public":
+            res = "publicly"
+        elif w_lower.endswith("ic"):
+            res = w_lower + "ally"
+        elif (
+            w_lower.endswith("ble")
+            or w_lower.endswith("ple")
+            or w_lower.endswith("tle")
+            or w_lower.endswith("dle")
+            or w_lower.endswith("gle")
+        ):
+            res = w_lower[:-1] + "y"
+        elif len(w_lower) > 2 and w_lower.endswith("y") and w_lower[-2] not in "aeiou":
+            res = w_lower[:-1] + "ily"
+        elif w_lower.endswith("ll"):
+            res = w_lower + "y"
+        elif w_lower.endswith("ue"):
+            res = w_lower[:-1] + "ly"
+        elif w_lower == "whole":
+            res = "wholly"
+        elif w_lower == "good":
+            res = "well"
+        else:
+            res = w_lower + "ly"
+        if w.istitle():
+            return res.capitalize()
+        return res
+
+    def transform_single_phrase(phrase: str) -> str:
+        phrase = phrase.strip()
+        if not phrase:
+            return ""
+        leading_paren_match = re.match(r"^(\([^)]+\)\s*)(.*)$", phrase)
+        leading_paren = ""
+        core_and_trailing = phrase
+        if leading_paren_match:
+            leading_paren = leading_paren_match.group(1)
+            core_and_trailing = leading_paren_match.group(2).strip()
+
+        trailing_paren_match = re.search(r"(\s*\([^)]+\))$", core_and_trailing)
+        trailing_paren = ""
+        core = core_and_trailing
+        if trailing_paren_match:
+            trailing_paren = trailing_paren_match.group(1)
+            core = core_and_trailing[: trailing_paren_match.start()].strip()
+
+        if not core:
+            return phrase
+
+        words = core.split()
+        if not words:
+            return phrase
+
+        transformed_words = list(words)
+        transformed_words[-1] = word_to_adverb(words[-1])
+        transformed_core = " ".join(transformed_words)
+
+        return f"{leading_paren}{transformed_core}{trailing_paren}"
+
+    sub_parts = split_commas_outside_parens(adj_gloss)
+    transformed_parts = [transform_single_phrase(p) for p in sub_parts]
+    return ", ".join(transformed_parts)
+
+
+def _deadjectival_adverb_translation(
+    entry: dict[str, Any],
+    manifest_index: dict[str, dict[str, Any]],
+) -> dict[str, object] | None:
+    """Derive English translation for a deadjectival adverb in -о/-е from its base adjective."""
+    pos = str(entry.get("pos") or "").casefold().strip()
+    if not (pos in ("adverb", "adv", "advp", "adverbial") or "adverb" in pos):
+        return None
+    lemma = str(entry.get("lemma") or "").strip()
+    if not (lemma.endswith("о") or lemma.endswith("е")):
+        return None
+    try:
+        if not verify_word(lemma, pos_filter="adv"):
+            return None
+    except Exception:
+        return None
+
+    candidates: list[str] = []
+    if lemma.endswith("о"):
+        stem = lemma[:-1]
+        candidates.extend([stem + "ий", stem + "ій"])
+        if stem.endswith("ь"):
+            candidates.extend([stem[:-1] + "ій", stem[:-1] + "ий"])
+        if stem.endswith("н"):
+            candidates.append(stem + "ій")
+    elif lemma.endswith("е"):
+        stem = lemma[:-1]
+        candidates.extend([stem + "ий", stem + "ій", stem + "їй"])
+        if stem.endswith("ь"):
+            candidates.append(stem[:-1] + "ій")
+
+    for cand in dict.fromkeys(candidates):
+        if cand == lemma:
+            continue
+        try:
+            if not verify_word(cand, pos_filter="adj"):
+                continue
+        except Exception:
+            continue
+        cand_entry = manifest_index.get(cand)
+        if not cand_entry:
+            continue
+        cand_pos = str(cand_entry.get("pos") or "").casefold()
+        if not ("adj" in cand_pos or "adjective" in cand_pos):
+            continue
+        adj_enr = cand_entry.get("enrichment")
+        if not isinstance(adj_enr, dict):
+            continue
+        adj_trans = adj_enr.get("translation")
+        if not isinstance(adj_trans, dict):
+            continue
+        adj_en = adj_trans.get("en")
+        if not (isinstance(adj_en, list) and any(isinstance(x, str) and x.strip() for x in adj_en)):
+            continue
+
+        derived_en = [_derive_adverb_en_gloss(term) for term in adj_en if isinstance(term, str) and term.strip()]
+        derived_en = [t for t in derived_en if t]
+        if not derived_en:
+            continue
+
+        block: dict[str, object] = {
+            "en": derived_en,
+            "source": adj_trans.get("source"),
+        }
+        if "pos" in adj_trans:
+            block["pos"] = "adverb"
+        return enrich_manifest._with_base_source_label(block, cand)
+    return None
+
+
 def _translation_for_entry(
     conn: sqlite3.Connection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
     *,
     cached_slovnyk_only: bool = False,
+    manifest_index: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, object] | None:
     lemma = str(entry.get("lemma") or "")
     entry_pos = entry.get("pos")
@@ -267,25 +442,26 @@ def _translation_for_entry(
     if translation:
         return translation
     fallback_base = enrich_manifest._base_lookup_for_entry(lemma, entry_pos)
-    if not fallback_base:
-        return None
-    fallback_cache = enrich_manifest._slovnyk_cache(fallback_base)
-    if cached_slovnyk_only and not enrich_manifest._cache_has_lookup(
-        fallback_cache,
-        enrich_manifest._SLOVNYK_UKRENG_SLUG,
-    ):
-        fallback_cache = None
-    translation = enrich_manifest._translation(
-        conn,
-        fallback_base,
-        kaikki_lookup,
-        entry_pos=entry_pos,
-        gloss_hints=gloss_hints,
-        slovnyk_cache=fallback_cache,
-    )
-    if not translation:
-        return None
-    return enrich_manifest._with_base_source_label(translation, fallback_base)
+    if fallback_base:
+        fallback_cache = enrich_manifest._slovnyk_cache(fallback_base)
+        if cached_slovnyk_only and not enrich_manifest._cache_has_lookup(
+            fallback_cache,
+            enrich_manifest._SLOVNYK_UKRENG_SLUG,
+        ):
+            fallback_cache = None
+        translation = enrich_manifest._translation(
+            conn,
+            fallback_base,
+            kaikki_lookup,
+            entry_pos=entry_pos,
+            gloss_hints=gloss_hints,
+            slovnyk_cache=fallback_cache,
+        )
+        if translation:
+            return enrich_manifest._with_base_source_label(translation, fallback_base)
+    if manifest_index is not None:
+        return _deadjectival_adverb_translation(entry, manifest_index)
+    return None
 
 
 def _reenrich_translation_only(
@@ -294,12 +470,14 @@ def _reenrich_translation_only(
     kaikki_lookup: dict[str, dict[str, Any]],
     *,
     cached_slovnyk_only: bool = False,
+    manifest_index: dict[str, dict[str, Any]] | None = None,
 ) -> None:
     translation = _translation_for_entry(
         conn,
         entry,
         kaikki_lookup,
         cached_slovnyk_only=cached_slovnyk_only,
+        manifest_index=manifest_index,
     )
     if not translation:
         return
@@ -387,6 +565,8 @@ def reenrich_thin_entries(
     if not refresh_wiki:
         enrich_manifest._wiki_reference = lambda *args, **kwargs: None
 
+    manifest_index = {str(e["lemma"]): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
+
     changed = 0
     gained_anchor = 0
     filled_translation = 0
@@ -414,6 +594,7 @@ def reenrich_thin_entries(
                     entry,
                     kaikki_lookup,
                     cached_slovnyk_only=cached_slovnyk_only,
+                    manifest_index=manifest_index,
                 )
             _preserve_existing_metadata(
                 entry,
@@ -427,7 +608,9 @@ def reenrich_thin_entries(
             if after != before:
                 changed += 1
 
-            is_now_enriched = has_learner_english_anchor(entry) or _has_translation(entry) or (_categorize_entry(entry) == "ENRICHED")
+            is_now_enriched = (
+                has_learner_english_anchor(entry) or _has_translation(entry) or (_categorize_entry(entry) == "ENRICHED")
+            )
             if was_enriched or is_now_enriched or after != before:
                 consecutive_misses = 0
             else:
@@ -592,7 +775,9 @@ def main() -> int:
                 )
                 return CANARY_FAILURE_EXIT_CODE
             if args.canary:
-                print(json.dumps({"canary_passed": True, "details": canary_res["details"]}, ensure_ascii=False, indent=2))
+                print(
+                    json.dumps({"canary_passed": True, "details": canary_res["details"]}, ensure_ascii=False, indent=2)
+                )
                 return 0
 
         summary = reenrich_thin_entries(
@@ -635,10 +820,7 @@ def main() -> int:
             allow_richness_regression_reason=args.allow_richness_regression,
         )
         if pointer:
-            print(
-                "Updated local atlas-manifest pointer "
-                f"{pointer['manifest_fingerprint']} {pointer['json_sha256']}"
-            )
+            print(f"Updated local atlas-manifest pointer {pointer['manifest_fingerprint']} {pointer['json_sha256']}")
     else:
         print("Dry run only; pass --write to update the manifest.")
     return 0
@@ -646,4 +828,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

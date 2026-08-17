@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -225,9 +226,7 @@ def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> 
     assert "translation" not in entry["enrichment"]
 
 
-def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(
-    tmp_path, monkeypatch
-) -> None:
+def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path, monkeypatch) -> None:
     manifest_path = tmp_path / "lexicon-manifest.json"
     manifest_path.write_text(
         '{"richness_summary": {"poc_thin_pages": 2, "search_no_visible_gloss": 0, '
@@ -249,9 +248,7 @@ def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(
         "scripts.lexicon.publish_manifest.download_published_manifest",
         lambda **kwargs: baseline,
     )
-    monkeypatch.setattr(
-        reenrich, "gzip_manifest", lambda manifest, gzip_path: gzip_calls.append(manifest)
-    )
+    monkeypatch.setattr(reenrich, "gzip_manifest", lambda manifest, gzip_path: gzip_calls.append(manifest))
     monkeypatch.setattr(
         "scripts.audit.audit_atlas_poc_richness.audit_manifest",
         lambda manifest: manifest["richness_summary"],
@@ -359,7 +356,6 @@ def test_already_enriched_prefix_does_not_trip_circuit_breaker(monkeypatch) -> N
     assert summary["consecutive_misses"] == 0
 
 
-
 def test_write_target_snapshot(tmp_path: Path) -> None:
     targets = [{"url_slug": "вода"}, {"url_slug": "хліб"}]
     snapshot_path = tmp_path / "target_snapshot.json"
@@ -427,3 +423,160 @@ def test_full_catalog_target_and_categorical_binning(monkeypatch) -> None:
     assert layers["forms"] == 1
 
 
+def test_derive_adverb_en_gloss_patterns() -> None:
+    assert reenrich._derive_adverb_en_gloss("abstract") == "abstractly"
+    assert (
+        reenrich._derive_adverb_en_gloss("abstract (apart from practice or reality; not concrete)")
+        == "abstractly (apart from practice or reality; not concrete)"
+    )
+    assert reenrich._derive_adverb_en_gloss("heroic") == "heroically"
+    assert (
+        reenrich._derive_adverb_en_gloss("flexible (easily bent without breaking)")
+        == "flexibly (easily bent without breaking)"
+    )
+    assert reenrich._derive_adverb_en_gloss("cloudless (without any clouds)") == "cloudlessly (without any clouds)"
+    assert (
+        reenrich._derive_adverb_en_gloss("(literally) cloudless, unclouded, clear")
+        == "(literally) cloudlessly, uncloudedly, clearly"
+    )
+    assert reenrich._derive_adverb_en_gloss("colourful (UK), colorful (US)") == "colourfully (UK), colorfully (US)"
+    assert reenrich._derive_adverb_en_gloss("simple") == "simply"
+    assert reenrich._derive_adverb_en_gloss("easy") == "easily"
+    assert reenrich._derive_adverb_en_gloss("public") == "publicly"
+    assert reenrich._derive_adverb_en_gloss("whole") == "wholly"
+    assert reenrich._derive_adverb_en_gloss("full") == "fully"
+    assert reenrich._derive_adverb_en_gloss("true") == "truly"
+    assert reenrich._derive_adverb_en_gloss("good") == "well"
+
+
+def test_deadjectival_adverb_fallback_fills_abstractly(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "абстрактний",
+                "pos": "adjective",
+                "url_slug": "абстрактний",
+                "enrichment": {
+                    "translation": {
+                        "en": ["abstract (apart from practice or reality; not concrete)"],
+                        "source": "dmklinger",
+                        "pos": "adjective",
+                    },
+                    "sources": ["dmklinger"],
+                },
+            },
+            {
+                "lemma": "абстрактно",
+                "pos": "adverb",
+                "url_slug": "абстрактно",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    # Direct translation misses for both lemmas so adverb fallback triggers
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    adv_entry = manifest["entries"][1]
+    assert summary["filled_translation"] == 1
+    assert adv_entry["enrichment"]["translation"] == {
+        "en": ["abstractly (apart from practice or reality; not concrete)"],
+        "source": "dmklinger (base form абстрактний)",
+        "pos": "adverb",
+    }
+    assert "dmklinger (base form абстрактний)" in adv_entry["enrichment"]["sources"]
+
+
+def test_deadjectival_adverb_fallback_no_fill_when_adjective_missing_en(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "гамірний",
+                "pos": "adjective",
+                "url_slug": "гамірний",
+                "enrichment": {
+                    "sources": ["VESUM"],
+                },
+            },
+            {
+                "lemma": "гамірно",
+                "pos": "adverb",
+                "url_slug": "гамірно",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    adv_entry = manifest["entries"][1]
+    assert summary["filled_translation"] == 0
+    assert "translation" not in adv_entry["enrichment"]
+
+
+def test_deadjectival_adverb_fallback_no_uk_lemma_invention(monkeypatch) -> None:
+    # 1. Made-up adverb lemma not in VESUM
+    fake_adv_entry = {
+        "lemma": "вигаданоневідомо",
+        "pos": "adverb",
+        "url_slug": "вигаданоневідомо",
+        "enrichment": {},
+    }
+    manifest_index = {
+        "вигаданоневідомий": {
+            "lemma": "вигаданоневідомий",
+            "pos": "adjective",
+            "enrichment": {"translation": {"en": ["invented"], "source": "test"}},
+        }
+    }
+    res = reenrich._deadjectival_adverb_translation(fake_adv_entry, manifest_index)
+    assert res is None
+
+    # 2. Adverb attested in VESUM, but candidate adjective not in VESUM as adj / not in manifest
+    adv_entry = {
+        "lemma": "абстрактно",
+        "pos": "adverb",
+        "url_slug": "абстрактно",
+        "enrichment": {},
+    }
+    empty_index: dict[str, dict[str, Any]] = {}
+    res2 = reenrich._deadjectival_adverb_translation(adv_entry, empty_index)
+    assert res2 is None
+
+
+def test_deadjectival_adverb_fallback_on_loaded_manifest_pair() -> None:
+    from scripts.lexicon.manifest_io import load_manifest
+
+    manifest = load_manifest()
+    by_lemma = {e.get("lemma"): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
+
+    if "абстрактно" in by_lemma and "абстрактний" in by_lemma:
+        abstr_adj = by_lemma["абстрактний"]
+        abstr_adv = by_lemma["абстрактно"]
+        adj_trans = abstr_adj.get("enrichment", {}).get("translation", {})
+        if adj_trans.get("en"):
+            res = reenrich._deadjectival_adverb_translation(abstr_adv, by_lemma)
+            assert res is not None
+            assert isinstance(res.get("en"), list)
+            assert "abstractly" in res["en"][0]
+            assert "base form абстрактний" in str(res.get("source"))
