@@ -1,0 +1,36 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6928-delta-stale-tests
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix the 2 CI failures on your PR #6928 (branch kimi/infra-6915-bridge-routing)
+
+ROUTING_CARD_V1
+- tier: heap/mechanical
+- model_x_harness: kimi:k3-256k (authoring lane — CI failures on its own PR)
+- why_this_tier: two stale tests encoding the pre-#6928 contracts; author-lane delta
+- advisor_packet: CI run 32009066415 failure names (below)
+- owned_paths: tests/test_gemini_bridge.py, tests/test_codex_bridge.py
+- acceptance_cmd: .venv/bin/pytest tests/test_gemini_bridge.py tests/test_codex_bridge.py tests/ai_agent_bridge/test_process_routing.py + ruff clean
+- alternatives_considered: n/a — author-lane delta by process
+- parallel_free_seats: n/a
+
+## The failures (CI run 32009066415 at your PR head)
+1. `tests/test_gemini_bridge.py::test_handle_ask_gemini_routes_to_agy` — `AssertionError: assert 'gemini-3.7-flash-high' == 'gemini-3.6-flash-high'`. The old test pins a stale literal slug — exactly the drift class your PR eliminates. Update it to assert against the registry-derived pin (read it the same way your resolver does), never a literal.
+2. `tests/test_codex_bridge.py::test_other_errors_still_ack_inbound` — `assert 0 == 1`. This test encodes the OLD ack-on-failure contract your PR deliberately removed. Replace/invert it to assert the NEW contract (message stays unconsumed on failure) or delete it if `test_process_routing.py`'s parameterized never-ack coverage already subsumes it — say which and why in the commit body.
+
+## Also answer in the PR comment (one paragraph)
+Why your local "739 passed in the bridge suites" run missed these two files — name the selection gap so the next bridge PR runs them.
+
+## Steps
+1. Work on the EXISTING branch kimi/infra-6915-bridge-routing in your dispatch worktree.
+2. Apply the two test-contract updates per above. No production-code changes expected; if a production change turns out to be needed, STOP and say so instead of shipping it silently.
+3. Run the acceptance command + ruff. Push to the same branch, comment on PR #6928 with evidence.
+4. Do NOT arm auto-merge and do NOT merge.

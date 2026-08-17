@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "be05a0556f72",
+  "session_id": "session_6172e158-cd22-4fd2-a712-bc185ed0f975",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T08:31:02.538167Z",
+  "branch": "kimi/infra-6915-bridge-routing",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_codex_bridge.py",
+    "tests/test_gemini_bridge.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "353b1df982f0",
+  "token_usage": {
+    "input_tokens": 29371,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 586240,
+    "output_tokens": 4249,
+    "api_call_count": 16
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T08:31:02.527162Z",
+    "agent_lines": 12,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 12,
+    "total_lines_changed": 16,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
