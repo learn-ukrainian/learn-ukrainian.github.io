@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7e6bec343e0a",
+  "session_id": "fleet-6cdd4ba86c014aa4a56118fde61b395b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-17T16:34:13.267799Z",
+  "branch": "agy/infra-6955-cursor-identity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/runbooks/cursor-driver.md",
+    "scripts/config/model_catalog.yaml",
+    "scripts/review/model_catalog.py",
+    "tests/test_model_catalog.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "3c7a7cac9933",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-17T16:34:13.261958Z",
+    "agent_lines": 88,
+    "agent_removed": 22,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 88,
+    "total_lines_changed": 110,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

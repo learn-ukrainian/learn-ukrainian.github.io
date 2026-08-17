@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7e6bec343e0a",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6955-cursor-identity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/runbooks/cursor-driver.md",
+    "scripts/config/model_catalog.yaml",
+    "scripts/review/model_catalog.py",
+    "tests/test_model_catalog.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/7e/6bec343e0a/0/metadata.json",
+      "transcript": "/7e/6bec343e0a/0/full.jsonl",
+      "compact_transcript": "/7e/6bec343e0a/0/transcript.jsonl",
+      "content_hash": "/7e/6bec343e0a/0/content_hash.txt",
+      "prompt": "/7e/6bec343e0a/0/prompt.txt"
+    }
+  ]
+}

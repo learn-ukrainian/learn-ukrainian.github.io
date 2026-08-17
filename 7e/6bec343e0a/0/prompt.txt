@@ -1,0 +1,55 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-6955-cursor-identity
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta on PR #6964: encode the operator's unknown-Auto union-resolution amendment
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: gemini-3.5-flash-high × agy (workspace-write, existing dispatch worktree)
+- why_this_tier: authoring-lane delta on agy's own PR #6964
+- advisor_packet: n/a
+- owned_paths: same as PR #6964 (catalog, model-assignment.md, runbook, lint tests)
+- acceptance_cmd: .venv/bin/python scripts/lint/lint_model_catalog.py + targeted pytest
+- alternatives_considered: (1) driver edits — REJECTED: lane owns its PR; (2) new PR — REJECTED: same unit
+- parallel_free_seats: cursor, grok
+
+## Evidence preamble (#M-4 — binding)
+Quote raw tool output for every claim.
+
+## Context
+Your PR #6964 landed the #6955 identity contract, but the operator amended the charter WHILE you
+worked (comments on #6952 + #6955 — `gh issue view 6955 --comments`, read the amendment verbatim).
+Missing from your PR: the **unknown-Auto → allowlist-union family** resolution rule.
+
+## Shippable unit
+One commit on the PR branch adding, everywhere the identity contract lives (catalog entry,
+model-assignment section, runbook, lint/tests):
+1. `cursor:auto` + `resolved_model=unknown` resolves to the **union family {xAI, Moonshot}**
+   (the allowlist pair), NOT unattested-harness-with-quorum.
+2. Cursor-authored PR → SINGLE cross-family reviewer from outside {xAI, Moonshot}; this
+   supersedes #6489 dual-family quorum as the default for unknown-Auto PRs (quorum text stays as
+   fallback history).
+3. Cursor-as-reviewer → eligible only against authors outside {xAI, Moonshot}.
+4. Validity condition: union bound holds only while the Auto allowlist contract holds (~30-day
+   refresh; lint enforces the pair). Allowlist rotation invalidates the bound.
+5. Driver-of-record: still attested-only (unchanged).
+6. Lint/test coverage: a test asserting the catalog expresses the union rule (and still fails if
+   cursor:auto is treated as an attested formal-review identity).
+
+## Steps
+1. `gh issue view 6955 --comments` + `gh issue view 6952 --comments` — quote the amendment.
+2. Implement across the four surfaces; keep wording tight and consistent.
+3. Acceptance: lint_model_catalog.py clean; targeted pytest green
+   (`/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest`); ruff clean.
+4. Conventional commit `feat(catalog): unknown-Auto resolves to allowlist-union family (#6955)`;
+   push to the PR branch. NO auto-merge.
+5. Report: new HEAD, diff --stat, acceptance tails.
