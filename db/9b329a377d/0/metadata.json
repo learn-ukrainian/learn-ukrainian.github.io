@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "db9b329a377d",
+  "session_id": "session_6b15d6ce-bd28-4f12-89b5-1c3e0b79f57b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T19:37:35.793807Z",
+  "branch": "kimi/infra-7010-ask-pr",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+    "agents_extensions/shared/memory/MEMORY.md",
+    "agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md",
+    "scripts/ai_agent_bridge/_agy.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_review_safety.py",
+    "tests/ai_agent_bridge/test_ask_pr_lightweight_route.py",
+    "tests/ai_agent_bridge/test_review_ask_caps.py",
+    "tests/ai_agent_bridge/test_review_pr_required.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "a37b2bf21f90",
+  "token_usage": {
+    "input_tokens": 80345,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4207616,
+    "output_tokens": 21716,
+    "api_call_count": 62
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T19:37:35.77136Z",
+    "agent_lines": 172,
+    "agent_removed": 46,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 172,
+    "total_lines_changed": 218,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

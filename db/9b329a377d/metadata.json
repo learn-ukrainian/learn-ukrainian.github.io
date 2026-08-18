@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "db9b329a377d",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-7010-ask-pr",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+    "agents_extensions/shared/memory/MEMORY.md",
+    "agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md",
+    "scripts/ai_agent_bridge/_agy.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_review_safety.py",
+    "tests/ai_agent_bridge/test_ask_pr_lightweight_route.py",
+    "tests/ai_agent_bridge/test_review_ask_caps.py",
+    "tests/ai_agent_bridge/test_review_pr_required.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/db/9b329a377d/0/metadata.json",
+      "transcript": "/db/9b329a377d/0/full.jsonl",
+      "content_hash": "/db/9b329a377d/0/content_hash.txt",
+      "prompt": "/db/9b329a377d/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 80345,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4207616,
+    "output_tokens": 21716,
+    "api_call_count": 62
+  }
+}
