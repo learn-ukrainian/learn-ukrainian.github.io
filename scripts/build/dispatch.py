@@ -18,6 +18,7 @@ import json
 import os
 import re
 import time
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -61,14 +62,17 @@ def _is_rate_limited(stderr: str) -> bool:
     return any(pat.lower() in stderr_lower for pat in _RATE_LIMIT_PATTERNS)
 
 
-def _pace_gemini_calls() -> None:
+def _pace_gemini_calls(sleep_fn: Callable[[int, str], None] | None = None) -> None:
     """Enforce minimum delay between Gemini CLI calls to avoid bursts."""
     global _last_gemini_call_time
     if _last_gemini_call_time > 0:
         elapsed = time.monotonic() - _last_gemini_call_time
         if elapsed < _GEMINI_INTER_CALL_DELAY:
             wait = _GEMINI_INTER_CALL_DELAY - elapsed
-            time.sleep(wait)
+            if sleep_fn is not None:
+                sleep_fn(int(wait) if int(wait) == wait else int(wait + 1), "gemini inter-call delay")
+            else:
+                time.sleep(wait)
     _last_gemini_call_time = time.monotonic()
 
 
@@ -412,6 +416,7 @@ def dispatch_agent(
     model: str | None = None,
     cascade_per_call_max_s: int | None = None,
     initial_response_timeout: int | None = None,
+    sleep_fn: Callable[[int, str], None] | None = None,
 ) -> tuple[bool, str]:
     """Unified dispatcher for Gemini and Claude subprocess calls.
 
@@ -428,6 +433,7 @@ def dispatch_agent(
         initial_response_timeout: Optional startup guard. When set, the runtime
             kills the subprocess if no stdout/stderr/liveness activity appears
             within this many seconds.
+        sleep_fn: Optional custom sleeper (seconds, reason) -> None for retry/pacing backoffs.
 
     Returns:
         (success, stdout_text)
@@ -474,6 +480,7 @@ def dispatch_agent(
             runtime_agent_name="gemini" if is_gemini else "codex",
             cascade_per_call_max_s=cascade_per_call_max_s,
             initial_response_timeout=initial_response_timeout,
+            sleep_fn=sleep_fn,
         )
     if is_claude:
         return _dispatch_claude_via_runtime(
@@ -623,6 +630,7 @@ def _dispatch_via_runtime(
     runtime_agent_name: str,
     cascade_per_call_max_s: int | None,
     initial_response_timeout: int | None,
+    sleep_fn: Callable[[int, str], None] | None = None,
 ) -> tuple[bool, str]:
     """Route Codex + Gemini dispatch through scripts.agent_runtime.runner.invoke().
 
@@ -798,7 +806,7 @@ def _dispatch_via_runtime(
             )
             try:
                 if not is_agy:
-                    _pace_gemini_calls()
+                    _pace_gemini_calls(sleep_fn=sleep_fn)
                 with _temporary_rate_limit_bypass():
                     result = runtime_invoke(
                         attempt_agent,
@@ -924,7 +932,7 @@ def _dispatch_via_runtime(
             min_attempt_budget_s=30,
             attempt_runner=_gemini_attempt_runner,
             logger=_log,
-            sleep_fn=lambda seconds, reason: visible_sleep(seconds, reason, logger=_log),
+            sleep_fn=sleep_fn if sleep_fn is not None else (lambda seconds, reason: visible_sleep(seconds, reason, logger=_log)),
             allowed_auth_modes=allowed_auth_modes,
         )
         if ladder_result.ok:
