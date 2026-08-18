@@ -80,6 +80,18 @@ def test_shared_script_exists_and_is_executable() -> None:
     assert mode & stat.S_IXUSR, f"{_SCRIPT} must be executable"
 
 
+def test_shared_script_invokes_interpolation_gate() -> None:
+    # The fail-closed untrusted-context gate (packet B+D) rides the always-on
+    # actionlint check: check_workflows.sh must call it after actionlint.
+    text = _SCRIPT.read_text(encoding="utf-8")
+    assert "check_untrusted_workflow_interpolation.py" in text, (
+        "shared runner must invoke the untrusted-context interpolation checker"
+    )
+    assert text.index('"$bin" -color') < text.index("check_untrusted_workflow_interpolation.py"), (
+        "interpolation checker must run after actionlint succeeds"
+    )
+
+
 def test_shared_script_pins_version_and_checksums() -> None:
     text = _SCRIPT.read_text(encoding="utf-8")
     assert 'ACTIONLINT_VERSION="' in text, "script must pin an actionlint version"

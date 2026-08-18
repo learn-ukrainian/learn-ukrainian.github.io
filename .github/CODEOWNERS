@@ -1,0 +1,7 @@
+# Workflow files gate to a named human code owner: any PR touching
+# .github/workflows/** requires @krisztiankoos review (enable "Require review
+# from Code Owners" in branch protection). Agents may still *draft* workflow
+# PRs; the human review is the merge gate. No catch-all `*` rule — ordinary
+# code/docs/curriculum PRs get no extra reviewer.
+.github/workflows/**  @krisztiankoos
+.github/CODEOWNERS    @krisztiankoos
