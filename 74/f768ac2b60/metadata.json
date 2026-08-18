@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "74f768ac2b60",
+  "strategy": "manual-commit",
+  "branch": "agy/sources-7028-rank",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/wiki/sources_db.py",
+    "tests/test_sources_db.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/74/f768ac2b60/0/metadata.json",
+      "transcript": "/74/f768ac2b60/0/full.jsonl",
+      "compact_transcript": "/74/f768ac2b60/0/transcript.jsonl",
+      "content_hash": "/74/f768ac2b60/0/content_hash.txt",
+      "prompt": "/74/f768ac2b60/0/prompt.txt"
+    }
+  ]
+}
