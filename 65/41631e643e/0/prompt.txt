@@ -1,0 +1,38 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-6967-receipt-allowlist
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #6967 clean-tree guard allowlists atlas-jobs receipts
+
+CAPACITY_CARD: pick=agy status=cool avoid=codex,cursor,gemini(CLI retired→agy) source=routing-budget
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: agy
+- why_this_tier: mechanical guard allowlist; AGY is Gemini-family implementer
+- owned_paths: scripts/delegate.py (clean-tree guard only); tests for that guard
+- alternatives_considered: claude (just shipped #7041)
+
+Initiator: grok-infra. AGENT_NO_MERGE=1.
+
+## Outcome
+Another lane's untracked `batch_state/atlas-jobs/receipts/*.json` must not refuse every dispatch. Issue listed 3 designs; implement **option 1**: guard allowlists untracked files under declared receipt collection points.
+
+## Work
+Find the clean-tree guard in `scripts/delegate.py` that refuses write-capable dispatch on untracked `batch_state/atlas-jobs/receipts/`. Allowlist that directory (and only documented receipt collection points already in `.gitignore` as tracked-by-design). Do not ignore the whole `batch_state/`. Test: untracked file under that receipts path does not fail the guard; a random untracked tracked-path still fails.
+
+PR Refs #6967. Trailer `X-Agent: agy/infra-6967-receipt-allowlist`. Do not merge.
+
+## Verify
+```bash
+.venv/bin/ruff check scripts/delegate.py
+.venv/bin/python -m pytest -q -k 'clean_tree or clean-tree or receipt'
+```
+Quote the new/updated test node id.
