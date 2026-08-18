@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8e7468931421",
+  "strategy": "manual-commit",
+  "branch": "agy/sources-7027-shadow-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/verification/check_ru_morph.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8e/7468931421/0/metadata.json",
+      "transcript": "/8e/7468931421/0/full.jsonl",
+      "compact_transcript": "/8e/7468931421/0/transcript.jsonl",
+      "content_hash": "/8e/7468931421/0/content_hash.txt",
+      "prompt": "/8e/7468931421/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/sources-7027-shadow-agy
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# sources-7039-fastlane
+
+Work only in this worktree on existing branch `agy/sources-7027-shadow-agy`.
+Do not merge. Do not open a second PR.
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy / gemini-3.7-flash-high
+- why_this_tier: this is AGY's PR; failing tests are Ukrainian ru-morph false positives (language-lane)
+- advisor_packet: n/a
+- owned_paths: verification/ru-morph code touched by #7027, tests/test_check_ru_morph.py
+- acceptance_cmd: `.venv/bin/python -m pytest tests/test_check_ru_morph.py -q --tb=short`
+- alternatives_considered:
+  1. claude — language-lane, reserved for #6370
+  2. cursor — mechanical, but this is a linguistic false-positive
+  3. codex — near_cap, refuse
+- parallel_free_seats: cursor, claude
+
+## CAPACITY_CARD
+pick=agy status=cool rem=94%+ will_last=true free=agy,cursor,claude avoid=codex(near_cap) source=routing-budget
+
+## Bug (tool-backed)
+PR #7039 `fix(verification): flag calques without fake Russian lemmas (#7027)`
+head `e9944401e97c`. Fastlane FAIL:
+https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/32188886446
+
+```
+tests/test_check_ru_morph.py::test_word_knyha FAILED
+  E   assert True is False
+tests/test_check_ru_morph.py::test_lexicalised_safe_and_clean_ukrainian_words FAILED
+  E   assert 0.3421052631578947 == 0.0
+tests/test_check_ru_morph.py::test_smoke_cases_unmocked FAILED
+  E   assert True is False
+```
+
+`книга` / lexicalised-safe Ukrainian words must stay clean. The PR must not invent Russian lemmas and must not start flagging clean UA.
+
+## Work
+1. Reproduce the 3 tests. Quote raw output.
+2. Fix the classifier / feature so clean UA (`книга` and the lexicalised-safe set) stays unflagged, while still flagging real calques/shadows without fake Russian lemmas.
+3. Do not weaken tests. Do not delete coverage. Do not mark xfail.
+4. VESUM/`sources` for any word-level claim.
+5. Commit + push to `agy/sources-7027-shadow-agy`.
+   - subject: `fix(verification): keep clean UA unflagged after calque-shadow (#7027)`
+   - trailer: `X-Agent: agy/sources-7039-fastlane`
+   - `Refs #7027` / `Refs #7039` — do not close unless ACs are actually met.
+
+## Non-goals
+- Merge
+- New PR
+- Broad ru-morph rewrite beyond this regression
+
+## Done means
+The 3 named tests + full `tests/test_check_ru_morph.py` pass; branch pushed; PR comment with pytest output.
