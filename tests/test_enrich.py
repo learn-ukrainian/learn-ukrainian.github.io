@@ -59,13 +59,19 @@ class TestSlovnyk:
         assert _build_slovnyk(plan) == ""
 
 
-    def test_build_slovnyk_markdown_formatting(self):
+    def test_build_slovnyk_markdown_formatting(self, monkeypatch):
         """Test that build_slovnyk_markdown produces correct table output.
 
         Words with 2+ syllables get stress marks (e.g. літера -> лі́тера).
         Single-syllable words (звук) stay unchanged.
         """
         from build.vocab_gen import build_slovnyk_markdown
+
+        # Stub stress annotation to avoid loading the heavy NLP model during fast formatting tests (#6999)
+        monkeypatch.setattr(
+            "pipeline.stress_annotator.annotate_stress",
+            lambda word: ("лі\u0301тера", 1) if word == "літера" else (word, 0),
+        )
 
         entries = [
             {"word": "звук", "translation": "sound", "expression": False, "pos": "ім.", "gender": "ч."},
