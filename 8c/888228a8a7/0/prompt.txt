@@ -1,0 +1,64 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-7024-overview-last-good
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #7024 overview last-good stays 0/1932 after bounce
+
+CAPACITY_CARD: pick=cursor status=cool will_last=true (Auto 83% on-pace) free=agy,kimi,claude avoid=codex(near_cap,5% weekly,deficit) source=codexbar+routing-budget
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: cursor Auto (Cursor Ultra)
+- why_this_tier: mechanical Monitor API leftover of #7009; Cursor bias for CI/infra; Auto on-pace
+- advisor_packet: n/a (filed bug + operator "work the rest")
+- owned_paths: scripts/api/dashboard_router.py; scripts/api/dashboard_helpers.py; tests/test_dashboards.py; tests/test_playground_api_stability.py
+- acceptance_cmd: see Verify
+- alternatives_considered: agy (used for sibling #7023 leftover mounts); kimi (docs #7012/#7014); claude (rules #7011/#7013); codex (REFUSE deficit)
+- parallel_free_seats: agy #7023; kimi #7012+#7014; claude #7011+#7013
+
+Initiator: grok-infra (epic:6943 / infra-harness). Stream lease already held — do not claim. AGENT_NO_MERGE=1.
+
+## User-visible outcome
+After a Monitor bounce, Home / `/api/dashboard/overview` does not sit at **0 passing / 1932 missing** while `/api/state/summary` already has `published_mdx` / `research_done`. Either last-good is durable and settles, or the cheap warming payload exposes published/research so Home is not a wall of zeros. `refreshing` must stop once a scan has a result.
+
+## Live evidence (issue #7024, process on public main `21382b1d`)
+- Hang is already fixed (#7009 / #6983 residual split). This ticket is last-good honesty.
+- After bounce: `meta.error=overview_warming`, `track_scan=skipped`, `pass=0`, `missing=1932`, `total=1932`.
+- ~13 min later still `missing=1932`, `refreshing=true`.
+- `/api/state/summary` at the same time: `published_mdx=356`, `research_done=450`, `generated_md=0`, `audit_passing=0`.
+
+## Root cause (prove/disprove on current main — do not treat as fact)
+1. `_overview_last_good` is **process memory only** (`dashboard_router.py`). Bounce ⇒ None ⇒ cheap `_build_overview_from_state_summary`.
+2. `stats_from_state_summary` sets `missing = total - generated_md`. `generated_md=0` ⇒ `missing=1932`, `pass=audit_passing=0`. `published_mdx` is on the track object but **not** what Home `loadStats()` uses.
+3. Background `_run_overview_refresh` walks every module (1932). If it never writes last-good / TTL cache, or keeps rescheduling, `refreshing` never settles.
+
+## Work
+1. Read `scripts/api/dashboard_router.py` (`overview`, `_overview_last_good`, `_build_overview_from_state_summary`) and Home `loadStats()` so you fix the number the UI actually shows.
+2. Persist last-good across process bounce (disk/cache that `_run_overview_refresh` already knows how to write) **or** make the cheap warming payload honest about published/research so Home is not 0/1932. Prefer both: durable last-good + honest warming.
+3. Background scan must set last-good and stop flipping `refreshing=true` once a result exists. Do not raise timeouts. Do not fake `pass=356`.
+4. Tests that fail on main first: bounce/cold process (empty in-memory last-good) + summary with published_mdx>0/generated_md=0 must not report missing=total forever; after a successful refresh, `track_scan=hit` and `refreshing` absent/false.
+5. Conventional commit + push + PR linking **#7024** (not #6983). Trailer `X-Agent: cursor/infra-7024-overview-last-good`. Do **not** merge or arm auto-merge.
+
+## Non-goals
+- Do not touch `scripts/api/main.py` mounts (sibling #7023 owns leftover `/api/hramatka` / `/api/rag`).
+- Do not retune `API_REQUEST_TIMEOUT_S`.
+- Do not close #6983.
+- Do not edit the primary checkout. Layout A worktree only.
+
+## Verify
+```bash
+.venv/bin/ruff check scripts/api/dashboard_router.py scripts/api/dashboard_helpers.py
+.venv/bin/python -m pytest -q tests/test_dashboards.py tests/test_playground_api_stability.py tests/test_orient_api.py
+```
+Paste node ids. Quote before/after overview totals for a cold last-good (empty memory, summary published_mdx>0).
+
+## Layout
+`.worktrees/dispatch/cursor/infra-7024-overview-last-good/`
+Mode: workspace-write.

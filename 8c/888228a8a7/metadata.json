@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8c888228a8a7",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-7024-overview-last-good",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/index.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/dashboard_helpers.py",
+    "scripts/api/dashboard_router.py",
+    "tests/conftest.py",
+    "tests/test_api_helpers.py",
+    "tests/test_dashboards.py",
+    "tests/test_playground_api_stability.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8c/888228a8a7/0/metadata.json",
+      "transcript": "/8c/888228a8a7/0/full.jsonl",
+      "compact_transcript": "/8c/888228a8a7/0/transcript.jsonl",
+      "content_hash": "/8c/888228a8a7/0/content_hash.txt",
+      "prompt": "/8c/888228a8a7/0/prompt.txt"
+    }
+  ]
+}

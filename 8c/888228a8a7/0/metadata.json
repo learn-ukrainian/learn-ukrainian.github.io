@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8c888228a8a7",
+  "session_id": "fleet-6d14371121ca45198208204b945acc9c",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T19:30:25.038141Z",
+  "branch": "cursor/infra-7024-overview-last-good",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/index.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/dashboard_helpers.py",
+    "scripts/api/dashboard_router.py",
+    "tests/conftest.py",
+    "tests/test_api_helpers.py",
+    "tests/test_dashboards.py",
+    "tests/test_playground_api_stability.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "d95d3120949b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T19:30:25.023672Z",
+    "agent_lines": 557,
+    "agent_removed": 26,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 557,
+    "total_lines_changed": 583,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
