@@ -2445,6 +2445,38 @@ async def main_stdio():
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
+class _RejectUnsupportedStatelessMcpMethods:
+    """ASGI wrapper: 405 GET/DELETE on ``/mcp`` in stateless JSON mode.
+
+    The Python MCP SDK's 2025-06-18 Streamable HTTP path still opens an empty
+    SSE stream on GET when ``stateless_http=True`` (python-sdk#2474). Cursor
+    waits on that stream during ``mcp.createClient`` and times out, marking
+    the sources server disabled. The Streamable HTTP spec says a server that
+    does not offer a standalone SSE stream MUST return 405 Method Not Allowed
+    (with ``Allow: POST``). That is the correct POST-only signal for this app.
+    """
+
+    _MCP_PATHS = frozenset({"/mcp", "/mcp/"})
+    _REJECTED_METHODS = frozenset({"GET", "DELETE"})
+
+    def __init__(self, app: Any) -> None:
+        self.app = app
+
+    async def __call__(self, scope: dict[str, Any], receive: Any, send: Any) -> None:
+        if (
+            scope.get("type") == "http"
+            and scope.get("method") in self._REJECTED_METHODS
+            and scope.get("path") in self._MCP_PATHS
+        ):
+            from starlette.responses import Response
+
+            await Response(status_code=405, headers={"Allow": "POST"})(
+                scope, receive, send
+            )
+            return
+        await self.app(scope, receive, send)
+
+
 def create_http_app():
     """Create the standalone HTTP app with SSE and Streamable HTTP transports.
 
@@ -2452,7 +2484,8 @@ def create_http_app():
     streamable-HTTP endpoint, with ``stateless_http=True`` and
     ``json_response=True`` so each request is independent and answered with a
     single JSON body. The legacy SSE endpoint and ``/health`` are wired as
-    custom Starlette routes.
+    custom Starlette routes. GET/DELETE on ``/mcp`` are rejected with 405 so
+    Streamable HTTP clients do not hang on an empty SSE notification stream.
     """
     from mcp.server.sse import SseServerTransport
     from starlette.responses import Response
@@ -2488,12 +2521,13 @@ def create_http_app():
         Mount("/messages/", app=sse.handle_post_message),
     ]
 
-    return server.streamable_http_app(
+    app = server.streamable_http_app(
         streamable_http_path="/mcp",
         json_response=True,
         stateless_http=True,
         custom_starlette_routes=custom_routes,
     )
+    return _RejectUnsupportedStatelessMcpMethods(app)
 
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):

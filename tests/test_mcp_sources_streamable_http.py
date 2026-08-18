@@ -82,6 +82,30 @@ def test_streamable_http_initialize_returns_capabilities(sources_http_url):
     assert "capabilities" in body["result"]
 
 
+def test_streamable_http_get_mcp_returns_405_instead_of_hanging(sources_http_url):
+    """Stateless JSON /mcp must 405 GET. An empty SSE hang is what disabled Cursor."""
+    timeout = httpx.Timeout(1.0, connect=1.0, read=1.0, write=1.0, pool=1.0)
+    response = httpx.get(
+        f"{sources_http_url}/mcp",
+        headers={"Accept": "text/event-stream", "MCP-Protocol-Version": "2025-06-18"},
+        timeout=timeout,
+    )
+    assert response.status_code == 405
+    assert "POST" in response.headers.get("allow", "")
+    assert not response.headers.get("content-type", "").startswith("text/event-stream")
+
+
+def test_streamable_http_delete_mcp_returns_405(sources_http_url):
+    timeout = httpx.Timeout(1.0, connect=1.0, read=1.0, write=1.0, pool=1.0)
+    response = httpx.delete(
+        f"{sources_http_url}/mcp",
+        headers={"MCP-Protocol-Version": "2025-06-18"},
+        timeout=timeout,
+    )
+    assert response.status_code == 405
+    assert "POST" in response.headers.get("allow", "")
+
+
 def test_streamable_http_tools_list_contains_vocabulary_vetting_tools(sources_http_url):
     response = httpx.post(
         f"{sources_http_url}/mcp",
