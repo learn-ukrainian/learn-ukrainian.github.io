@@ -1,0 +1,44 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-7002-net-retries
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: retry-harden unretried network steps on required CI paths — issue #7002
+
+You are cursor. Your own 2026-08-18 CI audit (pass 2, finding 7) found required-path
+network steps with no retry: Stanza provision and the playground probe already retry,
+but these do not: pip-wheel cache restore (no continue-on-error), pip/pytorch installs,
+npm ci, TruffleHog download, BIO git fetch. One transient network blip reds a required
+run — the outage-amplification class (#6968 sibling).
+
+## Steps
+1. Inventory every network-touching step in .github/workflows/ on the REQUIRED path
+   (ci.yml and anything CI Gate needs). Classify each: already-retried / retry-needed /
+   advisory-only (skip). Quote the inventory in your report.
+2. Fix at the right layer per step:
+   - cache restore: a miss must degrade to a cold install, never red the job
+     (continue-on-error or the action's own failure mode — check which applies).
+   - installs/downloads (pip, pytorch wheels, npm ci, TruffleHog, BIO git fetch): use
+     the repo's existing retry pattern (the same helper/action Stanza provision uses —
+     read it first; do NOT invent a second retry idiom).
+3. Respect the two-tier cutover on your own PR #6989: base your branch on origin/main
+   and keep the diff mergeable with #6989's ci.yml if it lands first — if #6989 merges
+   while you work, rebase onto the new main before pushing.
+4. actionlint on every touched workflow. The workflow-contract tests
+   (tests/test_frontend_change_scope.py, tests/test_paths_filter_fail_open.py,
+   tests/test_workflow_head_concurrency.py) must stay green — run them and quote output.
+5. Branch cursor/infra-7002-net-retries, conventional commit (Fixes #7002), push, open
+   PR. NO auto-merge — driver runs the CF gate.
+
+## Evidence rule (#M-4): quote the step inventory and raw test/actionlint output.
+
+## Routing card: tier=practical · cursor (authoring lane, own audit finding) ·
+owned_paths=.github/workflows/**, .github/actions/** ·
+research_classification: role=implementer family=ci-workflow-hardening track=infra
