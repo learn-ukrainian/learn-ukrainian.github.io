@@ -55,8 +55,24 @@ jobs:
           python-version-file: '.python-version'
       - name: Install and run ruff
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install ruff
+          set -euo pipefail
+          # Bounded retry absorbs transient PyPI blips (#7002;
+          # same 3× / 10s / 30s idiom as Stanza provision).
+          for attempt in 1 2 3; do
+            echo "ruff pip install attempt ${attempt}/3"
+            if python -m pip install --upgrade pip \
+              && python -m pip install ruff; then
+              break
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+              3)
+                echo "::error::Install ruff failed after 3 attempts" >&2
+                exit 1
+                ;;
+            esac
+          done
           python -m ruff check scripts/
 
   # ---------------------------------------------------------------------
@@ -103,14 +119,28 @@ jobs:
 
       - name: Install planner dependencies
         run: |
+          set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
           grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-            torch==2.13.0
-          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+          # Bounded retry absorbs transient PyPI / pytorch.org blips (#7002;
+          # same 3× / 10s / 30s idiom as Stanza provision below).
+          for attempt in 1 2 3; do
+            echo "planner pip install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
+              && .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
+                torch==2.13.0 \
+              && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Install planner dependencies failed after 3 attempts" >&2
+          exit 1
 
       - name: Restore successful-main pytest duration dataset
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -164,14 +194,28 @@ jobs:
 
       - name: Install fastlane test dependencies
         run: |
+          set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
           grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-            torch==2.13.0
-          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+          # Bounded retry absorbs transient PyPI / pytorch.org blips (#7002;
+          # same 3× / 10s / 30s idiom as Stanza provision).
+          for attempt in 1 2 3; do
+            echo "fastlane pip install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
+              && .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
+                torch==2.13.0 \
+              && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Install fastlane test dependencies failed after 3 attempts" >&2
+          exit 1
 
       - name: Select directly changed test modules
         id: plan
@@ -202,7 +246,21 @@ jobs:
           set -euo pipefail
           mapfile -t test_files < ci-artifacts/fastlane-test-files.txt
           if printf '%s\n' "${test_files[@]}" | grep -qx 'tests/agent_runtime/test_acp_text_agent.py'; then
-            npm ci --ignore-scripts
+            # npm registry blips (#7002; Stanza provision idiom).
+            for attempt in 1 2 3; do
+              echo "fastlane npm ci attempt ${attempt}/3"
+              if npm ci --ignore-scripts; then
+                break
+              fi
+              case "${attempt}" in
+                1) sleep 10 ;;
+                2) sleep 30 ;;
+                3)
+                  echo "::error::fastlane npm ci failed after 3 attempts" >&2
+                  exit 1
+                  ;;
+              esac
+            done
           fi
           .venv/bin/python -m pytest \
             --strict-markers --timeout=120 --timeout-method=thread --durations=10 \
@@ -264,8 +322,12 @@ jobs:
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       # Sole owner of ~/.cache/pip for this job (setup-python cache disabled).
+      # Cache-service errors are recoverable: continue to a cold pip install.
+      # A restore miss or outage must not kill the shard (#7002; same posture
+      # as the Stanza model-cache restore below).
       - name: Restore pip wheel cache
         id: pip-wheel-cache
+        continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
@@ -278,14 +340,29 @@ jobs:
       # Install the CPU-only torch wheel to avoid the much larger CUDA build.
       - name: Install dependencies
         run: |
+          set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
           grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-            torch==2.13.0
-          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+          # Bounded retry absorbs transient PyPI / pytorch.org blips (#7002;
+          # same 3× / 10s / 30s idiom as Stanza provision below).
+          # ruff lives in its own job after the two-tier cutover (#6989).
+          for attempt in 1 2 3; do
+            echo "python-shard pip install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
+              && .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
+                torch==2.13.0 \
+              && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Install dependencies failed after 3 attempts" >&2
+          exit 1
 
       - name: Save pip wheel cache
         if: steps.pip-wheel-cache.outputs.cache-hit != 'true'
@@ -362,7 +439,21 @@ jobs:
           cp "ci-artifacts/plans/pytest-shard-${SHARD}/plan.json" ci-artifacts/plan.json
           cp "ci-artifacts/plans/pytest-shard-${SHARD}/test-nodeids.txt" ci-artifacts/test-nodeids.txt
           if grep -q '^tests/agent_runtime/test_acp_text_agent.py::' ci-artifacts/test-nodeids.txt; then
-            npm ci --ignore-scripts
+            # npm registry blips (#7002; Stanza provision idiom).
+            for attempt in 1 2 3; do
+              echo "python-shard npm ci attempt ${attempt}/3"
+              if npm ci --ignore-scripts; then
+                break
+              fi
+              case "${attempt}" in
+                1) sleep 10 ;;
+                2) sleep 30 ;;
+                3)
+                  echo "::error::python-shard npm ci failed after 3 attempts" >&2
+                  exit 1
+                  ;;
+              esac
+            done
           fi
           cov_args=""
           if [ "$COLLECT_COVERAGE" = "true" ]; then
@@ -482,10 +573,24 @@ jobs:
 
       - name: Install contract-check dependencies
         run: |
+          set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML jsonschema requests==2.34.2
-          npm ci
+          # Bounded retry absorbs transient PyPI / npm registry blips (#7002;
+          # same 3× / 10s / 30s idiom as Stanza provision).
+          for attempt in 1 2 3; do
+            echo "contracts install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install PyYAML jsonschema requests==2.34.2 \
+              && npm ci; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Install contract-check dependencies failed after 3 attempts" >&2
+          exit 1
 
       - name: Run Word Atlas sense-lint ratchet (#6437)
         env:
@@ -602,7 +707,23 @@ jobs:
 
       - name: Check changed BIO dossier word-count floor
         run: |
-          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          set -euo pipefail
+          # Bounded retry absorbs transient git-fetch blips to origin/main (#7002;
+          # same 3× / 10s / 30s idiom as Stanza provision).
+          for attempt in 1 2 3; do
+            echo "BIO git fetch attempt ${attempt}/3"
+            if git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'; then
+              break
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+              3)
+                echo "::error::BIO git fetch failed after 3 attempts" >&2
+                exit 1
+                ;;
+            esac
+          done
           .venv/bin/python scripts/audit/check_dossier_wordcount.py --changed
 
       - name: Validate BIO preparation capsules and active holds
@@ -752,10 +873,50 @@ jobs:
 
       # Folded from standalone jobs (#4811): each extra always-on job competed for
       # the account concurrent-runner pool and delayed CI Gate (last to start).
-      - name: TruffleHog secret scan
+      # TruffleHog downloads its scanner binary on first use — retry the SHA-pinned
+      # action with the same 3-attempt / backoff cadence as Stanza (#7002). A
+      # `uses:` step cannot sit inside a shell for-loop, so this is the
+      # fail-closed sibling of paths-filter-retry (continue-on-error per attempt,
+      # then hard-fail if all three miss).
+      - name: TruffleHog secret scan (attempt 1)
+        id: trufflehog1
+        continue-on-error: true
         uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
         with:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Sleep before TruffleHog retry 1
+        if: steps.trufflehog1.outcome == 'failure'
+        run: sleep 10
+
+      - name: TruffleHog secret scan (attempt 2)
+        id: trufflehog2
+        if: steps.trufflehog1.outcome == 'failure'
+        continue-on-error: true
+        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
+        with:
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Sleep before TruffleHog retry 2
+        if: steps.trufflehog1.outcome == 'failure' && steps.trufflehog2.outcome == 'failure'
+        run: sleep 30
+
+      - name: TruffleHog secret scan (attempt 3)
+        id: trufflehog3
+        if: steps.trufflehog1.outcome == 'failure' && steps.trufflehog2.outcome == 'failure'
+        continue-on-error: true
+        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
+        with:
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Fail if TruffleHog exhausted retries
+        if: >-
+          steps.trufflehog1.outcome == 'failure'
+          && steps.trufflehog2.outcome != 'success'
+          && steps.trufflehog3.outcome != 'success'
+        run: |
+          echo "::error::TruffleHog secret scan failed after 3 attempts" >&2
+          exit 1
 
       - name: Reject negated closing references
         env:
@@ -815,9 +976,22 @@ jobs:
       - name: Create Python venv
         if: steps.scope.outputs.run == 'true'
         run: |
+          set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install jsonschema PyYAML
+          # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
+          for attempt in 1 2 3; do
+            echo "frontend pip install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install jsonschema PyYAML; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::frontend Create Python venv failed after 3 attempts" >&2
+          exit 1
 
       - name: Restore Atlas lexicon manifest cache
         if: steps.scope.outputs.run == 'true'
@@ -842,7 +1016,21 @@ jobs:
       - name: Install dependencies
         if: steps.scope.outputs.run == 'true'
         working-directory: site
-        run: npm ci
+        run: |
+          set -euo pipefail
+          # Bounded retry absorbs transient npm registry blips (#7002; Stanza idiom).
+          for attempt in 1 2 3; do
+            echo "frontend npm ci attempt ${attempt}/3"
+            if npm ci; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::frontend npm ci failed after 3 attempts" >&2
+          exit 1
 
       - name: Build site
         if: steps.scope.outputs.run == 'true'
@@ -914,11 +1102,26 @@ jobs:
       - name: Create Python venv
         if: steps.scope.outputs.run == 'true'
         run: |
+          set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          # jsonschema: `npm run build` imports scripts/audit via meta_validator —
-          # keep this list in sync with the `frontend` job's venv above.
-          .venv/bin/python -m pip install PyYAML jsonschema
+          # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
+          # frontend-e2e is post-gate / advisory, but the same npm/pip blips
+          # still burn a runner slot — retry here too.
+          for attempt in 1 2 3; do
+            echo "frontend-e2e pip install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install PyYAML jsonschema; then
+              # jsonschema: `npm run build` imports scripts/audit via meta_validator —
+              # keep this list in sync with the `frontend` job's venv above.
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::frontend-e2e Create Python venv failed after 3 attempts" >&2
+          exit 1
 
       - name: Restore Atlas lexicon manifest cache
         if: steps.scope.outputs.run == 'true'
@@ -943,12 +1146,38 @@ jobs:
       - name: Install dependencies
         if: steps.scope.outputs.run == 'true'
         working-directory: site
-        run: npm ci
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            echo "frontend-e2e npm ci attempt ${attempt}/3"
+            if npm ci; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::frontend-e2e npm ci failed after 3 attempts" >&2
+          exit 1
 
       - name: Install Playwright browser
         if: steps.scope.outputs.run == 'true'
         working-directory: site
-        run: npx playwright install --with-deps chromium
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            echo "playwright install attempt ${attempt}/3"
+            if npx playwright install --with-deps chromium; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Install Playwright browser failed after 3 attempts" >&2
+          exit 1
 
       - name: Build site for Playwright preview
         if: steps.scope.outputs.run == 'true'
@@ -1040,7 +1269,22 @@ jobs:
       - name: Combine and enforce
         if: github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         run: |
-          python -m pip install --quiet coverage
+          set -euo pipefail
+          # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
+          for attempt in 1 2 3; do
+            echo "coverage pip install attempt ${attempt}/3"
+            if python -m pip install --quiet coverage; then
+              break
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+              3)
+                echo "::error::coverage pip install failed after 3 attempts" >&2
+                exit 1
+                ;;
+            esac
+          done
           i=0
           for f in coverage-artifacts/*/.coverage; do
             i=$((i + 1))
