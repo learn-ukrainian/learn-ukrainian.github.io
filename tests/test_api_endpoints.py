@@ -374,6 +374,56 @@ class TestRouterMounting:
         paths = self._route_paths()
         assert any("/api/admin" in p for p in paths)
 
+    def test_sources_router_mounted(self):
+        paths = self._route_paths()
+        assert "/api/sources/stats" in paths
+
+    def test_rag_router_mounted_as_alias(self):
+        paths = self._route_paths()
+        assert "/api/rag/stats" in paths
+
+    def test_hramatka_not_mounted_on_public_monitor(self):
+        paths = self._route_paths()
+        assert not any(p.startswith("/api/hramatka") for p in paths)
+
+    def test_readyz_not_mounted_on_public_monitor(self):
+        paths = self._route_paths()
+        assert "/api/readyz" not in paths
+        assert "/readyz" not in paths
+
+
+class TestPublicMonitorSurfacesAndBoundaries:
+    """Validate status codes for public Monitor surfaces, legacy aliases, and service boundaries."""
+
+    def test_hramatka_readyz_returns_404(self):
+        resp = client.get("/api/hramatka/readyz")
+        assert resp.status_code == 404
+
+    def test_sources_stats_returns_200(self):
+        resp = client.get("/api/sources/stats")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "sources_db" in data
+
+    def test_rag_stats_alias_returns_200(self):
+        resp = client.get("/api/rag/stats")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "sources_db" in data
+
+    def test_readyz_returns_404(self):
+        assert client.get("/api/readyz").status_code == 404
+        assert client.get("/readyz").status_code == 404
+
+    def test_static_extensionless_aliases(self):
+        work_resp = client.get("/work")
+        assert work_resp.status_code == 200
+        assert "html" in work_resp.headers.get("content-type", "").lower()
+
+        orient_resp = client.get("/orient")
+        assert orient_resp.status_code == 200
+        assert "html" in orient_resp.headers.get("content-type", "").lower()
+
 
 # ==================== Helper function tests ====================
 

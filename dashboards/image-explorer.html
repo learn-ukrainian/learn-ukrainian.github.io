@@ -834,18 +834,18 @@ async function doSearch() {
   btn.disabled = true;
   btn.textContent = 'Searching...';
   const gallery = document.getElementById('search-gallery');
-  gallery.innerHTML = '<div class="loading">Searching RAG...</div>';
+  gallery.innerHTML = '<div class="loading">Searching sources...</div>';
   const info = document.getElementById('search-info');
 
   const params = new URLSearchParams({ q, limit: '20' });
   if (searchGrade) params.set('grade', searchGrade);
 
-  const endpoint = `/api/rag/search_${searchType}`;
+  const endpoint = `/api/sources/search_${searchType}`;
 
   try {
     const res = await fetch(`${endpoint}?${params}`);
     if (res.status === 503) {
-      gallery.innerHTML = '<div class="loading" style="color:var(--red)">Qdrant unavailable. Start with: docker start qdrant</div>';
+      gallery.innerHTML = '<div class="loading" style="color:var(--red)">Sources database unavailable.</div>';
       info.textContent = '';
       return;
     }
