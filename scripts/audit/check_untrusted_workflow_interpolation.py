@@ -15,9 +15,10 @@ prescribes the intermediate-``env:`` pattern instead:
 This checker scans every ``run:`` block (inline and ``|``/``>`` multiline) in
 ``.github/workflows/*.yml`` and fails on untrusted contexts. Identifiers and
 functions are matched case-insensitively (GitHub does), index syntax
-``github.event['issue']['title']`` is treated as dotted access, and
+``github.event['issue']['title']`` is treated as dotted access,
 ``toJSON(github.event)`` / ``toJSON(github)`` dumps of the event payload are
-rejected. It deliberately does NOT flag:
+rejected, and ``${{ }}`` extraction is quote-aware so ``format('}}{0}', ...)``
+cannot hide a later untrusted argument. It deliberately does NOT flag:
 
     - ``env:`` mappings (the safe pattern above),
     - SHAs and refs: ``github.sha``, ``github.ref``,
@@ -68,7 +69,43 @@ _BRACKET_IDENT = re.compile(r"""\[\s*(['"])([A-Za-z_][\w-]*)\1\s*\]""")
 # toJSON(...) are already caught by _UNTRUSTED after normalize.
 _TOJSON_WHOLE_EVENT = re.compile(r"\btojson\s*\(\s*github(?:\.event)?\s*\)", re.IGNORECASE)
 
-_EXPRESSION = re.compile(r"\$\{\{(.*?)\}\}", re.DOTALL)
+def iter_expressions(text: str) -> list[tuple[int, str]]:
+    """Yield ``(offset, inner)`` for each ``${{ ... }}``, quote-aware.
+
+    GitHub expressions only use single-quoted strings (``''`` escapes a quote).
+    A non-greedy ``(.*?)\\}\\}`` regex would stop at ``format('}}{0}', ...)``
+    and miss the untrusted argument after the embedded ``}}``.
+    """
+    results: list[tuple[int, str]] = []
+    i = 0
+    while True:
+        start = text.find("${{", i)
+        if start < 0:
+            return results
+        inner_start = start + 3
+        j = inner_start
+        in_string = False
+        while j < len(text):
+            if in_string:
+                if text[j] == "'":
+                    if j + 1 < len(text) and text[j + 1] == "'":
+                        j += 2
+                        continue
+                    in_string = False
+                j += 1
+                continue
+            if text[j] == "'":
+                in_string = True
+                j += 1
+                continue
+            if text.startswith("}}", j):
+                results.append((start, text[inner_start:j]))
+                i = j + 2
+                break
+            j += 1
+        else:
+            return results
+    return results
 # `run:` key, optionally after a `- ` step marker. Content indent is measured
 # from the line start so both `run: |` and `- run: |` blocks parse alike.
 _RUN_KEY = re.compile(r"^(?P<indent>\s*)(?:-\s+)?run:\s*(?P<value>.*)$")
@@ -135,15 +172,14 @@ def findings_for(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     findings: list[str] = []
     for start_line, body in run_blocks(text):
-        for match in _EXPRESSION.finditer(body):
-            expression = match.group(1)
+        for start, expression in iter_expressions(body):
             normalized = normalize_expression(expression)
             untrusted = _UNTRUSTED.search(normalized) or _TOJSON_WHOLE_EVENT.search(
                 normalized
             )
             if not untrusted:
                 continue
-            line_no = start_line + body[: match.start()].count("\n")
+            line_no = start_line + body[:start].count("\n")
             findings.append(
                 f"{path}:{line_no}: untrusted context `{untrusted.group(0)}` "
                 f"interpolated into a run: script — use env: + a quoted shell "

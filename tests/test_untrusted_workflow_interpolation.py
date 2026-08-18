@@ -156,6 +156,23 @@ jobs:
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+def test_quoted_braces_before_untrusted_context_in_run_fails(tmp_path: Path) -> None:
+    workflow = _write_workflow(
+        tmp_path,
+        """\
+on: issues
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ format('}}{0}', github.event.issue.title) }}"
+""",
+    )
+    result = _run_checker(workflow)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "github.event.issue" in result.stderr
+
+
 def test_mixed_case_untrusted_context_in_run_fails(tmp_path: Path) -> None:
     workflow = _write_workflow(
         tmp_path,
