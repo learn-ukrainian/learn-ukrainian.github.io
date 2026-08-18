@@ -33,7 +33,7 @@ _ALLOWLIST: frozenset[str] = frozenset(
         "scripts/entire/install_kimi_external_agent.sh:18",
         "scripts/entire/install_fleet_external_agent.sh:36",
         # Actionlint download cleanup (scoped under a local temp dir).
-        "scripts/audit/check_workflows.sh:50",
+        "scripts/audit/check_workflows.sh:53",
     }
 )
 
