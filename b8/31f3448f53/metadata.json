@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b831f3448f53",
+  "strategy": "manual-commit",
+  "branch": "agy/6876-agy-goroh",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b8/31f3448f53/0/metadata.json",
+      "transcript": "/b8/31f3448f53/0/full.jsonl",
+      "compact_transcript": "/b8/31f3448f53/0/transcript.jsonl",
+      "content_hash": "/b8/31f3448f53/0/content_hash.txt",
+      "prompt": "/b8/31f3448f53/0/prompt.txt"
+    }
+  ]
+}

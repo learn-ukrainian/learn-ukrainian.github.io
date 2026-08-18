@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b831f3448f53",
+  "session_id": "fleet-9a48a1e0bbea4a069f2f162a1f561cce",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T16:43:28.777082Z",
+  "branch": "agy/6876-agy-goroh",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "91bede624ca4",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T16:43:28.641729Z",
+    "agent_lines": 28,
+    "agent_removed": 13,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 28,
+    "total_lines_changed": 41,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
