@@ -3,18 +3,20 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from pathlib import Path
 
 import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ACTION_FILE = _REPO_ROOT / ".github" / "actions" / "paths-filter-retry" / "action.yml"
+_WORKFLOWS_DIR = _REPO_ROOT / ".github" / "workflows"
 # ci.yml's required jobs are unconditional as of the CI reboot (#5762) — it no
-# longer has a `changes` job. The action is still consumed by the advisory
-# workflows below, where a path-filter skip is a non-event, not a silent
-# regression.
-_CONTENT_CI_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "content-ci.yml"
-_HYGIENE_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "hygiene.yml"
+# longer has a `changes` job. Hygiene dropped the action when it left the PR
+# fan-out (#6943 stage 2). Remaining consumers must still fail-open onto
+# declared outputs; a skip from a missing output is a silent regression.
+_HYGIENE_WORKFLOW = _WORKFLOWS_DIR / "hygiene.yml"
+_ACTION_USES_MARKER = "paths-filter-retry"
 
 
 def test_action_metadata_exists_and_parses() -> None:
@@ -86,31 +88,67 @@ def test_fail_open_sets_all_declared_outputs_to_true() -> None:
     )
 
 
+def _iter_uses(node: object) -> Iterator[str]:
+    if isinstance(node, dict):
+        uses = node.get("uses")
+        if isinstance(uses, str):
+            yield uses
+        for value in node.values():
+            yield from _iter_uses(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from _iter_uses(item)
+
+
+def _workflow_consumes_paths_filter(wf_data: dict) -> bool:
+    return any(_ACTION_USES_MARKER in uses for uses in _iter_uses(wf_data))
+
+
+def test_hygiene_does_not_consume_paths_filter() -> None:
+    """Advisory hygiene (#6943) is unfiltered; a `changes` job would be old shape."""
+    assert _HYGIENE_WORKFLOW.is_file(), f"Missing workflow file: {_HYGIENE_WORKFLOW}"
+    wf_data = yaml.safe_load(_HYGIENE_WORKFLOW.read_text(encoding="utf-8"))
+    assert isinstance(wf_data, dict)
+    assert not _workflow_consumes_paths_filter(wf_data)
+    assert "changes" not in wf_data.get("jobs", {})
+
+
 def test_workflows_only_consume_valid_action_outputs() -> None:
     action_data = yaml.safe_load(_ACTION_FILE.read_text(encoding="utf-8"))
     action_outputs = set(action_data.get("outputs", {}).keys())
 
-    for wf_path in (_CONTENT_CI_WORKFLOW, _HYGIENE_WORKFLOW):
-        assert wf_path.is_file(), f"Missing workflow file: {wf_path}"
+    consumers = sorted(
+        path
+        for path in _WORKFLOWS_DIR.glob("*.yml")
+        if _workflow_consumes_paths_filter(yaml.safe_load(path.read_text(encoding="utf-8")))
+    )
+    assert consumers, (
+        "No workflow consumes paths-filter-retry; fail-open output mapping is untested"
+    )
+
+    for wf_path in consumers:
         wf_data = yaml.safe_load(wf_path.read_text(encoding="utf-8"))
+        jobs = wf_data.get("jobs", {})
+        consumer_jobs = [
+            (name, job)
+            for name, job in jobs.items()
+            if _workflow_consumes_paths_filter(job)
+        ]
+        assert consumer_jobs, f"{wf_path.name} uses the action but no job owns the step"
 
-        # Find the 'changes' job
-        changes_job = wf_data.get("jobs", {}).get("changes", {})
-        assert changes_job, f"Missing 'changes' job in {wf_path.name}"
+        for job_name, job in consumer_jobs:
+            outputs = job.get("outputs", {})
+            assert outputs, f"No outputs declared in {job_name} of {wf_path.name}"
 
-        # Find the output mappings of the 'changes' job
-        outputs = changes_job.get("outputs", {})
-        assert outputs, f"No outputs declared in changes job of {wf_path.name}"
-
-        for out_name, out_val in outputs.items():
-            # The value should look like: ${{ steps.filter.outputs.<key> }}
-            match = re.match(r"\$\{\{\s*steps\.filter\.outputs\.(\w+)\s*\}\}", out_val)
-            assert match, (
-                f"Job output '{out_name}' value '{out_val}' in {wf_path.name} "
-                f"does not match steps.filter.outputs.<key> syntax"
-            )
-            step_output_key = match.group(1)
-            assert step_output_key in action_outputs, (
-                f"Workflow {wf_path.name} references step output '{step_output_key}' "
-                f"which is not declared in action.yml"
-            )
+            for out_name, out_val in outputs.items():
+                # The value should look like: ${{ steps.filter.outputs.<key> }}
+                match = re.match(r"\$\{\{\s*steps\.filter\.outputs\.(\w+)\s*\}\}", str(out_val))
+                assert match, (
+                    f"Job output '{out_name}' value '{out_val}' in {wf_path.name} "
+                    f"does not match steps.filter.outputs.<key> syntax"
+                )
+                step_output_key = match.group(1)
+                assert step_output_key in action_outputs, (
+                    f"Workflow {wf_path.name} references step output '{step_output_key}' "
+                    f"which is not declared in action.yml"
+                )

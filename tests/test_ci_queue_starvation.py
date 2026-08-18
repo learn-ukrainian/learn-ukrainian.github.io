@@ -47,6 +47,7 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     assert "trufflesecurity/trufflehog@" in contracts_steps
     assert "lint_pr_closing_references.py" in contracts_steps
     assert set(jobs["ci-gate"]["needs"]) == {
+        "ruff",
         "pytest-plan",
         "pytest-fastlane",
         "python",
@@ -54,7 +55,15 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
         "frontend",
         "coverage-floor",
     }
-
+    assert jobs["pytest-plan"].get("if") == "github.event_name != 'pull_request'"
+    assert jobs["python"].get("if") == "github.event_name != 'pull_request'"
+    assert jobs["coverage-floor"].get("if") == "github.event_name != 'pull_request'"
+    assert "ruff" in jobs
+    gate_steps = "\n".join(
+        step.get("name", "") + "\n" + str(step.get("run", "")) for step in jobs["ci-gate"]["steps"]
+    )
+    assert "gate_required_results.py" in gate_steps
+    assert "contains(needs.*.result, 'skipped')" not in gate_steps
 
 def test_frontend_e2e_waits_for_ci_gate_success() -> None:
     e2e = _load(_CI)["jobs"]["frontend-e2e"]
@@ -84,6 +93,7 @@ def test_always_on_parallel_runner_slots_stay_within_budget() -> None:
 def test_hygiene_uses_one_composite_checks_job() -> None:
     jobs = _load(_HYGIENE)["jobs"]
     assert "hygiene-checks" in jobs
+    assert "changes" not in jobs, "path-filter job retired with PR fan-out trim (#6943)"
     for retired in (
         "quality-gates",
         "lint-prompts",
@@ -93,6 +103,26 @@ def test_hygiene_uses_one_composite_checks_job() -> None:
     ):
         assert retired not in jobs, f"{retired} must stay folded into hygiene-checks (#4811)"
 
+
+def test_hygiene_left_pull_request_fanout() -> None:
+    triggers = _triggers(_load(_HYGIENE))
+    assert "pull_request" not in triggers
+    assert "schedule" in triggers
+    assert "merge_group" in triggers
+    assert "workflow_dispatch" in triggers
+
+
+def test_security_and_ui_policy_left_pull_request_fanout() -> None:
+    security = _REPO_ROOT / ".github/workflows/security-audit.yml"
+    ui = _REPO_ROOT / ".github/workflows/ui-policy-gate.yml"
+    sec_triggers = _triggers(_load(security))
+    ui_triggers = _triggers(_load(ui))
+    assert "pull_request" not in sec_triggers
+    assert "schedule" in sec_triggers
+    assert "pull_request" not in ui_triggers
+    assert "schedule" in ui_triggers
+    assert "workflow_dispatch" in ui_triggers
+    # paths: is invalid on merge_group (actionlint); UI policy stays schedule-only.
 
 def test_recovery_workflow_is_schedule_dispatch_default_branch_and_write_scoped() -> None:
     workflow = _load(_RECOVERY)

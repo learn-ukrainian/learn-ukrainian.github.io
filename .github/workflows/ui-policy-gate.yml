@@ -7,16 +7,19 @@ name: UI Policy Gate (advisory)
 # protection's required checks without an explicit operator/advisor decision.
 # A red run here signals a policy regression to investigate; it never blocks
 # a merge on its own.
+#
+# Merge-queue cutover (#6943 stage 2): removed from pull_request after verifying
+# required contexts == ["CI Gate"] only. `paths:` is not valid on merge_group
+# (actionlint), and a full Playwright build on every landing is too expensive
+# for an advisory signal — schedule + workflow_dispatch instead.
 
 permissions:
   contents: read
 
 on:
-  pull_request:
-    paths:
-      - 'site/**'
-      - 'scripts/practice/**'
-      - '.github/workflows/ui-policy-gate.yml'
+  schedule:
+    # Weekdays 06:40 UTC — advisory UI signal without PR / merge_group contention.
+    - cron: '40 6 * * 1-5'
   workflow_dispatch:
 
 jobs:

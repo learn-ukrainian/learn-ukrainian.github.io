@@ -10,78 +10,30 @@ name: Hygiene (advisory)
 #
 # #4811: the five former single-purpose jobs are one composite so a scripts/
 # touch cannot claim five concurrent runner slots while CI Gate waits.
+#
+# Merge-queue cutover (#6943 stage 2): removed from pull_request fan-out after
+# verifying branch protection required contexts == ["CI Gate"] only. Runs on
+# schedule (weekday signal), merge_group (landing tree), and workflow_dispatch.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}
+  cancel-in-progress: ${{ github.event_name != 'merge_group' }}
 
 permissions:
   contents: read
 
 on:
-  pull_request:
+  schedule:
+    # Weekdays 05:17 UTC — advisory drift signal without PR runner contention.
+    - cron: '17 5 * * 1-5'
+  merge_group:
   workflow_dispatch:
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      python: ${{ steps.filter.outputs.python }}
-      agent_config: ${{ steps.filter.outputs.agent_config }}
-      postmortems: ${{ steps.filter.outputs.postmortems }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: ./.github/actions/paths-filter-retry
-        id: filter
-        with:
-          filters: |
-            python:
-              - '.github/workflows/hygiene.yml'
-              - 'requirements*.txt'
-              - 'requirements.lock'
-              - 'pyproject.toml'
-              - 'scripts/**/*.py'
-              - 'tests/**/*.py'
-            agent_config:
-              - '.github/workflows/hygiene.yml'
-              - '.mcp.json'
-              - '.cursor/mcp.json'
-              - 'AGENTS.md'
-              - 'CLAUDE.md'
-              - 'GEMINI.md'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'start-claude.sh'
-              - 'scripts/lib/handoff_identity.sh'
-              - 'start-codex.sh'
-              - 'scripts/check_rules_deployment.sh'
-              - 'scripts/deploy_prompts.sh'
-              - 'scripts/lint/**/*.py'
-              - 'scripts/lint_prompts.py'
-              - 'agents_extensions/shared/**'
-              - 'agents_extensions/codex/**'
-              - 'gemini_extensions/**'
-              - 'scripts/build/phases/**/*.md'
-              - 'docs/l2-uk-en/template_mappings.yaml'
-              - 'docs/l2-uk-en/templates/**'
-              - 'docs/prompts/orchestrators/**'
-            postmortems:
-              - '.github/workflows/hygiene.yml'
-              - 'docs/bug-autopsies/**'
-              - 'scripts/audit/check_postmortems.py'
-
   hygiene-checks:
     name: Hygiene checks
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs: [changes]
-    if: >-
-      needs.changes.outputs.python == 'true'
-      || needs.changes.outputs.agent_config == 'true'
-      || needs.changes.outputs.postmortems == 'true'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -93,39 +45,26 @@ jobs:
           python-version: '3.12'
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        if: needs.changes.outputs.agent_config == 'true'
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
       - name: Install radon
-        if: needs.changes.outputs.python == 'true'
+        if: github.event_name == 'merge_group'
         run: pip install radon
 
       - name: Collect changed scripts for radon
-        if: needs.changes.outputs.python == 'true'
+        if: github.event_name == 'merge_group'
         id: changed-scripts
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          PUSH_BEFORE_SHA: ${{ github.event.before }}
-          PUSH_HEAD_SHA: ${{ github.sha }}
+          MERGE_BASE_SHA: ${{ github.event.merge_group.base_sha }}
+          MERGE_HEAD_SHA: ${{ github.event.merge_group.head_sha || github.sha }}
         run: |
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            base_sha="$PR_BASE_SHA"
-            head_sha="$PR_HEAD_SHA"
-          elif [[ "$EVENT_NAME" == "push" ]]; then
-            base_sha="$PUSH_BEFORE_SHA"
-            head_sha="$PUSH_HEAD_SHA"
-          else
-            echo "ℹ️ Skipping changed-file collection on $EVENT_NAME"
-            echo "files=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ "$base_sha" =~ ^0+$ ]]; then
+          set -euo pipefail
+          base_sha="$MERGE_BASE_SHA"
+          head_sha="$MERGE_HEAD_SHA"
+          if [[ -z "$base_sha" || "$base_sha" =~ ^0+$ ]]; then
             base_sha="$(git merge-base origin/main "$head_sha")"
           fi
 
@@ -150,7 +89,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: No F-grade functions in changed files (CC > 40)
-        if: needs.changes.outputs.python == 'true' && steps.changed-scripts.outputs.files != ''
+        if: github.event_name == 'merge_group' && steps.changed-scripts.outputs.files != ''
         env:
           CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
         run: |
@@ -164,7 +103,7 @@ jobs:
           echo "✅ No F-grade functions in changed files"
 
       - name: No MI=C files in changed files (MI < 10)
-        if: needs.changes.outputs.python == 'true' && steps.changed-scripts.outputs.files != ''
+        if: github.event_name == 'merge_group' && steps.changed-scripts.outputs.files != ''
         env:
           CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
         run: |
@@ -178,26 +117,16 @@ jobs:
           echo "✅ No MI=C files in changed files"
 
       - name: Check for non-stub scripts in scripts/ root
-        if: needs.changes.outputs.python == 'true'
+        if: github.event_name == 'merge_group'
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          PUSH_BEFORE_SHA: ${{ github.event.before }}
-          PUSH_HEAD_SHA: ${{ github.sha }}
+          MERGE_BASE_SHA: ${{ github.event.merge_group.base_sha }}
+          MERGE_HEAD_SHA: ${{ github.event.merge_group.head_sha || github.sha }}
         run: |
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            base_sha="$PR_BASE_SHA"
-            head_sha="$PR_HEAD_SHA"
-          elif [[ "$EVENT_NAME" == "push" ]]; then
-            base_sha="$PUSH_BEFORE_SHA"
-            head_sha="$PUSH_HEAD_SHA"
-          else
-            echo "ℹ️ Skipping root-script diff on $EVENT_NAME"
-            exit 0
-          fi
+          set -euo pipefail
+          base_sha="$MERGE_BASE_SHA"
+          head_sha="$MERGE_HEAD_SHA"
 
-          if [[ "$base_sha" =~ ^0+$ ]]; then
+          if [[ -z "$base_sha" || "$base_sha" =~ ^0+$ ]]; then
             base_sha="$(git merge-base origin/main "$head_sha")"
           fi
 
@@ -236,18 +165,15 @@ jobs:
           echo "✅ No new root-level scripts"
 
       - name: Lint prompt templates
-        if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true'
         run: python scripts/lint/lint_prompts.py
 
       # Direct file path (NOT `-m`): the checker is stdlib-only, but `-m`
       # would import scripts.audit/__init__ which needs pyyaml (absent on
       # bare setup-python).
       - name: Validate bug-autopsy fields + INDEX freshness (#3725)
-        if: needs.changes.outputs.postmortems == 'true'
         run: python scripts/audit/check_postmortems.py --check
 
       - name: Validate agent JSON config
-        if: needs.changes.outputs.agent_config == 'true'
         run: |
           jq empty \
             .mcp.json \
@@ -258,7 +184,6 @@ jobs:
           fi
 
       - name: Validate agent shell entrypoints
-        if: needs.changes.outputs.agent_config == 'true'
         run: |
           bash -n \
             start-claude.sh \
@@ -281,20 +206,17 @@ jobs:
             scripts/check_rules_deployment.sh
 
       - name: Create local test venv
-        if: needs.changes.outputs.agent_config == 'true'
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install pytest pyyaml
 
       - name: Verify agent extension deployment
-        if: needs.changes.outputs.agent_config == 'true'
         run: |
           npm run agents:deploy --silent
           bash scripts/check_rules_deployment.sh
 
       - name: Run focused agent config tests
-        if: needs.changes.outputs.agent_config == 'true'
         run: |
           .venv/bin/python -m pytest \
             tests/test_deploy_script_idempotency.py \
