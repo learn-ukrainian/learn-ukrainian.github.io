@@ -186,7 +186,7 @@ unrelated `.agent/` state.
 From the issue worktree:
 
 ```bash
-.venv/bin/python -m pytest tests/audit/test_post_build_review.py -q
+.venv/bin/python -m pytest tests/audit/test_post_build_review.py tests/audit/test_post_build_review_pipeline.py -q
 .venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -q
 .venv/bin/python scripts/lint/lint_agent_skills.py
 .venv/bin/python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" \
