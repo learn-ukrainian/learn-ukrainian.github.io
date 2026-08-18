@@ -11,6 +11,14 @@ name: CI
 # four shards + coverage floor. CI Gate remains the sole required context,
 # reports on both events, and fail-closes on missing/skipped required deps.
 #
+# Third class (#7018): docs_skills — decided by scripts/ci/landing_class.py on
+# merge_group / push / workflow_dispatch (NOT GitHub paths:/paths-ignore).
+# Allowlist-only diffs (shared skills + docs/**/*.md + repo-root *.md) take
+# no-op success on pytest-plan / python shards / coverage-floor / Gate
+# verify-artifacts so CI Gate still sees success, never skipped (#5762).
+# Any off-allowlist path or classifier error → full suite (fail closed).
+# The full tier still never path-filters pytest collection for product code.
+#
 # Invariant (encodes #3873 #4888 #4936 #5351 #5354): on the full tier, pytest
 # must NEVER be selected or skipped by changed files. pytest-fastlane uses
 # changed files only as an early signal; it never replaces the shard plan.
@@ -76,37 +84,86 @@ jobs:
           python -m ruff check scripts/
 
   # ---------------------------------------------------------------------
+  # 0b. landing-class — classify merge_group/push/dispatch diffs (#7018).
+  #     Always runs on the full tier; always succeeds; outputs class=
+  #     docs_skills|full (fail closed → full). Downstream pytest-plan /
+  #     python / coverage-floor take no-op success when docs_skills so CI
+  #     Gate can require them unconditionally (never skipped).
+  # ---------------------------------------------------------------------
+  landing-class:
+    name: Landing class
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      # Belt-and-suspenders: empty/missing step output → full (fail closed).
+      class: ${{ steps.classify.outputs.class || 'full' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Classify landing class
+        id: classify
+        env:
+          BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.merge_group.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          # Stdlib-only classifier; system python3 matches frontend_change_scope.
+          # Script always exits 0 and always writes class= (full on any error).
+          python3 scripts/ci/landing_class.py \
+            --base "${BASE_SHA:-}" \
+            --head "${HEAD_SHA:-HEAD}" \
+            --github-output
+          if ! grep -q '^class=' "${GITHUB_OUTPUT}"; then
+            echo "class=full" >> "${GITHUB_OUTPUT}"
+          fi
+
+  # ---------------------------------------------------------------------
   # 1. pytest-plan — collect once, then produce all four LPT file plans from
   #    one duration dataset restored from a successful main run (#5744).
   #    Full tier only (merge_group / push / workflow_dispatch).
+  #    docs_skills (#7018): no-op success (job still runs; never skipped).
   # ---------------------------------------------------------------------
   pytest-plan:
     name: Pytest plan
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    needs: [landing-class]
     permissions:
       contents: read
     steps:
+      - name: Docs/skills-only — planner no-op success
+        if: needs.landing-class.outputs.class == 'docs_skills'
+        run: echo "landing-class=docs_skills; pytest-plan no-op success (#7018)"
+
       # Default checkout is the event SHA: for merge_group that is the
       # merge-group commit (never the PR head). Do not override with
       # pull_request.head.sha — that would test a stale tree.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           persist-credentials: false
           fetch-depth: 0
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           python-version-file: '.python-version'
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
       - name: Restore Atlas lexicon manifest cache
+        if: needs.landing-class.outputs.class != 'docs_skills'
         id: atlas-manifest-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -114,10 +171,12 @@ jobs:
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
 
       - name: Install planner dependencies
+        if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           set -euo pipefail
           python -m venv .venv
@@ -143,6 +202,7 @@ jobs:
           exit 1
 
       - name: Restore successful-main pytest duration dataset
+        if: needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ci-artifacts/pytest-durations.json
@@ -151,12 +211,14 @@ jobs:
             pytest-shard-durations-v1-main-
 
       - name: Plan all duration-balanced pytest shards
+        if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           .venv/bin/python scripts/ci/pytest_shards.py plan \
             --durations ci-artifacts/pytest-durations.json \
             --output-dir ci-artifacts/plans
 
       - name: Upload pytest plans
+        if: needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-plans
@@ -273,6 +335,7 @@ jobs:
   # The selection still never consults changed files: every collected test runs
   # exactly once. Four parallel jobs are the topology that completed under the
   # #5776 hang investigation; one xdist session did not.
+  # docs_skills (#7018): no-op success (job still runs; never skipped).
   python:
     name: Python (pytest) [${{ matrix.shard }}/4]
     if: github.event_name != 'pull_request'
@@ -282,28 +345,36 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
-    needs: [pytest-plan]
+    needs: [pytest-plan, landing-class]
     permissions:
       contents: read
     steps:
+      - name: Docs/skills-only — shard no-op success
+        if: needs.landing-class.outputs.class == 'docs_skills'
+        run: echo "landing-class=docs_skills; python shard ${{ matrix.shard }} no-op success (#7018)"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           persist-credentials: false
           fetch-depth: 0
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           python-version-file: '.python-version'
 
       # Keep the ACP protocol test's Node runtime deterministic regardless of
       # which round-robin shard owns its test file.
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
       - name: Restore Atlas lexicon manifest cache
+        if: needs.landing-class.outputs.class != 'docs_skills'
         id: atlas-manifest-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -311,11 +382,12 @@ jobs:
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
 
       - name: Save Atlas lexicon manifest cache
-        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        if: needs.landing-class.outputs.class != 'docs_skills' && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: site/src/data/lexicon-manifest.json
@@ -326,6 +398,7 @@ jobs:
       # A restore miss or outage must not kill the shard (#7002; same posture
       # as the Stanza model-cache restore below).
       - name: Restore pip wheel cache
+        if: needs.landing-class.outputs.class != 'docs_skills'
         id: pip-wheel-cache
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -339,6 +412,7 @@ jobs:
       # out of this environment: the suite does not import either package.
       # Install the CPU-only torch wheel to avoid the much larger CUDA build.
       - name: Install dependencies
+        if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           set -euo pipefail
           python -m venv .venv
@@ -365,7 +439,7 @@ jobs:
           exit 1
 
       - name: Save pip wheel cache
-        if: steps.pip-wheel-cache.outputs.cache-hit != 'true'
+        if: needs.landing-class.outputs.class != 'docs_skills' && steps.pip-wheel-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
@@ -379,6 +453,7 @@ jobs:
       # Cache-service errors are recoverable: continue to the provision path.
       # A restore miss or outage must not kill the shard; provision is the gate.
       - name: Restore Stanza Ukrainian model cache
+        if: needs.landing-class.outputs.class != 'docs_skills'
         id: stanza-model-cache
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -391,6 +466,7 @@ jobs:
       # lazy model downloads. Bounded retry absorbs transient Hugging Face /
       # GitHub network blips (3 attempts, 10s then 30s backoff).
       - name: Provision and verify Stanza Ukrainian model
+        if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           set -euo pipefail
           for attempt in 1 2 3; do
@@ -407,13 +483,14 @@ jobs:
           exit 1
 
       - name: Save Stanza Ukrainian model cache
-        if: steps.stanza-model-cache.outputs.cache-hit != 'true'
+        if: needs.landing-class.outputs.class != 'docs_skills' && steps.stanza-model-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/stanza_resources
           key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
 
       - name: Download the single planner's shard plans
+        if: needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pytest-plans
@@ -424,6 +501,7 @@ jobs:
       # exception, never a changed-file filter; all other collected tests run
       # through the file-grouped LPT plan exactly once.
       - name: Run planned pytest shard
+        if: needs.landing-class.outputs.class != 'docs_skills'
         id: pytest
         continue-on-error: true
         timeout-minutes: 25
@@ -473,7 +551,7 @@ jobs:
 
       - name: Playground perf probe (serial, shard 1 only)
         id: playground
-        if: matrix.shard == 1
+        if: needs.landing-class.outputs.class != 'docs_skills' && matrix.shard == 1
         continue-on-error: true
         run: |
           for attempt in 1 2 3; do
@@ -488,7 +566,7 @@ jobs:
           exit 1
 
       - name: Upload pytest shard plan and results
-        if: always()
+        if: always() && needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-shard-${{ matrix.shard }}
@@ -497,11 +575,11 @@ jobs:
           retention-days: 1
 
       - name: Fail after preserving pytest evidence
-        if: steps.pytest.outcome != 'success' || (matrix.shard == 1 && steps.playground.outcome != 'success')
+        if: needs.landing-class.outputs.class != 'docs_skills' && (steps.pytest.outcome != 'success' || (matrix.shard == 1 && steps.playground.outcome != 'success'))
         run: exit 1
 
       - name: Upload test breadcrumbs
-        if: always()
+        if: always() && needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-breadcrumbs-shard-${{ matrix.shard }}
@@ -520,7 +598,8 @@ jobs:
       # its own job because no individual shard observes the whole suite.
       - name: Upload shard coverage data
         if: >-
-          (github.event_name == 'merge_group'
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name == 'merge_group'
            || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
           && steps.pytest.outcome == 'success'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -1250,29 +1329,42 @@ jobs:
   # ---------------------------------------------------------------------
   # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
   # guarantee cross-family review flagged as a P1 when the reboot dropped it.
+  # docs_skills (#7018): no-op success (do not download missing coverage).
   coverage-floor:
     name: Coverage floor
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [python]
+    needs: [python, landing-class]
     permissions:
       contents: read
     steps:
+      - name: Docs/skills-only — coverage floor no-op success
+        if: needs.landing-class.outputs.class == 'docs_skills'
+        run: echo "landing-class=docs_skills; coverage-floor no-op success (#7018)"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           python-version: '3.12'
       - name: Download shard coverage data
-        if: github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name == 'merge_group'
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: coverage-shard-*
           path: coverage-artifacts
       - name: Combine and enforce
-        if: github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name == 'merge_group'
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
         run: |
           set -euo pipefail
           # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
@@ -1303,7 +1395,10 @@ jobs:
           python -m coverage html -d coverage-html
 
       - name: Upload full coverage report
-        if: github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name == 'merge_group'
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-report
@@ -1315,7 +1410,10 @@ jobs:
           retention-days: 14
 
       - name: Not a landing event — coverage floor is merge_group/main-push only
-        if: github.event_name != 'merge_group' && !(github.event_name == 'push' && github.ref == 'refs/heads/main')
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && github.event_name != 'merge_group'
+          && !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         run: echo "coverage floor applies to merge_group and pushes to main; job succeeds so CI Gate can require it unconditionally"
 
   ci-gate:
@@ -1325,6 +1423,7 @@ jobs:
     if: always()
     needs:
       - ruff
+      - landing-class
       - pytest-plan
       - pytest-fastlane
       - python
@@ -1338,14 +1437,17 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      - name: Docs/skills-only — skip shard artifact verify (no-op success)
+        if: github.event_name != 'pull_request' && needs.landing-class.outputs.class == 'docs_skills'
+        run: echo "landing-class=docs_skills; CI Gate verify-artifacts no-op success (#7018)"
       - name: Download pytest plans and JUnit results
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: pytest-shard-*
           path: ci-artifacts
       - name: Verify pytest shard completeness
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && needs.landing-class.outputs.class != 'docs_skills'
         run: python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts
       - name: Fail unless every event-required job succeeded
         env:
