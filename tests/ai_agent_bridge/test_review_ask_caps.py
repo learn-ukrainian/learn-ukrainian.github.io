@@ -20,13 +20,15 @@ from scripts.ai_agent_bridge import _review_safety as safety
     ),
 )
 def test_named_transports_reject_fat_formal_review_body(ask, kwargs: dict[str, str]) -> None:
-    with pytest.raises(SystemExit, match=r"review-pr.*exceeds_cap|exceeds_cap.*review-pr"):
+    with pytest.raises(SystemExit, match=r"review_ask_content_exceeds_cap") as exc_info:
         ask(
             "x" * (safety.MAX_REVIEW_REQUEST_BYTES + 1),
             task_id="review-fat",
             msg_type="review",
             **kwargs,
         )
+    # #7010: the retired sealed command must not be named as the fix.
+    assert "review-pr" not in str(exc_info.value)
 
 
 @pytest.mark.parametrize(
@@ -46,7 +48,7 @@ def test_named_transports_reject_fat_formal_review_attachment(
     attachment = tmp_path / "fat-evidence.txt"
     attachment.write_bytes(b"x" * (safety.MAX_ASK_ATTACHMENT_BYTES + 1))
 
-    with pytest.raises(SystemExit, match=r"review-pr.*attachment_exceeds_cap|attachment_exceeds_cap.*review-pr"):
+    with pytest.raises(SystemExit, match=r"review_ask_attachment_exceeds_cap") as exc_info:
         ask(
             "thin pointer only",
             task_id="review-attachment",
@@ -54,8 +56,12 @@ def test_named_transports_reject_fat_formal_review_attachment(
             data=str(attachment),
             **kwargs,
         )
+    assert "review-pr" not in str(exc_info.value)
 
 
 def test_formal_review_without_target_warns(capsys: pytest.CaptureFixture[str]) -> None:
     safety.warn_missing_review_target(formal_review=True, has_target=False)
-    assert "prefer review-pr <N>" in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "--pr <N>" in err
+    # #7010: the retired sealed command must not be named as the next step.
+    assert "prefer review-pr" not in err

@@ -616,7 +616,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_claude_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
-    ask_claude_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+    ask_claude_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-codex
     ask_codex_parser = subparsers.add_parser(
@@ -644,7 +644,7 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="ISSUE",
         help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)",
     )
-    ask_codex_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+    ask_codex_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-gemini legacy compatibility shim
     ask_gemini_parser = subparsers.add_parser(
@@ -706,7 +706,7 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["auto", "subscription", "api-key", "api"],
         help="Gemini auth mode override for this invocation",
     )
-    ask_gemini_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+    ask_gemini_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-agy
     ask_agy_parser = subparsers.add_parser(
@@ -742,8 +742,8 @@ def _build_parser() -> argparse.ArgumentParser:
         "--review",
         action="store_true",
         help=(
-            "Formal sealed CF review (NOT supported on AGY — exits 2 with "
-            "substitute: review-pr --reviewer claude|glm|codex)"
+            "Review ask on the lightweight direct path "
+            "(verdict + evidence required; sealed review-pr is retired)"
         ),
     )
 
@@ -904,7 +904,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_grok_build_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+    ask_grok_build_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     ask_kimi_parser = subparsers.add_parser(
         "ask-kimi", help="Send message AND invoke native Kimi Code one-shot (use '-' to read from stdin)"
@@ -920,7 +920,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_kimi_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_kimi_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_kimi_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+    ask_kimi_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     for review_parser in (
         ask_claude_parser,
@@ -933,12 +933,18 @@ def _build_parser() -> argparse.ArgumentParser:
         review_target = review_parser.add_mutually_exclusive_group()
         review_target.add_argument(
             "--branch",
-            help="Remote branch to review; fetched and resolved only as origin/<branch>",
+            help=(
+                "Remote branch to review via the lightweight direct path "
+                "(resolved as origin/<branch>; sealed review-pr is retired)"
+            ),
         )
         review_target.add_argument(
             "--pr",
             type=int,
-            help="PR whose head branch to fetch and review",
+            help=(
+                "PR to review via the lightweight direct path "
+                "(same as ask-LANE - --type review; sealed review-pr is retired)"
+            ),
         )
 
     for ask_parser in (
@@ -1466,14 +1472,39 @@ def _handle_acp_compat(args, target: str) -> None:
     """Route a legacy ask command through the single ACP compatibility shim."""
     if getattr(args, "background", False):
         raise SystemExit("legacy ask --background is retired; enqueue through fleet-comms")
-    if getattr(args, "branch", None) is not None or getattr(args, "pr", None) is not None:
-        raise SystemExit("formal review targets require the review-pr command")
     content = sys.stdin.read() if args.content == "-" else args.content
     data = Path(args.data).read_text(encoding="utf-8") if getattr(args, "data", None) else None
     model = getattr(args, "to_model", None) or getattr(args, "model", None)
     task_id = getattr(args, "task_id", None)
     if not task_id:
         raise SystemExit(f"ask-{target} requires --task-id")
+    # Review intent comes from either spelling: the explicit --review flag or
+    # the --type review drivers actually pass (#6805).
+    review = (
+        bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+    )
+    pr_number = getattr(args, "pr", None)
+    branch = getattr(args, "branch", None)
+    if pr_number is not None or branch is not None:
+        # #7010: sealed review-pr is retired (operator 2026-08-07). Route
+        # --pr/--branch to the same lightweight direct path as
+        # `ask-LANE - --type review`: the target is folded into the prompt and
+        # review mode is forced so the reply still needs a grounded verdict.
+        if pr_number is not None:
+            target_desc = (
+                f"PR #{pr_number} — resolve the exact head and diff with "
+                f"`gh pr view {pr_number} --json headRefOid` / `gh pr diff {pr_number}`"
+            )
+        else:
+            target_desc = f"remote branch origin/{branch}"
+        content = f"Cross-family review target: {target_desc}.\n\n{content}"
+        review = True
+        print(
+            f"ask-{target}: --pr/--branch use the lightweight direct review path "
+            "(sealed review-pr is retired); review mode forced.",
+            file=sys.stderr,
+        )
     from ._acp_compat import (
         ASK_HARD_TIMEOUT_DEFAULT_S,
         ask_hard_timeout,
@@ -1491,12 +1522,7 @@ def _handle_acp_compat(args, target: str) -> None:
             model=model,
             effort=getattr(args, "effort", None),
             data=data,
-            # Review intent comes from either spelling: the explicit --review
-            # flag or the --type review drivers actually pass (#6805).
-            review=(
-                bool(getattr(args, "review", False))
-                or str(getattr(args, "type", "") or "").strip().casefold() == "review"
-            ),
+            review=review,
             output_path=getattr(args, "output_path", None),
             stdout_only=bool(getattr(args, "stdout_only", False)),
             # None resolves the seat's per-seat timeout profile (#6877);
