@@ -5,8 +5,10 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 comms monitoring.
 """
 
-import asyncio
+import copy
+import logging
 import sys
+import threading
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -39,9 +41,10 @@ from .dashboard_helpers import (
     scan_pipeline_queues,
     scan_track_cached,
     scan_track_summary_cached,
+    stats_from_state_summary,
 )
 from .state_coverage import compute_summary
-from .state_helpers import cache_get_with_age, cache_set, get_plan_slugs
+from .state_helpers import cache_get_with_age, cache_invalidate, cache_set, get_plan_slugs
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -54,29 +57,136 @@ except ImportError:
 from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
+logger = logging.getLogger(__name__)
 DASHBOARD_STATE_SUMMARY_TTL_S = 60.0
+DASHBOARD_OVERVIEW_CACHE_KEY = "dashboard_overview"
+DASHBOARD_OVERVIEW_TTL_S = 60.0
+
+_overview_refresh_lock = threading.Lock()
+_overview_refresh_thread: threading.Thread | None = None
+_overview_last_good: dict | None = None
 
 
-async def _state_summary_for_dashboard() -> tuple[dict, str, float | None]:
-    """Reuse the state-summary cache so dashboard loads stay responsive."""
+def reset_overview_state_for_tests() -> None:
+    """Drop overview last-good + TTL cache so tests do not leak across cases."""
+    global _overview_refresh_thread, _overview_last_good
+    thread: threading.Thread | None
+    with _overview_refresh_lock:
+        thread = _overview_refresh_thread
+    if thread is not None:
+        thread.join(timeout=2.0)
+    _overview_last_good = None
+    cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
+    with _overview_refresh_lock:
+        _overview_refresh_thread = None
+
+
+def _peek_state_summary() -> tuple[dict, str, float | None]:
+    """Read the state-summary TTL cache without computing on the request path."""
     cached = cache_get_with_age("summary", ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
     if cached is not None:
         value, age_s = cached
         return value, "hit", age_s
-    result = await asyncio.to_thread(compute_summary)
-    cache_set("summary", result)
-    return result, "miss", 0.0
+    return {}, "miss", None
 
 
-# ==================== ENDPOINTS ====================
+def _overlay_research_from_summary(tracks: list[dict], state_tracks: dict) -> None:
+    for track_entry in tracks:
+        track_id = track_entry.get("id")
+        summary_stats = state_tracks.get(track_id, {}) if isinstance(state_tracks, dict) else {}
+        is_seminar = bool(track_entry.get("is_seminar") or summary_stats.get("is_seminar"))
+        research_total_key = "dossier_done" if is_seminar else "research_done"
+        stats = track_entry.setdefault("stats", {})
+        stats["research"] = {
+            **stats.get("research", {}),
+            "total": summary_stats.get(research_total_key, stats.get("research", {}).get("total", 0)),
+            "docs": summary_stats.get("dossier_docs", 0),
+            "curriculum": summary_stats.get("dossier_curriculum", 0),
+        }
 
 
-@router.get("/overview")
-async def overview():
-    """All tracks with module counts and pass/prose/fail stats."""
+def _build_overview_from_state_summary(
+    state_summary: dict,
+    cache_state: str,
+    age_s: float | None,
+    *,
+    track_scan: str,
+) -> dict:
+    """Assemble overview from cached summary + manifest. No per-module FS scan."""
     manifest = load_manifest()
     levels = manifest.get("levels", {})
-    state_summary, cache_state, age_s = await _state_summary_for_dashboard()
+    state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
+
+    tracks = []
+    totals = {"pass": 0, "content_complete": 0, "fail": 0, "unaudited": 0, "missing": 0, "shippable": 0, "total": 0}
+
+    for level_cfg in LEVELS:
+        track_id = level_cfg["id"]
+        summary_stats = state_tracks.get(track_id, {})
+        track_modules = levels.get(track_id, {}).get("modules", []) or [
+            slug for _num, slug in get_plan_slugs(track_id)
+        ]
+        module_count = int(summary_stats.get("total") or 0) or len(track_modules)
+        if not module_count:
+            continue
+
+        is_seminar = bool(summary_stats.get("is_seminar") or track_id in SEMINAR_TRACK_IDS)
+        s = stats_from_state_summary(summary_stats, is_seminar=is_seminar)
+        pct = round(s["pass"] / module_count * 100) if module_count > 0 else 0
+        tracks.append(
+            {
+                "id": track_id,
+                "name": level_cfg["name"],
+                "module_count": module_count,
+                "stats": s,
+                "pct_complete": pct,
+                "profile": summary_stats.get("profile", "seminar" if is_seminar else "core"),
+                "is_seminar": is_seminar,
+                "module_source": summary_stats.get("module_source"),
+                "published_mdx": summary_stats.get("published_mdx", 0),
+                "generated_md": summary_stats.get("generated_md", 0),
+                "audit_stale": summary_stats.get("audit_stale", 0),
+            }
+        )
+        for key in totals:
+            if key == "total":
+                totals["total"] += module_count
+            elif key in s:
+                totals[key] += s[key]
+
+    meta = {
+        "generated_at": state_summary.get("generated_at") if isinstance(state_summary, dict) else None,
+        "source": "fs:manifest+state-summary",
+        "cache": cache_state,
+        "stale_after_s": DASHBOARD_OVERVIEW_TTL_S,
+        "stale": cache_state != "hit",
+        "track_scan": track_scan,
+    }
+    if age_s is not None:
+        meta["age_s"] = round(age_s, 3)
+    if cache_state == "miss" and track_scan == "skipped":
+        meta["error"] = "overview_warming"
+    return {
+        "tracks": tracks,
+        "totals": totals,
+        "timestamp": datetime.now(UTC).isoformat(),
+        "meta": meta,
+    }
+
+
+def _build_overview_payload_from_scans() -> dict:
+    """Full overview including per-module status badges. Background refresh only."""
+    manifest = load_manifest()
+    levels = manifest.get("levels", {})
+    cached = cache_get_with_age("summary", ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
+    if cached is not None:
+        state_summary, age_s = cached
+        cache_state = "hit"
+    else:
+        state_summary = compute_summary()
+        cache_set("summary", state_summary)
+        cache_state = "miss"
+        age_s = 0.0
     state_tracks = state_summary.get("tracks", {})
 
     tracks = []
@@ -132,11 +242,96 @@ async def overview():
             "generated_at": state_summary.get("generated_at"),
             "source": "fs:dashboard-summary+state-summary",
             "cache": cache_state,
-            "stale_after_s": DASHBOARD_STATE_SUMMARY_TTL_S,
+            "stale_after_s": DASHBOARD_OVERVIEW_TTL_S,
             "stale": False,
+            "track_scan": "hit",
             **({"age_s": round(age_s, 3)} if age_s is not None else {}),
         },
     }
+
+
+def _schedule_overview_refresh() -> None:
+    global _overview_refresh_thread
+    with _overview_refresh_lock:
+        if _overview_refresh_thread is not None and _overview_refresh_thread.is_alive():
+            return
+        _overview_refresh_thread = threading.Thread(
+            target=_run_overview_refresh,
+            daemon=True,
+            name="dashboard-overview-refresh",
+        )
+        _overview_refresh_thread.start()
+
+
+def _run_overview_refresh() -> None:
+    global _overview_last_good
+    try:
+        payload = _build_overview_payload_from_scans()
+        cache_set(DASHBOARD_OVERVIEW_CACHE_KEY, payload)
+        _overview_last_good = payload
+    except Exception:
+        logger.exception("dashboard overview background refresh failed")
+
+
+# ==================== ENDPOINTS ====================
+
+
+@router.get("/overview")
+async def overview():
+    """All tracks with module counts and pass/prose/fail stats.
+
+    The request path never walks the curriculum tree. A warm TTL cache or
+    last-good full scan is returned immediately; otherwise a cheap
+    manifest + cached-summary payload is served while a detached worker
+    fills last-good. ``meta.cache`` remains the state-summary cache
+    signal; ``meta.track_scan`` / ``meta.stale`` / ``meta.error`` stay
+    honest about whether the per-module scan has run.
+    """
+    state_summary, cache_state, age_s = _peek_state_summary()
+    state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
+
+    cached = cache_get_with_age(DASHBOARD_OVERVIEW_CACHE_KEY, ttl=DASHBOARD_OVERVIEW_TTL_S)
+    if cached is not None:
+        value, overview_age_s = cached
+        payload = copy.deepcopy(value)
+        payload["timestamp"] = datetime.now(UTC).isoformat()
+        meta = dict(payload.get("meta") or {})
+        meta["cache"] = cache_state
+        meta["stale"] = False
+        meta["track_scan"] = "hit"
+        meta["stale_after_s"] = DASHBOARD_OVERVIEW_TTL_S
+        meta.pop("error", None)
+        if cache_state == "hit" and age_s is not None:
+            meta["age_s"] = round(age_s, 3)
+        elif overview_age_s is not None:
+            meta["age_s"] = round(overview_age_s, 3)
+        _overlay_research_from_summary(payload.get("tracks", []), state_tracks)
+        payload["meta"] = meta
+        return payload
+
+    if _overview_last_good is not None:
+        _schedule_overview_refresh()
+        payload = copy.deepcopy(_overview_last_good)
+        payload["timestamp"] = datetime.now(UTC).isoformat()
+        meta = dict(payload.get("meta") or {})
+        meta["cache"] = cache_state
+        meta["stale"] = True
+        meta["track_scan"] = "stale"
+        meta["refreshing"] = True
+        meta["stale_after_s"] = DASHBOARD_OVERVIEW_TTL_S
+        if age_s is not None:
+            meta["age_s"] = round(age_s, 3)
+        _overlay_research_from_summary(payload.get("tracks", []), state_tracks)
+        payload["meta"] = meta
+        return payload
+
+    _schedule_overview_refresh()
+    return _build_overview_from_state_summary(
+        state_summary,
+        cache_state,
+        age_s,
+        track_scan="skipped",
+    )
 
 
 @router.get("/research")
