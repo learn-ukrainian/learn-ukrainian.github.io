@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "192e4e2da93c",
+  "session_id": "fleet-041ac7b6c9174afb8e824ce49a037448",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T19:26:30.687217Z",
+  "branch": "cursor/infra-context-audit-docs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "CLAUDE.md",
+    "GEMINI.md",
+    "agents_extensions/cursor/rules/cold-start.md",
+    "agents_extensions/shared/rules/_load-via-api.md",
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/SCRIPTS.md",
+    "scripts/cursor_cold_start.py",
+    "tests/test_context_audit_pointers.py",
+    "tests/test_cursor_cold_start.py",
+    "tests/test_operator_contract_wiring.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "ba99fd969b04",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T19:26:30.681229Z",
+    "agent_lines": 228,
+    "agent_removed": 37,
+    "human_added": 10,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 238,
+    "total_lines_changed": 278,
+    "agent_percentage": 95.32374100719424,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

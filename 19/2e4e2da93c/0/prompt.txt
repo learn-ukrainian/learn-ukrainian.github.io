@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-context-audit-docs
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# infra-context-audit-docs
+
+One PR. Mechanical docs/rules pointer fixes. Do not merge.
+
+## Issues (all open, Sol context-audit)
+- #7012 CLAUDE.md points at missing memory/MEMORY.md and excluded .claude rules
+- #7013 SCRIPTS.md still indexes deleted rag-and-dictionaries and mcp__rag__ tools
+- #7014 GEMINI.md still documents deleted v6_build.py as the build pipeline
+- #7016 cursor cold-start must fetch /api/rules (Sol: REQUIRE-FETCH)
+- #7011 offline /api/rules fallback list omits files the live router serves
+
+## Rules
+- Shared invariants live in `agents_extensions/` first; never hand-edit deployed `.claude/` copies.
+- Do not invent process. Point at live `/api/rules` and existing files only.
+- Quote `ls`/`rg` proof that the deleted targets are gone and the new pointers exist.
+- One PR, conventional commits, `X-Agent: cursor/infra-context-audit-docs`.
+- Refs #7012 #7013 #7014 #7016 #7011 — never Closes unless every AC on that issue is tool-proven.
+
+## Tests
+`.venv/bin/ruff check` on any py you touch. If only markdown/rules, say so.
+
+Push PR. Do not merge.

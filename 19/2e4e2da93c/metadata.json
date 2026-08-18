@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "192e4e2da93c",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-context-audit-docs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "CLAUDE.md",
+    "GEMINI.md",
+    "agents_extensions/cursor/rules/cold-start.md",
+    "agents_extensions/shared/rules/_load-via-api.md",
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/SCRIPTS.md",
+    "scripts/cursor_cold_start.py",
+    "tests/test_context_audit_pointers.py",
+    "tests/test_cursor_cold_start.py",
+    "tests/test_operator_contract_wiring.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/19/2e4e2da93c/0/metadata.json",
+      "transcript": "/19/2e4e2da93c/0/full.jsonl",
+      "compact_transcript": "/19/2e4e2da93c/0/transcript.jsonl",
+      "content_hash": "/19/2e4e2da93c/0/content_hash.txt",
+      "prompt": "/19/2e4e2da93c/0/prompt.txt"
+    }
+  ]
+}
