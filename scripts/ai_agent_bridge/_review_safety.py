@@ -262,7 +262,8 @@ def assert_formal_review_ask_payload(
         raise ReviewSafetyError(
             "review_ask_content_exceeds_cap: "
             f"bytes={content_size} limit={MAX_REVIEW_REQUEST_BYTES}. "
-            "Use review-pr <N>; it pulls PR evidence instead of accepting pasted review bodies."
+            "Point the reviewer at the PR head (e.g. `ask-LANE - --type review --pr <N>`); "
+            "do not paste full review bodies."
         )
     if attachment is not None:
         attachment_size = _attachment_bytes(attachment)
@@ -270,7 +271,8 @@ def assert_formal_review_ask_payload(
             raise ReviewSafetyError(
                 "review_ask_attachment_exceeds_cap: "
                 f"bytes={attachment_size} limit={MAX_ASK_ATTACHMENT_BYTES}. "
-                "Use review-pr <N>; it pulls PR evidence instead of accepting attachments."
+                "Point the reviewer at the PR head (e.g. `ask-LANE - --type review --pr <N>`); "
+                "do not attach oversized evidence files."
             )
     return True
 
@@ -293,16 +295,16 @@ def allow_legacy_review_ask_escape() -> bool:
 
 
 def looks_like_pr_cf_review(content: str) -> bool:
-    """Heuristic: formal CF PR review should use review-pr, not fat ask-*."""
+    """Heuristic: body reads like a formal CF PR review (target should be named)."""
     return bool(_PR_CF_REVIEW_RE.search(content[:4000]))
 
 
 def warn_missing_review_target(*, formal_review: bool, has_target: bool) -> None:
-    """Steer manual formal-review asks to the PR-targeted entrypoint."""
+    """Remind manual formal-review asks to name the PR/branch target."""
     if formal_review and not has_target:
         print(
-            "warning: formal review ask has no review target; prefer review-pr <N> "
-            "for sealed, pointer-only review.",
+            "warning: formal review ask has no review target; name the PR head "
+            "SHA (or pass --pr <N>, which routes to the lightweight direct path).",
             file=sys.stderr,
         )
 
@@ -313,11 +315,14 @@ def warn_pr_cf_review_prefer_review_pr(
     formal_review: bool,
     has_target: bool,
 ) -> None:
-    """Phase 5: steer PR CF reviews to review-pr without discarding agent work.
+    """Warn when a PR CF review ask omits its target (warn-not-reject, #5486).
 
-    Rejecting after a model already generated a formal PR review is wasteful when
-    the agent did not know to use review-pr. Emit a strong warning instead; size
-    caps still fail closed for oversized bodies/attachments.
+    Sealed review-pr is retired (operator 2026-08-07): the direct
+    `ask-LANE --type review` round IS the formal path now, so this no longer
+    steers to a separate command — it only requires the review to name its
+    exact target (PR head SHA). Rejecting after a model already generated a
+    formal PR review is wasteful; size caps still fail closed for oversized
+    bodies/attachments.
     """
     if not formal_review or has_target:
         return
@@ -325,10 +330,11 @@ def warn_pr_cf_review_prefer_review_pr(
         return
     if looks_like_pr_cf_review(content):
         print(
-            "warning: formal CF PR review via ask-* without a sealed target — "
-            "prefer `scripts/ai_agent_bridge/__main__.py review-pr <N>` (pointer-only) "
-            "then `publish-review-verdict`. This ask is allowed so work is not discarded "
-            "(fleet-comms Phase 5 / #5486; warn-not-reject). "
+            "warning: formal CF PR review via ask-* without a named target — "
+            "the direct `ask-LANE - --type review` round is the formal path "
+            "(sealed review-pr retired 2026-08-07); include the PR head SHA in "
+            "the body and post the verdict on the PR. This ask is allowed so "
+            "work is not discarded (warn-not-reject). "
             "Silence with BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1.",
             file=sys.stderr,
         )
