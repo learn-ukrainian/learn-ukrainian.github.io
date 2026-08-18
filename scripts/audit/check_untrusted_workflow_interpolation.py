@@ -13,8 +13,11 @@ prescribes the intermediate-``env:`` pattern instead:
     run: echo "$TITLE"                                # allowed: quoted shell var
 
 This checker scans every ``run:`` block (inline and ``|``/``>`` multiline) in
-``.github/workflows/*.yml`` and fails on untrusted contexts. It deliberately
-does NOT flag:
+``.github/workflows/*.yml`` and fails on untrusted contexts. Identifiers and
+functions are matched case-insensitively (GitHub does), index syntax
+``github.event['issue']['title']`` is treated as dotted access, and
+``toJSON(github.event)`` / ``toJSON(github)`` dumps of the event payload are
+rejected. It deliberately does NOT flag:
 
     - ``env:`` mappings (the safe pattern above),
     - SHAs and refs: ``github.sha``, ``github.ref``,
@@ -44,6 +47,8 @@ _WORKFLOWS_DIR = _REPO_ROOT / ".github" / "workflows"
 
 # Attacker-controllable contexts (issue/PR/comment text, branch names, commit
 # messages). SHAs and github.ref are excluded: they are not attacker text.
+# VERBOSE | IGNORECASE: GitHub identifiers are case-insensitive
+# (github.Event.Issue.Title == github.event.issue.title).
 _UNTRUSTED = re.compile(
     r"""
     github\.event\.(?:
@@ -53,13 +58,34 @@ _UNTRUSTED = re.compile(
     )
     | github\.head_ref\b
     """,
-    re.VERBOSE,
+    re.VERBOSE | re.IGNORECASE,
 )
+
+# github['event']['issue']['title'] is the same object as github.event.issue.title.
+_BRACKET_IDENT = re.compile(r"""\[\s*(['"])([A-Za-z_][\w-]*)\1\s*\]""")
+# toJSON(github.event) / toJSON(github) dumps the webhook payload (or the whole
+# github context, which includes it) as text. Dotted untrusted paths inside
+# toJSON(...) are already caught by _UNTRUSTED after normalize.
+_TOJSON_WHOLE_EVENT = re.compile(r"\btojson\s*\(\s*github(?:\.event)?\s*\)", re.IGNORECASE)
 
 _EXPRESSION = re.compile(r"\$\{\{(.*?)\}\}", re.DOTALL)
 # `run:` key, optionally after a `- ` step marker. Content indent is measured
 # from the line start so both `run: |` and `- run: |` blocks parse alike.
 _RUN_KEY = re.compile(r"^(?P<indent>\s*)(?:-\s+)?run:\s*(?P<value>.*)$")
+
+
+def normalize_expression(expression: str) -> str:
+    """Case-fold and rewrite ``['ident']`` / ``[\"ident\"]`` to ``.ident``.
+
+    GitHub evaluates identifiers case-insensitively and treats index syntax as
+    equivalent to property dereference.
+    """
+    text = expression.casefold()
+    while True:
+        updated, count = _BRACKET_IDENT.subn(lambda m: "." + m.group(2).casefold(), text)
+        if count == 0:
+            return updated
+        text = updated
 
 
 def run_blocks(text: str) -> list[tuple[int, str]]:
@@ -105,7 +131,10 @@ def findings_for(path: Path) -> list[str]:
     for start_line, body in run_blocks(text):
         for match in _EXPRESSION.finditer(body):
             expression = match.group(1)
-            untrusted = _UNTRUSTED.search(expression)
+            normalized = normalize_expression(expression)
+            untrusted = _UNTRUSTED.search(normalized) or _TOJSON_WHOLE_EVENT.search(
+                normalized
+            )
             if not untrusted:
                 continue
             line_no = start_line + body[: match.start()].count("\n")

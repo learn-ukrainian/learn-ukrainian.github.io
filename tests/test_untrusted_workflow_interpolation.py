@@ -135,6 +135,73 @@ jobs:
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+def test_mixed_case_untrusted_context_in_run_fails(tmp_path: Path) -> None:
+    workflow = _write_workflow(
+        tmp_path,
+        """\
+on: issues
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ github.Event.Issue.Title }}"
+""",
+    )
+    result = _run_checker(workflow)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "github.event.issue" in result.stderr.casefold()
+
+
+def test_bracket_notation_untrusted_context_in_run_fails(tmp_path: Path) -> None:
+    workflow = _write_workflow(
+        tmp_path,
+        """\
+on: issues
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ github.event['issue']['title'] }}"
+""",
+    )
+    result = _run_checker(workflow)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "github.event.issue" in result.stderr
+
+
+def test_tojson_event_payload_in_run_fails(tmp_path: Path) -> None:
+    workflow = _write_workflow(
+        tmp_path,
+        """\
+on: issues
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(github.event) }}'
+""",
+    )
+    result = _run_checker(workflow)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "tojson" in result.stderr.casefold()
+
+
+def test_tojson_sha_in_run_passes(tmp_path: Path) -> None:
+    workflow = _write_workflow(
+        tmp_path,
+        """\
+on: pull_request
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(github.sha) }}'
+""",
+    )
+    result = _run_checker(workflow)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_current_repo_workflows_are_clean() -> None:
     result = subprocess.run(
         [sys.executable, str(_CHECKER)],
