@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "693b27862e8b",
+  "session_id": "fleet-c2a8b881e494401dba94a9d42d2c40d2",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T22:09:50.000285Z",
+  "branch": "agy/sources-7026-contracts-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".mcp/servers/sources/server.py",
+    "tests/test_mcp_sources_server.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "4c427894cb4b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T22:09:49.991441Z",
+    "agent_lines": 26,
+    "agent_removed": 8,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 26,
+    "total_lines_changed": 34,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "693b27862e8b",
+  "strategy": "manual-commit",
+  "branch": "agy/sources-7026-contracts-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".mcp/servers/sources/server.py",
+    "tests/test_mcp_sources_server.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/69/3b27862e8b/0/metadata.json",
+      "transcript": "/69/3b27862e8b/0/full.jsonl",
+      "compact_transcript": "/69/3b27862e8b/0/transcript.jsonl",
+      "content_hash": "/69/3b27862e8b/0/content_hash.txt",
+      "prompt": "/69/3b27862e8b/0/prompt.txt"
+    }
+  ]
+}
