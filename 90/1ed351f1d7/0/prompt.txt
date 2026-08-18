@@ -1,0 +1,73 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-7018-landing-class
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #7018 merge_group docs/skills-only class
+
+CAPACITY_CARD: pick=cursor status=cool avoid=codex(in_flight+deficit) kimi(pace deficit earlier) source=codexbar+active
+ROUTING_CARD_V1: tier=practical model_x_harness=cursor Auto why=mechanical CI classifier alternatives=agy,claude owned_paths=.github/workflows/ci.yml,scripts/ci/,tests/test_ci_gate_required_results.py
+
+Initiator: grok-infra. Layout A worktree. No merge.
+
+## User-visible outcome
+Merge-group for a skill/docs-only commit does **not** run the four pytest shards + coverage combine. A merge-group that also touches `scripts/` (or anything off the allowlist) still runs the **full** suite. CI Gate stays green via **no-op success**, never via `skipped`.
+
+Measured pain: PR #7008, 14-line Markdown, 22 min wall, merge_group four shards.
+
+## Binding design (do not invent a fourth model)
+
+#5762: CI Gate fail-closes on skipped/missing required jobs on merge_group. **Do not** `if: false` skip `pytest-plan` / `python` / `coverage-floor`. Those jobs must still **run** and report `success`.
+
+Pattern already in-tree: coverage-floor's "Not a landing event" step succeeds so the gate can require it unconditionally.
+
+1. Add `scripts/ci/landing_class.py` (name can match existing CI module style):
+   - Inputs: path list or `git diff --name-only BASE...HEAD`
+   - Output: `docs_skills` | `full` (stdout + `--json` if useful)
+   - **Fail closed → `full`:** empty list, unreadable git, unexpected error, any path not on the allowlist
+   - Allowlist (every path must match or it is `full`):
+     - `agents_extensions/shared/skills/**`
+     - `docs/**/*.md`
+     - repo-root `*.md`
+   - Deny by omission: `scripts/`, `tests/`, `site/`, `.github/`, lockfiles, `*.py`, yaml schemas, curriculum, etc.
+
+2. New always-on `landing-class` job on `merge_group` (and `push` to main if those jobs share the if). Checkout base+head, classify, set `outputs.class`. Job itself always succeeds; a classifier crash must still emit `class=full`.
+
+3. `pytest-plan`, `python` (all 4 shards), `coverage-floor`, and CI Gate's `verify-artifacts` step: when `needs.landing-class.outputs.class == 'docs_skills'`, take the cheap success path (echo + exit 0). Do **not** download missing coverage and then fail "no coverage data". Do **not** change `evaluate_gate` to treat `skipped` as success.
+
+4. Update the `ci.yml` header comment: full tier still never path-filters collection; `docs_skills` is a **third class** decided by this classifier, not GitHub `paths:`.
+
+5. Tests (must fail on main first):
+   - `tests/test_landing_class.py` (or next to `test_ci_gate_required_results.py`):
+     - skill-only → `docs_skills`
+     - skill + `scripts/api/foo.py` → `full`
+     - empty / bogus → `full`
+     - `docs/foo.md` only → `docs_skills`
+     - `.github/workflows/ci.yml` → `full`
+   - Existing `test_ci_gate_required_results.py` must still require full jobs as **success** on merge_group (no skipped-is-ok).
+
+## Non-goals
+- GitHub workflow `paths:` / `paths-ignore`
+- Accepting `skipped` as gate success on merge_group
+- Skipping ruff / fastlane / contracts / frontend
+- CodeQL / Playwright (not the 18 min tax)
+- pull_request tier changes
+- Grouping unrelated PRs
+- `httpx.AsyncClient` / #7015 worker-loop cleanup
+
+## Verify
+```
+.venv/bin/python -m pytest -q tests/test_ci_gate_required_results.py tests/test_landing_class.py
+.venv/bin/ruff check scripts/ci/landing_class.py scripts/ci/gate_required_results.py
+```
+If you add a dry-run helper, show:
+`git diff --name-only origin/main...HEAD | .venv/bin/python -m scripts.ci.landing_class` on a fixture list.
+
+Commit + push + PR linking #7018. `X-Agent: cursor/infra-7018-landing-class`. No merge.

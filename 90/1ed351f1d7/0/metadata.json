@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "901ed351f1d7",
+  "session_id": "fleet-eaefbb21f4df40dabf725d3d4c8e3525",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T15:43:41.391234Z",
+  "branch": "cursor/infra-7018-landing-class",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    "scripts/ci/landing_class.py",
+    "tests/test_landing_class.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "7b677dd0cfc8",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T15:43:41.384119Z",
+    "agent_lines": 394,
+    "agent_removed": 16,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 394,
+    "total_lines_changed": 410,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

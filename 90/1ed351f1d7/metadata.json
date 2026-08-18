@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "901ed351f1d7",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-7018-landing-class",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    "scripts/ci/landing_class.py",
+    "tests/test_landing_class.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/90/1ed351f1d7/0/metadata.json",
+      "transcript": "/90/1ed351f1d7/0/full.jsonl",
+      "compact_transcript": "/90/1ed351f1d7/0/transcript.jsonl",
+      "content_hash": "/90/1ed351f1d7/0/content_hash.txt",
+      "prompt": "/90/1ed351f1d7/0/prompt.txt"
+    }
+  ]
+}
