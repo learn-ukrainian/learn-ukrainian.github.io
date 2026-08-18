@@ -842,6 +842,22 @@ class TestDictSearchQuoteBalance:
         assert "«" not in clipped
         assert clipped.count("«") == clipped.count("»")
 
+    def test_clip_opener_at_cut_start_trimmed_when_unclosed(self, server_module):
+        # Opening quote at index 0 when cut is before closing quote (#7026, #7038)
+        text = "«" + "а" * 600 + "»"
+        clipped = server_module._quote_balanced_clip(text, 100)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
+        assert clipped == "…"
+
+    def test_clip_nested_unclosed_quotes_iteratively_trimmed(self, server_module):
+        # Nested unclosed quotes are iteratively trimmed until balanced (#7026, #7038)
+        text = "Початок «перша «друга " + "а" * 600 + "»»"
+        clipped = server_module._quote_balanced_clip(text, 100)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
+        assert clipped == "Початок…"
+
     def test_handle_dict_search_clips_long_definitions(self, server_module):
         hit = {
             "word": "тест",

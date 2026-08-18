@@ -2207,19 +2207,21 @@ def _quote_balanced_clip(text: str, max_chars: int = 500) -> str:
         return text
 
     prefix = text[:max_chars]
-    open_count = prefix.count("«")
-    close_count = prefix.count("»")
+    clipped = prefix.rstrip()
 
-    if open_count > close_count:
+    if prefix.count("«") > prefix.count("»"):
         # We are inside an unclosed « quote. Look ahead for the closing »
         close_pos = text.find("»", max_chars)
         if close_pos != -1 and (close_pos - max_chars) <= 120:
             clipped = text[: close_pos + 1].rstrip()
-        else:
-            last_open = prefix.rfind("«")
-            clipped = text[:last_open].rstrip() if last_open > 0 else prefix.rstrip()
-    else:
-        clipped = prefix.rstrip()
+
+        # If lookahead was not possible or still left unclosed quotes,
+        # iteratively trim from the last « until quotes are balanced.
+        while clipped.count("«") > clipped.count("»"):
+            last_open = clipped.rfind("«")
+            if last_open == -1:
+                break
+            clipped = clipped[:last_open].rstrip()
 
     if len(clipped) < len(text) and not clipped.endswith(("…", "...")):
         clipped = clipped + "…"
