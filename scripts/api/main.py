@@ -250,11 +250,13 @@ SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
 # advisory — Python threads are not cancellable once started. Real
 # protection per sync collector:
 #   - ``git``, ``issues``     — subprocess timeout 2 s (``_run_command``)
-#   - ``runtime``, ``delegate``, ``wiki``, ``health``, ``session_hints``
+#   - ``runtime``, ``delegate``, ``wiki``, ``session_hints``
 #                            — pure-Python / filesystem, no inner
 #                              timeout; they rely on being cheap.
 #   - ``idle_prs``           — cache-first detached worker; ``gh`` never runs
 #                              in the request path.
+#   - ``capacity``, ``health`` — cache-first detached worker (#6983); CodexBar
+#                              / canaries never pin the lean gather.
 # If a sync collector ever starts to block (e.g. a network FS hang), it
 # will tie up a threadpool slot past the hard timeout. See
 # MONITOR-API.md for the full breakdown.
@@ -320,7 +322,8 @@ ORIENT_SECTION_KEYS: tuple[str, ...] = tuple(ORIENT_SECTION_TTLS.keys())
 # bridge asks, blocking decisions (governance), health, and the handoff pointers / current goal
 # (session_hints). Excludes the three heavy sections — ``pipeline`` (~2k module stats),
 # ``issues`` (full gh list), ``wiki`` (per-track coverage) — which are fetched on demand via
-# ``?sections=...``. Cuts the default cold-start payload sharply (codex cold-start review; #4728).
+# ``?sections=...``. ``capacity`` and ``health`` stay in the preset but are cache-first /
+# detached so CodexBar or a hung canary cannot pin the gather at 5 s (#6983).
 LEAN_ORIENT_SECTIONS: tuple[str, ...] = (
     "git",
     "runtime",
@@ -342,6 +345,17 @@ _ORIENT_SYNC_EXECUTOR = ThreadPoolExecutor(
     max_workers=8,
     thread_name_prefix="orient-sync",
 )
+
+# Lean ``capacity`` / ``health`` are cache-first and detached: CodexBar and
+# integrity canaries must not pin ``asyncio.gather`` at the 5 s section
+# wall (#6983). A short join lets cheap (test) collectors populate the
+# same request; a live hang returns fallback immediately after this wait.
+DETACHED_ORIENT_SECTION_KEYS: frozenset[str] = frozenset({"capacity", "health"})
+DETACHED_ORIENT_INLINE_WAIT_S = 0.4
+_detached_orient_lock = threading.Lock()
+_detached_orient_threads: dict[str, threading.Thread] = {}
+_detached_orient_last_good: dict[str, tuple[Any, str]] = {}
+_detached_orient_last_error: dict[str, str] = {}
 
 # The idle-PR feed is deliberately cache-first. A live GitHub request is run by
 # one detached daemon worker, never by the ASGI request path. The last successful
@@ -737,6 +751,126 @@ def _cached_idle_pr_section(
     }
     if _idle_pr_last_error is not None:
         meta["error"] = _idle_pr_last_error
+    return fallback, meta
+
+
+def reset_detached_orient_state_for_tests() -> None:
+    """Drop capacity/health last-good so tests do not leak across cases."""
+    with _detached_orient_lock:
+        threads = list(_detached_orient_threads.values())
+    for thread in threads:
+        thread.join(timeout=2.0)
+    with _detached_orient_lock:
+        _detached_orient_threads.clear()
+    _detached_orient_last_good.clear()
+    _detached_orient_last_error.clear()
+
+
+def _schedule_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> bool:
+    """Start a single-flight worker for ``key``. Return True if this call started it."""
+    with _detached_orient_lock:
+        thread = _detached_orient_threads.get(key)
+        if thread is not None and thread.is_alive():
+            return False
+        worker = threading.Thread(
+            target=_run_detached_orient_refresh,
+            args=(key, collector),
+            daemon=True,
+            name=f"orient-{key}-refresh",
+        )
+        _detached_orient_threads[key] = worker
+        worker.start()
+        return True
+
+
+def _run_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> None:
+    ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
+    try:
+        value = collector()
+        generated_at = _isoformat_z(datetime.now(UTC))
+        if ttl > 0:
+            cache_set(f"orient_{key}", (value, generated_at))
+        _detached_orient_last_good[key] = (value, generated_at)
+        _detached_orient_last_error.pop(key, None)
+    except Exception as exc:
+        _detached_orient_last_error[key] = str(exc)
+
+
+async def _cached_detached_orient_section(
+    key: str,
+    collector: Callable[[], Any],
+    fallback: Any,
+) -> tuple[Any, dict]:
+    """Cache-first section: never let a hung collector pin the gather.
+
+    On a miss, one detached worker runs the collector. This request waits
+    up to ``DETACHED_ORIENT_INLINE_WAIT_S`` only if *this* call started
+    that worker (so cheap test doubles still populate the same response).
+    Overlapping requests and live hangs return last-good or fallback with
+    honest ``meta.error``.
+    """
+    ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
+    source = ORIENT_SECTION_SOURCES.get(key, "fs")
+    cache_key = f"orient_{key}"
+    if ttl > 0:
+        cached = cache_get(cache_key, ttl=ttl)
+        if cached is not None:
+            value, generated_at = cached  # type: ignore[misc]
+            return value, {
+                "generated_at": generated_at,
+                "stale_after_s": ttl,
+                "source": source,
+                "cache": "hit",
+            }
+
+    started = _schedule_detached_orient_refresh(key, collector)
+    thread = _detached_orient_threads.get(key)
+    if started and thread is not None and thread.is_alive():
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(
+            _ORIENT_SYNC_EXECUTOR,
+            thread.join,
+            DETACHED_ORIENT_INLINE_WAIT_S,
+        )
+
+    if ttl > 0:
+        cached = cache_get(cache_key, ttl=ttl)
+        if cached is not None:
+            value, generated_at = cached  # type: ignore[misc]
+            return value, {
+                "generated_at": generated_at,
+                "stale_after_s": ttl,
+                "source": source,
+                "cache": "miss",
+            }
+
+    last_good = _detached_orient_last_good.get(key)
+    if last_good is not None:
+        value, generated_at = last_good
+        meta: dict[str, Any] = {
+            "generated_at": generated_at,
+            "stale_after_s": ttl,
+            "source": source,
+            "cache": "miss",
+            "stale": True,
+            "refreshing": thread is not None and thread.is_alive(),
+        }
+        last_error = _detached_orient_last_error.get(key)
+        if last_error is not None:
+            meta["error"] = last_error
+        return value, meta
+
+    short_err = _detached_orient_last_error.get(key) or "refreshing"
+    meta = {
+        "generated_at": _isoformat_z(datetime.now(UTC)),
+        "stale_after_s": ttl,
+        "source": source,
+        "cache": "miss",
+        "refreshing": thread is not None and thread.is_alive(),
+        "error": short_err,
+    }
+    if isinstance(fallback, dict):
+        return {**fallback, "error": short_err}, meta
     return fallback, meta
 
 
@@ -1183,6 +1317,8 @@ async def _cached_orient_section(
     """
     if key == "idle_prs":
         return _cached_idle_pr_section(collector, fallback)  # type: ignore[arg-type]
+    if key in DETACHED_ORIENT_SECTION_KEYS:
+        return await _cached_detached_orient_section(key, collector, fallback)  # type: ignore[arg-type]
 
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")

@@ -249,6 +249,43 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     }
 
 
+def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
+    """Map cached ``/api/state/summary`` counts onto overview track stats.
+
+    This is the cheap request-path shape: no per-module status/orchestration
+    walk. ``fail`` / ``shippable`` / plan-review verdicts are not in the
+    summary snapshot, so they stay 0 until a background full scan fills
+    last-good. Research totals follow the same seminar-vs-core key as
+    ``overview()`` historically used.
+    """
+    total = int(summary_stats.get("total") or 0)
+    generated_md = int(summary_stats.get("generated_md") or 0)
+    audit_passing = int(summary_stats.get("audit_passing") or 0)
+    audit_stale = int(summary_stats.get("audit_stale") or 0)
+    content_done = int(summary_stats.get("content_done") or 0)
+    research_total_key = "dossier_done" if is_seminar else "research_done"
+    return {
+        "pass": audit_passing,
+        "content_complete": content_done,
+        "fail": 0,
+        "unaudited": max(0, generated_md - audit_passing - audit_stale),
+        "missing": max(0, total - generated_md),
+        "shippable": 0,
+        "reviewed": int(summary_stats.get("reviewed") or 0),
+        "final_review": int(summary_stats.get("final_review_done") or 0),
+        "plan_reviewed": int(summary_stats.get("prompt_reviewed") or 0),
+        "plan_pass": 0,
+        "plan_needs_fixes": 0,
+        "plan_fail": 0,
+        "stale_status": audit_stale,
+        "research": {
+            "total": int(summary_stats.get(research_total_key) or 0),
+            "docs": int(summary_stats.get("dossier_docs") or 0),
+            "curriculum": int(summary_stats.get("dossier_curriculum") or 0),
+        },
+    }
+
+
 def compute_track_stats(modules: list, track_id: str) -> dict:
     """Aggregate per-module data into track-level stats."""
     stats = {

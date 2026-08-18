@@ -1136,6 +1136,37 @@ class TestScanTrackSummaryCached:
         assert (time.time() - entry[0]) > 60  # past TTL
 
 
+class TestStatsFromStateSummary:
+    """Cheap overview stats mapping must keep research keys honest."""
+
+    def test_seminar_uses_dossier_done(self):
+        from scripts.api.dashboard_helpers import stats_from_state_summary
+
+        stats = stats_from_state_summary(
+            {
+                "total": 10,
+                "generated_md": 4,
+                "audit_passing": 2,
+                "audit_stale": 1,
+                "content_done": 3,
+                "research_done": 9,
+                "dossier_done": 5,
+                "dossier_docs": 1,
+                "dossier_curriculum": 4,
+                "reviewed": 2,
+                "final_review_done": 1,
+                "prompt_reviewed": 1,
+            },
+            is_seminar=True,
+        )
+        assert stats["pass"] == 2
+        assert stats["missing"] == 6
+        assert stats["unaudited"] == 1
+        assert stats["research"]["total"] == 5
+        assert stats["fail"] == 0
+        assert stats["shippable"] == 0
+
+
 class TestBuildModuleSummary:
     """build_module_summary returns lightweight module info."""
 

@@ -6,6 +6,7 @@ import asyncio
 import contextlib
 import os
 import subprocess
+import threading
 import time
 from pathlib import Path
 
@@ -31,10 +32,12 @@ def _reset_orient_cache():
     keys_to_drop = [k for k in state_helpers._ttl_cache if k.startswith("orient_")]
     for key in keys_to_drop:
         state_helpers._ttl_cache.pop(key, None)
+    api_main.reset_detached_orient_state_for_tests()
     yield
     keys_to_drop = [k for k in state_helpers._ttl_cache if k.startswith("orient_")]
     for key in keys_to_drop:
         state_helpers._ttl_cache.pop(key, None)
+    api_main.reset_detached_orient_state_for_tests()
 
 
 def _patch_orient_sources(monkeypatch) -> None:
@@ -708,3 +711,49 @@ def test_orient_issues_collector_uses_five_second_subprocess_timeout(monkeypatch
         api_main._collect_issues_orient_data()
 
     assert captured["timeout"] == 5.0
+
+
+def test_lean_orient_hung_capacity_and_health_do_not_stall_other_sections(monkeypatch):
+    """#6983: a hung CodexBar/canary must not pin lean orient at the 5 s wall.
+
+    ``asyncio.gather`` waits for the slowest section. Before the detached
+    refresh, a 5 s ``section_timeout`` on ``capacity`` or ``health`` made
+    the whole lean payload take 5.0 s. Other lean sections must still
+    populate, and the request must finish well under the 10 s global
+    timeout.
+    """
+    _patch_orient_sources(monkeypatch)
+    release = threading.Event()
+
+    def hang_capacity():
+        release.wait(8)
+        return {"lanes": {"codex": {"in_flight": 0, "healthy": True}}}
+
+    def hang_health():
+        release.wait(8)
+        return {"api": True}
+
+    monkeypatch.setattr(api_main, "_collect_capacity_orient_data", hang_capacity)
+    monkeypatch.setattr(api_main, "_collect_health_orient_data", hang_health)
+
+    start = time.perf_counter()
+    try:
+        response = client.get("/api/orient?lean=true")
+        elapsed = time.perf_counter() - start
+        assert response.status_code == 200
+        assert_under_budget(
+            elapsed,
+            1.5,
+            f"lean orient stalled on capacity/health, took {elapsed:.3f}s",
+        )
+        data = response.json()
+        assert data["git"]["branch"] == "main"
+        assert data["runtime"]["agents"] == ["codex"]
+        assert data["delegate"]["active_count"] == 0
+        assert "error" in data["meta"]["capacity"]
+        assert "error" in data["meta"]["health"]
+        assert data["capacity"].get("lanes") == {}
+        assert data["health"].get("api") is True
+        assert "section_timeout" not in str(data["meta"]["capacity"].get("error", ""))
+    finally:
+        release.set()

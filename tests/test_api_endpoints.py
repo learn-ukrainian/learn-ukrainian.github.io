@@ -16,12 +16,17 @@ Validates:
 import asyncio
 import json
 import subprocess
+import threading
+import time
 from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
+import scripts.api.dashboard_router as dashboard_router
+import scripts.api.state_helpers as state_helpers
 from scripts.api.main import app
+from tests.latency_budget import assert_under_budget
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -230,6 +235,96 @@ class TestDashboardOverviewEndpoint:
         assert overview["meta"]["cache"] == "hit"
         assert tracks["a1"]["stats"]["research"]["total"] == summary["tracks"]["a1"]["research_done"]
         assert tracks["folk"]["stats"]["research"]["total"] == summary["tracks"]["folk"]["dossier_done"]
+
+    def test_overview_does_not_wait_for_curriculum_scan(self, monkeypatch):
+        """#6983: overview must not rescan every module on the request path.
+
+        Live evidence: cache-miss overview took 5.7 s with totals.missing=1932
+        and overlapped lean orient into 504s. A hung scan/summary must still
+        return 200 well under the 10 s global timeout, with honest meta.
+        """
+        dashboard_router.reset_overview_state_for_tests()
+        state_helpers.cache_invalidate("summary")
+        state_helpers.cache_invalidate(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY)
+        release = threading.Event()
+
+        def hang_scan(*_args, **_kwargs):
+            release.wait(8)
+            return {
+                "track_id": "a1",
+                "track_path": "a1",
+                "module_count": 0,
+                "is_seminar": False,
+                "modules": [],
+            }
+
+        def hang_summary():
+            release.wait(8)
+            return {"generated_at": None, "tracks": {}, "totals": {}}
+
+        monkeypatch.setattr(dashboard_router, "scan_track_summary_cached", hang_scan)
+        monkeypatch.setattr(dashboard_router, "compute_summary", hang_summary)
+
+        start = time.perf_counter()
+        try:
+            resp = client.get("/api/dashboard/overview")
+            elapsed = time.perf_counter() - start
+            assert resp.status_code == 200
+            assert_under_budget(
+                elapsed,
+                1.5,
+                f"overview waited for curriculum scan, took {elapsed:.3f}s",
+            )
+            data = resp.json()
+            assert "tracks" in data
+            assert "totals" in data
+            meta = data["meta"]
+            assert meta["cache"] in {"hit", "miss"}
+            assert meta.get("track_scan") in {"skipped", "stale", "hit"}
+            if meta["cache"] == "miss" and meta.get("track_scan") == "skipped":
+                assert meta.get("error") == "overview_warming"
+                assert meta.get("stale") is True
+        finally:
+            release.set()
+            dashboard_router.reset_overview_state_for_tests()
+
+    def test_overview_cache_hit_stays_under_playground_budget(self, monkeypatch):
+        """Cache-hit overview must stay inside the 1.5 s in-process playground budget."""
+        dashboard_router.reset_overview_state_for_tests()
+        warm = client.get("/api/state/summary?fresh=true")
+        assert warm.status_code == 200
+        summary = warm.json()
+        seeded = dashboard_router._build_overview_from_state_summary(
+            summary, "hit", 0.0, track_scan="hit"
+        )
+        state_helpers.cache_set(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY, seeded)
+
+        release = threading.Event()
+
+        def hang_scan(*_args, **_kwargs):
+            release.wait(8)
+            raise AssertionError("cache-hit overview must not rescan")
+
+        monkeypatch.setattr(dashboard_router, "scan_track_summary_cached", hang_scan)
+        monkeypatch.setattr(dashboard_router, "compute_summary", hang_scan)
+
+        try:
+            start = time.perf_counter()
+            resp = client.get("/api/dashboard/overview")
+            elapsed = time.perf_counter() - start
+            assert resp.status_code == 200
+            assert_under_budget(
+                elapsed,
+                1.5,
+                f"overview cache-hit took {elapsed:.3f}s",
+            )
+            data = resp.json()
+            assert data["meta"]["cache"] == "hit"
+            assert data["meta"].get("stale") is False
+            assert data["meta"].get("track_scan") == "hit"
+        finally:
+            release.set()
+            dashboard_router.reset_overview_state_for_tests()
 
 
 # ==================== Router mounting tests ====================
