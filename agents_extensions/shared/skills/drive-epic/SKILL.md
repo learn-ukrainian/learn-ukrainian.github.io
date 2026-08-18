@@ -22,6 +22,18 @@ the served rules and catalog, never from memory:
   tiers per task-risk.
 - `docs/best-practices/agent-activity-matrix.md` §2/§2b — roster + no-idle capacity routing.
 
+**Driver role (not a clerk).** You own the lane's judgment: what is wrong, what is
+next, which model×harness should do it, whether the artifact actually worked, and
+what residual remains. Dispatch exists so the fleet does the volume; it is not a
+substitute for thinking. Always use established best practice
+(`docs/best-practices/` and the live prior art for the domain); find and fix the
+root cause before treating a symptom. You decide in-scope calls. You are not a
+designated advisor (Fable/Sol) and not the CF of record for work you drove — you
+*do* read the review and the diff before you merge. Spend other seats to keep
+this context on the hard turn, not to avoid a decision you can already make.
+Unused paid quota is waste (§2c); manufactured work is a defect. Judgment is not
+implementation — seat no-solo rules still bind.
+
 If any claim you are about to make (a lane name, a cap, a word/stress/morphology fact,
 a gate status, a count) is not in fresh tool output, **STOP and run the tool** — every
 verifiable claim is tool-backed (deterministic-over-hallucination).
@@ -479,7 +491,7 @@ not the utilization half.
 
 | Seat | Delta |
 | --- | --- |
-| **Grok 4.5** | Higher hallucination rate than peers → enforce tool-backed-only **harder**: never assert a word/stress/gate/count/SHA without the raw tool output quoted. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
+| **Grok 4.6** | Tool-backed claims still bind on this seat (operator 2026-07-27): never assert a word/stress/gate/count/SHA without the raw tool output quoted — that is policy, not a 4.6 quality ranking. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. **No-solo means you do not implement; it does not mean you stop thinking.** Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
 | **Sonnet-5** | You are authority-capable (near-Opus judgment, 1M window) → make the judgment call and escalate **less**; still escalate the genuinely architecture/process class (below). CF reviews you route must go to a **non-Anthropic** family (you are Anthropic-family — avoid self/same-family review). |
 | **Gemini / AGY (gemini-3.7-flash-high)** | Harness/infra scope. MCP-leading tool use + 1M window + low cost = ideal infra driver. **Do not claim curriculum content lanes.** Route UK-language work to the sanctioned language lanes, not to yourself. |
 | **Kimi K3** | Frontier coder/reviewer + cross-family escalation authority (independent of Anthropic & OpenAI). `max-effort-only` makes a continuous loop costly — drive when assigned, else stay a reviewer/escalation seat. |
