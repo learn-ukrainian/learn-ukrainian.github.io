@@ -91,7 +91,7 @@ COMPLETENESS_NOTES = {
 
 
 async def list_tools() -> list[Tool]:
-    """List available RAG tools.
+    """List available sources tools.
 
     Kept as a module-level callable for unit tests and backward compat.
     The registered MCP 2.0 handler is ``_on_list_tools``.
@@ -130,9 +130,8 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_text",
             description=(
-                "Hybrid text search across Ukrainian school textbooks. "
-                "Combines dense (semantic) and sparse (keyword) search via BGE-M3. "
-                "Returns relevant text chunks with metadata."
+                "FTS5 keyword search across Ukrainian school textbooks. "
+                "Returns relevant text chunks with metadata (section, source, grade, author, subject)."
             ),
             inputSchema={
                 "type": "object",
@@ -141,10 +140,6 @@ async def list_tools() -> list[Tool]:
                         "type": "string",
                         "description": "Search query in Ukrainian (e.g., 'як утворюється минулий час')"
                     },
-                    "grade": {
-                        "type": "integer",
-                        "description": "Filter by school grade (1-11). Optional."
-                    },
                     "subject": {
                         "type": "string",
                         "description": (
@@ -152,11 +147,6 @@ async def list_tools() -> list[Tool]:
                             "Examples: 'ukrmova', 'ukrlit', 'istoriya', 'bukvar'."
                         ),
                         "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
-                    },
-                    "trust_tier": {
-                        "type": "integer",
-                        "description": "Filter by trust tier: 1 = NUS 2022+, 2 = 2017-2021. Optional.",
-                        "enum": [1, 2]
                     },
                     "limit": {
                         "type": "integer",
@@ -170,10 +160,7 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_images",
             description=(
-                "Search textbook images using a Ukrainian text query. "
-                "Uses SigLIP 2 for cross-modal text-to-image matching. "
-                "Returns image paths with metadata and annotations "
-                "(description_uk, associated_text_uk, teaching_value) when available."
+                "Image search stub (deferred; currently returns a placeholder message)."
             ),
             inputSchema={
                 "type": "object",
@@ -182,28 +169,6 @@ async def list_tools() -> list[Tool]:
                         "type": "string",
                         "description": "Image search query in Ukrainian (e.g., 'яблуко', 'ілюстрація букви А')"
                     },
-                    "grade": {
-                        "type": "integer",
-                        "description": "Filter by school grade (1-11). Optional."
-                    },
-                    "teaching_value": {
-                        "type": "string",
-                        "description": "Filter by teaching value: 'high', 'medium', 'low', 'none'. Optional.",
-                        "enum": ["high", "medium", "low", "none"]
-                    },
-                    "subject": {
-                        "type": "string",
-                        "description": (
-                            "Optional canonical textbook subject slug. "
-                            "Examples: 'ukrmova', 'ukrlit', 'istoriya', 'bukvar'."
-                        ),
-                        "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "Max results to return (default 5, max 20)",
-                        "default": 5
-                    }
                 },
                 "required": ["query"]
             },
@@ -211,9 +176,8 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_literary",
             description=(
-                "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). "
-                "Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. "
-                "Returns text chunks with work, author, year, genre, and language period metadata."
+                "FTS5 search across Ukrainian literary primary sources (chronicles, poetry, prose, legal texts). "
+                "Returns text chunks with author, source file, chunk ID, and text."
             ),
             inputSchema={
                 "type": "object",
@@ -221,18 +185,6 @@ async def list_tools() -> list[Tool]:
                     "query": {
                         "type": "string",
                         "description": "Search query in Ukrainian (e.g., 'хрещення Русі', 'повстання козаків')"
-                    },
-                    "work": {
-                        "type": "string",
-                        "description": "Filter by work title. Optional."
-                    },
-                    "genre": {
-                        "type": "string",
-                        "description": "Filter by genre (chronicle, poetry, prose, legal, grammar, etc.). Optional."
-                    },
-                    "period": {
-                        "type": "string",
-                        "description": "Filter by language period (old_east_slavic, middle_ukrainian, early_modern, modern). Optional."
                     },
                     "limit": {
                         "type": "integer",
@@ -291,9 +243,9 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="get_full_text",
             description=(
-                "Load the full text of a short literary work from the RAG database. "
-                "Returns all chunks concatenated in order. Best for works under ~20 pages. "
-                "Caps at 50,000 characters."
+                "Load text chunks of a literary work from the sources database. "
+                "Returns matching chunks concatenated in order. Best for short works under ~20 pages. "
+                "Caps at max_chars (default 50,000 characters)."
             ),
             inputSchema={
                 "type": "object",
@@ -314,29 +266,22 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="get_chunk_context",
             description=(
-                "Get surrounding text chunks for context. "
-                "Given a chunk_id from search results, returns the chunk "
-                "and its neighbors from the same textbook."
+                "Get text chunk by chunk_id from textbooks or literary_texts collections."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "chunk_id": {
                         "type": "string",
-                        "description": "Chunk ID from search_text results"
+                        "description": "Chunk ID from search results"
                     },
-                    "window": {
-                        "type": "integer",
-                        "description": "Number of chunks before and after to include (default 2)",
-                        "default": 2
-                    }
                 },
                 "required": ["chunk_id"]
             },
         ),
         Tool(
             name="collection_stats",
-            description="Get statistics for all RAG collections (chunk count, image count, index status).",
+            description="Get row counts for all available content tables in the sources database.",
             inputSchema={
                 "type": "object",
                 "properties": {},
@@ -2256,6 +2201,31 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n".join(lines))]
 
 
+def _quote_balanced_clip(text: str, max_chars: int = 500) -> str:
+    """Clip text to approximately max_chars without splitting Ukrainian guillemets (« »)."""
+    if len(text) <= max_chars:
+        return text
+
+    prefix = text[:max_chars]
+    open_count = prefix.count("«")
+    close_count = prefix.count("»")
+
+    if open_count > close_count:
+        # We are inside an unclosed « quote. Look ahead for the closing »
+        close_pos = text.find("»", max_chars)
+        if close_pos != -1 and (close_pos - max_chars) <= 120:
+            clipped = text[: close_pos + 1].rstrip()
+        else:
+            last_open = prefix.rfind("«")
+            clipped = text[:last_open].rstrip() if last_open > 0 else prefix.rstrip()
+    else:
+        clipped = prefix.rstrip()
+
+    if len(clipped) < len(text) and not clipped.endswith(("…", "...")):
+        clipped = clipped + "…"
+    return clipped
+
+
 async def handle_dict_search(args: dict, collection: str, label: str) -> list[TextContent]:
     """Generic handler for dictionary/reference collection searches — uses SQLite."""
     query = args.get("query", args.get("word", ""))
@@ -2303,10 +2273,10 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
             )
         definition = hit.get("definition", hit.get("definitions", ""))
         if definition:
-            lines.append(f"- **Definition**: {str(definition)[:500]}")
+            lines.append(f"- **Definition**: {_quote_balanced_clip(str(definition), 500)}")
         text = hit.get("text", "")
         if text and text != definition:
-            lines.append(f"- **Text**: {text[:500]}")
+            lines.append(f"- **Text**: {_quote_balanced_clip(text, 500)}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -2479,8 +2449,30 @@ def create_http_app():
                 # This is normal — don't crash the server
                 pass
 
+    def _get_git_commit() -> str:
+        try:
+            import subprocess
+            res = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                cwd=str(PROJECT_ROOT),
+                timeout=2,
+            )
+            if res.returncode == 0:
+                return res.stdout.strip()
+        except Exception:
+            pass
+        return ""
+
     async def handle_health(request):
-        return Response('{"status":"ok"}', media_type="application/json")
+        from wiki.sources_db import SOURCES_DB_PATH
+        payload = {
+            "status": "ok",
+            "commit_sha": _get_git_commit(),
+            "db_path": str(SOURCES_DB_PATH),
+        }
+        return Response(json.dumps(payload), media_type="application/json")
 
     custom_routes = [
         Route("/health", endpoint=handle_health),
