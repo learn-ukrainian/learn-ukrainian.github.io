@@ -1,7 +1,10 @@
 """
-Comprehensive tests for activity validation.
+Tests for live activity-validation helpers and content-purity detection.
 
-Tests all 13 activity types and their validation rules.
+Markdown-only check_activity_complexity cases were removed (#6990): that
+helper short-circuits to [] without yaml_activities. YAML complexity lives
+in tests/test_yaml_activities.py and activity_validator.
+
 Run with: pytest tests/test_activities.py -v
 """
 
@@ -14,13 +17,13 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.checks.activities import (
-    check_activity_complexity,
     check_activity_level_restrictions,
     check_activity_ukrainian_content,
     check_anagram_min_letters,
     check_unjumble_word_match,
     count_items,
 )
+from scripts.audit.checks.content_purity import check_content_purity
 from scripts.audit.config import VALID_ACTIVITY_TYPES
 
 # =============================================================================
@@ -72,98 +75,11 @@ More English explanation here about how punctuation works.
 
 
 # =============================================================================
-# TEST: Quiz Validation
-# =============================================================================
-
-class TestQuizValidation:
-    """Test quiz prompt length validation."""
-
-    def test_quiz_prompt_too_short_b1(self):
-        """B1 quiz complexity check runs without error (prompt length now checked via YAML)."""
-        content = """
-## quiz: Тест
-
-1. Яка частина мови називає дії?
-   - [ ] Іменник
-   - [x] Дієслово
-   - [ ] Прикметник
-"""
-        violations = check_activity_complexity(content, 'B1', 6)
-        # Prompt length checks moved to YAML-based validation
-        assert isinstance(violations, list)
-
-    def test_quiz_prompt_valid_b1(self):
-        """B1 (non-bridge) quiz prompts need 12-20 words."""
-        content = """
-## quiz: Тест
-
-1. Яка частина мови в українській граматиці називає предмети та поняття для опису світу навколо нас?
-   - [x] Іменник
-   - [ ] Дієслово
-   - [ ] Прикметник
-"""
-        # 14 words - should pass for B1 non-bridge
-        violations = check_activity_complexity(content, 'B1', 6)
-        word_count_violations = [v for v in violations if 'prompt length' in v.get('issue', '')]
-        assert len(word_count_violations) == 0
-
-    def test_quiz_prompt_b1_bridge_uses_a2_rules(self):
-        """B1 M01-M05 (bridge) should use A2 complexity (8-15 words)."""
-        content = """
-## quiz: Тест
-
-1. Як називається частина мови що описує дію суб'єкта?
-   - [x] Дієслово
-   - [ ] Іменник
-"""
-        # 8 words - should pass for bridge modules
-        violations = check_activity_complexity(content, 'B1', 3)
-        word_count_violations = [v for v in violations if 'prompt length' in v.get('issue', '')]
-        assert len(word_count_violations) == 0
-
-
-# =============================================================================
 # TEST: Match-up Validation
 # =============================================================================
 
 class TestMatchupValidation:
-    """Test match-up pair count and content validation."""
-
-    def test_matchup_pair_count_valid(self):
-        """B1 bridge match-ups with 10-12 pairs should pass."""
-        content = """
-## match-up: Терміни
-
-| Термін | Переклад |
-|--------|----------|
-| слово | word |
-| речення | sentence |
-| граматика | grammar |
-| відмінок | case |
-| дієслово | verb |
-| іменник | noun |
-| прикметник | adjective |
-| прислівник | adverb |
-| займенник | pronoun |
-| сполучник | conjunction |
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        pair_violations = [v for v in violations if 'pairs' in v.get('issue', '')]
-        assert len(pair_violations) == 0
-
-    def test_matchup_too_many_pairs(self):
-        """Match-up complexity check runs without error (pair limits now in YAML)."""
-        pairs = "\n".join([f"| слово{i} | word{i} |" for i in range(14)])
-        content = f"""
-## match-up: Терміни
-
-| Термін | Переклад |
-|--------|----------|
-{pairs}
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        # Pair count enforcement moved to YAML-based validation
-        assert isinstance(violations, list)
+    """Test match-up content validation still enforced on markdown."""
 
     def test_matchup_misuse_english_pairs(self):
         """Match-ups with English-only pairs are detected by ukrainian content check."""
@@ -188,31 +104,7 @@ class TestMatchupValidation:
 # =============================================================================
 
 class TestUnjumbleValidation:
-    """Test unjumble word count and answer matching."""
-
-    def test_unjumble_word_count_valid_b1_bridge(self):
-        """B1 bridge unjumbles with 8-10 words should pass."""
-        content = """
-## unjumble: Речення
-
-1. мова / українська / граматичні / має / правила / чіткі / і / зрозумілі
-   > [!answer] Українська мова має чіткі і зрозумілі граматичні правила.
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        word_violations = [v for v in violations if 'words' in v.get('issue', '')]
-        assert len(word_violations) == 0
-
-    def test_unjumble_too_many_words_b1_bridge(self):
-        """Unjumble complexity check runs without error (word limits now in YAML)."""
-        content = """
-## unjumble: Речення
-
-1. мова / українська / граматичні / має / правила / чіткі / і / зрозумілі / для / всіх / хто / її / вивчає
-   > [!answer] Українська мова має чіткі і зрозумілі граматичні правила для всіх хто її вивчає.
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        # Word count enforcement moved to YAML-based validation
-        assert isinstance(violations, list)
+    """Test unjumble answer matching."""
 
     def test_unjumble_answer_mismatch(self):
         """Unjumble answer must use same words as scrambled version."""
@@ -237,87 +129,6 @@ class TestUnjumbleValidation:
 """
         violations = check_unjumble_word_match(content)
         assert len(violations) == 0
-
-
-# =============================================================================
-# TEST: Error-Correction Validation
-# =============================================================================
-
-class TestErrorCorrectionValidation:
-    """Test error-correction required callouts."""
-
-    def test_error_correction_missing_callouts(self):
-        """Error-correction without required callouts should fail."""
-        content = """
-## error-correction: Виправлення
-
-1. Він ходить до школа.
-
-This is missing the [!error], [!answer], [!options], [!explanation] callouts.
-"""
-        # This test checks that the audit flags missing callouts
-        # Note: The actual check is in markdown_format.py, not activities.py
-        # But we should ensure error-correction activities are validated
-        violations = check_activity_complexity(content, 'A2', 10)
-        # At minimum, item count should work
-        assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Group-Sort Validation
-# =============================================================================
-
-class TestGroupSortValidation:
-    """Test group-sort group count and item validation."""
-
-    def test_group_sort_valid_b1(self):
-        """B1 group-sort with valid group and item counts."""
-        content = """
-## group-sort: Частини мови
-
-### Іменники
-- стіл
-- книга
-- людина
-- місто
-- час
-- річка
-
-### Дієслова
-- читати
-- писати
-- говорити
-- бігти
-- думати
-- працювати
-
-### Прикметники
-- великий
-- малий
-- гарний
-- поганий
-- новий
-- старий
-"""
-        # B1 non-bridge needs 3-5 groups, 16-24 items
-        violations = check_activity_complexity(content, 'B1', 6)
-        group_violations = [v for v in violations if 'group' in v.get('issue', '').lower()]
-        # Should pass - 3 groups, 18 items
-        assert len([v for v in group_violations if 'groups' in v.get('issue', '')]) == 0
-
-    def test_group_sort_too_few_groups(self):
-        """Group-sort complexity check runs without error (group limits now in YAML)."""
-        content = """
-## group-sort: Частини мови
-
-### Іменники
-- стіл
-- книга
-- людина
-"""
-        violations = check_activity_complexity(content, 'B1', 6)
-        # Group count enforcement moved to YAML-based validation
-        assert isinstance(violations, list)
 
 
 # =============================================================================
@@ -361,148 +172,8 @@ class TestAnagramValidation:
    > [!answer] ТИ
 """
         violations = check_anagram_min_letters(content)
-        # Very short anagrams might be flagged
-        assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Cloze Validation
-# =============================================================================
-
-class TestClozeValidation:
-    """Test cloze passage and blank count validation."""
-
-    def test_cloze_item_count(self):
-        """Cloze should count blanks correctly."""
-        content = """
-## cloze: Заповніть пропуски
-
-Це {речення} про {граматику}. Українська {мова} має багато {правил}.
-Ми {вивчаємо} їх сьогодні. Кожне {слово} важливе. Це {текст} для {практики}.
-Продовжуємо {навчання}. Граматика {цікава}. Мова {красива}. Практика {важлива}.
-Закінчуємо {урок}. Підсумок {зроблено}.
-"""
-        # Count items function should work on cloze blanks
-        violations = check_activity_complexity(content, 'B1', 3)
-        assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Mark-the-Words Validation
-# =============================================================================
-
-class TestMarkTheWordsValidation:
-    """Test mark-the-words structure validation."""
-
-    def test_mark_the_words_bold_count(self):
-        """Mark-the-words should count bold words."""
-        content = """
-## mark-the-words: Знайдіть іменники
-
-Знайдіть усі іменники в реченнях.
-
-1. **Хлопчик** читає **книгу** про **пригоди**.
-2. **Мама** готує **вечерю** на **кухні**.
-3. **Батько** працює в **офісі** у **місті**.
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        # Check that we don't get item count violations for mark-the-words
-        # (it counts bold words, which is enough here)
-        mark_violations = [v for v in violations if 'mark-the-words' in v.get('issue', '').lower()]
-        # Just verify the check runs without errors
-        assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Select Validation
-# =============================================================================
-
-class TestSelectValidation:
-    """Test multi-select validation."""
-
-    def test_select_structure(self):
-        """Select should have checkboxes for multiple answers."""
-        content = """
-## select: Оберіть правильні відповіді
-
-1. Які з цих слів є іменниками? Оберіть усі правильні варіанти.
-   - [x] стіл
-   - [x] книга
-   - [ ] читати
-   - [ ] швидко
-"""
-        violations = check_activity_complexity(content, 'B1', 6)
-        # Should pass as valid select activity
-        assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Translate Validation
-# =============================================================================
-
-class TestTranslateValidation:
-    """Test translate activity validation."""
-
-    def test_translate_structure(self):
-        """Translate should have translation with options."""
-        content = """
-## translate: Переклад
-
-1. Перекладіть: "книга"
-   - [x] book
-   - [ ] table
-   - [ ] chair
-"""
-        violations = check_activity_complexity(content, 'B1', 6)
-        assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Fill-in Validation
-# =============================================================================
-
-class TestFillInValidation:
-    """Test fill-in sentence length validation."""
-
-    def test_fill_in_sentence_length_b1_bridge(self):
-        """B1 bridge fill-in should use A2 rules (6-8 words)."""
-        content = """
-## fill-in: Заповніть
-
-1. Я {читаю|пишу|говорю} книгу сьогодні.
-2. Ми {йдемо|біжимо|летимо} до школи.
-3. Вона {говорить|читає|пише} українською мовою.
-4. Він {працює|відпочиває|спить} вдома сьогодні.
-5. Ти {розумієш|знаєш|бачиш} цю граматику.
-6. Вони {вивчають|читають|пишуть} українську мову.
-7. Я {люблю|хочу|можу} читати книги.
-8. Ми {маємо|хочемо|любимо} робити вправи.
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        sent_violations = [v for v in violations if 'fill-in' in v.get('issue', '').lower() and 'sentence' in v.get('issue', '').lower()]
-        assert len(sent_violations) == 0
-
-
-# =============================================================================
-# TEST: True-False Validation
-# =============================================================================
-
-class TestTrueFalseValidation:
-    """Test true-false statement validation."""
-
-    def test_true_false_length_b1_bridge(self):
-        """B1 bridge true-false should use A2 rules (6-12 words)."""
-        content = """
-## true-false: Правда чи неправда
-
-1. Українська мова має сім відмінків.
-   > [!answer] true
-2. Дієслово позначає предмет.
-   > [!answer] false
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        tf_violations = [v for v in violations if 'true-false' in v.get('issue', '').lower()]
-        assert isinstance(violations, list)
+        short = [v for v in violations if v.get('type') == 'ANAGRAM_TOO_SHORT']
+        assert len(short) >= 1
 
 
 # =============================================================================
@@ -614,37 +285,54 @@ class TestUkrainianContent:
         assert violations[0]['type'] == 'NO_UKRAINIAN_CONTENT'
 
 
-
-
-
-
 # =============================================================================
-# TEST: Russian Character Detection
+# TEST: Content purity / redundancy
 # =============================================================================
 
 class TestContentPurity:
     """Test content purity checks (duplicate sentences, robotic structure)."""
 
     def test_clean_content_passes(self):
-        """Clean content without duplicates should pass."""
-        from scripts.audit.checks.content_purity import check_content_purity
-        content = "Українська мова має багату історію.\nГраматика цієї мови цікава."
-        violations = check_content_purity(content)
-        assert isinstance(violations, list)
-
-    @pytest.mark.xfail(reason="Redundancy detection disabled or threshold changed — pre-existing")
-    def test_redundancy_detection(self):
-        """Highly similar long sentences should be flagged as redundant."""
-        from scripts.audit.checks.content_purity import check_content_purity
-        # Sentences must be >50 chars and have >70% word overlap
-        s1 = "Українська граматика включає складні правила відмінювання іменників у різних контекстах."
-        s2 = "Українська граматика включає складні правила відмінювання прикметників у різних контекстах."
-        content = f"{s1} {s2}"
+        """Distinct lesson sentences must not emit CONTENT_REDUNDANCY."""
+        content = (
+            "Українська мова має багату історію та складну фонетичну систему.\n"
+            "Граматика цієї мови цікава своїми сімома відмінками."
+        )
         violations = check_content_purity(content)
         redundancy = [v for v in violations if v.get('type') == 'CONTENT_REDUNDANCY']
+        assert redundancy == []
+
+    def test_short_sentence_overlap_below_threshold_does_not_flag(self):
+        """#969: short sentences (<15 unique >3-char words) need >0.85 overlap."""
+        # 9 unique long words each; intersection/union = 8/10 = 0.80 < 0.85
+        s1 = (
+            "Українська граматика включає складні правила відмінювання "
+            "іменників у різних контекстах."
+        )
+        s2 = (
+            "Українська граматика включає складні правила відмінювання "
+            "прикметників у різних контекстах."
+        )
+        violations = check_content_purity(f"{s1} {s2}")
+        redundancy = [v for v in violations if v.get('type') == 'CONTENT_REDUNDANCY']
+        assert redundancy == []
+
+    def test_redundancy_detection(self):
+        """Long sentences (>=15 unique >3-char words) with >0.7 overlap flag."""
+        # 16 unique long words each; intersection/union = 15/17 ≈ 0.88 > 0.7
+        s1 = (
+            "Українська граматика включає складні правила відмінювання "
+            "іменників у різних контекстах навчання і потребує уваги "
+            "кожного студента на першому рівні."
+        )
+        s2 = (
+            "Українська граматика включає складні правила відмінювання "
+            "прикметників у різних контекстах навчання і потребує уваги "
+            "кожного студента на першому рівні."
+        )
+        violations = check_content_purity(f"{s1} {s2}")
+        redundancy = [v for v in violations if v.get('type') == 'CONTENT_REDUNDANCY']
         assert len(redundancy) >= 1
-
-
 
 
 # =============================================================================

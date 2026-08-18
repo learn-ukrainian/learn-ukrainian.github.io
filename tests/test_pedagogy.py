@@ -26,24 +26,12 @@ class TestDuplicateContent:
     """Test detection of duplicate/copy-pasted content."""
 
     def test_detects_duplicate_sentences(self):
-        """Should detect repeated sentences (function may have threshold)."""
-        content = """
-# Presentation
-
-Українська мова має сім відмінків. Це важлива інформація для вивчення.
-Українська мова має сім відмінків. Ми вивчаємо граматику.
-Українська мова має сім відмінків. Цей факт дуже цікавий.
-Українська мова має сім відмінків. Кожен відмінок унікальний.
-
-# Practice
-
-Практикуємо граматику української мови.
-"""
+        """A 7+ word Ukrainian sentence repeated 7+ times must emit DUPLICATE."""
+        repeated = "Українська мова має сім відмінків у кожній парадигмі."
+        content = "# Presentation\n\n" + "\n".join([repeated] * 7) + "\n"
         violations = check_duplicate_content(content)
-        dup_violations = [v for v in violations if 'DUPLICATE' in v.get('type', '')]
-        # Function may have a threshold for detection
-        # Just verify it returns a list (detection may vary by implementation)
-        assert isinstance(violations, list)
+        dup_violations = [v for v in violations if v.get('type') == 'DUPLICATE']
+        assert len(dup_violations) >= 1
 
     def test_allows_unique_content(self):
         """Should pass when all sentences are unique."""
@@ -112,17 +100,18 @@ class TestTopicConsistency:
         content = """
 # Граматика української мови
 
-Українська граматика має багато цікавих особливостей.
+Граматика української мови має багато цікавих особливостей.
 """
         frontmatter = """
 title: Граматика української мови
 module: 1
 """
         violations = check_topic_consistency(content, frontmatter)
-        assert isinstance(violations, list)
+        topic_violations = [v for v in violations if v.get('type') == 'TOPIC']
+        assert topic_violations == []
 
     def test_topic_mismatch(self):
-        """Content not matching title should be checked."""
+        """Title terms missing from the body must emit TOPIC."""
         content = """
 # Кулінарія
 
@@ -133,8 +122,8 @@ title: Граматика
 module: 1
 """
         violations = check_topic_consistency(content, frontmatter)
-        # Function may or may not flag this depending on implementation
-        assert isinstance(violations, list)
+        topic_violations = [v for v in violations if v.get('type') == 'TOPIC']
+        assert len(topic_violations) >= 1
 
 
 # =============================================================================
