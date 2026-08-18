@@ -7,12 +7,14 @@ Never proxies private adapters or mutates GitHub / dispatch state.
 from __future__ import annotations
 
 import asyncio
+import logging
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
 from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set
+from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
 from scripts.orchestration.issue_stream_audit import load_registry
 from scripts.work.attention import is_actionable
 from scripts.work.normalize import build_public_projection
@@ -24,6 +26,8 @@ from scripts.work.schema import (
     validate_projection,
 )
 from scripts.work.sources_public import private_capability_seam, public_repository_id
+
+log = logging.getLogger(__name__)
 
 router = APIRouter(tags=["work"])
 
@@ -39,6 +43,10 @@ NEXT_TOP_BLOCKERS = 3
 # Bound stale-serve for /next: expired cache may be returned while a
 # single-flight refresh runs, but never past this age (residual #3 / #6890).
 NEXT_MAX_STALE_S = 300.0
+# Bound one background build (#6984): the single-flight slot must always free
+# again even when a section collector hangs, or every later /next caller sees
+# 503 stale forever. Well above the per-section timeouts in sources_public.
+NEXT_BUILD_TIMEOUT_S = 20.0
 STREAM_REGISTRY_CACHE_KEY = "work:v1:stream-registry"
 STREAM_REGISTRY_TTL_S = 60.0
 
@@ -118,7 +126,10 @@ _IN_FLIGHT_BUILDS: dict[str, asyncio.Task[dict[str, Any]]] = {}
 
 async def _run_build_job(key: str, filters: dict[str, Any]) -> dict[str, Any]:
     try:
-        payload = await asyncio.to_thread(_build_sync, filters, cache_age_s=0.0)
+        payload = await asyncio.wait_for(
+            asyncio.to_thread(_build_sync, filters, cache_age_s=0.0),
+            timeout=NEXT_BUILD_TIMEOUT_S,
+        )
         payload["cache_age_s"] = 0.0
         cache_set(key, payload)
         return payload
@@ -126,10 +137,24 @@ async def _run_build_job(key: str, filters: dict[str, Any]) -> dict[str, Any]:
         _IN_FLIGHT_BUILDS.pop(key, None)
 
 
+def _consume_build_failure(task: asyncio.Task[dict[str, Any]]) -> None:
+    """Log (and thereby retrieve) fire-and-forget build failures.
+
+    Without this, a refresh kicked by /next that raises is dropped silently
+    and the cache just keeps aging toward the 503 stale cliff (#6984).
+    """
+    if task.cancelled():
+        return
+    exc = task.exception()
+    if exc is not None:
+        log.warning("work projection background build failed: %s: %s", type(exc).__name__, exc)
+
+
 def _get_or_create_build_task(key: str, filters: dict[str, Any]) -> asyncio.Task[dict[str, Any]]:
     task = _IN_FLIGHT_BUILDS.get(key)
     if task is None or task.done():
         task = asyncio.create_task(_run_build_job(key, filters))
+        task.add_done_callback(_consume_build_failure)
         _IN_FLIGHT_BUILDS[key] = task
     return task
 
@@ -225,6 +250,22 @@ def _item_streams(item: dict[str, Any]) -> list[str]:
     return [s for s in streams if isinstance(s, str) and s]
 
 
+def _resolve_stream_alias(stream: str, known: list[str]) -> str | None:
+    """Resolve an area/alias name (e.g. SESSION_EPIC ``infra``) to one stream.
+
+    Uses the fleet taxonomy (scripts/config/fleet_taxonomy.yaml), the same
+    resolver the session hooks use. Only an unambiguous mapping — exactly one
+    known stream among the area's id + aliases — aliases; anything else
+    returns None so the caller fails closed with 400 unknown_stream (#6984).
+    """
+    try:
+        area = resolve_area(stream)
+    except FleetTaxonomyError:
+        return None
+    candidates = [name for name in (area.id, *area.aliases) if name in known]
+    return candidates[0] if len(candidates) == 1 else None
+
+
 def _next_rank_key(item: dict[str, Any]) -> tuple[int, str]:
     return (int(item.get("attention_rank") or 0), str(item.get("work_id") or ""))
 
@@ -246,7 +287,11 @@ async def work_next(
     ``cache_age_s``) while the shared single-flight refresh runs in the
     background so /next-only pollers converge without ever blocking — until
     age exceeds ``NEXT_MAX_STALE_S``, which fails closed with 503 ``stale``.
-    An unreadable stream registry fails closed with 503 ``registry_unavailable``
+    The background build itself is bounded by ``NEXT_BUILD_TIMEOUT_S`` so a
+    hung collector frees the single-flight slot instead of wedging every
+    later caller at 503 stale (#6984). ``stream`` also accepts unambiguous
+    fleet-taxonomy area aliases (``infra`` → ``infra-harness``); an
+    unreadable stream registry fails closed with 503 ``registry_unavailable``
     rather than treating typos as an empty queue (#6890).
     """
     known = _known_streams()
@@ -260,12 +305,17 @@ async def work_next(
             },
             headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
         )
+    requested_stream = stream
+    if stream not in known:
+        aliased = _resolve_stream_alias(stream, known)
+        if aliased is not None:
+            stream = aliased
     if stream not in known:
         return _next_error(
             400,
             {
                 "error": "unknown_stream",
-                "message": f"unknown stream {stream!r}",
+                "message": f"unknown stream {requested_stream!r}",
                 "valid_streams": known,
             },
         )
@@ -343,7 +393,31 @@ async def work_next(
         )[:NEXT_TOP_BLOCKERS]
     ]
 
-    return {
+    # Honesty for the migration-pending lane (#6984): body-homed tickets whose
+    # native sub-issue link is still pending are AT_RISK work the caller must
+    # see either in the queue (when their body-derived membership includes
+    # this stream) or named here with a reason — never only a silent bump of
+    # unscoped_actionable_count.
+    excluded_pending = [
+        {
+            "work_id": i.get("work_id"),
+            "remote_id": i.get("remote_id"),
+            "title": i.get("title") or "",
+            "streams": _item_streams(i),
+            "reason": ("no_stream_membership" if not _item_streams(i) else "scoped_to_other_stream"),
+        }
+        for i in sorted(
+            (
+                i
+                for i in actionable
+                if ((i.get("projections") or {}).get("stream") or {}).get("status") == "pending_native"
+                and stream not in _item_streams(i)
+            ),
+            key=_next_rank_key,
+        )
+    ]
+
+    body: dict[str, Any] = {
         "schema_version": "work-next.v1",
         "stream": stream,
         "generated_at": payload.get("generated_at"),
@@ -356,9 +430,16 @@ async def work_next(
                 "top_blockers": top_blockers,
             },
             "unscoped_actionable_count": unscoped,
+            "excluded_pending_native": {
+                "count": len(excluded_pending),
+                "items": excluded_pending[:NEXT_MAX_LIMIT],
+            },
         },
         "capabilities": {"mutation": False},
     }
+    if requested_stream != stream:
+        body["requested_stream"] = requested_stream
+    return body
 
 
 @router.get("/v1/capabilities")
@@ -383,13 +464,15 @@ async def work_capabilities() -> dict[str, Any]:
             "route": "GET /api/work/v1/next",
             "params": {
                 "stream": (
-                    "required — stream key from scripts/config/issue_streams.yaml; the pick list is scoped to it"
+                    "required — stream key from scripts/config/issue_streams.yaml; the pick list is scoped to it. "
+                    "Unambiguous fleet-taxonomy area aliases (e.g. infra → infra-harness) are accepted (#6984)"
                 ),
                 "limit": f"optional int, default {NEXT_DEFAULT_LIMIT}, max {NEXT_MAX_LIMIT}",
             },
             "served_from": (
                 "warm projection cache only; 503 building + retry_after_s when cold; "
                 f"503 stale when cache_age_s ≥ {int(NEXT_MAX_STALE_S)}s; "
+                f"background refresh bounded at {int(NEXT_BUILD_TIMEOUT_S)}s so the single-flight slot always frees; "
                 "503 registry_unavailable when the stream registry is unreadable"
             ),
         },

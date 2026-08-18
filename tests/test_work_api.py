@@ -779,3 +779,213 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
     assert by_id[_wid(6001)]["projections"]["stream"]["streams"] == ["infra-harness"]
     assert by_id[_wid(6004)]["projections"]["stream"]["streams"] == ["infra-harness"]
     assert "bogus-stream" not in json.dumps(projection)
+
+
+# ---------------------------------------------------------------------------
+# /next — pending_native membership, stream aliases, refresh liveness (#6984)
+# ---------------------------------------------------------------------------
+
+
+def _pending_issue(number: int, title: str) -> dict:
+    return {
+        "number": number,
+        "title": title,
+        "labels": [{"name": "area:infra"}],
+        "assignees": [],
+        "body": "",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+        "url": f"https://github.com/{REPO}/issues/{number}",
+        "state": "OPEN",
+    }
+
+
+def _next_sections_pending(*, membership: bool) -> dict[str, SectionResult]:
+    """Fixture with an AT_RISK pending_native (body-homed) infra ticket.
+
+    With ``membership=True`` the streams authority knows the owning lane via
+    the epic-body reference (open_stream_membership); with ``False`` the
+    ticket is pending with no derivable lane.
+    """
+    sections = _next_sections()
+    issues = list(sections["issues"].payload)
+    issues.append(_pending_issue(6006, "Body-homed infra ticket (migration pending)"))
+    sections["issues"] = SectionResult("issues", "ok", payload=issues, count=len(issues))
+    streams_payload = dict(sections["streams"].payload)
+    streams_payload["pending_native_link"] = [6006]
+    membership_map = dict(streams_payload.get("open_stream_membership") or {})
+    if membership:
+        membership_map["6006"] = ["infra-harness"]
+    streams_payload["open_stream_membership"] = membership_map
+    sections["streams"] = SectionResult("streams", "ok", payload=streams_payload, count=len(issues))
+    return sections
+
+
+def _warm_cache_from(sections: dict[str, SectionResult]) -> dict:
+    from scripts.api.state_helpers import cache_set
+    from scripts.api.work_router import projection_cache_key
+
+    cache_invalidate("work:v1:projection")
+    payload = build_projection(sections, repository_id=REPO)
+    cache_set(projection_cache_key({}), payload)
+    return payload
+
+
+def test_next_includes_pending_native_with_body_membership(monkeypatch):
+    """#6984: a body-homed pending_native ticket is visible to its owning lane.
+
+    Native sub-issue migration can lag (5 infra tickets resisted --migrate);
+    while pending, the epic-body reference IS membership per the registry
+    rule. The item keeps status ``pending_native`` (no fake ``homed``) and
+    appears in the lane queue with LINK_PENDING_NATIVE.
+    """
+    _patch_known_streams(monkeypatch)
+    _warm_cache_from(_next_sections_pending(membership=True))
+
+    response = client.get("/api/work/v1/next?stream=infra-harness")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    queue_ids = [row["work_id"] for row in data["queue"]]
+    assert _wid(6006) in queue_ids
+    row = next(r for r in data["queue"] if r["work_id"] == _wid(6006))
+    assert row["health"] == "AT_RISK"
+    assert row["safe_next_action"]["code"] == "LINK_PENDING_NATIVE"
+    # Scoped, not silently dumped into the unscoped count.
+    assert data["digest"]["unscoped_actionable_count"] == 2
+    excluded = data["digest"]["excluded_pending_native"]
+    assert all(e["work_id"] != _wid(6006) for e in excluded["items"])
+    assert excluded["count"] == 0
+
+
+def test_next_pending_native_status_and_streams_stay_honest():
+    """The projection keeps status=pending_native while listing the body-derived lane."""
+    projection = build_projection(_next_sections_pending(membership=True), repository_id=REPO)
+    by_id = {i["work_id"]: i for i in projection["items"]}
+    stream = by_id[_wid(6006)]["projections"]["stream"]
+    assert stream["status"] == "pending_native"
+    assert stream["streams"] == ["infra-harness"]
+
+
+def test_next_pending_native_without_membership_is_named_in_digest(monkeypatch):
+    """#6984: an unscoped pending_native ticket is listed with a reason, never silent."""
+    _patch_known_streams(monkeypatch)
+    _warm_cache_from(_next_sections_pending(membership=False))
+
+    response = client.get("/api/work/v1/next?stream=infra-harness")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert _wid(6006) not in [row["work_id"] for row in data["queue"]]
+    excluded = data["digest"]["excluded_pending_native"]
+    assert excluded["count"] == 1
+    entry = next(e for e in excluded["items"] if e["work_id"] == _wid(6006))
+    assert entry["reason"] == "no_stream_membership"
+    assert entry["streams"] == []
+    assert entry["title"] == "Body-homed infra ticket (migration pending)"
+    # Still honestly counted as unscoped.
+    assert data["digest"]["unscoped_actionable_count"] == 3
+
+
+def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
+    """#6984: drivers type SESSION_EPIC area names ('infra'); unambiguous aliases work."""
+    _patch_known_streams(monkeypatch)
+    _warm_next_cache()
+
+    response = client.get("/api/work/v1/next?stream=infra")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["stream"] == "infra-harness"
+    assert data["requested_stream"] == "infra"
+    assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
+
+    # Canonical names still pass through without a requested_stream echo.
+    canonical = client.get("/api/work/v1/next?stream=infra-harness")
+    assert canonical.status_code == 200
+    assert "requested_stream" not in canonical.json()
+
+    # Unknown selectors still fail closed with the valid stream list.
+    bad = client.get("/api/work/v1/next?stream=not-a-stream")
+    assert bad.status_code == 400
+    assert bad.json()["error"] == "unknown_stream"
+
+
+def test_next_successful_background_refresh_resets_age(monkeypatch):
+    """#6984: a kicked refresh that finishes re-warms the cache; the retry is 200."""
+    import time
+
+    from scripts.api.state_helpers import _ttl_cache
+    from scripts.api.work_router import projection_cache_key
+
+    _patch_known_streams(monkeypatch)
+    payload = _warm_next_cache()
+    key = projection_cache_key({})
+    _ttl_cache[key] = (time.monotonic() - (work_router.NEXT_MAX_STALE_S + 15.0), payload)
+
+    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        return build_projection(_next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+
+    first = client.get("/api/work/v1/next?stream=infra-harness")
+    assert first.status_code == 503, first.text
+    assert first.json()["error"] == "stale"
+
+    # The single-flight refresh kicked by the 503 completes and rewrites the
+    # cache; a driver retrying within seconds must converge to 200.
+    deadline = time.monotonic() + 10.0
+    second = None
+    while time.monotonic() < deadline:
+        second = client.get("/api/work/v1/next?stream=infra-harness")
+        if second.status_code == 200:
+            break
+        time.sleep(0.05)
+    assert second is not None and second.status_code == 200, "refresh never re-warmed the cache"
+    assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+    assert [r["work_id"] for r in second.json()["queue"]] == [_wid(6004), _wid(6001)]
+
+
+def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
+    """#6984: a build that never finishes must not wedge the single-flight slot.
+
+    The background build is bounded by NEXT_BUILD_TIMEOUT_S; once it times
+    out the slot frees and the next caller's refresh can succeed.
+    """
+    import time
+
+    from scripts.api.state_helpers import _ttl_cache
+    from scripts.api.work_router import projection_cache_key
+
+    _patch_known_streams(monkeypatch)
+    payload = _warm_next_cache()
+    key = projection_cache_key({})
+    _ttl_cache[key] = (time.monotonic() - (work_router.NEXT_MAX_STALE_S + 15.0), payload)
+    monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
+
+    def hanging_build(**_kwargs):
+        time.sleep(2.0)
+        return build_projection(_next_sections(), repository_id=REPO)
+
+    monkeypatch.setattr(work_router, "build_public_projection", hanging_build)
+    first = client.get("/api/work/v1/next?stream=infra-harness")
+    assert first.status_code == 503, first.text
+    assert first.json()["error"] == "stale"
+
+    # The hung build is abandoned at the timeout and the slot frees.
+    deadline = time.monotonic() + 5.0
+    while time.monotonic() < deadline and key in work_router._IN_FLIGHT_BUILDS:
+        time.sleep(0.05)
+    assert key not in work_router._IN_FLIGHT_BUILDS, "hung build wedged the single-flight slot"
+
+    # A healthy retry rebuilds and serves 200.
+    def fast_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        return build_projection(_next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
+
+    monkeypatch.setattr(work_router, "build_public_projection", fast_build)
+    deadline = time.monotonic() + 10.0
+    second = None
+    while time.monotonic() < deadline:
+        second = client.get("/api/work/v1/next?stream=infra-harness")
+        if second.status_code == 200:
+            break
+        time.sleep(0.05)
+    assert second is not None and second.status_code == 200, "slot stayed wedged after the hung build"
+    assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
