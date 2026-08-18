@@ -658,7 +658,7 @@ diffs, Codex for novel-architecture catches. (VESUM/content review = language wo
 installed" fiasco was cancelled, user 2026-06-22; Claude may be used for ANY task, incl. dispatched review, when needed.
 The cost economics above stand regardless: dispatched Claude is far pricier than inline, so route by need, not by ban.)
 
-The same table lives in `memory/MEMORY.md` rule #M0; this file is the deploy-rule mirror so it loads via `npm run agents:deploy` into `.claude/rules/`.
+The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. This file is served at `GET /api/rules`; it is a Claude autoload exclude and is not deployed into `.claude/rules/`.
 
 </critical>
 

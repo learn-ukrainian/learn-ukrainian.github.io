@@ -10,9 +10,9 @@
 
 > **ALWAYS look for the source of the problem first.** Don't fix symptoms — trace the root cause, understand why it happens, then fix that.
 
-> **BEHAVIORAL RULES** are in `memory/MEMORY.md` — enforced every session. Key: finish the job (no tech debt), stop asking (just do it), test before shipping, use tracking docs, no quality shortcuts, investigate before coding, be honest.
+> **BEHAVIORAL RULES** are in `agents_extensions/shared/memory/MEMORY.md` — enforced every session. Key: finish the job (no tech debt), stop asking (just do it), test before shipping, use tracking docs, no quality shortcuts, investigate before coding, be honest.
 
-> **NON-NEGOTIABLE RULES** in `.claude/rules/non-negotiable-rules.md` — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
+> **NON-NEGOTIABLE RULES** in `agents_extensions/shared/rules/non-negotiable-rules.md` (served at `GET /api/rules`; offline: `agents_extensions/shared/rules/_load-via-api.md`) — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
