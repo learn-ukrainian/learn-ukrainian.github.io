@@ -1,0 +1,45 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/sources-7026-contracts-agy
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #7026 Sources MCP honest tool contracts
+
+CAPACITY_CARD: pick=gemini status=cool rem=99% will_last=true avoid=codex,cursor source=routing-budget
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: gemini (Gemini CLI / 99% remaining — operator: gemini underused)
+- why_this_tier: MCP contract honesty; not UK authoring; Gemini idle
+- owned_paths: .mcp/servers/sources/server.py; tests/test_mcp_sources_server.py
+- alternatives_considered: agy (sibling #7028); claude (infra 7020/7031)
+- parallel_free_seats: gemini #7027; agy #7028
+
+Initiator: grok-infra. AGENT_NO_MERGE=1. Stream #4706 / Sources MCP.
+
+## Outcome
+Live tool schemas match handlers. Agents must not be told BGE-M3 / SigLIP / RAG / grade/trust_tier filters exist if the handler ignores them.
+
+## Work
+Read issue #7026. In `.mcp/servers/sources/server.py`:
+1. `search_text` / `search_literary` / `get_chunk_context` / `search_images` / `collection_stats` / `get_full_text` — rewrite descriptions to what the code actually does, or implement the advertised filter (prefer honest schema unless a filter is a one-line SQLite WHERE that already has a column).
+2. `search_images` stub: say stub, drop SigLIP/grade claims.
+3. `collection_stats`: live counts including esum/ua_gec/sum20/slovnyk_me/wikipedia; drop “RAG collections”.
+4. Health: include commit SHA + DB path; do not invent `/api/readyz`. `/sse` hang is in-scope if it is a one-file ASGI fix.
+5. While in `handle_dict_search`, replace `[:500]` chops with a quote-balanced clip (do not split «»). Ranking/ESUM is #7028 — do not rewrite FTS.
+
+Tests in `tests/test_mcp_sources_server.py`. PR Refs #7026. Trailer `X-Agent: gemini/sources-7026-contracts`. Do not merge.
+
+## Verify
+```bash
+.venv/bin/ruff check .mcp/servers/sources/server.py
+.venv/bin/python -m pytest -q tests/test_mcp_sources_server.py
+rg -n 'BGE-M3|SigLIP|RAG database|RAG collections' .mcp/servers/sources/server.py
+```
+Zero false ads in tool descriptions.
