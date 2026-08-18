@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "458561cf715b",
+  "strategy": "manual-commit",
+  "branch": "codex/agent-gh-identity-aj",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_dispatch_telemetry.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/45/8561cf715b/0/metadata.json",
+      "transcript": "/45/8561cf715b/0/full.jsonl",
+      "compact_transcript": "/45/8561cf715b/0/transcript.jsonl",
+      "content_hash": "/45/8561cf715b/0/content_hash.txt",
+      "prompt": "/45/8561cf715b/0/prompt.txt"
+    }
+  ]
+}
