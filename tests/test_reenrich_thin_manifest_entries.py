@@ -644,8 +644,6 @@ def test_deadjectival_adverb_fallback_fails_closed_on_vesum_error(monkeypatch) -
 
 
 def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> None:
-    from scripts.lexicon.manifest_io import load_manifest
-
     monkeypatch.setattr(
         reenrich,
         "verify_word",
@@ -657,19 +655,36 @@ def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> No
         ),
     )
 
-    manifest = load_manifest()
+    manifest = {
+        "entries": [
+            {
+                "lemma": "абстрактний",
+                "pos": "adjective",
+                "url_slug": "абстрактний",
+                "enrichment": {
+                    "translation": {
+                        "en": ["abstract"],
+                        "source": "dmklinger",
+                    },
+                    "sources": ["dmklinger"],
+                },
+            },
+            {
+                "lemma": "абстрактно",
+                "pos": "adverb",
+                "url_slug": "абстрактно",
+                "enrichment": {},
+            },
+        ]
+    }
     by_lemma = {e.get("lemma"): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
 
-    if "абстрактно" in by_lemma and "абстрактний" in by_lemma:
-        abstr_adj = by_lemma["абстрактний"]
-        abstr_adv = by_lemma["абстрактно"]
-        adj_trans = abstr_adj.get("enrichment", {}).get("translation", {})
-        if adj_trans.get("en"):
-            res = reenrich._deadjectival_adverb_translation(abstr_adv, by_lemma)
-            assert res is not None
-            assert isinstance(res.get("en"), list)
-            assert "abstractly" in res["en"][0]
-            assert "base form абстрактний" in str(res.get("source"))
+    abstr_adv = by_lemma["абстрактно"]
+    res = reenrich._deadjectival_adverb_translation(abstr_adv, by_lemma)
+    assert res is not None
+    assert isinstance(res.get("en"), list)
+    assert "abstractly" in res["en"][0]
+    assert "base form абстрактний" in str(res.get("source"))
 
 
 def test_diminutive_fallback_fills_in_reenrich_thin_entries(monkeypatch) -> None:
