@@ -355,6 +355,8 @@ Never arm on a **draft** and never merge ahead of the review verdict. Blocking C
 never `--admin`-bypass. A track/infra driver **self-merges its own lane's PR** after the
 cross-family gate + green CI (lane model — there is no promoting orchestrator). Flag
 another lane's PR with `needs=merge` rather than merging it.
+Skill- or docs-only landings classify as merge_group `docs_skills` (#7018):
+the four pytest shards and coverage combine are no-op **success**, not skipped.
 
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
