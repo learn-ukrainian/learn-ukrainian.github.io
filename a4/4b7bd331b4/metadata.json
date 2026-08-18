@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a44b7bd331b4",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-7018-landing-class",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_ci_queue_starvation.py",
+    "tests/test_frontend_change_scope.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a4/4b7bd331b4/0/metadata.json",
+      "transcript": "/a4/4b7bd331b4/0/full.jsonl",
+      "compact_transcript": "/a4/4b7bd331b4/0/transcript.jsonl",
+      "content_hash": "/a4/4b7bd331b4/0/content_hash.txt",
+      "prompt": "/a4/4b7bd331b4/0/prompt.txt"
+    }
+  ]
+}
