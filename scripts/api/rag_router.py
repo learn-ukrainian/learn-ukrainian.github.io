@@ -1,4 +1,4 @@
-"""Legacy RAG browse/search endpoints backed by SQLite source helpers."""
+"""Sources browse/search endpoints backed by SQLite source helpers (with legacy /api/rag alias)."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ _scripts_dir = str(PROJECT_ROOT / "scripts")
 if _scripts_dir not in sys.path:
     sys.path.insert(0, _scripts_dir)
 
-router = APIRouter(tags=["rag"])
+router = APIRouter(tags=["sources"])
 
 IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
 ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}

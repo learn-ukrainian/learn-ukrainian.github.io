@@ -15,7 +15,6 @@ import logging
 import os
 import re
 import socket
-import sqlite3
 import subprocess
 import threading
 import time
@@ -79,14 +78,12 @@ from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
 from .hermes_cron_router import router as hermes_cron_router
-from .hramatka_router import initialize_hramatka_store
-from .hramatka_router import router as hramatka_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
 from .ops_router import router as ops_router
 from .preload import preload_all
-from .rag_router import router as rag_router
+from .rag_router import router as sources_router
 from .repository_authority import build_repository_authority
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
@@ -118,10 +115,6 @@ async def _lifespan(_app: FastAPI):
     preload_all()
     install_signal_logging()
     ensure_broker_db_ready()
-    try:
-        initialize_hramatka_store()
-    except (OSError, RuntimeError, sqlite3.Error) as exc:
-        logger.error("Hramatka store initialization failed; readyz will remain unhealthy: %s", exc)
     try:
         isa.schedule_refresh(force=False)
     except Exception as exc:
@@ -196,12 +189,12 @@ app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
 app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
-app.include_router(hramatka_router)
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
 app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
-app.include_router(rag_router, prefix="/api/rag")
+app.include_router(sources_router, prefix="/api/sources", tags=["sources"])
+app.include_router(sources_router, prefix="/api/rag", tags=["rag"], deprecated=True)
 # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
 # can discover it alongside the other state-query endpoints.
 app.include_router(
@@ -1240,9 +1233,11 @@ def _worktree_cleanup_integrity_canary() -> bool:
 
 
 def _collect_health_orient_data() -> dict:
+    mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
     return {
         "api": True,
-        "mcp_rag": _port_open("127.0.0.1", 8766, 0.2),
+        "mcp_sources": mcp_sources_ok,
+        "mcp_rag": mcp_sources_ok,
         "sources_db": _readable_file(SOURCES_DB_PATH),
         "message_broker": _readable_file(MESSAGE_DB),
         "git_core_bare_ok": _core_bare_canary(),
@@ -1769,4 +1764,12 @@ async def serve_static(path: str):
         return FileResponse(file_path)
     if file_path.is_dir() and (file_path / "index.html").is_file():
         return FileResponse(file_path / "index.html")
+    if not file_path.suffix:
+        html_candidate = _safe_join(DASHBOARDS_DIR, f"{path}.html")
+        if (
+            html_candidate is not None
+            and html_candidate.resolve().is_relative_to(dashboards_root)
+            and html_candidate.is_file()
+        ):
+            return FileResponse(html_candidate)
     raise HTTPException(status_code=404)

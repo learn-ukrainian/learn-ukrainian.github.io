@@ -85,7 +85,7 @@ def _patch_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(
         api_main,
         "_collect_health_orient_data",
-        lambda: {"api": True, "mcp_rag": False, "sources_db": True, "message_broker": True},
+        lambda: {"api": True, "mcp_sources": False, "mcp_rag": False, "sources_db": True, "message_broker": True},
     )
     monkeypatch.setattr(
         api_main,
