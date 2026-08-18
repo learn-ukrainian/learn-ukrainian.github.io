@@ -97,7 +97,6 @@ import json
 import logging
 import os
 import re
-import shlex
 import shutil
 import signal
 import stat
@@ -131,7 +130,20 @@ from scripts.orchestration import reaper_lifecycle
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
-_GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
+_GH_TOKEN_AGENTS = {
+    "agy",
+    "bridge",
+    "claude",
+    "codex",
+    "cursor",
+    "deepseek",
+    "gemini",
+    "glm",
+    "grok",
+    "grok-build",
+    "grok-hermes",
+    "kimi",
+}
 _RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
     {
         "done",
@@ -229,39 +241,15 @@ def _validate_dispatch_effort(agent: str, effort: str | None) -> None:
             ) from exc
 
 
-def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None:
-    """Read GITHUB_TOKEN from a shell env file without executing it."""
-    path = path or _BASH_SECRETS_PATH
-    try:
-        lines = path.read_text(encoding="utf-8").splitlines()
-    except FileNotFoundError:
-        return None
-    except OSError:
-        return None
-
-    for line in lines:
-        try:
-            parts = shlex.split(line, comments=True, posix=True)
-        except ValueError:
-            continue
-        if not parts:
-            continue
-        if parts[0] == "export":
-            parts = parts[1:]
-        for part in parts:
-            if part.startswith("GITHUB_TOKEN="):
-                value = part.split("=", 1)[1]
-                return value or None
-    return None
-
-
 def _resolve_github_token() -> str | None:
-    """Resolve the GitHub token used for GH_TOKEN pass-through."""
-    return os.environ.get("GITHUB_TOKEN") or _read_github_token_from_bash_secrets() or os.environ.get("GH_TOKEN")
+    """Resolve the App-first GitHub token used by an agent shell."""
+    from agent_runtime.agent_github_identity import resolve_agent_github_identity
+
+    return resolve_agent_github_identity(bash_secrets_path=_BASH_SECRETS_PATH).token
 
 
 def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
-    """Expose GH_TOKEN only to agents allowed to run authenticated gh."""
+    """Inject the resolved agent identity for every dispatchable push lane."""
     worker_env.pop("GITHUB_TOKEN", None)
     if agent not in _GH_TOKEN_AGENTS:
         worker_env.pop("GH_TOKEN", None)
@@ -272,10 +260,8 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
         worker_env["GH_TOKEN"] = token
         return
 
-    # No GH_TOKEN env var available — that's fine. Codex/Claude inherit the
-    # user's interactive `gh auth` via the gh CLI keyring; the env var is a
-    # belt-and-suspenders extra, not a requirement. User confirmed 2026-05-16:
-    # the previous warning was noise. Removing it.
+    # Without an agent identity, do not allow a dispatch shell to inherit an
+    # operator credential by accident through its parent environment.
     worker_env.pop("GH_TOKEN", None)
 
 
