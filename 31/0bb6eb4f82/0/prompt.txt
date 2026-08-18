@@ -1,0 +1,43 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-7001-postbuild-split
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: split/speed tests/audit/test_post_build_review.py — issue #7001
+
+You are agy. From the 2026-08-18 cursor CI audit (finding 6): this single file costs
+529.1s combined, 21 of its 58 tests exceed 10s, and it dominates required pytest shard 1
+(597s vs 572s next shard). The audit's diagnosis: schema-only tests are paying for real
+BIO packet loads.
+
+## Steps
+1. Profile first, then cut: run the file with `--durations=0`, quote the table, and for
+   each >10s test identify WHAT is slow (packet load? real review pipeline? fixture
+   scope?). Do not guess.
+2. Fix at the right layer:
+   - Schema/shape-only tests: replace real BIO packets with a minimal synthetic packet
+     fixture (module-scoped). The assertions must stay exactly as strong — a schema test
+     must still fail on the schema violation it guards. Mutation-check at least two:
+     break the guarded property in the fixture and quote the failure.
+   - Tests that genuinely exercise the review pipeline on real packets: keep them real;
+     if they exceed the fast-set budget, move them to a new sibling file and evaluate
+     whether they belong in the nightly slow lane (@pytest.mark.slow) — but NEVER
+     blanket-mark; justify each individually in the report.
+   - Shared expensive setup duplicated per-test: hoist to session/module-scoped fixtures.
+3. If you split the file, grep for consumers of its names (imports, conftest refs,
+   parametrize ids, CI selection patterns) — the #6997/#6989 cross-file-consumer lesson.
+4. Evidence (#M-4): quote --durations BEFORE and AFTER for the whole file(s); full run of
+   the touched files green; ruff clean; state the expected shard-1 saving.
+5. Branch agy/infra-7001-postbuild-split off origin/main, conventional commit
+   (Fixes #7001), push, open PR. NO auto-merge — driver runs the CF gate.
+
+## Routing card: tier=practical · agy (mechanical test refactor) ·
+owned_paths=tests/audit/test_post_build_review.py, tests/audit/**, tests/conftest.py ·
+research_classification: role=implementer family=test-wallclock track=infra

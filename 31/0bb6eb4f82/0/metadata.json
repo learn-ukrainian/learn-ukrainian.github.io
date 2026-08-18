@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "310bb6eb4f82",
+  "session_id": "fleet-79c9b03a395b4dfdb407461e54d01712",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T11:58:37.181053Z",
+  "branch": "agy/infra-7001-postbuild-split",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/audit/test_post_build_review.py",
+    "tests/audit/test_post_build_review_pipeline.py",
+    "tests/fixtures/post_build_review/synthetic/activities.md",
+    "tests/fixtures/post_build_review/synthetic/content.md",
+    "tests/fixtures/post_build_review/synthetic/plan.yaml",
+    "tests/fixtures/post_build_review/synthetic/resources.yaml",
+    "tests/fixtures/post_build_review/synthetic/vocabulary.yaml"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "362464b5591a",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T11:58:37.170357Z",
+    "agent_lines": 758,
+    "agent_removed": 537,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 758,
+    "total_lines_changed": 1295,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

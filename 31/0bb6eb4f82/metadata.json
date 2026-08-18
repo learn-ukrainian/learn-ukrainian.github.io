@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "310bb6eb4f82",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-7001-postbuild-split",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/audit/test_post_build_review.py",
+    "tests/audit/test_post_build_review_pipeline.py",
+    "tests/fixtures/post_build_review/synthetic/activities.md",
+    "tests/fixtures/post_build_review/synthetic/content.md",
+    "tests/fixtures/post_build_review/synthetic/plan.yaml",
+    "tests/fixtures/post_build_review/synthetic/resources.yaml",
+    "tests/fixtures/post_build_review/synthetic/vocabulary.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/31/0bb6eb4f82/0/metadata.json",
+      "transcript": "/31/0bb6eb4f82/0/full.jsonl",
+      "compact_transcript": "/31/0bb6eb4f82/0/transcript.jsonl",
+      "content_hash": "/31/0bb6eb4f82/0/content_hash.txt",
+      "prompt": "/31/0bb6eb4f82/0/prompt.txt"
+    }
+  ]
+}
