@@ -431,6 +431,11 @@ jobs:
           # Coverage collection on the trees that land: merge_group (queued
           # merge commit) and push to main. PR heads stay coverage-free.
           COLLECT_COVERAGE: ${{ github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+          # LINE coverage only (no branch=true). sys.monitoring is near-free
+          # on coverage 7.14.1 / Python 3.12 vs the C-tracer's ~35% tax.
+          # Unused when COLLECT_COVERAGE is false (--cov is not passed).
+          # Fastlane and coverage-combine do not run pytest --cov.
+          COVERAGE_CORE: sysmon
           SHARD: ${{ matrix.shard }}
           PYTEST_BREADCRUMB_DIR: .pytest_breadcrumbs
         run: |
