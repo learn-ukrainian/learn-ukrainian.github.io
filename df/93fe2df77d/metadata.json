@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "df93fe2df77d",
+  "strategy": "manual-commit",
+  "branch": "grok/infra-6976-no-idle-r2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "docs/SCRIPTS.md",
+    "scripts/fleet/driver_breadth_report.py",
+    "scripts/fleet/idle_settle.py",
+    "scripts/orchestration/dispatch_settle.py",
+    "tests/test_dispatch_settle.py",
+    "tests/test_driver_breadth_report.py",
+    "tests/test_idle_settle.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/df/93fe2df77d/0/metadata.json",
+      "transcript": "/df/93fe2df77d/0/full.jsonl",
+      "compact_transcript": "/df/93fe2df77d/0/transcript.jsonl",
+      "content_hash": "/df/93fe2df77d/0/content_hash.txt",
+      "prompt": "/df/93fe2df77d/0/prompt.txt"
+    }
+  ]
+}
