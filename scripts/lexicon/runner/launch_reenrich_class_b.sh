@@ -210,7 +210,7 @@ run_cmd() {
     printf '%q ' "${EXTRA_ARGS[@]}"
   fi
 }
-WRAPPED="cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$CODE_ROOT"):\$PYTHONPATH:$(printf '%q' "$REPO") exec /usr/bin/nice -n 10 /usr/bin/ionice -c3 $(run_cmd) 2>>$(printf '%q' "$LOG") | tee -a $(printf '%q' "$LOG") > $(printf '%q' "$SUMMARY_FILE")"
+WRAPPED="set -o pipefail; cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$CODE_ROOT"):\$PYTHONPATH:$(printf '%q' "$REPO") exec /usr/bin/nice -n 10 /usr/bin/ionice -c3 $(run_cmd) 2>>$(printf '%q' "$LOG") | tee -a $(printf '%q' "$LOG") > $(printf '%q' "$SUMMARY_FILE")"
 
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
