@@ -258,6 +258,7 @@ class TestDispatchAgent:
         ok, raw = dispatch_agent(
             "test prompt", agent="gemini", phase="write",
             orch_dir=tmp_path, timeout=300, model="gemini-test",
+            sleep_fn=lambda _s, _r: None,
         )
         assert ok is True
         assert "Section 1" in raw
@@ -288,6 +289,7 @@ class TestDispatchAgent:
             orch_dir=tmp_path,
             timeout=300,
             model="gemini-test",
+            sleep_fn=lambda _s, _r: None,
         )
 
         assert ok is True
@@ -337,6 +339,7 @@ class TestDispatchAgent:
             timeout=300,
             model="gemini-3.1-pro-preview",
             mcp_tools=True,
+            sleep_fn=lambda _s, _r: None,
         )
 
         assert ok is True
@@ -497,9 +500,11 @@ class TestDispatchAgent:
         from agent_runtime.errors import AgentTimeoutError
         mock_invoke.side_effect = AgentTimeoutError("gemini", 300)
 
+        recorded_sleeps: list[tuple[int, str]] = []
         ok, raw = dispatch_agent(
             "test", agent="gemini", phase="skeleton",
             orch_dir=tmp_path, timeout=300, model="test",
+            sleep_fn=lambda s, r: recorded_sleeps.append((s, r)),
         )
         assert ok is False
         assert raw == ""
@@ -508,6 +513,9 @@ class TestDispatchAgent:
         for mf in meta_files:
             data = json.loads(mf.read_text())
             assert data["ok"] is False
+        # Assert retry backoff sleeps were requested between attempts without blocking wallclock (#7000)
+        retry_backoffs = [s for s, r in recorded_sleeps if "retry backoff" in r]
+        assert retry_backoffs == [10, 10]
 
     @patch("agent_runtime.runner.invoke")
     def test_gemini_dispatch_honors_custom_per_call_cap(self, mock_invoke, tmp_path):
@@ -533,6 +541,7 @@ class TestDispatchAgent:
             ),
         ]
 
+        recorded_sleeps: list[tuple[int, str]] = []
         ok, raw = dispatch_agent(
             "rewrite prompt",
             agent="gemini-tools",
@@ -542,6 +551,7 @@ class TestDispatchAgent:
             model="gemini-3.1-pro-preview",
             mcp_tools=True,
             cascade_per_call_max_s=120,
+            sleep_fn=lambda s, r: recorded_sleeps.append((s, r)),
         )
 
         assert ok is True
@@ -550,6 +560,9 @@ class TestDispatchAgent:
         second_call = mock_invoke.call_args_list[1].kwargs
         assert first_call["hard_timeout"] == 120
         assert second_call["hard_timeout"] == 120
+        # Assert retry backoff sleep between attempt 1 and 2 was requested without blocking wallclock (#7000)
+        retry_backoffs = [s for s, r in recorded_sleeps if "retry backoff" in r]
+        assert retry_backoffs == [10]
 
     @patch("agent_runtime.runner.invoke")
     def test_failure_logged(self, mock_invoke, tmp_path):
