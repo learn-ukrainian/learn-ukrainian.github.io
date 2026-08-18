@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fdc2ed102af7",
+  "session_id": "fleet-99b505495af3483da868e8b65f814f14",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T11:10:46.855156Z",
+  "branch": "agy/infra-6999-wallclock",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_enrich.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "3dc35280672b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T11:10:46.84667Z",
+    "agent_lines": 7,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 7,
+    "total_lines_changed": 8,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
