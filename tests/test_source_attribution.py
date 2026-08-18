@@ -5,6 +5,7 @@ from __future__ import annotations
 from scripts.lexicon.enrich_manifest import _merge_homonym_relations, _relation_source_label
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
+    GOROH_LABEL,
     GRAC_LABEL,
     GRINCHENKO_LABEL,
     KARAVANSKY_LABEL,
@@ -191,3 +192,33 @@ def test_learner_provenance_walker_checks_section_singular_source_url() -> None:
     }
     violations = learner_facing_mirror_violations(entry)
     assert any("sections.synonyms.source_url" in item for item in violations)
+
+
+def test_apply_entry_attribution_handles_goroh_translation() -> None:
+    entry = {
+        "lemma": "албанці",
+        "enrichment": {
+            "translation": {
+                "en": ["Albanian", "Albanians"],
+                "source": "Горох (переклад)",
+                "mirror_source_url": "https://goroh.pp.ua/Переклад/%D0%B0%D0%BB%D0%B1%D0%B0%D0%BD%D1%86%D1%96",
+            },
+            "sources": ["Горох (переклад)"],
+        },
+    }
+    assert apply_entry_attribution(entry) is False
+    assert entry["enrichment"]["translation"]["source"] == GOROH_LABEL
+    assert "source_url" not in entry["enrichment"]["translation"]
+    assert (
+        entry["enrichment"]["translation"]["mirror_source_url"]
+        == "https://goroh.pp.ua/Переклад/%D0%B0%D0%BB%D0%B1%D0%B0%D0%BD%D1%86%D1%96"
+    )
+    assert learner_facing_mirror_violations(entry) == []
+    assert learner_facing_unmapped_source_violations(entry) == []
+
+
+def test_normalize_academic_label_maps_goroh() -> None:
+    assert normalize_academic_label("goroh.pp.ua") == GOROH_LABEL
+    assert normalize_academic_label("goroh.pp.ua: Переклад") == GOROH_LABEL
+    assert normalize_academic_label("Горох") == GOROH_LABEL
+    assert normalize_academic_label("Горох (переклад)") == GOROH_LABEL
