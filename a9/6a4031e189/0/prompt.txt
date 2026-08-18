@@ -1,0 +1,95 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/workflow-path-gate-bd
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch — workflow-path gate (B+D)
+
+Advisor packet: Fable + Sol [AGREE] 2026-08-18. Operator: implement, keep fleet fluid.
+Research classification: infra/ci; no matching registry records known → pointer-free.
+
+## Worktree instructions (mandatory)
+
+Work in `.worktrees/dispatch/<agent>/<task>/` (auto-created by `--worktree`).
+Do NOT branch in the primary checkout.
+
+## Owned paths (disjoint — do not touch others)
+
+- `.github/CODEOWNERS` (new)
+- `scripts/audit/check_untrusted_workflow_interpolation.py` (new)
+- `scripts/audit/check_workflows.sh` (call the new checker after actionlint)
+- `tests/test_untrusted_workflow_interpolation.py` (new)
+- `tests/test_actionlint_workflow.py` only if the existing actionlint test
+  must know about the extra checker
+- `.github/workflows/README.md` one-line mention of CODEOWNERS / the new check
+
+Do not edit `scripts/agent_runtime/**`, `scripts/delegate.py`, or `agents_extensions/`.
+
+## Outcome
+
+1. Workflow-file PRs require a named human code owner. Agents may still **draft**
+   workflow PRs. Ordinary code/docs/curriculum PRs get no extra reviewer.
+2. Untrusted GitHub context (`github.event.issue.*`, `github.event.comment.*`,
+   `github.event.pull_request.title/body`, `github.head_ref`, etc.) must not be
+   interpolated with `${{ }}` inside a `run:` script. The existing `env:` +
+   `"$VAR"` pattern in `ci.yml` must **pass**.
+
+## Implementation contract
+
+1. `.github/CODEOWNERS`:
+   ```
+   .github/workflows/**  @krisztiankoos
+   .github/CODEOWNERS    @krisztiankoos
+   ```
+   If `gh api user --jq .login` is not `krisztiankoos`, use the live login.
+   No catch-all `*` rule (that would add friction to every PR).
+2. New checker `scripts/audit/check_untrusted_workflow_interpolation.py`:
+   - Scan `.github/workflows/*.yml`
+   - Fail if a `run:` block (including multiline `|`) contains `${{` with
+     untrusted contexts listed above.
+   - Allow the same expressions inside `env:` mappings (Snowflake-safe).
+   - Allow SHAs, `github.sha`, `github.ref` used in `if:` / `concurrency` /
+     `with:` as needed — those are not `run:` interpolation.
+   - Exit 0 on current main workflows (prove with a run before committing).
+   - Fixture tests: one bad `run: echo ${{ github.event.issue.title }}` fails;
+     one good `env: TITLE: ${{ github.event.pull_request.title }}` + `run: echo "$TITLE"` passes.
+3. Call the checker from `scripts/audit/check_workflows.sh` after actionlint
+   succeeds, so the existing always-on `actionlint` required check gates it.
+4. Do **not** make the whole zizmor SARIF job fail-closed (known medium
+   backlog). The new checker is the fail-closed interpolation gate.
+
+## Verify
+
+```bash
+scripts/audit/check_workflows.sh
+.venv/bin/python -m pytest tests/test_untrusted_workflow_interpolation.py -q
+.venv/bin/python -m ruff check scripts/audit/check_untrusted_workflow_interpolation.py
+```
+
+Quote raw output. Current repo workflows must stay green.
+
+## Git
+
+1. Confirm dispatch worktree.
+2. Implement + tests.
+3. Commit: `feat(ci): CODEOWNERS + fail-closed workflow interpolation`
+   trailer `X-Agent: kimi/workflow-path-gate-bd`
+4. `git push -u origin HEAD` and `gh pr create`. **NO merge. NO auto-merge.**
+
+PR title: `feat(ci): CODEOWNERS + fail-closed workflow interpolation`
+PR body: advisor packet B+D; human code-owner on workflows only; agents may draft; env: pattern allowed.
+
+## Stop / non-goals
+
+- No per-command git approval.
+- No humans-only workflow *authorship* ban.
+- No repo-wide CODEOWNERS `*`.
+- Do not enable branch-protection settings (operator console); mention in PR
+  that "Require review from Code Owners" should be turned on.
