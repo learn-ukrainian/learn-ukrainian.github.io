@@ -105,13 +105,19 @@ def run_blocks(text: str) -> list[tuple[int, str]]:
             i += 1
             continue
         indent = len(match.group("indent"))
+        # Sibling keys (`env:`, `name:`) share the mapping indent of `run`,
+        # not the dash. For `- run: |`, dash-indent is shallower than `run`,
+        # so using dash-indent would swallow a following `env:` into the
+        # script body and false-positive the allowed env: pattern.
+        run_at = lines[i].find("run:")
+        key_indent = run_at if run_at >= 0 else indent
         value = match.group("value").strip()
         if value.startswith(("|", ">")):  # block scalar: consume deeper-indented lines
             body_lines: list[str] = []
             j = i + 1
             while j < len(lines):
                 line = lines[j]
-                if line.strip() == "" or (len(line) - len(line.lstrip())) > indent:
+                if line.strip() == "" or (len(line) - len(line.lstrip())) > key_indent:
                     body_lines.append(line)
                     j += 1
                 else:

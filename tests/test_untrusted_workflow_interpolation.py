@@ -135,6 +135,27 @@ jobs:
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+def test_env_mapping_after_dash_run_block_passes(tmp_path: Path) -> None:
+    # Compact `- run: |` measures dash-indent, which is shallower than sibling
+    # keys. env: after run: is valid YAML and must stay the allowed pattern.
+    workflow = _write_workflow(
+        tmp_path,
+        """\
+on: issues
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "$TITLE"
+        env:
+          TITLE: ${{ github.event.issue.title }}
+""",
+    )
+    result = _run_checker(workflow)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_mixed_case_untrusted_context_in_run_fails(tmp_path: Path) -> None:
     workflow = _write_workflow(
         tmp_path,
