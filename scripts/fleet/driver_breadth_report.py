@@ -15,6 +15,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.fleet import idle_settle as idle_settle
+
 ROOT = Path(__file__).resolve().parents[2]
 
 # Static agent→tier fallback (not a live model_catalog.yaml load).
@@ -201,6 +203,12 @@ def main(argv: list[str] | None = None) -> int:
         help="Path to a written NOTE: fleet_breadth justification (waives --enforce fail)",
     )
     parser.add_argument("--json", action="store_true", help="Machine-readable JSON only")
+    parser.add_argument(
+        "--idle-store",
+        type=Path,
+        default=None,
+        help="Optional idle-settle events JSONL to embed (report-only; ignored by --enforce)",
+    )
     args = parser.parse_args(argv)
 
     since = datetime.now(UTC) - timedelta(hours=args.since_hours)
@@ -209,6 +217,11 @@ def main(argv: list[str] | None = None) -> int:
     report["initiator_filter"] = args.initiator
     report["since_hours"] = args.since_hours
     report["generated_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    idle_path = args.idle_store if args.idle_store is not None else idle_settle.default_store_path()
+    if idle_path.is_file():
+        report["idle_settle"] = idle_settle.build_report(idle_settle.load_events(idle_path))
+    else:
+        report["idle_settle"] = None
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
@@ -227,6 +240,9 @@ def main(argv: list[str] | None = None) -> int:
             f"  breadth_floor_applies={report['breadth_floor_applies']} "
             f"ok={report['breadth_floor_ok']} ({report['breadth_floor_rule']})"
         )
+        idle = report.get("idle_settle")
+        if isinstance(idle, dict):
+            print(f"  idle_settle: {idle_settle.format_report(idle)}")
 
     if args.enforce and report["breadth_floor_applies"] and not report["breadth_floor_ok"]:
         if args.note_file and args.note_file.is_file():

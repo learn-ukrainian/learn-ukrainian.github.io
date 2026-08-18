@@ -22,6 +22,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.fleet import idle_settle as idle_settle
 from scripts.guardrails.delegate_ownership import OwnershipLedger, default_ledger_path
 
 
@@ -341,6 +342,61 @@ def settle_task(
     )
 
 
+def _idle_snapshot_from_args(args: argparse.Namespace) -> idle_settle.EligibilitySnapshot:
+    raw = getattr(args, "idle_snapshot_json", None)
+    if raw is None:
+        return idle_settle.empty_snapshot()
+    payload = json.loads(Path(raw).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"idle snapshot must be a JSON object: {raw}")
+    return idle_settle.parse_snapshot(payload)
+
+
+def attach_idle_reminder(
+    report: SettleReport,
+    *,
+    snapshot: idle_settle.EligibilitySnapshot | None = None,
+    dispatched: bool = False,
+    disposition: str | None = None,
+    store: Path | None = None,
+    record: bool = True,
+    settle_kind: str | None = None,
+    now: Any = None,
+) -> tuple[int, idle_settle.SettleDecision, dict[str, Any] | None]:
+    """Evaluate the #6976 settle reminder after a dispatch/review closeout.
+
+    Does not print. Invalid disposition returns 2; missing action is report-only 0.
+    """
+    kind = settle_kind or idle_settle.infer_settle_kind(report.task_id)
+    snap = snapshot or idle_settle.empty_snapshot()
+    decision = idle_settle.evaluate_settle(
+        snap,
+        dispatched=dispatched,
+        disposition=disposition,
+        settle_kind=kind,
+        task_id=report.task_id,
+    )
+    event: dict[str, Any] | None = None
+    if record and store is not None:
+        event = idle_settle.record_settle(store, decision, now=now)
+    rc = 2 if decision.outcome == "invalid_disposition" else 0
+    return rc, decision, event
+
+
+def _print_settle_report(report: SettleReport) -> None:
+    print(f"task_id={report.task_id} status={report.status} pid={report.pid} alive={report.pid_alive}")
+    print(f"worktree={report.worktree_path}")
+    print(f"branch={report.branch} ahead={report.commits_ahead} dirty={report.dirty}")
+    print(f"pr={report.pr_url or 'NONE'}")
+    if report.actions:
+        print("actions:")
+        for action in report.actions:
+            print(f"  - {action}")
+    print("CLOSEOUT")
+    for key, value in report.closeout.items():
+        print(f"{key}: {value}")
+
+
 def _cmd_task(args: argparse.Namespace) -> int:
     report = settle_task(
         args.task_id,
@@ -350,21 +406,36 @@ def _cmd_task(args: argparse.Namespace) -> int:
         push=args.push,
         release_stale=not args.no_release_stale,
     )
+    idle_payload: dict[str, Any] | None = None
+    idle_rc = 0
+    reminder_text: str | None = None
+    if not getattr(args, "no_idle_reminder", False):
+        snapshot = _idle_snapshot_from_args(args)
+        has_snapshot = args.idle_snapshot_json is not None
+        record = (not args.no_idle_record) and has_snapshot
+        store = args.idle_store if record else None
+        idle_rc, decision, event = attach_idle_reminder(
+            report,
+            snapshot=snapshot,
+            dispatched=bool(args.dispatched),
+            disposition=args.disposition,
+            store=store,
+            record=record,
+        )
+        idle_payload = decision.to_dict()
+        if event is not None:
+            idle_payload["event"] = event
+        reminder_text = idle_settle.format_reminder(decision, snapshot)
     if args.json:
-        print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+        payload = report.to_dict()
+        if idle_payload is not None:
+            payload["idle_settle"] = idle_payload
+        print(json.dumps(payload, indent=2, sort_keys=True))
     else:
-        print(f"task_id={report.task_id} status={report.status} pid={report.pid} alive={report.pid_alive}")
-        print(f"worktree={report.worktree_path}")
-        print(f"branch={report.branch} ahead={report.commits_ahead} dirty={report.dirty}")
-        print(f"pr={report.pr_url or 'NONE'}")
-        if report.actions:
-            print("actions:")
-            for action in report.actions:
-                print(f"  - {action}")
-        print("CLOSEOUT")
-        for key, value in report.closeout.items():
-            print(f"{key}: {value}")
-    return 0
+        _print_settle_report(report)
+        if reminder_text:
+            print(reminder_text)
+    return idle_rc
 
 
 def _cmd_release_stale(_args: argparse.Namespace) -> int:
@@ -389,6 +460,35 @@ def _build_parser() -> argparse.ArgumentParser:
     task.add_argument("--pr-body", default=None)
     task.add_argument("--no-release-stale", action="store_true")
     task.add_argument("--json", action="store_true")
+    task.add_argument(
+        "--disposition",
+        default=None,
+        help="Idle-settle disposition when no follow-up dispatch: "
+        + " | ".join(sorted(idle_settle.DISPOSITION_CODES)),
+    )
+    task.add_argument(
+        "--dispatched",
+        action="store_true",
+        help="This settle is paired with a follow-up dispatch (satisfies the reminder)",
+    )
+    task.add_argument(
+        "--idle-snapshot-json",
+        type=Path,
+        default=None,
+        help="Eligibility snapshot for the settle reminder (empty snapshot = no nag)",
+    )
+    task.add_argument(
+        "--idle-store",
+        type=Path,
+        default=idle_settle.default_store_path(),
+        help="Append-only idle-settle events JSONL",
+    )
+    task.add_argument("--no-idle-record", action="store_true")
+    task.add_argument(
+        "--no-idle-reminder",
+        action="store_true",
+        help="Skip the #6976 settle reminder (tests / explicit opt-out)",
+    )
     task.set_defaults(func=_cmd_task)
 
     stale = sub.add_parser(

@@ -1585,4 +1585,4 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 
 ### Dispatch settle (Luna handoff)
 
-`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned.
+`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report`.
