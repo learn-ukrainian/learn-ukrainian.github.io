@@ -929,16 +929,11 @@ def test_next_successful_background_refresh_resets_age(monkeypatch):
     assert first.status_code == 503, first.text
     assert first.json()["error"] == "stale"
 
-    # The single-flight refresh kicked by the 503 completes and rewrites the
-    # cache; a driver retrying within seconds must converge to 200.
-    deadline = time.monotonic() + 10.0
-    second = None
-    while time.monotonic() < deadline:
-        second = client.get("/api/work/v1/next?stream=infra-harness")
-        if second.status_code == 200:
-            break
-        time.sleep(0.05)
-    assert second is not None and second.status_code == 200, "refresh never re-warmed the cache"
+    # Sync TestClient does not pump request-loop create_task work; wait on the
+    # worker-loop future so the 503 stale contract stays and the retry is 200.
+    work_router.wait_for_in_flight_build(key)
+    second = client.get("/api/work/v1/next?stream=infra-harness")
+    assert second.status_code == 200, "refresh never re-warmed the cache"
     assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
     assert [r["work_id"] for r in second.json()["queue"]] == [_wid(6004), _wid(6001)]
 
@@ -970,9 +965,7 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
     assert first.json()["error"] == "stale"
 
     # The hung build is abandoned at the timeout and the slot frees.
-    deadline = time.monotonic() + 5.0
-    while time.monotonic() < deadline and key in work_router._IN_FLIGHT_BUILDS:
-        time.sleep(0.05)
+    work_router.wait_for_in_flight_build(key)
     assert key not in work_router._IN_FLIGHT_BUILDS, "hung build wedged the single-flight slot"
 
     # A healthy retry rebuilds and serves 200.
@@ -980,12 +973,10 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
         return build_projection(_next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
 
     monkeypatch.setattr(work_router, "build_public_projection", fast_build)
-    deadline = time.monotonic() + 10.0
-    second = None
-    while time.monotonic() < deadline:
-        second = client.get("/api/work/v1/next?stream=infra-harness")
-        if second.status_code == 200:
-            break
-        time.sleep(0.05)
-    assert second is not None and second.status_code == 200, "slot stayed wedged after the hung build"
+    retry = client.get("/api/work/v1/next?stream=infra-harness")
+    assert retry.status_code == 503, retry.text
+    assert retry.json()["error"] == "stale"
+    work_router.wait_for_in_flight_build(key)
+    second = client.get("/api/work/v1/next?stream=infra-harness")
+    assert second.status_code == 200, "slot stayed wedged after the hung build"
     assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
