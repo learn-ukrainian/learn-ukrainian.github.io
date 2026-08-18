@@ -611,29 +611,29 @@ of a second server:
 
 | Document | Purpose |
 | --- | --- |
-| `.claude/rules/workflow.md` | Core workflow rules for agent sessions |
-| `.claude/rules/pipeline.md` | Build and validation workflow guidance |
-| `.claude/rules/rag-and-dictionaries.md` | MCP sources and dictionary lookup rules |
-| `.claude/rules/ukrainian-linguistics.md` | Ukrainian language quality rules |
-| `.claude/phases/gemini/README.md` | Gemini phase map |
-| `.claude/phases/gemini/v6-write.md` | Current write phase reference |
-| `.claude/phases/gemini/v6-review.md` | Current review phase reference |
-| `.claude/quick-ref/ACTIVITY-SCHEMAS.md` | Activity schema quick reference |
+| `agents_extensions/shared/rules/workflow.md` (`GET /api/rules`) | Core workflow rules for agent sessions |
+| `agents_extensions/shared/rules/pipeline.md` | Build and validation workflow guidance |
+| `agents_extensions/shared/rules/mcp-sources-and-dictionaries.md` | MCP sources and dictionary lookup rules |
+| `agents_extensions/shared/rules/ukrainian-linguistics.md` | Ukrainian language quality rules |
+| `agents_extensions/shared/phases/gemini/README.md` | Gemini phase map |
+| `agents_extensions/shared/phases/gemini/v6-write.md` | Current write phase reference |
+| `agents_extensions/shared/phases/gemini/v6-review.md` | Current review phase reference |
+| `agents_extensions/shared/quick-ref/ACTIVITY-SCHEMAS.md` | Activity schema quick reference |
 | `docs/agent-runtime-guide.md` | Agent runtime architecture |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Module richness requirements |
-| `claude_extensions/consultation-queue/README.md` | Consultation queue format |
+| `agents_extensions/shared/consultation-queue/README.md` | Consultation queue format |
 
 ## Tool Inventory (Quick Reference)
 
 ### MCP sources tools
 
-Full list: [`.claude/rules/rag-and-dictionaries.md`](../.claude/rules/rag-and-dictionaries.md). Core tools used daily:
+Full list: [`agents_extensions/shared/rules/mcp-sources-and-dictionaries.md`](../agents_extensions/shared/rules/mcp-sources-and-dictionaries.md). Core tools used daily:
 
-- `mcp__rag__verify_word` - VESUM morphological check
+- `mcp__sources__verify_word` - VESUM morphological check
 - `mcp__sources__vet_vocabulary` - batched VESUM/CEFR/Russian-shadow vocabulary vetting (optional SUM-11 gloss)
-- `mcp__rag__search_text` - textbook content search
-- `mcp__rag__search_definitions` - SUM-11 explanatory dictionary
-- `mcp__rag__search_style_guide` - Antonenko-Davydovych style guidance
+- `mcp__sources__search_text` - textbook content search
+- `mcp__sources__search_definitions` - SUM-11 explanatory dictionary
+- `mcp__sources__search_style_guide` - Antonenko-Davydovych style guidance
 
 ### Deterministic audit checks
 
@@ -1266,9 +1266,9 @@ Queue locations:
 
 | Path | Purpose |
 | --- | --- |
-| `claude_extensions/consultation-queue/*.yaml` | Pending proposals |
-| `claude_extensions/consultation-queue/applied/` | Approved proposals |
-| `claude_extensions/consultation-queue/rejected/` | Rejected proposals |
+| `agents_extensions/shared/consultation-queue/*.yaml` | Pending proposals |
+| `agents_extensions/shared/consultation-queue/applied/` | Approved proposals |
+| `agents_extensions/shared/consultation-queue/rejected/` | Rejected proposals |
 
 ---
 

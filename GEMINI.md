@@ -180,7 +180,7 @@ data/
 ## References
 - **Commands**: `docs/SCRIPTS.md`
 - **Module manifest**: `curriculum/l2-uk-en/curriculum.yaml`
-- **Build pipeline**: `.venv/bin/python scripts/build/v6_build.py {level} {num}`
+- **Build pipeline**: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree [--writer {claude-tools|gemini-tools|codex-tools}]`
 - **Wiki compiler**: `scripts/wiki/compile.py`
 - **Monitor API**: `docs/MONITOR-API.md`
 
