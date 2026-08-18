@@ -515,6 +515,162 @@ def test_class_a_no_deliverable_dispatch_removed(
     assert not worktree_path.exists()
 
 
+def test_settled_dispatch_with_unpushed_local_commit_is_skipped_unpushed_head(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Settled dispatch worktree with unpushed commits must NOT be reaped (skip: unpushed_head)."""
+    repo = init_repo(tmp_path)
+    task_id = "grok-unpushed-task"
+    worktree_path = repo / ".worktrees" / "dispatch" / "grok" / task_id
+    add_worktree(repo, "grok/grok-unpushed-task", path=worktree_path)
+
+    # Add a local-only deliverable commit
+    (worktree_path / "deliverable.txt").write_text("precious deliverable\n", encoding="utf-8")
+    git(worktree_path, "add", "deliverable.txt")
+    git(worktree_path, "commit", "-m", "feat: unpushed deliverable")
+
+    # Set task status to done
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "done"}), encoding="utf-8"
+    )
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {"grok/grok-unpushed-task": []})
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+    )
+    result = result_for(results, worktree_path)
+    assert result.action == "skipped"
+    assert result.reason == "unpushed_head"
+    assert worktree_path.exists()
+    assert (worktree_path / "deliverable.txt").read_text(encoding="utf-8") == "precious deliverable\n"
+    journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
+    assert '"event": "skip"' in journal
+    assert '"reason": "unpushed_head"' in journal
+
+
+def test_settled_dispatch_with_head_pushed_to_origin_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Settled dispatch worktree whose commit is pushed to origin is safely reaped."""
+    repo = init_repo(tmp_path)
+    task_id = "grok-pushed-task"
+    branch = "grok/grok-pushed-task"
+    worktree_path = repo / ".worktrees" / "dispatch" / "grok" / task_id
+    add_worktree(repo, branch, path=worktree_path)
+
+    # Add a deliverable commit and push it to origin
+    (worktree_path / "deliverable.txt").write_text("pushed deliverable\n", encoding="utf-8")
+    git(worktree_path, "add", "deliverable.txt")
+    git(worktree_path, "commit", "-m", "feat: pushed deliverable")
+    git(worktree_path, "push", "-u", "origin", branch)
+
+    # Set task status to done
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "done"}), encoding="utf-8"
+    )
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {branch: []})
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+        safe_only=True,
+    )
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "settled dispatch" in result.reason
+    assert not worktree_path.exists()
+
+
+def test_settled_dispatch_with_zero_commits_ahead_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Settled dispatch worktree with zero commits ahead of base (origin/main) is reaped."""
+    repo = init_repo(tmp_path)
+    task_id = "noop-done-task"
+    branch = "grok/noop-done-task"
+    worktree_path = repo / ".worktrees" / "dispatch" / "grok" / task_id
+    add_worktree(repo, branch, path=worktree_path)
+
+    # No commits added -> 0 commits ahead of origin/main
+
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "done"}), encoding="utf-8"
+    )
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {branch: []})
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+    )
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "settled dispatch" in result.reason
+    assert not worktree_path.exists()
+
+
+def test_settled_dispatch_terminal_status_without_commits_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Terminal statuses implying no deliverable (dry_run, cancelled) with 0 commits reap."""
+    repo = init_repo(tmp_path)
+    task_id = "dry-run-task"
+    branch = "grok/dry-run-task"
+    worktree_path = repo / ".worktrees" / "dispatch" / "grok" / task_id
+    add_worktree(repo, branch, path=worktree_path)
+
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "dry_run"}), encoding="utf-8"
+    )
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {branch: []})
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+    )
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "settled dispatch" in result.reason
+    assert "status=dry_run" in result.reason
+    assert not worktree_path.exists()
+
+
 def test_terminal_dispatch_class_reaps_only_explicit_terminal_task(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

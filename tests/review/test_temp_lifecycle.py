@@ -84,7 +84,7 @@ def test_disk_pressure_escalates_sweeper(tmp_path: Path, monkeypatch: pytest.Mon
     root = tmp_path / "lu-review-snap-legacy"
     root.mkdir()
     marker = root / REVIEW_TEMP_ROOT_MARKER_NAME
-    marker.write_bytes(f"lu-review-root-v1:{'0'*64}\n".encode("ascii"))
+    marker.write_bytes(f"lu-review-root-v1:{'0' * 64}\n".encode("ascii"))
     os.utime(root, (now - 7200.0, now - 7200.0))  # 2 hours old
 
     # Mock free space = 1GB (< 10GB threshold)
@@ -147,7 +147,11 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
     monkeypatch.setattr(scheduled_worktree_cleanup, "find_orphaned_worktree_directories", lambda r: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "_git_maintenance", lambda r, apply: {"ok": True})
     monkeypatch.setattr(scheduled_worktree_cleanup, "sweep_review_temp_orphans", lambda: {"roots_reaped": 0})
-    monkeypatch.setattr(scheduled_worktree_cleanup, "sweep_tmp_leaks", lambda apply=False: {"roots_reaped": 0, "bytes_freed": 0, "errors": 0, "candidates": 0, "skipped_live": 0})
+    monkeypatch.setattr(
+        scheduled_worktree_cleanup,
+        "sweep_tmp_leaks",
+        lambda apply=False: {"roots_reaped": 0, "bytes_freed": 0, "errors": 0, "candidates": 0, "skipped_live": 0},
+    )
 
     res = scheduled_worktree_cleanup._repo_result_unlocked(repo, apply=False)
     assert any("fetch failed" in err for err in res["errors"])
@@ -165,9 +169,7 @@ def test_terminal_task_reaped_immediately(tmp_path: Path) -> None:
     tasks_dir.mkdir(parents=True)
 
     task_id = "task-123"
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"task_id": task_id, "status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, "status": "done"}), encoding="utf-8")
 
     wt = repo / ".worktrees" / "dispatch" / "lane-1" / "task-123"
     wt.mkdir(parents=True)
@@ -182,6 +184,7 @@ def test_terminal_task_reaped_immediately(tmp_path: Path) -> None:
     with (
         patch.object(reap_worktrees, "_worktree_clean", return_value=True),
         patch.object(reap_worktrees, "_is_ancestor_of_origin_main", return_value=False),
+        patch.object(reap_worktrees, "_is_head_reachable_from_remote", return_value=True),
     ):
         reason = reap_worktrees._qualifying_reason(
             repo_root=repo,
@@ -196,6 +199,24 @@ def test_terminal_task_reaped_immediately(tmp_path: Path) -> None:
 
     assert reason is not None
     assert "settled dispatch task-id=task-123" in reason
+
+    # Unpushed head must not be reaped under the reachability guard contract
+    with (
+        patch.object(reap_worktrees, "_worktree_clean", return_value=True),
+        patch.object(reap_worktrees, "_is_ancestor_of_origin_main", return_value=False),
+        patch.object(reap_worktrees, "_is_head_reachable_from_remote", return_value=False),
+    ):
+        unpushed_reason = reap_worktrees._qualifying_reason(
+            repo_root=repo,
+            info=info,
+            pr_state=None,
+            build_age_hours=24.0,
+            now=time.time(),
+            active_ids=set(),
+            safe_only=False,
+            merged_pr_only=False,
+        )
+    assert unpushed_reason is None
 
 
 def test_needs_finalize_log_visibility(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -252,9 +273,7 @@ def test_sweep_preserves_non_esrch_dead_owner_during_grace_window(
     assert not root.exists()
 
 
-def test_sweep_toctou_recheck_skips_on_uncheckable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_sweep_toctou_recheck_skips_on_uncheckable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Guard / F2 (TOCTOU re-check): Sweeper skips if TOCTOU recheck becomes uncheckable."""
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 1000.0
@@ -283,9 +302,7 @@ def test_sweep_toctou_recheck_skips_on_uncheckable(
     assert root.exists()
 
 
-def test_disk_pressure_threshold_reads_yaml_config(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_disk_pressure_threshold_reads_yaml_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Guard / F3 (Disk Pressure YAML Config): YAML config threshold is respected."""
     monkeypatch.setattr(
         isolation,
@@ -294,7 +311,7 @@ def test_disk_pressure_threshold_reads_yaml_config(
     )
 
     mock_usage = MagicMock()
-    mock_usage.free = 12 * (1024 ** 3)
+    mock_usage.free = 12 * (1024**3)
     monkeypatch.setattr(isolation.shutil, "disk_usage", lambda p: mock_usage)
 
     assert isolation._is_disk_pressure_active(tmp_path) is True
@@ -334,9 +351,7 @@ def test_terminal_task_reaped_with_none_active_ids(tmp_path: Path) -> None:
     tasks_dir.mkdir(parents=True)
 
     task_id = "task-789"
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"task_id": task_id, "status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, "status": "done"}), encoding="utf-8")
 
     wt = repo / ".worktrees" / "dispatch" / "lane-1" / "task-789"
     wt.mkdir(parents=True)
@@ -351,6 +366,7 @@ def test_terminal_task_reaped_with_none_active_ids(tmp_path: Path) -> None:
     with (
         patch.object(reap_worktrees, "_worktree_clean", return_value=True),
         patch.object(reap_worktrees, "_is_ancestor_of_origin_main", return_value=False),
+        patch.object(reap_worktrees, "_is_head_reachable_from_remote", return_value=True),
     ):
         reason = reap_worktrees._qualifying_reason(
             repo_root=repo,
