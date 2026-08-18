@@ -159,22 +159,41 @@ def test_launcher_wrapped_command_has_pipefail() -> None:
 
 
 def test_source_query_goroh_translate_importable_without_bs4() -> None:
-    """#6876: scripts.rag.source_query and goroh_translate must be importable
-    even when bs4 / beautifulsoup4 is not installed in the environment."""
+    """#6876: goroh_translate must be importable without bs4.
+
+    Fastlane puts only the repo root on ``sys.path``, so the content trees
+    ``wiki/`` and ``audit/`` shadow ``scripts.wiki`` / ``scripts.audit``. Stub
+    a minimal ``wiki.slovnyk_me`` so this regression proves the no-bs4 contract
+    without requiring those packages (or a scripts-on-path environment).
+    """
     import sys
-    orig_bs4 = sys.modules.get("bs4")
-    orig_source_query = {k: v for k, v in sys.modules.items() if "source_query" in k}
+    import types
+
+    stub_keys = ("bs4", "wiki", "wiki.slovnyk_me")
+    saved = {key: sys.modules.get(key) for key in stub_keys}
+    saved_source_query = {k: v for k, v in sys.modules.items() if "source_query" in k}
     try:
         sys.modules["bs4"] = None  # type: ignore[assignment]
-        for k in list(orig_source_query.keys()):
-            sys.modules.pop(k, None)
+
+        slovnyk = types.ModuleType("wiki.slovnyk_me")
+        slovnyk.SLOVNYK_ME_DICTS = {}
+        slovnyk.resolve_dict_slug = lambda slug: slug
+        wiki_pkg = types.ModuleType("wiki")
+        wiki_pkg.slovnyk_me = slovnyk
+        sys.modules["wiki"] = wiki_pkg
+        sys.modules["wiki.slovnyk_me"] = slovnyk
+
+        for key in list(saved_source_query):
+            sys.modules.pop(key, None)
 
         from scripts.rag.source_query import goroh_translate
+
         assert callable(goroh_translate)
     finally:
-        if orig_bs4 is not None:
-            sys.modules["bs4"] = orig_bs4
-        else:
-            sys.modules.pop("bs4", None)
-        sys.modules.update(orig_source_query)
+        for key, prior in saved.items():
+            if prior is None:
+                sys.modules.pop(key, None)
+            else:
+                sys.modules[key] = prior
+        sys.modules.update(saved_source_query)
 
