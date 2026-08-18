@@ -541,6 +541,14 @@ def _reap_terminal_without_pr(
             "error": None,
         }
 
+    if not reap_worktrees._is_head_reachable_from_remote(bound_path):
+        return {
+            "path": str(bound_path),
+            "action": "skipped",
+            "reason": "unpushed_head",
+            "error": None,
+        }
+
     if apply:
         live_cwds = reap_worktrees._live_cwd_paths(repo_root)
         if live_cwds is None:

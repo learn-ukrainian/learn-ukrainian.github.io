@@ -563,7 +563,57 @@ def _is_ancestor_of_origin_main(path: Path) -> bool:
     return proc.returncode == 0
 
 
-_TERMINAL_DISPATCH_STATUSES = frozenset({"done", "failed", "no_deliverable"})
+def _is_head_reachable_from_remote(path: Path, head: str | None = None) -> bool:
+    """Return True if ``head`` (or HEAD) is reachable from at least one origin/* ref."""
+    target = head or "HEAD"
+    proc = _run(
+        [
+            "git",
+            "for-each-ref",
+            "--format=%(refname)",
+            "--contains",
+            target,
+            "refs/remotes/origin/",
+        ],
+        cwd=path,
+    )
+    if proc.returncode != 0:
+        return False
+    refs = [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+    return bool(refs)
+
+
+_TERMINAL_DISPATCH_STATUSES = frozenset(
+    {
+        "done",
+        "failed",
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "dry_run",
+        "needs_finalize",
+        "no_deliverable",
+    }
+)
+
+
+def _is_settled_dispatch_task(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+) -> tuple[bool, str | None]:
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id is None or active_ids is None or task_id in active_ids:
+        return False, None
+    task_data = _task_record(repo_root, task_id)
+    if task_data is None:
+        return False, None
+    task_status = task_data.get("status")
+    if task_status not in _TERMINAL_DISPATCH_STATUSES or _task_pid_alive(task_data):
+        return False, None
+    return True, str(task_status)
 
 
 def _terminal_dispatch_reason(
@@ -576,16 +626,18 @@ def _terminal_dispatch_reason(
 
     This deliberately does not infer terminality from a dead PID.  A stale
     ``running`` record may be recoverable; scheduled cleanup may only reap an
-    explicit terminal record and a known-empty active-task probe.
+    explicit terminal record, a known-empty active-task probe, and a worktree
+    HEAD reachable from at least one remote ref (origin/*).
     """
+    settled, task_status = _is_settled_dispatch_task(
+        repo_root=repo_root,
+        info=info,
+        active_ids=active_ids,
+    )
+    if not settled:
+        return None
     task_id = _dispatch_task_id(repo_root, info)
-    if task_id is None or active_ids is None or task_id in active_ids:
-        return None
-    task_data = _task_record(repo_root, task_id)
-    if task_data is None:
-        return None
-    task_status = task_data.get("status")
-    if task_status not in _TERMINAL_DISPATCH_STATUSES or _task_pid_alive(task_data):
+    if not _is_head_reachable_from_remote(info.path, info.head):
         return None
     return f"settled dispatch task-id={task_id} status={task_status}"
 
@@ -661,9 +713,12 @@ def _qualifying_reason(
 
         ancestor = _is_ancestor_of_origin_main(info.path)
         if has_matching_task and task_settled:
-            if ancestor:
+            if not _is_head_reachable_from_remote(info.path, info.head):
+                pass
+            elif ancestor:
                 return f"detached HEAD ancestor of origin/main; settled dispatch task-id={task_id}"
-            return f"detached HEAD settled dispatch task-id={task_id}"
+            else:
+                return f"detached HEAD settled dispatch task-id={task_id}"
 
         if ancestor:
             age_hours = _worktree_age_hours(info.path, now=now)
@@ -953,6 +1008,15 @@ def _reap_qualified_worktree(
                 active_ids=current_active_ids,
                 live_cwds=current_live_cwds,
             )
+            if not _is_head_reachable_from_remote(info.path, current_head):
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="unpushed_head",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
             if terminal_reason is None or activity is not None:
                 return ReapResult(
                     path=str(info.path),
@@ -1196,7 +1260,20 @@ def reap_worktrees(
                 include_terminal_dispatches=include_terminal_dispatches,
             )
             if reason is None:
-                if info.branch is None:
+                is_settled, _ = _is_settled_dispatch_task(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=active_ids,
+                )
+                if (
+                    is_settled
+                    and is_under_worktrees(repo_root, info.path)
+                    and (include_terminal_dispatches or not merged_pr_only)
+                    and (pr_state is None or pr_state.state != "OPEN")
+                    and not _is_head_reachable_from_remote(info.path, info.head)
+                ):
+                    reason = "unpushed_head"
+                elif info.branch is None:
                     reason = "detached or missing branch"
                 else:
                     reason = (
@@ -1320,6 +1397,14 @@ def reap_success_worktree(
         )
     clean = _worktree_clean(info.path)
     dirty = None if clean is None else not clean
+    if reason.startswith("settled dispatch") and not _is_head_reachable_from_remote(info.path, info.head):
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason="unpushed_head",
+            dirty=dirty,
+        )
     return _reap_qualified_worktree(
         repo_root=repo_root,
         info=info,

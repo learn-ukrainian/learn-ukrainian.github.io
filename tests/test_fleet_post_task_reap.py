@@ -13,6 +13,7 @@ Tests exercise the hard guards without touching the real checkout:
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -62,24 +63,38 @@ def hermetic_reap(monkeypatch, tmp_path):
     return repo_root, tasks_dir
 
 
+def _git_env() -> dict[str, str]:
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
+    }
+
+
 def _run(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         args,
         cwd=cwd,
         capture_output=True,
         text=True,
-        check=check, timeout=30,
+        check=check,
+        timeout=30,
+        env=_git_env(),
     )
 
 
 def _init_repo(repo_root: Path) -> None:
     repo_root.mkdir(parents=True)
-    _run(["git", "init"], cwd=repo_root)
+    remote = repo_root.parent / f"{repo_root.name}-origin.git"
+    _run(["git", "init", "--bare", str(remote)], cwd=repo_root.parent)
+    _run(["git", "init", "--initial-branch=main", str(repo_root)], cwd=repo_root.parent)
     _run(["git", "config", "user.email", "test@example.com"], cwd=repo_root)
     _run(["git", "config", "user.name", "Test User"], cwd=repo_root)
     (repo_root / "README.md").write_text("# test\n", encoding="utf-8")
     _run(["git", "add", "README.md"], cwd=repo_root)
     _run(["git", "commit", "-m", "initial"], cwd=repo_root)
+    _run(["git", "remote", "add", "origin", str(remote)], cwd=repo_root)
+    _run(["git", "push", "-u", "origin", "main"], cwd=repo_root)
 
 
 def _add_dispatch_worktree(repo_root: Path, agent: str, task_id: str) -> Path:
@@ -246,6 +261,24 @@ def test_no_pr_terminal_reap_apply(hermetic_reap, monkeypatch):
     assert report["main_worktree"]["action"] == "removed"
     assert report["main_worktree"]["error"] is None
     assert not worktree.exists()
+
+
+def test_post_task_reap_unpushed_local_commit_is_retained(hermetic_reap, monkeypatch):
+    """post_task_reap retains worktree when local commits have not been pushed to origin."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "unpushed-task")
+    (worktree / "unpushed.txt").write_text("local only\n", encoding="utf-8")
+    _run(["git", "add", "unpushed.txt"], cwd=worktree)
+    _run(["git", "commit", "-m", "local commit"], cwd=worktree)
+    _write_task_state(tasks_dir, "unpushed-task", "done", worktree)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+
+    report = post_task_reap.post_task_reap("unpushed-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] in {"skipped", "retained"}
+    assert report["main_worktree"]["reason"] == "unpushed_head"
+    assert worktree.exists()
+    assert (worktree / "unpushed.txt").read_text(encoding="utf-8") == "local only\n"
 
 
 def test_no_pr_timeout_terminal_reap_apply(hermetic_reap, monkeypatch):
