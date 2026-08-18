@@ -1166,6 +1166,27 @@ class TestStatsFromStateSummary:
         assert stats["fail"] == 0
         assert stats["shippable"] == 0
 
+    def test_published_mdx_is_presence_not_pass(self):
+        from scripts.api.dashboard_helpers import stats_from_state_summary
+
+        stats = stats_from_state_summary(
+            {
+                "total": 1932,
+                "generated_md": 0,
+                "published_mdx": 356,
+                "audit_passing": 0,
+                "audit_stale": 0,
+                "content_done": 0,
+                "research_done": 450,
+            },
+            is_seminar=False,
+        )
+        assert stats["pass"] == 0
+        assert stats["published_mdx"] == 356
+        assert stats["missing"] == 1932 - 356
+        assert stats["missing"] != 1932
+        assert stats["research"]["total"] == 450
+
 
 class TestBuildModuleSummary:
     """build_module_summary returns lightweight module info."""

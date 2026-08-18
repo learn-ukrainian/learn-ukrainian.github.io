@@ -122,7 +122,40 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
+@pytest.fixture(autouse=True)
+def _isolate_overview_last_good(tmp_path, monkeypatch):
+    """Keep overview last-good on a per-test tmp path (#7024).
+
+    The durable snapshot lives under ``.cache/`` in production so a Monitor
+    bounce can reload it. Tests must not read or overwrite that host file,
+    and in-memory last-good must not leak across cases.
+    """
+    import sys
+
+    monkeypatch.setenv(
+        "DASHBOARD_OVERVIEW_LAST_GOOD_PATH",
+        str(tmp_path / "dashboard_overview_last_good.json"),
+    )
+    router = sys.modules.get("scripts.api.dashboard_router")
+    if router is not None:
+        router.reset_overview_state_for_tests()
+    yield
+    router = sys.modules.get("scripts.api.dashboard_router")
+    if router is not None:
+        router.reset_overview_state_for_tests()
+
+
+@pytest.fixture(autouse=True)
+def _isolate_overview_last_good(tmp_path, monkeypatch):
+    """Keep overview last-good on a per-test tmp path (#7024).
+
+    The durable snapshot lives under ``.cache/`` in production so a Monitor
+    bounce can reload it. Tests must not read or overwrite that host file.
+    """
+    monkeypatch.setenv(
+        "DASHBOARD_OVERVIEW_LAST_GOOD_PATH",
+        str(tmp_path / "dashboard_overview_last_good.json"),
+    )
 
 
 @pytest.fixture(autouse=True)

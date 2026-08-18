@@ -308,3 +308,48 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
             f"{HEALTH_ENDPOINT} p95-of-3 took {health_p95:.3f}s after {endpoint} "
             f"(runs: {', '.join(f'{elapsed:.3f}s' for elapsed in health_timings)})",
         )
+
+
+def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_path):
+    """#7024: empty in-memory last-good + published_mdx>0 is not missing=total."""
+    import scripts.api.dashboard_router as dashboard_router
+
+    dashboard_router.reset_overview_state_for_tests()
+    monkeypatch.setenv(
+        dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
+        str(tmp_path / "overview_last_good.json"),
+    )
+    summary = {
+        "generated_at": "2026-08-18T16:20:00Z",
+        "tracks": {
+            "a1": {
+                "total": 80,
+                "generated_md": 0,
+                "published_mdx": 55,
+                "research_done": 40,
+                "audit_passing": 0,
+                "content_done": 0,
+                "audit_stale": 0,
+                "is_seminar": False,
+            }
+        },
+    }
+    monkeypatch.setattr(
+        dashboard_router,
+        "_peek_state_summary",
+        lambda: (summary, "hit", 0.0),
+    )
+    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+
+    try:
+        client = TestClient(app, raise_server_exceptions=False)
+        data = client.get("/api/dashboard/overview").json()
+        totals = data["totals"]
+        assert totals["pass"] == 0
+        assert totals["published_mdx"] == 55
+        assert totals["missing"] < totals["total"]
+        assert data["meta"].get("track_scan") in {"skipped", "stale", "hit"}
+        if data["meta"].get("track_scan") == "hit":
+            assert not data["meta"].get("refreshing")
+    finally:
+        dashboard_router.reset_overview_state_for_tests()

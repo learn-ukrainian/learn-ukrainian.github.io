@@ -217,3 +217,214 @@ class TestDashboardInventory:
         linked = sum(1 for name in self.EXPECTED_DASHBOARDS
                      if name != "index.html" and name in text)
         assert linked >= 3, f"Index links to only {linked} dashboards"
+
+
+# ── #7024 overview last-good honesty ─────────────────────────────
+
+def _published_summary(*, total: int = 80, published_mdx: int = 55, research_done: int = 40) -> dict:
+    return {
+        "generated_at": "2026-08-18T16:20:00Z",
+        "tracks": {
+            "a1": {
+                "total": total,
+                "generated_md": 0,
+                "published_mdx": published_mdx,
+                "research_done": research_done,
+                "audit_passing": 0,
+                "content_done": 0,
+                "audit_stale": 0,
+                "reviewed": 0,
+                "final_review_done": 0,
+                "prompt_reviewed": 0,
+                "is_seminar": False,
+                "module_source": "curriculum.yaml",
+            }
+        },
+    }
+
+
+class TestHomeLoadStatsPublished:
+    """Home must show the published count overview already has on each track."""
+
+    def test_index_loadstats_surfaces_published_from_overview(self):
+        text = (DASHBOARDS_DIR / "index.html").read_text(encoding="utf-8")
+        assert "track.published_mdx" in text
+        assert "t.published" in text
+        assert "passing · ${t.published} published" in text
+        assert "${t.pass} passing / ${t.total} total" not in text
+
+
+class TestOverviewLastGoodHonesty:
+    """#7024: cold last-good + published_mdx must not report missing=total."""
+
+    def setup_method(self):
+        import scripts.api.dashboard_router as dashboard_router
+
+        dashboard_router.reset_overview_state_for_tests()
+
+    def teardown_method(self):
+        import scripts.api.dashboard_router as dashboard_router
+
+        dashboard_router.reset_overview_state_for_tests()
+
+    def _client(self):
+        from fastapi.testclient import TestClient
+
+        from scripts.api.main import app
+
+        return TestClient(app, raise_server_exceptions=False)
+
+    def test_cold_process_published_is_not_all_missing(self, monkeypatch, tmp_path):
+        import scripts.api.dashboard_router as dashboard_router
+
+        monkeypatch.setenv(
+            dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
+            str(tmp_path / "overview_last_good.json"),
+        )
+        monkeypatch.setattr(
+            dashboard_router,
+            "_peek_state_summary",
+            lambda: (_published_summary(), "hit", 0.0),
+        )
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+
+        before = {
+            "pass": 0,
+            "missing": 1932,
+            "total": 1932,
+            "published_mdx": 0,
+            "generated_md": 0,
+        }
+        resp = self._client().get("/api/dashboard/overview")
+        assert resp.status_code == 200
+        data = resp.json()
+        totals = data["totals"]
+        assert before["missing"] == before["total"]
+        assert totals["pass"] == 0
+        assert totals["published_mdx"] == 55
+        assert totals["missing"] < totals["total"]
+        assert totals["missing"] != totals["total"]
+        a1 = next(track for track in data["tracks"] if track["id"] == "a1")
+        assert a1["stats"]["missing"] == 80 - 55
+        assert a1["stats"]["pass"] == 0
+        assert a1["stats"]["research"]["total"] == 40
+        assert data["meta"].get("track_scan") == "skipped"
+        assert data["meta"].get("refreshing") is True
+
+    def test_bounce_reloads_persisted_last_good(self, monkeypatch, tmp_path):
+        import scripts.api.dashboard_router as dashboard_router
+
+        last_good_path = tmp_path / "overview_last_good.json"
+        monkeypatch.setenv(
+            dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
+            str(last_good_path),
+        )
+        payload = {
+            "tracks": [
+                {
+                    "id": "a1",
+                    "name": "A1",
+                    "module_count": 80,
+                    "published_mdx": 55,
+                    "generated_md": 0,
+                    "stats": {
+                        "pass": 0,
+                        "missing": 80,
+                        "content_complete": 0,
+                        "fail": 0,
+                        "unaudited": 0,
+                        "shippable": 0,
+                        "research": {"total": 40},
+                    },
+                }
+            ],
+            "totals": {
+                "pass": 0,
+                "missing": 80,
+                "total": 80,
+                "published_mdx": 0,
+                "content_complete": 0,
+                "fail": 0,
+                "unaudited": 0,
+                "shippable": 0,
+            },
+            "meta": {"track_scan": "hit", "source": "fs:dashboard-summary+state-summary"},
+            "timestamp": "2026-08-18T16:21:47Z",
+        }
+        dashboard_router.persist_overview_last_good(payload)
+        dashboard_router.simulate_overview_process_bounce_for_tests()
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+        monkeypatch.setattr(
+            dashboard_router,
+            "_peek_state_summary",
+            lambda: (_published_summary(), "hit", 0.0),
+        )
+
+        resp = self._client().get("/api/dashboard/overview")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["totals"]["pass"] == 0
+        assert data["totals"]["published_mdx"] == 55
+        assert data["totals"]["missing"] == 25
+        assert data["totals"]["missing"] != data["totals"]["total"]
+        assert data["meta"]["track_scan"] == "stale"
+        assert not data["meta"].get("refreshing")
+
+    def test_successful_refresh_settles_without_refreshing(self, monkeypatch, tmp_path):
+        import scripts.api.dashboard_router as dashboard_router
+        import scripts.api.state_helpers as state_helpers
+
+        monkeypatch.setenv(
+            dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
+            str(tmp_path / "overview_last_good.json"),
+        )
+        summary = _published_summary()
+        seeded = dashboard_router._build_overview_from_state_summary(
+            summary, "hit", 0.0, track_scan="hit"
+        )
+        seeded["meta"]["track_scan"] = "hit"
+        state_helpers.cache_set(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY, seeded)
+        dashboard_router._overview_last_good = seeded
+        monkeypatch.setattr(
+            dashboard_router,
+            "_peek_state_summary",
+            lambda: (summary, "hit", 0.0),
+        )
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+
+        resp = self._client().get("/api/dashboard/overview")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["meta"]["track_scan"] == "hit"
+        assert "refreshing" not in data["meta"] or data["meta"].get("refreshing") is False
+        assert data["totals"]["pass"] == 0
+        assert data["totals"]["published_mdx"] == 55
+        assert data["totals"]["missing"] != data["totals"]["total"]
+
+    def test_stale_last_good_does_not_keep_refreshing(self, monkeypatch, tmp_path):
+        import scripts.api.dashboard_router as dashboard_router
+
+        monkeypatch.setenv(
+            dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
+            str(tmp_path / "overview_last_good.json"),
+        )
+        summary = _published_summary()
+        seeded = dashboard_router._build_overview_from_state_summary(
+            summary, "hit", 0.0, track_scan="hit"
+        )
+        dashboard_router._overview_last_good = seeded
+        dashboard_router._overview_disk_loaded = True
+        monkeypatch.setattr(
+            dashboard_router,
+            "_peek_state_summary",
+            lambda: (summary, "hit", 0.0),
+        )
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+
+        resp = self._client().get("/api/dashboard/overview")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["meta"]["track_scan"] == "stale"
+        assert not data["meta"].get("refreshing")
+        assert data["totals"]["published_mdx"] == 55
+        assert data["totals"]["missing"] < data["totals"]["total"]

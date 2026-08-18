@@ -2866,12 +2866,18 @@ revision of this endpoint was removed per reviewer BLOCKER on
 
 ## UI Pages
 
-`GET /api/dashboard/overview` is cache-first (#6983): the request path
+`GET /api/dashboard/overview` is cache-first (#6983 / #7024): the request path
 never walks the curriculum tree. `meta.cache` remains the state-summary
 cache signal; `meta.track_scan` is `hit` / `stale` / `skipped`. A cold
-miss may include `meta.error=overview_warming` while a detached worker
-fills last-good. The live Monitor process does not pick up this behavior
-until restart.
+miss may include `meta.error=overview_warming` and `meta.refreshing=true`
+while a detached worker fills last-good. Last-good is persisted under
+`.cache/dashboard_overview_last_good.json` so a Monitor bounce reloads it
+instead of sitting at 0/total-missing. Cheap warming and overlays treat
+`published_mdx` as presence (`totals.missing` is not `total` when
+published > 0) and never copy published onto `totals.pass`. After a
+successful scan, `track_scan=hit` and `refreshing` is absent; a stale
+last-good does not keep flipping `refreshing=true`. The live Monitor
+process does not pick up this behavior until restart.
 
 | Page | URL | Data source |
 |------|-----|-------------|
