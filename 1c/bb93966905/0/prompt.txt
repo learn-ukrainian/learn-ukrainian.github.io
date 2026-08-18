@@ -1,0 +1,77 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-6984-work-next
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #6984 Work next-queue membership / stale / alias
+
+CAPACITY_CARD: pick=kimi status=cool will_last=true free=cursor,agy,claude avoid=codex(deficit/near_cap) source=codexbar+routing-budget
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: kimi native (Kimi Code)
+- why_this_tier: Work API membership + alias; kimi 98% weekly / cool; disjoint from cursor #6983
+- advisor_packet: n/a (existing filed bug, operator-directed this cycle)
+- owned_paths: scripts/api/work_router.py; scripts/work/attention.py; scripts/work/normalize.py; scripts/orchestration/issue_stream_audit.py (read if needed); tests/test_work_api.py
+- acceptance_cmd: see Verify
+- alternatives_considered: cursor (used on #6983); agy (gemini reset ~3h); claude (conserve Fable); codex (REFUSE)
+- parallel_free_seats: cursor on #6983 (Monitor API)
+
+Initiator: grok-infra (epic:6943 / infra-harness). Stream lease already held — do not claim.
+
+## User-visible outcome
+`GET /api/work/v1/next?stream=infra-harness` is a usable driver pick list: AT_RISK infra tickets are either in the queue or honestly explained in the digest. `?stream=infra` does not 400 as a mysterious unknown. Cache staleness does not wedge drivers for minutes.
+
+## Live evidence (grok-infra 2026-08-18T14:28–14:34Z)
+```
+GET /api/work/v1/next?stream=infra-harness
+  first: 200 queue=[#5535 only]  (AT_RISK pending_native #6954 #6957 #5880 #5885 absent)
+  later: 503 stale  cache_age_s=326  max_stale_s=300  retry_after_s=3
+GET /api/work/v1/next?stream=infra
+  400 unknown_stream  valid_streams includes infra-harness
+Projection: area:infra AT_RISK items have projections.stream.status=pending_native streams=[]
+  → attention.py derive_safe_next_action = LINK_PENDING_NATIVE
+  → work_router.work_next scopes with `stream in _item_streams(i)` so they never enter the queue
+  → they increment digest.unscoped_actionable_count instead
+```
+
+## Root-cause hypotheses (prove or disprove)
+1. Stream-scoped next only admits `projections.stream.streams`. Body-homed / label-homed / pending_native tickets are invisible to the lane that owns them. That is the filed bug.
+2. 503 `stale` after 300s is intentional fail-closed (`test_next_max_stale_503_when_refresh_never_finishes`) — do **not** delete it. The defect is that single-flight refresh is not actually keeping the cache <300s for /next-only callers. I rebuilt projection in ~1.7s via GET /projection, then 6 minutes later /next was 503. Find why `_get_or_create_build_task` did not complete / did not write the cache.
+3. `stream=infra` is what drivers type (`SESSION_EPIC=infra`). Alias or a clearer error that names the alias is in-scope; do not invent a second stream.
+
+## Required product behavior
+- Infra-epic next **includes** AT_RISK `area:infra` / pending_native tickets **or** the digest has an explicit `excluded_pending_native` (or equivalent) listing them with reason — empty queue + silent unscoped count is not honest.
+- Prefer inclusion for the caller's stream when the issue is already on #6943 / `area:infra` / body-homed, rather than waiting for a native GitHub sub-issue link that `issue_stream_audit --migrate` already failed to convert (Fable closeout: 5 body-homed resist native migration).
+- Do **not** fake `streams: ["infra-harness"]` on items that are not homed. Honesty in health/status stays.
+- `?stream=infra` aliases to `infra-harness` (or 307/rewrite internally) so cold-start does not 400.
+- Keep 503 `stale` for a refresh that never finishes; make refresh actually finish. Add a test that a successful build resets age so a subsequent /next is 200.
+
+## Non-goals
+- Do not close #6892 (grok-bot QA request) — that is the post-fix observer pass.
+- Do not touch dashboard/orient (#6983 sibling).
+- Do not migrate GitHub issue parent links as the only fix (that is a different chore; API must tell the truth either way).
+- Do not edit primary checkout.
+
+## Work
+1. Fail a test on main that reproduces: AT_RISK pending_native area:infra issue is invisible to `next?stream=infra-harness`.
+2. Fail a test on main for `stream=infra` alias.
+3. Investigate why refresh does not keep /next warm; fix if it is a real bug (cache key, dropped task, exception swallowed).
+4. Conventional commit + push + PR linking #6984. `X-Agent: kimi/infra-6984-work-next`. Do **not** merge or arm auto-merge.
+
+## Verify
+```bash
+.venv/bin/ruff check scripts/api/work_router.py scripts/work/attention.py scripts/work/normalize.py
+.venv/bin/python -m pytest -q tests/test_work_api.py tests/test_work_privacy.py
+```
+Paste node ids. Quote a fixture next payload that now contains (or honestly lists) a pending_native AT_RISK infra item.
+
+## Layout
+`.worktrees/dispatch/kimi/infra-6984-work-next/`
+Mode: workspace-write. AGENT_NO_MERGE=1.

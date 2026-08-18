@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1cbb93966905",
+  "session_id": "session_c0eb2c24-98e8-458c-a069-fb22710ea091",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T14:55:52.904564Z",
+  "branch": "kimi/infra-6984-work-next",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/monitor-api/work.md",
+    "scripts/api/work_router.py",
+    "scripts/work/normalize.py",
+    "tests/test_work_api.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "4970d2b43095",
+  "token_usage": {
+    "input_tokens": 108059,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4599040,
+    "output_tokens": 30818,
+    "api_call_count": 48
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T14:55:52.875342Z",
+    "agent_lines": 319,
+    "agent_removed": 10,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 319,
+    "total_lines_changed": 329,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
