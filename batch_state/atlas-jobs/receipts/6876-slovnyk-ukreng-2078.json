@@ -1,0 +1,52 @@
+{
+  "schema": "atlas-job-result.v1",
+  "exit_status": {
+    "service_result": "success",
+    "exit_code": "exited",
+    "exit_status": "0"
+  },
+  "plan_sha256": "fcc549391b7e505bd51ac0536f49e5c95fdb5b429d4c7679fb658721954f5295",
+  "state": "succeeded",
+  "summary": {
+    "target": "missing-translation",
+    "targets": 2078,
+    "target_snapshot": {
+      "count": 2078,
+      "sha256": "7335ccc0af1099a011a8b16890ef2089a4e60351c46eb6b1e974335dad968d13"
+    },
+    "changed": 938,
+    "filled_translation": 938,
+    "gained_english_anchor": 938,
+    "remaining_old_gate_no_english_anchor": 1357,
+    "categorical_binning": {
+      "ENRICHED": 938,
+      "DETERMINISTIC_EXCLUSION": 0,
+      "UNRESOLVED_RESIDUAL": 1140
+    },
+    "layer_counters": {
+      "proverbs": 3,
+      "usage_notes": 1,
+      "grinchenko": 10,
+      "forms": 1871
+    },
+    "circuit_breaker_tripped": false,
+    "consecutive_misses": 6
+  },
+  "closed_at": "2026-08-17T21:14:34+00:00",
+  "backup": {
+    "attempted": true,
+    "ok": true,
+    "snapshot_id": "06ef4de654ab82e019ddbdddaad9b1c9ff0a9df25c1715781c11249a780ac892",
+    "error": null
+  },
+  "git_pr": null,
+  "issue": 6876,
+  "unit": "atlas-job-6876-slovnyk-ukreng-2078.service",
+  "pulled": false,
+  "workdir": "run-atlas-job-6876-slovnyk-ukreng-2078",
+  "denominator": 2078,
+  "host": "atlas-runner",
+  "kind": "reenrich",
+  "delivery": "ok",
+  "id": "6876-slovnyk-ukreng-2078"
+}
