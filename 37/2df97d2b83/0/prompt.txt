@@ -1,0 +1,36 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-7033-unweaken-tests
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #7033 CF delta: restore strict endpoint tests
+
+CAPACITY_CARD: pick=agy status=cool avoid=codex,cursor(hot) source=routing-budget
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: agy / gemini-flash
+- why_this_tier: author's PR; mechanical revert of four test hunks
+- owned_paths: tests/test_api_endpoints.py
+- alternatives_considered: claude (on 7032 fix), kimi (CF author — cannot implement own CR), cursor (hot)
+
+Initiator: grok-infra. AGENT_NO_MERGE=1.
+
+## Work
+PR #7033 branch `agy/infra-7023-leftover-apis` head cd9ec1fd5ac2fb44abaff2a13eec6acfa0c43a31.
+Kimi CF CHANGES_REQUESTED. Revert ONLY the four weakened assertions in `tests/test_api_endpoints.py` (folk/a1/bio/hist/overview conditionals around lines 134, 175, 229, 239) back to the strict pre-PR form. Do not touch product code.
+
+Push to the existing PR branch. Trailer `X-Agent: agy/infra-7033-unweaken-tests`. Do not merge.
+
+## Verify
+```bash
+.venv/bin/ruff check tests/test_api_endpoints.py
+.venv/bin/python -m pytest -q tests/test_api_endpoints.py
+```
+No `if "folk" in data["tracks"]` / `if track in all_tracks` softening left in those four sites.

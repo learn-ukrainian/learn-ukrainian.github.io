@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "372df97d2b83",
+  "session_id": "fleet-d07ab51a46e742d9a09ac43dd5440b87",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T19:59:59.322486Z",
+  "branch": "agy/infra-7023-leftover-apis",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_api_endpoints.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "af55275ea2ce",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T19:59:59.314533Z",
+    "agent_lines": 10,
+    "agent_removed": 15,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 10,
+    "total_lines_changed": 25,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

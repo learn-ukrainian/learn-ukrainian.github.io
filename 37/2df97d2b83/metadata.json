@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "372df97d2b83",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-7023-leftover-apis",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_api_endpoints.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/37/2df97d2b83/0/metadata.json",
+      "transcript": "/37/2df97d2b83/0/full.jsonl",
+      "compact_transcript": "/37/2df97d2b83/0/transcript.jsonl",
+      "content_hash": "/37/2df97d2b83/0/content_hash.txt",
+      "prompt": "/37/2df97d2b83/0/prompt.txt"
+    }
+  ]
+}
