@@ -1,0 +1,9 @@
+please handle git operations dont wait for me
+
+---
+
+set these up for me pls: Still on you (not code):
+
+Merge when you are satisfied (I will not).
+Create the GitHub App (contents + pull_requests only) and set LU_AGENT_GITHUB_APP_*. Until then, dispatch keeps the legacy GH_TOKEN fallback with a warning.
+Enable Require review from Code Owners on branch protection so .github/workflows/** actually needs your review.
