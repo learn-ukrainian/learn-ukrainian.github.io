@@ -23,6 +23,9 @@
 #   ACTIONLINT_FORCE_DOWNLOAD=1          ignore any actionlint on PATH and always
 #                                        fetch the pinned, checksum-verified build
 #                                        (set in CI for reproducibility)
+#   PYTHON=/path/to/python               interpreter for the untrusted-context
+#                                        interpolation checker (default:
+#                                        .venv/bin/python, else python3)
 set -euo pipefail
 
 # --- pinned release (bump VERSION + all checksums together) -------------------
@@ -143,6 +146,22 @@ main() {
   echo "→ actionlint $("$bin" --version | head -1) on ${#targets[@]} workflow file(s)" >&2
   "$bin" -color "${targets[@]}"
   echo "✅ actionlint: all workflow files valid"
+
+  # Fail-closed interpolation gate (advisor packet B+D, 2026-08-18): untrusted
+  # GitHub context (github.event.issue.*/comment.*, PR title/body, head_ref,
+  # ...) must not be ${{ }}-expanded inside run: scripts — env: + "$VAR" is
+  # the safe pattern. Runs after actionlint so this script stays the single
+  # workflow gate both CI and local devs invoke. The checker is stdlib-only;
+  # prefer the project venv interpreter, fall back to any python3.
+  local py="${PYTHON:-}"
+  if [[ -z "$py" ]]; then
+    if [[ -x "$REPO_ROOT/.venv/bin/python" ]]; then
+      py="$REPO_ROOT/.venv/bin/python"
+    else
+      py="python3"
+    fi
+  fi
+  "$py" scripts/audit/check_untrusted_workflow_interpolation.py "${targets[@]}"
 }
 
 main "$@"
