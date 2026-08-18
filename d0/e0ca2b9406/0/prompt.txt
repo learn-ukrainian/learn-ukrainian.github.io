@@ -1,0 +1,68 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-6983-monitor-hang
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #6983 Monitor API hang / section timeouts
+
+CAPACITY_CARD: pick=cursor status=cool will_last=true free=kimi,agy,claude avoid=codex(deficit/near_cap,5% weekly) source=codexbar+routing-budget
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: cursor Auto (Cursor Ultra)
+- why_this_tier: mechanical Monitor API latency; Ultra on-pace 82%; not language-lane; conserve Fable (Max 5x)
+- advisor_packet: n/a (existing filed bug, operator-directed this cycle)
+- owned_paths: scripts/api/dashboard_router.py; scripts/api/main.py (orient); scripts/api/dashboard_helpers.py; scripts/api/state_helpers.py; tests/test_orient_api.py; tests/test_api_resilience.py; tests/test_api_endpoints.py; tests/test_playground_api_stability.py
+- acceptance_cmd: see Verify
+- alternatives_considered: kimi (budget primary — reserved for sibling #6984); agy (cool but gemini reset in ~3h — defer large batch); claude (cool but operator conserve Fable); codex (REFUSE — deficit)
+- parallel_free_seats: kimi on #6984 (disjoint Work API)
+
+Initiator: grok-infra (epic:6943 / infra-harness). Stream lease already held — do not claim.
+
+## User-visible outcome
+A driver (or grok-bot QA) can load `/api/dashboard/overview` and `/api/orient?lean=true` inside the documented budgets without 504, curl hang, or `section_timeout` on lean sections. Hung overview must not take the launchpad/orient session with it.
+
+## Live evidence (grok-infra 2026-08-18T14:34Z, process uptime 19842s)
+```
+GET /api/health            200  0.011s   timeout_count=1
+GET /api/dashboard/overview 200  5.702s  cache=miss  totals.missing=1932  stale_after_s=60
+GET /api/orient?lean=true   200  5.009s  (wall-clock == 5.0s section timeout)
+recent_slow_requests: /api/orient 5006–5055ms (several); /api/work/v1/projection 1721ms
+```
+Issue also recorded 504 `request_timeout` 10.7s and a 12s 0-byte hang. Health `API_REQUEST_TIMEOUT_S=10`.
+
+## Root-cause hypotheses (prove or disprove — do not treat as fact)
+1. `overview()` calls `scan_track_summary_cached` across every LEVELS track (incl. seminar 40+ modules) plus `compute_summary` on cache miss. Payload I just received listed 1932 missing modules. That is a launchpad-blocking FS scan.
+2. `LEAN_ORIENT_SECTIONS` still includes `capacity` and `health`. `capacity` likely hits CodexBar / routing-budget (this session: routing-budget curl 12–20s). `asyncio.gather` waits for the slowest lean section → 5.0s `section_timeout`.
+3. Global 10s request timeout then 504s when overview + orient overlap.
+
+## Non-goals
+- Do not raise `API_REQUEST_TIMEOUT_S` or section timeouts as the "fix".
+- Do not delete overview data; make it cached / incremental / cheaper.
+- Do not rewrite the Monitor process, add `/api/readyz` unless it is a one-line health sibling already designed.
+- Do not touch Work API next-queue (#6984 is a sibling dispatch on disjoint paths).
+- Do not edit primary checkout; layout A worktree only.
+
+## Work
+1. Trace the live 5.7s overview and 5.0s lean orient with tests that fail on main first (regression).
+2. Fix root cause: overview must not rescan the whole curriculum on the request path; lean orient must not block on CodexBar/network. Fail soft: section `error` + empty/default payload, request still 200 well under 10s.
+3. Keep honest `meta.cache` / `meta.error` — never fake freshness.
+4. Tests: budget assertions tighter than the 10s global timeout; lean `capacity`/`health` timeout must not stall other lean sections; overview cache hit path stays under the playground 1.5s in-process budget (see `tests/test_playground_api_stability.py`).
+5. Conventional commit + push + PR linking #6983. `X-Agent: cursor/infra-6983-monitor-hang`. Do **not** merge or arm auto-merge.
+
+## Verify
+```bash
+.venv/bin/ruff check scripts/api/dashboard_router.py scripts/api/main.py scripts/api/dashboard_helpers.py
+.venv/bin/python -m pytest -q tests/test_orient_api.py tests/test_api_resilience.py tests/test_api_endpoints.py tests/test_playground_api_stability.py tests/test_dashboards.py
+```
+Paste node ids. Quote before/after in-process timings. Note that the live Monitor process will not pick up the PR until restart — tests are the merge evidence; say so on the PR.
+
+## Layout
+`.worktrees/dispatch/cursor/infra-6983-monitor-hang/`
+Mode: workspace-write. AGENT_NO_MERGE=1.

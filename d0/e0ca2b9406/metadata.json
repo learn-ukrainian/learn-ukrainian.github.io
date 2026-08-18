@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d0e0ca2b9406",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-6983-monitor-hang",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/MONITOR-API.md",
+    "scripts/api/dashboard_helpers.py",
+    "scripts/api/dashboard_router.py",
+    "scripts/api/main.py",
+    "tests/test_api_endpoints.py",
+    "tests/test_api_helpers.py",
+    "tests/test_orient_api.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d0/e0ca2b9406/0/metadata.json",
+      "transcript": "/d0/e0ca2b9406/0/full.jsonl",
+      "compact_transcript": "/d0/e0ca2b9406/0/transcript.jsonl",
+      "content_hash": "/d0/e0ca2b9406/0/content_hash.txt",
+      "prompt": "/d0/e0ca2b9406/0/prompt.txt"
+    }
+  ]
+}
