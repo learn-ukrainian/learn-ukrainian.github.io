@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ca7616bfa689",
+  "strategy": "manual-commit",
+  "branch": "claude/infra-7017-formal-review-eligible",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ca/7616bfa689/0/metadata.json",
+      "transcript": "/ca/7616bfa689/0/full.jsonl",
+      "compact_transcript": "/ca/7616bfa689/0/transcript.jsonl",
+      "content_hash": "/ca/7616bfa689/0/content_hash.txt",
+      "prompt": "/ca/7616bfa689/0/prompt.txt"
+    }
+  ]
+}
