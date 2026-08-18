@@ -13,9 +13,46 @@ Dual-READ / prefer-WRITE:
 - **Write** the canonical seat id (``grok``) for new messages and telemetry.
 - **Never rewrite** frozen history strings in attestations, audit fixtures,
   or decision docs describing past runs.
+
+This module also carries ``RETIRED_AGENT_ALIASES`` — permanent dispatch-agent
+substitutions for a provider whose CLI is gone outright (currently
+``gemini`` → ``agy``). Those are a distinct concept from the seat aliases
+above: a retired-agent alias forwards to a genuinely different adapter, so
+it is resolve-only, never dual-read.
 """
 
 from __future__ import annotations
+
+# Permanent CLI retirements: a dispatch agent whose native binary is gone for
+# good, mapped to the live adapter that now carries that provider family's
+# work. UNLIKE ``SEAT_ALIASES`` (a cosmetic rename of the SAME adapter), a
+# retired-agent alias swaps to a DIFFERENT adapter/CLI entirely — the old
+# entry is never dual-readable, it always resolves forward.
+#
+# gemini → agy (operator fact, 2026-08-18): the ``gemini`` CLI is not
+# supported and will not be installed. Live Gemini-family implementer is the
+# Antigravity CLI (``agy``). A bare CodexBar quota reading is not proof the
+# `gemini` binary exists — dispatching it fails with
+# ``FileNotFoundError: 'gemini'``. Resolve the alias BEFORE Popen,
+# unconditionally (not only when the lane is hot/near_cap/deficit).
+RETIRED_AGENT_ALIASES: dict[str, str] = {
+    "gemini": "agy",
+}
+
+
+def resolve_retired_agent_alias(name: str | None) -> str | None:
+    """Return the permanent substitute for a retired CLI seat, or None.
+
+    None means ``name`` is not a retired alias (including when ``name`` is
+    None/empty) — callers should keep the original value unchanged.
+    """
+    if name is None:
+        return None
+    key = str(name).strip().lower()
+    if not key:
+        return None
+    return RETIRED_AGENT_ALIASES.get(key)
+
 
 # Permanent backward-compat aliases: historical lane id → canonical seat.
 # Keep forever: old X-Agent trailers, inbox rows, budget usage records, and

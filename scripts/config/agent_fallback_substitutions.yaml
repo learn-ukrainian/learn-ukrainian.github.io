@@ -9,7 +9,14 @@ dispatch_fallbacks:
   # Mechanical shed when Codex is hot or in weekly deficit while free seats
   # (Cursor) sit idle — operator 2026-08-12 / stream #4707.
   codex: cursor
-  # gemini/grok/cursor/kimi/agy/glm: no automatic mapping without an explicit
+  # PERMANENT retirement, not a hot/deficit-only shed: the gemini CLI is not
+  # supported and will not be installed (operator 2026-08-18). delegate.py
+  # resolves this row UNCONDITIONALLY, before the budget guard even runs —
+  # a "gemini is cool" budget reading is not proof the binary exists.
+  # Canonical mapping lives in agent_runtime.agent_identity.RETIRED_AGENT_ALIASES;
+  # this row keeps it visible to yaml-only consumers of dispatch_fallbacks.
+  gemini: agy
+  # grok/cursor/kimi/agy/glm: no automatic mapping without an explicit
   # operator comment (refuse dispatch when hot/deficit and no row here).
 #
 # Trigger condition: when a budget bucket is at status `near_cap` or `hot`,
@@ -54,8 +61,14 @@ substitutions:
     budget_bucket: "Codex weekly → Cursor when shed"
 
   - currently_uses: "delegate.py --agent gemini"
-    fallback: "(unaffected — separate quota)"
-    budget_bucket: "Gemini"
+    fallback: |
+      PERMANENT, always-on (not a budget-status shed): gemini CLI is
+      retired and will not be reinstalled (operator 2026-08-18). Resolves
+      to `delegate.py --agent agy` before Popen, via
+      dispatch_fallbacks.gemini and agent_identity.RETIRED_AGENT_ALIASES.
+      Do not tell agents to install `gemini` — the live Gemini-family
+      implementer is agy.
+    budget_bucket: "Gemini-family quota, tracked under agy"
 
   - currently_uses: "linear_pipeline.invoke_writer(writer='claude-tools')"
     fallback: |
