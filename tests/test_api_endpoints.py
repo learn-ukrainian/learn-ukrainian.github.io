@@ -131,9 +131,8 @@ class TestStateSummaryEndpoint:
         assert meta["stale_after_s"] == 60.0
         assert "dossier_done" in data["totals"]
         assert "published_mdx" in data["totals"]
-        if "folk" in data["tracks"]:
-            assert data["tracks"]["folk"]["profile"] == "seminar"
-            assert data["tracks"]["folk"]["is_seminar"] is True
+        assert data["tracks"]["folk"]["profile"] == "seminar"
+        assert data["tracks"]["folk"]["is_seminar"] is True
 
 
 class TestPipelineVersionsEndpoint:
@@ -172,11 +171,10 @@ class TestBuildStatusEndpoint:
         all_tracks = client.get("/api/state/build-status").json()["tracks"]
 
         for track in ["a1", "bio", "folk"]:
-            if track in all_tracks:
-                per_track = client.get(f"/api/state/build-status/{track}").json()
-                assert all_tracks[track]["building"] == per_track["building"]
-                assert all_tracks[track]["queued"] == per_track["queued"]
-                assert all_tracks[track]["failed"] == per_track["failed"]
+            per_track = client.get(f"/api/state/build-status/{track}").json()
+            assert all_tracks[track]["building"] == per_track["building"]
+            assert all_tracks[track]["queued"] == per_track["queued"]
+            assert all_tracks[track]["failed"] == per_track["failed"]
 
     def test_per_track_counts_failed_audit_before_running_phase(self, monkeypatch):
         from scripts.api import state_build
@@ -226,9 +224,8 @@ class TestDashboardOverviewEndpoint:
         # Retired aliases must not reappear once roster is manifest-derived (#5245).
         assert "lit-doc" not in overview_counts
         assert "lit-crimea" not in overview_counts
-        if "hist" in summary_counts:
-            assert "hist" in overview_counts
-            assert overview_counts["hist"] == summary_counts["hist"]
+        assert "hist" in overview_counts
+        assert overview_counts["hist"] == summary_counts["hist"]
 
     def test_overview_reuses_state_summary_cache_and_track_specific_research_metric(self):
         summary = client.get("/api/state/summary?fresh=true").json()
@@ -236,10 +233,8 @@ class TestDashboardOverviewEndpoint:
         tracks = {track["id"]: track for track in overview["tracks"]}
 
         assert overview["meta"]["cache"] == "hit"
-        if "a1" in tracks and "a1" in summary["tracks"]:
-            assert tracks["a1"]["stats"]["research"]["total"] == summary["tracks"]["a1"]["research_done"]
-        if "folk" in tracks and "folk" in summary["tracks"]:
-            assert tracks["folk"]["stats"]["research"]["total"] == summary["tracks"]["folk"]["dossier_done"]
+        assert tracks["a1"]["stats"]["research"]["total"] == summary["tracks"]["a1"]["research_done"]
+        assert tracks["folk"]["stats"]["research"]["total"] == summary["tracks"]["folk"]["dossier_done"]
 
     def test_overview_does_not_wait_for_curriculum_scan(self, monkeypatch):
         """#6983: overview must not rescan every module on the request path.
