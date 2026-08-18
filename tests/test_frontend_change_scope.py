@@ -378,7 +378,10 @@ def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> No
     jobs = workflow["jobs"]
 
     assert "if" not in jobs["frontend"]
+    # Two-tier cutover (#6943 stage 2): CI Gate also needs `ruff` so the
+    # pull_request light tier can require lint without the four-shard suite.
     assert set(jobs["ci-gate"]["needs"]) == {
+        "ruff",
         "pytest-plan",
         "pytest-fastlane",
         "python",
