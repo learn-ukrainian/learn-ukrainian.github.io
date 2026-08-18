@@ -24,6 +24,7 @@ def _run_checker(*files: Path) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
 
 
@@ -246,5 +247,6 @@ def test_current_repo_workflows_are_clean() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
     assert result.returncode == 0, result.stdout + result.stderr
