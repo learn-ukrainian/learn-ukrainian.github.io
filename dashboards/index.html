@@ -241,8 +241,10 @@ function sumDashboardTotals(tracks) {
     acc.total += track.module_count || 0;
     acc.pass += stats.pass || 0;
     acc.content_complete += stats.content_complete || 0;
+    acc.published += track.published_mdx || stats.published_mdx || 0;
+    acc.research += (stats.research && stats.research.total) || 0;
     return acc;
-  }, { total: 0, pass: 0, content_complete: 0 });
+  }, { total: 0, pass: 0, content_complete: 0, published: 0, research: 0 });
 }
 
 function sumSummaryTotals(summary, trackIds) {
@@ -312,13 +314,14 @@ async function loadStats() {
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
       <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
+      <div class="stat"><div class="value" style="color:var(--cyan)">${t.published}</div><div class="label">Published</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
       <div class="stat"><div class="value" style="color:var(--cyan)">${buildState.current}</div><div class="label">Current Builds</div></div>
       <div class="stat"><div class="value" style="color:var(--orange)">${buildState.backlog}</div><div class="label">Rebuild Backlog</div></div>
       <div class="stat"><div class="value" style="color:var(--purple)">${buildState.builtPct}%</div><div class="label">Built</div></div>
     `;
 
-    document.getElementById('audit-stat').textContent = `${t.pass} passing / ${t.total} total`;
+    document.getElementById('audit-stat').textContent = `${t.pass} passing · ${t.published} published / ${t.total} total`;
     document.getElementById('curriculum-stat').textContent = `${dashboardTracks.length} tracks`;
     if (pendingConsultations > 0) {
       document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;

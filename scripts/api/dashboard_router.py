@@ -5,9 +5,13 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 comms monitoring.
 """
 
+import contextlib
 import copy
+import json
 import logging
+import os
 import sys
+import tempfile
 import threading
 from datetime import UTC, datetime
 from pathlib import Path
@@ -20,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from audit.config import ACTIVITY_COMPLEXITY, ACTIVITY_RESTRICTIONS, LEVEL_CONFIG, VALID_ACTIVITY_TYPES
 from common.thresholds import REVIEW_PASS_FLOOR
 
-from .config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
+from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT, SEMINAR_TRACK_IDS
 from .dashboard_comms import (
     collect_stuck_tasks,
     ensure_broker_cols,
@@ -37,6 +41,7 @@ from .dashboard_helpers import (
     find_active_builds,
     get_orchestration_info,
     load_manifest,
+    present_module_count,
     read_yaml_file,
     scan_pipeline_queues,
     scan_track_cached,
@@ -61,21 +66,61 @@ logger = logging.getLogger(__name__)
 DASHBOARD_STATE_SUMMARY_TTL_S = 60.0
 DASHBOARD_OVERVIEW_CACHE_KEY = "dashboard_overview"
 DASHBOARD_OVERVIEW_TTL_S = 60.0
+DASHBOARD_OVERVIEW_LAST_GOOD_ENV = "DASHBOARD_OVERVIEW_LAST_GOOD_PATH"
+_OVERVIEW_TOTAL_KEYS = (
+    "pass",
+    "content_complete",
+    "fail",
+    "unaudited",
+    "missing",
+    "shippable",
+    "total",
+    "published_mdx",
+)
 
 _overview_refresh_lock = threading.Lock()
 _overview_refresh_thread: threading.Thread | None = None
 _overview_last_good: dict | None = None
+_overview_disk_loaded = False
+
+
+def overview_last_good_path() -> Path:
+    """Durable last-good snapshot written by the background overview scan."""
+    override = os.environ.get(DASHBOARD_OVERVIEW_LAST_GOOD_ENV)
+    if override:
+        return Path(override)
+    return PROJECT_ROOT / ".cache" / "dashboard_overview_last_good.json"
 
 
 def reset_overview_state_for_tests() -> None:
-    """Drop overview last-good + TTL cache so tests do not leak across cases."""
-    global _overview_refresh_thread, _overview_last_good
+    """Drop overview last-good + TTL cache so tests do not leak across cases.
+
+    Skips reloading the host disk snapshot so pytest cannot pick up a
+    previous Monitor process's last-good file.
+    """
+    global _overview_refresh_thread, _overview_last_good, _overview_disk_loaded
     thread: threading.Thread | None
     with _overview_refresh_lock:
         thread = _overview_refresh_thread
     if thread is not None:
         thread.join(timeout=2.0)
     _overview_last_good = None
+    _overview_disk_loaded = True
+    cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
+    with _overview_refresh_lock:
+        _overview_refresh_thread = None
+
+
+def simulate_overview_process_bounce_for_tests() -> None:
+    """Clear process memory only; the durable last-good file remains."""
+    global _overview_refresh_thread, _overview_last_good, _overview_disk_loaded
+    thread: threading.Thread | None
+    with _overview_refresh_lock:
+        thread = _overview_refresh_thread
+    if thread is not None:
+        thread.join(timeout=2.0)
+    _overview_last_good = None
+    _overview_disk_loaded = False
     cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
     with _overview_refresh_lock:
         _overview_refresh_thread = None
@@ -88,6 +133,10 @@ def _peek_state_summary() -> tuple[dict, str, float | None]:
         value, age_s = cached
         return value, "hit", age_s
     return {}, "miss", None
+
+
+def _empty_overview_totals() -> dict[str, int]:
+    return {key: 0 for key in _OVERVIEW_TOTAL_KEYS}
 
 
 def _overlay_research_from_summary(tracks: list[dict], state_tracks: dict) -> None:
@@ -105,6 +154,116 @@ def _overlay_research_from_summary(tracks: list[dict], state_tracks: dict) -> No
         }
 
 
+def _overlay_presence_from_summary(tracks: list[dict], state_tracks: dict, totals: dict) -> None:
+    """Treat published MDX as presence so Home is not 0/total-missing after a bounce.
+
+    Does not copy published onto ``stats.pass`` — that stays audit-passing.
+    """
+    published_total = 0
+    missing_total = 0
+    research_total = 0
+    for track_entry in tracks:
+        track_id = track_entry.get("id")
+        summary_stats = state_tracks.get(track_id, {}) if isinstance(state_tracks, dict) else {}
+        published = int(summary_stats.get("published_mdx") or track_entry.get("published_mdx") or 0)
+        generated = int(summary_stats.get("generated_md") or track_entry.get("generated_md") or 0)
+        track_entry["published_mdx"] = published
+        track_entry["generated_md"] = generated
+        stats = track_entry.setdefault("stats", {})
+        stats["published_mdx"] = published
+        module_count = int(track_entry.get("module_count") or 0)
+        scan_missing = int(stats.get("missing") or 0)
+        scan_present = max(0, module_count - scan_missing) if module_count else 0
+        present = present_module_count(
+            total=module_count,
+            generated_md=generated,
+            published_mdx=published,
+            scan_present=scan_present,
+        )
+        stats["missing"] = max(0, module_count - present)
+        published_total += published
+        missing_total += stats["missing"]
+        research_total += int((stats.get("research") or {}).get("total") or 0)
+    totals["missing"] = missing_total
+    totals["published_mdx"] = published_total
+    totals["research"] = research_total
+
+
+def _apply_overview_summary_overlay(payload: dict, state_tracks: dict) -> None:
+    tracks = payload.get("tracks") or []
+    totals = payload.setdefault("totals", _empty_overview_totals())
+    _overlay_research_from_summary(tracks, state_tracks)
+    _overlay_presence_from_summary(tracks, state_tracks, totals)
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    directory = path.parent
+    directory.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", dir=directory)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, path)
+    except Exception:
+        with contextlib.suppress(OSError):
+            os.unlink(tmp)
+        raise
+
+
+def _usable_overview_last_good(payload: dict | None) -> dict | None:
+    if not isinstance(payload, dict):
+        return None
+    tracks = payload.get("tracks")
+    totals = payload.get("totals")
+    if not isinstance(tracks, list) or not tracks:
+        return None
+    if not isinstance(totals, dict) or int(totals.get("total") or 0) <= 0:
+        return None
+    return payload
+
+
+def persist_overview_last_good(payload: dict) -> None:
+    """Write the full-scan overview snapshot so a Monitor bounce can reload it."""
+    if _usable_overview_last_good(payload) is None:
+        return
+    try:
+        _atomic_write_text(
+            overview_last_good_path(),
+            json.dumps(payload, ensure_ascii=False),
+        )
+    except OSError:
+        logger.exception("dashboard overview last-good persist failed")
+
+
+def read_persisted_overview_last_good() -> dict | None:
+    path = overview_last_good_path()
+    try:
+        if not path.is_file():
+            return None
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, TypeError):
+        return None
+    return _usable_overview_last_good(data)
+
+
+def hydrate_overview_last_good_from_disk() -> dict | None:
+    """Load durable last-good into process memory once per lifetime (or bounce)."""
+    global _overview_last_good, _overview_disk_loaded
+    if _overview_last_good is not None:
+        _overview_disk_loaded = True
+        return _overview_last_good
+    if _overview_disk_loaded:
+        return None
+    _overview_disk_loaded = True
+    payload = read_persisted_overview_last_good()
+    if payload is None:
+        return None
+    _overview_last_good = payload
+    return payload
+
+
 def _build_overview_from_state_summary(
     state_summary: dict,
     cache_state: str,
@@ -118,7 +277,7 @@ def _build_overview_from_state_summary(
     state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
 
     tracks = []
-    totals = {"pass": 0, "content_complete": 0, "fail": 0, "unaudited": 0, "missing": 0, "shippable": 0, "total": 0}
+    totals = _empty_overview_totals()
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
@@ -166,12 +325,14 @@ def _build_overview_from_state_summary(
         meta["age_s"] = round(age_s, 3)
     if cache_state == "miss" and track_scan == "skipped":
         meta["error"] = "overview_warming"
-    return {
+    payload = {
         "tracks": tracks,
         "totals": totals,
         "timestamp": datetime.now(UTC).isoformat(),
         "meta": meta,
     }
+    _apply_overview_summary_overlay(payload, state_tracks)
+    return payload
 
 
 def _build_overview_payload_from_scans() -> dict:
@@ -190,7 +351,7 @@ def _build_overview_payload_from_scans() -> dict:
     state_tracks = state_summary.get("tracks", {})
 
     tracks = []
-    totals = {"pass": 0, "content_complete": 0, "fail": 0, "unaudited": 0, "missing": 0, "shippable": 0, "total": 0}
+    totals = _empty_overview_totals()
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
@@ -234,7 +395,7 @@ def _build_overview_payload_from_scans() -> dict:
             elif key in s:
                 totals[key] += s[key]
 
-    return {
+    payload = {
         "tracks": tracks,
         "totals": totals,
         "timestamp": datetime.now(UTC).isoformat(),
@@ -248,6 +409,8 @@ def _build_overview_payload_from_scans() -> dict:
             **({"age_s": round(age_s, 3)} if age_s is not None else {}),
         },
     }
+    _apply_overview_summary_overlay(payload, state_tracks)
+    return payload
 
 
 def _schedule_overview_refresh() -> None:
@@ -263,12 +426,23 @@ def _schedule_overview_refresh() -> None:
         _overview_refresh_thread.start()
 
 
+def _overview_refresh_running() -> bool:
+    with _overview_refresh_lock:
+        thread = _overview_refresh_thread
+    return thread is not None and thread.is_alive()
+
+
 def _run_overview_refresh() -> None:
-    global _overview_last_good
+    global _overview_last_good, _overview_disk_loaded
     try:
         payload = _build_overview_payload_from_scans()
+        if _usable_overview_last_good(payload) is None:
+            logger.warning("dashboard overview refresh produced no tracks; keeping last-good")
+            return
         cache_set(DASHBOARD_OVERVIEW_CACHE_KEY, payload)
         _overview_last_good = payload
+        _overview_disk_loaded = True
+        persist_overview_last_good(payload)
     except Exception:
         logger.exception("dashboard overview background refresh failed")
 
@@ -283,9 +457,11 @@ async def overview():
     The request path never walks the curriculum tree. A warm TTL cache or
     last-good full scan is returned immediately; otherwise a cheap
     manifest + cached-summary payload is served while a detached worker
-    fills last-good. ``meta.cache`` remains the state-summary cache
-    signal; ``meta.track_scan`` / ``meta.stale`` / ``meta.error`` stay
-    honest about whether the per-module scan has run.
+    fills last-good. Last-good is also persisted to disk so a process
+    bounce does not fall back to 0/total-missing. ``meta.cache`` remains
+    the state-summary cache signal; ``meta.track_scan`` / ``meta.stale``
+    / ``meta.error`` stay honest about whether the per-module scan has
+    run. ``meta.refreshing`` is only set while warming (no last-good yet).
     """
     state_summary, cache_state, age_s = _peek_state_summary()
     state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
@@ -301,37 +477,43 @@ async def overview():
         meta["track_scan"] = "hit"
         meta["stale_after_s"] = DASHBOARD_OVERVIEW_TTL_S
         meta.pop("error", None)
+        meta.pop("refreshing", None)
         if cache_state == "hit" and age_s is not None:
             meta["age_s"] = round(age_s, 3)
         elif overview_age_s is not None:
             meta["age_s"] = round(overview_age_s, 3)
-        _overlay_research_from_summary(payload.get("tracks", []), state_tracks)
+        _apply_overview_summary_overlay(payload, state_tracks)
         payload["meta"] = meta
         return payload
 
-    if _overview_last_good is not None:
-        _schedule_overview_refresh()
-        payload = copy.deepcopy(_overview_last_good)
+    last_good = hydrate_overview_last_good_from_disk()
+    if last_good is not None:
+        if not _overview_refresh_running():
+            _schedule_overview_refresh()
+        payload = copy.deepcopy(last_good)
         payload["timestamp"] = datetime.now(UTC).isoformat()
         meta = dict(payload.get("meta") or {})
         meta["cache"] = cache_state
         meta["stale"] = True
         meta["track_scan"] = "stale"
-        meta["refreshing"] = True
         meta["stale_after_s"] = DASHBOARD_OVERVIEW_TTL_S
+        meta.pop("error", None)
+        meta.pop("refreshing", None)
         if age_s is not None:
             meta["age_s"] = round(age_s, 3)
-        _overlay_research_from_summary(payload.get("tracks", []), state_tracks)
+        _apply_overview_summary_overlay(payload, state_tracks)
         payload["meta"] = meta
         return payload
 
     _schedule_overview_refresh()
-    return _build_overview_from_state_summary(
+    payload = _build_overview_from_state_summary(
         state_summary,
         cache_state,
         age_s,
         track_scan="skipped",
     )
+    payload.setdefault("meta", {})["refreshing"] = True
+    return payload
 
 
 @router.get("/research")
