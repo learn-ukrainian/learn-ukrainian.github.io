@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from scripts.verification.check_ru_morph import (
+    _morph_ru,
     check_russian_patterns_batch,
     get_ru_confidence,
     is_russian_pattern,
@@ -85,6 +86,57 @@ def test_word_knyha():
     assert res["russian_lemma"] is None
     assert res["confidence"] == 0.0
     assert res["ukrainian_alternative"] is None
+
+
+# ---------------------------------------------------------------------------
+# VESUM-attested actv/Dist participles must stay clean (Issue #7039)
+# ---------------------------------------------------------------------------
+
+
+def test_vesum_attested_permanent_quality_adjectives_stay_clean():
+    # минулий/сплячий/сидячий/стоячий are lexicalised VESUM adjectives that
+    # pymorphy3's uk parser also tags actv/Dist on — the actv/Dist heuristic
+    # must not override a real VESUM attestation.
+    for word in ["минулий", "сплячий", "сидячий", "стоячий"]:
+        res = is_russian_pattern(word)
+        assert res["matches_russian"] is False, f"Expected {word} to be clean negative"
+        assert res["russian_lemma"] is None
+        assert res["confidence"] == 0.0
+
+
+def test_documented_calques_still_flag_without_vesum():
+    # Real calques (not VESUM-attested) must still flag despite the VESUM gate
+    # on the actv/Dist heuristic.
+    for word in ["слідуючий", "учбовий"]:
+        res = is_russian_pattern(word)
+        assert res["matches_russian"] is True, f"Expected {word} to flag"
+        assert res["russian_lemma"] is None
+        assert res["confidence"] >= 0.7
+
+
+def test_get_ru_confidence_never_invents_a_lemma_for_a_dictionary_touch():
+    # 'минулий' only touches the RU DictionaryAnalyzer via an unknown-prefix /
+    # known-suffix guess ('минулия') that pymorphy3 itself does not recognise
+    # as a known RU word. The DictionaryAnalyzer disjunct must not leak it.
+    conf, lemma = get_ru_confidence("минулий")
+    assert lemma is None
+    assert conf < 0.7
+
+
+def test_flagged_words_never_return_an_unverified_lemma():
+    # Any word this module returns a russian_lemma for must be a genuinely
+    # known RU dictionary word, never an invented DictionaryAnalyzer guess.
+    words = [
+        "получити", "здача", "врач", "привіт", "книга",
+        "слідуючий", "учбовий", "минулий", "сплячий", "сидячий", "стоячий",
+    ]
+    for word in words:
+        res = is_russian_pattern(word)
+        lemma = res["russian_lemma"]
+        if lemma is not None:
+            assert _morph_ru.word_is_known(lemma), (
+                f"{word} returned unverified lemma {lemma!r}"
+            )
 
 
 # ---------------------------------------------------------------------------

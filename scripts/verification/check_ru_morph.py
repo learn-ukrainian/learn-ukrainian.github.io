@@ -46,7 +46,7 @@ KNOWN_SHADOW_LEMMAS: frozenset[str] = frozenset({
 })
 
 
-def _is_calque_or_shadow(word: str) -> tuple[bool, bool]:
+def _is_calque_or_shadow(word: str, *, is_in_vesum: bool = False) -> tuple[bool, bool]:
     """Check if word is a known Russian shadow or documented calque.
 
     Returns:
@@ -66,8 +66,14 @@ def _is_calque_or_shadow(word: str) -> tuple[bool, bool]:
     if word in KNOWN_SHADOW_LEMMAS or uk_lemma in KNOWN_SHADOW_LEMMAS:
         return True, False
 
-    # Active present participle calques (-уч-/-юч-/-ач-/-яч- expressing active participle)
-    if any("actv" in str(p.tag) or "Dist" in str(p.tag) for p in uk_parses):
+    # Active present participle calques (-уч-/-юч-/-ач-/-яч- expressing active
+    # participle). pymorphy3's uk dictionary tags a VESUM-attested permanent-
+    # quality adjective (минулий, сплячий, сидячий, стоячий) with actv/Dist
+    # alongside its normal adjective reading — that reading is real Ukrainian,
+    # not a calque, so only run this heuristic for words VESUM does not know.
+    if not is_in_vesum and any(
+        "actv" in str(p.tag) or "Dist" in str(p.tag) for p in uk_parses
+    ):
         return True, True
 
     return False, False
@@ -96,12 +102,13 @@ def get_ru_confidence(word: str) -> tuple[float, str | None]:
     ]
     if dict_parses:
         best = max(dict_parses, key=lambda p: p.score)
-        lemma = (
-            best.normal_form
-            if _morph_ru.word_is_known(best.normal_form)
-            or any("DictionaryAnalyzer" in str(m[0]) for m in best.methods_stack)
-            else None
-        )
+        # dict_parses is already filtered to DictionaryAnalyzer hits (line
+        # above), so a "DictionaryAnalyzer in methods_stack" disjunct here is
+        # always true and defeats the word_is_known() check — it let pymorphy3
+        # invent a lemma (e.g. 'минулия' for 'минулий') from an unknown-prefix/
+        # known-suffix guess that merely touched the RU dictionary. Only a
+        # genuinely known RU lemma is reported.
+        lemma = best.normal_form if _morph_ru.word_is_known(best.normal_form) else None
         return best.score, lemma
 
     # Fallback to the top heuristic guess (FakeDictionary / UnknAnalyzer).
@@ -144,7 +151,9 @@ def _analyze_word(
             "confidence": 0.0,
         }
 
-    is_shadow, is_documented_calque = _is_calque_or_shadow(norm_word)
+    is_shadow, is_documented_calque = _is_calque_or_shadow(
+        norm_word, is_in_vesum=is_in_vesum
+    )
 
     # Clean Ukrainian words in VESUM stay negative unless they are known shadows/calques
     if is_in_vesum and not is_shadow:
