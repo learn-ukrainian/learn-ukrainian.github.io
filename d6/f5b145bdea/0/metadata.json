@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d6f5b145bdea",
+  "session_id": "fleet-0a9ec475137642309b39b76c230dd309",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T10:56:05.182825Z",
+  "branch": "cursor/infra-ci-mergequeue-b",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_frontend_change_scope.py",
+    "tests/test_paths_filter_fail_open.py",
+    "tests/test_workflow_head_concurrency.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "377106e4d3e4",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T10:56:05.175147Z",
+    "agent_lines": 121,
+    "agent_removed": 40,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 121,
+    "total_lines_changed": 161,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

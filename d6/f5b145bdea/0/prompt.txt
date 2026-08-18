@@ -1,0 +1,51 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-ci-mergequeue-b
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix the failing workflow-contract consumer tests on YOUR PR #6989 (in-PR, before re-queue)
+
+You are cursor. Your PR #6989 (two-tier merge-queue cutover, stage 2) was DEQUEUED: its
+merge_group run 32113347058 failed pytest shards 1+2 on three workflow-contract test files
+that assert the OLD ci.yml shape. They only run on the FULL tier, so your light PR-tier runs
+never saw them — the queue caught them, exactly as the design predicts. Same
+cross-file-consumer class agy hit on #6997.
+
+Failing surface (from the merge_group run):
+- tests/test_frontend_change_scope.py::test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip
+- tests/test_paths_filter_fail_open.py::test_workflows_only_consume_valid_action_outputs
+  (fails with "Missing 'changes' job in hygiene.yml" — you trimmed hygiene.yml to advisory)
+- tests/test_workflow_head_concurrency.py (concurrency group format + hygiene/security-audit params)
+
+## Steps
+1. In your worktree (.worktrees/dispatch/cursor/infra-ci-mergequeue-b, branch
+   cursor/infra-ci-mergequeue-b): read each failing test's INTENT first. Decide at the right
+   layer, per test:
+   - If the test guards an invariant your new two-tier ci.yml genuinely violates (e.g. a
+     fail-open paths-filter consumption, a concurrency group that can cancel a queued
+     merge_group run), fix the WORKFLOW — the invariant wins.
+   - If the test merely describes the old single-tier shape, update it to assert the NEW
+     contract (two-tier jobs, advisory hygiene, new concurrency format) and say which in the
+     commit message.
+2. Run the full consumer surface locally and quote output:
+   `.venv/bin/python -m pytest tests/test_frontend_change_scope.py tests/test_paths_filter_fail_open.py tests/test_workflow_head_concurrency.py -q`
+   plus `ugrep -ln "ci.yml\|hygiene.yml" tests/ | xargs .venv/bin/python -m pytest -q` if it
+   adds files beyond those three.
+3. ruff on touched Python files. actionlint if you touched any workflow file.
+4. Commit (conventional message), push to the SAME branch. NO auto-merge, NO re-queue —
+   the driver re-stamps CF review on the new head and re-queues.
+
+## Evidence rule (#M-4): quote raw test output; state per test WHICH branch of step 1
+applied and why.
+
+## Routing card: tier=practical · cursor (authoring lane, own regression) ·
+owned_paths=tests/test_frontend_change_scope.py, tests/test_paths_filter_fail_open.py,
+tests/test_workflow_head_concurrency.py, .github/workflows/** ·
+research_classification: role=implementer family=ci-workflow-contract track=infra

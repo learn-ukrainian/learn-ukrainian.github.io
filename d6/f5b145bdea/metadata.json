@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d6f5b145bdea",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-ci-mergequeue-b",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_frontend_change_scope.py",
+    "tests/test_paths_filter_fail_open.py",
+    "tests/test_workflow_head_concurrency.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d6/f5b145bdea/0/metadata.json",
+      "transcript": "/d6/f5b145bdea/0/full.jsonl",
+      "compact_transcript": "/d6/f5b145bdea/0/transcript.jsonl",
+      "content_hash": "/d6/f5b145bdea/0/content_hash.txt",
+      "prompt": "/d6/f5b145bdea/0/prompt.txt"
+    }
+  ]
+}
