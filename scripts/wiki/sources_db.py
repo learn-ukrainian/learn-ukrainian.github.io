@@ -2424,11 +2424,17 @@ def search_esum(
             query.replace("\u0301", "").strip(),
         ]))
         meta_placeholders = ",".join("?" for _ in query_variants)
-        meta_params: list[object] = list(query_variants)
+        meta_params: list[object] = [
+            *query_variants,
+            clean_query,
+            f"{clean_query}%",
+            f"{clean_query}%",
+        ]
         meta_vol_filter = ""
         if volume is not None:
             meta_vol_filter = " AND vol = ?"
             meta_params.append(volume)
+        meta_params.append(limit * 3)
 
         meta_rows = conn.execute(
             f"""
@@ -2441,7 +2447,7 @@ def search_esum(
             ORDER BY vol, page, lemma
             LIMIT ?
             """,
-            (*meta_params, clean_query, f"{clean_query}%", f"{clean_query}%", limit * 3),
+            tuple(meta_params),
         ).fetchall()
 
         candidates: dict[int, dict] = {}

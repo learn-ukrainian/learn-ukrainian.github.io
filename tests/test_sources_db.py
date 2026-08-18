@@ -980,6 +980,23 @@ def esum_heritage_rank_db(tmp_path):
         (3, "книгарня", knyharnia_text, "[]", 2, 205),
     )
 
+    # 4. golova: stressed headword in volume 1 (verifies diacritic normalization with volume filter)
+    golova_text = "голова́ — частина тіла; псл. *golva."
+    conn.execute(
+        """
+        INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (4, "голова́", 1, 550, golova_text, '["псл."]', "ЕСУМ vol. 1"),
+    )
+    conn.execute(
+        """
+        INSERT INTO esum_etymology (rowid, lemma, etymology_text, cognates, vol, page)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (4, "голова́", golova_text, '["псл."]', 1, 550),
+    )
+
     # Grinchenko entry for knyha
     conn.execute(
         "INSERT INTO grinchenko (word, definition) VALUES (?, ?)",
@@ -1025,6 +1042,30 @@ class TestHeadwordFirstRanking:
         hits = search_esum("«кни́га»", db_path=esum_heritage_rank_db, limit=5)
         assert hits
         assert hits[0]["lemma"] == "книга"
+
+    def test_search_esum_volume_filter_headword_and_body(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum
+
+        # Volume 2 returns exact headword and prefix match, excludes vol 4 body hit
+        hits_vol2 = search_esum("книга", volume=2, db_path=esum_heritage_rank_db, limit=5)
+        lemmas_vol2 = [h["lemma"] for h in hits_vol2]
+        assert "книга" in lemmas_vol2
+        assert "книгарня" in lemmas_vol2
+        assert "псалтир" not in lemmas_vol2
+        assert all(h["vol"] == 2 for h in hits_vol2)
+
+        # Volume 4 returns body hit, excludes vol 2 headword
+        hits_vol4 = search_esum("книга", volume=4, db_path=esum_heritage_rank_db, limit=5)
+        lemmas_vol4 = [h["lemma"] for h in hits_vol4]
+        assert "псалтир" in lemmas_vol4
+        assert "книга" not in lemmas_vol4
+        assert all(h["vol"] == 4 for h in hits_vol4)
+
+        # Stressed headword in DB resolves via meta path with volume filter
+        hits_stressed = search_esum("голова", volume=1, db_path=esum_heritage_rank_db, limit=5)
+        assert hits_stressed
+        assert hits_stressed[0]["lemma"] == "голова́"
+        assert hits_stressed[0]["vol"] == 1
 
     def test_search_heritage_knyha_ranks_above_psaltyr(self, esum_heritage_rank_db):
         from wiki.sources_db import search_heritage
