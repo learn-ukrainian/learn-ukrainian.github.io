@@ -130,6 +130,10 @@ from scripts.orchestration import reaper_lifecycle
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
+# Gemini is intentionally absent: its worker must not inherit a parent
+# operator ``GH_TOKEN`` / ``GITHUB_TOKEN``. Intended App or
+# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches the Gemini CLI via
+# ``build_agent_env`` (#7020).
 _GH_TOKEN_AGENTS = {
     "agy",
     "bridge",
@@ -137,7 +141,6 @@ _GH_TOKEN_AGENTS = {
     "codex",
     "cursor",
     "deepseek",
-    "gemini",
     "glm",
     "grok",
     "grok-build",
