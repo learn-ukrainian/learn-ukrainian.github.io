@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4367e848b40c",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-6996-reaper-guard",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet/post_task_reap.py",
+    "scripts/orchestration/reap_worktrees.py",
+    "tests/orchestration/test_reap_worktrees.py",
+    "tests/test_fleet_post_task_reap.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/43/67e848b40c/0/metadata.json",
+      "transcript": "/43/67e848b40c/0/full.jsonl",
+      "compact_transcript": "/43/67e848b40c/0/transcript.jsonl",
+      "content_hash": "/43/67e848b40c/0/content_hash.txt",
+      "prompt": "/43/67e848b40c/0/prompt.txt"
+    }
+  ]
+}

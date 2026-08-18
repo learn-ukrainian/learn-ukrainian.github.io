@@ -1,0 +1,43 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-6996-reaper-guard
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix #6996 — reaper settled-dispatch path must not remove unpushed work (one PR)
+
+You are agy, fixing GitHub issue #6996 (read it — it carries the journal evidence). One
+bounded unit.
+
+## Problem
+The worktree-reaper's settled-dispatch path reaps a dispatch worktree when its task file says
+status=done, without verifying the worktree HEAD exists anywhere but the local branch. For
+push-incapable lanes (grok), done ALWAYS precedes a driver push — the reap window can destroy
+the only workspace copy of a deliverable (survived tonight only via the shared object store's
+branch ref; PR #6995).
+
+## Required semantics (right layer — the reaper)
+1. Settled-dispatch reap requires the worktree HEAD to be reachable from at least one REMOTE
+   ref (any origin/* containing it), matching the spirit of the PR path (MERGED at exact
+   head). Unreachable → journal a `skip` with reason `unpushed_head` and leave the worktree.
+2. Terminal statuses that imply no deliverable (e.g. dry_run, cancelled with zero commits vs
+   base) may still reap — derive from the actual git state (commits ahead of base), not the
+   status string alone.
+3. Mutation-proof tests: (a) done task + local-only commit → SKIPPED unpushed_head (revert the
+   guard → test fails, quote it); (b) done task + head pushed to origin → reaped; (c) done
+   task + zero commits ahead → reaped.
+4. Run the reaper test files + ruff. Quote output. Conventional commit, Fixes #6996, X-Agent
+   trailer, push, PR, NO auto-merge.
+
+## Evidence rule (#M-4): quote raw output.
+
+## Routing card: tier=practical · agy/gemini-native (59% reserve; cursor held for the 6989
+queue canary) · owned_paths=scripts/orchestration/reap_worktrees.py, scripts/orchestration/
+reaper_lifecycle.py, scripts/fleet/post_task_reap.py, tests/** · research_classification=
+generic (deliberate)
