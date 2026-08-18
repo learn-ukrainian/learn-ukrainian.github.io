@@ -197,3 +197,45 @@ def test_enforce_waived_by_note_file(tmp_path: Path) -> None:
         ]
     )
     assert code == 0
+
+
+def test_enforce_ignores_missing_idle_disposition(tmp_path: Path, capsys) -> None:
+    """#6976: --enforce stays breadth-floor-only. Missing idle action is report-only."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _task(tasks_dir / "a.json", task_id="a", agent="claude", model="claude-sonnet-5", initiator="grok-x")
+    _task(tasks_dir / "b.json", task_id="b", agent="codex", model="gpt-5.6-luna", initiator="grok-x")
+    _task(tasks_dir / "c.json", task_id="c", agent="codex", model="gpt-5.6-terra", initiator="grok-x")
+    store = tmp_path / "idle.jsonl"
+    store.write_text(
+        json.dumps(
+            {
+                "schema": "fleet-idle-settle-event.v1",
+                "outcome": "missing_action",
+                "eligible": True,
+                "reminder_fired": True,
+                "opportunity_seconds_since_prev": 12.0,
+                "disposition_honest": None,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--enforce",
+            "--json",
+            "--idle-store",
+            str(store),
+        ]
+    )
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["breadth_floor_ok"] is True
+    assert payload["idle_settle"]["report_only"] is True
+    assert payload["idle_settle"]["settle_events_missing_action"] == 1
+    assert payload["idle_settle"]["eligible_idle_opportunity_seconds"] == 12.0

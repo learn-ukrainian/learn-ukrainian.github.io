@@ -186,8 +186,21 @@ dependency/critical-path → utilization. Later items never override earlier one
    busywork (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
    `.worktrees` before fan-out; reap first).
 
-Mechanical enforcement (settle-event reminder + eligibility-aware idle/disposition
-telemetry) lives on #6976 — keep this prose and that tooling aligned.
+Mechanical reminder + report-only telemetry (#6976). At every dispatch/review
+settle, evaluate eligible ready items and WIP/resource caps. The reminder fires
+only when something is eligible; then dispatch or pass one of the six codes.
+Unknown codes are rejected. Missing action is recorded, not gated. Do not add a
+raw idle-time threshold. `driver_breadth_report --enforce` remains the breadth
+floor only.
+
+```bash
+.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> \
+  --idle-snapshot-json <snap.json> [--dispatched | --disposition <code>]
+.venv/bin/python -m scripts.fleet.idle_settle evaluate \
+  --snapshot-json <snap.json> --kind dispatch --task-id <id> \
+  [--dispatched | --disposition <code>]
+.venv/bin/python -m scripts.fleet.idle_settle report
+```
 
 ### 3. Route by model × harness fit
 
