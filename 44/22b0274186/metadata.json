@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4422b0274186",
+  "strategy": "manual-commit",
+  "branch": "codex/agent-gh-identity-aj",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_batch_gemini_runner_env.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/44/22b0274186/0/metadata.json",
+      "transcript": "/44/22b0274186/0/full.jsonl",
+      "compact_transcript": "/44/22b0274186/0/transcript.jsonl",
+      "content_hash": "/44/22b0274186/0/content_hash.txt",
+      "prompt": "/44/22b0274186/0/prompt.txt"
+    }
+  ]
+}
