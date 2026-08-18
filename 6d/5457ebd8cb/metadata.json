@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6d5457ebd8cb",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6876-goroh-zero",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_launch_reenrich_venv_preflight.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6d/5457ebd8cb/0/metadata.json",
+      "transcript": "/6d/5457ebd8cb/0/full.jsonl",
+      "compact_transcript": "/6d/5457ebd8cb/0/transcript.jsonl",
+      "content_hash": "/6d/5457ebd8cb/0/content_hash.txt",
+      "prompt": "/6d/5457ebd8cb/0/prompt.txt"
+    }
+  ]
+}
