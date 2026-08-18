@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -582,7 +583,27 @@ def _artifact_snapshot() -> dict[str, tuple[int, int, str]]:
 
 @pytest.fixture(scope="module")
 def bilash_packet() -> dict:
-    return pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    before_status = subprocess.run(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    before_artifacts = _artifact_snapshot()
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    after_status = subprocess.run(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    assert after_status == before_status
+    assert _artifact_snapshot() == before_artifacts
+    return packet
 
 
 @pytest.fixture(scope="module")
