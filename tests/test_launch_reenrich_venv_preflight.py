@@ -149,3 +149,32 @@ def test_launcher_invokes_resolved_runner_python() -> None:
     source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
     assert 'printf \'%q \' "$RUNNER_PYTHON" "$DRIVER"' in source
     assert 'import yaml, jsonschema' in source
+
+
+def test_launcher_wrapped_command_has_pipefail() -> None:
+    """#6876: WRAPPED must set pipefail so driver failures (e.g. circuit breaker 70)
+    are not masked by tee exiting 0."""
+    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
+    assert 'WRAPPED="set -o pipefail;' in source
+
+
+def test_source_query_goroh_translate_importable_without_bs4() -> None:
+    """#6876: scripts.rag.source_query and goroh_translate must be importable
+    even when bs4 / beautifulsoup4 is not installed in the environment."""
+    import sys
+    orig_bs4 = sys.modules.get("bs4")
+    orig_source_query = {k: v for k, v in sys.modules.items() if "source_query" in k}
+    try:
+        sys.modules["bs4"] = None  # type: ignore[assignment]
+        for k in list(orig_source_query.keys()):
+            sys.modules.pop(k, None)
+
+        from scripts.rag.source_query import goroh_translate
+        assert callable(goroh_translate)
+    finally:
+        if orig_bs4 is not None:
+            sys.modules["bs4"] = orig_bs4
+        else:
+            sys.modules.pop("bs4", None)
+        sys.modules.update(orig_source_query)
+
