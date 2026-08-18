@@ -17,6 +17,9 @@ Indexed tables (dictionary headword lookup):
 - search_slovnyk_me() — curated slovnyk.me verification snapshots / live lookup
 - search_heritage() — merged Ukrainian heritage-defense lookup
 - lookup_by_url() — external article URL lookup
+
+Helpers:
+- clip_quote_safe() — quote-safe clipping keeping «» balanced
 """
 
 import hashlib
@@ -1793,15 +1796,17 @@ def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
 
 
 def _fold_dict_key(value: str) -> str:
-    """Case-fold a headword/query for Cyrillic-safe matching.
+    """Case-fold and normalize a headword/query for Cyrillic-safe matching.
 
     SQLite's `COLLATE NOCASE` only folds ASCII A-Z, so a lowercase Cyrillic
     query (e.g. "приймати") never matches a capitalized headword (e.g.
     "Приймати") through SQL alone. Python's Unicode-aware `.lower()` does,
-    and stripping the combining acute (U+0301) also lets stressed and
-    unstressed forms match each other.
+    and stripping combining acute (U+0301) plus surrounding quotes/guillemets
+    («», "", '') lets quoted, stressed, and unstressed forms match each other.
     """
-    return value.replace("\u0301", "").strip().lower()
+    cleaned = str(value or "").replace("\u0301", "").strip()
+    cleaned = cleaned.strip("«»\"'“”„`").strip()
+    return cleaned.lower()
 
 
 def _dict_lookup_contains(
@@ -1864,16 +1869,27 @@ def _dict_lookup(
         if contains:
             return _dict_lookup_contains(conn, table, word, limit)
 
+        cleaned_word = _fold_dict_key(word)
+        query_variants = list(dict.fromkeys([
+            word.strip(),
+            cleaned_word,
+            cleaned_word.capitalize(),
+            cleaned_word.upper(),
+            word.replace("\u0301", "").strip(),
+        ]))
+        query_variants = [v for v in query_variants if v]
+
         # Exact match first, then prefix match
         try:
+            placeholders = ",".join("?" for _ in query_variants)
             rows = conn.execute(
-                f"SELECT * FROM {table} WHERE word = ? COLLATE NOCASE LIMIT ?",
-                (word, limit),
+                f"SELECT * FROM {table} WHERE word IN ({placeholders}) OR word = ? COLLATE NOCASE LIMIT ?",
+                (*query_variants, word, limit),
             ).fetchall()
-            if not rows:
+            if not rows and cleaned_word:
                 rows = conn.execute(
-                    f"SELECT * FROM {table} WHERE word LIKE ? COLLATE NOCASE LIMIT ?",
-                    (f"{word}%", limit),
+                    f"SELECT * FROM {table} WHERE word LIKE ? OR word LIKE ? COLLATE NOCASE LIMIT ?",
+                    (f"{cleaned_word}%", f"{word}%", limit),
                 ).fetchall()
         except sqlite3.OperationalError:
             return []
@@ -2242,6 +2258,44 @@ def _strip_combining_acute(value: str) -> str:
     return value.replace("\u0301", "")
 
 
+def clip_quote_safe(text: str, max_chars: int = 500, *, ellipsis: str = "") -> str:
+    """Clip *text* to at most *max_chars*, keeping Ukrainian guillemets «» balanced.
+
+    If truncating at *max_chars* cuts off inside a quoted section, leaving an
+    unclosed opening guillemet «, the quote is balanced by closing with »
+    (or removing a trailing orphan «).
+    """
+    if not text:
+        return ""
+    if max_chars <= 0:
+        return ""
+    if len(text) <= max_chars:
+        return text
+
+    target_len = max_chars
+    if ellipsis:
+        target_len = max(0, max_chars - len(ellipsis))
+
+    raw_clip = text[:target_len]
+    stripped = raw_clip.rstrip()
+    if stripped.endswith("«"):
+        stripped = stripped[:-1].rstrip()
+        return (stripped + ellipsis) if stripped else ""
+
+    if ellipsis:
+        stripped += ellipsis
+
+    open_count = stripped.count("«")
+    close_count = stripped.count("»")
+    if open_count > close_count:
+        stripped += "»" * (open_count - close_count)
+
+    return stripped
+
+
+quote_safe_clip = clip_quote_safe
+
+
 def _escape_fts5_phrase(term: str) -> str:
     """Build a safe FTS5 phrase query for a user-supplied term."""
     cleaned = term.replace('"', " ").strip()
@@ -2315,6 +2369,21 @@ def _clean_garbled_esum_results(conn: sqlite3.Connection, rows: list[dict]) -> l
     return cleaned
 
 
+def _esum_match_tier(query: str, lemma: str) -> int:
+    """Return ranking tier for ESUM lemma matches (0=exact, 1=prefix, 2=contains, 3=body)."""
+    q = _fold_dict_key(query)
+    l = _fold_dict_key(lemma)
+    if not q or not l:
+        return 0
+    if l == q:
+        return 0
+    if l.startswith(q):
+        return 1
+    if q in l:
+        return 2
+    return 3
+
+
 def search_esum(
     query: str,
     volume: int | None = None,
@@ -2343,56 +2412,89 @@ def search_esum(
             return []
 
         limit = max(1, min(limit, 20))
-        params: list[object] = [query]
-        vol_filter = ""
-        if volume is not None:
-            vol_filter = " AND vol = ?"
-            params.append(volume)
+        clean_query = _fold_dict_key(query)
+        if not clean_query:
+            return []
 
-        exact_rows = conn.execute(
+        query_variants = list(dict.fromkeys([
+            query.strip(),
+            clean_query,
+            clean_query.capitalize(),
+            clean_query.upper(),
+            query.replace("\u0301", "").strip(),
+        ]))
+        meta_placeholders = ",".join("?" for _ in query_variants)
+        meta_params: list[object] = list(query_variants)
+        meta_vol_filter = ""
+        if volume is not None:
+            meta_vol_filter = " AND vol = ?"
+            meta_params.append(volume)
+
+        meta_rows = conn.execute(
             f"""
             SELECT id AS rowid, lemma, etymology_text, cognates, vol, page, source
             FROM esum_etymology_meta
-            WHERE lemma = ? COLLATE NOCASE{vol_filter}
+            WHERE (lemma IN ({meta_placeholders})
+                   OR replace(lemma, char(0x301), '') = ? COLLATE NOCASE
+                   OR lemma LIKE ? COLLATE NOCASE
+                   OR replace(lemma, char(0x301), '') LIKE ? COLLATE NOCASE){meta_vol_filter}
             ORDER BY vol, page, lemma
             LIMIT ?
             """,
-            (*params, limit),
+            (*meta_params, clean_query, f"{clean_query}%", f"{clean_query}%", limit * 3),
         ).fetchall()
 
-        results = [dict(row) for row in exact_rows]
-        seen = {row["rowid"] for row in results}
-        remaining = limit - len(results)
-        fts_query = _escape_fts5_phrase(query)
-        if remaining <= 0 or not fts_query:
-            return _clean_garbled_esum_results(conn, results)
-
-        fts_params: list[object] = [fts_query]
-        fts_vol_filter = ""
-        if volume is not None:
-            fts_vol_filter = " AND vol = ?"
-            fts_params.append(volume)
-        fts_params.append(remaining + len(seen))
-
-        fts_rows = conn.execute(
-            f"""
-            SELECT rowid, lemma, etymology_text, cognates, vol, page
-            FROM esum_etymology
-            WHERE esum_etymology MATCH ?{fts_vol_filter}
-            ORDER BY rank
-            LIMIT ?
-            """,
-            tuple(fts_params),
-        ).fetchall()
-        for row in fts_rows:
+        candidates: dict[int, dict] = {}
+        for row in meta_rows:
             item = dict(row)
-            if item["rowid"] in seen:
-                continue
-            item["source"] = "ЕСУМ"
-            results.append(item)
-            if len(results) >= limit:
-                break
-        return _clean_garbled_esum_results(conn, results)
+            item["source"] = item.get("source") or "ЕСУМ"
+            candidates[item["rowid"]] = item
+
+        fts_query = _escape_fts5_phrase(clean_query)
+        if fts_query:
+            fts_params: list[object] = [fts_query]
+            fts_vol_filter = ""
+            if volume is not None:
+                fts_vol_filter = " AND vol = ?"
+                fts_params.append(volume)
+            fts_params.append(max(limit * 4, 30))
+
+            fts_rows = conn.execute(
+                f"""
+                SELECT rowid, lemma, etymology_text, cognates, vol, page
+                FROM esum_etymology
+                WHERE esum_etymology MATCH ?{fts_vol_filter}
+                ORDER BY rank
+                LIMIT ?
+                """,
+                tuple(fts_params),
+            ).fetchall()
+            for idx, row in enumerate(fts_rows):
+                rowid = row["rowid"]
+                if rowid not in candidates:
+                    item = dict(row)
+                    item["source"] = "ЕСУМ"
+                    item["_fts_order"] = idx
+                    candidates[rowid] = item
+
+        if not candidates:
+            return []
+
+        cleaned = _clean_garbled_esum_results(conn, list(candidates.values()))
+        cleaned.sort(
+            key=lambda row: (
+                _esum_match_tier(query, row.get("lemma", "")),
+                row.get("_fts_order", 0),
+                int(row.get("vol") or 0),
+                int(row.get("page") or 0),
+                len(str(row.get("lemma") or "")),
+                str(row.get("lemma") or ""),
+            )
+        )
+        for item in cleaned:
+            item.pop("_fts_order", None)
+
+        return cleaned[:limit]
     finally:
         _close_if_temporary(conn, db_path)
 
@@ -2787,6 +2889,21 @@ def _heritage_text(hit: dict) -> str:
     )
 
 
+def _heritage_match_tier(query: str, headword: str) -> int:
+    """Return ranking tier for heritage matches (0=exact, 1=prefix, 2=contains, 3=body)."""
+    q = _fold_dict_key(query)
+    w = _fold_dict_key(headword)
+    if not q or not w:
+        return 0
+    if w == q:
+        return 0
+    if w.startswith(q) or q.startswith(w):
+        return 1
+    if q in w or w in q:
+        return 2
+    return 3
+
+
 def search_heritage(
     query: str,
     limit: int = 10,
@@ -2908,7 +3025,12 @@ def search_heritage(
             "score": 20.0,
         })
 
-    rows.sort(key=lambda row: row["score"], reverse=True)
+    rows.sort(
+        key=lambda row: (
+            _heritage_match_tier(query, row.get("word", "")),
+            -float(row.get("score", 0.0)),
+        )
+    )
     return rows[:limit]
 
 
