@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c7b97eae576e",
+  "strategy": "manual-commit",
+  "branch": "agy/infra-7023-leftover-apis",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/image-explorer.html",
+    "dashboards/orient.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/main.py",
+    "scripts/api/rag_router.py",
+    "scripts/api/route_contracts.py",
+    "tests/test_api_endpoints.py",
+    "tests/test_coverage_api_routers.py",
+    "tests/test_orient_api.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c7/b97eae576e/0/metadata.json",
+      "transcript": "/c7/b97eae576e/0/full.jsonl",
+      "compact_transcript": "/c7/b97eae576e/0/transcript.jsonl",
+      "content_hash": "/c7/b97eae576e/0/content_hash.txt",
+      "prompt": "/c7/b97eae576e/0/prompt.txt"
+    }
+  ]
+}
