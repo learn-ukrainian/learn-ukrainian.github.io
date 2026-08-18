@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "26cc654e39fd",
+  "session_id": "fleet-81c9538867de4efeb4f9bf951202a67d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-18T19:35:57.213599Z",
+  "branch": "agy/atlas-6876-goroh-zero",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/launch_reenrich_class_b.sh",
+    "scripts/rag/source_query.py",
+    "tests/test_launch_reenrich_venv_preflight.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "ed8641fc495e",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-18T19:35:57.207026Z",
+    "agent_lines": 48,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 48,
+    "total_lines_changed": 51,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

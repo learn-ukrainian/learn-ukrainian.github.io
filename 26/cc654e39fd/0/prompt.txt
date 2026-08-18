@@ -1,0 +1,32 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-6876-goroh-zero
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# atlas-6876-goroh-zero
+
+Diagnose and fix why two atlas-runner jobs filled **0/1140** EN after #6982.
+
+## Facts (do not relitigate)
+- Job `6876-goroh-leftover-1140` and `6876-goroh-leftover-1140b` both: filled_translation=0, circuit_breaker at 50 misses, same layer_counters (proverbs 2 / usage 1 / grinchenko 10 / forms 971), systemd exit 0, runtime ~2m55s.
+- First job was submitted from stale primary `df0aeb81` (pre-#6982). Second from worktree at `e78a7d26` which **does** contain `query_goroh_translate` / `_goroh_translation`.
+- Leftover slugs: `batch_state/atlas-jobs/6876-slovnyk-leftover-1140.slugs.json` (1140).
+- Remote workdir: `/home/ops/atlas-runner/run-atlas-job-6876-goroh-leftover-1140b`
+- #6876 stays OPEN. No DeepL. No e2u_reverse. pointer_write false.
+
+## Do
+1. Prove whether the **remote** work-dir `scripts/lexicon/enrich_manifest.py` contains `_goroh_translation` (scp/ssh via existing atlas-job helpers; quote grep).
+2. Canary 5 leftover slugs (`агі`, `адамсит`, `амброзія`, `анчоус`, `аршин`) through `query_goroh_translate` / `goroh_translate` with network allowed in a throwaway local script under the worktree. Quote raw returns. If HTTP fails, quote status/body class.
+3. Find why 50 consecutive translation misses: offline guard, empty goroh, slovnyk-cache-only, wrong package on PYTHONPATH, circuit treating layer-only as miss, etc.
+4. Fix the **root cause** so a third job can fill EN from Goroh when Goroh has a gloss. Also make circuit-breaker trip a **non-zero** systemd result (protocol: tripped breaker = failed). The wrapper currently reports success/exit 0.
+5. Tests. PR. `X-Agent: cursor/atlas-6876-goroh-zero`. Refs #6876. Do not close #6876. Do not publish pointer.
+
+## Done
+Pushed PR + quoted canary evidence + remote file proof.
