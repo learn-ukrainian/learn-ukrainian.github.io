@@ -286,6 +286,20 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   it. Lightweight agent review + green CI + merge + worktree/temp cleanup is
   the path.
 
+  **Historical projection only — not the live CF gate (#7017).** The table
+  below mirrors `scripts/config/fleet_communications.yaml`'s endpoint
+  registry, which that file's own header marks legacy: "Sealed formal CF
+  always goes through review-pr" — the very path retired above — and "keep
+  these endpoint booleans synchronized for legacy endpoint-status consumers;
+  reviewer_resolver never reads this copy." `scripts/lint/lint_fleet_roster.py`
+  still pins this block byte-exact against that YAML for those legacy
+  consumers (`scripts/api/fleet_router.py`, `scripts/fleet_comms/endpoints.py`)
+  — keep it in sync, do not delete it — but do not read it as today's review
+  routing. For the live formal resolver use the "Code Review (PR diff)" row
+  above (`closeout_cli resolve-reviewer`, backed by `model_catalog.yaml` →
+  `review_scheduler.endpoints`); for the everyday review of record use the
+  lightweight `ask-<lane>` path just above.
+
   <!-- fleet-roster-projection:begin formal_review_eligible -->
   | endpoint | formal_review_eligible |
   | --- | --- |
