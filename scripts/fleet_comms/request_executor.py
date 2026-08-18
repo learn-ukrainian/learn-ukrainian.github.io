@@ -84,13 +84,16 @@ class RequestExecutor:
         default_ttl_seconds: int | None = None,
     ) -> None:
         self.store = store or ArtifactStore(root=root)
+        self._owns_store = store is None
         self.registry = registry or load_endpoint_registry()
         self.default_ttl_seconds = default_ttl_seconds
         self._conn = self.store.connection
-        apply_migrations(self._conn)
+        if self._owns_store:
+            apply_migrations(self._conn)
 
     def close(self) -> None:
-        self.store.close()
+        if self._owns_store:
+            self.store.close()
 
     def __enter__(self) -> RequestExecutor:
         return self
