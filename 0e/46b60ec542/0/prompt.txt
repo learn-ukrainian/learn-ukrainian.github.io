@@ -1,0 +1,19 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/infra-7001-postbuild-split
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+In-PR delta on YOUR PR #7005 (worktree .worktrees/dispatch/agy/infra-7001-postbuild-split, branch agy/infra-7001-postbuild-split). CF review (kimi) returned PASS with two findings to fix before merge:
+
+1. RESTORE the dropped pristine-tree guard: on main, the bilash_packet fixture asserted prepare_review leaves the working tree and artifact dirs untouched (assert after_status == before_status and assert _artifact_snapshot() == before_artifacts). Your split dropped both asserts, leaving _artifact_snapshot (tests/audit/test_post_build_review.py:568) as dead code and the invariant untested. Restore the guard inside the module-scoped fixture (it runs once per module — costs nothing), or if you deliberately removed it, say why in the commit and delete _artifact_snapshot too. Restoring is the default.
+
+2. docs/runbooks/post-build-review.md:189 still lists only 'pytest tests/audit/test_post_build_review.py -q' as the validation command — post-split that silently skips the 19 pipeline tests. Update it to run both files.
+
+Then: run both test files green, quote the tail, ruff, push to the SAME branch. NO auto-merge — driver re-stamps.
