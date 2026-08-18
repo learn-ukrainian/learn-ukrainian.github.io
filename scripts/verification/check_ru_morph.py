@@ -125,6 +125,25 @@ def _analyze_word(
             "confidence": 0.0,
         }
 
+    # Lexicalised safe words (e.g. 'квітучий', 'лежачий', 'блискучий') are always clean negative
+    if norm_word in LEXICALISED_SAFE:
+        return {
+            "matches_russian": False,
+            "russian_lemma": None,
+            "ukrainian_alternative": None,
+            "confidence": 0.0,
+        }
+
+    uk_parses = _morph_uk.parse(norm_word)
+    uk_lemma = uk_parses[0].normal_form if uk_parses else norm_word
+    if uk_lemma in LEXICALISED_SAFE:
+        return {
+            "matches_russian": False,
+            "russian_lemma": None,
+            "ukrainian_alternative": None,
+            "confidence": 0.0,
+        }
+
     is_shadow, is_documented_calque = _is_calque_or_shadow(norm_word)
 
     # Clean Ukrainian words in VESUM stay negative unless they are known shadows/calques
@@ -183,7 +202,9 @@ def is_russian_pattern(
         )
         is_in_vesum = bool(vesum_results)
     except Exception:
-        is_in_vesum = False
+        # If DB connection fails / DB is not provisioned (e.g. CI fastlane),
+        # fall back to the built-in Ukrainian MorphAnalyzer dictionary.
+        is_in_vesum = _morph_uk.word_is_known(norm_word)
 
     return _analyze_word(norm_word, is_in_vesum=is_in_vesum, threshold=threshold)
 
