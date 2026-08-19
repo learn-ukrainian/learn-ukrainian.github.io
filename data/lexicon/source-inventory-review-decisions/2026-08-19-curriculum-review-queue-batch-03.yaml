@@ -1338,7 +1338,7 @@ decisions:
 - lemma: патос
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: Alternative form of па́фос
+  approved_gloss: pathos, fervor
   sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
     dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry.'
   source_inventory:
@@ -1992,7 +1992,7 @@ decisions:
 - lemma: непов'язаний
   decision: approve_for_publish
   approved_pos: adj
-  approved_gloss: desultory (out of course; by the way; not connected with the subject)
+  approved_gloss: unrelated, unconnected
   sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
     dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry.'
   source_inventory:
@@ -2139,7 +2139,7 @@ decisions:
 - lemma: узагалі
   decision: approve_for_publish
   approved_pos: adv
-  approved_gloss: Alternative form of взагалі́
+  approved_gloss: generally, in general, overall
   sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
     dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry.'
   source_inventory:
