@@ -552,6 +552,8 @@ LEXICALISED_SAFE: frozenset[str] = frozenset({
     "родючий",
     "балакучий",
     "плакучий",   # плакуча верба
+    "ріжучий",
+    "керуючий",
 })
 
 # Morphological rules (categorical — no exceptions, no heritage gate needed):

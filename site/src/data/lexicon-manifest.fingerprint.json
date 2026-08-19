@@ -51,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
-        "sha256": "d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5"
+        "sha256": "beb42751a66bea7c1c23f11f782a6001c91284e8c8a97da9cc063cd9276dab6c"
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
