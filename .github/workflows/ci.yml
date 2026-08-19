@@ -1430,6 +1430,9 @@ jobs:
       - contracts
       - frontend
       - coverage-floor
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -1460,3 +1463,28 @@ jobs:
           python scripts/ci/gate_required_results.py \
             --event "$EVENT_NAME" \
             --results "$RESULTS"
+
+      # Kicked PRs must not look CLEAN and sit (#7042): a merge_group failure
+      # dequeues the PR silently otherwise. Best-effort only — a parse/comment
+      # failure here must never change the gate's already-failed result, so
+      # this step always exits 0 and adds no required job.
+      - name: Comment merge-queue kick on source PR
+        if: failure() && github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.merge_group.head_ref }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RESULTS: >-
+            ruff=${{ needs.ruff.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
+        run: |
+          set +e
+          pr_number=$(printf '%s' "$HEAD_REF" | grep -oE 'pr-[0-9]+' | grep -oE '[0-9]+' | head -n1)
+          if [[ -z "$pr_number" ]]; then
+            echo "::warning::could not parse PR number from merge_group head_ref: $HEAD_REF"
+            exit 0
+          fi
+          body=$(printf 'merge-group CI Gate failed: %s\n\nResults: %s\n\nPR-tier green is not landed; fix and re-queue the same hour.\n' "$RUN_URL" "$RESULTS")
+          if ! gh pr comment "$pr_number" --body "$body"; then
+            echo "::warning::could not comment on PR #${pr_number}"
+          fi
+          exit 0

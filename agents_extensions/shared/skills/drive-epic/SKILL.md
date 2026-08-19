@@ -358,6 +358,15 @@ another lane's PR with `needs=merge` rather than merging it.
 Skill- or docs-only landings classify as merge_group `docs_skills` (#7018):
 the four pytest shards and coverage combine are no-op **success**, not skipped.
 
+**Merge-queue kick is same-hour work (#7042).** A **kick** is `merge_group` CI Gate
+going red and GitHub dequeuing the PR — it lands back on the branch looking CLEAN,
+with no visible failure unless you go look. CI Gate now comments the source PR with
+the run URL and per-job `RESULTS` on a kick; that comment is the trigger, not a
+courtesy. On seeing it: read the failed jobs from the run, fix or rebase, re-run
+exact-head CF review if the head moved, then re-queue — same hour, never left
+overnight. Do not stand up a bot or recovery workflow for this; it is driver work
+like any other red CI.
+
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
 **A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
