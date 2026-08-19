@@ -4,12 +4,12 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 WorkingDirectory=@REPO_ROOT@
-ExecStart=@REPO_ROOT@/services.sh start sources
-ExecStop=@REPO_ROOT@/services.sh stop sources
-ExecReload=@REPO_ROOT@/services.sh restart sources
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@REPO_ROOT@/.venv/bin/python .mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766
+Restart=on-failure
+RestartSec=5
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
