@@ -3077,6 +3077,37 @@ def test_tatoeba_cloze_without_attribution_metadata_fails_closed() -> None:
     assert shards["A1"]["cloze"]["cloze"] == []
 
 
+def test_live_curated_cloze_sources_and_allowlist_match() -> None:
+    cloze_sources_path = Path("site/src/data/lexicon-practice-cloze-sources.json")
+    reviewed_sources_path = Path("site/src/data/lexicon-practice-reviewed-sources.json")
+    assert cloze_sources_path.exists()
+    assert reviewed_sources_path.exists()
+
+    cloze_rows = json.loads(cloze_sources_path.read_text(encoding="utf-8"))
+    allowlist = ReviewedSourceAllowlist.from_path(reviewed_sources_path)
+
+    assert len(cloze_rows) >= 69
+    for index, row in enumerate(cloze_rows):
+        assert "lemma" in row, f"Row {index} missing lemma: {row}"
+        assert "sentence" in row and "___" in row["sentence"], f"Row {index} invalid sentence: {row}"
+        assert "blankCase" in row, f"Row {index} missing blankCase: {row}"
+        assert "form" in row, f"Row {index} missing form: {row}"
+        assert row.get("number") in {"singular", "plural"}, f"Row {index} invalid number: {row}"
+        assert row.get("caseRule") or row.get("caseRuleId"), f"Row {index} missing case rule: {row}"
+        assert "clozeEn" in row, f"Row {index} missing clozeEn: {row}"
+        prov = row.get("provenance")
+        assert isinstance(prov, dict), f"Row {index} missing provenance dict: {row}"
+        assert allowlist.allows(prov), f"Row {index} provenance not in allowlist: {prov}"
+
+        if prov.get("status") == "tatoeba" or str(prov.get("path", "")).startswith("tatoeba:"):
+            assert prov.get("license"), f"Row {index} missing Tatoeba license: {prov}"
+            assert prov.get("author"), f"Row {index} missing Tatoeba author: {prov}"
+            assert prov.get("sentenceId"), f"Row {index} missing Tatoeba sentenceId: {prov}"
+            assert prov.get("enLicense"), f"Row {index} missing Tatoeba enLicense: {prov}"
+            assert prov.get("enAuthor"), f"Row {index} missing Tatoeba enAuthor: {prov}"
+            assert prov.get("enSentenceId"), f"Row {index} missing Tatoeba enSentenceId: {prov}"
+
+
 def test_heritage_curated_distractors_win() -> None:
     pair = {
         "nativeSlug": "knyha",
