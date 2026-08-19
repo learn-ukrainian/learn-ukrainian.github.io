@@ -249,26 +249,33 @@ def test_parse_host_id_map_drops_non_opaque_values() -> None:
 
 def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
     assert _safe_field("cursor") == "cursor"
-    assert _safe_field("occupancy-job-example") == "occupancy-job-example"
+    assert _safe_field("occupancy-job-example", role="task_id") == "occupancy-job-example"
+    assert _safe_field("v2.1-reenrich", role="task_id") == "v2.1-reenrich"
+    assert _safe_field("hramatka", role="epic") == "hramatka"
     for leaked in (
         "hramatka",
         "atlas-runner",
         "vps",
+        "atlas-runner-reenrich-3",
+        "hramatka-drive",
+        "vps-2",
         "10.0.0.1",
         "2001:db8::1",
         "box.example.com",
         "/home/ops/job",
     ):
         assert _safe_field(leaked) is None
+        assert _safe_field(leaked, role="task_id") is None
     occupant = _occupant(
         kind="job",
         agent="hramatka",
-        task_id="occupancy-job-example",
-        epic="atlas-runner",
+        task_id="v2.1-reenrich",
+        epic="hramatka",
     )
     assert occupant == {
         "kind": "job",
         "agent": None,
-        "task_id": "occupancy-job-example",
-        "epic": None,
+        "task_id": "v2.1-reenrich",
+        "epic": "hramatka",
     }
+    assert _occupant(kind="job", task_id="atlas-runner-reenrich-3") is None

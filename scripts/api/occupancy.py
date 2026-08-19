@@ -24,8 +24,14 @@ OCCUPANCY_SCHEMA = "monitor-occupancy.v1"
 OCCUPANT_KINDS = frozenset({"driver", "worker", "job", "service"})
 _OPAQUE_HOST_ID = re.compile(r"^[a-z][a-z0-9-]{0,62}$")
 _SAFE_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
+_TASK_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 _IPV4 = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _IPV6 = re.compile(r":")
+_FQDN = re.compile(r"\.[A-Za-z]{2,}$")
+_ALIAS_TOKEN = re.compile(
+    r"(?:^|[^A-Za-z0-9])(atlas-runner|hramatka|vps)(?:[^A-Za-z0-9]|$)",
+    re.IGNORECASE,
+)
 _CANONICAL_ALIASES = frozenset({"atlas-runner", "hramatka", "vps"})
 _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
 
@@ -50,26 +56,27 @@ def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
 
 
 def _opaque_host_id(value: str) -> bool:
-    if not _OPAQUE_HOST_ID.fullmatch(value):
-        return False
-    if value in _CANONICAL_ALIASES:
-        return False
-    if _IPV4.search(value) or _IPV6.search(value) or "." in value:
-        return False
-    return True
+    return bool(
+        _OPAQUE_HOST_ID.fullmatch(value)
+        and value not in _CANONICAL_ALIASES
+        and not _IPV4.search(value)
+        and not _IPV6.search(value)
+        and "." not in value
+    )
 
 
-def _safe_field(value: Any) -> str | None:
+def _safe_field(value: Any, *, role: str = "agent") -> str | None:
     if value is None:
         return None
     text = str(value).strip()
     if not text or "/" in text or "\\" in text:
         return None
-    if text.lower() in _CANONICAL_ALIASES:
+    if _IPV4.search(text) or _IPV6.search(text) or _FQDN.search(text):
         return None
-    if _IPV4.search(text) or _IPV6.search(text) or "." in text:
+    token = _TASK_TOKEN if role == "task_id" else _SAFE_TOKEN
+    if not token.fullmatch(text):
         return None
-    if not _SAFE_TOKEN.fullmatch(text):
+    if role != "epic" and _ALIAS_TOKEN.search(text):
         return None
     return text
 
@@ -77,14 +84,14 @@ def _safe_field(value: Any) -> str | None:
 def _occupant(*, kind: str, agent: Any = None, task_id: Any = None, epic: Any = None) -> dict[str, str | None] | None:
     if kind not in OCCUPANT_KINDS:
         return None
-    task = _safe_field(task_id)
+    task = _safe_field(task_id, role="task_id")
     if task is None:
         return None
     return {
         "kind": kind,
-        "agent": _safe_field(agent),
+        "agent": _safe_field(agent, role="agent"),
         "task_id": task,
-        "epic": _safe_field(epic),
+        "epic": _safe_field(epic, role="epic"),
     }
 
 
