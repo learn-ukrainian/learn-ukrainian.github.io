@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -114,10 +115,35 @@ def test_normal_api_launch_uses_uvicorn_with_reload():
         command = scripts[name]
         assert ".venv/bin/python -m uvicorn" in command
         assert "scripts.api.main:app" in command
-        assert "--host 0.0.0.0" in command
+        assert "--host 127.0.0.1" in command
         assert "--port 8765" in command
         assert "--reload" in command
         assert "--log-config scripts/api/logging.json" in command
 
     # api:reload is now an alias of api (legacy name preserved for muscle memory).
     assert scripts["api:reload"] == "npm run api"
+
+
+def test_services_sh_loopback_bind_and_match_contract():
+    """services.sh api/sources must bind loopback and keep SVC_MATCH aligned with argv."""
+    content = (ROOT / "services.sh").read_text(encoding="utf-8")
+
+    def _field(name: str) -> str:
+        escaped = re.escape(name)
+        match = re.search(rf'{escaped}="([^"]+)"', content)
+        assert match is not None, f"missing {name} in services.sh"
+        return match.group(1)
+
+    api_cmd = _field("SVC_CMD[api]")
+    api_match = _field("SVC_MATCH[api]")
+    sources_cmd = _field("SVC_CMD[sources]")
+    sources_match = _field("SVC_MATCH[sources]")
+
+    assert "SVC_HOST[api]=127.0.0.1" in content
+    assert "SVC_HOST[sources]=127.0.0.1" in content
+    assert "--host 127.0.0.1" in api_cmd
+    assert "--host 127.0.0.1 --port 8766" in sources_cmd
+    assert "0.0.0.0" not in api_cmd
+    assert "0.0.0.0" not in sources_cmd
+    assert api_match in api_cmd
+    assert sources_match in sources_cmd

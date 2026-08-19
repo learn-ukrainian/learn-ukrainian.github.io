@@ -1,0 +1,15 @@
+[Unit]
+Description=Learn Ukrainian MCP Sources server (loopback)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=@REPO_ROOT@
+ExecStart=@REPO_ROOT@/services.sh start sources
+ExecStop=@REPO_ROOT@/services.sh stop sources
+ExecReload=@REPO_ROOT@/services.sh restart sources
+
+[Install]
+WantedBy=multi-user.target

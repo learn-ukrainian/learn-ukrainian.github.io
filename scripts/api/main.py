@@ -1277,6 +1277,15 @@ def _collect_session_hints_orient_data() -> list[dict]:
 # ==================== SHARED ENDPOINTS ====================
 
 
+def _health_instance_identity() -> dict[str, str | None]:
+    """Return loopback-safe host identity and exact git HEAD for /api/health."""
+    configured = os.environ.get("MONITOR_INSTANCE_ID", "").strip()
+    host_label = configured or socket.gethostname()
+    head_proc = _run_command(["git", "rev-parse", "HEAD"])
+    git_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
+    return {"host": host_label, "git_sha": git_sha}
+
+
 @app.get("/api/health")
 async def health_check():
     """Root health check — returns server status, version, uptime."""
@@ -1288,6 +1297,7 @@ async def health_check():
         "uptime_seconds": int(uptime.total_seconds()),
         "started_at": _SERVER_START.isoformat(),
         "checked_at": now.isoformat(),
+        "instance": _health_instance_identity(),
         "resilience": get_resilience_snapshot(),
         "codexbar": scheduler_status(),
     }

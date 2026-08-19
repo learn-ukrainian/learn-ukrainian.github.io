@@ -10,7 +10,7 @@ Normal API commands launch uvicorn in dev-reload mode:
 
 ```bash
 .venv/bin/python -m uvicorn scripts.api.main:app \
-  --host 0.0.0.0 \
+  --host 127.0.0.1 \
   --port 8765 \
   --reload \
   --log-config scripts/api/logging.json
@@ -105,7 +105,9 @@ The FastAPI app also installs `scripts/api/resilience.py` middleware:
 - `API_SLOW_SQL_MS` defaults to 500 ms and logs slow SQLite calls made through
   `connect_sqlite()`.
 - `/api/health` exposes in-flight, saturation, timeout, slow-request, and
-  slow-SQL telemetry.
+  slow-SQL telemetry, plus `instance.host` (hostname or `MONITOR_INSTANCE_ID`)
+  and `instance.git_sha` (exact git HEAD) so SSH-tunneled VPS hosts are
+  distinguishable from a local Mac Monitor.
 - `agents_extensions/shared/hooks/tool-timing.sh` serializes hook data with
   `jq` and posts it to `/api/telemetry/tool-timings`. The endpoint keeps its
   strict `ToolTimingIngest` schema; malformed hook input is discarded locally

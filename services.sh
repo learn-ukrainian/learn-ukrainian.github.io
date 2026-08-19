@@ -53,21 +53,23 @@ export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary
 # Service definitions: name -> command, port, log file, health checks, process match
 declare -A SVC_CMD SVC_PORT SVC_HOST SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH
 
-SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone"
+SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766"
 SVC_PORT[sources]=8766
+SVC_HOST[sources]=127.0.0.1
 SVC_LOG[sources]="$LOGS_DIR/mcp-sources.log"
 SVC_DESC[sources]="MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia)"
 SVC_HEALTH[sources]="http://127.0.0.1:8766/health"
 SVC_HEALTH_ALT[sources]="http://localhost:8766/health"
-SVC_MATCH[sources]=".mcp/servers/sources/server.py --standalone"
+SVC_MATCH[sources]=".mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766"
 
-SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"
+SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 127.0.0.1 --port 8765 --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"
 SVC_PORT[api]=8765
+SVC_HOST[api]=127.0.0.1
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"
 SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
 SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
-SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
+SVC_MATCH[api]="scripts.api.main:app --host 127.0.0.1 --port 8765"
 
 SVC_CMD[work]="$WORK_PRIVATE_ROOT/.venv/bin/python -m work_projection"
 SVC_PORT[work]=8769

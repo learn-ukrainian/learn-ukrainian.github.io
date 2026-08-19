@@ -823,7 +823,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "/api/health",
         "exact",
         "http",
-        "API process health, uptime, timeout/saturation counters.",
+        "API process health, uptime, timeout/saturation counters, and loopback instance identity (host label + git HEAD).",
         "API process state and resilience middleware counters.",
         "Generated per request; no route cache.",
         ("health checks", "tests", "agents"),

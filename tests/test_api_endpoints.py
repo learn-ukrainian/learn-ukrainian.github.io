@@ -47,13 +47,36 @@ class TestHealthEndpoint:
         assert "version" in data
         assert "uptime_seconds" in data
         assert isinstance(data["uptime_seconds"], int)
+        assert "instance" in data
+        instance = data["instance"]
+        assert isinstance(instance["host"], str)
+        assert instance["host"]
+        assert isinstance(instance["git_sha"], str)
+        assert len(instance["git_sha"]) == 40
         assert "codexbar" in data
         assert "scheduler_running" in data["codexbar"]
         assert data["codexbar"]["cache_ttl_s"] == 720.0
 
+    def test_health_respects_monitor_instance_id(self, monkeypatch):
+        monkeypatch.setenv("MONITOR_INSTANCE_ID", "vps-atlas-test")
+        data = client.get("/api/health").json()
+        assert data["instance"]["host"] == "vps-atlas-test"
+
     def test_version_matches_app(self):
         data = client.get("/api/health").json()
         assert data["version"] == app.version
+
+    def test_git_sha_matches_head(self):
+        head = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        ).stdout.strip()
+        data = client.get("/api/health").json()
+        assert data["instance"]["git_sha"] == head
 
 
 class TestConfigEndpoint:
