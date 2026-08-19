@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "be877fdd9c79",
+  "strategy": "manual-commit",
+  "branch": "cursor/sources-7026-sse-residual",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".mcp/servers/sources/server.py",
+    "tests/test_mcp_sources_server.py",
+    "tests/test_mcp_sources_streamable_http.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/be/877fdd9c79/0/metadata.json",
+      "transcript": "/be/877fdd9c79/0/full.jsonl",
+      "compact_transcript": "/be/877fdd9c79/0/transcript.jsonl",
+      "content_hash": "/be/877fdd9c79/0/content_hash.txt",
+      "prompt": "/be/877fdd9c79/0/prompt.txt"
+    }
+  ]
+}
