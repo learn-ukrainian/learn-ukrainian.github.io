@@ -23,8 +23,9 @@ router = APIRouter(tags=["occupancy"])
 OCCUPANCY_SCHEMA = "monitor-occupancy.v1"
 OCCUPANT_KINDS = frozenset({"driver", "worker", "job", "service"})
 _OPAQUE_HOST_ID = re.compile(r"^[a-z][a-z0-9-]{0,62}$")
-_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
+_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
 _IPV4 = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
+_IPV6 = re.compile(r":")
 _CANONICAL_ALIASES = frozenset({"atlas-runner", "hramatka", "vps"})
 _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
 
@@ -53,14 +54,20 @@ def _opaque_host_id(value: str) -> bool:
         return False
     if value in _CANONICAL_ALIASES:
         return False
-    return not _IPV4.search(value)
+    if _IPV4.search(value) or _IPV6.search(value) or "." in value:
+        return False
+    return True
 
 
 def _safe_field(value: Any) -> str | None:
     if value is None:
         return None
     text = str(value).strip()
-    if not text or _IPV4.search(text) or "/" in text or "\\" in text:
+    if not text or "/" in text or "\\" in text:
+        return None
+    if text.lower() in _CANONICAL_ALIASES:
+        return None
+    if _IPV4.search(text) or _IPV6.search(text) or "." in text:
         return None
     if not _SAFE_TOKEN.fullmatch(text):
         return None

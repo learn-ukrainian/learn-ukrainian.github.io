@@ -10,20 +10,22 @@ from fastapi.testclient import TestClient
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.main import app
+from scripts.api.occupancy import _occupant, _opaque_host_id, _safe_field, parse_host_id_map
 from scripts.lexicon.runner import atlas_job
 
 client = TestClient(app, raise_server_exceptions=False)
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
-_PLACEHOLDER_MAP = "atlas-runner=host-job,hramatka=host-teacher"
+# Fictional canonical keys — never pair real SSH aliases with opaque ids in git.
+_PLACEHOLDER_MAP = "job-box=host-job,teach-box=host-teacher"
 
 
 def _plan(**overrides: object) -> dict:
     base: dict = {
         "schema": "atlas-job.v1",
         "id": "occupancy-job-example",
-        "host": "atlas-runner",
+        "host": "job-box",
         "kind": "reenrich",
         "args": ["--target", "missing-translation"],
         "pointer_write": False,
@@ -39,8 +41,8 @@ def _plan(**overrides: object) -> dict:
 
 def _warm_load(fake: atlas_job.FakeHostAdapter) -> None:
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("atlas-runner", fake.host_load("atlas-runner"))
-    load_mod.set_host_load_cache("hramatka", fake.host_load("hramatka"))
+    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("teach-box", fake.host_load("teach-box"))
 
 
 def test_occupancy_empty_without_opaque_map(tmp_path, monkeypatch) -> None:
@@ -116,7 +118,7 @@ def test_occupancy_unavailable_has_no_metrics_or_ssh_text(tmp_path, monkeypatch)
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("atlas-runner", fake.host_load("atlas-runner"))
+        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
@@ -145,7 +147,7 @@ def test_occupancy_occupants_from_registry_and_job_unit(tmp_path, monkeypatch) -
             {
                 "id": plan["id"],
                 "state": "running",
-                "host": "atlas-runner",
+                "host": "job-box",
                 "kind": "reenrich",
                 "unit": atlas_job.unit_name(plan["id"]),
                 "workdir": atlas_job.work_dir_for(plan["id"], plan),
@@ -194,8 +196,10 @@ def test_occupancy_rejects_unknown_host_id(tmp_path, monkeypatch) -> None:
         _warm_load(fake)
         resp = client.get("/api/occupancy?host_id=atlas-runner")
         assert resp.status_code == 400
-        assert "atlas-runner" not in resp.text or resp.json()["detail"] == "unknown host_id"
         assert resp.json()["detail"] == "unknown host_id"
+        text = json.dumps(resp.json())
+        for alias in _ALIAS_LEAKS:
+            assert alias not in text
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -210,13 +214,13 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         load_mod.clear_host_load_cache()
         now_mono = time.monotonic()
         load_mod.set_host_load_cache(
-            "atlas-runner",
-            fake.host_load("atlas-runner"),
+            "job-box",
+            fake.host_load("job-box"),
             mono_ts=now_mono - 60.0,
         )
         load_mod.set_host_load_cache(
-            "hramatka",
-            fake.host_load("hramatka"),
+            "teach-box",
+            fake.host_load("teach-box"),
             mono_ts=now_mono - 10.0,
         )
         resp = client.get("/api/occupancy")
@@ -228,3 +232,43 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
+
+
+def test_parse_host_id_map_drops_non_opaque_values() -> None:
+    parsed = parse_host_id_map(
+        "job-box=host-job,teach-box=atlas-runner,bad=1.2.3.4,also=vps,ok=host-teacher"
+    )
+    assert parsed == {"job-box": "host-job", "ok": "host-teacher"}
+    assert not _opaque_host_id("atlas-runner")
+    assert not _opaque_host_id("hramatka")
+    assert not _opaque_host_id("vps")
+    assert not _opaque_host_id("10.0.0.1")
+    assert not _opaque_host_id("host.example")
+    assert _opaque_host_id("host-job")
+
+
+def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
+    assert _safe_field("cursor") == "cursor"
+    assert _safe_field("occupancy-job-example") == "occupancy-job-example"
+    for leaked in (
+        "hramatka",
+        "atlas-runner",
+        "vps",
+        "10.0.0.1",
+        "2001:db8::1",
+        "box.example.com",
+        "/home/ops/job",
+    ):
+        assert _safe_field(leaked) is None
+    occupant = _occupant(
+        kind="job",
+        agent="hramatka",
+        task_id="occupancy-job-example",
+        epic="atlas-runner",
+    )
+    assert occupant == {
+        "kind": "job",
+        "agent": None,
+        "task_id": "occupancy-job-example",
+        "epic": None,
+    }
