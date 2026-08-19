@@ -4727,6 +4727,62 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
     assert "GITHUB_TOKEN" not in env
 
 
+def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
+    tmp_tasks_dir, monkeypatch,
+):
+    """`--agent gemini` is a permanent retired-CLI alias (operator 2026-08-18):
+    the gemini CLI is not installed, so dispatch MUST resolve to agy before
+    the worker is even spawned. This is the test that proves `gemini` never
+    reaches Popen: the worker command line carries `--agent agy`, never
+    `--agent gemini` — nothing here calls out to a `gemini` binary.
+    """
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["cmd"] = args[0]
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="gemini",
+        task_id="gemini-retired-alias",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    cmd = recorded["cmd"]
+    assert "gemini" not in cmd
+    assert "agy" in cmd
+    assert cmd[cmd.index("--agent") + 1] == "agy"
+
+    state = delegate._read_state(delegate._state_path("gemini-retired-alias"))
+    assert state["agent"] == "agy"
+    assert state["agent_alias_note"] == "NOTE: gemini→agy retired CLI"
+
+
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
     import argparse
 
@@ -4749,7 +4805,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     # is asserting. Validation returns "clean, matching, up-to-date" so
     # the reuse path succeeds.
     _, base_stub = _make_run_stub(
-        abbrev_ref="gemini/existing-worktree",
+        abbrev_ref="agy/existing-worktree",
         status_porcelain="",
         rev_list_count="0",
     )
@@ -4762,8 +4818,12 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
 
+    # Not "gemini": that's now a retired-CLI alias (→ agy) resolved before
+    # this worktree-branch validation runs, so the expected branch prefix
+    # must match the RESOLVED agent, not the requested one. Use a live lane
+    # directly — this test is about worktree reuse, not the gemini alias.
     args = argparse.Namespace(
-        agent="gemini",
+        agent="agy",
         task_id="existing-worktree",
         prompt="test",
         prompt_file=None,
