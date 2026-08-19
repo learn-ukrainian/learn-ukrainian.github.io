@@ -132,13 +132,43 @@ class TestUlifHandlers:
         subject = search_text.input_schema["properties"]["subject"]
         assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
         assert "ukrmova" in subject["description"]
+        assert "grade" not in search_text.input_schema["properties"]
+        assert "trust_tier" not in search_text.input_schema["properties"]
+        assert "BGE-M3" not in search_text.description
 
-    def test_search_images_subject_schema(self, server_module):
+    def test_search_images_stub_schema(self, server_module):
         tools = _run(server_module.list_tools())
         search_images = next(t for t in tools if t.name == "search_images")
-        subject = search_images.input_schema["properties"]["subject"]
-        assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
-        assert "ukrmova" in subject["description"]
+        assert "stub" in search_images.description.lower()
+        assert "SigLIP" not in search_images.description
+        assert "grade" not in search_images.input_schema["properties"]
+        assert "subject" not in search_images.input_schema["properties"]
+        assert search_images.input_schema["required"] == ["query"]
+
+    def test_search_literary_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        search_literary = next(t for t in tools if t.name == "search_literary")
+        assert "work" not in search_literary.input_schema["properties"]
+        assert "genre" not in search_literary.input_schema["properties"]
+        assert "period" not in search_literary.input_schema["properties"]
+        assert search_literary.input_schema["required"] == ["query"]
+
+    def test_get_chunk_context_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        chunk_context = next(t for t in tools if t.name == "get_chunk_context")
+        assert "window" not in chunk_context.input_schema["properties"]
+        assert chunk_context.input_schema["required"] == ["chunk_id"]
+
+    def test_get_full_text_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        full_text = next(t for t in tools if t.name == "get_full_text")
+        assert "RAG" not in full_text.description
+        assert full_text.input_schema["required"] == ["work"]
+
+    def test_collection_stats_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        stats = next(t for t in tools if t.name == "collection_stats")
+        assert "RAG" not in stats.description
 
     def test_verify_words_schema(self, server_module):
         tools = _run(server_module.list_tools())
@@ -783,3 +813,101 @@ class TestIntegrationSmoke:
         assert data["is_modern_codified"] is False
         assert data["has_archaic_form"] is True
         assert data["has_only_archaic_form"] is True
+
+
+class TestDictSearchQuoteBalance:
+    """Test _quote_balanced_clip and handle_dict_search quote balancing (#7026)."""
+
+    def test_clip_short_text_unchanged(self, server_module):
+        short = "Короткий текст"
+        assert server_module._quote_balanced_clip(short, 500) == short
+
+    def test_clip_without_quotes_adds_ellipsis(self, server_module):
+        long_text = "а" * 600
+        clipped = server_module._quote_balanced_clip(long_text, 500)
+        assert len(clipped) == 501  # 500 + '…'
+        assert clipped.endswith("…")
+
+    def test_clip_preserves_guillemets_lookahead(self, server_module):
+        # Open quote inside first 500 chars, closing quote within lookahead (at 520)
+        base = "Початок " + "а" * 470 + " «цитата на двадцять слів» продовження"
+        clipped = server_module._quote_balanced_clip(base, 500)
+        assert "«цитата на двадцять слів»" in clipped
+        assert clipped.count("«") == clipped.count("»")
+
+    def test_clip_trims_before_unclosed_quote_when_closing_too_far(self, server_module):
+        # Open quote at char 480, but closing quote is 300 chars away
+        base = "Початок " + "а" * 470 + " «дуже довга цитата " + "б" * 300 + "»"
+        clipped = server_module._quote_balanced_clip(base, 500)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
+
+    def test_clip_opener_at_cut_start_trimmed_when_unclosed(self, server_module):
+        # Opening quote at index 0 when cut is before closing quote (#7026, #7038)
+        text = "«" + "а" * 600 + "»"
+        clipped = server_module._quote_balanced_clip(text, 100)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
+        assert clipped == "…"
+
+    def test_clip_nested_unclosed_quotes_iteratively_trimmed(self, server_module):
+        # Nested unclosed quotes are iteratively trimmed until balanced (#7026, #7038)
+        text = "Початок «перша «друга " + "а" * 600 + "»»"
+        clipped = server_module._quote_balanced_clip(text, 100)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
+        assert clipped == "Початок…"
+
+    def test_handle_dict_search_clips_long_definitions(self, server_module):
+        hit = {
+            "word": "тест",
+            "definition": "Початок " + "а" * 600,
+        }
+        with patch("wiki.sources_db.search_definitions", return_value=[hit]):
+            result = _run(server_module.handle_dict_search({"query": "тест"}, "sum11", "СУМ-11"))
+            text = result[0].text
+            assert "Found 1 results" in text
+            assert "…" in text
+            assert len(text) < 700
+
+
+class TestHealthEndpoint:
+    """Test health endpoint contract (#7026)."""
+
+    def test_handle_health_response(self, server_module):
+        app = server_module.create_http_app()
+        # #7037 wraps the ASGI app to 405 GET/DELETE on /mcp; unwrap the raw
+        # Starlette app for route introspection.
+        app = getattr(app, "app", app)
+        routes = [r for r in app.routes if getattr(r, "path", None) == "/health"]
+        assert len(routes) == 1
+        health_endpoint = routes[0].endpoint
+
+        response = _run(health_endpoint(None))
+        data = json.loads(response.body.decode("utf-8"))
+        assert data["status"] == "ok"
+        assert "commit_sha" in data
+        assert "db_path" in data
+        assert "sources.db" in data["db_path"]
+
+
+class TestCollectionStatsHandler:
+    """Test collection_stats handler (#7026)."""
+
+    def test_handle_collection_stats_dispatches(self, server_module):
+        mock_stats = {
+            "textbooks": 10,
+            "esum_etymology": 20,
+            "ua_gec_errors": 30,
+            "sum20_articles": 40,
+            "slovnyk_me_entries": 50,
+            "wikipedia": 60,
+        }
+        with patch("wiki.sources_db.list_tables", return_value=mock_stats):
+            result = _run(server_module.handle_collection_stats({}))
+            data = json.loads(result[0].text)
+            assert data["esum_etymology"] == 20
+            assert data["ua_gec_errors"] == 30
+            assert data["sum20_articles"] == 40
+            assert data["slovnyk_me_entries"] == 50
+            assert data["wikipedia"] == 60

@@ -3055,6 +3055,14 @@ def lookup_by_url(url: str) -> dict | None:
     return dict(row) if row else None
 
 
+CONTENT_TABLES = [
+    "textbooks", "external_articles", "literary_texts",
+    "sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
+    "ukrajinet", "wiktionary", "frazeolohichnyi", "puls_cefr", "style_guide",
+    "wikipedia", "esum_etymology", "ua_gec_errors", "sum20_articles", "slovnyk_me_entries",
+]
+
+
 def source_count(table: str | None = None) -> int:
     """Return entry count for a table, or total across all tables."""
     try:
@@ -3065,14 +3073,16 @@ def source_count(table: str | None = None) -> int:
     if table:
         return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
 
-    tables = [
-        "textbooks", "external_articles", "literary_texts",
-        "sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
-        "ukrajinet", "wiktionary", "frazeolohichnyi", "puls_cefr", "style_guide",
-    ]
+    existing = {
+        r[0]
+        for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type in ('table', 'view')"
+        ).fetchall()
+    }
     return sum(
         conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-        for t in tables
+        for t in CONTENT_TABLES
+        if t in existing
     )
 
 
@@ -3083,12 +3093,14 @@ def list_tables() -> dict[str, int]:
     except FileNotFoundError:
         return {}
 
-    tables = [
-        "textbooks", "external_articles", "literary_texts",
-        "sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
-        "ukrajinet", "wiktionary", "frazeolohichnyi", "puls_cefr", "style_guide",
-    ]
+    existing = {
+        r[0]
+        for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type in ('table', 'view')"
+        ).fetchall()
+    }
     return {
         t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-        for t in tables
+        for t in CONTENT_TABLES
+        if t in existing
     }
