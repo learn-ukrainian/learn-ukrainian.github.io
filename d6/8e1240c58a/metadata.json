@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d68e1240c58a",
+  "strategy": "manual-commit",
+  "branch": "agy/sources-7027-shadow-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d6/8e1240c58a/0/metadata.json",
+      "transcript": "/d6/8e1240c58a/0/full.jsonl",
+      "compact_transcript": "/d6/8e1240c58a/0/transcript.jsonl",
+      "content_hash": "/d6/8e1240c58a/0/content_hash.txt",
+      "prompt": "/d6/8e1240c58a/0/prompt.txt"
+    }
+  ]
+}
