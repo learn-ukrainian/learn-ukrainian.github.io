@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0ff8193cd600",
+  "strategy": "manual-commit",
+  "branch": "kimi/practice-kimi-frontend",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/lesson-schema.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0f/f8193cd600/0/metadata.json",
+      "transcript": "/0f/f8193cd600/0/full.jsonl",
+      "content_hash": "/0f/f8193cd600/0/content_hash.txt",
+      "prompt": "/0f/f8193cd600/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 27556,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 254208,
+    "output_tokens": 1358,
+    "api_call_count": 7
+  }
+}
