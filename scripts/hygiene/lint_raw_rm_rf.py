@@ -24,11 +24,11 @@ _ALLOWLIST: frozenset[str] = frozenset(
     {
         # services.sh: restart lockdir reclaim/release + Astro/Vite cache dirs
         # (scoped under $PIDS_DIR / $PROJECT_ROOT/site/…). Do not rewrite.
-        "services.sh:142",
-        "services.sh:161",
-        "services.sh:722",
-        "services.sh:732",
-        "services.sh:736",
+        "services.sh:144",
+        "services.sh:163",
+        "services.sh:724",
+        "services.sh:734",
+        "services.sh:738",
         # Scratch-dir EXIT traps for one-shot installer scripts.
         "scripts/entire/install_kimi_external_agent.sh:18",
         "scripts/entire/install_fleet_external_agent.sh:36",

@@ -73,6 +73,7 @@ class TestHealthEndpoint:
             capture_output=True,
             text=True,
             check=True,
+            timeout=30,
         ).stdout.strip()
         data = client.get("/api/health").json()
         assert data["instance"]["git_sha"] == head
