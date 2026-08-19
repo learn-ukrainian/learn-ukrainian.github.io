@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fd2c7c0fdcef",
+  "session_id": "fleet-71e6c4597146491fbf5b4365ac3e520f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-19T00:47:29.631258Z",
+  "branch": "agy/sources-7027-shadow-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/calque_corrections.py",
+    "tests/test_check_ru_morph.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "0a565147765d",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-19T00:47:29.610173Z",
+    "agent_lines": 20,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 20,
+    "total_lines_changed": 21,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

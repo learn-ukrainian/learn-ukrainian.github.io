@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fd2c7c0fdcef",
+  "strategy": "manual-commit",
+  "branch": "agy/sources-7027-shadow-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/calque_corrections.py",
+    "tests/test_check_ru_morph.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/fd/2c7c0fdcef/0/metadata.json",
+      "transcript": "/fd/2c7c0fdcef/0/full.jsonl",
+      "compact_transcript": "/fd/2c7c0fdcef/0/transcript.jsonl",
+      "content_hash": "/fd/2c7c0fdcef/0/content_hash.txt",
+      "prompt": "/fd/2c7c0fdcef/0/prompt.txt"
+    }
+  ]
+}
