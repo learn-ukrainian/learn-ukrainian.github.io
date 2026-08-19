@@ -6486,6 +6486,104 @@ def test_primary_dirty_status_ignores_gitignored_local_state(tmp_path):
     assert status["dirty_count"] == 0
 
 
+# --- #6967 clean-tree guard receipt allowlist tests -------------------------
+
+
+def test_is_untracked_receipt_allowlisted_unit():
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": "??",
+        "path": "batch_state/atlas-jobs/receipts/job-1.json",
+        "kind": "untracked",
+    }) is True
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": "??",
+        "path": "batch_state/atlas-jobs/receipts/sub/job-2.json",
+        "kind": "untracked",
+    }) is True
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": "??",
+        "path": "./batch_state/atlas-jobs/receipts/job-3.json",
+        "kind": "untracked",
+    }) is True
+    # Non-receipt untracked paths must not be allowlisted
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": "??",
+        "path": "batch_state/atlas-jobs/results/job-1.json",
+        "kind": "untracked",
+    }) is False
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": "??",
+        "path": "batch_state/random.json",
+        "kind": "untracked",
+    }) is False
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": "??",
+        "path": "scratch.txt",
+        "kind": "untracked",
+    }) is False
+    # Tracked modifications must NOT be allowlisted even under receipts/
+    assert delegate._is_untracked_receipt_allowlisted({
+        "xy": " M",
+        "path": "batch_state/atlas-jobs/receipts/job-1.json",
+        "kind": "tracked",
+    }) is False
+
+
+def test_dirty_primary_guard_allowlists_untracked_receipts(tmp_path, monkeypatch):
+    """#6967: untracked receipts under batch_state/atlas-jobs/receipts do not fail guard."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    receipt_dir = main / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    (receipt_dir / "job-100.json").write_text('{"status": "done"}\n')
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    assert delegate._resolve_dirty_primary_checkout_error(mode="workspace-write") is None
+    assert delegate._resolve_dirty_primary_checkout_error(mode="danger") is None
+
+
+def test_dirty_primary_guard_rejects_untracked_non_receipt_file(tmp_path, monkeypatch):
+    """#6967: random untracked non-receipt file still fails the clean-tree guard."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    receipt_dir = main / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    (receipt_dir / "job-100.json").write_text('{"status": "done"}\n')
+    (main / "scratch.txt").write_text("random\n")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    err = delegate._resolve_dirty_primary_checkout_error(mode="workspace-write")
+    assert err is not None
+    assert "primary checkout is dirty" in err
+    assert "scratch.txt" in err
+    # Allowlisted receipt must not be reported in dirty files list
+    assert "job-100.json" not in err
+
+
+def test_dirty_primary_guard_rejects_tracked_modified_receipt(tmp_path, monkeypatch):
+    """#6967: tracked modified receipt is not allowlisted."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    receipt_dir = main / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    receipt_file = receipt_dir / "job-committed.json"
+    receipt_file.write_text('{"status": "done"}\n')
+    env = delegate._sanitized_git_env()
+    subprocess.run(
+        ["git", "-C", str(main), "add", "-A"],
+        check=True, capture_output=True, text=True, env=env, timeout=30,
+    )
+    subprocess.run(
+        ["git", "-C", str(main), "commit", "-q", "-m", "add receipt"],
+        check=True, capture_output=True, text=True, env=env, timeout=30,
+    )
+    # Now modify the tracked receipt
+    receipt_file.write_text('{"status": "modified"}\n')
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    err = delegate._resolve_dirty_primary_checkout_error(mode="workspace-write")
+    assert err is not None
+    assert "primary checkout is dirty" in err
+    assert "job-committed.json" in err
+
+
 # --- cmd_dispatch end-to-end tests ------------------------------------------
 
 
@@ -6553,6 +6651,58 @@ def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
         timeout=30,
     )
     assert branch_proc.stdout.strip() == ""
+
+
+def test_dispatch_allows_write_capable_when_primary_has_untracked_receipt(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """#6967: write-capable dispatch succeeds when only untracked receipt exists."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    receipt_dir = main / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    (receipt_dir / "job-42.json").write_text('{"job_id": "job-42"}\n')
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    args = _write_args(
+        task_id="receipt-main",
+        mode="workspace-write",
+        cwd=str(dispatch_wt),
+        worktree=None,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("receipt-main"))
+    assert state is not None
+
+
+def test_dispatch_rejects_write_capable_when_primary_has_untracked_non_receipt_file(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+):
+    """#6967: untracked random file still blocks write-capable dispatch."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    receipt_dir = main / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    (receipt_dir / "job-42.json").write_text('{"job_id": "job-42"}\n')
+    (main / "random_scratch.txt").write_text("scratch\n")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    args = _write_args(
+        task_id="scratch-main",
+        mode="workspace-write",
+        cwd=None,
+        worktree="auto",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("scratch-main")) is None
+    err = capsys.readouterr().err
+    assert "primary checkout is dirty" in err
+    assert "random_scratch.txt" in err
+    assert "job-42.json" not in err
 
 
 def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys):

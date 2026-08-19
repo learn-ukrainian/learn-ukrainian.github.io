@@ -1403,6 +1403,29 @@ def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> 
     return ", ".join(shown) if shown else "(none)"
 
 
+# Declared receipt collection points unignored in .gitignore as tracked-by-design (#6967).
+# Untracked files under these directories are allowlisted by the clean-tree guard so
+# concurrent jobs writing receipts do not block write-capable dispatches.
+_CLEAN_TREE_UNTRACKED_RECEIPT_ALLOWLIST: tuple[str, ...] = (
+    "batch_state/atlas-jobs/receipts/",
+)
+
+
+def _is_untracked_receipt_allowlisted(entry: dict[str, str]) -> bool:
+    """Return True if entry is an untracked file under a declared receipt collection point."""
+    if entry.get("kind") != "untracked" and entry.get("xy", "").strip() != "??":
+        return False
+    raw_path = (entry.get("path") or "").replace("\\", "/")
+    if raw_path.startswith("./"):
+        raw_path = raw_path[2:]
+    raw_path = raw_path.lstrip("/")
+    for prefix in _CLEAN_TREE_UNTRACKED_RECEIPT_ALLOWLIST:
+        clean_prefix = prefix.strip("/")
+        if raw_path == clean_prefix or raw_path.startswith(clean_prefix + "/"):
+            return True
+    return False
+
+
 def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
     """Reject write-capable dispatch when the protected primary checkout is dirty.
 
@@ -1426,7 +1449,10 @@ def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
     if not status.get("protected_branch") or not status.get("dirty"):
         return None
 
-    entries = status.get("entries") or []
+    raw_entries = status.get("entries") or []
+    entries = [entry for entry in raw_entries if not _is_untracked_receipt_allowlisted(entry)]
+    if not entries:
+        return None
 
     extra_diagnostic = ""
     try:
