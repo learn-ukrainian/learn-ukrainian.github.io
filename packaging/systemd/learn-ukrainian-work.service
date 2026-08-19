@@ -1,0 +1,15 @@
+[Unit]
+Description=Learn Ukrainian Work projection adapter (loopback)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@PRIVATE_ROOT@
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@PRIVATE_ROOT@/.venv/bin/python -m work_projection
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

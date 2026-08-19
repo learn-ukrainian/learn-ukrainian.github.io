@@ -582,9 +582,83 @@ def test_work_status_rejects_foreign_health_listener(tmp_path, mock_lsof_env) ->
         assert "blocked" in result.stdout
         assert "foreign_listener" in result.stdout
         assert "running" not in result.stdout
+        assert "tunneled" not in result.stdout
     finally:
         proc.terminate()
         proc.wait(timeout=5)
+
+
+def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) -> None:
+    """An SSH LocalForward owner is tunneled, not a foreign blocker, when health is 2xx."""
+    set_pids, _, env = mock_lsof_env
+    private_root = tmp_path / "private"
+    (private_root / ".git").mkdir(parents=True)
+    (private_root / ".venv" / "bin").mkdir(parents=True)
+    (private_root / "work_projection").mkdir()
+    (private_root / ".venv" / "bin" / "python").symlink_to(VENV_PYTHON)
+    env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
+
+    port = find_free_port()
+    script_path = tmp_path / "services.sh"
+    script_path.write_text(
+        SERVICES_SH.read_text(encoding="utf-8").replace("8769", str(port)),
+        encoding="utf-8",
+    )
+    script_path.chmod(0o755)
+
+    health = subprocess.Popen(
+        [
+            str(VENV_PYTHON),
+            "-c",
+            (
+                "from http.server import BaseHTTPRequestHandler, HTTPServer\n"
+                f"port = {port}\n"
+                "class H(BaseHTTPRequestHandler):\n"
+                "    def do_GET(self):\n"
+                "        body = b'ok'\n"
+                "        self.send_response(200)\n"
+                "        self.send_header('Content-Type', 'text/plain')\n"
+                "        self.send_header('Content-Length', str(len(body)))\n"
+                "        self.end_headers()\n"
+                "        self.wfile.write(body)\n"
+                "    def log_message(self, *args):\n"
+                "        return\n"
+                "HTTPServer(('127.0.0.1', port), H).serve_forever()\n"
+            ),
+        ]
+    )
+    reap_process_on_exit(health)
+
+    ssh_shim = tmp_path / "ssh"
+    ssh_shim.write_text("#!/bin/sh\nwhile true; do sleep 30; done\n", encoding="utf-8")
+    ssh_shim.chmod(0o755)
+    tunnel = subprocess.Popen([str(ssh_shim), "-N", "job-tunnel"])
+    reap_process_on_exit(tunnel)
+    set_pids([tunnel.pid])
+    try:
+        deadline = time.time() + 5
+        while time.time() < deadline:
+            if not is_port_free(port):
+                break
+            time.sleep(0.05)
+        result = subprocess.run(
+            ["bash", str(script_path), "status", "work"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert "tunneled" in result.stdout
+        assert "ssh_tunnel" in result.stdout
+        assert "blocked" not in result.stdout
+        assert "foreign_listener" not in result.stdout
+    finally:
+        tunnel.terminate()
+        health.terminate()
+        tunnel.wait(timeout=5)
+        health.wait(timeout=5)
 
 
 def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> None:

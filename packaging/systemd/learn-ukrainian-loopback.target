@@ -1,6 +1,6 @@
 [Unit]
-Description=Learn Ukrainian loopback fleet (API + Sources)
-Requires=learn-ukrainian-api.service learn-ukrainian-sources.service
+Description=Learn Ukrainian loopback fleet (API + Sources + Work + Astro)
+Requires=learn-ukrainian-api.service learn-ukrainian-sources.service learn-ukrainian-work.service learn-ukrainian-astro.service
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

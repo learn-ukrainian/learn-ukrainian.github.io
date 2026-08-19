@@ -240,6 +240,42 @@ _verified_port_pid() {
     return 1
 }
 
+_is_ssh_tunnel_pid() {
+    local pid="$1"
+    local comm cmdline
+
+    comm="$(command ps -p "$pid" -o comm= 2>/dev/null || true)"
+    comm="${comm##*/}"
+    comm="${comm%%$'\n'*}"
+    comm="${comm%% *}"
+    if [[ "$comm" == "ssh" || "$comm" == "ssh.exe" ]]; then
+        return 0
+    fi
+
+    cmdline="$(_cmdline_for_pid "$pid")"
+    [[ -z "$cmdline" ]] && return 1
+    case "$cmdline" in
+        ssh[\ ]*|ssh$|*/ssh[\ ]*|*/ssh)
+            return 0
+            ;;
+    esac
+    return 1
+}
+
+_ssh_tunnel_port_pid() {
+    local name="$1"
+    local port_pid
+
+    for port_pid in $(_pid_on_port "$name"); do
+        if [[ -n "$port_pid" ]] && _is_ssh_tunnel_pid "$port_pid"; then
+            printf '%s\n' "$port_pid"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
 _foreign_port_pid() {
     local name="$1"
     local port_pid
@@ -420,6 +456,10 @@ _service_state() {
             fi
             return 0
         fi
+        if _ssh_tunnel_port_pid "$name" >/dev/null && _health_check "$name"; then
+            echo "tunneled"
+            return 0
+        fi
         if _foreign_port_pid "$name" >/dev/null; then
             echo "blocked"
             return 0
@@ -429,6 +469,11 @@ _service_state() {
             return 0
         fi
         echo "stopped"
+        return 0
+    fi
+
+    if _ssh_tunnel_port_pid "$name" >/dev/null && _health_check "$name"; then
+        echo "tunneled"
         return 0
     fi
 
@@ -451,6 +496,12 @@ _is_running() {
     fi
 
     return 1
+}
+
+_api_supervisor_available() {
+    # Tests inject SVC_API_SUPERVISOR_BIN. macOS has launchctl. Linux systemd
+    # units supervise uvicorn directly, so services.sh must not call launchd.
+    [[ -n "${SVC_API_SUPERVISOR_BIN:-}" ]] || command -v launchctl >/dev/null 2>&1
 }
 
 _api_supervisor() {
@@ -541,7 +592,7 @@ _start_service() {
         return 1
     fi
 
-    if [[ "$name" == "api" ]]; then
+    if [[ "$name" == "api" ]] && _api_supervisor_available; then
         _start_api_supervised
         return
     fi
@@ -615,7 +666,7 @@ _stop_service() {
     # ``launchctl disable`` happens before the listener is signalled. A
     # deliberate ``services.sh stop api`` therefore cannot be resurrected by
     # KeepAlive while the old process drains.
-    if [[ "$name" == "api" ]]; then
+    if [[ "$name" == "api" ]] && _api_supervisor_available; then
         _disable_api_supervisor || return 1
     fi
 
@@ -802,12 +853,18 @@ _status() {
         state="$(_service_state "$name")"
         pid="$(_known_service_pid "$name" || true)"
         if [[ -z "$pid" ]]; then
+            pid="$(_ssh_tunnel_port_pid "$name" || true)"
+        fi
+        if [[ -z "$pid" ]]; then
             pid="-"
         fi
 
         case "$state" in
             running)
                 printf "%-12s \033[32m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "$detail"
+                ;;
+            tunneled)
+                printf "%-12s \033[32m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "ssh_tunnel"
                 ;;
             degraded)
                 printf "%-12s \033[33m%-11s\033[0m %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "health_check_failed"

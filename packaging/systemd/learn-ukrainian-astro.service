@@ -1,0 +1,14 @@
+[Unit]
+Description=Learn Ukrainian Astro course UI (loopback)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@REPO_ROOT@/site
+ExecStart=/usr/bin/env npm run dev -- --host 127.0.0.1 --port 4321 --force
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
