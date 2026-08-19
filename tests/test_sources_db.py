@@ -840,3 +840,259 @@ class TestForcedRebuildAtomicity:
 
         leftovers = list(db_path.parent.glob(f".{db_path.name}.*"))
         assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
+
+
+class TestClipQuoteSafe:
+    def test_clip_quote_safe_balances_unclosed_guillemets(self):
+        from wiki.sources_db import clip_quote_safe
+
+        # Text with an unclosed « after clipping
+        text = "Опис: «давня рукописна книга псалмів із коментарями»."
+        clipped = clip_quote_safe(text, max_chars=25)
+        assert clipped.endswith("»")
+        assert clipped.count("«") == clipped.count("»")
+
+    def test_clip_quote_safe_strips_trailing_orphan_open_quote(self):
+        from wiki.sources_db import clip_quote_safe
+
+        text = "Початок «довга цитата»"
+        clipped = clip_quote_safe(text, max_chars=9)
+        assert clipped == "Початок"
+        assert clipped.count("«") == 0
+        assert clipped.count("»") == 0
+
+    def test_clip_quote_safe_short_text_unchanged(self):
+        from wiki.sources_db import clip_quote_safe
+
+        text = "«Коротка цитата»"
+        assert clip_quote_safe(text, max_chars=100) == text
+
+    def test_clip_quote_safe_with_ellipsis(self):
+        from wiki.sources_db import clip_quote_safe
+
+        text = "«Довга цитата з книги Шевченка про мову»"
+        clipped = clip_quote_safe(text, max_chars=20, ellipsis="…")
+        assert clipped.endswith("…»")
+        assert clipped.count("«") == clipped.count("»")
+
+    def test_quote_safe_clip_alias(self):
+        from wiki.sources_db import clip_quote_safe, quote_safe_clip
+
+        assert quote_safe_clip is clip_quote_safe
+
+
+@pytest.fixture()
+def esum_heritage_rank_db(tmp_path):
+    """Fixture DB with exact headwords and body-inner hits for ranking tests."""
+    db_path = tmp_path / "esum_heritage_rank.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(
+        """
+        CREATE TABLE esum_etymology_meta (
+            id INTEGER PRIMARY KEY,
+            lemma TEXT NOT NULL,
+            vol INTEGER NOT NULL,
+            page INTEGER NOT NULL,
+            entry_hash TEXT NOT NULL DEFAULT '',
+            etymology_text TEXT NOT NULL,
+            cognates TEXT NOT NULL DEFAULT '[]',
+            source TEXT NOT NULL DEFAULT 'ЕСУМ'
+        );
+        CREATE VIRTUAL TABLE esum_etymology USING fts5(
+            lemma,
+            etymology_text,
+            cognates,
+            vol UNINDEXED,
+            page UNINDEXED,
+            tokenize = 'unicode61 remove_diacritics 0'
+        );
+        CREATE TABLE grinchenko (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL,
+            source TEXT DEFAULT 'Грінченко'
+        );
+        CREATE TABLE style_guide (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            section TEXT DEFAULT '',
+            text TEXT NOT NULL,
+            source TEXT DEFAULT 'Антоненко-Давидович'
+        );
+        CREATE TABLE sum11 (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL,
+            text TEXT DEFAULT '',
+            source TEXT DEFAULT 'СУМ-11'
+        );
+        """
+    )
+    # 1. psaltyr: body contains "книга псалмів" and mentions "псл." (high heritage score)
+    psaltyr_text = "псалтир — богослужебна книга псалмів Давида; псл. *pьsaltyrь."
+    # 2. knyha: exact headword lemma
+    knyha_text = "книга — книжка, зшиток аркушів; псл. *kъńiga."
+    # 3. knyharnia: prefix lemma
+    knyharnia_text = "книгарня — крамниця книг."
+
+    conn.execute(
+        """
+        INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (1, "псалтир", 4, 100, psaltyr_text, '["псл."]', "ЕСУМ vol. 4"),
+    )
+    conn.execute(
+        """
+        INSERT INTO esum_etymology (rowid, lemma, etymology_text, cognates, vol, page)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (1, "псалтир", psaltyr_text, '["псл."]', 4, 100),
+    )
+
+    conn.execute(
+        """
+        INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (2, "книга", 2, 200, knyha_text, '["псл."]', "ЕСУМ vol. 2"),
+    )
+    conn.execute(
+        """
+        INSERT INTO esum_etymology (rowid, lemma, etymology_text, cognates, vol, page)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (2, "книга", knyha_text, '["псл."]', 2, 200),
+    )
+
+    conn.execute(
+        """
+        INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (3, "книгарня", 2, 205, knyharnia_text, "[]", "ЕСУМ vol. 2"),
+    )
+    conn.execute(
+        """
+        INSERT INTO esum_etymology (rowid, lemma, etymology_text, cognates, vol, page)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (3, "книгарня", knyharnia_text, "[]", 2, 205),
+    )
+
+    # 4. golova: stressed headword in volume 1 (verifies diacritic normalization with volume filter)
+    golova_text = "голова́ — частина тіла; псл. *golva."
+    conn.execute(
+        """
+        INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (4, "голова́", 1, 550, golova_text, '["псл."]', "ЕСУМ vol. 1"),
+    )
+    conn.execute(
+        """
+        INSERT INTO esum_etymology (rowid, lemma, etymology_text, cognates, vol, page)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (4, "голова́", golova_text, '["псл."]', 1, 550),
+    )
+
+    # Grinchenko entry for knyha
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition) VALUES (?, ?)",
+        ("книга", "Книга, книжка."),
+    )
+
+    # Style guide entries
+    conn.execute(
+        "INSERT INTO style_guide (word, text) VALUES (?, ?)",
+        ("На протязі", "Кажіть: протягом."),
+    )
+    conn.execute(
+        "INSERT INTO style_guide (word, text) VALUES (?, ?)",
+        ("Приймати участь", "Кажіть: брати участь."),
+    )
+
+    # SUM11 entry
+    conn.execute(
+        "INSERT INTO sum11 (word, definition) VALUES (?, ?)",
+        ("книга", "Зшите в один ексземпляр друковане або рукописне видання."),
+    )
+
+    conn.commit()
+    conn.close()
+    return db_path
+
+
+class TestHeadwordFirstRanking:
+    def test_search_esum_knyha_headword_ranks_above_psaltyr_body_hit(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum
+
+        hits = search_esum("книга", db_path=esum_heritage_rank_db, limit=5)
+        lemmas = [h["lemma"] for h in hits]
+
+        # Exact headword 'книга' must rank above body-inner hit 'псалтир'
+        assert lemmas[0] == "книга"
+        assert "псалтир" in lemmas
+        assert lemmas.index("книга") < lemmas.index("псалтир")
+
+    def test_search_esum_quoted_and_stressed_headword_lookup(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum
+
+        hits = search_esum("«кни́га»", db_path=esum_heritage_rank_db, limit=5)
+        assert hits
+        assert hits[0]["lemma"] == "книга"
+
+    def test_search_esum_volume_filter_headword_and_body(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum
+
+        # Volume 2 returns exact headword and prefix match, excludes vol 4 body hit
+        hits_vol2 = search_esum("книга", volume=2, db_path=esum_heritage_rank_db, limit=5)
+        lemmas_vol2 = [h["lemma"] for h in hits_vol2]
+        assert "книга" in lemmas_vol2
+        assert "книгарня" in lemmas_vol2
+        assert "псалтир" not in lemmas_vol2
+        assert all(h["vol"] == 2 for h in hits_vol2)
+
+        # Volume 4 returns body hit, excludes vol 2 headword
+        hits_vol4 = search_esum("книга", volume=4, db_path=esum_heritage_rank_db, limit=5)
+        lemmas_vol4 = [h["lemma"] for h in hits_vol4]
+        assert "псалтир" in lemmas_vol4
+        assert "книга" not in lemmas_vol4
+        assert all(h["vol"] == 4 for h in hits_vol4)
+
+        # Stressed headword in DB resolves via meta path with volume filter
+        hits_stressed = search_esum("голова", volume=1, db_path=esum_heritage_rank_db, limit=5)
+        assert hits_stressed
+        assert hits_stressed[0]["lemma"] == "голова́"
+        assert hits_stressed[0]["vol"] == 1
+
+    def test_search_heritage_knyha_ranks_above_psaltyr(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_heritage
+
+        hits = search_heritage("книга", db_path=esum_heritage_rank_db, limit=10)
+        words = [h["word"] for h in hits]
+
+        # All headword matches (Grinchenko, ESUM) must rank ahead of 'псалтир' body hit
+        assert words[0] == "книга"
+        assert words[1] == "книга"
+        assert "псалтир" in words
+        assert words.index("книга") < words.index("псалтир")
+
+    def test_search_style_guide_documented_examples_resolve(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_style_guide
+
+        # Documented docstring examples: «На протязі», На протязі, протязі, «протязі»
+        for query in ("«На протязі»", "На протязі", "протязі", "«протязі»"):
+            hits = search_style_guide(query, db_path=esum_heritage_rank_db)
+            assert len(hits) >= 1, f"Failed to return a row for {query!r}"
+            assert hits[0]["word"] == "На протязі"
+
+    def test_search_definitions_quoted_and_case_variants(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_definitions
+
+        for query in ("книга", "Книга", "«книга»", "«Книга»", "кни́га"):
+            hits = search_definitions(query, db_path=esum_heritage_rank_db)
+            assert len(hits) == 1, f"Failed for query {query!r}"
+            assert hits[0]["word"] == "книга"
+

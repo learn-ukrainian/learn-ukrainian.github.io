@@ -387,7 +387,7 @@ function renderWiki(wiki) {
 function renderHealth(health) {
   const items = [
     ['API', !!(health && health.api)],
-    ['MCP', !!(health && health.mcp_rag)],
+    ['MCP', !!(health && (health.mcp_sources ?? health.mcp_rag))],
     ['sources.db', !!(health && health.sources_db)],
     ['broker', !!(health && health.message_broker)],
   ];

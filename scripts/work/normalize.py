@@ -233,8 +233,12 @@ def _build_issue_item(
         stream_status = "orphan"
         epic_streams = []
     elif number in stream_idx["pending"]:
+        # Native sub-issue migration is pending, but the epic-body reference
+        # IS stream membership per the registry rule (issue_streams.yaml).
+        # Admit the body-derived lane so stream-scoped /next can see the
+        # ticket; status stays "pending_native" — never a fake "homed".
         stream_status = "pending_native"
-        epic_streams = []
+        epic_streams = stream_idx.get("membership", {}).get(number, [])
     elif number in stream_idx.get("epic_of", {}):
         stream_status = "epic"
         epic_streams = [stream_idx["epic_of"][number]]

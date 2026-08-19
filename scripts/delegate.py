@@ -168,7 +168,7 @@ _FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substi
 # dispatch a nonexistent adapter).
 _DISPATCH_AGENT_CHOICES = (
     "codex",
-    "gemini",
+    "gemini",  # permanent retired-CLI alias → agy (RETIRED_AGENT_ALIASES); gemini CLI not installed
     "claude",
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
@@ -4497,6 +4497,7 @@ def _run_worker(
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+    from agent_runtime.agent_identity import resolve_retired_agent_alias
     from agent_runtime.attribution import resolve_invocation_attribution
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
@@ -4731,14 +4732,32 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
 
+    # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
+    # BEFORE the budget guard and unconditionally — a hot/cool budget reading
+    # for a retired lane is not proof its binary still exists (CodexBar showed
+    # gemini ~99% remaining the same night `--agent gemini` failed with
+    # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
+    # not this — there is no CLI left to force.
+    agent_alias_note: str | None = None
+    retired_target = resolve_retired_agent_alias(args.agent)
+    requested_agent = args.agent
+    if retired_target:
+        agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
+        print(
+            f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
+            f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
+            file=sys.stderr,
+        )
+        requested_agent = retired_target
+
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
-            dispatch_agent = _resolve_agent_with_budget_guard(args.agent)
+            dispatch_agent = _resolve_agent_with_budget_guard(requested_agent)
         except BudgetGuardRefuseError as exc:
             print(f"❌ {exc}", file=sys.stderr)
             return 2
     else:
-        dispatch_agent = args.agent
+        dispatch_agent = requested_agent
 
     try:
         _validate_dispatch_effort(dispatch_agent, getattr(args, "effort", None))
@@ -4926,6 +4945,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "last_error": None,
             "exit_code": None,
             "substitution": None,
+            "agent_alias_note": agent_alias_note,
         }
         if requested_harness is not None:
             dry_run_state["harness"] = requested_harness
@@ -5094,6 +5114,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "last_error": None,
         "exit_code": None,
         "substitution": None,
+        "agent_alias_note": agent_alias_note,
     }
     if requested_harness is not None:
         initial_state["harness"] = requested_harness
@@ -5597,7 +5618,16 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         except ImportError:
             from api.lane_health import compute_lane_health, normalize_agent_name
 
-        subscription_lanes = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
+        from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+
+        # "gemini" excluded: it is a permanent retired-CLI alias (→ agy), so
+        # it must never appear as a "idle capacity available in: gemini"
+        # suggestion — that would just point drivers back at the dead CLI.
+        subscription_lanes = tuple(
+            lane
+            for lane in ("claude", "codex", "gemini", "grok", "cursor", "kimi")
+            if lane not in RETIRED_AGENT_ALIASES
+        )
         target_norm = normalize_agent_name(dispatch_agent) or dispatch_agent.lower().strip()
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
@@ -5947,7 +5977,8 @@ def build_parser() -> argparse.ArgumentParser:
         # "qwen" removed from choices (banned agent): advertising it in --help
         # while the routing guard rejects it at dispatch is a UX trap. The
         # guard still catches programmatic Namespace bypass.
-        help="Agent to run for the task: codex, gemini, claude, grok "
+        help="Agent to run for the task: codex, gemini (retired CLI — permanent "
+        "alias to agy, do not install gemini), claude, grok "
         "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi.",
     )
     d.add_argument(

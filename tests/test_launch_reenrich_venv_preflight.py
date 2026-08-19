@@ -149,3 +149,51 @@ def test_launcher_invokes_resolved_runner_python() -> None:
     source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
     assert 'printf \'%q \' "$RUNNER_PYTHON" "$DRIVER"' in source
     assert 'import yaml, jsonschema' in source
+
+
+def test_launcher_wrapped_command_has_pipefail() -> None:
+    """#6876: WRAPPED must set pipefail so driver failures (e.g. circuit breaker 70)
+    are not masked by tee exiting 0."""
+    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
+    assert 'WRAPPED="set -o pipefail;' in source
+
+
+def test_source_query_goroh_translate_importable_without_bs4() -> None:
+    """#6876: goroh_translate must be importable without bs4.
+
+    Fastlane puts only the repo root on ``sys.path``, so the content trees
+    ``wiki/`` and ``audit/`` shadow ``scripts.wiki`` / ``scripts.audit``. Stub
+    a minimal ``wiki.slovnyk_me`` so this regression proves the no-bs4 contract
+    without requiring those packages (or a scripts-on-path environment).
+    """
+    import sys
+    import types
+
+    stub_keys = ("bs4", "wiki", "wiki.slovnyk_me")
+    saved = {key: sys.modules.get(key) for key in stub_keys}
+    saved_source_query = {k: v for k, v in sys.modules.items() if "source_query" in k}
+    try:
+        sys.modules["bs4"] = None  # type: ignore[assignment]
+
+        slovnyk = types.ModuleType("wiki.slovnyk_me")
+        slovnyk.SLOVNYK_ME_DICTS = {}
+        slovnyk.resolve_dict_slug = lambda slug: slug
+        wiki_pkg = types.ModuleType("wiki")
+        wiki_pkg.slovnyk_me = slovnyk
+        sys.modules["wiki"] = wiki_pkg
+        sys.modules["wiki.slovnyk_me"] = slovnyk
+
+        for key in list(saved_source_query):
+            sys.modules.pop(key, None)
+
+        from scripts.rag.source_query import goroh_translate
+
+        assert callable(goroh_translate)
+    finally:
+        for key, prior in saved.items():
+            if prior is None:
+                sys.modules.pop(key, None)
+            else:
+                sys.modules[key] = prior
+        sys.modules.update(saved_source_query)
+

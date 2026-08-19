@@ -100,14 +100,16 @@ def _resolve_agy_bridge_timeout(no_timeout: bool = False) -> int:
 
 
 # Sealed formal CF isolation is not proven for AGY (project instructions, MCP,
-# hooks, nested reviewers cannot yet be suppressed). Fail closed *before*
-# provisioning a review worktree so operators get a substitute path immediately.
+# hooks, nested reviewers cannot yet be suppressed), and the sealed review-pr
+# path itself is retired (operator 2026-08-07). Fail closed *before* any send
+# on this legacy entrypoint so operators get the working path immediately.
 AGY_SEALED_REVIEW_UNSUPPORTED = (
     "agy_isolated_review_unsupported: AGY cannot yet prove native "
     "project-instruction, MCP, hook, and nested-reviewer suppression for "
-    "sealed formal CF review. "
-    "Use: `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> "
-    "--reviewer claude|glm|codex`. "
+    "sealed formal CF review, and sealed review-pr is retired. "
+    "Use the lightweight direct review on an eligible lane: "
+    "`ask-claude|ask-codex|ask-kimi - --task-id review-<N> --type review` "
+    "(or `--pr <N>`, which routes to the same direct path). "
     "AGY remains fine for advisory ask-agy *without* --review."
 )
 

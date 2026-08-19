@@ -16,7 +16,15 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-# Subscription + free seats drivers may pick for code implement.
+try:
+    from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+except ImportError:  # pragma: no cover - script path fallback
+    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
+
+# Subscription + free seats drivers may pick for code implement. "gemini" is
+# kept here for budget-row VISIBILITY (its Gemini-family quota still shows in
+# the table) but is force-AVOID via RETIRED_AGENT_ALIASES below — the gemini
+# CLI is retired (operator 2026-08-18) and must never be a `pick`.
 CODE_LANES: tuple[str, ...] = (
     "claude",
     "codex",
@@ -58,8 +66,15 @@ def will_last_to_reset(agent_info: dict[str, Any] | None) -> bool | None:
     return None
 
 
-def is_avoid_lane(agent_info: dict[str, Any] | None) -> bool:
-    """True when status is hot/near_cap or CodexBar deficit (will_last_to_reset is False)."""
+def is_avoid_lane(agent_info: dict[str, Any] | None, *, lane: str | None = None) -> bool:
+    """True when hot/near_cap, CodexBar deficit, or ``lane`` is a retired CLI alias.
+
+    A retired lane (currently just ``gemini`` → agy) is force-AVOID regardless
+    of its budget reading — a "cool" CodexBar snapshot is not proof the binary
+    is still installed.
+    """
+    if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
+        return True
     status = lane_status(agent_info)
     if status in _AVOID_STATUSES:
         return True
@@ -130,11 +145,14 @@ def build_lane_rows(
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
         status = lane_status(info)
         will_last = will_last_to_reset(info)
-        avoid = is_avoid_lane(info)
+        retired_target = RETIRED_AGENT_ALIASES.get(lane)
+        avoid = is_avoid_lane(info, lane=lane)
         in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
         notes: list[str] = []
         if avoid:
             notes.append("AVOID")
+            if retired_target:
+                notes.append(f"retired→{retired_target}")
             if will_last is False:
                 notes.append("deficit")
             if status in _AVOID_STATUSES:
@@ -248,15 +266,27 @@ def build_report(
     rows = build_lane_rows(budget, active_in_flight=active_in_flight)
     pick_order = build_pick_order(rows)
     rec = budget.get("recommendation") if isinstance(budget.get("recommendation"), dict) else {}
+    warnings = list(rec.get("warnings") or [])
+    primary = rec.get("primary_agent_for_code")
+    # The upstream recommendation (Monitor API) doesn't know gemini is
+    # retired — never surface it as a pick here, even if upstream still
+    # recommends it off a stale/uninformed CodexBar reading.
+    retired_target = RETIRED_AGENT_ALIASES.get(str(primary or "").strip().lower())
+    if retired_target:
+        warnings.append(
+            f"recommendation.primary_agent_for_code was {primary!r} (retired CLI) "
+            f"— capacity_pick substituted {retired_target!r}."
+        )
+        primary = retired_target
     return {
         "generated_at": budget.get("generated_at"),
         "rows": rows,
         "pick_order": pick_order,
         "cooler_lanes": cooler_lanes(rows),
         "recommendation": {
-            "primary_agent_for_code": rec.get("primary_agent_for_code"),
+            "primary_agent_for_code": primary,
             "rationale": rec.get("rationale"),
-            "warnings": list(rec.get("warnings") or []),
+            "warnings": warnings,
         },
         "diagnostics": budget.get("diagnostics") or {},
         "active_in_flight": dict(active_in_flight or {}),

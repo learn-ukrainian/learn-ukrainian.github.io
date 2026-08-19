@@ -631,7 +631,7 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path) -> str | None:
             return None
         return (
             "gh pr checkout moves the primary checkout off main "
-            "(use a dispatch worktree or gh pr diff / review-pr instead)"
+            "(use a dispatch worktree or gh pr diff instead)"
         )
     return None
 

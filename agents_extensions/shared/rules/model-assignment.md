@@ -286,6 +286,20 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   it. Lightweight agent review + green CI + merge + worktree/temp cleanup is
   the path.
 
+  **Historical projection only — not the live CF gate (#7017).** The table
+  below mirrors `scripts/config/fleet_communications.yaml`'s endpoint
+  registry, which that file's own header marks legacy: "Sealed formal CF
+  always goes through review-pr" — the very path retired above — and "keep
+  these endpoint booleans synchronized for legacy endpoint-status consumers;
+  reviewer_resolver never reads this copy." `scripts/lint/lint_fleet_roster.py`
+  still pins this block byte-exact against that YAML for those legacy
+  consumers (`scripts/api/fleet_router.py`, `scripts/fleet_comms/endpoints.py`)
+  — keep it in sync, do not delete it — but do not read it as today's review
+  routing. For the live formal resolver use the "Code Review (PR diff)" row
+  above (`closeout_cli resolve-reviewer`, backed by `model_catalog.yaml` →
+  `review_scheduler.endpoints`); for the everyday review of record use the
+  lightweight `ask-<lane>` path just above.
+
   <!-- fleet-roster-projection:begin formal_review_eligible -->
   | endpoint | formal_review_eligible |
   | --- | --- |
@@ -658,7 +672,7 @@ diffs, Codex for novel-architecture catches. (VESUM/content review = language wo
 installed" fiasco was cancelled, user 2026-06-22; Claude may be used for ANY task, incl. dispatched review, when needed.
 The cost economics above stand regardless: dispatched Claude is far pricier than inline, so route by need, not by ban.)
 
-The same table lives in `memory/MEMORY.md` rule #M0; this file is the deploy-rule mirror so it loads via `npm run agents:deploy` into `.claude/rules/`.
+The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. This file is served at `GET /api/rules`; it is a Claude autoload exclude and is not deployed into `.claude/rules/`.
 
 </critical>
 

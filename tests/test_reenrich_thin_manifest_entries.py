@@ -215,6 +215,7 @@ def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> 
 
     monkeypatch.setattr(enrich_manifest, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest, "query_goroh_translate", lambda lemma: [])
     monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {"lookups": {}})
     monkeypatch.setattr(enrich_manifest, "_fetch_slovnyk_entry", fail_fetch)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
@@ -224,6 +225,31 @@ def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> 
         _reenrich_translation_only(conn, entry, {}, cached_slovnyk_only=True)
 
     assert "translation" not in entry["enrichment"]
+
+
+def test_reenrich_thin_manifest_entries_fills_from_goroh_fixture(monkeypatch) -> None:
+    entry = {"lemma": "анімізм", "pos": "noun", "enrichment": {}}
+
+    monkeypatch.setattr(enrich_manifest, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {"lookups": {"ukreng": None}})
+    monkeypatch.setattr(
+        enrich_manifest,
+        "query_goroh_translate",
+        lambda lemma: ["animism"] if lemma == "анімізм" else [],
+    )
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+
+    with sqlite3.connect(":memory:") as conn:
+        conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+        _reenrich_translation_only(conn, entry, {})
+
+    assert entry["enrichment"]["translation"] == {
+        "en": ["animism"],
+        "source": "Горох (переклад)",
+        "mirror_source_url": "https://goroh.pp.ua/Переклад/%D0%B0%D0%BD%D1%96%D0%BC%D1%96%D0%B7%D0%BC",
+    }
+    assert "Горох (переклад)" in entry["enrichment"]["sources"]
 
 
 def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path, monkeypatch) -> None:
@@ -618,8 +644,6 @@ def test_deadjectival_adverb_fallback_fails_closed_on_vesum_error(monkeypatch) -
 
 
 def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> None:
-    from scripts.lexicon.manifest_io import load_manifest
-
     monkeypatch.setattr(
         reenrich,
         "verify_word",
@@ -631,19 +655,36 @@ def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> No
         ),
     )
 
-    manifest = load_manifest()
+    manifest = {
+        "entries": [
+            {
+                "lemma": "абстрактний",
+                "pos": "adjective",
+                "url_slug": "абстрактний",
+                "enrichment": {
+                    "translation": {
+                        "en": ["abstract"],
+                        "source": "dmklinger",
+                    },
+                    "sources": ["dmklinger"],
+                },
+            },
+            {
+                "lemma": "абстрактно",
+                "pos": "adverb",
+                "url_slug": "абстрактно",
+                "enrichment": {},
+            },
+        ]
+    }
     by_lemma = {e.get("lemma"): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
 
-    if "абстрактно" in by_lemma and "абстрактний" in by_lemma:
-        abstr_adj = by_lemma["абстрактний"]
-        abstr_adv = by_lemma["абстрактно"]
-        adj_trans = abstr_adj.get("enrichment", {}).get("translation", {})
-        if adj_trans.get("en"):
-            res = reenrich._deadjectival_adverb_translation(abstr_adv, by_lemma)
-            assert res is not None
-            assert isinstance(res.get("en"), list)
-            assert "abstractly" in res["en"][0]
-            assert "base form абстрактний" in str(res.get("source"))
+    abstr_adv = by_lemma["абстрактно"]
+    res = reenrich._deadjectival_adverb_translation(abstr_adv, by_lemma)
+    assert res is not None
+    assert isinstance(res.get("en"), list)
+    assert "abstractly" in res["en"][0]
+    assert "base form абстрактний" in str(res.get("source"))
 
 
 def test_diminutive_fallback_fills_in_reenrich_thin_entries(monkeypatch) -> None:

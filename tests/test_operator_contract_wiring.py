@@ -174,6 +174,36 @@ def test_deploy_lock_step_lists_include_contract() -> None:
     assert "deploy_orphan_paths.sh" in session_setup, "session-setup hook does not source the shared lists"
 
 
+def _offline_fallback_list(body: str) -> list[str]:
+    marker = "`RULE_SOURCES`:"
+    start = body.index(marker) + len(marker)
+    paths: list[str] = []
+    for line in body[start:].splitlines():
+        stripped = line.strip()
+        if not stripped:
+            if paths:
+                break
+            continue
+        if stripped.startswith("These files"):
+            break
+        if stripped.endswith(".md"):
+            paths.append(stripped)
+        elif paths:
+            break
+    return paths
+
+
 def test_offline_fallback_lists_contract() -> None:
     body = (REPO / "agents_extensions/shared/rules/_load-via-api.md").read_text(encoding="utf-8")
     assert CONTRACT_REL in body, "offline fallback list lost the contract"
+
+
+def test_offline_fallback_list_equals_rule_sources() -> None:
+    """#7011: a down API must not be a different ruleset than RULE_SOURCES."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "scripts"))
+    from api.rules_router import RULE_SOURCES
+
+    body = (REPO / "agents_extensions/shared/rules/_load-via-api.md").read_text(encoding="utf-8")
+    assert tuple(_offline_fallback_list(body)) == RULE_SOURCES

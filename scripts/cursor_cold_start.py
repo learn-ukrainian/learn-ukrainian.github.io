@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Condensed Monitor API cold start for Cursor (200k context).
 
-Skips /api/rules (AGENTS.md + CLAUDE.md already in Cursor workspace rules).
-Prints a compact markdown briefing (~3–5k tokens) for session orientation.
+Fetches /api/rules (canonical complete ruleset; AGENTS.md + CLAUDE.md are
+digests, not a substitute). Prints a compact markdown briefing (~3–5k
+tokens) for session orientation; does not reprint the rules blob.
 """
 
 from __future__ import annotations
@@ -14,6 +15,8 @@ import urllib.request
 
 DEFAULT_BASE = "http://localhost:8765"
 TIMEOUT_S = 5.0
+RULES_PATH = "/api/rules?format=json"
+OFFLINE_FALLBACK = "agents_extensions/shared/rules/_load-via-api.md"
 
 
 def _get(path: str) -> dict | list | None:
@@ -82,14 +85,34 @@ def _lines_orient(orient: dict) -> list[str]:
     return lines
 
 
+def _rules_briefing(manifest: dict | list | None, rules: dict | list | None) -> str:
+    manifest_hash = ""
+    if isinstance(manifest, dict):
+        manifest_hash = str((manifest.get("rules") or {}).get("hash", ""))[:12]
+    rules_hash = ""
+    n_sources = 0
+    if isinstance(rules, dict):
+        rules_hash = str(rules.get("hash", ""))[:12]
+        n_sources = len(rules.get("sources") or [])
+    shown = rules_hash or manifest_hash
+    if isinstance(rules, dict):
+        prefix = f"_manifest rules={shown}…" if shown else "_fetched /api/rules"
+        return f"{prefix} (fetched /api/rules; {n_sources} sources)_"
+    if shown:
+        return (
+            f"_manifest rules={shown}… "
+            f"(/api/rules unreachable — offline fallback `{OFFLINE_FALLBACK}`)_"
+        )
+    return f"_/api/rules unreachable — offline fallback `{OFFLINE_FALLBACK}`_"
+
+
 def main() -> int:
     manifest = _get("/api/state/manifest")
+    rules = _get(RULES_PATH)
     orient = _get("/api/orient")
 
     print("# Cursor cold start\n")
-    if manifest:
-        rules_hash = (manifest.get("rules") or {}).get("hash", "")[:12]
-        print(f"_manifest rules={rules_hash}… (rules skipped — already in workspace)_\n")
+    print(_rules_briefing(manifest, rules) + "\n")
 
     if orient:
         print("## Live state\n")
@@ -101,7 +124,8 @@ def main() -> int:
         print("- Monitor API down — run `git status --short --branch`\n")
 
     print("## Context budget (200k)\n")
-    print("- Workspace rules: ~50k (AGENTS + CLAUDE, do not re-read)")
+    print("- Workspace rules: ~50k (AGENTS + CLAUDE digests, do not re-read)")
+    print("- Canonical rules: GET /api/rules?format=markdown before consequential work")
     print("- This briefing: ~3–5k")
     print("- Task budget: ~140k; fetch scoped endpoints only when needed")
     print("- Full protocol: `agents_extensions/cursor/rules/cold-start.md`")

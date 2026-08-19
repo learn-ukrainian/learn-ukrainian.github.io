@@ -29,6 +29,11 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 
 ## Security gates (layered, non-wedging)
 
+0. **Workflow-path gate** — `.github/CODEOWNERS` requires human code-owner
+   review for PRs touching `workflows/**`, and
+   `scripts/audit/check_untrusted_workflow_interpolation.py` (invoked by
+   `check_workflows.sh` after actionlint) fail-closes untrusted-context
+   `${{ }}` interpolation in `run:` scripts; use the `env:` + `"$VAR"` pattern.
 1. **Auto-remediate** — Dependabot covers every ecosystem (github-actions, npm,
    **pip**) with automated security fixes enabled. Security PRs land continuously.
 2. **Block-new** — CodeQL + (recommended) required-check promotion of

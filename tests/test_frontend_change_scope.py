@@ -382,6 +382,7 @@ def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> No
     # pull_request light tier can require lint without the four-shard suite.
     assert set(jobs["ci-gate"]["needs"]) == {
         "ruff",
+        "landing-class",
         "pytest-plan",
         "pytest-fastlane",
         "python",

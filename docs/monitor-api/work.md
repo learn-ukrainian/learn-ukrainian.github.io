@@ -28,19 +28,28 @@ Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
 Machine contract for "what should this lane do next" — a driver never needs the
 586-row projection dump. Params: `stream=<stream key>` (required; keys from
 `scripts/config/issue_streams.yaml`, unknown keys 400 with `valid_streams`) and
-`limit` (default 7, max 25).
+`limit` (default 7, max 25). Unambiguous fleet-taxonomy area aliases are
+accepted and echoed (`?stream=infra` → `stream: "infra-harness"` +
+`requested_stream: "infra"`, via the same `fleet_taxonomy.yaml` resolver the
+session hooks use); ambiguous or unknown selectors still fail closed (#6984).
 
 - **Pick list is stream-scoped** (operator addendum on #6880): only actionable
   rows whose `projections.stream.streams` membership includes the requested
-  stream. Items with no stream membership (orphans, pending-native, PRs, tasks)
-  are NEVER pick items — they appear only as `digest.unscoped_actionable_count`.
+  stream. Body-homed `pending_native` tickets keep that honest status but DO
+  carry their epic-body-derived membership, so they are pick items for the
+  lane that owns them while native sub-issue migration lags (#6984). Items
+  with no stream membership (orphans, PRs, tasks, pending-native with no
+  derivable lane) are NEVER pick items — they appear as
+  `digest.unscoped_actionable_count`, and pending-native ones are additionally
+  named with a reason in `digest.excluded_pending_native`.
 - **Actionable** is the server-side SSOT `scripts/work/attention.py::is_actionable`
   (OFF_TRACK/AT_RISK always; otherwise `safe_next_action.code` outside the
   `INSPECT_UNKNOWN`/`OPEN_GITHUB`/`NONE` deny list). `dashboards/work.html`
   mirrors it in JS under a parity contract test.
 - **Digest, never a queue**: `other_streams.actionable_counts_by_stream`
   (counts only), `other_streams.top_blockers` (≤3 repo-wide OFF_TRACK
-  pointers), `unscoped_actionable_count`.
+  pointers), `unscoped_actionable_count`, `excluded_pending_native`
+  (`count` + ≤25 items with `streams` and `reason`).
 - **Warm cache only**: serves strictly from the unfiltered projection cache
   (single-flight, #6861). Cold → wire body
   `503 {"error": "building", "retry_after_s": 3}` (no FastAPI `detail`
@@ -48,6 +57,9 @@ Machine contract for "what should this lane do next" — a driver never needs th
   expired-but-present entries are served with an honest `cache_age_s` while
   the shared background refresh runs, until age exceeds `max_stale_s` (300s)
   → `503 {"error": "stale", "cache_age_s", "max_stale_s", "retry_after_s"}`.
+  The background build is bounded (`NEXT_BUILD_TIMEOUT_S`, 20s) so a hung
+  collector frees the single-flight slot and the next caller's refresh can
+  succeed instead of wedging the lane at 503 stale (#6984).
   An unreadable `issue_streams.yaml` registry →
   `503 {"error": "registry_unavailable", "retry_after_s"}` (fail closed —
   never 200 + empty queue for a stream typo). Warm calls measure ~1ms

@@ -26,14 +26,18 @@ Usage:
     result = ulif_paradigm("стіл")
 """
 
+from __future__ import annotations
+
 import re
 import time
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
 import requests
-from bs4 import BeautifulSoup, Tag
+
+if TYPE_CHECKING:
+    from bs4 import Tag
 
 try:
     from wiki import slovnyk_me as _slovnyk_me
@@ -478,6 +482,8 @@ def _ulif_terms(node: Tag) -> list[dict[str, str]]:
 
 def _parse_ulif_paradigm(html: str) -> dict[str, object] | None:
     """Parse a noun/adjective or verb paradigm table from a DictUA response."""
+    from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     for table in soup.find_all("table"):
         rows: list[list[str]] = []
@@ -494,6 +500,8 @@ def _parse_ulif_paradigm(html: str) -> dict[str, object] | None:
 
 def _parse_ulif_relation_groups(html: str, kind: str) -> list[dict]:
     """Parse ordered DictUA relation groups while retaining their source HTML."""
+    from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     panel = soup.select_one("div.p_cl")
     if panel is None:
@@ -563,6 +571,8 @@ def _parse_ulif_relation_groups(html: str, kind: str) -> list[dict]:
 
 
 def _ulif_webforms_tokens(html: str) -> dict[str, str] | None:
+    from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     values: dict[str, str] = {}
     for name in ("__VIEWSTATE", "__VIEWSTATEGENERATOR", "__EVENTVALIDATION"):
@@ -573,11 +583,15 @@ def _ulif_webforms_tokens(html: str) -> dict[str, str] | None:
 
 
 def _ulif_has_control(html: str, control_name: str) -> bool:
+    from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     return soup.find("input", attrs={"name": control_name}) is not None
 
 
 def _ulif_headword(html: str, requested_word: str) -> str:
+    from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     article = soup.find(id="ContentPlaceHolder1_article")
     if article is not None:
@@ -598,6 +612,8 @@ def _ulif_search_result_matches(html: str, requested_word: str) -> bool | None:
     so a successful status plus a paradigm table is not enough evidence of a
     lookup hit.  The list is the server's only reliable match signal.
     """
+    from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     result_list = soup.find(id="ContentPlaceHolder1_dgv")
     if result_list is None:

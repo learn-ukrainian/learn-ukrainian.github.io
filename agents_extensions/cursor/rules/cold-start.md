@@ -1,14 +1,17 @@
 # Cursor cold start (200k context)
 
 Cursor already loads `AGENTS.md` + `CLAUDE.md` as workspace rules (~40–60k tokens).
-Do **not** refetch `/api/rules` unless those files are missing from context.
+Those files are digests. When the Monitor API is up, fetch
+`GET /api/rules?format=markdown` before consequential work (AGENTS.md).
+`scripts/cursor_cold_start.py` hits `/api/rules?format=json` and prints the
+hash and source list; it does not reprint the rules blob.
 
 ## Budget
 
 | Reserve | Tokens | Purpose |
 | --- | --- | --- |
-| Workspace rules | ~50k | AGENTS + CLAUDE (Cursor-injected) |
-| Cold-start API | ~3–5k | manifest + condensed orient |
+| Workspace rules | ~50k | AGENTS + CLAUDE (Cursor-injected digests) |
+| Cold-start API | ~3–5k | manifest + rules hash/sources + condensed orient |
 | Task work | ~120–140k | reads, edits, reasoning |
 | Headroom | ~10k | tool output spikes |
 
@@ -22,15 +25,15 @@ Equivalent manual calls:
 
 ```bash
 curl -s http://localhost:8765/api/state/manifest
+curl -s http://localhost:8765/api/rules?format=markdown
 curl -s http://localhost:8765/api/orient   # parse git, health, delegate, governance only
 ```
 
 ## Skip (orchestrator / 1M lanes)
 
-- `/api/rules` — duplicates workspace rules
 - `/api/session/current?agent=orchestrator` — wrong agent
 - `context_canary.py mint` — 1M orchestrator sessions only
-- `Read` on `CLAUDE.md`, `AGENTS.md`, or `memory/MEMORY.md` at boot
+- `Read` on `CLAUDE.md` or `AGENTS.md` at boot
 
 ## Fetch on demand (task-scoped)
 
@@ -60,4 +63,5 @@ busy/partial behavior, and receipt-verification contract.
 ## Offline fallback
 
 If Monitor API is down: `git status --short --branch` + read
-`agents_extensions/shared/rules/operator-expectations.md` (digest only).
+`agents_extensions/shared/rules/_load-via-api.md` and its ordered local
+fallback list.

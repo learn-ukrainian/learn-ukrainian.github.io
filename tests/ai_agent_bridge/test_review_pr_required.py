@@ -30,7 +30,11 @@ def test_assert_pr_cf_review_warns_without_target(capsys: pytest.CaptureFixture[
         is True
     )
     err = capsys.readouterr().err
-    assert "prefer" in err and "review-pr" in err
+    # #7010: the direct ask IS the formal path now; the warning requires a
+    # named target and must not steer to the retired sealed command.
+    assert "review-pr retired" in err
+    assert "head SHA" in err
+    assert "prefer" not in err
     assert "warn-not-reject" in err or "not discarded" in err
 
 

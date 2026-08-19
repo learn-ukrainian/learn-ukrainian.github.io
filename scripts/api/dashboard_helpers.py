@@ -249,6 +249,25 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     }
 
 
+def present_module_count(
+    *,
+    total: int,
+    generated_md: int,
+    published_mdx: int,
+    scan_present: int = 0,
+) -> int:
+    """Count modules that have some content (generated, published, or scan-found).
+
+    Published MDX is presence, not audit pass. Callers must not copy this
+    onto ``stats.pass``.
+    """
+    present = max(int(generated_md or 0), int(published_mdx or 0), int(scan_present or 0))
+    bounded_total = int(total or 0)
+    if bounded_total:
+        return min(bounded_total, present)
+    return present
+
+
 def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
     """Map cached ``/api/state/summary`` counts onto overview track stats.
 
@@ -257,19 +276,29 @@ def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
     summary snapshot, so they stay 0 until a background full scan fills
     last-good. Research totals follow the same seminar-vs-core key as
     ``overview()`` historically used.
+
+    ``missing`` subtracts published MDX as well as generated markdown so a
+    bounce where ``generated_md=0`` but ``published_mdx>0`` is not a wall of
+    zeros. ``pass`` stays ``audit_passing`` — never spoofed from published.
     """
     total = int(summary_stats.get("total") or 0)
     generated_md = int(summary_stats.get("generated_md") or 0)
+    published_mdx = int(summary_stats.get("published_mdx") or 0)
     audit_passing = int(summary_stats.get("audit_passing") or 0)
     audit_stale = int(summary_stats.get("audit_stale") or 0)
     content_done = int(summary_stats.get("content_done") or 0)
     research_total_key = "dossier_done" if is_seminar else "research_done"
+    present = present_module_count(
+        total=total,
+        generated_md=generated_md,
+        published_mdx=published_mdx,
+    )
     return {
         "pass": audit_passing,
         "content_complete": content_done,
         "fail": 0,
         "unaudited": max(0, generated_md - audit_passing - audit_stale),
-        "missing": max(0, total - generated_md),
+        "missing": max(0, total - present),
         "shippable": 0,
         "reviewed": int(summary_stats.get("reviewed") or 0),
         "final_review": int(summary_stats.get("final_review_done") or 0),
@@ -278,6 +307,7 @@ def stats_from_state_summary(summary_stats: dict, *, is_seminar: bool) -> dict:
         "plan_needs_fixes": 0,
         "plan_fail": 0,
         "stale_status": audit_stale,
+        "published_mdx": published_mdx,
         "research": {
             "total": int(summary_stats.get(research_total_key) or 0),
             "docs": int(summary_stats.get("dossier_docs") or 0),

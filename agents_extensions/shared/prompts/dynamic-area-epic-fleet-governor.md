@@ -256,9 +256,11 @@ owned paths, lifecycle, state, evidence, PR, reviewer, and disposition.
   emit fabricated StepReceipts, or automate a transition whose `blocked_on`
   dependency remains unresolved. Stop on declared STOP conditions.
 - Formal review must be outside the author family and eligible for the task
-  family under live policy. Use
-  `.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER>
-  --reviewer <eligible-lane>` and the sealed verdict publication flow.
+  family under live policy. Sealed `review-pr` is RETIRED (operator 2026-08-07)
+  — use the lightweight direct review:
+  `printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." |
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`
+  then post the verdict on the PR.
 - Resolve every material review finding, run relevant tests and repository
   gates, verify the user-visible behavior, and arm auto-merge only after the
   review gate passes. Follow RB-4 for red CI; never retry unknown failures

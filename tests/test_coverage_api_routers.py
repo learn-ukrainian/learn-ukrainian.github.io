@@ -141,11 +141,12 @@ def images_client(_patch_config, mock_project_root):
 
 @pytest.fixture()
 def rag_client(mock_project_root):
-    """TestClient for rag router."""
+    """TestClient for sources router (with /api/sources and /api/rag)."""
     from scripts.api.rag_router import router
 
     with patch("scripts.api.rag_router.IMAGE_DIR", mock_project_root / "data" / "textbook_images"):
         app = FastAPI()
+        app.include_router(router, prefix="/api/sources")
         app.include_router(router, prefix="/api/rag")
         yield TestClient(app)
 
@@ -1316,13 +1317,16 @@ class TestImagesCleanup:
 
 
 class TestRagBrowseImages:
-    """Tests for /api/rag/browse_images."""
+    """Tests for /api/sources/browse_images and /api/rag/browse_images."""
 
     def test_browse_images_rejects_invalid_grade(self, rag_client):
-        r = rag_client.get("/api/rag/browse_images", params={"grade": "../etc"})
-
+        r = rag_client.get("/api/sources/browse_images", params={"grade": "../etc"})
         assert r.status_code == 400
         assert r.json()["error"] == "Invalid grade format: ../etc"
+
+        r_legacy = rag_client.get("/api/rag/browse_images", params={"grade": "../etc"})
+        assert r_legacy.status_code == 400
+        assert r_legacy.json()["error"] == "Invalid grade format: ../etc"
 
 
 class TestImagesReload:

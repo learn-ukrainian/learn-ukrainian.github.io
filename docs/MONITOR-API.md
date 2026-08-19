@@ -183,7 +183,7 @@ Sample response:
   "runtime": {"agents": ["claude", "gemini", "codex"]},
   "delegate": {"active_count": 2},
   "wiki": {"by_track": {"hist": {"compiled": 15, "total": 140, "pct": 10.7}}},
-  "health": {"api": true, "mcp_rag": false, "sources_db": true, "message_broker": true}
+  "health": {"api": true, "mcp_sources": false, "mcp_rag": false, "sources_db": true, "message_broker": true}
 }
 ```
 
@@ -827,6 +827,30 @@ curl -s http://localhost:8765/api/dashboard/research
 # Message broker status + recent messages (legacy)
 curl -s http://localhost:8765/api/dashboard/comms
 ```
+
+---
+
+## Sources & Search Endpoints — `/api/sources/`
+
+Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, literary texts, and image indexing.
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/api/sources/stats` | SQLite source database status, point counts, and table list |
+| GET | `/api/sources/search_text?q=...[&grade=...][&subject=...][&trust_tier=...][&limit=5]` | Search Ukrainian school textbook chunks (Grades 1–11) |
+| GET | `/api/sources/search_images?q=...[&grade=...][&teaching_value=...][&subject=...][&limit=5]` | Search textbook image metadata |
+| GET | `/api/sources/search_literary?q=...[&work=...][&genre=...][&period=...][&limit=5]` | Search literary and primary texts |
+| GET | `/api/sources/browse_images[?grade=...][&sort=size|name|grade][&page=0][&per_page=100]` | Browse textbook images on disk with pagination |
+
+### Legacy Alias — `/api/rag/*`
+
+`/api/rag/*` mirrors `/api/sources/*` for backward compatibility with older scripts and dashboards. It is deprecated and scheduled for removal after the next quarterly cleanup pass. New callers must use `/api/sources/*`.
+
+### Service Boundaries: Public Monitor vs. Private Teacher
+
+- **Public Monitor (`127.0.0.1:8765`)**: Exposes pipeline dashboards, cold-start orient, state queries, comms, build events, work attention projection (`/api/work/v1`), and local sources (`/api/sources/*`).
+- **Private Teacher (`127.0.0.1:8443` / `127.0.0.1:8788`)**: Hramatka lesson support, linguistics verification, and teacher dashboard services (`/api/hramatka/*`) run from `./services.sh` in the private repository and are **not** mounted on the public Monitor process.
+- **Health probes**: Public Monitor probes are `GET /api/health` and `GET /api/work/v1/health`. Kubernetes-style `/api/readyz` or `/readyz` probes are not mounted (return 404).
 
 ---
 
@@ -2071,7 +2095,7 @@ Query params:
   "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
   "idle_prs": [{"number": 1234, "branch": "cursor/ready-for-sweep", "minutes_idle": 93}],
   "runtime": {"agents": ["claude", "gemini", "codex"]},
-  "health": {"api": true, "mcp_rag": false},
+  "health": {"api": true, "mcp_sources": false, "mcp_rag": false},
   "meta": {
     "git": {"generated_at": "2026-04-11T00:15:00Z", "stale_after_s": 30, "source": "git", "cache": "miss"},
     "issues": {"generated_at": "2026-04-11T00:14:10Z", "stale_after_s": 120, "source": "gh", "cache": "hit"}
@@ -2866,12 +2890,18 @@ revision of this endpoint was removed per reviewer BLOCKER on
 
 ## UI Pages
 
-`GET /api/dashboard/overview` is cache-first (#6983): the request path
+`GET /api/dashboard/overview` is cache-first (#6983 / #7024): the request path
 never walks the curriculum tree. `meta.cache` remains the state-summary
 cache signal; `meta.track_scan` is `hit` / `stale` / `skipped`. A cold
-miss may include `meta.error=overview_warming` while a detached worker
-fills last-good. The live Monitor process does not pick up this behavior
-until restart.
+miss may include `meta.error=overview_warming` and `meta.refreshing=true`
+while a detached worker fills last-good. Last-good is persisted under
+`.cache/dashboard_overview_last_good.json` so a Monitor bounce reloads it
+instead of sitting at 0/total-missing. Cheap warming and overlays treat
+`published_mdx` as presence (`totals.missing` is not `total` when
+published > 0) and never copy published onto `totals.pass`. After a
+successful scan, `track_scan=hit` and `refreshing` is absent; a stale
+last-good does not keep flipping `refreshing=true`. The live Monitor
+process does not pick up this behavior until restart.
 
 | Page | URL | Data source |
 |------|-----|-------------|

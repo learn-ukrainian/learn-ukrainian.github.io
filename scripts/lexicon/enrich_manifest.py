@@ -88,6 +88,7 @@ from scripts.lexicon.source_attribution import (
     CORRECTION_DICTIONARIES_LABEL,
     DAVYDOV_LABEL,
     ESUM_LABEL,
+    GOROH_LABEL,
     GRINCHENKO_LABEL,
     MPHDICT_SYNONYMS_LABEL,
     PHRASEOLOGY_LABEL,
@@ -235,6 +236,7 @@ _FORM_NOTE_MIN_BODY_CHARS = 3
 _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = BALLA_LABEL
 _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
+_GOROH_TRANSLATION_SOURCE = GOROH_LABEL
 _SLOVNYK_BASE = "https://slovnyk.me"
 # v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
 # written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
@@ -6281,6 +6283,48 @@ def _fill_learner_english_anchor_from_slovnyk_cache(
     return True
 
 
+@functools.cache
+def query_goroh_translate(lemma: str) -> list[str]:
+    """Wrapper around rag.source_query.goroh_translate to support caching and unit test mocking."""
+    if _phase1_offline_mode():
+        return []
+
+    try:
+        from scripts.rag.source_query import goroh_translate
+
+        return goroh_translate(lemma) or []
+    except Exception:
+        return []
+
+
+def _goroh_translation(lemma: str) -> dict[str, object] | None:
+    """English translations for a Ukrainian lemma via goroh.pp.ua (#6876)."""
+    for variant in _split_lemma_variants(lemma):
+        glosses = query_goroh_translate(variant)
+        if not glosses:
+            continue
+        cleaned: list[str] = []
+        seen: set[str] = set()
+        for g in glosses:
+            g = g.strip()
+            if not g or not _is_learner_english_text(g):
+                continue
+            key = g.casefold()
+            if key not in seen:
+                seen.add(key)
+                cleaned.append(g)
+        if not cleaned:
+            continue
+        block: dict[str, object] = {
+            "en": cleaned[:6],
+            "source": _GOROH_TRANSLATION_SOURCE,
+        }
+        mirror_url = f"https://goroh.pp.ua/Переклад/{quote(variant, safe='')}"
+        attach_official_url(block, mirror_url=mirror_url, word=variant)
+        return block
+    return None
+
+
 def _translation(
     conn: sqlite3.Connection,
     lemma: str,
@@ -6297,7 +6341,9 @@ def _translation(
     back to Wiktionary/kaikki translation glosses (form-of/misspelling meta-glosses are
     stripped at build time). Балла is EN→UK only, so reverse lookup is used only when an
     exact Ukrainian token resolves to one unique English headword that matches an
-    existing learner-gloss hint from the source entry. Returns up to six glosses.
+    existing learner-gloss hint from the source entry. When slovnyk.me has a cached or
+    fetched ukreng entry, that is used next. When all previous sources miss, fall back
+    to goroh.pp.ua translation (#6876). Returns up to six glosses.
     """
     for variant in _split_lemma_variants(lemma):
         rows = _dmklinger_lookup(conn, _dmklinger_key(variant))
@@ -6333,6 +6379,9 @@ def _translation(
     slovnyk_translation = _slovnyk_ukreng_translation(lemma, slovnyk_cache)
     if slovnyk_translation:
         return slovnyk_translation
+    goroh_translation = _goroh_translation(lemma)
+    if goroh_translation:
+        return goroh_translation
 
     for variant in _split_lemma_variants(lemma):
         curated = _CURATED_LEARNER_TRANSLATIONS.get(_lookup_key(variant).casefold())
