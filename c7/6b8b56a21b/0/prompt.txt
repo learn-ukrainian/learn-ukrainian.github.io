@@ -1,0 +1,25 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/practice-kimi-frontend
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# practice-kimi-frontend
+
+Kimi designed the Practice Hub pages. **Pure web/frontend coding.** Do not judge Ukrainian lemmas, cloze text, or morphology.
+
+## Work
+1. Read `site/src` Practice Hub pages (practice index, session, daily, custom decks).
+2. Find and **fix 1–3 concrete UI bugs** (layout, contrast, focus, mobile, broken CSS, hydration empty state). Quote the file:line and how you reproduced.
+3. Do **not** change cloze sentences, lexicon JSON, or calque/VESUM logic.
+4. PR with screenshots-in-words + vitest/playwright if you touch behavior.
+5. No secrets.
+
+Trailer: `X-Agent: kimi/practice-frontend`
+Refs #4700 (UX wave) — do not close #4700.

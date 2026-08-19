@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c76b8b56a21b",
+  "strategy": "manual-commit",
+  "branch": "kimi/practice-kimi-frontend",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/PracticeDailyDeck.tsx",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/src/styles/course.css",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c7/6b8b56a21b/0/metadata.json",
+      "transcript": "/c7/6b8b56a21b/0/full.jsonl",
+      "content_hash": "/c7/6b8b56a21b/0/content_hash.txt",
+      "prompt": "/c7/6b8b56a21b/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 79064,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4131328,
+    "output_tokens": 21196,
+    "api_call_count": 63
+  }
+}
