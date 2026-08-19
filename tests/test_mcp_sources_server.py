@@ -876,6 +876,9 @@ class TestHealthEndpoint:
 
     def test_handle_health_response(self, server_module):
         app = server_module.create_http_app()
+        # #7037 wraps the ASGI app to 405 GET/DELETE on /mcp; unwrap the raw
+        # Starlette app for route introspection.
+        app = getattr(app, "app", app)
         routes = [r for r in app.routes if getattr(r, "path", None) == "/health"]
         assert len(routes) == 1
         health_endpoint = routes[0].endpoint
