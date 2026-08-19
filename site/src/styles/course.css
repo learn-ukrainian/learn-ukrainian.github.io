@@ -58,6 +58,10 @@
      brand band that must stay confident azure so white text always reads; the
      footer is a dark band in both modes. Never redefine these in [data-theme]. */
   --lu-on-yellow: #1A1A1A;
+  /* Text-safe amber for "due" status TEXT on surface backgrounds. The fill
+     token --lu-yellow-dark (#E6B800) fails WCAG AA as text on --lu-surface
+     (1.9:1 — see the rule-box note below); this stays in-family at >= 4.5:1. */
+  --lu-yellow-text: #8A6D00;
   --lu-hero-grad: linear-gradient(135deg, #0057B8, #1A6FD4);
   --lu-footer-bg: #1A1F26;
 
@@ -126,6 +130,9 @@
   --lu-text: #F4F7FB;
   --lu-text-muted: #A9B2BF;
   --lu-on-primary-fill: #1A1A1A;
+  /* Dark theme: the light yellow tint already passes AA as text on dark
+     surfaces (~14:1 on --lu-surface), so the text token tracks the fill. */
+  --lu-yellow-text: #FFE58A;
   --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
   --lu-shadow-lg: 0 4px 18px rgba(0, 0, 0, 0.36);
 
