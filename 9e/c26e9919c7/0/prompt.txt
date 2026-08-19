@@ -1,0 +1,68 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/sources-7028-style-guide
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #7028 residual: documented style-guide example «На протязі»
+
+CAPACITY_CARD: pick=agy status=cool (Gemini-family Flash; CodexBar CLI missing on Monitor host) avoid=codex source=codexbar+orient.headroom
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: agy / gemini-3.7-flash-high
+- why_this_tier: Sources DB lookup; disjoint from cursor #7026 server.py; AGY already landed ranking in #7040
+- owned_paths: scripts/wiki/sources_db.py; tests covering search_style_guide
+- alternatives_considered: cursor (on #7026 SSE); kimi (#6957); claude (CF)
+- parallel_free_seats: cursor #7026; kimi #6957
+- acceptance_cmd: `.venv/bin/python -c "from scripts.wiki.sources_db import search_style_guide as s; r=s('На протязі', limit=3); assert r, r"` plus pytest -k style_guide
+
+Initiator: grok-infra. AGENT_NO_MERGE=1. Homed: corpus-channels #4706.
+
+## Already landed (do not redo)
+PR #7040 merged (`8003d017d0`) — headword-first heritage/ESUM ranking. Live 2026-08-19:
+
+- `search_heritage("книга", limit=2, include_live_slovnyk=false)` → Evidence 1 Грінченко `книга`, Evidence 2 ЕСУМ `книга1` (was `псалтир`).
+- `search_esum("книга")` → `книга1`, `книга2`, then inner-hit `рацбєя` at #3. Ranking P0 is met; do not OCR-clean every ESUM snippet.
+- `search_definitions("книга")` quotes close (`«Що записано в книгу життя»`).
+
+## Live residual (must fix — original expected + original brief item 2)
+
+`scripts/wiki/sources_db.py` `search_style_guide` docstring cites `"На протязі"` as a typical headword. Live MCP + local DB:
+
+```
+style_guide_n = 342
+search_style_guide("На протязі") → 0 rows
+search_style_guide("на протязі") → 0 rows
+search_style_guide("протязі") → 0 rows
+search_style_guide("протягом") → 0 rows
+search_style_guide("Приймати участь") → 1 row  (control still works)
+```
+
+Issue text: "Incomplete coverage is fine; a cited example returning empty is not."
+
+## Work
+In a dispatch worktree:
+
+1. Prove whether Антоненко-Давидович actually discusses «на протязі» in the ingested book / structured table / full-book ingest (`scripts/ingest/antonenko_full_book_ingest.py`). Quote the source row or the book locus. Do **not** invent an entry.
+2. If the discussion exists: add the structured `style_guide` row from that source (or wire lookup so the existing full-book text is findable) so `search_style_guide("На протязі")` and `"протязі"` return it. Ukrainian text from the source only.
+3. If it does **not** exist in the 342 + full book: change the docstring example to a headword that **does** exist, **and** add a test that every headword cited in that docstring resolves. Do not silently drop the expected behavior without saying so on the PR.
+4. Add a regression test. Do not edit `.mcp/servers/sources/server.py` (cursor owns #7026 residual).
+
+PR: `Refs #7028`. Trailer `X-Agent: agy/sources-7028-style-guide`. Conventional commit. Push + open PR. Do **not** merge.
+
+## Verify (quote raw output)
+```bash
+.venv/bin/ruff check scripts/wiki/sources_db.py
+.venv/bin/python -m pytest -q -k 'style_guide'
+.venv/bin/python -c "from scripts.wiki.sources_db import search_style_guide as s; r=s('На протязі', limit=3); print(len(r), r[:1])"
+```
+
+If you chose the docstring-fix path, the last command may still be 0 — then quote the new cited example resolving instead, and quote the test that pins docstring examples.
+
+#M-4: every claim names the command + quoted output.
