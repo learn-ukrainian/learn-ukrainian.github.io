@@ -4727,6 +4727,61 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
     assert "GITHUB_TOKEN" not in env
 
 
+def test_dispatch_agy_worker_env_strips_gh_token(
+    tmp_tasks_dir, monkeypatch,
+):
+    """The GH_TOKEN strip is a seat policy, not a spelling policy (#7020).
+
+    ``--agent gemini`` resolves to ``agy`` before Popen (#7041), so the only
+    way to keep the parent operator token out of the Gemini-family worker env
+    in both spellings is for the resolved seat id ``agy`` itself to stay out
+    of ``_GH_TOKEN_AGENTS``. Intended identity still reaches that CLI via
+    ``build_agent_env``.
+    """
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24681
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
+    monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="agy",
+        task_id="agy-no-gh-token",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    assert "GH_TOKEN" not in env
+    assert "GITHUB_TOKEN" not in env
+
+
 def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
     tmp_tasks_dir, monkeypatch,
 ):

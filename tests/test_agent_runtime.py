@@ -2069,6 +2069,45 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
     assert "FileNotFoundError" in (written.get("stderr_excerpt") or "")
 
 
+def _popen_proc_for_subprocess_run(proc):
+    """Make a MagicMock Popen result safe under ``subprocess.run`` (#7020).
+
+    Patching ``agent_runtime.runner.subprocess.Popen`` also replaces the
+    stdlib ``Popen`` that ``subprocess.run`` uses inside
+    ``env_sanitize._isolated_git_env``. That path does
+    ``with Popen(...) as process: stdout, stderr = process.communicate(...)``,
+    so the fake must be a context manager whose ``communicate`` returns a
+    real ``(stdout, stderr)`` pair — MagicMock's default unpacks to zero
+    values and raises ``ValueError: not enough values to unpack``.
+    """
+    proc.communicate.return_value = (b"", b"")
+    proc.__enter__.return_value = proc
+    proc.__exit__.return_value = False
+    return proc
+
+
+def _agent_only_popen(agent_popen):
+    """Forward only agent-spawn Popen calls (those with ``env=``) to ``agent_popen``.
+
+    Git-identity isolation uses ``subprocess.run`` → shared patched ``Popen``
+    without ``env=``. Those calls must not consume agent ``side_effect`` lists
+    or inflate ``call_count`` / ``call_args_list`` assertions (#7020).
+    """
+    from unittest.mock import MagicMock
+
+    def _wrapper(*args, **kwargs):
+        if "env" not in kwargs:
+            isolation_proc = MagicMock()
+            _popen_proc_for_subprocess_run(isolation_proc)
+            isolation_proc.poll.return_value = 0
+            isolation_proc.returncode = 0
+            isolation_proc.args = args[0] if args else kwargs.get("args", ())
+            return isolation_proc
+        return agent_popen(*args, **kwargs)
+
+    return _wrapper
+
+
 def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     """Regression pin (2026-04-10): when an adapter's check_early_reap
     returns True, the runner must kill the subprocess and call
@@ -2172,6 +2211,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     mock_proc.stdout.readline = MagicMock(return_value="")
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 99999
+    _popen_proc_for_subprocess_run(mock_proc)
 
     # _kill_process_tree replaces bare proc.kill() in the runner.
     # We mock it so it still flips state["killed"] (via fake_kill)
@@ -2212,7 +2252,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            return_value=mock_proc,
+            _agent_only_popen(MagicMock(return_value=mock_proc)),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -2301,6 +2341,7 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     mock_proc.stdout.readline = MagicMock(return_value="")  # empty = streamer exits
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 99999
+    _popen_proc_for_subprocess_run(mock_proc)
 
     mock_kill_tree = MagicMock()
 
@@ -2331,7 +2372,7 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            side_effect=_popen_after_session_start,
+            _agent_only_popen(_popen_after_session_start),
         ),
         patch(
             "agent_runtime.runner.should_kill",
@@ -2392,6 +2433,8 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
     oauth_proc.stdout.readline = MagicMock(side_effect=["Recovered on subscription rung\n", ""])
     oauth_proc.stdout.close = MagicMock()
     oauth_proc.pid = 20202
+    _popen_proc_for_subprocess_run(api_proc)
+    _popen_proc_for_subprocess_run(oauth_proc)
 
     mock_popen = MagicMock(side_effect=[api_proc, oauth_proc])
 
@@ -2420,7 +2463,7 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._resolve_gemini_ladder_auth_modes",
@@ -2477,6 +2520,8 @@ def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
     flash_proc.stdout.readline = MagicMock(side_effect=["Flash model answer\n", ""])
     flash_proc.stdout.close = MagicMock()
     flash_proc.pid = 40404
+    _popen_proc_for_subprocess_run(primary_proc)
+    _popen_proc_for_subprocess_run(flash_proc)
 
     mock_popen = MagicMock(side_effect=[primary_proc, flash_proc])
 
@@ -2501,7 +2546,7 @@ def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -2540,7 +2585,7 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
         proc.stdout.readline = MagicMock(return_value="")
         proc.stdout.close = MagicMock()
         proc.pid = pid
-        return proc
+        return _popen_proc_for_subprocess_run(proc)
 
     mock_popen = MagicMock(
         side_effect=[
@@ -2571,7 +2616,7 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
         ) as mock_write,
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -2609,6 +2654,7 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
     timed_out_proc.stdout.readline = MagicMock(return_value="")
     timed_out_proc.stdout.close = MagicMock()
     timed_out_proc.pid = 60606
+    _popen_proc_for_subprocess_run(timed_out_proc)
 
     with (
         patch.dict(
@@ -2629,7 +2675,7 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
         ) as mock_write,
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            return_value=timed_out_proc,
+            _agent_only_popen(MagicMock(return_value=timed_out_proc)),
         ),
         patch(
             "agent_runtime.runner.should_kill",
@@ -4155,6 +4201,7 @@ def test_popen_uses_start_new_session():
     mock_proc.stdout.readline = MagicMock(return_value="")
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 99999
+    _popen_proc_for_subprocess_run(mock_proc)
 
     mock_popen = MagicMock(return_value=mock_proc)
 
@@ -4168,7 +4215,7 @@ def test_popen_uses_start_new_session():
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -4206,6 +4253,7 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
     mock_proc.stdout.readline = MagicMock(return_value="")
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 12345
+    _popen_proc_for_subprocess_run(mock_proc)
 
     mock_popen = MagicMock(return_value=mock_proc)
 
@@ -4228,7 +4276,7 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -4269,6 +4317,7 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
     mock_proc.stdout.readline = MagicMock(return_value="")
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 12345
+    _popen_proc_for_subprocess_run(mock_proc)
 
     mock_popen = MagicMock(return_value=mock_proc)
 
@@ -4282,7 +4331,7 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",
@@ -4349,6 +4398,7 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
     mock_proc.stdout.readline = MagicMock(return_value="")
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 12345
+    _popen_proc_for_subprocess_run(mock_proc)
 
     mock_popen = MagicMock(return_value=mock_proc)
 
@@ -4363,7 +4413,7 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
         ),
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            mock_popen,
+            _agent_only_popen(mock_popen),
         ),
         patch(
             "agent_runtime.runner._POLL_INTERVAL_S",

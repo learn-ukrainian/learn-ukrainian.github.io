@@ -79,15 +79,16 @@ def test_secrets_still_scrubbed() -> None:
     assert "GITHUB_TOKEN" not in env
 
 
-def test_git_global_config_sandboxed_system_left_intact() -> None:
+def test_git_global_config_sandboxed_without_operator_credential_fallback() -> None:
     """#2842: agent `git config --global` writes go to a throwaway sandbox copy,
-    while system config (the host's credential.helper) is left untouched."""
+    while credential helpers cannot reach the operator's keychain."""
     with patch.dict(
         "os.environ",
         {
             "PATH": "/usr/bin",
             "HOME": "/Users/example",
             "USER": "example",
+            "LU_AGENT_GITHUB_TOKEN": "ghp_agenttoken",
         },
         clear=True,
     ):
@@ -96,9 +97,11 @@ def test_git_global_config_sandboxed_system_left_intact() -> None:
     # Global config redirected to the runtime's throwaway sandbox copy.
     assert env["GIT_CONFIG_GLOBAL"].endswith("agent.gitconfig")
     assert "lu-agent-runtime-git" in env["GIT_CONFIG_GLOBAL"]
-    # System config deliberately NOT disabled — credential.helper must survive.
-    assert "GIT_CONFIG_NOSYSTEM" not in env
-    assert "GIT_CONFIG_SYSTEM" not in env
+    assert env["GIT_CONFIG_NOSYSTEM"] == "1"
+    assert env["GIT_CONFIG_KEY_0"] == "credential.helper"
+    assert env["GIT_CONFIG_KEY_1"] == "http.https://github.com/.extraheader"
+    assert env["GIT_ASKPASS"].endswith("git-askpass.sh")
+    assert env["GH_TOKEN"] == "ghp_agenttoken"
 
 
 def test_workdir_repointing_git_env_is_scrubbed() -> None:

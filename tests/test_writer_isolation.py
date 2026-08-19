@@ -279,6 +279,7 @@ def test_claude_subprocess_argv_contains_allowed_tools(
     class FakeProc:
         def __init__(self) -> None:
             self.pid = 12345
+            self.args: object = ()
             self.stdout = io.StringIO('{"result":"ok"}\n')
             self.stderr = io.StringIO("")
             self.stdin = None
@@ -296,10 +297,26 @@ def test_claude_subprocess_argv_contains_allowed_tools(
         def terminate(self) -> None:
             self.returncode = -15
 
+        def communicate(
+            self, input: object = None, timeout: float | None = None
+        ) -> tuple[bytes, bytes]:
+            _ = input, timeout
+            return b"", b""
+
+        def __enter__(self) -> FakeProc:
+            return self
+
+        def __exit__(self, *_args: object) -> bool:
+            return False
+
     captured_argv: list[list[str]] = []
 
     def fake_popen(cmd: list[str], *_args: object, **_kwargs: object) -> FakeProc:
-        captured_argv.append(cmd)
+        # ``subprocess.run`` in env sanitization (git identity isolation,
+        # #7020) shares this Popen patch. Only the agent spawn passes
+        # ``env=``, so filter the git config calls out of captured_argv.
+        if "env" in _kwargs:
+            captured_argv.append(cmd)
         return FakeProc()
 
     monkeypatch.setattr(

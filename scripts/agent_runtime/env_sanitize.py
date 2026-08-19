@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
@@ -69,11 +70,9 @@ _PROVIDER_SECRET_ALLOWLIST = {
     "claude": {
         "ANTHROPIC_API_KEY",
         "CLAUDE_API_KEY",
-        "GH_TOKEN",
     },
     "codex": {
         "CODEX_API_KEY",
-        "GH_TOKEN",
         "OPENAI_API_KEY",
     },
     "kimi": {
@@ -83,9 +82,6 @@ _PROVIDER_SECRET_ALLOWLIST = {
         "MOONSHOT_API_KEY",
         "KIMI_API_KEY",
         "ANTHROPIC_AUTH_TOKEN",
-    },
-    "bridge": {
-        "GH_TOKEN",
     },
 }
 
@@ -224,7 +220,7 @@ def _looks_sensitive_value(value: str) -> bool:
     return bool(_SENSITIVE_VALUE_RE.search(value))
 
 
-def _isolated_git_env(home: str | None) -> dict[str, str]:
+def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, str]:
     """Git ``--global`` config isolation for spawned agent CLIs (issue #2842).
 
     A stray ``git config`` write from an agent subprocess can brick git for the
@@ -234,21 +230,16 @@ def _isolated_git_env(home: str | None) -> dict[str, str]:
     and other global settings stay readable, but ``git config --global`` writes
     land in the copy instead of the developer's ``~/.gitconfig``.
 
-    Deliberately NOT touched:
-
-    - System config is left intact (no ``GIT_CONFIG_NOSYSTEM``): on this host it
-      carries ``credential.helper=osxkeychain`` with no global fallback, so
-      disabling it would break agent push/fetch auth — a worse failure than the
-      one we're guarding against.
-    - Repo-local shared config cannot be guarded by env vars at all; that vector
-      is backstopped by the health-endpoint canary
-      (``scripts/audit/check_core_bare.py``), which auto-detects + resets drift.
+    Credential helpers and GitHub extra headers are neutralized in the child
+    process, including values inherited from system or repository config.  When
+    an identity exists, Git obtains it via a tiny ``GIT_ASKPASS`` helper that
+    reads only the injected ``GH_TOKEN``.  This keeps ordinary ``git push``
+    working without exposing the operator's macOS keychain.
 
     Never raises: isolation failure must not block spawning an agent.
     """
     try:
-        sandbox_dir = Path(tempfile.gettempdir()) / "lu-agent-runtime-git"
-        sandbox_dir.mkdir(parents=True, exist_ok=True)
+        sandbox_dir = Path(tempfile.mkdtemp(prefix="lu-agent-runtime-git-"))
         sandbox_global = sandbox_dir / "agent.gitconfig"
         real_global = Path(
             os.environ.get("GIT_CONFIG_GLOBAL")
@@ -258,11 +249,48 @@ def _isolated_git_env(home: str | None) -> dict[str, str]:
             shutil.copyfile(real_global, sandbox_global)
         elif not sandbox_global.exists():
             sandbox_global.write_text("", encoding="utf-8")
-        return {"GIT_CONFIG_GLOBAL": str(sandbox_global)}
+        for key in ("credential.helper", "http.https://github.com/.extraheader"):
+            subprocess.run(
+                ["git", "config", "--file", str(sandbox_global), "--unset-all", key],
+                check=False,
+                capture_output=True,
+            )
+        env = {
+            "GIT_CONFIG_GLOBAL": str(sandbox_global),
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_COUNT": "2",
+            "GIT_CONFIG_KEY_0": "credential.helper",
+            "GIT_CONFIG_VALUE_0": "",
+            "GIT_CONFIG_KEY_1": "http.https://github.com/.extraheader",
+            "GIT_CONFIG_VALUE_1": "",
+            "GIT_TERMINAL_PROMPT": "0",
+            "GH_CONFIG_DIR": str(sandbox_dir / "gh"),
+            "GH_PROMPT_DISABLED": "1",
+        }
+        Path(env["GH_CONFIG_DIR"]).mkdir(mode=0o700)
+        if github_token:
+            askpass = sandbox_dir / "git-askpass.sh"
+            askpass.write_text(
+                "#!/bin/sh\n"
+                "case \"$1\" in\n"
+                "  *Username*) printf '%s\\n' x-access-token ;;\n"
+                "  *Password*) printf '%s\\n' \"$GH_TOKEN\" ;;\n"
+                "  *) printf '\\n' ;;\n"
+                "esac\n",
+                encoding="utf-8",
+            )
+            askpass.chmod(0o700)
+            env["GIT_ASKPASS"] = str(askpass)
+        return env
     except OSError:
-        # Copy failed; leave GIT_CONFIG_GLOBAL unset so the agent falls back to
-        # the real ~/.gitconfig rather than losing identity entirely.
-        return {}
+        # Isolation failure must not re-open the operator's global Git config.
+        # Losing the copied commit identity is safer than falling back to an
+        # interactive credential helper.
+        return {
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_TERMINAL_PROMPT": "0",
+        }
 
 
 def build_agent_env(
@@ -307,6 +335,16 @@ def build_agent_env(
 
     # Git-config isolation (#2842) — applied last so it always wins; agents
     # cannot persist a repo-bricking core.bare write into system/global config.
-    env.update(_isolated_git_env(env.get("HOME") or raw.get("HOME")))
+    from .agent_github_identity import resolve_agent_github_identity
+
+    identity = resolve_agent_github_identity(environment=raw)
+    if identity.token:
+        env["GH_TOKEN"] = identity.token
+        env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
+    else:
+        env.pop("GH_TOKEN", None)
+        env.pop("GITHUB_TOKEN", None)
+
+    env.update(_isolated_git_env(env.get("HOME") or raw.get("HOME"), identity.token))
 
     return env

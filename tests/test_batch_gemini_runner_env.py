@@ -32,7 +32,10 @@ class _FakeProc:
     def __init__(self, returncode: int = 0) -> None:
         self.returncode = returncode
         self.stdin = _FakeStdin()
+        self.stdout = None
+        self.stderr = None
         self.pid = 4321
+        self.args: object = ()
 
     def poll(self) -> int:
         return self.returncode
@@ -41,6 +44,21 @@ class _FakeProc:
         _ = timeout
         return self.returncode
 
+    def communicate(
+        self, input: object = None, timeout: float | None = None
+    ) -> tuple[bytes, bytes]:
+        _ = input, timeout
+        return b"", b""
+
+    def kill(self) -> None:
+        return None
+
+    def __enter__(self) -> _FakeProc:
+        return self
+
+    def __exit__(self, *_args: object) -> bool:
+        return False
+
 
 class _PopenCapture:
     def __init__(self, returncode: int = 0) -> None:
@@ -48,8 +66,13 @@ class _PopenCapture:
         self.calls: list[dict[str, object]] = []
 
     def __call__(self, *args, **kwargs):
-        self.calls.append({"args": args, "kwargs": kwargs})
-        return _FakeProc(self.returncode)
+        proc = _FakeProc(self.returncode)
+        proc.args = args[0] if args else kwargs.get("args", ())
+        # ``subprocess.run`` in env sanitization shares this Popen patch.
+        # Keep ``calls`` as the agent spawn (the only call that gets ``env``).
+        if "env" in kwargs:
+            self.calls.append({"args": args, "kwargs": kwargs})
+        return proc
 
 
 @pytest.fixture(autouse=True)

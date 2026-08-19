@@ -240,6 +240,24 @@ def test_runner_invoke_forwards_effort_to_adapter_build_invocation(tmp_path):
     fake_proc.poll.return_value = 0
     fake_proc.returncode = 0
     fake_proc.stdin = None
+    # Patching runner.subprocess.Popen also hits env_sanitize._isolated_git_env
+    # via subprocess.run → Popen.communicate(); MagicMock's default unpacks to
+    # zero values (#7020 merge-group). Agent spawns pass env=; isolation does not.
+    fake_proc.communicate.return_value = (b"", b"")
+    fake_proc.__enter__.return_value = fake_proc
+    fake_proc.__exit__.return_value = False
+
+    def _agent_only_popen(*args, **kwargs):
+        if "env" not in kwargs:
+            isolation_proc = MagicMock()
+            isolation_proc.communicate.return_value = (b"", b"")
+            isolation_proc.__enter__.return_value = isolation_proc
+            isolation_proc.__exit__.return_value = False
+            isolation_proc.poll.return_value = 0
+            isolation_proc.returncode = 0
+            isolation_proc.args = args[0] if args else kwargs.get("args", ())
+            return isolation_proc
+        return fake_proc
 
     with patch(
         "agent_runtime.runner._load_adapter", return_value=spy_adapter,
@@ -248,7 +266,7 @@ def test_runner_invoke_forwards_effort_to_adapter_build_invocation(tmp_path):
     ), patch(
         "agent_runtime.runner.write_record",
     ), patch(
-        "agent_runtime.runner.subprocess.Popen", return_value=fake_proc,
+        "agent_runtime.runner.subprocess.Popen", side_effect=_agent_only_popen,
     ), patch(
         "agent_runtime.runner.start_watchdog",
         return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),

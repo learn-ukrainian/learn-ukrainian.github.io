@@ -181,6 +181,12 @@ def test_runner_invoke_preserves_observed_terminal_returncode_and_telemetry(tmp_
     # has not reflected it through ``.returncode`` yet (#4837).
     fake_proc.returncode = None
     fake_proc.stdin = None
+    # Patching runner.subprocess.Popen also replaces the stdlib Popen that
+    # ``subprocess.run`` uses inside ``build_agent_env`` / git isolation, so
+    # communicate() must return a real (stdout, stderr) pair (#7020).
+    fake_proc.communicate.return_value = ("", "")
+    fake_proc.__enter__.return_value = fake_proc
+    fake_proc.__exit__.return_value = False
 
     with (
         patch("agent_runtime.runner._load_adapter", return_value=spy_adapter),
@@ -255,6 +261,10 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
     fake_proc.poll.return_value = 0
     fake_proc.returncode = 0
     fake_proc.stdin = None
+    # Same stdlib-Popen coupling as the returncode telemetry test (#7020).
+    fake_proc.communicate.return_value = ("", "")
+    fake_proc.__enter__.return_value = fake_proc
+    fake_proc.__exit__.return_value = False
     captured_records: list[dict] = []
     captured_env: dict[str, str] = {}
 
