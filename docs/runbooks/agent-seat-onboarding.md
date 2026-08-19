@@ -783,10 +783,22 @@ quotes the same substitutions):
 
 ---
 
+## VPS / laptop
+
+**Draft — pending advisor.** Monitor, Sources, Work, Astro, and private
+Hramatka services may move to a loopback-only VPS reachable via SSH tunnels;
+drivers must **not** assume the Monitor API always runs on the operator Mac.
+See [`vps-localhost-services.md`](vps-localhost-services.md) for Step 1 scope,
+port table, tunnel examples, and explicit non-goals (fleet worktrees on VPS,
+Grok Bot orchestration).
+
+---
+
 ## Related surfaces
 
 | Doc | Role |
 | --- | --- |
+| [`vps-localhost-services.md`](vps-localhost-services.md) | Draft VPS localhost + SSH tunnel plan (Step 1 services only) |
 | [`fleet-comms-coordination.md`](../../agents_extensions/shared/rules/fleet-comms-coordination.md) | Binding mid-cutover musts on `/api/rules` |
 | [`epic-orchestrator-roster.md`](epic-orchestrator-roster.md) | Which seat drives which epic (operator) |
 | [`agent-cooperation.md`](../best-practices/agent-cooperation.md) | Deliberation, V2, review discipline |
