@@ -85,6 +85,23 @@ def test_word_knyha():
     assert res["matches_russian"] is False
     assert res["russian_lemma"] is None
     assert res["confidence"] == 0.0
+
+
+def test_word_rizhuchyi():
+    # ріжучий: safe lexicalised adjective stays clean negative
+    res = is_russian_pattern("ріжучий")
+    assert res["matches_russian"] is False
+    assert res["russian_lemma"] is None
+    assert res["confidence"] == 0.0
+    assert res["ukrainian_alternative"] is None
+
+
+def test_word_keruiuchyi():
+    # керуючий: safe lexicalised adjective stays clean negative
+    res = is_russian_pattern("керуючий")
+    assert res["matches_russian"] is False
+    assert res["russian_lemma"] is None
+    assert res["confidence"] == 0.0
     assert res["ukrainian_alternative"] is None
 
 
@@ -146,7 +163,7 @@ def test_flagged_words_never_return_an_unverified_lemma():
 
 def test_lexicalised_safe_and_clean_ukrainian_words():
     # Safe lexicalised adjectives should not be flagged as calques
-    for safe_word in ["квітучий", "лежачий", "блискучий"]:
+    for safe_word in ["квітучий", "лежачий", "блискучий", "ріжучий", "керуючий"]:
         res = is_russian_pattern(safe_word)
         assert res["matches_russian"] is False, f"Expected {safe_word} to be clean negative"
         assert res["confidence"] == 0.0
