@@ -1,0 +1,31 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/docs-vps-localhost-plan
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# docs-vps-localhost-plan
+
+Write a **draft** runbook. Do not implement VPS. Do not bind ports. Do not change grok-bot contract.
+
+## Files
+- `docs/runbooks/vps-localhost-services.md` (new)
+- One short pointer in `docs/runbooks/agent-seat-onboarding.md` under a "VPS / laptop" note: drivers must not assume Monitor is the Mac; status = draft pending advisor.
+
+## Content (must match operator + grok-atlas packet)
+1. **Goal:** laptop not required for services; Hetzner cheaper than a new Mac.
+2. **Step 1 only:** migrate public **and** private `services.sh` to VPS. All bind **127.0.0.1**. Access **SSH tunnel only**.
+3. Table of services: api 8765, sources 8766, work 8769 (private sibling), astro 4321, private hramatka HTTPS loopback.
+4. Call out current bug: public api uses `--host 0.0.0.0` — must become loopback.
+5. **Not this step:** fleet worktrees on VPS; Grok Bot as orchestrator (current GO: observer only — link `grok-bot-qa-observer.md`). Mark those as later + advisor-gated.
+6. Tunnel examples: `ssh -L 8765:127.0.0.1:8765 -L 8766:127.0.0.1:8766 -L 8769:127.0.0.1:8769 user@vps` — **no real IPs, no hostnames that leak infra**.
+7. Status banner: **DRAFT — pending Fable/Sol + operator GO.**
+
+PR title: `docs(runbooks): draft VPS localhost services + tunnel (pending advisor)`
+Do not merge. Trailer `X-Agent: cursor/docs-vps-localhost-plan`

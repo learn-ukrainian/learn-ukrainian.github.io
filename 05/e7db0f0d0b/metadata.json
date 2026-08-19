@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "05e7db0f0d0b",
+  "strategy": "manual-commit",
+  "branch": "cursor/docs-vps-localhost-plan",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/agent-seat-onboarding.md",
+    "docs/runbooks/vps-localhost-services.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/05/e7db0f0d0b/0/metadata.json",
+      "transcript": "/05/e7db0f0d0b/0/full.jsonl",
+      "compact_transcript": "/05/e7db0f0d0b/0/transcript.jsonl",
+      "content_hash": "/05/e7db0f0d0b/0/content_hash.txt",
+      "prompt": "/05/e7db0f0d0b/0/prompt.txt"
+    }
+  ]
+}
