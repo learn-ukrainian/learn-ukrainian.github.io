@@ -231,6 +231,61 @@ All endpoints return errors in consistent JSON format:
 
 Standard HTTP status codes: `404` for missing resources, `500` for server errors.
 
+### `GET /api/occupancy[?host_id=x][&fresh=true]`
+
+Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board, no SSH on the request path). Host keys are opaque `host_id` values from `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Without that map the `hosts` object is empty — canonical aliases are never used as JSON keys.
+
+Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service`. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
+
+Examples and fixtures use placeholders only (`host-job`, `host-teacher`). Never put addresses, SSH hostnames, or provider SKUs in this payload.
+
+```bash
+curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
+```
+
+```json
+{
+  "schema": "monitor-occupancy.v1",
+  "observed_at": "2026-08-19T12:00:00Z",
+  "hosts": {
+    "host-job": {
+      "host_id": "host-job",
+      "status": "fresh",
+      "observed_at": "2026-08-19T12:00:00Z",
+      "age_seconds": 1.5,
+      "cpu_count": 4,
+      "loadavg": [0.15, 0.22, 0.18],
+      "mem": {
+        "available_bytes": 8589934592,
+        "total_bytes": 17179869184,
+        "pct": 50.0
+      },
+      "disk": {
+        "available_bytes": 53687091200,
+        "total_bytes": 107374182400,
+        "pct": 50.0
+      },
+      "occupants": [
+        {
+          "kind": "job",
+          "agent": null,
+          "task_id": "example-job",
+          "epic": "atlas"
+        }
+      ]
+    },
+    "host-teacher": {
+      "host_id": "host-teacher",
+      "status": "unavailable",
+      "error": "unreachable",
+      "observed_at": "2026-08-19T12:00:00Z",
+      "age_seconds": 0.0,
+      "occupants": []
+    }
+  }
+}
+```
+
 ---
 
 ## State Endpoints — `/api/state/`

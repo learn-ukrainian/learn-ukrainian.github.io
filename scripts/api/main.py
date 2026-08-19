@@ -81,6 +81,7 @@ from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
+from .occupancy import router as occupancy_router
 from .ops_router import router as ops_router
 from .preload import preload_all
 from .rag_router import router as sources_router
@@ -169,6 +170,7 @@ app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
 app.include_router(agent_monitor_router, prefix="/api/agent-monitor")
 app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
 app.include_router(atlas_jobs_router, prefix="/api/atlas-jobs", tags=["atlas-jobs"])
+app.include_router(occupancy_router, prefix="/api/occupancy", tags=["occupancy"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])

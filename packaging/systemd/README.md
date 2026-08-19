@@ -6,6 +6,8 @@ with the checkout path, run `systemctl daemon-reload`, then enable/start.
 
 Services bind `127.0.0.1` only. Reach them from another machine with an SSH
 tunnel; set `MONITOR_INSTANCE_ID` in the environment so `/api/health`
-distinguishes hosts.
+distinguishes hosts. For `GET /api/occupancy`, set `MONITOR_OCCUPANCY_HOST_IDS`
+to comma-separated `canonical=opaque-id` pairs (opaque values only, e.g.
+`host-job`). Do not put addresses or SSH hostnames in the occupancy JSON.
 
 Units invoke `./services.sh` start/stop semantics from the repo root.
