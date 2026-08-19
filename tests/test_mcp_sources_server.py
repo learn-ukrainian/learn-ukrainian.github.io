@@ -47,7 +47,7 @@ class TestListTools:
         tool_names = {t.name for t in tools}
 
         expected = {
-            "search_sources", "search_text", "search_images", "search_literary", "search_external",
+            "search_sources", "search_text", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
             "verify_stress",
@@ -136,14 +136,11 @@ class TestUlifHandlers:
         assert "trust_tier" not in search_text.input_schema["properties"]
         assert "BGE-M3" not in search_text.description
 
-    def test_search_images_stub_schema(self, server_module):
+    def test_search_images_not_in_live_inventory(self, server_module):
+        """Image search is deferred; do not advertise a no-op stub (#7026)."""
         tools = _run(server_module.list_tools())
-        search_images = next(t for t in tools if t.name == "search_images")
-        assert "stub" in search_images.description.lower()
-        assert "SigLIP" not in search_images.description
-        assert "grade" not in search_images.input_schema["properties"]
-        assert "subject" not in search_images.input_schema["properties"]
-        assert search_images.input_schema["required"] == ["query"]
+        tool_names = {t.name for t in tools}
+        assert "search_images" not in tool_names
 
     def test_search_literary_schema(self, server_module):
         tools = _run(server_module.list_tools())
@@ -879,6 +876,10 @@ class TestHealthEndpoint:
         # #7037 wraps the ASGI app to 405 GET/DELETE on /mcp; unwrap the raw
         # Starlette app for route introspection.
         app = getattr(app, "app", app)
+        route_paths = {getattr(r, "path", None) for r in app.routes}
+        assert "/health" in route_paths
+        assert "/sse" not in route_paths
+        assert "/messages/" not in route_paths
         routes = [r for r in app.routes if getattr(r, "path", None) == "/health"]
         assert len(routes) == 1
         health_endpoint = routes[0].endpoint
