@@ -130,12 +130,14 @@ from scripts.orchestration import reaper_lifecycle
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
-# Gemini is intentionally absent: its worker must not inherit a parent
-# operator ``GH_TOKEN`` / ``GITHUB_TOKEN``. Intended App or
-# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches the Gemini CLI via
+# The Gemini-family seat is intentionally absent in BOTH spellings: the
+# retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
+# strip has to attach to the resolved seat id ``agy`` — otherwise every
+# ``--agent gemini`` dispatch would slip a parent operator ``GH_TOKEN`` /
+# ``GITHUB_TOKEN`` back in through the alias. Intended App or
+# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches that CLI via
 # ``build_agent_env`` (#7020).
 _GH_TOKEN_AGENTS = {
-    "agy",
     "bridge",
     "claude",
     "codex",
