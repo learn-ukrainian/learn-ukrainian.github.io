@@ -1,10 +1,6 @@
 {
   "reviewed": [
     {
-      "status": "sentence_inventory",
-      "path": "site/src/data/lexicon-sentence-inventory.json"
-    },
-    {
       "status": "reviewed",
       "path": "curriculum/l2-uk-en/a1/a1-finale/vocabulary.yaml"
     },
@@ -227,6 +223,78 @@
     {
       "status": "reviewed",
       "path": "curriculum/l2-uk-en/a2/all-cases-practice/vocabulary.yaml"
+    },
+    {
+      "status": "sentence_inventory",
+      "path": "site/src/data/lexicon-sentence-inventory.json"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:4812003"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:491117"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:506209"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:5739133"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:5790737"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:5863084"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:5892786"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:5894790"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:6062676"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:6079507"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:6288289"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:6685918"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:7164990"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:8000560"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:8685455"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:918570"
+    },
+    {
+      "status": "tatoeba",
+      "path": "tatoeba:9503214"
     }
   ]
 }
