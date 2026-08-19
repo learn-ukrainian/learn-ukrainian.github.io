@@ -1,0 +1,33 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-4222-batch-03
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# atlas-4222-batch-03
+
+Implement the named next slice from the #4222 inventory comment (2026-08-19 AGY).
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy (Google agentic seat — not a second "Gemini" person)
+- why_this_tier: language-lane curriculum intake batch
+- owned_paths: lexicon curriculum review-queue for batch 03
+- acceptance_cmd: open a PR with 150 `missing_english_anchor` rows as specified; tests; do not close #4222
+- alternatives_considered: claude (on 673 leftover), kimi (code/CF not language), cursor (not language-lane)
+
+## Work
+From #4222 latest comment:
+**Batch 3 Proposer (`curriculum-review-queue-batch-03`):** 150 rows from high-frequency `missing_english_anchor` (A1–B2 path-derived, VESUM single-POS, standard heritage, UA-GEC and СУМ-11 sense-checked, 3×50-row chunked seats).
+
+Follow the same shape as merged #5199 / #5206. VESUM/`sources` every UA claim. No Daily Word / Practice / Cloze admission. No pointer flip.
+
+PR title like: `Refs #4222 — review-queue batch 3 proposer`
+X-Agent: agy/atlas-4222-batch-03
+Do not close #4222.

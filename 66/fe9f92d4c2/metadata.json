@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "66fe9f92d4c2",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-4222-batch-03",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/source-inventory-review-decisions/2026-08-19-curriculum-review-queue-batch-03.yaml",
+    "tests/test_source_inventory_review_decisions.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/66/fe9f92d4c2/0/metadata.json",
+      "transcript": "/66/fe9f92d4c2/0/full.jsonl",
+      "compact_transcript": "/66/fe9f92d4c2/0/transcript.jsonl",
+      "content_hash": "/66/fe9f92d4c2/0/content_hash.txt",
+      "prompt": "/66/fe9f92d4c2/0/prompt.txt"
+    }
+  ]
+}
