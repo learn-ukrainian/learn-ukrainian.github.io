@@ -498,6 +498,12 @@ _is_running() {
     return 1
 }
 
+_api_supervisor_available() {
+    # Tests inject SVC_API_SUPERVISOR_BIN. macOS has launchctl. Linux systemd
+    # units supervise uvicorn directly, so services.sh must not call launchd.
+    [[ -n "${SVC_API_SUPERVISOR_BIN:-}" ]] || command -v launchctl >/dev/null 2>&1
+}
+
 _api_supervisor() {
     if [[ -n "${SVC_API_SUPERVISOR_BIN:-}" ]]; then
         "$SVC_API_SUPERVISOR_BIN" "$@"
@@ -586,7 +592,7 @@ _start_service() {
         return 1
     fi
 
-    if [[ "$name" == "api" ]] && command -v launchctl >/dev/null 2>&1; then
+    if [[ "$name" == "api" ]] && _api_supervisor_available; then
         _start_api_supervised
         return
     fi
@@ -660,7 +666,7 @@ _stop_service() {
     # ``launchctl disable`` happens before the listener is signalled. A
     # deliberate ``services.sh stop api`` therefore cannot be resurrected by
     # KeepAlive while the old process drains.
-    if [[ "$name" == "api" ]] && command -v launchctl >/dev/null 2>&1; then
+    if [[ "$name" == "api" ]] && _api_supervisor_available; then
         _disable_api_supervisor || return 1
     fi
 

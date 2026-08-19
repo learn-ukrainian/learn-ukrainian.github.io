@@ -24,13 +24,14 @@ def test_systemd_templates_are_type_simple() -> None:
             assert "127.0.0.1" in text
 
 
-def test_api_supervisor_is_launchctl_gated() -> None:
+def test_api_supervisor_is_gated_for_linux() -> None:
     text = Path(__file__).resolve().parents[2].joinpath("services.sh").read_text(
         encoding="utf-8"
     )
-    assert text.count("command -v launchctl >/dev/null 2>&1") >= 2
-    assert "_start_api_supervised" in text
-    assert "_disable_api_supervisor" in text
+    assert "_api_supervisor_available" in text
+    assert "SVC_API_SUPERVISOR_BIN" in text
+    assert "command -v launchctl >/dev/null 2>&1" in text
+    assert text.count("_api_supervisor_available") >= 3
 
 
 def test_systemd_templates_have_no_host_facts() -> None:
