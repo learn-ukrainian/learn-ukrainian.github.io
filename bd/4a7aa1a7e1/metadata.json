@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bd4a7aa1a7e1",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-publish-go",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/word_atlas_lint_baseline.json",
+    "site/src/data/lexicon-practice-deck.pointer.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/bd/4a7aa1a7e1/0/metadata.json",
+      "transcript": "/bd/4a7aa1a7e1/0/full.jsonl",
+      "compact_transcript": "/bd/4a7aa1a7e1/0/transcript.jsonl",
+      "content_hash": "/bd/4a7aa1a7e1/0/content_hash.txt",
+      "prompt": "/bd/4a7aa1a7e1/0/prompt.txt"
+    }
+  ]
+}

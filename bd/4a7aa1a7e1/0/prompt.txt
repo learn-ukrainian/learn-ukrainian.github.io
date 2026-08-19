@@ -1,0 +1,37 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-publish-go
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# atlas-7054-senseid-b
+
+Prior Claude dispatch **cancelled** after 64m: it edited `generate_practice_deck.py` + lint baseline and **never** touched practice JSON. Do **not** change the generator or `word_atlas_lint_baseline.json`.
+
+PR #7054 branch `agy/atlas-publish-go`. Contracts: 18 LINT-003 on lemmas `боже`, `створений`, `вітровий`, `хресний`.
+
+## Exact cards (add `"senseId": "<lemma>:1"` to each dict)
+
+- practice-classify.A2.json classify боже
+- practice-classify.B2.json classify створений
+- practice-cloze.A2.json cloze боже
+- practice-cloze.B2.json cloze створений
+- practice-index.A2.json items боже
+- practice-index.B1.json items вітровий, хресний
+- practice-index.B2.json items створений
+- practice-lexemes.A2.json lexemes боже
+- practice-lexemes.B1.json lexemes вітровий, хресний
+- practice-lexemes.B2.json lexemes створений
+- practice-paradigm.B1.json paradigm вітровий, хресний
+- practice-paradigm.B2.json paradigm створений
+- practice-paronym.B1.json paronym вітровий
+- practice-stress.A2.json stress боже
+- practice-stress.B2.json stress створений
+
+Confirm each lemma with VESUM/`sources`. Trailer `X-Agent: agy/atlas-7054-senseid-b`. Push. Do not merge. Do not commit 190MB catalog.

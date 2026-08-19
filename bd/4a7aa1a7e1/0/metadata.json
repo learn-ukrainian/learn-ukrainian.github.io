@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bd4a7aa1a7e1",
+  "session_id": "fleet-0f7db53860244ee78b6fdc73c2894f7c",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-19T23:09:39.220638Z",
+  "branch": "agy/atlas-publish-go",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/word_atlas_lint_baseline.json",
+    "site/src/data/lexicon-practice-deck.pointer.json"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "98ba5bf41335",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-19T23:09:39.213506Z",
+    "agent_lines": 78,
+    "agent_removed": 78,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 78,
+    "total_lines_changed": 156,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
