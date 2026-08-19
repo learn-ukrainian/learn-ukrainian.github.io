@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6e2a4aff9289",
+  "strategy": "manual-commit",
+  "branch": "cursor/linux-loopback-units",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/lint_raw_rm_rf.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6e/2a4aff9289/0/metadata.json",
+      "transcript": "/6e/2a4aff9289/0/full.jsonl",
+      "compact_transcript": "/6e/2a4aff9289/0/transcript.jsonl",
+      "content_hash": "/6e/2a4aff9289/0/content_hash.txt",
+      "prompt": "/6e/2a4aff9289/0/prompt.txt"
+    }
+  ]
+}

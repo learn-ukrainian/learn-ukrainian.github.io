@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6e2a4aff9289",
+  "session_id": "fleet-61f27f87f27e4282b4dc1617705e35a4",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-19T21:56:53.246324Z",
+  "branch": "cursor/linux-loopback-units",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/lint_raw_rm_rf.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "c31384e67ff5",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-19T21:56:53.233002Z",
+    "agent_lines": 3,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 3,
+    "total_lines_changed": 6,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
