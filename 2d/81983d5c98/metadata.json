@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2d81983d5c98",
+  "strategy": "manual-commit",
+  "branch": "agy/sources-7026-contracts-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_mcp_sources_server.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/2d/81983d5c98/0/metadata.json",
+      "transcript": "/2d/81983d5c98/0/full.jsonl",
+      "content_hash": "/2d/81983d5c98/0/content_hash.txt",
+      "prompt": "/2d/81983d5c98/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 15275,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 316672,
+    "output_tokens": 2745,
+    "api_call_count": 11
+  }
+}

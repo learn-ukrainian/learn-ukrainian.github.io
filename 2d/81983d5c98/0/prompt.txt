@@ -1,0 +1,41 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-7038-health-routes
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch brief — #7038 merge_group: health test vs 405 wrapper
+
+CAPACITY_CARD: pick=kimi status=cool avoid=codex,gemini-CLI
+ROUTING_CARD_V1:
+- tier: practical
+- model_x_harness: kimi k3
+- why_this_tier: general implementer; GLM already on #7020
+- owned_paths: tests/test_mcp_sources_server.py; .mcp/servers/sources/server.py only if the test is correct and the wrapper is missing `.routes`
+
+Initiator: grok-infra. AGENT_NO_MERGE=1. Secrets stay out.
+
+## Work
+PR #7038 branch `agy/sources-7026-contracts-agy` head 9c754f7b9aab.
+merge_group 32223648327 (and likely the live queue) failed:
+
+```
+FAILED tests/test_mcp_sources_server.py::TestHealthEndpoint::test_handle_health_response
+AttributeError: '_RejectUnsupportedStatelessMcpMethods' object has no attribute 'routes'
+```
+
+#7037 wrapped the ASGI app so GET/DELETE on `/mcp` return 405. The health test still expects `.routes` on the raw app. Fix the test to use the unwrapped app or give the wrapper `.routes`. Do not revert the 405 behavior.
+
+Push existing PR branch. Trailer `X-Agent: kimi/infra-7038-health-routes`. Do not merge.
+
+## Verify
+```bash
+.venv/bin/python -m pytest -q tests/test_mcp_sources_server.py::TestHealthEndpoint
+.venv/bin/ruff check tests/test_mcp_sources_server.py
+```

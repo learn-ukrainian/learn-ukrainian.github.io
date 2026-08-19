@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2d81983d5c98",
+  "session_id": "session_bf1e3c96-f29a-4f46-80a7-e37d9edfc58d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-19T06:59:41.357362Z",
+  "branch": "agy/sources-7026-contracts-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_mcp_sources_server.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "d852d83b2b6e",
+  "token_usage": {
+    "input_tokens": 15275,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 316672,
+    "output_tokens": 2745,
+    "api_call_count": 11
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-19T06:59:41.336479Z",
+    "agent_lines": 3,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 3,
+    "total_lines_changed": 3,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
