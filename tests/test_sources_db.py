@@ -461,6 +461,18 @@ class TestSourcesDb:
         # in the canonical attribution rather than returning "".
         assert results[0]["source"] == "Антоненко-Давидович"
 
+    def test_search_style_guide_body_fallback_when_not_in_headword(
+        self, sample_data, monkeypatch
+    ):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki.sources_db import search_style_guide
+
+        # "протягом" is in the text of "На протязі" ("Кажіть: протягом."), but not in the headword.
+        results = search_style_guide("протягом")
+        assert len(results) >= 1
+        assert results[0]["word"] == "На протязі"
+        assert "протягом" in results[0]["text"]
+
     def test_search_style_guide_nonexistent_query_returns_empty(
         self, sample_data, monkeypatch
     ):
@@ -1087,6 +1099,30 @@ class TestHeadwordFirstRanking:
             hits = search_style_guide(query, db_path=esum_heritage_rank_db)
             assert len(hits) >= 1, f"Failed to return a row for {query!r}"
             assert hits[0]["word"] == "На протязі"
+
+    def test_search_style_guide_headword_ranks_above_body_hit(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_style_guide
+
+        # Headword hit "Приймати участь" must rank ahead of any entry having "участь" in body
+        hits = search_style_guide("участь", db_path=esum_heritage_rank_db)
+        assert len(hits) >= 1
+        assert hits[0]["word"] == "Приймати участь"
+
+    def test_search_style_guide_live_db_documented_examples(self):
+        from wiki.sources_db import SOURCES_DB_PATH, search_style_guide
+
+        if not SOURCES_DB_PATH.exists() or SOURCES_DB_PATH.stat().st_size < 1000:
+            pytest.skip("sources.db not present")
+
+        # "На протязі", "протязі", "Приймати участь" must all resolve against live DB
+        for query in ("«На протязі»", "На протязі", "протязі", "«протязі»"):
+            hits = search_style_guide(query)
+            assert len(hits) >= 1, f"Failed to return a row for {query!r}"
+            assert "протязі" in (hits[0]["word"] + hits[0]["text"]).lower()
+
+        hits_uchast = search_style_guide("Приймати участь")
+        assert len(hits_uchast) >= 1
+        assert "приймати участь" in hits_uchast[0]["word"].lower()
 
     def test_search_definitions_quoted_and_case_variants(self, esum_heritage_rank_db):
         from wiki.sources_db import search_definitions

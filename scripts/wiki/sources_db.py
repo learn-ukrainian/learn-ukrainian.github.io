@@ -1815,12 +1815,13 @@ def _dict_lookup_contains(
     word: str,
     limit: int,
 ) -> list[dict]:
-    """Case-fold + substring headword match for small multi-word tables.
+    """Case-fold + substring headword and body match for small multi-word tables.
 
     Loads the full table (e.g. `style_guide`'s ~340 rows) since headwords
     there are phrases rather than single tokens — a SQL prefix `LIKE` would
     match "Приймати" but miss "На протязі" for a "протязі" query. Exact
-    (case-folded) matches are ranked ahead of substring matches.
+    (case-folded) headword matches are ranked first, followed by substring
+    headword matches, followed by body text matches.
     """
     query_key = _fold_dict_key(word)
     if not query_key:
@@ -1833,17 +1834,22 @@ def _dict_lookup_contains(
 
     exact: list[dict] = []
     partial: list[dict] = []
+    body: list[dict] = []
     for row in rows:
         item = dict(row)
         headword_key = _fold_dict_key(str(item.get("word", "")))
-        if not headword_key:
-            continue
-        if headword_key == query_key:
-            exact.append(item)
-        elif query_key in headword_key or headword_key in query_key:
-            partial.append(item)
+        if headword_key:
+            if headword_key == query_key:
+                exact.append(item)
+                continue
+            if query_key in headword_key or headword_key in query_key:
+                partial.append(item)
+                continue
+        text_key = _fold_dict_key(str(item.get("text", "")))
+        if text_key and query_key in text_key:
+            body.append(item)
 
-    return (exact + partial)[:limit]
+    return (exact + partial + body)[:limit]
 
 
 def _dict_lookup(
@@ -2570,8 +2576,8 @@ def search_style_guide(
 
     Headwords are often multi-word phrases ("Приймати участь", "На
     протязі"), so matching is case-insensitive (Cyrillic-safe, unlike SQL
-    `COLLATE NOCASE`) and phrase-substring in either direction — see
-    :func:`_dict_lookup_contains`.
+    `COLLATE NOCASE`) and phrase-substring in headwords as well as body
+    text matches — see :func:`_dict_lookup_contains`.
     """
     rows = _dict_lookup("style_guide", word, limit, db_path=db_path, contains=True)
     for row in rows:
