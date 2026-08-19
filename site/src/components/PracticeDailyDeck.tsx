@@ -68,11 +68,13 @@ export default function PracticeDailyDeck({
   const currentLexeme = currentLemmaId ? lexemes.get(currentLemmaId) ?? null : null;
 
   const handlePrevious = () => {
+    if (total === 0) return;
     setFlipped(false);
     setPreviewIndex((index) => (index > 0 ? index - 1 : total - 1));
   };
 
   const handleNext = () => {
+    if (total === 0) return;
     setFlipped(false);
     setPreviewIndex((index) => (index < total - 1 ? index + 1 : 0));
   };
@@ -108,12 +110,14 @@ export default function PracticeDailyDeck({
             <ChromeText k="practice.wordsTitle" />
           )}
         </h2>
-        <span className="daily-deck-position" aria-live="polite">
-          <ChromeDual
-            uk={`${previewIndex + 1} з ${total}`}
-            en={`${previewIndex + 1} / ${total}`}
-          />
-        </span>
+        {total > 0 ? (
+          <span className="daily-deck-position" aria-live="polite">
+            <ChromeDual
+              uk={`${previewIndex + 1} з ${total}`}
+              en={`${previewIndex + 1} / ${total}`}
+            />
+          </span>
+        ) : null}
         {onReRoll ? (
           <button
             type="button"
@@ -135,6 +139,7 @@ export default function PracticeDailyDeck({
           type="button"
           className="daily-deck-nav"
           aria-label={chromeString(chromeLocale, 'label.previous')}
+          disabled={total === 0}
           onClick={handlePrevious}
         >
           ‹
@@ -162,7 +167,9 @@ export default function PracticeDailyDeck({
                   {frontSubtitle && <span className="flashcard-subtitle">{frontSubtitle}</span>}
                 </>
               ) : (
-                <span className="flashcard-word">—</span>
+                <span className="flashcard-subtitle" data-testid="practice-daily-empty">
+                  <ChromeText k="practice.noCards" />
+                </span>
               )}
             </div>
             <div className="flashcard-back">
@@ -199,6 +206,7 @@ export default function PracticeDailyDeck({
           type="button"
           className="daily-deck-nav"
           aria-label={chromeString(chromeLocale, 'label.next')}
+          disabled={total === 0}
           onClick={handleNext}
         >
           ›

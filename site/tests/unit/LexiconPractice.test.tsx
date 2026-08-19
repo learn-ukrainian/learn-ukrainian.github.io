@@ -1134,6 +1134,42 @@ describe('LexiconPractice', () => {
     expect(screen.queryByText('Context sentence for борщ')).not.toBeInTheDocument();
   });
 
+  test('renders an honest empty state for an empty daily deck — no "1 з 0", nav disabled', async () => {
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 2,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'daily-pool-empty',
+      createdAt: NOW.getTime(),
+      items: [],
+    };
+
+    render(
+      <PracticeDailyDeck
+        snapshot={snapshot}
+        rows={{ pendingDue: [], pendingNew: [], done: [] }}
+        lexemes={new Map()}
+        atlasLemmaHref={(lemmaId) => `/lexicon/${lemmaId}/`}
+        chromeLocale="uk"
+        learnerLevel="A1"
+      />,
+    );
+
+    // Honest empty copy on the card instead of a bare dash…
+    expect(screen.getByTestId('practice-daily-empty')).toHaveTextContent(
+      'Поки що немає карток для практики.',
+    );
+    // …no "1 з 0" position counter…
+    expect(screen.queryByText(/1 з 0/)).not.toBeInTheDocument();
+    // …and no wrap-around navigation that drove the index to -1 ("0 з 0").
+    const previous = screen.getByRole('button', { name: 'Назад' });
+    const next = screen.getByRole('button', { name: 'Далі' });
+    expect(previous).toBeDisabled();
+    expect(next).toBeDisabled();
+    await userEvent.setup().click(previous);
+    expect(screen.queryByText(/з 0/)).not.toBeInTheDocument();
+  });
+
   test('renders the daily card from the pick payload when the slug is absent from the practice-lexemes map (#5852)', () => {
     const snapshot: DailyPracticeDeckSnapshot = {
       version: 2,

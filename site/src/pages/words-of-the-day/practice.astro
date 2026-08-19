@@ -141,7 +141,10 @@ const frontmatter = {
   :global(.lexicon-practice-levels-row button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    /* --lu-on-primary-fill tracks the theme's primary fill (white on azure in
+       light, dark on the light-blue dark-theme primary); --lu-on-primary stays
+       white in both themes and fails AA on the dark theme's #5B9BD5. */
+    color: var(--lu-on-primary-fill);
   }
 
   :global(.lexicon-practice-stage) {
@@ -972,7 +975,7 @@ const frontmatter = {
   :global(.lexicon-practice-stage .matchItem.selected) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-primary-fill);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--lu-primary) 35%, transparent);
   }
 
@@ -1818,7 +1821,9 @@ const frontmatter = {
     letter-spacing: 0.03em;
   }
   :global(.daily-deck-row.state-due .row-status) {
-    color: var(--lu-yellow-dark);
+    /* --lu-yellow-dark (#E6B800) is a fill color — 1.9:1 as text on --lu-surface
+       in the light theme. The text-safe amber token keeps AA in both themes. */
+    color: var(--lu-yellow-text);
   }
   :global(.daily-deck-row.state-new .row-status) {
     color: var(--lu-blue);
@@ -2088,7 +2093,7 @@ const frontmatter = {
   :global(.stress-vowel.selected) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-primary-fill);
   }
 
   :global(.stress-vowel.correct) {
@@ -2313,7 +2318,7 @@ const frontmatter = {
   :global(.zno-practice-next) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-primary-fill);
   }
 
   @media (max-width: 560px) {
