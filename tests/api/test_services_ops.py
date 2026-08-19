@@ -83,8 +83,8 @@ def temp_services_sh():
     content = content.replace("API_LIVE_MODE=0", "API_LIVE_MODE=1")
 
     # Replace the real uvicorn start command with a python sleep command to avoid binding to real ports
-    old_cmd = f'SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port {port} --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"'
-    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" scripts.api.main:app --host 0.0.0.0 --port {port}"'
+    old_cmd = f'SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 127.0.0.1 --port {port} --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"'
+    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" scripts.api.main:app --host 127.0.0.1 --port {port}"'
 
     if old_cmd in content:
         content = content.replace(old_cmd, dummy_cmd)
@@ -92,7 +92,7 @@ def temp_services_sh():
         # Fallback to regex substitution
         import re
         content = re.sub(
-            r'SVC_CMD\[api\]="\$VENV/python -m uvicorn scripts\.api\.main:app --host 0\.0\.0\.0 --port \d+ --log-config scripts/api/logging\.json --timeout-graceful-shutdown \d+"',
+            r'SVC_CMD\[api\]="\$VENV/python -m uvicorn scripts\.api\.main:app --host 127\.0\.0\.1 --port \d+ --log-config scripts/api/logging\.json --timeout-graceful-shutdown \d+"',
             dummy_cmd,
             content
         )
@@ -193,7 +193,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
     # Start a dummy sleep process to act as the listener process.
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
+        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
     try:
@@ -296,7 +296,7 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
     # Start a dummy sleep process
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
+        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
 
@@ -345,7 +345,7 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env):
     )
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", dummy_code,
-        "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
+        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
 
@@ -476,7 +476,7 @@ def test_status_does_not_print_proc_on_missing_procfs(temp_services_sh, mock_lso
 
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
+        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
     try:

@@ -1,0 +1,16 @@
+[Unit]
+Description=Learn Ukrainian Monitor API (loopback)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=@REPO_ROOT@
+Environment=MONITOR_INSTANCE_ID=%H
+ExecStart=@REPO_ROOT@/services.sh start api
+ExecStop=@REPO_ROOT@/services.sh stop api
+ExecReload=@REPO_ROOT@/services.sh restart api
+
+[Install]
+WantedBy=multi-user.target

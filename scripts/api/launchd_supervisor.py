@@ -461,7 +461,7 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
         "uvicorn",
         "scripts.api.main:app",
         "--host",
-        "0.0.0.0",
+        "127.0.0.1",
         "--port",
         str(port),
         "--log-config",

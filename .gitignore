@@ -126,7 +126,8 @@ temp/
 *.yml.orig
 .venv
 # Local agent state, including the bypassable primary-ref audit tripwire (#5808).
-.agent/
+.agent/*
+!.agent/service-endpoints.env.example
 .agent/primary-ref-audit.jsonl
 # Local state owned by scripts/deploy_prompts.sh. It records which shared files
 # deploy placed in .agent/ so only those paths can be reaped on a later deploy.
