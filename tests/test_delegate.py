@@ -6508,11 +6508,11 @@ def test_dirty_primary_guard_rejects_tracked_modified_receipt(tmp_path, monkeypa
     env = delegate._sanitized_git_env()
     subprocess.run(
         ["git", "-C", str(main), "add", "-A"],
-        check=True, capture_output=True, text=True, env=env,
+        check=True, capture_output=True, text=True, env=env, timeout=30,
     )
     subprocess.run(
         ["git", "-C", str(main), "commit", "-q", "-m", "add receipt"],
-        check=True, capture_output=True, text=True, env=env,
+        check=True, capture_output=True, text=True, env=env, timeout=30,
     )
     # Now modify the tracked receipt
     receipt_file.write_text('{"status": "modified"}\n')
