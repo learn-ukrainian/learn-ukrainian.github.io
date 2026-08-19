@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "076a6e7fe7bb",
+  "strategy": "manual-commit",
+  "branch": "cursor/infra-7048-loopback",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".agent/service-endpoints.env.example",
+    ".gitignore",
+    ".mcp/servers/sources/server.py",
+    "docs/best-practices/local-api-server.md",
+    "package.json",
+    "packaging/systemd/README.md",
+    "packaging/systemd/learn-ukrainian-api.service",
+    "packaging/systemd/learn-ukrainian-loopback.target",
+    "packaging/systemd/learn-ukrainian-sources.service",
+    "scripts/api/launchd_supervisor.py",
+    "scripts/api/main.py",
+    "scripts/api/route_contracts.py",
+    "services.sh",
+    "tests/api/test_services_ops.py",
+    "tests/test_api_endpoints.py",
+    "tests/test_api_resilience.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/07/6a6e7fe7bb/0/metadata.json",
+      "transcript": "/07/6a6e7fe7bb/0/full.jsonl",
+      "compact_transcript": "/07/6a6e7fe7bb/0/transcript.jsonl",
+      "content_hash": "/07/6a6e7fe7bb/0/content_hash.txt",
+      "prompt": "/07/6a6e7fe7bb/0/prompt.txt"
+    }
+  ]
+}

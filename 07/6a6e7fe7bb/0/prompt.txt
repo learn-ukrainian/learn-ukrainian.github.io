@@ -1,0 +1,54 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/infra-7048-loopback
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# infra-7048-loopback
+
+**Pure coding / infra.** No Ukrainian lemma work. No secrets, IPs, hostnames, or private names in git, PR title, or logs.
+
+Refs #7048. Fable Step 1 **GO-WITH-CONDITIONS** (2026-08-19). Grok Bot orchestrator **NO-GO**. Operator 2026-08-19: **hramatka disk is fixed** — do **not** treat 40GB as a blocker and do **not** provision or resize any VPS.
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor:auto
+- why_this_tier: mechanical bind/health/systemd/tests; Ultra-month Cursor first pick for ordinary infra
+- advisor_packet: `batch_state/atlas-drive/briefs/advisor-vps-localhost-fleet.md` (already advised)
+- owned_paths: `services.sh`, `package.json`, `scripts/api/main.py`, `scripts/api/route_contracts.py`, `tests/test_api_endpoints.py`, `tests/test_api_resilience.py`, `docs/best-practices/local-api-server.md`, `packaging/systemd/` (or equivalent in-repo templates), `.agent/service-endpoints.env.example`
+- do_not_touch: do **not** add a public VPS topology runbook. Public PR #7047 was closed unmerged. Ops runbook is private #516 / PR #517.
+- acceptance_cmd: `.venv/bin/python -m pytest tests/test_api_endpoints.py::TestHealthEndpoint tests/test_api_resilience.py -q` plus a targeted bind/match test you add
+- alternatives_considered: agy (docs-only sibling), kimi k3-256k, glm-5.3
+- parallel_free_seats: agy on #7047 runbook only
+- CAPACITY_CARD: pick=cursor status=cool rem=77.9 will_last=true free=cursor,claude,kimi,gemini avoid=codex(near_cap) source=routing-budget
+
+## Shippable unit
+One PR that makes public services **loopback-only** and **identifiable**, so a VPS can host them behind an SSH tunnel without a second Monitor or a public bind.
+
+## Acceptance (must all be true)
+1. Public `services.sh` `api`: `--host 127.0.0.1`, `SVC_HOST[api]=127.0.0.1`, `SVC_MATCH[api]` matches the new argv (today it matches `--host 0.0.0.0` — that **must** change or restarts will miss the process).
+2. `sources` bind is **explicit** `127.0.0.1:8766` (health already targets loopback).
+3. `work` / `astro` stay loopback. Do **not** edit the private sibling repo.
+4. `package.json` `api` / `api:bg` move off `0.0.0.0` to `127.0.0.1`. Update `docs/best-practices/local-api-server.md` and any test that asserts `--host 0.0.0.0` (`tests/test_api_resilience.py`).
+5. `GET /api/health` includes **host identity + git SHA** (hostname or configured instance id, plus exact HEAD). A tunnel to localhost must be distinguishable from a leftover Mac Monitor (Fable single-writer). Update `TestHealthEndpoint` required fields. Do not leak IPs or secrets.
+6. In-repo **systemd unit templates** that invoke existing `services.sh` semantics. No IPs, hostnames, or secrets in git. Templates only — do not install units on this machine.
+7. Gitignored endpoints example: `.agent/service-endpoints.env.example` (loopback URLs only).
+8. Tests for bind/match/health identity. Ruff clean. No secrets in logs.
+9. Open a PR against **main**, body `Refs #7048`, trailer `X-Agent: cursor/infra-7048-loopback`. **Do not merge. Do not arm auto-merge.**
+
+## Non-goals (hard)
+- Do not provision, SSH to, or resize a VPS.
+- Do not start atlas leftover-EN, #6876, Practice PRs, or any other epic.
+- Do not change the Grok Bot contract.
+- Do not bind `0.0.0.0`.
+- Do not start a second Monitor on the Mac.
+- Do not invent architecture beyond the issue acceptance list.
+
+## Evidence
+Quote the commands and raw output for every claim. Layout A: work only in this dispatch worktree.
