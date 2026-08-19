@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ac42855d7490",
+  "strategy": "manual-commit",
+  "branch": "kimi/infra-6957-cf-smoke",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_cursor_cf_identity.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ac/42855d7490/0/metadata.json",
+      "transcript": "/ac/42855d7490/0/full.jsonl",
+      "content_hash": "/ac/42855d7490/0/content_hash.txt",
+      "prompt": "/ac/42855d7490/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 93166,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3881728,
+    "output_tokens": 23656,
+    "api_call_count": 50
+  }
+}

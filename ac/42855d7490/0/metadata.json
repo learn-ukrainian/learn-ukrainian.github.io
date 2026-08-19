@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ac42855d7490",
+  "session_id": "session_c5390c72-8830-4987-aa51-9493aa884fb1",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-19T22:04:33.153338Z",
+  "branch": "kimi/infra-6957-cf-smoke",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_cursor_cf_identity.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "bad13145f77a",
+  "token_usage": {
+    "input_tokens": 93166,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3881728,
+    "output_tokens": 23656,
+    "api_call_count": 50
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-19T22:04:33.110346Z",
+    "agent_lines": 237,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 237,
+    "total_lines_changed": 237,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
