@@ -118,6 +118,7 @@ def test_streamable_http_tools_list_contains_vocabulary_vetting_tools(sources_ht
     tool_names = {tool["name"] for tool in body["result"]["tools"]}
     assert "verify_words" in tool_names
     assert "vet_vocabulary" in tool_names
+    assert "search_images" not in tool_names
 
 
 def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
@@ -185,16 +186,17 @@ def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
     )
 
 
-def test_legacy_sse_endpoint_still_emits_message_endpoint(sources_http_url):
-    text = ""
+def test_legacy_sse_paths_are_not_advertised(sources_http_url):
+    """Legacy SSE must not hang as a public GET (#7026). 404/405 are fine."""
     timeout = httpx.Timeout(2.0, connect=2.0, read=2.0, write=2.0, pool=2.0)
-    with httpx.stream("GET", f"{sources_http_url}/sse", timeout=timeout) as response:
-        assert response.status_code == 200
-        assert response.headers["content-type"].startswith("text/event-stream")
-        for chunk in response.iter_text():
-            text += chunk
-            if "event: endpoint" in text and "data: /messages/?session_id=" in text:
-                break
+    sse_response = httpx.get(f"{sources_http_url}/sse", timeout=timeout)
+    assert sse_response.status_code in {404, 405}
+    assert not sse_response.headers.get("content-type", "").startswith("text/event-stream")
 
-    assert "event: endpoint" in text
-    assert "data: /messages/?session_id=" in text
+    messages_response = httpx.post(
+        f"{sources_http_url}/messages/",
+        content=b"{}",
+        headers={"content-type": "application/json"},
+        timeout=timeout,
+    )
+    assert messages_response.status_code in {404, 405}

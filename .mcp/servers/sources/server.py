@@ -14,7 +14,7 @@ The Python backing package is still `scripts/rag/` for backwards compat
 with imports; rename there is a follow-up.
 
 Tools:
-    - search_sources, search_text, search_literary, search_external, search_images, get_chunk_context
+    - search_sources, search_text, search_literary, search_external, get_chunk_context
     - verify_word, verify_words, verify_lemma, vet_vocabulary (VESUM)
     - verify_stress (stress oracle: ukrainian-word-stress trie + override layer + VESUM join)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
@@ -153,22 +153,6 @@ async def list_tools() -> list[Tool]:
                         "description": "Max results to return (default 5, max 20)",
                         "default": 5
                     }
-                },
-                "required": ["query"]
-            },
-        ),
-        Tool(
-            name="search_images",
-            description=(
-                "Image search stub (deferred; currently returns a placeholder message)."
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "Image search query in Ukrainian (e.g., 'яблуко', 'ілюстрація букви А')"
-                    },
                 },
                 "required": ["query"]
             },
@@ -1287,7 +1271,6 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         _handlers = {
             "search_sources": lambda: handle_search_sources(arguments),
             "search_text": lambda: handle_search_text(arguments),
-            "search_images": lambda: handle_search_images(arguments),
             "search_literary": lambda: handle_search_literary(arguments),
             "search_external": lambda: handle_search_external(arguments),
             "get_full_text": lambda: handle_get_full_text(arguments),
@@ -1524,10 +1507,6 @@ async def handle_get_full_text(args: dict) -> list[TextContent]:
         total += len(chunk_text)
 
     return [TextContent(type="text", text="\n\n---\n\n".join(text_parts))]
-
-
-async def handle_search_images(args: dict) -> list[TextContent]:
-    return [TextContent(type="text", text="Image search deferred — will be available for l2-uk-direct track.")]
 
 
 async def handle_get_chunk_context(args: dict) -> list[TextContent]:
@@ -2450,39 +2429,18 @@ class _RejectUnsupportedStatelessMcpMethods:
 
 
 def create_http_app():
-    """Create the standalone HTTP app with SSE and Streamable HTTP transports.
+    """Create the standalone HTTP app with Streamable HTTP transport.
 
     Uses MCP 2.0's built-in ``Server.streamable_http_app`` for the
     streamable-HTTP endpoint, with ``stateless_http=True`` and
     ``json_response=True`` so each request is independent and answered with a
-    single JSON body. The legacy SSE endpoint and ``/health`` are wired as
-    custom Starlette routes. GET/DELETE on ``/mcp`` are rejected with 405 so
-    Streamable HTTP clients do not hang on an empty SSE notification stream.
+    single JSON body. Public routes are ``/mcp`` and ``/health`` only — legacy
+    SSE (``/sse``, ``/messages/``) is not advertised. GET/DELETE on ``/mcp``
+    are rejected with 405 so Streamable HTTP clients do not hang on an empty
+    SSE notification stream.
     """
-    from mcp.server.sse import SseServerTransport
     from starlette.responses import Response
-    from starlette.routing import Mount, Route
-
-    sse = SseServerTransport("/messages/")
-
-    class SseEndpoint:
-        """ASGI endpoint for the legacy SSE transport."""
-
-        async def __call__(self, scope, receive, send):
-            try:
-                async with sse.connect_sse(scope, receive, send) as (
-                    read_stream,
-                    write_stream,
-                ):
-                    await server.run(
-                        read_stream,
-                        write_stream,
-                        server.create_initialization_options(),
-                    )
-            except Exception:
-                # Client disconnected (Gemini timeout, rate limit, etc.)
-                # This is normal — don't crash the server
-                pass
+    from starlette.routing import Route
 
     def _get_git_commit() -> str:
         try:
@@ -2511,8 +2469,6 @@ def create_http_app():
 
     custom_routes = [
         Route("/health", endpoint=handle_health),
-        Route("/sse", endpoint=SseEndpoint()),
-        Mount("/messages/", app=sse.handle_post_message),
     ]
 
     app = server.streamable_http_app(
@@ -2525,7 +2481,7 @@ def create_http_app():
 
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
-    """Run the MCP sources server as a standalone SSE daemon."""
+    """Run the MCP sources server as a standalone Streamable HTTP daemon."""
     import uvicorn
 
     # Verify SQLite sources database exists
@@ -2540,10 +2496,9 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     # (MCP 2.0's Server.run no longer accepts that parameter).
     app = create_http_app()
 
-    print(f"MCP Sources Server (SSE) running on http://{host}:{port}")
-    print(f"  SSE endpoint: http://{host}:{port}/sse")
+    print(f"MCP Sources Server running on http://{host}:{port}")
     print(f"  Streamable HTTP endpoint: http://{host}:{port}/mcp")
-    print(f"  Messages: http://{host}:{port}/messages/")
+    print(f"  Health: http://{host}:{port}/health")
     sys.stdout.flush()
 
     config = uvicorn.Config(app, host=host, port=port, log_level="warning")
