@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import re
+import threading
 import time
 
 import pytest
@@ -273,20 +275,103 @@ def test_load_endpoint_ip_sanitization_and_forbidden_fields(
 
 def test_load_endpoint_dead_host_isolation(
     _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     router_mod.clear_host_load_cache()
-    # atlas-runner has fresh cache, hramatka has no cache / failed
-    router_mod.set_host_load_cache("atlas-runner", _isolate.host_load("atlas-runner"))
+    monkeypatch.setattr(router_mod, "_canonical_allowed_hosts", lambda: ["job-box", "teach-box"])
+    live_host, dead_host = "job-box", "teach-box"
+    original_host_load = _isolate.host_load
+
+    def host_load(host: str) -> dict:
+        if host == dead_host:
+            raise ConnectionError("unreachable")
+        return original_host_load(host)
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+    router_mod.set_host_load_cache(live_host, _isolate.host_load(live_host))
 
     resp = client.get("/api/atlas-jobs/load")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["hosts"]["atlas-runner"]["status"] == "fresh"
-    assert data["hosts"]["hramatka"]["status"] == "unavailable"
-    assert data["hosts"]["hramatka"]["error"] == "unreachable"
+    assert data["hosts"][live_host]["status"] == "fresh"
+    assert data["hosts"][dead_host]["status"] == "unavailable"
+    assert data["hosts"][dead_host]["error"] == "unreachable"
     # Never zero-fill healthy metrics on unavailable host
-    assert "cpu_count" not in data["hosts"]["hramatka"]
-    assert "mem" not in data["hosts"]["hramatka"]
+    assert "cpu_count" not in data["hosts"][dead_host]
+    assert "mem" not in data["hosts"][dead_host]
+
+
+def test_load_endpoint_awaits_missing_expired_and_fresh_probes(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "_canonical_allowed_hosts", lambda: ["job-box", "teach-box"])
+    expired = _isolate.host_load("job-box")
+    expired["cpu_count"] = 1
+    router_mod.set_host_load_cache(
+        "job-box",
+        expired,
+        mono_ts=time.monotonic() - router_mod.HOST_LOAD_MAX_STALE_S - 1.0,
+    )
+
+    response = client.get("/api/atlas-jobs/load")
+    assert response.status_code == 200
+    hosts = response.json()["hosts"]
+    assert hosts["job-box"]["status"] == "fresh"
+    assert hosts["job-box"]["cpu_count"] == 4
+    assert hosts["teach-box"]["status"] == "fresh"
+    assert hosts["teach-box"]["cpu_count"] == 4
+
+    cached = _isolate.host_load("job-box")
+    cached["cpu_count"] = 1
+    router_mod.set_host_load_cache("job-box", cached)
+    fresh_response = client.get("/api/atlas-jobs/load?host=job-box&fresh=true")
+    assert fresh_response.status_code == 200
+    fresh_host = fresh_response.json()["hosts"]["job-box"]
+    assert fresh_host["status"] == "fresh"
+    assert fresh_host["cpu_count"] == 4
+
+
+def test_load_entry_awaits_an_inflight_probe(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    router_mod.clear_host_load_cache()
+    probe_started = threading.Event()
+    release_probe = threading.Event()
+    calls = 0
+    original_host_load = _isolate.host_load
+
+    def host_load(host: str) -> dict:
+        nonlocal calls
+        calls += 1
+        probe_started.set()
+        assert release_probe.wait(timeout=1.0)
+        return original_host_load(host)
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+
+    async def exercise() -> dict:
+        scheduled = router_mod._schedule_host_load_refresh("job-box")
+        assert scheduled is not None
+        assert await asyncio.to_thread(probe_started.wait, 1.0)
+
+        waiting_entry = asyncio.create_task(router_mod._get_host_load_entry_async("job-box"))
+        await asyncio.sleep(0)
+        assert not waiting_entry.done()
+
+        release_probe.set()
+        return await waiting_entry
+
+    try:
+        entry = asyncio.run(exercise())
+        assert calls == 1
+        assert entry["status"] == "fresh"
+        assert entry["cpu_count"] == 4
+    finally:
+        release_probe.set()
+        router_mod.clear_host_load_cache()
 
 
 def test_load_stale_while_revalidate_cache_lifecycle(

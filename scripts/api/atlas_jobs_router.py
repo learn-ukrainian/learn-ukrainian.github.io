@@ -126,12 +126,14 @@ def _probe_host_load_sync(host: str) -> tuple[dict[str, Any] | None, str]:
 
 
 async def _refresh_host_load_job(host: str) -> None:
+    task = asyncio.current_task()
     try:
         data, now_iso = await asyncio.to_thread(_probe_host_load_sync, host)
         if data is not None:
             _HOST_LOAD_CACHE[host] = (data, time.monotonic(), now_iso)
     finally:
-        _HOST_LOAD_TASKS.pop(host, None)
+        if _HOST_LOAD_TASKS.get(host) is task:
+            _HOST_LOAD_TASKS.pop(host, None)
 
 
 def _schedule_host_load_refresh(host: str) -> asyncio.Task[None] | None:
@@ -192,6 +194,22 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
     }
 
 
+async def _get_host_load_entry_async(host: str, *, fresh: bool = False) -> dict[str, Any]:
+    """Read host load, awaiting the shared probe when no usable cache exists."""
+    entry = _HOST_LOAD_CACHE.get(host)
+    needs_probe_result = fresh or entry is None
+    if entry is not None:
+        _, mono_ts, _ = entry
+        needs_probe_result = needs_probe_result or time.monotonic() - mono_ts > HOST_LOAD_MAX_STALE_S
+
+    if needs_probe_result:
+        task = _schedule_host_load_refresh(host)
+        if task is not None:
+            await asyncio.shield(task)
+
+    return _get_host_load_entry(host)
+
+
 def _encode_cursor(closed_at: str | None, job_id: str) -> str:
     payload = json.dumps([closed_at or "", job_id])
     return base64.urlsafe_b64encode(payload.encode("utf-8")).decode("ascii")
@@ -238,9 +256,8 @@ async def load_jobs(
     else:
         target_hosts = all_hosts
 
-    hosts_data: dict[str, Any] = {}
-    for h in target_hosts:
-        hosts_data[h] = _get_host_load_entry(h, fresh=fresh)
+    entries = await asyncio.gather(*(_get_host_load_entry_async(h, fresh=fresh) for h in target_hosts))
+    hosts_data = dict(zip(target_hosts, entries, strict=True))
 
     now_iso = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     payload = {
