@@ -4524,6 +4524,30 @@ def _run_worker(
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
+    from scripts.orchestration.job_host_exec import (
+        decide_dispatch_placement,
+        forward_dispatch,
+        notebook_fallback_after_forward,
+    )
+
+    placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
+    if placement == "vps" and host_id:
+        print(f"→ forwarding dispatch to {host_id}", file=sys.stderr)
+        forward_error: BaseException | None = None
+        forward_rc: int | None = None
+        try:
+            forward_rc = forward_dispatch(host_id=host_id, argv=sys.argv)
+        except (ValueError, FileNotFoundError, OSError) as exc:
+            forward_error = exc
+        if not notebook_fallback_after_forward(forward_rc, error=forward_error):
+            return int(forward_rc or 0)
+        why = str(forward_error) if forward_error is not None else f"ssh rc {forward_rc}"
+        print(
+            f"⚠️  VPS forward failed ({why}); spawning on notebook",
+            file=sys.stderr,
+        )
+    elif reason in {"unavailable", "full"}:
+        print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
     from agent_runtime.attribution import resolve_invocation_attribution

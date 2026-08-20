@@ -564,6 +564,12 @@ launcher_main() {
   launcher_adapter_validate
   launcher_adapter_preflight
 
+  if [ "$LC_DRY_RUN" != "1" ]; then
+    if declare -F fleet_comms_warn_if_plane_unreachable >/dev/null 2>&1; then
+      fleet_comms_warn_if_plane_unreachable
+    fi
+  fi
+
   # Agent-extensions staleness gate (restored from the pre-cutover
   # start-claude.sh, now for EVERY provider): a session launched against stale
   # deployed hooks/rules runs retired definitions — refuse rather than launch.
