@@ -418,12 +418,31 @@ def test_forward_dispatch_missing_ssh_is_transport_error(
         )
 
 
+def test_forward_dispatch_unexecutable_ssh_is_transport_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    fake_ssh.chmod(0o644)
+    monkeypatch.setenv("PATH", str(fake_bin))
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    with pytest.raises(jh.SshTransportError):
+        jh.forward_dispatch(
+            host_id="host-job",
+            argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
+        )
+
+
 def test_notebook_fallback_only_on_transport_failure() -> None:
     assert jh.notebook_fallback_after_forward(None, error=ValueError("missing host")) is False
     assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/local.json")) is False
     assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/ssh")) is False
     assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("ssh")) is False
     assert jh.notebook_fallback_after_forward(None, error=jh.SshTransportError("ssh missing")) is True
+    assert jh.notebook_fallback_after_forward(None, error=jh.SshTransportError("Permission denied")) is True
     assert jh.notebook_fallback_after_forward(255) is True
     assert jh.notebook_fallback_after_forward(0) is False
     assert jh.notebook_fallback_after_forward(2) is False

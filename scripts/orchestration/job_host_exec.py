@@ -401,8 +401,9 @@ def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | No
 
     Occupancy miss/full is decided before forward. Payload errors
     (missing local files, ``--cwd``, bad host config) must fail closed —
-    they are not a reason to spawn on Darwin. Missing ``ssh`` is classified
-    by ``SshTransportError`` from the exec site, not by filename basename.
+    they are not a reason to spawn on Darwin. Missing or unexecutable ``ssh``
+    is classified by ``SshTransportError`` from the exec site
+    (``FileNotFoundError`` / ``PermissionError``), not by filename basename.
     """
     if isinstance(error, SshTransportError):
         return True
@@ -436,7 +437,7 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
             check=False,
             input=stdin,
         )
-    except FileNotFoundError as exc:
+    except (FileNotFoundError, PermissionError) as exc:
         raise SshTransportError(str(exc)) from exc
     return int(completed.returncode)
 
