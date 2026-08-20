@@ -842,3 +842,62 @@ def test_mirror_dir_for_uses_primary_data(
     assert atlas_job.mirror_dir_for("job-1").resolve() == Path(
         "/tmp/primary-checkout/data/lexicon/runner-mirror/job-1"
     ).resolve()
+
+
+def test_collect_host_load_shape(tmp_path: Path) -> None:
+    payload = atlas_job.collect_host_load(run_root=tmp_path)
+    assert payload["cpu_count"] >= 1
+    assert len(payload["loadavg"]) == 3
+    assert set(payload["mem"]) == {"available_bytes", "total_bytes", "pct"}
+    assert set(payload["disk"]) == {"available_bytes", "total_bytes", "pct"}
+    assert payload["disk"]["total_bytes"] > 0
+    assert set(payload["job_unit"]) == {"active_count", "job_id", "state"}
+
+
+def test_ssh_host_load_skips_ssh_for_self_host(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "job-box")
+    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path))
+    real_run = atlas_job.subprocess.run
+
+    def guarded(cmd: list[str], **kwargs: object) -> object:
+        if cmd and cmd[0] == "ssh":
+            raise AssertionError("ssh must not run for self-host load")
+        return real_run(cmd, **kwargs)
+
+    monkeypatch.setattr(atlas_job.subprocess, "run", guarded)
+    payload = atlas_job.SshHostAdapter().host_load("job-box")
+    assert "cpu_count" in payload
+    assert "loadavg" in payload
+    assert "mem" in payload
+    assert "disk" in payload
+
+
+def test_ssh_host_load_uses_ssh_when_not_self(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    seen: list[list[str]] = []
+
+    def fake_run(cmd: list[str], **kwargs: object) -> object:
+        seen.append(list(cmd))
+
+        class Result:
+            returncode = 1
+            stdout = ""
+            stderr = ""
+
+        return Result()
+
+    monkeypatch.setattr(atlas_job.subprocess, "run", fake_run)
+    with pytest.raises(ConnectionError, match="host_load failed"):
+        atlas_job.SshHostAdapter().host_load("job-box")
+    assert seen
+    assert seen[0][0] == "ssh"
+    assert "job-box" in seen[0]
+
+
+def test_is_self_host_uses_canonical_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "vps")
+    assert atlas_job.is_self_host("hramatka") is True
+    assert atlas_job.is_self_host("vps") is True
+    assert atlas_job.is_self_host("job-box") is False

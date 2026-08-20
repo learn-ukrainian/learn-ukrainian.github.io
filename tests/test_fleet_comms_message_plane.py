@@ -80,6 +80,25 @@ def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
     )
 
 
+def test_default_plane_root_refuses_retired_local_marker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.fleet_comms.paths import PlaneRootAnchorError, RETIRED_LOCAL_MARKER
+
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
+    primary = tmp_path / "primary"
+    (primary / ".git").mkdir(parents=True)
+    plane = primary / "batch_state" / "fleet-comms" / "v1"
+    plane.mkdir(parents=True)
+    (plane / RETIRED_LOCAL_MARKER).write_text("retired\n", encoding="utf-8")
+    with pytest.raises(PlaneRootAnchorError, match="retired"):
+        default_plane_root(repo_root=primary)
+
+    monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
+    assert default_plane_root(repo_root=primary) == plane.resolve()
+
+
 def test_default_plane_root_makes_relative_override_stable(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
