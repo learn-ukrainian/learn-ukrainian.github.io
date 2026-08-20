@@ -7,6 +7,7 @@ path. Canonical SSH aliases never appear as JSON keys. Map them with
 
 from __future__ import annotations
 
+import asyncio
 import os
 import re
 from datetime import UTC, datetime
@@ -168,26 +169,31 @@ def _shape_host(host_id: str, load_entry: dict[str, Any], occupants: list[dict[s
     return shaped
 
 
-def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:
+def _selected_hosts(host_id: str | None) -> dict[str, str]:
     mapping = parse_host_id_map()
     if not mapping:
-        return {
-            "schema": OCCUPANCY_SCHEMA,
-            "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-            "hosts": {},
-        }
+        return {}
 
     reverse = {opaque: canonical for canonical, opaque in mapping.items()}
     if host_id is not None:
         if host_id not in reverse:
             raise HTTPException(status_code=400, detail="unknown host_id")
-        selected = {host_id: reverse[host_id]}
-    else:
-        selected = {opaque: canonical for canonical, opaque in mapping.items()}
+        return {host_id: reverse[host_id]}
+    return {opaque: canonical for canonical, opaque in mapping.items()}
 
+
+def _empty_payload() -> dict[str, Any]:
+    return {
+        "schema": OCCUPANCY_SCHEMA,
+        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "hosts": {},
+    }
+
+
+def _payload_from_entries(selected: dict[str, str], load_entries: dict[str, dict[str, Any]]) -> dict[str, Any]:
     hosts: dict[str, Any] = {}
     for opaque, canonical in selected.items():
-        load_entry = load_mod._get_host_load_entry(canonical, fresh=fresh)
+        load_entry = load_entries[canonical]
         occupants = _merge_occupants(
             _occupants_from_registry(canonical),
             _occupants_from_job_unit(canonical, load_entry),
@@ -201,10 +207,32 @@ def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dic
     }
 
 
+def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:
+    """Build the synchronous cache-only payload for non-HTTP callers."""
+    selected = _selected_hosts(host_id)
+    if not selected:
+        return _empty_payload()
+
+    load_entries = {canonical: load_mod._get_host_load_entry(canonical, fresh=fresh) for canonical in selected.values()}
+    return _payload_from_entries(selected, load_entries)
+
+
+async def _occupancy_payload_async(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:
+    selected = _selected_hosts(host_id)
+    if not selected:
+        return _empty_payload()
+
+    entries = await asyncio.gather(
+        *(load_mod._get_host_load_entry_async(canonical, fresh=fresh) for canonical in selected.values())
+    )
+    load_entries = dict(zip(selected.values(), entries, strict=True))
+    return _payload_from_entries(selected, load_entries)
+
+
 @router.get("")
 async def occupancy(
     host_id: str | None = Query(default=None),
     fresh: bool = False,
 ) -> JSONResponse:
-    payload = occupancy_payload(host_id=host_id, fresh=fresh)
+    payload = await _occupancy_payload_async(host_id=host_id, fresh=fresh)
     return JSONResponse(content=payload, headers={"Cache-Control": "no-store"})

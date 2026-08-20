@@ -233,9 +233,11 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 ### `GET /api/occupancy[?host_id=x][&fresh=true]`
 
-Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board, no SSH on the request path). Host keys are opaque `host_id` values from `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Without that map the `hosts` object is empty — canonical aliases are never used as JSON keys.
+Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). Host keys are opaque `host_id` values from `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Without that map the `hosts` object is empty — canonical aliases are never used as JSON keys.
 
 Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service`. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
+
+On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. Cached metrics between 30 and 300 seconds old may still be returned as `stale` while a refresh runs.
 
 When Monitor runs on the same machine as one mapped host, set `ATLAS_JOB_SELF_HOST` to that host's canonical token (the left-hand side of `MONITOR_OCCUPANCY_HOST_IDS`). Load is then collected locally — no SSH-to-self. Remote mapped hosts still use BatchMode SSH; they need a working operator SSH config on the Monitor host.
 
@@ -3275,4 +3277,3 @@ Query params: `host` (default `atlas-runner`), `audit` (default `false`).
 ### `POST /api/atlas-jobs/{job_id}/close`
 Closes a completed or crashed job, captures exit status, pulls mirror artifacts, runs restic backup, and seals a fail-closed result receipt (`.result.json`).
 Body: `{"summary": {...}, "skip_pull": false, "skip_restic": false}`.
-

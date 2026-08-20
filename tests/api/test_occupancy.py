@@ -111,12 +111,56 @@ def test_occupancy_shape_uses_placeholders(tmp_path, monkeypatch) -> None:
         load_mod.clear_host_load_cache()
 
 
+def test_occupancy_awaits_missing_expired_and_fresh_load_probes(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        expired = fake.host_load("job-box")
+        expired["cpu_count"] = 1
+        load_mod.set_host_load_cache(
+            "job-box",
+            expired,
+            mono_ts=time.monotonic() - load_mod.HOST_LOAD_MAX_STALE_S - 1.0,
+        )
+
+        resp = client.get("/api/occupancy")
+        assert resp.status_code == 200
+        hosts = resp.json()["hosts"]
+        assert hosts["host-job"]["status"] == "fresh"
+        assert hosts["host-job"]["cpu_count"] == 4
+        assert hosts["host-teacher"]["status"] == "fresh"
+        assert hosts["host-teacher"]["cpu_count"] == 4
+
+        cached = fake.host_load("job-box")
+        cached["cpu_count"] = 1
+        load_mod.set_host_load_cache("job-box", cached)
+        fresh_resp = client.get("/api/occupancy?host_id=host-job&fresh=true")
+        assert fresh_resp.status_code == 200
+        fresh_host = fresh_resp.json()["hosts"]["host-job"]
+        assert fresh_host["status"] == "fresh"
+        assert fresh_host["cpu_count"] == 4
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
 def test_occupancy_unavailable_has_no_metrics_or_ssh_text(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
+        original_host_load = fake.host_load
+
+        def host_load(host: str) -> dict:
+            if host == "teach-box":
+                raise ConnectionError("unreachable")
+            return original_host_load(host)
+
+        monkeypatch.setattr(fake, "host_load", host_load)
         load_mod.clear_host_load_cache()
         load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
         resp = client.get("/api/occupancy")
