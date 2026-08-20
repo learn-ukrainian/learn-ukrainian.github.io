@@ -69,6 +69,14 @@ PlacementReason = Literal[
     "full",
     "available",
 ]
+_COPY_FILE_FLAGS = {
+    "--lifecycle-file": "lifecycle",
+    "--output-schema": "output-schema",
+}
+
+
+class SshTransportError(OSError):
+    """Raised when the local ssh client cannot be started."""
 
 
 def notebook_block_message(*, host_id: str | None = None) -> str:
@@ -331,27 +339,51 @@ def materialize_local_dispatch_argv(argv: list[str]) -> tuple[list[str], bytes |
     """Rewrite notebook-only paths so SSH does not send Darwin paths.
 
     ``--prompt-file`` becomes ``--prompt -`` with the body on SSH stdin.
-    ``--lifecycle-file`` is written to a content-addressed ``/tmp`` file on
-    the remote host via a base64 preamble.
+    File payloads (``--lifecycle-file``, ``--output-schema``) are written to
+    content-addressed ``/tmp`` files on the remote host via a base64 preamble.
+    ``--cwd`` is rejected: a Darwin working directory is not a VPS checkout.
+    A notebook ``--worktree PATH`` is rewritten to bare ``--worktree`` so the
+    remote checkout creates its own isolation.
     """
     out: list[str] = []
     stdin: bytes | None = None
     preambles: list[str] = []
     i = 0
     while i < len(argv):
+        cwd_path, next_i = _flag_value(argv, i, "--cwd")
+        if cwd_path is not None:
+            raise ValueError(
+                f"--cwd {cwd_path!r} is a notebook path and cannot be forwarded "
+                "to a VPS worker; omit --cwd or pass --worktree so the remote "
+                "checkout isolates itself"
+            )
         prompt_path, next_i = _flag_value(argv, i, "--prompt-file")
         if prompt_path is not None:
             stdin = Path(prompt_path).read_text(encoding="utf-8").encode("utf-8")
             out.extend(["--prompt", "-"])
             i = next_i
             continue
-        lifecycle_path, next_i = _flag_value(argv, i, "--lifecycle-file")
-        if lifecycle_path is not None:
-            body = Path(lifecycle_path).read_bytes()
-            preamble, remote_path = _remote_payload_preamble("lifecycle", body)
+        copied = False
+        for flag, kind in _COPY_FILE_FLAGS.items():
+            file_path, next_i = _flag_value(argv, i, flag)
+            if file_path is None:
+                continue
+            body = Path(file_path).read_bytes()
+            preamble, remote_path = _remote_payload_preamble(kind, body)
             preambles.append(preamble)
-            out.extend(["--lifecycle-file", remote_path])
+            out.extend([flag, remote_path])
             i = next_i
+            copied = True
+            break
+        if copied:
+            continue
+        if argv[i] == "--worktree" and i + 1 < len(argv) and not argv[i + 1].startswith("-"):
+            out.append("--worktree")
+            i += 2
+            continue
+        if argv[i].startswith("--worktree="):
+            out.append("--worktree")
+            i += 1
             continue
         out.append(argv[i])
         i += 1
@@ -368,22 +400,15 @@ def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | No
     """True only for SSH transport failure, so the notebook may spawn.
 
     Occupancy miss/full is decided before forward. Payload errors
-    (missing ``--prompt-file`` / ``--lifecycle-file``, bad host config)
-    must fail closed — they are not a reason to spawn on Darwin.
+    (missing local files, ``--cwd``, bad host config) must fail closed —
+    they are not a reason to spawn on Darwin. Missing ``ssh`` is classified
+    by ``SshTransportError`` from the exec site, not by filename basename.
     """
-    if error is None:
-        return rc == 255
-    if isinstance(error, FileNotFoundError):
-        names = []
-        if error.filename:
-            names.append(os.fsdecode(error.filename))
-        for arg in error.args:
-            if isinstance(arg, bytes):
-                names.append(os.fsdecode(arg))
-            elif isinstance(arg, str):
-                names.append(arg)
-        return any(Path(name).name == "ssh" for name in names if name)
-    return False
+    if isinstance(error, SshTransportError):
+        return True
+    if error is not None:
+        return False
+    return rc == 255
 
 
 def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
@@ -405,11 +430,14 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
         remote_repo=repo,
         extra_exports=extra_exports,
     )
-    completed = subprocess.run(
-        build_ssh_argv(alias, remote),
-        check=False,
-        input=stdin,
-    )
+    try:
+        completed = subprocess.run(
+            build_ssh_argv(alias, remote),
+            check=False,
+            input=stdin,
+        )
+    except FileNotFoundError as exc:
+        raise SshTransportError(str(exc)) from exc
     return int(completed.returncode)
 
 

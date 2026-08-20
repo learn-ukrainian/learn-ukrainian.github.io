@@ -4525,6 +4525,7 @@ def _run_worker(
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
     from scripts.orchestration.job_host_exec import (
+        SshTransportError,
         decide_dispatch_placement,
         forward_dispatch,
         notebook_fallback_after_forward,
@@ -4537,6 +4538,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         forward_rc: int | None = None
         try:
             forward_rc = forward_dispatch(host_id=host_id, argv=sys.argv)
+        except SshTransportError as exc:
+            forward_error = exc
         except (ValueError, FileNotFoundError, OSError) as exc:
             forward_error = exc
         if not notebook_fallback_after_forward(forward_rc, error=forward_error):

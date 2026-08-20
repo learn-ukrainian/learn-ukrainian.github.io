@@ -304,10 +304,126 @@ def test_forward_dispatch_copies_lifecycle_file(
     assert "base64 -d >" in recorded
 
 
+def test_forward_dispatch_copies_output_schema(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    schema = tmp_path / "review.schema.json"
+    schema.write_text('{"type":"object"}\n', encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--output-schema",
+            str(schema),
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    assert str(schema) not in recorded
+    assert "--output-schema" in recorded
+    assert "/tmp/lu-dispatch-output-schema-" in recorded
+    assert "base64 -d >" in recorded
+
+
+def test_forward_dispatch_rejects_notebook_cwd(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    with pytest.raises(ValueError, match="--cwd"):
+        jh.forward_dispatch(
+            host_id="host-job",
+            argv=[
+                "scripts/delegate.py",
+                "dispatch",
+                "--agent",
+                "codex",
+                "--task-id",
+                "cf",
+                "--cwd",
+                str(tmp_path),
+            ],
+        )
+
+
+def test_forward_dispatch_strips_notebook_worktree_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    local_wt = tmp_path / "wt"
+    local_wt.mkdir()
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--worktree",
+            str(local_wt),
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    assert str(local_wt) not in recorded
+    assert "--worktree" in recorded
+
+
+def test_forward_dispatch_missing_ssh_is_transport_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    monkeypatch.setenv("PATH", str(empty))
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    with pytest.raises(jh.SshTransportError):
+        jh.forward_dispatch(
+            host_id="host-job",
+            argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
+        )
+
+
 def test_notebook_fallback_only_on_transport_failure() -> None:
     assert jh.notebook_fallback_after_forward(None, error=ValueError("missing host")) is False
     assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/local.json")) is False
-    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("ssh")) is True
+    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/ssh")) is False
+    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("ssh")) is False
+    assert jh.notebook_fallback_after_forward(None, error=jh.SshTransportError("ssh missing")) is True
     assert jh.notebook_fallback_after_forward(255) is True
     assert jh.notebook_fallback_after_forward(0) is False
     assert jh.notebook_fallback_after_forward(2) is False
