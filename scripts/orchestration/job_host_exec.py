@@ -307,6 +307,28 @@ def build_remote_command(
     return f"{prefix}; cd {shlex.quote(remote_repo)} && {quoted}"
 
 
+def materialize_local_prompt_argv(argv: list[str]) -> tuple[list[str], bytes | None]:
+    """Rewrite local ``--prompt-file`` to ``--prompt -`` so SSH can carry the body."""
+    out: list[str] = []
+    stdin: bytes | None = None
+    i = 0
+    while i < len(argv):
+        item = argv[i]
+        if item == "--prompt-file" and i + 1 < len(argv):
+            stdin = Path(argv[i + 1]).read_text(encoding="utf-8").encode("utf-8")
+            out.extend(["--prompt", "-"])
+            i += 2
+            continue
+        if item.startswith("--prompt-file="):
+            stdin = Path(item.split("=", 1)[1]).read_text(encoding="utf-8").encode("utf-8")
+            out.extend(["--prompt", "-"])
+            i += 1
+            continue
+        out.append(item)
+        i += 1
+    return out, stdin
+
+
 def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | None = None) -> bool:
     """True when VPS forward failed in transport, so the notebook may spawn."""
     if error is not None:
@@ -324,12 +346,17 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
         raise ValueError("dispatch argv is empty")
     alias = ssh_alias_for_host_id(host_id)
     repo = repo_for_host_id(host_id)
+    rest, stdin = materialize_local_prompt_argv(list(argv[1:]))
     remote = build_remote_command(
-        [".venv/bin/python", "scripts/delegate.py", *argv[1:]],
+        [".venv/bin/python", "scripts/delegate.py", *rest],
         remote_repo=repo,
         extra_exports=[f"export {ENV_ALLOW_NOTEBOOK}=1"],
     )
-    completed = subprocess.run(build_ssh_argv(alias, remote), check=False)
+    completed = subprocess.run(
+        build_ssh_argv(alias, remote),
+        check=False,
+        input=stdin,
+    )
     return int(completed.returncode)
 
 

@@ -218,6 +218,47 @@ def test_forward_dispatch_sets_allow_notebook(tmp_path: Path, monkeypatch: pytes
     assert "--agent" in recorded
 
 
+def test_forward_dispatch_inlines_prompt_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    stdin_file = tmp_path / "ssh.stdin"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        f"cat > {stdin_file}\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    prompt = tmp_path / "brief.md"
+    prompt.write_text("review PR 7070 exact head\n", encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--prompt-file",
+            str(prompt),
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    assert "--prompt-file" not in recorded
+    assert "--prompt" in recorded
+    assert stdin_file.read_text(encoding="utf-8") == "review PR 7070 exact head\n"
+
+
 def test_notebook_fallback_only_on_transport_failure() -> None:
     assert jh.notebook_fallback_after_forward(None, error=ValueError("missing host")) is True
     assert jh.notebook_fallback_after_forward(255) is True
