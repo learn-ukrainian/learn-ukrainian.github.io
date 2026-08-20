@@ -45,7 +45,9 @@ box. Do not raise these limits for hramatka jobs without checking headroom
 against the resident services first.
 
 SSH aliases live in the operator `~/.ssh/config`. IAC: private
-`hramatka/ops/iac/` (merged #495).
+`hramatka/ops/iac/` (merged #495). Occupancy/load on the Monitor host
+itself uses `ATLAS_JOB_SELF_HOST` (local collection, no SSH-to-self).
+Remote mapped hosts still need BatchMode SSH from that Monitor host.
 
 ## Lifecycle
 

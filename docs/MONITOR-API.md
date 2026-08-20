@@ -237,6 +237,8 @@ Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second p
 
 Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service`. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
 
+When Monitor runs on the same machine as one mapped host, set `ATLAS_JOB_SELF_HOST` to that host's canonical token (the left-hand side of `MONITOR_OCCUPANCY_HOST_IDS`). Load is then collected locally — no SSH-to-self. Remote mapped hosts still use BatchMode SSH; they need a working operator SSH config on the Monitor host.
+
 Examples and fixtures use placeholders only (`host-job`, `host-teacher`). Never put addresses, SSH hostnames, or provider SKUs in this payload.
 
 ```bash

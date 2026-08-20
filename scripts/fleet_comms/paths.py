@@ -11,11 +11,32 @@ from scripts.guardrails.worktree_containment import (
 )
 
 ENV_ROOT = "FLEET_COMMS_ROOT"
+ENV_ALLOW_LOCAL_SHADOW = "FLEET_COMMS_ALLOW_LOCAL_SHADOW"
 DEFAULT_ROOT_REL = Path("batch_state") / "fleet-comms" / "v1"
+RETIRED_LOCAL_MARKER = "READ_ME_CANONICAL_ON_JOB_HOST.txt"
 
 
 class PlaneRootAnchorError(RuntimeError):
     """Raised when the plane root cannot be anchored to the primary checkout."""
+
+
+def _refuse_retired_local_plane(root: Path) -> None:
+    """Fail closed when the notebook copy has been retired to the job host.
+
+    The marker is an ordinary file in the plane root (gitignored). Tests and
+    explicit recovery set ``FLEET_COMMS_ALLOW_LOCAL_SHADOW=1``.
+    """
+    if os.environ.get(ENV_ALLOW_LOCAL_SHADOW, "").strip() == "1":
+        return
+    marker = root / RETIRED_LOCAL_MARKER
+    sibling = root.parent / RETIRED_LOCAL_MARKER
+    if marker.is_file() or sibling.is_file():
+        raise PlaneRootAnchorError(
+            "local fleet-comms sqlite is retired; the job-host Monitor owns "
+            "the canonical plane. Do not chmod the stub directory. Observe "
+            "via the tunneled API, or set FLEET_COMMS_ALLOW_LOCAL_SHADOW=1 "
+            "only for an isolated fixture."
+        )
 
 
 def default_plane_root(
@@ -41,7 +62,9 @@ def default_plane_root(
     """
     env = os.environ.get(ENV_ROOT)
     if env:
-        return Path(env).expanduser().resolve()
+        root = Path(env).expanduser().resolve()
+        _refuse_retired_local_plane(root)
+        return root
 
     candidate = repo_root if repo_root is not None else Path.cwd()
     try:
@@ -51,10 +74,12 @@ def default_plane_root(
             raise PlaneRootAnchorError(
                 f"refusing to anchor the fleet-comms plane root at {candidate}: "
                 "not inside a git repository, so the primary checkout cannot be "
-                "verified. A silent fallback here once materialized a shadow comms "
-                "DB under a garbage cwd (#6863). Set FLEET_COMMS_ROOT for an "
+                "verified. A silent fallback here once materialized a shadow "
+                "comms DB under a garbage cwd (#6863). Set FLEET_COMMS_ROOT for an "
                 "explicit override, or pass allow_non_git=True for an isolated "
                 "non-git fixture."
             ) from exc
         base = candidate.resolve()
-    return (base / DEFAULT_ROOT_REL).resolve()
+    root = (base / DEFAULT_ROOT_REL).resolve()
+    _refuse_retired_local_plane(root)
+    return root

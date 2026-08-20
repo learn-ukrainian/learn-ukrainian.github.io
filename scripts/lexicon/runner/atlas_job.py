@@ -19,6 +19,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -236,6 +237,126 @@ class FakeHostAdapter:
         }
 
 
+ENV_SELF_HOST = "ATLAS_JOB_SELF_HOST"
+
+
+def self_host_aliases() -> frozenset[str]:
+    """Canonical host tokens this process should probe without SSH."""
+    raw = os.environ.get(ENV_SELF_HOST, "")
+    return frozenset(
+        _canonical_host(part.strip()) for part in raw.split(",") if part.strip()
+    )
+
+
+def is_self_host(host: str) -> bool:
+    return _canonical_host(host) in self_host_aliases()
+
+
+def collect_host_load(*, run_root: Path) -> dict[str, Any]:
+    """Collect cpu/load/mem/disk/job_unit on the current machine.
+
+    Same shape as the SSH remote snippet in ``SshHostAdapter.host_load``.
+    Used when ``ATLAS_JOB_SELF_HOST`` says this process already lives on
+    the target host, so occupancy does not SSH-to-self.
+    """
+    cpu_count = os.cpu_count() or 1
+    try:
+        loadavg = [round(float(x), 2) for x in os.getloadavg()]
+    except Exception:
+        loadavg = [0.0, 0.0, 0.0]
+
+    mem_total = 0
+    mem_avail = 0
+    try:
+        with open("/proc/meminfo", encoding="utf-8") as handle:
+            for line in handle:
+                parts = line.split()
+                if len(parts) < 2:
+                    continue
+                key = parts[0].rstrip(":")
+                if key == "MemTotal":
+                    mem_total = int(parts[1]) * 1024
+                elif key == "MemAvailable":
+                    mem_avail = int(parts[1]) * 1024
+    except OSError:
+        pass
+    mem_pct = (
+        round((mem_total - mem_avail) / mem_total * 100.0, 1) if mem_total > 0 else 0.0
+    )
+
+    path = Path(run_root)
+    while not path.exists() and path != path.parent:
+        path = path.parent
+    try:
+        usage = shutil.disk_usage(str(path))
+        disk_total = usage.total
+        disk_avail = usage.free
+        disk_pct = (
+            round((usage.total - usage.free) / usage.total * 100.0, 1)
+            if usage.total > 0
+            else 0.0
+        )
+    except OSError:
+        disk_total = 0
+        disk_avail = 0
+        disk_pct = 0.0
+
+    active_count = 0
+    active_job_id = None
+    active_state = None
+    try:
+        result = subprocess.run(
+            [
+                "systemctl",
+                "--user",
+                "list-units",
+                "atlas-job-*.service",
+                "--all",
+                "--no-legend",
+                "--no-pager",
+                "--plain",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        for line in (result.stdout or "").splitlines():
+            parts = line.split()
+            if len(parts) < 4:
+                continue
+            name, _load, active, sub = parts[0], parts[1], parts[2], parts[3]
+            if not (name.startswith("atlas-job-") and name.endswith(".service")):
+                continue
+            if active != "active":
+                continue
+            active_count += 1
+            if active_job_id is None:
+                active_job_id = name[len("atlas-job-") : -len(".service")]
+                active_state = sub or active
+    except OSError:
+        pass
+
+    return {
+        "cpu_count": cpu_count,
+        "loadavg": loadavg,
+        "mem": {
+            "available_bytes": mem_avail,
+            "total_bytes": mem_total,
+            "pct": mem_pct,
+        },
+        "disk": {
+            "available_bytes": disk_avail,
+            "total_bytes": disk_total,
+            "pct": disk_pct,
+        },
+        "job_unit": {
+            "active_count": active_count,
+            "job_id": active_job_id,
+            "state": active_state,
+        },
+    }
+
+
 class SshHostAdapter:
     """Production adapter: BatchMode SSH to the named host alias."""
 
@@ -329,7 +450,10 @@ class SshHostAdapter:
         return int(text)
 
     def host_load(self, host: str) -> dict[str, Any]:
-        target = str(_run_root(host))
+        canonical = _canonical_host(host)
+        if is_self_host(canonical):
+            return collect_host_load(run_root=_run_root(canonical))
+        target = str(_run_root(canonical))
         remote = (
             "python3 - <<'PY'\n"
             "import json, os, shutil, subprocess\n"
