@@ -70,6 +70,7 @@ PlacementReason = Literal[
     "available",
 ]
 _COPY_FILE_FLAGS = {
+    "--prompt-file": "prompt",
     "--lifecycle-file": "lifecycle",
     "--output-schema": "output-schema",
 }
@@ -335,18 +336,24 @@ def _remote_payload_preamble(kind: str, contents: bytes) -> tuple[str, str]:
     return preamble, remote_path
 
 
-def materialize_local_dispatch_argv(argv: list[str]) -> tuple[list[str], bytes | None, str | None]:
+def materialize_local_dispatch_argv(
+    argv: list[str],
+    *,
+    stdin_body: bytes | None = None,
+) -> tuple[list[str], bytes | None, str | None]:
     """Rewrite notebook-only paths so SSH does not send Darwin paths.
 
-    ``--prompt-file`` becomes ``--prompt -`` with the body on SSH stdin.
-    File payloads (``--lifecycle-file``, ``--output-schema``) are written to
-    content-addressed ``/tmp`` files on the remote host via a base64 preamble.
+    File payloads (``--prompt-file``, ``--lifecycle-file``, ``--output-schema``)
+    are written to content-addressed ``/tmp`` files on the remote host via a
+    base64 preamble so remote argparse still sees a real file (sparse-checkout
+    inference reads ``--prompt-file`` before stdin).
+    ``--prompt -`` is rewritten to a remote ``--prompt-file`` after the notebook
+    stdin body is captured.
     ``--cwd`` is rejected: a Darwin working directory is not a VPS checkout.
     A notebook ``--worktree PATH`` is rewritten to bare ``--worktree`` so the
     remote checkout creates its own isolation.
     """
     out: list[str] = []
-    stdin: bytes | None = None
     preambles: list[str] = []
     i = 0
     while i < len(argv):
@@ -357,10 +364,19 @@ def materialize_local_dispatch_argv(argv: list[str]) -> tuple[list[str], bytes |
                 "to a VPS worker; omit --cwd or pass --worktree so the remote "
                 "checkout isolates itself"
             )
-        prompt_path, next_i = _flag_value(argv, i, "--prompt-file")
-        if prompt_path is not None:
-            stdin = Path(prompt_path).read_text(encoding="utf-8").encode("utf-8")
-            out.extend(["--prompt", "-"])
+        prompt_val, next_i = _flag_value(argv, i, "--prompt")
+        if prompt_val is not None:
+            if prompt_val == "-":
+                if stdin_body is None:
+                    raise ValueError(
+                        "--prompt - cannot be forwarded without the prompt body; "
+                        "pass --prompt-file"
+                    )
+                preamble, remote_path = _remote_payload_preamble("prompt", stdin_body)
+                preambles.append(preamble)
+                out.extend(["--prompt-file", remote_path])
+            else:
+                out.extend(["--prompt", prompt_val])
             i = next_i
             continue
         copied = False
@@ -387,7 +403,7 @@ def materialize_local_dispatch_argv(argv: list[str]) -> tuple[list[str], bytes |
             continue
         out.append(argv[i])
         i += 1
-    return out, stdin, ("; ".join(preambles) if preambles else None)
+    return out, None, ("; ".join(preambles) if preambles else None)
 
 
 def materialize_local_prompt_argv(argv: list[str]) -> tuple[list[str], bytes | None]:
@@ -422,7 +438,16 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
         raise ValueError("dispatch argv is empty")
     alias = ssh_alias_for_host_id(host_id)
     repo = repo_for_host_id(host_id)
-    rest, stdin, preamble = materialize_local_dispatch_argv(list(argv[1:]))
+    payload = list(argv[1:])
+    stdin_body: bytes | None = None
+    idx = 0
+    while idx < len(payload):
+        prompt_val, next_idx = _flag_value(payload, idx, "--prompt")
+        if prompt_val == "-":
+            stdin_body = sys.stdin.buffer.read()
+            break
+        idx = next_idx if prompt_val is not None else idx + 1
+    rest, _stdin, preamble = materialize_local_dispatch_argv(payload, stdin_body=stdin_body)
     extra_exports = [f"export {ENV_ALLOW_NOTEBOOK}=1"]
     if preamble:
         extra_exports.append(preamble)
@@ -435,7 +460,6 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
         completed = subprocess.run(
             build_ssh_argv(alias, remote),
             check=False,
-            input=stdin,
         )
     except (FileNotFoundError, PermissionError) as exc:
         raise SshTransportError(str(exc)) from exc

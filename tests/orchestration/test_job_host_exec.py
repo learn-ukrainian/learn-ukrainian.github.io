@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import base64
+import io
 from pathlib import Path
 
 import pytest
@@ -229,18 +231,16 @@ def test_forward_dispatch_inlines_prompt_file(
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
-    stdin_file = tmp_path / "ssh.stdin"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
-        f"cat > {stdin_file}\n"
         "exit 0\n",
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
     prompt = tmp_path / "brief.md"
-    prompt.write_text("review PR 7070 exact head\n", encoding="utf-8")
+    prompt.write_text("keep curriculum/l2-uk-en in the worktree\n", encoding="utf-8")
     monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
     monkeypatch.setenv(jh.ENV_HOST, "job-alias")
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
@@ -259,9 +259,53 @@ def test_forward_dispatch_inlines_prompt_file(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
-    assert "--prompt-file" not in recorded
-    assert "--prompt" in recorded
-    assert stdin_file.read_text(encoding="utf-8") == "review PR 7070 exact head\n"
+    assert str(prompt) not in recorded
+    assert "--prompt-file" in recorded
+    assert "/tmp/lu-dispatch-prompt-" in recorded
+    assert "\n--prompt\n-\n" not in recorded
+    assert base64.b64encode(b"keep curriculum/l2-uk-en in the worktree\n").decode("ascii") in recorded.replace("\n", "")
+
+
+def test_forward_dispatch_rewrites_prompt_dash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    class _Stdin:
+        buffer = io.BytesIO(b"touch wiki/pages.md\n")
+
+    monkeypatch.setattr(jh.sys, "stdin", _Stdin())
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--prompt",
+            "-",
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    assert "--prompt-file" in recorded
+    assert "/tmp/lu-dispatch-prompt-" in recorded
+    assert "\n--prompt\n-\n" not in recorded
+    assert base64.b64encode(b"touch wiki/pages.md\n").decode("ascii") in recorded.replace("\n", "")
 
 
 def test_forward_dispatch_copies_lifecycle_file(
