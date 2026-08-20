@@ -313,6 +313,52 @@ def test_routing_page_uses_live_monitor_sources():
     assert "Live routing budget" in html
 
 
+def test_routing_page_labels_missing_codexbar_as_host_tooling_skip():
+    html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
+    start = html.index("const CODEXBAR_HOST_TOOLING_SKIP")
+    end = html.index("function renderSummary")
+    helpers = html[start:end]
+    script = f"""
+    {helpers}
+    const missingBinary = routingRecommendationDisplay({{
+      recommendation: {{
+        primary_agent_for_code: null,
+        rationale: 'Budget snapshot empty/absent',
+        warnings: ['empty snapshot — no recommendation emitted']
+      }},
+      agents: {{
+        codex: {{codexbar: {{error_kind: 'missing_binary', auth_error: 'CodexBar CLI binary not found'}}}}
+      }}
+    }});
+    const cliNotFound = routingRecommendationDisplay({{
+      recommendation: {{primary_agent_for_code: null, warnings: []}},
+      agents: {{
+        codex: {{codexbar: {{auth_error: 'CLI not found'}}}}
+      }}
+    }});
+    const nonBinaryFailure = routingRecommendationDisplay({{
+      recommendation: {{primary_agent_for_code: null, warnings: ['empty snapshot — no recommendation emitted']}},
+      agents: {{
+        codex: {{codexbar: {{error_kind: 'timeout', auth_error: 'CodexBar CLI timed out'}}}}
+      }}
+    }});
+    console.log(JSON.stringify({{missingBinary, cliNotFound, nonBinaryFailure}}));
+    """
+    result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
+    output = json.loads(result.stdout)
+
+    assert output["missingBinary"]["title"] == "Routing Recommendation"
+    assert output["missingBinary"]["value"] == "Skipped"
+    assert "CodexBar is not installed on this host" in output["missingBinary"]["detail"]
+    assert "not an indication that routing data is empty" in output["missingBinary"]["detail"]
+    assert output["missingBinary"]["warnings"] == [
+        "Host-tooling skip: CodexBar is not installed on this host; routing recommendation omitted."
+    ]
+    assert output["cliNotFound"]["value"] == "Skipped"
+    assert output["nonBinaryFailure"]["value"] == "unknown"
+    assert output["nonBinaryFailure"]["warnings"] == ["empty snapshot — no recommendation emitted"]
+
+
 def test_shared_monitor_css_targets_unified_nav_classes():
     css = (DASHBOARDS / "monitor.css").read_text(encoding="utf-8")
     assert ".topbar .nav" not in css
