@@ -141,17 +141,70 @@ function statusPill(status) {
   return `<span class="pill ${escapeHtml(cls)}">${escapeHtml(status || 'unknown')}</span>`;
 }
 
-function renderSummary(routing, usage, delegates) {
+const CODEXBAR_HOST_TOOLING_SKIP = {
+  warning: 'Host-tooling skip: CodexBar is not installed on this host; routing recommendation omitted.',
+  detail: 'CodexBar is not installed on this host, so the routing recommendation is omitted. This is a host-tooling skip, not an indication that routing data is empty; the lane tables remain available.'
+};
+
+function codexbarSnapshotIsMissingBinary(snapshot) {
+  const kind = String(
+    snapshot.error_kind || snapshot.failure_kind || snapshot.status || ''
+  ).toLowerCase();
+  const code = snapshot.error_code ?? snapshot.failure_code;
+  const details = [snapshot.auth_error, snapshot.failure_message, snapshot.message]
+    .filter(value => typeof value === 'string')
+    .join(' ')
+    .toLowerCase();
+  return kind === 'missing_binary'
+    || Number(code) === 127
+    || /\b(?:codexbar\s+)?(?:cli\s+)?(?:binary\s+)?not found\b/.test(details);
+}
+
+function codexbarHostToolingMissing(routing) {
+  const agentRecords = Object.values(routing.agents || {})
+    .filter(agent => agent && typeof agent === 'object');
+  const snapshots = agentRecords.map(agent => agent.codexbar);
+  return snapshots.length > 0
+    && snapshots.every(snapshot => snapshot && typeof snapshot === 'object')
+    && snapshots.every(codexbarSnapshotIsMissingBinary);
+}
+
+function routingRecommendationDisplay(routing) {
   const rec = routing.recommendation || {};
-  const warnings = rec.warnings || [];
+  const hostToolingSkip = !rec.primary_agent_for_code && codexbarHostToolingMissing(routing);
+  const sourceWarnings = Array.isArray(rec.warnings) ? rec.warnings : [];
+  if (hostToolingSkip) {
+    return {
+      title: 'Routing Recommendation',
+      value: 'Skipped',
+      detail: CODEXBAR_HOST_TOOLING_SKIP.detail,
+      panelClass: 'warn',
+      warnings: [
+        CODEXBAR_HOST_TOOLING_SKIP.warning,
+        ...sourceWarnings.filter(warning => !String(warning).toLowerCase().includes('empty snapshot'))
+      ]
+    };
+  }
+  return {
+    title: 'Primary Agent',
+    value: rec.primary_agent_for_code || 'unknown',
+    detail: rec.rationale || '',
+    panelClass: 'ok',
+    warnings: sourceWarnings
+  };
+}
+
+function renderSummary(routing, usage, delegates) {
+  const recommendation = routingRecommendationDisplay(routing);
+  const warnings = recommendation.warnings;
   const active = Object.values(routing.in_flight || {}).reduce((sum, val) => sum + Number(val || 0), 0);
   const recentTasks = delegates.tasks || [];
   const recentDone = recentTasks.filter(task => task.status === 'done').length;
   document.getElementById('summary-grid').innerHTML = `
-    <div class="panel ok">
-      <h3>Primary Agent</h3>
-      <div class="value">${escapeHtml(rec.primary_agent_for_code || 'unknown')}</div>
-      <div class="sub">${escapeHtml(rec.rationale || '')}</div>
+    <div class="panel ${recommendation.panelClass}">
+      <h3>${escapeHtml(recommendation.title)}</h3>
+      <div class="value">${escapeHtml(recommendation.value)}</div>
+      <div class="sub">${escapeHtml(recommendation.detail)}</div>
     </div>
     <div class="panel info">
       <h3>In Flight</h3>
