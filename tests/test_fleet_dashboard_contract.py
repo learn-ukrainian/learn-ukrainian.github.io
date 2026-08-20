@@ -76,6 +76,21 @@ def test_fleet_page_exposes_body_free_context_and_safe_acp_navigation() -> None:
     assert 'method: "POST"' not in html
 
 
+def test_fleet_page_mutes_missing_local_projection_instead_of_flagging_failure() -> None:
+    html = (DASHBOARDS / "fleet.html").read_text(encoding="utf-8")
+
+    assert ".context-muted {" in html
+    assert "projection_missing" in html
+    assert (
+        "Local context projection is not configured on this host. "
+        "Canonical ACP and Fleet evidence remain authoritative."
+    ) in html
+    # Genuine projection failures keep the red failure treatment.
+    assert "projection_request_failed" in html
+    assert '<div class="context-failure">Projection unavailable' in html
+    assert '<div class="context-failure">Context projection failure' in html
+
+
 def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     observer_app = FastAPI()
     observer_app.include_router(fleet_router, prefix="/api/fleet")

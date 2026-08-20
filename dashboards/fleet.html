@@ -58,6 +58,7 @@ button, input, select { font: inherit; }
 .context-actions a { border: 1px solid var(--border); border-radius: 3px; color: var(--accent); font-size: 11px; font-weight: 700; padding: 5px 7px; text-decoration: none; }
 .context-actions a:hover, .context-actions a:focus-visible { border-color: var(--accent); text-decoration: underline; }
 .context-failure { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); font-size: 12px; line-height: 1.45; margin: 0 16px 14px; padding: 9px 10px; }
+.context-muted { background: rgba(138, 131, 119, .08); border-left: 3px solid var(--gray); color: var(--text2); font-size: 12px; line-height: 1.45; margin: 0 16px 14px; padding: 9px 10px; }
 .operations-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 18px; }
 .legacy-diagnostics { background: rgba(168, 132, 43, .06); border: 1px solid var(--border); margin: 0 0 18px; }
 .legacy-diagnostics summary { cursor: pointer; font-family: Charter, Georgia, serif; font-size: 18px; font-weight: 700; padding: 13px 16px; }
@@ -324,7 +325,12 @@ function renderContextHealth(status) {
   const recall = objectValue(status.recall);
   const projection = objectValue(recall.projection);
   if (projection.available !== true) {
-    const reason = short(projection.reason || recall.reason, 'projection unavailable').replaceAll('_', ' ');
+    const rawReason = short(projection.reason || recall.reason, 'projection unavailable');
+    if (rawReason === 'projection_missing') {
+      target.innerHTML = '<div class="context-muted">Local context projection is not configured on this host. Canonical ACP and Fleet evidence remain authoritative.</div>';
+      return;
+    }
+    const reason = rawReason.replaceAll('_', ' ');
     target.innerHTML = `<div class="context-failure">Projection unavailable · ${escapeHtml(reason)}. Canonical ACP and Fleet evidence remain authoritative.</div>`;
     return;
   }
@@ -410,7 +416,12 @@ function renderConversationContext(conversationId, payload, relatedPayload) {
     return;
   }
   if (payload.available !== true) {
-    const reason = short(payload.reason, 'projection unavailable').replaceAll('_', ' ');
+    const rawReason = short(payload.reason, 'projection unavailable');
+    if (rawReason === 'projection_missing') {
+      target.innerHTML = '<div class="context-muted">Local context projection is not configured on this host. Canonical ACP and Fleet evidence remain authoritative.</div>';
+      return;
+    }
+    const reason = rawReason.replaceAll('_', ' ');
     target.innerHTML = `<div class="context-failure">Context projection failure · ${escapeHtml(reason)}. The ACP receipt remains authoritative.</div>`;
     return;
   }
