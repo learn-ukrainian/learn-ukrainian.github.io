@@ -4540,6 +4540,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         except (ValueError, FileNotFoundError, OSError) as exc:
             forward_error = exc
         if not notebook_fallback_after_forward(forward_rc, error=forward_error):
+            if forward_error is not None:
+                print(f"❌ VPS forward failed: {forward_error}", file=sys.stderr)
+                return 2
             return int(forward_rc or 0)
         why = str(forward_error) if forward_error is not None else f"ssh rc {forward_rc}"
         print(

@@ -23,6 +23,8 @@ Remote PATH always includes ``$HOME/.local/bin`` and ``$HOME/.opencode/bin``.
 from __future__ import annotations
 
 import argparse
+import base64
+import hashlib
 import json
 import os
 import shlex
@@ -307,33 +309,81 @@ def build_remote_command(
     return f"{prefix}; cd {shlex.quote(remote_repo)} && {quoted}"
 
 
-def materialize_local_prompt_argv(argv: list[str]) -> tuple[list[str], bytes | None]:
-    """Rewrite local ``--prompt-file`` to ``--prompt -`` so SSH can carry the body."""
+def _flag_value(argv: list[str], index: int, flag: str) -> tuple[str | None, int]:
+    item = argv[index]
+    if item == flag and index + 1 < len(argv):
+        return argv[index + 1], index + 2
+    prefix = f"{flag}="
+    if item.startswith(prefix):
+        return item.split("=", 1)[1], index + 1
+    return None, index
+
+
+def _remote_payload_preamble(kind: str, contents: bytes) -> tuple[str, str]:
+    digest = hashlib.sha256(contents).hexdigest()[:16]
+    remote_path = f"/tmp/lu-dispatch-{kind}-{digest}"
+    encoded = base64.b64encode(contents).decode("ascii")
+    preamble = f"printf '%s' {shlex.quote(encoded)} | base64 -d > {shlex.quote(remote_path)}"
+    return preamble, remote_path
+
+
+def materialize_local_dispatch_argv(argv: list[str]) -> tuple[list[str], bytes | None, str | None]:
+    """Rewrite notebook-only paths so SSH does not send Darwin paths.
+
+    ``--prompt-file`` becomes ``--prompt -`` with the body on SSH stdin.
+    ``--lifecycle-file`` is written to a content-addressed ``/tmp`` file on
+    the remote host via a base64 preamble.
+    """
     out: list[str] = []
     stdin: bytes | None = None
+    preambles: list[str] = []
     i = 0
     while i < len(argv):
-        item = argv[i]
-        if item == "--prompt-file" and i + 1 < len(argv):
-            stdin = Path(argv[i + 1]).read_text(encoding="utf-8").encode("utf-8")
+        prompt_path, next_i = _flag_value(argv, i, "--prompt-file")
+        if prompt_path is not None:
+            stdin = Path(prompt_path).read_text(encoding="utf-8").encode("utf-8")
             out.extend(["--prompt", "-"])
-            i += 2
+            i = next_i
             continue
-        if item.startswith("--prompt-file="):
-            stdin = Path(item.split("=", 1)[1]).read_text(encoding="utf-8").encode("utf-8")
-            out.extend(["--prompt", "-"])
-            i += 1
+        lifecycle_path, next_i = _flag_value(argv, i, "--lifecycle-file")
+        if lifecycle_path is not None:
+            body = Path(lifecycle_path).read_bytes()
+            preamble, remote_path = _remote_payload_preamble("lifecycle", body)
+            preambles.append(preamble)
+            out.extend(["--lifecycle-file", remote_path])
+            i = next_i
             continue
-        out.append(item)
+        out.append(argv[i])
         i += 1
-    return out, stdin
+    return out, stdin, ("; ".join(preambles) if preambles else None)
+
+
+def materialize_local_prompt_argv(argv: list[str]) -> tuple[list[str], bytes | None]:
+    """Rewrite local ``--prompt-file`` to ``--prompt -`` so SSH can carry the body."""
+    rest, stdin, _preamble = materialize_local_dispatch_argv(argv)
+    return rest, stdin
 
 
 def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | None = None) -> bool:
-    """True when VPS forward failed in transport, so the notebook may spawn."""
-    if error is not None:
-        return True
-    return rc == 255
+    """True only for SSH transport failure, so the notebook may spawn.
+
+    Occupancy miss/full is decided before forward. Payload errors
+    (missing ``--prompt-file`` / ``--lifecycle-file``, bad host config)
+    must fail closed — they are not a reason to spawn on Darwin.
+    """
+    if error is None:
+        return rc == 255
+    if isinstance(error, FileNotFoundError):
+        names = []
+        if error.filename:
+            names.append(os.fsdecode(error.filename))
+        for arg in error.args:
+            if isinstance(arg, bytes):
+                names.append(os.fsdecode(arg))
+            elif isinstance(arg, str):
+                names.append(arg)
+        return any(Path(name).name == "ssh" for name in names if name)
+    return False
 
 
 def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
@@ -346,11 +396,14 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
         raise ValueError("dispatch argv is empty")
     alias = ssh_alias_for_host_id(host_id)
     repo = repo_for_host_id(host_id)
-    rest, stdin = materialize_local_prompt_argv(list(argv[1:]))
+    rest, stdin, preamble = materialize_local_dispatch_argv(list(argv[1:]))
+    extra_exports = [f"export {ENV_ALLOW_NOTEBOOK}=1"]
+    if preamble:
+        extra_exports.append(preamble)
     remote = build_remote_command(
         [".venv/bin/python", "scripts/delegate.py", *rest],
         remote_repo=repo,
-        extra_exports=[f"export {ENV_ALLOW_NOTEBOOK}=1"],
+        extra_exports=extra_exports,
     )
     completed = subprocess.run(
         build_ssh_argv(alias, remote),

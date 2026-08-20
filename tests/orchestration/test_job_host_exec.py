@@ -10,6 +10,11 @@ from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
 from scripts.orchestration import job_host_exec as jh
 
 
+@pytest.fixture(autouse=True)
+def _clear_occupancy_pin(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(jh.ENV_OCCUPANCY_HOST, raising=False)
+
+
 def _marker_root(tmp_path: Path) -> Path:
     plane = tmp_path / "batch_state" / "fleet-comms" / "v1"
     plane.mkdir(parents=True)
@@ -259,8 +264,50 @@ def test_forward_dispatch_inlines_prompt_file(
     assert stdin_file.read_text(encoding="utf-8") == "review PR 7070 exact head\n"
 
 
+def test_forward_dispatch_copies_lifecycle_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    ledger = tmp_path / "task-lifecycle.json"
+    ledger.write_text('{"schema":"task-lifecycle.v1","task_id":"cf"}\n', encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--lifecycle-file",
+            str(ledger),
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    assert str(ledger) not in recorded
+    assert "--lifecycle-file" in recorded
+    assert "/tmp/lu-dispatch-lifecycle-" in recorded
+    assert "base64 -d >" in recorded
+
+
 def test_notebook_fallback_only_on_transport_failure() -> None:
-    assert jh.notebook_fallback_after_forward(None, error=ValueError("missing host")) is True
+    assert jh.notebook_fallback_after_forward(None, error=ValueError("missing host")) is False
+    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/local.json")) is False
+    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("ssh")) is True
     assert jh.notebook_fallback_after_forward(255) is True
     assert jh.notebook_fallback_after_forward(0) is False
     assert jh.notebook_fallback_after_forward(2) is False
