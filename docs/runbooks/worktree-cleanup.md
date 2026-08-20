@@ -124,6 +124,13 @@ The canonical PR lifecycle trail already performs worktree-first cleanup after
 merge. Other merge owners must invoke the exact command above before declaring
 closeout complete.
 
+Git closeout for **every** merge is exactly three things: worktree reaped,
+remote branch gone, local branch gone. If GitHub did not delete the remote
+head, delete it. Then delete the local branch. Host pulls, tunnels, occupancy
+probes, service restarts, and similar proofs are **task remainder**, not this
+list — name them for this task and finish them, but do not add them to standing
+merge hygiene.
+
 Do not put networked worktree deletion in Git's `post-merge` hook. GitHub merges
 do not run a local hook, and a later `git pull` is not reliable ownership
 evidence for an arbitrary dispatch worktree.
