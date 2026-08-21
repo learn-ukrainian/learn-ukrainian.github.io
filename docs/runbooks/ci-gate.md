@@ -88,6 +88,15 @@ implementation-only changes. It currently does not infer tests from changed
 implementation files; the unconditional shards remain responsible for that
 coverage.
 
+`CI Gate` remains the only required check. CodeQL stays on GitHub default
+setup and, after a repository administrator sets
+`github-codeql-config-file=.github/codeql/codeql-config.yml`, reads the
+in-repository scope exclusions for curriculum, generated lexicon/type outputs,
+and the incidental Go/Swift paths. Keep default setup's pull-request
+incremental overlay enabled; CodeQL language selection and merge protection
+are repository-admin settings, so do not add CodeQL to `CI Gate` or create a
+second workflow merely to change its requiredness.
+
 ## Quarantine convention (documentation only)
 
 If a future CI-capacity exception must be recorded, describe it in the PR or
@@ -123,4 +132,3 @@ trufflehog git file://$PWD --results=verified,unknown --exclude-paths=.truffleho
 ```
 
 Because the repository does not use Lob credentials, excluding the `Lob` detector in `.github/workflows/ci.yml` via `--exclude-detectors=Lob` permanently eliminates these false-positives.
-
