@@ -1,0 +1,19 @@
+# GitHub default setup consumes this file only when repository property
+# github-codeql-config-file is set to .github/codeql/codeql-config.yml.
+# Keep default setup's pull-request incremental overlay enabled.
+name: Default setup scope
+
+paths-ignore:
+  # Curriculum is content data, not executable product source.
+  - curriculum/**
+
+  # Generated lexicon artifacts and generated TypeScript declarations.
+  - site/public/lexicon/**
+  - site/src/data/lexicon-*.json
+  - packages/activity-kit/src/*.generated.ts
+
+  # The repository has only these incidental Go and Swift sources. Default
+  # setup language selection is still an administrator setting; these ignores
+  # keep their generated/external implementation out of source analysis.
+  - scripts/entire/external_agents/entire-agent-kimi/**
+  - scripts/rag/apple_vision_ocr.swift

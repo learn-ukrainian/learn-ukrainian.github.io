@@ -180,16 +180,16 @@ jobs:
         run: |
           set -euo pipefail
           python -m venv .venv
-          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+          # The planner collects `not atlas_release and not slow`: retain the
+          # offline ukrainian_word_stress trie, but never install the live
+          # Stanza/torch stack for a selection that excludes its tests.
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          # Bounded retry absorbs transient PyPI / pytorch.org blips (#7002;
-          # same 3× / 10s / 30s idiom as Stanza provision below).
+          # Bounded retry absorbs transient PyPI blips (#7002).
           for attempt in 1 2 3; do
             echo "planner pip install attempt ${attempt}/3"
             if .venv/bin/python -m pip install --upgrade pip \
               && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
-              && .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-                torch==2.13.0 \
               && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
               exit 0
             fi
@@ -248,37 +248,6 @@ jobs:
         with:
           python-version-file: '.python-version'
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Install fastlane test dependencies
-        run: |
-          set -euo pipefail
-          python -m venv .venv
-          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          # Bounded retry absorbs transient PyPI / pytorch.org blips (#7002;
-          # same 3× / 10s / 30s idiom as Stanza provision).
-          for attempt in 1 2 3; do
-            echo "fastlane pip install attempt ${attempt}/3"
-            if .venv/bin/python -m pip install --upgrade pip \
-              && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
-              && .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-                torch==2.13.0 \
-              && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
-              exit 0
-            fi
-            case "${attempt}" in
-              1) sleep 10 ;;
-              2) sleep 30 ;;
-            esac
-          done
-          echo "::error::Install fastlane test dependencies failed after 3 attempts" >&2
-          exit 1
-
       - name: Select directly changed test modules
         id: plan
         env:
@@ -290,7 +259,7 @@ jobs:
             base_ref="origin/main"
           fi
           mkdir -p ci-artifacts
-          .venv/bin/python scripts/ci/changed_tests.py \
+          python scripts/ci/changed_tests.py \
             --base "$base_ref" \
             --output ci-artifacts/fastlane-test-files.txt
           if [[ -s ci-artifacts/fastlane-test-files.txt ]]; then
@@ -302,13 +271,74 @@ jobs:
             echo "No directly changed test modules; fastlane has an empty advisory plan."
           fi
 
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: steps.plan.outputs.has_tests == 'true'
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install slim fastlane test dependencies
+        if: steps.plan.outputs.has_tests == 'true'
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          python scripts/ci/fastlane_requirements.py \
+            --tests ci-artifacts/fastlane-test-files.txt \
+            --base scripts/ci/requirements-fastlane.txt \
+            --lock requirements-lock.txt \
+            --output "${RUNNER_TEMP}/requirements-fastlane.txt"
+          # The checked-in profile plus the selected tests' reviewed direct
+          # imports resolve under the full lock as constraints; do not install
+          # every pinned package merely to run a small changed-test plan.
+          for attempt in 1 2 3; do
+            echo "fastlane slim pip install attempt ${attempt}/3"
+            if .venv/bin/python -m pip install --upgrade pip \
+              && .venv/bin/python -m pip install \
+                -c requirements-lock.txt -r "${RUNNER_TEMP}/requirements-fastlane.txt"; then
+              exit 0
+            fi
+            case "${attempt}" in
+              1) sleep 10 ;;
+              2) sleep 30 ;;
+            esac
+          done
+          echo "::error::Install slim fastlane test dependencies failed after 3 attempts" >&2
+          exit 1
+
       - name: Run directly changed test modules
         if: steps.plan.outputs.has_tests == 'true'
         run: |
           set -euo pipefail
           mapfile -t test_files < ci-artifacts/fastlane-test-files.txt
+
+          run_tests() {
+            local label="$1"
+            .venv/bin/python -m pytest \
+              --strict-markers --timeout=120 --timeout-method=thread --durations=10 \
+              -m 'not atlas_release and not slow' \
+              "${test_files[@]}" 2>&1 | tee "ci-artifacts/fastlane-pytest-${label}.log"
+          }
+
+          install_with_retry() {
+            local label="$1"
+            shift
+            for attempt in 1 2 3; do
+              echo "${label} install attempt ${attempt}/3"
+              if "$@"; then
+                return 0
+              fi
+              case "${attempt}" in
+                1) sleep 10 ;;
+                2) sleep 30 ;;
+              esac
+            done
+            echo "::error::${label} install failed after 3 attempts" >&2
+            return 1
+          }
+
           if printf '%s\n' "${test_files[@]}" | grep -qx 'tests/agent_runtime/test_acp_text_agent.py'; then
-            # npm registry blips (#7002; Stanza provision idiom).
+            # npm registry blips (#7002).
             for attempt in 1 2 3; do
               echo "fastlane npm ci attempt ${attempt}/3"
               if npm ci --ignore-scripts; then
@@ -324,10 +354,45 @@ jobs:
               esac
             done
           fi
-          .venv/bin/python -m pytest \
-            --strict-markers --timeout=120 --timeout-method=thread --durations=10 \
-            -m 'not atlas_release and not slow' \
-            "${test_files[@]}"
+
+          set +e
+          run_tests initial
+          status=$?
+          set -e
+
+          # The offline stress trie is intentionally independent of Stanza.
+          # Install it only after selected test execution proves it is needed.
+          if [[ "$status" -ne 0 ]] \
+            && grep -Eq "No module named ['\"](ukrainian_word_stress|marisa_trie)([.'\"]|$)" \
+              ci-artifacts/fastlane-pytest-initial.log; then
+            install_with_retry "offline stress dictionary" \
+              .venv/bin/python -m pip install --no-deps \
+              ukrainian_word_stress==2.1.0 marisa-trie==1.4.1
+            set +e
+            run_tests offline-stress
+            status=$?
+            set -e
+          fi
+
+          # A CPU torch/Stanza install is a fail-closed, per-run escalation:
+          # it follows an actual missing live-model import in selected tests,
+          # never a filename/import heuristic or the default fastlane path.
+          if [[ "$status" -ne 0 ]] \
+            && grep -Eq "No module named ['\"](torch|stanza)([.'\"]|$)" \
+              ci-artifacts/fastlane-pytest-*.log; then
+            install_with_retry "CPU torch" \
+              .venv/bin/python -m pip install --no-deps \
+                --index-url https://download.pytorch.org/whl/cpu torch==2.13.0
+            install_with_retry "Stanza live-model dependencies" \
+              .venv/bin/python -m pip install --no-deps \
+                stanza==1.13.0 ukrainian_word_stress==2.1.0
+            set +e
+            run_tests live-model
+            status=$?
+            set -e
+          fi
+
+          exit "$status"
 
   # ---------------------------------------------------------------------
   # 3. python — execute the planner's four unconditional test partitions.
@@ -395,8 +460,7 @@ jobs:
 
       # Sole owner of ~/.cache/pip for this job (setup-python cache disabled).
       # Cache-service errors are recoverable: continue to a cold pip install.
-      # A restore miss or outage must not kill the shard (#7002; same posture
-      # as the Stanza model-cache restore below).
+      # A restore miss or outage must not kill the shard (#7002).
       - name: Restore pip wheel cache
         if: needs.landing-class.outputs.class != 'docs_skills'
         id: pip-wheel-cache
@@ -404,29 +468,25 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
 
-      # pytest exercises scripts/pipeline/stress_annotator.py::_get_stressifier,
-      # which imports ukrainian_word_stress.Stressifier; Stressifier imports
-      # stanza, and Stanza imports torch. Keep torchvision and open_clip_torch
-      # out of this environment: the suite does not import either package.
-      # Install the CPU-only torch wheel to avoid the much larger CUDA build.
+      # Required shards select `not atlas_release and not slow`. Keep the
+      # offline ukrainian_word_stress trie available for its unmarked oracle,
+      # but exclude Stanza and torch: every live Stressifier test is slow and
+      # belongs to the dedicated scheduled model-provisioning lane.
       - name: Install dependencies
         if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
           set -euo pipefail
           python -m venv .venv
-          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          # Bounded retry absorbs transient PyPI / pytorch.org blips (#7002;
-          # same 3× / 10s / 30s idiom as Stanza provision below).
+          # Bounded retry absorbs transient PyPI blips (#7002).
           # ruff lives in its own job after the two-tier cutover (#6989).
           for attempt in 1 2 3; do
             echo "python-shard pip install attempt ${attempt}/3"
             if .venv/bin/python -m pip install --upgrade pip \
               && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
-              && .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
-                torch==2.13.0 \
               && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
               exit 0
             fi
@@ -443,51 +503,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
-          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-torch-cpu
-
-      # Stressifier lazily provisions this model when it creates its Stanza
-      # pipeline. Cache the model package separately from pip wheels so a
-      # cold runner does not redownload it in every CI run. Version the key and
-      # couple it to the lockfile: a model cache is valid only for the Stanza
-      # dependency set that produced it.
-      # Cache-service errors are recoverable: continue to the provision path.
-      # A restore miss or outage must not kill the shard; provision is the gate.
-      - name: Restore Stanza Ukrainian model cache
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        id: stanza-model-cache
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/stanza_resources
-          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
-
-      # Run this smoke regardless of cache state. Besides provisioning a cold
-      # cache, it verifies a restored archive before pytest workers can start
-      # lazy model downloads. Bounded retry absorbs transient Hugging Face /
-      # GitHub network blips (3 attempts, 10s then 30s backoff).
-      - name: Provision and verify Stanza Ukrainian model
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        run: |
-          set -euo pipefail
-          for attempt in 1 2 3; do
-            echo "stanza provision attempt ${attempt}/3"
-            if .venv/bin/python -c "from scripts.pipeline.stress_annotator import annotate_stress; print(annotate_stress('Мама читає книжку.'))"; then
-              exit 0
-            fi
-            case "${attempt}" in
-              1) sleep 10 ;;
-              2) sleep 30 ;;
-            esac
-          done
-          echo "::error::Provision and verify Stanza Ukrainian model failed after 3 attempts" >&2
-          exit 1
-
-      - name: Save Stanza Ukrainian model cache
-        if: needs.landing-class.outputs.class != 'docs_skills' && steps.stanza-model-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/stanza_resources
-          key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
 
       - name: Download the single planner's shard plans
         if: needs.landing-class.outputs.class != 'docs_skills'

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.ci import pytest_shards
 
@@ -209,6 +210,48 @@ def test_ci_workflow_uses_single_planner_and_ci_gate_verifier() -> None:
     assert "Create or update infra issue on failure" in nightly
     assert "area:infra" in nightly
     assert nightly.splitlines()[0] == "name: Pytest slow nightly"
+
+
+def test_required_lanes_exclude_live_model_setup_and_fastlane_is_slim() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    workflow = yaml.safe_load((repo_root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
+    jobs = workflow["jobs"]
+
+    planner_install = next(step for step in jobs["pytest-plan"]["steps"] if step.get("name") == "Install planner dependencies")
+    shard_steps = jobs["python"]["steps"]
+    shard_install = next(step for step in shard_steps if step.get("name") == "Install dependencies")
+    fastlane_steps = jobs["pytest-fastlane"]["steps"]
+    fastlane_install = next(step for step in fastlane_steps if step.get("name") == "Install slim fastlane test dependencies")
+    fastlane_run = next(step for step in fastlane_steps if step.get("name") == "Run directly changed test modules")
+
+    for step in (planner_install, shard_install):
+        run = step["run"]
+        assert "torch==2.13.0" not in run
+        assert "download.pytorch.org" not in run
+        assert "|stanza)" in run
+    assert "stanza_resources" not in "\n".join(str(step) for step in shard_steps)
+
+    assert "requirements-fastlane.txt" in fastlane_install["run"]
+    assert "-c requirements-lock.txt" in fastlane_install["run"]
+    assert "pip install --no-deps -r" not in fastlane_install["run"]
+    assert "No module named" in fastlane_run["run"]
+    assert "CPU torch" in fastlane_run["run"]
+    names = [step.get("name", "") for step in fastlane_steps]
+    assert names.index("Select directly changed test modules") < names.index("Install slim fastlane test dependencies")
+
+
+def test_codeql_default_setup_scope_excludes_content_generated_and_sparse_paths() -> None:
+    config_path = Path(__file__).resolve().parents[1] / ".github" / "codeql" / "codeql-config.yml"
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+
+    assert set(config["paths-ignore"]) >= {
+        "curriculum/**",
+        "site/public/lexicon/**",
+        "packages/activity-kit/src/*.generated.ts",
+        "scripts/entire/external_agents/entire-agent-kimi/**",
+        "scripts/rag/apple_vision_ocr.swift",
+    }
+
 
 def test_required_markexpr_constant_matches_ci_and_addopts_boundary() -> None:
     """addopts stays atlas-only; required gate adds not slow via CLI -m everywhere."""
