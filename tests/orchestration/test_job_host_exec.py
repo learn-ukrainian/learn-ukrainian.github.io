@@ -195,6 +195,63 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert "teacher-alias" in recorded
     assert "cd /remote/repo" in recorded
     assert "scripts/delegate.py" in recorded
+    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in recorded
+
+
+def test_main_dispatch_copies_local_prompt_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    prompt = tmp_path / "brief.md"
+    prompt.write_text("keep curriculum/l2-uk-en in the worktree\n", encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.main(
+        [
+            "--host-id",
+            "host-job",
+            "--",
+            ".venv/bin/python",
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--prompt-file",
+            str(prompt),
+        ]
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    assert str(prompt) not in recorded
+    assert "--prompt-file" in recorded
+    assert "/tmp/lu-dispatch-prompt-" in recorded
+    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in recorded
+    assert base64.b64encode(b"keep curriculum/l2-uk-en in the worktree\n").decode("ascii") in recorded.replace("\n", "")
+
+
+def test_main_help_contract() -> None:
+    help_text = jh.build_parser().format_help()
+    assert "Execute a command on a VPS worker checkout over BatchMode SSH." in help_text
+    assert "do not use it to start a second Monitor" in help_text
+    assert "Examples:" in help_text
+    assert "Outputs:" in help_text
+    assert "Exit codes:" in help_text
+    assert "Related:" in help_text
+    assert "--prompt-file" in help_text
+    assert "Issue: #7062" in help_text
 
 
 def test_forward_dispatch_sets_allow_notebook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -478,9 +478,47 @@ def build_ssh_argv(host: str, remote_command: str) -> list[str]:
     ]
 
 
-def main(argv: list[str] | None = None) -> int:
+def _delegate_dispatch_argv(remote_argv: list[str]) -> list[str] | None:
+    """Return ``[scripts/delegate.py, dispatch, ...]`` when this is a dispatch."""
+    try:
+        idx = remote_argv.index("scripts/delegate.py")
+    except ValueError:
+        return None
+    rest = remote_argv[idx:]
+    if len(rest) < 2 or rest[1] != "dispatch":
+        return None
+    return rest
+
+
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Execute a command on a VPS worker checkout (BatchMode SSH)."
+        prog="job_host_exec.py",
+        description=(
+            "Execute a command on a VPS worker checkout over BatchMode SSH.\n"
+            "Use it to place long Python jobs and agent dispatches on occupancy "
+            "hosts; do not use it to start a second Monitor or reopen retired Mac sqlite."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/orchestration/job_host_exec.py -- "
+            ".venv/bin/python scripts/delegate.py dispatch --agent codex "
+            "--task-id review-123 --prompt-file brief.md --mode read-only\n"
+            "  .venv/bin/python scripts/orchestration/job_host_exec.py "
+            "--host-id host-job -- .venv/bin/python -m pytest tests/orchestration/test_job_host_exec.py\n\n"
+            "Outputs:\n"
+            "  Runs the remote command in the occupancy checkout. Dispatch argv "
+            "is rewritten so notebook --prompt-file/--lifecycle-file/--output-schema "
+            "bodies land in remote /tmp and LU_ALLOW_NOTEBOOK_DISPATCH=1 prevents "
+            "a second forward hop.\n\n"
+            "Exit codes:\n"
+            "  0 on successful remote completion; 2 on CLI misuse or missing host; "
+            "255 on SSH transport failure; other codes are the remote command.\n\n"
+            "Related:\n"
+            "  Occupancy: GET /api/occupancy\n"
+            "  Dispatch: scripts/delegate.py\n"
+            "  Issue: #7062\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--host-id",
@@ -492,6 +530,11 @@ def main(argv: list[str] | None = None) -> int:
         nargs=argparse.REMAINDER,
         help="Command to run after -- on the remote checkout",
     )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     remote_argv = list(args.remote_argv)
     if remote_argv and remote_argv[0] == "--":
@@ -506,10 +549,13 @@ def main(argv: list[str] | None = None) -> int:
             if capacity != "available" or not host_id:
                 print(f"error: no VPS worker host available ({capacity})", file=sys.stderr)
                 return 2
+        dispatch_argv = _delegate_dispatch_argv(remote_argv)
+        if dispatch_argv is not None:
+            return forward_dispatch(host_id=host_id, argv=dispatch_argv)
         alias = ssh_alias_for_host_id(host_id)
         repo = repo_for_host_id(host_id)
         ssh_argv = build_ssh_argv(alias, build_remote_command(remote_argv, remote_repo=repo))
-    except ValueError as exc:
+    except (ValueError, FileNotFoundError, PermissionError, SshTransportError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     completed = subprocess.run(ssh_argv, check=False)
