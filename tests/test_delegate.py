@@ -31,6 +31,8 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 
+from scripts.orchestration import job_host_exec
+
 
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
@@ -136,6 +138,12 @@ def _fixture_runtime_tmp_root(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(runtime_tmp))
     monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
     return runtime_tmp
+
+
+@pytest.fixture(autouse=True)
+def _keep_delegate_unit_tests_local(monkeypatch):
+    """Isolate delegate unit tests from a live checkout's VPS occupancy marker."""
+    monkeypatch.setenv(job_host_exec.ENV_ALLOW_NOTEBOOK, "1")
 
 
 def _sanitize_git_env_for_test(monkeypatch) -> None:
@@ -4552,6 +4560,16 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
         delegate,
         "_sweep_runtime_tmp_orphans",
         lambda: pytest.fail("dry-run must not sweep ambient runtime tmp leases"),
+    )
+    monkeypatch.setattr(
+        job_host_exec,
+        "decide_dispatch_placement",
+        lambda **_kwargs: pytest.fail("dry-run must not query VPS placement"),
+    )
+    monkeypatch.setattr(
+        job_host_exec,
+        "forward_dispatch",
+        lambda **_kwargs: pytest.fail("dry-run must not forward to a VPS"),
     )
     args = delegate.build_parser().parse_args(
         [

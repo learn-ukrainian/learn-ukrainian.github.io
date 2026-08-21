@@ -106,3 +106,21 @@ fleet_comms_print_banner_line() {
       ;;
   esac
 }
+
+# Prefer the tunneled job-host Monitor. If it is down, warn and continue on the
+# notebook — never start a second Mac Monitor, never lift the retired sqlite.
+fleet_comms_warn_if_plane_unreachable() {
+  local root="${PROJECT_DIR:-${LC_ROOT:-.}}"
+  local py=""
+  if [ "${LU_SKIP_PLANE_TUNNEL_CHECK:-}" = "1" ]; then
+    return 0
+  fi
+  if ! py="$(fleet_comms_resolve_python "$root")"; then
+    echo "⚠️  plane fallback: no project interpreter; starting on notebook." >&2
+    return 0
+  fi
+  (
+    cd "$root" || exit 0
+    "$py" -m scripts.orchestration.plane_tunnel_gate
+  ) || true
+}

@@ -44,6 +44,8 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     helper = HELPER.read_text(encoding="utf-8")
     assert "fleet_comms_cold_clause" in helper
     assert "fleet_comms_resolve_plane_mode" in helper
+    assert "fleet_comms_warn_if_plane_unreachable" in helper
+    assert "plane_tunnel_gate" in helper
     assert "fleet-comms-coordination.md" in helper
     assert "drive-epic" in helper
     assert "authoritative" in helper
@@ -67,6 +69,7 @@ def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
     assert "fleet_comms_cold_clause" in text or "plane-status" in text
     assert "fleet-comms" in text
     assert 'source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"' in text
+    assert "fleet_comms_warn_if_plane_unreachable" in text
     assert (
         'FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"'
         in text
