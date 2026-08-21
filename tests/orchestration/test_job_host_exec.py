@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -16,6 +17,23 @@ from scripts.orchestration import job_host_exec as jh
 @pytest.fixture(autouse=True)
 def _clear_occupancy_pin(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(jh.ENV_OCCUPANCY_HOST, raising=False)
+
+
+def test_cli_help_runs_without_pythonpath(tmp_path: Path) -> None:
+    script = Path(jh.__file__).resolve()
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ""
+    proc = subprocess.run(
+        [sys.executable, str(script), "--help"],
+        cwd=tmp_path,
+        env=env,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "Examples:" in proc.stdout
+    assert "Exit codes:" in proc.stdout
 
 
 def _marker_root(tmp_path: Path) -> Path:

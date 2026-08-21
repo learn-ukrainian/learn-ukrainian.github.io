@@ -34,6 +34,10 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Literal
 
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
 from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
 from scripts.guardrails.worktree_containment import resolve_main_root
 
