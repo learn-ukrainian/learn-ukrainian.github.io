@@ -27,6 +27,8 @@ LOAD_SCHEMA = "atlas-jobs-load.v1"
 RESULTS_SCHEMA = "atlas-jobs-results.v1"
 
 HOST_LOAD_FRESH_S = 30.0
+HOST_LOAD_REFRESH_AFTER_S = 15.0
+HOST_LOAD_IN_FLIGHT_GRACE_S = 15.0
 HOST_LOAD_MAX_STALE_S = 300.0
 
 RESULTS_DEFAULT_LIMIT = 50
@@ -52,6 +54,10 @@ RESULTS_ALLOWLIST = frozenset(
 # In-process cache: host -> (metrics_dict, monotonic_ts, iso_observed_at)
 _HOST_LOAD_CACHE: dict[str, tuple[dict[str, Any], float, str]] = {}
 _HOST_LOAD_TASKS: dict[str, asyncio.Task[None]] = {}
+_HOST_LOAD_TIMERS: dict[str, asyncio.TimerHandle] = {}
+# Failed-probe backoff: host -> monotonic deadline. Ordinary reads must not
+# start a new collect before this instant; the armed timer owns the retry.
+_HOST_LOAD_BACKOFF_UNTIL: dict[str, float] = {}
 
 
 def set_host_load_cache(
@@ -65,15 +71,21 @@ def set_host_load_cache(
     m_ts = time.monotonic() if mono_ts is None else mono_ts
     i_ts = datetime.now(UTC).isoformat().replace("+00:00", "Z") if iso_ts is None else iso_ts
     _HOST_LOAD_CACHE[canonical] = (data, m_ts, i_ts)
+    _HOST_LOAD_BACKOFF_UNTIL.pop(canonical, None)
+    _arm_host_load_timer(canonical)
 
 
 def clear_host_load_cache() -> None:
-    """Clear in-process host load cache and in-flight tasks."""
+    """Clear in-process host load cache, in-flight tasks, and armed timers."""
     _HOST_LOAD_CACHE.clear()
     for task in _HOST_LOAD_TASKS.values():
         if not task.done():
             task.cancel()
     _HOST_LOAD_TASKS.clear()
+    for handle in _HOST_LOAD_TIMERS.values():
+        handle.cancel()
+    _HOST_LOAD_TIMERS.clear()
+    _HOST_LOAD_BACKOFF_UNTIL.clear()
 
 
 class SubmitBody(BaseModel):
@@ -127,13 +139,51 @@ def _probe_host_load_sync(host: str) -> tuple[dict[str, Any] | None, str]:
 
 async def _refresh_host_load_job(host: str) -> None:
     task = asyncio.current_task()
+    ok = False
     try:
         data, now_iso = await asyncio.to_thread(_probe_host_load_sync, host)
         if data is not None:
             _HOST_LOAD_CACHE[host] = (data, time.monotonic(), now_iso)
+            ok = True
+            _HOST_LOAD_BACKOFF_UNTIL.pop(host, None)
+        else:
+            _HOST_LOAD_BACKOFF_UNTIL[host] = time.monotonic() + HOST_LOAD_REFRESH_AFTER_S
     finally:
         if _HOST_LOAD_TASKS.get(host) is task:
             _HOST_LOAD_TASKS.pop(host, None)
+        if host in _HOST_LOAD_CACHE:
+            # Re-arm after success or failure while a sample remains. A failed
+            # probe restarts the full interval so a dead host is not hot-looped.
+            _arm_host_load_timer(host, from_now=not ok)
+
+
+def _fire_host_load_timer(host: str) -> None:
+    """Timer callback: start an autonomous refresh without waiting for a GET."""
+    _HOST_LOAD_TIMERS.pop(host, None)
+    if host in _HOST_LOAD_CACHE:
+        _schedule_host_load_refresh(host)
+
+
+def _arm_host_load_timer(host: str, *, from_now: bool = False) -> None:
+    """Arm a one-shot loop timer for the next refresh of a cached sample.
+
+    Fires at ``max(0, HOST_LOAD_REFRESH_AFTER_S - age)`` so the next collect
+    runs autonomously even when no reader hits within the fresh window.
+    No running loop -> skip, matching ``_schedule_host_load_refresh``.
+    """
+    handle = _HOST_LOAD_TIMERS.pop(host, None)
+    if handle is not None:
+        handle.cancel()
+    entry = _HOST_LOAD_CACHE.get(host)
+    if entry is None:
+        return
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return
+    age = 0.0 if from_now else max(0.0, time.monotonic() - entry[1])
+    delay = max(0.0, HOST_LOAD_REFRESH_AFTER_S - age)
+    _HOST_LOAD_TIMERS[host] = loop.call_later(delay, _fire_host_load_timer, host)
 
 
 def _schedule_host_load_refresh(host: str) -> asyncio.Task[None] | None:
@@ -143,9 +193,33 @@ def _schedule_host_load_refresh(host: str) -> asyncio.Task[None] | None:
             loop = asyncio.get_running_loop()
         except RuntimeError:
             return None
+        handle = _HOST_LOAD_TIMERS.pop(host, None)
+        if handle is not None:
+            handle.cancel()
         task = loop.create_task(_refresh_host_load_job(host))
         _HOST_LOAD_TASKS[host] = task
     return task
+
+
+def _host_load_refresh_in_flight(host: str) -> bool:
+    task = _HOST_LOAD_TASKS.get(host)
+    return task is not None and not task.done()
+
+
+def _host_load_in_failure_backoff(host: str, now_mono: float) -> bool:
+    until = _HOST_LOAD_BACKOFF_UNTIL.get(host)
+    return until is not None and now_mono < until
+
+
+def _cached_load_status(age: float, *, in_flight: bool) -> str:
+    """Classify a cached sample. In-flight probes stay fresh across one heartbeat."""
+    if age <= HOST_LOAD_FRESH_S or (
+        in_flight and age <= HOST_LOAD_FRESH_S + HOST_LOAD_IN_FLIGHT_GRACE_S
+    ):
+        return "fresh"
+    if age <= HOST_LOAD_MAX_STALE_S:
+        return "stale"
+    return "unavailable"
 
 
 def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
@@ -158,7 +232,14 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
     if entry is not None:
         metrics, mono_ts, iso_ts = entry
         age = max(0.0, round(now_mono - mono_ts, 2))
-        if age <= HOST_LOAD_FRESH_S:
+        if (
+            not fresh
+            and age > HOST_LOAD_REFRESH_AFTER_S
+            and not _host_load_in_failure_backoff(host, now_mono)
+        ):
+            _schedule_host_load_refresh(host)
+        status = _cached_load_status(age, in_flight=_host_load_refresh_in_flight(host))
+        if status == "fresh":
             res: dict[str, Any] = {
                 "status": "fresh",
                 "observed_at": iso_ts,
@@ -166,8 +247,7 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
             }
             res.update(metrics)
             return res
-        elif age <= HOST_LOAD_MAX_STALE_S:
-            _schedule_host_load_refresh(host)
+        if status == "stale":
             res = {
                 "status": "stale",
                 "observed_at": iso_ts,
@@ -175,16 +255,15 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
             }
             res.update(metrics)
             return res
-        else:
-            _schedule_host_load_refresh(host)
-            return {
-                "status": "unavailable",
-                "error": "unreachable",
-                "observed_at": iso_ts,
-                "age_seconds": age,
-            }
+        return {
+            "status": "unavailable",
+            "error": "unreachable",
+            "observed_at": iso_ts,
+            "age_seconds": age,
+        }
 
-    _schedule_host_load_refresh(host)
+    if fresh or not _host_load_in_failure_backoff(host, now_mono):
+        _schedule_host_load_refresh(host)
     now_iso = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     return {
         "status": "unavailable",
@@ -196,11 +275,16 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
 
 async def _get_host_load_entry_async(host: str, *, fresh: bool = False) -> dict[str, Any]:
     """Read host load, awaiting the shared probe when no usable cache exists."""
+    now_mono = time.monotonic()
     entry = _HOST_LOAD_CACHE.get(host)
-    needs_probe_result = fresh or entry is None
-    if entry is not None:
-        _, mono_ts, _ = entry
-        needs_probe_result = needs_probe_result or time.monotonic() - mono_ts > HOST_LOAD_MAX_STALE_S
+    in_backoff = _host_load_in_failure_backoff(host, now_mono)
+    needs_probe_result = bool(fresh)
+    if not needs_probe_result and not in_backoff:
+        if entry is None:
+            needs_probe_result = True
+        else:
+            _, mono_ts, _ = entry
+            needs_probe_result = now_mono - mono_ts > HOST_LOAD_MAX_STALE_S
 
     if needs_probe_result:
         task = _schedule_host_load_refresh(host)

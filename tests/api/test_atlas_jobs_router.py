@@ -374,6 +374,192 @@ def test_load_entry_awaits_an_inflight_probe(
         router_mod.clear_host_load_cache()
 
 
+def test_load_cache_arms_autonomous_refresh_timer(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A cached sample re-collects on its own — no GET/read needed (#7074)."""
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
+    calls = 0
+    original_host_load = _isolate.host_load
+
+    def host_load(host: str) -> dict:
+        nonlocal calls
+        calls += 1
+        return original_host_load(host)
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+    delays: list[float] = []
+
+    async def exercise() -> dict:
+        loop = asyncio.get_running_loop()
+        orig_call_later = loop.call_later
+
+        def wrapped_call_later(delay, callback, *args, **kwargs):
+            delays.append(float(delay))
+            return orig_call_later(delay, callback, *args, **kwargs)
+
+        loop.call_later = wrapped_call_later  # type: ignore[method-assign]
+        try:
+            router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
+        finally:
+            loop.call_later = orig_call_later  # type: ignore[method-assign]
+        assert delays, "set_host_load_cache must schedule call_later"
+        assert delays[0] == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.001)
+        handle = next(iter(router_mod._HOST_LOAD_TIMERS.values()))
+        remaining = handle.when() - loop.time()
+        await asyncio.sleep(max(0.0, remaining - 0.002))
+        assert calls == 0
+        deadline = handle.when() + 0.4
+        while calls == 0 and loop.time() < deadline:
+            await asyncio.sleep(0.005)
+        assert calls >= 1
+        return router_mod._get_host_load_entry("atlas-runner")
+
+    try:
+        entry = asyncio.run(exercise())
+        assert entry["status"] == "fresh"
+        assert entry["age_seconds"] < 1.0
+    finally:
+        router_mod.clear_host_load_cache()
+
+
+def test_failed_probe_backoff_blocks_ordinary_read(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A failed collect must not be retried by the next GET (#7074)."""
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
+    calls = 0
+
+    def host_load(host: str) -> dict:
+        del host
+        nonlocal calls
+        calls += 1
+        raise RuntimeError("down")
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        {"cpu_count": 4, "loadavg": [0.1, 0.1, 0.1]},
+        mono_ts=time.monotonic() - 1.0,
+    )
+
+    async def exercise() -> None:
+        router_mod._get_host_load_entry("atlas-runner")
+        task = router_mod._HOST_LOAD_TASKS.get("atlas-runner")
+        assert task is not None
+        await asyncio.shield(task)
+        assert calls == 1
+        router_mod._get_host_load_entry("atlas-runner")
+        await asyncio.sleep(0.02)
+        assert calls == 1
+        assert router_mod._HOST_LOAD_TASKS.get("atlas-runner") in (None, task)
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        router_mod.clear_host_load_cache()
+
+
+def test_failed_probe_backoff_blocks_cold_async_read(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A cold failed collect must not retry on the same ordinary read (#7074)."""
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
+    calls = 0
+
+    def host_load(host: str) -> dict:
+        del host
+        nonlocal calls
+        calls += 1
+        raise RuntimeError("down")
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+
+    async def exercise() -> None:
+        first = await router_mod._get_host_load_entry_async("atlas-runner")
+        assert calls == 1
+        assert first["status"] == "unavailable"
+        second = await router_mod._get_host_load_entry_async("atlas-runner")
+        await asyncio.sleep(0.02)
+        assert calls == 1
+        assert second["status"] == "unavailable"
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        router_mod.clear_host_load_cache()
+
+
+def test_load_refresh_starts_inside_fresh_window(
+    _isolate: atlas_job.FakeHostAdapter,
+) -> None:
+    router_mod.clear_host_load_cache()
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        _isolate.host_load("atlas-runner"),
+        mono_ts=time.monotonic() - 20.0,
+    )
+
+    async def exercise() -> tuple[dict, dict]:
+        first = router_mod._get_host_load_entry("atlas-runner")
+        task = router_mod._HOST_LOAD_TASKS.get("atlas-runner")
+        assert task is not None
+        await asyncio.shield(task)
+        second = router_mod._get_host_load_entry("atlas-runner")
+        return first, second
+
+    try:
+        first, second = asyncio.run(exercise())
+        assert first["status"] == "fresh"
+        assert 19.0 <= first["age_seconds"] <= 22.0
+        assert second["status"] == "fresh"
+        assert second["age_seconds"] < 5.0
+    finally:
+        router_mod.clear_host_load_cache()
+
+
+def test_load_heartbeat_boundary_stays_fresh_while_probe_runs(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    router_mod.clear_host_load_cache()
+    probe_started = threading.Event()
+    release_probe = threading.Event()
+    original_host_load = _isolate.host_load
+
+    def host_load(host: str) -> dict:
+        probe_started.set()
+        assert release_probe.wait(timeout=1.0)
+        return original_host_load(host)
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        original_host_load("atlas-runner"),
+        mono_ts=time.monotonic() - 31.0,
+    )
+
+    async def exercise() -> dict:
+        entry = router_mod._get_host_load_entry("atlas-runner")
+        assert await asyncio.to_thread(probe_started.wait, 1.0)
+        return entry
+
+    try:
+        entry = asyncio.run(exercise())
+        assert entry["status"] == "fresh"
+        assert 30.0 <= entry["age_seconds"] <= 33.0
+        assert "cpu_count" in entry
+    finally:
+        release_probe.set()
+        router_mod.clear_host_load_cache()
+
+
 def test_load_stale_while_revalidate_cache_lifecycle(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:

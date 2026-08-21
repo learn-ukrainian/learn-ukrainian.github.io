@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 
 import pytest
@@ -287,6 +288,49 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         assert "cpu_count" in data["hosts"]["host-job"]
         assert data["hosts"]["host-teacher"]["status"] == "fresh"
     finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(
+    tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    probe_started = threading.Event()
+    release_probe = threading.Event()
+    original_host_load = fake.host_load
+
+    def host_load(host: str) -> dict:
+        if host == "job-box":
+            probe_started.set()
+            assert release_probe.wait(timeout=1.0)
+        return original_host_load(host)
+
+    monkeypatch.setattr(fake, "host_load", host_load)
+    try:
+        load_mod.clear_host_load_cache()
+        load_mod.set_host_load_cache(
+            "job-box",
+            original_host_load("job-box"),
+            mono_ts=time.monotonic() - 31.0,
+        )
+        load_mod.set_host_load_cache(
+            "teach-box",
+            original_host_load("teach-box"),
+            mono_ts=time.monotonic() - 10.0,
+        )
+        resp = client.get("/api/occupancy")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["hosts"]["host-job"]["status"] == "fresh"
+        assert 30.0 <= data["hosts"]["host-job"]["age_seconds"] <= 33.0
+        assert data["hosts"]["host-teacher"]["status"] == "fresh"
+        assert probe_started.wait(timeout=1.0)
+    finally:
+        release_probe.set()
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
 
