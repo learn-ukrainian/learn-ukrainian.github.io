@@ -160,7 +160,7 @@ reap_retired_shared_agent_paths() {
     # OUTSIDE the repository. The helper walks components with O_NOFOLLOW|O_DIRECTORY
     # and unlinks relative to the resulting directory fd, so the entry removed is the
     # one inside the directory actually opened. See scripts/deploy/reap_agent_mirrors.py.
-    "$PROJECT_ROOT/.venv/bin/python" "$PROJECT_ROOT/scripts/deploy/reap_agent_mirrors.py" \
+    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/reap_agent_mirrors.py" \
         --agent-root .agent \
         --manifest "$AGENT_SHARED_MANIFEST" \
         --source-root "$SHARED_EXTENSIONS"
@@ -170,7 +170,7 @@ sync_shared_agent_mirror() {
     # The source is absolute because the helper fchdirs into a descriptor for
     # .agent before it execs rsync.  Passing . as the destination keeps the write
     # bound to that descriptor even if another agent swaps the .agent pathname.
-    "$PROJECT_ROOT/.venv/bin/python" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
+    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
         --source-root "$PROJECT_ROOT/$SHARED_EXTENSIONS" \
         --agent-root .agent
 }

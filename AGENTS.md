@@ -40,8 +40,9 @@ non-skippable:
 9. Maximize Ukrainian immersion, **EXCEPT A1**.
 10. Drive decided work within approved scope.
 11. Repository hard gates bind.
-12. Do not make architecture, layout, process, or policy decisions without
-    present-tense operator or designated-advisor approval.
+12. Do not make NEW architecture, layout, process, or policy decisions without
+    present-tense operator or designated-advisor approval; this does not reopen
+    approval on already-ordered or already-approved work — drive that per item 10.
 13. Apply adversarial quality: lead with failure modes and missing evidence.
 14. **Pre-dispatch outcome adequacy:** before presenting or dispatching a
     substantive phase/epic, freeze the SHA-256, user outcome, denominator,
@@ -65,7 +66,9 @@ non-skippable:
   `.venv/bin/python -m pytest`).
 - Never modify `.python-version`, `.yamllint`, or `.markdownlint.json` to make
   work pass. Fix source instead. Do not commit generated status, audit, review,
-  or telemetry artifacts; keep one PR to one concern and under the file cap.
+  or telemetry artifacts; one PR per user-visible outcome — do not mix outcomes,
+  do not split one outcome across PRs. The file cap is a review-size hint, not a
+  reason to stall or re-ask on decided work.
 - Do not delete existing files without explicit authorization. Do not weaken, skip, stub, or comment out tests.
   Run the affected checks and report their actual output; distinguish sandbox or harness limits from product failures.
 - Never print or commit secrets, credentials, infrastructure details, raw IP
