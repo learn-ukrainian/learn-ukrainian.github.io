@@ -148,6 +148,10 @@ async def list_tools() -> list[Tool]:
                         ),
                         "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
                     },
+                    "source_file": {
+                        "type": "string",
+                        "description": "Optional exact textbook source file to scope the search.",
+                    },
                     "limit": {
                         "type": "integer",
                         "description": "Max results to return (default 5, max 20)",
@@ -1345,10 +1349,11 @@ async def handle_search_text(args: dict) -> list[TextContent]:
     query = args["query"]
     limit = min(args.get("limit", 5), 20)
     subject = args.get("subject")
+    source_file = args.get("source_file")
 
     from wiki.sources_db import search_textbooks
     keywords = {w for w in query.lower().split() if len(w) >= 3}
-    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject)
+    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file)
 
     if not hits:
         return [TextContent(type="text", text="No results found.")]

@@ -1601,6 +1601,7 @@ def search_textbooks(
     *,
     track: str | None = None,
     subject: str | None = None,
+    source_file: str | None = None,
 ) -> list[dict]:
     """Deprecated chunk-level FTS5 textbook search kept for backward compatibility.
 
@@ -1615,7 +1616,18 @@ def search_textbooks(
     _ = track  # accepted for backward compatibility; ignored
     extra_where = ""
     extra_params: tuple = ()
-    if subject:
+    if subject and source_file:
+        normalized_subject = normalize_subject_slug(subject)
+        if normalized_subject is None:
+            return []
+        if "subject" not in _table_columns("textbooks"):
+            raise sqlite3.OperationalError(
+                "textbooks.subject column missing; run "
+                "scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
+            )
+        extra_where = "AND s.subject = ? AND s.source_file = ?"
+        extra_params = (normalized_subject, source_file)
+    elif subject:
         normalized_subject = normalize_subject_slug(subject)
         if normalized_subject is None:
             return []
@@ -1626,6 +1638,9 @@ def search_textbooks(
             )
         extra_where = "AND s.subject = ?"
         extra_params = (normalized_subject,)
+    elif source_file:
+        extra_where = "AND s.source_file = ?"
+        extra_params = (source_file,)
     # Request 2x to compensate for filtered TOC/noise chunks
     rows = _fts_search(
         "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,
