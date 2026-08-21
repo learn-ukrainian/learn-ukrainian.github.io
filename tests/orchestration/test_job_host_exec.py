@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import base64
 import io
+import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -564,8 +566,20 @@ def test_remote_payload_preamble_is_private_unique_and_fail_closed() -> None:
     assert token_a != token_b
     var_a = token_a.split(":", 1)[1]
     var_b = token_b.split(":", 1)[1]
+    mode_check = shlex.join(
+        [
+            sys.executable,
+            "-c",
+            "import os,stat,sys; p=sys.argv[1]; m=stat.S_IMODE(os.stat(p).st_mode); "
+            "raise SystemExit(0 if m & 0o077 == 0 else 1)",
+        ]
+    )
     created = subprocess.run(
-        ["bash", "-c", f"{first} && {second} && test \"${var_a}\" != \"${var_b}\" && python3 -c 'import os,stat,sys; p=sys.argv[1]; m=stat.S_IMODE(os.stat(p).st_mode); raise SystemExit(0 if m & 0o077 == 0 else 1)' \"${var_a}\""],
+        [
+            "bash",
+            "-c",
+            f"{first} && {second} && test \"${var_a}\" != \"${var_b}\" && {mode_check} \"${var_a}\"",
+        ],
         check=False,
         capture_output=True,
         text=True,
