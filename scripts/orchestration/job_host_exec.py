@@ -44,6 +44,8 @@ ENV_DISPATCH_SSH = "LU_DISPATCH_SSH"
 ENV_REPO = "LU_JOB_REPO"
 ENV_TEACHER_REPO = "LU_TEACHER_REPO"
 ENV_ALLOW_NOTEBOOK = "LU_ALLOW_NOTEBOOK_DISPATCH"
+ENV_RUNTIME_INITIATOR = "LU_RUNTIME_INITIATOR"
+ENV_RUNTIME_INITIATOR_SOURCE = "LU_RUNTIME_INITIATOR_SOURCE"
 ENV_OCCUPANCY_HOST = "LU_JOB_OCCUPANCY_HOST_ID"
 ENV_MEM_FULL = "LU_JOB_MEM_FULL_PCT"
 ENV_DISK_FULL = "LU_JOB_DISK_FULL_PCT"
@@ -443,11 +445,18 @@ def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | No
     return rc == 255
 
 
-def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
+def forward_dispatch(
+    *,
+    host_id: str,
+    argv: list[str],
+    initiator: str | None = None,
+    initiator_source: str | None = None,
+) -> int:
     """SSH a notebook ``delegate.py dispatch`` onto the chosen VPS and spawn there.
 
     Remote spawn sets ``LU_ALLOW_NOTEBOOK_DISPATCH=1`` so the worker checkout
-    does not try to forward again.
+    does not try to forward again. Session-derived initiator identity is
+    exported so the remote worker does not record ``unknown``.
     """
     if len(argv) < 2:
         raise ValueError("dispatch argv is empty")
@@ -463,7 +472,20 @@ def forward_dispatch(*, host_id: str, argv: list[str]) -> int:
             break
         idx = next_idx if prompt_val is not None else idx + 1
     rest, _stdin, preamble = materialize_local_dispatch_argv(payload, stdin_body=stdin_body)
+    has_initiator = False
+    scan = 0
+    while scan < len(rest):
+        value, next_scan = _flag_value(rest, scan, "--initiator")
+        if value is not None:
+            has_initiator = True
+            break
+        scan = next_scan if value is not None else scan + 1
+    if initiator and not has_initiator:
+        rest.extend(["--initiator", initiator])
     extra_exports = [f"export {ENV_ALLOW_NOTEBOOK}=1"]
+    if initiator and initiator_source and initiator_source != "unknown":
+        extra_exports.append(f"export {ENV_RUNTIME_INITIATOR}={shlex.quote(initiator)}")
+        extra_exports.append(f"export {ENV_RUNTIME_INITIATOR_SOURCE}={shlex.quote(initiator_source)}")
     if preamble:
         extra_exports.append(preamble)
     remote = build_remote_command(
