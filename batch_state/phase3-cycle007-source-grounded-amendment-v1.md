@@ -74,20 +74,32 @@ The deterministic query plan is:
    Deduplicate the resulting queries within the frozen source universe.
 3. Batch-check every extracted form with `verify_words`.
 4. For a VESUM miss, never infer that the form is Russian or invalid. Split
-   supported compounds and escalate through `check_modern_form`,
-   `search_heritage`, the Антоненко-Давидович style-guide surfaces,
-   `search_ua_gec_errors`, and local corpus evidence as prescribed by the
-   Ukrainian-linguistics rules. Антоненко-Давидович and UA-GEC are paired:
-   neither incomplete source substitutes for the other.
-5. Use `check_russian_shadow` only as a suspicion flag. It can require review
+   supported compounds, then check `query_ulif`, the locally cached
+   `query_slovnyk_me` evidence, and `query_grac` corpus attestation. Ambiguous
+   or unavailable escalation remains unresolved.
+5. Russianism/calque verification is a distinct path: query both
+   `search_style_guide` and `search_text` with
+   `source_file='antonenko-davydovych-yak-my-hovorymo'`, plus
+   `search_ua_gec_errors` and `search_heritage`. The structured
+   Антоненко-Давидович index, its prose surface, and UA-GEC are complementary;
+   no incomplete surface substitutes for the others.
+6. Use `check_russian_shadow` only as a suspicion flag. It can require review
    but can never independently reject or accept a row.
-6. Pravopys 2026 remains the sole current normative authority. Bind its frozen
-   Cycle 005 source rows/PDF evidence to relevant residual phenomena. The
-   Sources MCP `query_pravopys` tool exposes Pravopys 2019 and is therefore
-   comparison-only: it cannot satisfy a current normative decision. Ukrainian
+7. Within this frozen Phase 3 evaluation contract, the officially decided
+   Pravopys 2026 edition is the sole current normative authority. This is a
+   task-specific frozen source identity, not an unsupported inference from the
+   general Sources MCP documentation. Its PDF SHA-256 is
+   `e593956bfba6737d991a76fa86970db9c10a5cd7fd8895bae67f2b9a950c3a92`;
+   the text-free Phase 3 context receipt SHA-256 is
+   `5da6f60e1cf5527fd98e44b4396472d871d359cd6b9dc76e3806c73a15c2b827`;
+   and the public source-universe schema requires both an official decision
+   locator and official download locator for that edition. Bind those frozen
+   Cycle 005 rows/PDF facts to relevant residual phenomena. The Sources MCP
+   `query_pravopys` tool exposes Pravopys 2019 and is comparison-only within
+   this evaluation; it cannot override the frozen 2026 decision. Ukrainian
    textbook explanations, VESUM attestation, heritage evidence, and corpus
    occurrences remain distinct non-normative channels.
-7. Give every immutable result a content-derived evidence ID using canonical
+8. Give every immutable result a content-derived evidence ID using canonical
    JSON over exactly: evidence schema, channel, source identity and version,
    locator, query SHA-256, status, supports value, retrieval SHA-256, parser ID
    and version, row identity, and optional phenomenon ID. Status is one of
@@ -243,14 +255,17 @@ No private provider call is allowed until all are true:
 7. Public Gemini and Grok canaries each make a real `sources` MCP call, cite
    valid evidence IDs, reject a Russian/Surzhyk trap for the right sourced
    reason, preserve a heritage false-positive control, and emit the exact
-   bound schema without private data.
+   bound schema without private data. These canaries use dedicated public
+   synthetic fixtures disjoint from both the private 10,159-row denominator
+   and its frozen negative controls.
 8. A text-free preflight binds the reviewed code, amendment, source database,
    prompts, evidence manifest, audit seed, canary receipts, and fresh Google
    Drive backup receipt.
 
 ## Stop policy
 
-One structural retry is permitted only when attempt 1 has no extractable,
+For each provider work unit (one Gemini chunk or one Grok packet), one
+structural retry is permitted only when attempt 1 has no extractable,
 schema-valid result. A schema-valid result that fails identity, evidence, or
 semantic validation is terminal and receives no provider retry. Any other
 structural, source-binding, privacy, provider, or audit failure writes one

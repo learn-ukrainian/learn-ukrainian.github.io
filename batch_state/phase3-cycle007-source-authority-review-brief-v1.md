@@ -12,9 +12,16 @@ repository's Ukrainian-linguistics and Sources MCP rules. In particular check:
 3. Антоненко-Давидович and heritage sources are used for their proper roles.
    UA-GEC is paired with the partly indexed style guide so modern calques are
    not silently missed.
-4. Pravopys 2026 remains the sole current normative authority; Sources MCP
-   Pravopys 2019 output is comparison-only, and textbook/corpus occurrence
-   cannot masquerade as a current normative rule.
+4. Within this Phase 3 evaluation, the frozen Pravopys 2026 edition remains
+   the sole current normative authority. Verify that claim against the public
+   text-free receipt
+   `data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json`
+   and the official-decision-locator requirement in
+   `data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json`;
+   do not reject the task-specific source identity merely because the general
+   Sources MCP `query_pravopys` tool currently exposes 2019. Its 2019 output is
+   comparison-only for this evaluation, and textbook/corpus occurrence cannot
+   masquerade as a current normative rule.
 5. Evidence IDs and abstention rules actually prevent source-free positive
    decisions.
 6. The risk-triggered full review and 600-row consensus audit are strong enough
