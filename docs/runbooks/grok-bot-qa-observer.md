@@ -69,8 +69,9 @@ curl -s -X POST http://127.0.0.1:8765/api/observer/presence \
 ```
 
 `qa-engineer` is also allowed. Repeat at least every 15 minutes while working.
-`GET /api/occupancy` then shows the row under `cloud-observer`. Do not POST a
-`pid` or `reserved_ram_mb`. Do not treat this as a dispatch seat.
+`GET /api/occupancy` then shows `agent`, `task_id`, and `status` under
+`cloud-observer`. Occupancy does not echo `summary`. Do not POST a `pid` or
+`reserved_ram_mb`. Do not treat this as a dispatch seat.
 
 ## Evidence (works today)
 

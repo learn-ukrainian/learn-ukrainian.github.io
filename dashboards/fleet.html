@@ -544,11 +544,11 @@ function renderOccupancy(data) {
       continue;
     }
     occupants.forEach(item => {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td class="preview">${escapeHtml(short(item.summary, short(item.status)))}</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
     });
   }
   document.getElementById('occupancy-content').innerHTML = table(
-    ['Host', 'Probe', 'Kind', 'Agent', 'Task', 'Epic', 'Summary'],
+    ['Host', 'Probe', 'Kind', 'Agent', 'Task', 'Epic', 'Status'],
     rows,
     'No occupancy occupants. Observer heartbeats appear under cloud-observer.',
   );

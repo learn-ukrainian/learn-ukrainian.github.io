@@ -38,7 +38,7 @@ _HEARTBEAT = {
     "task_id": "7061",
     "epic": "6943",
     "status": "working",
-    "summary": "tunneled Monitor/observer e2e sweep",
+    "summary": "tunneled Monitor observer sweep",
 }
 
 
@@ -58,6 +58,7 @@ def test_presence_loopback_heartbeat_appears_under_cloud_observer() -> None:
     assert body["task_id"] == "7061"
     assert body["host_id"] == "cloud-observer"
     assert body["ttl_seconds"] == PRESENCE_TTL_SECONDS
+    assert body["summary"] == "tunneled Monitor observer sweep"
     assert "pid" not in body
     assert "reserved_ram_mb" not in body
     assert posted.headers.get("cache-control") == "no-store"
@@ -78,10 +79,11 @@ def test_presence_loopback_heartbeat_appears_under_cloud_observer() -> None:
             "task_id": "7061",
             "epic": "6943",
             "status": "working",
-            "summary": "tunneled Monitor/observer e2e sweep",
         }
     ]
+    assert "summary" not in host["occupants"][0]
     text = json.dumps(data)
+    assert "summary" not in text
     assert _IP.findall(text) == []
     for alias in _ALIAS_LEAKS:
         assert alias not in text
@@ -105,11 +107,19 @@ def test_presence_rejects_ram_lease_fields() -> None:
 def test_presence_rejects_unknown_agent_and_leaky_summary() -> None:
     unknown = loop_client.post("/api/observer/presence", json={**_HEARTBEAT, "agent": "cursor"})
     assert unknown.status_code == 400
-    leaky = loop_client.post(
-        "/api/observer/presence",
-        json={**_HEARTBEAT, "summary": "talk to atlas-runner"},
-    )
-    assert leaky.status_code == 400
+    for summary in (
+        "talk to atlas-runner",
+        "notes/etc/passwd",
+        "token=abc123",
+        "see box.example.com",
+        "pid=12 reserved_ram_mb=256",
+        "bearer secret value",
+    ):
+        leaky = loop_client.post(
+            "/api/observer/presence",
+            json={**_HEARTBEAT, "summary": summary},
+        )
+        assert leaky.status_code == 400, summary
 
 
 def test_presence_upserts_per_agent_and_drops_after_ttl() -> None:

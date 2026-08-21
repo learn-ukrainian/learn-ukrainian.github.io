@@ -339,29 +339,33 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
     assert _occupant(kind="job", task_id="atlas-runner-reenrich-3") is None
 
 
-def test_safe_summary_keeps_slash_phrases_and_drops_leaks() -> None:
-    assert _safe_summary("tunneled Monitor/observer e2e sweep") == "tunneled Monitor/observer e2e sweep"
+def test_safe_summary_drops_paths_secrets_and_aliases() -> None:
+    assert _safe_summary("tunneled Monitor observer sweep") == "tunneled Monitor observer sweep"
     assert _safe_summary("  spaced   words  ") == "spaced words"
     for leaked in (
         "talk to atlas-runner",
         "10.0.0.1 sweep",
         "/etc/passwd",
+        "notes/etc/passwd",
         "box.example.com",
         "pid=12 reserved_ram_mb=256",
+        "token=abc123",
+        "bearer secret value",
+        "user@host",
     ):
         assert _safe_summary(leaked) is None
     assert _occupant(kind="observer", agent="grok-bot", task_id="7061") is None
-    assert _occupant(
+    occupant = _occupant(
         kind="observer",
         agent="grok-bot",
         task_id="7061",
         status="working",
-        summary="tunneled Monitor/observer e2e sweep",
-    ) == {
+    )
+    assert occupant == {
         "kind": "observer",
         "agent": "grok-bot",
         "task_id": "7061",
         "epic": None,
         "status": "working",
-        "summary": "tunneled Monitor/observer e2e sweep",
     }
+    assert "summary" not in occupant

@@ -130,7 +130,6 @@ def _occupants_from_observers() -> list[dict[str, str | None]]:
             task_id=row.task_id,
             epic=row.epic,
             status=row.status,
-            summary=row.summary,
         )
         if occupant is not None:
             occupants.append(occupant)
