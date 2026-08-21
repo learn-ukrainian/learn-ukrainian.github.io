@@ -464,6 +464,38 @@ def test_failed_probe_backoff_blocks_ordinary_read(
         router_mod.clear_host_load_cache()
 
 
+def test_failed_probe_backoff_blocks_cold_async_read(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A cold failed collect must not retry on the same ordinary read (#7074)."""
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
+    calls = 0
+
+    def host_load(host: str) -> dict:
+        del host
+        nonlocal calls
+        calls += 1
+        raise RuntimeError("down")
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+
+    async def exercise() -> None:
+        first = await router_mod._get_host_load_entry_async("atlas-runner")
+        assert calls == 1
+        assert first["status"] == "unavailable"
+        second = await router_mod._get_host_load_entry_async("atlas-runner")
+        await asyncio.sleep(0.02)
+        assert calls == 1
+        assert second["status"] == "unavailable"
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        router_mod.clear_host_load_cache()
+
+
 def test_load_refresh_starts_inside_fresh_window(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:

@@ -262,7 +262,8 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
             "age_seconds": age,
         }
 
-    _schedule_host_load_refresh(host)
+    if fresh or not _host_load_in_failure_backoff(host, now_mono):
+        _schedule_host_load_refresh(host)
     now_iso = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     return {
         "status": "unavailable",
@@ -274,11 +275,16 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
 
 async def _get_host_load_entry_async(host: str, *, fresh: bool = False) -> dict[str, Any]:
     """Read host load, awaiting the shared probe when no usable cache exists."""
+    now_mono = time.monotonic()
     entry = _HOST_LOAD_CACHE.get(host)
-    needs_probe_result = fresh or entry is None
-    if entry is not None:
-        _, mono_ts, _ = entry
-        needs_probe_result = needs_probe_result or time.monotonic() - mono_ts > HOST_LOAD_MAX_STALE_S
+    in_backoff = _host_load_in_failure_backoff(host, now_mono)
+    needs_probe_result = bool(fresh)
+    if not needs_probe_result and not in_backoff:
+        if entry is None:
+            needs_probe_result = True
+        else:
+            _, mono_ts, _ = entry
+            needs_probe_result = now_mono - mono_ts > HOST_LOAD_MAX_STALE_S
 
     if needs_probe_result:
         task = _schedule_host_load_refresh(host)
