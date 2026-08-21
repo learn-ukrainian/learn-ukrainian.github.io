@@ -39,7 +39,7 @@ def test_unreachable_is_degraded_not_refused(monkeypatch) -> None:
     assert "retired" in reason
     line = gate.format_launcher_line(status, reason)
     assert line.startswith("⚠️")
-    assert gate.main() == 0
+    assert gate.main([]) == 0
 
 
 def test_healthy_observer_is_ok(monkeypatch) -> None:
@@ -75,3 +75,14 @@ def test_missing_fleet_db_is_degraded(monkeypatch) -> None:
 
     monkeypatch.setattr(gate.urllib.request, "urlopen", fake_open)
     assert gate.check_driver_plane()[0] == "degraded"
+
+
+def test_help_contract() -> None:
+    help_text = gate.build_parser().format_help()
+    assert "Probe the tunneled job-host Monitor before notebook driver launch." in help_text
+    assert "do not use it to start a second Monitor" in help_text
+    assert "Examples:" in help_text
+    assert "Outputs:" in help_text
+    assert "Exit codes:" in help_text
+    assert "Related:" in help_text
+    assert "Issue: #7062" in help_text

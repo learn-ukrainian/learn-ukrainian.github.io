@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import argparse
 import base64
-import hashlib
 import json
 import os
 import shlex
@@ -49,6 +48,7 @@ ENV_OCCUPANCY_HOST = "LU_JOB_OCCUPANCY_HOST_ID"
 ENV_MEM_FULL = "LU_JOB_MEM_FULL_PCT"
 ENV_DISK_FULL = "LU_JOB_DISK_FULL_PCT"
 REMOTE_PATH_EXPORT = 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"'
+_REMOTE_VAR_PREFIX = "__LU_REMOTE_VAR:"
 # Canonical SSH Host names already used by atlas_job (public repo contract).
 DEFAULT_JOB_SSH = "atlas-runner"
 DEFAULT_TEACHER_SSH = "hramatka"
@@ -311,11 +311,20 @@ def build_remote_command(
 ) -> str:
     if not argv:
         raise ValueError("remote command is empty")
-    quoted = " ".join(shlex.quote(part) for part in argv)
+    parts: list[str] = []
+    for part in argv:
+        if part.startswith(_REMOTE_VAR_PREFIX):
+            var = part[len(_REMOTE_VAR_PREFIX) :]
+            if not var.isidentifier():
+                raise ValueError(f"invalid remote payload variable {var!r}")
+            parts.append(f'"${var}"')
+        else:
+            parts.append(shlex.quote(part))
+    quoted = " ".join(parts)
     prefix = REMOTE_PATH_EXPORT
     for item in extra_exports or []:
-        prefix = f"{prefix}; {item}"
-    return f"{prefix}; cd {shlex.quote(remote_repo)} && {quoted}"
+        prefix = f"{prefix} && {item}"
+    return f"{prefix} && cd {shlex.quote(remote_repo)} && {quoted}"
 
 
 def _flag_value(argv: list[str], index: int, flag: str) -> tuple[str | None, int]:
@@ -328,12 +337,15 @@ def _flag_value(argv: list[str], index: int, flag: str) -> tuple[str | None, int
     return None, index
 
 
-def _remote_payload_preamble(kind: str, contents: bytes) -> tuple[str, str]:
-    digest = hashlib.sha256(contents).hexdigest()[:16]
-    remote_path = f"/tmp/lu-dispatch-{kind}-{digest}"
+def _remote_payload_preamble(kind: str, contents: bytes, *, seq: int) -> tuple[str, str]:
+    ident = kind.replace("-", "_")
+    var = f"LU_DISPATCH_{ident.upper()}_{seq}"
     encoded = base64.b64encode(contents).decode("ascii")
-    preamble = f"printf '%s' {shlex.quote(encoded)} | base64 -d > {shlex.quote(remote_path)}"
-    return preamble, remote_path
+    preamble = (
+        f"umask 077 && {var}=$(mktemp /tmp/lu-dispatch-{kind}.XXXXXX) && "
+        f"printf '%s' {shlex.quote(encoded)} | base64 -d > \"${var}\""
+    )
+    return preamble, f"{_REMOTE_VAR_PREFIX}{var}"
 
 
 def materialize_local_dispatch_argv(
@@ -344,9 +356,9 @@ def materialize_local_dispatch_argv(
     """Rewrite notebook-only paths so SSH does not send Darwin paths.
 
     File payloads (``--prompt-file``, ``--lifecycle-file``, ``--output-schema``)
-    are written to content-addressed ``/tmp`` files on the remote host via a
-    base64 preamble so remote argparse still sees a real file (sparse-checkout
-    inference reads ``--prompt-file`` before stdin).
+    are written to unique private ``mktemp`` files on the remote host via a
+    fail-closed base64 preamble so remote argparse still sees a real file
+    (sparse-checkout inference reads ``--prompt-file`` before stdin).
     ``--prompt -`` is rewritten to a remote ``--prompt-file`` after the notebook
     stdin body is captured.
     ``--cwd`` is rejected: a Darwin working directory is not a VPS checkout.
@@ -355,6 +367,7 @@ def materialize_local_dispatch_argv(
     """
     out: list[str] = []
     preambles: list[str] = []
+    seq = 0
     i = 0
     while i < len(argv):
         cwd_path, next_i = _flag_value(argv, i, "--cwd")
@@ -372,7 +385,8 @@ def materialize_local_dispatch_argv(
                         "--prompt - cannot be forwarded without the prompt body; "
                         "pass --prompt-file"
                     )
-                preamble, remote_path = _remote_payload_preamble("prompt", stdin_body)
+                preamble, remote_path = _remote_payload_preamble("prompt", stdin_body, seq=seq)
+                seq += 1
                 preambles.append(preamble)
                 out.extend(["--prompt-file", remote_path])
             else:
@@ -385,7 +399,8 @@ def materialize_local_dispatch_argv(
             if file_path is None:
                 continue
             body = Path(file_path).read_bytes()
-            preamble, remote_path = _remote_payload_preamble(kind, body)
+            preamble, remote_path = _remote_payload_preamble(kind, body, seq=seq)
+            seq += 1
             preambles.append(preamble)
             out.extend([flag, remote_path])
             i = next_i
@@ -403,7 +418,7 @@ def materialize_local_dispatch_argv(
             continue
         out.append(argv[i])
         i += 1
-    return out, None, ("; ".join(preambles) if preambles else None)
+    return out, None, (" && ".join(preambles) if preambles else None)
 
 
 def materialize_local_prompt_argv(argv: list[str]) -> tuple[list[str], bytes | None]:
@@ -511,8 +526,10 @@ def build_parser() -> argparse.ArgumentParser:
             "bodies land in remote /tmp and LU_ALLOW_NOTEBOOK_DISPATCH=1 prevents "
             "a second forward hop.\n\n"
             "Exit codes:\n"
-            "  0 on successful remote completion; 2 on CLI misuse or missing host; "
-            "255 on SSH transport failure; other codes are the remote command.\n\n"
+            "  0 on successful remote completion; 2 on CLI misuse, missing host, "
+            "or notebook payload errors; 255 on SSH transport failure "
+            "(missing/unexecutable ssh, or ssh rc 255); other codes are the "
+            "remote command.\n\n"
             "Related:\n"
             "  Occupancy: GET /api/occupancy\n"
             "  Dispatch: scripts/delegate.py\n"
@@ -551,14 +568,25 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
         dispatch_argv = _delegate_dispatch_argv(remote_argv)
         if dispatch_argv is not None:
-            return forward_dispatch(host_id=host_id, argv=dispatch_argv)
+            try:
+                return forward_dispatch(host_id=host_id, argv=dispatch_argv)
+            except SshTransportError as exc:
+                print(f"error: {exc}", file=sys.stderr)
+                return 255
+            except (ValueError, FileNotFoundError, PermissionError) as exc:
+                print(f"error: {exc}", file=sys.stderr)
+                return 2
         alias = ssh_alias_for_host_id(host_id)
         repo = repo_for_host_id(host_id)
         ssh_argv = build_ssh_argv(alias, build_remote_command(remote_argv, remote_repo=repo))
-    except (ValueError, FileNotFoundError, PermissionError, SshTransportError) as exc:
+    except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
-    completed = subprocess.run(ssh_argv, check=False)
+    try:
+        completed = subprocess.run(ssh_argv, check=False)
+    except (FileNotFoundError, PermissionError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 255
     return int(completed.returncode)
 
 

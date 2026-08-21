@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import io
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -237,7 +238,8 @@ def test_main_dispatch_copies_local_prompt_file(
     recorded = args_file.read_text(encoding="utf-8")
     assert str(prompt) not in recorded
     assert "--prompt-file" in recorded
-    assert "/tmp/lu-dispatch-prompt-" in recorded
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in recorded
+    assert "$LU_DISPATCH_PROMPT_0" in recorded
     assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in recorded
     assert base64.b64encode(b"keep curriculum/l2-uk-en in the worktree\n").decode("ascii") in recorded.replace("\n", "")
 
@@ -318,7 +320,8 @@ def test_forward_dispatch_inlines_prompt_file(
     recorded = args_file.read_text(encoding="utf-8")
     assert str(prompt) not in recorded
     assert "--prompt-file" in recorded
-    assert "/tmp/lu-dispatch-prompt-" in recorded
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in recorded
+    assert "$LU_DISPATCH_PROMPT_0" in recorded
     assert "\n--prompt\n-\n" not in recorded
     assert base64.b64encode(b"keep curriculum/l2-uk-en in the worktree\n").decode("ascii") in recorded.replace("\n", "")
 
@@ -360,7 +363,8 @@ def test_forward_dispatch_rewrites_prompt_dash(
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
     assert "--prompt-file" in recorded
-    assert "/tmp/lu-dispatch-prompt-" in recorded
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in recorded
+    assert "$LU_DISPATCH_PROMPT_0" in recorded
     assert "\n--prompt\n-\n" not in recorded
     assert base64.b64encode(b"touch wiki/pages.md\n").decode("ascii") in recorded.replace("\n", "")
 
@@ -401,7 +405,8 @@ def test_forward_dispatch_copies_lifecycle_file(
     recorded = args_file.read_text(encoding="utf-8")
     assert str(ledger) not in recorded
     assert "--lifecycle-file" in recorded
-    assert "/tmp/lu-dispatch-lifecycle-" in recorded
+    assert "/tmp/lu-dispatch-lifecycle.XXXXXX" in recorded
+    assert "$LU_DISPATCH_LIFECYCLE_0" in recorded
     assert "base64 -d >" in recorded
 
 
@@ -441,7 +446,8 @@ def test_forward_dispatch_copies_output_schema(
     recorded = args_file.read_text(encoding="utf-8")
     assert str(schema) not in recorded
     assert "--output-schema" in recorded
-    assert "/tmp/lu-dispatch-output-schema-" in recorded
+    assert "/tmp/lu-dispatch-output-schema.XXXXXX" in recorded
+    assert "$LU_DISPATCH_OUTPUT_SCHEMA_0" in recorded
     assert "base64 -d >" in recorded
 
 
@@ -547,3 +553,66 @@ def test_notebook_fallback_only_on_transport_failure() -> None:
     assert jh.notebook_fallback_after_forward(255) is True
     assert jh.notebook_fallback_after_forward(0) is False
     assert jh.notebook_fallback_after_forward(2) is False
+
+
+def test_remote_payload_preamble_is_private_unique_and_fail_closed() -> None:
+    first, token_a = jh._remote_payload_preamble("prompt", b"same\n", seq=0)
+    second, token_b = jh._remote_payload_preamble("prompt", b"same\n", seq=1)
+    assert "umask 077" in first
+    assert "mktemp /tmp/lu-dispatch-prompt.XXXXXX" in first
+    assert "base64 -d >" in first
+    assert token_a != token_b
+    var_a = token_a.split(":", 1)[1]
+    var_b = token_b.split(":", 1)[1]
+    created = subprocess.run(
+        ["bash", "-c", f"{first} && {second} && test \"${var_a}\" != \"${var_b}\" && python3 -c 'import os,stat,sys; p=sys.argv[1]; m=stat.S_IMODE(os.stat(p).st_mode); raise SystemExit(0 if m & 0o077 == 0 else 1)' \"${var_a}\""],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert created.returncode == 0, created.stderr
+    failed = subprocess.run(
+        ["bash", "-c", "umask 077 && f=$(mktemp /tmp/lu-dispatch-prompt.XXXXXX) && printf '%s' '!!!!' | base64 -d > \"$f\" && echo reached"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert failed.returncode != 0
+    assert "reached" not in failed.stdout
+
+
+def test_main_missing_ssh_dispatch_returns_255(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    monkeypatch.setenv("PATH", str(empty))
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.main(
+        [
+            "--host-id",
+            "host-job",
+            "--",
+            ".venv/bin/python",
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+        ]
+    )
+    assert rc == 255
+
+
+def test_main_missing_ssh_plain_command_returns_255(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    monkeypatch.setenv("PATH", str(empty))
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.main(["--host-id", "host-job", "--", "true"])
+    assert rc == 255

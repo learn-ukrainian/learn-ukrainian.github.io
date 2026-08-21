@@ -9,6 +9,7 @@ occupancy env.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -84,8 +85,35 @@ def format_launcher_line(status: PlaneStatus, reason: str) -> str:
     return f"⚠️  plane fallback: {reason}"
 
 
+def build_parser() -> argparse.ArgumentParser:
+    return argparse.ArgumentParser(
+        prog="plane_tunnel_gate.py",
+        description=(
+            "Probe the tunneled job-host Monitor before notebook driver launch.\n"
+            "Use it to warn when the plane is down; do not use it to start a "
+            "second Monitor or reopen retired Mac sqlite."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/orchestration/plane_tunnel_gate.py\n"
+            "  LU_SKIP_PLANE_TUNNEL_CHECK=1 .venv/bin/python scripts/orchestration/plane_tunnel_gate.py\n\n"
+            "Outputs:\n"
+            "  Prints a one-line plane status. Degraded probes still exit 0 so "
+            "drivers start on the notebook; they never reopen retired sqlite.\n\n"
+            "Exit codes:\n"
+            "  0 after a probe (ok, degraded, or skipped); 2 on CLI misuse.\n\n"
+            "Related:\n"
+            "  Dispatch: scripts/orchestration/job_host_exec.py\n"
+            "  Fleet: scripts/lib/fleet_comms_cold_start.sh\n"
+            "  Issue: #7062\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
-    del argv
+    parser = build_parser()
+    parser.parse_args(argv)
     status, reason = check_driver_plane()
     print(format_launcher_line(status, reason), file=sys.stderr if status == "degraded" else sys.stdout)
     return 0
