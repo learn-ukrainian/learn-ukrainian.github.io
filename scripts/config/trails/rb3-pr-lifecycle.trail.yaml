@@ -6,7 +6,7 @@
 # evaluated through its shared pure evaluator with all eight typed facts.
 schema_version: trailspec.v1.1
 trail_id: rb3-pr-lifecycle
-version: "2.1.0"
+version: "2.2.0"
 title: RB3 PR lifecycle — receipt-bound review, gate, arm, and hygiene
 seats:
   - grok
@@ -445,11 +445,11 @@ steps:
     intent: Perform local hygiene after a separate observation proved the PR merged.
     command:
       adapter: shell
-      argv: [sh, -c, 'if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then git worktree remove "$WORKTREE_PATH" >/dev/null 2>&1 || { echo hygiene-command-failed; exit 0; }; fi; git pull --ff-only >/dev/null 2>&1 && echo hygiene-command-succeeded || echo hygiene-command-failed']
+      argv: [sh, -c, 'PRIMARY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"; if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then BRANCH=$(git -C "$WORKTREE_PATH" symbolic-ref --short HEAD 2>/dev/null || true); "$PRIMARY/.venv/bin/python" "$PRIMARY/scripts/orchestration/reap_worktrees.py" --repo-root "$PRIMARY" --apply --merged --worktree "$WORKTREE_PATH" >/dev/null 2>&1 || { echo hygiene-command-failed; exit 0; }; if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ] && git -C "$PRIMARY" ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then git -C "$PRIMARY" push origin --delete -- "$BRANCH" >/dev/null 2>&1 || { echo hygiene-command-failed; exit 0; }; fi; fi; git -C "$PRIMARY" pull --ff-only >/dev/null 2>&1 && echo hygiene-command-succeeded || echo hygiene-command-failed']
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         WORKTREE_PATH: "{worktree_path}"
-      timeout_seconds: 30
+      timeout_seconds: 120
       mutation_class: local-write
       outcome_decoder: {source: stdout-token}
     transitions:

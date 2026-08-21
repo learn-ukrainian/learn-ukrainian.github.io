@@ -70,6 +70,8 @@ def test_scheduled_cleanup_enables_terminal_dispatch_class_by_default(
         lambda **kwargs: captured.update(kwargs) or [],
     )
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
@@ -93,6 +95,8 @@ def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monke
         lambda **kwargs: captured.update(kwargs) or [],
     )
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
@@ -193,6 +197,11 @@ def test_stale_worktree_registration_is_pruned_before_reaping(
         "_live_cwd_paths",
         lambda _repo: set(),
     )
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda *_args, **_kwargs: ([], None),
+    )
 
     result = cleanup._repo_result(repo, apply=True)
 
@@ -275,7 +284,7 @@ def test_unproven_gone_branch_is_preserved(
 
     row = next(item for item in result if item["branch"] == branch)
     assert row["action"] == "skipped"
-    assert "no exact merged-PR" in row["reason"]
+    assert "no exact merged/closed PR" in row["reason"]
     assert _git(repo, "branch", "--list", branch) != ""
 
 
@@ -476,6 +485,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "repositories": 2,
         "removed": 1,
         "branches_deleted": 2,
+        "origin_branches_deleted": 0,
         "orphans_reported": 1,
         "errors": 0,
         "review_temp_reaped": 0,
@@ -527,6 +537,8 @@ def test_git_maintenance_failure_is_reported(
     monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(
         cleanup,
@@ -560,3 +572,124 @@ def test_receipt_write_is_atomic_and_private(tmp_path: Path) -> None:
     assert (tmp_path / "state").stat().st_mode & 0o777 == 0o700
     assert (tmp_path / "state" / "receipts").stat().st_mode & 0o777 == 0o700
     assert receipt_dir.stat().st_mode & 0o777 == 0o700
+
+
+def test_exact_merged_origin_branch_is_deleted(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/merged-origin"
+    _git(repo, "branch", branch, "main")
+    _git(repo, "push", "origin", branch)
+    head_sha = _git(repo, "rev-parse", branch)
+
+    def _prs(_repo: Path, candidate: str | None):
+        if candidate != branch:
+            return [], None
+        return (
+            [
+                cleanup.reap_worktrees.PullRequestState(
+                    number=77,
+                    state="MERGED",
+                    head_sha=head_sha,
+                )
+            ],
+            None,
+        )
+
+    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+
+    applied = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    assert applied[0]["action"] == "deleted"
+    assert "exact head of MERGED PR #77" in applied[0]["reason"]
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert branch not in remote_heads.splitlines()
+
+
+def test_unique_unproven_origin_branch_is_preserved(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "codex/unique-origin")
+    (repo / "unique.txt").write_text("unique\n", encoding="utf-8")
+    _git(repo, "add", "unique.txt")
+    _git(repo, "commit", "-m", "unique")
+    _git(repo, "push", "-u", "origin", "codex/unique-origin")
+    _git(repo, "checkout", "main")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == "codex/unique-origin")
+    assert row["action"] == "skipped"
+    assert "no exact merged/closed PR" in row["reason"]
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert "codex/unique-origin" in remote_heads
+
+
+def test_untracked_ancestor_local_branch_is_deleted(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    branch = "claude/old-local"
+    _git(repo, "branch", branch, "main")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
+    assert result[0]["action"] == "deleted"
+    assert "ancestor of origin/main" in result[0]["reason"]
+    assert _git(repo, "branch", "--list", branch) == ""
+
+
+def test_review_checkout_of_merged_pr_is_deleted(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "pr-7020")
+    (repo / "review.txt").write_text("review\n", encoding="utf-8")
+    _git(repo, "add", "review.txt")
+    _git(repo, "commit", "-m", "review tip")
+    _git(repo, "checkout", "main")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+    monkeypatch.setattr(
+        cleanup,
+        "_query_pr_by_number",
+        lambda _repo, number: (
+            [
+                cleanup.reap_worktrees.PullRequestState(
+                    number=number,
+                    state="MERGED",
+                    head_sha="0" * 40,
+                )
+            ],
+            None,
+        ),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
+    assert result[0]["action"] == "deleted"
+    assert "review checkout of MERGED PR #7020" in result[0]["reason"]
+    assert _git(repo, "branch", "--list", "pr-7020") == ""
+
+
+def test_entire_checkpoint_branch_is_not_deleted(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "branch", "entire/checkpoints/v1", "main")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
+    assert result == []
+    assert _git(repo, "branch", "--list", "entire/checkpoints/v1") != ""
+

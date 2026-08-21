@@ -382,7 +382,17 @@ def _pr_matches_worktree_head(
         ["git", "merge-base", "--is-ancestor", info.head, pr_state.head_sha],
         cwd=info.path,
     )
-    return proc.returncode == 0
+    if proc.returncode == 0:
+        return True
+    # Squash/recommit leftovers often keep the same tree at a sibling SHA
+    # that is neither the PR head nor an ancestor of it.  git diff --quiet
+    # is 0 only when both objects exist and the trees are identical; a
+    # missing or dummy headRefOid fails closed.
+    tree = _run(
+        ["git", "diff", "--quiet", pr_state.head_sha, info.head],
+        cwd=info.path,
+    )
+    return tree.returncode == 0
 
 
 def _live_cwd_paths(repo_root: Path) -> set[Path] | None:
@@ -520,6 +530,16 @@ class _ReapLock:
         if self.handle is not None:
             fcntl.flock(self.handle.fileno(), fcntl.LOCK_UN)
             self.handle.close()
+
+
+def _origin_branch_present(path: Path, branch: str | None) -> bool:
+    if not branch:
+        return False
+    verify = _run(
+        ["git", "rev-parse", "--verify", "--quiet", f"refs/remotes/origin/{branch}"],
+        cwd=path,
+    )
+    return verify.returncode == 0
 
 
 def _origin_matches_head(path: Path, branch: str | None) -> bool:
@@ -741,7 +761,49 @@ def _qualifying_reason(
         if terminal_reason is not None and (pr_state is None or pr_state.state != "OPEN"):
             return terminal_reason
 
+        abandoned = _abandoned_main_dispatch_reason(
+            repo_root=repo_root,
+            info=info,
+            pr_state=pr_state,
+            now=now,
+        )
+        if abandoned is not None:
+            return abandoned
+
     return None
+
+
+def _abandoned_main_dispatch_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    pr_state: PullRequestState | None,
+    now: float | None,
+) -> str | None:
+    """Reap a dispatch checkout left sitting on origin/main after closeout.
+
+    A brand-new worktree is also created from main, so this class requires the
+    origin branch to be gone, no open PR, a clean tree, and age above the
+    build-branch threshold. Live CWDs and active tasks are rejected earlier.
+    """
+    if info.branch is None or (pr_state is not None and pr_state.state == "OPEN"):
+        return None
+    if not _is_ancestor_of_origin_main(info.path):
+        return None
+    if _origin_branch_present(info.path, info.branch):
+        return None
+    age_hours = _worktree_age_hours(info.path, now=now)
+    if age_hours is None or age_hours <= DEFAULT_BUILD_AGE_HOURS:
+        return None
+    task_data = _task_record(repo_root, _dispatch_task_id(repo_root, info))
+    if task_data is not None:
+        status = task_data.get("status")
+        if status not in _TERMINAL_DISPATCH_STATUSES or _task_pid_alive(task_data):
+            return None
+    return (
+        "dispatch HEAD ancestor of origin/main; origin branch gone; "
+        f"age {age_hours:.1f}h > {DEFAULT_BUILD_AGE_HOURS:g}h"
+    )
 
 
 def find_needs_finalize_worktrees(repo_root: Path) -> list[dict[str, Any]]:

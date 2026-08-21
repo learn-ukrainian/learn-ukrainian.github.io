@@ -3,9 +3,10 @@
 
 The scheduled runner prunes remote refs and stale worktree registrations,
 requires the macOS process-CWD probe in apply mode, delegates safe worktree
-removal to the canonical reaper, deletes only provably merged local branches,
-runs automatic Git maintenance, and writes an immutable JSON receipt.
-Orphaned ``.worktrees/**`` directories are reported but never deleted.
+removal to the canonical reaper, deletes origin and local branches only with
+exact merged/closed-PR or origin/main-ancestry proof, runs automatic Git
+maintenance, and writes an immutable JSON receipt. Orphaned ``.worktrees/**``
+directories are reported but never deleted.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -114,12 +116,30 @@ def _worktree_prune(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     }
 
 
+_PROTECTED_BRANCHES = frozenset({"main", "master"})
+_PROTECTED_LOCAL_PREFIXES = ("entire/",)
+_REVIEW_CHECKOUT_RE = re.compile(r"^(?:pr|review)-(\d+)(?:-review|-tmp)?$")
+
+
 def _checked_out_branches(repo_root: Path) -> set[str]:
     return {
         item.branch
         for item in reap_worktrees.list_git_worktrees(repo_root)
         if item.branch is not None
     }
+
+
+def _is_protected_local_branch(branch: str) -> bool:
+    if branch in _PROTECTED_BRANCHES:
+        return True
+    return branch.startswith(_PROTECTED_LOCAL_PREFIXES)
+
+
+def _review_checkout_pr_number(branch: str) -> int | None:
+    match = _REVIEW_CHECKOUT_RE.fullmatch(branch)
+    if match is None:
+        return None
+    return int(match.group(1))
 
 
 def _gone_local_branches(repo_root: Path) -> list[tuple[str, str]]:
@@ -160,6 +180,155 @@ def _branch_is_origin_main_ancestor(repo_root: Path, head_sha: str) -> bool:
         "origin/main",
     )
     return proc.returncode == 0
+
+
+def _stale_ref_delete_reason(
+    repo_root: Path,
+    *,
+    prs: list[reap_worktrees.PullRequestState],
+    head_sha: str,
+    kind: str,
+) -> tuple[str | None, str | None]:
+    """Return ``(delete_reason, skip_reason)`` for a candidate stale ref."""
+    open_pr = next((pr for pr in prs if pr.state == "OPEN"), None)
+    if open_pr is not None:
+        return None, f"{kind} but PR #{open_pr.number} is OPEN"
+    exact_merged = next(
+        (pr for pr in prs if pr.state == "MERGED" and pr.head_sha == head_sha),
+        None,
+    )
+    if exact_merged is not None:
+        return f"{kind}; exact head of MERGED PR #{exact_merged.number}", None
+    exact_closed = next(
+        (pr for pr in prs if pr.state == "CLOSED" and pr.head_sha == head_sha),
+        None,
+    )
+    if exact_closed is not None:
+        return f"{kind}; exact head of CLOSED PR #{exact_closed.number}", None
+    if _branch_is_origin_main_ancestor(repo_root, head_sha):
+        return f"{kind}; branch HEAD is an ancestor of origin/main", None
+    return None, (
+        f"{kind} but no exact merged/closed PR or origin/main ancestry evidence"
+    )
+
+
+def _origin_heads(repo_root: Path) -> list[tuple[str, str]]:
+    proc = _run_git(
+        repo_root,
+        "for-each-ref",
+        "refs/remotes/origin",
+        "--format=%(refname)%09%(objectname)",
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"cannot list origin branches: {_failure(proc)}")
+    heads: list[tuple[str, str]] = []
+    prefix = "refs/remotes/origin/"
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split("\t")
+        if len(parts) != 2 or not parts[0].startswith(prefix):
+            continue
+        branch = parts[0][len(prefix) :]
+        if branch in _PROTECTED_BRANCHES or branch == "HEAD":
+            continue
+        heads.append((branch, parts[1]))
+    return heads
+
+
+def _delete_origin_branch(
+    repo_root: Path,
+    *,
+    branch: str,
+    expected_head: str,
+) -> str | None:
+    current = _run_git(
+        repo_root,
+        "rev-parse",
+        "--verify",
+        f"refs/remotes/origin/{branch}",
+    )
+    if current.returncode != 0 or (current.stdout or "").strip() != expected_head:
+        return "origin HEAD changed during cleanup"
+    if branch in _checked_out_branches(repo_root):
+        return "branch became checked out during cleanup"
+    proc = _run_git(repo_root, "push", "origin", "--delete", "--", branch)
+    if proc.returncode != 0:
+        return _failure(proc)
+    return None
+
+
+def cleanup_stale_origin_branches(
+    repo_root: Path,
+    *,
+    apply: bool,
+) -> list[dict[str, Any]]:
+    """Delete origin heads only with exact merged/closed PR or ancestry proof."""
+    checked_out = _checked_out_branches(repo_root)
+    results: list[dict[str, Any]] = []
+    for branch, head_sha in _origin_heads(repo_root):
+        if branch in checked_out:
+            results.append(
+                {
+                    "action": "skipped",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": "origin branch is checked out",
+                }
+            )
+            continue
+        prs, pr_error = reap_worktrees._query_pr_states(repo_root, branch)
+        if pr_error is not None:
+            results.append(
+                {
+                    "action": "error",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": "origin branch PR state could not be verified",
+                    "error": pr_error,
+                }
+            )
+            continue
+        reason, skip_reason = _stale_ref_delete_reason(
+            repo_root,
+            prs=prs,
+            head_sha=head_sha,
+            kind="origin head",
+        )
+        if skip_reason is not None:
+            results.append(
+                {
+                    "action": "skipped",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": skip_reason,
+                }
+            )
+            continue
+        assert reason is not None
+        if not apply:
+            results.append(
+                {
+                    "action": "would_delete",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": reason,
+                }
+            )
+            continue
+        error = _delete_origin_branch(
+            repo_root,
+            branch=branch,
+            expected_head=head_sha,
+        )
+        results.append(
+            {
+                "action": "error" if error else "deleted",
+                "branch": branch,
+                "head_sha": head_sha,
+                "reason": reason,
+                "error": error,
+            }
+        )
+    return results
 
 
 def _delete_local_branch(
@@ -218,49 +387,23 @@ def cleanup_gone_local_branches(
                 }
             )
             continue
-        open_pr = next((pr for pr in prs if pr.state == "OPEN"), None)
-        exact_merged = next(
-            (
-                pr
-                for pr in prs
-                if pr.state == "MERGED" and pr.head_sha == head_sha
-            ),
-            None,
+        reason, skip_reason = _stale_ref_delete_reason(
+            repo_root,
+            prs=prs,
+            head_sha=head_sha,
+            kind="upstream gone",
         )
-        if open_pr is not None:
+        if skip_reason is not None:
             results.append(
                 {
                     "action": "skipped",
                     "branch": branch,
                     "head_sha": head_sha,
-                    "reason": f"upstream gone but PR #{open_pr.number} is OPEN",
+                    "reason": skip_reason,
                 }
             )
             continue
-
-        origin_main_ancestor = False
-        if exact_merged is not None:
-            reason = f"upstream gone; exact head of MERGED PR #{exact_merged.number}"
-        else:
-            origin_main_ancestor = _branch_is_origin_main_ancestor(
-                repo_root,
-                head_sha,
-            )
-        if exact_merged is None and origin_main_ancestor:
-            reason = "upstream gone; branch HEAD is an ancestor of origin/main"
-        elif exact_merged is None:
-            results.append(
-                {
-                    "action": "skipped",
-                    "branch": branch,
-                    "head_sha": head_sha,
-                    "reason": (
-                        "upstream gone but no exact merged-PR or "
-                        "origin/main ancestry evidence"
-                    ),
-                }
-            )
-            continue
+        assert reason is not None
         if not apply:
             results.append(
                 {
@@ -272,6 +415,178 @@ def cleanup_gone_local_branches(
             )
             continue
 
+        error = _delete_local_branch(
+            repo_root,
+            branch=branch,
+            expected_head=head_sha,
+        )
+        results.append(
+            {
+                "action": "error" if error else "deleted",
+                "branch": branch,
+                "head_sha": head_sha,
+                "reason": reason,
+                "error": error,
+            }
+        )
+    return results
+
+
+def _untracked_local_branches(repo_root: Path) -> list[tuple[str, str]]:
+    proc = _run_git(
+        repo_root,
+        "for-each-ref",
+        "refs/heads",
+        "--format=%(refname:short)%09%(objectname)%09%(upstream)",
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"cannot list local branches: {_failure(proc)}")
+    untracked: list[tuple[str, str]] = []
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split("\t")
+        if len(parts) != 3:
+            continue
+        branch, head_sha, upstream = parts
+        if _is_protected_local_branch(branch):
+            continue
+        if upstream:
+            continue
+        untracked.append((branch, head_sha))
+    return untracked
+
+
+def _query_pr_by_number(
+    repo_root: Path,
+    number: int,
+) -> tuple[list[reap_worktrees.PullRequestState], str | None]:
+    try:
+        proc = reap_worktrees._run(
+            [
+                "gh",
+                "pr",
+                "view",
+                str(number),
+                "--json",
+                "number,state,headRefOid",
+            ],
+            cwd=repo_root,
+            timeout=30,
+        )
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return [], f"gh pr view failed: {exc}"
+    if proc.returncode != 0:
+        return [], f"gh pr view failed: {reap_worktrees._format_failure(proc)}"
+    try:
+        item = json.loads(proc.stdout or "{}")
+    except json.JSONDecodeError as exc:
+        return [], f"gh pr view returned invalid JSON: {exc}"
+    if not isinstance(item, dict):
+        return [], "gh pr view returned invalid JSON"
+    state = str(item.get("state") or "").upper()
+    if not state:
+        return [], None
+    number_value = item.get("number")
+    return [
+        reap_worktrees.PullRequestState(
+            number=number_value if isinstance(number_value, int) else number,
+            state=state,
+            head_sha=(
+                str(item.get("headRefOid")) if item.get("headRefOid") else None
+            ),
+        )
+    ], None
+
+
+def cleanup_untracked_local_branches(
+    repo_root: Path,
+    *,
+    apply: bool,
+) -> list[dict[str, Any]]:
+    """Delete never-tracked local branches with merged/closed or ancestry proof."""
+    checked_out = _checked_out_branches(repo_root)
+    results: list[dict[str, Any]] = []
+    for branch, head_sha in _untracked_local_branches(repo_root):
+        if branch in checked_out:
+            results.append(
+                {
+                    "action": "skipped",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": "untracked local branch is checked out",
+                }
+            )
+            continue
+        prs, pr_error = reap_worktrees._query_pr_states(repo_root, branch)
+        if pr_error is not None:
+            results.append(
+                {
+                    "action": "error",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": "untracked local PR state could not be verified",
+                    "error": pr_error,
+                }
+            )
+            continue
+        review_number = _review_checkout_pr_number(branch)
+        if review_number is not None:
+            extra, extra_error = _query_pr_by_number(repo_root, review_number)
+            if extra_error is not None:
+                results.append(
+                    {
+                        "action": "error",
+                        "branch": branch,
+                        "head_sha": head_sha,
+                        "reason": "untracked local PR state could not be verified",
+                        "error": extra_error,
+                    }
+                )
+                continue
+            prs = [*prs, *extra]
+        reason, skip_reason = _stale_ref_delete_reason(
+            repo_root,
+            prs=prs,
+            head_sha=head_sha,
+            kind="untracked local",
+        )
+        if (
+            reason is None
+            and review_number is not None
+            and any(pr.number == review_number and pr.state in {"MERGED", "CLOSED"} for pr in prs)
+        ):
+            # Review checkouts keep the pre-squash SHA, which is not origin/main
+            # and often not the stored headRefOid after GitHub rewrote the ref.
+            terminal = next(
+                pr
+                for pr in prs
+                if pr.number == review_number and pr.state in {"MERGED", "CLOSED"}
+            )
+            reason = (
+                f"untracked local; review checkout of {terminal.state} "
+                f"PR #{terminal.number}"
+            )
+            skip_reason = None
+        if skip_reason is not None:
+            results.append(
+                {
+                    "action": "skipped",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": skip_reason,
+                }
+            )
+            continue
+        assert reason is not None
+        if not apply:
+            results.append(
+                {
+                    "action": "would_delete",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": reason,
+                }
+            )
+            continue
         error = _delete_local_branch(
             repo_root,
             branch=branch,
@@ -360,6 +675,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "activity_probe": None,
         "results": [],
         "adopted": [],
+        "origin_branches": [],
         "branches": [],
         "maintenance": None,
         "orphans": [],
@@ -427,11 +743,27 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             if row.action == "error"
         )
         if apply and os.environ.get("LU_REAPER_DISABLED") == "1":
-            branches = []
+            origin_branches: list[dict[str, Any]] = []
+            branches: list[dict[str, Any]] = []
             result["reaper_disabled"] = True
         else:
-            branches = cleanup_gone_local_branches(repo_root, apply=apply)
+            origin_branches = cleanup_stale_origin_branches(repo_root, apply=apply)
+            if apply:
+                prune_after = _run_git(repo_root, "fetch", "--prune", "origin")
+                if prune_after.returncode != 0:
+                    result["errors"].append(
+                        f"post-origin prune failed ({_failure(prune_after)})"
+                    )
+            branches = cleanup_gone_local_branches(
+                repo_root, apply=apply
+            ) + cleanup_untracked_local_branches(repo_root, apply=apply)
+        result["origin_branches"] = origin_branches
         result["branches"] = branches
+        result["errors"].extend(
+            f"origin/{row['branch']}: {row.get('error') or row['reason']}"
+            for row in origin_branches
+            if row["action"] == "error"
+        )
         result["errors"].extend(
             f"{row['branch']}: {row.get('error') or row['reason']}"
             for row in branches
@@ -506,6 +838,12 @@ def build_receipt(
     )
     errors = sum(len(repository["errors"]) for repository in repositories)
     orphans = sum(len(repository["orphans"]) for repository in repositories)
+    origin_branches_deleted = sum(
+        1
+        for repository in repositories
+        for row in repository.get("origin_branches", [])
+        if row["action"] == "deleted"
+    )
     branches_deleted = sum(
         1
         for repository in repositories
@@ -516,7 +854,7 @@ def build_receipt(
         for repository in repositories
         for row in repository["results"]
         if row.get("branch_pruned") is True
-    )
+    ) + origin_branches_deleted
     review_temp_reaped = sum(
         repository.get("review_temp_sweep", {}).get("roots_reaped", 0)
         for repository in repositories
@@ -545,6 +883,7 @@ def build_receipt(
             "repositories": len(repositories),
             "removed": removed,
             "branches_deleted": branches_deleted,
+            "origin_branches_deleted": origin_branches_deleted,
             "orphans_reported": orphans,
             "errors": errors,
             "review_temp_reaped": review_temp_reaped,

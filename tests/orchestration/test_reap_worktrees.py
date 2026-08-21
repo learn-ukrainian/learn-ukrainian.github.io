@@ -1732,3 +1732,88 @@ def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
     assert len(blocked) == 1
     assert "daily reap cap ceiling reached (2)" in (blocked[0].reason or "")
     assert Path(blocked[0].path).exists()
+
+
+def test_merged_pr_same_tree_sibling_head_reaps(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Squash leftovers with the same tree as the MERGED PR head still reap."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/occupancy-fresh")
+    git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
+    tree = git(worktree, "rev-parse", "HEAD^{tree}")
+    parent = git(repo, "rev-parse", "main")
+    pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/occupancy-fresh": [
+                {"number": 7067, "state": "MERGED", "headRefOid": pr_head}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.reason == "PR #7067 MERGED"
+    assert not worktree.exists()
+
+
+def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(
+        repo,
+        "codex/cycle006-public",
+        path=repo / ".worktrees" / "dispatch" / "codex" / "cycle006-public",
+    )
+    os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
+    patch_gh(monkeypatch, {"codex/cycle006-public": []})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert "origin branch gone" in (result.reason or "")
+    assert not worktree.exists()
+
+
+def test_fresh_main_dispatch_is_not_age_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(
+        repo,
+        "codex/fresh-dispatch",
+        path=repo / ".worktrees" / "dispatch" / "codex" / "fresh-dispatch",
+    )
+    patch_gh(monkeypatch, {"codex/fresh-dispatch": []})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
