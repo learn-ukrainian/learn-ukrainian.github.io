@@ -12,9 +12,7 @@ SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" /
 
 @pytest.fixture(autouse=True)
 def optional_dependency_stubs(monkeypatch):
-    try:
-        import requests  # noqa: F401
-    except ImportError:
+    if importlib.util.find_spec("requests") is None:
         stub = types.ModuleType("requests")
 
         class RequestException(Exception):
@@ -33,9 +31,7 @@ def optional_dependency_stubs(monkeypatch):
     dense_rerank_stub.rerank_sections = lambda sections, *_args, **_kwargs: sections
     monkeypatch.setitem(sys.modules, "wiki.dense_rerank", dense_rerank_stub)
 
-    try:
-        import mcp  # noqa: F401
-    except ImportError:
+    if importlib.util.find_spec("mcp") is None:
         mcp_module = types.ModuleType("mcp")
         server_module = types.ModuleType("mcp.server")
         stdio_module = types.ModuleType("mcp.server.stdio")
