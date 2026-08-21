@@ -179,6 +179,6 @@ async def post_presence(request: Request, body: PresenceRequest) -> JSONResponse
         return JSONResponse(status_code=403, content={"detail": "Forbidden"}, headers=no_store)
     try:
         row = upsert_presence(body)
-    except PresenceRequestForbidden as exc:
-        return JSONResponse(status_code=400, content={"detail": str(exc)}, headers=no_store)
+    except PresenceRequestForbidden:
+        return JSONResponse(status_code=400, content={"detail": "invalid observer presence"}, headers=no_store)
     return JSONResponse(content=_row_payload(row), headers=no_store)

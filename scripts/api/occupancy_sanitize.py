@@ -21,7 +21,7 @@ _ALIAS_TOKEN = re.compile(
 _SUMMARY_SECRET = re.compile(
     r"(?i)\b(token|password|secret|passwd|api[_-]?key|bearer|reserved_ram|pid)\b"
 )
-_HOST_TRAIL = re.compile(r"[.\-_!?;,)'\"]+$")
+_HOST_TRAIL_CHARS = ".-_!?;,)'\""
 _SUMMARY_OK = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ,'!?;()-]{0,79}$")
 _CANONICAL_ALIASES = frozenset({"atlas-runner", "hramatka", "vps"})
 _RESERVED_HOST_IDS = frozenset({CLOUD_OBSERVER_HOST_ID})
@@ -30,7 +30,7 @@ _RESERVED_HOST_IDS = frozenset({CLOUD_OBSERVER_HOST_ID})
 def _looks_like_host(text: str) -> bool:
     if _IPV4.search(text) or _IPV6.search(text) or _FQDN.search(text):
         return True
-    trimmed = _HOST_TRAIL.sub("", text)
+    trimmed = text.rstrip(_HOST_TRAIL_CHARS)
     return bool(trimmed and trimmed != text and _FQDN.search(trimmed))
 
 
