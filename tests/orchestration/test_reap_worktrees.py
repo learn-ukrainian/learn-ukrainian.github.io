@@ -1776,6 +1776,8 @@ def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(
     )
     os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
     patch_gh(monkeypatch, {"codex/cycle006-public": []})
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
     result = result_for(
         rw.reap_worktrees(
@@ -1805,6 +1807,7 @@ def test_abandoned_main_dispatch_skips_if_cwd_appears_before_remove(
     os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
     patch_gh(monkeypatch, {"codex/cycle006-public": []})
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: {worktree.resolve()})
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
     result = result_for(
         rw.reap_worktrees(
@@ -1833,6 +1836,8 @@ def test_abandoned_main_dispatch_skips_if_live_origin_returns(
     )
     os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
     patch_gh(monkeypatch, {"codex/cycle006-public": []})
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_origin_heads_present", lambda _path, _branch: True)
 
     result = result_for(
