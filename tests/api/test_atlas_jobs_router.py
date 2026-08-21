@@ -425,6 +425,45 @@ def test_load_cache_arms_autonomous_refresh_timer(
         router_mod.clear_host_load_cache()
 
 
+def test_failed_probe_backoff_blocks_ordinary_read(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A failed collect must not be retried by the next GET (#7074)."""
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
+    calls = 0
+
+    def host_load(host: str) -> dict:
+        del host
+        nonlocal calls
+        calls += 1
+        raise RuntimeError("down")
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        {"cpu_count": 4, "loadavg": [0.1, 0.1, 0.1]},
+        mono_ts=time.monotonic() - 1.0,
+    )
+
+    async def exercise() -> None:
+        router_mod._get_host_load_entry("atlas-runner")
+        task = router_mod._HOST_LOAD_TASKS.get("atlas-runner")
+        assert task is not None
+        await asyncio.shield(task)
+        assert calls == 1
+        router_mod._get_host_load_entry("atlas-runner")
+        await asyncio.sleep(0.02)
+        assert calls == 1
+        assert router_mod._HOST_LOAD_TASKS.get("atlas-runner") in (None, task)
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        router_mod.clear_host_load_cache()
+
+
 def test_load_refresh_starts_inside_fresh_window(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:

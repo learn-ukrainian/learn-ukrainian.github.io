@@ -55,6 +55,9 @@ RESULTS_ALLOWLIST = frozenset(
 _HOST_LOAD_CACHE: dict[str, tuple[dict[str, Any], float, str]] = {}
 _HOST_LOAD_TASKS: dict[str, asyncio.Task[None]] = {}
 _HOST_LOAD_TIMERS: dict[str, asyncio.TimerHandle] = {}
+# Failed-probe backoff: host -> monotonic deadline. Ordinary reads must not
+# start a new collect before this instant; the armed timer owns the retry.
+_HOST_LOAD_BACKOFF_UNTIL: dict[str, float] = {}
 
 
 def set_host_load_cache(
@@ -68,6 +71,7 @@ def set_host_load_cache(
     m_ts = time.monotonic() if mono_ts is None else mono_ts
     i_ts = datetime.now(UTC).isoformat().replace("+00:00", "Z") if iso_ts is None else iso_ts
     _HOST_LOAD_CACHE[canonical] = (data, m_ts, i_ts)
+    _HOST_LOAD_BACKOFF_UNTIL.pop(canonical, None)
     _arm_host_load_timer(canonical)
 
 
@@ -81,6 +85,7 @@ def clear_host_load_cache() -> None:
     for handle in _HOST_LOAD_TIMERS.values():
         handle.cancel()
     _HOST_LOAD_TIMERS.clear()
+    _HOST_LOAD_BACKOFF_UNTIL.clear()
 
 
 class SubmitBody(BaseModel):
@@ -140,6 +145,9 @@ async def _refresh_host_load_job(host: str) -> None:
         if data is not None:
             _HOST_LOAD_CACHE[host] = (data, time.monotonic(), now_iso)
             ok = True
+            _HOST_LOAD_BACKOFF_UNTIL.pop(host, None)
+        else:
+            _HOST_LOAD_BACKOFF_UNTIL[host] = time.monotonic() + HOST_LOAD_REFRESH_AFTER_S
     finally:
         if _HOST_LOAD_TASKS.get(host) is task:
             _HOST_LOAD_TASKS.pop(host, None)
@@ -198,6 +206,11 @@ def _host_load_refresh_in_flight(host: str) -> bool:
     return task is not None and not task.done()
 
 
+def _host_load_in_failure_backoff(host: str, now_mono: float) -> bool:
+    until = _HOST_LOAD_BACKOFF_UNTIL.get(host)
+    return until is not None and now_mono < until
+
+
 def _cached_load_status(age: float, *, in_flight: bool) -> str:
     """Classify a cached sample. In-flight probes stay fresh across one heartbeat."""
     if age <= HOST_LOAD_FRESH_S or (
@@ -219,7 +232,11 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
     if entry is not None:
         metrics, mono_ts, iso_ts = entry
         age = max(0.0, round(now_mono - mono_ts, 2))
-        if age > HOST_LOAD_REFRESH_AFTER_S:
+        if (
+            not fresh
+            and age > HOST_LOAD_REFRESH_AFTER_S
+            and not _host_load_in_failure_backoff(host, now_mono)
+        ):
             _schedule_host_load_refresh(host)
         status = _cached_load_status(age, in_flight=_host_load_refresh_in_flight(host))
         if status == "fresh":
