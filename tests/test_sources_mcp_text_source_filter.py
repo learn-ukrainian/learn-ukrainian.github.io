@@ -1,12 +1,31 @@
 import asyncio
 import importlib.util
 import sys
+import types
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
+
+
+@pytest.fixture(autouse=True)
+def requests_stub_when_optional_dependency_is_absent(monkeypatch):
+    try:
+        import requests  # noqa: F401
+    except ImportError:
+        stub = types.ModuleType("requests")
+
+        class RequestException(Exception):
+            pass
+
+        def unexpected_network_call(*_args, **_kwargs):
+            raise AssertionError("source-filter tests must not make network calls")
+
+        stub.RequestException = RequestException
+        stub.get = unexpected_network_call
+        monkeypatch.setitem(sys.modules, "requests", stub)
 
 
 @pytest.fixture
