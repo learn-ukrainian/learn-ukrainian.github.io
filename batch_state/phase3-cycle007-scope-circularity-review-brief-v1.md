@@ -9,7 +9,7 @@ Adversarially check that the proposed restart:
 1. preserves exactly 204 packets / 10,159 rows and the frozen identity order;
 2. copies no Cycle 006 labels or provider artifacts;
 3. does not treat model agreement as truth or use either first-pass model as
-   its own independent evaluator;
+   its own independent evaluator, including under a fresh session identity;
 4. freezes the evidence, seed, audit selection, prompts, code, and source
    versions before private labeling;
 5. prevents evidence cherry-picking, cross-row evidence reuse, leakage,

@@ -10,6 +10,8 @@ repository's Ukrainian-linguistics and Sources MCP rules. In particular check:
 1. VESUM absence is escalation, never condemnation.
 2. Russian-shadow is suspicion only, never an authority.
 3. Антоненко-Давидович and heritage sources are used for their proper roles.
+   UA-GEC is paired with the partly indexed style guide so modern calques are
+   not silently missed.
 4. Pravopys 2026 remains the sole current normative authority; Sources MCP
    Pravopys 2019 output is comparison-only, and textbook/corpus occurrence
    cannot masquerade as a current normative rule.

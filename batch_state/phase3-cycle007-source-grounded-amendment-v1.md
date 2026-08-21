@@ -62,8 +62,9 @@ The deterministic query plan is:
 1. Preserve and hash each row's existing source provenance and source-bearing
    fields without printing them. Evidence channels are separate and explicit:
    `pravopys_2026_normative`, `pravopys_2019_comparison`, `vesum_attestation`,
-   `antonenko_style`, `heritage_attestation`, `ukrainian_corpus_occurrence`,
-   `textbook_explanation`, `russian_shadow_suspicion`, and `source_metadata`.
+   `antonenko_style`, `ua_gec_calque`, `heritage_attestation`,
+   `ukrainian_corpus_occurrence`, `textbook_explanation`,
+   `russian_shadow_suspicion`, and `source_metadata`.
    Each channel has a closed claim boundary; attestation or occurrence cannot
    satisfy a normative-rule claim.
 2. Extract Ukrainian Cyrillic surface forms with one reviewed tokenizer whose
@@ -74,8 +75,10 @@ The deterministic query plan is:
 3. Batch-check every extracted form with `verify_words`.
 4. For a VESUM miss, never infer that the form is Russian or invalid. Split
    supported compounds and escalate through `check_modern_form`,
-   `search_heritage`, the Антоненко-Давидович style-guide surfaces, and local
-   corpus evidence as prescribed by the Ukrainian-linguistics rules.
+   `search_heritage`, the Антоненко-Давидович style-guide surfaces,
+   `search_ua_gec_errors`, and local corpus evidence as prescribed by the
+   Ukrainian-linguistics rules. Антоненко-Давидович and UA-GEC are paired:
+   neither incomplete source substitutes for the other.
 5. Use `check_russian_shadow` only as a suspicion flag. It can require review
    but can never independently reject or accept a row.
 6. Pravopys 2026 remains the sole current normative authority. Bind its frozen
@@ -132,7 +135,7 @@ not automatically final when its evidence is risky.
 The following consensus rows receive source-authority review in full:
 
 - any VESUM miss or archaic-only form;
-- any Russian-shadow or style-guide warning;
+- any UA-GEC, Russian-shadow, or style-guide warning;
 - any heritage/source conflict, missing normative rule, or unresolved source
   result;
 - any model decision that cites insufficient, missing, foreign-row, or
@@ -169,11 +172,17 @@ actual audited count and computed bound. Risk-triggered rows are reviewed at
 
 Model disagreements go to a fresh source-qualified adjudicator that sees both
 candidate labels, the same evidence sidecar, and no unrelated model outputs.
-It may select an existing candidate only when the cited source evidence
-supports it. Otherwise it emits an unresolved request. The operator or a
-designated source-qualified advisor resolves only explicit unresolved
-requests, with a source-bound decision receipt. No majority vote, model
-agreement, or source-blind operator choice can override conflicting evidence.
+The live risk-trigger review, clean-consensus sample audit, and disagreement
+adjudication are executed locally by a human operator/source-qualified advisor
+or an Anthropic-family source-qualified lane with Sources MCP. Google and xAI
+families are prohibited from those roles, including a fresh Gemini or Grok
+session. The accountable root owns routing and receipt verification but does
+not inspect private text. The adjudicator may select an existing candidate
+only when the cited source evidence supports it. Otherwise it emits an
+unresolved request. The operator or a designated source-qualified advisor
+resolves only explicit unresolved requests, with a source-bound decision
+receipt. No majority vote, model agreement, same-family recheck, or
+source-blind operator choice can override conflicting evidence.
 
 ## Privacy, storage, and fleet boundary
 
@@ -182,7 +191,11 @@ outputs, labels, and raw telemetry remain on the local machine in a mode-0700
 operator-owned package with mode-0600 files. They never go to a VPS, Git,
 GitHub, stdout, argv, controller logs, or public review artifacts.
 
-The two VPSes may run only public code, synthetic fixtures, tests, and agents.
+The two VPSes may receive only public code, synthetic fixtures, tests, and
+review briefs. Their Cycle 007 work is limited to public materializer proofs,
+synthetic test execution, prompt/contract criticism, and exact-head
+cross-family code review. Public-only agents may perform those tasks; they may
+not receive held-out or source-response content.
 The local package receives an incremental, hash-verified Google Drive backup
 before the first private provider call and after each completed stage. Cycle
 006 and Cycle 007 are preserved separately; no cleanup is authorized until
@@ -201,6 +214,9 @@ Cycle 007 certification and backup verification are complete.
 - Gemini and Grok: independent first-pass labelers using identical frozen
   source evidence.
 - Fresh source-qualified adjudicator: disagreement and risk-review lane.
+- Runtime independent source auditor: local human or Anthropic-family
+  source-qualified lane; owns the 100% risk review and clean-consensus sample
+  audit and is disjoint from both first-pass model families.
 - Operator or designated source-qualified advisor: explicit unresolved
   decisions only.
 
@@ -234,11 +250,12 @@ No private provider call is allowed until all are true:
 
 ## Stop policy
 
-The first structural, identity, source-binding, semantic-tripwire, privacy,
-provider, or audit failure writes one text-free terminal stop and blocks every
-later paid or adjudication stage. A structural retry remains limited to one
-retry when no schema-valid result exists. Semantic, identity, evidence, or
-privacy failures never receive an automatic provider retry. No chunk-size,
+One structural retry is permitted only when attempt 1 has no extractable,
+schema-valid result. A schema-valid result that fails identity, evidence, or
+semantic validation is terminal and receives no provider retry. Any other
+structural, source-binding, privacy, provider, or audit failure writes one
+text-free terminal stop and blocks every later paid or adjudication stage.
+No chunk-size,
 validator, taxonomy, source hierarchy, audit threshold, or custody change is
 allowed inside a live run.
 
