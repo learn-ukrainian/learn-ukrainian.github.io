@@ -54,6 +54,7 @@ RESULTS_ALLOWLIST = frozenset(
 # In-process cache: host -> (metrics_dict, monotonic_ts, iso_observed_at)
 _HOST_LOAD_CACHE: dict[str, tuple[dict[str, Any], float, str]] = {}
 _HOST_LOAD_TASKS: dict[str, asyncio.Task[None]] = {}
+_HOST_LOAD_TIMERS: dict[str, asyncio.TimerHandle] = {}
 
 
 def set_host_load_cache(
@@ -67,15 +68,19 @@ def set_host_load_cache(
     m_ts = time.monotonic() if mono_ts is None else mono_ts
     i_ts = datetime.now(UTC).isoformat().replace("+00:00", "Z") if iso_ts is None else iso_ts
     _HOST_LOAD_CACHE[canonical] = (data, m_ts, i_ts)
+    _arm_host_load_timer(canonical)
 
 
 def clear_host_load_cache() -> None:
-    """Clear in-process host load cache and in-flight tasks."""
+    """Clear in-process host load cache, in-flight tasks, and armed timers."""
     _HOST_LOAD_CACHE.clear()
     for task in _HOST_LOAD_TASKS.values():
         if not task.done():
             task.cancel()
     _HOST_LOAD_TASKS.clear()
+    for handle in _HOST_LOAD_TIMERS.values():
+        handle.cancel()
+    _HOST_LOAD_TIMERS.clear()
 
 
 class SubmitBody(BaseModel):
@@ -129,13 +134,48 @@ def _probe_host_load_sync(host: str) -> tuple[dict[str, Any] | None, str]:
 
 async def _refresh_host_load_job(host: str) -> None:
     task = asyncio.current_task()
+    ok = False
     try:
         data, now_iso = await asyncio.to_thread(_probe_host_load_sync, host)
         if data is not None:
             _HOST_LOAD_CACHE[host] = (data, time.monotonic(), now_iso)
+            ok = True
     finally:
         if _HOST_LOAD_TASKS.get(host) is task:
             _HOST_LOAD_TASKS.pop(host, None)
+        if host in _HOST_LOAD_CACHE:
+            # Re-arm after success or failure while a sample remains. A failed
+            # probe restarts the full interval so a dead host is not hot-looped.
+            _arm_host_load_timer(host, from_now=not ok)
+
+
+def _fire_host_load_timer(host: str) -> None:
+    """Timer callback: start an autonomous refresh without waiting for a GET."""
+    _HOST_LOAD_TIMERS.pop(host, None)
+    if host in _HOST_LOAD_CACHE:
+        _schedule_host_load_refresh(host)
+
+
+def _arm_host_load_timer(host: str, *, from_now: bool = False) -> None:
+    """Arm a one-shot loop timer for the next refresh of a cached sample.
+
+    Fires at ``max(0, HOST_LOAD_REFRESH_AFTER_S - age)`` so the next collect
+    runs autonomously even when no reader hits within the fresh window.
+    No running loop -> skip, matching ``_schedule_host_load_refresh``.
+    """
+    handle = _HOST_LOAD_TIMERS.pop(host, None)
+    if handle is not None:
+        handle.cancel()
+    entry = _HOST_LOAD_CACHE.get(host)
+    if entry is None:
+        return
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return
+    age = 0.0 if from_now else max(0.0, time.monotonic() - entry[1])
+    delay = max(0.0, HOST_LOAD_REFRESH_AFTER_S - age)
+    _HOST_LOAD_TIMERS[host] = loop.call_later(delay, _fire_host_load_timer, host)
 
 
 def _schedule_host_load_refresh(host: str) -> asyncio.Task[None] | None:
@@ -145,6 +185,9 @@ def _schedule_host_load_refresh(host: str) -> asyncio.Task[None] | None:
             loop = asyncio.get_running_loop()
         except RuntimeError:
             return None
+        handle = _HOST_LOAD_TIMERS.pop(host, None)
+        if handle is not None:
+            handle.cancel()
         task = loop.create_task(_refresh_host_load_job(host))
         _HOST_LOAD_TASKS[host] = task
     return task

@@ -374,6 +374,39 @@ def test_load_entry_awaits_an_inflight_probe(
         router_mod.clear_host_load_cache()
 
 
+def test_load_cache_arms_autonomous_refresh_timer(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A cached sample re-collects on its own — no GET/read needed (#7074)."""
+    router_mod.clear_host_load_cache()
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.05)
+    calls = 0
+    original_host_load = _isolate.host_load
+
+    def host_load(host: str) -> dict:
+        nonlocal calls
+        calls += 1
+        return original_host_load(host)
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+
+    async def exercise() -> dict:
+        # Warm at t=0 inside a running loop; deliberately do NOT read the entry
+        # before the delayed probe fires.
+        router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
+        await asyncio.sleep(0.5)
+        return router_mod._get_host_load_entry("atlas-runner")
+
+    try:
+        entry = asyncio.run(exercise())
+        assert calls >= 1
+        assert entry["status"] == "fresh"
+        assert entry["age_seconds"] < 1.0
+    finally:
+        router_mod.clear_host_load_cache()
+
+
 def test_load_refresh_starts_inside_fresh_window(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:
