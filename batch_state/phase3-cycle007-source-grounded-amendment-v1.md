@@ -72,12 +72,18 @@ The deterministic query plan is:
    is a versioned parser operation. Ambiguous tokenization or decomposition is
    recorded as unresolved and never silently drops or invents evidence.
    Deduplicate the resulting queries within the frozen source universe.
-3. Batch-check every extracted form with `verify_words`.
+3. Batch-check every extracted form with `verify_words`, and run
+   `check_modern_form` for every extracted form regardless of the VESUM batch
+   result. Bind `is_modern_codified`, `has_archaic_form`, and
+   `has_only_archaic_form` to same-row evidence IDs so archaic-only risk review
+   is mechanically selectable.
 4. For a VESUM miss, never infer that the form is Russian or invalid. Split
    supported compounds, then check `query_ulif`, the locally cached
    `query_slovnyk_me` evidence, and `query_grac` corpus attestation. Ambiguous
    or unavailable escalation remains unresolved.
-5. Russianism/calque verification is a distinct path: query both
+5. Russianism/calque and heritage verification is an always-on parallel path
+   for every row, not a path gated by VESUM absence or Russian-shadow
+   suspicion. Query both
    `search_style_guide` and `search_text` with
    `source_file='antonenko-davydovych-yak-my-hovorymo'`, plus
    `search_ua_gec_errors` and `search_heritage`. The structured
