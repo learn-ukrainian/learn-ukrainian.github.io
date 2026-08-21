@@ -92,9 +92,13 @@ context or weakening the generic pointer-free contract.
 Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must name
 **one shippable unit** and its **acceptance criteria** — not an open-ended objective.
 
-- **Shippable unit:** typically one feature or one PR worth of work (owned paths +
-  out-of-scope stated). The worker implements that unit end-to-end; it does **not**
-  invent a serial micro-PR campaign from a vague goal.
+- **Shippable unit: one user-visible outcome, delivered whole, in one PR** (owned paths +
+  out-of-scope stated). The worker implements that outcome end-to-end; it does **not**
+  invent a serial micro-PR campaign from a vague goal, and once the outcome is ordered or
+  approved it does not pause mid-implementation to ask whether to slice it further — see
+  `operator-expectations.md` items 10 and 12. Files that outcome touches stay together in
+  the PR; a genuinely separate user-visible outcome is a different PR, not a slice of this
+  one.
 - **Acceptance criteria:** checklist or equivalent that can be verified before PR
   open (commands, evidence types, stop conditions). Weak criteria ("improve X",
   "clean up the area") are not a brief — the orchestrator must decompose first.

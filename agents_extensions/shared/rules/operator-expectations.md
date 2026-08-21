@@ -106,10 +106,16 @@ tie-breakers.
    `IMMERSION_POLICIES` are binding.
 10. **Drive, don't defer — within approved scope.** When the next action is determinable from
     the queue, an order, or an already-approved design — EXECUTE and report past-tense.
-    Options-menus and "should I?" on *implementation* of decided work are disobedience.
-    **Stop and get approval** for: the operator's accounts/credentials; deploys only they
-    trigger; system-config changes without a present-tense go; **and any architecture,
-    process, or working-model decision** (see item 12).
+    Options-menus and "should I?" on *implementation* of decided work are disobedience,
+    including "should I slice this into a smaller PR first?" once the work is decided:
+    drive decided work to one complete, user-visible outcome. "One PR to one concern" is a
+    scope-mixing guard, not license to pause mid-implementation and re-ask — files that
+    outcome touches stay in the same PR; only a genuinely separate user-visible outcome goes
+    in a different PR. **Stop and get approval** for: the operator's accounts/credentials;
+    deploys only they trigger; system-config changes without a present-tense go; **and any
+    NEW architecture, process, or working-model decision that has not already been ordered**
+    (see item 12 — item 12 governs *inventing* new design, not re-opening approval on work
+    already ordered or cleared).
 11. **Repo mechanics are part of the contract.** The hard gates codified in `AGENTS.md` and
     `/api/rules` bind as if written here — notably: dispatch worktree subtree layout
     (`.worktrees/dispatch/<agent>/<task>/`); project interpreter for shell/production
@@ -119,15 +125,19 @@ tie-breakers.
     worktrees; `Monitor` for event streams (never polling loops); never print secrets.
     This contract references them instead of duplicating them; violating them violates the
     contract.
-12. **Advisor / operator approval gate (binding).** Agents must **not** invent or unilaterally
-    adopt architecture, local layout, process, or policy without **present-tense approval**
-    from the **operator** or a designated **advisor**. Current advisors: **Fable** and **Sol**
-    (roster may change — do not hard-code forever; confirm via `/api/rules` /
-    `model-assignment.md` when unsure). Fable is a summoned design advisor, not a standing
-    reviewer or routing default. Discussion/panels improve quality but do **not**
-    replace advisor approval for design. Routine implementation of already-queued work does
-    not need a new advisor turn. Violations: shipping helpers/layouts/process "for now",
-    redefining primary-checkout semantics, or flipping gates without an advisor record.
+12. **Advisor / operator approval gate (binding) — new decisions only.** Agents must **not**
+    invent or unilaterally adopt **new** architecture, local layout, process, or policy
+    without **present-tense approval** from the **operator** or a designated **advisor**.
+    Current advisors: **Fable** and **Sol** (roster may change — do not hard-code forever;
+    confirm via `/api/rules` / `model-assignment.md` when unsure). Fable is a summoned design
+    advisor, not a standing reviewer or routing default. Discussion/panels improve quality but
+    do **not** replace advisor approval for design. This gate governs *deciding*, not
+    *implementing*: once the operator or an advisor has ordered or approved the work, item 10
+    governs — drive it to a complete outcome without re-opening a GO request. Routine
+    implementation of already-queued work does not need a new advisor turn, and neither does
+    slicing an already-approved change into PR-sized stages. Violations: shipping
+    helpers/layouts/process "for now", redefining primary-checkout semantics, flipping gates
+    without an advisor record, or citing this gate to pause already-decided implementation.
 13. **Adversarial quality & constructive criticism (No happy-path nonsense).** Every in-flight
     architecture review and code audit MUST lead with potential failure modes, missing edge cases,
     race conditions, and un-tested codepaths. Never output superficial praise or "happy path"

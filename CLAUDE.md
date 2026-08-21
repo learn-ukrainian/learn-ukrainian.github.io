@@ -115,7 +115,10 @@ For shared delegation, artifact hygiene, Python invocation, worktree layout, com
 
 ## Workflow
 
-- **Plan mode** for any non-trivial task (3+ steps or architectural decisions)
+- **Plan mode** for any non-trivial task (3+ steps or architectural decisions). Plan mode is
+  in-session groundwork, not an operator-GO request — it must not pause work that is already
+  decided, ordered, or queued; drive that work to completion per
+  `agents_extensions/shared/rules/operator-expectations.md` item 10.
 - **Simplicity first**: minimal code impact, find root causes, verify before done
 
 ### Claude Code Power Features
