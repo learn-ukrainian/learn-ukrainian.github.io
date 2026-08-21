@@ -395,11 +395,16 @@ def test_load_cache_arms_autonomous_refresh_timer(
         # Warm at t=0 inside a running loop; deliberately do NOT read the entry
         # before the delayed probe fires.
         router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
-        await asyncio.sleep(0.02)
+        loop = asyncio.get_running_loop()
+        assert router_mod._HOST_LOAD_TIMERS, "set_host_load_cache must arm a timer"
+        handle = next(iter(router_mod._HOST_LOAD_TIMERS.values()))
+        delay = handle.when() - loop.time()
+        assert delay == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.01)
+        await asyncio.sleep(max(0.0, delay - 0.01))
         assert calls == 0
-        deadline = asyncio.get_running_loop().time() + 0.5
-        while calls == 0 and asyncio.get_running_loop().time() < deadline:
-            await asyncio.sleep(0.01)
+        deadline = handle.when() + 0.4
+        while calls == 0 and loop.time() < deadline:
+            await asyncio.sleep(0.005)
         assert calls >= 1
         return router_mod._get_host_load_entry("atlas-runner")
 
