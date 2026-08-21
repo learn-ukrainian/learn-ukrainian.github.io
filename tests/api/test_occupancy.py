@@ -6,11 +6,17 @@ import json
 import re
 import time
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.main import app
-from scripts.api.occupancy import _occupant, _opaque_host_id, _safe_field, parse_host_id_map
+from scripts.api.observer_presence import reset_observer_presence
+from scripts.api.occupancy import parse_host_id_map
+from scripts.api.occupancy_sanitize import occupant as _occupant
+from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
+from scripts.api.occupancy_sanitize import safe_field as _safe_field
+from scripts.api.occupancy_sanitize import safe_summary as _safe_summary
 from scripts.lexicon.runner import atlas_job
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -19,6 +25,13 @@ _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 # Fictional canonical keys — never pair real SSH aliases with opaque ids in git.
 _PLACEHOLDER_MAP = "job-box=host-job,teach-box=host-teacher"
+
+
+@pytest.fixture(autouse=True)
+def _clear_observer_presence() -> None:
+    reset_observer_presence()
+    yield
+    reset_observer_presence()
 
 
 def _plan(**overrides: object) -> dict:
@@ -288,6 +301,7 @@ def test_parse_host_id_map_drops_non_opaque_values() -> None:
     assert not _opaque_host_id("vps")
     assert not _opaque_host_id("10.0.0.1")
     assert not _opaque_host_id("host.example")
+    assert not _opaque_host_id("cloud-observer")
     assert _opaque_host_id("host-job")
 
 
@@ -323,3 +337,31 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
         "epic": "hramatka",
     }
     assert _occupant(kind="job", task_id="atlas-runner-reenrich-3") is None
+
+
+def test_safe_summary_keeps_slash_phrases_and_drops_leaks() -> None:
+    assert _safe_summary("tunneled Monitor/observer e2e sweep") == "tunneled Monitor/observer e2e sweep"
+    assert _safe_summary("  spaced   words  ") == "spaced words"
+    for leaked in (
+        "talk to atlas-runner",
+        "10.0.0.1 sweep",
+        "/etc/passwd",
+        "box.example.com",
+        "pid=12 reserved_ram_mb=256",
+    ):
+        assert _safe_summary(leaked) is None
+    assert _occupant(kind="observer", agent="grok-bot", task_id="7061") is None
+    assert _occupant(
+        kind="observer",
+        agent="grok-bot",
+        task_id="7061",
+        status="working",
+        summary="tunneled Monitor/observer e2e sweep",
+    ) == {
+        "kind": "observer",
+        "agent": "grok-bot",
+        "task_id": "7061",
+        "epic": None,
+        "status": "working",
+        "summary": "tunneled Monitor/observer e2e sweep",
+    }

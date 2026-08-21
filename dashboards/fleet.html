@@ -184,6 +184,10 @@ button, input, select { font: inherit; }
       <div class="panel-head"><h3 id="dead-heading">Dead letters</h3><p>Metadata, reason, and successor only</p></div>
       <div id="dead-content" class="empty">Loading dead letters…</div>
     </article>
+    <article class="panel wide ledger cyan" aria-labelledby="occupancy-heading">
+      <div class="panel-head"><h3 id="occupancy-heading">Host occupancy</h3><p>Opaque host_id only · observers under cloud-observer · no RAM lease</p></div>
+      <div id="occupancy-content" class="empty">Loading occupancy…</div>
+    </article>
     <article class="panel wide ledger cyan" aria-labelledby="activity-heading">
       <div class="panel-head"><h3 id="activity-heading">Recent provenance</h3><p>Source is the caller; Agent is the executed seat; Via is the transport</p></div>
       <div id="activity-content" class="empty">Loading provenance records…</div>
@@ -528,6 +532,28 @@ function renderDeadLetters(data) {
   document.getElementById('dead-content').innerHTML = table(['Dead letter', 'Agent', 'Reason', 'Successor', 'Created'], rows, 'No dead letters match the current observer filters.');
 }
 
+function renderOccupancy(data) {
+  const hosts = objectValue(data.hosts);
+  const rows = [];
+  for (const host of Object.values(hosts)) {
+    if (!host || typeof host !== 'object') continue;
+    const hostId = short(host.host_id);
+    const occupants = listValue(host.occupants);
+    if (!occupants.length) {
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      continue;
+    }
+    occupants.forEach(item => {
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td class="preview">${escapeHtml(short(item.summary, short(item.status)))}</td></tr>`);
+    });
+  }
+  document.getElementById('occupancy-content').innerHTML = table(
+    ['Host', 'Probe', 'Kind', 'Agent', 'Task', 'Epic', 'Summary'],
+    rows,
+    'No occupancy occupants. Observer heartbeats appear under cloud-observer.',
+  );
+}
+
 function renderActivity(data) {
   const rows = (data.records || []).map(item => `<tr><td>${escapeHtml(formatTime(item.ts))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.via))}</td><td>${escapeHtml(short(item.outcome))}</td><td class="mono">${escapeHtml(short(item.model))}</td></tr>`);
   document.getElementById('activity-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Outcome', 'Model'], rows, 'No runtime provenance records match the current observer filters.');
@@ -546,19 +572,20 @@ async function refreshFleet() {
       recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
       use: {},
     }));
-    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, activity, messages, contextStatus] = await Promise.all([
+    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, occupancy, activity, messages, contextStatus] = await Promise.all([
       fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
       fetchJson(query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' })),
       fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
       fetchJson(query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr'])),
       fetchJson(query('/api/fleet/acp/conversations', common)),
       fetchJson(query('/api/fleet/dead-letters', ['state', 'agent', 'source'])),
+      fetchJson('/api/occupancy'),
       fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
       fetchJson(query('/api/fleet/messages', ['kind', ...common])),
       contextStatusRequest,
     ]);
     renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
-    renderAcp(acp); renderDeadLetters(deadLetters); renderActivity(activity); renderMessages(messages);
+    renderAcp(acp); renderDeadLetters(deadLetters); renderOccupancy(occupancy); renderActivity(activity); renderMessages(messages);
     await refreshConversationContext(contextStatus);
   } catch (error) {
     setError(`Observer data could not be read: ${error.message}`);
