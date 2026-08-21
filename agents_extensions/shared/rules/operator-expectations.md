@@ -134,8 +134,10 @@ tie-breakers.
     do **not** replace advisor approval for design. This gate governs *deciding*, not
     *implementing*: once the operator or an advisor has ordered or approved the work, item 10
     governs — drive it to a complete outcome without re-opening a GO request. Routine
-    implementation of already-queued work does not need a new advisor turn, and neither does
-    slicing an already-approved change into PR-sized stages. Violations: shipping
+    implementation of already-queued work does not need a new advisor turn. Slicing an
+    already-approved user-visible outcome into PR-sized stages is item-10 disobedience,
+    not an extra exemption from this gate; unrelated outcomes stay in other PRs.
+    Violations: shipping
     helpers/layouts/process "for now", redefining primary-checkout semantics, flipping gates
     without an advisor record, or citing this gate to pause already-decided implementation.
 13. **Adversarial quality & constructive criticism (No happy-path nonsense).** Every in-flight
