@@ -11,7 +11,7 @@ SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" /
 
 
 @pytest.fixture(autouse=True)
-def requests_stub_when_optional_dependency_is_absent(monkeypatch):
+def optional_dependency_stubs(monkeypatch):
     try:
         import requests  # noqa: F401
     except ImportError:
@@ -26,6 +26,48 @@ def requests_stub_when_optional_dependency_is_absent(monkeypatch):
         stub.RequestException = RequestException
         stub.get = unexpected_network_call
         monkeypatch.setitem(sys.modules, "requests", stub)
+
+    dense_rerank_stub = types.ModuleType("wiki.dense_rerank")
+    dense_rerank_stub._get_tokenizer = lambda: None
+    dense_rerank_stub.rerank_candidates = lambda candidates, *_args, **_kwargs: candidates
+    dense_rerank_stub.rerank_sections = lambda sections, *_args, **_kwargs: sections
+    monkeypatch.setitem(sys.modules, "wiki.dense_rerank", dense_rerank_stub)
+
+    try:
+        import mcp  # noqa: F401
+    except ImportError:
+        mcp_module = types.ModuleType("mcp")
+        server_module = types.ModuleType("mcp.server")
+        stdio_module = types.ModuleType("mcp.server.stdio")
+        types_module = types.ModuleType("mcp.types")
+
+        class Server:
+            def __init__(self, *_args, **_kwargs):
+                pass
+
+        class Content:
+            def __init__(self, **values):
+                self.__dict__.update(values)
+
+        class Tool(Content):
+            def __init__(self, *, inputSchema, **values):
+                super().__init__(**values)
+                self.input_schema = inputSchema
+
+        server_module.Server = Server
+        stdio_module.stdio_server = None
+        for name in (
+            "CallToolRequestParams",
+            "CallToolResult",
+            "ListToolsResult",
+            "TextContent",
+        ):
+            setattr(types_module, name, Content)
+        types_module.Tool = Tool
+        monkeypatch.setitem(sys.modules, "mcp", mcp_module)
+        monkeypatch.setitem(sys.modules, "mcp.server", server_module)
+        monkeypatch.setitem(sys.modules, "mcp.server.stdio", stdio_module)
+        monkeypatch.setitem(sys.modules, "mcp.types", types_module)
 
 
 @pytest.fixture
