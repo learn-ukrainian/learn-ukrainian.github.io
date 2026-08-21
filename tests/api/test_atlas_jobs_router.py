@@ -374,6 +374,70 @@ def test_load_entry_awaits_an_inflight_probe(
         router_mod.clear_host_load_cache()
 
 
+def test_load_refresh_starts_inside_fresh_window(
+    _isolate: atlas_job.FakeHostAdapter,
+) -> None:
+    router_mod.clear_host_load_cache()
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        _isolate.host_load("atlas-runner"),
+        mono_ts=time.monotonic() - 20.0,
+    )
+
+    async def exercise() -> tuple[dict, dict]:
+        first = router_mod._get_host_load_entry("atlas-runner")
+        task = router_mod._HOST_LOAD_TASKS.get("atlas-runner")
+        assert task is not None
+        await asyncio.shield(task)
+        second = router_mod._get_host_load_entry("atlas-runner")
+        return first, second
+
+    try:
+        first, second = asyncio.run(exercise())
+        assert first["status"] == "fresh"
+        assert 19.0 <= first["age_seconds"] <= 22.0
+        assert second["status"] == "fresh"
+        assert second["age_seconds"] < 5.0
+    finally:
+        router_mod.clear_host_load_cache()
+
+
+def test_load_heartbeat_boundary_stays_fresh_while_probe_runs(
+    _isolate: atlas_job.FakeHostAdapter,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    router_mod.clear_host_load_cache()
+    probe_started = threading.Event()
+    release_probe = threading.Event()
+    original_host_load = _isolate.host_load
+
+    def host_load(host: str) -> dict:
+        probe_started.set()
+        assert release_probe.wait(timeout=1.0)
+        return original_host_load(host)
+
+    monkeypatch.setattr(_isolate, "host_load", host_load)
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        original_host_load("atlas-runner"),
+        mono_ts=time.monotonic() - 31.0,
+    )
+
+    async def exercise() -> dict:
+        entry = router_mod._get_host_load_entry("atlas-runner")
+        assert await asyncio.to_thread(probe_started.wait, 1.0)
+        return entry
+
+    try:
+        entry = asyncio.run(exercise())
+        assert entry["status"] == "fresh"
+        assert 30.0 <= entry["age_seconds"] <= 33.0
+        assert "cpu_count" in entry
+    finally:
+        release_probe.set()
+        router_mod.clear_host_load_cache()
+
+
 def test_load_stale_while_revalidate_cache_lifecycle(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:

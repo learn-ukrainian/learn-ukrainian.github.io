@@ -27,6 +27,8 @@ LOAD_SCHEMA = "atlas-jobs-load.v1"
 RESULTS_SCHEMA = "atlas-jobs-results.v1"
 
 HOST_LOAD_FRESH_S = 30.0
+HOST_LOAD_REFRESH_AFTER_S = 15.0
+HOST_LOAD_IN_FLIGHT_GRACE_S = 15.0
 HOST_LOAD_MAX_STALE_S = 300.0
 
 RESULTS_DEFAULT_LIMIT = 50
@@ -148,6 +150,22 @@ def _schedule_host_load_refresh(host: str) -> asyncio.Task[None] | None:
     return task
 
 
+def _host_load_refresh_in_flight(host: str) -> bool:
+    task = _HOST_LOAD_TASKS.get(host)
+    return task is not None and not task.done()
+
+
+def _cached_load_status(age: float, *, in_flight: bool) -> str:
+    """Classify a cached sample. In-flight probes stay fresh across one heartbeat."""
+    if age <= HOST_LOAD_FRESH_S or (
+        in_flight and age <= HOST_LOAD_FRESH_S + HOST_LOAD_IN_FLIGHT_GRACE_S
+    ):
+        return "fresh"
+    if age <= HOST_LOAD_MAX_STALE_S:
+        return "stale"
+    return "unavailable"
+
+
 def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
     now_mono = time.monotonic()
     entry = _HOST_LOAD_CACHE.get(host)
@@ -158,7 +176,10 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
     if entry is not None:
         metrics, mono_ts, iso_ts = entry
         age = max(0.0, round(now_mono - mono_ts, 2))
-        if age <= HOST_LOAD_FRESH_S:
+        if age > HOST_LOAD_REFRESH_AFTER_S:
+            _schedule_host_load_refresh(host)
+        status = _cached_load_status(age, in_flight=_host_load_refresh_in_flight(host))
+        if status == "fresh":
             res: dict[str, Any] = {
                 "status": "fresh",
                 "observed_at": iso_ts,
@@ -166,8 +187,7 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
             }
             res.update(metrics)
             return res
-        elif age <= HOST_LOAD_MAX_STALE_S:
-            _schedule_host_load_refresh(host)
+        if status == "stale":
             res = {
                 "status": "stale",
                 "observed_at": iso_ts,
@@ -175,14 +195,12 @@ def _get_host_load_entry(host: str, *, fresh: bool = False) -> dict[str, Any]:
             }
             res.update(metrics)
             return res
-        else:
-            _schedule_host_load_refresh(host)
-            return {
-                "status": "unavailable",
-                "error": "unreachable",
-                "observed_at": iso_ts,
-                "age_seconds": age,
-            }
+        return {
+            "status": "unavailable",
+            "error": "unreachable",
+            "observed_at": iso_ts,
+            "age_seconds": age,
+        }
 
     _schedule_host_load_refresh(host)
     now_iso = datetime.now(UTC).isoformat().replace("+00:00", "Z")
