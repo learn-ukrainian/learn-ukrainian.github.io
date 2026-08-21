@@ -17,6 +17,8 @@ from scripts.orchestration import job_host_exec as jh
 @pytest.fixture(autouse=True)
 def _clear_occupancy_pin(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(jh.ENV_OCCUPANCY_HOST, raising=False)
+    monkeypatch.delenv(jh.ENV_RUNTIME_INITIATOR, raising=False)
+    monkeypatch.delenv(jh.ENV_RUNTIME_INITIATOR_SOURCE, raising=False)
 
 
 def test_cli_help_runs_without_pythonpath(tmp_path: Path) -> None:
