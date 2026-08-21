@@ -396,7 +396,7 @@ def test_load_cache_arms_autonomous_refresh_timer(
         loop = asyncio.get_running_loop()
         orig_call_later = loop.call_later
 
-        def wrapped_call_later(delay, callback, *args, **kwargs):  # noqa: ANN001
+        def wrapped_call_later(delay, callback, *args, **kwargs):
             delays.append(float(delay))
             return orig_call_later(delay, callback, *args, **kwargs)
 
