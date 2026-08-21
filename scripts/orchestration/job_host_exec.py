@@ -297,14 +297,6 @@ def decide_dispatch_placement(
     return "notebook", capacity, None
 
 
-def notebook_dispatch_blocked(*, repo_root: Path | None = None, occupancy: Any = _MISSING) -> str | None:
-    """Return an error when this checkout must not spawn Darwin workers."""
-    placement, _reason, host_id = decide_dispatch_placement(repo_root=repo_root, occupancy=occupancy)
-    if placement == "vps":
-        return notebook_block_message(host_id=host_id)
-    return None
-
-
 def build_remote_command(
     argv: list[str],
     *,
@@ -339,28 +331,24 @@ def _flag_value(argv: list[str], index: int, flag: str) -> tuple[str | None, int
     return None, index
 
 
-def _remote_payload_preamble(kind: str, contents: bytes, *, seq: int) -> tuple[str, str]:
+def _remote_payload_binding(kind: str, *, seq: int) -> tuple[str, str]:
+    """Return the remote variable and argv token for one private payload."""
     ident = kind.replace("-", "_")
     var = f"LU_DISPATCH_{ident.upper()}_{seq}"
-    encoded = base64.b64encode(contents).decode("ascii")
-    preamble = (
-        f"umask 077 && {var}=$(mktemp /tmp/lu-dispatch-{kind}.XXXXXX) && "
-        f"printf '%s' {shlex.quote(encoded)} | base64 -d > \"${var}\""
-    )
-    return preamble, f"{_REMOTE_VAR_PREFIX}{var}"
+    return var, f"{_REMOTE_VAR_PREFIX}{var}"
 
 
 def materialize_local_dispatch_argv(
     argv: list[str],
     *,
     stdin_body: bytes | None = None,
-) -> tuple[list[str], bytes | None, str | None]:
+) -> tuple[list[str], list[tuple[str, str, bytes]]]:
     """Rewrite notebook-only paths so SSH does not send Darwin paths.
 
     File payloads (``--prompt-file``, ``--lifecycle-file``, ``--output-schema``)
-    are written to unique private ``mktemp`` files on the remote host via a
-    fail-closed base64 preamble so remote argparse still sees a real file
-    (sparse-checkout inference reads ``--prompt-file`` before stdin).
+    are written to unique private ``mktemp`` files by a remote stdin script,
+    so remote argparse still sees a real file (sparse-checkout inference reads
+    ``--prompt-file`` before stdin). The script has EXIT/signal cleanup traps.
     ``--prompt -`` is rewritten to a remote ``--prompt-file`` after the notebook
     stdin body is captured.
     ``--cwd`` is rejected: a Darwin working directory is not a VPS checkout.
@@ -368,7 +356,7 @@ def materialize_local_dispatch_argv(
     remote checkout creates its own isolation.
     """
     out: list[str] = []
-    preambles: list[str] = []
+    payloads: list[tuple[str, str, bytes]] = []
     seq = 0
     i = 0
     while i < len(argv):
@@ -387,9 +375,9 @@ def materialize_local_dispatch_argv(
                         "--prompt - cannot be forwarded without the prompt body; "
                         "pass --prompt-file"
                     )
-                preamble, remote_path = _remote_payload_preamble("prompt", stdin_body, seq=seq)
+                var, remote_path = _remote_payload_binding("prompt", seq=seq)
                 seq += 1
-                preambles.append(preamble)
+                payloads.append((var, "prompt", stdin_body))
                 out.extend(["--prompt-file", remote_path])
             else:
                 out.extend(["--prompt", prompt_val])
@@ -401,9 +389,9 @@ def materialize_local_dispatch_argv(
             if file_path is None:
                 continue
             body = Path(file_path).read_bytes()
-            preamble, remote_path = _remote_payload_preamble(kind, body, seq=seq)
+            var, remote_path = _remote_payload_binding(kind, seq=seq)
             seq += 1
-            preambles.append(preamble)
+            payloads.append((var, kind, body))
             out.extend([flag, remote_path])
             i = next_i
             copied = True
@@ -420,13 +408,68 @@ def materialize_local_dispatch_argv(
             continue
         out.append(argv[i])
         i += 1
-    return out, None, (" && ".join(preambles) if preambles else None)
+    return out, payloads
 
 
-def materialize_local_prompt_argv(argv: list[str]) -> tuple[list[str], bytes | None]:
-    """Rewrite local ``--prompt-file`` to ``--prompt -`` so SSH can carry the body."""
-    rest, stdin, _preamble = materialize_local_dispatch_argv(argv)
-    return rest, stdin
+def _build_remote_dispatch_script(
+    *,
+    argv: list[str],
+    remote_repo: str,
+    payloads: list[tuple[str, str, bytes]],
+    extra_exports: list[str],
+) -> bytes:
+    """Build the SSH-stdin bash program for a forwarded dispatch.
+
+    Private content intentionally appears only in this stdin body, never in
+    the local ``ssh`` argv. Remote files are 0600 under ``umask 077`` and an
+    EXIT/signal cleanup trap covers normal completion, failure, HUP, INT, and
+    TERM. Cleanup failure turns a successful dispatch into failure so residue
+    is never silently accepted.
+    """
+    lines = [
+        "#!/usr/bin/env bash",
+        "set -euo pipefail",
+        "payload_paths=()",
+        "_cleanup() {",
+        "  local status=$1",
+        '  if ((${#payload_paths[@]})) && ! rm -f -- "${payload_paths[@]}"; then',
+        '    [ "$status" -eq 0 ] && status=1',
+        "  fi",
+        '  exit "$status"',
+        "}",
+        "_on_exit() {",
+        "  local status=$?",
+        "  trap - EXIT HUP INT TERM",
+        '  _cleanup "$status"',
+        "}",
+        "_on_signal() {",
+        "  local signal=$1",
+        "  trap - EXIT HUP INT TERM",
+        '  _cleanup "$((128 + signal))"',
+        "}",
+        "trap _on_exit EXIT",
+        "trap '_on_signal 1' HUP",
+        "trap '_on_signal 2' INT",
+        "trap '_on_signal 15' TERM",
+        "umask 077",
+    ]
+    for var, kind, contents in payloads:
+        encoded = base64.b64encode(contents).decode("ascii")
+        lines.extend(
+            [
+                f"{var}=$(mktemp /tmp/lu-dispatch-{kind}.XXXXXX)",
+                f'payload_paths+=("${var}")',
+                f"printf '%s' {shlex.quote(encoded)} | base64 -d > \"${var}\"",
+            ]
+        )
+    lines.append(
+        build_remote_command(
+            [".venv/bin/python", "scripts/delegate.py", *argv],
+            remote_repo=remote_repo,
+            extra_exports=extra_exports,
+        )
+    )
+    return ("\n".join(lines) + "\n").encode("utf-8")
 
 
 def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | None = None) -> bool:
@@ -471,7 +514,7 @@ def forward_dispatch(
             stdin_body = sys.stdin.buffer.read()
             break
         idx = next_idx if prompt_val is not None else idx + 1
-    rest, _stdin, preamble = materialize_local_dispatch_argv(payload, stdin_body=stdin_body)
+    rest, payloads = materialize_local_dispatch_argv(payload, stdin_body=stdin_body)
     has_initiator = False
     scan = 0
     while scan < len(rest):
@@ -486,17 +529,17 @@ def forward_dispatch(
     if initiator and initiator_source and initiator_source != "unknown":
         extra_exports.append(f"export {ENV_RUNTIME_INITIATOR}={shlex.quote(initiator)}")
         extra_exports.append(f"export {ENV_RUNTIME_INITIATOR_SOURCE}={shlex.quote(initiator_source)}")
-    if preamble:
-        extra_exports.append(preamble)
-    remote = build_remote_command(
-        [".venv/bin/python", "scripts/delegate.py", *rest],
+    remote_script = _build_remote_dispatch_script(
+        argv=rest,
         remote_repo=repo,
         extra_exports=extra_exports,
+        payloads=payloads,
     )
     try:
         completed = subprocess.run(
-            build_ssh_argv(alias, remote),
+            build_ssh_argv(alias, "bash -s"),
             check=False,
+            input=remote_script,
         )
     except (FileNotFoundError, PermissionError) as exc:
         raise SshTransportError(str(exc)) from exc

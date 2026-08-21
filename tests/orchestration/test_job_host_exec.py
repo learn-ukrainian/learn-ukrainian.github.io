@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import base64
 import io
-import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -94,10 +92,6 @@ def test_picks_teacher_when_it_has_more_headroom(tmp_path: Path, monkeypatch: py
     )
     placement, reason, host_id = jh.decide_dispatch_placement(repo_root=root, occupancy=occupancy)
     assert (placement, reason, host_id) == ("vps", "available", "host-teacher")
-    blocked = jh.notebook_dispatch_blocked(repo_root=root, occupancy=occupancy)
-    assert blocked is not None
-    assert "host-teacher" in blocked
-    assert "every VPS worker host" in blocked
 
 
 def test_job_full_uses_teacher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -149,7 +143,6 @@ def test_both_full_or_down_falls_back_to_notebook(tmp_path: Path, monkeypatch: p
         None,
     )
     assert jh.decide_dispatch_placement(repo_root=root, occupancy=None) == ("notebook", "unavailable", None)
-    assert jh.notebook_dispatch_blocked(repo_root=root, occupancy=None) is None
 
 
 def test_allow_env_bypasses_block(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -182,6 +175,7 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -194,11 +188,13 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert "BatchMode=yes" in recorded
     assert "teacher-alias" in recorded
-    assert "cd /remote/repo" in recorded
-    assert "scripts/delegate.py" in recorded
-    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in recorded
+    assert "bash -s" in recorded
+    assert "cd /remote/repo" in script
+    assert "scripts/delegate.py" in script
+    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
 
 
 def test_main_dispatch_copies_local_prompt_file(
@@ -211,6 +207,7 @@ def test_main_dispatch_copies_local_prompt_file(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -238,12 +235,13 @@ def test_main_dispatch_copies_local_prompt_file(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert str(prompt) not in recorded
-    assert "--prompt-file" in recorded
-    assert "/tmp/lu-dispatch-prompt.XXXXXX" in recorded
-    assert "$LU_DISPATCH_PROMPT_0" in recorded
-    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in recorded
-    assert base64.b64encode(b"keep curriculum/l2-uk-en in the worktree\n").decode("ascii") in recorded.replace("\n", "")
+    assert "keep curriculum/l2-uk-en in the worktree" not in recorded
+    assert "--prompt-file" in script
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
+    assert "$LU_DISPATCH_PROMPT_0" in script
+    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
 
 
 def test_main_help_contract() -> None:
@@ -266,6 +264,7 @@ def test_forward_dispatch_sets_allow_notebook(tmp_path: Path, monkeypatch: pytes
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -279,11 +278,13 @@ def test_forward_dispatch_sets_allow_notebook(tmp_path: Path, monkeypatch: pytes
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert "BatchMode=yes" in recorded
     assert "job-alias" in recorded
-    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in recorded
-    assert "dispatch" in recorded
-    assert "--agent" in recorded
+    assert "bash -s" in recorded
+    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
+    assert "dispatch" in script
+    assert "--agent" in script
 
 
 def test_forward_dispatch_preserves_initiator(
@@ -296,6 +297,7 @@ def test_forward_dispatch_preserves_initiator(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -311,10 +313,12 @@ def test_forward_dispatch_preserves_initiator(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
-    assert "--initiator" in recorded
-    assert "cursor/job-host-dispatch" in recorded
-    assert f"export {jh.ENV_RUNTIME_INITIATOR}=" in recorded
-    assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in recorded
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
+    assert "--initiator" in script
+    assert "cursor/job-host-dispatch" in script
+    assert f"export {jh.ENV_RUNTIME_INITIATOR}=" in script
+    assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
+    assert "cursor/job-host-dispatch" not in recorded
 
 
 def test_forward_dispatch_inlines_prompt_file(
@@ -327,6 +331,7 @@ def test_forward_dispatch_inlines_prompt_file(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -351,12 +356,14 @@ def test_forward_dispatch_inlines_prompt_file(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert str(prompt) not in recorded
-    assert "--prompt-file" in recorded
-    assert "/tmp/lu-dispatch-prompt.XXXXXX" in recorded
-    assert "$LU_DISPATCH_PROMPT_0" in recorded
-    assert "\n--prompt\n-\n" not in recorded
-    assert base64.b64encode(b"keep curriculum/l2-uk-en in the worktree\n").decode("ascii") in recorded.replace("\n", "")
+    assert "keep curriculum/l2-uk-en in the worktree" not in recorded
+    assert "--prompt-file" in script
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
+    assert "$LU_DISPATCH_PROMPT_0" in script
+    assert "\n--prompt\n-\n" not in script
+    assert "keep curriculum/l2-uk-en in the worktree" not in script
 
 
 def test_forward_dispatch_rewrites_prompt_dash(
@@ -369,6 +376,7 @@ def test_forward_dispatch_rewrites_prompt_dash(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -395,11 +403,12 @@ def test_forward_dispatch_rewrites_prompt_dash(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
-    assert "--prompt-file" in recorded
-    assert "/tmp/lu-dispatch-prompt.XXXXXX" in recorded
-    assert "$LU_DISPATCH_PROMPT_0" in recorded
-    assert "\n--prompt\n-\n" not in recorded
-    assert base64.b64encode(b"touch wiki/pages.md\n").decode("ascii") in recorded.replace("\n", "")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
+    assert "--prompt-file" in script
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
+    assert "$LU_DISPATCH_PROMPT_0" in script
+    assert "\n--prompt\n-\n" not in script
+    assert "touch wiki/pages.md" not in recorded
 
 
 def test_forward_dispatch_copies_lifecycle_file(
@@ -412,6 +421,7 @@ def test_forward_dispatch_copies_lifecycle_file(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -436,11 +446,12 @@ def test_forward_dispatch_copies_lifecycle_file(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert str(ledger) not in recorded
-    assert "--lifecycle-file" in recorded
-    assert "/tmp/lu-dispatch-lifecycle.XXXXXX" in recorded
-    assert "$LU_DISPATCH_LIFECYCLE_0" in recorded
-    assert "base64 -d >" in recorded
+    assert "--lifecycle-file" in script
+    assert "/tmp/lu-dispatch-lifecycle.XXXXXX" in script
+    assert "$LU_DISPATCH_LIFECYCLE_0" in script
+    assert "base64 -d >" in script
 
 
 def test_forward_dispatch_copies_output_schema(
@@ -453,6 +464,7 @@ def test_forward_dispatch_copies_output_schema(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -477,11 +489,12 @@ def test_forward_dispatch_copies_output_schema(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert str(schema) not in recorded
-    assert "--output-schema" in recorded
-    assert "/tmp/lu-dispatch-output-schema.XXXXXX" in recorded
-    assert "$LU_DISPATCH_OUTPUT_SCHEMA_0" in recorded
-    assert "base64 -d >" in recorded
+    assert "--output-schema" in script
+    assert "/tmp/lu-dispatch-output-schema.XXXXXX" in script
+    assert "$LU_DISPATCH_OUTPUT_SCHEMA_0" in script
+    assert "base64 -d >" in script
 
 
 def test_forward_dispatch_rejects_notebook_cwd(
@@ -515,6 +528,7 @@ def test_forward_dispatch_strips_notebook_worktree_path(
     fake_ssh.write_text(
         "#!/usr/bin/env bash\n"
         f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -539,8 +553,9 @@ def test_forward_dispatch_strips_notebook_worktree_path(
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert str(local_wt) not in recorded
-    assert "--worktree" in recorded
+    assert "--worktree" in script
 
 
 def test_forward_dispatch_missing_ssh_is_transport_error(
@@ -588,42 +603,60 @@ def test_notebook_fallback_only_on_transport_failure() -> None:
     assert jh.notebook_fallback_after_forward(2) is False
 
 
-def test_remote_payload_preamble_is_private_unique_and_fail_closed() -> None:
-    first, token_a = jh._remote_payload_preamble("prompt", b"same\n", seq=0)
-    second, token_b = jh._remote_payload_preamble("prompt", b"same\n", seq=1)
-    assert "umask 077" in first
-    assert "mktemp /tmp/lu-dispatch-prompt.XXXXXX" in first
-    assert "base64 -d >" in first
-    assert token_a != token_b
-    var_a = token_a.split(":", 1)[1]
-    var_b = token_b.split(":", 1)[1]
-    mode_check = shlex.join(
-        [
-            sys.executable,
-            "-c",
-            "import os,stat,sys; p=sys.argv[1]; m=stat.S_IMODE(os.stat(p).st_mode); "
-            "raise SystemExit(0 if m & 0o077 == 0 else 1)",
-        ]
+@pytest.mark.parametrize(
+    ("mode", "expected_rc"),
+    [("success", 0), ("failure", 7), ("signal", 143)],
+)
+def test_remote_payload_script_cleans_private_files_on_exit_failure_and_signal(
+    tmp_path: Path, mode: str, expected_rc: int
+) -> None:
+    """The remote trap must remove each 0600 payload file in every exit path."""
+    remote_python = tmp_path / ".venv" / "bin" / "python"
+    remote_python.parent.mkdir(parents=True)
+    remote_python.symlink_to(sys.executable)
+    remote_delegate = tmp_path / "scripts" / "delegate.py"
+    remote_delegate.parent.mkdir()
+    observed_path = tmp_path / "payload-path"
+    remote_delegate.write_text(
+        "import os\n"
+        "import signal\n"
+        "import stat\n"
+        "import sys\n"
+        "from pathlib import Path\n"
+        "payload = Path(sys.argv[sys.argv.index('--prompt-file') + 1])\n"
+        "mode = stat.S_IMODE(payload.stat().st_mode)\n"
+        "Path(os.environ['LU_TEST_PAYLOAD_PATH']).write_text(f'{payload}\\n{mode:o}', encoding='utf-8')\n"
+        "if os.environ['LU_TEST_PAYLOAD_MODE'] == 'signal':\n"
+        "    os.kill(os.getppid(), signal.SIGTERM)\n"
+        "sys.exit(7 if os.environ['LU_TEST_PAYLOAD_MODE'] == 'failure' else 0)\n",
+        encoding="utf-8",
     )
-    created = subprocess.run(
-        [
-            "bash",
-            "-c",
-            f"{first} && {second} && test \"${var_a}\" != \"${var_b}\" && {mode_check} \"${var_a}\"",
+    prompt = tmp_path / "brief.md"
+    prompt.write_text("private body\n", encoding="utf-8")
+    rest, payloads = jh.materialize_local_dispatch_argv(
+        ["dispatch", "--prompt-file", str(prompt)]
+    )
+    script = jh._build_remote_dispatch_script(
+        argv=rest,
+        remote_repo=str(tmp_path),
+        payloads=payloads,
+        extra_exports=[
+            f"export LU_TEST_PAYLOAD_PATH={observed_path}",
+            f"export LU_TEST_PAYLOAD_MODE={mode}",
         ],
-        check=False,
-        capture_output=True,
-        text=True,
     )
-    assert created.returncode == 0, created.stderr
-    failed = subprocess.run(
-        ["bash", "-c", "umask 077 && f=$(mktemp /tmp/lu-dispatch-prompt.XXXXXX) && printf '%s' '!!!!' | base64 -d > \"$f\" && echo reached"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    assert failed.returncode != 0
-    assert "reached" not in failed.stdout
+    rendered = script.decode("utf-8")
+    assert "umask 077" in rendered
+    assert "mktemp /tmp/lu-dispatch-prompt.XXXXXX" in rendered
+    assert "trap _on_exit EXIT" in rendered
+    assert "trap '_on_signal 15' TERM" in rendered
+    assert "private body" not in rendered
+    completed = subprocess.run(["bash", "-s"], input=script, check=False, capture_output=True)
+    assert completed.returncode == expected_rc, completed.stderr.decode("utf-8")
+    payload_name, payload_mode = observed_path.read_text(encoding="utf-8").splitlines()
+    payload_path = Path(payload_name)
+    assert int(payload_mode, 8) & 0o077 == 0
+    assert not payload_path.exists()
 
 
 def test_main_missing_ssh_dispatch_returns_255(
