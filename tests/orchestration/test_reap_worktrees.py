@@ -1821,6 +1821,35 @@ def test_abandoned_main_dispatch_skips_if_cwd_appears_before_remove(
     assert worktree.exists()
 
 
+def test_abandoned_main_dispatch_skips_if_live_origin_returns(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(
+        repo,
+        "codex/cycle006-public",
+        path=repo / ".worktrees" / "dispatch" / "codex" / "cycle006-public",
+    )
+    os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
+    patch_gh(monkeypatch, {"codex/cycle006-public": []})
+    monkeypatch.setattr(rw, "_live_origin_heads_present", lambda _path, _branch: True)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == "origin branch returned during cleanup"
+    assert worktree.exists()
+
+
 def test_fresh_main_dispatch_is_not_age_reaped(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

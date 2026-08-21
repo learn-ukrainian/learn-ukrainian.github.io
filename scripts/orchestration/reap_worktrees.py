@@ -542,6 +542,16 @@ def _origin_branch_present(path: Path, branch: str | None) -> bool:
     return verify.returncode == 0
 
 
+def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
+    """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
+    if not branch:
+        return False
+    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path)
+    if proc.returncode != 0:
+        return None
+    return bool((proc.stdout or "").strip())
+
+
 def _origin_matches_head(path: Path, branch: str | None) -> bool:
     if not branch:
         return False
@@ -1137,6 +1147,25 @@ def _reap_qualified_worktree(
                     pr=_pr_dict(pr_state),
                 )
             if _origin_branch_present(info.path, info.branch):
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="origin branch returned during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            live_origin = _live_origin_heads_present(info.path, info.branch)
+            if live_origin is None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="live origin probe unavailable during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            if live_origin:
                 return ReapResult(
                     path=str(info.path),
                     branch=info.branch,
