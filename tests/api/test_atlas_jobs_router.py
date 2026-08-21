@@ -380,7 +380,7 @@ def test_load_cache_arms_autonomous_refresh_timer(
 ) -> None:
     """A cached sample re-collects on its own — no GET/read needed (#7074)."""
     router_mod.clear_host_load_cache()
-    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.05)
+    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
     calls = 0
     original_host_load = _isolate.host_load
 
@@ -390,17 +390,26 @@ def test_load_cache_arms_autonomous_refresh_timer(
         return original_host_load(host)
 
     monkeypatch.setattr(_isolate, "host_load", host_load)
+    delays: list[float] = []
 
     async def exercise() -> dict:
-        # Warm at t=0 inside a running loop; deliberately do NOT read the entry
-        # before the delayed probe fires.
-        router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
         loop = asyncio.get_running_loop()
-        assert router_mod._HOST_LOAD_TIMERS, "set_host_load_cache must arm a timer"
+        orig_call_later = loop.call_later
+
+        def wrapped_call_later(delay, callback, *args, **kwargs):  # noqa: ANN001
+            delays.append(float(delay))
+            return orig_call_later(delay, callback, *args, **kwargs)
+
+        loop.call_later = wrapped_call_later  # type: ignore[method-assign]
+        try:
+            router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
+        finally:
+            loop.call_later = orig_call_later  # type: ignore[method-assign]
+        assert delays, "set_host_load_cache must schedule call_later"
+        assert delays[0] == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.001)
         handle = next(iter(router_mod._HOST_LOAD_TIMERS.values()))
-        delay = handle.when() - loop.time()
-        assert delay == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.01)
-        await asyncio.sleep(max(0.0, delay - 0.01))
+        remaining = handle.when() - loop.time()
+        await asyncio.sleep(max(0.0, remaining - 0.002))
         assert calls == 0
         deadline = handle.when() + 0.4
         while calls == 0 and loop.time() < deadline:
