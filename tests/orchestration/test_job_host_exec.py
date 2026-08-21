@@ -32,6 +32,7 @@ def test_cli_help_runs_without_pythonpath(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode == 0, proc.stderr
     assert "Examples:" in proc.stdout
@@ -712,7 +713,13 @@ def test_remote_payload_script_cleans_private_files_on_exit_failure_and_signal(
     assert "trap _on_exit EXIT" in rendered
     assert "trap '_on_signal 15' TERM" in rendered
     assert "private body" not in rendered
-    completed = subprocess.run(["bash", "-s"], input=script, check=False, capture_output=True)
+    completed = subprocess.run(
+        ["bash", "-s"],
+        input=script,
+        check=False,
+        capture_output=True,
+        timeout=30,
+    )
     assert completed.returncode == expected_rc, completed.stderr.decode("utf-8")
     payload_name, payload_mode = observed_path.read_text(encoding="utf-8").splitlines()
     payload_path = Path(payload_name)
