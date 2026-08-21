@@ -197,6 +197,47 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
 
 
+def test_main_dispatch_preserves_session_initiator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        f"cat > {args_file}.stdin\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "cursor")
+    rc = jh.main(
+        [
+            "--host-id",
+            "host-job",
+            "--",
+            ".venv/bin/python",
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+        ]
+    )
+    assert rc == 0
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
+    assert "--initiator" in script
+    assert "cursor" in script
+    assert f"export {jh.ENV_RUNTIME_INITIATOR}=" in script
+    assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
+
+
 def test_main_dispatch_copies_local_prompt_file(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

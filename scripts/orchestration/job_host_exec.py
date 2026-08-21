@@ -633,8 +633,31 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
         dispatch_argv = _delegate_dispatch_argv(remote_argv)
         if dispatch_argv is not None:
+            from scripts.agent_runtime.attribution import resolve_invocation_attribution
+
+            explicit = None
+            task_id = None
+            idx = 0
+            while idx < len(dispatch_argv):
+                value, nxt = _flag_value(dispatch_argv, idx, "--initiator")
+                if value is not None:
+                    explicit = value
+                    idx = nxt
+                    continue
+                value, nxt = _flag_value(dispatch_argv, idx, "--task-id")
+                if value is not None:
+                    task_id = value
+                    idx = nxt
+                    continue
+                idx += 1
+            attribution = resolve_invocation_attribution(explicit=explicit, task_id=task_id)
             try:
-                return forward_dispatch(host_id=host_id, argv=dispatch_argv)
+                return forward_dispatch(
+                    host_id=host_id,
+                    argv=dispatch_argv,
+                    initiator=attribution.initiator,
+                    initiator_source=attribution.source,
+                )
             except SshTransportError as exc:
                 print(f"error: {exc}", file=sys.stderr)
                 return 255
