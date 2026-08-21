@@ -395,12 +395,16 @@ def test_load_cache_arms_autonomous_refresh_timer(
         # Warm at t=0 inside a running loop; deliberately do NOT read the entry
         # before the delayed probe fires.
         router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.02)
+        assert calls == 0
+        deadline = asyncio.get_running_loop().time() + 0.5
+        while calls == 0 and asyncio.get_running_loop().time() < deadline:
+            await asyncio.sleep(0.01)
+        assert calls >= 1
         return router_mod._get_host_load_entry("atlas-runner")
 
     try:
         entry = asyncio.run(exercise())
-        assert calls >= 1
         assert entry["status"] == "fresh"
         assert entry["age_seconds"] < 1.0
     finally:
