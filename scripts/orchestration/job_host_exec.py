@@ -82,18 +82,6 @@ class SshTransportError(OSError):
     """Raised when the local ssh client cannot be started."""
 
 
-def notebook_block_message(*, host_id: str | None = None) -> str:
-    where = f" ({host_id})" if host_id else ""
-    return (
-        f"a VPS worker host{where} is available; spawn workers there. "
-        f"Run: {ENV_DISPATCH_SSH}=<opaque=alias,...> {ENV_REPO}=<remote-checkout> "
-        ".venv/bin/python scripts/orchestration/job_host_exec.py -- "
-        ".venv/bin/python scripts/delegate.py dispatch ... "
-        "Notebook spawn is allowed only when every VPS worker host is "
-        f"unavailable or full (or {ENV_ALLOW_NOTEBOOK}=1)."
-    )
-
-
 def job_dispatch_host() -> str:
     return (
         os.environ.get(ENV_HOST, "").strip()
@@ -257,19 +245,6 @@ def pick_worker_host(payload: dict[str, Any] | None) -> tuple[str | None, Litera
     if saw_full:
         return None, "full"
     return None, "unavailable"
-
-
-def classify_worker_host(payload: dict[str, Any] | None, *, host_id: str | None = None) -> Literal["available", "unavailable", "full"]:
-    """Classify one occupancy host, or the picked pool host when ``host_id`` is omitted."""
-    if host_id is not None:
-        if not isinstance(payload, dict):
-            return "unavailable"
-        hosts = payload.get("hosts")
-        if not isinstance(hosts, dict):
-            return "unavailable"
-        return classify_host_entry(hosts.get(host_id) if isinstance(hosts.get(host_id), dict) else None)
-    _picked, state = pick_worker_host(payload)
-    return state
 
 
 def decide_dispatch_placement(
