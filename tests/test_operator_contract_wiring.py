@@ -60,6 +60,8 @@ def test_agents_md_carries_binding_digest() -> None:
     assert "outcome validity precedes paid execution" in body, "digest lost the semantic outcome gate"
     assert "pre-dispatch outcome adequacy" in body.lower(), "digest lost the prompt adequacy gate"
     assert "independent held-out evaluation" in body, "digest lost held-out proof requirement"
+    assert "NEW architecture" in body, "digest must scope item 12 to NEW decisions"
+    assert "already-ordered" in body, "digest must keep item 10 for decided work"
 
 
 def test_agents_md_is_a_bounded_offline_digest() -> None:
@@ -94,6 +96,8 @@ def test_gemini_md_carries_binding_digest() -> None:
     assert "outcome validity precedes paid execution" in body, "GEMINI.md lost the semantic outcome gate"
     assert "pre-dispatch outcome adequacy" in body, "GEMINI.md lost the prompt adequacy gate"
     assert "independent held-out evaluation" in body, "GEMINI.md lost held-out proof requirement"
+    assert "NEW architecture" in body, "GEMINI.md digest must scope item 12 to NEW decisions"
+    assert "already-ordered" in body, "GEMINI.md digest must keep item 10 for decided work"
 
 
 def test_claude_md_carries_binding_digest() -> None:
@@ -105,6 +109,8 @@ def test_claude_md_carries_binding_digest() -> None:
     assert "outcome validity precedes paid execution" in body, "CLAUDE.md lost the semantic outcome gate"
     assert "pre-dispatch outcome adequacy" in body, "CLAUDE.md lost the prompt adequacy gate"
     assert "independent held-out evaluation" in body, "CLAUDE.md lost held-out proof requirement"
+    assert "NEW architecture" in body, "CLAUDE.md digest must scope item 12 to NEW decisions"
+    assert "already-ordered" in body, "CLAUDE.md digest must keep item 10 for decided work"
 
 
 def test_agy_bridge_prompt_injects_contract_digest() -> None:
@@ -122,6 +128,8 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     assert "outcome validity precedes paid execution" in " ".join(out.split())
     assert "pre-dispatch outcome adequacy" in out
     assert "independent held-out evaluation" in out
+    assert "NEW architecture" in out, "agy digest must scope item 12 to NEW decisions"
+    assert "already-ordered" in out, "agy digest must keep item 10 for decided work"
 
 
 def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:
