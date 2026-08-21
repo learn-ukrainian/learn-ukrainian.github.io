@@ -1109,6 +1109,72 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                     )
 
+        if reason.startswith("dispatch HEAD ancestor of origin/main"):
+            current_active_ids = _active_task_ids()
+            current_live_cwds = _live_cwd_paths(repo_root)
+            if current_active_ids is None or current_live_cwds is None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="abandoned-main activity probe unavailable during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            activity = _activity_reason(
+                repo_root=repo_root,
+                info=info,
+                active_ids=current_active_ids,
+                live_cwds=current_live_cwds,
+            )
+            if activity is not None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=activity,
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            if _origin_branch_present(info.path, info.branch):
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="origin branch returned during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            if not _is_ancestor_of_origin_main(info.path):
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="HEAD left origin/main during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            if info.branch is not None:
+                current_prs, current_pr_error = _query_pr_states(repo_root, info.branch)
+                if current_pr_error is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"PR guard unavailable during cleanup; {current_pr_error}",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if any(pr.state == "OPEN" for pr in current_prs):
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="open PR appeared during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+
         recovery_ref, recovery_error = reaper_lifecycle.create_recovery_ref(
             repo_root,
             branch=info.branch,

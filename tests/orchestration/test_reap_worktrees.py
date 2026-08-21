@@ -1792,6 +1792,35 @@ def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(
     assert not worktree.exists()
 
 
+def test_abandoned_main_dispatch_skips_if_cwd_appears_before_remove(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(
+        repo,
+        "codex/cycle006-public",
+        path=repo / ".worktrees" / "dispatch" / "codex" / "cycle006-public",
+    )
+    os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
+    patch_gh(monkeypatch, {"codex/cycle006-public": []})
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: {worktree.resolve()})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "live process cwd=" in (result.reason or "")
+    assert worktree.exists()
+
+
 def test_fresh_main_dispatch_is_not_age_reaped(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

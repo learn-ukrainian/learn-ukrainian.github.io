@@ -156,13 +156,14 @@ Each run performs the following in both repository roots:
 3. automatically removes only clean, inactive worktrees with exact merged-PR
    head evidence (including same-tree squash siblings), plus the terminal-dispatch
    class described above; open or GitHub-unknown PR state remains a hard skip;
-4. deletes origin heads whose GitHub PR is MERGED or CLOSED at the exact local
-   origin SHA, or whose tip is already an ancestor of `origin/main`, and which
-   are not checked out and have no open PR;
+4. deletes origin heads whose GitHub PR is MERGED or CLOSED at the exact live
+   origin SHA (`ls-remote` + `--force-with-lease`), or whose tip is already an
+   ancestor of `origin/main`, and which are not checked out, have no open PR,
+   and are not `entire/` refs;
 5. deletes local branches whose upstream is gone, or that were never tracked,
    only when their exact head is proven merged/closed or is already an ancestor
-   of `origin/main` (review checkouts `pr-N` / `pr-N-review` / `review-N-tmp`
-   of a merged or closed PR are included; `entire/` refs are preserved);
+   of `origin/main` (`entire/` refs are preserved; a `pr-N` name alone is not
+   proof);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
 7. runs `git gc --auto`;

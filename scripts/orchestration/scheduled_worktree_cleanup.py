@@ -228,10 +228,28 @@ def _origin_heads(repo_root: Path) -> list[tuple[str, str]]:
         if len(parts) != 2 or not parts[0].startswith(prefix):
             continue
         branch = parts[0][len(prefix) :]
-        if branch in _PROTECTED_BRANCHES or branch == "HEAD":
+        if (
+            branch in _PROTECTED_BRANCHES
+            or branch == "HEAD"
+            or _is_protected_local_branch(branch)
+        ):
             continue
         heads.append((branch, parts[1]))
     return heads
+
+
+def _live_origin_head(repo_root: Path, branch: str) -> str | None:
+    proc = _run_git(repo_root, "ls-remote", "--heads", "origin", branch)
+    if proc.returncode != 0:
+        return None
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) != 2:
+            continue
+        sha, ref = parts
+        if ref == f"refs/heads/{branch}":
+            return sha
+    return None
 
 
 def _delete_origin_branch(
@@ -240,17 +258,20 @@ def _delete_origin_branch(
     branch: str,
     expected_head: str,
 ) -> str | None:
-    current = _run_git(
-        repo_root,
-        "rev-parse",
-        "--verify",
-        f"refs/remotes/origin/{branch}",
-    )
-    if current.returncode != 0 or (current.stdout or "").strip() != expected_head:
+    live_head = _live_origin_head(repo_root, branch)
+    if live_head is None:
+        return "origin HEAD disappeared during cleanup"
+    if live_head != expected_head:
         return "origin HEAD changed during cleanup"
     if branch in _checked_out_branches(repo_root):
         return "branch became checked out during cleanup"
-    proc = _run_git(repo_root, "push", "origin", "--delete", "--", branch)
+    proc = _run_git(
+        repo_root,
+        "push",
+        f"--force-with-lease=refs/heads/{branch}:{expected_head}",
+        "origin",
+        f":refs/heads/{branch}",
+    )
     if proc.returncode != 0:
         return _failure(proc)
     return None
@@ -311,6 +332,29 @@ def cleanup_stale_origin_branches(
                     "branch": branch,
                     "head_sha": head_sha,
                     "reason": reason,
+                }
+            )
+            continue
+        prs_now, pr_error_now = reap_worktrees._query_pr_states(repo_root, branch)
+        if pr_error_now is not None:
+            results.append(
+                {
+                    "action": "error",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": "origin branch PR state could not be re-verified",
+                    "error": pr_error_now,
+                }
+            )
+            continue
+        open_now = next((pr for pr in prs_now if pr.state == "OPEN"), None)
+        if open_now is not None:
+            results.append(
+                {
+                    "action": "skipped",
+                    "branch": branch,
+                    "head_sha": head_sha,
+                    "reason": f"origin head but PR #{open_now.number} is OPEN",
                 }
             )
             continue
@@ -549,23 +593,6 @@ def cleanup_untracked_local_branches(
             head_sha=head_sha,
             kind="untracked local",
         )
-        if (
-            reason is None
-            and review_number is not None
-            and any(pr.number == review_number and pr.state in {"MERGED", "CLOSED"} for pr in prs)
-        ):
-            # Review checkouts keep the pre-squash SHA, which is not origin/main
-            # and often not the stored headRefOid after GitHub rewrote the ref.
-            terminal = next(
-                pr
-                for pr in prs
-                if pr.number == review_number and pr.state in {"MERGED", "CLOSED"}
-            )
-            reason = (
-                f"untracked local; review checkout of {terminal.state} "
-                f"PR #{terminal.number}"
-            )
-            skip_reason = None
         if skip_reason is not None:
             results.append(
                 {

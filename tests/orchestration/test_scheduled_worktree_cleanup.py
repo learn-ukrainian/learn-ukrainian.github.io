@@ -645,7 +645,9 @@ def test_untracked_ancestor_local_branch_is_deleted(tmp_path: Path, monkeypatch)
     assert _git(repo, "branch", "--list", branch) == ""
 
 
-def test_review_checkout_of_merged_pr_is_deleted(tmp_path: Path, monkeypatch) -> None:
+def test_review_checkout_unrelated_commit_is_preserved(
+    tmp_path: Path, monkeypatch
+) -> None:
     repo = _repo(tmp_path)
     _git(repo, "checkout", "-b", "pr-7020")
     (repo / "review.txt").write_text("review\n", encoding="utf-8")
@@ -674,9 +676,61 @@ def test_review_checkout_of_merged_pr_is_deleted(tmp_path: Path, monkeypatch) ->
 
     result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
 
+    assert result[0]["action"] == "skipped"
+    assert "no exact merged/closed PR" in result[0]["reason"]
+    assert _git(repo, "branch", "--list", "pr-7020") != ""
+
+
+def test_review_checkout_exact_merged_head_is_deleted(
+    tmp_path: Path, monkeypatch
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "pr-7020"
+    _git(repo, "branch", branch, "main")
+    head_sha = _git(repo, "rev-parse", branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+    monkeypatch.setattr(
+        cleanup,
+        "_query_pr_by_number",
+        lambda _repo, number: (
+            [
+                cleanup.reap_worktrees.PullRequestState(
+                    number=number,
+                    state="MERGED",
+                    head_sha=head_sha,
+                )
+            ],
+            None,
+        ),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
     assert result[0]["action"] == "deleted"
-    assert "review checkout of MERGED PR #7020" in result[0]["reason"]
-    assert _git(repo, "branch", "--list", "pr-7020") == ""
+    assert "exact head of MERGED PR #7020" in result[0]["reason"]
+    assert _git(repo, "branch", "--list", branch) == ""
+
+
+def test_origin_entire_checkpoint_is_not_deleted(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    branch = "entire/checkpoints/v1"
+    _git(repo, "branch", branch, "main")
+    _git(repo, "push", "origin", branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    assert all(item.get("branch") != branch for item in result)
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert branch in remote_heads.splitlines()
 
 
 def test_entire_checkpoint_branch_is_not_deleted(tmp_path: Path, monkeypatch) -> None:
