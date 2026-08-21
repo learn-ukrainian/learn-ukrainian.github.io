@@ -11,10 +11,9 @@ OBSERVER_STATUSES = frozenset({"working", "blocked", "idle"})
 _OPAQUE_HOST_ID = re.compile(r"^[a-z][a-z0-9-]{0,62}$")
 _SAFE_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
 _TASK_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
-_SUMMARY_OK = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,'!?;()-]{0,79}$")
 _IPV4 = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _IPV6 = re.compile(r":")
-_FQDN = re.compile(r"\.[A-Za-z]{2,}$")
+_FQDN = re.compile(r"\.[A-Za-z]{2,}(?:[^A-Za-z0-9]|$)")
 _ALIAS_TOKEN = re.compile(
     r"(?:^|[^A-Za-z0-9])(atlas-runner|hramatka|vps)(?:[^A-Za-z0-9]|$)",
     re.IGNORECASE,
@@ -22,8 +21,17 @@ _ALIAS_TOKEN = re.compile(
 _SUMMARY_SECRET = re.compile(
     r"(?i)\b(token|password|secret|passwd|api[_-]?key|bearer|reserved_ram|pid)\b"
 )
+_HOST_TRAIL = re.compile(r"[.\-_!?;,)'\"]+$")
+_SUMMARY_OK = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ,'!?;()-]{0,79}$")
 _CANONICAL_ALIASES = frozenset({"atlas-runner", "hramatka", "vps"})
 _RESERVED_HOST_IDS = frozenset({CLOUD_OBSERVER_HOST_ID})
+
+
+def _looks_like_host(text: str) -> bool:
+    if _IPV4.search(text) or _IPV6.search(text) or _FQDN.search(text):
+        return True
+    trimmed = _HOST_TRAIL.sub("", text)
+    return bool(trimmed and trimmed != text and _FQDN.search(trimmed))
 
 
 def opaque_host_id(value: str) -> bool:
@@ -43,7 +51,7 @@ def safe_field(value: Any, *, role: str = "agent") -> str | None:
     text = str(value).strip()
     if not text or "/" in text or "\\" in text:
         return None
-    if _IPV4.search(text) or _IPV6.search(text) or _FQDN.search(text):
+    if _looks_like_host(text):
         return None
     token = _TASK_TOKEN if role == "task_id" else _SAFE_TOKEN
     if not token.fullmatch(text):
@@ -64,9 +72,9 @@ def safe_summary(value: Any) -> str | None:
     text = " ".join(str(value).split())
     if not text or len(text) > 80:
         return None
-    if any(ch in text for ch in "/\\=@"):
+    if any(ch in text for ch in "/\\=.@"):
         return None
-    if _IPV4.search(text) or _IPV6.search(text) or _FQDN.search(text):
+    if _looks_like_host(text):
         return None
     if _ALIAS_TOKEN.search(text) or _SUMMARY_SECRET.search(text):
         return None

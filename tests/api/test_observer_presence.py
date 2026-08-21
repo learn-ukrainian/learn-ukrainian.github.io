@@ -112,6 +112,7 @@ def test_presence_rejects_unknown_agent_and_leaky_summary() -> None:
         "notes/etc/passwd",
         "token=abc123",
         "see box.example.com",
+        "box.example.com!",
         "pid=12 reserved_ram_mb=256",
         "bearer secret value",
     ):
@@ -120,6 +121,16 @@ def test_presence_rejects_unknown_agent_and_leaky_summary() -> None:
             json={**_HEARTBEAT, "summary": summary},
         )
         assert leaky.status_code == 400, summary
+    alias_epic = loop_client.post(
+        "/api/observer/presence",
+        json={**_HEARTBEAT, "epic": "hramatka"},
+    )
+    assert alias_epic.status_code == 400
+    dotted_task = loop_client.post(
+        "/api/observer/presence",
+        json={**_HEARTBEAT, "task_id": "box.example.com."},
+    )
+    assert dotted_task.status_code == 400
 
 
 def test_presence_upserts_per_agent_and_drops_after_ttl() -> None:

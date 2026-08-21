@@ -102,7 +102,7 @@ def upsert_presence(
     task_id = _safe_field(payload.task_id, role="task_id")
     if task_id is None:
         raise PresenceRequestForbidden("invalid task_id")
-    epic = _safe_field(payload.epic, role="epic") if payload.epic else None
+    epic = _safe_field(payload.epic, role="agent") if payload.epic else None
     if payload.epic and epic is None:
         raise PresenceRequestForbidden("invalid epic")
     if payload.status not in ALLOWED_STATUSES:

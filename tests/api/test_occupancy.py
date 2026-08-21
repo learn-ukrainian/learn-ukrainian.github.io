@@ -337,6 +337,8 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
         "epic": "hramatka",
     }
     assert _occupant(kind="job", task_id="atlas-runner-reenrich-3") is None
+    assert _safe_field("box.example.com.", role="task_id") is None
+    assert _safe_field("v2.1-reenrich", role="task_id") == "v2.1-reenrich"
 
 
 def test_safe_summary_drops_paths_secrets_and_aliases() -> None:
@@ -348,6 +350,7 @@ def test_safe_summary_drops_paths_secrets_and_aliases() -> None:
         "/etc/passwd",
         "notes/etc/passwd",
         "box.example.com",
+        "box.example.com!",
         "pid=12 reserved_ram_mb=256",
         "token=abc123",
         "bearer secret value",
