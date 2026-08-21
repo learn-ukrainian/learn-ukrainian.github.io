@@ -2,7 +2,7 @@ import asyncio
 import importlib.util
 import sys
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import pytest
 
@@ -36,17 +36,18 @@ class TestSearchTextSourceFilter:
         with patch("wiki.sources_db.search_textbooks") as mock_search:
             mock_search.return_value = [{"title": "Title", "text": "Hit", "chunk_id": "1"}]
             result = _run(server_module.handle_search_text(args))
-            
+
             mock_search.assert_called_once()
             _, kwargs = mock_search.call_args
             assert kwargs.get("source_file") == "antonenko-davydovych-yak-my-hovorymo"
+            assert "**Source file**" in result[0].text
 
     def test_handle_search_text_backward_compatibility(self, server_module):
         args = {"query": "test query"}
         with patch("wiki.sources_db.search_textbooks") as mock_search:
             mock_search.return_value = [{"title": "Title", "text": "Hit", "chunk_id": "1"}]
-            result = _run(server_module.handle_search_text(args))
-            
+            _run(server_module.handle_search_text(args))
+
             mock_search.assert_called_once()
             _, kwargs = mock_search.call_args
             assert kwargs.get("source_file") is None
@@ -59,7 +60,7 @@ class TestSearchTextbooksSourceFilter:
             mock_fts.return_value = [{"title": "Title", "text": "Hit", "chunk_id": "1", "source_file": "antonenko-davydovych-yak-my-hovorymo"}]
             results = search_textbooks({"query"}, source_file="antonenko-davydovych-yak-my-hovorymo")
             mock_fts.assert_called_once()
-            args, kwargs = mock_fts.call_args
+            _, kwargs = mock_fts.call_args
             assert "AND s.source_file = ?" in kwargs["extra_where"]
             assert kwargs["extra_params"] == ("antonenko-davydovych-yak-my-hovorymo",)
             assert len(results) == 1
@@ -72,17 +73,50 @@ class TestSearchTextbooksSourceFilter:
             # ukrmova is a valid canonical subject
             results = search_textbooks({"query"}, subject="ukrmova", source_file="antonenko-davydovych-yak-my-hovorymo")
             mock_fts.assert_called_once()
-            args, kwargs = mock_fts.call_args
+            _, kwargs = mock_fts.call_args
             assert "AND s.subject = ? AND s.source_file = ?" in kwargs["extra_where"]
             assert kwargs["extra_params"] == ("ukrmova", "antonenko-davydovych-yak-my-hovorymo")
 
     def test_search_textbooks_no_cross_source_leakage(self):
         from wiki.sources_db import search_textbooks
         with patch("wiki.sources_db._fts_search") as mock_fts:
-            # Assume _fts_search respects the parameters (as we test SQL building above)
-            # We can also test what happens if _fts_search returns multiple items, we shouldn't filter them out here 
-            # if we trust SQL, but we just verify the parameters passed down guarantee no leakage at the query level.
-            pass
+            mock_fts.return_value = [
+                {
+                    "title": "Expected",
+                    "text": "Long enough expected source text for the result filter.",
+                    "chunk_id": "1",
+                    "source_file": "antonenko-davydovych-yak-my-hovorymo",
+                },
+                {
+                    "title": "Foreign",
+                    "text": "Long enough foreign source text that must never leak.",
+                    "chunk_id": "2",
+                    "source_file": "different-source",
+                },
+            ]
+            results = search_textbooks(
+                {"query"}, source_file="antonenko-davydovych-yak-my-hovorymo"
+            )
+            assert [result["source_file"] for result in results] == [
+                "antonenko-davydovych-yak-my-hovorymo"
+            ]
+
+    def test_source_file_is_normalized_before_query(self):
+        from wiki.sources_db import search_textbooks
+        with patch("wiki.sources_db._fts_search") as mock_fts:
+            mock_fts.return_value = []
+            search_textbooks(
+                {"query"}, source_file=" `antonenko-davydovych-yak-my-hovorymo` "
+            )
+            assert mock_fts.call_args.kwargs["extra_params"] == (
+                "antonenko-davydovych-yak-my-hovorymo",
+            )
+
+    def test_empty_supplied_source_file_fails_closed(self):
+        from wiki.sources_db import search_textbooks
+        with patch("wiki.sources_db._fts_search") as mock_fts:
+            assert search_textbooks({"query"}, source_file="  ") == []
+            mock_fts.assert_not_called()
 
     def test_empty_results_when_source_file_has_no_matches(self):
         from wiki.sources_db import search_textbooks
@@ -90,4 +124,3 @@ class TestSearchTextbooksSourceFilter:
             mock_fts.return_value = []
             results = search_textbooks({"query"}, source_file="antonenko-davydovych-yak-my-hovorymo")
             assert results == []
-

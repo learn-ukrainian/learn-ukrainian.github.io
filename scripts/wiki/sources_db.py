@@ -43,6 +43,7 @@ from .channels import rank_external_hits
 from .chunking import chunk_text, policy_for
 from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections  # noqa: F401
 from .query_builder import build_query_buckets
+from .sources_schema import normalize_source_filename
 from .sum20_official import (
     PARSER_VERSION as SUM20_PARSER_VERSION,
 )
@@ -1614,9 +1615,13 @@ def search_textbooks(
     `search_sources` for new code.
     """
     _ = track  # accepted for backward compatibility; ignored
+    source_filter_requested = source_file is not None
+    normalized_source_file = normalize_source_filename(source_file or "")
+    if source_filter_requested and not normalized_source_file:
+        return []
     extra_where = ""
     extra_params: tuple = ()
-    if subject and source_file:
+    if subject and source_filter_requested:
         normalized_subject = normalize_subject_slug(subject)
         if normalized_subject is None:
             return []
@@ -1626,7 +1631,7 @@ def search_textbooks(
                 "scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
             )
         extra_where = "AND s.subject = ? AND s.source_file = ?"
-        extra_params = (normalized_subject, source_file)
+        extra_params = (normalized_subject, normalized_source_file)
     elif subject:
         normalized_subject = normalize_subject_slug(subject)
         if normalized_subject is None:
@@ -1638,9 +1643,9 @@ def search_textbooks(
             )
         extra_where = "AND s.subject = ?"
         extra_params = (normalized_subject,)
-    elif source_file:
+    elif source_filter_requested:
         extra_where = "AND s.source_file = ?"
-        extra_params = (source_file,)
+        extra_params = (normalized_source_file,)
     # Request 2x to compensate for filtered TOC/noise chunks
     rows = _fts_search(
         "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,
@@ -1648,6 +1653,8 @@ def search_textbooks(
     )
     results = []
     for r in rows:
+        if source_filter_requested and normalize_source_filename(str(r.get("source_file", ""))) != normalized_source_file:
+            continue
         text = r.get("text", "")
         if _is_noise(text):
             continue
