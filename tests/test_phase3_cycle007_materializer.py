@@ -43,7 +43,9 @@ def _row(index: int, lane: str, *, include_cycle: bool, forbidden_keys: dict[str
     return row
 
 
-def _fixture(root: Path, *, forbidden_row_keys: dict[str, Any] | None = None) -> tuple[Path, Path, list[dict[str, Any]]]:
+def _fixture(
+    root: Path, *, forbidden_row_keys: dict[str, Any] | None = None
+) -> tuple[Path, Path, list[dict[str, Any]]]:
     source = root / "cycle005-source"
     source.mkdir(mode=materializer.PRIVATE_DIR_MODE)
     os.chmod(source, materializer.PRIVATE_DIR_MODE)
@@ -249,7 +251,9 @@ def test_materializer_path_overlap_rejected(tmp_path: Path):
 # --------------------------------------------------------------------------
 
 
-def test_materializer_never_deletes_output_when_a_post_replace_check_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_materializer_never_deletes_output_when_a_post_replace_check_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     source, output, _rows = _fixture(tmp_path)
     real_walk_modes = materializer._walk_modes
     call_count = {"n": 0}
@@ -271,7 +275,9 @@ def test_materializer_never_deletes_output_when_a_post_replace_check_fails(tmp_p
     assert custody["evaluation_cycle_id"] == materializer.CYCLE007
 
 
-def test_materializer_rollback_never_touches_a_concurrently_created_destination(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_materializer_rollback_never_touches_a_concurrently_created_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     source, output, _rows = _fixture(tmp_path)
 
     def _boom(*_args: Any, **_kwargs: Any):
@@ -363,7 +369,9 @@ def test_materializer_rolls_back_the_claimed_destination_when_a_mid_install_rena
 # --------------------------------------------------------------------------
 
 
-def test_materializer_real_mode_rejects_a_world_readable_source_package(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_materializer_real_mode_rejects_a_world_readable_source_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     source, output, _rows = _fixture(tmp_path)
     os.chmod(source / "custody-receipt.json", 0o644)  # no longer mode-0600
     # Bind the frozen hashes to this fixture so we get past source_binding_drift
@@ -557,6 +565,25 @@ def _uniform_fixture(root: Path, *, packet_size: int) -> Path:
     manifest["receipt_sha256"] = materializer._hash_receipt(manifest)
     _write(source / "label-manifest.json", manifest)
     return source
+
+
+def test_materializer_real_mode_accepts_legacy_manifest_without_commitment_field(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """The pinned Cycle-005 manifest predates this field; recomputation remains mandatory."""
+    computed = "8" * 64
+    monkeypatch.setattr(materializer, "ORDERED_IDENTITY_COMMITMENT_SHA256", computed)
+
+    materializer._validate_ordered_identity_commitment(computed)
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer._validate_ordered_identity_commitment("7" * 64)
+    assert excinfo.value.code == "ordered_identity_commitment_failure"
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer._validate_ordered_identity_commitment(computed, None)
+    assert excinfo.value.code == "ordered_identity_commitment_failure"
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer._validate_ordered_identity_commitment(computed, "7" * 64)
+    assert excinfo.value.code == "ordered_identity_commitment_failure"
 
 
 def test_materializer_recomputes_ordered_identity_and_rejects_a_claimed_commitment_drift(

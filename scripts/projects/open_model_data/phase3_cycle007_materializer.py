@@ -51,6 +51,7 @@ LANE_ORDER = ("clean_label", "residual_label")
 PACKET_SIZE = 50
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
+_MISSING = object()
 
 # Cycle 007 is evidence-foundation only at this stage: no prompts, no raw/
 # response/sealed/transport/assembled label directories are ever produced.
@@ -204,6 +205,18 @@ def _ordered_identity_commitment(stream: Sequence[Any]) -> str:
     return digest(canonical(stream))
 
 
+def _validate_ordered_identity_commitment(commitment: str, reported: Any = _MISSING) -> None:
+    """Bind recomputed identities to the frozen pin and any legacy claim.
+
+    The pinned Cycle-005 manifest predates the optional reported field.  Its
+    absence cannot replace recomputation; when present, it must agree exactly
+    with the independently recomputed frozen commitment.
+    """
+    _require(commitment == ORDERED_IDENTITY_COMMITMENT_SHA256, "ordered_identity_commitment_failure")
+    if reported is not _MISSING:
+        _require(reported == commitment, "ordered_identity_commitment_failure")
+
+
 def _atomic_write(path: Path, payload: bytes, mode: int = PRIVATE_FILE_MODE) -> str:
     if path.exists() or path.is_symlink():
         raise MaterializationError("transaction_failure")
@@ -291,7 +304,8 @@ def _source_manifest(source: Path, config: Config) -> tuple[dict[str, Any], byte
     _require(isinstance(records, list) and bool(records), "manifest_binding_drift")
     _require(manifest.get("packet_count") == len(records), "manifest_binding_drift")
     _require(
-        manifest.get("row_count") == sum(record.get("row_count", -1) for record in records if isinstance(record, Mapping)),
+        manifest.get("row_count")
+        == sum(record.get("row_count", -1) for record in records if isinstance(record, Mapping)),
         "manifest_binding_drift",
     )
     _require(manifest.get("custody_receipt_raw_sha256") == digest(custody_raw), "manifest_binding_drift")
@@ -369,7 +383,9 @@ def _packet_rows(source: Path, record: Mapping[str, Any], fixture: bool) -> dict
     else:
         _require(isinstance(row_count, int) and 1 <= row_count <= PACKET_SIZE, "packet_binding_drift")
     _require(packet.get("packet_identity_set_sha256") == identity_set(rows), "packet_binding_drift")
-    _require(packet.get("packet_identity_set_sha256") == record.get("packet_identity_set_sha256"), "packet_binding_drift")
+    _require(
+        packet.get("packet_identity_set_sha256") == record.get("packet_identity_set_sha256"), "packet_binding_drift"
+    )
     for row in rows:
         _require(isinstance(row, Mapping), "packet_binding_drift")
         _require(not (FORBIDDEN_ROW_KEYS & set(row)), "label_leak_detected")
@@ -470,15 +486,18 @@ def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
         output_records.append(out_record)
         for row_index, identity in enumerate(identities):
             ordered_source_stream.append([lane, record["packet_index"], row_index, identity[0], identity[1]])
-    _require(lane_counts["clean_label"] + lane_counts["residual_label"] == sum(lane_counts.values()), "source_shape_failure")
+    _require(
+        lane_counts["clean_label"] + lane_counts["residual_label"] == sum(lane_counts.values()), "source_shape_failure"
+    )
     if config.strict_counts:
         _require(lane_counts == REAL_ROW_COUNTS, "source_shape_failure")
         _require(len(expected) == sum(REAL_PACKET_COUNTS.values()), "source_shape_failure")
     commitment = _ordered_identity_commitment(ordered_source_stream)
     if not config.fixture:
-        reported = manifest.get("ordered_identity_commitment_sha256")
-        _require(reported == ORDERED_IDENTITY_COMMITMENT_SHA256, "ordered_identity_commitment_failure")
-        _require(commitment == reported, "ordered_identity_commitment_failure")
+        _validate_ordered_identity_commitment(
+            commitment,
+            manifest.get("ordered_identity_commitment_sha256", _MISSING),
+        )
     identity_union_commitment = digest(canonical(sorted(seen)))
     packet_count = len(output_records)
     row_count = sum(record["row_count"] for record in output_records)
@@ -493,7 +512,9 @@ def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
             "source_evaluation_cycle_id": CYCLE005,
             "amendment_reference": "batch_state/phase3-cycle007-source-grounded-amendment-v1.md",
             "source_custody_receipt_raw_sha256": digest(custody_raw),
-            "source_label_manifest_raw_sha256": digest(_read_regular(source / "label-manifest.json", "source_binding_drift")),
+            "source_label_manifest_raw_sha256": digest(
+                _read_regular(source / "label-manifest.json", "source_binding_drift")
+            ),
             "ordered_identity_commitment_sha256": commitment,
             "identity_union_commitment_sha256": identity_union_commitment,
             "ordered_packet_commitment_sha256": ordered_packet_commitment,
@@ -648,7 +669,9 @@ def _resolve_real_paths() -> tuple[Path, Path]:
         _require(stat.S_IMODE(config_path.stat().st_mode) == PRIVATE_FILE_MODE, "path_disclosure_refused")
         payload = strict_json(config_path, "path_disclosure_refused")
         _require(
-            isinstance(payload, Mapping) and isinstance(payload.get("source"), str) and isinstance(payload.get("output"), str),
+            isinstance(payload, Mapping)
+            and isinstance(payload.get("source"), str)
+            and isinstance(payload.get("output"), str),
             "path_disclosure_refused",
         )
         return Path(payload["source"]), Path(payload["output"])
