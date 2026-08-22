@@ -491,6 +491,51 @@ def test_grok_rejects_noncanonical_output_envelope() -> None:
         CANARY._extract_grok(raw, "a" * 64)
 
 
+@pytest.mark.parametrize(
+    ("raw", "failure_code"),
+    [
+        (
+            b'{"event":"init","init":{}}\n'
+            b'{"event":"result","result":{"status":"SUCCESS","structured_output":{}}}\n',
+            "init_model_binding_drift",
+        ),
+        (
+            b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
+            b'{"event":"result","result":{"status":"ERROR"}}\n',
+            "provider_result_status_error",
+        ),
+        (
+            b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
+            b'{"event":"result","result":{"status":"SUCCESS"}}\n',
+            "structured_output_missing",
+        ),
+    ],
+)
+def test_gemini_stream_reports_text_free_structural_cause(raw: bytes, failure_code: str) -> None:
+    with pytest.raises(CANARY.CanaryStructuralError, match=failure_code):
+        CANARY._extract_gemini(raw, "a" * 64)
+
+
+def test_gemini_output_reports_liveness_drift_separately() -> None:
+    raw = CANARY.canonical(
+        {"event": "init", "init": {"model": "Gemini 3.6 Flash (High)"}}
+    ) + CANARY.canonical(
+        {
+            "event": "result",
+            "result": {
+                "status": "SUCCESS",
+                "structured_output": {
+                    "labels_by_position": {"p01": {}, "p02": {}},
+                    "liveness_challenge": "b" * 64,
+                },
+            },
+        }
+    )
+
+    with pytest.raises(CANARY.CanaryStructuralError, match="liveness_challenge_drift"):
+        CANARY._extract_gemini(raw, "a" * 64)
+
+
 def test_structural_retry_permitted_on_first_attempt_malformed(tmp_path: Path) -> None:
     client = CANARY.make_synthetic_mcp_client(tmp_path)
     sidecar = CANARY.compile_public_sidecar(client)

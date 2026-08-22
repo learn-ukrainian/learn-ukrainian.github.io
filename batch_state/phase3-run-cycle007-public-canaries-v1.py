@@ -397,10 +397,16 @@ def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
         raise CanaryStructuralError("terminal_result_count_drift")
     init, result_event = init_events[0], result_events[0]
     config, result = init.get("init"), result_event.get("result")
-    if not isinstance(config, dict) or config.get("model") != GEMINI_MODEL:
-        raise CanaryStructuralError("structured_output_envelope_drift")
-    if not isinstance(result, dict) or result.get("status") != "SUCCESS" or "structured_output" not in result:
-        raise CanaryStructuralError("structured_output_envelope_drift")
+    if not isinstance(config, dict):
+        raise CanaryStructuralError("init_envelope_drift")
+    if config.get("model") != GEMINI_MODEL:
+        raise CanaryStructuralError("init_model_binding_drift")
+    if not isinstance(result, dict):
+        raise CanaryStructuralError("result_envelope_drift")
+    if result.get("status") != "SUCCESS":
+        raise CanaryStructuralError("provider_result_status_error")
+    if "structured_output" not in result:
+        raise CanaryStructuralError("structured_output_missing")
     return init, result
 
 
@@ -413,9 +419,11 @@ def _extract_gemini(raw: bytes, challenge: str) -> tuple[dict[str, Any], dict[st
         except (json.JSONDecodeError, CanaryError) as exc:
             raise CanaryStructuralError("label_json_invalid") from exc
     if not isinstance(output, dict):
-        raise CanaryStructuralError("structured_output_envelope_drift")
-    if set(output) != {"labels_by_position", "liveness_challenge"} or output.get("liveness_challenge") != challenge:
-        raise CanaryStructuralError("structured_output_envelope_drift")
+        raise CanaryStructuralError("structured_output_type_drift")
+    if set(output) != {"labels_by_position", "liveness_challenge"}:
+        raise CanaryStructuralError("structured_output_keys_drift")
+    if output.get("liveness_challenge") != challenge:
+        raise CanaryStructuralError("liveness_challenge_drift")
     positions = output["labels_by_position"]
     if not isinstance(positions, dict) or set(positions) != {"p01", "p02"}:
         raise CanaryStructuralError("ordinal_key_drift")
