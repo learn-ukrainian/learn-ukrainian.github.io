@@ -25,6 +25,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
+from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
+from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
+
 HERE = Path(__file__).resolve().parent
 CYCLE = "phase3-v2-1-evaluation-cycle-007"
 AMENDMENT_SHA256 = "4f2e3e58964cae391c3933ffdce531296a0744808b0154231ca513049602fea0"
@@ -35,6 +39,7 @@ ORDERED_IDENTITY_COMMITMENT_SHA256 = "331fd7fbc42e43cb3c218d9c2b790df060c0a553ab
 EXPECTED_CUSTODY_SHA256 = ""
 EXPECTED_LABEL_MANIFEST_SHA256 = ""
 EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
+EXPECTED_SOURCES_ENDPOINT_IDENTITY: dict[str, Any] = {}
 
 MODEL = "Gemini 3.6 Flash (High)"
 FAMILY = "google"
@@ -192,6 +197,26 @@ def _identity(row: dict[str, Any]) -> tuple[str, str]:
     return unit_id, unit_sha256
 
 
+def _get_expected_identity() -> dict[str, Any]:
+    server_code_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("server_code_sha256")
+    sources_db_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("sources_db_sha256")
+    vesum_db_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("vesum_db_sha256")
+    if not server_code_sha and compiler.DEFAULT_SERVER_CODE.is_file():
+        server_code_sha = contract.sha256_file(compiler.DEFAULT_SERVER_CODE)
+    if not sources_db_sha and compiler.DEFAULT_SOURCES_DB.is_file():
+        sources_db_sha = contract.sha256_file(compiler.DEFAULT_SOURCES_DB)
+    if not vesum_db_sha and compiler.DEFAULT_VESUM_DB.is_file():
+        vesum_db_sha = contract.sha256_file(compiler.DEFAULT_VESUM_DB)
+    return {
+        "tokenizer_id": compiler.TOKENIZER_ID,
+        "tokenizer_version": compiler.TOKENIZER_VERSION,
+        "code_hashes": compiler.CODE_HASHES,
+        "server_code_sha256": server_code_sha or "",
+        "sources_db_sha256": sources_db_sha or "",
+        "vesum_db_sha256": vesum_db_sha or "",
+    }
+
+
 def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], Path, dict[str, Any]]:
     if lane not in LANES or not 1 <= index <= LANES[lane]:
         raise Error("ordinal_identity_binding_drift")
@@ -199,7 +224,7 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
     custody = package / "custody-receipt.json"
     _mode(custody, 0o600)
     custody_bytes = custody.read_bytes()
-    if EXPECTED_CUSTODY_SHA256 and digest(custody_bytes) != EXPECTED_CUSTODY_SHA256:
+    if not EXPECTED_CUSTODY_SHA256 or digest(custody_bytes) != EXPECTED_CUSTODY_SHA256:
         raise Error("ordinal_identity_binding_drift")
     custody_val = _read_json(custody)
     if (
@@ -214,6 +239,8 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
         raise Error("ordinal_identity_binding_drift")
 
     path = package / lane / f"packet-{index:04d}.json"
+    _mode(path, 0o600)
+    packet_bytes = path.read_bytes()
     value = _read_json(path)
     count = 9 if lane == "residual_label" and index == LANES[lane] else 50
     expected_keys = {
@@ -249,7 +276,7 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
         manifest_path = package / "label-manifest.json"
     _mode(manifest_path, 0o600)
     manifest_bytes = manifest_path.read_bytes()
-    if EXPECTED_LABEL_MANIFEST_SHA256 and digest(manifest_bytes) != EXPECTED_LABEL_MANIFEST_SHA256:
+    if not EXPECTED_LABEL_MANIFEST_SHA256 or digest(manifest_bytes) != EXPECTED_LABEL_MANIFEST_SHA256:
         raise Error("ordinal_identity_binding_drift")
     manifest = _read_json(manifest_path)
     entries = [
@@ -262,7 +289,7 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
         "packet_index": index,
         "canonical_basename": path.name,
         "row_count": count,
-        "raw_sha256": digest(path.read_bytes()),
+        "raw_sha256": digest(packet_bytes),
         "packet_identity_set_sha256": value["packet_identity_set_sha256"],
     }
     if (
@@ -274,45 +301,117 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
     ):
         raise Error("ordinal_identity_binding_drift")
 
-    sidecar_path = package / lane / f"evidence-{index:04d}.json"
+    evidence_manifest_path = package / "evidence" / "manifest.json"
+    _mode(evidence_manifest_path, 0o600)
+    ev_bytes = evidence_manifest_path.read_bytes()
+    if not EXPECTED_EVIDENCE_MANIFEST_SHA256 or digest(ev_bytes) != EXPECTED_EVIDENCE_MANIFEST_SHA256:
+        raise Error("evidence_manifest_binding_drift")
+    ev_manifest = _read_json(evidence_manifest_path)
+    if (
+        ev_manifest.get("schema_version") != "phase3_cycle007_evidence_manifest_v1"
+        or ev_manifest.get("evaluation_cycle_id") != CYCLE
+        or ev_manifest.get("text_free") is not True
+    ):
+        raise Error("evidence_manifest_binding_drift")
+
+    body_ev = {k: v for k, v in ev_manifest.items() if k != "manifest_sha256"}
+    if ev_manifest.get("manifest_sha256") != contract.sha256_value(body_ev):
+        raise Error("evidence_manifest_binding_drift")
+
+    spb = ev_manifest.get("source_package_binding")
+    if spb is not None and (
+        not isinstance(spb, dict)
+        or spb.get("source_evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-005"
+        or spb.get("custody_receipt_raw_sha256") != digest(custody_bytes)
+        or spb.get("materialization_manifest_sha256") not in {digest(manifest_bytes), manifest.get("receipt_sha256")}
+        or spb.get("ordered_identity_commitment_sha256")
+        != manifest.get("ordered_identity_commitment_sha256", ORDERED_IDENTITY_COMMITMENT_SHA256)
+        or (
+            manifest.get("identity_union_commitment_sha256")
+            and spb.get("identity_union_commitment_sha256") != manifest.get("identity_union_commitment_sha256")
+        )
+        or (
+            manifest.get("ordered_packet_commitment_sha256")
+            and spb.get("ordered_packet_commitment_sha256") != manifest.get("ordered_packet_commitment_sha256")
+        )
+        or (manifest.get("packet_count") and spb.get("packet_count") != manifest.get("packet_count"))
+        or (manifest.get("row_count") and spb.get("row_count") != manifest.get("row_count"))
+    ):
+        raise Error("evidence_manifest_binding_drift")
+
+    expected_identity = _get_expected_identity()
+    try:
+        validator.validate_manifest(ev_manifest, expected_identity=expected_identity)
+    except validator.EvidenceValidationError as exc:
+        raise Error("evidence_manifest_binding_drift") from exc
+
+    sidecar_entries = ev_manifest.get("sidecars")
+    if not isinstance(sidecar_entries, list) or not sidecar_entries:
+        raise Error("evidence_manifest_binding_drift")
+
+    manifest_packets = manifest.get("packets", [])
+    if manifest_packets:
+        if len(sidecar_entries) != len(manifest_packets):
+            raise Error("evidence_manifest_binding_drift")
+        for expected_p, sidecar_e in zip(manifest_packets, sidecar_entries, strict=True):
+            if not isinstance(sidecar_e, dict):
+                raise Error("evidence_manifest_binding_drift")
+            if (
+                sidecar_e.get("lane") != expected_p.get("lane")
+                or sidecar_e.get("row_count") != expected_p.get("row_count")
+                or sidecar_e.get("packet_binding", {}).get("canonical_basename")
+                != expected_p.get("canonical_basename")
+                or sidecar_e.get("packet_binding", {}).get("raw_sha256") != expected_p.get("raw_sha256")
+                or sidecar_e.get("packet_binding", {}).get("packet_identity_set_sha256")
+                != expected_p.get("packet_identity_set_sha256")
+            ):
+                raise Error("evidence_manifest_binding_drift")
+
+    matching_entries = [
+        item
+        for item in sidecar_entries
+        if isinstance(item, dict)
+        and item.get("lane") == lane
+        and item.get("packet_binding", {}).get("canonical_basename") == path.name
+        and item.get("packet_binding", {}).get("raw_sha256") == digest(packet_bytes)
+        and item.get("packet_binding", {}).get("packet_identity_set_sha256") == value["packet_identity_set_sha256"]
+    ]
+    if len(matching_entries) != 1:
+        raise Error("sidecar_binding_drift")
+
+    entry = matching_entries[0]
+    global_packet_index = entry.get("packet_index")
+    if not isinstance(global_packet_index, int) or global_packet_index < 1:
+        raise Error("sidecar_binding_drift")
+
+    sidecar_path = package / "evidence" / f"sidecar-{global_packet_index:04d}.json"
     _mode(sidecar_path, 0o600)
+    sidecar_bytes = sidecar_path.read_bytes()
+    if digest(sidecar_bytes) != entry.get("sidecar_sha256"):
+        raise Error("sidecar_binding_drift")
+
     sidecar_val = _read_json(sidecar_path)
     if (
         sidecar_val.get("schema_version") != "phase3_cycle007_evidence_sidecar_v1"
         or sidecar_val.get("evaluation_cycle_id") != CYCLE
         or sidecar_val.get("lane") != lane
-        or sidecar_val.get("packet_index") != index
+        or sidecar_val.get("packet_index") != global_packet_index
         or sidecar_val.get("row_count") != count
+        or sidecar_val.get("sidecar_id") != entry.get("sidecar_id")
+        or sidecar_val.get("packet_binding") != entry.get("packet_binding")
         or not isinstance(sidecar_val.get("rows"), list)
         or len(sidecar_val["rows"]) != count
     ):
         raise Error("sidecar_binding_drift")
 
+    try:
+        validator.validate_sidecar(sidecar_val, expected_identity=expected_identity)
+    except validator.EvidenceValidationError as exc:
+        raise Error("sidecar_binding_drift") from exc
+
     sidecar_ids = [_identity(row) for row in sidecar_val["rows"] if isinstance(row, dict)]
     if sidecar_ids != identities:
         raise Error("sidecar_binding_drift")
-
-    evidence_manifest_path = package / "evidence-manifest.json"
-    if evidence_manifest_path.exists():
-        _mode(evidence_manifest_path, 0o600)
-        ev_bytes = evidence_manifest_path.read_bytes()
-        if EXPECTED_EVIDENCE_MANIFEST_SHA256 and digest(ev_bytes) != EXPECTED_EVIDENCE_MANIFEST_SHA256:
-            raise Error("evidence_manifest_binding_drift")
-        ev_manifest = _read_json(evidence_manifest_path)
-        sidecar_entries = [
-            item
-            for item in ev_manifest.get("sidecars", [])
-            if isinstance(item, dict) and item.get("lane") == lane and item.get("packet_index") == index
-        ]
-        if not sidecar_entries:
-            raise Error("evidence_manifest_binding_drift")
-        entry = sidecar_entries[0]
-        if (
-            entry.get("sidecar_sha256") != digest(sidecar_path.read_bytes())
-            or entry.get("sidecar_id") != sidecar_val.get("sidecar_id")
-            or entry.get("row_count") != count
-        ):
-            raise Error("evidence_manifest_binding_drift")
 
     return path, value, sidecar_path, sidecar_val
 
@@ -1017,6 +1116,10 @@ def _reassemble(
     receipt = {
         "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
         "evaluation_cycle_id": CYCLE,
+        "amendment_sha256": AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
+        "materialization_manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
+        "evidence_manifest_raw_sha256": digest((package / "evidence" / "manifest.json").read_bytes()),
         "lane": lane,
         "packet_index": packet_index,
         "row_count": contents["row_count"],
@@ -1067,6 +1170,10 @@ def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]
     expected = {
         "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
         "evaluation_cycle_id": CYCLE,
+        "amendment_sha256": AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
+        "materialization_manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
+        "evidence_manifest_raw_sha256": digest((package / "evidence" / "manifest.json").read_bytes()),
         "lane": lane,
         "packet_index": packet_index,
         "row_count": contents["row_count"],
@@ -1098,8 +1205,23 @@ def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]
 
 
 def run_packet(
-    package: Path, lane: str, packet_index: int, provider: Path = AGY, *, expected_agy_sha256: str | None = None
+    package: Path,
+    lane: str,
+    packet_index: int,
+    provider: Path = AGY,
+    *,
+    expected_agy_sha256: str | None = None,
+    expected_custody_sha256: str | None = None,
+    expected_label_manifest_sha256: str | None = None,
+    expected_evidence_manifest_sha256: str | None = None,
 ) -> dict[str, Any]:
+    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
+    if expected_custody_sha256 is not None:
+        EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
+    if expected_label_manifest_sha256 is not None:
+        EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
+    if expected_evidence_manifest_sha256 is not None:
+        EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
     if _real_agy_provider(provider):
         if not isinstance(expected_agy_sha256, str) or len(expected_agy_sha256) != 64:
             raise Error("ordinal_identity_binding_drift")
@@ -1138,8 +1260,18 @@ def batch(
     *,
     concurrency: int = 1,
     expected_agy_sha256: str | None = None,
+    expected_custody_sha256: str | None = None,
+    expected_label_manifest_sha256: str | None = None,
+    expected_evidence_manifest_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Resume one contiguous packet range with fail-stop concurrency fixed at one."""
+    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
+    if expected_custody_sha256 is not None:
+        EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
+    if expected_label_manifest_sha256 is not None:
+        EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
+    if expected_evidence_manifest_sha256 is not None:
+        EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
     if lane not in LANES or not 1 <= start <= end <= LANES[lane] or concurrency != 1:
         raise Error("ordinal_identity_binding_drift")
     if (package / OUTPUT / "provider-stop.json").exists():
@@ -1175,7 +1307,7 @@ def main() -> int:
     )
     parser.add_argument("--expected-custody-sha", required=True, help="controller-bound custody receipt SHA256")
     parser.add_argument("--expected-label-manifest-sha", required=True, help="controller-bound label manifest SHA256")
-    parser.add_argument("--expected-evidence-manifest-sha", help="controller-bound evidence manifest SHA256")
+    parser.add_argument("--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256")
     args = parser.parse_args()
     try:
         if args.concurrency != 1:
@@ -1192,19 +1324,16 @@ def main() -> int:
         if (
             len(args.expected_custody_sha) != 64
             or len(args.expected_label_manifest_sha) != 64
+            or len(args.expected_evidence_manifest_sha) != 64
             or any(character not in "0123456789abcdef" for character in args.expected_custody_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_label_manifest_sha)
-        ):
-            raise Error("ordinal_identity_binding_drift")
-        if args.expected_evidence_manifest_sha and (
-            len(args.expected_evidence_manifest_sha) != 64
             or any(character not in "0123456789abcdef" for character in args.expected_evidence_manifest_sha)
         ):
             raise Error("ordinal_identity_binding_drift")
         global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
         EXPECTED_CUSTODY_SHA256 = args.expected_custody_sha
         EXPECTED_LABEL_MANIFEST_SHA256 = args.expected_label_manifest_sha
-        EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha or ""
+        EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha
         if args.packet_index is not None:
             if args.end is not None:
                 raise Error("ordinal_identity_binding_drift")

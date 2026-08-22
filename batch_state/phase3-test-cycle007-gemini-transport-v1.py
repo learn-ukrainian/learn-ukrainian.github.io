@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 
 
@@ -76,7 +77,10 @@ def _build_row_evidence(row: dict[str, Any], *, lane: str = "clean_label") -> tu
         row=row,
         phenomenon_id=phenomenon_id,
     )
-    phenomenon_evidence_ids = {phenomenon_id: [rec["evidence_id"]]} if phenomenon_id else {}
+    if lane == "residual_label":
+        phenomenon_evidence_ids = {k: ([rec["evidence_id"]] if k == "apostrophe" else []) for k in contract.RESIDUAL_PHENOMENON_TAXONOMY}
+    else:
+        phenomenon_evidence_ids = {}
     row_ev = {
         "unit_id": row["unit_id"],
         "unit_sha256": row["unit_sha256"],
@@ -186,7 +190,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "row_count": count,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_sha256": "e" * 64},
+        "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -195,7 +199,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "retrieval_payloads": retrieval_payloads,
     }
     sidecar_body["sidecar_id"] = "cycle007_sidecar:" + contract.sha256_value(sidecar_body)
-    sidecar_path = package / lane / f"evidence-{index:04d}.json"
+    sidecar_path = package / "evidence" / f"sidecar-{index:04d}.json"
     sidecar_bytes = put(sidecar_path, sidecar_body)
 
     ev_manifest = {
@@ -204,7 +208,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "evaluation_cycle_id": RUN.CYCLE,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_sha256": "e" * 64},
+        "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -224,8 +228,13 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "source_package_binding": None,
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
-    ev_manifest_bytes = put(package / "evidence-manifest.json", ev_manifest)
+    ev_manifest_bytes = put(package / "evidence" / "manifest.json", ev_manifest)
     RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = RUN.digest(ev_manifest_bytes)
+    RUN.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
+        "server_code_sha256": "f" * 64,
+        "sources_db_sha256": "1" * 64,
+        "vesum_db_sha256": "2" * 64,
+    }
 
     return package
 
@@ -459,6 +468,70 @@ def test_no_private_disclosure_in_receipts(tmp_path: Path, monkeypatch: pytest.M
     assert "prompt" not in receipt
 
 
+def test_wrong_evidence_manifest_hash_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = "0" * 64
+    with pytest.raises(RUN.Error) as exc_info:
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    assert exc_info.value.code == "evidence_manifest_binding_drift"
+
+
+def test_missing_evidence_manifest_hash_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
+    with pytest.raises(RUN.Error) as exc_info:
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    assert exc_info.value.code == "evidence_manifest_binding_drift"
+
+
+def test_sidecar_path_drift_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    # Move sidecar to legacy path
+    sidecar_old = pkg / "evidence" / "sidecar-0001.json"
+    sidecar_new = pkg / "clean_label" / "evidence-0001.json"
+    sidecar_new.write_bytes(sidecar_old.read_bytes())
+    os.chmod(sidecar_new, 0o600)
+    sidecar_old.unlink()
+    with pytest.raises(RUN.Error) as exc_info:
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    assert exc_info.value.code in {"sidecar_binding_drift", "ordinal_identity_binding_drift"}
+
+
+def test_duplicate_or_foreign_sidecar_manifest_entry_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    ev_manifest_path = pkg / "evidence" / "manifest.json"
+    ev_manifest = json.loads(ev_manifest_path.read_text())
+    # Add duplicate entry
+    ev_manifest["sidecars"].append(ev_manifest["sidecars"][0])
+    ev_manifest["manifest_sha256"] = contract.sha256_value(
+        {k: v for k, v in ev_manifest.items() if k != "manifest_sha256"}
+    )
+    ev_bytes = put(ev_manifest_path, ev_manifest)
+    RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = RUN.digest(ev_bytes)
+    with pytest.raises(RUN.Error) as exc_info:
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    assert exc_info.value.code in {"evidence_manifest_binding_drift", "sidecar_binding_drift"}
+
+
+def test_prompt_tamper_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    prompt_file = pkg / "prompts" / "gemini-clean-label.md"
+    prompt_file.write_bytes(b"tampered content")
+    os.chmod(prompt_file, 0o600)
+    with pytest.raises(RUN.Error):
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+
+
 def main() -> int:
     tmp = Path(tempfile.mkdtemp(prefix="gemini_test_"))
     try:
@@ -474,6 +547,11 @@ def main() -> int:
         test_partial_seal_chunk_rejected(tmp / "t9", mp)
         test_partial_seal_packet_rejected(tmp / "t10", mp)
         test_no_private_disclosure_in_receipts(tmp / "t11", mp)
+        test_wrong_evidence_manifest_hash_rejected(tmp / "t12", mp)
+        test_missing_evidence_manifest_hash_rejected(tmp / "t13", mp)
+        test_sidecar_path_drift_rejected(tmp / "t14", mp)
+        test_duplicate_or_foreign_sidecar_manifest_entry_rejected(tmp / "t15", mp)
+        test_prompt_tamper_rejected(tmp / "t16", mp)
         print(
             json.dumps(
                 {"ok": True, "synthetic_only": True, "provider_calls": 0, "text_free": True},

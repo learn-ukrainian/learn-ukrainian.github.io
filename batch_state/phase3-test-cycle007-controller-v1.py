@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 
 
@@ -49,7 +50,7 @@ def put_raw(path: Path, value: bytes) -> bytes:
     return value
 
 
-def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, dict[str, Path]]:
+def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, Path, dict[str, Path]]:
     package = root / "package"
     package.mkdir(parents=True, mode=0o700)
     os.chmod(package, 0o700)
@@ -88,14 +89,14 @@ def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, dict[str, Pa
     manifest_bytes = put(package / "manifest.json", manifest_val)
     manifest_sha = CTRL.digest(manifest_bytes)
 
-    # 3. Evidence manifest
+    # 3. Evidence manifest (at evidence/manifest.json)
     ev_manifest_val = {
         "schema_version": "phase3_cycle007_evidence_manifest_v1",
         "text_free": True,
         "evaluation_cycle_id": CTRL.CYCLE,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_sha256": "e" * 64},
+        "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -106,31 +107,63 @@ def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, dict[str, Pa
         "source_package_binding": None,
     }
     ev_manifest_val["manifest_sha256"] = contract.sha256_value(ev_manifest_val)
-    ev_manifest_bytes = put(package / "evidence-manifest.json", ev_manifest_val)
+    ev_manifest_bytes = put(package / "evidence" / "manifest.json", ev_manifest_val)
     ev_manifest_sha = CTRL.digest(ev_manifest_bytes)
 
-    # 4. Canary receipt
-    canary_receipt_val = {
-        "schema_version": CTRL.CANARY_RECEIPT_SCHEMA,
+    # 4. Gemini canary receipt
+    gemini_canary_val = {
+        "schema_version": "phase3_cycle007_gemini_public_canary_receipt_v1",
         "evaluation_cycle_id": CTRL.CYCLE,
         "ok": True,
         "execution_mode": "synthetic",
         "exact_model": CTRL.GEMINI_MODEL,
+        "model_family": "google",
         "harness": "agy",
-        "real_provider_attested": True,
+        "sources_mcp_used": True,
+        "valid_evidence_ids": True,
+        "russian_surzhyk_trap_rejected": True,
+        "heritage_control_preserved": True,
+        "code_hashes": {"compiler_sha256": "e" * 64},
+        "prompt_hashes": {"prompt_sha256": "d" * 64},
+        "executable_sha256": "synthetic",
+        "synthetic_fixture_hashes": {"fixture_sha256": "c" * 64},
         "text_free": True,
     }
-    canary_receipt_val["receipt_sha256"] = CTRL.digest(CTRL.canonical(canary_receipt_val))
-    canary_receipt_path = root / "canary-receipt.json"
-    canary_bytes = put(canary_receipt_path, canary_receipt_val)
-    canary_sha = CTRL.digest(canary_bytes)
+    gemini_canary_val["receipt_sha256"] = CTRL.digest(CTRL.canonical(gemini_canary_val))
+    gemini_canary_path = root / "gemini-canary-receipt.json"
+    gemini_canary_bytes = put(gemini_canary_path, gemini_canary_val)
+    gemini_canary_sha = CTRL.digest(gemini_canary_bytes)
 
-    # 5. Code paths
+    # 5. Grok canary receipt
+    grok_canary_val = {
+        "schema_version": "phase3_cycle007_grok_public_canary_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "ok": True,
+        "execution_mode": "synthetic",
+        "exact_model": CTRL.GROK_MODEL,
+        "model_family": "xai",
+        "harness": "native_grok",
+        "sources_mcp_used": True,
+        "valid_evidence_ids": True,
+        "russian_surzhyk_trap_rejected": True,
+        "heritage_control_preserved": True,
+        "code_hashes": {"compiler_sha256": "e" * 64},
+        "prompt_hashes": {"prompt_sha256": "d" * 64},
+        "executable_sha256": "synthetic",
+        "synthetic_fixture_hashes": {"fixture_sha256": "c" * 64},
+        "text_free": True,
+    }
+    grok_canary_val["receipt_sha256"] = CTRL.digest(CTRL.canonical(grok_canary_val))
+    grok_canary_path = root / "grok-canary-receipt.json"
+    grok_canary_bytes = put(grok_canary_path, grok_canary_val)
+    grok_canary_sha = CTRL.digest(grok_canary_bytes)
+
+    # 6. Code paths
     code_paths: dict[str, Path] = {}
     for label, path in CTRL.REQUIRED_CODE_PATHS.items():
         code_paths[label] = path
 
-    # Create dummy runners for the other stages
+    # Create dummy runners for the downstream stages
     for label in ("compare_runner", "audit_runner", "adjudicate_runner", "resolve_runner", "certify_runner"):
         dummy = root / f"dummy_{label}.py"
         dummy.write_text("#!/usr/bin/env python3\nimport sys\nsys.exit(0)\n")
@@ -139,14 +172,15 @@ def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, dict[str, Pa
 
     code_hashes = {label: CTRL.sha256(path) for label, path in code_paths.items()}
 
-    # 6. Preflight receipt
+    # 7. Preflight receipt
     preflight_val = {
         "schema_version": "phase3_cycle007_preflight_receipt_v1",
         "amendment_sha256": CTRL.AMENDMENT_SHA256,
         "package_custody_receipt_sha256": custody_sha,
         "package_manifest_sha256": manifest_sha,
         "package_evidence_manifest_sha256": ev_manifest_sha,
-        "public_canary_receipt_sha256": canary_sha,
+        "gemini_canary_receipt_sha256": gemini_canary_sha,
+        "grok_canary_receipt_sha256": grok_canary_sha,
         "code_hashes": code_hashes,
         "backup_receipt_sha256": "7" * 64,
         "review_hashes": {"source_authority_review": "8" * 64, "scope_circularity_review": "9" * 64},
@@ -162,26 +196,42 @@ def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, dict[str, Pa
     preflight_path = root / "preflight-receipt.json"
     put(preflight_path, preflight_val)
 
-    return package, preflight_path, canary_receipt_path, code_paths
+    return package, preflight_path, gemini_canary_path, grok_canary_path, code_paths
 
 
 def test_preflight_valid(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
-    proof = CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
     assert proof["ok"] is True
     assert proof["text_free"] is True
+    assert proof["expected_custody_sha256"]
+    assert proof["expected_label_manifest_sha256"]
+    assert proof["expected_evidence_manifest_sha256"]
 
 
 def test_preflight_fails_on_hash_drift(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
     # Mutate custody receipt
     put(pkg / "custody-receipt.json", {"schema_version": "phase3_cycle007_custody_receipt_v1"})
     with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
-        CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+
+
+def test_preflight_fails_missing_grok_canary(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, _grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, None)
+
+
+def test_preflight_fails_swapped_canaries(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    # Pass grok canary for gemini and gemini canary for grok
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, grok_canary, gemini_canary)
 
 
 def test_status_action(tmp_path: Path) -> None:
-    pkg, _preflight_path, _canary_path, _code_paths = make_controller_fixtures(tmp_path)
+    pkg, _preflight_path, _gemini_canary, _grok_canary, _code_paths = make_controller_fixtures(tmp_path)
     st = CTRL.status(pkg)
     assert st["completed_stages"] == []
     assert st["stopped"] is False
@@ -190,8 +240,8 @@ def test_status_action(tmp_path: Path) -> None:
 
 
 def test_plan_action_gemini(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
-    proof = CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
     res = CTRL.run_stage(
         pkg,
         "gemini",
@@ -210,10 +260,32 @@ def test_plan_action_gemini(tmp_path: Path) -> None:
     assert res["concurrency"] == 1
 
 
+def test_plan_action_grok(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+    CTRL._seal(pkg, "gemini", proof["preflight_receipt_sha256"])
+    res = CTRL.run_stage(
+        pkg,
+        "grok",
+        code_paths["grok_runner"],
+        proof["preflight_receipt_sha256"],
+        dry_run=True,
+        concurrency=1,
+        expected_grok_executable_sha256=proof.get("expected_grok_executable_sha256"),
+        expected_custody_sha256=proof["expected_custody_sha256"],
+        expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
+        expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
+        code_paths=code_paths,
+    )
+    assert res["ok"] is True
+    assert res["stage"] == "grok"
+    assert res["concurrency"] == 1
+
+
 def test_stage_sequence_enforced(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
-    proof = CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
-    # Try running grok before gemini
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+    # Try running grok before gemini is sealed
     with pytest.raises(CTRL.ControllerError, match="noncontiguous_stage_order"):
         CTRL.run_stage(
             pkg,
@@ -227,8 +299,8 @@ def test_stage_sequence_enforced(tmp_path: Path) -> None:
 
 
 def test_stop_present_blocks_stages(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
-    proof = CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
     # Create stop file
     stop_dir = pkg / "label-output-gemini-cycle007-v1"
     stop_dir.mkdir(parents=True, mode=0o700)
@@ -251,8 +323,8 @@ def test_stop_present_blocks_stages(tmp_path: Path) -> None:
 
 
 def test_concurrency_drift_rejected(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
-    proof = CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
     with pytest.raises(CTRL.ControllerError, match="concurrency_drift"):
         CTRL.run_stage(
             pkg,
@@ -269,23 +341,212 @@ def test_concurrency_drift_rejected(tmp_path: Path) -> None:
         )
 
 
-def test_certify_requires_operator_inspected_count(tmp_path: Path) -> None:
-    pkg, preflight_path, canary_path, code_paths = make_controller_fixtures(tmp_path)
-    proof = CTRL.preflight(pkg, preflight_path, code_paths, canary_path)
-    # Mark prior stages complete
-    for stage in CTRL.STAGES[:-1]:
+def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+    cust_sha = proof["expected_custody_sha256"]
+    man_sha = proof["expected_label_manifest_sha256"]
+    ev_sha = proof["expected_evidence_manifest_sha256"]
+
+    # Seal gemini and grok
+    CTRL._seal(pkg, "gemini", proof["preflight_receipt_sha256"])
+    CTRL._seal(pkg, "grok", proof["preflight_receipt_sha256"])
+
+    # 1. Setup compare stage receipt
+    compare_receipt = {
+        "schema_version": "phase3_cycle007_dual_label_batch_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "custody_receipt_raw_sha256": cust_sha,
+        "manifest_raw_sha256": man_sha,
+        "text_free": True,
+    }
+    compare_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(compare_receipt))
+    put(pkg / "dual-label-output-cycle007-v1" / "batch-receipt.json", compare_receipt)
+    for lane, count in CTRL.LANES.items():
+        for i in range(1, count + 1):
+            put(
+                pkg / "dual-label-output-cycle007-v1" / lane / f"receipt-{i:04d}.json",
+                {"schema_version": "phase3_cycle007_dual_label_packet_receipt_v1", "text_free": True},
+            )
+
+    res_compare = CTRL.run_stage(
+        pkg,
+        "compare",
+        code_paths["compare_runner"],
+        proof["preflight_receipt_sha256"],
+        dry_run=False,
+        concurrency=1,
+        expected_custody_sha256=cust_sha,
+        expected_label_manifest_sha256=man_sha,
+        expected_evidence_manifest_sha256=ev_sha,
+        code_paths=code_paths,
+    )
+    assert res_compare["ok"] is True
+
+    # 2. Setup audit stage receipt
+    audit_receipt = {
+        "schema_version": "phase3_cycle007_consensus_audit_batch_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "passed": True,
+        "terminal_findings_count": 0,
+        "custody_receipt_raw_sha256": cust_sha,
+        "manifest_raw_sha256": man_sha,
+        "text_free": True,
+    }
+    audit_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(audit_receipt))
+    put(pkg / "consensus-audit-cycle007-v1" / "batch-receipt.json", audit_receipt)
+    put(pkg / "consensus-audit-cycle007-v1" / "clean-audit-receipt.json", {"terminal_findings_count": 0, "text_free": True})
+    put(pkg / "consensus-audit-cycle007-v1" / "risk-review-receipt.json", {"terminal_findings_count": 0, "text_free": True})
+
+    res_audit = CTRL.run_stage(
+        pkg,
+        "audit",
+        code_paths["audit_runner"],
+        proof["preflight_receipt_sha256"],
+        dry_run=False,
+        concurrency=1,
+        expected_custody_sha256=cust_sha,
+        expected_label_manifest_sha256=man_sha,
+        expected_evidence_manifest_sha256=ev_sha,
+        code_paths=code_paths,
+    )
+    assert res_audit["ok"] is True
+
+    # 3. Setup adjudicate stage receipt
+    adj_receipt = {
+        "schema_version": "phase3_cycle007_dual_label_adjudication_batch_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "custody_receipt_raw_sha256": cust_sha,
+        "manifest_raw_sha256": man_sha,
+        "text_free": True,
+    }
+    adj_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(adj_receipt))
+    put(pkg / "dual-label-adjudication-cycle007-v1" / "batch-receipt.json", adj_receipt)
+    for lane, count in CTRL.LANES.items():
+        for i in range(1, count + 1):
+            put(
+                pkg / "dual-label-adjudication-cycle007-v1" / "final" / lane / f"receipt-{i:04d}.json",
+                {"schema_version": "phase3_cycle007_dual_label_adjudication_packet_receipt_v1", "text_free": True},
+            )
+
+    res_adj = CTRL.run_stage(
+        pkg,
+        "adjudicate",
+        code_paths["adjudicate_runner"],
+        proof["preflight_receipt_sha256"],
+        dry_run=False,
+        concurrency=1,
+        expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
+        expected_custody_sha256=cust_sha,
+        expected_label_manifest_sha256=man_sha,
+        expected_evidence_manifest_sha256=ev_sha,
+        code_paths=code_paths,
+    )
+    assert res_adj["ok"] is True
+
+    # 4. Setup resolve stage receipt
+    res_receipt = {
+        "schema_version": "phase3_cycle007_operator_resolution_batch_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "unresolved_remaining_count": 0,
+        "custody_receipt_raw_sha256": cust_sha,
+        "manifest_raw_sha256": man_sha,
+        "text_free": True,
+    }
+    res_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(res_receipt))
+    put(pkg / "dual-label-final-cycle007-v1" / "batch-receipt.json", res_receipt)
+    for lane, count in CTRL.LANES.items():
+        for i in range(1, count + 1):
+            put(
+                pkg / "dual-label-final-cycle007-v1" / "final" / lane / f"receipt-{i:04d}.json",
+                {"schema_version": "phase3_cycle007_operator_resolution_packet_receipt_v1", "unresolved_remaining_count": 0, "text_free": True},
+            )
+
+    res_res = CTRL.run_stage(
+        pkg,
+        "resolve",
+        code_paths["resolve_runner"],
+        proof["preflight_receipt_sha256"],
+        dry_run=False,
+        concurrency=1,
+        expected_custody_sha256=cust_sha,
+        expected_label_manifest_sha256=man_sha,
+        expected_evidence_manifest_sha256=ev_sha,
+        code_paths=code_paths,
+    )
+    assert res_res["ok"] is True
+
+    # 5. Setup certify stage receipt
+    cert_receipt = {
+        "schema_version": "phase3_cycle007_label_completion_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "amendment_sha256": CTRL.AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": cust_sha,
+        "manifest_raw_sha256": man_sha,
+        "evidence_manifest_raw_sha256": ev_sha,
+        "source_custody_receipt_raw_sha256": CTRL.SOURCE_CUSTODY_SHA256,
+        "source_label_manifest_raw_sha256": CTRL.SOURCE_MANIFEST_SHA256,
+        "ordered_identity_commitment_sha256": CTRL.ORDERED_IDENTITY_COMMITMENT_SHA256,
+        "unresolved_remaining_count": 0,
+        "terminal_findings_count": 0,
+        "text_free": True,
+    }
+    cert_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(cert_receipt))
+    put(pkg / "dual-label-final-cycle007-v1" / "certification-receipt.json", cert_receipt)
+
+    res_cert = CTRL.run_stage(
+        pkg,
+        "certify",
+        code_paths["certify_runner"],
+        proof["preflight_receipt_sha256"],
+        dry_run=False,
+        concurrency=1,
+        expected_custody_sha256=cust_sha,
+        expected_label_manifest_sha256=man_sha,
+        expected_evidence_manifest_sha256=ev_sha,
+        code_paths=code_paths,
+    )
+    assert res_cert["ok"] is True
+
+    # Check status is now fully ready
+    st = CTRL.status(pkg)
+    assert st["ready"] is True
+    assert st["completed_stages"] == list(CTRL.STAGES)
+
+
+def test_stage_receipt_tamper_rejected(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+    cust_sha = proof["expected_custody_sha256"]
+    man_sha = proof["expected_label_manifest_sha256"]
+
+    for stage in CTRL.STAGES[:3]:
         CTRL._seal(pkg, stage, proof["preflight_receipt_sha256"])
 
-    with pytest.raises(CTRL.ControllerError, match="operator_inspected_count_required"):
+    # Setup audit receipt with terminal findings != 0
+    audit_receipt = {
+        "schema_version": "phase3_cycle007_consensus_audit_batch_receipt_v1",
+        "evaluation_cycle_id": CTRL.CYCLE,
+        "passed": False,
+        "terminal_findings_count": 1,
+        "custody_receipt_raw_sha256": cust_sha,
+        "manifest_raw_sha256": man_sha,
+        "text_free": True,
+    }
+    audit_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(audit_receipt))
+    put(pkg / "consensus-audit-cycle007-v1" / "batch-receipt.json", audit_receipt)
+
+    with pytest.raises(CTRL.ControllerError, match="stage_execution_failed"):
         CTRL.run_stage(
             pkg,
-            "certify",
-            code_paths["certify_runner"],
+            "audit",
+            code_paths["audit_runner"],
             proof["preflight_receipt_sha256"],
-            dry_run=True,
+            dry_run=False,
             concurrency=1,
+            expected_custody_sha256=cust_sha,
+            expected_label_manifest_sha256=man_sha,
             code_paths=code_paths,
-            operator_inspected_count=None,
         )
 
 
@@ -294,12 +555,16 @@ def main() -> int:
     try:
         test_preflight_valid(tmp / "t1")
         test_preflight_fails_on_hash_drift(tmp / "t2")
-        test_status_action(tmp / "t3")
-        test_plan_action_gemini(tmp / "t4")
-        test_stage_sequence_enforced(tmp / "t5")
-        test_stop_present_blocks_stages(tmp / "t6")
-        test_concurrency_drift_rejected(tmp / "t7")
-        test_certify_requires_operator_inspected_count(tmp / "t8")
+        test_preflight_fails_missing_grok_canary(tmp / "t3")
+        test_preflight_fails_swapped_canaries(tmp / "t4")
+        test_status_action(tmp / "t5")
+        test_plan_action_gemini(tmp / "t6")
+        test_plan_action_grok(tmp / "t7")
+        test_stage_sequence_enforced(tmp / "t8")
+        test_stop_present_blocks_stages(tmp / "t9")
+        test_concurrency_drift_rejected(tmp / "t10")
+        test_downstream_stages_revalidation_and_sealing(tmp / "t11")
+        test_stage_receipt_tamper_rejected(tmp / "t12")
         print(
             json.dumps(
                 {"ok": True, "synthetic_only": True, "provider_calls": 0, "text_free": True},

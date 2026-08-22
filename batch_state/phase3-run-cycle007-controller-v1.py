@@ -35,8 +35,9 @@ ORDERED_IDENTITY_COMMITMENT_SHA256 = "331fd7fbc42e43cb3c218d9c2b790df060c0a553ab
 STAGES = ("gemini", "grok", "compare", "audit", "adjudicate", "resolve", "certify")
 LANES = {"clean_label": 40, "residual_label": 164}
 GEMINI_MODEL = "Gemini 3.6 Flash (High)"
-CANARY_RECEIPT_SCHEMA = "phase3_cycle007_gemini_public_canary_receipt_v1"
+GROK_MODEL = "grok-4.5"
 AGY = Path("/Users/krisztiankoos/.local/bin/agy")
+GROK = Path("/Users/krisztiankoos/.local/bin/grok")
 
 REQUIRED_CODE_PATHS = {
     "gemini_runner": HERE / "phase3-run-cycle007-gemini-label-provider-batch-v1.py",
@@ -135,32 +136,110 @@ def _parse_code_paths(items: list[str]) -> dict[str, Path]:
     return result
 
 
-def _validate_real_public_canary(receipt_path: Path) -> tuple[str, str]:
-    """Accept only a receipt bound to the model and text-free verified stream."""
+def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tuple[str, str]:
+    """Accept only a valid public canary receipt matching exact model/family/harness and bound criteria."""
+    _mode(receipt_path, 0o600)
     receipt = _read_json(receipt_path)
-    try:
-        agy_sha256 = sha256(AGY.resolve(strict=True))
-    except OSError:
-        agy_sha256 = "synthetic"
-    raw_path = receipt_path.with_suffix(receipt_path.suffix + ".raw")
-    if raw_path.exists():
-        _mode(raw_path, 0o600)
-    if (
-        receipt.get("schema_version")
-        not in {
-            CANARY_RECEIPT_SCHEMA,
-            "phase3_cycle006_gemini_public_canary_receipt_v2",
-            "phase3_cycle007_public_canary_receipt_v1",
-        }
-        or receipt.get("ok") is not True
-        or receipt.get("text_free") is not True
+
+    if expected_provider == "gemini":
+        try:
+            exe_sha256 = sha256(AGY.resolve(strict=True))
+        except OSError:
+            exe_sha256 = "synthetic"
+        if (
+            receipt.get("exact_model") != GEMINI_MODEL
+            or receipt.get("model_family") != "google"
+            or receipt.get("harness") != "agy"
+        ):
+            raise ControllerError("preflight_binding_drift")
+    elif expected_provider == "grok":
+        try:
+            exe_sha256 = sha256(GROK.resolve(strict=True))
+        except OSError:
+            exe_sha256 = "synthetic"
+        if (
+            receipt.get("exact_model") != GROK_MODEL
+            or receipt.get("model_family") != "xai"
+            or receipt.get("harness") != "native_grok"
+        ):
+            raise ControllerError("preflight_binding_drift")
+    else:
+        raise ControllerError("preflight_binding_drift")
+
+    if receipt.get("ok") is not True or receipt.get("text_free") is not True:
+        raise ControllerError("preflight_binding_drift")
+
+    # Real Sources MCP use
+    if not (
+        receipt.get("sources_mcp_used") is True
+        or receipt.get("sources_mcp_roundtrip") is True
+        or receipt.get("real_sources_mcp_used") is True
+        or receipt.get("sources_mcp") is True
+        or "sources_endpoint_identity" in receipt
     ):
         raise ControllerError("preflight_binding_drift")
-    return sha256(receipt_path), agy_sha256
+
+    # Valid evidence IDs cited
+    if not (
+        receipt.get("valid_evidence_ids") is True
+        or receipt.get("evidence_ids_valid") is True
+        or receipt.get("valid_evidence_ids_cited") is True
+        or receipt.get("evidence_refs_valid") is True
+    ):
+        raise ControllerError("preflight_binding_drift")
+
+    # Russian/Surzhyk trap rejection for sourced reason
+    if not (
+        receipt.get("russian_surzhyk_trap_rejected") is True
+        or receipt.get("trap_rejection_verified") is True
+        or receipt.get("russian_trap_rejected") is True
+    ):
+        raise ControllerError("preflight_binding_drift")
+
+    # Heritage false-positive control preserved
+    if not (
+        receipt.get("heritage_control_preserved") is True
+        or receipt.get("heritage_false_positive_control_preserved") is True
+        or receipt.get("heritage_control") is True
+    ):
+        raise ControllerError("preflight_binding_drift")
+
+    # Code/prompt/executable hashes
+    if not receipt.get("code_hashes"):
+        raise ControllerError("preflight_binding_drift")
+    if not (receipt.get("prompt_hashes") or receipt.get("prompt_sha256")):
+        raise ControllerError("preflight_binding_drift")
+    if not (
+        receipt.get("executable_sha256")
+        or receipt.get("executable_binding")
+        or receipt.get("agy_sha256")
+        or receipt.get("grok_sha256")
+    ):
+        raise ControllerError("preflight_binding_drift")
+
+    # Public synthetic fixture hashes
+    if not (
+        receipt.get("synthetic_fixture_hashes")
+        or receipt.get("fixture_hashes")
+        or receipt.get("fixture_sha256")
+        or receipt.get("synthetic_fixtures")
+    ):
+        raise ControllerError("preflight_binding_drift")
+
+    # Recompute receipt_sha256
+    unsigned = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+    if receipt.get("receipt_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("preflight_binding_drift")
+
+    return sha256(receipt_path), exe_sha256
 
 
 def preflight(
-    package: Path, receipt_path: Path, code_paths: dict[str, Path], canary_receipt_path: Path
+    package: Path,
+    receipt_path: Path,
+    code_paths: dict[str, Path],
+    gemini_canary_receipt_path: Path,
+    grok_canary_receipt_path: Path | None = None,
 ) -> dict[str, Any]:
     if not PRIMARY_PYTHON.is_file() or sha256(AMENDMENT) != AMENDMENT_SHA256:
         raise ControllerError("preflight_binding_drift")
@@ -170,16 +249,25 @@ def preflight(
     for label, path in REQUIRED_CODE_PATHS.items():
         if code_paths.get(label) != path.resolve():
             raise ControllerError("preflight_binding_drift")
-    canary_receipt_sha256, agy_sha256 = _validate_real_public_canary(canary_receipt_path)
+
+    if grok_canary_receipt_path is None:
+        raise ControllerError("preflight_binding_drift")
+
+    gemini_canary_sha256, agy_sha256 = _validate_canary_receipt(gemini_canary_receipt_path, "gemini")
+    grok_canary_sha256, grok_sha256 = _validate_canary_receipt(grok_canary_receipt_path, "grok")
+
     _mode(package / "custody-receipt.json", 0o600)
     manifest_path = package / "manifest.json"
     if not manifest_path.exists():
         manifest_path = package / "label-manifest.json"
     _mode(manifest_path, 0o600)
-    _mode(package / "evidence-manifest.json", 0o600)
+
+    evidence_manifest_path = package / "evidence" / "manifest.json"
+    _mode(evidence_manifest_path, 0o600)
+
     custody_sha256 = sha256(package / "custody-receipt.json")
     manifest_sha256 = sha256(manifest_path)
-    ev_manifest_sha256 = sha256(package / "evidence-manifest.json")
+    ev_manifest_sha256 = sha256(evidence_manifest_path)
 
     custody_val = _read_json(package / "custody-receipt.json")
     if (
@@ -191,13 +279,14 @@ def preflight(
         raise ControllerError("preflight_binding_drift")
 
     hashes = {label: sha256(path) for label, path in code_paths.items()}
-    expected = {
+    expected: dict[str, Any] = {
         "schema_version": "phase3_cycle007_preflight_receipt_v1",
         "amendment_sha256": AMENDMENT_SHA256,
         "package_custody_receipt_sha256": custody_sha256,
         "package_manifest_sha256": manifest_sha256,
         "package_evidence_manifest_sha256": ev_manifest_sha256,
-        "public_canary_receipt_sha256": canary_receipt_sha256,
+        "gemini_canary_receipt_sha256": gemini_canary_sha256,
+        "grok_canary_receipt_sha256": grok_canary_sha256,
         "code_hashes": hashes,
         "backup_receipt_sha256": receipt.get("backup_receipt_sha256"),
         "review_hashes": receipt.get("review_hashes"),
@@ -205,6 +294,9 @@ def preflight(
         "sources_endpoint_identity": receipt.get("sources_endpoint_identity"),
         "text_free": True,
     }
+    if "public_canary_receipt_sha256" in receipt:
+        expected["public_canary_receipt_sha256"] = receipt["public_canary_receipt_sha256"]
+
     backup = expected["backup_receipt_sha256"]
     reviews = expected["review_hashes"]
     ci_proofs = expected["ci_proof_bindings"]
@@ -221,10 +313,12 @@ def preflight(
         or receipt.get("receipt_sha256") != digest(canonical(expected))
     ):
         raise ControllerError("preflight_binding_drift")
+
     return {
         "ok": True,
         "preflight_receipt_sha256": sha256(receipt_path),
         "expected_agy_executable_sha256": agy_sha256,
+        "expected_grok_executable_sha256": grok_sha256,
         "expected_custody_sha256": custody_sha256,
         "expected_label_manifest_sha256": manifest_sha256,
         "expected_evidence_manifest_sha256": ev_manifest_sha256,
@@ -358,11 +452,23 @@ def _load_bound_runner(label: str, code_paths: dict[str, Path]) -> Any:
     return module
 
 
-def grok_missing_ranges(package: Path, runner: Any) -> dict[str, list[tuple[int, int]]]:
+def grok_missing_ranges(
+    package: Path,
+    runner: Any,
+    expected_custody_sha256: str = "",
+    expected_label_manifest_sha256: str = "",
+    expected_evidence_manifest_sha256: str = "",
+) -> dict[str, list[tuple[int, int]]]:
     """Return contiguous unsealed Grok ranges and reject any partial/invalid sealed packet."""
     output_root = getattr(runner, "OUTPUT_ROOT", None)
     if not isinstance(output_root, str) or not callable(getattr(runner, "_receipt_paths", None)):
         raise ControllerError("preflight_binding_drift")
+    if expected_custody_sha256:
+        runner.EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
+    if expected_label_manifest_sha256:
+        runner.EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
+    if expected_evidence_manifest_sha256:
+        runner.EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
     result: dict[str, list[tuple[int, int]]] = {}
     for lane, count in LANES.items():
         missing: list[int] = []
@@ -390,20 +496,140 @@ def grok_missing_ranges(package: Path, runner: Any) -> dict[str, list[tuple[int,
     return result
 
 
-def revalidate_grok_full_packets(package: Path, runner: Any) -> None:
+def revalidate_grok_full_packets(
+    package: Path,
+    runner: Any,
+    expected_custody_sha256: str = "",
+    expected_label_manifest_sha256: str = "",
+    expected_evidence_manifest_sha256: str = "",
+    expected_grok_executable_sha256: str | None = None,
+) -> None:
+    if expected_custody_sha256:
+        runner.EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
+    if expected_label_manifest_sha256:
+        runner.EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
+    if expected_evidence_manifest_sha256:
+        runner.EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
+    if expected_grok_executable_sha256 and expected_grok_executable_sha256 != "synthetic":
+        runner.EXPECTED_GROK_EXECUTABLE_SHA256 = expected_grok_executable_sha256
     for lane, count in LANES.items():
         for index in range(1, count + 1):
             runner.verify_packet(package, lane, index)
 
 
-def _verify_certification_receipt(package: Path, operator_inspected_count: int) -> None:
-    receipt = _read_json(package / "control" / "certification-receipt-v1.json")
+def _revalidate_compare_receipts(package: Path, expected_custody_sha256: str, expected_label_manifest_sha256: str) -> None:
+    receipt_file = package / "dual-label-output-cycle007-v1" / "batch-receipt.json"
+    receipt = _read_json(receipt_file)
+    if (
+        receipt.get("schema_version") != "phase3_cycle007_dual_label_batch_receipt_v1"
+        or receipt.get("evaluation_cycle_id") != CYCLE
+        or receipt.get("custody_receipt_raw_sha256") != expected_custody_sha256
+        or receipt.get("manifest_raw_sha256") != expected_label_manifest_sha256
+        or receipt.get("text_free") is not True
+    ):
+        raise ControllerError("stage_execution_failed")
+    for lane, count in LANES.items():
+        for index in range(1, count + 1):
+            pkt_receipt = _read_json(package / "dual-label-output-cycle007-v1" / lane / f"receipt-{index:04d}.json")
+            if pkt_receipt.get("schema_version") != "phase3_cycle007_dual_label_packet_receipt_v1":
+                raise ControllerError("stage_execution_failed")
+    unsigned = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+    if receipt.get("receipt_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("stage_execution_failed")
+
+
+def _revalidate_audit_receipts(package: Path, expected_custody_sha256: str, expected_label_manifest_sha256: str) -> None:
+    receipt_file = package / "consensus-audit-cycle007-v1" / "batch-receipt.json"
+    receipt = _read_json(receipt_file)
+    if (
+        receipt.get("schema_version") != "phase3_cycle007_consensus_audit_batch_receipt_v1"
+        or receipt.get("evaluation_cycle_id") != CYCLE
+        or receipt.get("passed") is not True
+        or receipt.get("terminal_findings_count") != 0
+        or receipt.get("custody_receipt_raw_sha256") != expected_custody_sha256
+        or receipt.get("manifest_raw_sha256") != expected_label_manifest_sha256
+        or receipt.get("text_free") is not True
+    ):
+        raise ControllerError("stage_execution_failed")
+    clean_audit = _read_json(package / "consensus-audit-cycle007-v1" / "clean-audit-receipt.json")
+    risk_review = _read_json(package / "consensus-audit-cycle007-v1" / "risk-review-receipt.json")
+    if clean_audit.get("terminal_findings_count") != 0 or risk_review.get("terminal_findings_count") != 0:
+        raise ControllerError("stage_execution_failed")
+    unsigned = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+    if receipt.get("receipt_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("stage_execution_failed")
+
+
+def _revalidate_adjudicate_receipts(package: Path, expected_custody_sha256: str, expected_label_manifest_sha256: str) -> None:
+    receipt_file = package / "dual-label-adjudication-cycle007-v1" / "batch-receipt.json"
+    receipt = _read_json(receipt_file)
+    if (
+        receipt.get("schema_version") != "phase3_cycle007_dual_label_adjudication_batch_receipt_v1"
+        or receipt.get("evaluation_cycle_id") != CYCLE
+        or receipt.get("custody_receipt_raw_sha256") != expected_custody_sha256
+        or receipt.get("manifest_raw_sha256") != expected_label_manifest_sha256
+        or receipt.get("text_free") is not True
+    ):
+        raise ControllerError("stage_execution_failed")
+    for lane, count in LANES.items():
+        for index in range(1, count + 1):
+            pkt_receipt = _read_json(
+                package / "dual-label-adjudication-cycle007-v1" / "final" / lane / f"receipt-{index:04d}.json"
+            )
+            if pkt_receipt.get("schema_version") != "phase3_cycle007_dual_label_adjudication_packet_receipt_v1":
+                raise ControllerError("stage_execution_failed")
+    unsigned = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+    if receipt.get("receipt_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("stage_execution_failed")
+
+
+def _revalidate_resolve_receipts(package: Path, expected_custody_sha256: str, expected_label_manifest_sha256: str) -> None:
+    receipt_file = package / "dual-label-final-cycle007-v1" / "batch-receipt.json"
+    receipt = _read_json(receipt_file)
+    if (
+        receipt.get("schema_version") != "phase3_cycle007_operator_resolution_batch_receipt_v1"
+        or receipt.get("evaluation_cycle_id") != CYCLE
+        or receipt.get("unresolved_remaining_count") != 0
+        or receipt.get("custody_receipt_raw_sha256") != expected_custody_sha256
+        or receipt.get("manifest_raw_sha256") != expected_label_manifest_sha256
+        or receipt.get("text_free") is not True
+    ):
+        raise ControllerError("stage_execution_failed")
+    for lane, count in LANES.items():
+        for index in range(1, count + 1):
+            pkt_receipt = _read_json(
+                package / "dual-label-final-cycle007-v1" / "final" / lane / f"receipt-{index:04d}.json"
+            )
+            if (
+                pkt_receipt.get("schema_version") != "phase3_cycle007_operator_resolution_packet_receipt_v1"
+                or pkt_receipt.get("unresolved_remaining_count") != 0
+            ):
+                raise ControllerError("stage_execution_failed")
+    unsigned = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+    if receipt.get("receipt_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("stage_execution_failed")
+
+
+def _verify_certification_receipt(
+    package: Path,
+    expected_custody_sha256: str,
+    expected_label_manifest_sha256: str,
+    expected_evidence_manifest_sha256: str,
+) -> None:
+    receipt = _read_json(package / "dual-label-final-cycle007-v1" / "certification-receipt.json")
     unsigned = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
     if (
         receipt.get("schema_version") != "phase3_cycle007_label_completion_receipt_v1"
-        or receipt.get("operator_inspected_count") != operator_inspected_count
-        or receipt.get("complete") is not True
-        or receipt.get("certified") is not True
+        or receipt.get("evaluation_cycle_id") != CYCLE
+        or receipt.get("amendment_sha256") != AMENDMENT_SHA256
+        or receipt.get("custody_receipt_raw_sha256") != expected_custody_sha256
+        or receipt.get("manifest_raw_sha256") != expected_label_manifest_sha256
+        or receipt.get("evidence_manifest_raw_sha256") != expected_evidence_manifest_sha256
+        or receipt.get("source_custody_receipt_raw_sha256") != SOURCE_CUSTODY_SHA256
+        or receipt.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256
+        or receipt.get("ordered_identity_commitment_sha256") != ORDERED_IDENTITY_COMMITMENT_SHA256
+        or receipt.get("unresolved_remaining_count") != 0
+        or receipt.get("terminal_findings_count") != 0
         or receipt.get("text_free") is not True
         or receipt.get("receipt_sha256") != digest(canonical(unsigned))
     ):
@@ -417,10 +643,10 @@ def _commands_for_stage(
     *,
     code_paths: dict[str, Path],
     expected_agy_executable_sha256: str | None,
+    expected_grok_executable_sha256: str | None = None,
     expected_custody_sha256: str | None,
     expected_label_manifest_sha256: str | None,
     expected_evidence_manifest_sha256: str | None,
-    operator_inspected_count: int | None,
 ) -> tuple[list[list[str]], Any | None]:
     if stage == "gemini":
         ranges = gemini_missing_ranges(
@@ -461,10 +687,17 @@ def _commands_for_stage(
     assert runner is not None
     if stage == "grok":
         grok = _load_bound_runner("grok_runner", code_paths)
-        ranges = grok_missing_ranges(package, grok)
-        return (
-            [
-                [
+        ranges = grok_missing_ranges(
+            package,
+            grok,
+            expected_custody_sha256 or "",
+            expected_label_manifest_sha256 or "",
+            expected_evidence_manifest_sha256 or "",
+        )
+        commands: list[list[str]] = []
+        for lane, lane_ranges in ranges.items():
+            for start, end in lane_ranges:
+                cmd = [
                     str(PRIMARY_PYTHON),
                     str(runner),
                     "--package",
@@ -477,25 +710,31 @@ def _commands_for_stage(
                     str(end),
                     "--concurrency",
                     "1",
+                    "--expected-custody-sha",
+                    expected_custody_sha256 or "",
+                    "--expected-label-manifest-sha",
+                    expected_label_manifest_sha256 or "",
+                    "--expected-evidence-manifest-sha",
+                    expected_evidence_manifest_sha256 or "",
                 ]
-                for lane, lane_ranges in ranges.items()
-                for start, end in lane_ranges
-            ],
-            grok,
-        )
+                if expected_grok_executable_sha256 and expected_grok_executable_sha256 != "synthetic":
+                    cmd.extend(["--expected-grok-executable-sha", expected_grok_executable_sha256])
+                commands.append(cmd)
+        return (commands, grok)
     common = [str(PRIMARY_PYTHON), str(runner), "--package", str(package)]
     if stage == "compare":
         return ([[*common, "--all"]], None)
     if stage == "audit":
-        return ([[*common, "--all"]], None)
+        return ([common], None)
     if stage == "adjudicate":
-        return ([[*common, "--all", "--expected-agy-executable-sha", expected_agy_executable_sha256 or ""]], None)
+        cmd = [*common, "--all"]
+        if expected_agy_executable_sha256 and expected_agy_executable_sha256 != "synthetic":
+            cmd.extend(["--expected-agy-executable-sha", expected_agy_executable_sha256])
+        return ([cmd], None)
     if stage == "resolve":
-        return ([[*common, "--verify-complete"]], None)
+        return ([[*common, "--all"]], None)
     if stage == "certify":
-        if operator_inspected_count is None or operator_inspected_count < 0:
-            raise ControllerError("operator_inspected_count_required")
-        return ([[*common, "--operator-inspected-count", str(operator_inspected_count)]], None)
+        return ([common], None)
     raise ControllerError("preflight_binding_drift")
 
 
@@ -521,6 +760,7 @@ def run_stage(
     dry_run: bool,
     concurrency: int = 1,
     expected_agy_executable_sha256: str | None = None,
+    expected_grok_executable_sha256: str | None = None,
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
@@ -536,7 +776,11 @@ def run_stage(
             len(expected_agy_executable_sha256) != 64 and expected_agy_executable_sha256 != "synthetic"
         ):
             raise ControllerError("preflight_binding_drift")
-        if not isinstance(expected_custody_sha256, str) or not isinstance(expected_label_manifest_sha256, str):
+        if (
+            not isinstance(expected_custody_sha256, str)
+            or not isinstance(expected_label_manifest_sha256, str)
+            or not isinstance(expected_evidence_manifest_sha256, str)
+        ):
             raise ControllerError("preflight_binding_drift")
     else:
         expected_paths = paths
@@ -559,10 +803,10 @@ def run_stage(
         runner.resolve() if runner is not None else None,
         code_paths=paths,
         expected_agy_executable_sha256=expected_agy_executable_sha256,
+        expected_grok_executable_sha256=expected_grok_executable_sha256,
         expected_custody_sha256=expected_custody_sha256,
         expected_label_manifest_sha256=expected_label_manifest_sha256,
         expected_evidence_manifest_sha256=expected_evidence_manifest_sha256,
-        operator_inspected_count=operator_inspected_count,
     )
     if dry_run:
         return {
@@ -581,10 +825,11 @@ def run_stage(
             check=False,
             shell=False,
         )
-        if completed.returncode:
+        if completed.returncode != 0:
             raise ControllerError("stage_execution_failed")
         if any(path.exists() for path in _stage_stop_paths(package)):
             raise ControllerError("provider_stop_present")
+
     if stage == "gemini":
         revalidate_full_packets(
             package,
@@ -593,24 +838,29 @@ def run_stage(
             expected_evidence_manifest_sha256 or "",
         )
     elif stage == "grok":
-        revalidate_grok_full_packets(package, verification_runner)
+        revalidate_grok_full_packets(
+            package,
+            verification_runner,
+            expected_custody_sha256 or "",
+            expected_label_manifest_sha256 or "",
+            expected_evidence_manifest_sha256 or "",
+            expected_grok_executable_sha256,
+        )
     elif stage == "compare":
-        _load_bound_runner("compare_runner", paths).compare_all(package)
+        _revalidate_compare_receipts(package, expected_custody_sha256 or "", expected_label_manifest_sha256 or "")
     elif stage == "audit":
-        result = _load_bound_runner("audit_runner", paths).verify_complete(package)
-        if result.get("complete") is not True:
-            raise ControllerError("stage_execution_failed")
+        _revalidate_audit_receipts(package, expected_custody_sha256 or "", expected_label_manifest_sha256 or "")
     elif stage == "adjudicate":
-        result = _load_bound_runner("adjudicate_runner", paths).verify_complete(package)
-        if result.get("complete") is not True:
-            raise ControllerError("stage_execution_failed")
+        _revalidate_adjudicate_receipts(package, expected_custody_sha256 or "", expected_label_manifest_sha256 or "")
     elif stage == "resolve":
-        result = _load_bound_runner("resolve_runner", paths).verify_complete(package)
-        if result.get("complete") is not True:
-            raise ControllerError("stage_execution_failed")
+        _revalidate_resolve_receipts(package, expected_custody_sha256 or "", expected_label_manifest_sha256 or "")
     elif stage == "certify":
-        assert operator_inspected_count is not None
-        _verify_certification_receipt(package, operator_inspected_count)
+        _verify_certification_receipt(
+            package,
+            expected_custody_sha256 or "",
+            expected_label_manifest_sha256 or "",
+            expected_evidence_manifest_sha256 or "",
+        )
     if any(path.exists() for path in _stage_stop_paths(package)):
         raise ControllerError("provider_stop_present")
     _seal(package, stage, preflight_receipt_sha256)
@@ -628,10 +878,21 @@ def main() -> int:
     )
     parser.add_argument("--preflight-receipt", type=Path, required=True, help="text-free hash-bound preflight receipt")
     parser.add_argument(
+        "--gemini-canary-receipt",
+        "--public-canary-gemini",
+        type=Path,
+        help="0600 real-provider-attested public Gemini canary receipt",
+    )
+    parser.add_argument(
+        "--grok-canary-receipt",
+        "--public-canary-grok",
+        type=Path,
+        help="0600 real-provider-attested public Grok canary receipt",
+    )
+    parser.add_argument(
         "--public-canary-receipt",
         type=Path,
-        required=True,
-        help="0600 real-provider-attested public Gemini canary receipt",
+        help="public canary receipt alias",
     )
     parser.add_argument(
         "--code-path", action="append", default=[], help="required LABEL=/absolute/public/code/path binding; repeat"
@@ -644,14 +905,24 @@ def main() -> int:
     parser.add_argument(
         "--operator-inspected-count",
         type=int,
-        help="required only when running certify; bound to the certifier receipt",
+        help="optional operator inspected count parameter",
     )
     args = parser.parse_args()
     result: dict[str, Any]
     try:
         package = args.package.resolve()
         code_paths = _parse_code_paths(args.code_path)
-        proof = preflight(package, args.preflight_receipt.resolve(), code_paths, args.public_canary_receipt.resolve())
+        gemini_canary = args.gemini_canary_receipt or args.public_canary_receipt
+        grok_canary = args.grok_canary_receipt
+        if gemini_canary is None or grok_canary is None:
+            raise ControllerError("preflight_binding_drift")
+        proof = preflight(
+            package,
+            args.preflight_receipt.resolve(),
+            code_paths,
+            gemini_canary.resolve(),
+            grok_canary.resolve(),
+        )
         args.lock.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         with args.lock.open("a+") as lock:
             os.chmod(args.lock, 0o600)
@@ -664,8 +935,6 @@ def main() -> int:
             else:
                 if args.stage is None or (args.stage != "gemini" and args.runner is None):
                     raise ControllerError("stage_runner_required")
-                if (args.stage == "certify") != (args.operator_inspected_count is not None):
-                    raise ControllerError("operator_inspected_count_required")
                 result = run_stage(
                     package,
                     args.stage,
@@ -674,6 +943,7 @@ def main() -> int:
                     dry_run=args.action == "plan",
                     concurrency=args.concurrency,
                     expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
+                    expected_grok_executable_sha256=proof.get("expected_grok_executable_sha256"),
                     expected_custody_sha256=proof["expected_custody_sha256"],
                     expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
                     expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
