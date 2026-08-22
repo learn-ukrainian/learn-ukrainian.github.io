@@ -14,6 +14,11 @@ launcher_adapter_exec() {
   if [ -n "${LC_DRIVER_PROMPT:-}" ]; then
     cmd+=(-i "$LC_DRIVER_PROMPT")
   fi
+  # Driver seats must not hang on interactive tool approval (AgyAdapter
+  # headless uses the same flag). Interactive start-gemini.sh stays gated.
+  if [ "${LC_MODE:-}" = driver ]; then
+    cmd+=(--dangerously-skip-permissions)
+  fi
   for arg in "${LC_FORWARD_ARGS[@]}"; do
     if [ -n "${LC_DRIVER_PROMPT:-}" ] && [ "$arg" = "$LC_DRIVER_PROMPT" ]; then
       continue

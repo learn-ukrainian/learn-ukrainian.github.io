@@ -10,6 +10,7 @@ from tests.test_launcher_contract import run_launcher
 
 _DRIVE_EPIC_NEEDLE = "agents_extensions/shared/skills/drive-epic/SKILL.md"
 _AGY_PROMPT_FLAG = re.compile(r"(?:^|\s)(-i|--prompt-interactive)(?:\s|$)")
+_AGY_SKIP_PERMISSIONS = "--dangerously-skip-permissions"
 # Dry-run uses bash %q, so the prompt may appear as Load\ agents_extensions/...
 # or as a quoted string. The flag must attach to that argument.
 _AGY_BOUND_PROMPT = re.compile(
@@ -32,6 +33,7 @@ def _assert_drive_epic_uses_agy_interactive_flag(exec_line: str) -> None:
     assert exec_line.count(_DRIVE_EPIC_NEEDLE) == 1, exec_line
     # Regression: --model <id> followed by the prompt with no -i.
     assert not re.search(r"--model\s+\S+\s+Load\\?\s", exec_line), exec_line
+    assert _AGY_SKIP_PERMISSIONS in exec_line, exec_line
 
 
 def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
@@ -42,6 +44,7 @@ def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     assert "would exec agy --model gemini-3.7-flash-high" in exec_line
     assert not _AGY_PROMPT_FLAG.search(exec_line), exec_line
     assert _DRIVE_EPIC_NEEDLE not in exec_line
+    assert _AGY_SKIP_PERMISSIONS not in exec_line, exec_line
     assert epic.returncode == 2
     assert "interactive launchers reject --epic" in epic.stderr
 
@@ -76,6 +79,7 @@ def test_gemini_forwards_provider_arguments_only_after_separator() -> None:
     exec_line = _would_exec_line(result.stdout)
     assert "--sandbox read-only" in exec_line
     assert not _AGY_PROMPT_FLAG.search(exec_line), exec_line
+    assert _AGY_SKIP_PERMISSIONS not in exec_line, exec_line
 
 
 def test_gemini_driver_passes_binding_via_agy_interactive_flag() -> None:
