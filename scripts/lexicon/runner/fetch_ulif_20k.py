@@ -18,10 +18,12 @@ import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import requests
 from bs4 import BeautifulSoup
+
+if TYPE_CHECKING:
+    import requests
 
 EXPECTED_COHORT_SHA256 = "858f0c7ce34d0d1e27c3519695073ea3e62bc0623010c03683137b7b730dcab4"
 EXPECTED_COHORT_COUNT = 20_323
@@ -40,6 +42,18 @@ def _load_runner(repo: Path) -> None:
     sys.path.insert(0, str(repo))
 
 
+def _requests() -> Any:
+    """Import ``requests`` only when a live DictUA HTTP exchange is about to run.
+
+    Fastlane CI (and ``--help`` / argparse unit tests) must import this module
+    without the network extra. Reduce already keeps third-party I/O off the
+    import path; fetch mirrors that for ``requests``.
+    """
+    import requests
+
+    return requests
+
+
 @dataclass(frozen=True, slots=True)
 class RetryableFetch(Exception):
     error_code: str
@@ -50,18 +64,25 @@ class DictUAClient:
     """One polite, sequential WebForms client; it holds no corpus/database handle."""
 
     def __init__(self, *, delay_seconds: float, timeout_seconds: int) -> None:
-        self.session = requests.Session()
         self.delay_seconds = delay_seconds
         self.timeout_seconds = timeout_seconds
         self.last_request_at = 0.0
-        self.session.headers.update(
-            {
-                "User-Agent": (
-                    "learn-ukrainian-atlas/1.0 "
-                    "(noncommercial educational ULIF per-lemma fetch; issue #5230)"
-                )
-            }
-        )
+        self._session: Any = None
+        # Headers stay on the client so argparse / in-process tests can
+        # construct it without importing ``requests``.
+        self.headers = {
+            "User-Agent": (
+                "learn-ukrainian-atlas/1.0 "
+                "(noncommercial educational ULIF per-lemma fetch; issue #5230)"
+            )
+        }
+
+    def _http_session(self) -> Any:
+        if self._session is None:
+            session = _requests().Session()
+            session.headers.update(self.headers)
+            self._session = session
+        return self._session
 
     def _wait_turn(self) -> None:
         elapsed = time.monotonic() - self.last_request_at
@@ -85,8 +106,11 @@ class DictUAClient:
 
     def _request(self, method: str, **kwargs: Any) -> requests.Response:
         self._wait_turn()
+        requests = _requests()
         try:
-            response = self.session.request(method, ULIF_URL, timeout=self.timeout_seconds, **kwargs)
+            response = self._http_session().request(
+                method, ULIF_URL, timeout=self.timeout_seconds, **kwargs
+            )
         except requests.RequestException as exc:
             raise RetryableFetch("network_error", COOLDOWN_SECONDS) from exc
         finally:
@@ -435,7 +459,7 @@ def _run(args: argparse.Namespace) -> int:
                 method="POST",
                 url=ULIF_URL,
                 request_body=json.dumps({"adapter": ADAPTER_VERSION, "lemma": lemma}, ensure_ascii=False, sort_keys=True).encode("utf-8"),
-                response_affecting_headers={"user-agent": client.session.headers["User-Agent"]},
+                response_affecting_headers={"user-agent": client.headers["User-Agent"]},
                 request_meta={"logical_request": "ulif_dictua_lookup"},
             )
             claim = ledger.claim_unit(run_id, lemma, ledger.owner_id, phase=PHASE, host=HOST)
