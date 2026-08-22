@@ -772,7 +772,7 @@ def test_dashboard_routing_html_renders_unavailable_explicitly():
     script = """
     const fs = require('fs');
     const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const renderBudgetMatch = html.match(/function renderBudget\\(routing\\) \\{[\\s\\S]*?\\n\\}/);
+    const renderBudgetMatch = html.match(/function renderBudget\\(routing, usage\\) \\{[\\s\\S]*?\\n\\}/);
     if (!renderBudgetMatch) throw new Error('renderBudget not found');
 
     const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({

@@ -63,6 +63,7 @@ from . import preparation_state
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data, trigger_background_refresh
 from .config import CURRICULUM_ROOT, LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .lane_health import compute_lane_health
+from .runtime_router import summarize_runtime_usage
 
 try:
     from agent_runtime.usage import summarize_lane_runtime
@@ -585,6 +586,25 @@ def _recommend_agent(
     }
 
 
+def _runtime_usage_records_7d() -> int | None:
+    """Count agent-runtime usage rows over the same 7-day window served by
+    ``GET /api/runtime/usage?days=7``. Returns None when the probe itself fails.
+
+    The USD cost ledger can be empty while runtime usage exists; diagnostics
+    must say so instead of reporting ``runtime_data_available=false`` just
+    because the 5-minute reactive window (``summarize_lane_runtime``) is quiet.
+    """
+    try:
+        summary = summarize_runtime_usage(days=7)
+    except Exception as exc:  # never break routing-budget on telemetry I/O
+        logging.getLogger("state_router").debug("runtime usage probe failed: %s", exc)
+        return None
+    try:
+        return int(summary.get("records_total") or 0)
+    except (TypeError, ValueError):
+        return None
+
+
 def compute_routing_budget(
     now: datetime | None = None,
     *,
@@ -595,6 +615,7 @@ def compute_routing_budget(
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets()
+    runtime_records_7d = _runtime_usage_records_7d()
     extras = _load_budget_extras(budgets)
     reset_hours = extras["reset_imminent_hours"]
     resets_at = _next_weekly_reset(current_time)
@@ -694,6 +715,9 @@ def compute_routing_budget(
                 "stale": False,
                 "data_age_s": None,
                 "stale_threshold_s": 900,
+                "budget_ledger_empty": True,
+                "runtime_data_available": bool(runtime_records_7d),
+                "runtime_usage_records_7d": runtime_records_7d,
             },
             "ranked_by_headroom": ranked,
         }
@@ -983,6 +1007,16 @@ def compute_routing_budget(
         is_stale = cb_stale
         data_age_s = cb_max_age_s
 
+    # Honest availability: the 5-minute reactive window can be quiet while
+    # the 7-day runtime usage log (what /api/runtime/usage serves) has rows.
+    runtime_data_available = runtime_sourced_any or bool(runtime_records_7d)
+    if not records and runtime_records_7d:
+        warnings.append(
+            f"USD cost ledger empty (records_loaded=0) but runtime usage has "
+            f"{runtime_records_7d} record(s) in 7d — ledger burn unavailable, "
+            f"see /api/runtime/usage?days=7"
+        )
+
     if is_stale:
         warnings.append(
             "generatedAt/data age >15min — advisory downgraded to stale, verify manually (never hard block)"
@@ -1167,7 +1201,9 @@ def compute_routing_budget(
                 fresh_codexbar if refresh_requested is None else refresh_requested
             ),
             "fresh_codexbar_blocking": fresh_codexbar,
-            "runtime_data_available": runtime_sourced_any,
+            "runtime_data_available": runtime_data_available,
+            "runtime_usage_records_7d": runtime_records_7d,
+            "budget_ledger_empty": len(records) == 0,
             "usage_sources": {
                 "allotment": "codexbar",
                 "burn_rate_limit": "agent_runtime_jsonl",
