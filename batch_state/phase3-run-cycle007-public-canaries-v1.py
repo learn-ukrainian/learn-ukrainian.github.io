@@ -58,6 +58,115 @@ GROK = Path("/Users/krisztiankoos/.local/bin/grok")
 GROK_SCHEMA_VERSION = "phase3_cycle007_grok_public_canary_receipt_v1"
 MCP_START_TIMEOUT_SECONDS = 15.0
 
+AGY_PROVIDER_STATUS_FAILURE_CODES: frozenset[str] = frozenset(
+    {
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_structured_request_rejected",
+        "provider_status_authentication_or_permission",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+        "provider_status_unknown",
+    }
+)
+
+_AGY_PROVIDER_STATUS_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "provider_status_quota_or_rate_limit",
+        (
+            "quota",
+            "rate limit",
+            "rate-limit",
+            "rate_limit",
+            "too many requests",
+            "too_many_requests",
+            "resource exhausted",
+            "resource_exhausted",
+            "429",
+        ),
+    ),
+    (
+        "provider_status_capacity_unavailable",
+        (
+            "capacity",
+            "overload",
+            "overloaded",
+            "service unavailable",
+            "service_unavailable",
+            "temporarily unavailable",
+            "temporarily_unavailable",
+            "unavailable",
+            "503",
+        ),
+    ),
+    (
+        "provider_status_structured_request_rejected",
+        (
+            "structured output",
+            "structured_output",
+            "json schema",
+            "json_schema",
+            "schema",
+            "invalid request",
+            "invalid_request",
+            "bad request",
+            "bad_request",
+            "request rejected",
+            "request_rejected",
+            "validation",
+        ),
+    ),
+    (
+        "provider_status_authentication_or_permission",
+        (
+            "authentication",
+            "unauthenticated",
+            "unauthorized",
+            "unauthorised",
+            "auth error",
+            "auth_error",
+            "permission denied",
+            "permission_denied",
+            "forbidden",
+            "access denied",
+            "access_denied",
+            "401",
+            "403",
+        ),
+    ),
+    (
+        "provider_status_timeout",
+        (
+            "timeout",
+            "timed out",
+            "deadline exceeded",
+            "deadline_exceeded",
+        ),
+    ),
+    (
+        "provider_status_cancelled",
+        (
+            "cancelled",
+            "canceled",
+            "cancelled_by",
+            "canceled_by",
+            "aborted",
+            "interrupted",
+        ),
+    ),
+    (
+        "provider_status_internal_error",
+        (
+            "internal error",
+            "internal_error",
+            "server error",
+            "server_error",
+            "500",
+        ),
+    ),
+)
+
 SOURCE_VALIDATOR = HERE / "phase3-cycle007-label-validation-v1.py"
 
 
@@ -218,6 +327,28 @@ def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
             raise CanaryStructuralError("duplicate_json_key")
         result[key] = value
     return result
+
+
+def _agy_static_failure_code(result: Mapping[str, Any]) -> str:
+    """Map a non-success AGY result to a closed, text-free structural code."""
+
+    def matches(value: Any, patterns: tuple[str, ...], *, depth: int = 0) -> bool:
+        if isinstance(value, str):
+            lowered = value.lower()
+            return any(pattern in lowered for pattern in patterns)
+        if not isinstance(value, Mapping) or depth >= 2:
+            return False
+        keys = ("status", "code", "error_code", "error_type", "reason", "message", "response", "error")
+        return any(matches(value.get(key), patterns, depth=depth + 1) for key in keys)
+
+    try:
+        for code, patterns in _AGY_PROVIDER_STATUS_PATTERNS:
+            if code in AGY_PROVIDER_STATUS_FAILURE_CODES and matches(result, patterns):
+                return code
+    except Exception:
+        # Provider-shaped data is untrusted; malformed diagnostics stay unknown.
+        pass
+    return "provider_status_unknown"
 
 
 def _mode(path: Path, expected: int) -> None:
@@ -411,7 +542,7 @@ def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
     if not isinstance(result, dict):
         raise CanaryStructuralError("result_envelope_drift")
     if result.get("status") != "SUCCESS":
-        raise CanaryStructuralError("provider_result_status_error")
+        raise CanaryStructuralError(_agy_static_failure_code(result))
     if "structured_output" not in result:
         raise CanaryStructuralError("structured_output_missing")
     return init, result

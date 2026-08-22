@@ -491,6 +491,105 @@ def test_grok_rejects_noncanonical_output_envelope() -> None:
         CANARY._extract_grok(raw, "a" * 64)
 
 
+AGY_STATUS_SENTINEL = "SENTINEL_PROVIDER_MESSAGE_CYCLE007"
+AGY_STATUS_CASES = (
+    (
+        "provider_status_quota_or_rate_limit",
+        {"status": "ERROR", "error": {"code": "RESOURCE_EXHAUSTED", "message": AGY_STATUS_SENTINEL}},
+    ),
+    (
+        "provider_status_capacity_unavailable",
+        {"status": "ERROR", "response": {"code": "503", "message": AGY_STATUS_SENTINEL}},
+    ),
+    (
+        "provider_status_structured_request_rejected",
+        {"status": "ERROR", "error": {"code": "INVALID_ARGUMENT", "message": f"schema: {AGY_STATUS_SENTINEL}"}},
+    ),
+    (
+        "provider_status_authentication_or_permission",
+        {"status": "ERROR", "response": {"code": "PERMISSION_DENIED", "message": AGY_STATUS_SENTINEL}},
+    ),
+    (
+        "provider_status_timeout",
+        {"status": "ERROR", "error": {"code": "DEADLINE_EXCEEDED", "message": AGY_STATUS_SENTINEL}},
+    ),
+    (
+        "provider_status_cancelled",
+        {"status": "ERROR", "response": {"code": "CANCELLED", "message": AGY_STATUS_SENTINEL}},
+    ),
+    (
+        "provider_status_internal_error",
+        {"status": "ERROR", "error": {"code": "INTERNAL_ERROR", "message": AGY_STATUS_SENTINEL}},
+    ),
+    (
+        "provider_status_unknown",
+        {"status": "ERROR", "response": {"message": AGY_STATUS_SENTINEL}},
+    ),
+)
+
+
+def _make_gemini_status_provider(tmp_path: Path) -> Path:
+    script = tmp_path / "gemini_status_failure.py"
+    init_line = json.dumps({"event": "init", "init": {"model": CANARY.GEMINI_MODEL}})
+    result_line = json.dumps(
+        {
+            "event": "result",
+            "result": {
+                "status": "ERROR",
+                "error": {"code": "RESOURCE_EXHAUSTED", "message": AGY_STATUS_SENTINEL},
+            },
+        }
+    )
+    script.write_text(f"#!/usr/bin/env python3\nprint({init_line!r})\nprint({result_line!r})\n")
+    script.chmod(0o755)
+    return script
+
+
+def test_agy_status_failure_code_set_is_closed_and_exact() -> None:
+    expected_codes = {
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_structured_request_rejected",
+        "provider_status_authentication_or_permission",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+        "provider_status_unknown",
+    }
+    assert expected_codes == CANARY.AGY_PROVIDER_STATUS_FAILURE_CODES
+    assert {code for code, _result in AGY_STATUS_CASES} == expected_codes
+    assert {code for code, _patterns in CANARY._AGY_PROVIDER_STATUS_PATTERNS} == expected_codes - {
+        "provider_status_unknown"
+    }
+    for expected_code, result in AGY_STATUS_CASES:
+        assert CANARY._agy_static_failure_code(result) == expected_code
+
+
+def test_agy_status_mapping_is_text_free(capsys: pytest.CaptureFixture[str]) -> None:
+    init = {"event": "init", "init": {"model": CANARY.GEMINI_MODEL}}
+    for expected_code, result in AGY_STATUS_CASES:
+        raw = CANARY.canonical(init) + CANARY.canonical({"event": "result", "result": result})
+        with pytest.raises(CANARY.CanaryStructuralError) as raised:
+            CANARY._agy_stream(raw)
+        assert str(raised.value) == expected_code
+        assert AGY_STATUS_SENTINEL not in str(raised.value)
+        assert AGY_STATUS_SENTINEL not in repr(raised.value)
+        assert not raised.value.attempt_failure_codes
+        captured = capsys.readouterr()
+        assert AGY_STATUS_SENTINEL not in captured.out
+        assert AGY_STATUS_SENTINEL not in captured.err
+
+
+def test_agy_success_path_preserves_result_shape() -> None:
+    init = {"event": "init", "init": {"model": CANARY.GEMINI_MODEL}}
+    result = {"status": "SUCCESS", "structured_output": {"labels_by_position": {}}}
+    parsed_init, parsed_result = CANARY._agy_stream(
+        CANARY.canonical(init) + CANARY.canonical({"event": "result", "result": result})
+    )
+    assert parsed_init == init
+    assert parsed_result == result
+
+
 @pytest.mark.parametrize(
     ("raw", "failure_code"),
     [
@@ -512,7 +611,7 @@ def test_grok_rejects_noncanonical_output_envelope() -> None:
         (
             b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
             b'{"event":"result","result":{"status":"ERROR"}}\n',
-            "provider_result_status_error",
+            "provider_status_unknown",
         ),
         (
             b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
@@ -601,6 +700,28 @@ print(json.dumps(output))
     assert receipt["provider_call_count"] == 2
 
 
+def test_agy_status_retry_codes_are_static_and_ordered(tmp_path: Path) -> None:
+    client = CANARY.make_synthetic_mcp_client(tmp_path / "mcp")
+    script = _make_gemini_status_provider(tmp_path)
+    expected_code = "provider_status_quota_or_rate_limit"
+
+    try:
+        with pytest.raises(CANARY.CanaryError, match="structural_retry_exhausted") as raised:
+            CANARY.invoke_canary(
+                "gemini",
+                script,
+                execution_mode="synthetic",
+                sources_client=client,
+            )
+    finally:
+        client.close()
+
+    assert raised.value.attempt_failure_codes == (expected_code, expected_code)
+    assert AGY_STATUS_SENTINEL not in str(raised.value)
+    assert raised.value.__cause__ is not None
+    assert AGY_STATUS_SENTINEL not in str(raised.value.__cause__)
+
+
 def test_structural_retry_exhausted_fails(tmp_path: Path) -> None:
     client = CANARY.make_synthetic_mcp_client(tmp_path)
     script = tmp_path / "always_fails.py"
@@ -649,6 +770,35 @@ def test_cli_reports_ordered_text_free_attempt_failures(
         "ok": False,
         "text_free": True,
     }
+
+
+def test_cli_agy_status_failure_artifact_is_text_free(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    script = _make_gemini_status_provider(tmp_path)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "canary",
+            "--provider",
+            "gemini",
+            "--test-provider-bin",
+            str(script),
+            "--synthetic-mcp",
+        ],
+    )
+
+    assert CANARY.main() == 2
+    output = capsys.readouterr().out
+    result = json.loads(output)
+    assert result == {
+        "attempt_failure_codes": ["provider_status_quota_or_rate_limit"] * 2,
+        "failure_code": "structural_retry_exhausted",
+        "ok": False,
+        "text_free": True,
+    }
+    assert AGY_STATUS_SENTINEL not in output
 
 
 def test_semantic_failure_is_terminal_no_retry(tmp_path: Path) -> None:
@@ -721,11 +871,14 @@ def main() -> int:
         test_synthetic_gemini_canary_invocation(tmp / "t8")
         test_synthetic_grok_canary_invocation(tmp / "t9")
         test_synthetic_provider_incapable_of_minting_real_receipt(tmp / "t10")
-        test_structural_retry_permitted_on_first_attempt_malformed(tmp / "t11")
-        test_structural_retry_exhausted_fails(tmp / "t12")
-        test_semantic_failure_is_terminal_no_retry(tmp / "t13")
+        test_agy_status_failure_code_set_is_closed_and_exact()
+        test_agy_success_path_preserves_result_shape()
+        test_agy_status_retry_codes_are_static_and_ordered(tmp / "t11")
+        test_structural_retry_permitted_on_first_attempt_malformed(tmp / "t12")
+        test_structural_retry_exhausted_fails(tmp / "t13")
+        test_semantic_failure_is_terminal_no_retry(tmp / "t14")
         test_static_verify_mode()
-        print(json.dumps({"ok": True, "tests_passed": 14, "text_free": True}))
+        print(json.dumps({"ok": True, "tests_passed": 18, "text_free": True}))
         return 0
     finally:
         import shutil
