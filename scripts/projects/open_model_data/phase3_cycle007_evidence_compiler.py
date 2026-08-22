@@ -2179,9 +2179,15 @@ def _validate_cycle007_materialization(
         for reconstructed_row in reconstructed_source_packet["rows"]:
             if "evaluation_cycle_id" in reconstructed_row:
                 reconstructed_row["evaluation_cycle_id"] = materializer.CYCLE005
-        contract.require(
+        source_digest_candidates = {
             materializer.digest(materializer.canonical(reconstructed_source_packet))
-            == source_record.get("raw_sha256"),
+        }
+        legacy_source_packet = copy.deepcopy(reconstructed_source_packet)
+        for legacy_row in legacy_source_packet["rows"]:
+            legacy_row.pop("source_text_sha256", None)
+        source_digest_candidates.add(materializer.digest(materializer.canonical(legacy_source_packet)))
+        contract.require(
+            source_record.get("raw_sha256") in source_digest_candidates,
             "source_content_binding_drift",
         )
 

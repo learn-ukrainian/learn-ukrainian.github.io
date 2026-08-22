@@ -111,7 +111,7 @@ def _fixture(
     return source, root / "cycle007-successor", all_rows
 
 
-def test_identity_and_order_preserved_with_only_cycle_id_changed(tmp_path: Path):
+def test_identity_order_and_source_text_are_preserved_with_derived_hash(tmp_path: Path):
     source, output, all_rows = _fixture(tmp_path)
     result = materializer.materialize(source, output, fixture=True)
     assert result["ok"] is True
@@ -126,7 +126,28 @@ def test_identity_and_order_preserved_with_only_cycle_id_changed(tmp_path: Path)
             expected_row = dict(expected_by_id[row["unit_id"]])
             if "evaluation_cycle_id" in expected_row:
                 expected_row["evaluation_cycle_id"] = materializer.CYCLE007
+            expected_row["source_text_sha256"] = materializer.contract.sha256_text(expected_row["source_text"])
             assert row == expected_row
+
+
+def test_materializer_rejects_an_existing_incorrect_source_text_hash(tmp_path: Path):
+    source, output, _rows = _fixture(tmp_path)
+    manifest = materializer.strict_json(source / "label-manifest.json")
+    packet_path = source / "clean_label" / "packet-0001.json"
+    packet = materializer.strict_json(packet_path)
+    packet["rows"][0]["source_text_sha256"] = "0" * 64
+    packet_path.unlink()
+    packet_raw = _write(packet_path, packet)
+    records = [dict(record) for record in manifest["packets"]]
+    records[0]["raw_sha256"] = materializer.digest(packet_raw)
+    manifest = dict(manifest)
+    manifest["packets"] = records
+    _rewrite_manifest(source, manifest)
+
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "packet_binding_drift"
+    assert not output.exists()
 
 
 def test_materializer_output_top_level_excludes_labels_and_prompts(tmp_path: Path):

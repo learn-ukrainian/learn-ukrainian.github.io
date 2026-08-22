@@ -1116,7 +1116,7 @@ def test_compile_sidecar_bundle_rolls_back_the_claimed_destination_when_a_mid_in
 # --------------------------------------------------------------------------
 
 
-def _write_cycle005_fixture(root: Path) -> Path:
+def _write_cycle005_fixture(root: Path, *, include_source_text_hash: bool = True) -> Path:
     """A minimal, real materializer.materialize()-compatible Cycle-005 source."""
     import hashlib
     import os
@@ -1131,16 +1131,16 @@ def _write_cycle005_fixture(root: Path) -> Path:
         rows = []
         for offset in range(count):
             unit_id = f"synthetic.{lane}.{index:03d}.{offset}"
-            rows.append(
-                {
-                    "unit_id": unit_id,
-                    "unit_sha256": hashlib.sha256(unit_id.encode()).hexdigest(),
-                    "family_id": "synthetic_family",
-                    "source_text": f"Привіт {offset}",
-                    "source_text_sha256": contract.sha256_text(f"Привіт {offset}"),
-                    "frozen_locator_sha256": contract.sha256_text(f"locator-{unit_id}"),
-                }
-            )
+            row = {
+                "unit_id": unit_id,
+                "unit_sha256": hashlib.sha256(unit_id.encode()).hexdigest(),
+                "family_id": "synthetic_family",
+                "source_text": f"Привіт {offset}",
+                "frozen_locator_sha256": contract.sha256_text(f"locator-{unit_id}"),
+            }
+            if include_source_text_hash:
+                row["source_text_sha256"] = contract.sha256_text(f"Привіт {offset}")
+            rows.append(row)
         all_rows.extend(rows)
         packet = {
             "schema_version": "phase3_cycle005_private_packet_v1",
@@ -1287,6 +1287,26 @@ def test_compile_cycle007_package_binds_lane_packet_index_and_basename(tmp_path:
         "row_count": package_manifest["row_count"],
     }
     assert manifest["mcp_transport_attestation"] is None
+
+
+def test_compile_cycle007_package_binds_legacy_source_without_text_hash(tmp_path: Path):
+    source = _write_cycle005_fixture(tmp_path, include_source_text_hash=False)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    packet = json.loads((package / "clean_label" / "packet-0001.json").read_text())
+    assert all(
+        row["source_text_sha256"] == contract.sha256_text(row["source_text"])
+        for row in packet["rows"]
+    )
+
+    manifest = compiler.compile_cycle007_package(
+        package,
+        source / "label-manifest.json",
+        SyntheticSourcesClient(),
+        tmp_path / "sidecars",
+        fixture=True,
+    )
+    assert manifest["row_count"] == 4
 
 
 def test_compile_sidecar_bundle_bare_compile_has_a_null_source_package_binding(tmp_path: Path):

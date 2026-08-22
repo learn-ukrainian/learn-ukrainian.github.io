@@ -4,13 +4,16 @@
 Per ``batch_state/phase3-cycle007-source-grounded-amendment-v1.md``: the sole
 held-out source remains the restored Cycle-005 custody package. Source rows
 are copied into a new transactional package with their ``evaluation_cycle_id``
-changed from Cycle 005 to Cycle 007. This module never reads, requires, or
+changed from Cycle 005 to Cycle 007 and a deterministic
+``source_text_sha256`` integrity field derived from the unchanged source text.
+This module never reads, requires, or
 copies anything from a Cycle-006 successor package — it reads only the same
 Cycle-005 custody receipt / label manifest / packet files that Cycle 006 also
 read, and it starts both model lanes at zero: no labels, no provider
 artifacts, no prompts are produced here. Row order, packet order, packet
-size, lane order, and unit identity are preserved byte-for-value; the only
-row field this materializer changes is ``evaluation_cycle_id``.
+size, lane order, and unit identity are preserved byte-for-value. The only
+row changes are the Cycle-007 identifier and the derived source-text hash
+required by the frozen evidence validator.
 
 The default CLI is pinned to the real Cycle-005 bindings. ``--fixture`` is a
 separate synthetic-only mode used by the public behavior proof; it never
@@ -193,6 +196,22 @@ def _identity(row: Mapping[str, Any]) -> tuple[str, str]:
     _require(isinstance(unit_id, str) and bool(unit_id), "packet_binding_drift")
     _require(isinstance(unit_sha256, str) and len(unit_sha256) == 64, "packet_binding_drift")
     return unit_id, unit_sha256
+
+
+def _source_text_digest(row: Mapping[str, Any]) -> str:
+    """Return the verified deterministic hash required by Cycle 007.
+
+    The frozen Cycle-005 package predates this derived field. Synthetic or
+    future-compatible inputs may already carry it, but an existing value must
+    agree with the unchanged source text before it can be copied forward.
+    """
+
+    source_text = row.get("source_text")
+    _require(isinstance(source_text, str), "packet_binding_drift")
+    expected = contract.sha256_text(source_text)
+    reported = row.get("source_text_sha256", _MISSING)
+    _require(reported is _MISSING or reported == expected, "packet_binding_drift")
+    return expected
 
 
 def identity_set(rows: Sequence[Mapping[str, Any]]) -> str:
@@ -391,6 +410,7 @@ def _packet_rows(source: Path, record: Mapping[str, Any], fixture: bool) -> dict
         _require(not (FORBIDDEN_ROW_KEYS & set(row)), "label_leak_detected")
         if "evaluation_cycle_id" in row:
             _require(row.get("evaluation_cycle_id") == CYCLE005, "packet_binding_drift")
+        _source_text_digest(row)
         _identity(row)
     return dict(packet)
 
@@ -463,6 +483,7 @@ def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
             output_row = copy.deepcopy(source_row)
             if "evaluation_cycle_id" in source_row:
                 output_row["evaluation_cycle_id"] = CYCLE007
+            output_row["source_text_sha256"] = _source_text_digest(source_row)
             packet_out["rows"].append(output_row)
         packet_out["packet_identity_set_sha256"] = identity_set(packet_out["rows"])
         output_path = stage / lane / str(record["canonical_basename"])
@@ -473,6 +494,7 @@ def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
             expected_row = copy.deepcopy(source_row)
             if "evaluation_cycle_id" in source_row:
                 expected_row["evaluation_cycle_id"] = CYCLE007
+            expected_row["source_text_sha256"] = _source_text_digest(source_row)
             _require(output_row == expected_row, "packet_binding_drift")
         raw_out = _read_regular(output_path, "transaction_failure")
         out_record = {
