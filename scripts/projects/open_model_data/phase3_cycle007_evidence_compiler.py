@@ -1080,12 +1080,27 @@ def compile_row_evidence(
     source_text = str(row.get("source_text", ""))
     forms = extract_forms(source_text)
     evidence: list[dict[str, Any]] = []
+    seen_evidence_ids: set[str] = set()
     retrieval_payloads: dict[str, Any] = {}
+
+    def _append_unique(record: dict[str, Any]) -> None:
+        """Keep one canonical copy when query planning reaches the same fact twice.
+
+        A surface form can also occur as a repeated compound component (or as
+        both a standalone form and a component).  Those routes intentionally
+        produce the same evidence identity; the sidecar contract requires the
+        resulting record set to contain that identity exactly once.
+        """
+        record_id = str(record["evidence_id"])
+        if record_id in seen_evidence_ids:
+            return
+        seen_evidence_ids.add(record_id)
+        evidence.append(record)
 
     def _add(record_and_payload: tuple[dict[str, Any], Any]) -> dict[str, Any]:
         record, payload = record_and_payload
         retrieval_payloads[str(record["retrieval_sha256"])] = payload
-        evidence.append(record)
+        _append_unique(record)
         return record
 
     # source_metadata: preserve existing provenance, hashed, never printed.
@@ -1116,7 +1131,7 @@ def compile_row_evidence(
         phenomenon_id=None,
     )
     retrieval_payloads[metadata_retrieval_sha256] = metadata_payload
-    evidence.append(metadata_record)
+    _append_unique(metadata_record)
 
     # VESUM batch + check_modern_form for every extracted form, regardless of
     # the batch result (amendment step 3).
@@ -1282,7 +1297,7 @@ def compile_row_evidence(
     row_level_records = list(evidence)
     for phenomenon_id in residual_phenomena:
         for bound_record in bind_phenomenon_scoped_evidence(row_level_records, phenomenon_id, row):
-            evidence.append(bound_record)
+            _append_unique(bound_record)
             # Deliberately no new retrieval_payloads entry: the payload is
             # already present under this shared retrieval_sha256.
 

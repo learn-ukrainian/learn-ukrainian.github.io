@@ -162,6 +162,24 @@ def test_split_compound_marks_short_component_ambiguous():
     assert parts is None
 
 
+def test_compile_row_evidence_deduplicates_repeated_compound_component_facts():
+    """One form reached through multiple query-plan routes yields one evidence record."""
+    row = _row(text="Світ світ-світ")
+    result = compiler.compile_row_evidence(
+        row,
+        SyntheticSourcesClient(),
+        identity=_identity(),
+        residual_phenomena=("apostrophe",),
+    )
+
+    record_ids = [record["evidence_id"] for record in result["evidence"]]
+    assert len(record_ids) == len(set(record_ids))
+    assert result["evidence_ids"] == sorted(record_ids)
+    sidecar_row = dict(result)
+    sidecar_row.pop("retrieval_payloads")
+    validator.validate_row_evidence(sidecar_row)
+
+
 # --------------------------------------------------------------------------
 # Determinism, hash/source/parser drift
 # --------------------------------------------------------------------------
