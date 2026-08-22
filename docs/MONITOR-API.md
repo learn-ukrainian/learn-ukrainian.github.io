@@ -235,9 +235,11 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). Host keys are opaque `host_id` values from `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Without that map the `hosts` object is empty — canonical aliases are never used as JSON keys.
 
-Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service`. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
+Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
 
-On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. Cached metrics between 30 and 300 seconds old may still be returned as `stale` while a refresh runs.
+On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
+
+Refresh is armed autonomously, not only by readers: every successful sample schedules a one-shot loop timer for `max(0, 15s - age)`, so a poller that only reads at ~30s still gets a fresh collect without sending a GET. The timer is cancelled when a probe starts or the cache is cleared, and re-arms after each probe — success or failure — while a cache entry remains (a failed probe restarts the full 15s interval, so an unreachable host is not hot-looped). Ordinary reads do not start a new collect during that failure backoff; `fresh=true` still forces a probe.
 
 When Monitor runs on the same machine as one mapped host, set `ATLAS_JOB_SELF_HOST` to that host's canonical token (the left-hand side of `MONITOR_OCCUPANCY_HOST_IDS`). Load is then collected locally — no SSH-to-self. Remote mapped hosts still use BatchMode SSH; they need a working operator SSH config on the Monitor host.
 
@@ -288,6 +290,18 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
     }
   }
 }
+```
+
+### `POST /api/observer/presence`
+
+Loopback-only heartbeat for Grok Bot / QA Engineer. This is **not** a RAM lease (`POST /api/agent-monitor/register`), not a fleet seat, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an issue/PR token. Optional `epic` and `summary`. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show `status` plus `task_id`). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
+
+Rows live 15 minutes and drop when stale or when Monitor restarts. Occupancy then shows them under `cloud-observer`.
+
+```bash
+curl -s -X POST http://127.0.0.1:8765/api/observer/presence \
+  -H 'Content-Type: application/json' \
+  -d '{"agent":"grok-bot","kind":"observer","task_id":"7061","status":"working","summary":"tunneled Monitor observer sweep"}'
 ```
 
 ---

@@ -1,0 +1,29 @@
+---
+description: GitHub MERGED is not closeout — reap branch + worktree every merge
+alwaysApply: true
+---
+
+# Merge closeout (Cursor)
+
+`gh pr merge` / merge-queue **MERGED** is not closeout. Do not treat the PR URL as done.
+
+## Every merge (universal)
+
+Finish all three before claiming the merge closed:
+
+1. **Remote branch gone** — `git ls-remote --heads origin <branch>` empty (delete if GitHub did not).
+2. **Local branch gone** — no leftover `refs/heads/<branch>` (including worktree-linked refs).
+3. **Worktree reaped** — from the primary checkout, after every process has left the tree:
+
+```bash
+.venv/bin/python scripts/orchestration/reap_worktrees.py \
+  --repo-root "$(pwd)" --apply --merged --worktree "<exact-worktree>"
+```
+
+Canonical: `docs/runbooks/worktree-cleanup.md` § Immediate cleanup after merge. A skip is a blocker, not permission for `--force`.
+
+Do not copy the last task’s leftovers into this list.
+
+## Task-specific (not universal)
+
+Deploy, host pull, tunnel-only Mac, occupancy probes, service restarts, and similar proofs belong **only** to the task that created them. Name that remainder in the closeout, finish it for **this** task, and do not promote it into standing merge hygiene.

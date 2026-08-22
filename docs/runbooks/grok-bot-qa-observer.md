@@ -57,6 +57,22 @@ Configure in the Grok Bot product UI; this repo does not encode schedules.
   explicit local-computer / operator approval; never silent primary-checkout
   writes.
 
+## Presence heartbeat (#7063)
+
+Occupancy cannot infer Grok Bot from a RAM lease. From a loopback Monitor client
+(the notebook tunnel to `127.0.0.1`), heartbeat the current issue/PR:
+
+```bash
+curl -s -X POST http://127.0.0.1:8765/api/observer/presence \
+  -H 'Content-Type: application/json' \
+  -d '{"agent":"grok-bot","kind":"observer","task_id":"7061","status":"working","summary":"tunneled Monitor observer sweep"}'
+```
+
+`qa-engineer` is also allowed. Repeat at least every 15 minutes while working.
+`GET /api/occupancy` then shows `agent`, `task_id`, and `status` under
+`cloud-observer`. Occupancy does not echo `summary`. Do not POST a `pid` or
+`reserved_ram_mb`. Do not treat this as a dispatch seat.
+
 ## Evidence (works today)
 
 - Sweep 403 → [#6717](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6717)

@@ -124,6 +124,13 @@ The canonical PR lifecycle trail already performs worktree-first cleanup after
 merge. Other merge owners must invoke the exact command above before declaring
 closeout complete.
 
+Git closeout for **every** merge is exactly three things: worktree reaped,
+remote branch gone, local branch gone. If GitHub did not delete the remote
+head, delete it. Then delete the local branch. Host pulls, tunnels, occupancy
+probes, service restarts, and similar proofs are **task remainder**, not this
+list — name them for this task and finish them, but do not add them to standing
+merge hygiene.
+
 Do not put networked worktree deletion in Git's `post-merge` hook. GitHub merges
 do not run a local hook, and a later `git pull` is not reliable ownership
 evidence for an arbitrary dispatch worktree.
@@ -147,14 +154,20 @@ Each run performs the following in both repository roots:
 1. fetches `origin` and prunes deleted remote refs;
 2. prunes stale Git worktree registrations;
 3. automatically removes only clean, inactive worktrees with exact merged-PR
-   head evidence, plus the terminal-dispatch class described above; open or
-   GitHub-unknown PR state remains a hard skip;
-4. deletes local branches whose upstream is gone only when their exact head is
-   proven merged or is already an ancestor of `origin/main`;
-5. preserves and reports unproven gone branches and orphaned worktree
+   head evidence (including same-tree squash siblings), plus the terminal-dispatch
+   class described above; open or GitHub-unknown PR state remains a hard skip;
+4. deletes origin heads whose GitHub PR is MERGED or CLOSED at the exact live
+   origin SHA (`ls-remote` + `--force-with-lease`), or whose tip is already an
+   ancestor of `origin/main`, and which are not checked out, have no open PR,
+   and are not `entire/` refs;
+5. deletes local branches whose upstream is gone, or that were never tracked,
+   only when their exact head is proven merged/closed or is already an ancestor
+   of `origin/main` (`entire/` refs are preserved; a `pr-N` name alone is not
+   proof);
+6. preserves and reports unproven gone branches and orphaned worktree
    directories;
-6. runs `git gc --auto`;
-7. writes an immutable JSON receipt.
+7. runs `git gc --auto`;
+8. writes an immutable JSON receipt.
 
 Dirty worktrees, open PRs, active/non-terminal tasks, checked-out branches, and
 unmerged branch heads remain untouched.

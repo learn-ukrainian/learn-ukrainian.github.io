@@ -30,6 +30,8 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "/api/fleet/reviews" in html
     assert "/api/fleet/acp/conversations" in html
     assert "/api/fleet/activity" in html
+    assert "/api/occupancy" in html
+    assert "cloud-observer" in html
     assert "<th>Source</th>" in html
     assert "<th>Agent</th>" in html
     assert "<th>Via</th>" in html

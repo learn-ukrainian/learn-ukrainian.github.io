@@ -57,8 +57,16 @@ scripts/wt.sh clean 817
 
 ## Commit Discipline
 
-### Only commit when asked
-Unless the user explicitly says "commit", do not commit. Stage, review, present — but do not commit automatically.
+### Only commit when asked — human primary checkout only
+This applies to interactive work in the human's primary checkout: unless the user
+explicitly says "commit", do not commit there. Stage, review, present — but do not commit
+automatically.
+
+**Dispatched change tasks are different.** Per `AGENTS.md`, change tasks end in a pushed
+PR — commit, push, and open the PR as the job, in the dispatch worktree, without waiting
+for a separate "commit" instruction. Pausing a dispatched change task to ask whether to
+commit is the "first slice, then ask" pattern the operator contract disallows for decided
+work (`operator-expectations.md` item 10).
 
 ### Stage specific files
 Never `git add -A` or `git add .` — it risks including:

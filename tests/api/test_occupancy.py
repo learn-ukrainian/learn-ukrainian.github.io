@@ -4,13 +4,20 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.main import app
-from scripts.api.occupancy import _occupant, _opaque_host_id, _safe_field, parse_host_id_map
+from scripts.api.observer_presence import reset_observer_presence
+from scripts.api.occupancy import parse_host_id_map
+from scripts.api.occupancy_sanitize import occupant as _occupant
+from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
+from scripts.api.occupancy_sanitize import safe_field as _safe_field
+from scripts.api.occupancy_sanitize import safe_summary as _safe_summary
 from scripts.lexicon.runner import atlas_job
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -19,6 +26,13 @@ _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 # Fictional canonical keys — never pair real SSH aliases with opaque ids in git.
 _PLACEHOLDER_MAP = "job-box=host-job,teach-box=host-teacher"
+
+
+@pytest.fixture(autouse=True)
+def _clear_observer_presence() -> None:
+    reset_observer_presence()
+    yield
+    reset_observer_presence()
 
 
 def _plan(**overrides: object) -> dict:
@@ -278,6 +292,49 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         load_mod.clear_host_load_cache()
 
 
+def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(
+    tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    probe_started = threading.Event()
+    release_probe = threading.Event()
+    original_host_load = fake.host_load
+
+    def host_load(host: str) -> dict:
+        if host == "job-box":
+            probe_started.set()
+            assert release_probe.wait(timeout=1.0)
+        return original_host_load(host)
+
+    monkeypatch.setattr(fake, "host_load", host_load)
+    try:
+        load_mod.clear_host_load_cache()
+        load_mod.set_host_load_cache(
+            "job-box",
+            original_host_load("job-box"),
+            mono_ts=time.monotonic() - 31.0,
+        )
+        load_mod.set_host_load_cache(
+            "teach-box",
+            original_host_load("teach-box"),
+            mono_ts=time.monotonic() - 10.0,
+        )
+        resp = client.get("/api/occupancy")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["hosts"]["host-job"]["status"] == "fresh"
+        assert 30.0 <= data["hosts"]["host-job"]["age_seconds"] <= 33.0
+        assert data["hosts"]["host-teacher"]["status"] == "fresh"
+        assert probe_started.wait(timeout=1.0)
+    finally:
+        release_probe.set()
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
 def test_parse_host_id_map_drops_non_opaque_values() -> None:
     parsed = parse_host_id_map(
         "job-box=host-job,teach-box=atlas-runner,bad=1.2.3.4,also=vps,ok=host-teacher"
@@ -288,6 +345,7 @@ def test_parse_host_id_map_drops_non_opaque_values() -> None:
     assert not _opaque_host_id("vps")
     assert not _opaque_host_id("10.0.0.1")
     assert not _opaque_host_id("host.example")
+    assert not _opaque_host_id("cloud-observer")
     assert _opaque_host_id("host-job")
 
 
@@ -323,3 +381,38 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
         "epic": "hramatka",
     }
     assert _occupant(kind="job", task_id="atlas-runner-reenrich-3") is None
+    assert _safe_field("box.example.com.", role="task_id") is None
+    assert _safe_field("v2.1-reenrich", role="task_id") == "v2.1-reenrich"
+
+
+def test_safe_summary_drops_paths_secrets_and_aliases() -> None:
+    assert _safe_summary("tunneled Monitor observer sweep") == "tunneled Monitor observer sweep"
+    assert _safe_summary("  spaced   words  ") == "spaced words"
+    for leaked in (
+        "talk to atlas-runner",
+        "10.0.0.1 sweep",
+        "/etc/passwd",
+        "notes/etc/passwd",
+        "box.example.com",
+        "box.example.com!",
+        "pid=12 reserved_ram_mb=256",
+        "token=abc123",
+        "bearer secret value",
+        "user@host",
+    ):
+        assert _safe_summary(leaked) is None
+    assert _occupant(kind="observer", agent="grok-bot", task_id="7061") is None
+    occupant = _occupant(
+        kind="observer",
+        agent="grok-bot",
+        task_id="7061",
+        status="working",
+    )
+    assert occupant == {
+        "kind": "observer",
+        "agent": "grok-bot",
+        "task_id": "7061",
+        "epic": None,
+        "status": "working",
+    }
+    assert "summary" not in occupant

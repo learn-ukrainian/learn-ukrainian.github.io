@@ -1,0 +1,101 @@
+"""Regression tests for the changed-test fastlane dependency profile."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from scripts.ci import fastlane_requirements
+
+
+def _write(path: Path, content: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    return path
+
+
+def _lock(tmp_path: Path) -> dict[str, str]:
+    lock = _write(
+        tmp_path / "requirements-lock.txt",
+        """\
+fastapi==0.139.0
+PyYAML==6.0.3
+pytest==9.0.3
+requests==2.34.2
+""",
+    )
+    return fastlane_requirements.read_lock(lock)
+
+
+def test_selected_direct_imports_add_reviewed_exact_lock_pins(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    _write(project_root / "scripts" / "ci" / "__init__.py", "")
+    test_path = _write(
+        project_root / "tests" / "test_example.py",
+        """\
+from __future__ import annotations
+
+import yaml
+from fastapi import FastAPI
+from requests import get
+from scripts.ci import changed_tests
+""",
+    )
+
+    selected = fastlane_requirements.select_requirements(
+        [test_path],
+        base_requirements=["pytest==9.0.3", "fastapi==0.139.0"],
+        lock_requirements=_lock(tmp_path),
+        project_root=project_root,
+    )
+
+    assert selected == ["pytest==9.0.3", "fastapi==0.139.0", "PyYAML==6.0.3", "requests==2.34.2"]
+
+
+def test_unknown_third_party_import_fails_closed(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    test_path = _write(project_root / "tests" / "test_example.py", "import unreviewed_vendor\n")
+
+    with pytest.raises(fastlane_requirements.RequirementSelectionError, match="unreviewed_vendor"):
+        fastlane_requirements.select_requirements(
+            [test_path],
+            base_requirements=[],
+            lock_requirements=_lock(tmp_path),
+            project_root=project_root,
+        )
+
+
+def test_explicit_non_lock_runtime_import_has_a_reviewed_pin(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    test_path = _write(project_root / "tests" / "test_example.py", "import ahocorasick\n")
+
+    selected = fastlane_requirements.select_requirements(
+        [test_path],
+        base_requirements=[],
+        lock_requirements=_lock(tmp_path),
+        project_root=project_root,
+    )
+
+    assert selected == ["pyahocorasick==2.3.1"]
+
+
+def test_live_model_imports_do_not_expand_the_default_profile(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    test_path = _write(
+        project_root / "tests" / "test_example.py",
+        """\
+import stanza
+import torch
+from ukrainian_word_stress import Stressifier
+""",
+    )
+
+    selected = fastlane_requirements.select_requirements(
+        [test_path],
+        base_requirements=["pytest==9.0.3"],
+        lock_requirements=_lock(tmp_path),
+        project_root=project_root,
+    )
+
+    assert selected == ["pytest==9.0.3"]

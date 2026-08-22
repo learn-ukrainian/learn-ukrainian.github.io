@@ -2,14 +2,14 @@
 
 Sibling of ``GET /api/atlas-jobs/load`` — one occupancy board, no second probe
 path. Canonical SSH aliases never appear as JSON keys. Map them with
-``MONITOR_OCCUPANCY_HOST_IDS`` (``alias=opaque-id,...``).
+``MONITOR_OCCUPANCY_HOST_IDS`` (``alias=opaque-id,...``). Observer heartbeats
+from ``POST /api/observer/presence`` appear under ``cloud-observer``.
 """
 
 from __future__ import annotations
 
 import asyncio
 import os
-import re
 from datetime import UTC, datetime
 from typing import Any
 
@@ -17,23 +17,15 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
+from scripts.api.observer_presence import list_live
+from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
+from scripts.api.occupancy_sanitize import occupant as _occupant
+from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.lexicon.runner import atlas_job
 
 router = APIRouter(tags=["occupancy"])
 
 OCCUPANCY_SCHEMA = "monitor-occupancy.v1"
-OCCUPANT_KINDS = frozenset({"driver", "worker", "job", "service"})
-_OPAQUE_HOST_ID = re.compile(r"^[a-z][a-z0-9-]{0,62}$")
-_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
-_TASK_TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
-_IPV4 = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_IPV6 = re.compile(r":")
-_FQDN = re.compile(r"\.[A-Za-z]{2,}$")
-_ALIAS_TOKEN = re.compile(
-    r"(?:^|[^A-Za-z0-9])(atlas-runner|hramatka|vps)(?:[^A-Za-z0-9]|$)",
-    re.IGNORECASE,
-)
-_CANONICAL_ALIASES = frozenset({"atlas-runner", "hramatka", "vps"})
 _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
 
 
@@ -54,46 +46,6 @@ def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
             continue
         mapping[canonical] = opaque
     return mapping
-
-
-def _opaque_host_id(value: str) -> bool:
-    return bool(
-        _OPAQUE_HOST_ID.fullmatch(value)
-        and value not in _CANONICAL_ALIASES
-        and not _IPV4.search(value)
-        and not _IPV6.search(value)
-        and "." not in value
-    )
-
-
-def _safe_field(value: Any, *, role: str = "agent") -> str | None:
-    if value is None:
-        return None
-    text = str(value).strip()
-    if not text or "/" in text or "\\" in text:
-        return None
-    if _IPV4.search(text) or _IPV6.search(text) or _FQDN.search(text):
-        return None
-    token = _TASK_TOKEN if role == "task_id" else _SAFE_TOKEN
-    if not token.fullmatch(text):
-        return None
-    if role != "epic" and _ALIAS_TOKEN.search(text):
-        return None
-    return text
-
-
-def _occupant(*, kind: str, agent: Any = None, task_id: Any = None, epic: Any = None) -> dict[str, str | None] | None:
-    if kind not in OCCUPANT_KINDS:
-        return None
-    task = _safe_field(task_id, role="task_id")
-    if task is None:
-        return None
-    return {
-        "kind": kind,
-        "agent": _safe_field(agent, role="agent"),
-        "task_id": task,
-        "epic": _safe_field(epic, role="epic"),
-    }
 
 
 def _occupants_from_registry(canonical: str) -> list[dict[str, str | None]]:
@@ -169,7 +121,45 @@ def _shape_host(host_id: str, load_entry: dict[str, Any], occupants: list[dict[s
     return shaped
 
 
+def _occupants_from_observers() -> list[dict[str, str | None]]:
+    occupants: list[dict[str, str | None]] = []
+    for row in list_live():
+        occupant = _occupant(
+            kind="observer",
+            agent=row.agent,
+            task_id=row.task_id,
+            epic=row.epic,
+            status=row.status,
+        )
+        if occupant is not None:
+            occupants.append(occupant)
+    return occupants
+
+
+def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, Any]:
+    return {
+        "host_id": CLOUD_OBSERVER_HOST_ID,
+        "status": "fresh",
+        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "age_seconds": 0.0,
+        "occupants": occupants,
+    }
+
+
+def _attach_cloud_observer(payload: dict[str, Any], host_id: str | None) -> dict[str, Any]:
+    if host_id is not None and host_id != CLOUD_OBSERVER_HOST_ID:
+        return payload
+    occupants = _occupants_from_observers()
+    if not occupants and host_id is None:
+        return payload
+    payload["hosts"][CLOUD_OBSERVER_HOST_ID] = _shape_cloud_observer(occupants)
+    return payload
+
+
 def _selected_hosts(host_id: str | None) -> dict[str, str]:
+    if host_id == CLOUD_OBSERVER_HOST_ID:
+        return {}
+
     mapping = parse_host_id_map()
     if not mapping:
         return {}
@@ -211,22 +201,22 @@ def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dic
     """Build the synchronous cache-only payload for non-HTTP callers."""
     selected = _selected_hosts(host_id)
     if not selected:
-        return _empty_payload()
+        return _attach_cloud_observer(_empty_payload(), host_id)
 
     load_entries = {canonical: load_mod._get_host_load_entry(canonical, fresh=fresh) for canonical in selected.values()}
-    return _payload_from_entries(selected, load_entries)
+    return _attach_cloud_observer(_payload_from_entries(selected, load_entries), host_id)
 
 
 async def _occupancy_payload_async(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:
     selected = _selected_hosts(host_id)
     if not selected:
-        return _empty_payload()
+        return _attach_cloud_observer(_empty_payload(), host_id)
 
     entries = await asyncio.gather(
         *(load_mod._get_host_load_entry_async(canonical, fresh=fresh) for canonical in selected.values())
     )
     load_entries = dict(zip(selected.values(), entries, strict=True))
-    return _payload_from_entries(selected, load_entries)
+    return _attach_cloud_observer(_payload_from_entries(selected, load_entries), host_id)
 
 
 @router.get("")

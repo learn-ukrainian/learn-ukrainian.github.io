@@ -4524,9 +4524,54 @@ def _run_worker(
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
+    from scripts.agent_runtime.attribution import resolve_invocation_attribution
+    from scripts.orchestration.job_host_exec import (
+        SshTransportError,
+        decide_dispatch_placement,
+        forward_dispatch,
+        notebook_fallback_after_forward,
+    )
+
+    try:
+        attribution = resolve_invocation_attribution(
+            explicit=getattr(args, "initiator", None),
+            task_id=args.task_id,
+        )
+    except ValueError as exc:
+        print(f"❌ invalid --initiator: {exc}", file=sys.stderr)
+        return 2
+
+    if not bool(getattr(args, "dry_run", False)):
+        placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
+        if placement == "vps" and host_id:
+            print(f"→ forwarding dispatch to {host_id}", file=sys.stderr)
+            forward_error: BaseException | None = None
+            forward_rc: int | None = None
+            try:
+                forward_rc = forward_dispatch(
+                    host_id=host_id,
+                    argv=sys.argv,
+                    initiator=attribution.initiator,
+                    initiator_source=attribution.source,
+                )
+            except SshTransportError as exc:
+                forward_error = exc
+            except (ValueError, FileNotFoundError, OSError) as exc:
+                forward_error = exc
+            if not notebook_fallback_after_forward(forward_rc, error=forward_error):
+                if forward_error is not None:
+                    print(f"❌ VPS forward failed: {forward_error}", file=sys.stderr)
+                    return 2
+                return int(forward_rc or 0)
+            why = str(forward_error) if forward_error is not None else f"ssh rc {forward_rc}"
+            print(
+                f"⚠️  VPS forward failed ({why}); spawning on notebook",
+                file=sys.stderr,
+            )
+        elif reason in {"unavailable", "full"}:
+            print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
-    from agent_runtime.attribution import resolve_invocation_attribution
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
@@ -4534,14 +4579,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
-        return 2
-    try:
-        attribution = resolve_invocation_attribution(
-            explicit=getattr(args, "initiator", None),
-            task_id=task_id,
-        )
-    except ValueError as exc:
-        print(f"❌ invalid --initiator: {exc}", file=sys.stderr)
         return 2
     try:
         requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
