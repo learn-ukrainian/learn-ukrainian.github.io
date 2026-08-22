@@ -144,6 +144,7 @@ def mock_lsof_env(tmp_path):
             mock_file.unlink()
 
     env = os.environ.copy()
+    env.pop("LU_SERVICES_SSH_HOST", None)
     if os.environ.get("MOCK_LSOF_EMPTY") == "1":
         env["SVC_LSOF_BIN"] = "/nonexistent/lsof"
     else:
@@ -796,3 +797,281 @@ def test_local_service_ports_do_not_collide_with_bridge_or_kubedojo() -> None:
         assert {name: declared[name] for name in kubedojo_ports} == kubedojo_ports
 
     assert set(learn_ports.values()).isdisjoint(kubedojo_ports.values())
+
+
+def _supervisor_was_not_called(env: dict[str, str]) -> bool:
+    """Local API start writes this file; missing/empty means no local spawn."""
+    path = Path(env["SVC_API_SUPERVISOR_CAPTURE"])
+    if not path.exists():
+        return True
+    return path.read_text(encoding="utf-8") == ""
+
+
+def _ssh_recorder(tmp_path: Path, exit_code: int = 0) -> tuple[Path, Path]:
+    """Return (shim_dir, capture_file) for a PATH-first ``ssh`` recorder."""
+    capture = tmp_path / "ssh_args.txt"
+    shim_dir = tmp_path / "ssh_bin"
+    shim_dir.mkdir()
+    ssh = shim_dir / "ssh"
+    ssh.write_text(
+        f"#!/bin/sh\nprintf '%s\\n' \"$@\" >> '{capture}'\nexit {exit_code}\n",
+        encoding="utf-8",
+    )
+    ssh.chmod(0o755)
+    return shim_dir, capture
+
+
+def _start_named_ssh_process(tmp_path: Path) -> subprocess.Popen[object]:
+    """Spawn a process whose argv looks like ``…/ssh -N …`` for tunnel detection."""
+    tunnel_dir = tmp_path / "tunnel_proc"
+    tunnel_dir.mkdir()
+    tunnel_ssh = tunnel_dir / "ssh"
+    tunnel_ssh.write_text("#!/bin/sh\nwhile true; do sleep 30; done\n", encoding="utf-8")
+    tunnel_ssh.chmod(0o755)
+    proc = subprocess.Popen([str(tunnel_ssh), "-N", "hramatka-tunnel"])
+    reap_process_on_exit(proc)
+    return proc
+
+
+def test_should_delegate_remote_env_or_tunnel() -> None:
+    """Delegation triggers on LU_SERVICES_SSH_HOST or an ssh-owned port, not the default alias."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    helper = "\n".join(
+        [
+            "declare -A SVC_CMD",
+            "SVC_CMD[api]=dummy",
+            _extract_bash_function(source, "_requested_has_ssh_tunnel"),
+            _extract_bash_function(source, "_should_delegate_remote"),
+            "_ssh_tunnel_port_pid() { return 1; }",
+            "unset LU_SERVICES_SSH_HOST",
+            "if _should_delegate_remote api; then echo TRIGGER; else echo LOCAL; fi",
+            "LU_SERVICES_SSH_HOST=hramatka",
+            "if _should_delegate_remote api; then echo ENV; else echo NOENV; fi",
+            "unset LU_SERVICES_SSH_HOST",
+            "_ssh_tunnel_port_pid() { return 0; }",
+            "if _should_delegate_remote api; then echo TUNNEL; else echo NOTUNNEL; fi",
+        ]
+    )
+    result = subprocess.run(
+        ["bash", "-c", helper],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.split() == ["LOCAL", "ENV", "TUNNEL"]
+
+
+def test_abort_if_ssh_owned_port_refuses_spawn() -> None:
+    """Local spawn must refuse an ssh LocalForward owner with a fix/restart hint."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    helper = "\n".join(
+        [
+            _extract_bash_function(source, "_abort_if_ssh_owned_port"),
+            '_port_owner_label() { printf "127.0.0.1:8765"; }',
+            "_ssh_tunnel_port_pid() { return 1; }",
+            "if _abort_if_ssh_owned_port api; then echo ALLOW; else echo REFUSE; fi",
+            "_ssh_tunnel_port_pid() { return 0; }",
+            "if _abort_if_ssh_owned_port api; then echo ALLOW2; else echo REFUSE2; fi",
+        ]
+    )
+    result = subprocess.run(
+        ["bash", "-c", helper],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "ALLOW" in result.stdout
+    assert "REFUSE2" in result.stdout
+    assert "owned by an ssh LocalForward" in result.stderr
+    assert "fix api" in result.stderr
+    assert "restart api" in result.stderr
+
+
+def test_usage_documents_fix_and_ssh_env() -> None:
+    """Header comments and help list fix plus the SSH Host / remote-root overrides."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    assert "./services.sh fix" in source
+    assert "./services.sh fix api" in source
+    assert "LU_SERVICES_SSH_HOST" in source
+    assert "LU_SERVICES_REMOTE_ROOT" in source
+    assert "auto-delegate" in source
+
+    env = os.environ.copy()
+    env.pop("LU_SERVICES_SSH_HOST", None)
+    result = subprocess.run(
+        ["bash", str(SERVICES_SH), "help"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "fix" in result.stdout
+    assert "LU_SERVICES_SSH_HOST" in result.stdout
+    assert "LU_SERVICES_REMOTE_ROOT" in result.stdout
+    assert "auto-delegate" in result.stdout
+
+
+def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_path) -> None:
+    """An explicit LU_SERVICES_SSH_HOST must ssh to remote services.sh and not spawn locally."""
+    script_path, _port = temp_services_sh
+    _, _, env = mock_lsof_env
+    shim_dir, capture = _ssh_recorder(tmp_path)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env["LU_SERVICES_SSH_HOST"] = "hramatka"
+    env["LU_SERVICES_REMOTE_ROOT"] = "/home/ops/learn-ukrainian"
+
+    result = subprocess.run(
+        [str(script_path), "start", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+    args = capture.read_text(encoding="utf-8")
+    assert "BatchMode=yes" in args
+    assert "hramatka" in args
+    assert 'cd "/home/ops/learn-ukrainian" && ./services.sh start api' in args
+    assert "Delegating start api" in result.stdout
+    assert _supervisor_was_not_called(env)
+
+
+def test_start_delegates_when_ssh_owns_port(temp_services_sh, mock_lsof_env, tmp_path) -> None:
+    """An ssh LocalForward listener on the service port delegates start without a host override."""
+    script_path, _port = temp_services_sh
+    set_pids, _, env = mock_lsof_env
+    shim_dir, capture = _ssh_recorder(tmp_path)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+
+    tunnel = _start_named_ssh_process(tmp_path)
+    set_pids([tunnel.pid])
+    try:
+        result = subprocess.run(
+            [str(script_path), "start", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+        args = capture.read_text(encoding="utf-8")
+        assert "BatchMode=yes" in args
+        assert "hramatka" in args
+        assert "./services.sh start api" in args
+        assert _supervisor_was_not_called(env)
+    finally:
+        tunnel.terminate()
+        tunnel.wait(timeout=5)
+
+
+def test_failed_remote_delegate_does_not_spawn_local(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """A failed ssh delegate must not fall through to local uvicorn/launchd."""
+    script_path, _port = temp_services_sh
+    _, _, env = mock_lsof_env
+    shim_dir, _capture = _ssh_recorder(tmp_path, exit_code=1)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env["LU_SERVICES_SSH_HOST"] = "hramatka"
+
+    result = subprocess.run(
+        [str(script_path), "start", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    assert _supervisor_was_not_called(env)
+
+
+def test_fix_prints_ok_when_healthy(temp_services_sh, mock_lsof_env) -> None:
+    """Healthy services print ok and do not restart."""
+    script_path, port = temp_services_sh
+    _, _, env = mock_lsof_env
+    env.pop("LU_SERVICES_SSH_HOST", None)
+
+    health = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            (
+                "from http.server import BaseHTTPRequestHandler, HTTPServer\n"
+                f"port = {port}\n"
+                "class H(BaseHTTPRequestHandler):\n"
+                "    def do_GET(self):\n"
+                "        body = b'ok'\n"
+                "        self.send_response(200)\n"
+                "        self.send_header('Content-Type', 'text/plain')\n"
+                "        self.send_header('Content-Length', str(len(body)))\n"
+                "        self.end_headers()\n"
+                "        self.wfile.write(body)\n"
+                "    def log_message(self, *args):\n"
+                "        return\n"
+                "HTTPServer(('127.0.0.1', port), H).serve_forever()\n"
+            ),
+        ]
+    )
+    reap_process_on_exit(health)
+    try:
+        deadline = time.time() + 5
+        while time.time() < deadline:
+            if not is_port_free(port):
+                break
+            time.sleep(0.05)
+        result = subprocess.run(
+            [str(script_path), "fix", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+        assert "api ok" in result.stdout
+        assert _supervisor_was_not_called(env)
+    finally:
+        health.terminate()
+        health.wait(timeout=5)
+
+
+def test_fix_unhealthy_ssh_tunnel_delegates_restart(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """Unhealthy tunneled ports remote-restart; they must not spawn local listeners."""
+    script_path, _port = temp_services_sh
+    set_pids, _, env = mock_lsof_env
+    shim_dir, capture = _ssh_recorder(tmp_path)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+
+    tunnel = _start_named_ssh_process(tmp_path)
+    set_pids([tunnel.pid])
+    try:
+        result = subprocess.run(
+            [str(script_path), "fix", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        # Remote restart is recorded; local health stays down without a real writer.
+        args = capture.read_text(encoding="utf-8")
+        assert "BatchMode=yes" in args
+        assert "./services.sh restart api" in args
+        assert _supervisor_was_not_called(env)
+        assert "not starting or stopping local processes" in result.stdout
+    finally:
+        tunnel.terminate()
+        tunnel.wait(timeout=5)
