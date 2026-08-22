@@ -1155,8 +1155,14 @@ def compile_row_evidence(
             # whole (unsplit) form either way.
             split_status, parts = split_compound(form)
             if split_status == "resolved" and parts:
-                part_batch = client.verify_words(parts)
-                for part in parts:
+                # Repeated compounds legitimately yield the same component
+                # more than once, while the reviewed MCP batch contract
+                # rejects duplicate words. Query each distinct component once
+                # in first-occurrence order; its evidence identity is the same
+                # for every route that reached it.
+                unique_parts = list(dict.fromkeys(parts))
+                part_batch = client.verify_words(unique_parts)
+                for part in unique_parts:
                     part_modern = client.check_modern_form(part)
                     _add(
                         _vesum_form_evidence(

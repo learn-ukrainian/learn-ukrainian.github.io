@@ -70,6 +70,9 @@ class SyntheticSourcesClient:
         return self._server_identity
 
     def verify_words(self, words):
+        words = list(words)
+        if len(set(words)) != len(words):
+            raise ValueError("synthetic client mirrors the production duplicate-word rejection")
         self.call_log.append(("verify_words", ",".join(words)))
         return {word: self._vesum.get(word, []) for word in words}
 
@@ -165,13 +168,15 @@ def test_split_compound_marks_short_component_ambiguous():
 def test_compile_row_evidence_deduplicates_repeated_compound_component_facts():
     """One form reached through multiple query-plan routes yields one evidence record."""
     row = _row(text="Світ світ-світ")
+    client = SyntheticSourcesClient()
     result = compiler.compile_row_evidence(
         row,
-        SyntheticSourcesClient(),
+        client,
         identity=_identity(),
         residual_phenomena=("apostrophe",),
     )
 
+    assert ("verify_words", "світ,світ") not in client.call_log
     record_ids = [record["evidence_id"] for record in result["evidence"]]
     assert len(record_ids) == len(set(record_ids))
     assert result["evidence_ids"] == sorted(record_ids)
