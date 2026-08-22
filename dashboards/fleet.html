@@ -543,16 +543,25 @@ function renderOccupancy(data) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
     const occupants = listValue(host.occupants);
+    const idleState = host.idle_or_empty ? 'idle' : 'active';
+    let utilText = '—';
+    if (host.status !== 'unavailable') {
+      const parts = [];
+      if (host.mem && host.mem.pct != null) parts.push(`RAM ${host.mem.pct}%`);
+      if (host.disk && host.disk.pct != null) parts.push(`Disk ${host.disk.pct}%`);
+      if (Array.isArray(host.loadavg) && host.loadavg.length) parts.push(`Load ${host.loadavg[0]}`);
+      if (parts.length) utilText = parts.join(' · ');
+    }
     if (!occupants.length) {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
       continue;
     }
     occupants.forEach(item => {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
     });
   }
   document.getElementById('occupancy-content').innerHTML = table(
-    ['Host', 'Probe', 'Kind', 'Agent', 'Task', 'Epic', 'Status'],
+    ['Host', 'Probe', 'Burn', 'Utilization', 'Kind', 'Agent', 'Task', 'Epic', 'Status'],
     rows,
     'No occupancy occupants. Observer heartbeats appear under cloud-observer.',
   );
