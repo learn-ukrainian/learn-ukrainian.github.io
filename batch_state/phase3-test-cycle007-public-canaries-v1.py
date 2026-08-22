@@ -495,9 +495,19 @@ def test_grok_rejects_noncanonical_output_envelope() -> None:
     ("raw", "failure_code"),
     [
         (
+            b'{"event":"init","init":[]}\n'
+            b'{"event":"result","result":{"status":"SUCCESS","structured_output":{}}}\n',
+            "init_envelope_drift",
+        ),
+        (
             b'{"event":"init","init":{}}\n'
             b'{"event":"result","result":{"status":"SUCCESS","structured_output":{}}}\n',
             "init_model_binding_drift",
+        ),
+        (
+            b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
+            b'{"event":"result","result":[]}\n',
+            "result_envelope_drift",
         ),
         (
             b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
@@ -508,6 +518,16 @@ def test_grok_rejects_noncanonical_output_envelope() -> None:
             b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
             b'{"event":"result","result":{"status":"SUCCESS"}}\n',
             "structured_output_missing",
+        ),
+        (
+            b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
+            b'{"event":"result","result":{"status":"SUCCESS","structured_output":[]}}\n',
+            "structured_output_type_drift",
+        ),
+        (
+            b'{"event":"init","init":{"model":"Gemini 3.6 Flash (High)"}}\n'
+            b'{"event":"result","result":{"status":"SUCCESS","structured_output":{}}}\n',
+            "structured_output_keys_drift",
         ),
     ],
 )
