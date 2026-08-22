@@ -27,14 +27,14 @@ class HeartbeatError(ValueError):
 
 
 def _loopback_monitor_url(raw: str) -> str:
-    parsed = urlparse(raw)
-    if parsed.scheme != "http" or parsed.path not in {"", "/"}:
-        raise HeartbeatError("monitor URL must be http loopback")
-    host = parsed.hostname
     try:
+        parsed = urlparse(raw)
+        host = parsed.hostname
         port = parsed.port
     except ValueError:
         raise HeartbeatError("monitor URL must be http loopback") from None
+    if parsed.scheme != "http" or parsed.path not in {"", "/"}:
+        raise HeartbeatError("monitor URL must be http loopback")
     if host in {"localhost", "127.0.0.1"}:
         return f"http://127.0.0.1:{port or 8765}"
     raise HeartbeatError("monitor URL must be http loopback")
@@ -77,8 +77,14 @@ def post_observer_presence(
         method="POST",
     )
     urlopen = urllib.request.urlopen if opener is None else opener
-    with urlopen(request, timeout=5) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
+    try:
+        with urlopen(request, timeout=5) as resp:
+            raw_body = resp.read().decode("utf-8")
+        data = json.loads(raw_body)
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        raise urllib.error.URLError("unreachable") from exc
+    except json.JSONDecodeError:
+        raise HeartbeatError("presence response was not an object") from None
     if not isinstance(data, dict):
         raise HeartbeatError("presence response was not an object")
     return {
@@ -112,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
     except HeartbeatError as exc:
         print(f"observer-heartbeat: {exc}", file=sys.stderr)
         return 2
-    except urllib.error.URLError:
+    except Exception:
         print("observer-heartbeat: monitor unreachable", file=sys.stderr)
         return 1
     print(f"observer-heartbeat: agent={args.agent} task_id={args.task_id} status={args.status}")

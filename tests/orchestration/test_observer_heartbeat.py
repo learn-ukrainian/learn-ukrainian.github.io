@@ -36,6 +36,8 @@ def test_presence_url_rejects_non_loopback() -> None:
         presence_url("http://[::1]:8765")
     with pytest.raises(HeartbeatError):
         presence_url("http://127.0.0.1:atlas-runner")
+    with pytest.raises(HeartbeatError):
+        presence_url("http://[::1")
 
 
 def test_post_observer_presence_posts_cursor_payload() -> None:
@@ -115,3 +117,16 @@ def test_main_malformed_port_does_not_print_alias(monkeypatch: pytest.MonkeyPatc
     assert "monitor URL must be http loopback" in err
     assert "atlas-runner" not in err
     assert "Traceback" not in err
+
+
+def test_main_timeout_is_unreachable(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    def opener(request: object, timeout: int = 0) -> _FakeResponse:
+        del request, timeout
+        raise TimeoutError("stalled")
+
+    monkeypatch.setattr("urllib.request.urlopen", opener)
+    assert main(["--agent", "cursor", "--task-id", "7075"]) == 1
+    err = capsys.readouterr().err
+    assert "monitor unreachable" in err
+    assert "Traceback" not in err
+    assert "stalled" not in err
