@@ -352,7 +352,10 @@ def is_risk_triggered(
     # 5. Missing normative rule (in residual lane)
     if "phenomena" in grok_label:
         pravopys_records = [r for r in evidence_records if r.get("channel") == "pravopys_2026_normative"]
-        if any(r.get("status") != "attested" or r.get("supports") == "no_conclusion" for r in pravopys_records) and "missing_normative_rule" not in reasons:
+        if (
+            not pravopys_records
+            or any(r.get("status") != "attested" or r.get("supports") == "no_conclusion" for r in pravopys_records)
+        ) and "missing_normative_rule" not in reasons:
             reasons.append("missing_normative_rule")
 
     # 6. Insufficient or non-normative evidence cited

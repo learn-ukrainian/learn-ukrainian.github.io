@@ -498,9 +498,14 @@ def test_compare_residual_lane(tmp_path):
     _setup_provider_labels(pkg, "residual_label", 1, grok_labels, gemini_labels)
     result = compare_mod.compare(pkg, "residual_label", 1)
 
-    assert result["clean_consensus_count"] == 2
-    assert result["risk_triggered_consensus_count"] == 0
+    assert result["clean_consensus_count"] == 0
+    assert result["risk_triggered_consensus_count"] == 2
     assert result["disagreement_count"] == 0
+    risk_records = compare_mod.read(
+        pkg / compare_mod.OUTPUT / "residual_label" / "risk-consensus-0001.json",
+        "risk records",
+    )["records"]
+    assert all("missing_normative_rule" in record["risk_reasons"] for record in risk_records)
 
 
 def test_compare_all_fixture_mode(tmp_path):
@@ -541,8 +546,8 @@ def test_compare_all_fixture_mode(tmp_path):
     batch_receipt = compare_mod.compare_all(pkg, fixture=True)
     assert batch_receipt["packet_count"] == 2
     assert batch_receipt["row_count"] == 4
-    assert batch_receipt["clean_consensus_count"] == 4
-    assert batch_receipt["risk_triggered_consensus_count"] == 0
+    assert batch_receipt["clean_consensus_count"] == 2
+    assert batch_receipt["risk_triggered_consensus_count"] == 2
     assert batch_receipt["disagreement_count"] == 0
 
 
