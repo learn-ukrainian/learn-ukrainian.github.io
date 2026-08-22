@@ -430,8 +430,13 @@ async function loadStats() {
   }
 
   if (cost) {
-    const amount = Number(cost.windows?.last_7_days?.totals?.cost_usd_est || 0);
-    setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
+    const week = cost.windows?.last_7_days || {};
+    if (week.ledger_empty) {
+      setStat('card-stat-cost', `ledger empty · ${Number(week.runtime_calls_total || 0)} runtime calls (7d)`);
+    } else {
+      const amount = Number(week.totals?.cost_usd_est || 0);
+      setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
+    }
   }
 
   // Visualize the contracts (definition authority for public surface) per Claude review.

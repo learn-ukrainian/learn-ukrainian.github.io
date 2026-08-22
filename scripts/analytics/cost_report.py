@@ -9,7 +9,7 @@ import re
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from statistics import median
 from typing import Any
@@ -18,6 +18,7 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+API_USAGE_DIR = PROJECT_ROOT / "batch_state" / "api_usage"
 COST_RATES_PATH = PROJECT_ROOT / "scripts" / "analytics" / "cost_rates.yaml"
 DEFAULT_DIVISOR = 3.8
 PROMPT_BLOAT_THRESHOLD = 30_000
@@ -211,9 +212,7 @@ def _record_from_meta(path: Path, meta: dict[str, Any], rates: dict[str, dict[st
 
     rate_model = _resolve_rate_model(model, rates)
     rate = rates[rate_model]
-    cost_usd_est = (
-        (prompt_tokens_est * rate["input"]) + (response_tokens_est * rate["output"])
-    ) / 1_000_000
+    cost_usd_est = ((prompt_tokens_est * rate["input"]) + (response_tokens_est * rate["output"])) / 1_000_000
 
     return CostRecord(
         path=path,
@@ -253,6 +252,57 @@ def load_cost_records(
             continue
         records.append(_record_from_meta(path, meta, rates))
     return records
+
+
+def _usage_day_from_name(path: Path) -> date | None:
+    stem = path.stem
+    if not stem.startswith("usage_"):
+        return None
+    try:
+        return date.fromisoformat(stem.rsplit("_", 1)[1])
+    except (IndexError, ValueError):
+        return None
+
+
+def count_runtime_calls(
+    *,
+    days: int | None,
+    now: datetime | None = None,
+    usage_dir: Path | None = None,
+) -> int:
+    """Count runtime usage rows (batch_state/api_usage/usage_*.jsonl) for a window.
+
+    Runtime rows record every fleet invoke but carry no reliable token data,
+    so they are surfaced as a call count only — never folded into USD estimates.
+    Day granularity: a N-day window covers the last N calendar days, which is a
+    slight superset of the cost window's exact N*24h mtime cutoff.
+    """
+    directory = usage_dir or API_USAGE_DIR
+    if not directory.exists():
+        return 0
+    today = (now or datetime.now(UTC)).date()
+    earliest = None if days is None else today - timedelta(days=max(1, days) - 1)
+    total = 0
+    for path in sorted(directory.glob("usage_*.jsonl")):
+        if earliest is not None:
+            day = _usage_day_from_name(path)
+            if day is None or day < earliest or day > today:
+                continue
+        try:
+            with open(path, encoding="utf-8") as handle:
+                for raw in handle:
+                    raw = raw.strip()
+                    if not raw:
+                        continue
+                    try:
+                        data = json.loads(raw)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(data, dict):
+                        total += 1
+        except OSError:
+            continue
+    return total
 
 
 def _filter_records(
@@ -374,13 +424,12 @@ def build_cost_summary(
             f"({counts['model_agent']} inferred, {counts['model_missing']} missing)."
         )
     if unknown_models:
-        warnings.append(
-            "Unknown model rates fell back to the YAML default for: "
-            + ", ".join(sorted(unknown_models))
-        )
+        warnings.append("Unknown model rates fell back to the YAML default for: " + ", ".join(sorted(unknown_models)))
 
     prompt_bloat_watch = []
-    for phase_name, values in sorted(phase_prompt_sizes.items(), key=lambda item: (_PHASE_SORT.get(item[0], 99), item[0])):
+    for phase_name, values in sorted(
+        phase_prompt_sizes.items(), key=lambda item: (_PHASE_SORT.get(item[0], 99), item[0])
+    ):
         phase_median = round(median(values))
         if phase_median > PROMPT_BLOAT_THRESHOLD:
             prompt_bloat_watch.append(
@@ -454,13 +503,14 @@ def build_cost_windows(
     slug: str | None = None,
     phase: str | None = None,
     now: datetime | None = None,
+    usage_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = now or datetime.now(UTC)
     records = load_cost_records(root=root, rates_path=rates_path)
     windows: dict[str, Any] = {}
     for key, days in _WINDOW_SPECS:
         since = None if days is None else current_time - timedelta(days=days)
-        windows[key] = build_cost_summary(
+        window = build_cost_summary(
             records=records,
             track=track,
             level=level,
@@ -468,6 +518,17 @@ def build_cost_windows(
             phase=phase,
             since=since,
         )
+        runtime_calls = count_runtime_calls(days=days, now=current_time, usage_dir=usage_dir)
+        window["runtime_calls_total"] = runtime_calls
+        ledger_empty = window["records_total"] == 0 and runtime_calls > 0
+        window["ledger_empty"] = ledger_empty
+        if ledger_empty:
+            window["warnings"] = [
+                *window["warnings"],
+                f"Dispatch-meta cost ledger is empty for this window, but {runtime_calls} runtime "
+                "call(s) were recorded; those calls are not reflected in the cost estimates.",
+            ]
+        windows[key] = window
     return {
         "scope": {
             "track": level or track,
@@ -611,13 +672,15 @@ def render_markdown(summary: dict[str, Any]) -> str:
     def add_table(title: str, rows: list[dict[str, Any]]) -> None:
         if not rows:
             return
-        lines.extend([
-            "",
-            f"### {title}",
-            "",
-            "| Name | Calls | Prompt est. | Output est. | USD est. |",
-            "| --- | ---: | ---: | ---: | ---: |",
-        ])
+        lines.extend(
+            [
+                "",
+                f"### {title}",
+                "",
+                "| Name | Calls | Prompt est. | Output est. | USD est. |",
+                "| --- | ---: | ---: | ---: | ---: |",
+            ]
+        )
         for row in rows:
             lines.append(
                 f"| {row['name']} | {row['calls']} | {_fmt_int(int(row['prompt_tokens_est']))} | "
