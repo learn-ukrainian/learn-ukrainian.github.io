@@ -218,22 +218,45 @@ function sumSummaryTotals(trackEntries) {
   return totals;
 }
 
+const BACKLOG_PENDING_LABEL = 'backlog pending';
+
+function displayBuildCount(value) {
+  return value == null ? '—' : String(value);
+}
+
+function formatBacklogSegment(buildState) {
+  return buildState.pending ? BACKLOG_PENDING_LABEL : `${buildState.backlog} backlog`;
+}
+
 function buildStateSummary(pv, trackIds) {
-  if (trackIds && pv?.per_track) {
+  if (!pv) {
+    return { pending: true, current: null, backlog: null };
+  }
+  if (trackIds && trackIds.size && pv.per_track) {
     const counts = {v6:0,v5:0,v3:0,unbuilt:0};
     for (const trackId of trackIds) {
       const row = pv.per_track[trackId] || {};
       for (const key of Object.keys(counts)) counts[key] += row[key] || 0;
     }
     return {
+      pending: false,
       current: counts.v6,
       backlog: counts.v5 + counts.v3 + counts.unbuilt,
     };
   }
-  const state = pv?.build_state || {};
+  if (trackIds && trackIds.size) {
+    return { pending: true, current: null, backlog: null };
+  }
+  const state = pv.build_state || {};
+  const current = pv.current_builds ?? state.current ?? pv.counts?.v6;
+  const backlog = pv.rebuild_backlog ?? state.backlog ?? pv.needs_rebuild;
+  if (current == null && backlog == null) {
+    return { pending: true, current: null, backlog: null };
+  }
   return {
-    current: pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0,
-    backlog: pv?.rebuild_backlog ?? state.backlog ?? pv?.needs_rebuild ?? 0,
+    pending: false,
+    current: current ?? 0,
+    backlog: backlog ?? 0,
   };
 }
 
@@ -407,7 +430,7 @@ async function load() {
   try {
     const [res, pv] = await Promise.all([
       fetchJson('/api/state/summary?fresh=true'),
-      fetchJson('/api/state/pipeline-versions?fresh=true').catch(() => ({})),
+      fetchJson('/api/state/pipeline-versions?fresh=true').catch(() => null),
     ]);
     const data = res;
     const trackEntries = operationalTrackEntries(data.tracks);
@@ -424,10 +447,10 @@ async function load() {
     document.getElementById('total-dossier').textContent = t.dossier_done || 0;
     document.getElementById('total-published').textContent = t.published_mdx || 0;
     const buildState = buildStateSummary(pv, trackIds);
-    document.getElementById('total-current-builds').textContent = `${buildState.current}`;
-    document.getElementById('total-rebuild').textContent = `${buildState.backlog}`;
+    document.getElementById('total-current-builds').textContent = displayBuildCount(buildState.current);
+    document.getElementById('total-rebuild').textContent = displayBuildCount(buildState.backlog);
     document.getElementById('topbar-subtitle').textContent =
-      `Build state across operational tracks — ${buildState.current} current, ${t.published_mdx || 0} published, ${buildState.backlog} in backlog`;
+      `Build state across operational tracks — ${displayBuildCount(buildState.current)} current, ${t.published_mdx || 0} published, ${formatBacklogSegment(buildState)}`;
 
     const container = document.getElementById('tracks-container');
 

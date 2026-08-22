@@ -265,8 +265,21 @@ function sumSummaryTotals(summary, trackIds) {
   return totals;
 }
 
+const BACKLOG_PENDING_LABEL = 'backlog pending';
+
+function displayBuildCount(value) {
+  return value == null ? '—' : String(value);
+}
+
+function formatBacklogSegment(buildState) {
+  return buildState.pending ? BACKLOG_PENDING_LABEL : `${buildState.backlog} backlog`;
+}
+
 function buildStateSummary(pv, trackIds) {
-  if (trackIds && pv?.per_track) {
+  if (!pv) {
+    return { pending: true, current: null, backlog: null, builtPct: null };
+  }
+  if (trackIds && trackIds.size && pv.per_track) {
     const counts = {v6:0,v5:0,v3:0,unbuilt:0};
     for (const trackId of trackIds) {
       const row = pv.per_track[trackId] || {};
@@ -275,18 +288,26 @@ function buildStateSummary(pv, trackIds) {
     const total = counts.v6 + counts.v5 + counts.v3 + counts.unbuilt;
     const built = counts.v6 + counts.v5 + counts.v3;
     return {
+      pending: false,
       current: counts.v6,
       backlog: counts.v5 + counts.v3 + counts.unbuilt,
       builtPct: total > 0 ? Math.round(built / total * 100) : 0,
     };
   }
-  const state = pv?.build_state || {};
-  const current = pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0;
-  const backlog = pv?.rebuild_backlog ?? state.backlog ?? pv?.needs_rebuild ?? 0;
+  if (trackIds && trackIds.size) {
+    return { pending: true, current: null, backlog: null, builtPct: null };
+  }
+  const state = pv.build_state || {};
+  const current = pv.current_builds ?? state.current ?? pv.counts?.v6;
+  const backlog = pv.rebuild_backlog ?? state.backlog ?? pv.needs_rebuild;
+  if (current == null && backlog == null) {
+    return { pending: true, current: null, backlog: null, builtPct: null };
+  }
   return {
-    current,
-    backlog,
-    builtPct: pv?.pct_built || 0,
+    pending: false,
+    current: current ?? 0,
+    backlog: backlog ?? 0,
+    builtPct: pv.pct_built || 0,
   };
 }
 
@@ -296,7 +317,7 @@ function resolveOperationalBuildState(pv, summary) {
 }
 
 async function loadStats() {
-  let buildState = { current: 0, backlog: 0, builtPct: 0 };
+  let buildState = { pending: true, current: null, backlog: null, builtPct: null };
   let pendingConsultations = 0;
   const [data, pv, cMetrics, summary, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
@@ -327,9 +348,9 @@ async function loadStats() {
       <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
       <div class="stat"><div class="value" style="color:var(--cyan)">${t.published}</div><div class="label">Published</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
-      <div class="stat"><div class="value" style="color:var(--cyan)">${buildState.current}</div><div class="label">Current Builds</div></div>
-      <div class="stat"><div class="value" style="color:var(--orange)">${buildState.backlog}</div><div class="label">Rebuild Backlog</div></div>
-      <div class="stat"><div class="value" style="color:var(--purple)">${buildState.builtPct}%</div><div class="label">Built</div></div>
+      <div class="stat"><div class="value" style="color:var(--cyan)">${displayBuildCount(buildState.current)}</div><div class="label">Current Builds</div></div>
+      <div class="stat"><div class="value" style="color:var(--orange)">${displayBuildCount(buildState.backlog)}</div><div class="label">Rebuild Backlog</div></div>
+      <div class="stat"><div class="value" style="color:var(--purple)">${buildState.pending ? '—' : `${buildState.builtPct}%`}</div><div class="label">Built</div></div>
     `;
 
     document.getElementById('audit-stat').textContent = `${t.pass} passing · ${t.published} published / ${t.total} total`;
@@ -351,7 +372,7 @@ async function loadStats() {
     const t = sumSummaryTotals(summary, operationalIds);
     const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
-      `${buildState.current} current · ${buildState.backlog} backlog · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
+      `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
   } catch(e) {}
 
   try {

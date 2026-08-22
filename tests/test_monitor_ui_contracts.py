@@ -390,6 +390,59 @@ def test_progress_page_surfaces_freshness_and_dossiers():
     assert "t.dossier_done ?? 0" in index_html
     assert "operationalTrackEntries" in index_html
     assert "resolveOperationalBuildState" in index_html
+    assert "BACKLOG_PENDING_LABEL" in index_html
+    assert "backlog pending" in index_html
+    assert "formatBacklogSegment" in index_html
+
+
+def test_launchpad_and_progress_avoid_zero_backlog_when_pipeline_versions_unavailable():
+    """Missing or timed-out pipeline-versions must not stringify as '0 backlog'."""
+    index_html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    progress_html = (DASHBOARDS / "progress.html").read_text(encoding="utf-8")
+
+    for html in (index_html, progress_html):
+        assert "BACKLOG_PENDING_LABEL = 'backlog pending'" in html
+        assert "formatBacklogSegment" in html
+        assert "if (!pv)" in html
+        assert "pending: true" in html
+
+    assert "0 backlog" not in index_html.split("formatBacklogSegment")[0]
+    assert ".catch(() => ({}))" not in progress_html
+    assert ".catch(() => null)" in progress_html
+
+    index_helpers = index_html[
+        index_html.index("function operationalTrackEntries")
+        : index_html.index("async function loadStats")
+    ]
+    script = f"""
+    {index_helpers}
+    const summary = {{
+      tracks: {{
+        'l2-uk-en-a1': {{ total: 10, module_source: 'curriculum', dossier_done: 3, published_mdx: 1 }},
+      }},
+    }};
+    const unavailable = resolveOperationalBuildState(null, summary);
+    const progressCard = `${{displayBuildCount(unavailable.current)}} current · ${{formatBacklogSegment(unavailable)}} · 3 dossiers · 1 published`;
+    const withData = resolveOperationalBuildState({{
+      per_track: {{
+        'l2-uk-en-a1': {{ v6: 2, v5: 5, v3: 1, unbuilt: 0 }},
+      }},
+    }}, summary);
+    const resolvedCard = `${{displayBuildCount(withData.current)}} current · ${{formatBacklogSegment(withData)}} · 3 dossiers · 1 published`;
+    console.log(JSON.stringify({{
+      unavailable,
+      progressCard,
+      resolvedCard,
+      showsZeroBacklog: progressCard.includes('0 backlog'),
+    }}));
+    """
+    result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
+    output = json.loads(result.stdout)
+
+    assert output["unavailable"]["pending"] is True
+    assert output["showsZeroBacklog"] is False
+    assert output["progressCard"] == "— current · backlog pending · 3 dossiers · 1 published"
+    assert output["resolvedCard"] == "2 current · 6 backlog · 3 dossiers · 1 published"
 
 
 def test_monitor_dashboards_hide_legacy_pipeline_version_labels():
