@@ -692,6 +692,36 @@ def _authority_health_snapshot(
     }
 
 
+def _runtime_activity_snapshot(since: str) -> dict[str, Any]:
+    """Count runtime/delegate ledger records inside the authority evidence window.
+
+    The authority health window counts only fleet-comms ``authority_jobs``.
+    Runtime and delegate work is recorded in a separate usage ledger, so a
+    "0 jobs" authority window must not be read as "no fleet work today".
+    """
+    try:
+        records = recent_runtime_records(limit=MAX_ACTIVITY_SCAN).get("records", [])
+    except Exception:
+        logger.warning("Fleet observer could not derive runtime activity")
+        return {
+            "ledger": "runtime_delegate_usage",
+            "records_in_window": None,
+            "availability": "unavailable",
+        }
+    total = sum(
+        1
+        for record in records
+        if isinstance(record, dict)
+        and isinstance(record.get("ts"), str)
+        and record["ts"] >= since
+    )
+    return {
+        "ledger": "runtime_delegate_usage",
+        "records_in_window": total,
+        "availability": "available",
+    }
+
+
 def _non_negative_int(value: Any) -> int:
     """Normalize legacy numeric fields without reflecting arbitrary values."""
     if isinstance(value, bool):
@@ -984,12 +1014,20 @@ def fleet_health() -> dict[str, Any]:
                 "dead_letters": 0,
             }
         )
+    window = authority_health.get("window") or {}
+    since = window.get("since")
+    if not isinstance(since, str):
+        since = (datetime.now(UTC) - timedelta(hours=AUTHORITY_HEALTH_WINDOW_HOURS)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
+    runtime_activity = _runtime_activity_snapshot(since)
     return {
         "ok": bool(status["enabled"]) and bool(authority_health["ok"]),
         "observer": "fleet-comms-v1",
         "read_only": True,
         "writes_enabled": False,
         "authority_health": authority_health,
+        "runtime_activity": runtime_activity,
         **status,
     }
 
