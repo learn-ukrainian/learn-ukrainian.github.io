@@ -626,3 +626,233 @@ def test_runner_script_help_flag() -> None:
     )
     assert proc.returncode == 0
     assert "Usage:" in proc.stdout
+
+
+# =============================================================================
+# 5. Delta Fail-Open Invariant Tests (#7113 Review Fixes)
+# =============================================================================
+
+def test_one_shard_synthetic_bundle_rejected_as_unknown_infra(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fixed four-shard plane: 1-shard synthetic bundle fails closed as UNKNOWN/INFRA (never PASS)."""
+    # Create 1-shard synthetic bundle (node count: 2)
+    bundle_1shard = create_synthetic_bundle(tmp_path, shard_count=1)
+
+    # 1. Verifying with shard_count=1 must be rejected (only 4 is allowed)
+    res_1 = verify_cloud_artifacts(
+        artifact_dir=bundle_1shard,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        shard_count=1,
+    )
+    assert res_1.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert res_1.is_unknown_infra is True
+    assert res_1.is_pass is False
+    assert any("shard_count must be 4" in r for r in res_1.reasons)
+
+    # 2. Verifying with default shard_count=4 fails due to missing shards 2-4
+    res_4 = verify_cloud_artifacts(
+        artifact_dir=bundle_1shard,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        shard_count=4,
+    )
+    assert res_4.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert res_4.is_unknown_infra is True
+    assert res_4.is_pass is False
+
+    # 3. CLI execution with --shard-count 1 exits 2 with UNKNOWN/INFRA
+    exit_code = verifier_main([
+        "--artifact-dir", str(bundle_1shard),
+        "--requested-sha", TEST_SHA,
+        "--expected-runner-sha", TEST_RUNNER_SHA,
+        "--nonce", TEST_NONCE,
+        "--shard-count", "1",
+    ])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "UNKNOWN/INFRA" in captured.out
+
+
+def test_runner_script_rejects_shard_count_collapse() -> None:
+    """Runner script refuses to execute with shard count != 4."""
+    proc = subprocess.run(
+        [
+            "bash",
+            "scripts/ci/cursor_cloud_full_pytest.sh",
+            "--sha", TEST_SHA,
+            "--nonce", "token123",
+            "--shard-count", "1",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode != 0
+    assert "--shard-count must be 4" in proc.stderr
+
+
+def test_omitted_test_self_consistent_plans_rejected_by_anchoring(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Self-consistent omitted-test bundle (fail-open previously) is rejected as UNKNOWN/INFRA when anchored."""
+    # Expected suite: 8 test nodes across 4 shards (2 tests per shard)
+    expected_all_nodeids = [
+        f"tests/test_module_{s}.py::{case}"
+        for s in range(1, 5)
+        for case in ("test_case_a", "test_case_b")
+    ]
+    assert len(expected_all_nodeids) == 8
+    expected_digest_8 = _sha256_digest(expected_all_nodeids)
+
+    # Create synthetic bundle (8 tests total)
+    bundle = create_synthetic_bundle(tmp_path)
+
+    # Verify happy path with anchored suite passes first
+    green_result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_nodeids=expected_all_nodeids,
+        expected_collected_count=8,
+        expected_collected_digest=expected_digest_8,
+    )
+    assert green_result.outcome == VerificationOutcome.PASS
+
+    # Now mutate the bundle: omit 'tests/test_module_4.py::test_case_b' (leaving 7 tests)
+    omitted_test = "tests/test_module_4.py::test_case_b"
+    surviving_nodeids = [nid for nid in expected_all_nodeids if nid != omitted_test]
+    assert len(surviving_nodeids) == 7
+    surviving_digest_7 = _sha256_digest(surviving_nodeids)
+
+    # 1. Update shard 4 artifacts to execute only 1 test
+    shard4_assigned = ["tests/test_module_4.py::test_case_a"]
+    (bundle / "pytest-shard-4" / "test-nodeids.txt").write_text("\n".join(shard4_assigned) + "\n", encoding="utf-8")
+    junit4_xml = """<?xml version="1.0" encoding="utf-8"?>
+<testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.50">
+  <testcase classname="tests.test_module_4" name="test_case_a" time="0.50"/>
+</testsuite>
+"""
+    (bundle / "pytest-shard-4" / "main-junit.xml").write_text(junit4_xml, encoding="utf-8")
+
+    # 2. Adjust all 4 plan.json files to self-consistently report collected_count=7 and collected_digest=digest(7)
+    for s in range(1, 5):
+        p_path = bundle / f"pytest-shard-{s}" / "plan.json"
+        p_data = json.loads(p_path.read_text(encoding="utf-8"))
+        p_data["collected_count"] = 7
+        p_data["collected_digest"] = surviving_digest_7
+        if s == 4:
+            p_data["assigned_nodeids"] = shard4_assigned
+            p_data["assigned_digest"] = _sha256_digest(shard4_assigned)
+        p_path.write_text(json.dumps(p_data, indent=2), encoding="utf-8")
+
+    # 3. Confirm that self-reported verify_artifacts() without anchor passes this self-consistent omitted test!
+    from scripts.ci.pytest_shards import verify_artifacts
+    verify_artifacts(bundle, 4)  # Passes because plans and JUnits are self-consistent!
+
+    # 4. Controller anchored verification with expected_nodeids rejects with UNKNOWN/INFRA
+    res_nodeids = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_nodeids=expected_all_nodeids,
+    )
+    assert res_nodeids.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert res_nodeids.is_unknown_infra is True
+    assert any("collected_count" in r or "does not match anchored" in r or "missing=1" in r for r in res_nodeids.reasons)
+
+    # 5. Controller anchored verification with expected_collected_count rejects with UNKNOWN/INFRA
+    res_count = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=8,
+    )
+    assert res_count.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert any("collected_count" in r and "8" in r for r in res_count.reasons)
+
+    # 6. Controller anchored verification with expected_collected_digest rejects with UNKNOWN/INFRA
+    res_digest = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_digest=expected_digest_8,
+    )
+    assert res_digest.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert any("collected_digest" in r for r in res_digest.reasons)
+
+    # 7. CLI verification with --expected-nodeids-file exits 2 with UNKNOWN/INFRA
+    nodeids_file = tmp_path / "expected_nodeids.txt"
+    nodeids_file.write_text("\n".join(expected_all_nodeids) + "\n", encoding="utf-8")
+    exit_code = verifier_main([
+        "--artifact-dir", str(bundle),
+        "--requested-sha", TEST_SHA,
+        "--expected-runner-sha", TEST_RUNNER_SHA,
+        "--nonce", TEST_NONCE,
+        "--expected-nodeids-file", str(nodeids_file),
+    ])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "UNKNOWN/INFRA" in captured.out
+
+
+def test_renamed_directory_mutation_rejected_as_unknown_infra(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Renaming bundle directory away from controller nonce fails closed as UNKNOWN/INFRA."""
+    bundle = create_synthetic_bundle(tmp_path, nonce=TEST_NONCE)
+    assert bundle.name == TEST_NONCE
+
+    # Rename the bundle directory on disk
+    renamed_bundle = tmp_path / "tampered-renamed-nonce-dir"
+    bundle.rename(renamed_bundle)
+
+    # Verifying renamed bundle against expected TEST_NONCE must fail as UNKNOWN/INFRA
+    result = verify_cloud_artifacts(
+        artifact_dir=renamed_bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_unknown_infra is True
+    assert any("artifact directory name" in r and "does not match expected nonce" in r for r in result.reasons)
+
+    # CLI execution exits 2
+    exit_code = verifier_main([
+        "--artifact-dir", str(renamed_bundle),
+        "--requested-sha", TEST_SHA,
+        "--expected-runner-sha", TEST_RUNNER_SHA,
+        "--nonce", TEST_NONCE,
+    ])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "UNKNOWN/INFRA" in captured.out
+
+
+def test_runner_script_contains_node22_confinement_and_dirty_tree_contracts() -> None:
+    """Runner script asserts Node 22, write confinement outside repo, and final dirty-tree check."""
+    script_path = Path("scripts/ci/cursor_cloud_full_pytest.sh")
+    script_text = script_path.read_text(encoding="utf-8")
+
+    # Fixed 4-shard plane
+    assert "SHARD_COUNT must be 4" in script_text or "SHARD_COUNT\" -ne 4" in script_text
+
+    # Node 22 check
+    assert "NODE_VER" in script_text
+    assert "v22" in script_text
+    assert "Node 22" in script_text
+
+    # Write confinement outside git worktree
+    assert "cursor-cloud-ci-venv" in script_text or "TMPDIR" in script_text
+    assert "never overwriting repo .venv" in script_text or "outside git worktree" in script_text
+
+    # Final dirty-tree check
+    assert "git status --porcelain --untracked-files=no" in script_text
+    assert "modified tracked files after test execution" in script_text

@@ -21,11 +21,12 @@ from __future__ import annotations
 
 import argparse
 import enum
+import hashlib
 import json
 import re
 import sys
 import xml.etree.ElementTree as element_tree
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -38,10 +39,15 @@ if __package__ in (None, ""):
 
 from scripts.ci.pytest_shards import SHARD_COUNT, verify_artifacts
 
+REQUIRED_SHARD_COUNT = 4
 _HEX_40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _HEX_64_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 _ISO_TIMESTAMP_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}")
 _REQUIRED_METADATA_FIELDS = ("git_head", "runner_sha256", "nonce", "build_id", "started_at")
+
+
+def _nodeids_digest(nodeids: Iterable[str]) -> str:
+    return hashlib.sha256("\n".join(sorted(nodeids)).encode("utf-8")).hexdigest()
 
 
 class VerificationOutcome(enum.StrEnum):
@@ -145,18 +151,27 @@ def verify_cloud_artifacts(
     expected_runner_blob_sha256: str,
     nonce: str,
     shard_count: int = SHARD_COUNT,
+    *,
+    expected_nodeids: Sequence[str] | None = None,
+    expected_collected_count: int | None = None,
+    expected_collected_digest: str | None = None,
 ) -> VerificationResult:
     """Verify a Cursor cloud agent artifact bundle against controller parameters.
 
     Checks:
-    1. Artifact path and metadata nonce match expected session nonce (C8).
-    2. git_head in metadata matches requested_sha (40-hex exact match).
-    3. runner_sha256 in metadata matches expected_runner_blob_sha256 (64-hex).
-    4. Completeness: all shard plans, nodeid lists, JUnit reports, logs, exit codes,
+    1. Fixed 4-shard plane: shard_count must equal 4 (rejects collapse).
+    2. Nonce path and metadata: bundle directory name and metadata nonce must match
+       expected session nonce (C8).
+    3. git_head in metadata matches requested_sha (40-hex exact match).
+    4. runner_sha256 in metadata matches expected_runner_blob_sha256 (64-hex).
+    5. Completeness: all shard plans, nodeid lists, JUnit reports, logs, exit codes,
        and shard 1 playground JUnit are present and non-empty (R2, R4).
-    5. Partition integrity: verify-artifacts accepts partition with zero omissions/dups.
-    6. Recorded provenance: build_id and started_at present and formatted properly (C7).
-    7. Exit code and test results evaluation:
+    6. Anchored completeness: if expected_nodeids, expected_collected_count, or
+       expected_collected_digest are provided, plans and assigned nodeids must match
+       the anchored expectation (preventing self-reported omission attacks).
+    7. Partition integrity: verify_artifacts accepts partition with zero omissions/dups.
+    8. Recorded provenance: build_id and started_at present and formatted properly (C7).
+    9. Exit code and test results evaluation:
        - PASS if all checks pass and all shard exit_codes == 0 and 0 failures/errors.
        - FAIL if all integrity checks pass but any shard/playground failed.
        - UNKNOWN/INFRA on any integrity, hash, SHA, nonce, structure, or parse anomaly.
@@ -165,6 +180,12 @@ def verify_cloud_artifacts(
     clean_nonce = nonce.strip()
     clean_requested_sha = requested_sha.strip()
     clean_expected_runner_sha = expected_runner_blob_sha256.strip()
+
+    if shard_count != REQUIRED_SHARD_COUNT:
+        return VerificationResult(
+            VerificationOutcome.UNKNOWN_INFRA,
+            reasons=[f"shard_count must be {REQUIRED_SHARD_COUNT} (fixed four-shard plane), got: {shard_count}"],
+        )
 
     if not clean_nonce:
         return VerificationResult(
@@ -192,7 +213,48 @@ def verify_cloud_artifacts(
             reasons=[f"artifact directory does not exist or is not a directory: {dir_path}"],
         )
 
-    # 1 & 6. Metadata validation
+    # Nonce check on bundle directory path (renamed-dir mutation fails UNKNOWN/INFRA)
+    if dir_path.name != clean_nonce:
+        return VerificationResult(
+            VerificationOutcome.UNKNOWN_INFRA,
+            reasons=[
+                f"nonce mismatch: artifact directory name {dir_path.name!r} does not match expected nonce {clean_nonce!r}"
+            ],
+        )
+
+    # Anchoring setup
+    target_count: int | None = None
+    target_digest: str | None = None
+    target_nodeids_set: set[str] | None = None
+
+    if expected_nodeids is not None:
+        clean_expected_nodeids = sorted({n.strip() for n in expected_nodeids if n.strip()})
+        target_count = len(clean_expected_nodeids)
+        target_digest = _nodeids_digest(clean_expected_nodeids)
+        target_nodeids_set = set(clean_expected_nodeids)
+
+        if expected_collected_count is not None and expected_collected_count != target_count:
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=[
+                    f"expected_collected_count ({expected_collected_count}) does not match len(expected_nodeids) ({target_count})"
+                ],
+            )
+        if (
+            expected_collected_digest is not None
+            and expected_collected_digest.lower() != target_digest.lower()
+        ):
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=[
+                    f"expected_collected_digest ({expected_collected_digest}) does not match digest of expected_nodeids ({target_digest})"
+                ],
+            )
+    else:
+        target_count = expected_collected_count
+        target_digest = expected_collected_digest.strip() if expected_collected_digest else None
+
+    # Metadata validation
     metadata_path = dir_path / "metadata.json"
     if not metadata_path.is_file():
         return VerificationResult(
@@ -226,7 +288,7 @@ def verify_cloud_artifacts(
                 reasons=[f"metadata.json field {field_name!r} must be a string"],
             )
 
-    # Nonce check
+    # Nonce check in metadata
     meta_nonce = metadata["nonce"].strip()
     if meta_nonce != clean_nonce:
         return VerificationResult(
@@ -276,7 +338,8 @@ def verify_cloud_artifacts(
             metadata=metadata,
         )
 
-    # 4. Check shard directory completeness
+    # 4. Check shard directory completeness and plan invariants
+    all_assigned_nodeids: list[str] = []
     for shard_id in range(1, shard_count + 1):
         shard_dir = dir_path / f"pytest-shard-{shard_id}"
         if not shard_dir.is_dir():
@@ -341,6 +404,47 @@ def verify_cloud_artifacts(
             return VerificationResult(
                 VerificationOutcome.UNKNOWN_INFRA,
                 reasons=[f"test-nodeids.txt does not match plan.json assigned_nodeids in shard {shard_id}"],
+                metadata=metadata,
+            )
+
+        # Check plan vs anchored completeness
+        plan_collected_count = plan_data.get("collected_count")
+        plan_collected_digest = plan_data.get("collected_digest")
+
+        if target_count is not None and plan_collected_count != target_count:
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=[
+                    f"shard {shard_id} plan collected_count ({plan_collected_count}) does not match anchored count ({target_count})"
+                ],
+                metadata=metadata,
+            )
+
+        if target_digest is not None and (
+            not isinstance(plan_collected_digest, str)
+            or plan_collected_digest.lower() != target_digest.lower()
+        ):
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=[
+                    f"shard {shard_id} plan collected_digest ({plan_collected_digest!r}) does not match anchored digest ({target_digest!r})"
+                ],
+                metadata=metadata,
+            )
+
+        all_assigned_nodeids.extend(nodeids)
+
+    # Check overall assigned node IDs vs anchored suite
+    if target_nodeids_set is not None:
+        assigned_set = set(all_assigned_nodeids)
+        if assigned_set != target_nodeids_set:
+            missing = sorted(target_nodeids_set - assigned_set)
+            extra = sorted(assigned_set - target_nodeids_set)
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=[
+                    f"shard test assignment does not match anchored suite (missing={len(missing)}, extra={len(extra)})"
+                ],
                 metadata=metadata,
             )
 
@@ -462,7 +566,25 @@ def _build_parser() -> argparse.ArgumentParser:
         "--shard-count",
         type=int,
         default=SHARD_COUNT,
-        help=f"Expected shard count (default: {SHARD_COUNT})",
+        help=f"Expected shard count (fixed: must be {REQUIRED_SHARD_COUNT}, default: {SHARD_COUNT})",
+    )
+    parser.add_argument(
+        "--expected-nodeids-file",
+        type=Path,
+        default=None,
+        help="Optional path to file with expected test node IDs (one per line) to anchor completeness",
+    )
+    parser.add_argument(
+        "--expected-collected-count",
+        type=int,
+        default=None,
+        help="Optional expected total collected test count to anchor completeness",
+    )
+    parser.add_argument(
+        "--expected-collected-digest",
+        type=str,
+        default=None,
+        help="Optional expected SHA-256 digest of sorted collected test node IDs to anchor completeness",
     )
     parser.add_argument(
         "--json",
@@ -476,12 +598,27 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
+    expected_nodeids: list[str] | None = None
+    if args.expected_nodeids_file is not None:
+        if not args.expected_nodeids_file.is_file():
+            print("UNKNOWN/INFRA")
+            print(f"- expected-nodeids-file not found: {args.expected_nodeids_file}", file=sys.stderr)
+            return 2
+        expected_nodeids = [
+            line.strip()
+            for line in args.expected_nodeids_file.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+
     result = verify_cloud_artifacts(
         artifact_dir=args.artifact_dir,
         requested_sha=args.requested_sha,
         expected_runner_blob_sha256=args.expected_runner_sha,
         nonce=args.nonce,
         shard_count=args.shard_count,
+        expected_nodeids=expected_nodeids,
+        expected_collected_count=args.expected_collected_count,
+        expected_collected_digest=args.expected_collected_digest,
     )
 
     if args.json:

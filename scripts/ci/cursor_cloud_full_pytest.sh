@@ -8,16 +8,19 @@
 # Contract:
 # - Takes --sha <40hex> (must match `git rev-parse HEAD`); dirty tree -> non-zero.
 # - Takes --nonce <token> (required); writes exclusively under `artifacts/<nonce>/`.
-# - Installs CI venv like `ci.yml` (lockfile + CPU torch 2.13.0 carve-out).
-# - Sets Node 22; runs `npm ci --ignore-scripts` only if ACP test is in shard.
+# - Installs CI venv like `ci.yml` (lockfile + CPU torch 2.13.0 carve-out) in a
+#   temporary directory outside the git worktree (never overwriting repo .venv).
+# - Asserts Node 22 (`node -v` is v22); runs `npm ci --ignore-scripts` only if
+#   ACP test is in shard.
 # - Runs Stanza provision with 3-attempt 10s/30s fail-closed retry.
 # - Unsets ZNO_LIVE, RUN_BRIDGE_INBOX_INTEGRATION, ENFORCE_LATENCY_ASSERTIONS;
 #   sets CI=true and GITHUB_ACTIONS=true.
-# - Runs 4 duration-balanced shards via `scripts/ci/pytest_shards.py`.
+# - Runs 4 duration-balanced shards via `scripts/ci/pytest_shards.py` (fixed 4-shard plane).
 # - Shard 1 also runs serial playground probe with 3-attempt retry.
 # - Emits per shard: plan.json, test-nodeids.txt, main-junit.xml, main.log, exit_code;
 #   shard 1 also playground-junit.xml.
 # - Bundle metadata: git_head, runner_sha256, nonce, build_id, started_at.
+# - Performs final dirty-tree check asserting no tracked files were modified.
 # - Performs ZERO GitHub API calls.
 # =============================================================================
 
@@ -41,8 +44,8 @@ Required arguments:
 Optional arguments:
   --build-id <id>        Build provenance ID (default: empty string)
   --durations <path>     Path to durations JSON dataset (default: ci-artifacts/pytest-durations.json)
-  --venv <path>          Path to Python virtualenv (default: .venv)
-  --shard-count <count>  Number of pytest shards to plan and run (default: 4)
+  --venv <path>          Path to Python virtualenv (default: temp workdir outside git worktree)
+  --shard-count <count>  Number of pytest shards to plan and run (fixed: must be 4)
   -h, --help             Show this help message and exit
 USAGE_EOF
 }
@@ -129,6 +132,11 @@ if [[ "$NONCE" =~ [/\] || "$NONCE" == ".." || "$NONCE" == "." ]]; then
   exit 1
 fi
 
+if [[ "$SHARD_COUNT" -ne 4 ]]; then
+  echo "Error: --shard-count must be 4 (fixed four-shard plane), got: $SHARD_COUNT" >&2
+  exit 1
+fi
+
 # 1. Assert clean working tree (dirty tree -> non-zero, never PASS)
 if [[ -n "$(git status --porcelain)" ]]; then
   echo "Error: git working tree is dirty; refusing to execute candidate runner" >&2
@@ -160,8 +168,8 @@ export GITHUB_ACTIONS=true
 export PYTEST_BREADCRUMB_DIR="${ARTIFACT_ROOT}/.pytest_breadcrumbs"
 mkdir -p "${PYTEST_BREADCRUMB_DIR}"
 
-# 5. Python virtual environment setup
-VENV_DIR="${VENV_PATH:-.venv}"
+# 5. Python virtual environment setup (write confinement: default outside git worktree)
+VENV_DIR="${VENV_PATH:-${RUNNER_TEMP:-${TMPDIR:-/tmp}}/cursor-cloud-ci-venv-${NONCE}}"
 if [[ ! -d "${VENV_DIR}" ]]; then
   python3 -m venv "${VENV_DIR}"
 fi
@@ -169,11 +177,14 @@ PYTHON="${VENV_DIR}/bin/python"
 
 # 6. Install CI venv dependencies (lockfile + CPU torch 2.13.0 carve-out)
 if [[ -f "requirements-lock.txt" ]]; then
-  REQS_CI="${ARTIFACT_ROOT}/requirements-ci.txt"
+  REQS_CI="${VENV_DIR}/requirements-ci.txt"
   grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "${REQS_CI}"
   for attempt in 1 2 3; do
     echo "CI dependencies pip install attempt ${attempt}/3"
-    if "${PYTHON}" -m pip install --upgrade pip       && "${PYTHON}" -m pip install --no-deps -r "${REQS_CI}"       && "${PYTHON}" -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.13.0       && "${PYTHON}" -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
+    if "${PYTHON}" -m pip install --upgrade pip \
+      && "${PYTHON}" -m pip install --no-deps -r "${REQS_CI}" \
+      && "${PYTHON}" -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.13.0 \
+      && "${PYTHON}" -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
       break
     fi
     case "${attempt}" in
@@ -208,9 +219,9 @@ if [[ -f "site/src/data/lexicon-manifest.pointer.json" ]]; then
   "${PYTHON}" -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified')" || true
 fi
 
-# 9. Plan pytest shards
+# 9. Plan pytest shards (fixed 4-shard plane)
 PLAN_DIR="${ARTIFACT_ROOT}/plans"
-PLAN_ARGS=("${PYTHON}" scripts/ci/pytest_shards.py plan --output-dir "${PLAN_DIR}" --shard-count "${SHARD_COUNT}")
+PLAN_ARGS=("${PYTHON}" scripts/ci/pytest_shards.py plan --output-dir "${PLAN_DIR}" --shard-count 4)
 if [[ -n "${DURATIONS_PATH}" && -f "${DURATIONS_PATH}" ]]; then
   PLAN_ARGS+=(--durations "${DURATIONS_PATH}")
 elif [[ -f "ci-artifacts/pytest-durations.json" ]]; then
@@ -221,7 +232,7 @@ fi
 # 10. Execute each planned shard
 OVERALL_EXIT=0
 
-for shard in $(seq 1 "${SHARD_COUNT}"); do
+for shard in 1 2 3 4; do
   shard_dir="${ARTIFACT_ROOT}/pytest-shard-${shard}"
   mkdir -p "${shard_dir}"
   cp "${PLAN_DIR}/pytest-shard-${shard}/plan.json" "${shard_dir}/plan.json"
@@ -229,6 +240,30 @@ for shard in $(seq 1 "${SHARD_COUNT}"); do
 
   # ACP protocol test node dependency check (R3)
   if grep -q '^tests/agent_runtime/test_acp_text_agent.py::' "${shard_dir}/test-nodeids.txt"; then
+    # Assert Node 22 before npm (provision if nvm/node 22 exists; fail UNKNOWN/INFRA if missing or != 22)
+    NODE_VER=""
+    if command -v node >/dev/null 2>&1; then
+      NODE_VER="$(node -v 2>/dev/null || true)"
+    fi
+    if [[ ! "$NODE_VER" =~ ^v22\. ]]; then
+      if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
+        # shellcheck source=/dev/null
+        source "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
+        nvm use 22 >/dev/null 2>&1 || nvm use v22 >/dev/null 2>&1 || true
+      elif [[ -s "/usr/local/nvm/nvm.sh" ]]; then
+        # shellcheck source=/dev/null
+        source "/usr/local/nvm/nvm.sh"
+        nvm use 22 >/dev/null 2>&1 || nvm use v22 >/dev/null 2>&1 || true
+      fi
+      if command -v node >/dev/null 2>&1; then
+        NODE_VER="$(node -v 2>/dev/null || true)"
+      fi
+    fi
+    if [[ ! "$NODE_VER" =~ ^v22\. ]]; then
+      echo "Error: Node 22 is required before running npm (found: ${NODE_VER:-none}); fail UNKNOWN/INFRA" >&2
+      exit 1
+    fi
+
     for attempt in 1 2 3; do
       echo "shard ${shard} npm ci attempt ${attempt}/3"
       if npm ci --ignore-scripts; then
@@ -247,7 +282,11 @@ for shard in $(seq 1 "${SHARD_COUNT}"); do
 
   # Run shard
   set +e
-  "${PYTHON}" scripts/ci/pytest_shards.py run --nodeids "${shard_dir}/test-nodeids.txt" --     -n auto --dist=loadfile --strict-markers --timeout=120 --timeout-method=thread     -m 'not atlas_release and not slow'     --junitxml="${shard_dir}/main-junit.xml" --durations=0     2>&1 | tee "${shard_dir}/main.log"
+  "${PYTHON}" scripts/ci/pytest_shards.py run --nodeids "${shard_dir}/test-nodeids.txt" -- \
+    -n auto --dist=loadfile --strict-markers --timeout=120 --timeout-method=thread \
+    -m 'not atlas_release and not slow' \
+    --junitxml="${shard_dir}/main-junit.xml" --durations=0 \
+    2>&1 | tee "${shard_dir}/main.log"
   shard_exit=$?
   set -e
 
@@ -257,7 +296,9 @@ for shard in $(seq 1 "${SHARD_COUNT}"); do
     playground_exit=1
     for attempt in 1 2 3; do
       echo "playground smoke attempt ${attempt}/3"
-      if "${PYTHON}" -m pytest         tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast         -v --tb=short --junitxml="${shard_dir}/playground-junit.xml"; then
+      if "${PYTHON}" -m pytest \
+        tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
+        -v --tb=short --junitxml="${shard_dir}/playground-junit.xml"; then
         playground_exit=0
         break
       fi
@@ -282,7 +323,14 @@ for shard in $(seq 1 "${SHARD_COUNT}"); do
   fi
 done
 
-# 11. Write bundle metadata
+# 11. Final dirty-tree check (dirty tracked files -> non-zero / UNKNOWN, never PASS)
+if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+  echo "Error: git working tree has modified tracked files after test execution" >&2
+  git status --short --untracked-files=no >&2
+  exit 1
+fi
+
+# 12. Write bundle metadata
 cat > "${ARTIFACT_ROOT}/metadata.json" <<METADATA_EOF
 {
   "build_id": "${BUILD_ID}",
