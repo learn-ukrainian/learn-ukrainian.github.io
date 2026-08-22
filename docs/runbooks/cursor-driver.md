@@ -8,7 +8,12 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Driver vs GUI Supervision
 
-- **Canonical Driver = TUI Launcher:** The canonical Cursor driver runs as a launched TUI driver session (`start-cursor-driver.sh`, child #6956) sharing `scripts/lib/launcher_core.sh` with other driver seats. It claims the stream lease, respects lease lifecycles, and executes the standard `drive-epic` loop.
+- **Canonical Driver = TUI Launcher:** The canonical Cursor driver runs as a launched TUI driver session (`start-cursor-driver.sh`, child #6956) sharing `scripts/lib/launcher_core.sh` with other driver seats. It claims the stream lease, respects lease lifecycles, and executes the standard `drive-epic` loop. On claim it heartbeats `POST /api/observer/presence` (`agent=cursor`) over the Monitor loopback tunnel and renews that row while the provider child is alive so occupancy can show the seat under `cloud-observer` without a RAM lease (#7075). A GUI Cursor driver session that is actually driving uses the same helper:
+
+```bash
+.venv/bin/python -m scripts.orchestration.observer_heartbeat \
+  --agent cursor --task-id <issue-or-task> --epic <epic> --status working
+```
 - **GUI Cursor IDE = Human Supervision Only:** GUI Cursor chat is interactive human supervision and inspection. It is **not** a second driver protocol, does not claim autonomous stream leases, and does not run an unmonitored alternate orchestration loop.
 
 ## Identity Contract & Attestation
