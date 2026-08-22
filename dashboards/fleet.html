@@ -304,8 +304,12 @@ function renderHealth(health) {
   const authority = health.authority_health || {};
   const authorityState = short(authority.state, 'unavailable').replaceAll('_', ' ');
   const healthy = authority.ok === true;
+  const runtimeRecords = health.runtime_activity?.records_in_window;
+  const runtimeCopy = Number.isInteger(runtimeRecords) && runtimeRecords > 0
+    ? ` · ${runtimeRecords} runtime/delegate records in window`
+    : '';
   document.getElementById('plane-mode').textContent = `${mode} · durable authority`;
-  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Authority ${authorityState} · ${short(authority.jobs?.total, '0')} jobs in the last ${short(authority.window?.hours, '24')}h` : 'Durable database not present yet';
+  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Authority ${authorityState} · ${short(authority.jobs?.total, '0')} fleet-comms authority jobs in the last ${short(authority.window?.hours, '24')}h${runtimeCopy}` : 'Durable database not present yet';
   document.getElementById('plane-dot').className = `signal-dot ${healthy ? 'live' : 'warn'}`;
 }
 
