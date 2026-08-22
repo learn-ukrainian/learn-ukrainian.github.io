@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 115640,
-      "output": 14895,
-      "reasoning": 32418,
+      "input": 118304,
+      "output": 16668,
+      "reasoning": 32635,
       "cache": {
-        "read": 4888128,
+        "read": 5532992,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1787439783208,
-      "updated": 1787440651067
+      "updated": 1787440687876
     }
   },
   "messages": [
@@ -6348,19 +6348,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 128934,
+          "input": 668,
+          "output": 266,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 128000
           }
         },
         "modelID": "glm-5.3",
         "providerID": "zai-coding-plan",
         "time": {
-          "created": 1787440651065
+          "created": 1787440651065,
+          "completed": 1787440663959
         },
+        "finish": "tool-calls",
         "id": "msg_02bc3db39001SQsYkUkUB4qTWA",
         "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN"
       },
@@ -6377,20 +6380,488 @@
           "tool": "bash",
           "callID": "call_4091664e283d4eddb9afe25a",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/fleet/pr_identity.py scripts/fleet/post_task_reap.py scripts/fleet/hramatka_hygiene_check.py tests/test_fleet_pr_identity.py tests/test_fleet_post_task_reap.py tests/test_fleet_hramatka_hygiene_check.py tests/orchestration/test_reap_worktrees.py && git commit -m \"fix(fleet): share one open-PR identity probe between reaper and hygiene gate (#7127)\n\nThe reaper's _no_open_pr_for_branch (via reap_worktrees._query_pr_states)\nand the gate's _branch_has_open_pr (#7126) independently answered \\\"does\nthis branch still have an open PR?\\\" and already disagreed on malformed\nrows. Extract scripts/fleet/pr_identity.py: a leaf probe that expresses\nthe identity binding once (explicit --repo scope, state OPEN, exact\nheadRefName equality, non-fork head, positive int number) and returns a\ntri-state so each caller keeps its own fail-closed direction — the\nreaper retains on unknown, the gate still counts on unknown. The reaper\nnow binds the repository explicitly from remote.origin.url instead of\ngh's cwd fallback.\n\nX-Agent: glm/7127\""
             },
+            "output": "[issue/7127-worktree-pr-predicates 2231ae7a9] fix(fleet): share one open-PR identity probe between reaper and hygiene gate (#7127)\n 7 files changed, 634 insertions(+), 90 deletions(-)\n create mode 100644 scripts/fleet/pr_identity.py\n create mode 100644 tests/test_fleet_pr_identity.py\n",
+            "metadata": {
+              "output": "[issue/7127-worktree-pr-predicates 2231ae7a9] fix(fleet): share one open-PR identity probe between reaper and hygiene gate (#7127)\n 7 files changed, 634 insertions(+), 90 deletions(-)\n create mode 100644 scripts/fleet/pr_identity.py\n create mode 100644 tests/test_fleet_pr_identity.py\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/fleet/pr_identity.py scripts/fleet/post_task_reap.py scripts/fleet/hramatka_hygiene_check.py tests/test_fleet_pr_identity.py tests/test_fleet_post_task_reap.py tests/test_fleet_hramatka_hygiene_check.py tests/orchestration/test_reap_worktrees.py && git commit -m \"fix(fleet): share one open-PR identity probe between reaper and hygiene gate (#7127)\n\nThe reaper's _no_open_pr_for_branch (via reap_worktrees._query_pr_states)\nand the gate's _branch_has_open_pr (#7126) independently answered \\\"does\nthis branch still have an open PR?\\\" and already disagreed on malformed\nrows. Extract scripts/fleet/pr_identity.py: a leaf probe that expresses\nthe identity binding once (explicit --repo scope, state OPEN, exact\nheadRefName equality, non-fork head, positive int number) and returns a\ntri-state so each caller keeps its own fail-closed direction — the\nreaper retains on unknown, the gate still counts on unknown. The reaper\nnow binds the repository explicitly from remote.origin.url instead of\ngh's cwd fallback.\n\nX-Agent: glm/7127\"",
             "time": {
-              "start": 1787440657911
+              "start": 1787440663802,
+              "end": 1787440663807
             }
           },
           "id": "prt_02bc3f5f0001ALTo5vePWn9JEq",
           "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
           "messageID": "msg_02bc3db39001SQsYkUkUB4qTWA"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 128934,
+            "input": 668,
+            "output": 266,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 128000
+            }
+          },
+          "cost": 0,
+          "id": "prt_02bc40d3b001O21Oyd22HJ0x8w",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc3db39001SQsYkUkUB4qTWA"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_02bb69e9a0018sM1phza6MXGjC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127",
+          "root": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 129140,
+          "input": 386,
+          "output": 41,
+          "reasoning": 73,
+          "cache": {
+            "write": 0,
+            "read": 128640
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1787440663970,
+          "completed": 1787440673110
+        },
+        "finish": "tool-calls",
+        "id": "msg_02bc40da2001hYTniAmli4KiA6",
+        "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN"
+      },
+      "parts": [
+        {
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-start",
+          "id": "prt_02bc41cae001eMpKEWvlPVmkfc",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc40da2001hYTniAmli4KiA6"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed. Now push and open the PR. The task says \"Real PR via gh\" and \"OPSEC-clean PR body\" (no infra details, no raw IPs, no private transcript IDs — note the module docstring already contained the conversation hash from before; PR body must avoid it).\n\nAlso: base branch is main. Push the branch to origin.",
+          "time": {
+            "start": 1787440667825,
+            "end": 1787440668964
+          },
+          "id": "prt_02bc41cb1001oiimKbk3rLVS1f",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc40da2001hYTniAmli4KiA6"
+        },
+        {
+          "type": "text",
+          "text": "Pushing and opening the PR:",
+          "time": {
+            "start": 1787440668966,
+            "end": 1787440669232
+          },
+          "id": "prt_02bc42126001e9GvPLKWf2kMyU",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc40da2001hYTniAmli4KiA6"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_7d576a58ec3442b2b0783c9a",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin issue/7127-worktree-pr-predicates 2>&1 | tail -3"
+            },
+            "output": "To https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]          issue/7127-worktree-pr-predicates -> issue/7127-worktree-pr-predicates\nbranch 'issue/7127-worktree-pr-predicates' set up to track 'origin/issue/7127-worktree-pr-predicates'.\n",
+            "metadata": {
+              "output": "To https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]          issue/7127-worktree-pr-predicates -> issue/7127-worktree-pr-predicates\nbranch 'issue/7127-worktree-pr-predicates' set up to track 'origin/issue/7127-worktree-pr-predicates'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin issue/7127-worktree-pr-predicates 2>&1 | tail -3",
+            "time": {
+              "start": 1787440672985,
+              "end": 1787440672989
+            }
+          },
+          "id": "prt_02bc42223001LQUzDRlg2Lyy7P",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc40da2001hYTniAmli4KiA6"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 129140,
+            "input": 386,
+            "output": 41,
+            "reasoning": 73,
+            "cache": {
+              "write": 0,
+              "read": 128640
+            }
+          },
+          "cost": 0,
+          "id": "prt_02bc4311d001AZ1tUqyeQgW0M3",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc40da2001hYTniAmli4KiA6"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_02bb69e9a0018sM1phza6MXGjC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127",
+          "root": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 129987,
+          "input": 204,
+          "output": 759,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 129024
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1787440673120,
+          "completed": 1787440684586
+        },
+        "finish": "tool-calls",
+        "id": "msg_02bc43160001STF6qljM3JHz32",
+        "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN"
+      },
+      "parts": [
+        {
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-start",
+          "id": "prt_02bc456fc00170dGkP5OBP3f0N",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc43160001STF6qljM3JHz32"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_9e42c401b2f447ceabe8aaa1",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --base main --head issue/7127-worktree-pr-predicates --title \"fix(fleet): share one open-PR identity probe between reaper and hygiene gate\" --body \"## Summary\n\nCloses #7127.\n\nTwo modules independently answered *\\\"does this branch still have an open PR?\\\"* — the reaper's \\`_no_open_pr_for_branch()\\` (delegating to \\`reap_worktrees._query_pr_states()\\`) and the gate's \\`_branch_has_open_pr()\\` (#7126) — and they already disagreed on malformed rows. This extracts **one dependency-safe PR-identity probe** both callers now share.\n\n## The shared probe\n\nNew leaf module \\`scripts/fleet/pr_identity.py\\` (imports neither caller, so no import cycle into either module body — verified by a test). It expresses the identity binding exactly once:\n\n- explicit \\`--repo\\` scope (never gh's cwd fallback);\n- \\`state == \\\"OPEN\\\"\\`;\n- exact \\`headRefName\\` equality with the probed branch;\n- non-fork (same-repository) head;\n- positive integer \\`number\\`.\n\nIt returns a tri-state: \\`True\\` (provably open), \\`False\\` (provably none), \\`None\\` (unknown + structural reason; gh stderr is never echoed). A single malformed row — e.g. \\`[{}]\\` — poisons the whole answer to unknown.\n\n## Per-caller fail-closed directions (unchanged, by design)\n\n| probe answer | reaper \\`_no_open_pr_for_branch\\` | gate \\`_branch_has_open_pr\\` |\n|---|---|---|\n| proven open | retain | exempt (not counted) |\n| proven absent | may proceed | counted |\n| unknown | **retain (never delete)** | **still counted (never passes)** |\n\nThe reaper now also binds the repository explicitly, resolved from the checkout's \\`remote.origin.url\\`; an unresolvable slug is an unknown, which retains.\n\n## Tests\n\n- \\`tests/test_fleet_pr_identity.py\\` (new): probe tri-state semantics incl. \\`[{}]\\`/\\`[null]\\`/non-list/transport failures; command-shape binding (\\`--repo\\`/\\`--head\\`/\\`--state open\\`); repo-slug resolution; **identity-agreement tests** driving the real reaper and gate predicates over one shared gh answer, plus the direction matrix and per-caller explicit-repo pinning.\n- \\`tests/test_fleet_post_task_reap.py\\`: hermetic fixture controls the shared probe; new unknown-retains fallback test; open-PR test drives probe + canonical path independently.\n- \\`tests/test_fleet_hramatka_hygiene_check.py\\`: probe tests now patch the probe's gh boundary.\n- \\`tests/orchestration/test_reap_worktrees.py\\`: the #7126 deletion-authorization end-to-end test re-driven through the probe's gh boundary, same contract (ambiguity retains, proven-absent permits).\n\n## Verification\n\n- \\`pytest tests/test_fleet_pr_identity.py tests/test_fleet_post_task_reap.py tests/test_fleet_hramatka_hygiene_check.py tests/orchestration/test_reap_worktrees.py tests/orchestration/test_scheduled_worktree_cleanup.py\\` — **257 passed**\n- \\`ruff check scripts/\\` + touched test files — clean\n\n\\`reap_worktrees._query_pr_states\\` itself and the scheduled cleanup are untouched.\" 2>&1 | tail -2"
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7149\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7149\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --base main --head issue/7127-worktree-pr-predicates --title \"fix(fleet): share one open-PR identity probe between reaper and hygiene gate\" --body \"## Summary\n\nCloses #7127.\n\nTwo modules independently answered *\\\"does this branch still have an open PR?\\\"* — the reaper's \\`_no_open_pr_for_branch()\\` (delegating to \\`reap_worktrees._query_pr_states()\\`) and the gate's \\`_branch_has_open_pr()\\` (#7126) — and they already disagreed on malformed rows. This extracts **one dependency-safe PR-identity probe** both callers now share.\n\n## The shared probe\n\nNew leaf module \\`scripts/fleet/pr_identity.py\\` (imports neither caller, so no import cycle into either module body — verified by a test). It expresses the identity binding exactly once:\n\n- explicit \\`--repo\\` scope (never gh's cwd fallback);\n- \\`state == \\\"OPEN\\\"\\`;\n- exact \\`headRefName\\` equality with the probed branch;\n- non-fork (same-repository) head;\n- positive integer \\`number\\`.\n\nIt returns a tri-state: \\`True\\` (provably open), \\`False\\` (provably none), \\`None\\` (unknown + structural reason; gh stderr is never echoed). A single malformed row — e.g. \\`[{}]\\` — poisons the whole answer to unknown.\n\n## Per-caller fail-closed directions (unchanged, by design)\n\n| probe answer | reaper \\`_no_open_pr_for_branch\\` | gate \\`_branch_has_open_pr\\` |\n|---|---|---|\n| proven open | retain | exempt (not counted) |\n| proven absent | may proceed | counted |\n| unknown | **retain (never delete)** | **still counted (never passes)** |\n\nThe reaper now also binds the repository explicitly, resolved from the checkout's \\`remote.origin.url\\`; an unresolvable slug is an unknown, which retains.\n\n## Tests\n\n- \\`tests/test_fleet_pr_identity.py\\` (new): probe tri-state semantics incl. \\`[{}]\\`/\\`[null]\\`/non-list/transport failures; command-shape binding (\\`--repo\\`/\\`--head\\`/\\`--state open\\`); repo-slug resolution; **identity-agreement tests** driving the real reaper and gate predicates over one shared gh answer, plus the direction matrix and per-caller explicit-repo pinning.\n- \\`tests/test_fleet_post_task_reap.py\\`: hermetic fixture controls the shared probe; new unknown-retains fallback test; open-PR test drives probe + canonical path independently.\n- \\`tests/test_fleet_hramatka_hygiene_check.py\\`: probe tests now patch the probe's gh boundary.\n- \\`tests/orchestration/test_reap_worktrees.py\\`: the #7126 deletion-authorization end-to-end test re-driven through the probe's gh boundary, same contract (ambiguity retains, proven-absent permits).\n\n## Verification\n\n- \\`pytest tests/test_fleet_pr_identity.py tests/test_fleet_post_task_reap.py tests/test_fleet_hramatka_hygiene_check.py tests/orchestration/test_reap_worktrees.py tests/orchestration/test_scheduled_worktree_cleanup.py\\` — **257 passed**\n- \\`ruff check scripts/\\` + touched test files — clean\n\n\\`reap_worktrees._query_pr_states\\` itself and the scheduled cleanup are untouched.\" 2>&1 | tail -2",
+            "time": {
+              "start": 1787440684423,
+              "end": 1787440684429
+            }
+          },
+          "id": "prt_02bc45702001KL1GgikMA4fD0r",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc43160001STF6qljM3JHz32"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 129987,
+            "input": 204,
+            "output": 759,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 129024
+            }
+          },
+          "cost": 0,
+          "id": "prt_02bc45dd60012c2KOREN72K7WH",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc43160001STF6qljM3JHz32"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_02bb69e9a0018sM1phza6MXGjC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127",
+          "root": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 130279,
+          "input": 800,
+          "output": 263,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 129216
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1787440684601,
+          "completed": 1787440687864
+        },
+        "finish": "tool-calls",
+        "id": "msg_02bc45e39001D1swKwxiW3duz6",
+        "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN"
+      },
+      "parts": [
+        {
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-start",
+          "id": "prt_02bc46a7b001pUO1EgC2G87Vji",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc45e39001D1swKwxiW3duz6"
+        },
+        {
+          "type": "tool",
+          "tool": "todowrite",
+          "callID": "call_6f1aef3b9c6a4ee08476ba30",
+          "state": {
+            "status": "completed",
+            "input": {
+              "todos": [
+                {
+                  "content": "Create scripts/fleet/pr_identity.py (shared probe + repo-slug resolver)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Rewire post_task_reap._no_open_pr_for_branch to shared probe",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Rewire hramatka_hygiene_check._branch_has_open_pr to shared probe",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Add tests/test_fleet_pr_identity.py incl. malformed {} agreement tests",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Update tests/test_fleet_hramatka_hygiene_check.py probe patching",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Update tests/test_fleet_post_task_reap.py probe control",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Run pytest + ruff on touched files",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Commit with X-Agent trailer, push, open PR, print PR_URL",
+                  "priority": "high",
+                  "status": "completed"
+                }
+              ]
+            },
+            "output": "[\n  {\n    \"content\": \"Create scripts/fleet/pr_identity.py (shared probe + repo-slug resolver)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Rewire post_task_reap._no_open_pr_for_branch to shared probe\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Rewire hramatka_hygiene_check._branch_has_open_pr to shared probe\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Add tests/test_fleet_pr_identity.py incl. malformed {} agreement tests\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Update tests/test_fleet_hramatka_hygiene_check.py probe patching\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Update tests/test_fleet_post_task_reap.py probe control\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run pytest + ruff on touched files\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Commit with X-Agent trailer, push, open PR, print PR_URL\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  }\n]",
+            "metadata": {
+              "todos": [
+                {
+                  "content": "Create scripts/fleet/pr_identity.py (shared probe + repo-slug resolver)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Rewire post_task_reap._no_open_pr_for_branch to shared probe",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Rewire hramatka_hygiene_check._branch_has_open_pr to shared probe",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Add tests/test_fleet_pr_identity.py incl. malformed {} agreement tests",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Update tests/test_fleet_hramatka_hygiene_check.py probe patching",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Update tests/test_fleet_post_task_reap.py probe control",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Run pytest + ruff on touched files",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Commit with X-Agent trailer, push, open PR, print PR_URL",
+                  "status": "completed",
+                  "priority": "high"
+                }
+              ],
+              "truncated": false
+            },
+            "title": "0 todos",
+            "time": {
+              "start": 1787440687747,
+              "end": 1787440687750
+            }
+          },
+          "id": "prt_02bc46a7e001mdYSxgTaGFlLY6",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc45e39001D1swKwxiW3duz6"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 130279,
+            "input": 800,
+            "output": 263,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 129216
+            }
+          },
+          "cost": 0,
+          "id": "prt_02bc46aba001bQJGbvC1WQ9J0E",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc45e39001D1swKwxiW3duz6"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_02bb69e9a0018sM1phza6MXGjC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127",
+          "root": "/home/ops/learn-ukrainian-driver/batch_state/tier-bakeoff-2026-08-23/impl-wave/worktrees/bakeoff-impl-agy-7127"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 131178,
+          "input": 606,
+          "output": 444,
+          "reasoning": 144,
+          "cache": {
+            "write": 0,
+            "read": 129984
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1787440687875,
+          "completed": 1787440699118
+        },
+        "finish": "stop",
+        "id": "msg_02bc46b03001MN704pOm1BcfXl",
+        "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN"
+      },
+      "parts": [
+        {
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-start",
+          "id": "prt_02bc47b750019Ac9joVUhPMuIX",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc46b03001MN704pOm1BcfXl"
+        },
+        {
+          "type": "reasoning",
+          "text": "Done. Ticket #7127 implemented, branch pushed, PR #7149 opened. Verification: 257 tests passed, ruff clean, leaf import property verified, CI will run on the PR.\n\nPer the completion contract: report changed files, commands/results, branch status, user-visible outcome, residual.\n\nResidual: the merge gate requires independent cross-family review + CI — I'm a worker, not merging. Also note `_query_pr_states` remains in use by the canonical reaper and scheduled cleanup (deliberately untouched; the issue scoped only the two named callers, and #7102 must not be touched).\n\nKeep it concise and print PR_URL=... at the end as required.",
+          "time": {
+            "start": 1787440692087,
+            "end": 1787440694228
+          },
+          "id": "prt_02bc47b77001ZSxDrZmdryOZ0L",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc46b03001MN704pOm1BcfXl"
+        },
+        {
+          "type": "text",
+          "text": "Done. Summary:\n\n**Outcome** — #7127 implemented on `issue/7127-worktree-pr-predicates` (commit `2231ae7a9`, `X-Agent: glm/7127`), PR opened against `main`.\n\n**Changed files**\n- `scripts/fleet/pr_identity.py` (new) — leaf probe: one identity binding (explicit `--repo`, `state==OPEN`, exact `headRefName`, non-fork head, positive int number), tri-state result, structural-only errors; plus `resolve_repo_slug` from `remote.origin.url`\n- `scripts/fleet/post_task_reap.py` — `_no_open_pr_for_branch` rewired to the probe; unknown → retain\n- `scripts/fleet/hramatka_hygiene_check.py` — `_branch_has_open_pr` rewired to the probe; unknown → still counted; no-cycle design note updated\n- `tests/test_fleet_pr_identity.py` (new) — probe semantics incl. `[{}]`/`[null]`/non-list/transport, command-shape binding, slug resolution, and identity-agreement tests driving both real callers over one gh answer\n- `tests/test_fleet_post_task_reap.py`, `tests/test_fleet_hramatka_hygiene_check.py`, `tests/orchestration/test_reap_worktrees.py` — re-driven through the probe boundary (same contracts; new unknown-retains fallback test)\n\n**Verification** — 257 passed across the 5 affected suites; `ruff check scripts/` + touched tests clean; probe verified to load without either caller (no import cycle); both callers share one module object; `reap_worktrees._query_pr_states` and scheduled cleanup untouched (#7102 scope avoided).\n\n**Residual** — CI and independent cross-family review on the PR are still pending (not mine to merge); the canonical reaper path keeps using `_query_pr_states` by design, per the issue's minimal scope.\n\nPR_URL=https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7149",
+          "time": {
+            "start": 1787440694231,
+            "end": 1787440698984
+          },
+          "id": "prt_02bc483d7001Y56o0ege1kLkCM",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc46b03001MN704pOm1BcfXl"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "5e63d548aa0bd44dc143a53356cebec2b9c5fe6a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 131178,
+            "input": 606,
+            "output": 444,
+            "reasoning": 144,
+            "cache": {
+              "write": 0,
+              "read": 129984
+            }
+          },
+          "cost": 0,
+          "id": "prt_02bc496ab001Li02nziYmmb5W2",
+          "sessionID": "ses_fd44962d8ffemK2g60fTNP2fuN",
+          "messageID": "msg_02bc46b03001MN704pOm1BcfXl"
         }
       ]
     }
