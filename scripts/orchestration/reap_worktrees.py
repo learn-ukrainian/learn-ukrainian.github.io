@@ -223,6 +223,11 @@ def _worktree_clean(path: Path) -> bool | None:
     return True
 
 
+# The states `gh pr list` can report. Anything else is an UNKNOWN, never
+# an absence -- callers read "no open PR" as permission to delete.
+_PR_STATES = frozenset({"OPEN", "MERGED", "CLOSED"})
+
+
 def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequestState], str | None]:
     if not branch:
         return [], None
@@ -265,13 +270,21 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
         # one already treats a non-None error as skip/retain.
         if not isinstance(item, dict):
             return [], "gh pr list returned a malformed row (not an object)"
-        state = str(item.get("state") or "").upper()
-        if not state:
-            return [], "gh pr list returned a row with no usable state"
+        raw_state = item.get("state")
+        state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+        if state not in _PR_STATES:
+            # An unrecognised state is ambiguous, and ambiguity must not read
+            # as "no open PR". `[{"state": "CLOSED"}]` and an unknown enum
+            # both used to authorise deletion.
+            return [], "gh pr list returned a row with an unusable state"
         number = item.get("number")
+        if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+            # gh always returns `number` when asked for it, so a row without a
+            # usable one is an incomplete answer, not a PR-free branch.
+            return [], "gh pr list returned a row without a usable PR number"
         states.append(
             PullRequestState(
-                number=number if isinstance(number, int) else None,
+                number=number,
                 state=state,
                 head_sha=(
                     str(item.get("headRefOid"))
@@ -1397,10 +1410,13 @@ def reap_worktrees(
             if info.head and not _is_ancestor_of_origin_main(info.path):
                 all_pr_states.extend(_query_prs_by_head_sha(repo_root, info.head))
 
-            if errors and not all_pr_states:
+            # Any candidate-query error blocks qualification. A supplementary
+            # SHA lookup finding *some* PR cannot redeem an unreadable
+            # authoritative branch response -- that made UNKNOWN -> retain
+            # non-universal on the destructive path.
+            pr_state = _best_pr(all_pr_states)
+            if errors:
                 pr_error = "; ".join(errors)
-            else:
-                pr_state = _best_pr(all_pr_states)
 
             if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:
                 results.append(

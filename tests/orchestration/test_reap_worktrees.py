@@ -1950,3 +1950,112 @@ def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, pa
 
     assert no_open_pr is False
     assert guard_error is not None
+
+
+@pytest.mark.parametrize(
+    ("label", "payload"),
+    [
+        ("state present but no number", '[{"state": "CLOSED"}]'),
+        ("unrecognised state enum", '[{"state": "NOT_A_GH_PR_STATE", "number": 7126}]'),
+        ("state is not a string", '[{"state": [], "number": 7126}]'),
+        ("number is a bool", '[{"state": "CLOSED", "number": true}]'),
+        ("number is zero", '[{"state": "CLOSED", "number": 0}]'),
+        ("number is a string", '[{"state": "CLOSED", "number": "7126"}]'),
+    ],
+)
+def test_query_pr_states_rejects_incomplete_rows(monkeypatch, label, payload) -> None:
+    """An incomplete or unrecognised row is ambiguous, and ambiguity must not
+    read as "no open PR" -- callers treat that as permission to DELETE."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert states == [], label
+    assert error is not None, label
+
+
+@pytest.mark.parametrize("state", ["OPEN", "MERGED", "CLOSED"])
+def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None:
+    """The tightened validation must not reject legitimate answers, or
+    nothing would ever be reaped."""
+    payload = json.dumps([{"number": 7126, "state": state, "headRefOid": "abc"}])
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert error is None
+    assert [(s.number, s.state) for s in states] == [(7126, state)]
+
+
+@pytest.mark.parametrize(
+    ("label", "payload", "expect_deletion_allowed"),
+    [
+        ("incomplete row", '[{"state": "CLOSED"}]', False),
+        ("bogus enum", '[{"state": "WAT", "number": 1}]', False),
+        ("genuinely empty", "[]", True),
+        ("valid closed", '[{"state": "CLOSED", "number": 1}]', True),
+        ("valid merged", '[{"state": "MERGED", "number": 1}]', True),
+        ("valid open", '[{"state": "OPEN", "number": 1}]', False),
+    ],
+)
+def test_post_task_reap_deletion_authorization_end_to_end(
+    monkeypatch, label, payload, expect_deletion_allowed
+) -> None:
+    """The destructive authorization itself: ambiguity retains, and a real
+    answer still permits reaping."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    no_open_pr, _guard_error = post_task_reap._no_open_pr_for_branch(
+        repo_root=Path("/nonexistent"), branch="some/branch"
+    )
+
+    assert no_open_pr is expect_deletion_allowed, label
+
+
+def test_unreadable_branch_query_retains_even_when_the_sha_lookup_succeeds(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An unreadable authoritative branch response must never end in deletion,
+    even when the supplementary SHA lookup happily returns a MERGED PR.
+
+    Honest scope note: this asserts the OUTCOME (retained), which holds both
+    with and without the `if errors:` change at the candidate-query site --
+    a later cleanup-time re-query independently catches the same condition
+    ("PR guard unavailable during cleanup"). The change removes the reliance
+    on that downstream guard rather than closing a demonstrated deletion;
+    this test pins the outcome so a future refactor of either guard cannot
+    silently turn an unreadable response into a reap.
+    """
+    repo = init_repo(tmp_path)
+    task_id = "sha-redeem-guard"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/sha-redeem-guard", path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([], "gh unreadable row"))
+    monkeypatch.setattr(
+        rw,
+        "_query_prs_by_head_sha",
+        lambda _repo, _sha: [rw.PullRequestState(number=42, state="MERGED", head_sha="abc")],
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "PR guard unavailable" in result.reason
+    assert worktree.exists()
