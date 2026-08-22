@@ -599,7 +599,7 @@ def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
         if not isinstance(initiator, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(initiator):
             initiator = "unknown"
         source_provenance = record.get("attribution_source")
-        if source_provenance not in _RUNTIME_ATTRIBUTION_SOURCES or initiator == "unknown":
+        if source_provenance not in _RUNTIME_ATTRIBUTION_SOURCES:
             source_provenance = "unknown"
         source_task_id = record.get("attribution_task_id")
         if not isinstance(source_task_id, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(source_task_id):
