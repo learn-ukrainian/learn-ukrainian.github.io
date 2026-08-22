@@ -19,7 +19,11 @@ import sys
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import numpy  # noqa: F401  # Declares the Sources runtime dependency to the CI fastlane.
+import pymorphy3  # noqa: F401  # Declares the Russian-shadow runtime dependency.
+import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dictionary.
 import pytest
+import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 

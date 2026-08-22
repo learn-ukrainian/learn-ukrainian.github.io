@@ -33,6 +33,7 @@ IMPORT_DISTRIBUTIONS = {
     "numpy": "numpy",
     "PIL": "pillow",
     "pymorphy3": "pymorphy3",
+    "pymorphy3_dicts_uk": "pymorphy3-dicts-uk",
     "pypdf": "pypdf",
     "psutil": "psutil",
     "pytest": "pytest",
