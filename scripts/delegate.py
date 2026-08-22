@@ -34,6 +34,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
 
     {
         "task_id": str,
+        "repository": str | null,   # authoritative "owner/repo" of the dispatch target (#7083)
         "agent": str,
         "model": str,
         "resolved_model": str,  # Cursor's concrete model, or "unknown"
@@ -1218,6 +1219,133 @@ def _resolve_cwd_path(raw: str) -> Path:
     if not p.is_absolute():
         p = Path.cwd() / p
     return p.resolve()
+
+
+# Authoritative repository attribution (#7083). Task state carries the
+# dispatch target's ``owner/repo`` slug so the public Work projection can
+# scope its delegate join without ever inferring identity from paths or task
+# ids at read time. Only GitHub remotes yield a slug; anything else stays
+# unclassified (the projection fails closed on it).
+_GITHUB_REMOTE_PATTERNS = (
+    re.compile(r"^https?://(?:[^/@\s]+@)?github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+    re.compile(r"^ssh://git@github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+    re.compile(r"^git@github\.com:([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+    re.compile(r"^git://github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+)
+# Same authoritative-claim contract as scripts/api/delegate_router.py:
+# only these fields attribute a task to a repository.
+_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
+
+
+def _parse_github_owner_repo(remote_url: str | None) -> str | None:
+    """Return ``owner/repo`` for a GitHub remote URL, else None (fail closed)."""
+    if not remote_url:
+        return None
+    text = remote_url.strip()
+    for pattern in _GITHUB_REMOTE_PATTERNS:
+        match = pattern.match(text)
+        if match:
+            return f"{match.group(1)}/{match.group(2)}"
+    return None
+
+
+_GITCONFIG_REMOTE_SECTION_RE = re.compile(r'^\s*\[\s*remote\s+"([^"]+)"\s*\]')
+_GITCONFIG_ANY_SECTION_RE = re.compile(r"^\s*\[")
+_GITCONFIG_URL_RE = re.compile(r"^\s*url\s*=\s*(.+?)\s*$")
+
+
+def _git_common_dir(root: Path) -> Path | None:
+    """Return the git common dir for a checkout or linked worktree.
+
+    Pure filesystem — never a git subprocess. The dispatch path stays
+    independent of the ``subprocess.Popen`` stubs used by dispatch tests,
+    same contract as :func:`_resolve_invocation_git_root`.
+    """
+    dot_git = root / ".git"
+    try:
+        if dot_git.is_dir():
+            return dot_git
+        if not dot_git.is_file():
+            return None
+        text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
+        if not text.startswith("gitdir:"):
+            return None
+        gitdir = Path(text.split(":", 1)[1].strip())
+        if not gitdir.is_absolute():
+            gitdir = (root / gitdir).resolve()
+        commondir_file = gitdir / "commondir"
+        if commondir_file.is_file():
+            common = Path(commondir_file.read_text(encoding="utf-8", errors="replace").strip())
+            if not common.is_absolute():
+                common = (gitdir / common).resolve()
+            return common
+        return gitdir
+    except OSError:
+        return None
+
+
+def _read_origin_url(root: Path) -> str | None:
+    """Read ``remote.origin.url`` from the checkout's common git config."""
+    common = _git_common_dir(root)
+    if common is None:
+        return None
+    try:
+        lines = (common / "config").read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return None
+    in_origin = False
+    for line in lines:
+        remote_section = _GITCONFIG_REMOTE_SECTION_RE.match(line)
+        if remote_section:
+            in_origin = remote_section.group(1) == "origin"
+            continue
+        if _GITCONFIG_ANY_SECTION_RE.match(line):
+            in_origin = False
+            continue
+        if in_origin:
+            url = _GITCONFIG_URL_RE.match(line)
+            if url:
+                return url.group(1)
+    return None
+
+
+def _resolve_dispatch_repository(target: str | Path | None) -> str | None:
+    """Resolve the authoritative ``owner/repo`` identity for a dispatch target.
+
+    Reads the target checkout's git config from disk — never a network call,
+    never a subprocess. A target inside the primary checkout (including an
+    auto worktree, existing or already reaped) binds the primary's origin by
+    construction; any other target must exist on disk so its own
+    ``remote.origin.url`` can be read. Returns None when no GitHub slug can be
+    proven — callers then leave the task unclassified rather than guess.
+    """
+    if target is None or str(target) == "":
+        return None
+    try:
+        target_path = Path(target).expanduser().resolve()
+        primary = _REPO_ROOT.resolve()
+    except OSError:
+        return None
+    if target_path == primary or primary in target_path.parents:
+        config_dir = primary
+    elif target_path.is_dir():
+        config_dir = target_path
+    else:
+        return None
+    return _parse_github_owner_repo(_read_origin_url(config_dir))
+
+
+def _state_repository_claims(state: dict[str, Any]) -> list[str]:
+    """Return the distinct authoritative repository claims on a task state."""
+    claims: list[str] = []
+    for field_name in _REPOSITORY_ATTR_FIELDS:
+        raw = state.get(field_name)
+        if raw is None or raw == "":
+            continue
+        text = str(raw).strip()
+        if text and text not in claims:
+            claims.append(text)
+    return claims
 
 
 def _resolve_invocation_git_root(start: Path | str | None = None) -> Path | None:
@@ -4979,6 +5107,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         dry_run_state = {
             "task_id": task_id,
+            "repository": _resolve_dispatch_repository(
+                dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
+            ),
             "initiator": attribution.initiator,
             "attribution_source": attribution.source,
             "agent": dispatch_agent,
@@ -5136,6 +5267,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
     initial_state = {
         "task_id": task_id,
+        # Authoritative repository identity for the Work projection's scoped
+        # delegate join (#7083); None stays unclassified and fails closed.
+        "repository": _resolve_dispatch_repository(cwd),
         "initiator": attribution.initiator,
         "attribution_source": attribution.source,
         "agent": dispatch_agent,
@@ -5953,6 +6087,74 @@ def cmd_list(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_backfill_repository(args: argparse.Namespace) -> int:
+    """Stamp authoritative ``repository`` identity on legacy task states (#7083).
+
+    Task states written before dispatch-time attribution have no
+    ``repository`` / ``repository_id`` claim, so the public Work projection's
+    repository-scoped delegate join (correctly) drops them and reports
+    ``delegate_tasks.count=0``. This rewrites history the same way new
+    dispatches stamp it: the target's git ``remote.origin.url`` is read by the
+    owner of the state directory — never inferred by projection readers from
+    paths, branches, or task ids.
+
+    Dry-run by default; ``--apply`` performs the atomic write-rename updates.
+    Existing claims are authoritative: consistent claims are kept, conflicting
+    claims are reported and never overwritten. Targets whose repository cannot
+    be proven stay unclassified.
+    """
+    apply_changes = bool(getattr(args, "apply", False))
+    if not _TASKS_DIR.is_dir():
+        print(f"❌ tasks dir not found: {_TASKS_DIR}", file=sys.stderr)
+        return 1
+    scanned = stamped = already = unresolved = conflicts = errors = 0
+    for state_file in sorted(_TASKS_DIR.glob("*.json")):
+        state = _read_state(state_file)
+        if state is None:
+            continue
+        scanned += 1
+        task_id = str(state.get("task_id") or state_file.stem)
+        claims = _state_repository_claims(state)
+        if len(claims) == 1:
+            already += 1
+            continue
+        if len(claims) > 1:
+            conflicts += 1
+            print(
+                f"⚠️  {task_id}: conflicting repository claims {claims}; left untouched",
+                file=sys.stderr,
+            )
+            continue
+        target = state.get("worktree_path") or state.get("cwd")
+        slug = _resolve_dispatch_repository(target)
+        if slug is None:
+            unresolved += 1
+            print(
+                f"⚠️  {task_id}: cannot prove repository from recorded target; left unclassified",
+                file=sys.stderr,
+            )
+            continue
+        if apply_changes:
+            state["repository"] = slug
+            try:
+                _write_state_atomic(state_file, state)
+            except OSError as exc:
+                errors += 1
+                print(f"❌ {task_id}: failed to write stamp: {exc}", file=sys.stderr)
+                continue
+        stamped += 1
+        print(f"{'✅' if apply_changes else '🔎'} {task_id}: repository={slug}")
+    mode = "apply" if apply_changes else "dry-run"
+    print(
+        f"repository backfill ({mode}): scanned={scanned} stamped={stamped} "
+        f"already_attributed={already} unresolved={unresolved} "
+        f"conflicts={conflicts} errors={errors}"
+    )
+    if not apply_changes and stamped:
+        print("dry-run only — re-run with --apply to write these stamps")
+    return 1 if errors else 0
+
+
 # ---------------------------------------------------------------------------
 # _worker command — internal, called by cmd_dispatch's spawned process
 # ---------------------------------------------------------------------------
@@ -6402,6 +6604,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Optional status filter, e.g. running or failed.",
     )
     l.set_defaults(func=cmd_list)
+
+    # backfill-repository
+    bf = sub.add_parser(
+        "backfill-repository",
+        help="Stamp authoritative repository identity on legacy task states (#7083); dry-run unless --apply",
+    )
+    bf.add_argument(
+        "--apply",
+        action="store_true",
+        help="Write the stamps (default is a dry-run report).",
+    )
+    bf.set_defaults(func=cmd_backfill_repository)
 
     # _worker (hidden — internal)
     wk = sub.add_parser("_worker", help=argparse.SUPPRESS)
