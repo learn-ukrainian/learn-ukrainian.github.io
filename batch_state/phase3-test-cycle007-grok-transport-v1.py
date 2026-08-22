@@ -61,37 +61,46 @@ def rows(count: int, lane: str = "clean_label") -> list[dict[str, Any]]:
     ]
 
 
-def _build_row_evidence(row: dict[str, Any], *, lane: str = "clean_label") -> tuple[dict[str, Any], dict[str, Any]]:
-    phenomenon_id = "apostrophe" if lane == "residual_label" else None
-    rec = contract.build_evidence_record(
-        channel="vesum_attestation",
-        source_identity="vesum",
-        source_version="v1",
-        locator="data/vesum.db#forms",
-        query="слово",
-        status="attested",
-        supports="attestation",
-        retrieval_sha256=contract.sha256_value({"mock": "payload"}),
-        parser_id="vesum-forms-v1",
-        parser_version="1",
-        row=row,
-        phenomenon_id=phenomenon_id,
-    )
-    if lane == "residual_label":
-        phenomenon_evidence_ids = {k: ([rec["evidence_id"]] if k == "apostrophe" else []) for k in contract.RESIDUAL_PHENOMENON_TAXONOMY}
-    else:
-        phenomenon_evidence_ids = {}
+def _build_row_evidence(
+    row: dict[str, Any], *, lane: str = "clean_label"
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    phenomenon_ids = contract.RESIDUAL_PHENOMENON_TAXONOMY if lane == "residual_label" else (None,)
+    records = [
+        contract.build_evidence_record(
+            channel="vesum_attestation",
+            source_identity="vesum",
+            source_version="v1",
+            locator="data/vesum.db#forms",
+            query="слово",
+            status="attested",
+            supports="attestation",
+            retrieval_sha256=contract.sha256_value({"mock": "payload"}),
+            parser_id="vesum-forms-v1",
+            parser_version="1",
+            row=row,
+            phenomenon_id=phenomenon_id,
+        )
+        for phenomenon_id in phenomenon_ids
+    ]
+    phenomenon_evidence_ids = {
+        record["phenomenon_id"]: [record["evidence_id"]]
+        for record in records
+        if record["phenomenon_id"] is not None
+    }
     row_ev = {
         "unit_id": row["unit_id"],
         "unit_sha256": row["unit_sha256"],
-        "evidence": [rec],
-        "evidence_ids": [rec["evidence_id"]],
+        "tokenizer_id": compiler.TOKENIZER_ID,
+        "tokenizer_version": compiler.TOKENIZER_VERSION,
+        "extracted_forms": [],
+        "evidence": records,
+        "evidence_ids": sorted(record["evidence_id"] for record in records),
         "phenomenon_evidence_ids": phenomenon_evidence_ids,
         "sufficient_support": True,
         "archaic_only_risk": False,
         "russian_shadow_suspected": False,
     }
-    return rec, row_ev
+    return records, row_ev
 
 
 def synthetic_prompt(lane: str) -> bytes:
@@ -122,8 +131,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "ordered_identity_commitment_sha256": RUN.ORDERED_IDENTITY_COMMITMENT_SHA256,
         "identity_union_commitment_sha256": "5" * 64,
         "ordered_packet_commitment_sha256": "6" * 64,
-        "packet_count": 204,
-        "row_count": 10159,
+        "packet_count": 1,
+        "row_count": count,
         "text_free": True,
     }
     custody_val["receipt_sha256"] = RUN.digest(RUN.canonical(custody_val))
@@ -158,8 +167,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "ordered_identity_commitment_sha256": RUN.ORDERED_IDENTITY_COMMITMENT_SHA256,
         "identity_union_commitment_sha256": "5" * 64,
         "ordered_packet_commitment_sha256": "6" * 64,
-        "packet_count": 204,
-        "row_count": 10159,
+        "packet_count": 1,
+        "row_count": count,
         "packets": [entry],
         "text_free": True,
     }
@@ -173,8 +182,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
     sidecar_rows = []
     retrieval_payloads = {contract.sha256_value({"mock": "payload"}): {"mock": "payload"}}
     for row in packet_rows:
-        rec, row_ev = _build_row_evidence(row, lane=lane)
-        evidence_records.append(rec)
+        records, row_ev = _build_row_evidence(row, lane=lane)
+        evidence_records.extend(records)
         sidecar_rows.append(row_ev)
 
     sidecar_body = {
@@ -188,8 +197,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         },
         "packet_index": index,
         "row_count": count,
-        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
-        "tokenizer_version": "1",
+        "tokenizer_id": compiler.TOKENIZER_ID,
+        "tokenizer_version": compiler.TOKENIZER_VERSION,
         "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
@@ -206,8 +215,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "schema_version": "phase3_cycle007_evidence_manifest_v1",
         "text_free": True,
         "evaluation_cycle_id": RUN.CYCLE,
-        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
-        "tokenizer_version": "1",
+        "tokenizer_id": compiler.TOKENIZER_ID,
+        "tokenizer_version": compiler.TOKENIZER_VERSION,
         "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
@@ -215,6 +224,12 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "packet_count": 1,
         "row_count": count,
         "network_lookups_performed": 0,
+        "counts_by_channel": {"vesum_attestation": len(evidence_records)},
+        "counts_by_status": {"attested": len(evidence_records)},
+        "counts_by_supports": {"attestation": len(evidence_records)},
+        "sufficient_support_rows": sum(int(row["sufficient_support"]) for row in sidecar_rows),
+        "archaic_only_risk_rows": sum(int(row["archaic_only_risk"]) for row in sidecar_rows),
+        "russian_shadow_suspected_rows": sum(int(row["russian_shadow_suspected"]) for row in sidecar_rows),
         "sidecars": [
             {
                 "packet_index": index,
