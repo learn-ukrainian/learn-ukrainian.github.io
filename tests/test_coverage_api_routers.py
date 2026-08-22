@@ -870,36 +870,9 @@ class TestAdminHealth:
         assert set(data) >= {"status", "timestamp", "uptime_seconds", "broker", "disk"}
 
 
-class TestAdminDiskUsage:
-    """Tests for /api/admin/disk-usage endpoint."""
-
-    def test_disk_usage(self, admin_client, mock_project_root):
-        # Create some files
-        (mock_project_root / "data" / "textbook_images" / "test.png").write_bytes(b"x" * 100)
-        r = admin_client.get("/api/admin/disk-usage")
-        data = r.json()
-        assert r.status_code == 200
-        assert "breakdown" in data
-        assert data["total_bytes"] >= 0
-        # Breakdown keys are opaque labels only
-        assert set(data["breakdown"]) == {
-            "textbook_images", "textbooks", "literary_texts",
-            "textbook_chunks", "backups", "logs", "vesum_db",
-        }
-
-    def test_disk_usage_leaks_no_absolute_paths(self, admin_client, mock_project_root):
-        """OPSEC #7081: serialized JSON must not contain path/home/host strings."""
-        r = admin_client.get("/api/admin/disk-usage")
-        assert r.status_code == 200
-        data = r.json()
-        for entry in data["breakdown"].values():
-            assert "path" not in entry
-            assert set(entry) == {"exists", "size_bytes", "size_human"}
-        raw = r.content.decode()
-        assert "/home/" not in raw
-        assert str(Path.home()) not in raw
-        if Path(str(mock_project_root)).is_absolute():
-            assert str(mock_project_root) not in raw
+# NOTE: TestAdminDiskUsage moved to tests/test_admin_disk_usage_opsec.py so
+# the pytest fastlane can collect it without importing the optional pymupdf
+# dependency used by TestPDFPool below.
 
 
 class TestAdminMaintenance:
