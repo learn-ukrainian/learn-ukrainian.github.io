@@ -60,6 +60,17 @@ def hermetic_reap(monkeypatch, tmp_path):
 
     monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", merged_pr)
 
+    # Shared-probe control (#7127): the bound checkout resolves to a GitHub
+    # repository and provably has no OPEN PR, unless a test overrides it.
+    monkeypatch.setattr(
+        post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "octo/hermetic"
+    )
+    monkeypatch.setattr(
+        post_task_reap.pr_identity,
+        "probe_open_pr_for_branch",
+        lambda **_kwargs: (False, None),
+    )
+
     return repo_root, tasks_dir
 
 
@@ -319,12 +330,43 @@ def test_no_pr_open_pr_retain(hermetic_reap, monkeypatch):
     def open_pr(_repo: Path, _branch: str | None):
         return [post_task_reap.reap_worktrees.PullRequestState(9, "OPEN", "deadbeef")], None
 
+    # The canonical path declines on the OPEN PR; the shared probe (#7127)
+    # must independently confirm it for the no-PR fallback.
     monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", open_pr)
+    monkeypatch.setattr(
+        post_task_reap.pr_identity,
+        "probe_open_pr_for_branch",
+        lambda **_kwargs: (True, None),
+    )
 
     report = post_task_reap.post_task_reap("open-pr-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
 
     assert report["main_worktree"]["action"] == "retained"
     assert "open PR" in report["main_worktree"]["reason"]
+    assert worktree.exists()
+
+
+def test_no_pr_probe_unknown_retain(hermetic_reap, monkeypatch):
+    """An unknown shared-probe answer (malformed gh row, outage, …) is
+    fail-closed: the no-PR fallback must retain, never delete on a guess."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "pr-unknown-task")
+    _write_task_state(tasks_dir, "pr-unknown-task", "done", worktree)
+
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+    # Force the no-PR fallback (which consults the shared probe) by failing the
+    # canonical Class-A settled-dispatch activity probe, as in the dry-run test.
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: None)
+    monkeypatch.setattr(
+        post_task_reap.pr_identity,
+        "probe_open_pr_for_branch",
+        lambda **_kwargs: (None, "gh pr list returned a malformed row (not an object)"),
+    )
+
+    report = post_task_reap.post_task_reap("pr-unknown-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained"
+    assert "PR guard unavailable" in report["main_worktree"]["reason"]
     assert worktree.exists()
 
 
