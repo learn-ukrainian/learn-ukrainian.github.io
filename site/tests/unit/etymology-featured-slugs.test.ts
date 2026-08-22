@@ -1,43 +1,41 @@
 /**
- * Quality gate: every featured slug on the /etymology/ landing page
- * must exist in the build manifest.
+ * Quality gate: /etymology/ must no longer advertise a fake ESUM catalog
+ * or prerender standalone lemma demo pages (#7059).
  *
- * Background: 2026-05-15 — the landing originally featured 'хата'
- * (transliterated 'khata'), but ESUM has no headword 'хата' (closest
- * real entries are 'хати' / 'хатьма'), so clicking that LinkCard
- * returned 404 in dev mode. This test prevents recurrence by
- * validating every featured slug against the canonical manifest
- * before CI lets the change land.
+ * Learners looking for etymology are redirected to Word Atlas (/lexicon/).
+ * Standalone /etymology/[slug].astro dynamic routes are removed so thousands
+ * of HTML pages (or 4 fake demo pages) are never prerendered.
  */
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const STARLIGHT_DIR = join(__dirname, '..', '..');
-const INDEX_ASTRO = join(STARLIGHT_DIR, 'src', 'pages', 'etymology', 'index.astro');
-const MANIFEST = join(STARLIGHT_DIR, 'src', 'data', 'etymology-manifest.json');
+const SITE_DIR = join(__dirname, '..', '..');
+const INDEX_ASTRO = join(SITE_DIR, 'src', 'pages', 'etymology', 'index.astro');
+const SLUG_ASTRO = join(SITE_DIR, 'src', 'pages', 'etymology', '[slug].astro');
 
-describe('Etymology featured slugs', () => {
-  it('every featured slug in /etymology/ landing exists in the build manifest', () => {
+describe('Etymology catalog retirement (#7059)', () => {
+  it('/etymology/index.astro is a redirect/moved page to Word Atlas (/lexicon/)', () => {
+    expect(existsSync(INDEX_ASTRO)).toBe(true);
     const src = readFileSync(INDEX_ASTRO, 'utf-8');
-    const manifest = JSON.parse(readFileSync(MANIFEST, 'utf-8')) as {
-      slug_groups: Record<string, string[]>;
-    };
 
-    // Match `slug: 'xxx'` inside the `featured` array. Captures the slug
-    // value regardless of single/double quotes.
-    const slugMatches = Array.from(src.matchAll(/slug:\s*['"]([^'"]+)['"]/g));
-    const slugs = slugMatches.map((m) => m[1]);
+    // Points to /lexicon/
+    expect(src).toContain('/lexicon/');
 
-    expect(slugs.length).toBeGreaterThanOrEqual(3);
+    // Does not import manifest for route generation or stats
+    expect(src).not.toContain('etymology-manifest.json');
 
-    const missing = slugs.filter((s) => !(s in manifest.slug_groups));
-    expect(
-      missing,
-      `Featured slugs missing from manifest: ${missing.join(', ')}. ` +
-        `Verify each slug exists in starlight/src/data/etymology-manifest.json:slug_groups. ` +
-        `Regenerate manifest if ESUM data changed: .venv/bin/python scripts/etymology/build_data_manifest.py`,
-    ).toEqual([]);
+    // Does not contain the old featured demo slug array
+    expect(src).not.toContain("slug: 'dim'");
+    expect(src).not.toContain("slug: 'voda'");
+
+    // Does not claim tens of thousands of articles
+    expect(src).not.toContain('36');
+    expect(src).not.toContain('total_entries');
+  });
+
+  it('standalone dynamic routes /etymology/[slug].astro are deleted', () => {
+    expect(existsSync(SLUG_ASTRO)).toBe(false);
   });
 });
