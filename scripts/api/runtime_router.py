@@ -357,7 +357,10 @@ def list_runtime_agents() -> list[dict[str, Any]]:
     _refresh_agent_registry_if_changed()
     agents: list[dict[str, Any]] = []
     for path in sorted(ADAPTERS_DIR.glob("*.py")):
-        if path.stem in {"__init__", "acpx", "base", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
+        # Skip non-agent helper modules and alternate-harness adapters that
+        # alias an existing fleet agent name (hermes_* wrap the same grok /
+        # qwen / deepseek identities for ask-hermes only).
+        if path.stem in {"__init__", "acpx", "base", "hermes_deepseek", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
             continue
         try:
             module = importlib.import_module(f"agent_runtime.adapters.{path.stem}")
