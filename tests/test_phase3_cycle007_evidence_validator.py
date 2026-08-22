@@ -15,6 +15,7 @@ from typing import Any
 
 import pytest
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
@@ -79,6 +80,9 @@ def _row_evidence(row, records, *, phenomenon_evidence_ids=None):
     return {
         "unit_id": row["unit_id"],
         "unit_sha256": row["unit_sha256"],
+        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
+        "tokenizer_version": "1",
+        "extracted_forms": [],
         "evidence": records,
         "evidence_ids": evidence_ids,
         "phenomenon_evidence_ids": phenomenon_evidence_ids or {},
@@ -99,7 +103,7 @@ def _expected_identity(**overrides: Any) -> dict[str, Any]:
     base = {
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_sha256": "e" * 64},
+        "code_hashes": copy.deepcopy(compiler.CODE_HASHES),
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -192,6 +196,12 @@ def _full_manifest(*, identity=None, packet_count=1, row_count=3, sidecars=None,
         "packet_count": packet_count,
         "row_count": row_count,
         "network_lookups_performed": 0,
+        "counts_by_channel": {},
+        "counts_by_status": {},
+        "counts_by_supports": {},
+        "sufficient_support_rows": 0,
+        "archaic_only_risk_rows": 0,
+        "russian_shadow_suspected_rows": 0,
         "sidecars": sidecars,
         "source_package_binding": source_package_binding,
     }
@@ -637,3 +647,154 @@ def test_validate_evidence_record_rejects_a_deleted_query_field():
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_evidence_record(record)
     assert excinfo.value.code == "evidence_shape_drift"
+
+
+# --------------------------------------------------------------------------
+# P1 schema hardening reprobes: the Python gate must reject the same malformed
+# shapes, unsafe names, and count drifts that the published schemas/producer
+# contract exclude, even when a caller rehashes its outer container.
+# --------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("mutate", "expected_code"),
+    [
+        (lambda record: record.__setitem__("extra", True), "evidence_shape_drift"),
+        (lambda record: record.__setitem__("row_identity", {"unit_id": "unit-a", "unit_sha256": "A" * 64}), "evidence_shape_drift"),
+        (lambda record: record.__setitem__("retrieval_sha256", "g" * 64), "evidence_shape_drift"),
+        (lambda record: record.__setitem__("phenomenon_id", "invented"), "evidence_shape_drift"),
+    ],
+)
+def test_validate_evidence_record_rejects_closed_schema_reprobes(mutate, expected_code):
+    record = dict(_vesum_record(ROW_A))
+    mutate(record)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == expected_code
+
+
+def test_validate_row_evidence_rejects_extra_key_and_non_hex_row_identity():
+    record = _vesum_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record])
+    row_evidence["unit_sha256"] = "A" * 64
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "row_identity_drift"
+
+    row_evidence = _row_evidence(ROW_A, [record])
+    row_evidence["extra"] = True
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "row_shape_drift"
+
+
+def test_validate_row_evidence_recomputes_compiler_boolean_summaries():
+    record = _vesum_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record])
+    row_evidence["sufficient_support"] = False
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "row_count_drift"
+
+
+def test_validate_row_evidence_requires_a_complete_phenomenon_index():
+    record = _vesum_record(ROW_A, phenomenon_id="apostrophe")
+    row_evidence = _row_evidence(ROW_A, [record])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "phenomenon_evidence_set_drift"
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda sidecar: sidecar.__setitem__("evaluation_cycle_id", "phase3-v2-1-evaluation-cycle-006"),
+        lambda sidecar: sidecar["packet_binding"].__setitem__("canonical_basename", "../packet-0001.json"),
+        lambda sidecar: sidecar["packet_binding"].__setitem__("raw_sha256", "A" * 64),
+        lambda sidecar: sidecar["rows"][0].__setitem__("tokenizer_version", "drift"),
+        lambda sidecar: sidecar.__setitem__("extra", True),
+    ],
+)
+def test_validate_sidecar_rejects_closed_shape_cycle_hash_and_packet_name_reprobes(mutate):
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload})
+    mutate(sidecar)
+    with pytest.raises(validator.EvidenceValidationError):
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+
+
+def test_validate_manifest_rejects_missing_required_count_fields_and_count_map_total_drift():
+    manifest = _full_manifest()
+    del manifest["counts_by_channel"]
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "manifest_shape_drift"
+
+    manifest = _full_manifest(counts_by_channel={"vesum_attestation": 1})
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "manifest_shape_drift"
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda manifest: manifest.__setitem__("evaluation_cycle_id", "phase3-v2-1-evaluation-cycle-006"),
+        lambda manifest: manifest.__setitem__("extra", True),
+        lambda manifest: manifest["sidecars"][0].__setitem__("sidecar_sha256", "A" * 64),
+        lambda manifest: manifest["sidecars"][0]["packet_binding"].__setitem__("canonical_basename", "/tmp/packet-0001.json"),
+    ],
+)
+def test_validate_manifest_rejects_closed_entry_cycle_hash_and_packet_name_reprobes(mutate):
+    manifest = _full_manifest()
+    mutate(manifest)
+    with pytest.raises(validator.EvidenceValidationError):
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+
+
+def test_validate_manifest_requires_ordered_unique_typed_sidecar_entries():
+    first = _full_manifest()["sidecars"][0]
+    second = copy.deepcopy(first)
+    second["packet_index"] = 1
+    second["sidecar_id"] = "cycle007_sidecar:" + "c" * 64
+    manifest = _full_manifest(packet_count=2, row_count=6, sidecars=[first, second])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "manifest_shape_drift"
+
+    second["packet_index"] = True
+    manifest = _full_manifest(packet_count=2, row_count=6, sidecars=[first, second])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "manifest_shape_drift"
+
+
+def test_validate_manifest_checks_source_package_binding_semantics():
+    binding = {
+        "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+        "custody_receipt_raw_sha256": "c" * 64,
+        "materialization_manifest_sha256": "d" * 64,
+        "ordered_identity_commitment_sha256": "e" * 64,
+        "identity_union_commitment_sha256": "f" * 64,
+        "ordered_packet_commitment_sha256": "1" * 64,
+        "packet_count": 1,
+        "row_count": 3,
+    }
+    manifest = _full_manifest(source_package_binding=binding)
+    validator.validate_manifest(manifest, expected_identity=_expected_identity())
+
+    binding = copy.deepcopy(binding)
+    binding["source_evaluation_cycle_id"] = "phase3-v2-1-evaluation-cycle-006"
+    manifest = _full_manifest(source_package_binding=binding)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "source_package_binding_shape_drift"
+
+    binding = copy.deepcopy(binding)
+    binding["source_evaluation_cycle_id"] = "phase3-v2-1-evaluation-cycle-005"
+    binding["row_count"] = 4
+    manifest = _full_manifest(source_package_binding=binding)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "source_package_binding_shape_drift"
