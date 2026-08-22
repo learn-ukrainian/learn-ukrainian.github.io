@@ -156,6 +156,20 @@ def test_semantic_canary_assertions_pass_valid(tmp_path: Path) -> None:
     assert preserved is True
 
 
+def test_gemini_prompt_contains_public_rows_and_compiled_evidence(tmp_path: Path) -> None:
+    client = CANARY.make_synthetic_mcp_client(tmp_path)
+    rows = CANARY.fixture_rows()
+    sidecar = CANARY.compile_public_sidecar(client, rows)
+    client.close()
+
+    prompt = CANARY.gemini_prompt("a" * 64, rows, sidecar).decode("utf-8")
+    assert "слідуючий раз" in prompt
+    assert "філіжанка" in prompt
+    assert sidecar["sidecar_id"] in prompt
+    for row in sidecar["rows"]:
+        assert all(evidence["evidence_id"] in prompt for evidence in row["evidence"])
+
+
 def test_semantic_canary_assertions_reject_trap_agreed(tmp_path: Path) -> None:
     client = CANARY.make_synthetic_mcp_client(tmp_path)
     sidecar = CANARY.compile_public_sidecar(client)
@@ -204,6 +218,34 @@ def test_semantic_canary_assertions_reject_heritage_control_missing_evidence(tmp
     labels = _build_mock_labels(sidecar, control_missing_evidence=True)
     with pytest.raises(CANARY.SOURCE.Invalid):
         CANARY.SOURCE.validate("clean_label", {"rows": CANARY.fixture_rows()}, CANARY.canonical({"labels": labels}), sidecar=sidecar)
+
+
+def test_semantic_canary_assertions_require_both_vesum_and_heritage(tmp_path: Path) -> None:
+    client = CANARY.make_synthetic_mcp_client(tmp_path)
+    sidecar = CANARY.compile_public_sidecar(client)
+    client.close()
+    labels = _build_mock_labels(sidecar)
+    control_evidence = {item["evidence_id"]: item for item in sidecar["rows"][1]["evidence"]}
+    labels[1]["evidence_ids"] = [
+        evidence_id
+        for evidence_id in labels[1]["evidence_ids"]
+        if control_evidence[evidence_id]["channel"] == "vesum_attestation"
+    ]
+
+    with pytest.raises(CANARY.CanarySemanticError, match="heritage_control_missing_vesum_or_heritage_evidence"):
+        CANARY.verify_semantic_canary_assertions(sidecar, labels)
+
+
+def test_semantic_canary_assertions_reject_control_style_warning(tmp_path: Path) -> None:
+    client = CANARY.make_synthetic_mcp_client(tmp_path)
+    sidecar = CANARY.compile_public_sidecar(client)
+    client.close()
+    labels = _build_mock_labels(sidecar)
+    warning = next(item for item in sidecar["rows"][1]["evidence"] if item["channel"] == "antonenko_style")
+    warning["status"] = "attested"
+
+    with pytest.raises(CANARY.CanarySemanticError, match="heritage_control_has_style_or_shadow_warning"):
+        CANARY.verify_semantic_canary_assertions(sidecar, labels)
 
 
 def _make_gemini_fake_provider(tmp_path: Path, sidecar: dict[str, Any]) -> Path:
@@ -338,7 +380,10 @@ def test_synthetic_provider_incapable_of_minting_real_receipt(tmp_path: Path) ->
     mock_bin = _make_gemini_fake_provider(tmp_path, sidecar)
     receipt_path = tmp_path / "receipt.json"
 
-    with pytest.raises(CANARY.CanaryError, match=r"provider_executable_mismatch|invalid_executable"):
+    with pytest.raises(
+        CANARY.CanaryError,
+        match=r"provider_executable_mismatch|invalid_executable|real_mode_prohibits_injected_sources_client",
+    ):
         CANARY.invoke_canary(
             "gemini",
             mock_bin,
@@ -347,6 +392,41 @@ def test_synthetic_provider_incapable_of_minting_real_receipt(tmp_path: Path) ->
             sources_client=client,
         )
     client.close()
+
+
+def test_real_mode_rejects_injected_synthetic_sources_client(tmp_path: Path) -> None:
+    client = CANARY.make_synthetic_mcp_client(tmp_path)
+    with pytest.raises(CANARY.CanaryError, match="real_mode_prohibits_injected_sources_client"):
+        CANARY.invoke_canary(
+            "gemini",
+            CANARY.AGY,
+            execution_mode="real",
+            receipt_path=tmp_path / "receipt.json",
+            sources_client=client,
+        )
+    client.close()
+
+
+@pytest.mark.parametrize("attempts", [0, 3, True])
+def test_canary_rejects_attempt_limit_outside_one_structural_retry(tmp_path: Path, attempts: int) -> None:
+    client = CANARY.make_synthetic_mcp_client(tmp_path)
+    with pytest.raises(CANARY.CanaryError, match="invalid_attempt_limit"):
+        CANARY.invoke_canary(
+            "grok",
+            tmp_path / "unused-provider",
+            execution_mode="synthetic",
+            sources_client=client,
+            max_attempts=attempts,
+        )
+    client.close()
+
+
+def test_grok_rejects_noncanonical_output_envelope() -> None:
+    raw = CANARY.canonical(
+        {"structured_output": {"labels": [], "liveness_challenge": "a" * 64}}
+    )
+    with pytest.raises(CANARY.CanaryStructuralError, match="structured_output_envelope_drift"):
+        CANARY._extract_grok(raw, "a" * 64)
 
 
 def test_structural_retry_permitted_on_first_attempt_malformed(tmp_path: Path) -> None:

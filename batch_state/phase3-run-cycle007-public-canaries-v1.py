@@ -249,10 +249,16 @@ def gemini_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
     }
 
 
-def gemini_prompt(challenge: str) -> bytes:
+def gemini_prompt(challenge: str, rows: list[dict[str, Any]], sidecar: dict[str, Any]) -> bytes:
     return (
         GEMINI_CANARY_PROMPT.strip()
         + f"\n\nEcho this exact liveness challenge in liveness_challenge: {challenge}\n"
+        + "\n--- BEGIN IMMUTABLE PUBLIC PACKET JSON ---\n"
+        + json.dumps({"rows": rows}, ensure_ascii=False, indent=2)
+        + "\n--- END IMMUTABLE PUBLIC PACKET JSON ---\n"
+        + "\n--- BEGIN IMMUTABLE EVIDENCE SIDECAR JSON ---\n"
+        + json.dumps(sidecar, ensure_ascii=False, indent=2)
+        + "\n--- END IMMUTABLE EVIDENCE SIDECAR JSON ---\n"
     ).encode("utf-8")
 
 
@@ -317,43 +323,16 @@ def _extract_gemini(raw: bytes, challenge: str) -> tuple[dict[str, Any], dict[st
 def _extract_grok(raw: bytes, challenge: str) -> dict[str, Any]:
     try:
         direct = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
-    except (UnicodeDecodeError, json.JSONDecodeError, CanaryError):
-        lines = [line for line in raw.splitlines() if line.strip()]
-        if not lines:
-            raise CanaryStructuralError("stream_json_invalid") from None
-        events: list[Any] = []
-        for line in lines:
-            try:
-                events.append(json.loads(line.decode("utf-8", "strict"), object_pairs_hook=_pairs))
-            except (UnicodeDecodeError, json.JSONDecodeError, CanaryError):
-                raise CanaryStructuralError("stream_json_invalid") from None
-        results = [item for item in events if isinstance(item, dict) and item.get("event") == "result"]
-        if len(results) != 1:
-            raise CanaryStructuralError("terminal_result_count_drift") from None
-        result = results[0]
-        if result.get("status") != "SUCCESS" or not isinstance(result.get("structured_output"), dict):
-            raise CanaryStructuralError("structured_output_envelope_drift") from None
-        direct = result["structured_output"]
-
-    if isinstance(direct, dict) and "structured_output" in direct:
-        direct = direct["structured_output"]
-
-    if not isinstance(direct, dict):
+    except (UnicodeDecodeError, json.JSONDecodeError, CanaryError) as exc:
+        raise CanaryStructuralError("stream_json_invalid") from exc
+    if (
+        not isinstance(direct, dict)
+        or set(direct) != {"labels", "liveness_challenge"}
+        or direct.get("liveness_challenge") != challenge
+        or not isinstance(direct.get("labels"), list)
+    ):
         raise CanaryStructuralError("structured_output_envelope_drift")
-
-    if direct.get("liveness_challenge") != challenge:
-        raise CanaryStructuralError("structured_output_envelope_drift")
-
-    if "labels_by_position" in direct:
-        positions = direct["labels_by_position"]
-        if not isinstance(positions, dict) or set(positions) != {"p01", "p02"}:
-            raise CanaryStructuralError("ordinal_key_drift")
-        return {"labels": [positions["p01"], positions["p02"]]}
-
-    if "labels" in direct and isinstance(direct["labels"], list):
-        return {"labels": direct["labels"]}
-
-    raise CanaryStructuralError("structured_output_envelope_drift")
+    return {"labels": direct["labels"]}
 
 
 def verify_semantic_canary_assertions(
@@ -367,7 +346,8 @@ def verify_semantic_canary_assertions(
        - rejected with cited attested Antonenko style guidance plus cited Russian-shadow suspicion.
        - suspicion alone is never sufficient.
     2. Heritage control row:
-       - labeled agree with cited sufficient heritage or VESUM evidence.
+       - labeled agree with both cited sufficient heritage and VESUM evidence.
+       - has no attested Antonenko warning or Russian-shadow suspicion.
     """
     if len(normalized_labels) != 2:
         raise CanarySemanticError("expected_two_labels")
@@ -409,20 +389,26 @@ def verify_semantic_canary_assertions(
     control_cited_ids = set(control_label.get("evidence_ids", []))
     control_evidence_by_id = {str(rec["evidence_id"]): rec for rec in control_ev_row.get("evidence", [])}
 
-    has_sufficient_heritage_or_vesum = False
+    has_sufficient_heritage = False
+    has_sufficient_vesum = False
     for eid in control_cited_ids:
         rec = control_evidence_by_id.get(eid)
         if rec is None:
             raise CanarySemanticError("foreign_evidence_id_in_control")
-        if (
-            rec.get("channel") in {"heritage_attestation", "vesum_attestation"}
-            and rec.get("status") == "attested"
-            and rec.get("supports") in contract.SUFFICIENT_SUPPORTS
-        ):
-            has_sufficient_heritage_or_vesum = True
+        if rec.get("status") == "attested" and rec.get("supports") in contract.SUFFICIENT_SUPPORTS:
+            if rec.get("channel") == "heritage_attestation":
+                has_sufficient_heritage = True
+            if rec.get("channel") == "vesum_attestation":
+                has_sufficient_vesum = True
 
-    if not has_sufficient_heritage_or_vesum:
-        raise CanarySemanticError("heritage_control_missing_sufficient_evidence")
+    if not (has_sufficient_heritage and has_sufficient_vesum):
+        raise CanarySemanticError("heritage_control_missing_vesum_or_heritage_evidence")
+    if any(
+        rec.get("channel") in {"antonenko_style", "russian_shadow_suspicion"}
+        and rec.get("status") == "attested"
+        for rec in control_ev_row.get("evidence", [])
+    ):
+        raise CanarySemanticError("heritage_control_has_style_or_shadow_warning")
 
     return True, True
 
@@ -598,13 +584,7 @@ def static_verify(provider_name: str) -> dict[str, Any]:
     rows = fixture_rows()
     assert len(rows) == 2
     challenge = secrets.token_hex(32)
-    if provider_name == "gemini":
-        schema = gemini_schema(rows, challenge)
-        assert schema["required"] == ["labels_by_position", "liveness_challenge"]
-        prompt = gemini_prompt(challenge)
-    elif provider_name == "grok":
-        prompt = grok_prompt(challenge, rows, {"sidecar_id": "dummy"})
-    else:
+    if provider_name not in {"gemini", "grok"}:
         raise CanaryError("unknown_provider")
 
     tmp = Path(tempfile.mkdtemp(prefix=".static-canary-"))
@@ -612,6 +592,12 @@ def static_verify(provider_name: str) -> dict[str, Any]:
         client = make_synthetic_mcp_client(tmp)
         sidecar = compile_public_sidecar(client, rows)
         client.close()
+        if provider_name == "gemini":
+            schema = gemini_schema(rows, challenge)
+            assert schema["required"] == ["labels_by_position", "liveness_challenge"]
+            prompt = gemini_prompt(challenge, rows, sidecar)
+        else:
+            prompt = grok_prompt(challenge, rows, sidecar)
 
         trap_ev = sidecar["rows"][0]["evidence"]
         trap_antonenko = next(e["evidence_id"] for e in trap_ev if e["channel"] == "antonenko_style" and e["status"] == "attested")
@@ -672,6 +658,10 @@ def invoke_canary(
     """Execute provider canary with challenge, sidecar compilation, retry and verification."""
     if execution_mode not in {"real", "synthetic"}:
         raise CanaryError("invalid_execution_mode")
+    if not isinstance(max_attempts, int) or isinstance(max_attempts, bool) or not 1 <= max_attempts <= 2:
+        raise CanaryError("invalid_attempt_limit")
+    if execution_mode == "real" and sources_client is not None:
+        raise CanaryError("real_mode_prohibits_injected_sources_client")
 
     # Verify real executable identity if real mode is requested
     if execution_mode == "real":
@@ -714,7 +704,7 @@ def invoke_canary(
 
         challenge = secrets.token_hex(32)
         if provider_name == "gemini":
-            prompt_bytes = gemini_prompt(challenge)
+            prompt_bytes = gemini_prompt(challenge, rows, sidecar)
             schema_dict = gemini_schema(rows, challenge)
             schema_path = runtime / "response-schema.json"
             stdin_path = runtime / "prompt.stdin"
@@ -831,6 +821,8 @@ def invoke_canary(
                 # Semantic failure is terminal; no provider retry
                 raise
 
+        if provider_calls < 1 or not normalized_labels or not raw_output:
+            raise CanaryError("provider_result_missing")
         receipt = build_receipt(
             provider_name,
             execution_mode=execution_mode,

@@ -151,10 +151,14 @@ sys.exit(0)
         "model_family": "google",
         "harness": "agy",
         "provider_call_count": 1,
-        "fixture_hashes": {"fixture_raw_sha256": "c" * 64, "identity_set_sha256": "d" * 64, "row_count": 2},
+        "fixture_hashes": CTRL._public_fixture_hashes(),
         "sidecar_hashes": {"sidecar_id": "cycle007_sidecar:" + "e" * 64, "sidecar_raw_sha256": "b" * 64},
         "prompt_hashes": {"prompt_sha256": "a" * 64},
-        "code_hashes": {"compiler_sha256": "1" * 64, "validator_sha256": "2" * 64, "canary_runner_sha256": "3" * 64},
+        "code_hashes": {
+            "compiler_sha256": CTRL.sha256(CTRL.EVIDENCE_COMPILER),
+            "validator_sha256": CTRL.sha256(CTRL.REQUIRED_CODE_PATHS["label_validator"]),
+            "canary_runner_sha256": CTRL.sha256(CTRL.CANARY_RUNNER),
+        },
         "executable_sha256": agy_exe_sha,
         "response_hashes": {"raw_stream_sha256": "4" * 64, "labels_raw_sha256": "5" * 64},
         "sources_endpoint_identity": sources_identity,
@@ -181,10 +185,14 @@ sys.exit(0)
         "model_family": "xai",
         "harness": "native_grok",
         "provider_call_count": 1,
-        "fixture_hashes": {"fixture_raw_sha256": "c" * 64, "identity_set_sha256": "d" * 64, "row_count": 2},
+        "fixture_hashes": CTRL._public_fixture_hashes(),
         "sidecar_hashes": {"sidecar_id": "cycle007_sidecar:" + "e" * 64, "sidecar_raw_sha256": "b" * 64},
         "prompt_hashes": {"prompt_sha256": "a" * 64},
-        "code_hashes": {"compiler_sha256": "1" * 64, "validator_sha256": "2" * 64, "canary_runner_sha256": "3" * 64},
+        "code_hashes": {
+            "compiler_sha256": CTRL.sha256(CTRL.EVIDENCE_COMPILER),
+            "validator_sha256": CTRL.sha256(CTRL.REQUIRED_CODE_PATHS["label_validator"]),
+            "canary_runner_sha256": CTRL.sha256(CTRL.CANARY_RUNNER),
+        },
         "executable_sha256": grok_exe_sha,
         "response_hashes": {"response_raw_sha256": "7" * 64, "labels_raw_sha256": "8" * 64},
         "sources_endpoint_identity": sources_identity,
@@ -214,6 +222,7 @@ sys.exit(0)
 """)
         dummy.chmod(0o755)
         code_paths[label] = dummy
+        CTRL.REQUIRED_CODE_PATHS[label] = dummy
 
     code_hashes = {label: CTRL.sha256(path) for label, path in code_paths.items()}
 
@@ -263,6 +272,49 @@ def test_preflight_persists_canonical_receipts_under_control(tmp_path: Path) -> 
     assert CTRL._read_json(control_dir / "preflight-receipt.json") == CTRL._read_json(preflight_path)
     assert CTRL._read_json(control_dir / "gemini-canary-receipt.json") == CTRL._read_json(gemini_canary)
     assert CTRL._read_json(control_dir / "grok-canary-receipt.json") == CTRL._read_json(grok_canary)
+
+
+def test_preflight_rejects_symlinked_control_directory(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir(mode=0o700)
+    (pkg / "control").symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+
+
+def test_preflight_rejects_noncanonical_canary_bytes(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    value = CTRL._read_json(gemini_canary)
+    gemini_canary.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n")
+    gemini_canary.chmod(0o600)
+
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+
+
+def test_preflight_rejects_forged_canary_code_hash(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    value = CTRL._read_json(gemini_canary)
+    value["code_hashes"]["canary_runner_sha256"] = "0" * 64
+    value["receipt_sha256"] = CTRL.digest(
+        CTRL.canonical({key: item for key, item in value.items() if key != "receipt_sha256"})
+    )
+    put(gemini_canary, value)
+
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+
+
+def test_preflight_rejects_unfrozen_extra_code_path(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    extra = tmp_path / "extra.py"
+    extra.write_text("pass\n")
+    code_paths["extra_runner"] = extra
+
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
 
 
 def test_preflight_rejects_synthetic_canary_receipt(tmp_path: Path) -> None:

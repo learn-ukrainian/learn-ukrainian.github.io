@@ -8,6 +8,7 @@ explicitly. It never discovers a package or prints child output.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import hashlib
 import importlib.util
@@ -44,7 +45,16 @@ REQUIRED_CODE_PATHS = {
     "label_validator": HERE / "phase3-cycle007-label-validation-v1.py",
     "controller": HERE / "phase3-run-cycle007-controller-v1.py",
     "grok_runner": HERE / "phase3-run-cycle007-grok-label-provider-batch-v1.py",
+    "compare_runner": HERE / "phase3-compare-cycle007-dual-labels-v1.py",
+    "audit_runner": HERE / "phase3-audit-cycle007-consensus-v1.py",
+    "adjudicate_runner": HERE / "phase3-adjudicate-cycle007-dual-labels-v1.py",
+    "resolve_runner": HERE / "phase3-apply-cycle007-operator-resolutions-v1.py",
+    "certify_runner": HERE / "phase3-verify-cycle007-label-completion-v1.py",
 }
+CANARY_RUNNER = HERE / "phase3-run-cycle007-public-canaries-v1.py"
+EVIDENCE_COMPILER = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py"
+EVIDENCE_VALIDATOR = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_validator.py"
+PUBLIC_CANARY_DOMAIN = "phase3-cycle007-public-canary-v1"
 
 STAGE_RUNNER_LABELS = {
     "grok": "grok_runner",
@@ -70,6 +80,36 @@ def digest(value: bytes) -> str:
 
 def sha256(path: Path) -> str:
     return digest(path.read_bytes())
+
+
+def _hex64(value: Any) -> bool:
+    return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+
+
+def _public_fixture_hashes() -> dict[str, Any]:
+    rows = [
+        {
+            "unit_id": f"{PUBLIC_CANARY_DOMAIN}-trap",
+            "unit_sha256": digest(f"{PUBLIC_CANARY_DOMAIN}:trap:слідуючий раз".encode()),
+            "source_text": "слідуючий раз",
+            "family_id": PUBLIC_CANARY_DOMAIN,
+        },
+        {
+            "unit_id": f"{PUBLIC_CANARY_DOMAIN}-control",
+            "unit_sha256": digest(f"{PUBLIC_CANARY_DOMAIN}:control:філіжанка".encode()),
+            "source_text": "філіжанка",
+            "family_id": PUBLIC_CANARY_DOMAIN,
+        },
+    ]
+    return {
+        "fixture_raw_sha256": digest(canonical(rows)),
+        "row_count": 2,
+        "identity_set_sha256": digest(canonical(sorted((row["unit_id"], row["unit_sha256"]) for row in rows))),
+    }
+
+
+def _exact_hash_map(value: Any, keys: set[str]) -> bool:
+    return isinstance(value, dict) and set(value) == keys and all(_hex64(value[key]) for key in keys)
 
 
 def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -99,8 +139,11 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _atomic(path: Path, value: dict[str, Any]) -> None:
     data = canonical(value)
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(path.parent, 0o700)
+    parent = path.parent
+    with contextlib.suppress(FileExistsError):
+        parent.mkdir(mode=0o700)
+    if parent.is_symlink() or not parent.is_dir() or os.stat(parent).st_mode & 0o777 != 0o700:
+        raise ControllerError("preflight_binding_drift")
     if path.exists():
         _mode(path, 0o600)
         if path.read_bytes() != data:
@@ -131,7 +174,7 @@ def _parse_code_paths(items: list[str]) -> dict[str, Path]:
         if not path.is_file() or path.is_symlink():
             raise ControllerError("preflight_binding_drift")
         result[label] = path
-    if not result:
+    if set(result) != set(REQUIRED_CODE_PATHS):
         raise ControllerError("preflight_binding_drift")
     return result
 
@@ -197,6 +240,8 @@ def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tupl
     """Accept only a valid public canary receipt matching exact model/family/harness and bound criteria."""
     _mode(receipt_path, 0o600)
     receipt = _read_json(receipt_path)
+    if receipt_path.read_bytes() != canonical(receipt):
+        raise ControllerError("preflight_binding_drift")
 
     if expected_provider == "gemini":
         if set(receipt) != EXACT_GEMINI_CANARY_KEYS:
@@ -277,15 +322,32 @@ def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tupl
         if not isinstance(val, int) or isinstance(val, bool) or val <= 0:
             raise ControllerError("preflight_binding_drift")
 
-    if not isinstance(receipt.get("fixture_hashes"), dict) or not receipt["fixture_hashes"]:
+    if receipt.get("fixture_hashes") != _public_fixture_hashes():
         raise ControllerError("preflight_binding_drift")
-    if not isinstance(receipt.get("sidecar_hashes"), dict) or not receipt["sidecar_hashes"]:
+    sidecar_hashes = receipt.get("sidecar_hashes")
+    if (
+        not isinstance(sidecar_hashes, dict)
+        or set(sidecar_hashes) != {"sidecar_id", "sidecar_raw_sha256"}
+        or not isinstance(sidecar_hashes.get("sidecar_id"), str)
+        or not sidecar_hashes["sidecar_id"].startswith("cycle007_sidecar:")
+        or not _hex64(sidecar_hashes.get("sidecar_raw_sha256"))
+    ):
         raise ControllerError("preflight_binding_drift")
-    if not isinstance(receipt.get("prompt_hashes"), dict) or not receipt["prompt_hashes"]:
+    if not _exact_hash_map(receipt.get("prompt_hashes"), {"prompt_sha256"}):
         raise ControllerError("preflight_binding_drift")
-    if not isinstance(receipt.get("code_hashes"), dict) or not receipt["code_hashes"]:
+    expected_canary_code_hashes = {
+        "compiler_sha256": sha256(EVIDENCE_COMPILER),
+        "validator_sha256": sha256(REQUIRED_CODE_PATHS["label_validator"]),
+        "canary_runner_sha256": sha256(CANARY_RUNNER),
+    }
+    if receipt.get("code_hashes") != expected_canary_code_hashes:
         raise ControllerError("preflight_binding_drift")
-    if not isinstance(receipt.get("response_hashes"), dict) or not receipt["response_hashes"]:
+    response_keys = (
+        {"raw_stream_sha256", "labels_raw_sha256"}
+        if expected_provider == "gemini"
+        else {"response_raw_sha256", "labels_raw_sha256"}
+    )
+    if not _exact_hash_map(receipt.get("response_hashes"), response_keys):
         raise ControllerError("preflight_binding_drift")
     if not isinstance(receipt.get("provenance_basis"), dict) or not receipt["provenance_basis"]:
         raise ControllerError("preflight_binding_drift")
@@ -315,6 +377,8 @@ def preflight(
     if not package.is_dir() or package.is_symlink() or os.stat(package).st_mode & 0o777 != 0o700:
         raise ControllerError("preflight_binding_drift")
     receipt = _read_json(receipt_path)
+    if receipt_path.read_bytes() != canonical(receipt) or set(code_paths) != set(REQUIRED_CODE_PATHS):
+        raise ControllerError("preflight_binding_drift")
     for label, path in REQUIRED_CODE_PATHS.items():
         if code_paths.get(label) != path.resolve():
             raise ControllerError("preflight_binding_drift")
@@ -342,6 +406,12 @@ def preflight(
 
     evidence_manifest_path = package / "evidence" / "manifest.json"
     _mode(evidence_manifest_path, 0o600)
+    evidence_manifest = _read_json(evidence_manifest_path)
+    if any(
+        evidence_manifest.get(key) != gemini_sources_id[key]
+        for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256")
+    ):
+        raise ControllerError("preflight_binding_drift")
 
     custody_sha256 = sha256(package / "custody-receipt.json")
     manifest_sha256 = sha256(manifest_path)
