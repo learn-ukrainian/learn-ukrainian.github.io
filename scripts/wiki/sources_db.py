@@ -2326,7 +2326,7 @@ quote_safe_clip = clip_quote_safe
 
 def _escape_fts5_phrase(term: str) -> str:
     """Build a safe FTS5 phrase query for a user-supplied term."""
-    cleaned = term.replace('"', " ").strip()
+    cleaned = term.replace("\x00", " ").replace('"', " ").strip()
     if not cleaned:
         return ""
     return f'"{cleaned}"'
@@ -2620,13 +2620,22 @@ def search_ua_gec_errors(
     except FileNotFoundError:
         return []
 
+    # Whole learner/source sentences are valid inputs here.  Passing them
+    # directly to FTS5 lets ordinary quotes, operators, or punctuation become
+    # MATCH syntax (and an unmatched quote raises a terminal SQLite error).
+    # Treat the exact supplied text as a literal phrase, as the sibling ESUM
+    # lookup already does, and fail closed to no results for empty punctuation.
+    fts_query = _escape_fts5_phrase(query)
+    if not fts_query:
+        return []
+
     # error_type exists in BOTH the FTS table (f) and the data table (m), so
     # every non-FTS predicate must carry its table alias — an unqualified
     # `error_type IN (...)` raises "ambiguous column name". Build each clause
     # already-qualified instead of prefixing the whole WHERE with `f.` (which
     # only attached to the first clause and left the rest ambiguous).
     where_clauses = ["f.ua_gec_errors_fts MATCH ?"]
-    params = [query]
+    params = [fts_query]
 
     if tag_filter:
         placeholders = ",".join("?" for _ in tag_filter)

@@ -9,6 +9,64 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
+from wiki import sources_db
+
+
+@pytest.fixture()
+def ua_gec_search_conn(monkeypatch: pytest.MonkeyPatch):
+    """Small deterministic UA-GEC FTS database for query-safety tests."""
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute(
+        """
+        CREATE TABLE ua_gec_errors (
+            id INTEGER PRIMARY KEY,
+            error TEXT NOT NULL,
+            correct TEXT NOT NULL,
+            error_type TEXT NOT NULL,
+            doc_id TEXT NOT NULL,
+            is_native INTEGER NOT NULL,
+            source_lang TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE VIRTUAL TABLE ua_gec_errors_fts USING fts5(
+            error, correct, error_type,
+            content='ua_gec_errors', content_rowid='id', tokenize='unicode61'
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO ua_gec_errors(id, error, correct, error_type, doc_id, is_native, source_lang)
+        VALUES (1, 'приймати участь', 'брати участь', 'F/Calque', 'synthetic-doc', 1, 'uk')
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO ua_gec_errors_fts(rowid, error, correct, error_type)
+        VALUES (1, 'приймати участь', 'брати участь', 'F/Calque')
+        """
+    )
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    yield conn
+    conn.close()
+
+
+@pytest.mark.parametrize("query", ['"брати участь', "брати\x00участь"])
+def test_search_ua_gec_errors_treats_fts_control_input_as_literal_text(ua_gec_search_conn, query: str) -> None:
+    results = sources_db.search_ua_gec_errors(query)
+
+    assert [row["correct"] for row in results] == ["брати участь"]
+
+
+@pytest.mark.parametrize("query", ['"', '  ""  '])
+def test_search_ua_gec_errors_returns_empty_for_quote_only_query(ua_gec_search_conn, query: str) -> None:
+    assert sources_db.search_ua_gec_errors(query) == []
+
 
 @pytest.fixture()
 def sample_data(tmp_path):
@@ -1131,4 +1189,3 @@ class TestHeadwordFirstRanking:
             hits = search_definitions(query, db_path=esum_heritage_rank_db)
             assert len(hits) == 1, f"Failed for query {query!r}"
             assert hits[0]["word"] == "книга"
-
