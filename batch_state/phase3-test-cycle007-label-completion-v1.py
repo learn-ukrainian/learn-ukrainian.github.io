@@ -15,6 +15,22 @@ from scripts.projects.open_model_data import phase3_cycle007_evidence_contract a
 HERE = Path(__file__).resolve().parent
 VERIFY_PATH = HERE / "phase3-verify-cycle007-label-completion-v1.py"
 AUDIT_PATH = HERE / "phase3-audit-cycle007-consensus-v1.py"
+CURRENT_CODE_HASHES = {
+    "compiler_id": "c1",
+    "compiler_sha256": "1" * 64,
+    "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
+    "tokenizer_version": "1",
+    "tokenizer_sha256": "2" * 64,
+    "compound_parser_id": "p",
+    "compound_parser_version": "1",
+    "compound_parser_sha256": "3" * 64,
+    "mcp_response_parser_id": "m",
+    "mcp_response_parser_version": "1",
+    "mcp_response_parser_sha256": "4" * 64,
+    "query_plan_id": "q",
+    "query_plan_version": "1",
+    "query_plan_sha256": "5" * 64,
+}
 
 
 def _load_module(path: Path, name: str):
@@ -101,12 +117,20 @@ def _setup_certified_package(tmp_path: Path):
     )
     material_packets = [
         {
-            "lane": "clean_label", "packet_index": 1, "canonical_basename": "packet-0001.json", "row_count": 2,
-            "raw_sha256": verify_mod.digest(p_clean_raw), "packet_identity_set_sha256": id_set_clean,
+            "lane": "clean_label",
+            "packet_index": 1,
+            "canonical_basename": "packet-0001.json",
+            "row_count": 2,
+            "raw_sha256": verify_mod.digest(p_clean_raw),
+            "packet_identity_set_sha256": id_set_clean,
         },
         {
-            "lane": "residual_label", "packet_index": 1, "canonical_basename": "packet-0001.json", "row_count": 2,
-            "raw_sha256": verify_mod.digest(p_res_raw), "packet_identity_set_sha256": id_set_res,
+            "lane": "residual_label",
+            "packet_index": 1,
+            "canonical_basename": "packet-0001.json",
+            "row_count": 2,
+            "raw_sha256": verify_mod.digest(p_res_raw),
+            "packet_identity_set_sha256": id_set_res,
         },
     ]
     ordered_packets = verify_mod.digest(verify_mod.canonical(material_packets))
@@ -186,6 +210,9 @@ def _setup_certified_package(tmp_path: Path):
             {
                 "unit_id": r["unit_id"],
                 "unit_sha256": r["unit_sha256"],
+                "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
+                "tokenizer_version": "1",
+                "extracted_forms": [],
                 "evidence": [rec],
                 "evidence_ids": [rec["evidence_id"]],
                 "phenomenon_evidence_ids": {},
@@ -207,10 +234,10 @@ def _setup_certified_package(tmp_path: Path):
         "row_count": 2,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_id": "c1"},
-        "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
-        "vesum_db_sha256": "vsm",
+        "code_hashes": CURRENT_CODE_HASHES,
+        "server_code_sha256": "a" * 64,
+        "sources_db_sha256": "b" * 64,
+        "vesum_db_sha256": "c" * 64,
         "network_lookups_performed": 0,
         "rows": clean_ev_rows,
         "retrieval_payloads": {r_sha: retrieval_payload},
@@ -223,28 +250,33 @@ def _setup_certified_package(tmp_path: Path):
     # Residual sidecar
     res_ev_rows = []
     for r in residual_rows:
-        rec = contract.build_evidence_record(
-            channel="vesum_attestation",
-            source_identity="vesum",
-            source_version="v1",
-            locator="data/vesum.db",
-            query="query",
-            status="attested",
-            supports="attestation",
-            retrieval_sha256=r_sha,
-            parser_id="p1",
-            parser_version="1",
-            row=r,
-            phenomenon_id="apostrophe",
-        )
-        phenom_map = {p: [] for p in contract.RESIDUAL_PHENOMENON_TAXONOMY}
-        phenom_map["apostrophe"] = [rec["evidence_id"]]
+        evidence = [
+            contract.build_evidence_record(
+                channel="vesum_attestation",
+                source_identity="vesum",
+                source_version="v1",
+                locator="data/vesum.db",
+                query="query",
+                status="attested",
+                supports="attestation",
+                retrieval_sha256=r_sha,
+                parser_id="p1",
+                parser_version="1",
+                row=r,
+                phenomenon_id=phenomenon_id,
+            )
+            for phenomenon_id in contract.RESIDUAL_PHENOMENON_TAXONOMY
+        ]
+        phenom_map = {record["phenomenon_id"]: [record["evidence_id"]] for record in evidence}
         res_ev_rows.append(
             {
                 "unit_id": r["unit_id"],
                 "unit_sha256": r["unit_sha256"],
-                "evidence": [rec],
-                "evidence_ids": [rec["evidence_id"]],
+                "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
+                "tokenizer_version": "1",
+                "extracted_forms": [],
+                "evidence": evidence,
+                "evidence_ids": sorted(record["evidence_id"] for record in evidence),
                 "phenomenon_evidence_ids": phenom_map,
                 "sufficient_support": True,
                 "archaic_only_risk": False,
@@ -264,10 +296,10 @@ def _setup_certified_package(tmp_path: Path):
         "row_count": 2,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_id": "c1"},
-        "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
-        "vesum_db_sha256": "vsm",
+        "code_hashes": CURRENT_CODE_HASHES,
+        "server_code_sha256": "a" * 64,
+        "sources_db_sha256": "b" * 64,
+        "vesum_db_sha256": "c" * 64,
         "network_lookups_performed": 0,
         "rows": res_ev_rows,
         "retrieval_payloads": {r_sha: retrieval_payload},
@@ -283,13 +315,19 @@ def _setup_certified_package(tmp_path: Path):
         "evaluation_cycle_id": verify_mod.CYCLE,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": {"compiler_id": "c1"},
-        "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
-        "vesum_db_sha256": "vsm",
+        "code_hashes": CURRENT_CODE_HASHES,
+        "server_code_sha256": "a" * 64,
+        "sources_db_sha256": "b" * 64,
+        "vesum_db_sha256": "c" * 64,
         "packet_count": 2,
         "row_count": 4,
         "network_lookups_performed": 0,
+        "counts_by_channel": {key: 0 for key in contract.CHANNELS},
+        "counts_by_status": {key: 0 for key in contract.STATUSES},
+        "counts_by_supports": {key: 0 for key in contract.SUPPORTS},
+        "sufficient_support_rows": 4,
+        "archaic_only_risk_rows": 0,
+        "russian_shadow_suspected_rows": 0,
         "sidecars": [
             {
                 "packet_index": 1,
@@ -319,6 +357,9 @@ def _setup_certified_package(tmp_path: Path):
             "row_count": 4,
         },
     }
+    ev_manifest["counts_by_channel"]["vesum_attestation"] = 48
+    ev_manifest["counts_by_status"]["attested"] = 48
+    ev_manifest["counts_by_supports"]["attestation"] = 48
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_m_p = ev_dir / "manifest.json"
     ev_m_p.write_text(json.dumps(ev_manifest, sort_keys=True) + "\n")
@@ -392,15 +433,31 @@ def _setup_certified_package(tmp_path: Path):
         }
 
     grok_res_labels = [
-        _make_res_lbl("residual.1.0", residual_rows[0]["unit_sha256"], res_ev_rows[0]["evidence_ids"], code="positive"),
         _make_res_lbl(
-            "residual.1.1", residual_rows[1]["unit_sha256"], res_ev_rows[1]["evidence_ids"], code="acceptable_control"
+            "residual.1.0",
+            residual_rows[0]["unit_sha256"],
+            res_ev_rows[0]["phenomenon_evidence_ids"]["apostrophe"],
+            code="positive",
+        ),
+        _make_res_lbl(
+            "residual.1.1",
+            residual_rows[1]["unit_sha256"],
+            res_ev_rows[1]["phenomenon_evidence_ids"]["apostrophe"],
+            code="acceptable_control",
         ),
     ]
     gemini_res_labels = [
-        _make_res_lbl("residual.1.0", residual_rows[0]["unit_sha256"], res_ev_rows[0]["evidence_ids"], code="positive"),
         _make_res_lbl(
-            "residual.1.1", residual_rows[1]["unit_sha256"], res_ev_rows[1]["evidence_ids"], code="acceptable_control"
+            "residual.1.0",
+            residual_rows[0]["unit_sha256"],
+            res_ev_rows[0]["phenomenon_evidence_ids"]["apostrophe"],
+            code="positive",
+        ),
+        _make_res_lbl(
+            "residual.1.1",
+            residual_rows[1]["unit_sha256"],
+            res_ev_rows[1]["phenomenon_evidence_ids"]["apostrophe"],
+            code="acceptable_control",
         ),
     ]
 
@@ -564,8 +621,16 @@ def _setup_certified_package(tmp_path: Path):
         json.dumps(
             {
                 "records": [
-                    {"source_row": residual_rows[0], "label": grok_res_labels[0], "risk_reasons": ["missing_normative_rule"]},
-                    {"source_row": residual_rows[1], "label": grok_res_labels[1], "risk_reasons": ["missing_normative_rule", "negative_control"]},
+                    {
+                        "source_row": residual_rows[0],
+                        "label": grok_res_labels[0],
+                        "risk_reasons": ["missing_normative_rule"],
+                    },
+                    {
+                        "source_row": residual_rows[1],
+                        "label": grok_res_labels[1],
+                        "risk_reasons": ["missing_normative_rule", "negative_control"],
+                    },
                 ]
             },
             sort_keys=True,
@@ -619,7 +684,9 @@ def _setup_certified_package(tmp_path: Path):
     # 6. Produce the current, fully sealed bounded live-audit artifact chain.
     audit_dir = pkg / verify_mod.AUDIT_ROOT
     audit_dir.mkdir(parents=True, mode=0o700)
-    clean_records = [{"source_row": clean_rows[0], "label": grok_clean_labels[0], "lane": "clean_label", "packet_index": 1}]
+    clean_records = [
+        {"source_row": clean_rows[0], "label": grok_clean_labels[0], "lane": "clean_label", "packet_index": 1}
+    ]
     risk_records = [
         {"source_row": residual_rows[0], "label": grok_res_labels[0], "lane": "residual_label", "packet_index": 1},
         {"source_row": residual_rows[1], "label": grok_res_labels[1], "lane": "residual_label", "packet_index": 1},
@@ -641,39 +708,81 @@ def _setup_certified_package(tmp_path: Path):
         source_identity_sha256=verify_mod.digest(verify_mod.canonical(expected_identity)),
     )
     human_result = {
-        "reviewer": {"exact_model": "synthetic-source-qualified-human", "model_family": "human", "harness": "local-operator", "source_qualified": True},
+        "reviewer": {
+            "exact_model": "synthetic-source-qualified-human",
+            "model_family": "human",
+            "harness": "local-operator",
+            "source_qualified": True,
+        },
         "reviews": [
-            {"lane": target["lane"], "packet_index": target["packet_index"], "unit_id": target["source_row"]["unit_id"], "unit_sha256": target["source_row"]["unit_sha256"], "source_evidence_sha256": target["source_evidence_sha256"], "outcome": "pass"}
+            {
+                "lane": target["lane"],
+                "packet_index": target["packet_index"],
+                "unit_id": target["source_row"]["unit_id"],
+                "unit_sha256": target["source_row"]["unit_sha256"],
+                "source_evidence_sha256": target["source_evidence_sha256"],
+                "outcome": "pass",
+            }
             for target in targets
         ],
     }
     review_receipt = audit_mod.source_review(pkg, targets, plan_receipt, human_review_result=human_result)
     risk_rcpt = {
-        "schema_version": "phase3_cycle007_risk_review_receipt_v1", "evaluation_cycle_id": verify_mod.CYCLE,
-        "amendment_sha256": verify_mod.AMENDMENT_SHA256, "custody_receipt_raw_sha256": custody_hash,
-        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256, "manifest_raw_sha256": manifest_hash,
-        "ordered_identity_commitment_sha256": commitment, "risk_population_count": len(risk_records), "reviewed_count": len(risk_records),
-        "source_review_receipt_sha256": review_receipt["receipt_sha256"], "reviewer": review_receipt["reviewer"], "terminal_findings_count": 0, "text_free": True,
+        "schema_version": "phase3_cycle007_risk_review_receipt_v1",
+        "evaluation_cycle_id": verify_mod.CYCLE,
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": custody_hash,
+        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256,
+        "manifest_raw_sha256": manifest_hash,
+        "ordered_identity_commitment_sha256": commitment,
+        "risk_population_count": len(risk_records),
+        "reviewed_count": len(risk_records),
+        "source_review_receipt_sha256": review_receipt["receipt_sha256"],
+        "reviewer": review_receipt["reviewer"],
+        "terminal_findings_count": 0,
+        "text_free": True,
     }
     risk_rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(risk_rcpt))
     audit_mod.atomic(audit_dir / "risk-review-receipt.json", risk_rcpt)
     clean_rcpt = {
-        "schema_version": "phase3_cycle007_clean_audit_receipt_v1", "evaluation_cycle_id": verify_mod.CYCLE,
-        "amendment_sha256": verify_mod.AMENDMENT_SHA256, "custody_receipt_raw_sha256": custody_hash,
-        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256, "manifest_raw_sha256": manifest_hash,
-        "ordered_identity_commitment_sha256": commitment, "clean_population_count": len(clean_records), "audited_count": len(sample_records),
-        "one_sided_95_bound": sample_doc["one_sided_95_bound"], "source_review_receipt_sha256": review_receipt["receipt_sha256"], "reviewer": review_receipt["reviewer"], "terminal_findings_count": 0, "text_free": True,
+        "schema_version": "phase3_cycle007_clean_audit_receipt_v1",
+        "evaluation_cycle_id": verify_mod.CYCLE,
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": custody_hash,
+        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256,
+        "manifest_raw_sha256": manifest_hash,
+        "ordered_identity_commitment_sha256": commitment,
+        "clean_population_count": len(clean_records),
+        "audited_count": len(sample_records),
+        "one_sided_95_bound": sample_doc["one_sided_95_bound"],
+        "source_review_receipt_sha256": review_receipt["receipt_sha256"],
+        "reviewer": review_receipt["reviewer"],
+        "terminal_findings_count": 0,
+        "text_free": True,
     }
     clean_rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(clean_rcpt))
     audit_mod.atomic(audit_dir / "clean-audit-receipt.json", clean_rcpt)
     audit_batch = {
-        "schema_version": "phase3_cycle007_consensus_audit_batch_receipt_v1", "evaluation_cycle_id": verify_mod.CYCLE,
-        "amendment_sha256": verify_mod.AMENDMENT_SHA256, "custody_receipt_raw_sha256": custody_hash,
-        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256, "manifest_raw_sha256": manifest_hash,
-        "ordered_identity_commitment_sha256": commitment, "risk_population_count": len(risk_records), "risk_reviewed_count": len(risk_records),
-        "clean_population_count": len(clean_records), "clean_audited_count": len(sample_records), "one_sided_95_bound": sample_doc["one_sided_95_bound"],
-        "sample_receipt_sha256": sample_doc["receipt_sha256"], "sampler_seal_receipt_sha256": sampler_receipt["receipt_sha256"], "source_review_plan_receipt_sha256": plan_receipt["receipt_sha256"], "source_review_receipt_sha256": review_receipt["receipt_sha256"],
-        "reviewer": review_receipt["reviewer"], "terminal_findings_count": 0, "passed": True, "text_free": True,
+        "schema_version": "phase3_cycle007_consensus_audit_batch_receipt_v1",
+        "evaluation_cycle_id": verify_mod.CYCLE,
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": custody_hash,
+        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256,
+        "manifest_raw_sha256": manifest_hash,
+        "ordered_identity_commitment_sha256": commitment,
+        "risk_population_count": len(risk_records),
+        "risk_reviewed_count": len(risk_records),
+        "clean_population_count": len(clean_records),
+        "clean_audited_count": len(sample_records),
+        "one_sided_95_bound": sample_doc["one_sided_95_bound"],
+        "sample_receipt_sha256": sample_doc["receipt_sha256"],
+        "sampler_seal_receipt_sha256": sampler_receipt["receipt_sha256"],
+        "source_review_plan_receipt_sha256": plan_receipt["receipt_sha256"],
+        "source_review_receipt_sha256": review_receipt["receipt_sha256"],
+        "reviewer": review_receipt["reviewer"],
+        "terminal_findings_count": 0,
+        "passed": True,
+        "text_free": True,
     }
     audit_batch["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(audit_batch))
     audit_mod.atomic(audit_dir / "batch-receipt.json", audit_batch)
@@ -813,6 +922,109 @@ def _setup_certified_package(tmp_path: Path):
     (res_dir / "batch-receipt.json").write_text(json.dumps(res_batch, sort_keys=True) + "\n")
     (res_dir / "batch-receipt.json").chmod(0o600)
 
+    # 9. Copied controller controls: fixture-shaped, canonical, and hash-bound.
+    control = pkg / verify_mod.CONTROL_ROOT
+    control.mkdir(parents=True, mode=0o700)
+    endpoint = {
+        "server_code_sha256": "a" * 64,
+        "sources_db_sha256": "b" * 64,
+        "sources_db_bytes": 1,
+        "vesum_db_sha256": "c" * 64,
+        "vesum_db_bytes": 1,
+    }
+    canary_hashes = {
+        "compiler_sha256": verify_mod.digest(verify_mod.EVIDENCE_COMPILER.read_bytes()),
+        "validator_sha256": verify_mod.digest(verify_mod.CONTROL_CODE_PATHS["label_validator"].read_bytes()),
+        "canary_runner_sha256": verify_mod.digest(verify_mod.CANARY_RUNNER.read_bytes()),
+    }
+    canary_raws = {}
+    for provider, model, family, harness, response_hashes in (
+        (
+            "gemini",
+            verify_mod.EXPECTED_MODELS["gemini"]["exact_model"],
+            "google",
+            "agy",
+            {"raw_stream_sha256": "1" * 64, "labels_raw_sha256": "2" * 64},
+        ),
+        (
+            "grok",
+            verify_mod.EXPECTED_MODELS["grok"]["exact_model"],
+            "xai",
+            "native_grok",
+            {"response_raw_sha256": "3" * 64, "labels_raw_sha256": "4" * 64},
+        ),
+    ):
+        provenance = (
+            {
+                "init_model": model,
+                "result_status": "SUCCESS",
+                "init_conversation_id": None,
+                "result_conversation_id": None,
+                "challenge_sha256": "5" * 64,
+                "raw_stream_sha256": response_hashes["raw_stream_sha256"],
+            }
+            if provider == "gemini"
+            else {"challenge_sha256": "5" * 64, "response_raw_sha256": response_hashes["response_raw_sha256"]}
+        )
+        canary = {
+            "schema_version": f"phase3_cycle007_{provider}_public_canary_receipt_v1",
+            "evaluation_cycle_id": verify_mod.CYCLE,
+            "amendment_sha256": verify_mod.AMENDMENT_SHA256,
+            "ok": True,
+            "execution_mode": "fixture",
+            "exact_model": model,
+            "model_family": family,
+            "harness": harness,
+            "provider_call_count": 1,
+            "fixture_hashes": verify_mod._public_fixture_hashes(),
+            "sidecar_hashes": {"sidecar_id": "cycle007_sidecar:" + "d" * 64, "sidecar_raw_sha256": "e" * 64},
+            "prompt_hashes": {"prompt_sha256": "f" * 64},
+            "code_hashes": canary_hashes,
+            "executable_sha256": "0" * 64,
+            "response_hashes": response_hashes,
+            "sources_endpoint_identity": endpoint,
+            "sources_mcp_used": True,
+            "valid_evidence_ids": True,
+            "russian_surzhyk_trap_rejected": True,
+            "heritage_control_preserved": True,
+            "provenance_basis": provenance,
+            "text_free": True,
+        }
+        canary["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(canary))
+        path = control / f"{provider}-canary-receipt.json"
+        verify_mod._atomic(path, canary)
+        canary_raws[provider] = verify_mod.digest(path.read_bytes())
+    code_hashes = {key: verify_mod.digest(path.read_bytes()) for key, path in verify_mod.CONTROL_CODE_PATHS.items()}
+    preflight = {
+        "schema_version": "phase3_cycle007_preflight_receipt_v1",
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256,
+        "package_custody_receipt_sha256": custody_hash,
+        "package_manifest_sha256": manifest_hash,
+        "package_evidence_manifest_sha256": verify_mod.digest(ev_m_p.read_bytes()),
+        "gemini_canary_receipt_sha256": canary_raws["gemini"],
+        "grok_canary_receipt_sha256": canary_raws["grok"],
+        "code_hashes": code_hashes,
+        "backup_receipt_sha256": "6" * 64,
+        "review_hashes": {"source_authority_review": "7" * 64},
+        "ci_proof_bindings": {"ci_proof": "8" * 64},
+        "sources_endpoint_identity": endpoint,
+        "text_free": True,
+    }
+    preflight["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(preflight))
+    verify_mod._atomic(control / "preflight-receipt.json", preflight)
+    preflight_hash = verify_mod.digest((control / "preflight-receipt.json").read_bytes())
+    for stage in ("gemini", "grok", "compare", "audit", "adjudicate", "resolve"):
+        verify_mod._atomic(
+            control / f"stage-{stage}.complete.json",
+            {
+                "schema_version": "phase3_cycle007_stage_complete_v1",
+                "evaluation_cycle_id": verify_mod.CYCLE,
+                "stage": stage,
+                "preflight_receipt_sha256": preflight_hash,
+                "text_free": True,
+            },
+        )
+
     for directory in [pkg, *(path for path in pkg.rglob("*") if path.is_dir())]:
         directory.chmod(0o700)
     return pkg
@@ -829,6 +1041,17 @@ def test_certifier_successful_exact_fixture_closure(tmp_path):
     assert cert["unresolved_remaining_count"] == 0
     assert cert["terminal_findings_count"] == 0
     assert cert["text_free"] is True
+    assert set(cert["stage_seal_hashes"]) == {"gemini", "grok", "compare", "audit", "adjudicate", "resolve"}
+    assert cert["preflight_receipt_sha256"] == verify_mod.digest(
+        (pkg / verify_mod.CONTROL_ROOT / "preflight-receipt.json").read_bytes()
+    )
+    assert cert["sources_endpoint_identity_sha256"] == verify_mod.digest(
+        verify_mod.canonical(
+            json.loads((pkg / verify_mod.CONTROL_ROOT / "preflight-receipt.json").read_text())[
+                "sources_endpoint_identity"
+            ]
+        )
+    )
     assert (pkg / verify_mod.RESOLUTION_ROOT / "certification-receipt.json").exists()
 
 
@@ -1098,6 +1321,54 @@ def test_certifier_treats_a_sealed_non_pass_live_review_as_terminal(tmp_path):
     with pytest.raises(verify_mod.Error) as exc:
         verify_mod.certify_completion(pkg, fixture=True)
     assert exc.value.failure_code == "terminal_audit_finding"
+
+
+def test_certifier_rejects_resealed_preflight_code_hash_tamper(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    path = pkg / verify_mod.CONTROL_ROOT / "preflight-receipt.json"
+    receipt = json.loads(path.read_text())
+    receipt["code_hashes"]["certify_runner"] = "0" * 64
+    receipt["receipt_sha256"] = verify_mod.digest(
+        verify_mod.canonical({key: value for key, value in receipt.items() if key != "receipt_sha256"})
+    )
+    path.write_bytes(verify_mod.canonical(receipt))
+    path.chmod(0o600)
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "closure_validation_failed"
+
+
+def test_certifier_rejects_tampered_prior_stage_seal(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    path = pkg / verify_mod.CONTROL_ROOT / "stage-audit.complete.json"
+    seal = json.loads(path.read_text())
+    seal["preflight_receipt_sha256"] = "0" * 64
+    path.write_bytes(verify_mod.canonical(seal))
+    path.chmod(0o600)
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "closure_validation_failed"
+
+
+def test_control_validation_requires_real_canaries_outside_fixture_mode(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    custody_raw = (pkg / "custody-receipt.json").read_bytes()
+    manifest_raw = (pkg / "manifest.json").read_bytes()
+    evidence_path = pkg / "evidence" / "manifest.json"
+    evidence_raw = evidence_path.read_bytes()
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod._validate_controls(
+            pkg,
+            fixture=False,
+            custody_hash=verify_mod.digest(custody_raw),
+            manifest_hash=verify_mod.digest(manifest_raw),
+            evidence_hash=verify_mod.digest(evidence_raw),
+            evidence=json.loads(evidence_raw),
+        )
+    assert exc.value.failure_code == "closure_validation_failed"
 
 
 def test_missing_pravopys_record_is_risk_even_without_an_unresolved_record():
