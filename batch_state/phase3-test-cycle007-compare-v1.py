@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import importlib.util
 import json
+from collections import Counter
 from pathlib import Path
 
 import pytest
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 
 HERE = Path(__file__).resolve().parent
@@ -26,9 +28,36 @@ def _load_compare():
 compare_mod = _load_compare()
 
 
+CURRENT_CODE_HASHES = compiler.CODE_HASHES
+TOKENIZER_ID = compiler.TOKENIZER_ID
+TOKENIZER_VERSION = compiler.TOKENIZER_VERSION
+SERVER_CODE_SHA256 = "a" * 64
+SOURCES_DB_SHA256 = "b" * 64
+VESUM_DB_SHA256 = "c" * 64
+
+
 def _private_tree(package: Path) -> None:
     for directory in [package, *(path for path in package.rglob("*") if path.is_dir())]:
         directory.chmod(0o700)
+
+
+def _row_evidence(row, records, phenomenon_evidence_ids):
+    return {
+        "unit_id": row["unit_id"],
+        "unit_sha256": row["unit_sha256"],
+        "tokenizer_id": TOKENIZER_ID,
+        "tokenizer_version": TOKENIZER_VERSION,
+        "extracted_forms": [],
+        "evidence": records,
+        "evidence_ids": sorted(record["evidence_id"] for record in records),
+        "phenomenon_evidence_ids": phenomenon_evidence_ids,
+        "sufficient_support": any(contract.is_sufficient_positive(record) for record in records),
+        "archaic_only_risk": contract.is_archaic_only_risk(records),
+        "russian_shadow_suspected": any(
+            record["channel"] == "russian_shadow_suspicion" and record["status"] == "attested"
+            for record in records
+        ),
+    }
 
 
 def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_negative_control=False):
@@ -84,6 +113,15 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
             "packet_identity_set_sha256": res_id_set,
         },
     ]
+    identity_union_commitment = compare_mod.digest(
+        compare_mod.canonical(
+            sorted(
+                (row["unit_id"], row["unit_sha256"])
+                for row in [*clean_row_list, *residual_row_list]
+            )
+        )
+    )
+    ordered_packet_commitment = compare_mod.digest(compare_mod.canonical(packets_meta))
 
     manifest = {
         "schema_version": "phase3_cycle007_materialization_manifest_v1",
@@ -92,8 +130,8 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
         "text_free": True,
         "custody_receipt_raw_sha256": "",
         "ordered_identity_commitment_sha256": compare_mod.ORDERED_IDENTITY_COMMITMENT_SHA256,
-        "identity_union_commitment_sha256": "union_sha",
-        "ordered_packet_commitment_sha256": "order_sha",
+        "identity_union_commitment_sha256": identity_union_commitment,
+        "ordered_packet_commitment_sha256": ordered_packet_commitment,
         "packet_count": len(packets_meta),
         "row_count": clean_rows + residual_rows,
         "lane_row_counts": {"clean_label": clean_rows, "residual_label": residual_rows},
@@ -108,6 +146,8 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
         "source_custody_receipt_raw_sha256": compare_mod.SOURCE_CUSTODY_SHA256,
         "source_label_manifest_raw_sha256": compare_mod.SOURCE_MANIFEST_SHA256,
         "ordered_identity_commitment_sha256": compare_mod.ORDERED_IDENTITY_COMMITMENT_SHA256,
+        "identity_union_commitment_sha256": identity_union_commitment,
+        "ordered_packet_commitment_sha256": ordered_packet_commitment,
         "packet_count": len(packets_meta),
         "row_count": clean_rows + residual_rows,
         "lane_row_counts": {"clean_label": clean_rows, "residual_label": residual_rows},
@@ -155,16 +195,7 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
             parser_version="1",
             row=r,
         )
-        clean_ev_rows.append({
-            "unit_id": r["unit_id"],
-            "unit_sha256": r["unit_sha256"],
-            "evidence": [rec],
-            "evidence_ids": [rec["evidence_id"]],
-            "phenomenon_evidence_ids": {},
-            "sufficient_support": True,
-            "archaic_only_risk": False,
-            "russian_shadow_suspected": False,
-        })
+        clean_ev_rows.append(_row_evidence(r, [rec], {}))
 
     clean_sidecar = {
         "schema_version": "phase3_cycle007_evidence_sidecar_v1",
@@ -177,12 +208,12 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
         },
         "packet_index": 1,
         "row_count": clean_rows,
-        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
-        "tokenizer_version": "1",
-        "code_hashes": {"compiler_id": "c1"},
-        "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
-        "vesum_db_sha256": "vsm",
+        "tokenizer_id": TOKENIZER_ID,
+        "tokenizer_version": TOKENIZER_VERSION,
+        "code_hashes": CURRENT_CODE_HASHES,
+        "server_code_sha256": SERVER_CODE_SHA256,
+        "sources_db_sha256": SOURCES_DB_SHA256,
+        "vesum_db_sha256": VESUM_DB_SHA256,
         "network_lookups_performed": 0,
         "rows": clean_ev_rows,
         "retrieval_payloads": retrieval_payloads,
@@ -195,32 +226,25 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
     # Residual sidecar
     res_ev_rows = []
     for r in residual_row_list:
-        rec = contract.build_evidence_record(
-            channel="vesum_attestation",
-            source_identity="vesum",
-            source_version="v1",
-            locator="locator",
-            query="form",
-            status="attested",
-            supports="attestation",
-            retrieval_sha256=r_sha,
-            parser_id="p1",
-            parser_version="1",
-            row=r,
-            phenomenon_id="apostrophe",
-        )
-        phenom_map = {p: [] for p in contract.RESIDUAL_PHENOMENON_TAXONOMY}
-        phenom_map["apostrophe"] = [rec["evidence_id"]]
-        res_ev_rows.append({
-            "unit_id": r["unit_id"],
-            "unit_sha256": r["unit_sha256"],
-            "evidence": [rec],
-            "evidence_ids": [rec["evidence_id"]],
-            "phenomenon_evidence_ids": phenom_map,
-            "sufficient_support": True,
-            "archaic_only_risk": False,
-            "russian_shadow_suspected": False,
-        })
+        records = [
+            contract.build_evidence_record(
+                channel="vesum_attestation",
+                source_identity="vesum",
+                source_version="v1",
+                locator="locator",
+                query="form",
+                status="attested",
+                supports="attestation",
+                retrieval_sha256=r_sha,
+                parser_id="p1",
+                parser_version="1",
+                row=r,
+                phenomenon_id=phenomenon_id,
+            )
+            for phenomenon_id in contract.RESIDUAL_PHENOMENON_TAXONOMY
+        ]
+        phenom_map = {record["phenomenon_id"]: [record["evidence_id"]] for record in records}
+        res_ev_rows.append(_row_evidence(r, records, phenom_map))
 
     res_sidecar = {
         "schema_version": "phase3_cycle007_evidence_sidecar_v1",
@@ -233,12 +257,12 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
         },
         "packet_index": 2,
         "row_count": residual_rows,
-        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
-        "tokenizer_version": "1",
-        "code_hashes": {"compiler_id": "c1"},
-        "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
-        "vesum_db_sha256": "vsm",
+        "tokenizer_id": TOKENIZER_ID,
+        "tokenizer_version": TOKENIZER_VERSION,
+        "code_hashes": CURRENT_CODE_HASHES,
+        "server_code_sha256": SERVER_CODE_SHA256,
+        "sources_db_sha256": SOURCES_DB_SHA256,
+        "vesum_db_sha256": VESUM_DB_SHA256,
         "network_lookups_performed": 0,
         "rows": res_ev_rows,
         "retrieval_payloads": retrieval_payloads,
@@ -249,19 +273,32 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
     s2_p.chmod(0o600)
 
     # Evidence manifest
+    all_ev_rows = [*clean_ev_rows, *res_ev_rows]
+    all_records = [record for row in all_ev_rows for record in row["evidence"]]
+    counts_by_channel = dict(
+        sorted(Counter(record["channel"] for record in all_records).items())
+    )
+    counts_by_status = dict(sorted(Counter(record["status"] for record in all_records).items()))
+    counts_by_supports = dict(sorted(Counter(record["supports"] for record in all_records).items()))
     ev_manifest = {
         "schema_version": "phase3_cycle007_evidence_manifest_v1",
         "text_free": True,
         "evaluation_cycle_id": compare_mod.CYCLE,
-        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
-        "tokenizer_version": "1",
-        "code_hashes": {"compiler_id": "c1"},
-        "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
-        "vesum_db_sha256": "vsm",
+        "tokenizer_id": TOKENIZER_ID,
+        "tokenizer_version": TOKENIZER_VERSION,
+        "code_hashes": CURRENT_CODE_HASHES,
+        "server_code_sha256": SERVER_CODE_SHA256,
+        "sources_db_sha256": SOURCES_DB_SHA256,
+        "vesum_db_sha256": VESUM_DB_SHA256,
         "packet_count": 2,
         "row_count": clean_rows + residual_rows,
         "network_lookups_performed": 0,
+        "counts_by_channel": counts_by_channel,
+        "counts_by_status": counts_by_status,
+        "counts_by_supports": counts_by_supports,
+        "sufficient_support_rows": sum(row["sufficient_support"] for row in all_ev_rows),
+        "archaic_only_risk_rows": sum(row["archaic_only_risk"] for row in all_ev_rows),
+        "russian_shadow_suspected_rows": sum(row["russian_shadow_suspected"] for row in all_ev_rows),
         "sidecars": [
             {
                 "packet_index": 1,
