@@ -1,0 +1,250 @@
+"""Synthetic public tests for the Cycle 007 evidence validator.
+
+Builds evidence records directly through
+``phase3_cycle007_evidence_contract`` so these tests are independent of the
+compiler's client wiring and focus purely on the validator's fail-closed
+behavior: sorted/unique same-row and same-phenomenon evidence IDs,
+sufficient-support decisions, source-role boundaries, and fail-closed
+missing/conflicting/unavailable evidence.
+"""
+
+from __future__ import annotations
+
+import copy
+
+import pytest
+
+from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
+from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
+
+ROW_A = {"unit_id": "unit-a", "unit_sha256": "a" * 64}
+ROW_B = {"unit_id": "unit-b", "unit_sha256": "b" * 64}
+
+
+def _vesum_record(row, *, status="attested", supports="attestation", phenomenon_id=None):
+    return contract.build_evidence_record(
+        channel="vesum_attestation",
+        source_identity="vesum",
+        source_version="v1",
+        locator="data/vesum.db#forms",
+        query="слово",
+        query_sha256=contract.sha256_text("слово"),
+        status=status,
+        supports=supports if status == "attested" else "no_conclusion",
+        retrieval_sha256=contract.sha256_text("payload"),
+        parser_id="vesum-forms-v1",
+        parser_version="1",
+        row=row,
+        phenomenon_id=phenomenon_id,
+        negative_reason=None if status == "attested" else status,
+    )
+
+
+def _shadow_record(row):
+    return contract.build_evidence_record(
+        channel="russian_shadow_suspicion",
+        source_identity="check_ru_morph",
+        source_version="v1",
+        locator="repo:scripts/verification/check_ru_morph.py",
+        query="слово",
+        query_sha256=contract.sha256_text("слово"),
+        status="attested",
+        supports="suspicion",
+        retrieval_sha256=contract.sha256_text("payload"),
+        parser_id="russian-shadow-heuristic-v1",
+        parser_version="1",
+        row=row,
+    )
+
+
+def _row_evidence(row, records, *, phenomenon_evidence_ids=None):
+    evidence_ids = sorted({record["evidence_id"] for record in records})
+    return {
+        "unit_id": row["unit_id"],
+        "unit_sha256": row["unit_sha256"],
+        "evidence": records,
+        "evidence_ids": evidence_ids,
+        "phenomenon_evidence_ids": phenomenon_evidence_ids or {},
+        "sufficient_support": any(contract.is_sufficient_positive(record) for record in records),
+        "archaic_only_risk": False,
+        "russian_shadow_suspected": any(record["channel"] == "russian_shadow_suspicion" for record in records),
+    }
+
+
+# --------------------------------------------------------------------------
+# validate_evidence_record / validate_row_evidence
+# --------------------------------------------------------------------------
+
+
+def test_validate_row_evidence_accepts_well_formed_row():
+    records = [_vesum_record(ROW_A), _shadow_record(ROW_A)]
+    validator.validate_row_evidence(_row_evidence(ROW_A, records))
+
+
+def test_validate_evidence_record_detects_hash_drift():
+    record = dict(_vesum_record(ROW_A))
+    record["evidence_id"] = "cycle007_evidence:" + "0" * 64
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "evidence_id_hash_drift"
+
+
+def test_validate_evidence_record_detects_source_role_boundary_violation():
+    """A hand-edited record claiming russian_shadow_suspicion=attestation must fail closed."""
+    record = dict(_shadow_record(ROW_A))
+    record["supports"] = "attestation"  # forbidden for this channel
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "source_role_boundary_violation"
+
+
+def test_validate_row_evidence_rejects_cross_row_evidence():
+    foreign_record = _vesum_record(ROW_B)
+    row_evidence = _row_evidence(ROW_A, [foreign_record])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "cross_row_evidence"
+
+
+def test_validate_row_evidence_rejects_duplicate_evidence_id():
+    record = _vesum_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record, copy.deepcopy(record)])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "duplicate_evidence_id"
+
+
+def test_validate_row_evidence_rejects_unsorted_declared_ids():
+    record_a = _vesum_record(ROW_A)
+    record_b = _shadow_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record_a, record_b])
+    row_evidence["evidence_ids"] = list(reversed(row_evidence["evidence_ids"]))
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "evidence_id_order_drift"
+
+
+def test_validate_row_evidence_rejects_invented_declared_id():
+    record = _vesum_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record])
+    row_evidence["evidence_ids"] = sorted({*row_evidence["evidence_ids"], "cycle007_evidence:" + "f" * 64})
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "evidence_id_set_drift"
+
+
+def test_validate_row_evidence_rejects_cross_phenomenon_evidence():
+    scoped = _vesum_record(ROW_A, phenomenon_id="phenomenon-a")
+    row_evidence = _row_evidence(ROW_A, [scoped], phenomenon_evidence_ids={"phenomenon-b": [scoped["evidence_id"]]})
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "cross_phenomenon_evidence"
+
+
+def test_validate_sidecar_rejects_duplicate_row():
+    row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
+    sidecar = {
+        "schema_version": "phase3_cycle007_evidence_sidecar_v1",
+        "rows": [row_a, copy.deepcopy(row_a)],
+    }
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar)
+    assert excinfo.value.code == "duplicate_row"
+
+
+# --------------------------------------------------------------------------
+# classify_sufficiency: fail-closed missing/conflicting/unavailable
+# --------------------------------------------------------------------------
+
+
+def test_classify_sufficiency_sufficient():
+    row_evidence = _row_evidence(ROW_A, [_vesum_record(ROW_A, status="attested", supports="attestation")])
+    assert validator.classify_sufficiency(row_evidence) == "sufficient"
+
+
+def test_classify_sufficiency_missing():
+    row_evidence = _row_evidence(ROW_A, [_vesum_record(ROW_A, status="not_found")])
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_missing"
+
+
+def test_classify_sufficiency_unavailable():
+    row_evidence = _row_evidence(ROW_A, [_vesum_record(ROW_A, status="unavailable")])
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_unavailable"
+
+
+def test_classify_sufficiency_conflicting():
+    row_evidence = _row_evidence(ROW_A, [_vesum_record(ROW_A, status="ambiguous")])
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_conflicting"
+
+
+def test_classify_sufficiency_prioritizes_conflicting_over_unavailable():
+    row_evidence = _row_evidence(
+        ROW_A,
+        [_vesum_record(ROW_A, status="ambiguous"), _vesum_record(ROW_A, status="unavailable", supports="attestation")],
+    )
+    # Two distinct records collide on evidence_id only if every field matches;
+    # status differs here so both survive as distinct evidence entries.
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_conflicting"
+
+
+# --------------------------------------------------------------------------
+# validate_label_evidence_refs: sufficiency + scoping gate
+# --------------------------------------------------------------------------
+
+
+def test_validate_label_evidence_refs_accepts_sufficient_agree_decision():
+    record = _vesum_record(ROW_A, status="attested", supports="attestation")
+    row_evidence = _row_evidence(ROW_A, [record])
+    validator.validate_label_evidence_refs(row_evidence, decision_code="agree", evidence_ids=[record["evidence_id"]])
+
+
+def test_validate_label_evidence_refs_rejects_insufficient_agree_decision():
+    record = _vesum_record(ROW_A, status="not_found")
+    row_evidence = _row_evidence(ROW_A, [record])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence, decision_code="agree", evidence_ids=[record["evidence_id"]])
+    assert excinfo.value.code == "insufficient_evidence_for_decision"
+
+
+def test_validate_label_evidence_refs_uncertainty_path_never_needs_sufficiency():
+    record = _vesum_record(ROW_A, status="not_found")
+    row_evidence = _row_evidence(ROW_A, [record])
+    validator.validate_label_evidence_refs(
+        row_evidence, decision_code="reject_insufficient_locator_evidence", evidence_ids=[record["evidence_id"]]
+    )
+
+
+def test_validate_label_evidence_refs_rejects_cross_row_reference():
+    record = _vesum_record(ROW_B, status="attested", supports="attestation")
+    row_evidence_a = _row_evidence(ROW_A, [])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence_a, decision_code="agree", evidence_ids=[record["evidence_id"]])
+    assert excinfo.value.code == "cross_row_evidence"
+
+
+def test_validate_label_evidence_refs_rejects_cross_phenomenon_reference():
+    scoped = _vesum_record(ROW_A, status="attested", supports="attestation", phenomenon_id="phenomenon-a")
+    row_evidence = _row_evidence(ROW_A, [scoped], phenomenon_evidence_ids={"phenomenon-a": [scoped["evidence_id"]]})
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(
+            row_evidence, decision_code="positive", evidence_ids=[scoped["evidence_id"]], phenomenon_id="phenomenon-b"
+        )
+    assert excinfo.value.code == "cross_phenomenon_evidence"
+
+
+def test_validate_label_evidence_refs_rejects_reordered_ids():
+    record_a = _vesum_record(ROW_A)
+    record_b = _shadow_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record_a, record_b])
+    reordered = sorted(row_evidence["evidence_ids"], reverse=True)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence, decision_code="abstention", evidence_ids=reordered)
+    assert excinfo.value.code == "evidence_id_order_drift"
+
+
+def test_validate_label_evidence_refs_rejects_unknown_decision_code():
+    record = _vesum_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence, decision_code="not_a_real_code", evidence_ids=[record["evidence_id"]])
+    assert excinfo.value.code == "unknown_decision_code"

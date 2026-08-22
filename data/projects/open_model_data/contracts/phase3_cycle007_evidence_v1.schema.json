@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_cycle007_evidence_v1.schema.json",
+  "title": "Phase 3 Cycle 007 source-grounded evidence record v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "evidence_id", "channel", "source_identity", "source_version", "locator", "query", "query_sha256", "status", "supports", "retrieval_sha256", "parser_id", "parser_version", "row_identity", "phenomenon_id", "negative_reason", "raw_payload_publication_allowed", "claim_boundary"],
+  "properties": {
+    "schema_version": {"const": "phase3_cycle007_evidence_v1"},
+    "evidence_id": {"type": "string", "pattern": "^cycle007_evidence:[a-f0-9]{64}$"},
+    "channel": {"enum": ["pravopys_2026_normative", "pravopys_2019_comparison", "vesum_attestation", "antonenko_style", "ua_gec_calque", "heritage_attestation", "ukrainian_corpus_occurrence", "textbook_explanation", "russian_shadow_suspicion", "source_metadata"]},
+    "source_identity": {"type": "string", "minLength": 1},
+    "source_version": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "query": {"type": ["string", "null"]},
+    "query_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"enum": ["attested", "not_found", "ambiguous", "incomplete", "parse_error", "unavailable"]},
+    "supports": {"enum": ["normative_rule", "comparison_only", "attestation", "archaic_attestation", "occurrence", "style_guidance", "calque_flag", "explanation_context", "suspicion", "metadata_only", "no_conclusion"]},
+    "retrieval_sha256": {"$ref": "#/$defs/sha256"},
+    "parser_id": {"type": "string", "minLength": 1},
+    "parser_version": {"type": "string", "minLength": 1},
+    "row_identity": {"type": "object", "additionalProperties": false, "required": ["unit_id", "unit_sha256"], "properties": {"unit_id": {"type": "string", "minLength": 1}, "unit_sha256": {"$ref": "#/$defs/sha256"}}},
+    "phenomenon_id": {"type": ["string", "null"], "minLength": 1},
+    "negative_reason": {"type": ["string", "null"]},
+    "raw_payload_publication_allowed": {"const": false},
+    "claim_boundary": {"type": "object", "additionalProperties": false, "required": ["authoritative", "human_gold", "model_vote_authoritative", "vesum_absence_only_authoritative"], "properties": {"authoritative": {"const": false}, "human_gold": {"const": false}, "model_vote_authoritative": {"const": false}, "vesum_absence_only_authoritative": {"const": false}}}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "attested"}}, "required": ["status"]}, "then": {"properties": {"negative_reason": {"const": null}}}},
+    {"if": {"not": {"properties": {"status": {"const": "attested"}}, "required": ["status"]}}, "then": {"properties": {"supports": {"const": "no_conclusion"}}}},
+    {"if": {"properties": {"channel": {"const": "pravopys_2026_normative"}}}, "then": {"properties": {"supports": {"enum": ["normative_rule", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "pravopys_2019_comparison"}}}, "then": {"properties": {"supports": {"enum": ["comparison_only", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "vesum_attestation"}}}, "then": {"properties": {"supports": {"enum": ["attestation", "archaic_attestation", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "antonenko_style"}}}, "then": {"properties": {"supports": {"enum": ["style_guidance", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "ua_gec_calque"}}}, "then": {"properties": {"supports": {"enum": ["calque_flag", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "heritage_attestation"}}}, "then": {"properties": {"supports": {"enum": ["attestation", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "ukrainian_corpus_occurrence"}}}, "then": {"properties": {"supports": {"enum": ["occurrence", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "textbook_explanation"}}}, "then": {"properties": {"supports": {"enum": ["explanation_context", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "russian_shadow_suspicion"}}}, "then": {"properties": {"supports": {"enum": ["suspicion", "no_conclusion"]}}}},
+    {"if": {"properties": {"channel": {"const": "source_metadata"}}}, "then": {"properties": {"supports": {"const": "metadata_only"}}}}
+  ],
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

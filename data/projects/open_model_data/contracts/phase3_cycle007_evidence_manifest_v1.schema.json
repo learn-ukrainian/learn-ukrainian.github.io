@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_cycle007_evidence_manifest_v1.schema.json",
+  "title": "Phase 3 Cycle 007 text-free evidence compile manifest v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "text_free", "evaluation_cycle_id", "tokenizer_id", "tokenizer_version", "server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "packet_count", "row_count", "network_lookups_performed", "counts_by_channel", "counts_by_status", "counts_by_supports", "sufficient_support_rows", "archaic_only_risk_rows", "russian_shadow_suspected_rows", "sidecars", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_cycle007_evidence_manifest_v1"},
+    "text_free": {"const": true},
+    "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-007"},
+    "tokenizer_id": {"type": "string", "minLength": 1},
+    "tokenizer_version": {"type": "string", "minLength": 1},
+    "server_code_sha256": {"$ref": "#/$defs/sha256"},
+    "sources_db_sha256": {"$ref": "#/$defs/sha256"},
+    "vesum_db_sha256": {"$ref": "#/$defs/sha256"},
+    "packet_count": {"type": "integer", "minimum": 0},
+    "row_count": {"type": "integer", "minimum": 0},
+    "network_lookups_performed": {"const": 0},
+    "counts_by_channel": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_status": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_supports": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "sufficient_support_rows": {"type": "integer", "minimum": 0},
+    "archaic_only_risk_rows": {"type": "integer", "minimum": 0},
+    "russian_shadow_suspected_rows": {"type": "integer", "minimum": 0},
+    "sidecars": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["packet_index", "row_count", "sidecar_sha256"],
+        "properties": {
+          "packet_index": {"type": "integer", "minimum": 1},
+          "row_count": {"type": "integer", "minimum": 1},
+          "sidecar_sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "manifest_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}
