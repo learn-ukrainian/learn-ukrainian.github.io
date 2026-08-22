@@ -415,6 +415,7 @@ launcher_claim_driver_lease() {
   launcher_prepare_driver_identity
   if [ "$LC_DRY_RUN" = "1" ]; then
     printf 'launcher: would claim lease stream=%s agent=%s harness=%s\n' "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS"
+    launcher_cursor_observer_presence
     return 0
   fi
   # shellcheck source=scripts/lib/session_supervisor.sh
@@ -423,6 +424,53 @@ launcher_claim_driver_lease() {
   instance_id="${SESSION_INSTANCE_ID:-${LC_PROVIDER}-$$}"
   claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC"
   LC_DRIVER_LEASE_CLAIMED=1
+  launcher_cursor_observer_presence
+}
+
+launcher_cursor_observer_presence() {
+  # Occupancy cannot infer Cursor from a RAM lease or a live fleet-agents row.
+  # Heartbeat the loopback observer store (#7075). Fail-open if Monitor is down.
+  [ "$LC_PROVIDER" = "cursor" ] || return 0
+  [ "$LC_MODE" = "driver" ] || return 0
+  if [ "$LC_DRY_RUN" = "1" ]; then
+    printf 'launcher: would heartbeat observer presence agent=cursor\n'
+    printf 'launcher: would renew observer presence while the driver session runs\n'
+    return 0
+  fi
+  local task_id
+  task_id="${SESSION_TASK_ID:-${LC_EPIC:-cursor-driver}}"
+  "$LC_SESSION_ROOT/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
+    --agent cursor \
+    --task-id "$task_id" \
+    --epic "$LC_EPIC" \
+    --status working \
+    --summary "cursor driver occupancy heartbeat" \
+    >/dev/null || true
+}
+
+launcher_cursor_observer_renew_loop() {
+  [ "$LC_PROVIDER" = "cursor" ] || return 0
+  [ "$LC_MODE" = "driver" ] || return 0
+  [ "$LC_DRY_RUN" != "1" ] || return 0
+  local child_pid="$1"
+  (
+    while kill -0 "$child_pid" 2>/dev/null; do
+      sleep 480
+      if ! kill -0 "$child_pid" 2>/dev/null; then
+        break
+      fi
+      launcher_cursor_observer_presence
+    done
+  ) &
+  LC_OBSERVER_HEARTBEAT_PID=$!
+}
+
+launcher_stop_cursor_observer_renew() {
+  if [ -n "${LC_OBSERVER_HEARTBEAT_PID:-}" ]; then
+    kill "$LC_OBSERVER_HEARTBEAT_PID" 2>/dev/null || true
+    wait "$LC_OBSERVER_HEARTBEAT_PID" 2>/dev/null || true
+    LC_OBSERVER_HEARTBEAT_PID=""
+  fi
 }
 
 launcher_close_driver_lease() {
@@ -464,6 +512,7 @@ launcher_forward_driver_signal() {
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
   fi
   LC_DRIVER_CHILD_PID=""
+  launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || true
   trap - EXIT INT TERM HUP
   exit "$exit_code"
@@ -497,12 +546,14 @@ launcher_exec_command() {
     exec "$@"
   ) 0<&0 &
   LC_DRIVER_CHILD_PID=$!
+  launcher_cursor_observer_renew_loop "$LC_DRIVER_CHILD_PID"
   if wait "$LC_DRIVER_CHILD_PID"; then
     provider_rc=0
   else
     provider_rc=$?
   fi
   LC_DRIVER_CHILD_PID=""
+  launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || close_rc=$?
   trap - EXIT INT TERM HUP
 

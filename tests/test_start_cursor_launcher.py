@@ -69,6 +69,8 @@ def test_cursor_driver_claims_lease_for_supported_selectors(selector: str) -> No
     assert "would claim lease" in result.stdout
     assert "would run provider canary" in result.stdout
     assert "would bind drive-epic" in result.stdout
+    assert "would heartbeat observer presence agent=cursor" in result.stdout
+    assert "would renew observer presence while the driver session runs" in result.stdout
     assert "--model auto" in result.stdout
 
 
@@ -86,6 +88,13 @@ def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", model)
     assert result.returncode == 0, result.stderr
     assert f"--model {model}" in result.stdout
+
+
+def test_observer_heartbeat_is_cursor_gated_in_launcher_core() -> None:
+    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert "launcher_cursor_observer_presence" in core
+    assert "launcher_cursor_observer_renew_loop" in core
+    assert '[ "$LC_PROVIDER" = "cursor" ] || return 0' in core
 
 
 def test_cursor_seat_enumerated_in_launcher_core_and_public_estate() -> None:
