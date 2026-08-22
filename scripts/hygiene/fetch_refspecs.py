@@ -220,7 +220,7 @@ def add_fetch_branch(
             "refspec": spec,
             "duplicates": current.count(spec) - 1,
         }
-    desired = current + [spec]
+    desired = [*current, spec]
     _write_fetch_refspecs(repo_root, remote, desired, current)
     return {
         "added": True,
