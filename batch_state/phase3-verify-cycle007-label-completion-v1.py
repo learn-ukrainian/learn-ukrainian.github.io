@@ -100,6 +100,54 @@ FAILURE_CODES = frozenset(
     }
 )
 
+_CUSTODY_FIELDS = frozenset(
+    {
+        "schema_version", "evaluation_cycle_id", "source_evaluation_cycle_id", "amendment_reference",
+        "source_custody_receipt_raw_sha256", "source_label_manifest_raw_sha256",
+        "ordered_identity_commitment_sha256", "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256", "packet_count", "row_count", "lane_row_counts",
+        "packet_size", "provider_artifacts_copied", "labels_copied", "responses_copied",
+        "prompts_generated", "evidence_sidecars_generated", "text_free", "receipt_sha256",
+    }
+)
+_MATERIALIZATION_MANIFEST_FIELDS = frozenset(
+    {
+        "schema_version", "evaluation_cycle_id", "source_evaluation_cycle_id", "text_free",
+        "custody_receipt_raw_sha256", "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256", "ordered_packet_commitment_sha256", "packet_count",
+        "row_count", "lane_row_counts", "packets", "receipt_sha256",
+    }
+)
+_MATERIAL_PACKET_FIELDS = frozenset(
+    {"lane", "packet_index", "canonical_basename", "row_count", "raw_sha256", "packet_identity_set_sha256"}
+)
+_PROVIDER_RECEIPT_COMMON_FIELDS = frozenset(
+    {
+        "schema_version", "evaluation_cycle_id", "amendment_sha256", "custody_receipt_raw_sha256",
+        "materialization_manifest_raw_sha256", "evidence_manifest_raw_sha256", "lane", "packet_index",
+        "row_count", "packet_raw_sha256", "packet_identity_set_sha256", "sidecar_raw_sha256",
+        "sidecar_id", "raw_manifest_sha256", "labels_sha256", "exact_model", "model_family",
+        "harness", "text_free", "receipt_sha256",
+    }
+)
+_PROVIDER_RECEIPT_FIELDS = {
+    "gemini": _PROVIDER_RECEIPT_COMMON_FIELDS | {"chunk_count"},
+    "grok": _PROVIDER_RECEIPT_COMMON_FIELDS | {"response_raw_sha256", "prompt_path", "prompt_sha256", "attempt_count"},
+}
+
+
+def _receipt_hash(value: Mapping[str, Any]) -> str:
+    return digest(canonical({key: item for key, item in value.items() if key != "receipt_sha256"}))
+
+
+def _sealed_receipt(value: Mapping[str, Any], fields: frozenset[str], code: str) -> None:
+    if set(value) != fields or value.get("receipt_sha256") != _receipt_hash(value):
+        raise Error(code)
+
+
+def _hex(value: Any) -> bool:
+    return isinstance(value, str) and bool(HEX64.fullmatch(value))
+
 
 class Error(ValueError):
     def __init__(self, code: str):
@@ -408,9 +456,9 @@ def is_risk_triggered(
     if "phenomena" in grok_label:
         pravopys_records = [r for r in evidence_records if r.get("channel") == "pravopys_2026_normative"]
         if (
-            any(r.get("status") != "attested" or r.get("supports") == "no_conclusion" for r in pravopys_records)
-            and "missing_normative_rule" not in reasons
-        ):
+            not pravopys_records
+            or any(r.get("status") != "attested" or r.get("supports") == "no_conclusion" for r in pravopys_records)
+        ) and "missing_normative_rule" not in reasons:
             reasons.append("missing_normative_rule")
 
     if (
@@ -437,6 +485,249 @@ def compute_zero_event_bound(population_count: int) -> float:
     return 1.0 - (0.05 ** (1.0 / population_count))
 
 
+def _reviewer_is_source_qualified(reviewer: Any) -> bool:
+    if not isinstance(reviewer, dict) or not isinstance(reviewer.get("exact_model"), str) or not reviewer["exact_model"]:
+        return False
+    if reviewer.get("model_family") == "anthropic":
+        return set(reviewer) == {"exact_model", "model_family", "harness"} and isinstance(reviewer.get("harness"), str)
+    return (
+        set(reviewer) == {"exact_model", "model_family", "harness", "source_qualified"}
+        and reviewer.get("model_family") == "human"
+        and reviewer.get("harness") == "local-operator"
+        and reviewer.get("source_qualified") is True
+    )
+
+
+def _validate_live_audit(
+    package: Path,
+    *,
+    custody_hash: str,
+    manifest_hash: str,
+    manifest: Mapping[str, Any],
+    expected_commitment: str,
+    ev_manifest_raw: bytes,
+    expected_identity: Mapping[str, Any],
+    sidecar_by_uid: Mapping[tuple[str, str], Mapping[str, Any]],
+    clean_records: list[dict[str, Any]],
+    risk_records: list[dict[str, Any]],
+    sample_records: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Validate the sealed, bounded source-review audit without reading provider text."""
+    audit_dir = package / AUDIT_ROOT
+    sample_doc, _ = _read_json(audit_dir / "clean-consensus-sample.json")
+    sampler_seal, sampler_seal_raw = _read_json(audit_dir / "clean-consensus-sampler-seal.json")
+    sampler_receipt, _ = _read_json(audit_dir / "clean-consensus-sampler-seal-receipt.json")
+    plan, plan_raw = _read_json(audit_dir / "source-review-plan.json")
+    plan_receipt, _ = _read_json(audit_dir / "source-review-plan-receipt.json")
+    review_results, review_results_raw = _read_json(audit_dir / "source-review-results.json")
+    review_receipt, _ = _read_json(audit_dir / "source-review-receipt.json")
+    risk_receipt, _ = _read_json(audit_dir / "risk-review-receipt.json")
+    clean_receipt, _ = _read_json(audit_dir / "clean-audit-receipt.json")
+    audit_batch, _ = _read_json(audit_dir / "batch-receipt.json")
+
+    seed = digest(
+        f"phase3-cycle007-consensus-audit-v1\n{SOURCE_CUSTODY_SHA256}{SOURCE_MANIFEST_SHA256}{expected_commitment}".encode()
+    )
+    ranked_clean = []
+    for record in clean_records:
+        copy = dict(record)
+        row = copy["source_row"]
+        copy["rank"] = digest(f"{seed}{copy['lane']}{row['unit_id']}{row['unit_sha256']}".encode())
+        ranked_clean.append(copy)
+    strata: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in ranked_clean:
+        if record["lane"] == "clean_label":
+            strata[f"clean:{record['label'].get('decision_code', 'unknown')}"].append(record)
+        else:
+            for phenomenon in record["label"].get("phenomena", []):
+                strata[f"residual:{phenomenon.get('phenomenon_id', 'unknown')}:{phenomenon.get('decision_code', 'unknown')}"].append(record)
+    chosen: dict[tuple[str, str], dict[str, Any]] = {}
+    for members in strata.values():
+        for record in sorted(members, key=lambda item: item["rank"])[:10]:
+            row = record["source_row"]
+            chosen.setdefault((row["unit_id"], row["unit_sha256"]), record)
+    mandatory = list(chosen.values())
+    if len(ranked_clean) <= 600:
+        expected_sample = sorted(ranked_clean, key=lambda item: item["rank"])
+    elif len(mandatory) >= 600:
+        expected_sample = mandatory
+    else:
+        expected_sample = mandatory + sorted(
+            (record for record in ranked_clean if (record["source_row"]["unit_id"], record["source_row"]["unit_sha256"]) not in chosen),
+            key=lambda item: item["rank"],
+        )[: 600 - len(mandatory)]
+    expected_sample = sorted(
+        expected_sample, key=lambda item: (item["lane"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"])
+    )
+    sample_identities = [(item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]) for item in expected_sample]
+    sample_fields = {
+        "schema_version", "evaluation_cycle_id", "amendment_sha256", "custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256", "manifest_raw_sha256", "ordered_identity_commitment_sha256",
+        "population_count", "audited_count", "one_sided_95_bound", "seed", "seed_source_custody_sha256",
+        "seed_source_manifest_sha256", "strata_counts", "sample_identity_commitment_sha256", "text_free", "receipt_sha256",
+    }
+    if (
+        set(sample_doc) != sample_fields
+        or sample_doc.get("schema_version") != "phase3_cycle007_clean_consensus_sample_receipt_v1"
+        or sample_doc.get("evaluation_cycle_id") != CYCLE
+        or sample_doc.get("amendment_sha256") != AMENDMENT_SHA256
+        or sample_doc.get("custody_receipt_raw_sha256") != custody_hash
+        or sample_doc.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256
+        or sample_doc.get("manifest_raw_sha256") != manifest_hash
+        or sample_doc.get("ordered_identity_commitment_sha256") != expected_commitment
+        or sample_doc.get("seed") != seed
+        or sample_doc.get("seed_source_custody_sha256") != SOURCE_CUSTODY_SHA256
+        or sample_doc.get("seed_source_manifest_sha256") != SOURCE_MANIFEST_SHA256
+        or sample_doc.get("population_count") != len(ranked_clean)
+        or sample_doc.get("audited_count") != len(expected_sample)
+        or sample_doc.get("one_sided_95_bound") != compute_zero_event_bound(len(expected_sample))
+        or sample_doc.get("strata_counts") != {key: len(value) for key, value in sorted(strata.items())}
+        or sample_doc.get("sample_identity_commitment_sha256") != digest(canonical(sample_identities))
+        or sample_doc.get("text_free") is not True
+        or sample_doc.get("receipt_sha256") != _receipt_hash(sample_doc)
+    ):
+        raise Error("sample_audit_incomplete")
+
+    clean_seal = [
+        {"lane": item["lane"], "packet_index": item["packet_index"], "unit_id": item["source_row"]["unit_id"], "unit_sha256": item["source_row"]["unit_sha256"], "rank": item["rank"], "strata": ([f"clean:{item['label'].get('decision_code', 'unknown')}"] if item["lane"] == "clean_label" else [f"residual:{p.get('phenomenon_id', 'unknown')}:{p.get('decision_code', 'unknown')}" for p in item["label"].get("phenomena", [])])}
+        for item in ranked_clean
+    ]
+    risk_seal = [[item["lane"], item["packet_index"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]] for item in risk_records]
+    selected_seal = [[item["lane"], item["packet_index"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]] for item in expected_sample]
+    if (
+        set(sampler_seal) != {"schema_version", "evaluation_cycle_id", "sample_receipt_sha256", "clean_population", "risk_exclusions", "selected_identities"}
+        or sampler_seal != {"schema_version": "phase3_cycle007_clean_consensus_sampler_seal_v1", "evaluation_cycle_id": CYCLE, "sample_receipt_sha256": sample_doc["receipt_sha256"], "clean_population": clean_seal, "risk_exclusions": risk_seal, "selected_identities": selected_seal}
+        or set(sampler_receipt) != {"schema_version", "evaluation_cycle_id", "amendment_sha256", "clean_population_count", "risk_exclusion_count", "selected_count", "clean_population_identity_commitment_sha256", "risk_exclusion_identity_commitment_sha256", "rank_and_strata_commitment_sha256", "selected_identity_commitment_sha256", "private_sampler_seal_sha256", "sample_receipt_sha256", "text_free", "receipt_sha256"}
+        or sampler_receipt.get("schema_version") != "phase3_cycle007_clean_consensus_sampler_seal_receipt_v1"
+        or sampler_receipt.get("evaluation_cycle_id") != CYCLE
+        or sampler_receipt.get("amendment_sha256") != AMENDMENT_SHA256
+        or sampler_receipt.get("clean_population_count") != len(clean_seal)
+        or sampler_receipt.get("risk_exclusion_count") != len(risk_seal)
+        or sampler_receipt.get("selected_count") != len(selected_seal)
+        or sampler_receipt.get("clean_population_identity_commitment_sha256") != digest(canonical([(item["lane"], item["packet_index"], item["unit_id"], item["unit_sha256"]) for item in clean_seal]))
+        or sampler_receipt.get("risk_exclusion_identity_commitment_sha256") != digest(canonical(risk_seal))
+        or sampler_receipt.get("rank_and_strata_commitment_sha256") != digest(canonical([(item["lane"], item["packet_index"], item["unit_id"], item["unit_sha256"], item["rank"], item["strata"]) for item in clean_seal]))
+        or sampler_receipt.get("selected_identity_commitment_sha256") != digest(canonical(selected_seal))
+        or sampler_receipt.get("private_sampler_seal_sha256") != digest(sampler_seal_raw)
+        or sampler_receipt.get("sample_receipt_sha256") != sample_doc["receipt_sha256"]
+        or sampler_receipt.get("text_free") is not True
+        or sampler_receipt.get("receipt_sha256") != _receipt_hash(sampler_receipt)
+    ):
+        raise Error("sample_audit_incomplete")
+
+    targets = []
+    for scope, records in (("risk", risk_records), ("clean_sample", expected_sample)):
+        for item in records:
+            row = item["source_row"]
+            evidence = sidecar_by_uid.get((row["unit_id"], row["unit_sha256"]))
+            if evidence is None:
+                raise Error("sample_audit_incomplete")
+            targets.append({"scope": scope, "lane": item["lane"], "packet_index": item["packet_index"], "source_row": row, "label": item["label"], "row_evidence": evidence, "source_evidence_sha256": digest(canonical(evidence))})
+    if len({(item["lane"], item["packet_index"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]) for item in targets}) != len(targets):
+        raise Error("sample_audit_incomplete")
+    grouped: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
+    for target in targets:
+        grouped[(target["lane"], target["packet_index"])].append(target)
+    batches = []
+    for number, ((lane, index), members) in enumerate(sorted(grouped.items()), 1):
+        ordered = sorted(members, key=lambda item: (item["scope"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]))
+        identities = [(item["lane"], item["packet_index"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]) for item in ordered]
+        batches.append({"batch_index": number, "lane": lane, "packet_index": index, "target_count": len(ordered), "identity_commitment_sha256": digest(canonical(identities)), "targets": ordered})
+    descriptors = [{key: batch[key] for key in ("batch_index", "lane", "packet_index", "target_count", "identity_commitment_sha256")} for batch in batches]
+    target_identity = digest(canonical([(item["lane"], item["packet_index"], item["source_row"]["unit_id"], item["source_row"]["unit_sha256"]) for item in targets]))
+    identity_hash = digest(canonical(expected_identity))
+    if (
+        set(plan) != {"schema_version", "evaluation_cycle_id", "amendment_sha256", "sample_receipt_sha256", "risk_target_count", "clean_sample_target_count", "target_identity_commitment_sha256", "evidence_manifest_raw_sha256", "sources_identity_commitment_sha256", "batches", "targets"}
+        or plan != {"schema_version": "phase3_cycle007_consensus_source_review_plan_v1", "evaluation_cycle_id": CYCLE, "amendment_sha256": AMENDMENT_SHA256, "sample_receipt_sha256": sample_doc["receipt_sha256"], "risk_target_count": len(risk_records), "clean_sample_target_count": len(expected_sample), "target_identity_commitment_sha256": target_identity, "evidence_manifest_raw_sha256": digest(ev_manifest_raw), "sources_identity_commitment_sha256": identity_hash, "batches": descriptors, "targets": targets}
+        or set(plan_receipt) != {"schema_version", "evaluation_cycle_id", "amendment_sha256", "risk_target_count", "clean_sample_target_count", "target_identity_commitment_sha256", "review_batch_count", "review_batch_union_commitment_sha256", "evidence_manifest_raw_sha256", "sources_identity_commitment_sha256", "source_review_plan_sha256", "sample_receipt_sha256", "text_free", "receipt_sha256"}
+        or plan_receipt.get("schema_version") != "phase3_cycle007_consensus_source_review_plan_receipt_v1"
+        or plan_receipt.get("evaluation_cycle_id") != CYCLE or plan_receipt.get("amendment_sha256") != AMENDMENT_SHA256
+        or plan_receipt.get("risk_target_count") != len(risk_records) or plan_receipt.get("clean_sample_target_count") != len(expected_sample)
+        or plan_receipt.get("target_identity_commitment_sha256") != target_identity or plan_receipt.get("review_batch_count") != len(batches)
+        or plan_receipt.get("review_batch_union_commitment_sha256") != digest(canonical([batch["identity_commitment_sha256"] for batch in batches]))
+        or plan_receipt.get("evidence_manifest_raw_sha256") != digest(ev_manifest_raw) or plan_receipt.get("sources_identity_commitment_sha256") != identity_hash
+        or plan_receipt.get("source_review_plan_sha256") != digest(plan_raw) or plan_receipt.get("sample_receipt_sha256") != sample_doc["receipt_sha256"]
+        or plan_receipt.get("text_free") is not True or plan_receipt.get("receipt_sha256") != _receipt_hash(plan_receipt)
+    ):
+        raise Error("sample_audit_incomplete")
+
+    if set(review_results) != {"reviews"} or not isinstance(review_results["reviews"], list):
+        raise Error("sample_audit_incomplete")
+    expected_reviews = []
+    for batch in batches:
+        expected_reviews.extend(batch["targets"])
+    review_identities = []
+    for review, target in zip(review_results["reviews"], expected_reviews, strict=False):
+        if not isinstance(review, dict) or set(review) != {"lane", "packet_index", "unit_id", "unit_sha256", "source_evidence_sha256", "outcome"}:
+            raise Error("sample_audit_incomplete")
+        actual = (review["lane"], review["packet_index"], review["unit_id"], review["unit_sha256"], review["source_evidence_sha256"])
+        expected = (target["lane"], target["packet_index"], target["source_row"]["unit_id"], target["source_row"]["unit_sha256"], target["source_evidence_sha256"])
+        if actual != expected or review.get("outcome") != "pass":
+            raise Error("terminal_audit_finding")
+        review_identities.append(actual)
+    if len(review_results["reviews"]) != len(expected_reviews) or len(set(review_identities)) != len(expected_reviews):
+        raise Error("sample_audit_incomplete")
+    if (
+        set(review_receipt) != {"schema_version", "evaluation_cycle_id", "amendment_sha256", "source_review_plan_sha256", "target_identity_commitment_sha256", "reviewed_count", "review_result_sha256", "review_input_sha256", "reviewer", "attempt_count", "review_batch_count", "review_batch_receipt_union_sha256", "evidence_manifest_raw_sha256", "sources_identity_commitment_sha256", "terminal_findings_count", "text_free", "receipt_sha256"}
+        or review_receipt.get("schema_version") != "phase3_cycle007_consensus_source_review_receipt_v1"
+        or review_receipt.get("evaluation_cycle_id") != CYCLE or review_receipt.get("amendment_sha256") != AMENDMENT_SHA256
+        or review_receipt.get("source_review_plan_sha256") != digest(plan_raw) or review_receipt.get("target_identity_commitment_sha256") != target_identity
+        or review_receipt.get("reviewed_count") != len(expected_reviews) or review_receipt.get("review_result_sha256") != digest(review_results_raw)
+        or not _hex(review_receipt.get("review_input_sha256")) or not _reviewer_is_source_qualified(review_receipt.get("reviewer"))
+        or not isinstance(review_receipt.get("attempt_count"), int) or review_receipt.get("review_batch_count") != len(batches)
+        or review_receipt.get("evidence_manifest_raw_sha256") != digest(ev_manifest_raw) or review_receipt.get("sources_identity_commitment_sha256") != identity_hash
+        or review_receipt.get("terminal_findings_count") != 0 or review_receipt.get("text_free") is not True or review_receipt.get("receipt_sha256") != _receipt_hash(review_receipt)
+    ):
+        raise Error("terminal_audit_finding")
+    batch_hashes = []
+    for batch in batches:
+        result, result_raw = _read_json(audit_dir / f"source-review-results-batch-{batch['batch_index']:04d}.json")
+        receipt, _ = _read_json(audit_dir / f"source-review-batch-receipt-{batch['batch_index']:04d}.json")
+        prior_batches = len(batch_hashes)
+        start = sum(item["target_count"] for item in batches[:prior_batches])
+        end = sum(item["target_count"] for item in batches[: prior_batches + 1])
+        expected_batch_reviews = review_results["reviews"][start:end]
+        if (
+            result != {"reviews": expected_batch_reviews}
+            or set(receipt) != {"schema_version", "evaluation_cycle_id", "amendment_sha256", "source_review_plan_sha256", "batch_index", "lane", "packet_index", "identity_commitment_sha256", "reviewed_count", "review_result_sha256", "review_input_sha256", "evidence_manifest_raw_sha256", "sources_identity_commitment_sha256", "reviewer", "attempt_count", "terminal_findings_count", "text_free", "receipt_sha256"}
+            or receipt.get("schema_version") != "phase3_cycle007_consensus_source_review_batch_receipt_v1" or receipt.get("evaluation_cycle_id") != CYCLE or receipt.get("amendment_sha256") != AMENDMENT_SHA256
+            or receipt.get("source_review_plan_sha256") != digest(plan_raw) or receipt.get("batch_index") != batch["batch_index"] or receipt.get("lane") != batch["lane"] or receipt.get("packet_index") != batch["packet_index"]
+            or receipt.get("identity_commitment_sha256") != batch["identity_commitment_sha256"] or receipt.get("reviewed_count") != batch["target_count"] or receipt.get("review_result_sha256") != digest(result_raw)
+            or not _hex(receipt.get("review_input_sha256")) or receipt.get("reviewer") != review_receipt["reviewer"] or not isinstance(receipt.get("attempt_count"), int)
+            or receipt.get("evidence_manifest_raw_sha256") != digest(ev_manifest_raw) or receipt.get("sources_identity_commitment_sha256") != identity_hash or receipt.get("terminal_findings_count") != 0 or receipt.get("text_free") is not True or receipt.get("receipt_sha256") != _receipt_hash(receipt)
+        ):
+            raise Error("sample_audit_incomplete")
+        batch_hashes.append(receipt["receipt_sha256"])
+    if review_receipt.get("review_batch_receipt_union_sha256") != digest(canonical(batch_hashes)):
+        raise Error("sample_audit_incomplete")
+    audit_receipt_common = {
+        "schema_version", "evaluation_cycle_id", "amendment_sha256", "custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256", "manifest_raw_sha256", "ordered_identity_commitment_sha256",
+        "source_review_receipt_sha256", "reviewer", "terminal_findings_count", "text_free", "receipt_sha256",
+    }
+    audit_receipt_shapes = (
+        (risk_receipt, "phase3_cycle007_risk_review_receipt_v1", "risk_population_count", len(risk_records), audit_receipt_common | {"risk_population_count", "reviewed_count"}),
+        (clean_receipt, "phase3_cycle007_clean_audit_receipt_v1", "clean_population_count", len(ranked_clean), audit_receipt_common | {"clean_population_count", "audited_count", "one_sided_95_bound"}),
+    )
+    for receipt, schema, count_field, count, fields in audit_receipt_shapes:
+        if set(receipt) != fields or receipt.get("schema_version") != schema or receipt.get("evaluation_cycle_id") != CYCLE or receipt.get("amendment_sha256") != AMENDMENT_SHA256 or receipt.get("custody_receipt_raw_sha256") != custody_hash or receipt.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256 or receipt.get("manifest_raw_sha256") != manifest_hash or receipt.get("ordered_identity_commitment_sha256") != expected_commitment or receipt.get(count_field) != count or receipt.get("source_review_receipt_sha256") != review_receipt["receipt_sha256"] or receipt.get("reviewer") != review_receipt["reviewer"] or receipt.get("terminal_findings_count") != 0 or receipt.get("text_free") is not True or receipt.get("receipt_sha256") != _receipt_hash(receipt):
+            raise Error("risk_review_incomplete" if receipt is risk_receipt else "sample_audit_incomplete")
+    if risk_receipt.get("reviewed_count") != len(risk_records):
+        raise Error("risk_review_incomplete")
+    if clean_receipt.get("audited_count") != len(expected_sample) or clean_receipt.get("one_sided_95_bound") != sample_doc["one_sided_95_bound"]:
+        raise Error("sample_audit_incomplete")
+    if (
+        set(audit_batch) != {"schema_version", "evaluation_cycle_id", "amendment_sha256", "custody_receipt_raw_sha256", "source_label_manifest_raw_sha256", "manifest_raw_sha256", "ordered_identity_commitment_sha256", "risk_population_count", "risk_reviewed_count", "clean_population_count", "clean_audited_count", "one_sided_95_bound", "sample_receipt_sha256", "sampler_seal_receipt_sha256", "source_review_plan_receipt_sha256", "source_review_receipt_sha256", "reviewer", "terminal_findings_count", "passed", "text_free", "receipt_sha256"}
+        or audit_batch.get("schema_version") != "phase3_cycle007_consensus_audit_batch_receipt_v1" or audit_batch.get("evaluation_cycle_id") != CYCLE or audit_batch.get("amendment_sha256") != AMENDMENT_SHA256
+        or audit_batch.get("custody_receipt_raw_sha256") != custody_hash or audit_batch.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256 or audit_batch.get("manifest_raw_sha256") != manifest_hash or audit_batch.get("ordered_identity_commitment_sha256") != expected_commitment
+        or audit_batch.get("risk_population_count") != len(risk_records) or audit_batch.get("risk_reviewed_count") != len(risk_records) or audit_batch.get("clean_population_count") != len(ranked_clean) or audit_batch.get("clean_audited_count") != len(expected_sample) or audit_batch.get("one_sided_95_bound") != sample_doc["one_sided_95_bound"]
+        or audit_batch.get("sample_receipt_sha256") != sample_doc["receipt_sha256"] or audit_batch.get("sampler_seal_receipt_sha256") != sampler_receipt["receipt_sha256"] or audit_batch.get("source_review_plan_receipt_sha256") != plan_receipt["receipt_sha256"] or audit_batch.get("source_review_receipt_sha256") != review_receipt["receipt_sha256"] or audit_batch.get("reviewer") != review_receipt["reviewer"]
+        or audit_batch.get("terminal_findings_count") != 0 or audit_batch.get("passed") is not True or audit_batch.get("text_free") is not True or audit_batch.get("receipt_sha256") != _receipt_hash(audit_batch)
+    ):
+        raise Error("terminal_audit_finding")
+    return sample_doc, risk_receipt, clean_receipt
+
+
 def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any]:
     """Execute fail-closed certification over all gates."""
     # 1. Permission checks & file hygiene
@@ -459,9 +750,11 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
     expected_row_count = ROW_COUNT if not fixture else sum(p.get("row_count", 0) for p in manifest.get("packets", []))
 
     if (
-        custody.get("schema_version") != "phase3_cycle007_custody_receipt_v1"
+        set(custody) != _CUSTODY_FIELDS
+        or custody.get("schema_version") != "phase3_cycle007_custody_receipt_v1"
         or custody.get("evaluation_cycle_id") != CYCLE
         or custody.get("source_evaluation_cycle_id") != SOURCE_CYCLE
+        or custody.get("amendment_reference") != "batch_state/phase3-cycle007-source-grounded-amendment-v1.md"
         or custody.get("source_custody_receipt_raw_sha256") != expected_custody_src
         or custody.get("source_label_manifest_raw_sha256") != expected_manifest_src
         or custody.get("ordered_identity_commitment_sha256") != expected_commitment
@@ -470,11 +763,20 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         or custody.get("provider_artifacts_copied") is not False
         or custody.get("labels_copied") is not False
         or custody.get("responses_copied") is not False
+        or custody.get("prompts_generated") is not False
+        or custody.get("evidence_sidecars_generated") is not False
+        or custody.get("text_free") is not True
+        or custody.get("lane_row_counts") != (
+            LANE_ROW_COUNTS if not fixture else {lane: sum(p.get("row_count", 0) for p in manifest.get("packets", []) if p.get("lane") == lane) for lane in LANES}
+        )
+        or not isinstance(custody.get("packet_size"), int)
+        or custody.get("receipt_sha256") != _receipt_hash(custody)
     ):
         raise Error("source_manifest_binding")
 
     if (
-        manifest.get("schema_version") != "phase3_cycle007_materialization_manifest_v1"
+        set(manifest) != _MATERIALIZATION_MANIFEST_FIELDS
+        or manifest.get("schema_version") != "phase3_cycle007_materialization_manifest_v1"
         or manifest.get("evaluation_cycle_id") != CYCLE
         or manifest.get("source_evaluation_cycle_id") != SOURCE_CYCLE
         or manifest.get("custody_receipt_raw_sha256") != custody_hash
@@ -484,6 +786,10 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         or manifest.get("text_free") is not True
         or not isinstance(manifest.get("packets"), list)
         or len(manifest["packets"]) != expected_packet_count
+        or manifest.get("lane_row_counts") != custody.get("lane_row_counts")
+        or manifest.get("identity_union_commitment_sha256") != custody.get("identity_union_commitment_sha256")
+        or manifest.get("ordered_packet_commitment_sha256") != custody.get("ordered_packet_commitment_sha256")
+        or manifest.get("receipt_sha256") != _receipt_hash(manifest)
     ):
         raise Error("source_manifest_binding")
 
@@ -501,23 +807,89 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
     if len(sidecars) != expected_packet_count:
         raise Error("evidence_validation_failed")
 
+    source_package_binding = {
+        "source_evaluation_cycle_id": SOURCE_CYCLE,
+        "custody_receipt_raw_sha256": custody_hash,
+        "materialization_manifest_sha256": manifest["receipt_sha256"],
+        "ordered_identity_commitment_sha256": expected_commitment,
+        "identity_union_commitment_sha256": manifest["identity_union_commitment_sha256"],
+        "ordered_packet_commitment_sha256": manifest["ordered_packet_commitment_sha256"],
+        "packet_count": expected_packet_count,
+        "row_count": expected_row_count,
+    }
+    if ev_manifest.get("source_package_binding") != source_package_binding:
+        raise Error("evidence_validation_failed")
+
+    material_packets: dict[tuple[str, int], dict[str, Any]] = {}
+    for record in manifest["packets"]:
+        if not isinstance(record, dict) or set(record) != _MATERIAL_PACKET_FIELDS:
+            raise Error("exact_packet_denominator")
+        key = (record.get("lane"), record.get("packet_index"))
+        if (
+            key in material_packets
+            or key[0] not in LANES
+            or not isinstance(key[1], int)
+            or record.get("canonical_basename") != f"packet-{key[1]:04d}.json"
+            or not isinstance(record.get("row_count"), int)
+            or not _hex(record.get("raw_sha256"))
+            or not _hex(record.get("packet_identity_set_sha256"))
+        ):
+            raise Error("exact_packet_denominator")
+        material_packets[key] = record
+
     sidecar_by_uid: dict[tuple[str, str], dict[str, Any]] = {}
+    sidecar_artifacts: dict[tuple[str, int], tuple[Path, bytes, dict[str, Any]]] = {}
+    sidecar_packet_keys: set[tuple[str, int]] = set()
+    sidecar_indexes: set[int] = set()
     for entry in sidecars:
         p_idx = entry["packet_index"]
         s_path = package / "evidence" / f"sidecar-{p_idx:04d}.json"
         _regular(s_path)
-        s_data, _ = _read_json(s_path)
+        s_data, s_raw = _read_json(s_path)
         try:
             validator.validate_sidecar(s_data, expected_identity=expected_identity)
         except validator.EvidenceValidationError as exc:
             raise Error("evidence_validation_failed") from exc
+        key = (entry.get("lane"), p_idx)
+        matching_packets = [
+            (packet_key, packet)
+            for packet_key, packet in material_packets.items()
+            if packet_key[0] == entry.get("lane")
+            and entry.get("packet_binding")
+            == {field: packet[field] for field in ("canonical_basename", "raw_sha256", "packet_identity_set_sha256")}
+        ]
+        packet_key, packet_record = matching_packets[0] if len(matching_packets) == 1 else (None, None)
+        if (
+            p_idx in sidecar_indexes
+            or packet_record is None
+            or entry.get("row_count") != packet_record["row_count"]
+            or entry.get("packet_binding")
+            != {field: packet_record[field] for field in ("canonical_basename", "raw_sha256", "packet_identity_set_sha256")}
+            or entry.get("sidecar_sha256") != digest(s_raw)
+            or entry.get("sidecar_id") != s_data.get("sidecar_id")
+            or s_data.get("lane") != entry.get("lane")
+            or s_data.get("packet_index") != p_idx
+            or s_data.get("row_count") != packet_record["row_count"]
+            or s_data.get("packet_binding") != entry.get("packet_binding")
+        ):
+            raise Error("evidence_validation_failed")
+        sidecar_indexes.add(p_idx)
+        sidecar_packet_keys.add(packet_key)
+        sidecar_artifacts[packet_key] = (s_path, s_raw, s_data)
         for r in s_data.get("rows", []):
-            sidecar_by_uid[(r["unit_id"], r["unit_sha256"])] = r
+            uid = (r["unit_id"], r["unit_sha256"])
+            if uid in sidecar_by_uid:
+                raise Error("evidence_validation_failed")
+            sidecar_by_uid[uid] = r
+    if set(material_packets) != sidecar_packet_keys or set(material_packets) != set(sidecar_artifacts):
+        raise Error("evidence_validation_failed")
 
     # 4. Check packets and row order
     ordered_identities: list[list[Any]] = []
     seen_identities: list[tuple[str, str]] = []
     packet_data_lookup: dict[tuple[str, int], dict[str, Any]] = {}
+    lane_rows: dict[str, int] = defaultdict(int)
+    lane_packets: dict[str, int] = defaultdict(int)
 
     for packet_record in manifest["packets"]:
         lane = packet_record["lane"]
@@ -526,18 +898,41 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         _regular(packet_path)
         p_data, p_raw = _read_json(packet_path)
         packet_data_lookup[(lane, idx)] = p_data
-        if digest(p_raw) != packet_record["raw_sha256"]:
+        if (
+            digest(p_raw) != packet_record["raw_sha256"]
+            or p_data.get("packet_identity_set_sha256") != packet_record["packet_identity_set_sha256"]
+            or not isinstance(p_data.get("rows"), list)
+            or len(p_data["rows"]) != packet_record["row_count"]
+        ):
             raise Error("exact_packet_denominator")
+        packet_identities: list[tuple[str, str]] = []
         for r_idx, row in enumerate(p_data.get("rows", [])):
             uid = (row["unit_id"], row["unit_sha256"])
+            packet_identities.append(uid)
             ordered_identities.append([lane, idx, r_idx, uid[0], uid[1]])
             seen_identities.append(uid)
+        if digest(canonical(sorted(packet_identities))) != packet_record["packet_identity_set_sha256"]:
+            raise Error("exact_packet_denominator")
+        lane_rows[lane] += len(packet_identities)
+        lane_packets[lane] += 1
 
-    if len(seen_identities) != expected_row_count or len(seen_identities) != len(set(seen_identities)):
+    expected_lane_packets = LANES if not fixture else {lane: lane_packets[lane] for lane in LANES}
+    if (
+        len(seen_identities) != expected_row_count
+        or len(seen_identities) != len(set(seen_identities))
+        or lane_rows != manifest["lane_row_counts"]
+        or lane_packets != expected_lane_packets
+    ):
         raise Error("ordered_identity_denominator")
 
     recomputed_commitment = digest(canonical(ordered_identities))
-    if recomputed_commitment != expected_commitment:
+    if (
+        recomputed_commitment != expected_commitment
+        or digest(canonical(sorted(seen_identities))) != manifest["identity_union_commitment_sha256"]
+        or digest(canonical(manifest["packets"])) != manifest["ordered_packet_commitment_sha256"]
+        or len(sidecar_by_uid) != len(seen_identities)
+        or set(sidecar_by_uid) != set(seen_identities)
+    ):
         raise Error("ordered_identity_denominator")
 
     # 5. Check Provider Receipt Coverage (Grok & Gemini)
@@ -555,22 +950,65 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
                 raise Error("provider_receipt_coverage")
             rcpt_val, _ = _read_json(rcpt_p)
             lbl_val, lbl_raw = _read_json(lbl_p)
+            p_rows = packet_data_lookup[(lane, idx)]["rows"]
+            _sidecar_path, sidecar_raw, sidecar = sidecar_artifacts[(lane, idx)]
+            raw_manifest_path = p_dir / lane / f"raw-manifest-{idx:04d}.json"
+            try:
+                _regular(raw_manifest_path)
+            except Error as exc:
+                raise Error("provider_receipt_coverage") from exc
+            provider_extras: dict[str, Any]
+            if provider_name == "gemini":
+                provider_extras = {"chunk_count": (len(p_rows) + 19) // 20}
+            else:
+                raw_path = p_dir / lane / f"raw-{idx:04d}.raw"
+                prompt_path = package / "prompts" / f"grok-{'clean' if lane == 'clean_label' else 'residual'}-label.md"
+                try:
+                    _regular(raw_path)
+                    _regular(prompt_path)
+                except Error as exc:
+                    raise Error("provider_receipt_coverage") from exc
+                provider_extras = {
+                    "response_raw_sha256": digest(raw_path.read_bytes()),
+                    "prompt_path": prompt_path.relative_to(package).as_posix(),
+                    "prompt_sha256": digest(prompt_path.read_bytes()),
+                    "attempt_count": rcpt_val.get("attempt_count"),
+                }
             if (
-                rcpt_val.get("evaluation_cycle_id") != CYCLE
+                set(rcpt_val) != _PROVIDER_RECEIPT_FIELDS[provider_name]
+                or set(lbl_val) != {"labels"}
+                or not isinstance(lbl_val.get("labels"), list)
+                or rcpt_val.get("schema_version") != f"phase3_cycle007_{provider_name}_packet_label_receipt_v1"
+                or rcpt_val.get("evaluation_cycle_id") != CYCLE
+                or rcpt_val.get("amendment_sha256") != AMENDMENT_SHA256
+                or rcpt_val.get("custody_receipt_raw_sha256") != custody_hash
+                or rcpt_val.get("materialization_manifest_raw_sha256") != manifest_hash
+                or rcpt_val.get("evidence_manifest_raw_sha256") != digest(ev_manifest_raw)
+                or rcpt_val.get("lane") != lane
+                or rcpt_val.get("packet_index") != idx
+                or rcpt_val.get("row_count") != len(p_rows)
+                or rcpt_val.get("packet_raw_sha256") != packet_record["raw_sha256"]
+                or rcpt_val.get("packet_identity_set_sha256") != packet_record["packet_identity_set_sha256"]
+                or rcpt_val.get("sidecar_raw_sha256") != digest(sidecar_raw)
+                or rcpt_val.get("sidecar_id") != sidecar["sidecar_id"]
+                or rcpt_val.get("raw_manifest_sha256") != digest(raw_manifest_path.read_bytes())
                 or rcpt_val.get("exact_model") != expected_spec["exact_model"]
                 or rcpt_val.get("model_family") != expected_spec["model_family"]
                 or rcpt_val.get("harness") != expected_spec["harness"]
                 or rcpt_val.get("labels_sha256") != digest(lbl_raw)
-                or rcpt_val.get("receipt_sha256")
-                != digest(canonical({k: v for k, v in rcpt_val.items() if k != "receipt_sha256"}))
+                or any(rcpt_val.get(key) != value for key, value in provider_extras.items())
+                or (provider_name == "grok" and rcpt_val.get("attempt_count") not in {1, 2})
+                or rcpt_val.get("text_free") is not True
+                or rcpt_val.get("receipt_sha256") != _receipt_hash(rcpt_val)
             ):
                 raise Error("provider_receipt_coverage")
             labels_list = lbl_val.get("labels", [])
-            p_rows = packet_data_lookup[(lane, idx)]["rows"]
             if len(labels_list) != len(p_rows):
                 raise Error("provider_receipt_coverage")
             for row, lbl in zip(p_rows, labels_list, strict=True):
                 r_ev = sidecar_by_uid.get((row["unit_id"], row["unit_sha256"]))
+                if r_ev is None:
+                    raise Error("provider_receipt_coverage")
                 try:
                     validate_label(lane, lbl, row, r_ev)
                 except Error as exc:
@@ -667,136 +1105,20 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
     ):
         raise Error("comparison_batch_receipt")
 
-    # 7. Recompute and Check Consensus Audit
-    sample_doc_p = package / AUDIT_ROOT / "clean-consensus-sample.json"
-    risk_rcpt_p = package / AUDIT_ROOT / "risk-review-receipt.json"
-    clean_rcpt_p = package / AUDIT_ROOT / "clean-audit-receipt.json"
-    audit_batch_path = package / AUDIT_ROOT / "batch-receipt.json"
-
-    if (
-        not sample_doc_p.exists()
-        or not risk_rcpt_p.exists()
-        or not clean_rcpt_p.exists()
-        or not audit_batch_path.exists()
-    ):
-        raise Error("sample_audit_incomplete")
-
-    sample_doc, _ = _read_json(sample_doc_p)
-    risk_rcpt, _ = _read_json(risk_rcpt_p)
-    clean_rcpt, _ = _read_json(clean_rcpt_p)
-    audit_batch, _ = _read_json(audit_batch_path)
-
-    recomputed_seed = digest(
-        f"phase3-cycle007-consensus-audit-v1\n{custody_hash}{manifest_hash}{expected_commitment}".encode()
+    # 7. Validate all sealed bounded source-review artifacts and their exact links.
+    sample_doc, _risk_rcpt, _clean_rcpt = _validate_live_audit(
+        package,
+        custody_hash=custody_hash,
+        manifest_hash=manifest_hash,
+        manifest=manifest,
+        expected_commitment=expected_commitment,
+        ev_manifest_raw=ev_manifest_raw,
+        expected_identity=expected_identity,
+        sidecar_by_uid=sidecar_by_uid,
+        clean_records=all_clean_records,
+        risk_records=all_risk_records,
+        sample_records=[],
     )
-    if sample_doc.get("seed") != recomputed_seed:
-        raise Error("sample_audit_incomplete")
-
-    # Recompute stratified sampling
-    for r in all_clean_records:
-        u_id = r["source_row"]["unit_id"]
-        u_sha = r["source_row"]["unit_sha256"]
-        r["rank"] = digest(f"{recomputed_seed}{r['lane']}{u_id}{u_sha}".encode())
-
-    strata: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for r in all_clean_records:
-        lane = r["lane"]
-        lbl = r["label"]
-        if lane == "clean_label":
-            code = lbl.get("decision_code", "unknown")
-            strata[f"clean:{code}"].append(r)
-        elif lane == "residual_label":
-            for p in lbl.get("phenomena", []):
-                p_id = p.get("phenomenon_id", "unknown")
-                p_code = p.get("decision_code", "unknown")
-                strata[f"residual:{p_id}:{p_code}"].append(r)
-
-    selected_by_unit: dict[tuple[str, str], dict[str, Any]] = {}
-    for _s_name, s_rows in sorted(strata.items()):
-        sorted_s = sorted(s_rows, key=lambda x: x["rank"])
-        for row in sorted_s[:10]:
-            uid = (row["source_row"]["unit_id"], row["source_row"]["unit_sha256"])
-            if uid not in selected_by_unit:
-                selected_by_unit[uid] = row
-
-    mandatory_union = list(selected_by_unit.values())
-    pop_count = len(all_clean_records)
-    if pop_count <= 600:
-        sample = sorted(all_clean_records, key=lambda x: x["rank"])
-    elif len(mandatory_union) >= 600:
-        sample = mandatory_union
-    else:
-        rem = [
-            r
-            for r in all_clean_records
-            if (r["source_row"]["unit_id"], r["source_row"]["unit_sha256"]) not in selected_by_unit
-        ]
-        rem_sorted = sorted(rem, key=lambda x: x["rank"])
-        sample = mandatory_union + rem_sorted[: 600 - len(mandatory_union)]
-
-    sample_sorted = sorted(
-        sample, key=lambda x: (x["lane"], x["source_row"]["unit_id"], x["source_row"]["unit_sha256"])
-    )
-    recomputed_sample_commitment = digest(
-        canonical([(r["source_row"]["unit_id"], r["source_row"]["unit_sha256"]) for r in sample_sorted])
-    )
-
-    if (
-        sample_doc.get("sample_identity_commitment_sha256") != recomputed_sample_commitment
-        or sample_doc.get("audited_count") != len(sample_sorted)
-        or sample_doc.get("population_count") != pop_count
-        or sample_doc.get("receipt_sha256")
-        != digest(canonical({k: v for k, v in sample_doc.items() if k != "receipt_sha256"}))
-    ):
-        raise Error("sample_audit_incomplete")
-
-    if (
-        risk_rcpt.get("risk_population_count") != len(all_risk_records)
-        or risk_rcpt.get("reviewed_count") != len(all_risk_records)
-        or risk_rcpt.get("terminal_findings_count") != 0
-        or risk_rcpt.get("receipt_sha256")
-        != digest(canonical({k: v for k, v in risk_rcpt.items() if k != "receipt_sha256"}))
-    ):
-        raise Error("risk_review_incomplete")
-
-    if (
-        clean_rcpt.get("clean_population_count") != pop_count
-        or clean_rcpt.get("audited_count") != len(sample_sorted)
-        or clean_rcpt.get("terminal_findings_count") != 0
-        or clean_rcpt.get("receipt_sha256")
-        != digest(canonical({k: v for k, v in clean_rcpt.items() if k != "receipt_sha256"}))
-    ):
-        raise Error("sample_audit_incomplete")
-
-    if (
-        audit_batch.get("schema_version") != "phase3_cycle007_consensus_audit_batch_receipt_v1"
-        or audit_batch.get("evaluation_cycle_id") != CYCLE
-        or audit_batch.get("passed") is not True
-        or audit_batch.get("terminal_findings_count") != 0
-        or audit_batch.get("receipt_sha256")
-        != digest(canonical({k: v for k, v in audit_batch.items() if k != "receipt_sha256"}))
-        or audit_batch.get("text_free") is not True
-    ):
-        raise Error("terminal_audit_finding")
-
-    # Re-verify terminal findings on risk and sample rows
-    for r in all_risk_records + sample_sorted:
-        source_row = r["source_row"]
-        lbl = r["label"]
-        is_neg = (
-            source_row.get("is_negative_control") is True
-            or source_row.get("negative_control") is True
-            or source_row.get("is_russianism_control") is True
-            or source_row.get("is_surzhyk_control") is True
-            or source_row.get("control_type") in {"russianism", "surzhyk", "source_conflict"}
-            or source_row.get("family_id") in {"russianism", "surzhyk", "source_conflict"}
-        )
-        if is_neg:
-            if lbl.get("decision_code") == "agree":
-                raise Error("terminal_audit_finding")
-            if "phenomena" in lbl and any(p.get("decision_code") == "positive" for p in lbl.get("phenomena", [])):
-                raise Error("terminal_audit_finding")
-
     # 8. Check Adjudication Stage
     adj_packet_receipts: list[dict[str, Any]] = []
     all_adj_labels: list[dict[str, Any]] = []
@@ -960,7 +1282,7 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         "clean_consensus_count": len(all_clean_records),
         "risk_triggered_consensus_count": len(all_risk_records),
         "disagreement_count": len(all_disagreements),
-        "audited_consensus_count": len(sample_sorted),
+        "audited_consensus_count": sample_doc["audited_count"],
         "one_sided_95_bound": sample_doc.get("one_sided_95_bound"),
         "unresolved_remaining_count": 0,
         "terminal_findings_count": 0,

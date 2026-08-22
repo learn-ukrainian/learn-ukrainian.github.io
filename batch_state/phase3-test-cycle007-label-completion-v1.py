@@ -14,6 +14,7 @@ from scripts.projects.open_model_data import phase3_cycle007_evidence_contract a
 
 HERE = Path(__file__).resolve().parent
 VERIFY_PATH = HERE / "phase3-verify-cycle007-label-completion-v1.py"
+AUDIT_PATH = HERE / "phase3-audit-cycle007-consensus-v1.py"
 
 
 def _load_module(path: Path, name: str):
@@ -25,6 +26,7 @@ def _load_module(path: Path, name: str):
 
 
 verify_mod = _load_module(VERIFY_PATH, "verify_mod")
+audit_mod = _load_module(AUDIT_PATH, "audit_mod")
 
 
 def _setup_certified_package(tmp_path: Path):
@@ -94,23 +96,44 @@ def _setup_certified_package(tmp_path: Path):
         ["residual_label", 1, 1, residual_rows[1]["unit_id"], residual_rows[1]["unit_sha256"]],
     ]
     commitment = verify_mod.digest(verify_mod.canonical(ordered_identities))
+    identity_union = verify_mod.digest(
+        verify_mod.canonical(sorted((row["unit_id"], row["unit_sha256"]) for row in [*clean_rows, *residual_rows]))
+    )
+    material_packets = [
+        {
+            "lane": "clean_label", "packet_index": 1, "canonical_basename": "packet-0001.json", "row_count": 2,
+            "raw_sha256": verify_mod.digest(p_clean_raw), "packet_identity_set_sha256": id_set_clean,
+        },
+        {
+            "lane": "residual_label", "packet_index": 1, "canonical_basename": "packet-0001.json", "row_count": 2,
+            "raw_sha256": verify_mod.digest(p_res_raw), "packet_identity_set_sha256": id_set_res,
+        },
+    ]
+    ordered_packets = verify_mod.digest(verify_mod.canonical(material_packets))
 
     # 2. Custody & Manifest
     custody = {
         "schema_version": "phase3_cycle007_custody_receipt_v1",
         "evaluation_cycle_id": verify_mod.CYCLE,
         "source_evaluation_cycle_id": verify_mod.SOURCE_CYCLE,
+        "amendment_reference": "batch_state/phase3-cycle007-source-grounded-amendment-v1.md",
         "source_custody_receipt_raw_sha256": verify_mod.SOURCE_CUSTODY_SHA256,
         "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256,
         "ordered_identity_commitment_sha256": commitment,
+        "identity_union_commitment_sha256": identity_union,
+        "ordered_packet_commitment_sha256": ordered_packets,
         "packet_count": 2,
         "row_count": 4,
         "lane_row_counts": {"clean_label": 2, "residual_label": 2},
+        "packet_size": 50,
         "provider_artifacts_copied": False,
         "labels_copied": False,
         "responses_copied": False,
+        "prompts_generated": False,
+        "evidence_sidecars_generated": False,
         "text_free": True,
     }
+    custody["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(custody))
     custody_p = pkg / "custody-receipt.json"
     custody_p.write_text(json.dumps(custody, sort_keys=True) + "\n")
     custody_p.chmod(0o600)
@@ -123,28 +146,14 @@ def _setup_certified_package(tmp_path: Path):
         "text_free": True,
         "custody_receipt_raw_sha256": custody_hash,
         "ordered_identity_commitment_sha256": commitment,
+        "identity_union_commitment_sha256": identity_union,
+        "ordered_packet_commitment_sha256": ordered_packets,
         "packet_count": 2,
         "row_count": 4,
         "lane_row_counts": {"clean_label": 2, "residual_label": 2},
-        "packets": [
-            {
-                "lane": "clean_label",
-                "packet_index": 1,
-                "canonical_basename": "packet-0001.json",
-                "row_count": 2,
-                "raw_sha256": verify_mod.digest(p_clean_raw),
-                "packet_identity_set_sha256": id_set_clean,
-            },
-            {
-                "lane": "residual_label",
-                "packet_index": 1,
-                "canonical_basename": "packet-0001.json",
-                "row_count": 2,
-                "raw_sha256": verify_mod.digest(p_res_raw),
-                "packet_identity_set_sha256": id_set_res,
-            },
-        ],
+        "packets": material_packets,
     }
+    manifest["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(manifest))
     manifest_p = pkg / "manifest.json"
     manifest_p.write_text(json.dumps(manifest, sort_keys=True) + "\n")
     manifest_p.chmod(0o600)
@@ -299,7 +308,16 @@ def _setup_certified_package(tmp_path: Path):
                 "packet_binding": s_res["packet_binding"],
             },
         ],
-        "source_package_binding": None,
+        "source_package_binding": {
+            "source_evaluation_cycle_id": verify_mod.SOURCE_CYCLE,
+            "custody_receipt_raw_sha256": custody_hash,
+            "materialization_manifest_sha256": manifest["receipt_sha256"],
+            "ordered_identity_commitment_sha256": commitment,
+            "identity_union_commitment_sha256": identity_union,
+            "ordered_packet_commitment_sha256": ordered_packets,
+            "packet_count": 2,
+            "row_count": 4,
+        },
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_m_p = ev_dir / "manifest.json"
@@ -388,6 +406,12 @@ def _setup_certified_package(tmp_path: Path):
 
     # Write Grok
     grok_dir = pkg / verify_mod.GROK_ROOT
+    prompt_dir = pkg / "prompts"
+    prompt_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    for prompt_name in ("grok-clean-label.md", "grok-residual-label.md"):
+        prompt = prompt_dir / prompt_name
+        prompt.write_text(f"synthetic {prompt_name}\n")
+        prompt.chmod(0o600)
     for lane, idx, lbls, p_raw, idset in [
         ("clean_label", 1, grok_clean_labels, p_clean_raw, id_set_clean),
         ("residual_label", 1, grok_res_labels, p_res_raw, id_set_res),
@@ -397,22 +421,36 @@ def _setup_certified_package(tmp_path: Path):
         lp = ldir / f"labels-{idx:04d}.json"
         lp.write_text(json.dumps({"labels": lbls}, sort_keys=True) + "\n")
         lp.chmod(0o600)
+        raw = ldir / f"raw-{idx:04d}.raw"
+        raw.write_bytes(f"synthetic grok {lane}\n".encode())
+        raw.chmod(0o600)
+        raw_manifest = ldir / f"raw-manifest-{idx:04d}.json"
+        raw_manifest.write_text(json.dumps({"synthetic": "grok", "lane": lane}, sort_keys=True) + "\n")
+        raw_manifest.chmod(0o600)
+        prompt = prompt_dir / f"grok-{'clean' if lane == 'clean_label' else 'residual'}-label.md"
         rcpt = {
             "schema_version": "phase3_cycle007_grok_packet_label_receipt_v1",
             "evaluation_cycle_id": verify_mod.CYCLE,
             "amendment_sha256": verify_mod.AMENDMENT_SHA256,
             "custody_receipt_raw_sha256": custody_hash,
-            "manifest_raw_sha256": manifest_hash,
-            "ordered_identity_commitment_sha256": commitment,
+            "materialization_manifest_raw_sha256": manifest_hash,
+            "evidence_manifest_raw_sha256": verify_mod.digest(ev_m_p.read_bytes()),
             "lane": lane,
             "packet_index": idx,
             "row_count": len(lbls),
             "packet_raw_sha256": verify_mod.digest(p_raw),
             "packet_identity_set_sha256": idset,
+            "sidecar_raw_sha256": verify_mod.digest((s_clean_p if lane == "clean_label" else s_res_p).read_bytes()),
+            "sidecar_id": s_clean["sidecar_id"] if lane == "clean_label" else s_res["sidecar_id"],
+            "raw_manifest_sha256": verify_mod.digest(raw_manifest.read_bytes()),
             "exact_model": "grok-4.5",
             "model_family": "xai",
             "harness": "native_grok",
             "labels_sha256": verify_mod.digest(lp.read_bytes()),
+            "response_raw_sha256": verify_mod.digest(raw.read_bytes()),
+            "prompt_path": prompt.relative_to(pkg).as_posix(),
+            "prompt_sha256": verify_mod.digest(prompt.read_bytes()),
+            "attempt_count": 1,
             "text_free": True,
         }
         rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(rcpt))
@@ -431,22 +469,29 @@ def _setup_certified_package(tmp_path: Path):
         lp = ldir / f"labels-{idx:04d}.json"
         lp.write_text(json.dumps({"labels": lbls}, sort_keys=True) + "\n")
         lp.chmod(0o600)
+        raw_manifest = ldir / f"raw-manifest-{idx:04d}.json"
+        raw_manifest.write_text(json.dumps({"synthetic": "gemini", "lane": lane}, sort_keys=True) + "\n")
+        raw_manifest.chmod(0o600)
         rcpt = {
             "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
             "evaluation_cycle_id": verify_mod.CYCLE,
             "amendment_sha256": verify_mod.AMENDMENT_SHA256,
             "custody_receipt_raw_sha256": custody_hash,
-            "manifest_raw_sha256": manifest_hash,
-            "ordered_identity_commitment_sha256": commitment,
+            "materialization_manifest_raw_sha256": manifest_hash,
+            "evidence_manifest_raw_sha256": verify_mod.digest(ev_m_p.read_bytes()),
             "lane": lane,
             "packet_index": idx,
             "row_count": len(lbls),
             "packet_raw_sha256": verify_mod.digest(p_raw),
             "packet_identity_set_sha256": idset,
+            "sidecar_raw_sha256": verify_mod.digest((s_clean_p if lane == "clean_label" else s_res_p).read_bytes()),
+            "sidecar_id": s_clean["sidecar_id"] if lane == "clean_label" else s_res["sidecar_id"],
+            "raw_manifest_sha256": verify_mod.digest(raw_manifest.read_bytes()),
             "exact_model": "Gemini 3.6 Flash (High)",
             "model_family": "google",
             "harness": "agy",
             "labels_sha256": verify_mod.digest(lp.read_bytes()),
+            "chunk_count": 1,
             "text_free": True,
         }
         rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(rcpt))
@@ -511,9 +556,7 @@ def _setup_certified_package(tmp_path: Path):
     # Residual lane compare
     r_clean_p = comp_dir / "residual_label" / "clean-consensus-0001.json"
     r_clean_p.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    r_clean_p.write_text(
-        json.dumps({"records": [{"source_row": residual_rows[0], "label": grok_res_labels[0]}]}, sort_keys=True) + "\n"
-    )
+    r_clean_p.write_text(json.dumps({"records": []}, sort_keys=True) + "\n")
     r_clean_p.chmod(0o600)
 
     r_risk_p = comp_dir / "residual_label" / "risk-consensus-0001.json"
@@ -521,7 +564,8 @@ def _setup_certified_package(tmp_path: Path):
         json.dumps(
             {
                 "records": [
-                    {"source_row": residual_rows[1], "label": grok_res_labels[1], "risk_reasons": ["negative_control"]}
+                    {"source_row": residual_rows[0], "label": grok_res_labels[0], "risk_reasons": ["missing_normative_rule"]},
+                    {"source_row": residual_rows[1], "label": grok_res_labels[1], "risk_reasons": ["missing_normative_rule", "negative_control"]},
                 ]
             },
             sort_keys=True,
@@ -560,8 +604,8 @@ def _setup_certified_package(tmp_path: Path):
         "evaluation_cycle_id": verify_mod.CYCLE,
         "packet_count": 2,
         "row_count": 4,
-        "clean_consensus_count": 2,
-        "risk_triggered_consensus_count": 1,
+        "clean_consensus_count": 1,
+        "risk_triggered_consensus_count": 2,
         "disagreement_count": 1,
         "packet_receipt_union_sha256": verify_mod.digest(
             verify_mod.canonical([c_rcpt["receipt_sha256"], r_rcpt["receipt_sha256"]])
@@ -572,72 +616,67 @@ def _setup_certified_package(tmp_path: Path):
     (comp_dir / "batch-receipt.json").write_text(json.dumps(comp_batch, sort_keys=True) + "\n")
     (comp_dir / "batch-receipt.json").chmod(0o600)
 
-    # 6. Consensus audit outputs
+    # 6. Produce the current, fully sealed bounded live-audit artifact chain.
     audit_dir = pkg / verify_mod.AUDIT_ROOT
     audit_dir.mkdir(parents=True, mode=0o700)
-
-    seed = verify_mod.digest(f"phase3-cycle007-consensus-audit-v1\n{custody_hash}{manifest_hash}{commitment}".encode())
-    sample_recs = [
-        {"source_row": clean_rows[0], "label": grok_clean_labels[0], "lane": "clean_label"},
-        {"source_row": residual_rows[0], "label": grok_res_labels[0], "lane": "residual_label"},
+    clean_records = [{"source_row": clean_rows[0], "label": grok_clean_labels[0], "lane": "clean_label", "packet_index": 1}]
+    risk_records = [
+        {"source_row": residual_rows[0], "label": grok_res_labels[0], "lane": "residual_label", "packet_index": 1},
+        {"source_row": residual_rows[1], "label": grok_res_labels[1], "lane": "residual_label", "packet_index": 1},
     ]
-    sample_sorted = sorted(
-        sample_recs, key=lambda x: (x["lane"], x["source_row"]["unit_id"], x["source_row"]["unit_sha256"])
+    # The closure fixture deliberately has a four-row synthetic denominator;
+    # keep the audit module's frozen commitment aligned with that fixture only.
+    audit_mod.ORDERED_IDENTITY_COMMITMENT_SHA256 = commitment
+    sample_doc, sample_records = audit_mod.sample_clean_consensus(pkg, clean_records)
+    audit_mod.atomic(audit_dir / "clean-consensus-sample.json", sample_doc)
+    sampler_receipt = audit_mod.seal_sampler(pkg, clean_records, risk_records, sample_records, sample_doc)
+    expected_identity = {key: ev_manifest[key] for key in audit_mod.validator._IDENTITY_FIELDS}
+    plan_receipt, targets = audit_mod.seal_review_plan(
+        pkg,
+        risk_records,
+        sample_records,
+        {(item["unit_id"], item["unit_sha256"]): item for item in [*clean_ev_rows, *res_ev_rows]},
+        sample_doc,
+        evidence_manifest_sha256=verify_mod.digest(ev_m_p.read_bytes()),
+        source_identity_sha256=verify_mod.digest(verify_mod.canonical(expected_identity)),
     )
-    sample_comm = verify_mod.digest(
-        verify_mod.canonical([(r["source_row"]["unit_id"], r["source_row"]["unit_sha256"]) for r in sample_sorted])
-    )
-
-    sample_doc = {
-        "schema_version": "phase3_cycle007_clean_consensus_sample_v1",
-        "evaluation_cycle_id": verify_mod.CYCLE,
-        "seed": seed,
-        "population_count": 2,
-        "audited_count": 2,
-        "one_sided_95_bound": 1.0 - (0.05 ** (1.0 / 2)),
-        "sample_identity_commitment_sha256": sample_comm,
-        "text_free": True,
+    human_result = {
+        "reviewer": {"exact_model": "synthetic-source-qualified-human", "model_family": "human", "harness": "local-operator", "source_qualified": True},
+        "reviews": [
+            {"lane": target["lane"], "packet_index": target["packet_index"], "unit_id": target["source_row"]["unit_id"], "unit_sha256": target["source_row"]["unit_sha256"], "source_evidence_sha256": target["source_evidence_sha256"], "outcome": "pass"}
+            for target in targets
+        ],
     }
-    sample_doc["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(sample_doc))
-    (audit_dir / "clean-consensus-sample.json").write_text(json.dumps(sample_doc, sort_keys=True) + "\n")
-    (audit_dir / "clean-consensus-sample.json").chmod(0o600)
-
+    review_receipt = audit_mod.source_review(pkg, targets, plan_receipt, human_review_result=human_result)
     risk_rcpt = {
-        "schema_version": "phase3_cycle007_risk_review_receipt_v1",
-        "evaluation_cycle_id": verify_mod.CYCLE,
-        "risk_population_count": 1,
-        "reviewed_count": 1,
-        "terminal_findings_count": 0,
-        "text_free": True,
+        "schema_version": "phase3_cycle007_risk_review_receipt_v1", "evaluation_cycle_id": verify_mod.CYCLE,
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256, "custody_receipt_raw_sha256": custody_hash,
+        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256, "manifest_raw_sha256": manifest_hash,
+        "ordered_identity_commitment_sha256": commitment, "risk_population_count": len(risk_records), "reviewed_count": len(risk_records),
+        "source_review_receipt_sha256": review_receipt["receipt_sha256"], "reviewer": review_receipt["reviewer"], "terminal_findings_count": 0, "text_free": True,
     }
     risk_rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(risk_rcpt))
-    (audit_dir / "risk-review-receipt.json").write_text(json.dumps(risk_rcpt, sort_keys=True) + "\n")
-    (audit_dir / "risk-review-receipt.json").chmod(0o600)
-
+    audit_mod.atomic(audit_dir / "risk-review-receipt.json", risk_rcpt)
     clean_rcpt = {
-        "schema_version": "phase3_cycle007_clean_audit_receipt_v1",
-        "evaluation_cycle_id": verify_mod.CYCLE,
-        "clean_population_count": 2,
-        "audited_count": 2,
-        "terminal_findings_count": 0,
-        "text_free": True,
+        "schema_version": "phase3_cycle007_clean_audit_receipt_v1", "evaluation_cycle_id": verify_mod.CYCLE,
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256, "custody_receipt_raw_sha256": custody_hash,
+        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256, "manifest_raw_sha256": manifest_hash,
+        "ordered_identity_commitment_sha256": commitment, "clean_population_count": len(clean_records), "audited_count": len(sample_records),
+        "one_sided_95_bound": sample_doc["one_sided_95_bound"], "source_review_receipt_sha256": review_receipt["receipt_sha256"], "reviewer": review_receipt["reviewer"], "terminal_findings_count": 0, "text_free": True,
     }
     clean_rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(clean_rcpt))
-    (audit_dir / "clean-audit-receipt.json").write_text(json.dumps(clean_rcpt, sort_keys=True) + "\n")
-    (audit_dir / "clean-audit-receipt.json").chmod(0o600)
-
+    audit_mod.atomic(audit_dir / "clean-audit-receipt.json", clean_rcpt)
     audit_batch = {
-        "schema_version": "phase3_cycle007_consensus_audit_batch_receipt_v1",
-        "evaluation_cycle_id": verify_mod.CYCLE,
-        "clean_audited_count": 2,
-        "one_sided_95_bound": sample_doc["one_sided_95_bound"],
-        "terminal_findings_count": 0,
-        "passed": True,
-        "text_free": True,
+        "schema_version": "phase3_cycle007_consensus_audit_batch_receipt_v1", "evaluation_cycle_id": verify_mod.CYCLE,
+        "amendment_sha256": verify_mod.AMENDMENT_SHA256, "custody_receipt_raw_sha256": custody_hash,
+        "source_label_manifest_raw_sha256": verify_mod.SOURCE_MANIFEST_SHA256, "manifest_raw_sha256": manifest_hash,
+        "ordered_identity_commitment_sha256": commitment, "risk_population_count": len(risk_records), "risk_reviewed_count": len(risk_records),
+        "clean_population_count": len(clean_records), "clean_audited_count": len(sample_records), "one_sided_95_bound": sample_doc["one_sided_95_bound"],
+        "sample_receipt_sha256": sample_doc["receipt_sha256"], "sampler_seal_receipt_sha256": sampler_receipt["receipt_sha256"], "source_review_plan_receipt_sha256": plan_receipt["receipt_sha256"], "source_review_receipt_sha256": review_receipt["receipt_sha256"],
+        "reviewer": review_receipt["reviewer"], "terminal_findings_count": 0, "passed": True, "text_free": True,
     }
     audit_batch["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(audit_batch))
-    (audit_dir / "batch-receipt.json").write_text(json.dumps(audit_batch, sort_keys=True) + "\n")
-    (audit_dir / "batch-receipt.json").chmod(0o600)
+    audit_mod.atomic(audit_dir / "batch-receipt.json", audit_batch)
 
     # 7. Adjudication outputs
     adj_dir = pkg / verify_mod.ADJUDICATION_ROOT / "final"
@@ -783,10 +822,10 @@ def test_certifier_successful_exact_fixture_closure(tmp_path):
     pkg = _setup_certified_package(tmp_path)
     cert = verify_mod.certify_completion(pkg, fixture=True)
     assert cert["schema_version"] == "phase3_cycle007_label_completion_receipt_v1"
-    assert cert["clean_consensus_count"] == 2
-    assert cert["risk_triggered_consensus_count"] == 1
+    assert cert["clean_consensus_count"] == 1
+    assert cert["risk_triggered_consensus_count"] == 2
     assert cert["disagreement_count"] == 1
-    assert cert["audited_consensus_count"] == 2
+    assert cert["audited_consensus_count"] == 1
     assert cert["unresolved_remaining_count"] == 0
     assert cert["terminal_findings_count"] == 0
     assert cert["text_free"] is True
@@ -991,6 +1030,83 @@ def test_certifier_fails_on_partition_overlap_or_omission(tmp_path):
     with pytest.raises(verify_mod.Error) as exc:
         verify_mod.certify_completion(pkg, fixture=True)
     assert exc.value.failure_code == "comparison_receipts"
+
+
+def test_certifier_rejects_rebound_evidence_manifest_source_package(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    manifest_path = pkg / "evidence" / "manifest.json"
+    evidence_manifest = json.loads(manifest_path.read_text())
+    evidence_manifest["source_package_binding"]["materialization_manifest_sha256"] = "0" * 64
+    evidence_manifest["manifest_sha256"] = contract.sha256_value(
+        {key: value for key, value in evidence_manifest.items() if key != "manifest_sha256"}
+    )
+    manifest_path.write_text(json.dumps(evidence_manifest, sort_keys=True) + "\n")
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "evidence_validation_failed"
+
+
+def test_certifier_rejects_provider_receipt_schema_extension(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    receipt_path = pkg / verify_mod.GEMINI_ROOT / "clean_label" / "receipt-0001.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["unexpected_transport_hint"] = "forged"
+    receipt["receipt_sha256"] = verify_mod.digest(
+        verify_mod.canonical({key: value for key, value in receipt.items() if key != "receipt_sha256"})
+    )
+    receipt_path.write_text(json.dumps(receipt, sort_keys=True) + "\n")
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "provider_receipt_coverage"
+
+
+def test_certifier_rejects_grok_raw_manifest_drift_even_with_a_valid_receipt(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    raw_manifest = pkg / verify_mod.GROK_ROOT / "clean_label" / "raw-manifest-0001.json"
+    raw_manifest.write_text(json.dumps({"synthetic": "rebound"}, sort_keys=True) + "\n")
+    raw_manifest.chmod(0o600)
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "provider_receipt_coverage"
+
+
+def test_certifier_rejects_audit_receipt_schema_extension(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    receipt_path = pkg / verify_mod.AUDIT_ROOT / "risk-review-receipt.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["unexpected"] = True
+    receipt["receipt_sha256"] = verify_mod.digest(
+        verify_mod.canonical({key: value for key, value in receipt.items() if key != "receipt_sha256"})
+    )
+    receipt_path.write_text(json.dumps(receipt, sort_keys=True) + "\n")
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "risk_review_incomplete"
+
+
+def test_certifier_treats_a_sealed_non_pass_live_review_as_terminal(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    results_path = pkg / verify_mod.AUDIT_ROOT / "source-review-results.json"
+    results = json.loads(results_path.read_text())
+    results["reviews"][0]["outcome"] = "incorrect_positive"
+    results_path.write_text(json.dumps(results, sort_keys=True) + "\n")
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "terminal_audit_finding"
+
+
+def test_missing_pravopys_record_is_risk_even_without_an_unresolved_record():
+    label = {"phenomena": [{"phenomenon_id": "apostrophe", "decision_code": "positive"}]}
+    triggered, reasons = verify_mod.is_risk_triggered(
+        {"unit_id": "u", "unit_sha256": "0" * 64}, {"evidence": []}, label, label
+    )
+    assert triggered is True
+    assert reasons == ["insufficient_evidence_cited", "missing_normative_rule"]
 
 
 if __name__ == "__main__":
