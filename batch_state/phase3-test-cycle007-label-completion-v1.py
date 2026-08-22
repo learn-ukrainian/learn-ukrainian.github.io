@@ -16,6 +16,7 @@ HERE = Path(__file__).resolve().parent
 VERIFY_PATH = HERE / "phase3-verify-cycle007-label-completion-v1.py"
 AUDIT_PATH = HERE / "phase3-audit-cycle007-consensus-v1.py"
 
+
 def _load_module(path: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None and spec.loader is not None
@@ -462,7 +463,12 @@ def _setup_certified_package(tmp_path: Path):
     grok_dir = pkg / verify_mod.GROK_ROOT
     prompt_dir = pkg / "prompts"
     prompt_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    for prompt_name in ("grok-clean-label.md", "grok-residual-label.md"):
+    for prompt_name in (
+        "grok-clean-label.md",
+        "grok-residual-label.md",
+        "gemini-clean-label.md",
+        "gemini-residual-label.md",
+    ):
         prompt = prompt_dir / prompt_name
         prompt.write_text(f"synthetic {prompt_name}\n")
         prompt.chmod(0o600)
@@ -504,6 +510,7 @@ def _setup_certified_package(tmp_path: Path):
             "response_raw_sha256": verify_mod.digest(raw.read_bytes()),
             "prompt_path": prompt.relative_to(pkg).as_posix(),
             "prompt_sha256": verify_mod.digest(prompt.read_bytes()),
+            "label_prompt_sha256": verify_mod.digest(prompt.read_bytes()),
             "attempt_count": 1,
             "text_free": True,
         }
@@ -526,6 +533,7 @@ def _setup_certified_package(tmp_path: Path):
         raw_manifest = ldir / f"raw-manifest-{idx:04d}.json"
         raw_manifest.write_text(json.dumps({"synthetic": "gemini", "lane": lane}, sort_keys=True) + "\n")
         raw_manifest.chmod(0o600)
+        prompt = prompt_dir / f"gemini-{'clean' if lane == 'clean_label' else 'residual'}-label.md"
         rcpt = {
             "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
             "evaluation_cycle_id": verify_mod.CYCLE,
@@ -546,6 +554,7 @@ def _setup_certified_package(tmp_path: Path):
             "harness": "agy",
             "labels_sha256": verify_mod.digest(lp.read_bytes()),
             "chunk_count": 1,
+            "label_prompt_sha256": verify_mod.digest(prompt.read_bytes()),
             "text_free": True,
         }
         rcpt["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(rcpt))
@@ -996,6 +1005,7 @@ def _setup_certified_package(tmp_path: Path):
         "gemini_canary_receipt_sha256": canary_raws["gemini"],
         "grok_canary_receipt_sha256": canary_raws["grok"],
         "code_hashes": code_hashes,
+        "label_prompt_sha256s": verify_mod._recompute_label_prompt_sha256s(pkg),
         "backup_receipt_sha256": "6" * 64,
         "review_hashes": {"source_authority_review": "7" * 64},
         "ci_proof_bindings": {"ci_proof": "8" * 64},
@@ -1045,6 +1055,10 @@ def test_certifier_successful_exact_fixture_closure(tmp_path):
     assert cert["preflight_receipt_sha256"] == verify_mod.digest(
         (pkg / verify_mod.CONTROL_ROOT / "preflight-receipt.json").read_bytes()
     )
+    assert cert["label_prompt_sha256s"] == verify_mod._recompute_label_prompt_sha256s(pkg)
+    assert cert["resolution_authorization_receipt_raw_sha256"] is None
+    assert cert["resolution_authority_attestation_raw_sha256"] is None
+    assert cert["resolution_nonce_consumption_sha256"] is None
     assert cert["sources_endpoint_identity_sha256"] == verify_mod.digest(
         verify_mod.canonical(
             json.loads((pkg / verify_mod.CONTROL_ROOT / "preflight-receipt.json").read_text())[
@@ -1372,6 +1386,17 @@ def test_certifier_rejects_resealed_preflight_code_hash_tamper(tmp_path):
     )
     path.write_bytes(verify_mod.canonical(receipt))
     path.chmod(0o600)
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "closure_validation_failed"
+
+
+def test_certifier_rejects_label_prompt_drift_after_preflight(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    prompt_path = pkg / verify_mod.LABEL_PROMPT_PATHS["gemini"]["clean_label"]
+    prompt_path.write_text("drifted prompt\n")
+    prompt_path.chmod(0o600)
 
     with pytest.raises(verify_mod.Error) as exc:
         verify_mod.certify_completion(pkg, fixture=True)

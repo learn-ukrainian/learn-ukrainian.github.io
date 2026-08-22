@@ -39,7 +39,6 @@ ORDERED_IDENTITY_COMMITMENT_SHA256 = "331fd7fbc42e43cb3c218d9c2b790df060c0a553ab
 EXPECTED_CUSTODY_SHA256 = ""
 EXPECTED_LABEL_MANIFEST_SHA256 = ""
 EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
-EXPECTED_PROMPT_SHA256 = ""
 EXPECTED_SOURCES_ENDPOINT_IDENTITY: dict[str, Any] = {}
 
 MODEL = "Gemini 3.6 Flash (High)"
@@ -130,6 +129,25 @@ def canonical(value: Any) -> bytes:
 
 def digest(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def _label_prompt_hash(value: str | None) -> str:
+    """Require the separately reviewed, lane-specific labeling prompt digest.
+
+    A public canary prompt only proves a two-row liveness challenge.  It is not
+    the private 10,159-row labeling instruction and must never become a
+    fallback binding for this runner.  Callers therefore supply the exact
+    labeling prompt digest for the lane they are executing on every entry
+    point; an absent or malformed value is a package-binding failure before
+    any provider executable is started.
+    """
+    if (
+        not isinstance(value, str)
+        or len(value) != 64
+        or any(character not in "0123456789abcdef" for character in value)
+    ):
+        raise Error("ordinal_identity_binding_drift")
+    return value
 
 
 def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -236,7 +254,8 @@ def _verify_source_package_binding(
     if (
         not isinstance(binding, dict)
         or not isinstance(manifest.get("receipt_sha256"), str)
-        or manifest.get("receipt_sha256") != digest(canonical({key: value for key, value in manifest.items() if key != "receipt_sha256"}))
+        or manifest.get("receipt_sha256")
+        != digest(canonical({key: value for key, value in manifest.items() if key != "receipt_sha256"}))
         or digest(manifest_bytes) == binding.get("materialization_manifest_sha256")
         or binding != expected
     ):
@@ -366,8 +385,7 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
             if (
                 sidecar_e.get("lane") != expected_p.get("lane")
                 or sidecar_e.get("row_count") != expected_p.get("row_count")
-                or sidecar_e.get("packet_binding", {}).get("canonical_basename")
-                != expected_p.get("canonical_basename")
+                or sidecar_e.get("packet_binding", {}).get("canonical_basename") != expected_p.get("canonical_basename")
                 or sidecar_e.get("packet_binding", {}).get("raw_sha256") != expected_p.get("raw_sha256")
                 or sidecar_e.get("packet_binding", {}).get("packet_identity_set_sha256")
                 != expected_p.get("packet_identity_set_sha256")
@@ -423,13 +441,14 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
     return path, value, sidecar_path, sidecar_val
 
 
-def prompt_binding(package: Path, lane: str) -> tuple[bytes, str]:
-    """Read and independently bind the immutable prompt for this lane."""
+def prompt_binding(package: Path, lane: str, *, expected_label_prompt_sha: str | None) -> tuple[bytes, str]:
+    """Read and bind the immutable private labeling prompt for this lane."""
+    expected_hash = _label_prompt_hash(expected_label_prompt_sha)
     prompt_path = package / PROMPTS[lane]
     _mode(prompt_path, 0o600)
     prompt_raw = prompt_path.read_bytes()
     prompt_sha256 = digest(prompt_raw)
-    if EXPECTED_PROMPT_SHA256 and prompt_sha256 != EXPECTED_PROMPT_SHA256:
+    if prompt_sha256 != expected_hash:
         raise Error("ordinal_identity_binding_drift")
     return prompt_raw, prompt_sha256
 
@@ -869,6 +888,7 @@ def _run_chunk(
     sidecar_part: dict[str, Any],
     provider: Path,
     expected_agy_sha256: str | None,
+    expected_label_prompt_sha: str,
 ) -> dict[str, Any]:
     chunk_index = int(part["chunk_index"])
     out = _chunk_dir(package, lane, packet_index)
@@ -877,7 +897,14 @@ def _run_chunk(
     if labels_path.exists() or receipt_path.exists():
         if not (labels_path.exists() and receipt_path.exists()):
             raise Error("ordinal_identity_binding_drift")
-        _verify_chunk(package, lane, packet_index, part, sidecar_part)
+        _verify_chunk(
+            package,
+            lane,
+            packet_index,
+            part,
+            sidecar_part,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+        )
         return {"chunk_index": chunk_index, "resumed": True, "text_free": True}
     if (package / OUTPUT / "provider-stop.json").exists():
         raise Error("ordinal_identity_binding_drift")
@@ -919,7 +946,9 @@ def _run_chunk(
                 runtime / "response-schema.json",
                 runtime / "agy.log",
             )
-            prompt_template, prompt_sha256 = prompt_binding(package, lane)
+            prompt_template, prompt_sha256 = prompt_binding(
+                package, lane, expected_label_prompt_sha=expected_label_prompt_sha
+            )
             prompt = compose_prompt(prompt_template, lane, part, sidecar_part)
             _atomic(stdin_path, stdin_event(prompt), raw=True)
             _atomic(schema_path, schema(lane, part["rows"]))
@@ -1001,6 +1030,7 @@ def _run_chunk(
                 "row_count": len(part["rows"]),
                 "chunk_identity_set_sha256": digest(canonical(sorted(_identity(row) for row in part["rows"]))),
                 "prompt_sha256": prompt_sha256,
+                "label_prompt_sha256": expected_label_prompt_sha,
                 "response_raw_sha256": raw_hash,
                 "labels_sha256": labels_hash,
                 "attempt_count": attempt,
@@ -1034,7 +1064,13 @@ def _run_chunk(
 
 
 def _verify_chunk(
-    package: Path, lane: str, packet_index: int, part: dict[str, Any], sidecar_part: dict[str, Any] | None = None
+    package: Path,
+    lane: str,
+    packet_index: int,
+    part: dict[str, Any],
+    sidecar_part: dict[str, Any] | None = None,
+    *,
+    expected_label_prompt_sha: str | None,
 ) -> dict[str, Any]:
     out = _chunk_dir(package, lane, packet_index)
     chunk_index = int(part["chunk_index"])
@@ -1050,7 +1086,7 @@ def _verify_chunk(
         SOURCE.validate(lane, {"rows": part["rows"]}, canonical(labels), sidecar=sidecar_arg)
     except SOURCE.Invalid as exc:
         raise _semantic_failure(exc) from exc
-    _prompt_template, prompt_sha256 = prompt_binding(package, lane)
+    _prompt_template, prompt_sha256 = prompt_binding(package, lane, expected_label_prompt_sha=expected_label_prompt_sha)
     expected = {
         "schema_version": "phase3_cycle007_gemini_chunk_receipt_v1",
         "evaluation_cycle_id": CYCLE,
@@ -1061,6 +1097,7 @@ def _verify_chunk(
         "row_count": len(part["rows"]),
         "chunk_identity_set_sha256": digest(canonical(sorted(_identity(row) for row in part["rows"]))),
         "prompt_sha256": prompt_sha256,
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "response_raw_sha256": digest(raw_path.read_bytes()),
         "labels_sha256": digest(labels_path.read_bytes()),
         "attempt_count": receipt.get("attempt_count"),
@@ -1088,6 +1125,8 @@ def _reassemble(
     sidecar_path: Path,
     sidecar_contents: dict[str, Any],
     parts: list[tuple[dict[str, Any], dict[str, Any]]],
+    *,
+    expected_label_prompt_sha: str,
 ) -> dict[str, Any]:
     out = package / OUTPUT / lane
     labels_path, receipt_path, raw_manifest_path = (
@@ -1098,10 +1137,17 @@ def _reassemble(
     if labels_path.exists() or receipt_path.exists() or raw_manifest_path.exists():
         if not (labels_path.exists() and receipt_path.exists() and raw_manifest_path.exists()):
             raise Error("ordinal_identity_binding_drift")
-        return verify_packet(package, lane, packet_index)
+        return verify_packet(package, lane, packet_index, expected_label_prompt_sha=expected_label_prompt_sha)
     answers, entries = [], []
     for part, sidecar_part in parts:
-        labels = _verify_chunk(package, lane, packet_index, part, sidecar_part)
+        labels = _verify_chunk(
+            package,
+            lane,
+            packet_index,
+            part,
+            sidecar_part,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+        )
         answers.extend(labels["labels"])
         receipt = _read_json(_chunk_dir(package, lane, packet_index) / f"receipt-chunk-{part['chunk_index']:02d}.json")
         entries.append(
@@ -1124,6 +1170,7 @@ def _reassemble(
         "lane": lane,
         "packet_index": packet_index,
         "chunk_count": len(parts),
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "chunks": entries,
         "text_free": True,
     }
@@ -1142,7 +1189,8 @@ def _reassemble(
         "packet_identity_set_sha256": contents["packet_identity_set_sha256"],
         "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
         "sidecar_id": sidecar_contents.get("sidecar_id", ""),
-        "prompt_sha256": prompt_binding(package, lane)[1],
+        "prompt_sha256": prompt_binding(package, lane, expected_label_prompt_sha=expected_label_prompt_sha)[1],
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "raw_manifest_sha256": manifest_hash,
         "labels_sha256": labels_hash,
         "chunk_count": len(parts),
@@ -1156,7 +1204,9 @@ def _reassemble(
     return {"ok": True, "lane": lane, "packet_index": packet_index, "chunk_count": len(parts), "text_free": True}
 
 
-def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]:
+def verify_packet(
+    package: Path, lane: str, packet_index: int, *, expected_label_prompt_sha: str | None
+) -> dict[str, Any]:
     source_path, contents, sidecar_path, sidecar_contents = packet(package, lane, packet_index)
     parts = chunks(contents, sidecar_contents)
     out = package / OUTPUT / lane
@@ -1167,7 +1217,14 @@ def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]
     )
     labels, receipt, manifest = _read_json(labels_path), _read_json(receipt_path), _read_json(manifest_path)
     for part, sidecar_part in parts:
-        _verify_chunk(package, lane, packet_index, part, sidecar_part)
+        _verify_chunk(
+            package,
+            lane,
+            packet_index,
+            part,
+            sidecar_part,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+        )
     try:
         SOURCE.validate(lane, {"rows": contents["rows"]}, canonical(labels), sidecar={"rows": sidecar_contents["rows"]})
     except SOURCE.Invalid as exc:
@@ -1178,6 +1235,7 @@ def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]
         "lane": lane,
         "packet_index": packet_index,
         "chunk_count": len(parts),
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "chunks": manifest.get("chunks"),
         "text_free": True,
     }
@@ -1197,7 +1255,8 @@ def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]
         "packet_identity_set_sha256": contents["packet_identity_set_sha256"],
         "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
         "sidecar_id": sidecar_contents.get("sidecar_id", ""),
-        "prompt_sha256": prompt_binding(package, lane)[1],
+        "prompt_sha256": prompt_binding(package, lane, expected_label_prompt_sha=expected_label_prompt_sha)[1],
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "raw_manifest_sha256": digest(manifest_path.read_bytes()),
         "labels_sha256": digest(labels_path.read_bytes()),
         "chunk_count": len(parts),
@@ -1231,17 +1290,16 @@ def run_packet(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
-    expected_prompt_sha: str | None = None,
+    expected_label_prompt_sha: str | None = None,
 ) -> dict[str, Any]:
-    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256, EXPECTED_PROMPT_SHA256
+    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
         EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     if expected_evidence_manifest_sha256 is not None:
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
-    if expected_prompt_sha is not None:
-        EXPECTED_PROMPT_SHA256 = expected_prompt_sha
+    expected_label_prompt_sha = _label_prompt_hash(expected_label_prompt_sha)
     if _real_agy_provider(provider):
         if not isinstance(expected_agy_sha256, str) or len(expected_agy_sha256) != 64:
             raise Error("ordinal_identity_binding_drift")
@@ -1259,13 +1317,32 @@ def run_packet(
         if not all(path.exists() and not path.is_symlink() for path in final_paths):
             stop(package, lane, packet_index, "ordinal_identity_binding_drift", failure_stage="package_binding")
             raise Error("ordinal_identity_binding_drift")
-        return verify_packet(package, lane, packet_index)
+        return verify_packet(package, lane, packet_index, expected_label_prompt_sha=expected_label_prompt_sha)
     parts = chunks(contents, sidecar_contents)
     try:
         for part, sidecar_part in parts:
-            _run_chunk(package, lane, packet_index, part, sidecar_part, provider, expected_agy_sha256)
-        _reassemble(package, lane, packet_index, source_path, contents, sidecar_path, sidecar_contents, parts)
-        return verify_packet(package, lane, packet_index)
+            _run_chunk(
+                package,
+                lane,
+                packet_index,
+                part,
+                sidecar_part,
+                provider,
+                expected_agy_sha256,
+                expected_label_prompt_sha,
+            )
+        _reassemble(
+            package,
+            lane,
+            packet_index,
+            source_path,
+            contents,
+            sidecar_path,
+            sidecar_contents,
+            parts,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+        )
+        return verify_packet(package, lane, packet_index, expected_label_prompt_sha=expected_label_prompt_sha)
     except Error as exc:
         stop(package, lane, packet_index, exc.code)
         raise
@@ -1283,18 +1360,17 @@ def batch(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
-    expected_prompt_sha: str | None = None,
+    expected_label_prompt_sha: str | None = None,
 ) -> dict[str, Any]:
     """Resume one contiguous packet range with fail-stop concurrency fixed at one."""
-    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256, EXPECTED_PROMPT_SHA256
+    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
         EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     if expected_evidence_manifest_sha256 is not None:
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
-    if expected_prompt_sha is not None:
-        EXPECTED_PROMPT_SHA256 = expected_prompt_sha
+    expected_label_prompt_sha = _label_prompt_hash(expected_label_prompt_sha)
     if lane not in LANES or not 1 <= start <= end <= LANES[lane] or concurrency != 1:
         raise Error("ordinal_identity_binding_drift")
     if (package / OUTPUT / "provider-stop.json").exists():
@@ -1310,7 +1386,7 @@ def batch(
                 index,
                 provider,
                 expected_agy_sha256=expected_agy_sha256,
-                expected_prompt_sha=expected_prompt_sha,
+                expected_label_prompt_sha=expected_label_prompt_sha,
             )
         )
     return {
@@ -1320,6 +1396,7 @@ def batch(
         "end": end,
         "packet_count": len(results),
         "concurrency": 1,
+        "label_prompt_sha256": expected_label_prompt_sha,
         "text_free": True,
     }
 
@@ -1339,8 +1416,14 @@ def main() -> int:
     )
     parser.add_argument("--expected-custody-sha", required=True, help="controller-bound custody receipt SHA256")
     parser.add_argument("--expected-label-manifest-sha", required=True, help="controller-bound label manifest SHA256")
-    parser.add_argument("--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256")
-    parser.add_argument("--expected-prompt-sha", required=True, help="controller-bound immutable Gemini prompt SHA256")
+    parser.add_argument(
+        "--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256"
+    )
+    parser.add_argument(
+        "--expected-label-prompt-sha",
+        required=True,
+        help="independently reviewed immutable labeling-prompt SHA256 for the selected lane",
+    )
     args = parser.parse_args()
     try:
         if args.concurrency != 1:
@@ -1361,15 +1444,14 @@ def main() -> int:
             or any(character not in "0123456789abcdef" for character in args.expected_custody_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_label_manifest_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_evidence_manifest_sha)
-            or len(args.expected_prompt_sha) != 64
-            or any(character not in "0123456789abcdef" for character in args.expected_prompt_sha)
+            or len(args.expected_label_prompt_sha) != 64
+            or any(character not in "0123456789abcdef" for character in args.expected_label_prompt_sha)
         ):
             raise Error("ordinal_identity_binding_drift")
-        global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256, EXPECTED_PROMPT_SHA256
+        global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
         EXPECTED_CUSTODY_SHA256 = args.expected_custody_sha
         EXPECTED_LABEL_MANIFEST_SHA256 = args.expected_label_manifest_sha
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha
-        EXPECTED_PROMPT_SHA256 = args.expected_prompt_sha
         if args.packet_index is not None:
             if args.end is not None:
                 raise Error("ordinal_identity_binding_drift")
@@ -1379,7 +1461,7 @@ def main() -> int:
                 args.packet_index,
                 args.test_provider_bin or AGY,
                 expected_agy_sha256=args.expected_agy_executable_sha,
-                expected_prompt_sha=args.expected_prompt_sha,
+                expected_label_prompt_sha=args.expected_label_prompt_sha,
             )
         elif args.start is not None and args.end is not None:
             result = batch(
@@ -1390,7 +1472,7 @@ def main() -> int:
                 args.test_provider_bin or AGY,
                 concurrency=args.concurrency,
                 expected_agy_sha256=args.expected_agy_executable_sha,
-                expected_prompt_sha=args.expected_prompt_sha,
+                expected_label_prompt_sha=args.expected_label_prompt_sha,
             )
         else:
             raise Error("ordinal_identity_binding_drift")

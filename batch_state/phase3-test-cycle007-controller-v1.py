@@ -54,6 +54,9 @@ def make_controller_fixtures(root: Path) -> tuple[Path, Path, Path, Path, dict[s
     package = root / "package"
     package.mkdir(parents=True, mode=0o700)
     os.chmod(package, 0o700)
+    for provider, lanes in CTRL.LABEL_PROMPT_PATHS.items():
+        for lane, relative in lanes.items():
+            put_raw(package / relative, f"reviewed {provider} {lane} prompt\n".encode())
 
     # Create dummy live executables and point controller to them
     bin_dir = root / "bin"
@@ -266,6 +269,7 @@ sys.exit(0)
         "gemini_canary_receipt_sha256": gemini_canary_sha,
         "grok_canary_receipt_sha256": grok_canary_sha,
         "code_hashes": code_hashes,
+        "label_prompt_sha256s": CTRL._label_prompt_sha256s(package),
         "backup_receipt_sha256": "7" * 64,
         "review_hashes": {"source_authority_review": "8" * 64, "scope_circularity_review": "9" * 64},
         "ci_proof_bindings": {"ci_proof": "a" * 64},
@@ -417,7 +421,9 @@ def test_preflight_rejects_nonhex_source_endpoint_hash(tmp_path: Path) -> None:
     pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
     value = CTRL._read_json(gemini_canary)
     value["sources_endpoint_identity"]["server_code_sha256"] = "z" * 64
-    value["receipt_sha256"] = CTRL.digest(CTRL.canonical({key: item for key, item in value.items() if key != "receipt_sha256"}))
+    value["receipt_sha256"] = CTRL.digest(
+        CTRL.canonical({key: item for key, item in value.items() if key != "receipt_sha256"})
+    )
     put(gemini_canary, value)
 
     with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
@@ -429,7 +435,9 @@ def test_preflight_requires_transport_attestation(tmp_path: Path) -> None:
     evidence_path = pkg / "evidence" / "manifest.json"
     evidence = CTRL._read_json(evidence_path)
     del evidence["mcp_transport_attestation"]
-    evidence["manifest_sha256"] = contract.sha256_value({key: item for key, item in evidence.items() if key != "manifest_sha256"})
+    evidence["manifest_sha256"] = contract.sha256_value(
+        {key: item for key, item in evidence.items() if key != "manifest_sha256"}
+    )
     put(evidence_path, evidence)
 
     with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
@@ -440,7 +448,9 @@ def test_preflight_rejects_forged_evidence_contract_code_hash(tmp_path: Path) ->
     pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
     value = CTRL._read_json(gemini_canary)
     value["code_hashes"]["evidence_contract_sha256"] = "0" * 64
-    value["receipt_sha256"] = CTRL.digest(CTRL.canonical({key: item for key, item in value.items() if key != "receipt_sha256"}))
+    value["receipt_sha256"] = CTRL.digest(
+        CTRL.canonical({key: item for key, item in value.items() if key != "receipt_sha256"})
+    )
     put(gemini_canary, value)
 
     with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
@@ -457,7 +467,7 @@ def test_audit_stage_cli_receives_expected_agy_executable_sha(tmp_path: Path) ->
         code_paths=code_paths,
         expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
         expected_grok_executable_sha256=proof["expected_grok_executable_sha256"],
-        expected_prompt_sha256=proof["expected_prompt_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
         expected_custody_sha256=proof["expected_custody_sha256"],
         expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
         expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
@@ -480,15 +490,91 @@ def test_gemini_cli_receives_expected_prompt_sha(tmp_path: Path) -> None:
             None,
             code_paths=code_paths,
             expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
-            expected_prompt_sha256=proof["expected_prompt_sha256"],
+            expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
             expected_custody_sha256=proof["expected_custody_sha256"],
             expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
             expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
         )
-        prompt_idx = cmds[0].index("--expected-prompt-sha")
-        assert cmds[0][prompt_idx + 1] == proof["expected_prompt_sha256"]
+        prompt_idx = cmds[0].index("--expected-label-prompt-sha")
+        assert cmds[0][prompt_idx + 1] == proof["expected_label_prompt_sha256s"]["gemini"]["clean_label"]
     finally:
         CTRL.gemini_missing_ranges = original
+
+
+def test_preflight_rejects_label_prompt_drift(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    prompt = pkg / CTRL.LABEL_PROMPT_PATHS["gemini"]["clean_label"]
+    put_raw(prompt, b"unreviewed replacement prompt\n")
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+
+
+def test_grok_cli_receives_lane_specific_reviewed_prompt_sha(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+    original = CTRL.grok_missing_ranges
+    CTRL.grok_missing_ranges = lambda *_args: {"clean_label": [], "residual_label": [(1, 1)]}
+    try:
+        commands, _ = CTRL._commands_for_stage(
+            pkg,
+            "grok",
+            code_paths["grok_runner"],
+            code_paths=code_paths,
+            expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
+            expected_grok_executable_sha256=proof["expected_grok_executable_sha256"],
+            expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
+            expected_custody_sha256=proof["expected_custody_sha256"],
+            expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
+            expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
+        )
+        prompt_idx = commands[0].index("--expected-label-prompt-sha")
+        assert commands[0][prompt_idx + 1] == proof["expected_label_prompt_sha256s"]["grok"]["residual_label"]
+    finally:
+        CTRL.grok_missing_ranges = original
+
+
+def test_resolve_command_wires_external_authority_paths(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    proof = CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
+    authority_root = tmp_path / "authority"
+    nonce_ledger = tmp_path / "nonces"
+    authority_root.mkdir(mode=0o700)
+    nonce_ledger.mkdir(mode=0o700)
+    authorization = authority_root / "authorization.json"
+    attestation = authority_root / "attestation.json"
+    commands, _ = CTRL._commands_for_stage(
+        pkg,
+        "resolve",
+        code_paths["resolve_runner"],
+        code_paths=code_paths,
+        expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
+        expected_grok_executable_sha256=proof["expected_grok_executable_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
+        expected_custody_sha256=proof["expected_custody_sha256"],
+        expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
+        expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
+        resolution_authorization=authorization,
+        resolution_authority_attestation=attestation,
+        resolution_authority_root=authority_root,
+        resolution_nonce_ledger=nonce_ledger,
+    )
+    assert commands == [
+        [
+            str(CTRL.PRIMARY_PYTHON),
+            str(code_paths["resolve_runner"]),
+            "--package",
+            str(pkg),
+            "--all",
+            "--authorization",
+            str(authorization),
+            "--authority-attestation",
+            str(attestation),
+            "--authority-root",
+            str(authority_root),
+            "--nonce-ledger",
+            str(nonce_ledger),
+        ]
+    ]
 
 
 def test_status_action(tmp_path: Path) -> None:
@@ -522,7 +608,9 @@ def test_status_rejects_broken_stage_chain(tmp_path: Path) -> None:
     value = CTRL._read_json(seal)
     unsigned = {key: item for key, item in value.items() if key != "seal_sha256"}
     unsigned["python_executable_sha256"] = "a" * 64
-    unsigned["seal_sha256"] = CTRL.digest(CTRL.canonical({key: item for key, item in unsigned.items() if key != "seal_sha256"}))
+    unsigned["seal_sha256"] = CTRL.digest(
+        CTRL.canonical({key: item for key, item in unsigned.items() if key != "seal_sha256"})
+    )
     put(seal, unsigned)
 
     with pytest.raises(CTRL.ControllerError, match="invalid_stage_seal"):
@@ -595,7 +683,7 @@ def test_stage_sequence_enforced(tmp_path: Path) -> None:
             dry_run=False,
             concurrency=1,
             expected_python_executable_sha256=proof["expected_python_executable_sha256"],
-            expected_prompt_sha256=proof["expected_prompt_sha256"],
+            expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
             code_paths=code_paths,
         )
 
@@ -617,7 +705,7 @@ def test_stop_present_blocks_stages(tmp_path: Path) -> None:
             concurrency=1,
             expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
             expected_python_executable_sha256=proof["expected_python_executable_sha256"],
-            expected_prompt_sha256=proof["expected_prompt_sha256"],
+            expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
             expected_custody_sha256=proof["expected_custody_sha256"],
             expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
             expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
@@ -671,6 +759,7 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
         dry_run=False,
         concurrency=1,
         expected_python_executable_sha256=proof["expected_python_executable_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
         expected_custody_sha256=cust_sha,
         expected_label_manifest_sha256=man_sha,
         expected_evidence_manifest_sha256=ev_sha,
@@ -690,8 +779,14 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
     }
     audit_receipt["receipt_sha256"] = CTRL.digest(CTRL.canonical(audit_receipt))
     put(pkg / "consensus-audit-cycle007-v1" / "batch-receipt.json", audit_receipt)
-    put(pkg / "consensus-audit-cycle007-v1" / "clean-audit-receipt.json", {"terminal_findings_count": 0, "text_free": True})
-    put(pkg / "consensus-audit-cycle007-v1" / "risk-review-receipt.json", {"terminal_findings_count": 0, "text_free": True})
+    put(
+        pkg / "consensus-audit-cycle007-v1" / "clean-audit-receipt.json",
+        {"terminal_findings_count": 0, "text_free": True},
+    )
+    put(
+        pkg / "consensus-audit-cycle007-v1" / "risk-review-receipt.json",
+        {"terminal_findings_count": 0, "text_free": True},
+    )
 
     res_audit = CTRL.run_stage(
         pkg,
@@ -702,6 +797,7 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
         concurrency=1,
         expected_agy_executable_sha256=agy_sha,
         expected_python_executable_sha256=proof["expected_python_executable_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
         expected_custody_sha256=cust_sha,
         expected_label_manifest_sha256=man_sha,
         expected_evidence_manifest_sha256=ev_sha,
@@ -735,6 +831,7 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
         concurrency=1,
         expected_agy_executable_sha256=agy_sha,
         expected_python_executable_sha256=proof["expected_python_executable_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
         expected_custody_sha256=cust_sha,
         expected_label_manifest_sha256=man_sha,
         expected_evidence_manifest_sha256=ev_sha,
@@ -757,7 +854,11 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
         for i in range(1, count + 1):
             put(
                 pkg / "dual-label-final-cycle007-v1" / "final" / lane / f"receipt-{i:04d}.json",
-                {"schema_version": "phase3_cycle007_operator_resolution_packet_receipt_v1", "unresolved_remaining_count": 0, "text_free": True},
+                {
+                    "schema_version": "phase3_cycle007_operator_resolution_packet_receipt_v1",
+                    "unresolved_remaining_count": 0,
+                    "text_free": True,
+                },
             )
 
     res_res = CTRL.run_stage(
@@ -768,6 +869,7 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
         dry_run=False,
         concurrency=1,
         expected_python_executable_sha256=proof["expected_python_executable_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
         expected_custody_sha256=cust_sha,
         expected_label_manifest_sha256=man_sha,
         expected_evidence_manifest_sha256=ev_sha,
@@ -801,6 +903,7 @@ def test_downstream_stages_revalidation_and_sealing(tmp_path: Path) -> None:
         dry_run=False,
         concurrency=1,
         expected_python_executable_sha256=proof["expected_python_executable_sha256"],
+        expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
         expected_custody_sha256=cust_sha,
         expected_label_manifest_sha256=man_sha,
         expected_evidence_manifest_sha256=ev_sha,

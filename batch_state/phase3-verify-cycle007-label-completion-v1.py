@@ -32,6 +32,16 @@ MANIFEST_SHA256 = SOURCE_MANIFEST_SHA256
 ORDERED_IDENTITY_COMMITMENT_SHA256 = "331fd7fbc42e43cb3c218d9c2b790df060c0a553ab7c3a7b3b557f9f2bc3c419"
 
 LANES = {"clean_label": 40, "residual_label": 164}
+LABEL_PROMPT_PATHS = {
+    "gemini": {
+        "clean_label": Path("prompts/gemini-clean-label.md"),
+        "residual_label": Path("prompts/gemini-residual-label.md"),
+    },
+    "grok": {
+        "clean_label": Path("prompts/grok-clean-label.md"),
+        "residual_label": Path("prompts/grok-residual-label.md"),
+    },
+}
 LANE_ROW_COUNTS = {"clean_label": 2_000, "residual_label": 8_159}
 ROW_COUNT = 10_159
 PACKET_COUNT = 204
@@ -206,8 +216,9 @@ _PROVIDER_RECEIPT_COMMON_FIELDS = frozenset(
     }
 )
 _PROVIDER_RECEIPT_FIELDS = {
-    "gemini": _PROVIDER_RECEIPT_COMMON_FIELDS | {"chunk_count"},
-    "grok": _PROVIDER_RECEIPT_COMMON_FIELDS | {"response_raw_sha256", "prompt_path", "prompt_sha256", "attempt_count"},
+    "gemini": _PROVIDER_RECEIPT_COMMON_FIELDS | {"chunk_count", "label_prompt_sha256"},
+    "grok": _PROVIDER_RECEIPT_COMMON_FIELDS
+    | {"response_raw_sha256", "prompt_path", "prompt_sha256", "label_prompt_sha256", "attempt_count"},
 }
 
 
@@ -293,6 +304,7 @@ _PREFLIGHT_FIELDS = frozenset(
         "gemini_canary_receipt_sha256",
         "grok_canary_receipt_sha256",
         "code_hashes",
+        "label_prompt_sha256s",
         "backup_receipt_sha256",
         "review_hashes",
         "ci_proof_bindings",
@@ -319,6 +331,30 @@ def _file_sha256(path: Path) -> str:
     if not raw:
         raise Error("closure_validation_failed")
     return digest(raw)
+
+
+def _recompute_label_prompt_sha256s(package: Path) -> dict[str, dict[str, str]]:
+    result: dict[str, dict[str, str]] = {}
+    for provider, lanes in LABEL_PROMPT_PATHS.items():
+        result[provider] = {}
+        for lane, relative in lanes.items():
+            path = package / relative
+            _regular(path)
+            result[provider][lane] = digest(path.read_bytes())
+    return result
+
+
+def _valid_label_prompt_sha256s(value: Any) -> bool:
+    return (
+        isinstance(value, dict)
+        and set(value) == set(LABEL_PROMPT_PATHS)
+        and all(
+            isinstance(value.get(provider), dict)
+            and set(value[provider]) == set(LABEL_PROMPT_PATHS[provider])
+            and all(_hex(value[provider].get(lane)) for lane in LABEL_PROMPT_PATHS[provider])
+            for provider in LABEL_PROMPT_PATHS
+        )
+    )
 
 
 def _recompute_sources_endpoint_identity() -> dict[str, Any]:
@@ -415,8 +451,7 @@ def _validate_transport_attestation(
         value.get("schema_version") != "phase3_cycle007_mcp_transport_attestation_v1"
         or value.get("transport") != "streamable_http"
         or value.get("endpoint_sha256") != contract.sha256_text(evidence_compiler.DEFAULT_MCP_ENDPOINT)
-        or value.get("required_tool_set_sha256")
-        != contract.sha256_value(sorted(evidence_compiler.REQUIRED_TOOL_NAMES))
+        or value.get("required_tool_set_sha256") != contract.sha256_value(sorted(evidence_compiler.REQUIRED_TOOL_NAMES))
         or not isinstance(value.get("tool_call_count"), int)
         or isinstance(value.get("tool_call_count"), bool)
         or value["tool_call_count"] <= row_count
@@ -500,6 +535,7 @@ def _validate_controls(
         "sources_db_sha256": expected_sources["sources_db_sha256"],
         "vesum_db_sha256": expected_sources["vesum_db_sha256"],
     }
+    label_prompt_sha256s = _recompute_label_prompt_sha256s(package)
     control_code_identity = _recompute_control_code_identity()
     providers = (
         ("gemini", EXPECTED_MODELS["gemini"], frozenset({"raw_stream_sha256", "labels_raw_sha256"})),
@@ -591,6 +627,8 @@ def _validate_controls(
         or preflight.get("gemini_canary_receipt_sha256") != digest(canaries["gemini"][1])
         or preflight.get("grok_canary_receipt_sha256") != digest(canaries["grok"][1])
         or preflight.get("code_hashes") != code_hashes
+        or not _valid_label_prompt_sha256s(preflight.get("label_prompt_sha256s"))
+        or preflight.get("label_prompt_sha256s") != label_prompt_sha256s
         or not _hex(preflight.get("backup_receipt_sha256"))
         or not isinstance(preflight.get("review_hashes"), dict)
         or not preflight["review_hashes"]
@@ -650,6 +688,7 @@ def _validate_controls(
         "sources_endpoint_identity": expected_sources,
         "evidence_code_hashes": expected_evidence_code_hashes,
         "evidence_identity_sha256": digest(canonical(expected_evidence_identity)),
+        "label_prompt_sha256s": label_prompt_sha256s,
         "control_code_identity": control_code_identity,
         "mcp_transport_attestation": transport_attestation,
         "mcp_transport_attestation_sha256": (
@@ -1586,7 +1625,15 @@ def _validate_live_audit(
     return sample_doc, risk_receipt, clean_receipt
 
 
-def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any]:
+def certify_completion(
+    package: Path,
+    *,
+    fixture: bool = False,
+    resolution_authorization: Path | None = None,
+    resolution_authority_attestation: Path | None = None,
+    resolution_authority_root: Path | None = None,
+    resolution_nonce_ledger: Path | None = None,
+) -> dict[str, Any]:
     """Execute fail-closed certification over all gates."""
     # 1. Permission checks & file hygiene
     _walk_modes(package)
@@ -1839,7 +1886,10 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
                 raise Error("provider_receipt_coverage") from exc
             provider_extras: dict[str, Any]
             if provider_name == "gemini":
-                provider_extras = {"chunk_count": (len(p_rows) + 19) // 20}
+                provider_extras = {
+                    "chunk_count": (len(p_rows) + 19) // 20,
+                    "label_prompt_sha256": controls["label_prompt_sha256s"]["gemini"][lane],
+                }
             else:
                 raw_path = p_dir / lane / f"raw-{idx:04d}.raw"
                 prompt_path = package / "prompts" / f"grok-{'clean' if lane == 'clean_label' else 'residual'}-label.md"
@@ -1852,6 +1902,7 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
                     "response_raw_sha256": digest(raw_path.read_bytes()),
                     "prompt_path": prompt_path.relative_to(package).as_posix(),
                     "prompt_sha256": digest(prompt_path.read_bytes()),
+                    "label_prompt_sha256": controls["label_prompt_sha256s"]["grok"][lane],
                     "attempt_count": rcpt_val.get("attempt_count"),
                 }
             if (
@@ -2072,14 +2123,92 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         raise Error("adjudication_candidate_partition")
 
     # 9. Check Resolution & Authorization Stage
+    authorization_raw_sha256: str | None = None
+    authority_attestation_raw_sha256: str | None = None
+    nonce_consumption_sha256: str | None = None
+    decision_authority: str | None = None
+    authorized_identity: dict[str, Any] | None = None
     if all_unresolved:
-        auth_file = package / RESOLUTION_ROOT / "authorization.json"
-        if not auth_file.exists():
-            raise Error("resolution_authorization")
-        auth_val, _ = _read_json(auth_file)
+        if fixture:
+            auth_file = package / RESOLUTION_ROOT / "authorization.json"
+            auth_val, auth_raw = _read_json(auth_file)
+        else:
+            if any(
+                path is None
+                for path in (
+                    resolution_authorization,
+                    resolution_authority_attestation,
+                    resolution_authority_root,
+                    resolution_nonce_ledger,
+                )
+            ):
+                raise Error("resolution_authorization")
+            assert resolution_authorization is not None
+            assert resolution_authority_attestation is not None
+            assert resolution_authority_root is not None
+            assert resolution_nonce_ledger is not None
+            _directory(resolution_authority_root)
+            _directory(resolution_nonce_ledger)
+            try:
+                package_root = package.resolve(strict=True)
+                authority_root = resolution_authority_root.resolve(strict=True)
+                nonce_ledger = resolution_nonce_ledger.resolve(strict=True)
+                auth_file = resolution_authorization.resolve(strict=True)
+                attestation_file = resolution_authority_attestation.resolve(strict=True)
+            except OSError as exc:
+                raise Error("resolution_authorization") from exc
+            if (
+                authority_root.is_relative_to(package_root)
+                or nonce_ledger.is_relative_to(package_root)
+                or nonce_ledger == authority_root
+                or not auth_file.is_relative_to(authority_root)
+                or not attestation_file.is_relative_to(authority_root)
+            ):
+                raise Error("resolution_authorization")
+            auth_val, auth_raw = _read_json(auth_file)
+            attestation_val, attestation_raw = _read_json(attestation_file)
+            request_val, request_raw = _read_json(package / ADJUDICATION_ROOT / "operator-resolution-request.json")
+            nonce = auth_val.get("nonce_sha256")
+            if not _hex(nonce):
+                raise Error("resolution_authorization")
+            nonce_val, nonce_raw = _read_json(nonce_ledger / f"nonce-{nonce}.json")
+            if (
+                auth_val.get("request_raw_sha256") != digest(request_raw)
+                or request_val.get("request_sha256")
+                != digest(canonical({key: item for key, item in request_val.items() if key != "request_sha256"}))
+                or attestation_val.get("schema_version") != "phase3_cycle007_external_authority_attestation_v1"
+                or attestation_val.get("authorization_receipt_raw_sha256") != digest(auth_raw)
+                or attestation_val.get("request_raw_sha256") != digest(request_raw)
+                or attestation_val.get("decision_authority") != auth_val.get("decision_authority")
+                or attestation_val.get("authorized_identity") != auth_val.get("authorized_identity")
+                or attestation_val.get("nonce_sha256") != nonce
+                or attestation_val.get("attestation_sha256")
+                != digest(
+                    canonical({key: item for key, item in attestation_val.items() if key != "attestation_sha256"})
+                )
+                or nonce_val.get("schema_version") != "phase3_cycle007_authorization_nonce_consumption_v1"
+                or nonce_val.get("authorization_receipt_raw_sha256") != digest(auth_raw)
+                or nonce_val.get("authority_attestation_raw_sha256") != digest(attestation_raw)
+                or nonce_val.get("request_raw_sha256") != digest(request_raw)
+                or nonce_val.get("nonce_sha256") != nonce
+                or nonce_val.get("decision_authority") != auth_val.get("decision_authority")
+                or nonce_val.get("authorized_identity") != auth_val.get("authorized_identity")
+                or nonce_val.get("consumption_sha256")
+                != digest(canonical({key: item for key, item in nonce_val.items() if key != "consumption_sha256"}))
+            ):
+                raise Error("resolution_authorization")
+            authority_attestation_raw_sha256 = digest(attestation_raw)
+            nonce_consumption_sha256 = digest(nonce_raw)
+        authorization_raw_sha256 = digest(auth_raw)
+        decision_authority = auth_val.get("decision_authority")
+        authorized_identity = auth_val.get("authorized_identity")
         unres_uids = {(r["source_row"]["unit_id"], r["source_row"]["unit_sha256"]) for r in all_unresolved}
         auths_list = auth_val.get("authorizations", [])
-        if len(auths_list) != len(unres_uids) or {(a["unit_id"], a["unit_sha256"]) for a in auths_list} != unres_uids:
+        if (
+            auth_val.get("receipt_sha256") != _receipt_hash(auth_val)
+            or len(auths_list) != len(unres_uids)
+            or {(a["unit_id"], a["unit_sha256"]) for a in auths_list} != unres_uids
+        ):
             raise Error("resolution_authorization")
 
     res_packet_receipts: list[dict[str, Any]] = []
@@ -2104,6 +2233,14 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
             res_rcpt.get("labels_sha256") != digest(lbl_raw)
             or res_rcpt.get("decisions_sha256") != digest(dec_raw)
             or res_rcpt.get("unresolved_remaining_count") != 0
+            or res_rcpt.get("authorization_receipt_raw_sha256")
+            != (authorization_raw_sha256 if res_rcpt.get("operator_resolved_count", 0) else None)
+            or res_rcpt.get("authority_attestation_raw_sha256")
+            != (
+                authority_attestation_raw_sha256 if res_rcpt.get("operator_resolved_count", 0) and not fixture else None
+            )
+            or res_rcpt.get("nonce_consumption_sha256")
+            != (nonce_consumption_sha256 if res_rcpt.get("operator_resolved_count", 0) and not fixture else None)
             or res_rcpt.get("receipt_sha256")
             != digest(canonical({k: v for k, v in res_rcpt.items() if k != "receipt_sha256"}))
         ):
@@ -2131,6 +2268,11 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         or res_batch.get("total_rows") != expected_row_count
         or res_batch.get("packet_count") != expected_packet_count
         or res_batch.get("unresolved_remaining_count") != 0
+        or res_batch.get("authorization_payload_sha256") != authorization_raw_sha256
+        or res_batch.get("decision_authority") != decision_authority
+        or res_batch.get("authorized_identity") != authorized_identity
+        or res_batch.get("authority_attestation_raw_sha256") != authority_attestation_raw_sha256
+        or res_batch.get("nonce_consumption_sha256") != nonce_consumption_sha256
         or res_batch.get("packet_receipt_union_sha256")
         != digest(canonical([r["receipt_sha256"] for r in res_packet_receipts]))
         or res_batch.get("receipt_sha256")
@@ -2157,6 +2299,7 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         "manifest_raw_sha256": manifest_hash,
         "evidence_manifest_raw_sha256": digest(ev_manifest_raw),
         "preflight_receipt_sha256": controls["preflight_receipt_sha256"],
+        "label_prompt_sha256s": controls["label_prompt_sha256s"],
         "gemini_canary_receipt_sha256": controls["gemini_canary_receipt_sha256"],
         "grok_canary_receipt_sha256": controls["grok_canary_receipt_sha256"],
         "sources_endpoint_identity_sha256": controls["sources_endpoint_identity_sha256"],
@@ -2168,6 +2311,9 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         "mcp_transport_attestation_sha256": controls["mcp_transport_attestation_sha256"],
         "stage_seal_hashes": controls["stage_seal_hashes"],
         "expected_certify_stage_seal_sha256": controls["expected_certify_stage_seal_sha256"],
+        "resolution_authorization_receipt_raw_sha256": authorization_raw_sha256,
+        "resolution_authority_attestation_raw_sha256": authority_attestation_raw_sha256,
+        "resolution_nonce_consumption_sha256": nonce_consumption_sha256,
         "ordered_identity_commitment_sha256": expected_commitment,
         "packet_count": expected_packet_count,
         "row_count": expected_row_count,
@@ -2192,9 +2338,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--package", type=Path, required=True)
     parser.add_argument("--fixture", action="store_true")
     parser.add_argument("--receipt", type=Path)
+    parser.add_argument("--resolution-authorization", type=Path)
+    parser.add_argument("--resolution-authority-attestation", type=Path)
+    parser.add_argument("--resolution-authority-root", type=Path)
+    parser.add_argument("--resolution-nonce-ledger", type=Path)
     args = parser.parse_args(argv)
     try:
-        result = certify_completion(args.package, fixture=args.fixture)
+        result = certify_completion(
+            args.package,
+            fixture=args.fixture,
+            resolution_authorization=args.resolution_authorization,
+            resolution_authority_attestation=args.resolution_authority_attestation,
+            resolution_authority_root=args.resolution_authority_root,
+            resolution_nonce_ledger=args.resolution_nonce_ledger,
+        )
         if args.receipt is not None:
             _atomic(args.receipt, result)
     except Error as exc:

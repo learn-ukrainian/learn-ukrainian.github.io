@@ -30,7 +30,17 @@ def _load_runner() -> Any:
     return module
 
 
+def _load_canary_runner() -> Any:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-public-canaries-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_public_canary", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 RUN = _load_runner()
+CANARY = _load_canary_runner()
 
 
 def put(path: Path, value: Any) -> bytes:
@@ -86,11 +96,7 @@ def _build_row_evidence(
     ]
     evidence_ids = sorted(record["evidence_id"] for record in records)
     phenomenon_evidence_ids = (
-        {
-            record["phenomenon_id"]: [record["evidence_id"]]
-            for record in records
-            if record["phenomenon_id"] is not None
-        }
+        {record["phenomenon_id"]: [record["evidence_id"]] for record in records if record["phenomenon_id"] is not None}
         if lane == "residual_label"
         else {}
     )
@@ -117,6 +123,33 @@ def synthetic_prompt(lane: str) -> bytes:
         else "Phase 3 Cycle 007 held-out residual label review"
     )
     return f"# {title}\n\nSynthetic Gemini {lane} fixture.\n".encode()
+
+
+def label_prompt_hash(package: Path, lane: str) -> str:
+    """The reviewed labeling-prompt hash supplied independently to the runner."""
+    return RUN.digest((package / RUN.PROMPTS[lane]).read_bytes())
+
+
+def run_packet(package: Path, lane: str, index: int, provider: Path) -> dict[str, Any]:
+    return RUN.run_packet(
+        package,
+        lane,
+        index,
+        provider,
+        expected_label_prompt_sha=label_prompt_hash(package, lane),
+    )
+
+
+def batch(package: Path, lane: str, start: int, end: int, provider: Path, *, concurrency: int = 1) -> dict[str, Any]:
+    return RUN.batch(
+        package,
+        lane,
+        start,
+        end,
+        provider,
+        concurrency=concurrency,
+        expected_label_prompt_sha=label_prompt_hash(package, lane),
+    )
 
 
 def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count: int = 50) -> Path:
@@ -361,7 +394,7 @@ def test_valid_clean_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setenv("FAKE_STATE", str(state_file))
     monkeypatch.setenv("FAKE_MODE", "valid")
 
-    res = RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    res = run_packet(pkg, "clean_label", 1, fake_bin)
     assert res["ok"] is True
     assert res["row_count"] == 50
 
@@ -371,18 +404,64 @@ def test_valid_clean_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert (out_dir / "raw-manifest-0001.json").exists()
     receipt = json.loads((out_dir / "receipt-0001.json").read_text())
     assert receipt["prompt_sha256"] == RUN.digest((pkg / RUN.PROMPTS["clean_label"]).read_bytes())
+    assert receipt["label_prompt_sha256"] == label_prompt_hash(pkg, "clean_label")
+    raw_manifest = json.loads((out_dir / "raw-manifest-0001.json").read_text())
+    assert raw_manifest["label_prompt_sha256"] == label_prompt_hash(pkg, "clean_label")
+    chunk_receipt = json.loads((out_dir / "chunks" / "packet-0001" / "receipt-chunk-01.json").read_text())
+    assert chunk_receipt["label_prompt_sha256"] == label_prompt_hash(pkg, "clean_label")
 
 
-def test_prompt_hash_drift_stops_before_provider(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_missing_label_prompt_hash_stops_before_provider(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     pkg = make_package(tmp_path, lane="clean_label", count=50)
     fake_bin = _make_fake_bin(tmp_path)
     state_file = tmp_path / "state.txt"
     monkeypatch.setenv("FAKE_STATE", str(state_file))
     monkeypatch.setenv("FAKE_MODE", "valid")
-    monkeypatch.setattr(RUN, "EXPECTED_PROMPT_SHA256", "")
+    with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+
+    assert not state_file.exists()
+
+
+def test_batch_requires_label_prompt_hash_before_provider(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    state_file = tmp_path / "state.txt"
+    monkeypatch.setenv("FAKE_STATE", str(state_file))
+    monkeypatch.setenv("FAKE_MODE", "valid")
 
     with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin, expected_prompt_sha="0" * 64)
+        RUN.batch(pkg, "clean_label", 1, 1, fake_bin)
+
+    assert not state_file.exists()
+
+
+def test_wrong_label_prompt_hash_stops_before_provider(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    state_file = tmp_path / "state.txt"
+    monkeypatch.setenv("FAKE_STATE", str(state_file))
+    monkeypatch.setenv("FAKE_MODE", "valid")
+
+    with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin, expected_label_prompt_sha="0" * 64)
+
+    assert not state_file.exists()
+
+
+def test_public_canary_prompt_hash_is_not_a_labeling_prompt_binding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    state_file = tmp_path / "state.txt"
+    monkeypatch.setenv("FAKE_STATE", str(state_file))
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    public_canary_hash = CANARY.static_verify("gemini")["prompt_sha256"]
+
+    assert public_canary_hash != label_prompt_hash(pkg, "clean_label")
+    with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin, expected_label_prompt_sha=public_canary_hash)
 
     assert not state_file.exists()
 
@@ -394,7 +473,7 @@ def test_valid_residual_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setenv("FAKE_STATE", str(state_file))
     monkeypatch.setenv("FAKE_MODE", "valid")
 
-    res = RUN.run_packet(pkg, "residual_label", 1, fake_bin)
+    res = run_packet(pkg, "residual_label", 1, fake_bin)
     assert res["ok"] is True
     assert res["row_count"] == 50
 
@@ -406,11 +485,11 @@ def test_resume_sealed_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     monkeypatch.setenv("FAKE_STATE", str(state_file))
     monkeypatch.setenv("FAKE_MODE", "valid")
 
-    RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    run_packet(pkg, "clean_label", 1, fake_bin)
     count_1 = int(state_file.read_text())
 
     # Call again, should resume without running provider
-    res2 = RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    res2 = run_packet(pkg, "clean_label", 1, fake_bin)
     assert res2["ok"] is True
     count_2 = int(state_file.read_text())
     assert count_1 == count_2
@@ -423,7 +502,7 @@ def test_retryable_structural_failure_recovers(tmp_path: Path, monkeypatch: pyte
     monkeypatch.setenv("FAKE_STATE", str(state_file))
     monkeypatch.setenv("FAKE_MODE", "retry")
 
-    res = RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    res = run_packet(pkg, "clean_label", 1, fake_bin)
     assert res["ok"] is True
     # Attempt 1 failed (structural), attempt 2 succeeded
     assert int(state_file.read_text()) > 1
@@ -439,7 +518,7 @@ def test_two_structural_failures_writes_stop(tmp_path: Path, monkeypatch: pytest
     monkeypatch.setenv("FAKE_MODE", "invalid")
 
     with pytest.raises(RUN.Error):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert (pkg / RUN.OUTPUT / "provider-stop.json").exists()
 
 
@@ -451,7 +530,7 @@ def test_semantic_failure_immediately_stops(tmp_path: Path, monkeypatch: pytest.
     monkeypatch.setenv("FAKE_MODE", "semantic")
 
     with pytest.raises(RUN.Error):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert int(state_file.read_text()) == 1  # No attempt 2!
     assert (pkg / RUN.OUTPUT / "provider-stop.json").exists()
 
@@ -467,7 +546,7 @@ def test_stop_idempotence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
     assert (pkg / RUN.OUTPUT / "provider-stop.json").exists()
 
     with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert not state_file.exists()
 
 
@@ -475,7 +554,7 @@ def test_concurrency_must_be_one(tmp_path: Path) -> None:
     pkg = make_package(tmp_path, lane="clean_label", count=50)
     fake_bin = _make_fake_bin(tmp_path)
     with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
-        RUN.batch(pkg, "clean_label", 1, 1, fake_bin, concurrency=2)
+        batch(pkg, "clean_label", 1, 1, fake_bin, concurrency=2)
 
 
 def test_partial_seal_chunk_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -488,7 +567,7 @@ def test_partial_seal_chunk_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyP
     (chunk_dir / "labels-chunk-01.json").write_text("{}")
     os.chmod(chunk_dir / "labels-chunk-01.json", 0o600)
     with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
 
 
 def test_partial_seal_packet_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -501,7 +580,7 @@ def test_partial_seal_packet_rejected(tmp_path: Path, monkeypatch: pytest.Monkey
     (out_dir / "labels-0001.json").write_text("{}")
     os.chmod(out_dir / "labels-0001.json", 0o600)
     with pytest.raises(RUN.Error):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert (pkg / RUN.OUTPUT / "provider-stop.json").exists()
 
 
@@ -509,7 +588,7 @@ def test_no_private_disclosure_in_receipts(tmp_path: Path, monkeypatch: pytest.M
     pkg = make_package(tmp_path, lane="clean_label", count=50)
     fake_bin = _make_fake_bin(tmp_path)
     monkeypatch.setenv("FAKE_MODE", "valid")
-    res = RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+    res = run_packet(pkg, "clean_label", 1, fake_bin)
     assert res["text_free"] is True
 
     receipt_path = pkg / RUN.OUTPUT / "clean_label" / "receipt-0001.json"
@@ -525,7 +604,7 @@ def test_wrong_evidence_manifest_hash_rejected(tmp_path: Path, monkeypatch: pyte
     monkeypatch.setenv("FAKE_MODE", "valid")
     RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = "0" * 64
     with pytest.raises(RUN.Error) as exc_info:
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert exc_info.value.code == "evidence_manifest_binding_drift"
 
 
@@ -535,7 +614,7 @@ def test_missing_evidence_manifest_hash_rejected(tmp_path: Path, monkeypatch: py
     monkeypatch.setenv("FAKE_MODE", "valid")
     RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
     with pytest.raises(RUN.Error) as exc_info:
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert exc_info.value.code == "evidence_manifest_binding_drift"
 
 
@@ -555,7 +634,7 @@ def test_missing_source_package_binding_rejected_before_synthetic_provider(
     RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = RUN.digest(manifest_bytes)
 
     with pytest.raises(RUN.Error) as exc_info:
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert exc_info.value.code == "evidence_manifest_binding_drift"
 
 
@@ -570,7 +649,7 @@ def test_sidecar_path_drift_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyP
     os.chmod(sidecar_new, 0o600)
     sidecar_old.unlink()
     with pytest.raises(RUN.Error) as exc_info:
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert exc_info.value.code in {"sidecar_binding_drift", "ordinal_identity_binding_drift"}
 
 
@@ -588,7 +667,7 @@ def test_duplicate_or_foreign_sidecar_manifest_entry_rejected(tmp_path: Path, mo
     ev_bytes = put(ev_manifest_path, ev_manifest)
     RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = RUN.digest(ev_bytes)
     with pytest.raises(RUN.Error) as exc_info:
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        run_packet(pkg, "clean_label", 1, fake_bin)
     assert exc_info.value.code in {"evidence_manifest_binding_drift", "sidecar_binding_drift"}
 
 
@@ -597,10 +676,17 @@ def test_prompt_tamper_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     fake_bin = _make_fake_bin(tmp_path)
     monkeypatch.setenv("FAKE_MODE", "valid")
     prompt_file = pkg / "prompts" / "gemini-clean-label.md"
+    expected_label_prompt_sha = label_prompt_hash(pkg, "clean_label")
     prompt_file.write_bytes(b"tampered content")
     os.chmod(prompt_file, 0o600)
     with pytest.raises(RUN.Error):
-        RUN.run_packet(pkg, "clean_label", 1, fake_bin)
+        RUN.run_packet(
+            pkg,
+            "clean_label",
+            1,
+            fake_bin,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+        )
 
 
 def main() -> int:
@@ -608,21 +694,25 @@ def main() -> int:
     try:
         mp = pytest.MonkeyPatch()
         test_valid_clean_packet(tmp / "t1", mp)
-        test_valid_residual_packet(tmp / "t2", mp)
-        test_resume_sealed_packet(tmp / "t3", mp)
-        test_retryable_structural_failure_recovers(tmp / "t4", mp)
-        test_two_structural_failures_writes_stop(tmp / "t5", mp)
-        test_semantic_failure_immediately_stops(tmp / "t6", mp)
-        test_stop_idempotence(tmp / "t7", mp)
-        test_concurrency_must_be_one(tmp / "t8")
-        test_partial_seal_chunk_rejected(tmp / "t9", mp)
-        test_partial_seal_packet_rejected(tmp / "t10", mp)
-        test_no_private_disclosure_in_receipts(tmp / "t11", mp)
-        test_wrong_evidence_manifest_hash_rejected(tmp / "t12", mp)
-        test_missing_evidence_manifest_hash_rejected(tmp / "t13", mp)
-        test_sidecar_path_drift_rejected(tmp / "t14", mp)
-        test_duplicate_or_foreign_sidecar_manifest_entry_rejected(tmp / "t15", mp)
-        test_prompt_tamper_rejected(tmp / "t16", mp)
+        test_missing_label_prompt_hash_stops_before_provider(tmp / "t2", mp)
+        test_batch_requires_label_prompt_hash_before_provider(tmp / "t3", mp)
+        test_wrong_label_prompt_hash_stops_before_provider(tmp / "t4", mp)
+        test_public_canary_prompt_hash_is_not_a_labeling_prompt_binding(tmp / "t5", mp)
+        test_valid_residual_packet(tmp / "t6", mp)
+        test_resume_sealed_packet(tmp / "t7", mp)
+        test_retryable_structural_failure_recovers(tmp / "t8", mp)
+        test_two_structural_failures_writes_stop(tmp / "t9", mp)
+        test_semantic_failure_immediately_stops(tmp / "t10", mp)
+        test_stop_idempotence(tmp / "t11", mp)
+        test_concurrency_must_be_one(tmp / "t12")
+        test_partial_seal_chunk_rejected(tmp / "t13", mp)
+        test_partial_seal_packet_rejected(tmp / "t14", mp)
+        test_no_private_disclosure_in_receipts(tmp / "t15", mp)
+        test_wrong_evidence_manifest_hash_rejected(tmp / "t16", mp)
+        test_missing_evidence_manifest_hash_rejected(tmp / "t17", mp)
+        test_sidecar_path_drift_rejected(tmp / "t18", mp)
+        test_duplicate_or_foreign_sidecar_manifest_entry_rejected(tmp / "t19", mp)
+        test_prompt_tamper_rejected(tmp / "t20", mp)
         print(
             json.dumps(
                 {"ok": True, "synthetic_only": True, "provider_calls": 0, "text_free": True},

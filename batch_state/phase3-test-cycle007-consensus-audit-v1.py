@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -28,7 +29,7 @@ audit_mod = _load_module(AUDIT_PATH, "audit_mod")
 compare_mod = _load_module(COMPARE_PATH, "compare_mod_audit")
 
 
-FAKE_REVIEWER = r'''#!/usr/bin/env python3
+FAKE_REVIEWER = r"""#!/usr/bin/env python3
 import json
 import os
 from pathlib import Path
@@ -54,7 +55,7 @@ if os.environ.get("CYCLE007_AUDIT_MODE") == "missing_second" and calls == 1:
     reviews = []
 print(json.dumps({"event": "init", "init": {"model": "Claude Sonnet 4.6 (Thinking)"}}))
 print(json.dumps({"event": "result", "result": {"status": "SUCCESS", "structured_output": {"reviews": reviews}}}))
-'''
+"""
 
 
 def _review_fixture(tmp_path: Path):
@@ -109,8 +110,231 @@ def _multibatch_review_fixture(tmp_path: Path):
             "label": {"decision_code": "reject_mixed_or_uncertain"},
         }
         records.append(record)
-        evidence[(number, unit_sha)] = {"unit_id": number, "unit_sha256": unit_sha, "evidence": [], "private": "PRIVATE_TEXT_DO_NOT_RECEIPT"}
+        evidence[(number, unit_sha)] = {
+            "unit_id": number,
+            "unit_sha256": unit_sha,
+            "evidence": [],
+            "private": "PRIVATE_TEXT_DO_NOT_RECEIPT",
+        }
     return (package, *audit_mod.seal_review_plan(package, [], records, evidence, {"receipt_sha256": "3" * 64}))
+
+
+def _write_private_json(path: Path, value: Any) -> bytes:
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    path.parent.chmod(0o700)
+    payload = audit_mod.canonical(value)
+    path.write_bytes(payload)
+    path.chmod(0o600)
+    return payload
+
+
+def _synthetic_row_evidence(row: dict[str, str]) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Build one validator-approved, text-free clean-lane evidence row."""
+    tokenizer_id = "synthetic-tokenizer-v1"
+    tokenizer_version = "1"
+    code_hashes = {
+        "compiler_id": "synthetic-compiler-v1",
+        "compiler_sha256": "c" * 64,
+        "tokenizer_id": tokenizer_id,
+        "tokenizer_version": tokenizer_version,
+        "tokenizer_sha256": "d" * 64,
+        "compound_parser_id": "synthetic-compound-parser-v1",
+        "compound_parser_version": "1",
+        "compound_parser_sha256": "e" * 64,
+        "mcp_response_parser_id": "synthetic-mcp-parser-v1",
+        "mcp_response_parser_version": "1",
+        "mcp_response_parser_sha256": "f" * 64,
+        "query_plan_id": "synthetic-query-plan-v1",
+        "query_plan_version": "1",
+        "query_plan_sha256": "0" * 64,
+    }
+    identity = {
+        "tokenizer_id": tokenizer_id,
+        "tokenizer_version": tokenizer_version,
+        "code_hashes": code_hashes,
+        "server_code_sha256": "1" * 64,
+        "sources_db_sha256": "2" * 64,
+        "vesum_db_sha256": "3" * 64,
+    }
+    payload = {"source_text_sha256": "4" * 64}
+    retrieval_sha256 = contract.sha256_value(payload)
+    evidence = contract.build_evidence_record(
+        channel="source_metadata",
+        source_identity="synthetic-family",
+        source_version=identity["sources_db_sha256"],
+        locator=f"synthetic-row:{row['unit_id']}",
+        query=None,
+        status="attested",
+        supports="metadata_only",
+        retrieval_sha256=retrieval_sha256,
+        parser_id="synthetic-provenance-v1",
+        parser_version="1",
+        row=row,
+    )
+    row_evidence = {
+        "unit_id": row["unit_id"],
+        "unit_sha256": row["unit_sha256"],
+        "tokenizer_id": tokenizer_id,
+        "tokenizer_version": tokenizer_version,
+        "extracted_forms": [],
+        "evidence": [evidence],
+        "evidence_ids": [evidence["evidence_id"]],
+        "phenomenon_evidence_ids": {},
+        "sufficient_support": False,
+        "archaic_only_risk": False,
+        "russian_shadow_suspected": False,
+    }
+    return row_evidence, {retrieval_sha256: payload}, identity
+
+
+def _bounded_package_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, dict[str, Any]]:
+    """Create a two-packet package that exercises the frozen boundary only."""
+    package = tmp_path / "cycle007-audit-package"
+    package.mkdir(mode=0o700)
+    package.chmod(0o700)
+    rows = {
+        "clean": {"unit_id": "clean-1", "unit_sha256": "a" * 64},
+        "residual": {"unit_id": "residual-1", "unit_sha256": "b" * 64},
+    }
+    packet_specs = (
+        ("clean_label", 1, [rows["clean"]]),
+        ("residual_label", 1, [rows["residual"]]),
+    )
+    packet_records: list[dict[str, Any]] = []
+    ordered_identities: list[list[Any]] = []
+    all_identities: list[tuple[str, str]] = []
+    for lane, packet_index, packet_rows in packet_specs:
+        identities = [(row["unit_id"], row["unit_sha256"]) for row in packet_rows]
+        packet_identity_set_sha256 = audit_mod.digest(audit_mod.canonical(sorted(identities)))
+        packet = {"rows": packet_rows, "packet_identity_set_sha256": packet_identity_set_sha256}
+        packet_path = package / lane / f"packet-{packet_index:04d}.json"
+        packet_raw = _write_private_json(packet_path, packet)
+        packet_records.append(
+            {
+                "lane": lane,
+                "packet_index": packet_index,
+                "canonical_basename": packet_path.name,
+                "row_count": len(packet_rows),
+                "raw_sha256": audit_mod.digest(packet_raw),
+                "packet_identity_set_sha256": packet_identity_set_sha256,
+            }
+        )
+        all_identities.extend(identities)
+        ordered_identities.extend(
+            [
+                [lane, packet_index, row_index, unit_id, unit_sha256]
+                for row_index, (unit_id, unit_sha256) in enumerate(identities)
+            ]
+        )
+
+    ordered_identity_commitment = audit_mod.digest(audit_mod.canonical(ordered_identities))
+    identity_union_commitment = audit_mod.digest(audit_mod.canonical(sorted(all_identities)))
+    ordered_packet_commitment = audit_mod.digest(audit_mod.canonical(packet_records))
+    monkeypatch.setattr(audit_mod, "ORDERED_IDENTITY_COMMITMENT_SHA256", ordered_identity_commitment)
+    lane_row_counts = {"clean_label": 1, "residual_label": 1}
+    custody = {
+        "packet_count": len(packet_records),
+        "row_count": len(all_identities),
+        "lane_row_counts": lane_row_counts,
+        "ordered_identity_commitment_sha256": ordered_identity_commitment,
+        "identity_union_commitment_sha256": identity_union_commitment,
+        "ordered_packet_commitment_sha256": ordered_packet_commitment,
+    }
+    custody["receipt_sha256"] = audit_mod._unsigned_hash(custody)
+    custody_raw = _write_private_json(package / "custody-receipt.json", custody)
+    manifest = {
+        "schema_version": "phase3_cycle007_materialization_manifest_v1",
+        "evaluation_cycle_id": audit_mod.CYCLE,
+        "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+        "text_free": True,
+        "custody_receipt_raw_sha256": audit_mod.digest(custody_raw),
+        "ordered_identity_commitment_sha256": ordered_identity_commitment,
+        "identity_union_commitment_sha256": identity_union_commitment,
+        "ordered_packet_commitment_sha256": ordered_packet_commitment,
+        "packet_count": len(packet_records),
+        "row_count": len(all_identities),
+        "lane_row_counts": lane_row_counts,
+        "packets": packet_records,
+    }
+    manifest["receipt_sha256"] = audit_mod._unsigned_hash(manifest)
+    _write_private_json(package / "manifest.json", manifest)
+
+    compare_dir = package / audit_mod.COMPARE_OUTPUT
+    compare_dir.mkdir(mode=0o700)
+    compare_dir.chmod(0o700)
+    clean_record = {
+        "source_row": rows["clean"],
+        "label": {"decision_code": "reject_mixed_or_uncertain", "evidence_ids": []},
+    }
+    residual_record = {"source_row": rows["residual"]}
+    for lane, packet_index, clean, risk, disagreement in (
+        ("clean_label", 1, [], [clean_record], []),
+        ("residual_label", 1, [], [], [residual_record]),
+    ):
+        lane_dir = compare_dir / lane
+        _write_private_json(lane_dir / f"clean-consensus-{packet_index:04d}.json", {"records": clean})
+        _write_private_json(lane_dir / f"risk-consensus-{packet_index:04d}.json", {"records": risk})
+        _write_private_json(lane_dir / f"disagreements-{packet_index:04d}.json", {"records": disagreement})
+
+    evidence_dir = package / "evidence"
+    evidence_dir.mkdir(mode=0o700)
+    evidence_dir.chmod(0o700)
+    clean_evidence, retrieval_payloads, identity = _synthetic_row_evidence(rows["clean"])
+    packet_binding = packet_records[0]
+    sidecar = {
+        "schema_version": "phase3_cycle007_evidence_sidecar_v1",
+        "evaluation_cycle_id": audit_mod.CYCLE,
+        "lane": "clean_label",
+        "packet_binding": {
+            "canonical_basename": packet_binding["canonical_basename"],
+            "raw_sha256": packet_binding["raw_sha256"],
+            "packet_identity_set_sha256": packet_binding["packet_identity_set_sha256"],
+        },
+        "packet_index": 1,
+        "row_count": 1,
+        **identity,
+        "network_lookups_performed": 0,
+        "rows": [clean_evidence],
+        "retrieval_payloads": retrieval_payloads,
+    }
+    sidecar["sidecar_id"] = "cycle007_sidecar:" + contract.sha256_value(sidecar)
+    sidecar_raw = _write_private_json(evidence_dir / "sidecar-0001.json", sidecar)
+    evidence_manifest = {
+        "schema_version": "phase3_cycle007_evidence_manifest_v1",
+        "text_free": True,
+        "evaluation_cycle_id": audit_mod.CYCLE,
+        **identity,
+        "packet_count": 1,
+        "row_count": 1,
+        "network_lookups_performed": 0,
+        "counts_by_channel": {"source_metadata": 1},
+        "counts_by_status": {"attested": 1},
+        "counts_by_supports": {"metadata_only": 1},
+        "sufficient_support_rows": 0,
+        "archaic_only_risk_rows": 0,
+        "russian_shadow_suspected_rows": 0,
+        "sidecars": [
+            {
+                "packet_index": 1,
+                "row_count": 1,
+                "sidecar_sha256": audit_mod.digest(sidecar_raw),
+                "sidecar_id": sidecar["sidecar_id"],
+                "lane": "clean_label",
+                "packet_binding": sidecar["packet_binding"],
+            }
+        ],
+        "source_package_binding": None,
+        "mcp_transport_attestation": None,
+    }
+    evidence_manifest["manifest_sha256"] = contract.sha256_value(evidence_manifest)
+    _write_private_json(evidence_dir / "manifest.json", evidence_manifest)
+    return package, {
+        "manifest": manifest,
+        "custody": custody,
+        "packet_records": packet_records,
+        "ordered_identities": ordered_identities,
+        "all_identities": all_identities,
+    }
 
 
 def test_seed_derivation():
@@ -203,20 +427,22 @@ def test_sampler_expand_beyond_600(tmp_path):
     # Create 70 strata with 10 rows each -> 700 rows
     for s in range(70):
         for i in range(10):
-            records.append({
-                "lane": "residual_label",
-                "source_row": {"unit_id": f"u-{s}-{i}", "unit_sha256": f"{s:02d}{i:02d}" + "0" * 60},
-                "label": {
-                    "phenomena": [
-                        {
-                            "phenomenon_id": contract.RESIDUAL_PHENOMENON_TAXONOMY[s % 23],
-                            "decision_code": f"code_{s}",
-                            "evidence_sufficiency": "sufficient",
-                            "evidence_ids": [],
-                        }
-                    ]
-                },
-            })
+            records.append(
+                {
+                    "lane": "residual_label",
+                    "source_row": {"unit_id": f"u-{s}-{i}", "unit_sha256": f"{s:02d}{i:02d}" + "0" * 60},
+                    "label": {
+                        "phenomena": [
+                            {
+                                "phenomenon_id": contract.RESIDUAL_PHENOMENON_TAXONOMY[s % 23],
+                                "decision_code": f"code_{s}",
+                                "evidence_sufficiency": "sufficient",
+                                "evidence_ids": [],
+                            }
+                        ]
+                    },
+                }
+            )
 
     receipt, sample = audit_mod.sample_clean_consensus(pkg, records)
     assert receipt["population_count"] == 700
@@ -351,7 +577,9 @@ def test_terminal_review_finding_is_fail_closed(tmp_path):
 
 def test_fixture_review_is_explicit_and_receipt_is_text_free(tmp_path):
     package, plan, targets = _review_fixture(tmp_path)
-    result = audit_mod.source_review(package, targets, plan, synthetic_provider=True, fixture_override=_passing_reviews(targets))
+    result = audit_mod.source_review(
+        package, targets, plan, synthetic_provider=True, fixture_override=_passing_reviews(targets)
+    )
 
     assert result["reviewed_count"] == 1 and result["text_free"] is True
     receipt = (package / audit_mod.OUTPUT / "source-review-receipt.json").read_text()
@@ -370,7 +598,9 @@ def test_tampered_sealed_review_plan_is_rejected(tmp_path):
     plan_path.chmod(0o600)
 
     with pytest.raises(audit_mod.Error) as exc:
-        audit_mod.source_review(package, targets, plan, synthetic_provider=True, fixture_override=_passing_reviews(targets))
+        audit_mod.source_review(
+            package, targets, plan, synthetic_provider=True, fixture_override=_passing_reviews(targets)
+        )
     assert exc.value.failure_code == "binding_failure"
 
 
@@ -420,7 +650,9 @@ def test_multibatch_provider_review_has_exact_complete_union_and_bound_receipts(
         json.loads((package / audit_mod.OUTPUT / f"source-review-batch-receipt-{index:04d}.json").read_text())
         for index in (1, 2)
     ]
-    assert result["review_batch_receipt_union_sha256"] == audit_mod.digest(audit_mod.canonical([item["receipt_sha256"] for item in batch_receipts]))
+    assert result["review_batch_receipt_union_sha256"] == audit_mod.digest(
+        audit_mod.canonical([item["receipt_sha256"] for item in batch_receipts])
+    )
     assert all(item["source_review_plan_sha256"] == plan["source_review_plan_sha256"] for item in batch_receipts)
     assert all(item["evidence_manifest_raw_sha256"] == "0" * 64 for item in batch_receipts)
     sealed_plan = json.loads((package / audit_mod.OUTPUT / "source-review-plan.json").read_text())
@@ -455,6 +687,137 @@ def test_duplicate_identity_across_review_batches_is_terminal(tmp_path):
 
     assert exc.value.failure_code == "review_identity_drift"
     assert (package / audit_mod.OUTPUT / "provider-stop.json").is_file()
+
+
+def test_cycle007_denominator_pins_are_exact():
+    assert audit_mod.LANES == {"clean_label": 40, "residual_label": 164}
+    assert compare_mod.LANE_ROW_COUNTS == {"clean_label": 2_000, "residual_label": 8_159}
+    assert compare_mod.PACKET_COUNT == 204
+    assert compare_mod.ROW_COUNT == 10_159
+    assert sum(audit_mod.LANES.values()) == compare_mod.PACKET_COUNT
+    assert sum(compare_mod.LANE_ROW_COUNTS.values()) == compare_mod.ROW_COUNT
+
+
+def test_package_packet_snapshot_reconciles_bounded_lane_counts_and_commitments(tmp_path, monkeypatch):
+    package, expected = _bounded_package_fixture(tmp_path, monkeypatch)
+
+    snapshot = audit_mod._package_packet_snapshot(package)
+
+    assert snapshot["manifest"]["packet_count"] == 2
+    assert snapshot["manifest"]["row_count"] == 2
+    assert snapshot["manifest"]["lane_row_counts"] == {"clean_label": 1, "residual_label": 1}
+    assert snapshot["packet_records"] == expected["packet_records"]
+    assert snapshot["ordered_identities"] == expected["ordered_identities"]
+    assert snapshot["seen_identities"] == expected["all_identities"]
+    assert snapshot["manifest"]["ordered_identity_commitment_sha256"] == audit_mod.digest(
+        audit_mod.canonical(expected["ordered_identities"])
+    )
+    assert snapshot["manifest"]["identity_union_commitment_sha256"] == audit_mod.digest(
+        audit_mod.canonical(sorted(expected["all_identities"]))
+    )
+    assert snapshot["manifest"]["ordered_packet_commitment_sha256"] == audit_mod.digest(
+        audit_mod.canonical(expected["packet_records"])
+    )
+
+
+@pytest.mark.parametrize(
+    ("location", "field"),
+    [
+        ("manifest", "row_count"),
+        ("manifest", "lane_row_counts"),
+        ("manifest", "ordered_identity_commitment_sha256"),
+        ("manifest", "ordered_packet_commitment_sha256"),
+        ("custody", "ordered_packet_commitment_sha256"),
+    ],
+)
+def test_package_packet_snapshot_rejects_population_or_commitment_reconciliation_drift(
+    tmp_path, monkeypatch, location, field
+):
+    package, _expected = _bounded_package_fixture(tmp_path, monkeypatch)
+    path = package / ("custody-receipt.json" if location == "custody" else "manifest.json")
+    value = json.loads(path.read_text())
+    if field == "row_count":
+        value[field] += 1
+    elif field == "lane_row_counts":
+        value[field]["clean_label"] += 1
+    else:
+        value[field] = "f" * 64
+    value["receipt_sha256"] = audit_mod._unsigned_hash(value)
+    _write_private_json(path, value)
+
+    with pytest.raises(audit_mod.Error) as exc:
+        audit_mod._package_packet_snapshot(package)
+
+    assert exc.value.failure_code == "binding_failure"
+
+
+@pytest.mark.parametrize("tamper", ["packet_bytes", "manifest_packet_order"])
+def test_package_packet_snapshot_rejects_byte_or_order_tampering(tmp_path, monkeypatch, tamper):
+    package, _expected = _bounded_package_fixture(tmp_path, monkeypatch)
+    if tamper == "packet_bytes":
+        path = package / "clean_label" / "packet-0001.json"
+        packet = json.loads(path.read_text())
+        packet["rows"][0]["unit_id"] = "clean-tampered"
+        _write_private_json(path, packet)
+    else:
+        manifest_path = package / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        manifest["packets"].reverse()
+        manifest["ordered_packet_commitment_sha256"] = audit_mod.digest(audit_mod.canonical(manifest["packets"]))
+        custody_path = package / "custody-receipt.json"
+        custody = json.loads(custody_path.read_text())
+        custody["ordered_packet_commitment_sha256"] = manifest["ordered_packet_commitment_sha256"]
+        custody["receipt_sha256"] = audit_mod._unsigned_hash(custody)
+        custody_raw = _write_private_json(custody_path, custody)
+        manifest["custody_receipt_raw_sha256"] = audit_mod.digest(custody_raw)
+        manifest["receipt_sha256"] = audit_mod._unsigned_hash(manifest)
+        _write_private_json(manifest_path, manifest)
+
+    with pytest.raises(audit_mod.Error) as exc:
+        audit_mod._package_packet_snapshot(package)
+
+    assert exc.value.failure_code == "binding_failure"
+
+
+def test_run_audit_consumes_bounded_manifest_boundary_and_completes(tmp_path, monkeypatch):
+    package, _expected = _bounded_package_fixture(tmp_path, monkeypatch)
+    provider = tmp_path / "reviewer.py"
+    provider.write_text(FAKE_REVIEWER, encoding="utf-8")
+    provider.chmod(0o700)
+
+    result = audit_mod._run_audit(package, provider=provider, synthetic_provider=True)
+
+    assert result["passed"] is True
+    assert result["risk_population_count"] == 1
+    assert result["risk_reviewed_count"] == 1
+    assert result["clean_population_count"] == 0
+    assert result["clean_audited_count"] == 0
+    assert result["ordered_identity_commitment_sha256"] == audit_mod.ORDERED_IDENTITY_COMMITMENT_SHA256
+    assert (package / audit_mod.OUTPUT / "batch-receipt.json").is_file()
+    assert not (package / audit_mod.OUTPUT / "provider-stop.json").exists()
+
+
+@pytest.mark.parametrize("mutation", ["missing", "duplicate", "foreign"])
+def test_run_audit_wrapper_fails_closed_on_partition_tampering(tmp_path, monkeypatch, mutation):
+    package, _expected = _bounded_package_fixture(tmp_path, monkeypatch)
+    risk_path = package / audit_mod.COMPARE_OUTPUT / "clean_label" / "risk-consensus-0001.json"
+    risk_value = json.loads(risk_path.read_text())
+    record = risk_value["records"][0]
+    if mutation == "missing":
+        risk_value["records"] = []
+    elif mutation == "foreign":
+        record["source_row"]["unit_id"] = "foreign"
+    else:
+        clean_path = package / audit_mod.COMPARE_OUTPUT / "clean_label" / "clean-consensus-0001.json"
+        _write_private_json(clean_path, {"records": [record]})
+    _write_private_json(risk_path, risk_value)
+
+    with pytest.raises(audit_mod.Error) as exc:
+        audit_mod.run_audit(package)
+
+    assert exc.value.failure_code == "audit_population_drift"
+    stop = json.loads((package / audit_mod.OUTPUT / "provider-stop.json").read_text())
+    assert stop["failure_code"] == "audit_population_drift"
 
 
 if __name__ == "__main__":

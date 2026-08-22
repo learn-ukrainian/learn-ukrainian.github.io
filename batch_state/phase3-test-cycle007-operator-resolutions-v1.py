@@ -404,6 +404,49 @@ def _make_resolution_request(pkg: Path, records: list[dict[str, Any]]) -> Path:
     return request_p
 
 
+def _make_live_authority_artifacts(
+    tmp_path: Path,
+    pkg: Path,
+    records: list[dict[str, Any]],
+    authorizations: list[dict[str, Any]],
+) -> tuple[Path, Path, Path, Path]:
+    """Create public synthetic files that exercise the real external boundary."""
+    request_p = _make_resolution_request(pkg, records)
+    root = tmp_path / "operator-authority"
+    root.mkdir(mode=0o700)
+    ledger = tmp_path / "operator-nonce-ledger"
+    ledger.mkdir(mode=0o700)
+    auth_p = _make_authorization(pkg, authorizations)
+    auth_doc = json.loads(auth_p.read_text())
+    auth_doc["request_raw_sha256"] = res_mod.digest(request_p.read_bytes())
+    auth_doc["receipt_sha256"] = res_mod.digest(
+        res_mod.canonical({key: value for key, value in auth_doc.items() if key != "receipt_sha256"})
+    )
+    external_auth = root / "authorization.json"
+    external_auth.write_bytes(res_mod.canonical(auth_doc))
+    external_auth.chmod(0o600)
+    attestation = {
+        "schema_version": res_mod.AUTHORITY_ATTESTATION_SCHEMA_VERSION,
+        "evaluation_cycle_id": res_mod.CYCLE,
+        "amendment_sha256": res_mod.AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": res_mod.digest((pkg / "custody-receipt.json").read_bytes()),
+        "source_label_manifest_raw_sha256": res_mod.SOURCE_MANIFEST_SHA256,
+        "manifest_raw_sha256": res_mod.digest((pkg / "manifest.json").read_bytes()),
+        "ordered_identity_commitment_sha256": "order_comm",
+        "authorization_receipt_raw_sha256": res_mod.digest(external_auth.read_bytes()),
+        "request_raw_sha256": res_mod.digest(request_p.read_bytes()),
+        "decision_authority": "operator",
+        "authorized_identity": {"identity_type": "human", "identity_id": "operator.fixture"},
+        "nonce_sha256": auth_doc["nonce_sha256"],
+        "text_free": True,
+    }
+    attestation["attestation_sha256"] = res_mod.digest(res_mod.canonical(attestation))
+    attestation_p = root / "attestation.json"
+    attestation_p.write_bytes(res_mod.canonical(attestation))
+    attestation_p.chmod(0o600)
+    return external_auth, attestation_p, root, ledger
+
+
 def test_operator_resolution_success(tmp_path):
     pkg, rows, _rows_ev = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=1)
     unres_row = rows[1]
@@ -503,6 +546,179 @@ def test_live_authorization_receipt_cannot_live_inside_package(tmp_path):
     with pytest.raises(res_mod.Error) as exc:
         res_mod.validate_authorization_file(auth_p, pkg)
     assert exc.value.failure_code == "authorization_binding_failure"
+
+
+def test_live_authorization_requires_separate_external_authority_attestation(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
+    row = rows[0]
+    auth_p, attestation_p, authority_root, _ledger = _make_live_authority_artifacts(
+        tmp_path,
+        pkg,
+        [
+            json.loads(
+                (pkg / res_mod.ADJUDICATION_OUTPUT / "final" / "clean_label" / "unresolved-0001.json").read_text()
+            )["records"][0]
+        ],
+        [
+            {
+                "unit_id": row["unit_id"],
+                "unit_sha256": row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+    request_hash = res_mod.digest((pkg / res_mod.ADJUDICATION_OUTPUT / "operator-resolution-request.json").read_bytes())
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.validate_authorization_file(
+            auth_p,
+            pkg,
+            request_raw_sha256=request_hash,
+            authority_root=authority_root,
+        )
+    assert exc.value.failure_code == "authorization_binding_failure"
+
+    validated = res_mod.validate_authorization_file(
+        auth_p,
+        pkg,
+        request_raw_sha256=request_hash,
+        authority_attestation_path=attestation_p,
+        authority_root=authority_root,
+    )
+    assert validated.metadata["authority_attestation_raw_sha256"] == res_mod.digest(attestation_p.read_bytes())
+
+
+def test_live_authority_attestation_cannot_bind_different_authorization(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
+    row = rows[0]
+    unresolved = json.loads(
+        (pkg / res_mod.ADJUDICATION_OUTPUT / "final" / "clean_label" / "unresolved-0001.json").read_text()
+    )["records"]
+    auth_p, attestation_p, authority_root, _ledger = _make_live_authority_artifacts(
+        tmp_path,
+        pkg,
+        unresolved,
+        [
+            {
+                "unit_id": row["unit_id"],
+                "unit_sha256": row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+    auth_doc = json.loads(auth_p.read_text())
+    auth_doc["authorizations"][0]["selection"] = "gemini"
+    auth_doc["receipt_sha256"] = res_mod.digest(
+        res_mod.canonical({key: value for key, value in auth_doc.items() if key != "receipt_sha256"})
+    )
+    auth_p.write_bytes(res_mod.canonical(auth_doc))
+    request_hash = res_mod.digest((pkg / res_mod.ADJUDICATION_OUTPUT / "operator-resolution-request.json").read_bytes())
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.validate_authorization_file(
+            auth_p,
+            pkg,
+            request_raw_sha256=request_hash,
+            authority_attestation_path=attestation_p,
+            authority_root=authority_root,
+        )
+    assert exc.value.failure_code == "authorization_binding_failure"
+
+
+def test_nonce_consumption_is_atomic_durable_and_replay_fails_closed(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
+    row = rows[0]
+    unresolved = json.loads(
+        (pkg / res_mod.ADJUDICATION_OUTPUT / "final" / "clean_label" / "unresolved-0001.json").read_text()
+    )["records"]
+    auth_p, attestation_p, authority_root, ledger = _make_live_authority_artifacts(
+        tmp_path,
+        pkg,
+        unresolved,
+        [
+            {
+                "unit_id": row["unit_id"],
+                "unit_sha256": row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+    request_hash = res_mod.digest((pkg / res_mod.ADJUDICATION_OUTPUT / "operator-resolution-request.json").read_bytes())
+    auths = res_mod.validate_authorization_file(
+        auth_p,
+        pkg,
+        request_raw_sha256=request_hash,
+        authority_attestation_path=attestation_p,
+        authority_root=authority_root,
+    )
+    receipt_hash = res_mod._consume_nonce(ledger, pkg, auths.metadata)
+    nonce_file = ledger / f"nonce-{auths.metadata['nonce_sha256']}.json"
+    assert receipt_hash == res_mod.digest(nonce_file.read_bytes())
+    assert nonce_file.stat().st_mode & 0o777 == 0o600
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod._consume_nonce(ledger, pkg, auths.metadata)
+    assert exc.value.failure_code == "authorization_replay_detected"
+
+
+def test_live_resolution_burns_nonce_before_any_resolution_write(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
+    row = rows[0]
+    unresolved = json.loads(
+        (pkg / res_mod.ADJUDICATION_OUTPUT / "final" / "clean_label" / "unresolved-0001.json").read_text()
+    )["records"]
+    auth_p, attestation_p, authority_root, ledger = _make_live_authority_artifacts(
+        tmp_path,
+        pkg,
+        unresolved,
+        [
+            {
+                "unit_id": row["unit_id"],
+                "unit_sha256": row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+
+    # The synthetic evidence package intentionally cannot satisfy the live
+    # independently recomputed on-disk identity.  The nonce must nevertheless
+    # be burned before that downstream failure can leave any final labels.
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.resolve_all(
+            pkg,
+            auth_p,
+            authority_attestation_path=attestation_p,
+            authority_root=authority_root,
+            nonce_ledger=ledger,
+        )
+    assert exc.value.failure_code == "missing_evidence_sidecar"
+    assert list(ledger.glob("nonce-*.json"))
+    assert not (pkg / res_mod.RESOLUTION_OUTPUT / "final").exists()
+
+
+def test_disk_evidence_identity_rehashes_real_files_not_manifest_fields(tmp_path, monkeypatch):
+    server = tmp_path / "server.py"
+    sources = tmp_path / "sources.db"
+    vesum = tmp_path / "vesum.db"
+    for path, value in ((server, b"server-v1"), (sources, b"sources-v1"), (vesum, b"vesum-v1")):
+        path.write_bytes(value)
+    monkeypatch.setattr(res_mod.evidence_compiler, "DEFAULT_SERVER_CODE", server)
+    monkeypatch.setattr(res_mod.evidence_compiler, "DEFAULT_SOURCES_DB", sources)
+    monkeypatch.setattr(res_mod.evidence_compiler, "DEFAULT_VESUM_DB", vesum)
+
+    first = res_mod._disk_evidence_identity()
+    sources.write_bytes(b"sources-v2")
+    second = res_mod._disk_evidence_identity()
+    assert first["sources_db_sha256"] != second["sources_db_sha256"]
+    assert first["server_code_sha256"] == second["server_code_sha256"]
 
 
 def test_operator_resolution_extra_or_foreign_authorization(tmp_path):

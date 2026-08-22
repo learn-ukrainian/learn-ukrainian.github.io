@@ -13,6 +13,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as evidence_compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
@@ -36,6 +37,8 @@ RESOLUTION_OUTPUT = "dual-label-final-cycle007-v1"
 ADJUDICATION_OUTPUT = "dual-label-adjudication-cycle007-v1"
 COMPARE_OUTPUT = "dual-label-output-cycle007-v1"
 AUTHORIZATION_SCHEMA_VERSION = "phase3_cycle007_operator_resolution_authorization_v2"
+AUTHORITY_ATTESTATION_SCHEMA_VERSION = "phase3_cycle007_external_authority_attestation_v1"
+NONCE_CONSUMPTION_SCHEMA_VERSION = "phase3_cycle007_authorization_nonce_consumption_v1"
 
 REJECTS = frozenset(
     {
@@ -65,6 +68,7 @@ FAILURE_CODES = frozenset(
         "authorization_identity_failure",
         "authorization_schema_failure",
         "authorization_tamper_detected",
+        "authorization_replay_detected",
         "candidate_invention_drift",
         "unauthorized_row_drift",
         "missing_authorization",
@@ -141,6 +145,22 @@ def _directory(path: Path, mode: int | None = 0o700) -> None:
         raise Error("authorization_binding_failure")
     if mode is not None and stat.S_IMODE(info.st_mode) != mode:
         raise Error("mode_drift")
+
+
+def _operator_owned_directory(path: Path) -> None:
+    """Require an existing private directory owned by this operator process.
+
+    The authority receipt and nonce ledger are deliberately outside the live
+    package.  Ownership is not an identity assertion on its own; it prevents a
+    package-controlled or shared directory from being substituted for the
+    operator-controlled custody boundary defined by the Cycle006 pattern.
+    """
+    _directory(path, 0o700)
+    try:
+        if path.lstat().st_uid != os.geteuid():
+            raise Error("authorization_identity_failure")
+    except OSError:
+        raise Error("authorization_binding_failure") from None
 
 
 def _private_directory(package: Path, path: Path) -> None:
@@ -318,18 +338,186 @@ def _identity_order_hash(identities: list[tuple[str, str]]) -> str:
     return digest(canonical([list(identity) for identity in identities]))
 
 
-def _external_json(path: Path, package: Path, *, fixture: bool) -> tuple[dict[str, Any], bytes]:
-    """Read a canonical authorization artifact, outside live package custody."""
+def _external_json(
+    path: Path,
+    package: Path,
+    *,
+    fixture: bool,
+    authority_root: Path | None = None,
+) -> tuple[dict[str, Any], bytes]:
+    """Read a canonical authorization artifact outside the package boundary."""
     try:
-        inside_package = path.resolve(strict=True).is_relative_to(package.resolve(strict=True))
+        resolved_path = path.resolve(strict=True)
+        inside_package = resolved_path.is_relative_to(package.resolve(strict=True))
     except OSError as exc:
         raise Error("authorization_binding_failure") from exc
     if inside_package and not fixture:
         raise Error("authorization_binding_failure")
+    if authority_root is not None:
+        try:
+            resolved_root = authority_root.resolve(strict=True)
+        except OSError as exc:
+            raise Error("authorization_binding_failure") from exc
+        _operator_owned_directory(resolved_root)
+        if not resolved_path.is_relative_to(resolved_root):
+            raise Error("authorization_binding_failure")
     value, raw = _read(path)
     if not isinstance(value, dict) or raw != canonical(value):
         raise Error("authorization_schema_failure")
     return value, raw
+
+
+def _disk_evidence_identity() -> dict[str, Any]:
+    """Recompute the evidence identity from reviewed local files, never its manifest.
+
+    The evidence manifest is an input under validation, so deriving its
+    expected identity from fields in that same manifest is circular.  The
+    compiler records the exact files and code that define the frozen identity;
+    calculate all hash-bearing values afresh from those paths before trusting a
+    sidecar or manifest.
+    """
+    try:
+        server_code = evidence_compiler.DEFAULT_SERVER_CODE
+        sources_db = evidence_compiler.DEFAULT_SOURCES_DB
+        vesum_db = evidence_compiler.DEFAULT_VESUM_DB
+        for path in (server_code, sources_db, vesum_db):
+            if not path.is_file():
+                raise Error("missing_evidence_sidecar")
+        return {
+            "tokenizer_id": evidence_compiler.TOKENIZER_ID,
+            "tokenizer_version": evidence_compiler.TOKENIZER_VERSION,
+            "code_hashes": dict(evidence_compiler.CODE_HASHES),
+            "server_code_sha256": contract.sha256_file(server_code),
+            "sources_db_sha256": contract.sha256_file(sources_db),
+            "vesum_db_sha256": contract.sha256_file(vesum_db),
+        }
+    except Error:
+        raise
+    except Exception:
+        raise Error("missing_evidence_sidecar") from None
+
+
+def _validate_authority_attestation(
+    path: Path,
+    package: Path,
+    *,
+    authority_root: Path,
+    authorization_raw_sha256: str,
+    request_raw_sha256: str,
+    authorization_value: Mapping[str, Any],
+) -> str:
+    """Validate the independent authority receipt that admits an authorization.
+
+    This is intentionally a distinct external file, so neither the resolution
+    package nor the authorization document can self-attest its own authority.
+    It binds every value that selects rows or decisions, without storing row
+    text in the durable receipt.
+    """
+    value, raw = _external_json(path, package, fixture=False, authority_root=authority_root)
+    required = {
+        "schema_version",
+        "evaluation_cycle_id",
+        "amendment_sha256",
+        "custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256",
+        "manifest_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "authorization_receipt_raw_sha256",
+        "request_raw_sha256",
+        "decision_authority",
+        "authorized_identity",
+        "nonce_sha256",
+        "text_free",
+        "attestation_sha256",
+    }
+    if (
+        set(value) != required
+        or value.get("schema_version") != AUTHORITY_ATTESTATION_SCHEMA_VERSION
+        or value.get("evaluation_cycle_id") != CYCLE
+        or value.get("amendment_sha256") != AMENDMENT_SHA256
+        or value.get("custody_receipt_raw_sha256") != digest((package / "custody-receipt.json").read_bytes())
+        or value.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256
+        or value.get("manifest_raw_sha256") != digest((package / "manifest.json").read_bytes())
+        or value.get("ordered_identity_commitment_sha256")
+        != _read(package / "manifest.json")[0].get(
+            "ordered_identity_commitment_sha256", ORDERED_IDENTITY_COMMITMENT_SHA256
+        )
+        or value.get("authorization_receipt_raw_sha256") != authorization_raw_sha256
+        or value.get("request_raw_sha256") != request_raw_sha256
+        or value.get("decision_authority") != authorization_value.get("decision_authority")
+        or value.get("authorized_identity") != authorization_value.get("authorized_identity")
+        or value.get("nonce_sha256") != authorization_value.get("nonce_sha256")
+        or value.get("text_free") is not True
+        or value.get("attestation_sha256")
+        != digest(canonical({key: item for key, item in value.items() if key != "attestation_sha256"}))
+    ):
+        raise Error("authorization_binding_failure")
+    return digest(raw)
+
+
+def _consume_nonce(
+    ledger: Path,
+    package: Path,
+    metadata: Mapping[str, Any],
+) -> str:
+    """Atomically burn a validated authorization nonce in external custody.
+
+    A write failure leaves the nonce unavailable: retry requires a freshly
+    attested authorization.  That conservative behavior prevents a crash or
+    race from reopening a decision authority already observed by this runner.
+    """
+    try:
+        resolved_ledger = ledger.resolve(strict=True)
+        if resolved_ledger.is_relative_to(package.resolve(strict=True)):
+            raise Error("authorization_binding_failure")
+    except OSError as exc:
+        raise Error("authorization_binding_failure") from exc
+    _operator_owned_directory(resolved_ledger)
+    nonce = metadata.get("nonce_sha256")
+    if not _valid_sha256(nonce):
+        raise Error("authorization_binding_failure")
+    target = resolved_ledger / f"nonce-{nonce}.json"
+    if target.exists() or target.is_symlink():
+        raise Error("authorization_replay_detected")
+    body = {
+        "schema_version": NONCE_CONSUMPTION_SCHEMA_VERSION,
+        "evaluation_cycle_id": CYCLE,
+        "amendment_sha256": AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
+        "manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
+        "ordered_identity_commitment_sha256": metadata["ordered_identity_commitment_sha256"],
+        "authorization_receipt_raw_sha256": metadata["authorization_receipt_raw_sha256"],
+        "authority_attestation_raw_sha256": metadata["authority_attestation_raw_sha256"],
+        "request_raw_sha256": metadata["request_raw_sha256"],
+        "nonce_sha256": nonce,
+        "decision_authority": metadata["decision_authority"],
+        "authorized_identity": metadata["authorized_identity"],
+        "text_free": True,
+    }
+    body["consumption_sha256"] = digest(canonical(body))
+    data = canonical(body)
+    try:
+        descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        raise Error("authorization_replay_detected") from None
+    except OSError:
+        raise Error("authorization_binding_failure") from None
+    try:
+        with os.fdopen(descriptor, "wb", closefd=True) as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(target, 0o600)
+        directory_fd = os.open(resolved_ledger, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except BaseException:
+        # The name was reserved with O_EXCL; leave any partial entry in place
+        # so a second attempt cannot reuse the authorization after uncertainty.
+        raise Error("authorization_binding_failure") from None
+    return digest(data)
 
 
 def validate_authorization_file(
@@ -341,8 +529,12 @@ def validate_authorization_file(
     request_raw_sha256: str | None = None,
     fixture: bool = False,
     advisor_response_path: Path | None = None,
+    authority_attestation_path: Path | None = None,
+    authority_root: Path | None = None,
 ) -> AuthorizationBundle:
-    value, raw = _external_json(path, package, fixture=fixture)
+    if not fixture and (authority_attestation_path is None or authority_root is None):
+        raise Error("authorization_binding_failure")
+    value, raw = _external_json(path, package, fixture=fixture, authority_root=authority_root)
     custody_raw = (package / "custody-receipt.json").read_bytes()
     manifest_raw = (package / "manifest.json").read_bytes()
     manifest_val, _ = _read(package / "manifest.json")
@@ -405,14 +597,20 @@ def validate_authorization_file(
             authorized_identity.get("identity_type") != "designated_advisor"
             or set(value) != expected_keys
             or not isinstance(advisor, dict)
-            or set(advisor) != {"identity_id", "exact_model", "model_family", "harness", "task_id", "response_raw_sha256"}
+            or set(advisor)
+            != {"identity_id", "exact_model", "model_family", "harness", "task_id", "response_raw_sha256"}
             or advisor.get("identity_id") != authorized_identity.get("identity_id")
             or not all(isinstance(advisor.get(key), str) and advisor[key].strip() for key in advisor)
             or not _valid_sha256(advisor.get("response_raw_sha256"))
             or advisor_response_path is None
         ):
             raise Error("authorization_identity_failure")
-        _advisor_value, advisor_raw = _external_json(advisor_response_path, package, fixture=fixture)
+        _advisor_value, advisor_raw = _external_json(
+            advisor_response_path,
+            package,
+            fixture=fixture,
+            authority_root=authority_root,
+        )
         if digest(advisor_raw) != advisor["response_raw_sha256"]:
             raise Error("authorization_binding_failure")
 
@@ -422,7 +620,8 @@ def validate_authorization_file(
     for item in value["authorizations"]:
         if (
             not isinstance(item, dict)
-            or set(item) != {"unit_id", "unit_sha256", "selection", "source_bound_rationale", "source_authority_reference"}
+            or set(item)
+            != {"unit_id", "unit_sha256", "selection", "source_bound_rationale", "source_authority_reference"}
             or not isinstance(item.get("unit_id"), str)
             or not item["unit_id"]
             or not _valid_sha256(item.get("unit_sha256"))
@@ -453,18 +652,32 @@ def validate_authorization_file(
         raise Error("authorization_identity_failure")
     if not fixture and request_raw_sha256 is None:
         raise Error("authorization_binding_failure")
-    if value.get("receipt_sha256") != digest(canonical({key: item for key, item in value.items() if key != "receipt_sha256"})):
+    if value.get("receipt_sha256") != digest(
+        canonical({key: item for key, item in value.items() if key != "receipt_sha256"})
+    ):
         raise Error("authorization_schema_failure")
 
-    metadata = {
+    metadata: dict[str, Any] = {
         "authorization_receipt_raw_sha256": digest(raw),
         "authorization_receipt_sha256": value["receipt_sha256"],
         "decision_authority": authority,
         "authorized_identity": authorized_identity,
         "operator_id": value.get("operator_id"),
         "identity_order_sha256": value["identity_order_sha256"],
+        "ordered_identity_commitment_sha256": value["ordered_identity_commitment_sha256"],
         "request_raw_sha256": value["request_raw_sha256"],
+        "nonce_sha256": value["nonce_sha256"],
     }
+    if not fixture:
+        assert authority_attestation_path is not None and authority_root is not None
+        metadata["authority_attestation_raw_sha256"] = _validate_authority_attestation(
+            authority_attestation_path,
+            package,
+            authority_root=authority_root,
+            authorization_raw_sha256=metadata["authorization_receipt_raw_sha256"],
+            request_raw_sha256=value["request_raw_sha256"],
+            authorization_value=value,
+        )
     return AuthorizationBundle(authorizations, metadata)
 
 
@@ -527,8 +740,7 @@ def _evidence_sidecar(
     packet_ids = [(row.get("unit_id"), row.get("unit_sha256")) for row in rows]
     sidecar_rows = sidecar["rows"]
     sidecar_ids = [
-        (row.get("unit_id"), row.get("unit_sha256")) if isinstance(row, dict) else (None, None)
-        for row in sidecar_rows
+        (row.get("unit_id"), row.get("unit_sha256")) if isinstance(row, dict) else (None, None) for row in sidecar_rows
     ]
     if len(sidecar_rows) != len(rows) or sidecar_ids != packet_ids or len(set(sidecar_ids)) != len(sidecar_ids):
         raise Error("missing_evidence_sidecar")
@@ -536,7 +748,7 @@ def _evidence_sidecar(
         raise Error("missing_evidence_sidecar")
 
     if not fixture:
-        expected_identity = {key: evidence_manifest.get(key) for key in validator._IDENTITY_FIELDS}
+        expected_identity = _disk_evidence_identity()
         try:
             validator.validate_manifest(evidence_manifest, expected_identity=expected_identity)
             validator.validate_sidecar(sidecar, expected_identity=expected_identity)
@@ -848,6 +1060,14 @@ def resolve_packet(
         "authorized_identity": (
             authorization_metadata.get("authorized_identity") if isinstance(authorization_metadata, dict) else None
         ),
+        "authority_attestation_raw_sha256": (
+            authorization_metadata.get("authority_attestation_raw_sha256")
+            if isinstance(authorization_metadata, dict)
+            else None
+        ),
+        "nonce_consumption_sha256": (
+            authorization_metadata.get("nonce_consumption_sha256") if isinstance(authorization_metadata, dict) else None
+        ),
         "text_free": True,
     }
     body["receipt_sha256"] = digest(canonical(body))
@@ -861,6 +1081,9 @@ def resolve_all(
     *,
     fixture: bool = False,
     advisor_response_path: Path | None = None,
+    authority_attestation_path: Path | None = None,
+    authority_root: Path | None = None,
+    nonce_ledger: Path | None = None,
 ) -> dict[str, Any]:
     _directory(package, 0o700)
 
@@ -972,6 +1195,8 @@ def resolve_all(
             request_raw_sha256=request_raw_sha256,
             fixture=fixture,
             advisor_response_path=advisor_response_path,
+            authority_attestation_path=authority_attestation_path,
+            authority_root=authority_root,
         )
         auth_uids = set(authorizations.keys())
 
@@ -993,6 +1218,19 @@ def resolve_all(
     else:
         if all_unresolved_uids:
             raise Error("missing_authorization")
+
+    if all_unresolved_uids and not fixture:
+        if nonce_ledger is None or authority_root is None:
+            raise Error("authorization_binding_failure")
+        if not isinstance(authorizations, AuthorizationBundle):
+            raise Error("authorization_binding_failure")
+        try:
+            if nonce_ledger.resolve(strict=True) == authority_root.resolve(strict=True):
+                raise Error("authorization_binding_failure")
+        except OSError as exc:
+            raise Error("authorization_binding_failure") from exc
+        nonce_consumption_sha256 = _consume_nonce(nonce_ledger, package, authorizations.metadata)
+        authorizations.metadata["nonce_consumption_sha256"] = nonce_consumption_sha256
 
     receipts: list[dict[str, Any]] = []
     for lane, index in expected_packets:
@@ -1039,6 +1277,16 @@ def resolve_all(
             if isinstance(authorizations, AuthorizationBundle)
             else None
         ),
+        "authority_attestation_raw_sha256": (
+            authorizations.metadata.get("authority_attestation_raw_sha256")
+            if isinstance(authorizations, AuthorizationBundle)
+            else None
+        ),
+        "nonce_consumption_sha256": (
+            authorizations.metadata.get("nonce_consumption_sha256")
+            if isinstance(authorizations, AuthorizationBundle)
+            else None
+        ),
         "text_free": True,
     }
     body["receipt_sha256"] = digest(canonical(body))
@@ -1055,6 +1303,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--fixture", action="store_true")
     parser.add_argument("--advisor-response", type=Path)
+    parser.add_argument(
+        "--authority-attestation",
+        type=Path,
+        help="0600 external authority receipt bound to the authorization and exact unresolved request",
+    )
+    parser.add_argument(
+        "--authority-root",
+        type=Path,
+        help="0700 operator-owned root containing external authority artifacts",
+    )
+    parser.add_argument(
+        "--nonce-ledger",
+        type=Path,
+        help="separate 0700 operator-owned external directory for one-time authorization nonces",
+    )
     args = parser.parse_args(argv)
     try:
         if args.all:
@@ -1063,12 +1326,26 @@ def main(argv: list[str] | None = None) -> int:
                 args.authorization,
                 fixture=args.fixture,
                 advisor_response_path=args.advisor_response,
+                authority_attestation_path=args.authority_attestation,
+                authority_root=args.authority_root,
+                nonce_ledger=args.nonce_ledger,
             )
         elif args.lane is not None and args.packet_index is not None:
+            if not args.fixture:
+                # The frozen live protocol resolves the complete emitted set.
+                # A partial command could otherwise burn a valid authority
+                # receipt without proving full unresolved-set coverage.
+                raise Error("authorization_binding_failure")
             auth_path = args.authorization or (args.package / RESOLUTION_OUTPUT / "authorization.json")
             auths: AuthorizationBundle | dict[tuple[str, str], dict[str, Any]] = {}
             if auth_path.exists():
-                unresolved_path = args.package / ADJUDICATION_OUTPUT / "final" / args.lane / f"unresolved-{args.packet_index:04d}.json"
+                unresolved_path = (
+                    args.package
+                    / ADJUDICATION_OUTPUT
+                    / "final"
+                    / args.lane
+                    / f"unresolved-{args.packet_index:04d}.json"
+                )
                 unresolved_value, _ = _read(unresolved_path)
                 unresolved_order = [
                     (item["source_row"]["unit_id"], item["source_row"]["unit_sha256"])
@@ -1081,6 +1358,8 @@ def main(argv: list[str] | None = None) -> int:
                     ordered_unresolved_identities=unresolved_order,
                     fixture=args.fixture,
                     advisor_response_path=args.advisor_response,
+                    authority_attestation_path=args.authority_attestation,
+                    authority_root=args.authority_root,
                 )
             result = resolve_packet(args.package, args.lane, args.packet_index, auths, fixture=args.fixture)
         else:
@@ -1089,6 +1368,9 @@ def main(argv: list[str] | None = None) -> int:
                 args.authorization,
                 fixture=args.fixture,
                 advisor_response_path=args.advisor_response,
+                authority_attestation_path=args.authority_attestation,
+                authority_root=args.authority_root,
+                nonce_ledger=args.nonce_ledger,
             )
     except Error as exc:
         result = {"ok": False, "failure_code": exc.failure_code, "text_free": True}

@@ -44,7 +44,6 @@ EXPECTED_CUSTODY_SHA256 = ""
 EXPECTED_LABEL_MANIFEST_SHA256 = ""
 EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
 EXPECTED_GROK_EXECUTABLE_SHA256 = ""
-EXPECTED_PROMPT_SHA256 = ""
 EXPECTED_SOURCES_ENDPOINT_IDENTITY: dict[str, Any] = {}
 
 LANES = {"clean_label": 40, "residual_label": 164}
@@ -152,6 +151,23 @@ def canonical(value: Any) -> bytes:
 
 def digest(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
+
+
+def _label_prompt_hash(value: str | None) -> str:
+    """Require the independently reviewed labeling-prompt digest for this lane.
+
+    The public Gemini/Grok canaries prove liveness only.  Their prompts are
+    not private labeling instructions and cannot act as an implicit or global
+    fallback here.  Every direct, batch, and resume entry point receives the
+    exact private labeling-prompt digest explicitly before a provider call.
+    """
+    if (
+        not isinstance(value, str)
+        or len(value) != 64
+        or any(character not in "0123456789abcdef" for character in value)
+    ):
+        raise Error("label_count_or_envelope_drift")
+    return value
 
 
 def pairs(items: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -342,20 +358,22 @@ def _verify_source_package_binding(
     if (
         not isinstance(binding, dict)
         or not isinstance(manifest.get("receipt_sha256"), str)
-        or manifest.get("receipt_sha256") != digest(canonical({key: value for key, value in manifest.items() if key != "receipt_sha256"}))
+        or manifest.get("receipt_sha256")
+        != digest(canonical({key: value for key, value in manifest.items() if key != "receipt_sha256"}))
         or digest(manifest_bytes) == binding.get("materialization_manifest_sha256")
         or binding != expected
     ):
         raise Error("evidence_manifest_binding_drift")
 
 
-def prompt_binding(package: Path, lane: str) -> tuple[Path, str, str]:
+def prompt_binding(package: Path, lane: str, *, expected_label_prompt_sha: str | None) -> tuple[Path, str, str]:
+    expected_label_hash = _label_prompt_hash(expected_label_prompt_sha)
     relative = PROMPTS[lane]
     prompt_path = package / relative
     _regular(prompt_path, 0o600)
     prompt_raw = prompt_path.read_bytes()
     expected_hash = digest(prompt_raw)
-    if EXPECTED_PROMPT_SHA256 and expected_hash != EXPECTED_PROMPT_SHA256:
+    if expected_hash != expected_label_hash:
         raise Error("label_count_or_envelope_drift")
     return prompt_path, relative, expected_hash
 
@@ -451,8 +469,7 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
             if (
                 sidecar_e.get("lane") != expected_p.get("lane")
                 or sidecar_e.get("row_count") != expected_p.get("row_count")
-                or sidecar_e.get("packet_binding", {}).get("canonical_basename")
-                != expected_p.get("canonical_basename")
+                or sidecar_e.get("packet_binding", {}).get("canonical_basename") != expected_p.get("canonical_basename")
                 or sidecar_e.get("packet_binding", {}).get("raw_sha256") != expected_p.get("raw_sha256")
                 or sidecar_e.get("packet_binding", {}).get("packet_identity_set_sha256")
                 != expected_p.get("packet_identity_set_sha256")
@@ -580,10 +597,12 @@ def _decode_provider(raw: bytes, packet_value: dict[str, Any], sidecar_value: di
     return canonical_value
 
 
-def _prompt(package_packet: Path, sidecar_path: Path, lane: str) -> bytes:
+def _prompt(package_packet: Path, sidecar_path: Path, lane: str, *, expected_label_prompt_sha: str | None) -> bytes:
     try:
         package = package_packet.parents[1]
-        prompt_path, basename, expected_hash = prompt_binding(package, lane)
+        prompt_path, basename, expected_hash = prompt_binding(
+            package, lane, expected_label_prompt_sha=expected_label_prompt_sha
+        )
         prompt_raw = prompt_path.read_bytes()
     except (KeyError, Error, OSError):
         raise Error("label_count_or_envelope_drift") from None
@@ -654,6 +673,8 @@ def _verify_sealed(
     packet_value: dict[str, Any],
     sidecar_path: Path,
     sidecar_value: dict[str, Any],
+    *,
+    expected_label_prompt_sha: str | None,
 ) -> dict[str, Any]:
     labels_path, receipt_path, raw_manifest_path, raw_path = _receipt_paths(package, lane, index)
     paths = (labels_path, receipt_path, raw_manifest_path, raw_path)
@@ -675,7 +696,9 @@ def _verify_sealed(
     dynamic_ev_manifest_hash = digest(ev_manifest_path.read_bytes())
     if EXPECTED_EVIDENCE_MANIFEST_SHA256 and dynamic_ev_manifest_hash != EXPECTED_EVIDENCE_MANIFEST_SHA256:
         raise Error("evidence_manifest_binding_drift")
-    _prompt_path, prompt_name, prompt_hash = prompt_binding(package, lane)
+    _prompt_path, prompt_name, prompt_hash = prompt_binding(
+        package, lane, expected_label_prompt_sha=expected_label_prompt_sha
+    )
     expected_manifest = {
         "schema_version": "phase3_cycle007_grok_raw_manifest_v1",
         "evaluation_cycle_id": CYCLE,
@@ -688,6 +711,7 @@ def _verify_sealed(
         "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
         "sidecar_id": sidecar_value.get("sidecar_id", ""),
         "response_raw_sha256": digest(raw_path.read_bytes()),
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "text_free": True,
     }
     if (
@@ -716,6 +740,7 @@ def _verify_sealed(
         "response_raw_sha256": digest(raw_path.read_bytes()),
         "prompt_path": prompt_name,
         "prompt_sha256": prompt_hash,
+        "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "attempt_count": receipt.get("attempt_count"),
         "exact_model": "grok-4.5",
         "model_family": "xai",
@@ -798,11 +823,11 @@ def run_packet(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
-    expected_prompt_sha: str | None = None,
+    expected_label_prompt_sha: str | None = None,
     synthetic_provider: bool = False,
 ) -> dict[str, Any]:
     global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
-    global EXPECTED_GROK_EXECUTABLE_SHA256, EXPECTED_PROMPT_SHA256
+    global EXPECTED_GROK_EXECUTABLE_SHA256
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
@@ -811,18 +836,27 @@ def run_packet(
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
     if expected_grok_sha256 is not None:
         EXPECTED_GROK_EXECUTABLE_SHA256 = expected_grok_sha256
-    if expected_prompt_sha is not None:
-        EXPECTED_PROMPT_SHA256 = expected_prompt_sha
+    expected_label_prompt_sha = _label_prompt_hash(expected_label_prompt_sha)
     _provider_mode(
         provider,
-        expected_grok_sha256=expected_grok_sha256 or (EXPECTED_GROK_EXECUTABLE_SHA256 if not synthetic_provider else None),
+        expected_grok_sha256=expected_grok_sha256
+        or (EXPECTED_GROK_EXECUTABLE_SHA256 if not synthetic_provider else None),
         synthetic_provider=synthetic_provider,
     )
     packet_path, packet_value, sidecar_path, sidecar_value = packet(package, lane, index)
     labels_path, receipt_path, raw_manifest_path, raw_path = _receipt_paths(package, lane, index)
     present = [path.exists() or path.is_symlink() for path in (labels_path, receipt_path, raw_manifest_path, raw_path)]
     if all(present):
-        return _verify_sealed(package, lane, index, packet_path, packet_value, sidecar_path, sidecar_value)
+        return _verify_sealed(
+            package,
+            lane,
+            index,
+            packet_path,
+            packet_value,
+            sidecar_path,
+            sidecar_value,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+        )
     if any(present):
         _stop(package, lane, index, "label_count_or_envelope_drift")
         raise Error("label_count_or_envelope_drift")
@@ -833,7 +867,7 @@ def run_packet(
     os.chmod(package / OUTPUT_ROOT, 0o700)
     os.chmod(out, 0o700)
     try:
-        prompt_bytes = _prompt(packet_path, sidecar_path, lane)
+        prompt_bytes = _prompt(packet_path, sidecar_path, lane, expected_label_prompt_sha=expected_label_prompt_sha)
         for attempt in (1, 2):
             marker = out / f"attempt-{attempt}-{index:04d}.terminal.json"
             started = out / f"attempt-{attempt}-{index:04d}.started.json"
@@ -884,7 +918,9 @@ def run_packet(
             ev_manifest_path = package / "evidence" / "manifest.json"
             _regular(ev_manifest_path, 0o600)
             dynamic_ev_manifest_hash = digest(ev_manifest_path.read_bytes())
-            _prompt_path, prompt_name, prompt_hash = prompt_binding(package, lane)
+            _prompt_path, prompt_name, prompt_hash = prompt_binding(
+                package, lane, expected_label_prompt_sha=expected_label_prompt_sha
+            )
             raw_manifest_data = {
                 "schema_version": "phase3_cycle007_grok_raw_manifest_v1",
                 "evaluation_cycle_id": CYCLE,
@@ -897,6 +933,7 @@ def run_packet(
                 "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
                 "sidecar_id": sidecar_value.get("sidecar_id", ""),
                 "response_raw_sha256": digest(raw_capture),
+                "label_prompt_sha256": expected_label_prompt_sha,
                 "text_free": True,
             }
             raw_manifest_data["manifest_sha256"] = digest(canonical(raw_manifest_data))
@@ -920,6 +957,7 @@ def run_packet(
                 "response_raw_sha256": digest(raw_capture),
                 "prompt_path": prompt_name,
                 "prompt_sha256": prompt_hash,
+                "label_prompt_sha256": expected_label_prompt_sha,
                 "attempt_count": attempt,
                 "exact_model": "grok-4.5",
                 "model_family": "xai",
@@ -943,9 +981,18 @@ def run_packet(
     raise Error("stream_json_invalid")
 
 
-def verify_packet(package: Path, lane: str, index: int) -> dict[str, Any]:
+def verify_packet(package: Path, lane: str, index: int, *, expected_label_prompt_sha: str | None) -> dict[str, Any]:
     packet_path, packet_value, sidecar_path, sidecar_value = packet(package, lane, index)
-    return _verify_sealed(package, lane, index, packet_path, packet_value, sidecar_path, sidecar_value)
+    return _verify_sealed(
+        package,
+        lane,
+        index,
+        packet_path,
+        packet_value,
+        sidecar_path,
+        sidecar_value,
+        expected_label_prompt_sha=expected_label_prompt_sha,
+    )
 
 
 def batch(
@@ -960,12 +1007,12 @@ def batch(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
-    expected_prompt_sha: str | None = None,
+    expected_label_prompt_sha: str | None = None,
     synthetic_provider: bool = False,
 ) -> dict[str, Any]:
     """Execute packet range with concurrency fixed at 1."""
     global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
-    global EXPECTED_GROK_EXECUTABLE_SHA256, EXPECTED_PROMPT_SHA256
+    global EXPECTED_GROK_EXECUTABLE_SHA256
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
@@ -974,8 +1021,7 @@ def batch(
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
     if expected_grok_sha256 is not None:
         EXPECTED_GROK_EXECUTABLE_SHA256 = expected_grok_sha256
-    if expected_prompt_sha is not None:
-        EXPECTED_PROMPT_SHA256 = expected_prompt_sha
+    expected_label_prompt_sha = _label_prompt_hash(expected_label_prompt_sha)
     if lane not in LANES or not 1 <= start <= end <= LANES[lane] or concurrency != 1:
         raise Error("label_count_or_envelope_drift")
     if (package / OUTPUT_ROOT / "provider-stop.json").exists():
@@ -994,7 +1040,7 @@ def batch(
                 expected_custody_sha256=expected_custody_sha256,
                 expected_label_manifest_sha256=expected_label_manifest_sha256,
                 expected_evidence_manifest_sha256=expected_evidence_manifest_sha256,
-                expected_prompt_sha=expected_prompt_sha,
+                expected_label_prompt_sha=expected_label_prompt_sha,
                 synthetic_provider=synthetic_provider,
             )
         )
@@ -1005,6 +1051,7 @@ def batch(
         "end": end,
         "packet_count": len(results),
         "concurrency": 1,
+        "label_prompt_sha256": expected_label_prompt_sha,
         "text_free": True,
     }
 
@@ -1020,12 +1067,19 @@ def main() -> int:
     parser.add_argument("--concurrency", type=int, default=1, help="must remain one for fail-stop execution")
     parser.add_argument("--test-provider-bin", type=Path, help="synthetic provider executable only")
     parser.add_argument(
-        "--expected-grok-executable-sha", help="controller-bound Grok executable SHA256; required for real provider calls"
+        "--expected-grok-executable-sha",
+        help="controller-bound Grok executable SHA256; required for real provider calls",
     )
     parser.add_argument("--expected-custody-sha", required=True, help="controller-bound custody receipt SHA256")
     parser.add_argument("--expected-label-manifest-sha", required=True, help="controller-bound label manifest SHA256")
-    parser.add_argument("--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256")
-    parser.add_argument("--expected-prompt-sha", help="controller-bound prompt SHA256")
+    parser.add_argument(
+        "--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256"
+    )
+    parser.add_argument(
+        "--expected-label-prompt-sha",
+        required=True,
+        help="independently reviewed immutable labeling-prompt SHA256 for the selected lane",
+    )
     args = parser.parse_args()
     try:
         if args.concurrency != 1:
@@ -1048,19 +1102,17 @@ def main() -> int:
             or any(character not in "0123456789abcdef" for character in args.expected_evidence_manifest_sha)
         ):
             raise Error("label_count_or_envelope_drift")
-        if args.expected_prompt_sha and (
-            len(args.expected_prompt_sha) != 64
-            or any(character not in "0123456789abcdef" for character in args.expected_prompt_sha)
+        if len(args.expected_label_prompt_sha) != 64 or any(
+            character not in "0123456789abcdef" for character in args.expected_label_prompt_sha
         ):
             raise Error("label_count_or_envelope_drift")
 
         global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
-        global EXPECTED_GROK_EXECUTABLE_SHA256, EXPECTED_PROMPT_SHA256
+        global EXPECTED_GROK_EXECUTABLE_SHA256
         EXPECTED_CUSTODY_SHA256 = args.expected_custody_sha
         EXPECTED_LABEL_MANIFEST_SHA256 = args.expected_label_manifest_sha
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha
         EXPECTED_GROK_EXECUTABLE_SHA256 = args.expected_grok_executable_sha or ""
-        EXPECTED_PROMPT_SHA256 = args.expected_prompt_sha or ""
 
         package = args.package.resolve()
         synthetic = args.test_provider_bin is not None
@@ -1077,7 +1129,7 @@ def main() -> int:
                 expected_custody_sha256=args.expected_custody_sha,
                 expected_label_manifest_sha256=args.expected_label_manifest_sha,
                 expected_evidence_manifest_sha256=args.expected_evidence_manifest_sha,
-                expected_prompt_sha=args.expected_prompt_sha,
+                expected_label_prompt_sha=args.expected_label_prompt_sha,
                 synthetic_provider=synthetic,
             )
         elif args.start is not None and args.end is not None:
@@ -1092,7 +1144,7 @@ def main() -> int:
                 expected_custody_sha256=args.expected_custody_sha,
                 expected_label_manifest_sha256=args.expected_label_manifest_sha,
                 expected_evidence_manifest_sha256=args.expected_evidence_manifest_sha,
-                expected_prompt_sha=args.expected_prompt_sha,
+                expected_label_prompt_sha=args.expected_label_prompt_sha,
                 synthetic_provider=synthetic,
             )
         else:
