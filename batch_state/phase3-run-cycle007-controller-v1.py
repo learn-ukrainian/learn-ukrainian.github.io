@@ -136,102 +136,171 @@ def _parse_code_paths(items: list[str]) -> dict[str, Path]:
     return result
 
 
-def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tuple[str, str]:
+EXACT_GEMINI_CANARY_KEYS = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "amendment_sha256",
+        "ok",
+        "execution_mode",
+        "exact_model",
+        "model_family",
+        "harness",
+        "provider_call_count",
+        "fixture_hashes",
+        "sidecar_hashes",
+        "prompt_hashes",
+        "code_hashes",
+        "executable_sha256",
+        "response_hashes",
+        "sources_endpoint_identity",
+        "sources_mcp_used",
+        "valid_evidence_ids",
+        "russian_surzhyk_trap_rejected",
+        "heritage_control_preserved",
+        "provenance_basis",
+        "text_free",
+        "receipt_sha256",
+    }
+)
+
+EXACT_GROK_CANARY_KEYS = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "amendment_sha256",
+        "ok",
+        "execution_mode",
+        "exact_model",
+        "model_family",
+        "harness",
+        "provider_call_count",
+        "fixture_hashes",
+        "sidecar_hashes",
+        "prompt_hashes",
+        "code_hashes",
+        "executable_sha256",
+        "response_hashes",
+        "sources_endpoint_identity",
+        "sources_mcp_used",
+        "valid_evidence_ids",
+        "russian_surzhyk_trap_rejected",
+        "heritage_control_preserved",
+        "provenance_basis",
+        "text_free",
+        "receipt_sha256",
+    }
+)
+
+
+def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tuple[str, str, dict[str, Any], dict[str, Any]]:
     """Accept only a valid public canary receipt matching exact model/family/harness and bound criteria."""
     _mode(receipt_path, 0o600)
     receipt = _read_json(receipt_path)
 
     if expected_provider == "gemini":
-        try:
-            exe_sha256 = sha256(AGY.resolve(strict=True))
-        except OSError:
-            exe_sha256 = "synthetic"
+        if set(receipt) != EXACT_GEMINI_CANARY_KEYS:
+            raise ControllerError("preflight_binding_drift")
+        if receipt.get("schema_version") != "phase3_cycle007_gemini_public_canary_receipt_v1":
+            raise ControllerError("preflight_binding_drift")
         if (
             receipt.get("exact_model") != GEMINI_MODEL
             or receipt.get("model_family") != "google"
             or receipt.get("harness") != "agy"
         ):
             raise ControllerError("preflight_binding_drift")
-    elif expected_provider == "grok":
         try:
-            exe_sha256 = sha256(GROK.resolve(strict=True))
-        except OSError:
-            exe_sha256 = "synthetic"
+            resolved_exe = AGY.resolve(strict=True)
+            if not resolved_exe.is_file() or resolved_exe.is_symlink():
+                raise ControllerError("preflight_binding_drift")
+            exe_sha256 = sha256(resolved_exe)
+        except OSError as exc:
+            raise ControllerError("preflight_binding_drift") from exc
+        if receipt.get("executable_sha256") != exe_sha256:
+            raise ControllerError("preflight_binding_drift")
+
+    elif expected_provider == "grok":
+        if set(receipt) != EXACT_GROK_CANARY_KEYS:
+            raise ControllerError("preflight_binding_drift")
+        if receipt.get("schema_version") != "phase3_cycle007_grok_public_canary_receipt_v1":
+            raise ControllerError("preflight_binding_drift")
         if (
             receipt.get("exact_model") != GROK_MODEL
             or receipt.get("model_family") != "xai"
             or receipt.get("harness") != "native_grok"
         ):
             raise ControllerError("preflight_binding_drift")
+        try:
+            resolved_exe = GROK.resolve(strict=True)
+            if not resolved_exe.is_file() or resolved_exe.is_symlink():
+                raise ControllerError("preflight_binding_drift")
+            exe_sha256 = sha256(resolved_exe)
+        except OSError as exc:
+            raise ControllerError("preflight_binding_drift") from exc
+        if receipt.get("executable_sha256") != exe_sha256:
+            raise ControllerError("preflight_binding_drift")
     else:
         raise ControllerError("preflight_binding_drift")
 
+    if receipt.get("execution_mode") != "real":
+        raise ControllerError("preflight_binding_drift")
+    if receipt.get("evaluation_cycle_id") != CYCLE:
+        raise ControllerError("preflight_binding_drift")
+    if receipt.get("amendment_sha256") != AMENDMENT_SHA256:
+        raise ControllerError("preflight_binding_drift")
     if receipt.get("ok") is not True or receipt.get("text_free") is not True:
         raise ControllerError("preflight_binding_drift")
+    if receipt.get("sources_mcp_used") is not True:
+        raise ControllerError("preflight_binding_drift")
+    if receipt.get("valid_evidence_ids") is not True:
+        raise ControllerError("preflight_binding_drift")
+    if receipt.get("russian_surzhyk_trap_rejected") is not True:
+        raise ControllerError("preflight_binding_drift")
+    if receipt.get("heritage_control_preserved") is not True:
+        raise ControllerError("preflight_binding_drift")
 
-    # Real Sources MCP use
-    if not (
-        receipt.get("sources_mcp_used") is True
-        or receipt.get("sources_mcp_roundtrip") is True
-        or receipt.get("real_sources_mcp_used") is True
-        or receipt.get("sources_mcp") is True
-        or "sources_endpoint_identity" in receipt
+    sources_id = receipt.get("sources_endpoint_identity")
+    if not isinstance(sources_id, dict) or set(sources_id) != {
+        "server_code_sha256",
+        "sources_db_sha256",
+        "sources_db_bytes",
+        "vesum_db_sha256",
+        "vesum_db_bytes",
+    }:
+        raise ControllerError("preflight_binding_drift")
+    for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
+        val = sources_id.get(key)
+        if not isinstance(val, str) or len(val) != 64:
+            raise ControllerError("preflight_binding_drift")
+    for key in ("sources_db_bytes", "vesum_db_bytes"):
+        val = sources_id.get(key)
+        if not isinstance(val, int) or isinstance(val, bool) or val <= 0:
+            raise ControllerError("preflight_binding_drift")
+
+    if not isinstance(receipt.get("fixture_hashes"), dict) or not receipt["fixture_hashes"]:
+        raise ControllerError("preflight_binding_drift")
+    if not isinstance(receipt.get("sidecar_hashes"), dict) or not receipt["sidecar_hashes"]:
+        raise ControllerError("preflight_binding_drift")
+    if not isinstance(receipt.get("prompt_hashes"), dict) or not receipt["prompt_hashes"]:
+        raise ControllerError("preflight_binding_drift")
+    if not isinstance(receipt.get("code_hashes"), dict) or not receipt["code_hashes"]:
+        raise ControllerError("preflight_binding_drift")
+    if not isinstance(receipt.get("response_hashes"), dict) or not receipt["response_hashes"]:
+        raise ControllerError("preflight_binding_drift")
+    if not isinstance(receipt.get("provenance_basis"), dict) or not receipt["provenance_basis"]:
+        raise ControllerError("preflight_binding_drift")
+    if (
+        not isinstance(receipt.get("provider_call_count"), int)
+        or isinstance(receipt.get("provider_call_count"), bool)
+        or receipt["provider_call_count"] < 1
     ):
         raise ControllerError("preflight_binding_drift")
 
-    # Valid evidence IDs cited
-    if not (
-        receipt.get("valid_evidence_ids") is True
-        or receipt.get("evidence_ids_valid") is True
-        or receipt.get("valid_evidence_ids_cited") is True
-        or receipt.get("evidence_refs_valid") is True
-    ):
-        raise ControllerError("preflight_binding_drift")
-
-    # Russian/Surzhyk trap rejection for sourced reason
-    if not (
-        receipt.get("russian_surzhyk_trap_rejected") is True
-        or receipt.get("trap_rejection_verified") is True
-        or receipt.get("russian_trap_rejected") is True
-    ):
-        raise ControllerError("preflight_binding_drift")
-
-    # Heritage false-positive control preserved
-    if not (
-        receipt.get("heritage_control_preserved") is True
-        or receipt.get("heritage_false_positive_control_preserved") is True
-        or receipt.get("heritage_control") is True
-    ):
-        raise ControllerError("preflight_binding_drift")
-
-    # Code/prompt/executable hashes
-    if not receipt.get("code_hashes"):
-        raise ControllerError("preflight_binding_drift")
-    if not (receipt.get("prompt_hashes") or receipt.get("prompt_sha256")):
-        raise ControllerError("preflight_binding_drift")
-    if not (
-        receipt.get("executable_sha256")
-        or receipt.get("executable_binding")
-        or receipt.get("agy_sha256")
-        or receipt.get("grok_sha256")
-    ):
-        raise ControllerError("preflight_binding_drift")
-
-    # Public synthetic fixture hashes
-    if not (
-        receipt.get("synthetic_fixture_hashes")
-        or receipt.get("fixture_hashes")
-        or receipt.get("fixture_sha256")
-        or receipt.get("synthetic_fixtures")
-    ):
-        raise ControllerError("preflight_binding_drift")
-
-    # Recompute receipt_sha256
     unsigned = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
     if receipt.get("receipt_sha256") != digest(canonical(unsigned)):
         raise ControllerError("preflight_binding_drift")
 
-    return sha256(receipt_path), exe_sha256
+    return sha256(receipt_path), exe_sha256, sources_id, receipt
 
 
 def preflight(
@@ -253,8 +322,17 @@ def preflight(
     if grok_canary_receipt_path is None:
         raise ControllerError("preflight_binding_drift")
 
-    gemini_canary_sha256, agy_sha256 = _validate_canary_receipt(gemini_canary_receipt_path, "gemini")
-    grok_canary_sha256, grok_sha256 = _validate_canary_receipt(grok_canary_receipt_path, "grok")
+    gemini_canary_sha256, agy_sha256, gemini_sources_id, gemini_receipt = _validate_canary_receipt(
+        gemini_canary_receipt_path, "gemini"
+    )
+    grok_canary_sha256, grok_sha256, grok_sources_id, grok_receipt = _validate_canary_receipt(
+        grok_canary_receipt_path, "grok"
+    )
+
+    if gemini_sources_id != grok_sources_id:
+        raise ControllerError("preflight_binding_drift")
+    if receipt.get("sources_endpoint_identity") != gemini_sources_id:
+        raise ControllerError("preflight_binding_drift")
 
     _mode(package / "custody-receipt.json", 0o600)
     manifest_path = package / "manifest.json"
@@ -314,6 +392,11 @@ def preflight(
     ):
         raise ControllerError("preflight_binding_drift")
 
+    control_dir = _control(package)
+    _atomic(control_dir / "preflight-receipt.json", receipt)
+    _atomic(control_dir / "gemini-canary-receipt.json", gemini_receipt)
+    _atomic(control_dir / "grok-canary-receipt.json", grok_receipt)
+
     return {
         "ok": True,
         "preflight_receipt_sha256": sha256(receipt_path),
@@ -322,6 +405,7 @@ def preflight(
         "expected_custody_sha256": custody_sha256,
         "expected_label_manifest_sha256": manifest_sha256,
         "expected_evidence_manifest_sha256": ev_manifest_sha256,
+        "sources_endpoint_identity": gemini_sources_id,
         "text_free": True,
     }
 
@@ -725,7 +809,10 @@ def _commands_for_stage(
     if stage == "compare":
         return ([[*common, "--all"]], None)
     if stage == "audit":
-        return ([common], None)
+        cmd = list(common)
+        if expected_agy_executable_sha256 and expected_agy_executable_sha256 != "synthetic":
+            cmd.extend(["--expected-agy-executable-sha", expected_agy_executable_sha256])
+        return ([cmd], None)
     if stage == "adjudicate":
         cmd = [*common, "--all"]
         if expected_agy_executable_sha256 and expected_agy_executable_sha256 != "synthetic":
@@ -792,7 +879,7 @@ def run_stage(
             or expected_paths.get(label) != runner.resolve()
         ):
             raise ControllerError("preflight_binding_drift")
-        if stage == "adjudicate" and (
+        if stage in ("adjudicate", "audit") and (
             not isinstance(expected_agy_executable_sha256, str)
             or (len(expected_agy_executable_sha256) != 64 and expected_agy_executable_sha256 != "synthetic")
         ):
