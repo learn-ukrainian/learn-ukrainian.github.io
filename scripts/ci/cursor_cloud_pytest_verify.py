@@ -222,6 +222,22 @@ def verify_cloud_artifacts(
             ],
         )
 
+    # Mandatory completeness anchoring check (exact-head anchor must be present)
+    clean_expected_digest = expected_collected_digest.strip() if expected_collected_digest else None
+    if (
+        expected_nodeids is None
+        and expected_collected_count is None
+        and not clean_expected_digest
+    ):
+        return VerificationResult(
+            VerificationOutcome.UNKNOWN_INFRA,
+            reasons=[
+                "completeness anchor is mandatory: at least one of expected_nodeids, "
+                "expected_collected_count, or expected_collected_digest must be supplied "
+                "(trusted exact-head node-id digest/file is absent)"
+            ],
+        )
+
     # Anchoring setup
     target_count: int | None = None
     target_digest: str | None = None
@@ -229,6 +245,11 @@ def verify_cloud_artifacts(
 
     if expected_nodeids is not None:
         clean_expected_nodeids = sorted({n.strip() for n in expected_nodeids if n.strip()})
+        if not clean_expected_nodeids:
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=["expected_nodeids must contain at least one non-empty test node ID"],
+            )
         target_count = len(clean_expected_nodeids)
         target_digest = _nodeids_digest(clean_expected_nodeids)
         target_nodeids_set = set(clean_expected_nodeids)
@@ -241,18 +262,18 @@ def verify_cloud_artifacts(
                 ],
             )
         if (
-            expected_collected_digest is not None
-            and expected_collected_digest.lower() != target_digest.lower()
+            clean_expected_digest is not None
+            and clean_expected_digest.lower() != target_digest.lower()
         ):
             return VerificationResult(
                 VerificationOutcome.UNKNOWN_INFRA,
                 reasons=[
-                    f"expected_collected_digest ({expected_collected_digest}) does not match digest of expected_nodeids ({target_digest})"
+                    f"expected_collected_digest ({clean_expected_digest}) does not match digest of expected_nodeids ({target_digest})"
                 ],
             )
     else:
         target_count = expected_collected_count
-        target_digest = expected_collected_digest.strip() if expected_collected_digest else None
+        target_digest = clean_expected_digest
 
     # Metadata validation
     metadata_path = dir_path / "metadata.json"
@@ -287,6 +308,15 @@ def verify_cloud_artifacts(
                 VerificationOutcome.UNKNOWN_INFRA,
                 reasons=[f"metadata.json field {field_name!r} must be a string"],
             )
+
+    # Build ID check (§3.3: missing Build provenance is never PASS)
+    meta_build_id = metadata["build_id"].strip()
+    if not meta_build_id:
+        return VerificationResult(
+            VerificationOutcome.UNKNOWN_INFRA,
+            reasons=["metadata.json build_id must not be empty (missing Build provenance is never PASS)"],
+            metadata=metadata,
+        )
 
     # Nonce check in metadata
     meta_nonce = metadata["nonce"].strip()
@@ -434,7 +464,17 @@ def verify_cloud_artifacts(
 
         all_assigned_nodeids.extend(nodeids)
 
-    # Check overall assigned node IDs vs anchored suite
+    # 5. Shard partition verification (using trusted verify_artifacts)
+    try:
+        verify_artifacts(dir_path, shard_count=shard_count)
+    except Exception as e:
+        return VerificationResult(
+            VerificationOutcome.UNKNOWN_INFRA,
+            reasons=[f"shard partition verification failed: {e}"],
+            metadata=metadata,
+        )
+
+    # 6. Check overall assigned node IDs vs anchored suite
     if target_nodeids_set is not None:
         assigned_set = set(all_assigned_nodeids)
         if assigned_set != target_nodeids_set:
@@ -448,15 +488,25 @@ def verify_cloud_artifacts(
                 metadata=metadata,
             )
 
-    # 5. Shard partition verification (using trusted verify_artifacts)
-    try:
-        verify_artifacts(dir_path, shard_count=shard_count)
-    except Exception as e:
+    if target_count is not None and len(all_assigned_nodeids) != target_count:
         return VerificationResult(
             VerificationOutcome.UNKNOWN_INFRA,
-            reasons=[f"shard partition verification failed: {e}"],
+            reasons=[
+                f"total assigned test count across shards ({len(all_assigned_nodeids)}) does not match anchored count ({target_count})"
+            ],
             metadata=metadata,
         )
+
+    if target_digest is not None:
+        actual_assigned_digest = _nodeids_digest(all_assigned_nodeids)
+        if actual_assigned_digest.lower() != target_digest.lower():
+            return VerificationResult(
+                VerificationOutcome.UNKNOWN_INFRA,
+                reasons=[
+                    f"digest of all assigned shard test node IDs ({actual_assigned_digest}) does not match anchored digest ({target_digest})"
+                ],
+                metadata=metadata,
+            )
 
     # 7. Shard exit codes and JUnit inspection
     shard_results: list[ShardArtifactResult] = []

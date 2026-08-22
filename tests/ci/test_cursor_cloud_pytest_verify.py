@@ -37,10 +37,19 @@ TEST_RUNNER_SHA = "a" * 64
 TEST_NONCE = "test-session-nonce-42"
 TEST_BUILD_ID = "build-pilot-001"
 TEST_TIMESTAMP = "2026-08-22T15:00:00Z"
+TEST_COLLECTED_COUNT = 8
+TEST_ALL_NODEIDS = [
+    f"tests/test_module_{s}.py::{case}"
+    for s in range(1, 5)
+    for case in ("test_case_a", "test_case_b")
+]
 
 
 def _sha256_digest(items: list[str]) -> str:
     return hashlib.sha256("\n".join(sorted(items)).encode("utf-8")).hexdigest()
+
+
+TEST_COLLECTED_DIGEST = _sha256_digest(TEST_ALL_NODEIDS)
 
 
 def create_synthetic_bundle(
@@ -166,6 +175,8 @@ def test_synthetic_green_bundle_passes(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+        expected_collected_digest=TEST_COLLECTED_DIGEST,
     )
 
     assert result.outcome == VerificationOutcome.PASS
@@ -187,6 +198,8 @@ def test_synthetic_green_bundle_cli_output_and_json(tmp_path: Path, capsys: pyte
         "--requested-sha", TEST_SHA,
         "--expected-runner-sha", TEST_RUNNER_SHA,
         "--nonce", TEST_NONCE,
+        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
+        "--expected-collected-digest", TEST_COLLECTED_DIGEST,
     ])
     assert exit_code == 0
     captured = capsys.readouterr()
@@ -198,6 +211,8 @@ def test_synthetic_green_bundle_cli_output_and_json(tmp_path: Path, capsys: pyte
         "--requested-sha", TEST_SHA,
         "--expected-runner-sha", TEST_RUNNER_SHA,
         "--nonce", TEST_NONCE,
+        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
+        "--expected-collected-digest", TEST_COLLECTED_DIGEST,
         "--json",
     ])
     assert exit_code_json == 0
@@ -218,6 +233,7 @@ def test_synthetic_red_bundle_shard_exit_code_fails(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
 
     assert result.outcome == VerificationOutcome.FAIL
@@ -239,6 +255,7 @@ def test_synthetic_red_bundle_cli_exits_one(tmp_path: Path, capsys: pytest.Captu
         "--requested-sha", TEST_SHA,
         "--expected-runner-sha", TEST_RUNNER_SHA,
         "--nonce", TEST_NONCE,
+        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
     ])
     assert exit_code == 1
     captured = capsys.readouterr()
@@ -257,6 +274,7 @@ def test_shard1_playground_probe_failure_fails(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
 
     assert result.outcome == VerificationOutcome.FAIL
@@ -283,6 +301,7 @@ def test_mutation_a_corrupted_runner_sha_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert result.is_unknown_infra is True
@@ -294,6 +313,7 @@ def test_mutation_a_corrupted_runner_sha_rejected(tmp_path: Path) -> None:
         "--requested-sha", TEST_SHA,
         "--expected-runner-sha", TEST_RUNNER_SHA,
         "--nonce", TEST_NONCE,
+        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
     ])
     assert exit_code == 2
 
@@ -309,6 +329,7 @@ def test_mutation_b_target_sha_mismatch_rejected(tmp_path: Path) -> None:
         requested_sha=different_sha,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert result.is_unknown_infra is True
@@ -328,6 +349,7 @@ def test_mutation_c_corrupted_exit_code_file_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert result.is_unknown_infra is True
@@ -340,14 +362,14 @@ def test_mutation_d_shard_artifact_corruptions_rejected(tmp_path: Path) -> None:
     # Sub-case d1: Missing test-nodeids.txt
     b1 = create_synthetic_bundle(tmp_path / "d1")
     (b1 / "pytest-shard-2" / "test-nodeids.txt").unlink()
-    r1 = verify_cloud_artifacts(b1, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE)
+    r1 = verify_cloud_artifacts(b1, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE, expected_collected_count=TEST_COLLECTED_COUNT)
     assert r1.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("missing required file test-nodeids.txt" in r for r in r1.reasons)
 
     # Sub-case d2: Corrupted XML in main-junit.xml
     b2 = create_synthetic_bundle(tmp_path / "d2")
     (b2 / "pytest-shard-2" / "main-junit.xml").write_text("<invalid <xml >>>", encoding="utf-8")
-    r2 = verify_cloud_artifacts(b2, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE)
+    r2 = verify_cloud_artifacts(b2, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE, expected_collected_count=TEST_COLLECTED_COUNT)
     assert r2.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("shard partition verification failed" in r or "corrupted main JUnit XML" in r for r in r2.reasons)
 
@@ -359,14 +381,14 @@ def test_mutation_d_shard_artifact_corruptions_rejected(tmp_path: Path) -> None:
 </testsuite>
 """
     (b3 / "pytest-shard-2" / "main-junit.xml").write_text(bad_junit, encoding="utf-8")
-    r3 = verify_cloud_artifacts(b3, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE)
+    r3 = verify_cloud_artifacts(b3, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE, expected_collected_count=TEST_COLLECTED_COUNT)
     assert r3.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("main JUnit count does not match plan" in r for r in r3.reasons)
 
     # Sub-case d4: Missing shard 1 playground-junit.xml
     b4 = create_synthetic_bundle(tmp_path / "d4")
     (b4 / "pytest-shard-1" / "playground-junit.xml").unlink()
-    r4 = verify_cloud_artifacts(b4, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE)
+    r4 = verify_cloud_artifacts(b4, TEST_SHA, TEST_RUNNER_SHA, TEST_NONCE, expected_collected_count=TEST_COLLECTED_COUNT)
     assert r4.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("missing playground-junit.xml" in r for r in r4.reasons)
 
@@ -383,6 +405,7 @@ def test_nonce_mismatch_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce="different-nonce-token",
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("nonce mismatch" in r for r in result.reasons)
@@ -396,6 +419,7 @@ def test_missing_metadata_json_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("missing metadata.json" in r for r in result.reasons)
@@ -409,6 +433,7 @@ def test_invalid_metadata_timestamp_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("started_at is not a valid ISO 8601 timestamp" in r for r in result.reasons)
@@ -427,6 +452,7 @@ def test_missing_build_id_in_metadata_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("missing required field: 'build_id'" in r for r in result.reasons)
@@ -442,6 +468,7 @@ def test_unexpected_playground_on_shard_two_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("unexpected playground-junit.xml" in r for r in result.reasons)
@@ -457,6 +484,7 @@ def test_empty_main_log_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("main.log is empty" in r for r in result.reasons)
@@ -482,7 +510,10 @@ def test_duplicate_nodeid_between_shards_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert any("assigned to more than one shard" in r or "verification failed" in r for r in result.reasons)
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("assigned to more than one shard" in r or "verification failed" in r for r in result.reasons)
 
@@ -544,6 +575,7 @@ def test_invalid_requested_sha_format_rejected(tmp_path: Path) -> None:
         requested_sha="short-sha",
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("requested_sha must be a 40-character hex string" in r for r in result.reasons)
@@ -557,6 +589,7 @@ def test_invalid_runner_sha_format_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256="short-hash",
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("expected_runner_blob_sha256 must be a 64-character hex string" in r for r in result.reasons)
@@ -570,6 +603,7 @@ def test_empty_nonce_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce="   ",
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("nonce parameter must not be empty" in r for r in result.reasons)
@@ -583,6 +617,7 @@ def test_nonexistent_artifact_directory_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("does not exist or is not a directory" in r for r in result.reasons)
@@ -598,6 +633,7 @@ def test_missing_shard_directory_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("missing shard directory: pytest-shard-3" in r for r in result.reasons)
@@ -612,6 +648,7 @@ def test_nodeids_txt_mismatch_with_plan_rejected(tmp_path: Path) -> None:
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("test-nodeids.txt does not match plan.json" in r for r in result.reasons)
@@ -646,6 +683,7 @@ def test_one_shard_synthetic_bundle_rejected_as_unknown_infra(
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
         shard_count=1,
+        expected_collected_count=2,
     )
     assert res_1.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert res_1.is_unknown_infra is True
@@ -659,6 +697,7 @@ def test_one_shard_synthetic_bundle_rejected_as_unknown_infra(
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
         shard_count=4,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert res_4.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert res_4.is_unknown_infra is True
@@ -671,6 +710,7 @@ def test_one_shard_synthetic_bundle_rejected_as_unknown_infra(
         "--expected-runner-sha", TEST_RUNNER_SHA,
         "--nonce", TEST_NONCE,
         "--shard-count", "1",
+        "--expected-collected-count", "2",
     ])
     assert exit_code == 2
     captured = capsys.readouterr()
@@ -819,6 +859,7 @@ def test_renamed_directory_mutation_rejected_as_unknown_infra(
         requested_sha=TEST_SHA,
         expected_runner_blob_sha256=TEST_RUNNER_SHA,
         nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert result.is_unknown_infra is True
@@ -830,6 +871,7 @@ def test_renamed_directory_mutation_rejected_as_unknown_infra(
         "--requested-sha", TEST_SHA,
         "--expected-runner-sha", TEST_RUNNER_SHA,
         "--nonce", TEST_NONCE,
+        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
     ])
     assert exit_code == 2
     captured = capsys.readouterr()
@@ -854,5 +896,84 @@ def test_runner_script_contains_node22_confinement_and_dirty_tree_contracts() ->
     assert "never overwriting repo .venv" in script_text or "outside git worktree" in script_text
 
     # Final dirty-tree check
-    assert "git status --porcelain --untracked-files=no" in script_text
-    assert "modified tracked files after test execution" in script_text
+    assert "git status --porcelain --untracked-files=all" in script_text
+    assert "DIRTY_ENTRIES" in script_text
+    assert "artifacts/" in script_text
+
+
+def test_default_public_api_without_anchors_rejects_as_unknown_infra(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Default verify() / CLI with no optional kwargs/flags rejects as UNKNOWN/INFRA (anchoring is mandatory)."""
+    bundle = create_synthetic_bundle(tmp_path)
+
+    # 1. Default verify_cloud_artifacts call with no optional kwargs on authentic bundle
+    result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_pass is False
+    assert result.is_unknown_infra is True
+    assert any("completeness anchor is mandatory" in r for r in result.reasons)
+
+    # 2. Mutated omitted-test bundle with default public API (no optional kwargs) must NOT be PASS
+    (bundle / "pytest-shard-4" / "test-nodeids.txt").write_text("tests/test_module_4.py::test_case_a\n", encoding="utf-8")
+    (bundle / "pytest-shard-4" / "main-junit.xml").write_text(
+        '<testsuite tests="1" failures="0" errors="0"><testcase name="test_case_a"/></testsuite>',
+        encoding="utf-8",
+    )
+    res_mutated = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+    )
+    assert res_mutated.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert res_mutated.is_pass is False
+
+    # 3. CLI execution with no extra flags exits 2 with UNKNOWN/INFRA
+    exit_code = verifier_main([
+        "--artifact-dir", str(bundle),
+        "--requested-sha", TEST_SHA,
+        "--expected-runner-sha", TEST_RUNNER_SHA,
+        "--nonce", TEST_NONCE,
+    ])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "UNKNOWN/INFRA" in captured.out
+
+
+def test_empty_build_id_in_metadata_rejected_as_unknown_infra(tmp_path: Path) -> None:
+    """Empty build_id string in metadata fails closed as UNKNOWN/INFRA (missing Build provenance is never PASS)."""
+    bundle = create_synthetic_bundle(tmp_path, build_id="")
+    result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_pass is False
+    assert result.is_unknown_infra is True
+    assert any("build_id must not be empty" in r for r in result.reasons)
+
+    # Also test whitespace-only build_id
+    meta_path = bundle / "metadata.json"
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    meta["build_id"] = "   "
+    meta_path.write_text(json.dumps(meta), encoding="utf-8")
+
+    result_ws = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+    )
+    assert result_ws.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result_ws.is_pass is False
+

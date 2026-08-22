@@ -20,7 +20,7 @@
 # - Emits per shard: plan.json, test-nodeids.txt, main-junit.xml, main.log, exit_code;
 #   shard 1 also playground-junit.xml.
 # - Bundle metadata: git_head, runner_sha256, nonce, build_id, started_at.
-# - Performs final dirty-tree check asserting no tracked files were modified.
+# - Performs final dirty-tree check allowlisting only artifacts/<nonce>/.
 # - Performs ZERO GitHub API calls.
 # =============================================================================
 
@@ -323,10 +323,11 @@ for shard in 1 2 3 4; do
   fi
 done
 
-# 11. Final dirty-tree check (dirty tracked files -> non-zero / UNKNOWN, never PASS)
-if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
-  echo "Error: git working tree has modified tracked files after test execution" >&2
-  git status --short --untracked-files=no >&2
+# 11. Final dirty-tree check (allowlist only artifacts/<nonce>/; any other untracked/tracked dirty -> fail)
+DIRTY_ENTRIES="$(git status --porcelain --untracked-files=all | grep -vE '^\?\? "?artifacts/'"${NONCE}"'(/|$)' || true)"
+if [[ -n "${DIRTY_ENTRIES}" ]]; then
+  echo "Error: git working tree has unallowlisted dirty or untracked files after test execution (only artifacts/${NONCE}/ is allowed)" >&2
+  echo "${DIRTY_ENTRIES}" >&2
   exit 1
 fi
 
