@@ -5,6 +5,42 @@
 
 SESSION_START_STARTED_SECONDS=$SECONDS
 
+# Deadline wrapper for subprocesses that are not yet on run_bounded (git, find,
+# stdin cat, jq). Prefer a coreutils timeout binary by absolute path so a
+# hermetic PATH cannot skip the bound. A missing binary warns; the call still
+# runs so SessionStart can degrade instead of aborting.
+_HOOK_TIMEOUT_BIN=""
+for _timeout_candidate in \
+  /usr/bin/timeout \
+  /usr/local/bin/timeout \
+  /opt/homebrew/bin/timeout \
+  /usr/local/bin/gtimeout \
+  /opt/homebrew/bin/gtimeout
+do
+  if [ -x "$_timeout_candidate" ]; then
+    _HOOK_TIMEOUT_BIN="$_timeout_candidate"
+    break
+  fi
+done
+unset _timeout_candidate
+if [ -z "$_HOOK_TIMEOUT_BIN" ]; then
+  if command -v timeout >/dev/null 2>&1; then
+    _HOOK_TIMEOUT_BIN="$(command -v timeout)"
+  elif command -v gtimeout >/dev/null 2>&1; then
+    _HOOK_TIMEOUT_BIN="$(command -v gtimeout)"
+  fi
+fi
+_hook_deadline() {
+  local seconds="$1"
+  shift
+  if [ -n "$_HOOK_TIMEOUT_BIN" ]; then
+    "$_HOOK_TIMEOUT_BIN" -s KILL "$seconds" "$@"
+  else
+    echo "WARNING: no timeout binary; SessionStart subprocess has no deadline: $1" >&2
+    "$@"
+  fi
+}
+
 # 0. Pyenv-rehash stale-lock cleanup. Runs BEFORE the headless-skip
 #    because every shell startup (including pipeline jobs) hits pyenv
 #    init, and a stale lock costs 60s per Bash invocation.
@@ -28,7 +64,7 @@ SESSION_START_STARTED_SECONDS=$SECONDS
 #    incompatible meanings — `find -mmin +1` is the same on both.
 PYENV_SHIM_LOCK="${PYENV_ROOT:-$HOME/.pyenv}/shims/.pyenv-shim"
 if [ -f "$PYENV_SHIM_LOCK" ] && \
-   [ -n "$(find "$PYENV_SHIM_LOCK" -mmin +1 -type f 2>/dev/null)" ]; then
+   [ -n "$(_hook_deadline 2 find "$PYENV_SHIM_LOCK" -mmin +1 -type f 2>/dev/null)" ]; then
   echo "WARNING: pyenv rehash lock is older than one minute; inspect it, then remove it explicitly if stale: rm -f \"$PYENV_SHIM_LOCK\"" >&2
 fi
 
@@ -39,8 +75,8 @@ fi
 # so no session inherits a broken tree. Runs BEFORE the headless-skip because
 # pipeline jobs need a work tree too. See issue #2842.
 _LU_REPO="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
-if [ "$(git -C "$_LU_REPO" config --get core.bare 2>/dev/null)" = "true" ]; then
-  git -C "$_LU_REPO" config --local core.bare false 2>/dev/null \
+if [ "$(_hook_deadline 2 git -C "$_LU_REPO" config --get core.bare 2>/dev/null)" = "true" ]; then
+  _hook_deadline 2 git -C "$_LU_REPO" config --local core.bare false 2>/dev/null \
     && echo "⚠️  repo-health: reset core.bare true→false (git work tree was broken; see #2842)" >&2
 fi
 
@@ -66,14 +102,16 @@ fi
 # Read hook stdin exactly once, then parse all official fields in one jq pass.
 STDIN_JSON=""
 if [ ! -t 0 ]; then
-  STDIN_JSON=$(cat)
+  # Open stdin with no EOF (piped test/CI, a wedged launcher) must not block
+  # SessionStart. Empty/partial input degrades to "no official session id".
+  STDIN_JSON=$(_hook_deadline 2 cat || true)
 fi
 
 HOOK_FIELDS=()
 if [ -n "$STDIN_JSON" ]; then
   while IFS= read -r -d '' _hook_field; do
     HOOK_FIELDS+=("$_hook_field")
-  done < <(printf '%s' "$STDIN_JSON" | jq -j '
+  done < <(printf '%s' "$STDIN_JSON" | _hook_deadline 2 jq -j '
     [
       (if (.session_id | type) == "string" then .session_id else "" end),
       (if (.transcript_path | type) == "string" then .transcript_path else "" end),
@@ -103,7 +141,7 @@ INFO=()
 if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
   CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
 else
-  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  GIT_COMMON_DIR=$(_hook_deadline 2 git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
   if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
     CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
   else
@@ -137,12 +175,18 @@ clamp_bounded_timeout() {
 run_bounded() {
   local requested_timeout="$1"
   shift
-  if [ ! -x "$BOUNDED_PYTHON" ] || [ ! -f "$BOUNDED_RUNNER" ]; then
-    return 127
-  fi
   clamp_bounded_timeout "$requested_timeout" || return $?
-  "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" \
-    --timeout "$CLAMPED_BOUNDED_TIMEOUT_SECONDS" -- "$@"
+  if [ -x "$BOUNDED_PYTHON" ] && [ -f "$BOUNDED_RUNNER" ]; then
+    "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" \
+      --timeout "$CLAMPED_BOUNDED_TIMEOUT_SECONDS" -- "$@"
+    return $?
+  fi
+  if [ -n "$_HOOK_TIMEOUT_BIN" ]; then
+    _hook_deadline "$CLAMPED_BOUNDED_TIMEOUT_SECONDS" "$@"
+    return $?
+  fi
+  echo "WARNING: SessionStart command skipped (no bounded runner or timeout): $1" >&2
+  return 127
 }
 
 # Hook-owned state uses the same bounded local-lock contract. fcntl releases
@@ -261,7 +305,7 @@ if [ -f "$LANE_PROBE_SCRIPT" ]; then
   LANE_PROBE_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
     -m scripts.agent_runtime.lane_probe --agent "$HANDOFF_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
   if [ "$LANE_PROBE_RC" -ne 0 ]; then
-    LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
+    LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
     ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $HANDOFF_AGENT: $LANE_PROBE_REASON")
   fi
   unset LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON
@@ -278,9 +322,9 @@ ROOT_GUARD_RC=0
 ROOT_GUARD_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
   -m scripts.hygiene.root_entry_guard --repo-root "$CANONICAL_ROOT" --json 2>/dev/null) || ROOT_GUARD_RC=$?
 if [ "$ROOT_GUARD_RC" -eq 0 ] && [ -n "$ROOT_GUARD_JSON" ]; then
-  ROOT_GUARD_COUNT=$(printf '%s' "$ROOT_GUARD_JSON" | jq -r '.unexpected_count // 0' 2>/dev/null || echo 0)
+  ROOT_GUARD_COUNT=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 jq -r '.unexpected_count // 0' 2>/dev/null || echo 0)
   if [ "${ROOT_GUARD_COUNT:-0}" -gt 0 ]; then
-    ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | jq -r '[.unexpected[].name] | join(", ")' 2>/dev/null || true)
+    ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 jq -r '[.unexpected[].name] | join(", ")' 2>/dev/null || true)
     ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_COUNT unexpected top-level entries in the primary checkout ($ROOT_GUARD_NAMES). Inspect and remove MANUALLY — the guard never auto-deletes (evidence preservation, #6863). Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard")
   fi
   unset ROOT_GUARD_COUNT ROOT_GUARD_NAMES
@@ -563,7 +607,7 @@ GATE_FIELDS=()
 if [ "$GATE_RC" -eq 0 ] && [ -n "$GATE_JSON" ]; then
   while IFS= read -r -d '' _gate_field; do
     GATE_FIELDS+=("$_gate_field")
-  done < <(printf '%s' "$GATE_JSON" | jq -j '
+  done < <(printf '%s' "$GATE_JSON" | _hook_deadline 2 jq -j '
     [ (.session_record.status // ""), (.session_record.verdict // .session_record.error // ""),
       (.python_version.status // ""), (.python_version.verdict // .python_version.error // ""),
       (.primary_main.status // ""), (.primary_main.verdict // .primary_main.error // ""),
@@ -831,6 +875,23 @@ INFO:"
   done
 fi
 
-jq -n --arg msg "$CONTEXT" \
-  '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":$msg}}'
+_emit_session_start_json() {
+  local msg="$1"
+  if command -v jq >/dev/null 2>&1; then
+    if _hook_deadline 2 jq -n --arg msg "$msg" \
+      '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":$msg}}'; then
+      return 0
+    fi
+    echo "WARNING: jq failed emitting SessionStart JSON; trying python fallback." >&2
+  fi
+  if [ -x "${BOUNDED_PYTHON:-}" ]; then
+    printf '%s' "$msg" | _hook_deadline 2 "$BOUNDED_PYTHON" -c \
+      'import json,sys; print(json.dumps({"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":sys.stdin.read()}}))'
+    return $?
+  fi
+  echo "WARNING: SessionStart context not emitted (jq and python unavailable)." >&2
+  return 1
+}
+
+_emit_session_start_json "$CONTEXT"
 exit 0

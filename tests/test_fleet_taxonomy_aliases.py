@@ -356,26 +356,45 @@ def test_session_setup_hook_epic_validation_contract(
         "CLAUDE_PROJECT_DIR": str(project_dir),
         "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
         "HOME": str(tmp_path / "home"),
-        "PATH": f"{venv_bin}:{os.environ.get('PATH', '')}",
+        # Hermetic PATH: stub python first, then a minimal system bin set.
+        # A hang here must surface as TimeoutExpired, not empty-stdout JSONDecodeError.
+        "PATH": f"{venv_bin}:/usr/bin:/bin",
         "SESSION_EPIC": session_epic,
         "CLAUDE_PROFILE_RESOLVER_SH": str(_REPO_ROOT / "scripts/lib/profile_resolver.sh"),
         "CLAUDE_PROFILE_RESOLVER_PY": str(_REPO_ROOT / "scripts/lib/context_profiles.py"),
         "CLAUDE_PROFILE_RESOLVER_PYTHON": sys.executable,
         "CLAUDE_SESSION_RECORD_SCRIPT": str(_REPO_ROOT / "scripts/lib/session_record.py"),
         "CLAUDE_SESSION_RECORD_PYTHON": sys.executable,
+        "SESSION_BOUNDED_RUNNER": str(
+            _REPO_ROOT / "scripts" / "agent_runtime" / "bounded_command.py"
+        ),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
     }
 
-    result = subprocess.run(
-        ["bash", str(hook_path)],
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
+    try:
+        result = subprocess.run(
+            ["bash", str(hook_path)],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=15,
+            stdin=subprocess.DEVNULL,
+        )
+    except subprocess.TimeoutExpired as exc:
+        pytest.fail(
+            f"SessionStart hook hung under hermetic env after {exc.timeout}s "
+            f"(expected a bounded degrade, not a hang). "
+            f"stdout={exc.stdout!r} stderr={exc.stderr!r}"
+        )
     assert result.returncode == 0, f"hook failed: {result.stderr}\n{result.stdout}"
-    data = json.loads(result.stdout)
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        pytest.fail(
+            f"SessionStart hook stdout was not JSON ({exc}); "
+            f"stdout={result.stdout!r} stderr={result.stderr!r}"
+        )
     context = data.get("hookSpecificOutput", {}).get("additionalContext", "")
 
     assert expected_token in context

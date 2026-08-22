@@ -48,6 +48,21 @@ def test_session_start_defers_optional_network_diagnostics() -> None:
     assert "Orientation diagnostics:" in source
 
 
+def test_session_start_bounds_external_subprocesses() -> None:
+    """#7125: git/find/cat/jq and run_bounded fallbacks must have a hard deadline."""
+    source = SESSION_SETUP.read_text(encoding="utf-8")
+
+    assert "_hook_deadline()" in source
+    assert 'STDIN_JSON=$(_hook_deadline 2 cat || true)' in source
+    assert '_hook_deadline 2 git -C "$_LU_REPO" config --get core.bare' in source
+    assert '_hook_deadline 2 git -C "$PROJECT_DIR" rev-parse' in source
+    assert "_hook_deadline 2 find " in source
+    assert "_hook_deadline 2 jq" in source
+    assert "_emit_session_start_json" in source
+    # Missing bounded_command.py must not become an unbounded spawn.
+    assert 'echo "WARNING: SessionStart command skipped (no bounded runner or timeout): $1"' in source
+
+
 def test_rollover_and_postcompact_commands_are_bounded() -> None:
     session_source = SESSION_SETUP.read_text(encoding="utf-8")
     compact_source = POST_COMPACT.read_text(encoding="utf-8")
