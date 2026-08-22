@@ -461,6 +461,7 @@ _REQUIRED_MANIFEST_FIELDS: tuple[str, ...] = (
     "russian_shadow_suspected_rows",
     "sidecars",
     "source_package_binding",
+    "mcp_transport_attestation",
     "manifest_sha256",
 )
 _MANIFEST_FIELDS = frozenset(_REQUIRED_MANIFEST_FIELDS)
@@ -479,6 +480,21 @@ _SOURCE_PACKAGE_BINDING_FIELDS: frozenset[str] = frozenset(
         "row_count",
     }
 )
+_MCP_TRANSPORT_ATTESTATION_FIELDS: frozenset[str] = frozenset(
+    {
+        "schema_version",
+        "transport",
+        "endpoint_sha256",
+        "required_tool_set_sha256",
+        "tool_call_count",
+        "counts_by_tool",
+        "server_identity_call_count",
+        "ordered_call_commitment_sha256",
+    }
+)
+_REAL_PACKET_COUNT = 204
+_REAL_ROW_COUNT = 10_159
+_EXPECTED_MCP_ENDPOINT_SHA256 = contract.sha256_text("http://127.0.0.1:8766/mcp")
 
 
 def validate_manifest(manifest: Mapping[str, Any], *, expected_identity: Mapping[str, Any]) -> None:
@@ -586,6 +602,51 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_identity: Mapping
             or source_package_binding["row_count"] != manifest["row_count"]
         ):
             _fail("source_package_binding_shape_drift", "source_package_binding counts disagree with the manifest")
+
+    transport_attestation = manifest["mcp_transport_attestation"]
+    if transport_attestation is not None:
+        if (
+            not isinstance(transport_attestation, Mapping)
+            or set(transport_attestation) != _MCP_TRANSPORT_ATTESTATION_FIELDS
+        ):
+            _fail("mcp_transport_attestation_drift", "MCP transport attestation has an unexpected shape")
+        if transport_attestation["schema_version"] != "phase3_cycle007_mcp_transport_attestation_v1":
+            _fail("mcp_transport_attestation_drift", "unexpected MCP transport attestation schema")
+        for field in ("endpoint_sha256", "required_tool_set_sha256", "ordered_call_commitment_sha256"):
+            if not _is_sha256(transport_attestation[field]):
+                _fail("mcp_transport_attestation_drift", f"{field} must be a hex sha256")
+        counts_by_tool = transport_attestation["counts_by_tool"]
+        if not isinstance(counts_by_tool, Mapping) or any(
+            not _is_nonempty_string(tool) or not _is_nonnegative_int(count)
+            for tool, count in counts_by_tool.items()
+        ):
+            _fail("mcp_transport_attestation_drift", "counts_by_tool has an unexpected shape")
+        if (
+            not _is_nonnegative_int(transport_attestation["tool_call_count"])
+            or sum(counts_by_tool.values()) != transport_attestation["tool_call_count"]
+            or not _is_nonnegative_int(transport_attestation["server_identity_call_count"])
+            or counts_by_tool.get("mcp_server_identity", 0)
+            != transport_attestation["server_identity_call_count"]
+        ):
+            _fail("mcp_transport_attestation_drift", "MCP tool-call counts do not reconcile")
+
+    real_denominator = (
+        manifest["packet_count"] == _REAL_PACKET_COUNT
+        and manifest["row_count"] == _REAL_ROW_COUNT
+        and source_package_binding is not None
+    )
+    if real_denominator and (
+        not isinstance(transport_attestation, Mapping)
+        or transport_attestation.get("transport") != "streamable_http"
+        or transport_attestation.get("endpoint_sha256") != _EXPECTED_MCP_ENDPOINT_SHA256
+        or transport_attestation.get("server_identity_call_count") != 1
+        or not isinstance(transport_attestation.get("tool_call_count"), int)
+        or transport_attestation.get("tool_call_count", 0) <= manifest["row_count"]
+    ):
+        _fail(
+            "mcp_transport_attestation_drift",
+            "the real denominator requires one identity check and committed streamable-HTTP tool calls",
+        )
 
     for field in _IDENTITY_FIELDS:
         if manifest[field] != expected_identity.get(field):

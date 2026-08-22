@@ -250,6 +250,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
             "packet_count": manifest["packet_count"],
             "row_count": manifest["row_count"],
         },
+        "mcp_transport_attestation": None,
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_manifest_bytes = put(package / "evidence" / "manifest.json", ev_manifest)

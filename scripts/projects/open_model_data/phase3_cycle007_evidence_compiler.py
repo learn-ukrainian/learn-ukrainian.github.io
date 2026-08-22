@@ -646,6 +646,7 @@ class LocalMcpSourcesClient:
         host = urlparse(endpoint_url).hostname
         if not host or not _is_loopback_host(host):
             raise LocalMcpSourcesClientError(f"non_loopback_mcp_endpoint: {endpoint_url!r}")
+        self._endpoint_url = endpoint_url
         self._sources_db = sources_db
         self._vesum_db = vesum_db
         self._server_code = server_code
@@ -653,6 +654,9 @@ class LocalMcpSourcesClient:
             if not path.is_file():
                 raise LocalMcpSourcesClientError(f"local sources endpoint unavailable: missing {label} at {path}")
         self._transport: McpToolTransport = transport if transport is not None else RealMcpToolTransport(endpoint_url)
+        self._tool_call_count = 0
+        self._tool_call_counts: Counter[str] = Counter()
+        self._tool_call_commitment = contract.sha256_text("phase3-cycle007-mcp-tool-call-chain-v1")
         # Fail closed immediately on drift/unavailability rather than at the
         # first evidence call.
         self._transport.preflight()
@@ -684,7 +688,34 @@ class LocalMcpSourcesClient:
         return self._identity
 
     def _call_text(self, tool: str, arguments: Mapping[str, Any]) -> str:
-        return self._transport.call_tool(tool, arguments)
+        response = self._transport.call_tool(tool, arguments)
+        self._tool_call_count += 1
+        self._tool_call_counts[tool] += 1
+        call = {
+            "ordinal": self._tool_call_count,
+            "tool": tool,
+            "arguments_sha256": contract.sha256_value(arguments),
+            "response_sha256": contract.sha256_text(response),
+        }
+        self._tool_call_commitment = contract.sha256_text(
+            self._tool_call_commitment + "\n" + contract.canonical_json(call)
+        )
+        return response
+
+    def transport_attestation(self) -> Mapping[str, Any]:
+        """Return a text-free commitment to the actual ordered MCP calls."""
+        return {
+            "schema_version": "phase3_cycle007_mcp_transport_attestation_v1",
+            "transport": (
+                "streamable_http" if isinstance(self._transport, RealMcpToolTransport) else "synthetic"
+            ),
+            "endpoint_sha256": contract.sha256_text(self._endpoint_url),
+            "required_tool_set_sha256": contract.sha256_value(sorted(REQUIRED_TOOL_NAMES)),
+            "tool_call_count": self._tool_call_count,
+            "counts_by_tool": dict(sorted(self._tool_call_counts.items())),
+            "server_identity_call_count": self._tool_call_counts.get(_SERVER_IDENTITY_TOOL, 0),
+            "ordered_call_commitment_sha256": self._tool_call_commitment,
+        }
 
     def _call_json(self, tool: str, arguments: Mapping[str, Any]) -> Any:
         text = self._call_text(tool, arguments)
@@ -1755,6 +1786,9 @@ def compile_sidecar_bundle(
             # hashes and ordered identity commitment, when this compile is
             # backed by a real materialized source package.
             "source_package_binding": dict(source_package_binding) if source_package_binding is not None else None,
+            "mcp_transport_attestation": (
+                dict(client.transport_attestation()) if isinstance(client, LocalMcpSourcesClient) else None
+            ),
         }
         manifest["manifest_sha256"] = contract.sha256_value(manifest)
         # Amendment (fixes v3, item 5): validate the manifest before installation.
@@ -2271,6 +2305,14 @@ def compile_cycle007_package(
     before compilation. Real mode enforces the exact 204-packet/10,159-row
     denominator; a smaller synthetic run requires ``fixture=True``.
     """
+    if not fixture and (
+        not isinstance(client, LocalMcpSourcesClient)
+        or not isinstance(client._transport, RealMcpToolTransport)
+    ):
+        raise contract.EvidenceContractError(
+            "real package compile requires the reviewed streamable-HTTP MCP transport"
+        )
+
     packets, residual_flags, packet_bindings, source_package_binding = _validate_cycle007_materialization(
         package_dir,
         source_manifest_path,

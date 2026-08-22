@@ -670,6 +670,16 @@ def test_local_mcp_client_round_trips_through_fake_transport(tmp_path: Path):
     modern = client.check_modern_form("слово")
     assert modern["found"] is True
     assert modern["is_modern_codified"] is True
+    attestation = client.transport_attestation()
+    assert attestation["transport"] == "synthetic"
+    assert attestation["tool_call_count"] == 3
+    assert attestation["server_identity_call_count"] == 1
+    assert attestation["counts_by_tool"] == {
+        "check_modern_form": 1,
+        "mcp_server_identity": 1,
+        "verify_words": 1,
+    }
+    assert len(attestation["ordered_call_commitment_sha256"]) == 64
     client.close()
     assert transport.closed
 
@@ -1276,6 +1286,7 @@ def test_compile_cycle007_package_binds_lane_packet_index_and_basename(tmp_path:
         "packet_count": package_manifest["packet_count"],
         "row_count": package_manifest["row_count"],
     }
+    assert manifest["mcp_transport_attestation"] is None
 
 
 def test_compile_sidecar_bundle_bare_compile_has_a_null_source_package_binding(tmp_path: Path):
@@ -1284,6 +1295,7 @@ def test_compile_sidecar_bundle_bare_compile_has_a_null_source_package_binding(t
     output_dir = tmp_path / "sidecars"
     manifest = compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
     assert manifest["source_package_binding"] is None
+    assert manifest["mcp_transport_attestation"] is None
     assert set(manifest["sidecars"][0]["packet_binding"]) == {
         "canonical_basename",
         "raw_sha256",

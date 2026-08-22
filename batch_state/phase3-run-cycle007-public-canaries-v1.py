@@ -19,13 +19,18 @@ import json
 import os
 import secrets
 import shutil
+import socket
 import stat
 import subprocess
 import sys
 import tempfile
+import time
+import urllib.error
+import urllib.request
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -51,6 +56,7 @@ GROK_FAMILY = "xai"
 GROK_HARNESS = "native_grok"
 GROK = Path("/Users/krisztiankoos/.local/bin/grok")
 GROK_SCHEMA_VERSION = "phase3_cycle007_grok_public_canary_receipt_v1"
+MCP_START_TIMEOUT_SECONDS = 15.0
 
 SOURCE_VALIDATOR = HERE / "phase3-cycle007-label-validation-v1.py"
 
@@ -91,6 +97,89 @@ class CanarySemanticError(CanaryError):
 
     def __init__(self, code: str) -> None:
         super().__init__(code, structural=False)
+
+
+def _endpoint_is_listening(host: str, port: int) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=0.2):
+            return True
+    except OSError:
+        return False
+
+
+def _start_reviewed_sources_server(endpoint: str) -> subprocess.Popen[bytes]:
+    parsed = urlparse(endpoint)
+    if (
+        parsed.scheme != "http"
+        or parsed.hostname != "127.0.0.1"
+        or parsed.port != 8766
+        or parsed.path != "/mcp"
+        or parsed.params
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise CanaryError("real_mode_sources_endpoint_drift")
+    if _endpoint_is_listening(parsed.hostname, parsed.port):
+        raise CanaryError("reviewed_sources_endpoint_already_in_use")
+
+    server_path = compiler.DEFAULT_SERVER_CODE.resolve(strict=True)
+    expected_server_path = (ROOT / ".mcp" / "servers" / "sources" / "server.py").resolve(strict=True)
+    if server_path != expected_server_path:
+        raise CanaryError("reviewed_sources_server_path_drift")
+    process = subprocess.Popen(
+        [
+            str(Path(sys.executable).resolve(strict=True)),
+            str(server_path),
+            "--standalone",
+            "--host",
+            parsed.hostname,
+            "--port",
+            str(parsed.port),
+        ],
+        cwd=ROOT,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        shell=False,
+        start_new_session=True,
+    )
+    try:
+        expected_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        ).stdout.strip()
+        health_url = endpoint.removesuffix("/mcp") + "/health"
+        deadline = time.monotonic() + MCP_START_TIMEOUT_SECONDS
+        while time.monotonic() < deadline:
+            if process.poll() is not None:
+                raise CanaryError("reviewed_sources_server_start_failed")
+            try:
+                with urllib.request.urlopen(health_url, timeout=1) as response:
+                    payload = json.loads(response.read())
+                if payload.get("status") == "ok" and payload.get("commit_sha") == expected_commit:
+                    return process
+            except (OSError, urllib.error.URLError, json.JSONDecodeError):
+                pass
+            time.sleep(0.1)
+        raise CanaryError("reviewed_sources_server_start_timeout")
+    except BaseException:
+        _stop_reviewed_sources_server(process)
+        raise
+
+
+def _stop_reviewed_sources_server(process: subprocess.Popen[bytes] | None) -> None:
+    if process is None or process.poll() is not None:
+        return
+    process.terminate()
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
 
 
 def canonical(value: Any) -> bytes:
@@ -474,6 +563,8 @@ def build_receipt(
         "code_hashes": {
             "compiler_sha256": compiler.COMPILER_MODULE_SHA256,
             "validator_sha256": contract.sha256_file(SOURCE_VALIDATOR),
+            "evidence_validator_sha256": contract.sha256_file(Path(validator.__file__)),
+            "evidence_contract_sha256": contract.sha256_file(Path(contract.__file__)),
             "canary_runner_sha256": contract.sha256_file(Path(__file__)),
         },
         "executable_sha256": exe_sha256,
@@ -662,6 +753,8 @@ def invoke_canary(
         raise CanaryError("invalid_attempt_limit")
     if execution_mode == "real" and sources_client is not None:
         raise CanaryError("real_mode_prohibits_injected_sources_client")
+    if execution_mode == "real" and mcp_endpoint != compiler.DEFAULT_MCP_ENDPOINT:
+        raise CanaryError("real_mode_sources_endpoint_drift")
 
     # Verify real executable identity if real mode is requested
     if execution_mode == "real":
@@ -686,14 +779,21 @@ def invoke_canary(
         except OSError:
             exe_sha256 = "synthetic"
 
-    # Setup sources client
+    # Setup sources client. Real mode owns the exact reviewed server process;
+    # it never trusts a pre-existing or caller-selected listener.
     tmp_mcp: Path | None = None
+    managed_sources_process: subprocess.Popen[bytes] | None = None
     if sources_client is None:
         if execution_mode == "synthetic":
             tmp_mcp = Path(tempfile.mkdtemp(prefix=".canary-mcp-"))
             sources_client = make_synthetic_mcp_client(tmp_mcp)
         else:
-            sources_client = compiler.LocalMcpSourcesClient(endpoint_url=mcp_endpoint)
+            managed_sources_process = _start_reviewed_sources_server(mcp_endpoint)
+            try:
+                sources_client = compiler.LocalMcpSourcesClient(endpoint_url=mcp_endpoint)
+            except BaseException:
+                _stop_reviewed_sources_server(managed_sources_process)
+                raise
 
     runtime = Path(tempfile.mkdtemp(prefix=f".cycle007-canary-{provider_name}-"))
     os.chmod(runtime, 0o700)
@@ -846,6 +946,9 @@ def invoke_canary(
 
     finally:
         shutil.rmtree(runtime, ignore_errors=True)
+        if execution_mode == "real" and sources_client is not None:
+            sources_client.close()
+        _stop_reviewed_sources_server(managed_sources_process)
         if tmp_mcp is not None:
             shutil.rmtree(tmp_mcp, ignore_errors=True)
 
@@ -868,6 +971,8 @@ def main() -> int:
             if args.receipt:
                 _atomic(args.receipt, result)
         elif args.test_provider_bin:
+            if not args.synthetic_mcp:
+                raise CanaryError("synthetic_provider_requires_synthetic_mcp")
             result = invoke_canary(
                 args.provider,
                 args.test_provider_bin,
@@ -876,14 +981,7 @@ def main() -> int:
                 mcp_endpoint=args.mcp_endpoint,
             )
         elif args.synthetic_mcp:
-            provider_bin = AGY if args.provider == "gemini" else GROK
-            result = invoke_canary(
-                args.provider,
-                provider_bin,
-                execution_mode="synthetic",
-                receipt_path=args.receipt,
-                mcp_endpoint=args.mcp_endpoint,
-            )
+            raise CanaryError("synthetic_mcp_requires_test_provider_bin")
         else:
             if args.receipt is None:
                 raise CanaryError("receipt_path_required_for_real_mode")

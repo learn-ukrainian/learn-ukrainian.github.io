@@ -25,7 +25,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 HERE = Path(__file__).resolve().parent
-PRIMARY_PYTHON = Path(sys.executable)
+PRIMARY_PYTHON = Path(sys.executable).resolve()
 AMENDMENT = HERE / "phase3-cycle007-source-grounded-amendment-v1.md"
 AMENDMENT_SHA256 = "4f2e3e58964cae391c3933ffdce531296a0744808b0154231ca513049602fea0"
 CYCLE = "phase3-v2-1-evaluation-cycle-007"
@@ -50,11 +50,43 @@ REQUIRED_CODE_PATHS = {
     "adjudicate_runner": HERE / "phase3-run-cycle007-dual-label-adjudication-v1.py",
     "resolve_runner": HERE / "phase3-apply-cycle007-operator-resolutions-v1.py",
     "certify_runner": HERE / "phase3-verify-cycle007-label-completion-v1.py",
+    "evidence_validator": ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_validator.py",
+    "evidence_contract": ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_contract.py",
 }
 CANARY_RUNNER = HERE / "phase3-run-cycle007-public-canaries-v1.py"
 EVIDENCE_COMPILER = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py"
 EVIDENCE_VALIDATOR = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_validator.py"
+EVIDENCE_CONTRACT = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_contract.py"
 PUBLIC_CANARY_DOMAIN = "phase3-cycle007-public-canary-v1"
+MCP_ENDPOINT = "http://127.0.0.1:8766/mcp"
+MCP_REQUIRED_TOOL_NAMES = (
+    "check_modern_form",
+    "check_russian_shadow",
+    "mcp_server_identity",
+    "query_grac",
+    "query_pravopys",
+    "query_ulif",
+    "search_heritage",
+    "search_slovnyk_me",
+    "search_style_guide",
+    "search_text",
+    "search_ua_gec_errors",
+    "verify_words",
+)
+
+STAGE_SEAL_SCHEMA = "phase3_cycle007_stage_complete_v2"
+STAGE_SEAL_FIELDS = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "stage",
+        "preflight_receipt_sha256",
+        "python_executable_sha256",
+        "preceding_stage_seal_sha256",
+        "text_free",
+        "seal_sha256",
+    }
+)
 
 STAGE_RUNNER_LABELS = {
     "grok": "grok_runner",
@@ -80,6 +112,14 @@ def digest(value: bytes) -> str:
 
 def sha256(path: Path) -> str:
     return digest(path.read_bytes())
+
+
+def _contract_digest(value: Any) -> str:
+    return digest(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+
+
+def _expected_mcp_tool_set_sha256() -> str:
+    return _contract_digest(list(MCP_REQUIRED_TOOL_NAMES))
 
 
 def _hex64(value: Any) -> bool:
@@ -110,6 +150,94 @@ def _public_fixture_hashes() -> dict[str, Any]:
 
 def _exact_hash_map(value: Any, keys: set[str]) -> bool:
     return isinstance(value, dict) and set(value) == keys and all(_hex64(value[key]) for key in keys)
+
+
+def _source_endpoint_identity(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != {
+        "server_code_sha256",
+        "sources_db_sha256",
+        "sources_db_bytes",
+        "vesum_db_sha256",
+        "vesum_db_bytes",
+    }:
+        raise ControllerError("preflight_binding_drift")
+    for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
+        if not _hex64(value.get(key)):
+            raise ControllerError("preflight_binding_drift")
+    for key in ("sources_db_bytes", "vesum_db_bytes"):
+        if not isinstance(value.get(key), int) or isinstance(value.get(key), bool) or value[key] <= 0:
+            raise ControllerError("preflight_binding_drift")
+    return value
+
+
+def _canary_raw_artifact(receipt_path: Path, expected_provider: str, response_hashes: dict[str, Any]) -> None:
+    """Bind the receipt's provider-response hash to the persisted raw artifact."""
+    raw_path = Path(f"{receipt_path}.raw")
+    _mode(raw_path, 0o600)
+    raw_key = "raw_stream_sha256" if expected_provider == "gemini" else "response_raw_sha256"
+    if response_hashes.get(raw_key) != sha256(raw_path):
+        raise ControllerError("preflight_binding_drift")
+
+
+def _validate_mcp_transport_attestation(manifest: dict[str, Any]) -> dict[str, Any]:
+    value = manifest.get("mcp_transport_attestation")
+    fields = {
+        "schema_version",
+        "transport",
+        "endpoint_sha256",
+        "required_tool_set_sha256",
+        "tool_call_count",
+        "counts_by_tool",
+        "server_identity_call_count",
+        "ordered_call_commitment_sha256",
+    }
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ControllerError("preflight_binding_drift")
+    if value.get("schema_version") != "phase3_cycle007_mcp_transport_attestation_v1":
+        raise ControllerError("preflight_binding_drift")
+    if value.get("transport") not in {"streamable_http", "synthetic"}:
+        raise ControllerError("preflight_binding_drift")
+    if (
+        not _hex64(value.get("endpoint_sha256"))
+        or value.get("endpoint_sha256") != digest(MCP_ENDPOINT.encode("utf-8"))
+        or value.get("required_tool_set_sha256") != _expected_mcp_tool_set_sha256()
+        or not _hex64(value.get("ordered_call_commitment_sha256"))
+    ):
+        raise ControllerError("preflight_binding_drift")
+    counts = value.get("counts_by_tool")
+    if (
+        not isinstance(counts, dict)
+        or any(
+            not isinstance(tool, str)
+            or not tool
+            or not isinstance(count, int)
+            or isinstance(count, bool)
+            or count < 0
+            for tool, count in counts.items()
+        )
+        or not isinstance(value.get("tool_call_count"), int)
+        or isinstance(value.get("tool_call_count"), bool)
+        or value["tool_call_count"] < 0
+        or sum(counts.values()) != value["tool_call_count"]
+        or not isinstance(value.get("server_identity_call_count"), int)
+        or isinstance(value.get("server_identity_call_count"), bool)
+        or value["server_identity_call_count"] < 0
+        or counts.get("mcp_server_identity", 0) != value["server_identity_call_count"]
+    ):
+        raise ControllerError("preflight_binding_drift")
+    real_denominator = (
+        manifest.get("packet_count") == 204
+        and manifest.get("row_count") == 10159
+        and manifest.get("source_package_binding") is not None
+    )
+    if real_denominator and (
+        value.get("transport") != "streamable_http"
+        or value.get("endpoint_sha256") != digest(MCP_ENDPOINT.encode("utf-8"))
+        or value.get("server_identity_call_count") != 1
+        or value.get("tool_call_count", 0) <= manifest["row_count"]
+    ):
+        raise ControllerError("preflight_binding_drift")
+    return value
 
 
 def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -304,23 +432,7 @@ def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tupl
     if receipt.get("heritage_control_preserved") is not True:
         raise ControllerError("preflight_binding_drift")
 
-    sources_id = receipt.get("sources_endpoint_identity")
-    if not isinstance(sources_id, dict) or set(sources_id) != {
-        "server_code_sha256",
-        "sources_db_sha256",
-        "sources_db_bytes",
-        "vesum_db_sha256",
-        "vesum_db_bytes",
-    }:
-        raise ControllerError("preflight_binding_drift")
-    for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
-        val = sources_id.get(key)
-        if not isinstance(val, str) or len(val) != 64:
-            raise ControllerError("preflight_binding_drift")
-    for key in ("sources_db_bytes", "vesum_db_bytes"):
-        val = sources_id.get(key)
-        if not isinstance(val, int) or isinstance(val, bool) or val <= 0:
-            raise ControllerError("preflight_binding_drift")
+    sources_id = _source_endpoint_identity(receipt.get("sources_endpoint_identity"))
 
     if receipt.get("fixture_hashes") != _public_fixture_hashes():
         raise ControllerError("preflight_binding_drift")
@@ -338,6 +450,8 @@ def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tupl
     expected_canary_code_hashes = {
         "compiler_sha256": sha256(EVIDENCE_COMPILER),
         "validator_sha256": sha256(REQUIRED_CODE_PATHS["label_validator"]),
+        "evidence_validator_sha256": sha256(EVIDENCE_VALIDATOR),
+        "evidence_contract_sha256": sha256(EVIDENCE_CONTRACT),
         "canary_runner_sha256": sha256(CANARY_RUNNER),
     }
     if receipt.get("code_hashes") != expected_canary_code_hashes:
@@ -349,6 +463,7 @@ def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tupl
     )
     if not _exact_hash_map(receipt.get("response_hashes"), response_keys):
         raise ControllerError("preflight_binding_drift")
+    _canary_raw_artifact(receipt_path, expected_provider, receipt["response_hashes"])
     if not isinstance(receipt.get("provenance_basis"), dict) or not receipt["provenance_basis"]:
         raise ControllerError("preflight_binding_drift")
     if (
@@ -365,6 +480,23 @@ def _validate_canary_receipt(receipt_path: Path, expected_provider: str) -> tupl
     return sha256(receipt_path), exe_sha256, sources_id, receipt
 
 
+def _python_executable_sha256() -> str:
+    try:
+        if PRIMARY_PYTHON.is_symlink():
+            raise ControllerError("preflight_binding_drift")
+        executable = PRIMARY_PYTHON.resolve(strict=True)
+        if not executable.is_file() or executable.is_symlink():
+            raise ControllerError("preflight_binding_drift")
+        return sha256(executable)
+    except OSError as exc:
+        raise ControllerError("preflight_binding_drift") from exc
+
+
+def _require_python_binding(expected_sha256: str) -> None:
+    if not _hex64(expected_sha256) or _python_executable_sha256() != expected_sha256:
+        raise ControllerError("preflight_binding_drift")
+
+
 def preflight(
     package: Path,
     receipt_path: Path,
@@ -372,7 +504,8 @@ def preflight(
     gemini_canary_receipt_path: Path,
     grok_canary_receipt_path: Path | None = None,
 ) -> dict[str, Any]:
-    if not PRIMARY_PYTHON.is_file() or sha256(AMENDMENT) != AMENDMENT_SHA256:
+    python_executable_sha256 = _python_executable_sha256()
+    if sha256(AMENDMENT) != AMENDMENT_SHA256:
         raise ControllerError("preflight_binding_drift")
     if not package.is_dir() or package.is_symlink() or os.stat(package).st_mode & 0o777 != 0o700:
         raise ControllerError("preflight_binding_drift")
@@ -407,9 +540,22 @@ def preflight(
     evidence_manifest_path = package / "evidence" / "manifest.json"
     _mode(evidence_manifest_path, 0o600)
     evidence_manifest = _read_json(evidence_manifest_path)
+    _validate_mcp_transport_attestation(evidence_manifest)
+    if evidence_manifest.get("manifest_sha256") != _contract_digest(
+        {key: value for key, value in evidence_manifest.items() if key != "manifest_sha256"}
+    ):
+        raise ControllerError("preflight_binding_drift")
     if any(
         evidence_manifest.get(key) != gemini_sources_id[key]
         for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256")
+    ):
+        raise ControllerError("preflight_binding_drift")
+    manifest_identity_keys = {"sources_db_bytes", "vesum_db_bytes"}
+    present_manifest_identity_keys = manifest_identity_keys & set(evidence_manifest)
+    if present_manifest_identity_keys and present_manifest_identity_keys != manifest_identity_keys:
+        raise ControllerError("preflight_binding_drift")
+    if present_manifest_identity_keys and any(
+        evidence_manifest.get(key) != gemini_sources_id[key] for key in manifest_identity_keys
     ):
         raise ControllerError("preflight_binding_drift")
 
@@ -475,6 +621,8 @@ def preflight(
         "expected_custody_sha256": custody_sha256,
         "expected_label_manifest_sha256": manifest_sha256,
         "expected_evidence_manifest_sha256": ev_manifest_sha256,
+        "expected_python_executable_sha256": python_executable_sha256,
+        "expected_prompt_sha256": gemini_receipt["prompt_hashes"]["prompt_sha256"],
         "sources_endpoint_identity": gemini_sources_id,
         "text_free": True,
     }
@@ -488,6 +636,115 @@ def _stage_seal(package: Path, stage: str) -> Path:
     return _control(package) / f"stage-{stage}.complete.json"
 
 
+def _stage_seal_unsigned(
+    stage: str,
+    preflight_receipt_sha256: str,
+    python_executable_sha256: str,
+    preceding_stage_seal_sha256: dict[str, str],
+) -> dict[str, Any]:
+    return {
+        "schema_version": STAGE_SEAL_SCHEMA,
+        "evaluation_cycle_id": CYCLE,
+        "stage": stage,
+        "preflight_receipt_sha256": preflight_receipt_sha256,
+        "python_executable_sha256": python_executable_sha256,
+        "preceding_stage_seal_sha256": preceding_stage_seal_sha256,
+        "text_free": True,
+    }
+
+
+def _validate_stage_seal(
+    package: Path,
+    stage: str,
+    *,
+    expected_preflight_receipt_sha256: str | None = None,
+    expected_python_executable_sha256: str | None = None,
+) -> tuple[str, dict[str, Any]]:
+    if stage not in STAGES:
+        raise ControllerError("invalid_stage_seal")
+    path = _stage_seal(package, stage)
+    try:
+        _mode(path, 0o600)
+        value = _read_json(path)
+        if path.read_bytes() != canonical(value):
+            raise ControllerError("invalid_stage_seal")
+    except ControllerError as exc:
+        raise ControllerError("invalid_stage_seal") from exc
+
+    stage_index = STAGES.index(stage)
+    preceding = value.get("preceding_stage_seal_sha256")
+    if (
+        set(value) != STAGE_SEAL_FIELDS
+        or value.get("schema_version") != STAGE_SEAL_SCHEMA
+        or value.get("evaluation_cycle_id") != CYCLE
+        or value.get("stage") != stage
+        or value.get("text_free") is not True
+        or not _hex64(value.get("preflight_receipt_sha256"))
+        or not _hex64(value.get("python_executable_sha256"))
+        or not isinstance(preceding, dict)
+        or set(preceding) != set(STAGES[:stage_index])
+        or not all(_hex64(item) for item in preceding.values())
+    ):
+        raise ControllerError("invalid_stage_seal")
+    if expected_preflight_receipt_sha256 is not None and value["preflight_receipt_sha256"] != expected_preflight_receipt_sha256:
+        raise ControllerError("invalid_stage_seal")
+    if expected_python_executable_sha256 is not None and value["python_executable_sha256"] != expected_python_executable_sha256:
+        raise ControllerError("invalid_stage_seal")
+
+    unsigned = {key: item for key, item in value.items() if key != "seal_sha256"}
+    if value.get("seal_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("invalid_stage_seal")
+    for prior in STAGES[:stage_index]:
+        prior_path = _stage_seal(package, prior)
+        if not prior_path.is_file() or prior_path.is_symlink() or preceding[prior] != sha256(prior_path):
+            raise ControllerError("invalid_stage_seal")
+    return sha256(path), value
+
+
+def _validate_stage_chain(
+    package: Path,
+    *,
+    expected_preflight_receipt_sha256: str | None = None,
+    expected_python_executable_sha256: str | None = None,
+) -> list[str]:
+    completed: list[str] = []
+    seal_hashes: dict[str, str] = {}
+    chain_preflight_receipt_sha256 = expected_preflight_receipt_sha256
+    for index, stage in enumerate(STAGES):
+        path = _stage_seal(package, stage)
+        if not path.exists():
+            if path.is_symlink() or any(
+                _stage_seal(package, later).exists() or _stage_seal(package, later).is_symlink()
+                for later in STAGES[index + 1 :]
+            ):
+                raise ControllerError("invalid_stage_seal")
+            break
+        seal_hash, value = _validate_stage_seal(
+            package,
+            stage,
+            expected_preflight_receipt_sha256=expected_preflight_receipt_sha256,
+            expected_python_executable_sha256=expected_python_executable_sha256,
+        )
+        preceding = value["preceding_stage_seal_sha256"]
+        if any(preceding[prior] != seal_hashes[prior] for prior in STAGES[:index]):
+            raise ControllerError("invalid_stage_seal")
+        if chain_preflight_receipt_sha256 is None:
+            chain_preflight_receipt_sha256 = value["preflight_receipt_sha256"]
+        elif value["preflight_receipt_sha256"] != chain_preflight_receipt_sha256:
+            raise ControllerError("invalid_stage_seal")
+        if index == 0:
+            preflight_path = _control(package) / "preflight-receipt.json"
+            try:
+                _mode(preflight_path, 0o600)
+            except ControllerError as exc:
+                raise ControllerError("invalid_stage_seal") from exc
+            if sha256(preflight_path) != value["preflight_receipt_sha256"]:
+                raise ControllerError("invalid_stage_seal")
+        completed.append(stage)
+        seal_hashes[stage] = seal_hash
+    return completed
+
+
 def _stage_stop_paths(package: Path) -> tuple[Path, ...]:
     return (
         package / "label-output-gemini-cycle007-v1" / "provider-stop.json",
@@ -498,7 +755,7 @@ def _stage_stop_paths(package: Path) -> tuple[Path, ...]:
 
 
 def status(package: Path) -> dict[str, Any]:
-    completed = [stage for stage in STAGES if _stage_seal(package, stage).exists()]
+    completed = _validate_stage_chain(package, expected_python_executable_sha256=_python_executable_sha256())
     stopped = any(path.exists() for path in _stage_stop_paths(package))
     runtime_directories = [
         path.name for path in package.iterdir() if path.is_dir() and path.name.startswith(".cycle007-")
@@ -514,13 +771,47 @@ def status(package: Path) -> dict[str, Any]:
     }
 
 
-def _require_contiguous(package: Path, stage: str) -> None:
+def _require_contiguous(
+    package: Path,
+    stage: str,
+    preflight_receipt_sha256: str,
+    python_executable_sha256: str,
+) -> None:
     stage_index = STAGES.index(stage)
     if any(path.exists() for path in _stage_stop_paths(package)):
         raise ControllerError("provider_stop_present")
-    if any(not _stage_seal(package, prior).exists() for prior in STAGES[:stage_index]):
-        raise ControllerError("noncontiguous_stage_order")
-    if _stage_seal(package, stage).exists():
+    _require_python_binding(python_executable_sha256)
+    preflight_path = _control(package) / "preflight-receipt.json"
+    try:
+        _mode(preflight_path, 0o600)
+    except ControllerError as exc:
+        raise ControllerError("preflight_binding_drift") from exc
+    if sha256(preflight_path) != preflight_receipt_sha256:
+        raise ControllerError("preflight_binding_drift")
+    for prior in STAGES[:stage_index]:
+        prior_path = _stage_seal(package, prior)
+        if prior_path.is_symlink():
+            raise ControllerError("invalid_stage_seal")
+        if not prior_path.exists():
+            raise ControllerError("noncontiguous_stage_order")
+        _validate_stage_seal(
+            package,
+            prior,
+            expected_preflight_receipt_sha256=preflight_receipt_sha256,
+            expected_python_executable_sha256=python_executable_sha256,
+        )
+    if any(
+        _stage_seal(package, later).exists() or _stage_seal(package, later).is_symlink()
+        for later in STAGES[stage_index + 1 :]
+    ):
+        raise ControllerError("invalid_stage_seal")
+    if _stage_seal(package, stage).exists() or _stage_seal(package, stage).is_symlink():
+        _validate_stage_seal(
+            package,
+            stage,
+            expected_preflight_receipt_sha256=preflight_receipt_sha256,
+            expected_python_executable_sha256=python_executable_sha256,
+        )
         raise ControllerError("stage_already_complete")
 
 
@@ -528,6 +819,7 @@ def _gemini_runner(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
+    expected_prompt_sha256: str | None = None,
 ) -> Any:
     path = HERE / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_controller_gemini", path)
@@ -540,6 +832,8 @@ def _gemini_runner(
     module.EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     module.EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     module.EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256 or ""
+    if expected_prompt_sha256 is not None:
+        module.EXPECTED_PROMPT_SHA256 = expected_prompt_sha256
     return module
 
 
@@ -548,9 +842,15 @@ def revalidate_full_packets(
     expected_custody_sha256: str,
     expected_label_manifest_sha256: str,
     expected_evidence_manifest_sha256: str,
+    expected_prompt_sha256: str,
 ) -> None:
     """Revalidate every reassembled Gemini packet before its stage can seal."""
-    runner = _gemini_runner(expected_custody_sha256, expected_label_manifest_sha256, expected_evidence_manifest_sha256)
+    runner = _gemini_runner(
+        expected_custody_sha256,
+        expected_label_manifest_sha256,
+        expected_evidence_manifest_sha256,
+        expected_prompt_sha256,
+    )
     for lane, count in LANES.items():
         for index in range(1, count + 1):
             runner.verify_packet(package, lane, index)
@@ -561,9 +861,15 @@ def gemini_missing_ranges(
     expected_custody_sha256: str,
     expected_label_manifest_sha256: str,
     expected_evidence_manifest_sha256: str,
+    expected_prompt_sha256: str,
 ) -> dict[str, list[tuple[int, int]]]:
     """Return only contiguous entirely-unsealed packet ranges; partial seals refuse."""
-    runner = _gemini_runner(expected_custody_sha256, expected_label_manifest_sha256, expected_evidence_manifest_sha256)
+    runner = _gemini_runner(
+        expected_custody_sha256,
+        expected_label_manifest_sha256,
+        expected_evidence_manifest_sha256,
+        expected_prompt_sha256,
+    )
     result: dict[str, list[tuple[int, int]]] = {}
     for lane, count in LANES.items():
         missing: list[int] = []
@@ -798,6 +1104,7 @@ def _commands_for_stage(
     code_paths: dict[str, Path],
     expected_agy_executable_sha256: str | None,
     expected_grok_executable_sha256: str | None = None,
+    expected_prompt_sha256: str | None = None,
     expected_custody_sha256: str | None,
     expected_label_manifest_sha256: str | None,
     expected_evidence_manifest_sha256: str | None,
@@ -808,6 +1115,7 @@ def _commands_for_stage(
             expected_custody_sha256 or "",
             expected_label_manifest_sha256 or "",
             expected_evidence_manifest_sha256 or "",
+            expected_prompt_sha256 or "",
         )
         return (
             [
@@ -832,6 +1140,8 @@ def _commands_for_stage(
                     expected_label_manifest_sha256 or "",
                     "--expected-evidence-manifest-sha",
                     expected_evidence_manifest_sha256 or "",
+                    "--expected-prompt-sha",
+                    expected_prompt_sha256 or "",
                 ]
                 for lane, lane_ranges in ranges.items()
                 for start, end in lane_ranges
@@ -895,16 +1205,35 @@ def _commands_for_stage(
     raise ControllerError("preflight_binding_drift")
 
 
-def _seal(package: Path, stage: str, preflight_receipt_sha256: str) -> None:
+def _seal(
+    package: Path,
+    stage: str,
+    preflight_receipt_sha256: str,
+    python_executable_sha256: str,
+) -> None:
+    if stage not in STAGES or not _hex64(preflight_receipt_sha256) or not _hex64(python_executable_sha256):
+        raise ControllerError("invalid_stage_seal")
+    try:
+        preflight_path = _control(package) / "preflight-receipt.json"
+        _mode(preflight_path, 0o600)
+        if sha256(preflight_path) != preflight_receipt_sha256:
+            raise ControllerError("invalid_stage_seal")
+        _require_python_binding(python_executable_sha256)
+    except ControllerError as exc:
+        raise ControllerError("invalid_stage_seal") from exc
+    preceding: dict[str, str] = {}
+    for prior in STAGES[: STAGES.index(stage)]:
+        prior_hash, _prior_value = _validate_stage_seal(
+            package,
+            prior,
+            expected_preflight_receipt_sha256=preflight_receipt_sha256,
+            expected_python_executable_sha256=python_executable_sha256,
+        )
+        preceding[prior] = prior_hash
+    unsigned = _stage_seal_unsigned(stage, preflight_receipt_sha256, python_executable_sha256, preceding)
     _atomic(
         _stage_seal(package, stage),
-        {
-            "schema_version": "phase3_cycle007_stage_complete_v1",
-            "evaluation_cycle_id": CYCLE,
-            "stage": stage,
-            "preflight_receipt_sha256": preflight_receipt_sha256,
-            "text_free": True,
-        },
+        {**unsigned, "seal_sha256": digest(canonical(unsigned))},
     )
 
 
@@ -918,13 +1247,20 @@ def run_stage(
     concurrency: int = 1,
     expected_agy_executable_sha256: str | None = None,
     expected_grok_executable_sha256: str | None = None,
+    expected_python_executable_sha256: str | None = None,
+    expected_prompt_sha256: str | None = None,
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
     code_paths: dict[str, Path] | None = None,
     operator_inspected_count: int | None = None,
 ) -> dict[str, Any]:
-    _require_contiguous(package, stage)
+    _require_contiguous(
+        package,
+        stage,
+        preflight_receipt_sha256,
+        expected_python_executable_sha256 or "",
+    )
     if concurrency != 1:
         raise ControllerError("concurrency_drift")
     paths = REQUIRED_CODE_PATHS if code_paths is None else code_paths
@@ -938,6 +1274,8 @@ def run_stage(
             or not isinstance(expected_label_manifest_sha256, str)
             or not isinstance(expected_evidence_manifest_sha256, str)
         ):
+            raise ControllerError("preflight_binding_drift")
+        if not _hex64(expected_prompt_sha256):
             raise ControllerError("preflight_binding_drift")
     else:
         expected_paths = paths
@@ -961,6 +1299,7 @@ def run_stage(
         code_paths=paths,
         expected_agy_executable_sha256=expected_agy_executable_sha256,
         expected_grok_executable_sha256=expected_grok_executable_sha256,
+        expected_prompt_sha256=expected_prompt_sha256,
         expected_custody_sha256=expected_custody_sha256,
         expected_label_manifest_sha256=expected_label_manifest_sha256,
         expected_evidence_manifest_sha256=expected_evidence_manifest_sha256,
@@ -974,6 +1313,7 @@ def run_stage(
             "text_free": True,
         }
     for command in commands:
+        _require_python_binding(expected_python_executable_sha256 or "")
         completed = subprocess.run(
             command,
             stdin=subprocess.DEVNULL,
@@ -984,6 +1324,7 @@ def run_stage(
         )
         if completed.returncode != 0:
             raise ControllerError("stage_execution_failed")
+        _require_python_binding(expected_python_executable_sha256 or "")
         if any(path.exists() for path in _stage_stop_paths(package)):
             raise ControllerError("provider_stop_present")
 
@@ -993,6 +1334,7 @@ def run_stage(
             expected_custody_sha256 or "",
             expected_label_manifest_sha256 or "",
             expected_evidence_manifest_sha256 or "",
+            expected_prompt_sha256 or "",
         )
     elif stage == "grok":
         revalidate_grok_full_packets(
@@ -1020,7 +1362,8 @@ def run_stage(
         )
     if any(path.exists() for path in _stage_stop_paths(package)):
         raise ControllerError("provider_stop_present")
-    _seal(package, stage, preflight_receipt_sha256)
+    _require_python_binding(expected_python_executable_sha256 or "")
+    _seal(package, stage, preflight_receipt_sha256, expected_python_executable_sha256 or "")
     return {"ok": True, "stage": stage, "text_free": True}
 
 
@@ -1101,6 +1444,8 @@ def main() -> int:
                     concurrency=args.concurrency,
                     expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
                     expected_grok_executable_sha256=proof.get("expected_grok_executable_sha256"),
+                    expected_python_executable_sha256=proof["expected_python_executable_sha256"],
+                    expected_prompt_sha256=proof["expected_prompt_sha256"],
                     expected_custody_sha256=proof["expected_custody_sha256"],
                     expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
                     expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],

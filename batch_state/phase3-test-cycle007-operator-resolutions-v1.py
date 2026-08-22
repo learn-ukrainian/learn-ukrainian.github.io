@@ -3,16 +3,22 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 
-HERE = Path(__file__).resolve().parent
 RES_PATH = HERE / "phase3-apply-cycle007-operator-resolutions-v1.py"
 
 
@@ -351,21 +357,51 @@ def _setup_resolution_package(tmp_path: Path, *, unresolved_count: int = 1, clea
 
 
 def _make_authorization(pkg: Path, authorizations: list[dict[str, Any]]) -> Path:
+    identity_order = [(item["unit_id"], item["unit_sha256"]) for item in authorizations]
     auth_doc = {
-        "schema_version": "phase3_cycle007_operator_resolution_authorization_v1",
+        "schema_version": res_mod.AUTHORIZATION_SCHEMA_VERSION,
         "evaluation_cycle_id": res_mod.CYCLE,
         "amendment_sha256": res_mod.AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": res_mod.digest((pkg / "custody-receipt.json").read_bytes()),
         "source_label_manifest_raw_sha256": res_mod.SOURCE_MANIFEST_SHA256,
         "manifest_raw_sha256": res_mod.digest((pkg / "manifest.json").read_bytes()),
         "ordered_identity_commitment_sha256": "order_comm",
+        "request_raw_sha256": None,
+        "decision_authority": "operator",
+        "operator_id": "operator.fixture",
+        "authorized_identity": {"identity_type": "human", "identity_id": "operator.fixture"},
+        "identity_order_sha256": res_mod.digest(res_mod.canonical([list(identity) for identity in identity_order])),
+        "nonce_sha256": hashlib.sha256(b"synthetic-operator-nonce").hexdigest(),
         "authorizations": authorizations,
+        "text_free": True,
     }
+    auth_doc["receipt_sha256"] = res_mod.digest(res_mod.canonical(auth_doc))
     auth_p = pkg / res_mod.RESOLUTION_OUTPUT / "authorization.json"
     auth_p.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    auth_p.write_text(json.dumps(auth_doc, sort_keys=True) + "\n")
+    auth_p.write_bytes(res_mod.canonical(auth_doc))
     auth_p.chmod(0o600)
     return auth_p
+
+
+def _make_resolution_request(pkg: Path, records: list[dict[str, Any]]) -> Path:
+    request = {
+        "schema_version": "phase3_cycle007_operator_resolution_request_v1",
+        "evaluation_cycle_id": res_mod.CYCLE,
+        "amendment_sha256": res_mod.AMENDMENT_SHA256,
+        "custody_receipt_raw_sha256": res_mod.digest((pkg / "custody-receipt.json").read_bytes()),
+        "source_label_manifest_raw_sha256": res_mod.SOURCE_MANIFEST_SHA256,
+        "manifest_raw_sha256": res_mod.digest((pkg / "manifest.json").read_bytes()),
+        "ordered_identity_commitment_sha256": "order_comm",
+        "unresolved_count": len(records),
+        "unresolved_records": records,
+        "text_free": False,
+    }
+    request["request_sha256"] = res_mod.digest(res_mod.canonical(request))
+    request_p = pkg / res_mod.ADJUDICATION_OUTPUT / "operator-resolution-request.json"
+    request_p.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    request_p.write_bytes(res_mod.canonical(request))
+    request_p.chmod(0o600)
+    return request_p
 
 
 def test_operator_resolution_success(tmp_path):
@@ -384,7 +420,7 @@ def test_operator_resolution_success(tmp_path):
         ],
     )
 
-    auths = res_mod.validate_authorization_file(auth_p, pkg)
+    auths = res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
     assert (unres_row["unit_id"], unres_row["unit_sha256"]) in auths
 
     result = res_mod.resolve_packet(pkg, "clean_label", 1, auths, fixture=True)
@@ -396,6 +432,77 @@ def test_operator_resolution_success(tmp_path):
     final_data = json.loads(final_labels_p.read_text())
     assert len(final_data["labels"]) == 2
     assert final_data["labels"][1]["decision_code"] == "agree"
+
+
+def test_operator_resolution_missing_sidecar_fails_closed(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=1)
+    unres_row = rows[1]
+    auth_p = _make_authorization(
+        pkg,
+        [
+            {
+                "unit_id": unres_row["unit_id"],
+                "unit_sha256": unres_row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+    auths = res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
+    (pkg / "evidence" / "sidecar-0001.json").unlink()
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.resolve_packet(pkg, "clean_label", 1, auths, fixture=True)
+    assert exc.value.failure_code == "missing_evidence_sidecar"
+
+
+def test_operator_authorization_requires_human_identity_and_authority(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
+    unres_row = rows[0]
+    auth_p = _make_authorization(
+        pkg,
+        [
+            {
+                "unit_id": unres_row["unit_id"],
+                "unit_sha256": unres_row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+    auth_doc = json.loads(auth_p.read_text())
+    del auth_doc["authorized_identity"]
+    auth_doc["receipt_sha256"] = res_mod.digest(
+        res_mod.canonical({key: value for key, value in auth_doc.items() if key != "receipt_sha256"})
+    )
+    auth_p.write_bytes(res_mod.canonical(auth_doc))
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
+    assert exc.value.failure_code == "authorization_binding_failure"
+
+
+def test_live_authorization_receipt_cannot_live_inside_package(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
+    unres_row = rows[0]
+    auth_p = _make_authorization(
+        pkg,
+        [
+            {
+                "unit_id": unres_row["unit_id"],
+                "unit_sha256": unres_row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.validate_authorization_file(auth_p, pkg)
+    assert exc.value.failure_code == "authorization_binding_failure"
 
 
 def test_operator_resolution_extra_or_foreign_authorization(tmp_path):
@@ -474,7 +581,7 @@ def test_operator_resolution_source_blind_authorization(tmp_path):
     )
 
     with pytest.raises(res_mod.Error) as exc:
-        res_mod.validate_authorization_file(auth_p, pkg)
+        res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
     assert exc.value.failure_code == "authorization_tamper_detected"
 
 
@@ -495,7 +602,7 @@ def test_operator_resolution_candidate_invention_rejected(tmp_path):
     )
 
     with pytest.raises(res_mod.Error) as exc:
-        res_mod.validate_authorization_file(auth_p, pkg)
+        res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
     assert exc.value.failure_code == "authorization_tamper_detected"
 
 
@@ -515,7 +622,7 @@ def test_operator_resolution_partition_overlap_rejected(tmp_path):
             }
         ],
     )
-    auths = res_mod.validate_authorization_file(auth_p, pkg)
+    auths = res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
 
     # Corrupt risk-consensus to also include clean_row
     risk_p = pkg / res_mod.COMPARE_OUTPUT / "clean_label" / "risk-consensus-0001.json"
@@ -568,7 +675,7 @@ def test_operator_resolution_partition_omission_rejected(tmp_path):
             }
         ],
     )
-    auths = res_mod.validate_authorization_file(auth_p, pkg)
+    auths = res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
 
     # Empty out clean-consensus so clean_row is omitted
     clean_p = pkg / res_mod.COMPARE_OUTPUT / "clean_label" / "clean-consensus-0001.json"
@@ -601,7 +708,7 @@ def test_operator_resolution_forged_upstream_receipt_rejected(tmp_path):
             }
         ],
     )
-    auths = res_mod.validate_authorization_file(auth_p, pkg)
+    auths = res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
 
     # Tamper with compare receipt hash
     comp_rcpt_p = pkg / res_mod.COMPARE_OUTPUT / "clean_label" / "receipt-0001.json"
@@ -617,7 +724,7 @@ def test_operator_resolution_forged_upstream_receipt_rejected(tmp_path):
 def test_operator_resolution_missing_authorization(tmp_path):
     pkg, _rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=0)
     auth_p = _make_authorization(pkg, [])
-    auths = res_mod.validate_authorization_file(auth_p, pkg)
+    auths = res_mod.validate_authorization_file(auth_p, pkg, fixture=True)
 
     with pytest.raises(res_mod.Error) as exc:
         res_mod.resolve_packet(pkg, "clean_label", 1, auths, fixture=True)
@@ -645,6 +752,32 @@ def test_operator_resolution_resolve_all_fixture(tmp_path):
     assert batch_rcpt["total_rows"] == 2
     assert batch_rcpt["unresolved_remaining_count"] == 0
     assert batch_rcpt["text_free"] is True
+
+
+def test_resolution_request_must_match_exact_unresolved_records(tmp_path):
+    pkg, rows, _ = _setup_resolution_package(tmp_path, unresolved_count=1, clean_count=1)
+    unres_row = rows[1]
+    auth_p = _make_authorization(
+        pkg,
+        [
+            {
+                "unit_id": unres_row["unit_id"],
+                "unit_sha256": unres_row["unit_sha256"],
+                "selection": "grok",
+                "source_bound_rationale": "Valid rationale",
+                "source_authority_reference": "pravopys_2026:section_1",
+            }
+        ],
+    )
+    unresolved_path = pkg / res_mod.ADJUDICATION_OUTPUT / "final" / "clean_label" / "unresolved-0001.json"
+    unresolved_records = json.loads(unresolved_path.read_text())["records"]
+    forged_records = json.loads(json.dumps(unresolved_records))
+    forged_records[0]["grok_label"]["unit_id"] = "forged-unresolved-item"
+    _make_resolution_request(pkg, forged_records)
+
+    with pytest.raises(res_mod.Error) as exc:
+        res_mod.resolve_all(pkg, auth_p, fixture=True)
+    assert exc.value.failure_code == "authorization_identity_failure"
 
 
 if __name__ == "__main__":

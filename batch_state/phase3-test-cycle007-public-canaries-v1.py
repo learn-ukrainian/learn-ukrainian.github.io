@@ -407,6 +407,43 @@ def test_real_mode_rejects_injected_synthetic_sources_client(tmp_path: Path) -> 
     client.close()
 
 
+def test_real_mode_rejects_noncanonical_sources_endpoint(tmp_path: Path) -> None:
+    with pytest.raises(CANARY.CanaryError, match="real_mode_sources_endpoint_drift"):
+        CANARY.invoke_canary(
+            "gemini",
+            tmp_path / "provider-must-not-be-resolved",
+            execution_mode="real",
+            receipt_path=tmp_path / "receipt.json",
+            mcp_endpoint="http://127.0.0.1:9876/mcp",
+        )
+
+
+def test_managed_sources_server_refuses_preexisting_listener(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(CANARY, "_endpoint_is_listening", lambda _host, _port: True)
+
+    def forbidden(*_args: Any, **_kwargs: Any) -> Any:
+        raise AssertionError("must not launch over an existing listener")
+
+    monkeypatch.setattr(CANARY.subprocess, "Popen", forbidden)
+    with pytest.raises(CANARY.CanaryError, match="reviewed_sources_endpoint_already_in_use"):
+        CANARY._start_reviewed_sources_server(compiler.DEFAULT_MCP_ENDPOINT)
+
+
+def test_cli_synthetic_mcp_cannot_execute_real_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    called = False
+
+    def forbidden(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        nonlocal called
+        called = True
+        raise AssertionError("provider invocation must not occur")
+
+    monkeypatch.setattr(CANARY, "invoke_canary", forbidden)
+    monkeypatch.setattr(sys, "argv", ["canary", "--provider", "gemini", "--synthetic-mcp"])
+
+    assert CANARY.main() == 2
+    assert called is False
+
+
 @pytest.mark.parametrize("attempts", [0, 3, True])
 def test_canary_rejects_attempt_limit_outside_one_structural_retry(tmp_path: Path, attempts: int) -> None:
     client = CANARY.make_synthetic_mcp_client(tmp_path)

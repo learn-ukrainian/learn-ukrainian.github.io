@@ -327,6 +327,7 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
             "packet_count": manifest["packet_count"],
             "row_count": manifest["row_count"],
         },
+        "mcp_transport_attestation": None,
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_manifest_p = evidence_dir / "manifest.json"

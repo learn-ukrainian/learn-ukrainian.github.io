@@ -182,12 +182,217 @@ def compute_zero_event_bound(population_count: int) -> float:
     return 1.0 - (0.05 ** (1.0 / population_count))
 
 
+_PACKAGE_MANIFEST_FIELDS = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "source_evaluation_cycle_id",
+        "text_free",
+        "custody_receipt_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+        "packet_count",
+        "row_count",
+        "lane_row_counts",
+        "packets",
+        "receipt_sha256",
+    }
+)
+_PACKAGE_PACKET_FIELDS = frozenset(
+    {"lane", "packet_index", "canonical_basename", "row_count", "raw_sha256", "packet_identity_set_sha256"}
+)
+
+
+def _unsigned_hash(value: Mapping[str, Any]) -> str:
+    return digest(canonical({key: item for key, item in value.items() if key != "receipt_sha256"}))
+
+
+def _package_packet_snapshot(package: Path) -> dict[str, Any]:
+    """Load and independently reconcile the package's frozen packet boundary.
+
+    The audit must consume the materialization manifest as a frozen package
+    boundary, while also proving every listed packet and row is present on
+    disk.  Hardcoded lane packet counts are only a source-cycle sanity check;
+    they are never used as the iteration boundary.
+    """
+    custody_path = package / "custody-receipt.json"
+    manifest_path = package / "manifest.json"
+    _regular(custody_path, 0o600)
+    _regular(manifest_path, 0o600)
+    custody_raw = custody_path.read_bytes()
+    custody = read(custody_path, "custody receipt")
+    manifest_raw = manifest_path.read_bytes()
+    manifest = read(manifest_path, "materialization manifest")
+    if (
+        not isinstance(custody, dict)
+        or not isinstance(manifest, dict)
+        or not _PACKAGE_MANIFEST_FIELDS.issubset(manifest)
+        or manifest.get("schema_version") != "phase3_cycle007_materialization_manifest_v1"
+        or manifest.get("evaluation_cycle_id") != CYCLE
+        or manifest.get("source_evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-005"
+        or manifest.get("text_free") is not True
+        or manifest.get("custody_receipt_raw_sha256") != digest(custody_raw)
+        or manifest.get("receipt_sha256") != _unsigned_hash(manifest)
+        or not isinstance(manifest.get("packets"), list)
+        or not isinstance(manifest.get("lane_row_counts"), dict)
+        or set(manifest["lane_row_counts"]) != set(LANES)
+        or not isinstance(manifest.get("packet_count"), int)
+        or isinstance(manifest.get("packet_count"), bool)
+        or manifest["packet_count"] != len(manifest["packets"])
+        or not isinstance(manifest.get("row_count"), int)
+        or isinstance(manifest.get("row_count"), bool)
+        or manifest["row_count"] < 0
+        or any(
+            not isinstance(value, int) or isinstance(value, bool) or value < 0
+            for value in manifest["lane_row_counts"].values()
+        )
+    ):
+        raise Error("binding_failure")
+    if (
+        not isinstance(custody, dict)
+        or custody.get("receipt_sha256") != _unsigned_hash(custody)
+        or custody.get("packet_count") != manifest["packet_count"]
+        or custody.get("row_count") != manifest["row_count"]
+        or custody.get("lane_row_counts") != manifest["lane_row_counts"]
+        or custody.get("ordered_identity_commitment_sha256")
+        != manifest["ordered_identity_commitment_sha256"]
+        or custody.get("identity_union_commitment_sha256") != manifest["identity_union_commitment_sha256"]
+        or custody.get("ordered_packet_commitment_sha256") != manifest["ordered_packet_commitment_sha256"]
+        or manifest.get("ordered_packet_commitment_sha256")
+        != digest(canonical(manifest["packets"]))
+        or manifest.get("ordered_identity_commitment_sha256") != ORDERED_IDENTITY_COMMITMENT_SHA256
+    ):
+        raise Error("binding_failure")
+
+    packet_records: list[dict[str, Any]] = []
+    packet_keys: set[tuple[str, int]] = set()
+    for item in manifest["packets"]:
+        if not isinstance(item, dict) or not _PACKAGE_PACKET_FIELDS.issubset(item):
+            raise Error("binding_failure")
+        lane = item.get("lane")
+        packet_index = item.get("packet_index")
+        key = (lane, packet_index)
+        if (
+            lane not in LANES
+            or not isinstance(packet_index, int)
+            or isinstance(packet_index, bool)
+            or packet_index < 1
+            or key in packet_keys
+            or item.get("canonical_basename") != f"packet-{packet_index:04d}.json"
+            or not isinstance(item.get("row_count"), int)
+            or isinstance(item.get("row_count"), bool)
+            or item["row_count"] < 0
+            or not isinstance(item.get("raw_sha256"), str)
+            or len(item["raw_sha256"]) != 64
+            or any(char not in "0123456789abcdef" for char in item["raw_sha256"])
+            or not isinstance(item.get("packet_identity_set_sha256"), str)
+            or len(item["packet_identity_set_sha256"]) != 64
+            or any(char not in "0123456789abcdef" for char in item["packet_identity_set_sha256"])
+        ):
+            raise Error("binding_failure")
+        packet_keys.add(key)
+        packet_records.append(item)
+
+    packet_data_lookup: dict[tuple[str, int], dict[str, Any]] = {}
+    ordered_identities: list[list[Any]] = []
+    seen_identities: list[tuple[str, str]] = []
+    lane_rows: dict[str, int] = {lane: 0 for lane in LANES}
+    listed_names: dict[str, set[str]] = {lane: set() for lane in LANES}
+    for item in packet_records:
+        lane = item["lane"]
+        packet_index = item["packet_index"]
+        listed_names[lane].add(item["canonical_basename"])
+    for lane in LANES:
+        lane_dir = package / lane
+        _directory(lane_dir, 0o700)
+        actual_names = {entry.name for entry in lane_dir.iterdir()}
+        if actual_names != listed_names[lane]:
+            raise Error("binding_failure")
+
+    for item in packet_records:
+        lane = item["lane"]
+        packet_index = item["packet_index"]
+        packet_path = package / lane / item["canonical_basename"]
+        _regular(packet_path, 0o600)
+        packet_raw = packet_path.read_bytes()
+        packet = read(packet_path, f"packet {lane}/{packet_index}")
+        rows = packet.get("rows")
+        if (
+            not isinstance(rows, list)
+            or packet.get("packet_identity_set_sha256") != item["packet_identity_set_sha256"]
+            or len(rows) != item["row_count"]
+            or digest(packet_raw) != item["raw_sha256"]
+        ):
+            raise Error("binding_failure")
+        packet_identities: list[tuple[str, str]] = []
+        for row_index, row in enumerate(rows):
+            if (
+                not isinstance(row, Mapping)
+                or not isinstance(row.get("unit_id"), str)
+                or not isinstance(row.get("unit_sha256"), str)
+                or len(row["unit_sha256"]) != 64
+                or any(char not in "0123456789abcdef" for char in row["unit_sha256"])
+            ):
+                raise Error("binding_failure")
+            identity = (row["unit_id"], row["unit_sha256"])
+            packet_identities.append(identity)
+            ordered_identities.append([lane, packet_index, row_index, identity[0], identity[1]])
+            seen_identities.append(identity)
+        if digest(canonical(sorted(packet_identities))) != item["packet_identity_set_sha256"]:
+            raise Error("binding_failure")
+        lane_rows[lane] += len(rows)
+        packet_data_lookup[(lane, packet_index)] = packet
+
+    if (
+        len(seen_identities) != manifest["row_count"]
+        or len(seen_identities) != len(set(seen_identities))
+        or lane_rows != manifest["lane_row_counts"]
+        or digest(canonical(ordered_identities)) != manifest["ordered_identity_commitment_sha256"]
+        or digest(canonical(sorted(seen_identities))) != manifest["identity_union_commitment_sha256"]
+    ):
+        raise Error("binding_failure")
+    return {
+        "custody": custody,
+        "manifest": manifest,
+        "custody_raw_sha256": digest(custody_raw),
+        "manifest_raw_sha256": digest(manifest_raw),
+        "packet_records": packet_records,
+        "packet_data_lookup": packet_data_lookup,
+        "ordered_identities": ordered_identities,
+        "seen_identities": seen_identities,
+    }
+
+
+def _assert_partition_exhaustive(
+    packet_rows: list[Mapping[str, Any]],
+    clean_records: list[Mapping[str, Any]],
+    risk_records: list[Mapping[str, Any]],
+    disagreement_records: list[Mapping[str, Any]],
+) -> None:
+    """Require clean/risk/disagreement rows to partition one packet exactly."""
+    expected = [(row.get("unit_id"), row.get("unit_sha256")) for row in packet_rows]
+    if any(not isinstance(identity[0], str) or not isinstance(identity[1], str) for identity in expected):
+        raise Error("audit_population_drift")
+    partition = [*clean_records, *risk_records, *disagreement_records]
+    partition_identities = [_identity(record) for record in partition]
+    if (
+        len(partition_identities) != len(expected)
+        or len(partition_identities) != len(set(partition_identities))
+        or set(partition_identities) != set(expected)
+    ):
+        raise Error("audit_population_drift")
+
+
 def sample_clean_consensus(
-    package: Path, clean_consensus_records: list[dict[str, Any]]
+    package: Path,
+    clean_consensus_records: list[dict[str, Any]],
+    *,
+    ordered_identity_commitment_sha256: str | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     custody_sha256 = digest((package / "custody-receipt.json").read_bytes())
     manifest_sha256 = digest((package / "manifest.json").read_bytes())
-    ordered_identity_commitment = ORDERED_IDENTITY_COMMITMENT_SHA256
+    ordered_identity_commitment = ordered_identity_commitment_sha256 or ORDERED_IDENTITY_COMMITMENT_SHA256
     # The amendment freezes the source Cycle 005 custody/manifest values, not
     # this materialization's private receipt hashes, as sampler seed inputs.
     seed = seed_clean_consensus(SOURCE_CUSTODY_SHA256, SOURCE_MANIFEST_SHA256, ordered_identity_commitment)
@@ -905,8 +1110,28 @@ def _run_audit(
 ) -> dict[str, Any]:
     """Execute 100% review of risk-triggered consensus and sample audit of clean consensus."""
     _directory(package, 0o700)
+    package_snapshot = _package_packet_snapshot(package)
+    package_manifest = package_snapshot["manifest"]
+    package_commitment = package_manifest["ordered_identity_commitment_sha256"]
+    package_manifest_sha256 = package_snapshot["manifest_raw_sha256"]
     compare_dir = package / COMPARE_OUTPUT
     _directory(compare_dir, 0o700)
+    compare_names: dict[str, set[str]] = {lane: set() for lane in LANES}
+    for packet_record in package_snapshot["packet_records"]:
+        lane = packet_record["lane"]
+        index = packet_record["packet_index"]
+        compare_names[lane].update(
+            {
+                f"clean-consensus-{index:04d}.json",
+                f"risk-consensus-{index:04d}.json",
+                f"disagreements-{index:04d}.json",
+            }
+        )
+    for lane, expected_names in compare_names.items():
+        lane_dir = compare_dir / lane
+        _directory(lane_dir, 0o700)
+        if {entry.name for entry in lane_dir.iterdir()} != expected_names:
+            raise Error("audit_population_drift")
 
     if (package / OUTPUT / "provider-stop.json").exists():
         raise Error("binding_failure")
@@ -939,36 +1164,35 @@ def _run_audit(
         for r_ev in s_data.get("rows", []):
             unit_evidence_map[(r_ev["unit_id"], r_ev["unit_sha256"])] = r_ev
 
-    for lane, count in LANES.items():
+    for packet_record in package_snapshot["packet_records"]:
+        lane = packet_record["lane"]
+        index = packet_record["packet_index"]
         lane_dir = compare_dir / lane
         _directory(lane_dir, 0o700)
-        for index in range(1, count + 1):
-            clean_p = lane_dir / f"clean-consensus-{index:04d}.json"
-            risk_p = lane_dir / f"risk-consensus-{index:04d}.json"
-            disagreement_p = lane_dir / f"disagreements-{index:04d}.json"
-            _regular(clean_p, 0o600)
-            _regular(risk_p, 0o600)
-            _regular(disagreement_p, 0o600)
-            c_val = read(clean_p, f"clean consensus {lane}/{index}")
-            r_val = read(risk_p, f"risk consensus {lane}/{index}")
-            d_val = read(disagreement_p, f"disagreements {lane}/{index}")
-            if not all(isinstance(value, dict) and isinstance(value.get("records"), list) for value in (c_val, r_val, d_val)):
-                raise Error("audit_population_drift")
-            packet = read(package / lane / f"packet-{index:04d}.json", f"packet {lane}/{index}")
-            if not isinstance(packet, dict) or not isinstance(packet.get("rows"), list):
-                raise Error("audit_population_drift")
-            partition = [*c_val["records"], *r_val["records"], *d_val["records"]]
-            expected_identities = [(row.get("unit_id"), row.get("unit_sha256")) for row in packet["rows"] if isinstance(row, dict)]
-            partition_identities = [_identity(record) for record in partition]
-            if len(expected_identities) != len(packet["rows"]) or len(partition_identities) != len(set(partition_identities)) or set(partition_identities) != set(expected_identities):
-                raise Error("audit_population_drift")
-            for r in c_val.get("records", []):
-                clean_records.append({**r, "lane": lane, "packet_index": index})
-            for r in r_val.get("records", []):
-                risk_records.append({**r, "lane": lane, "packet_index": index})
+        clean_p = lane_dir / f"clean-consensus-{index:04d}.json"
+        risk_p = lane_dir / f"risk-consensus-{index:04d}.json"
+        disagreement_p = lane_dir / f"disagreements-{index:04d}.json"
+        _regular(clean_p, 0o600)
+        _regular(risk_p, 0o600)
+        _regular(disagreement_p, 0o600)
+        c_val = read(clean_p, f"clean consensus {lane}/{index}")
+        r_val = read(risk_p, f"risk consensus {lane}/{index}")
+        d_val = read(disagreement_p, f"disagreements {lane}/{index}")
+        if not all(isinstance(value, dict) and isinstance(value.get("records"), list) for value in (c_val, r_val, d_val)):
+            raise Error("audit_population_drift")
+        packet = package_snapshot["packet_data_lookup"][(lane, index)]
+        _assert_partition_exhaustive(packet["rows"], c_val["records"], r_val["records"], d_val["records"])
+        for r in c_val.get("records", []):
+            clean_records.append({**r, "lane": lane, "packet_index": index})
+        for r in r_val.get("records", []):
+            risk_records.append({**r, "lane": lane, "packet_index": index})
 
     # Seal the exact clean sample and source-bearing review plan before any provider/human call.
-    sample_receipt, sample_records = sample_clean_consensus(package, clean_records)
+    sample_receipt, sample_records = sample_clean_consensus(
+        package,
+        clean_records,
+        ordered_identity_commitment_sha256=package_commitment,
+    )
     out_dir = package / OUTPUT
     _private_directory(package, out_dir)
     atomic(out_dir / "clean-consensus-sample.json", sample_receipt)
@@ -1010,8 +1234,8 @@ def _run_audit(
         "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
         "source_label_manifest_raw_sha256": SOURCE_MANIFEST_SHA256,
-        "manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
-        "ordered_identity_commitment_sha256": ORDERED_IDENTITY_COMMITMENT_SHA256,
+        "manifest_raw_sha256": package_manifest_sha256,
+        "ordered_identity_commitment_sha256": package_commitment,
         "risk_population_count": len(risk_records),
         "reviewed_count": len(risk_records),
         "source_review_receipt_sha256": review_receipt["receipt_sha256"],
@@ -1029,8 +1253,8 @@ def _run_audit(
         "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
         "source_label_manifest_raw_sha256": SOURCE_MANIFEST_SHA256,
-        "manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
-        "ordered_identity_commitment_sha256": ORDERED_IDENTITY_COMMITMENT_SHA256,
+        "manifest_raw_sha256": package_manifest_sha256,
+        "ordered_identity_commitment_sha256": package_commitment,
         "clean_population_count": len(clean_records),
         "audited_count": len(sample_records),
         "one_sided_95_bound": sample_receipt["one_sided_95_bound"],
@@ -1049,8 +1273,8 @@ def _run_audit(
         "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
         "source_label_manifest_raw_sha256": SOURCE_MANIFEST_SHA256,
-        "manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
-        "ordered_identity_commitment_sha256": ORDERED_IDENTITY_COMMITMENT_SHA256,
+        "manifest_raw_sha256": package_manifest_sha256,
+        "ordered_identity_commitment_sha256": package_commitment,
         "risk_population_count": len(risk_records),
         "risk_reviewed_count": len(risk_records),
         "clean_population_count": len(clean_records),

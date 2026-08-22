@@ -9,12 +9,14 @@ import json
 import os
 import re
 import stat
+import sys
 import tempfile
 from collections import defaultdict
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as evidence_compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
@@ -33,6 +35,20 @@ LANES = {"clean_label": 40, "residual_label": 164}
 LANE_ROW_COUNTS = {"clean_label": 2_000, "residual_label": 8_159}
 ROW_COUNT = 10_159
 PACKET_COUNT = 204
+STAGES = ("gemini", "grok", "compare", "audit", "adjudicate", "resolve", "certify")
+STAGE_SEAL_SCHEMA = "phase3_cycle007_stage_complete_v2"
+STAGE_SEAL_FIELDS = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "stage",
+        "preflight_receipt_sha256",
+        "python_executable_sha256",
+        "preceding_stage_seal_sha256",
+        "text_free",
+        "seal_sha256",
+    }
+)
 
 GROK_ROOT = "label-output-grok-cycle007-v1"
 GEMINI_ROOT = "label-output-gemini-cycle007-v1"
@@ -63,10 +79,16 @@ CONTROL_CODE_PATHS = {
     "adjudicate_runner": ROOT / "batch_state/phase3-run-cycle007-dual-label-adjudication-v1.py",
     "resolve_runner": ROOT / "batch_state/phase3-apply-cycle007-operator-resolutions-v1.py",
     "certify_runner": ROOT / "batch_state/phase3-verify-cycle007-label-completion-v1.py",
+    "evidence_validator": ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_validator.py",
+    "evidence_contract": ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_contract.py",
 }
 CANARY_RUNNER = ROOT / "batch_state/phase3-run-cycle007-public-canaries-v1.py"
 EVIDENCE_COMPILER = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py"
 EVIDENCE_VALIDATOR = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_validator.py"
+EVIDENCE_CONTRACT = ROOT / "scripts/projects/open_model_data/phase3_cycle007_evidence_contract.py"
+SOURCES_SERVER_CODE = ROOT / ".mcp/servers/sources/server.py"
+SOURCES_DB = ROOT / "data/sources.db"
+VESUM_DB = ROOT / "data/vesum.db"
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 REJECTS = frozenset(
@@ -285,6 +307,141 @@ def _exact_hash_map(value: Any, fields: frozenset[str]) -> bool:
     return isinstance(value, dict) and set(value) == fields and all(_hex(item) for item in value.values())
 
 
+def _file_sha256(path: Path) -> str:
+    """Hash one reviewed code/data file without accepting a symlink or directory."""
+    try:
+        info = path.lstat()
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+            raise Error("closure_validation_failed")
+        raw = path.read_bytes()
+    except (OSError, Error) as exc:
+        raise Error("closure_validation_failed") from exc
+    if not raw:
+        raise Error("closure_validation_failed")
+    return digest(raw)
+
+
+def _recompute_sources_endpoint_identity() -> dict[str, Any]:
+    """Recompute the frozen Sources endpoint identity from the reviewed files.
+
+    The package's evidence manifest is an assertion about these inputs, not the
+    source of truth for them.  Keeping this calculation outside package parsing
+    prevents a consistently re-sealed manifest/canary pair from rebinding the
+    certifier to a different Sources endpoint.
+    """
+    try:
+        source_code_sha256 = _file_sha256(SOURCES_SERVER_CODE)
+        sources_db_sha256 = _file_sha256(SOURCES_DB)
+        vesum_db_sha256 = _file_sha256(VESUM_DB)
+        sources_db_bytes = SOURCES_DB.stat().st_size
+        vesum_db_bytes = VESUM_DB.stat().st_size
+    except (OSError, Error) as exc:
+        raise Error("closure_validation_failed") from exc
+    if sources_db_bytes <= 0 or vesum_db_bytes <= 0:
+        raise Error("closure_validation_failed")
+    return {
+        "server_code_sha256": source_code_sha256,
+        "sources_db_sha256": sources_db_sha256,
+        "sources_db_bytes": sources_db_bytes,
+        "vesum_db_sha256": vesum_db_sha256,
+        "vesum_db_bytes": vesum_db_bytes,
+    }
+
+
+def _recompute_evidence_code_hashes() -> dict[str, str]:
+    """Recompute and sanity-check the compiler's frozen evidence code identity."""
+    compiler_sha256 = _file_sha256(EVIDENCE_COMPILER)
+    expected = dict(evidence_compiler.CODE_HASHES)
+    if set(expected) != validator._CODE_HASH_FIELDS:
+        raise Error("closure_validation_failed")
+    if expected.get("compiler_sha256") != compiler_sha256:
+        raise Error("closure_validation_failed")
+    for field in (
+        "tokenizer_sha256",
+        "compound_parser_sha256",
+        "mcp_response_parser_sha256",
+        "query_plan_sha256",
+    ):
+        if expected.get(field) != compiler_sha256:
+            raise Error("closure_validation_failed")
+    return expected
+
+
+def _recompute_evidence_identity() -> dict[str, Any]:
+    """Build validator identity expectations from code/data, never package fields."""
+    endpoint = _recompute_sources_endpoint_identity()
+    return {
+        "tokenizer_id": evidence_compiler.TOKENIZER_ID,
+        "tokenizer_version": evidence_compiler.TOKENIZER_VERSION,
+        "code_hashes": _recompute_evidence_code_hashes(),
+        "server_code_sha256": endpoint["server_code_sha256"],
+        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "vesum_db_sha256": endpoint["vesum_db_sha256"],
+    }
+
+
+def _recompute_control_code_identity() -> dict[str, str]:
+    """Return all code identities the final receipt must bind independently."""
+    return {
+        "compiler_sha256": _file_sha256(EVIDENCE_COMPILER),
+        "evidence_validator_sha256": _file_sha256(EVIDENCE_VALIDATOR),
+        "evidence_contract_sha256": _file_sha256(EVIDENCE_CONTRACT),
+        "label_validator_sha256": _file_sha256(CONTROL_CODE_PATHS["label_validator"]),
+        "canary_runner_sha256": _file_sha256(CANARY_RUNNER),
+    }
+
+
+def _validate_transport_attestation(
+    value: Any,
+    *,
+    fixture: bool,
+    packet_count: int,
+    row_count: int,
+) -> dict[str, Any] | None:
+    """Validate the compiler's text-free MCP transport attestation.
+
+    Bare/fixture bundles intentionally carry ``null``.  A real Cycle 007
+    denominator must carry the exact loopback streamable-HTTP endpoint binding,
+    one server identity call, and a reconciled ordered call commitment.
+    """
+    if value is None:
+        if not fixture or (packet_count == PACKET_COUNT and row_count == ROW_COUNT):
+            raise Error("evidence_validation_failed")
+        return None
+    fields = getattr(validator, "_MCP_TRANSPORT_ATTESTATION_FIELDS", frozenset())
+    if not isinstance(value, dict) or set(value) != fields:
+        raise Error("evidence_validation_failed")
+    if (
+        value.get("schema_version") != "phase3_cycle007_mcp_transport_attestation_v1"
+        or value.get("transport") != "streamable_http"
+        or value.get("endpoint_sha256") != contract.sha256_text(evidence_compiler.DEFAULT_MCP_ENDPOINT)
+        or value.get("required_tool_set_sha256")
+        != contract.sha256_value(sorted(evidence_compiler.REQUIRED_TOOL_NAMES))
+        or not isinstance(value.get("tool_call_count"), int)
+        or isinstance(value.get("tool_call_count"), bool)
+        or value["tool_call_count"] <= row_count
+        or not isinstance(value.get("counts_by_tool"), dict)
+        or not all(
+            isinstance(tool, str)
+            and bool(tool)
+            and isinstance(count, int)
+            and not isinstance(count, bool)
+            and count >= 0
+            for tool, count in value["counts_by_tool"].items()
+        )
+        or sum(value["counts_by_tool"].values()) != value["tool_call_count"]
+        or not isinstance(value.get("server_identity_call_count"), int)
+        or isinstance(value.get("server_identity_call_count"), bool)
+        or value["server_identity_call_count"] != value["counts_by_tool"].get("mcp_server_identity", 0)
+        or value["server_identity_call_count"] != 1
+        or not _hex(value.get("ordered_call_commitment_sha256"))
+    ):
+        raise Error("evidence_validation_failed")
+    if fixture or packet_count != PACKET_COUNT or row_count != ROW_COUNT:
+        raise Error("evidence_validation_failed")
+    return value
+
+
 def _valid_canary_provenance(provider: str, value: Any, response_hashes: Mapping[str, Any]) -> bool:
     if not isinstance(value, dict):
         return False
@@ -326,12 +483,24 @@ def _validate_controls(
     manifest_hash: str,
     evidence_hash: str,
     evidence: Mapping[str, Any],
+    expected_packet_count: int = PACKET_COUNT,
+    expected_row_count: int = ROW_COUNT,
 ) -> dict[str, Any]:
     control = package / CONTROL_ROOT
     _directory(control)
     preflight, preflight_raw = _read_json(control / "preflight-receipt.json")
     canaries: dict[str, tuple[dict[str, Any], bytes]] = {}
-    expected_sources: dict[str, Any] | None = None
+    expected_sources = _recompute_sources_endpoint_identity()
+    expected_evidence_code_hashes = _recompute_evidence_code_hashes()
+    expected_evidence_identity = {
+        "tokenizer_id": evidence_compiler.TOKENIZER_ID,
+        "tokenizer_version": evidence_compiler.TOKENIZER_VERSION,
+        "code_hashes": expected_evidence_code_hashes,
+        "server_code_sha256": expected_sources["server_code_sha256"],
+        "sources_db_sha256": expected_sources["sources_db_sha256"],
+        "vesum_db_sha256": expected_sources["vesum_db_sha256"],
+    }
+    control_code_identity = _recompute_control_code_identity()
     providers = (
         ("gemini", EXPECTED_MODELS["gemini"], frozenset({"raw_stream_sha256", "labels_raw_sha256"})),
         ("grok", EXPECTED_MODELS["grok"], frozenset({"response_raw_sha256", "labels_raw_sha256"})),
@@ -339,6 +508,8 @@ def _validate_controls(
     expected_canary_code_hashes = {
         "compiler_sha256": digest(EVIDENCE_COMPILER.read_bytes()),
         "validator_sha256": digest(CONTROL_CODE_PATHS["label_validator"].read_bytes()),
+        "evidence_validator_sha256": digest(EVIDENCE_VALIDATOR.read_bytes()),
+        "evidence_contract_sha256": digest(EVIDENCE_CONTRACT.read_bytes()),
         "canary_runner_sha256": digest(CANARY_RUNNER.read_bytes()),
     }
     for provider, expected_model, response_keys in providers:
@@ -380,6 +551,7 @@ def _validate_controls(
             or not _hex(value.get("executable_sha256"))
             or not _exact_hash_map(response_hashes, response_keys)
             or not endpoint_is_valid
+            or endpoint != expected_sources
             or any(
                 value.get(key) is not True
                 for key in (
@@ -393,17 +565,20 @@ def _validate_controls(
             or value.get("receipt_sha256") != _receipt_hash(value)
         ):
             raise Error("closure_validation_failed")
-        if expected_sources is None:
-            expected_sources = endpoint
-        if endpoint != expected_sources:
-            raise Error("closure_validation_failed")
         canaries[provider] = (value, raw)
-    assert expected_sources is not None
     if any(
         evidence.get(key) != expected_sources[key]
         for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256")
     ):
         raise Error("evidence_validation_failed")
+    if evidence.get("code_hashes") != expected_evidence_code_hashes:
+        raise Error("evidence_validation_failed")
+    transport_attestation = _validate_transport_attestation(
+        evidence.get("mcp_transport_attestation"),
+        fixture=fixture,
+        packet_count=expected_packet_count,
+        row_count=expected_row_count,
+    )
     code_hashes = {key: digest(path.read_bytes()) for key, path in CONTROL_CODE_PATHS.items()}
     if (
         preflight_raw != canonical(preflight)
@@ -429,26 +604,38 @@ def _validate_controls(
     ):
         raise Error("closure_validation_failed")
     preflight_hash = digest(preflight_raw)
-    seals = {}
-    for stage in ("gemini", "grok", "compare", "audit", "adjudicate", "resolve"):
+    try:
+        python_executable_sha256 = digest(Path(sys.executable).resolve(strict=True).read_bytes())
+    except OSError as exc:
+        raise Error("closure_validation_failed") from exc
+    if not _hex(python_executable_sha256):
+        raise Error("closure_validation_failed")
+    seals: dict[str, str] = {}
+    for stage in STAGES[:-1]:
         seal, raw = _read_json(control / f"stage-{stage}.complete.json")
-        expected = {
-            "schema_version": "phase3_cycle007_stage_complete_v1",
+        unsigned = {
+            "schema_version": STAGE_SEAL_SCHEMA,
             "evaluation_cycle_id": CYCLE,
             "stage": stage,
             "preflight_receipt_sha256": preflight_hash,
+            "python_executable_sha256": python_executable_sha256,
+            "preceding_stage_seal_sha256": dict(seals),
             "text_free": True,
         }
+        expected = {**unsigned, "seal_sha256": digest(canonical(unsigned))}
         if raw != canonical(seal) or seal != expected:
             raise Error("closure_validation_failed")
         seals[stage] = digest(raw)
-    certify_seal = {
-        "schema_version": "phase3_cycle007_stage_complete_v1",
+    certify_unsigned = {
+        "schema_version": STAGE_SEAL_SCHEMA,
         "evaluation_cycle_id": CYCLE,
         "stage": "certify",
         "preflight_receipt_sha256": preflight_hash,
+        "python_executable_sha256": python_executable_sha256,
+        "preceding_stage_seal_sha256": dict(seals),
         "text_free": True,
     }
+    certify_seal = {**certify_unsigned, "seal_sha256": digest(canonical(certify_unsigned))}
     certify_expected = digest(canonical(certify_seal))
     certify_path = control / "stage-certify.complete.json"
     if certify_path.exists():
@@ -460,9 +647,16 @@ def _validate_controls(
         "gemini_canary_receipt_sha256": digest(canaries["gemini"][1]),
         "grok_canary_receipt_sha256": digest(canaries["grok"][1]),
         "sources_endpoint_identity_sha256": digest(canonical(expected_sources)),
+        "sources_endpoint_identity": expected_sources,
+        "evidence_code_hashes": expected_evidence_code_hashes,
+        "evidence_identity_sha256": digest(canonical(expected_evidence_identity)),
+        "control_code_identity": control_code_identity,
+        "mcp_transport_attestation": transport_attestation,
+        "mcp_transport_attestation_sha256": (
+            digest(canonical(transport_attestation)) if transport_attestation is not None else None
+        ),
         "stage_seal_hashes": seals,
         "expected_certify_stage_seal_sha256": certify_expected,
-        "sources_endpoint_identity": expected_sources,
     }
 
 
@@ -1467,7 +1661,10 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
     ev_manifest_path = package / "evidence" / "manifest.json"
     _regular(ev_manifest_path)
     ev_manifest, ev_manifest_raw = _read_json(ev_manifest_path)
-    expected_identity = {k: ev_manifest.get(k) for k in validator._IDENTITY_FIELDS}
+    # The package manifest is untrusted input.  Recompute the expected
+    # compiler/validator/contract and Sources endpoint identity from the
+    # reviewed checkout before validating any manifest or sidecar fields.
+    expected_identity = _recompute_evidence_identity()
     try:
         validator.validate_manifest(ev_manifest, expected_identity=expected_identity)
     except validator.EvidenceValidationError as exc:
@@ -1563,6 +1760,8 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         manifest_hash=manifest_hash,
         evidence_hash=digest(ev_manifest_raw),
         evidence=ev_manifest,
+        expected_packet_count=expected_packet_count,
+        expected_row_count=expected_row_count,
     )
 
     # 4. Check packets and row order
@@ -1961,6 +2160,12 @@ def certify_completion(package: Path, *, fixture: bool = False) -> dict[str, Any
         "gemini_canary_receipt_sha256": controls["gemini_canary_receipt_sha256"],
         "grok_canary_receipt_sha256": controls["grok_canary_receipt_sha256"],
         "sources_endpoint_identity_sha256": controls["sources_endpoint_identity_sha256"],
+        "sources_endpoint_identity": controls["sources_endpoint_identity"],
+        "evidence_code_hashes": controls["evidence_code_hashes"],
+        "evidence_identity_sha256": controls["evidence_identity_sha256"],
+        "control_code_identity": controls["control_code_identity"],
+        "mcp_transport_attestation": controls["mcp_transport_attestation"],
+        "mcp_transport_attestation_sha256": controls["mcp_transport_attestation_sha256"],
         "stage_seal_hashes": controls["stage_seal_hashes"],
         "expected_certify_stage_seal_sha256": controls["expected_certify_stage_seal_sha256"],
         "ordered_identity_commitment_sha256": expected_commitment,

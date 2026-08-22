@@ -260,6 +260,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
             "packet_count": manifest["packet_count"],
             "row_count": manifest["row_count"],
         },
+        "mcp_transport_attestation": None,
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_manifest_bytes = put(package / "evidence" / "manifest.json", ev_manifest)
@@ -368,6 +369,22 @@ def test_valid_clean_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert (out_dir / "labels-0001.json").exists()
     assert (out_dir / "receipt-0001.json").exists()
     assert (out_dir / "raw-manifest-0001.json").exists()
+    receipt = json.loads((out_dir / "receipt-0001.json").read_text())
+    assert receipt["prompt_sha256"] == RUN.digest((pkg / RUN.PROMPTS["clean_label"]).read_bytes())
+
+
+def test_prompt_hash_drift_stops_before_provider(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    state_file = tmp_path / "state.txt"
+    monkeypatch.setenv("FAKE_STATE", str(state_file))
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    monkeypatch.setattr(RUN, "EXPECTED_PROMPT_SHA256", "")
+
+    with pytest.raises(RUN.Error, match="ordinal_identity_binding_drift"):
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin, expected_prompt_sha="0" * 64)
+
+    assert not state_file.exists()
 
 
 def test_valid_residual_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

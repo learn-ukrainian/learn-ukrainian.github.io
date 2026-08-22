@@ -15,23 +15,6 @@ from scripts.projects.open_model_data import phase3_cycle007_evidence_contract a
 HERE = Path(__file__).resolve().parent
 VERIFY_PATH = HERE / "phase3-verify-cycle007-label-completion-v1.py"
 AUDIT_PATH = HERE / "phase3-audit-cycle007-consensus-v1.py"
-CURRENT_CODE_HASHES = {
-    "compiler_id": "c1",
-    "compiler_sha256": "1" * 64,
-    "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
-    "tokenizer_version": "1",
-    "tokenizer_sha256": "2" * 64,
-    "compound_parser_id": "p",
-    "compound_parser_version": "1",
-    "compound_parser_sha256": "3" * 64,
-    "mcp_response_parser_id": "m",
-    "mcp_response_parser_version": "1",
-    "mcp_response_parser_sha256": "4" * 64,
-    "query_plan_id": "q",
-    "query_plan_version": "1",
-    "query_plan_sha256": "5" * 64,
-}
-
 
 def _load_module(path: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -43,11 +26,24 @@ def _load_module(path: Path, name: str):
 
 verify_mod = _load_module(VERIFY_PATH, "verify_mod")
 audit_mod = _load_module(AUDIT_PATH, "audit_mod")
+CURRENT_CODE_HASHES = verify_mod._recompute_evidence_code_hashes()
 
 
 def _setup_certified_package(tmp_path: Path):
     pkg = tmp_path / "pkg"
     pkg.mkdir(parents=True, mode=0o700)
+
+    # Give the certifier an isolated, deterministic Sources endpoint snapshot
+    # so its independent endpoint recomputation is exercised in fixture mode.
+    endpoint_root = tmp_path / "sources-endpoint"
+    endpoint_root.mkdir(mode=0o700)
+    verify_mod.SOURCES_SERVER_CODE = endpoint_root / "server.py"
+    verify_mod.SOURCES_DB = endpoint_root / "sources.db"
+    verify_mod.VESUM_DB = endpoint_root / "vesum.db"
+    verify_mod.SOURCES_SERVER_CODE.write_bytes(b"synthetic_server_code")
+    verify_mod.SOURCES_DB.write_bytes(b"synthetic_sources_db")
+    verify_mod.VESUM_DB.write_bytes(b"synthetic_vesum_db")
+    endpoint = verify_mod._recompute_sources_endpoint_identity()
 
     # Clean rows: 2 rows
     # row 0: agree / expository_narrative (both models agree -> clean consensus)
@@ -235,9 +231,9 @@ def _setup_certified_package(tmp_path: Path):
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
         "code_hashes": CURRENT_CODE_HASHES,
-        "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
-        "vesum_db_sha256": "c" * 64,
+        "server_code_sha256": endpoint["server_code_sha256"],
+        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "vesum_db_sha256": endpoint["vesum_db_sha256"],
         "network_lookups_performed": 0,
         "rows": clean_ev_rows,
         "retrieval_payloads": {r_sha: retrieval_payload},
@@ -297,9 +293,9 @@ def _setup_certified_package(tmp_path: Path):
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
         "code_hashes": CURRENT_CODE_HASHES,
-        "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
-        "vesum_db_sha256": "c" * 64,
+        "server_code_sha256": endpoint["server_code_sha256"],
+        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "vesum_db_sha256": endpoint["vesum_db_sha256"],
         "network_lookups_performed": 0,
         "rows": res_ev_rows,
         "retrieval_payloads": {r_sha: retrieval_payload},
@@ -316,9 +312,9 @@ def _setup_certified_package(tmp_path: Path):
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
         "code_hashes": CURRENT_CODE_HASHES,
-        "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
-        "vesum_db_sha256": "c" * 64,
+        "server_code_sha256": endpoint["server_code_sha256"],
+        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "vesum_db_sha256": endpoint["vesum_db_sha256"],
         "packet_count": 2,
         "row_count": 4,
         "network_lookups_performed": 0,
@@ -346,6 +342,7 @@ def _setup_certified_package(tmp_path: Path):
                 "packet_binding": s_res["packet_binding"],
             },
         ],
+        "mcp_transport_attestation": None,
         "source_package_binding": {
             "source_evaluation_cycle_id": verify_mod.SOURCE_CYCLE,
             "custody_receipt_raw_sha256": custody_hash,
@@ -925,16 +922,11 @@ def _setup_certified_package(tmp_path: Path):
     # 9. Copied controller controls: fixture-shaped, canonical, and hash-bound.
     control = pkg / verify_mod.CONTROL_ROOT
     control.mkdir(parents=True, mode=0o700)
-    endpoint = {
-        "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
-        "sources_db_bytes": 1,
-        "vesum_db_sha256": "c" * 64,
-        "vesum_db_bytes": 1,
-    }
     canary_hashes = {
         "compiler_sha256": verify_mod.digest(verify_mod.EVIDENCE_COMPILER.read_bytes()),
         "validator_sha256": verify_mod.digest(verify_mod.CONTROL_CODE_PATHS["label_validator"].read_bytes()),
+        "evidence_validator_sha256": verify_mod.digest(verify_mod.EVIDENCE_VALIDATOR.read_bytes()),
+        "evidence_contract_sha256": verify_mod.digest(verify_mod.EVIDENCE_CONTRACT.read_bytes()),
         "canary_runner_sha256": verify_mod.digest(verify_mod.CANARY_RUNNER.read_bytes()),
     }
     canary_raws = {}
@@ -1013,17 +1005,25 @@ def _setup_certified_package(tmp_path: Path):
     preflight["receipt_sha256"] = verify_mod.digest(verify_mod.canonical(preflight))
     verify_mod._atomic(control / "preflight-receipt.json", preflight)
     preflight_hash = verify_mod.digest((control / "preflight-receipt.json").read_bytes())
+    python_executable_sha256 = verify_mod.digest(Path(verify_mod.sys.executable).resolve(strict=True).read_bytes())
+    stage_hashes: dict[str, str] = {}
     for stage in ("gemini", "grok", "compare", "audit", "adjudicate", "resolve"):
+        unsigned = {
+            "schema_version": verify_mod.STAGE_SEAL_SCHEMA,
+            "evaluation_cycle_id": verify_mod.CYCLE,
+            "stage": stage,
+            "preflight_receipt_sha256": preflight_hash,
+            "python_executable_sha256": python_executable_sha256,
+            "preceding_stage_seal_sha256": dict(stage_hashes),
+            "text_free": True,
+        }
+        seal = {**unsigned, "seal_sha256": verify_mod.digest(verify_mod.canonical(unsigned))}
+        path = control / f"stage-{stage}.complete.json"
         verify_mod._atomic(
-            control / f"stage-{stage}.complete.json",
-            {
-                "schema_version": "phase3_cycle007_stage_complete_v1",
-                "evaluation_cycle_id": verify_mod.CYCLE,
-                "stage": stage,
-                "preflight_receipt_sha256": preflight_hash,
-                "text_free": True,
-            },
+            path,
+            seal,
         )
+        stage_hashes[stage] = verify_mod.digest(path.read_bytes())
 
     for directory in [pkg, *(path for path in pkg.rglob("*") if path.is_dir())]:
         directory.chmod(0o700)
@@ -1052,7 +1052,46 @@ def test_certifier_successful_exact_fixture_closure(tmp_path):
             ]
         )
     )
+    assert cert["evidence_identity_sha256"] == verify_mod.digest(
+        verify_mod.canonical(
+            {
+                "tokenizer_id": verify_mod.evidence_compiler.TOKENIZER_ID,
+                "tokenizer_version": verify_mod.evidence_compiler.TOKENIZER_VERSION,
+                "code_hashes": verify_mod._recompute_evidence_code_hashes(),
+                "server_code_sha256": cert["sources_endpoint_identity"]["server_code_sha256"],
+                "sources_db_sha256": cert["sources_endpoint_identity"]["sources_db_sha256"],
+                "vesum_db_sha256": cert["sources_endpoint_identity"]["vesum_db_sha256"],
+            }
+        )
+    )
+    assert cert["mcp_transport_attestation"] is None
+    assert cert["mcp_transport_attestation_sha256"] is None
     assert (pkg / verify_mod.RESOLUTION_ROOT / "certification-receipt.json").exists()
+
+
+def test_certifier_recomputes_sources_endpoint_identity_outside_package(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    verify_mod.SOURCES_DB.write_bytes(b"drifted_sources_db")
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "evidence_validation_failed"
+
+
+def test_certifier_rejects_rebound_evidence_identity(tmp_path):
+    pkg = _setup_certified_package(tmp_path)
+    manifest_path = pkg / "evidence" / "manifest.json"
+    evidence_manifest = json.loads(manifest_path.read_text())
+    evidence_manifest["sources_db_sha256"] = "0" * 64
+    evidence_manifest["manifest_sha256"] = contract.sha256_value(
+        {key: value for key, value in evidence_manifest.items() if key != "manifest_sha256"}
+    )
+    manifest_path.write_text(json.dumps(evidence_manifest, sort_keys=True) + "\n")
+    manifest_path.chmod(0o600)
+
+    with pytest.raises(verify_mod.Error) as exc:
+        verify_mod.certify_completion(pkg, fixture=True)
+    assert exc.value.failure_code == "evidence_validation_failed"
 
 
 def test_certifier_fails_on_permission_drift(tmp_path):

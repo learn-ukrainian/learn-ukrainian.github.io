@@ -167,7 +167,10 @@ def _full_sidecar(rows, retrieval_payloads, *, lane="clean_label", identity=None
     return body
 
 
-def _full_manifest(*, identity=None, packet_count=1, row_count=3, sidecars=None, source_package_binding=None, **overrides):
+def _full_manifest(
+    *, identity=None, packet_count=1, row_count=3, sidecars=None,
+    source_package_binding=None, mcp_transport_attestation=None, **overrides
+):
     identity = identity or _expected_identity()
     sidecars = (
         sidecars
@@ -204,6 +207,7 @@ def _full_manifest(*, identity=None, packet_count=1, row_count=3, sidecars=None,
         "russian_shadow_suspected_rows": 0,
         "sidecars": sidecars,
         "source_package_binding": source_package_binding,
+        "mcp_transport_attestation": mcp_transport_attestation,
     }
     manifest.update(overrides)
     manifest["manifest_sha256"] = contract.sha256_value(manifest)
@@ -798,3 +802,58 @@ def test_validate_manifest_checks_source_package_binding_semantics():
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_manifest(manifest, expected_identity=_expected_identity())
     assert excinfo.value.code == "source_package_binding_shape_drift"
+
+
+def test_real_denominator_requires_reconciled_streamable_http_attestation():
+    sidecars = [
+        {
+            "packet_index": index,
+            "row_count": 9 if index == 204 else 50,
+            "sidecar_sha256": f"{index:064x}",
+            "sidecar_id": "cycle007_sidecar:" + f"{index + 204:064x}",
+            "lane": "clean_label" if index <= 40 else "residual_label",
+            "packet_binding": {
+                "canonical_basename": f"packet-{index:04d}.json",
+                "raw_sha256": f"{index + 408:064x}",
+                "packet_identity_set_sha256": f"{index + 612:064x}",
+            },
+        }
+        for index in range(1, 205)
+    ]
+    binding = {
+        "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+        "custody_receipt_raw_sha256": "c" * 64,
+        "materialization_manifest_sha256": "d" * 64,
+        "ordered_identity_commitment_sha256": "e" * 64,
+        "identity_union_commitment_sha256": "f" * 64,
+        "ordered_packet_commitment_sha256": "1" * 64,
+        "packet_count": 204,
+        "row_count": 10_159,
+    }
+    attestation = {
+        "schema_version": "phase3_cycle007_mcp_transport_attestation_v1",
+        "transport": "streamable_http",
+        "endpoint_sha256": contract.sha256_text("http://127.0.0.1:8766/mcp"),
+        "required_tool_set_sha256": "2" * 64,
+        "tool_call_count": 10_160,
+        "counts_by_tool": {"mcp_server_identity": 1, "verify_words": 10_159},
+        "server_identity_call_count": 1,
+        "ordered_call_commitment_sha256": "3" * 64,
+    }
+    manifest = _full_manifest(
+        packet_count=204,
+        row_count=10_159,
+        sidecars=sidecars,
+        source_package_binding=binding,
+        mcp_transport_attestation=attestation,
+    )
+    validator.validate_manifest(manifest, expected_identity=_expected_identity())
+
+    missing = dict(manifest)
+    missing["mcp_transport_attestation"] = None
+    missing["manifest_sha256"] = contract.sha256_value(
+        {key: value for key, value in missing.items() if key != "manifest_sha256"}
+    )
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(missing, expected_identity=_expected_identity())
+    assert excinfo.value.code == "mcp_transport_attestation_drift"

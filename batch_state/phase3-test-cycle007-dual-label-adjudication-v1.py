@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -86,7 +87,7 @@ def _fake_selector(tmp_path: Path) -> Path:
 
 
 def _run_synthetic(package: Path, selector: Path) -> dict[str, object]:
-    return adj_mod.adjudicate_packet(package, "clean_label", 1, provider=selector, synthetic_provider=True)
+    return adj_mod.adjudicate_packet(package, "clean_label", 1, provider=selector, synthetic_provider=True, fixture=True)
 
 
 def test_real_default_has_no_candidate_fallback(tmp_path: Path) -> None:
@@ -110,6 +111,10 @@ def test_transport_selects_only_returned_candidate_and_receipt_is_text_free(tmp_
     labels = json.loads((package / adj_mod.OUTPUT / "final/clean_label/labels-0001.json").read_text())
     assert labels["labels"] == [record["gemini_label"] for record in records]
     assert receipt["adjudicator"] == {"exact_model": adj_mod.MODEL, "model_family": "anthropic", "harness": "agy"}
+    assert receipt["execution_mode"] == "fixture"
+    assert receipt["executable_sha256"] == hashlib.sha256(selector.read_bytes()).hexdigest()
+    assert receipt["provider_result_provenance"]["init_model"] == adj_mod.MODEL
+    assert receipt["provider_result_provenance"]["result_status"] == "SUCCESS"
     serialized_receipt = (package / adj_mod.OUTPUT / "final/clean_label/receipt-0001.json").read_text()
     assert "PRIVATE_TEXT_DO_NOT_RECEIPT" not in serialized_receipt
     assert adj_mod.verify_packet(package, "clean_label", 1)["ok"] is True
@@ -167,8 +172,74 @@ def test_synthetic_override_requires_explicit_fixture_mode(tmp_path: Path) -> No
         adj_mod.adjudicate_packet(package, "clean_label", 1, selections_override=override)
     assert exc.value.failure_code == "mode_drift"
 
-    receipt = adj_mod.adjudicate_packet(package, "clean_label", 1, selections_override=override, synthetic_provider=True)
+    receipt = adj_mod.adjudicate_packet(
+        package,
+        "clean_label",
+        1,
+        selections_override=override,
+        synthetic_provider=True,
+        fixture=True,
+    )
     assert receipt["attempt_count"] == 0
+    assert receipt["provider_result_provenance"] is None
+
+
+def test_synthetic_provider_is_rejected_without_fixture_mode(tmp_path: Path) -> None:
+    package, _ = _setup_package(tmp_path)
+    selector = _fake_selector(tmp_path)
+
+    with pytest.raises(adj_mod.Error) as exc:
+        adj_mod.adjudicate_packet(package, "clean_label", 1, provider=selector, synthetic_provider=True)
+    assert exc.value.failure_code == "mode_drift"
+
+
+def test_cli_test_provider_bin_requires_fixture_flag(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    package, _ = _setup_package(tmp_path)
+    selector = _fake_selector(tmp_path)
+
+    assert (
+        adj_mod.main(
+            [
+                "--package",
+                str(package),
+                "--lane",
+                "clean_label",
+                "--packet-index",
+                "1",
+                "--test-provider-bin",
+                str(selector),
+            ]
+        )
+        == 2
+    )
+    assert json.loads(capsys.readouterr().out)["failure_code"] == "mode_drift"
+    assert not (package / adj_mod.OUTPUT / "final").exists()
+
+
+def test_provider_provenance_tampering_is_rejected_on_resume(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    package, _ = _setup_package(tmp_path)
+    selector = _fake_selector(tmp_path)
+    monkeypatch.setenv("CYCLE007_MODE", "gemini")
+    _run_synthetic(package, selector)
+
+    receipt_path = package / adj_mod.OUTPUT / "final" / "clean_label" / "receipt-0001.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["provider_result_provenance"]["init_model"] = "self-reported-model"
+    receipt_path.write_text(json.dumps(receipt, sort_keys=True) + "\n")
+    with pytest.raises(adj_mod.Error) as exc:
+        adj_mod.verify_packet(package, "clean_label", 1)
+    assert exc.value.failure_code == "provider_provenance_failure"
+
+
+def test_fixture_output_cannot_resume_in_live_mode(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    package, _ = _setup_package(tmp_path)
+    selector = _fake_selector(tmp_path)
+    monkeypatch.setenv("CYCLE007_MODE", "gemini")
+    _run_synthetic(package, selector)
+
+    with pytest.raises(adj_mod.Error) as exc:
+        adj_mod.adjudicate_packet(package, "clean_label", 1)
+    assert exc.value.failure_code == "mode_drift"
 
 
 def test_all_resume_preserves_private_unresolved_mode(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -178,7 +249,7 @@ def test_all_resume_preserves_private_unresolved_mode(tmp_path: Path, monkeypatc
     monkeypatch.setenv("CYCLE007_MODE", "unresolved")
 
     _run_synthetic(package, selector)
-    batch = adj_mod.adjudicate_all(package, provider=selector, synthetic_provider=True)
+    batch = adj_mod.adjudicate_all(package, provider=selector, synthetic_provider=True, fixture=True)
 
     assert batch["packet_count"] == 1 and batch["total_unresolved"] == 2 and batch["text_free"] is True
     request = json.loads((package / adj_mod.OUTPUT / "operator-resolution-request.json").read_text())

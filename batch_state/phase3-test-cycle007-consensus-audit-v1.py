@@ -292,6 +292,25 @@ def test_missing_normative_evidence_is_a_risk_trigger_even_when_none_exists():
     assert audit_mod._missing_normative_risk(record, {"evidence": []}) is True
 
 
+def test_partition_rejects_missing_packet_row():
+    packet_rows = [
+        {"unit_id": "u-1", "unit_sha256": "1" * 64},
+        {"unit_id": "u-2", "unit_sha256": "2" * 64},
+    ]
+    clean = [{"source_row": packet_rows[0]}]
+    with pytest.raises(audit_mod.Error) as exc:
+        audit_mod._assert_partition_exhaustive(packet_rows, clean, [], [])
+    assert exc.value.failure_code == "audit_population_drift"
+
+
+def test_partition_rejects_extra_packet_row():
+    packet_rows = [{"unit_id": "u-1", "unit_sha256": "1" * 64}]
+    extra = {"source_row": {"unit_id": "u-extra", "unit_sha256": "e" * 64}}
+    with pytest.raises(audit_mod.Error) as exc:
+        audit_mod._assert_partition_exhaustive(packet_rows, [extra], [], [])
+    assert exc.value.failure_code == "audit_population_drift"
+
+
 def test_source_review_requires_explicit_transport(tmp_path):
     package, plan, targets = _review_fixture(tmp_path)
 

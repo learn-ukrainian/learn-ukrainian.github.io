@@ -35,6 +35,7 @@ PACKET_COUNT = 204
 RESOLUTION_OUTPUT = "dual-label-final-cycle007-v1"
 ADJUDICATION_OUTPUT = "dual-label-adjudication-cycle007-v1"
 COMPARE_OUTPUT = "dual-label-output-cycle007-v1"
+AUTHORIZATION_SCHEMA_VERSION = "phase3_cycle007_operator_resolution_authorization_v2"
 
 REJECTS = frozenset(
     {
@@ -61,6 +62,8 @@ DEC = frozenset({"positive", "acceptable_control", "protected", "abstention", "d
 FAILURE_CODES = frozenset(
     {
         "authorization_binding_failure",
+        "authorization_identity_failure",
+        "authorization_schema_failure",
         "authorization_tamper_detected",
         "candidate_invention_drift",
         "unauthorized_row_drift",
@@ -71,6 +74,7 @@ FAILURE_CODES = frozenset(
         "source_blind_authorization",
         "insufficient_evidence_for_decision",
         "evidence_reference_invalid",
+        "missing_evidence_sidecar",
         "identity_binding_failure",
         "identity_or_order_drift",
         "identity_uniqueness_failure",
@@ -90,6 +94,14 @@ class Error(ValueError):
         self.code = code if code in FAILURE_CODES else "authorization_binding_failure"
         self.failure_code = self.code
         super().__init__(self.code)
+
+
+class AuthorizationBundle(dict[tuple[str, str], dict[str, Any]]):
+    """Validated per-row authorizations plus their immutable receipt metadata."""
+
+    def __init__(self, values: dict[tuple[str, str], dict[str, Any]], metadata: dict[str, Any]):
+        super().__init__(values)
+        self.metadata = metadata
 
 
 def canonical(value: Any) -> bytes:
@@ -180,6 +192,8 @@ def validate_clean_label(
     row: dict[str, Any],
     row_evidence: Mapping[str, Any] | None = None,
 ) -> None:
+    if not isinstance(row_evidence, Mapping):
+        raise Error("missing_evidence_sidecar")
     if (
         not isinstance(label, dict)
         or set(label)
@@ -200,21 +214,20 @@ def validate_clean_label(
     if evidence_ids != sorted(set(evidence_ids)):
         raise Error("evidence_reference_invalid")
 
-    if row_evidence is not None:
-        available_ids = set(row_evidence.get("evidence_ids", []))
-        if set(evidence_ids) - available_ids:
-            raise Error("evidence_reference_invalid")
-        try:
-            validator.validate_label_evidence_refs(
-                row_evidence,
-                decision_code=label["decision_code"],
-                evidence_ids=evidence_ids,
-                phenomenon_id=None,
-            )
-        except validator.EvidenceValidationError as exc:
-            if exc.code == "insufficient_evidence_for_decision":
-                raise Error("insufficient_evidence_for_decision") from exc
-            raise Error("evidence_reference_invalid") from exc
+    available_ids = set(row_evidence.get("evidence_ids", []))
+    if set(evidence_ids) - available_ids:
+        raise Error("evidence_reference_invalid")
+    try:
+        validator.validate_label_evidence_refs(
+            row_evidence,
+            decision_code=label["decision_code"],
+            evidence_ids=evidence_ids,
+            phenomenon_id=None,
+        )
+    except validator.EvidenceValidationError as exc:
+        if exc.code == "insufficient_evidence_for_decision":
+            raise Error("insufficient_evidence_for_decision") from exc
+        raise Error("evidence_reference_invalid") from exc
 
 
 def validate_residual_label(
@@ -222,6 +235,8 @@ def validate_residual_label(
     row: dict[str, Any],
     row_evidence: Mapping[str, Any] | None = None,
 ) -> None:
+    if not isinstance(row_evidence, Mapping):
+        raise Error("missing_evidence_sidecar")
     if (
         not isinstance(label, dict)
         or set(label) != {"unit_id", "unit_sha256", "phenomena", "primary_phenomenon_id", "item_decision_rollup"}
@@ -252,18 +267,17 @@ def validate_residual_label(
         p_ids = p["evidence_ids"]
         if p_ids != sorted(set(p_ids)):
             raise Error("evidence_reference_invalid")
-        if row_evidence is not None:
-            try:
-                validator.validate_label_evidence_refs(
-                    row_evidence,
-                    decision_code=p["decision_code"],
-                    evidence_ids=p_ids,
-                    phenomenon_id=p["phenomenon_id"],
-                )
-            except validator.EvidenceValidationError as exc:
-                if exc.code == "insufficient_evidence_for_decision":
-                    raise Error("insufficient_evidence_for_decision") from exc
-                raise Error("evidence_reference_invalid") from exc
+        try:
+            validator.validate_label_evidence_refs(
+                row_evidence,
+                decision_code=p["decision_code"],
+                evidence_ids=p_ids,
+                phenomenon_id=p["phenomenon_id"],
+            )
+        except validator.EvidenceValidationError as exc:
+            if exc.code == "insufficient_evidence_for_decision":
+                raise Error("insufficient_evidence_for_decision") from exc
+            raise Error("evidence_reference_invalid") from exc
         names.append(p["phenomenon_id"])
         decisions[p["phenomenon_id"]] = p["decision_code"]
 
@@ -296,29 +310,111 @@ def validate_label(
         raise Error("final_label_validation_failure")
 
 
+def _valid_sha256(value: Any) -> bool:
+    return isinstance(value, str) and len(value) == 64 and all(character in "0123456789abcdef" for character in value)
+
+
+def _identity_order_hash(identities: list[tuple[str, str]]) -> str:
+    return digest(canonical([list(identity) for identity in identities]))
+
+
+def _external_json(path: Path, package: Path, *, fixture: bool) -> tuple[dict[str, Any], bytes]:
+    """Read a canonical authorization artifact, outside live package custody."""
+    try:
+        inside_package = path.resolve(strict=True).is_relative_to(package.resolve(strict=True))
+    except OSError as exc:
+        raise Error("authorization_binding_failure") from exc
+    if inside_package and not fixture:
+        raise Error("authorization_binding_failure")
+    value, raw = _read(path)
+    if not isinstance(value, dict) or raw != canonical(value):
+        raise Error("authorization_schema_failure")
+    return value, raw
+
+
 def validate_authorization_file(
     path: Path,
     package: Path,
     unresolved_identities: set[tuple[str, str]] | None = None,
-) -> dict[tuple[str, str], dict[str, Any]]:
-    value, _raw = _read(path)
+    *,
+    ordered_unresolved_identities: list[tuple[str, str]] | None = None,
+    request_raw_sha256: str | None = None,
+    fixture: bool = False,
+    advisor_response_path: Path | None = None,
+) -> AuthorizationBundle:
+    value, raw = _external_json(path, package, fixture=fixture)
     custody_raw = (package / "custody-receipt.json").read_bytes()
     manifest_raw = (package / "manifest.json").read_bytes()
     manifest_val, _ = _read(package / "manifest.json")
 
     expected_commitment = manifest_val.get("ordered_identity_commitment_sha256", ORDERED_IDENTITY_COMMITMENT_SHA256)
-
+    authority = value.get("decision_authority")
+    authorized_identity = value.get("authorized_identity")
     if (
-        not isinstance(value, dict)
-        or value.get("schema_version") != "phase3_cycle007_operator_resolution_authorization_v1"
+        value.get("schema_version") != AUTHORIZATION_SCHEMA_VERSION
         or value.get("evaluation_cycle_id") != CYCLE
         or value.get("amendment_sha256") != AMENDMENT_SHA256
         or value.get("custody_receipt_raw_sha256") != digest(custody_raw)
+        or value.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256
         or value.get("manifest_raw_sha256") != digest(manifest_raw)
         or value.get("ordered_identity_commitment_sha256") != expected_commitment
+        or value.get("request_raw_sha256") != request_raw_sha256
+        or authority not in {"operator", "designated_advisor"}
+        or not isinstance(authorized_identity, dict)
+        or set(authorized_identity) != {"identity_type", "identity_id"}
+        or not isinstance(authorized_identity.get("identity_id"), str)
+        or not authorized_identity["identity_id"].strip()
+        or not _valid_sha256(value.get("nonce_sha256"))
+        or not isinstance(value.get("identity_order_sha256"), str)
         or not isinstance(value.get("authorizations"), list)
+        or value.get("text_free") is not True
     ):
         raise Error("authorization_binding_failure")
+
+    base_keys = {
+        "schema_version",
+        "evaluation_cycle_id",
+        "amendment_sha256",
+        "custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256",
+        "manifest_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "request_raw_sha256",
+        "decision_authority",
+        "authorized_identity",
+        "identity_order_sha256",
+        "nonce_sha256",
+        "authorizations",
+        "text_free",
+        "receipt_sha256",
+    }
+    if authority == "operator":
+        if (
+            authorized_identity.get("identity_type") != "human"
+            or advisor_response_path is not None
+            or set(value) != base_keys | {"operator_id"}
+            or not isinstance(value.get("operator_id"), str)
+            or not value["operator_id"].strip()
+            or value["operator_id"] != authorized_identity.get("identity_id")
+        ):
+            raise Error("authorization_identity_failure")
+    else:
+        advisor = value.get("advisor")
+        expected_keys = base_keys | {"advisor"}
+        if (
+            authorized_identity.get("identity_type") != "designated_advisor"
+            or set(value) != expected_keys
+            or not isinstance(advisor, dict)
+            or set(advisor) != {"identity_id", "exact_model", "model_family", "harness", "task_id", "response_raw_sha256"}
+            or advisor.get("identity_id") != authorized_identity.get("identity_id")
+            or not all(isinstance(advisor.get(key), str) and advisor[key].strip() for key in advisor)
+            or not _valid_sha256(advisor.get("response_raw_sha256"))
+            or advisor_response_path is None
+        ):
+            raise Error("authorization_identity_failure")
+        _advisor_value, advisor_raw = _external_json(advisor_response_path, package, fixture=fixture)
+        if digest(advisor_raw) != advisor["response_raw_sha256"]:
+            raise Error("authorization_binding_failure")
 
     authorizations: dict[tuple[str, str], dict[str, Any]] = {}
     seen: list[tuple[str, str]] = []
@@ -326,20 +422,16 @@ def validate_authorization_file(
     for item in value["authorizations"]:
         if (
             not isinstance(item, dict)
+            or set(item) != {"unit_id", "unit_sha256", "selection", "source_bound_rationale", "source_authority_reference"}
             or not isinstance(item.get("unit_id"), str)
             or not item["unit_id"]
-            or not isinstance(item.get("unit_sha256"), str)
-            or len(item["unit_sha256"]) != 64
-            or any(c not in "0123456789abcdef" for c in item["unit_sha256"])
+            or not _valid_sha256(item.get("unit_sha256"))
             or not isinstance(item.get("source_bound_rationale"), str)
             or not item["source_bound_rationale"].strip()
             or not isinstance(item.get("source_authority_reference"), str)
             or not item["source_authority_reference"].strip()
+            or item.get("selection") not in {"grok", "gemini"}
         ):
-            raise Error("authorization_tamper_detected")
-
-        selection = item.get("selection")
-        if selection not in {"grok", "gemini"}:
             raise Error("authorization_tamper_detected")
 
         key = (item["unit_id"], item["unit_sha256"])
@@ -348,16 +440,158 @@ def validate_authorization_file(
 
     if len(seen) != len(set(seen)):
         raise Error("identity_uniqueness_failure")
-
     if unresolved_identities is not None:
         auth_keys = set(authorizations.keys())
         if auth_keys != unresolved_identities:
             if auth_keys - unresolved_identities:
                 raise Error("unauthorized_row_drift")
-            if unresolved_identities - auth_keys:
-                raise Error("missing_authorization")
+            raise Error("missing_authorization")
+    if ordered_unresolved_identities is not None and seen != ordered_unresolved_identities:
+        raise Error("authorization_identity_failure")
+    expected_order = ordered_unresolved_identities if ordered_unresolved_identities is not None else seen
+    if value.get("identity_order_sha256") != _identity_order_hash(expected_order):
+        raise Error("authorization_identity_failure")
+    if not fixture and request_raw_sha256 is None:
+        raise Error("authorization_binding_failure")
+    if value.get("receipt_sha256") != digest(canonical({key: item for key, item in value.items() if key != "receipt_sha256"})):
+        raise Error("authorization_schema_failure")
 
-    return authorizations
+    metadata = {
+        "authorization_receipt_raw_sha256": digest(raw),
+        "authorization_receipt_sha256": value["receipt_sha256"],
+        "decision_authority": authority,
+        "authorized_identity": authorized_identity,
+        "operator_id": value.get("operator_id"),
+        "identity_order_sha256": value["identity_order_sha256"],
+        "request_raw_sha256": value["request_raw_sha256"],
+    }
+    return AuthorizationBundle(authorizations, metadata)
+
+
+def _evidence_sidecar(
+    package: Path,
+    lane: str,
+    index: int,
+    packet_path: Path,
+    packet_data: dict[str, Any],
+    rows: list[dict[str, Any]],
+    *,
+    fixture: bool,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    """Resolve one exact packet sidecar; missing or incomplete evidence stops."""
+    try:
+        evidence_manifest_path = package / "evidence" / "manifest.json"
+        _regular(evidence_manifest_path, 0o600)
+        evidence_manifest, _ = _read(evidence_manifest_path)
+    except Error as exc:
+        raise Error("missing_evidence_sidecar") from exc
+    if not isinstance(evidence_manifest, dict) or not isinstance(evidence_manifest.get("sidecars"), list):
+        raise Error("missing_evidence_sidecar")
+
+    binding = {
+        "canonical_basename": packet_path.name,
+        "raw_sha256": digest(packet_path.read_bytes()),
+        "packet_identity_set_sha256": packet_data.get("packet_identity_set_sha256"),
+    }
+    matches = [
+        entry
+        for entry in evidence_manifest["sidecars"]
+        if isinstance(entry, dict) and entry.get("lane") == lane and entry.get("packet_binding") == binding
+    ]
+    if len(matches) != 1:
+        raise Error("missing_evidence_sidecar")
+    entry = matches[0]
+    sidecar_index = entry.get("packet_index")
+    if not isinstance(sidecar_index, int) or sidecar_index < 1:
+        raise Error("missing_evidence_sidecar")
+    sidecar_path = package / "evidence" / f"sidecar-{sidecar_index:04d}.json"
+    try:
+        _regular(sidecar_path, 0o600)
+        sidecar, sidecar_raw = _read(sidecar_path)
+    except Error as exc:
+        raise Error("missing_evidence_sidecar") from exc
+    if (
+        not isinstance(sidecar, dict)
+        or entry.get("row_count") != len(rows)
+        or entry.get("sidecar_sha256") != digest(sidecar_raw)
+        or entry.get("sidecar_id") != sidecar.get("sidecar_id")
+        or sidecar.get("schema_version") != "phase3_cycle007_evidence_sidecar_v1"
+        or sidecar.get("evaluation_cycle_id") != CYCLE
+        or sidecar.get("lane") != lane
+        or sidecar.get("packet_index") != sidecar_index
+        or sidecar.get("packet_binding") != binding
+        or sidecar.get("row_count") != len(rows)
+        or not isinstance(sidecar.get("rows"), list)
+    ):
+        raise Error("missing_evidence_sidecar")
+    packet_ids = [(row.get("unit_id"), row.get("unit_sha256")) for row in rows]
+    sidecar_rows = sidecar["rows"]
+    sidecar_ids = [
+        (row.get("unit_id"), row.get("unit_sha256")) if isinstance(row, dict) else (None, None)
+        for row in sidecar_rows
+    ]
+    if len(sidecar_rows) != len(rows) or sidecar_ids != packet_ids or len(set(sidecar_ids)) != len(sidecar_ids):
+        raise Error("missing_evidence_sidecar")
+    if any(not isinstance(row, dict) for row in sidecar_rows):
+        raise Error("missing_evidence_sidecar")
+
+    if not fixture:
+        expected_identity = {key: evidence_manifest.get(key) for key in validator._IDENTITY_FIELDS}
+        try:
+            validator.validate_manifest(evidence_manifest, expected_identity=expected_identity)
+            validator.validate_sidecar(sidecar, expected_identity=expected_identity)
+        except validator.EvidenceValidationError as exc:
+            raise Error("missing_evidence_sidecar") from exc
+    return {key: row for key, row in zip(packet_ids, sidecar_rows, strict=True)}
+
+
+def _validate_resolution_request(
+    path: Path,
+    expected_records: list[dict[str, Any]],
+    *,
+    custody_hash: str,
+    manifest_hash: str,
+    ordered_commitment: str,
+) -> tuple[dict[str, Any], bytes]:
+    """Validate the adjudicator's exact unresolved-record request before authorization."""
+    try:
+        value, raw = _read(path)
+    except Error as exc:
+        raise Error("authorization_binding_failure") from exc
+    required = {
+        "schema_version",
+        "evaluation_cycle_id",
+        "amendment_sha256",
+        "custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256",
+        "manifest_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "unresolved_count",
+        "unresolved_records",
+        "request_sha256",
+        "text_free",
+    }
+    if not isinstance(value, dict) or set(value) != required:
+        raise Error("authorization_schema_failure")
+    if (
+        value.get("schema_version") != "phase3_cycle007_operator_resolution_request_v1"
+        or value.get("evaluation_cycle_id") != CYCLE
+        or value.get("amendment_sha256") != AMENDMENT_SHA256
+        or value.get("custody_receipt_raw_sha256") != custody_hash
+        or value.get("source_label_manifest_raw_sha256") != SOURCE_MANIFEST_SHA256
+        or value.get("manifest_raw_sha256") != manifest_hash
+        or value.get("ordered_identity_commitment_sha256") != ordered_commitment
+        or value.get("unresolved_count") != len(expected_records)
+        or value.get("text_free") is not False
+        or not _valid_sha256(value.get("request_sha256"))
+        or value.get("request_sha256")
+        != digest(canonical({key: item for key, item in value.items() if key != "request_sha256"}))
+        or raw != canonical(value)
+    ):
+        raise Error("authorization_binding_failure")
+    if value.get("unresolved_records") != expected_records:
+        raise Error("authorization_identity_failure")
+    return value, raw
 
 
 def resolve_packet(
@@ -379,25 +613,16 @@ def resolve_packet(
     if len(packet_uids) != len(set(packet_uids)):
         raise Error("identity_uniqueness_failure")
 
-    # Read evidence sidecar
-    sidecar_path = package / "evidence" / f"sidecar-{index:04d}.json"
-    if not sidecar_path.exists():
-        ev_manifest_p = package / "evidence" / "manifest.json"
-        if ev_manifest_p.exists():
-            ev_manifest, _ = _read(ev_manifest_p)
-            for entry in ev_manifest.get("sidecars", []):
-                if (
-                    entry.get("lane") == lane
-                    and entry.get("packet_binding", {}).get("canonical_basename") == packet_path.name
-                ):
-                    sidecar_path = package / "evidence" / f"sidecar-{entry['packet_index']:04d}.json"
-                    break
-    sidecar_by_uid: dict[tuple[str, str], dict[str, Any]] = {}
-    if sidecar_path.exists():
-        _regular(sidecar_path, 0o600)
-        sidecar_data, _ = _read(sidecar_path)
-        for r in sidecar_data.get("rows", []):
-            sidecar_by_uid[(r["unit_id"], r["unit_sha256"])] = r
+    # Read and bind the required evidence sidecar before any label validation.
+    sidecar_by_uid = _evidence_sidecar(
+        package,
+        lane,
+        index,
+        packet_path,
+        packet_data,
+        rows,
+        fixture=fixture,
+    )
 
     # 2. Read upstream comparison artifacts & receipts
     comp_dir = package / COMPARE_OUTPUT / lane
@@ -456,6 +681,10 @@ def resolve_packet(
         != digest(canonical({k: v for k, v in adj_receipt.items() if k != "receipt_sha256"}))
     ):
         raise Error("upstream_receipt_drift")
+
+    authorization_metadata = getattr(authorizations, "metadata", None)
+    if adj_unres_val.get("records") and not isinstance(authorization_metadata, dict):
+        raise Error("authorization_binding_failure")
 
     # 4. Strict disjoint partition verification across clean, risk, adjudicated, and unresolved
     partition_map: dict[tuple[str, str], tuple[str, dict[str, Any], dict[str, Any]]] = {}
@@ -608,6 +837,17 @@ def resolve_packet(
         "adjudicated_count": adj_count,
         "operator_resolved_count": unres_count,
         "unresolved_remaining_count": 0,
+        "authorization_receipt_raw_sha256": (
+            authorization_metadata.get("authorization_receipt_raw_sha256")
+            if isinstance(authorization_metadata, dict)
+            else None
+        ),
+        "decision_authority": (
+            authorization_metadata.get("decision_authority") if isinstance(authorization_metadata, dict) else None
+        ),
+        "authorized_identity": (
+            authorization_metadata.get("authorized_identity") if isinstance(authorization_metadata, dict) else None
+        ),
         "text_free": True,
     }
     body["receipt_sha256"] = digest(canonical(body))
@@ -620,6 +860,7 @@ def resolve_all(
     authorization_path: Path | None = None,
     *,
     fixture: bool = False,
+    advisor_response_path: Path | None = None,
 ) -> dict[str, Any]:
     _directory(package, 0o700)
 
@@ -658,6 +899,8 @@ def resolve_all(
 
     # Collect all unresolved identities across all packets
     all_unresolved_uids: set[tuple[str, str]] = set()
+    all_unresolved_ordered: list[tuple[str, str]] = []
+    all_unresolved_records: list[dict[str, Any]] = []
     all_resolved_uids: set[tuple[str, str]] = set()
     all_package_uids: set[tuple[str, str]] = set()
 
@@ -692,16 +935,44 @@ def resolve_all(
         for lbl in adj_l_val.get("labels", []):
             all_resolved_uids.add((lbl["unit_id"], lbl["unit_sha256"]))
         for rec in adj_u_val.get("records", []):
-            all_unresolved_uids.add((rec["source_row"]["unit_id"], rec["source_row"]["unit_sha256"]))
+            uid = (rec["source_row"]["unit_id"], rec["source_row"]["unit_sha256"])
+            all_unresolved_uids.add(uid)
+            all_unresolved_ordered.append(uid)
+            all_unresolved_records.append(rec)
 
     # Read and validate authorizations
     auth_path = authorization_path or (package / RESOLUTION_OUTPUT / "authorization.json")
-    authorizations: dict[tuple[str, str], dict[str, Any]] = {}
+    authorizations: AuthorizationBundle | dict[tuple[str, str], dict[str, Any]] = {}
     auth_payload_hash: str | None = None
+    request_raw_sha256: str | None = None
+    request_path = package / ADJUDICATION_OUTPUT / "operator-resolution-request.json"
+    if all_unresolved_uids:
+        if request_path.exists() or request_path.is_symlink():
+            try:
+                _request_value, request_raw = _validate_resolution_request(
+                    request_path,
+                    all_unresolved_records,
+                    custody_hash=custody_hash,
+                    manifest_hash=manifest_hash,
+                    ordered_commitment=manifest_val.get(
+                        "ordered_identity_commitment_sha256", ORDERED_IDENTITY_COMMITMENT_SHA256
+                    ),
+                )
+            except Error as exc:
+                raise Error(exc.failure_code) from exc
+            request_raw_sha256 = digest(request_raw)
+        elif not fixture:
+            raise Error("authorization_binding_failure")
 
     if auth_path.exists():
         _regular(auth_path, 0o600)
-        authorizations = validate_authorization_file(auth_path, package)
+        authorizations = validate_authorization_file(
+            auth_path,
+            package,
+            request_raw_sha256=request_raw_sha256,
+            fixture=fixture,
+            advisor_response_path=advisor_response_path,
+        )
         auth_uids = set(authorizations.keys())
 
         # Exact unresolved set check
@@ -716,7 +987,9 @@ def resolve_all(
             missing = all_unresolved_uids - auth_uids
             if missing:
                 raise Error("missing_authorization")
-        auth_payload_hash = digest(auth_path.read_bytes())
+        if list(authorizations.keys()) != all_unresolved_ordered:
+            raise Error("authorization_identity_failure")
+        auth_payload_hash = authorizations.metadata["authorization_receipt_raw_sha256"]
     else:
         if all_unresolved_uids:
             raise Error("missing_authorization")
@@ -756,6 +1029,16 @@ def resolve_all(
         "unresolved_remaining_count": 0,
         "packet_receipt_union_sha256": digest(canonical([r["receipt_sha256"] for r in receipts])),
         "authorization_payload_sha256": auth_payload_hash,
+        "decision_authority": (
+            authorizations.metadata.get("decision_authority")
+            if isinstance(authorizations, AuthorizationBundle)
+            else None
+        ),
+        "authorized_identity": (
+            authorizations.metadata.get("authorized_identity")
+            if isinstance(authorizations, AuthorizationBundle)
+            else None
+        ),
         "text_free": True,
     }
     body["receipt_sha256"] = digest(canonical(body))
@@ -771,18 +1054,42 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--packet-index", type=int)
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--fixture", action="store_true")
+    parser.add_argument("--advisor-response", type=Path)
     args = parser.parse_args(argv)
     try:
         if args.all:
-            result = resolve_all(args.package, args.authorization, fixture=args.fixture)
+            result = resolve_all(
+                args.package,
+                args.authorization,
+                fixture=args.fixture,
+                advisor_response_path=args.advisor_response,
+            )
         elif args.lane is not None and args.packet_index is not None:
             auth_path = args.authorization or (args.package / RESOLUTION_OUTPUT / "authorization.json")
-            auths = {}
+            auths: AuthorizationBundle | dict[tuple[str, str], dict[str, Any]] = {}
             if auth_path.exists():
-                auths = validate_authorization_file(auth_path, args.package)
+                unresolved_path = args.package / ADJUDICATION_OUTPUT / "final" / args.lane / f"unresolved-{args.packet_index:04d}.json"
+                unresolved_value, _ = _read(unresolved_path)
+                unresolved_order = [
+                    (item["source_row"]["unit_id"], item["source_row"]["unit_sha256"])
+                    for item in unresolved_value.get("records", [])
+                ]
+                auths = validate_authorization_file(
+                    auth_path,
+                    args.package,
+                    set(unresolved_order),
+                    ordered_unresolved_identities=unresolved_order,
+                    fixture=args.fixture,
+                    advisor_response_path=args.advisor_response,
+                )
             result = resolve_packet(args.package, args.lane, args.packet_index, auths, fixture=args.fixture)
         else:
-            result = resolve_all(args.package, args.authorization, fixture=args.fixture)
+            result = resolve_all(
+                args.package,
+                args.authorization,
+                fixture=args.fixture,
+                advisor_response_path=args.advisor_response,
+            )
     except Error as exc:
         result = {"ok": False, "failure_code": exc.failure_code, "text_free": True}
     except Exception:

@@ -39,6 +39,7 @@ ORDERED_IDENTITY_COMMITMENT_SHA256 = "331fd7fbc42e43cb3c218d9c2b790df060c0a553ab
 EXPECTED_CUSTODY_SHA256 = ""
 EXPECTED_LABEL_MANIFEST_SHA256 = ""
 EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
+EXPECTED_PROMPT_SHA256 = ""
 EXPECTED_SOURCES_ENDPOINT_IDENTITY: dict[str, Any] = {}
 
 MODEL = "Gemini 3.6 Flash (High)"
@@ -422,11 +423,15 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
     return path, value, sidecar_path, sidecar_val
 
 
-def frozen_prompt(package: Path, lane: str) -> bytes:
-    """Read the immutable prompt for this lane."""
+def prompt_binding(package: Path, lane: str) -> tuple[bytes, str]:
+    """Read and independently bind the immutable prompt for this lane."""
     prompt_path = package / PROMPTS[lane]
     _mode(prompt_path, 0o600)
-    return prompt_path.read_bytes()
+    prompt_raw = prompt_path.read_bytes()
+    prompt_sha256 = digest(prompt_raw)
+    if EXPECTED_PROMPT_SHA256 and prompt_sha256 != EXPECTED_PROMPT_SHA256:
+        raise Error("ordinal_identity_binding_drift")
+    return prompt_raw, prompt_sha256
 
 
 def compose_prompt(template: bytes, lane: str, part: dict[str, Any], sidecar_part: dict[str, Any]) -> str:
@@ -914,7 +919,8 @@ def _run_chunk(
                 runtime / "response-schema.json",
                 runtime / "agy.log",
             )
-            prompt = compose_prompt(frozen_prompt(package, lane), lane, part, sidecar_part)
+            prompt_template, prompt_sha256 = prompt_binding(package, lane)
+            prompt = compose_prompt(prompt_template, lane, part, sidecar_part)
             _atomic(stdin_path, stdin_event(prompt), raw=True)
             _atomic(schema_path, schema(lane, part["rows"]))
             _atomic(log_path, b"", raw=True)
@@ -994,6 +1000,7 @@ def _run_chunk(
                 "chunk_count": part["chunk_count"],
                 "row_count": len(part["rows"]),
                 "chunk_identity_set_sha256": digest(canonical(sorted(_identity(row) for row in part["rows"]))),
+                "prompt_sha256": prompt_sha256,
                 "response_raw_sha256": raw_hash,
                 "labels_sha256": labels_hash,
                 "attempt_count": attempt,
@@ -1043,6 +1050,7 @@ def _verify_chunk(
         SOURCE.validate(lane, {"rows": part["rows"]}, canonical(labels), sidecar=sidecar_arg)
     except SOURCE.Invalid as exc:
         raise _semantic_failure(exc) from exc
+    _prompt_template, prompt_sha256 = prompt_binding(package, lane)
     expected = {
         "schema_version": "phase3_cycle007_gemini_chunk_receipt_v1",
         "evaluation_cycle_id": CYCLE,
@@ -1052,6 +1060,7 @@ def _verify_chunk(
         "chunk_count": part["chunk_count"],
         "row_count": len(part["rows"]),
         "chunk_identity_set_sha256": digest(canonical(sorted(_identity(row) for row in part["rows"]))),
+        "prompt_sha256": prompt_sha256,
         "response_raw_sha256": digest(raw_path.read_bytes()),
         "labels_sha256": digest(labels_path.read_bytes()),
         "attempt_count": receipt.get("attempt_count"),
@@ -1133,6 +1142,7 @@ def _reassemble(
         "packet_identity_set_sha256": contents["packet_identity_set_sha256"],
         "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
         "sidecar_id": sidecar_contents.get("sidecar_id", ""),
+        "prompt_sha256": prompt_binding(package, lane)[1],
         "raw_manifest_sha256": manifest_hash,
         "labels_sha256": labels_hash,
         "chunk_count": len(parts),
@@ -1187,6 +1197,7 @@ def verify_packet(package: Path, lane: str, packet_index: int) -> dict[str, Any]
         "packet_identity_set_sha256": contents["packet_identity_set_sha256"],
         "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
         "sidecar_id": sidecar_contents.get("sidecar_id", ""),
+        "prompt_sha256": prompt_binding(package, lane)[1],
         "raw_manifest_sha256": digest(manifest_path.read_bytes()),
         "labels_sha256": digest(labels_path.read_bytes()),
         "chunk_count": len(parts),
@@ -1220,14 +1231,17 @@ def run_packet(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
+    expected_prompt_sha: str | None = None,
 ) -> dict[str, Any]:
-    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
+    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256, EXPECTED_PROMPT_SHA256
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
         EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     if expected_evidence_manifest_sha256 is not None:
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
+    if expected_prompt_sha is not None:
+        EXPECTED_PROMPT_SHA256 = expected_prompt_sha
     if _real_agy_provider(provider):
         if not isinstance(expected_agy_sha256, str) or len(expected_agy_sha256) != 64:
             raise Error("ordinal_identity_binding_drift")
@@ -1269,15 +1283,18 @@ def batch(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
+    expected_prompt_sha: str | None = None,
 ) -> dict[str, Any]:
     """Resume one contiguous packet range with fail-stop concurrency fixed at one."""
-    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
+    global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256, EXPECTED_PROMPT_SHA256
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
         EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     if expected_evidence_manifest_sha256 is not None:
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
+    if expected_prompt_sha is not None:
+        EXPECTED_PROMPT_SHA256 = expected_prompt_sha
     if lane not in LANES or not 1 <= start <= end <= LANES[lane] or concurrency != 1:
         raise Error("ordinal_identity_binding_drift")
     if (package / OUTPUT / "provider-stop.json").exists():
@@ -1286,7 +1303,16 @@ def batch(
     for index in range(start, end + 1):
         if (package / OUTPUT / "provider-stop.json").exists():
             raise Error("ordinal_identity_binding_drift")
-        results.append(run_packet(package, lane, index, provider, expected_agy_sha256=expected_agy_sha256))
+        results.append(
+            run_packet(
+                package,
+                lane,
+                index,
+                provider,
+                expected_agy_sha256=expected_agy_sha256,
+                expected_prompt_sha=expected_prompt_sha,
+            )
+        )
     return {
         "ok": True,
         "lane": lane,
@@ -1314,6 +1340,7 @@ def main() -> int:
     parser.add_argument("--expected-custody-sha", required=True, help="controller-bound custody receipt SHA256")
     parser.add_argument("--expected-label-manifest-sha", required=True, help="controller-bound label manifest SHA256")
     parser.add_argument("--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256")
+    parser.add_argument("--expected-prompt-sha", required=True, help="controller-bound immutable Gemini prompt SHA256")
     args = parser.parse_args()
     try:
         if args.concurrency != 1:
@@ -1334,12 +1361,15 @@ def main() -> int:
             or any(character not in "0123456789abcdef" for character in args.expected_custody_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_label_manifest_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_evidence_manifest_sha)
+            or len(args.expected_prompt_sha) != 64
+            or any(character not in "0123456789abcdef" for character in args.expected_prompt_sha)
         ):
             raise Error("ordinal_identity_binding_drift")
-        global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
+        global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256, EXPECTED_PROMPT_SHA256
         EXPECTED_CUSTODY_SHA256 = args.expected_custody_sha
         EXPECTED_LABEL_MANIFEST_SHA256 = args.expected_label_manifest_sha
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha
+        EXPECTED_PROMPT_SHA256 = args.expected_prompt_sha
         if args.packet_index is not None:
             if args.end is not None:
                 raise Error("ordinal_identity_binding_drift")
@@ -1349,6 +1379,7 @@ def main() -> int:
                 args.packet_index,
                 args.test_provider_bin or AGY,
                 expected_agy_sha256=args.expected_agy_executable_sha,
+                expected_prompt_sha=args.expected_prompt_sha,
             )
         elif args.start is not None and args.end is not None:
             result = batch(
@@ -1359,6 +1390,7 @@ def main() -> int:
                 args.test_provider_bin or AGY,
                 concurrency=args.concurrency,
                 expected_agy_sha256=args.expected_agy_executable_sha,
+                expected_prompt_sha=args.expected_prompt_sha,
             )
         else:
             raise Error("ordinal_identity_binding_drift")
