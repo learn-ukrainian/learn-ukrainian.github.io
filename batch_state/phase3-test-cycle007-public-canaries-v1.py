@@ -610,7 +610,7 @@ sys.exit(1)
 """)
     script.chmod(0o755)
 
-    with pytest.raises(CANARY.CanaryError, match="provider_process_nonzero_exit"):
+    with pytest.raises(CANARY.CanaryError, match="structural_retry_exhausted") as raised:
         CANARY.invoke_canary(
             "grok",
             script,
@@ -618,6 +618,37 @@ sys.exit(1)
             sources_client=client,
         )
     client.close()
+    assert raised.value.attempt_failure_codes == (
+        "provider_process_nonzero_exit",
+        "provider_process_nonzero_exit",
+    )
+
+
+def test_cli_reports_ordered_text_free_attempt_failures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def failed(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        raise CANARY.CanaryError(
+            "structural_retry_exhausted",
+            structural=True,
+            attempt_failure_codes=("structured_output_missing", "provider_process_nonzero_exit"),
+        )
+
+    monkeypatch.setattr(CANARY, "invoke_canary", failed)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["canary", "--provider", "gemini", "--receipt", str(tmp_path / "receipt.json")],
+    )
+
+    assert CANARY.main() == 2
+    result = json.loads(capsys.readouterr().out)
+    assert result == {
+        "attempt_failure_codes": ["structured_output_missing", "provider_process_nonzero_exit"],
+        "failure_code": "structural_retry_exhausted",
+        "ok": False,
+        "text_free": True,
+    }
 
 
 def test_semantic_failure_is_terminal_no_retry(tmp_path: Path) -> None:

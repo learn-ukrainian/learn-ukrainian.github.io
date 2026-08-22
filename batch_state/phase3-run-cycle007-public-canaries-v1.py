@@ -79,9 +79,16 @@ SOURCE = _load_validator()
 class CanaryError(ValueError):
     """Base error for canary execution."""
 
-    def __init__(self, code: str, *, structural: bool = False) -> None:
+    def __init__(
+        self,
+        code: str,
+        *,
+        structural: bool = False,
+        attempt_failure_codes: tuple[str, ...] = (),
+    ) -> None:
         self.code = code
         self.structural = structural
+        self.attempt_failure_codes = attempt_failure_codes
         super().__init__(code)
 
 
@@ -880,6 +887,7 @@ def invoke_canary(
 
         attempt = 1
         provider_calls = 0
+        structural_failure_codes: list[str] = []
         raw_output: bytes = b""
         normalized_labels: list[dict[str, Any]] = []
         provenance: dict[str, Any] = {}
@@ -935,10 +943,15 @@ def invoke_canary(
                 break
 
             except CanaryStructuralError as exc:
+                structural_failure_codes.append(exc.code)
                 if attempt < max_attempts:
                     attempt += 1
                     continue
-                raise CanaryError(exc.code, structural=True) from exc
+                raise CanaryError(
+                    "structural_retry_exhausted",
+                    structural=True,
+                    attempt_failure_codes=tuple(structural_failure_codes),
+                ) from exc
             except (CanarySemanticError, SOURCE.Invalid):
                 # Semantic failure is terminal; no provider retry
                 raise
@@ -1020,6 +1033,8 @@ def main() -> int:
         return 0
     except CanaryError as exc:
         result = {"ok": False, "failure_code": exc.code, "text_free": True}
+        if exc.attempt_failure_codes:
+            result["attempt_failure_codes"] = list(exc.attempt_failure_codes)
         print(json.dumps(result, sort_keys=True, separators=(",", ":")))
         return 2
     except Exception:
