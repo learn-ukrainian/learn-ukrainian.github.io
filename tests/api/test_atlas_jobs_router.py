@@ -61,13 +61,20 @@ def test_submit_dry_run_via_api(_isolate: atlas_job.FakeHostAdapter) -> None:
     assert resp.json()["exit_code"] == 0
 
 
-def test_submit_allows_hramatka(_isolate: atlas_job.FakeHostAdapter) -> None:
+def test_submit_rejects_hramatka(_isolate: atlas_job.FakeHostAdapter) -> None:
     resp = client.post(
         "/api/atlas-jobs/submit",
         json={"plan": _plan(host="hramatka"), "dry_run": True},
     )
-    assert resp.status_code == 200
-    assert resp.json()["exit_code"] == 0
+    assert resp.status_code == 400
+
+
+def test_submit_rejects_vps_alias(_isolate: atlas_job.FakeHostAdapter) -> None:
+    resp = client.post(
+        "/api/atlas-jobs/submit",
+        json={"plan": _plan(host="vps"), "dry_run": True},
+    )
+    assert resp.status_code == 400
 
 
 def test_submit_rejects_unknown_host(_isolate: atlas_job.FakeHostAdapter) -> None:
@@ -181,14 +188,9 @@ def test_load_endpoint_shape_and_cache(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:
     router_mod.clear_host_load_cache()
-    # Populate fresh cache for both hosts
     router_mod.set_host_load_cache(
         "atlas-runner",
         _isolate.host_load("atlas-runner"),
-    )
-    router_mod.set_host_load_cache(
-        "hramatka",
-        _isolate.host_load("hramatka"),
     )
 
     resp = client.get("/api/atlas-jobs/load")
@@ -197,39 +199,36 @@ def test_load_endpoint_shape_and_cache(
     data = resp.json()
     assert data["schema"] == "atlas-jobs-load.v1"
     assert "observed_at" in data
-    assert sorted(data["hosts"].keys()) == ["atlas-runner", "hramatka"]
+    assert sorted(data["hosts"].keys()) == ["atlas-runner"]
 
-    for host_name in ("atlas-runner", "hramatka"):
-        host_info = data["hosts"][host_name]
-        assert host_info["status"] == "fresh"
-        assert isinstance(host_info["age_seconds"], (int, float))
-        assert "observed_at" in host_info
-        assert host_info["cpu_count"] == 4
-        assert host_info["loadavg"] == [0.15, 0.22, 0.18]
-        assert host_info["mem"]["total_bytes"] == 16 * 1024 * 1024 * 1024
-        assert host_info["mem"]["available_bytes"] == 8 * 1024 * 1024 * 1024
-        assert host_info["mem"]["pct"] == 50.0
-        assert host_info["disk"]["available_bytes"] == 50 * 1024 * 1024 * 1024
-        assert "total_bytes" in host_info["disk"]
-        assert "pct" in host_info["disk"]
-        assert host_info["job_unit"]["active_count"] == 0
-        assert host_info["job_unit"]["job_id"] is None
-        assert host_info["job_unit"]["state"] is None
+    host_info = data["hosts"]["atlas-runner"]
+    assert host_info["status"] == "fresh"
+    assert isinstance(host_info["age_seconds"], (int, float))
+    assert "observed_at" in host_info
+    assert host_info["cpu_count"] == 4
+    assert host_info["loadavg"] == [0.15, 0.22, 0.18]
+    assert host_info["mem"]["total_bytes"] == 16 * 1024 * 1024 * 1024
+    assert host_info["mem"]["available_bytes"] == 8 * 1024 * 1024 * 1024
+    assert host_info["mem"]["pct"] == 50.0
+    assert host_info["disk"]["available_bytes"] == 50 * 1024 * 1024 * 1024
+    assert "total_bytes" in host_info["disk"]
+    assert "pct" in host_info["disk"]
+    assert host_info["job_unit"]["active_count"] == 0
+    assert host_info["job_unit"]["job_id"] is None
+    assert host_info["job_unit"]["state"] is None
 
 
-def test_load_endpoint_host_filter_and_vps_normalization(
+def test_load_endpoint_host_filter_rejects_unknown(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:
     router_mod.clear_host_load_cache()
-    router_mod.set_host_load_cache("hramatka", _isolate.host_load("hramatka"))
     router_mod.set_host_load_cache("atlas-runner", _isolate.host_load("atlas-runner"))
 
-    # ?host=vps normalizes to hramatka and never emits 'vps' in keys
     resp_vps = client.get("/api/atlas-jobs/load?host=vps")
-    assert resp_vps.status_code == 200
-    data_vps = resp_vps.json()
-    assert list(data_vps["hosts"].keys()) == ["hramatka"]
-    assert "vps" not in data_vps["hosts"]
+    assert resp_vps.status_code == 400
+
+    resp_hramatka = client.get("/api/atlas-jobs/load?host=hramatka")
+    assert resp_hramatka.status_code == 400
 
     resp_runner = client.get("/api/atlas-jobs/load?host=atlas-runner")
     assert resp_runner.status_code == 200
@@ -244,7 +243,6 @@ def test_load_endpoint_ip_sanitization_and_forbidden_fields(
 ) -> None:
     router_mod.clear_host_load_cache()
     router_mod.set_host_load_cache("atlas-runner", _isolate.host_load("atlas-runner"))
-    router_mod.set_host_load_cache("hramatka", _isolate.host_load("hramatka"))
 
     resp = client.get("/api/atlas-jobs/load")
     assert resp.status_code == 200
@@ -640,7 +638,7 @@ def test_results_allowlist_and_sorting(
     receipt2 = {
         "schema": "atlas-job-result.v1",
         "id": "job-002",
-        "host": "vps",
+        "host": "other-runner",
         "kind": "reenrich",
         "state": "failed",
         "closed_at": "2026-08-17T12:00:00Z",
@@ -667,7 +665,7 @@ def test_results_allowlist_and_sorting(
 
     # Newest-first by (closed_at, id): job-002 (12:00:00Z) before job-001 (10:00:00Z)
     assert data["results"][0]["id"] == "job-002"
-    assert data["results"][0]["host"] == "hramatka"  # normalized
+    assert data["results"][0]["host"] == "other-runner"
     assert data["results"][0]["circuit_breaker_tripped"] is True
     assert data["results"][1]["id"] == "job-001"
     assert data["results"][1]["targets"] == 100
@@ -705,7 +703,7 @@ def test_results_pagination_and_filters(
         receipt = {
             "schema": "atlas-job-result.v1",
             "id": job_id,
-            "host": "atlas-runner" if i % 2 == 1 else "hramatka",
+            "host": "atlas-runner" if i % 2 == 1 else "other-runner",
             "kind": "reenrich",
             "state": "succeeded" if i <= 3 else "failed",
             "closed_at": f"2026-08-17T{10 + i:02d}:00:00Z",
@@ -742,12 +740,11 @@ def test_results_pagination_and_filters(
     assert p2_data["results"][1]["id"] == "job-002"
     assert p2_data["next_cursor"] is not None
 
-    # Filter by host (including vps alias)
-    vps_resp = client.get("/api/atlas-jobs/results?host=vps")
-    assert vps_resp.status_code == 200
-    vps_data = vps_resp.json()
-    assert vps_data["count"] == 2
-    assert all(r["host"] == "hramatka" for r in vps_data["results"])
+    other_resp = client.get("/api/atlas-jobs/results?host=other-runner")
+    assert other_resp.status_code == 200
+    other_data = other_resp.json()
+    assert other_data["count"] == 2
+    assert all(r["host"] == "other-runner" for r in other_data["results"])
 
     # Filter by state
     failed_resp = client.get("/api/atlas-jobs/results?state=failed")
