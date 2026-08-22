@@ -56,13 +56,20 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 
 def _git_repo_with_origin(path: Path, origin_url: str | None) -> Path:
     path.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "init"], cwd=path, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "init"],
+        cwd=path,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
     if origin_url is not None:
         subprocess.run(
             ["git", "remote", "add", "origin", origin_url],
             cwd=path,
             check=True,
             capture_output=True,
+            timeout=30,
         )
     return path
 
