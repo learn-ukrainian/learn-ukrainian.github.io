@@ -72,6 +72,28 @@ button, input, select { font: inherit; }
 .detail dd { margin: 2px 0 0; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
 .empty, .error { color: var(--text3); font-size: 13px; line-height: 1.5; padding: 18px 14px; }
 .error { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); margin: 0 0 14px; }
+.actionable-banner {
+  align-items: center;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  color: var(--text2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  line-height: 1.4;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.actionable-banner strong { color: var(--text); }
+.actionable-banner a, .actionable-banner button, .empty a {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: underline;
+}
 .source-strip { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 16px; }
 .source-card { background: var(--bg2); border: 1px solid var(--border); padding: 11px 12px; }
 .source-card strong { display: block; font-size: 13px; }
@@ -212,6 +234,8 @@ button, input, select { font: inherit; }
     </div>
   </section>
 
+  <div id="actionable-banner" class="actionable-banner hidden" role="status"></div>
+
   <section class="layout">
     <article class="panel" aria-labelledby="attention-heading">
       <div class="panel-head">
@@ -278,10 +302,14 @@ button, input, select { font: inherit; }
     selectedIndex: -1,
     privateStatusText: 'Checking capability…',
     publicStatusOverride: null,
+    filteredCount: 0,
+    totalMatching: 0,
+    currentView: 'actionable',
   };
 
   const els = {
     error: document.getElementById('error-banner'),
+    actionableBanner: document.getElementById('actionable-banner'),
     list: document.getElementById('attention-list'),
     detail: document.getElementById('detail-panel'),
     publicMeta: document.getElementById('source-public-meta'),
@@ -728,10 +756,9 @@ button, input, select { font: inherit; }
   }
 
   function applyLocalFilters(projection, filters) {
-    if (!projection) return { items: [], attention: [] };
+    if (!projection) return { items: [], attention: [], filteredCount: 0, totalMatching: 0 };
     const view = filters.view || 'actionable';
-    const items = (projection.items || []).filter((item) => {
-      if (view === 'actionable' && !isActionable(item)) return false;
+    const baseItems = (projection.items || []).filter((item) => {
       if (filters.health && item.health !== filters.health) return false;
       if (filters.kind && item.resource_kind !== filters.kind) return false;
       if (filters.lifecycle && item.lifecycle !== filters.lifecycle) return false;
@@ -743,9 +770,49 @@ button, input, select { font: inherit; }
       }
       return true;
     });
+    const items = view === 'actionable'
+      ? baseItems.filter((item) => isActionable(item))
+      : baseItems;
+    const filteredCount = view === 'actionable'
+      ? (baseItems.length - items.length)
+      : 0;
     const idSet = new Set(items.map((i) => i.work_id));
     const attention = (projection.attention || []).filter((row) => idSet.has(row.work_id));
-    return { items: items, attention: attention };
+    return { items: items, attention: attention, filteredCount: filteredCount, totalMatching: baseItems.length };
+  }
+
+  function allViewUrl() {
+    const filters = controlsToFilters();
+    filters.view = 'all';
+    const safe = shareableFilters(filters);
+    const params = new URLSearchParams();
+    Object.keys(safe).sort().forEach((key) => params.set(key, safe[key]));
+    const qs = params.toString();
+    return qs ? (window.location.pathname + '?' + qs) : window.location.pathname;
+  }
+
+  function renderActionableBanner() {
+    if (!els.actionableBanner) return;
+    if (state.currentView !== 'actionable' || state.filteredCount <= 0) {
+      els.actionableBanner.classList.add('hidden');
+      els.actionableBanner.innerHTML = '';
+      return;
+    }
+    const count = state.filteredCount;
+    const total = state.totalMatching;
+    const url = allViewUrl();
+    els.actionableBanner.classList.remove('hidden');
+    els.actionableBanner.innerHTML =
+      '<span>Actionable view filtered out <strong>' + count + '</strong> non-actionable item' + (count === 1 ? '' : 's') + ' (on-track / no urgent action, e.g. OPEN_GITHUB).</span>' +
+      '<a href="' + escapeAttr(url) + '" id="actionable-view-all-link">Switch to All (' + total + ')</a>';
+    const link = els.actionableBanner.querySelector('#actionable-view-all-link');
+    if (link) {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (els.view) els.view.value = 'all';
+        refilterOnly();
+      });
+    }
   }
 
   function railClasses(item) {
@@ -770,6 +837,19 @@ button, input, select { font: inherit; }
     if (!attention.length) {
       if (!state.merged) {
         els.list.innerHTML = '<div class="empty">No source projection is available. Retry refresh.</div>';
+      } else if (state.currentView === 'actionable' && state.filteredCount > 0) {
+        const count = state.filteredCount;
+        const total = state.totalMatching;
+        const url = allViewUrl();
+        els.list.innerHTML = '<div class="empty">No actionable items require immediate attention. <strong>' + count + '</strong> non-actionable item' + (count === 1 ? '' : 's') + ' filtered out (e.g. ON_TRACK / OPEN_GITHUB). <a href="' + escapeAttr(url) + '" id="empty-view-all-link">Switch to All (' + total + ')</a> to inspect all work.</div>';
+        const emptyLink = els.list.querySelector('#empty-view-all-link');
+        if (emptyLink) {
+          emptyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (els.view) els.view.value = 'all';
+            refilterOnly();
+          });
+        }
       } else {
         els.list.innerHTML = '<div class="empty">No attention items for the current public-safe filters. Sources may be empty or degraded — check the source strip.</div>';
       }
@@ -855,6 +935,10 @@ button, input, select { font: inherit; }
     const den = (projection && projection.denominator) || {};
     const pubSections = pub.sections || {};
     const pubStatus = publicStatusOverride || pub.status || '—';
+    const rankedCount = state.attention ? state.attention.length : ((projection.attention || []).length);
+    const metaSuffix = (state.currentView === 'actionable' && state.filteredCount > 0)
+      ? (' (' + state.filteredCount + ' filtered out)')
+      : '';
     if (projection && pub.source_id === PUBLIC_SOURCE_ID) {
       els.publicMeta.textContent = [
         'status=' + pubStatus,
@@ -865,10 +949,10 @@ button, input, select { font: inherit; }
         'class4 d1=' + (den.class4 && den.class4.delegate_active) + ' d2=' + (den.class4 && den.class4.delegate_tasks) + ' r1=' + (den.class4 && den.class4.fleet_reviews),
       ].join(' · ');
       els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
-      els.attentionMeta.textContent = (state.attention ? state.attention.length : ((projection.attention || []).length)) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
+      els.attentionMeta.textContent = rankedCount + ' ranked' + metaSuffix + ' · cache ' + (projection.cache_age_s ?? 0) + 's';
     } else if (projection) {
       els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
-      els.attentionMeta.textContent = (state.attention ? state.attention.length : ((projection.attention || []).length)) + ' ranked · cache ' + (projection.cache_age_s ?? 0) + 's';
+      els.attentionMeta.textContent = rankedCount + ' ranked' + metaSuffix + ' · cache ' + (projection.cache_age_s ?? 0) + 's';
       if (publicStatusOverride) {
         els.publicMeta.textContent = 'status=' + publicStatusOverride;
       }
@@ -1035,6 +1119,9 @@ button, input, select { font: inherit; }
     const filtered = applyLocalFilters(projection, filters);
     state.itemsById = new Map(filtered.items.map((i) => [i.work_id, i]));
     state.attention = filtered.attention;
+    state.filteredCount = filtered.filteredCount || 0;
+    state.totalMatching = filtered.totalMatching || 0;
+    state.currentView = filters.view || 'actionable';
     if (state.selectedId && state.itemsById.has(state.selectedId)) {
       state.selectedIndex = state.attention.findIndex((a) => a.work_id === state.selectedId);
     } else if (state.attention.length) {
@@ -1045,6 +1132,7 @@ button, input, select { font: inherit; }
       state.selectedId = null;
     }
     renderSources(projection, state.privateStatusText, state.publicStatusOverride);
+    renderActionableBanner();
     renderList();
     renderDetail(state.selectedId ? state.itemsById.get(state.selectedId) : null);
   }
@@ -1144,6 +1232,9 @@ button, input, select { font: inherit; }
     state.attention = [];
     state.selectedId = null;
     state.selectedIndex = -1;
+    state.filteredCount = 0;
+    state.totalMatching = 0;
+    renderActionableBanner();
     const pubCode = publicFail === 'schema_mismatch' ? 'schema_mismatch' : 'unreachable';
     const privCode = privateFail || 'unreachable';
     showError('Work projection unavailable · public=' + pubCode + ' · private=' + privCode);
