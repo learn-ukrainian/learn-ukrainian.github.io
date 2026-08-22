@@ -1161,7 +1161,9 @@ def test_compile_cycle007_package_binds_lane_packet_index_and_basename(tmp_path:
     materializer.materialize(source, package, fixture=True)
     client = SyntheticSourcesClient()
     sidecars_out = tmp_path / "sidecars"
-    manifest = compiler.compile_cycle007_package(package, client, sidecars_out, fixture=True)
+    manifest = compiler.compile_cycle007_package(
+        package, source / "label-manifest.json", client, sidecars_out, fixture=True
+    )
     assert manifest["packet_count"] == 2
     assert manifest["row_count"] == 4
     # residual_label packet must have been compiled with phenomenon scoping.
@@ -1223,7 +1225,9 @@ def test_compile_cycle007_package_rejects_a_tampered_packet_raw_sha(tmp_path: Pa
     tampered_path.write_text(contract.canonical_json(body))
     client = SyntheticSourcesClient()
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, client, tmp_path / "sidecars", fixture=True)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", client, tmp_path / "sidecars", fixture=True
+        )
 
 
 def test_compile_cycle007_package_real_mode_requires_the_exact_denominator(tmp_path: Path):
@@ -1232,7 +1236,9 @@ def test_compile_cycle007_package_real_mode_requires_the_exact_denominator(tmp_p
     materializer.materialize(source, package, fixture=True)
     client = SyntheticSourcesClient()
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, client, tmp_path / "sidecars", fixture=False)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", client, tmp_path / "sidecars", fixture=False
+        )
 
 
 def test_compile_cycle007_package_rejects_duplicate_identity_across_packets(tmp_path: Path):
@@ -1247,7 +1253,9 @@ def test_compile_cycle007_package_rejects_duplicate_identity_across_packets(tmp_
     _write_json(residual_packet_path, residual_packet)
     _refresh_cycle007_package_bindings(package)
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True
+        )
 
 
 def test_compile_cycle007_package_rejects_rehashed_source_text_tamper(tmp_path: Path):
@@ -1256,11 +1264,15 @@ def test_compile_cycle007_package_rejects_rehashed_source_text_tamper(tmp_path: 
     materializer.materialize(source, package, fixture=True)
     packet_path = package / "clean_label" / "packet-0001.json"
     packet = json.loads(packet_path.read_text())
-    packet["rows"][0]["source_text"] = "tampered while preserving the frozen source hash"
+    tampered_text = "tampered and locally rehashed"
+    packet["rows"][0]["source_text"] = tampered_text
+    packet["rows"][0]["source_text_sha256"] = contract.sha256_text(tampered_text)
     _write_json(packet_path, packet)
     _refresh_cycle007_package_bindings(package)
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True
+        )
 
 
 @pytest.mark.parametrize("tamper", ("row_count", "ordered_identity_commitment_sha256"))
@@ -1277,7 +1289,9 @@ def test_compile_cycle007_package_rejects_falsified_totals_or_commitments(tmp_pa
     package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
     _write_json(manifest_path, package_manifest)
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True
+        )
 
 
 @pytest.mark.parametrize("tamper", ("reverse", "index"))
@@ -1301,7 +1315,9 @@ def test_compile_cycle007_package_rejects_wrong_packet_order_or_index_metadata(t
     package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
     _write_json(manifest_path, package_manifest)
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True
+        )
 
 
 def test_compile_cycle007_package_rejects_custody_binding_tamper(tmp_path: Path):
@@ -1319,7 +1335,9 @@ def test_compile_cycle007_package_rejects_custody_binding_tamper(tmp_path: Path)
     package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
     _write_json(manifest_path, package_manifest)
     with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+        compiler.compile_cycle007_package(
+            package, source / "label-manifest.json", SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True
+        )
 
 
 def test_retrieval_payloads_are_deduplicated_across_phenomenon_scoped_records(tmp_path: Path):

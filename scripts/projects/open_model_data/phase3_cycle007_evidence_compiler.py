@@ -25,6 +25,7 @@ per-packet sidecar file.
 from __future__ import annotations
 
 import asyncio
+import copy
 import functools
 import json
 import os
@@ -1857,6 +1858,7 @@ def _materializer_module():
 
 def _validate_cycle007_materialization(
     package_dir: Path,
+    source_manifest_path: Path,
     *,
     fixture: bool,
 ) -> tuple[
@@ -1979,6 +1981,30 @@ def _validate_cycle007_materialization(
         )),
         "custody_binding_drift",
     )
+
+    source_manifest_raw = materializer._read_regular(source_manifest_path, "source_binding_drift")
+    expected_source_manifest_sha256 = (
+        materializer.digest(source_manifest_raw)
+        if fixture
+        else materializer.SOURCE_MANIFEST_SHA256
+    )
+    contract.require(
+        materializer.digest(source_manifest_raw) == expected_source_manifest_sha256
+        and custody.get("source_label_manifest_raw_sha256") == expected_source_manifest_sha256,
+        "source_binding_drift",
+    )
+    source_manifest = materializer.strict_json(source_manifest_path, "source_binding_drift")
+    contract.require(isinstance(source_manifest, Mapping), "source_binding_drift")
+    contract.require(
+        source_manifest.get("schema_version") == "phase3_cycle005_label_manifest_v1"
+        and source_manifest.get("evaluation_cycle_id") == materializer.CYCLE005
+        and source_manifest.get("receipt_sha256") == materializer._hash_receipt(source_manifest),
+        "source_binding_drift",
+    )
+    source_records = materializer._expected_order(source_manifest, fixture)
+    source_records_by_key = {
+        (record["lane"], record["packet_index"]): record for record in source_records
+    }
     if not fixture:
         contract.require(
             custody.get("source_custody_receipt_raw_sha256") == materializer.SOURCE_CUSTODY_SHA256
@@ -2061,6 +2087,26 @@ def _validate_cycle007_materialization(
         contract.require(
             isinstance(rows, list) and len(rows) == row_count_for_packet,
             "packet_binding_drift",
+        )
+
+        source_record = source_records_by_key.get((lane, packet_index))
+        contract.require(
+            isinstance(source_record, Mapping)
+            and source_record.get("canonical_basename") == basename
+            and source_record.get("row_count") == row_count_for_packet
+            and source_record.get("packet_identity_set_sha256") == identity_set_sha256,
+            "source_binding_drift",
+        )
+        reconstructed_source_packet = copy.deepcopy(packet)
+        reconstructed_source_packet["schema_version"] = "phase3_cycle005_private_packet_v1"
+        reconstructed_source_packet["evaluation_cycle_id"] = materializer.CYCLE005
+        for reconstructed_row in reconstructed_source_packet["rows"]:
+            if "evaluation_cycle_id" in reconstructed_row:
+                reconstructed_row["evaluation_cycle_id"] = materializer.CYCLE005
+        contract.require(
+            materializer.digest(materializer.canonical(reconstructed_source_packet))
+            == source_record.get("raw_sha256"),
+            "source_content_binding_drift",
         )
 
         packet_identities: list[tuple[str, str]] = []
@@ -2166,6 +2212,7 @@ def _validate_cycle007_materialization(
 
 def compile_cycle007_package(
     package_dir: Path,
+    source_manifest_path: Path,
     client: SourcesClient,
     output_dir: Path,
     *,
@@ -2184,6 +2231,7 @@ def compile_cycle007_package(
     """
     packets, residual_flags, packet_bindings, source_package_binding = _validate_cycle007_materialization(
         package_dir,
+        source_manifest_path,
         fixture=fixture,
     )
 
