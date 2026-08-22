@@ -230,13 +230,24 @@ function renderSummary(routing, usage, delegates) {
   `;
 }
 
-function renderBudget(routing) {
+function renderBudget(routing, usage) {
   const agents = routing.agents || {};
+  const diag = routing.diagnostics || {};
+  const ledgerEmpty = diag.budget_ledger_empty === true || Number(diag.records_loaded || 0) === 0;
+  const runtimeRecords = Number(diag.runtime_usage_records_7d ?? (usage || {}).records_total ?? 0);
+  const ledgerNote = ledgerEmpty
+    ? (runtimeRecords > 0
+      ? `<div class="sub" style="margin-bottom:8px">USD budget ledger is empty — 7d burn/headroom unknown. Runtime usage exists (${runtimeRecords} call(s) in 7d); see Runtime Agents below.</div>`
+      : `<div class="sub" style="margin-bottom:8px">USD budget ledger is empty — 7d burn/headroom unknown; no runtime usage records this week either.</div>`)
+    : '';
+  const unavailableTitle = ledgerEmpty
+    ? 'Burn unknown — USD budget ledger empty'
+    : 'Capacity unavailable';
   const rows = Object.entries(agents).map(([name, data]) => {
     const isUnavailable = data.status === 'unavailable' || data.burn_pct_7d == null || typeof data.burn_pct_7d !== 'number';
     const burnStr = isUnavailable ? 'unavailable' : `${Number(data.burn_pct_7d).toFixed(1)}%`;
     const barCell = isUnavailable
-      ? '<div class="bar unavailable" title="Capacity unavailable"><span style="width:100%"></span></div>'
+      ? `<div class="bar unavailable" title="${escapeHtml(unavailableTitle)}"><span style="width:100%"></span></div>`
       : `<div class="bar"><span style="width:${pct(data.burn_pct_7d)}%"></span></div>`;
     const cap = data.weekly_cap_usd == null ? 'n/a' : `$${Number(data.weekly_cap_usd).toFixed(0)}`;
     return `<tr>
@@ -248,7 +259,7 @@ function renderBudget(routing) {
       <td>${escapeHtml((routing.in_flight || {})[name] ?? 0)}</td>
     </tr>`;
   }).join('');
-  document.getElementById('budget-table').innerHTML = `<table>
+  document.getElementById('budget-table').innerHTML = `${ledgerNote}<table>
     <tr><th>Agent</th><th>Status</th><th>7d Burn</th><th>Headroom</th><th>Weekly Cap</th><th>In Flight</th></tr>
     ${rows || '<tr><td colspan="6">No budget data.</td></tr>'}
   </table>`;
@@ -300,7 +311,7 @@ async function loadRouting() {
       fetchJson(ENDPOINTS.delegates)
     ]);
     renderSummary(routing, usage, delegates);
-    renderBudget(routing);
+    renderBudget(routing, usage);
     renderAgents(agents, usage);
     renderDelegates(delegates);
     status.textContent = `Updated ${new Date().toLocaleTimeString()}`;
