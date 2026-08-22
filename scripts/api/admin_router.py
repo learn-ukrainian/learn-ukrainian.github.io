@@ -199,8 +199,8 @@ async def disk_usage():
             size = path.stat().st_size if path.exists() else 0
         else:
             size = await asyncio.to_thread(_dir_size, path)
+        # OPSEC (#7081): never expose absolute/host paths to the observer UI.
         return label, {
-            "path": str(path),
             "exists": path.exists(),
             "size_bytes": size,
             "size_human": _format_bytes(size),
