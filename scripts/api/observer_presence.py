@@ -1,9 +1,9 @@
 """Loopback-only observer presence — no RAM lease, not a dispatch seat.
 
-Grok Bot / QA Engineer / Cursor-driver heartbeats land here so occupancy can
-show the current task without ``POST /api/agent-monitor/register``. In-process
-TTL store; a Monitor restart drops rows (callers heartbeat). Never writes
-fleet-comms. A live ``/api/fleet/agents`` row is not occupancy evidence.
+Grok Bot / QA Engineer / Cursor-driver / Codex-UI heartbeats land here so
+occupancy can show the current task without ``POST /api/agent-monitor/register``.
+In-process TTL store; a Monitor restart drops rows (callers heartbeat). Never
+writes fleet-comms. A live ``/api/fleet/agents`` row is not occupancy evidence.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from scripts.api.occupancy_sanitize import (
 
 router = APIRouter(tags=["observer"])
 
-ALLOWED_AGENTS = frozenset({"grok-bot", "qa-engineer", "cursor"})
+ALLOWED_AGENTS = frozenset({"grok-bot", "qa-engineer", "cursor", "codex"})
 ALLOWED_STATUSES = frozenset({"working", "blocked", "idle"})
 PRESENCE_TTL_SECONDS = 15 * 60
 KIND_OBSERVER = "observer"
