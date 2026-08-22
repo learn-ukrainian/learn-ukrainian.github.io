@@ -201,7 +201,7 @@ tr:last-child td { border-bottom: none; }
   </section>
 
   <section class="card purple">
-    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Using each agent's default model</div></div>
+    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Using last-used or default model</div></div>
     <div class="banner" id="headroom-banner"></div>
     <div id="headroom-content" class="empty">Loading...</div>
   </section>
@@ -270,11 +270,12 @@ function renderAgents(agents) {
     return;
   }
   document.getElementById('agents-content').innerHTML = `<table>
-    <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Supported Modes</th></tr></thead>
+    <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Headroom Model</th><th>Supported Modes</th></tr></thead>
     <tbody>${agents.map(agent => `<tr>
       <td>${escapeHtml(agent.name || '—')}</td>
       <td class="mono">${escapeHtml(agent.binary || '—')}</td>
       <td class="mono">${escapeHtml(agent.default_model || '—')}</td>
+      <td class="mono">${escapeHtml(agent.headroom_model || agent.last_used_model || agent.default_model || '—')}</td>
       <td>${(agent.supported_modes || []).map(mode => `<span class="pill gray">${escapeHtml(mode)}</span>`).join(' ') || '—'}</td>
     </tr>`).join('')}</tbody>
   </table>`;
@@ -805,7 +806,7 @@ async function loadRuntime() {
 
   try {
     if (!agents.length) throw new Error('Need agent list before checking headroom');
-    const cards = await Promise.all(agents.map(agent => fetchJson(`/api/runtime/headroom?agent=${encodeURIComponent(agent.name)}&model=${encodeURIComponent(agent.default_model || '')}`)));
+    const cards = await Promise.all(agents.map(agent => fetchJson(`/api/runtime/headroom?agent=${encodeURIComponent(agent.name)}&model=${encodeURIComponent(agent.headroom_model || agent.last_used_model || agent.default_model || '')}`)));
     renderHeadroom(cards);
     setBanner('headroom-banner', '');
   } catch (error) {
