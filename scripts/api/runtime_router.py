@@ -891,6 +891,59 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+_ROUTING_ACTIVE_STATES = frozenset({"reserved", "running"})
+# Matches the dashboard's STALE_ACTIVITY_MS (45 minutes) so the API and the
+# page agree on when a loaded window no longer counts as recent.
+_ROUTING_WINDOW_STALE_AFTER_S = 45 * 60
+
+
+def _routing_iso_z(value: datetime) -> str:
+    return value.isoformat().replace("+00:00", "Z")
+
+
+def _routing_zombie_expired(item: dict[str, Any], now: datetime) -> bool:
+    """Observer-side TTL check mirroring the ledger's ``_recover_expired_tx``.
+
+    The write-path expiry only runs when Fleet Comms opens a write
+    transaction; if no reservation activity has happened since a row went
+    overdue, its ``reserved``/``running`` status persists indefinitely.  The
+    read-only projection must never write, so it reports those zombies as
+    terminal ``expired`` rows instead of live routing (#7088).
+    """
+    state = str(item.get("current_state") or item.get("reservation_state") or "").lower()
+    if state not in _ROUTING_ACTIVE_STATES:
+        return False
+    expires_at = _parse_iso_datetime(item.get("expires_at"))
+    return expires_at is not None and expires_at <= now
+
+
+def _routing_apply_observer_expiry(item: dict[str, Any], now: datetime) -> None:
+    if not _routing_zombie_expired(item, now):
+        return
+    item["reservation_state"] = "expired"
+    item["terminal_status"] = "expired"
+    item["current_state"] = "expired"
+    if not item.get("failure_classification"):
+        item["failure_classification"] = "ttl_expired_orphan"
+    item["zombie_expired"] = True
+
+
+def _routing_assignment_window(assignments: list[dict[str, Any]], now: datetime) -> dict[str, Any] | None:
+    timestamps = [
+        parsed
+        for parsed in (_parse_iso_datetime(item.get("timestamp")) for item in assignments)
+        if parsed is not None
+    ]
+    if not timestamps:
+        return None
+    newest = max(timestamps)
+    return {
+        "oldest_at": _routing_iso_z(min(timestamps)),
+        "newest_at": _routing_iso_z(newest),
+        "stale": (now - newest).total_seconds() > _ROUTING_WINDOW_STALE_AFTER_S,
+    }
+
+
 def _routing_assignment_aggregate(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Collapse decision events into one current reservation assignment."""
     ordered = sorted(records, key=_routing_event_sort_key)
@@ -960,9 +1013,14 @@ def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
         reverse=True,
     )
     assignments = assignments[:record_limit]
+    now = datetime.now(UTC)
+    for item in assignments:
+        _routing_apply_observer_expiry(item, now)
     return {
         "availability": "available" if assignments else "empty",
         "plane": plane,
+        "as_of": _routing_iso_z(now),
+        "window": _routing_assignment_window(assignments, now),
         "assignments": assignments,
     }
 

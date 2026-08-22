@@ -729,12 +729,19 @@ function renderRoutingAssignments(data) {
   const plane = data && typeof data.plane === 'object' ? data.plane : {};
   const assignments = Array.isArray(data?.assignments) ? data.assignments : [];
   const availability = data?.availability || 'unavailable';
+  const window = data && typeof data.window === 'object' && data.window ? data.window : null;
+  const windowLabel = window
+    ? (window.stale ? `stale · latest event ${formatTs(window.newest_at)}` : `recent · latest event ${formatTs(window.newest_at)}`)
+    : 'unreported';
+  const zombieCount = assignments.filter(item => item.zombie_expired === true).length;
   routingUi.plane = plane;
   const planeMarkup = `<div class="routing-status">
     <span class="pill ${plane.mode === 'authority' ? 'ok' : 'warn'}">Plane: ${escapeHtml(displayRouteValue(plane.mode))}</span>
     <span class="pill info">${escapeHtml(displayRouteValue(plane.authority))}</span>
     <span class="pill gray">${escapeHtml(displayRouteValue(plane.cutover))}</span>
     <span class="pill ${availability === 'available' || availability === 'empty' ? 'ok' : 'err'}">History: ${escapeHtml(availability)}</span>
+    <span class="pill ${window && window.stale ? 'warn' : 'gray'}">Window: ${escapeHtml(windowLabel)}</span>
+    ${zombieCount ? `<span class="pill warn">${zombieCount} overdue reserved/running shown as expired</span>` : ''}
   </div>`;
   if (!assignments.length) {
     const reason = data?.reason ? ` (${displayRouteValue(data.reason)})` : '';
