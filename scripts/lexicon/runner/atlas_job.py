@@ -30,9 +30,7 @@ from typing import Any, Protocol
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"
 BATCH_KINDS = frozenset({"reenrich"})
-# Plan-host tokens kept so occupancy sanitizer can redact them from API output.
-HRAMATKA_ALIASES = frozenset({"hramatka", "vps"})
-ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"}) | HRAMATKA_ALIASES}
+ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"})}
 RESULT_SINKS = frozenset({"git", "restic", "both"})
 RESUME_MODES = frozenset({"idempotent", "checkpoint", "never"})
 DRIVER_NEEDLES = (
@@ -228,6 +226,17 @@ class FakeHostAdapter:
 
 
 ENV_SELF_HOST = "ATLAS_JOB_SELF_HOST"
+ENV_RUNNER_HOST = "ATLAS_RUNNER_HOST"
+
+
+def resolve_runner_host(host: str | None = None) -> str:
+    """Return the plan-host token for status/pull; fail closed without env."""
+    if host:
+        return host
+    env_host = os.environ.get(ENV_RUNNER_HOST, "").strip()
+    if not env_host:
+        raise ValueError(f"{ENV_RUNNER_HOST} is required")
+    return env_host
 
 
 def self_host_aliases() -> frozenset[str]:
@@ -624,9 +633,7 @@ def require_safe_job_id(job_id: object) -> str:
 
 
 def _canonical_host(host: str | None) -> str:
-    """Map ssh-alias variants (``vps``) onto the canonical host name."""
-    if host in HRAMATKA_ALIASES:
-        return "hramatka"
+    """Normalize a plan-host token (no alias remapping)."""
     return host or "atlas-runner"
 
 
@@ -762,8 +769,8 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     if not isinstance(job_id, str) or _SAFE_ID.fullmatch(job_id) is None:
         errors.append("id must be a filesystem/systemd-safe token")
     host = plan.get("host")
-    if host != "atlas-runner" and host not in HRAMATKA_ALIASES:
-        errors.append("host must be atlas-runner, hramatka, or vps")
+    if host != "atlas-runner":
+        errors.append("host must be atlas-runner")
     kind = plan.get("kind")
     if kind not in BATCH_KINDS:
         errors.append(f"kind must be one of {sorted(BATCH_KINDS)}")
@@ -1298,7 +1305,7 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
     if "--no-poll" not in args:
         args.append("--no-poll")
     env = os.environ.copy()
-    env["ATLAS_RUNNER_HOST"] = host
+    env[ENV_RUNNER_HOST] = host
     env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     env["ATLAS_RE_ENRICH_UNIT"] = unit
     env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
@@ -1543,18 +1550,25 @@ def _unit_is_active(unit: dict[str, Any]) -> bool:
     ).startswith("running")
 
 
-def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None = None) -> int:
+def status(
+    *, host: str | None = None, audit: bool = False, host_adapter: HostAdapter | None = None
+) -> int:
+    try:
+        resolved = resolve_runner_host(host)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     adapter = host_adapter or get_host_adapter()
     try:
-        if not adapter.reachable(host):
-            print(f"host {host} unreachable", file=sys.stderr)
+        if not adapter.reachable(resolved):
+            print(f"host {resolved} unreachable", file=sys.stderr)
             return 2
-        host_units = adapter.list_atlas_job_units(host)
+        host_units = adapter.list_atlas_job_units(resolved)
     except (ConnectionError, OSError, ValueError) as exc:
         print(f"host status failed: {exc}", file=sys.stderr)
         return 2
 
-    rows = [r for r in list_registry() if r.get("host") == host]
+    rows = [r for r in list_registry() if r.get("host") == resolved]
     for row in rows:
         if row.get("state") == "running":
             row = reconcile_row(row, host_units=host_units, host_adapter=adapter)
@@ -1587,7 +1601,7 @@ def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None =
         )
 
     try:
-        lines = adapter.pgrep_drivers(host)
+        lines = adapter.pgrep_drivers(resolved)
     except (ConnectionError, OSError) as exc:
         print(f"audit pgrep failed: {exc}", file=sys.stderr)
         return 2
@@ -1612,17 +1626,22 @@ def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None =
 
 def pull(
     *,
-    host: str,
+    host: str | None = None,
     job_id: str | None = None,
     workdir: str | None = None,
 ) -> int:
+    try:
+        resolved = resolve_runner_host(host)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     if job_id is not None:
         job_id = require_safe_job_id(job_id)
     if workdir:
-        workdir = require_safe_workdir(workdir, host=host)
+        workdir = require_safe_workdir(workdir, host=resolved)
     env = os.environ.copy()
-    env["ATLAS_RUNNER_HOST"] = host
-    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
+    env[ENV_RUNNER_HOST] = resolved
+    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(resolved)))
     if workdir:
         env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
     if job_id:
@@ -1648,7 +1667,7 @@ def main(argv: list[str] | None = None) -> int:
     p_sub.add_argument("--dry-run", action="store_true")
 
     p_st = sub.add_parser("status", help="List registry rows; optional untracked audit")
-    p_st.add_argument("--host", default="atlas-runner")
+    p_st.add_argument("--host", default=None)
     p_st.add_argument("--audit", action="store_true")
 
     p_close = sub.add_parser("close", help="Seal a result receipt for a registered job")
@@ -1660,7 +1679,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("list", help="List registry rows")
 
     p_pull = sub.add_parser("pull", help="Pull work-dir artifacts (no pointer flip)")
-    p_pull.add_argument("--host", default="atlas-runner")
+    p_pull.add_argument("--host", default=None)
     p_pull.add_argument("--job-id")
 
     args = parser.parse_args(argv)

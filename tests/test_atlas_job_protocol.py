@@ -64,13 +64,14 @@ def test_valid_plan_is_ok() -> None:
     assert atlas_job.validate_plan(_plan()) == []
 
 
-def test_allows_hramatka_for_reenrich() -> None:
-    assert atlas_job.validate_plan(_plan(host="hramatka")) == []
+def test_rejects_hramatka_host() -> None:
+    errors = atlas_job.validate_plan(_plan(host="hramatka"))
+    assert any("host" in e for e in errors)
 
 
-def test_allows_vps_alias_for_reenrich() -> None:
-    # "vps" remains an allowed plan-host token (occupancy sanitizer denylist).
-    assert atlas_job.validate_plan(_plan(host="vps")) == []
+def test_rejects_vps_alias_host() -> None:
+    errors = atlas_job.validate_plan(_plan(host="vps"))
+    assert any("host" in e for e in errors)
 
 
 def test_rejects_unknown_host() -> None:
@@ -154,14 +155,14 @@ def test_submit_fails_closed_without_run_root(monkeypatch: pytest.MonkeyPatch) -
     assert atlas_job.submit(_plan(), dry_run=True) == 2
 
 
-def test_submit_dry_run_uses_env_run_root_for_any_host(
+def test_submit_dry_run_uses_env_run_root(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    rc = atlas_job.submit(_plan(id="hramatka-dry", host="hramatka"), dry_run=True)
+    rc = atlas_job.submit(_plan(id="dry-run-job"), dry_run=True)
     assert rc == 0
     out = capsys.readouterr().out
-    assert "hramatka" in out
-    assert "/tmp/atlas-run-root/run-atlas-job-hramatka-dry" in out
+    assert "atlas-runner" in out
+    assert "/tmp/atlas-run-root/run-atlas-job-dry-run-job" in out
 
 
 def test_submit_forwards_required_run_root_env(
@@ -176,7 +177,7 @@ def test_submit_forwards_required_run_root_env(
         return 0
 
     monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
-    plan = _plan(id="hramatka-run-root", host="hramatka")
+    plan = _plan(id="run-root-job")
     rc = atlas_job.submit(plan, dry_run=False, host_adapter=_isolate_host)
     assert rc == 0
     assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
@@ -407,15 +408,23 @@ def test_status_reconciles_inactive_unit_to_needs_finalize(
     assert row["state"] == "needs_finalize"
 
 
-def test_status_accepts_hramatka(
+def test_status_accepts_explicit_host(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
 ) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    rc = atlas_job.status(host="hramatka", host_adapter=_isolate_host)
+    rc = atlas_job.status(host="atlas-runner", host_adapter=_isolate_host)
     assert rc == 0
 
 
-def test_pull_accepts_hramatka(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_status_fails_closed_without_runner_host(
+    monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
+    rc = atlas_job.status(host_adapter=_isolate_host)
+    assert rc == 2
+
+
+def test_pull_accepts_explicit_host(monkeypatch: pytest.MonkeyPatch) -> None:
     launched: list[list[str]] = []
 
     def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
@@ -423,9 +432,14 @@ def test_pull_accepts_hramatka(monkeypatch: pytest.MonkeyPatch) -> None:
         return 0
 
     monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
-    rc = atlas_job.pull(host="hramatka")
+    rc = atlas_job.pull(host="test-runner-host")
     assert rc == 0
     assert launched
+
+
+def test_pull_fails_closed_without_runner_host(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
+    assert atlas_job.pull() == 2
 
 
 def test_pull_forwards_required_run_root_env(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -438,7 +452,7 @@ def test_pull_forwards_required_run_root_env(monkeypatch: pytest.MonkeyPatch) ->
         return 0
 
     monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
-    rc = atlas_job.pull(host="hramatka")
+    rc = atlas_job.pull(host="test-runner-host")
     assert rc == 0
     assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
 
@@ -585,11 +599,8 @@ def test_work_dir_for_requires_run_root_and_ignores_host(
     assert atlas_job.work_dir_for("ar-job", _plan(id="ar-job")) == (
         "/tmp/atlas-run-root/run-atlas-job-ar-job"
     )
-    assert atlas_job.work_dir_for(
-        "hramatka-job", _plan(id="hramatka-job", host="hramatka")
-    ) == "/tmp/atlas-run-root/run-atlas-job-hramatka-job"
-    assert atlas_job.work_dir_for("vps-job", _plan(id="vps-job", host="vps")) == (
-        "/tmp/atlas-run-root/run-atlas-job-vps-job"
+    assert atlas_job.work_dir_for("alt-job", _plan(id="alt-job", host="atlas-runner")) == (
+        "/tmp/atlas-run-root/run-atlas-job-alt-job"
     )
     monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
     with pytest.raises(ValueError, match="ATLAS_RUN_ROOT is required"):
@@ -913,8 +924,8 @@ def test_ssh_host_load_uses_ssh_when_not_self(monkeypatch: pytest.MonkeyPatch) -
     assert "job-box" in seen[0]
 
 
-def test_is_self_host_uses_canonical_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "vps")
-    assert atlas_job.is_self_host("hramatka") is True
-    assert atlas_job.is_self_host("vps") is True
-    assert atlas_job.is_self_host("job-box") is False
+def test_is_self_host_matches_env_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "job-box,runner-a")
+    assert atlas_job.is_self_host("job-box") is True
+    assert atlas_job.is_self_host("runner-a") is True
+    assert atlas_job.is_self_host("other-box") is False

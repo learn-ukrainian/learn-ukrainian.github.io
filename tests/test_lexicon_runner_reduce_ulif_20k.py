@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -140,7 +141,7 @@ def test_help_exits_zero_without_side_effects(tmp_path: Path) -> None:
 
     work = tmp_path / "work"
     proc = subprocess.run(
-        [str(ROOT / ".venv" / "bin" / "python"), str(ROOT / "scripts" / "lexicon" / "runner" / "reduce_ulif_20k.py"), "--help"],
+        [sys.executable, str(ROOT / "scripts" / "lexicon" / "runner" / "reduce_ulif_20k.py"), "--help"],
         cwd=ROOT,
         capture_output=True,
         text=True,

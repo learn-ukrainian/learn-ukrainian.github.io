@@ -73,17 +73,17 @@ def test_rb6_references_estate_registry_entries() -> None:
     repos = {Path(r["local_path"]).name for r in surfaces["repositories"]}
     sites = {s["url"] for s in surfaces["public_sites"]}
 
-    assert "vps" in vps_aliases
-    assert "hramatka-api" in services
-    assert "learn-ukrainian-infra-private" in repos
+    assert "estate-probe-ssh" in vps_aliases
+    assert "estate-probe-unit" in services
+    assert "estate-probe-private" in repos
     # Exact-set equality (not substring membership): stricter, and it avoids the
     # URL-substring pattern CodeQL flags (py/incomplete-url-substring-sanitization).
     assert sites == {"https://learn-ukrainian.github.io/"}
 
     # Refused surfaces check
-    assert "pilot-vps" in refused
-    assert "hramatka-api" in refused
-    assert "learn-ukrainian-infra-private" in refused
+    assert "estate-probe-vps" in refused
+    assert "estate-probe-service" in refused
+    assert "estate-probe-private-repo" in refused
     assert "public-site" in refused
 
     # Consistency pin: the registry values must appear in the probe COMMANDS
@@ -313,8 +313,8 @@ def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
 
     estate_data = _load_yaml(ESTATE_PATH)
     assert validate_estate_registry_data(estate_data)["ok"] is True
-    estate_data["refused_mutation_surfaces"].remove("pilot-vps")
-    with pytest.raises(TrailSpecValidationError, match="pilot-vps"):
+    estate_data["refused_mutation_surfaces"].remove("estate-probe-vps")
+    with pytest.raises(TrailSpecValidationError, match="estate-probe-vps"):
         validate_estate_registry_data(estate_data)
 
 

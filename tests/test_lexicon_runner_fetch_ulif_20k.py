@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = str(ROOT / ".venv" / "bin" / "python")
+PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "fetch_ulif_20k.py"
 
 
