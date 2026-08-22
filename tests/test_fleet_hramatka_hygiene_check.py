@@ -83,12 +83,28 @@ def hermetic_repo(tmp_path):
     return repo_root, tasks_dir
 
 
+def _no_open_prs(_repo_root: Path, _branch: str | None) -> bool:
+    """Default hermetic PR probe: nothing has an open PR."""
+    return False
+
+
+def _open_pr_for(*branches: str):
+    """PR probe that reports an OPEN PR for exactly ``branches``."""
+    wanted = set(branches)
+
+    def _probe(_repo_root: Path, branch: str | None) -> bool:
+        return branch in wanted
+
+    return _probe
+
+
 def _base_kwargs(repo_root: Path, tasks_dir: Path, **overrides: Any) -> dict[str, Any]:
     kwargs = {
         "repo_root": repo_root,
         "dispatch_worktrees_root": repo_root / ".worktrees" / "dispatch",
         "tasks_dir": tasks_dir,
         "disk_path": repo_root,
+        "open_pr_probe": _no_open_prs,
     }
     kwargs.update(overrides)
     return kwargs
@@ -104,7 +120,9 @@ def test_policy_version_is_a_stable_string() -> None:
 
 def test_receipt_has_every_documented_key(hermetic_repo) -> None:
     repo_root, tasks_dir = hermetic_repo
-    reader = _reader({(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}})
+    reader = _reader(
+        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
+    )
 
     receipt = hygiene.hygiene_check(reader=reader, **_base_kwargs(repo_root, tasks_dir))
 
@@ -117,7 +135,9 @@ def test_receipt_has_every_documented_key(hermetic_repo) -> None:
 
 def test_verified_when_epic_clean_pointer_present_no_zombies(hermetic_repo) -> None:
     repo_root, tasks_dir = hermetic_repo
-    reader = _reader({(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}})
+    reader = _reader(
+        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
+    )
 
     receipt = hygiene.hygiene_check(reader=reader, **_base_kwargs(repo_root, tasks_dir))
 
@@ -130,7 +150,9 @@ def test_verified_when_epic_clean_pointer_present_no_zombies(hermetic_repo) -> N
 
 def test_cli_exit_zero_on_verified(hermetic_repo, capsys) -> None:
     repo_root, tasks_dir = hermetic_repo
-    reader = _reader({(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}})
+    reader = _reader(
+        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
+    )
 
     exit_code = hygiene.main(
         [
@@ -247,7 +269,9 @@ def test_cli_exit_two_on_unknown(hermetic_repo, capsys) -> None:
 
 
 def _reader_clean() -> hygiene.IssueReader:
-    return _reader({(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}})
+    return _reader(
+        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
+    )
 
 
 def test_stale_when_terminal_task_worktree_still_registered(hermetic_repo) -> None:
@@ -272,6 +296,88 @@ def test_not_zombie_when_task_still_running(hermetic_repo) -> None:
 
     assert receipt["status"] == "verified"
     assert receipt["zombie_worktrees"] == []
+
+
+def test_terminal_worktree_with_open_pr_is_not_a_zombie(hermetic_repo) -> None:
+    """post_task_reap deliberately RETAINS a terminal-task worktree whose
+    branch still has an open PR ("open PR present for bound worktree branch").
+    Counting it here would demand a state the sanctioned reaper refuses to
+    produce, holding the gate at `stale` for as long as any lane has a PR in
+    flight."""
+    repo_root, tasks_dir = hermetic_repo
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "pr-open-task")
+    _write_task_state(tasks_dir, "pr-open-task", "done", worktree)
+
+    receipt = hygiene.hygiene_check(
+        reader=_reader_clean(),
+        **_base_kwargs(repo_root, tasks_dir, open_pr_probe=_open_pr_for("kimi/pr-open-task")),
+    )
+
+    assert receipt["status"] == "verified"
+    assert receipt["zombie_worktrees"] == []
+
+
+def test_open_pr_exemption_is_per_branch_not_blanket(hermetic_repo) -> None:
+    """Only the branch with the open PR is exempt; a sibling terminal
+    worktree without one is still reported."""
+    repo_root, tasks_dir = hermetic_repo
+    kept = _add_dispatch_worktree(repo_root, "kimi", "pr-open-task")
+    _write_task_state(tasks_dir, "pr-open-task", "done", kept)
+    orphan = _add_dispatch_worktree(repo_root, "agy", "no-pr-task")
+    _write_task_state(tasks_dir, "no-pr-task", "failed", orphan)
+
+    receipt = hygiene.hygiene_check(
+        reader=_reader_clean(),
+        **_base_kwargs(repo_root, tasks_dir, open_pr_probe=_open_pr_for("kimi/pr-open-task")),
+    )
+
+    assert receipt["status"] == "stale"
+    assert [z["task_id"] for z in receipt["zombie_worktrees"]] == ["no-pr-task"]
+
+
+def test_unknown_pr_state_still_counts_the_worktree(hermetic_repo) -> None:
+    """The exemption needs a PROVABLE open PR. An unreachable/failing probe
+    must not excuse a worktree — this gate never passes on a guess."""
+    repo_root, tasks_dir = hermetic_repo
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "unknown-pr-task")
+    _write_task_state(tasks_dir, "unknown-pr-task", "done", worktree)
+
+    def _probe_blows_up(_repo_root: Path, _branch: str | None) -> bool:
+        return False  # what _branch_has_open_pr returns on any failure
+
+    receipt = hygiene.hygiene_check(
+        reader=_reader_clean(),
+        **_base_kwargs(repo_root, tasks_dir, open_pr_probe=_probe_blows_up),
+    )
+
+    assert receipt["status"] == "stale"
+    assert [z["task_id"] for z in receipt["zombie_worktrees"]] == ["unknown-pr-task"]
+
+
+def test_branch_probe_fails_closed_on_subprocess_error(monkeypatch, tmp_path) -> None:
+    """_branch_has_open_pr itself: every failure mode returns False."""
+
+    def _raise(*_args: Any, **_kwargs: Any):
+        raise OSError("gh missing")
+
+    monkeypatch.setattr(hygiene.subprocess, "run", _raise)
+    assert hygiene._branch_has_open_pr(tmp_path, "some/branch") is False
+
+
+def test_branch_probe_returns_false_for_detached_worktree(tmp_path) -> None:
+    """A detached worktree has no branch identity to probe."""
+    assert hygiene._branch_has_open_pr(tmp_path, None) is False
+
+
+def test_registered_worktree_entries_reports_branches(hermetic_repo) -> None:
+    repo_root, _tasks_dir = hermetic_repo
+    _add_dispatch_worktree(repo_root, "kimi", "branch-task")
+
+    entries = hygiene._registered_worktree_entries(repo_root)
+
+    assert entries is not None
+    by_name = {path.name: branch for path, branch in entries}
+    assert by_name["branch-task"] == "kimi/branch-task"
 
 
 def test_unbound_worktree_is_not_flagged_zombie(hermetic_repo) -> None:

@@ -74,6 +74,11 @@ handoff:
   dispatch worktree is bound to an already-terminal task
   (`.worktrees/dispatch/` vs. `batch_state/tasks/`), or local disk use is at
   or above the configured high-water mark (default 95%, `--high-water-percent`).
+  A terminal-task worktree whose branch still has an **open PR** is not
+  counted: `post_task_reap` deliberately retains that worktree, so counting it
+  would hold the gate at `stale` for as long as any lane has a PR in flight.
+  The exemption requires a *provable* open PR — an unreachable `gh` leaves the
+  worktree counted, because this gate never passes on an unknown.
 - **unknown** (exit 2) — GitHub was unreachable for the public epic or the
   private board. This is never a pass.
 

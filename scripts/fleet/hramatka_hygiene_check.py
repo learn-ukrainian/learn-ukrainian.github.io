@@ -95,6 +95,8 @@ class GhUnavailable(RuntimeError):
 
 
 IssueReader = Callable[[str, int], dict[str, Any]]
+# (repo_root, branch) -> True only when that branch provably has an OPEN PR.
+OpenPrProbe = Callable[[Path, "str | None"], bool]
 
 
 def _gh_issue(
@@ -158,6 +160,20 @@ def _count_task_list_items(body: str) -> tuple[int, int]:
 
 def _registered_worktrees(repo_root: Path) -> list[Path] | None:
     """Return every registered git worktree path, or None if not detectable."""
+    entries = _registered_worktree_entries(repo_root)
+    if entries is None:
+        return None
+    return [path for path, _branch in entries]
+
+
+def _registered_worktree_entries(
+    repo_root: Path,
+) -> list[tuple[Path, str | None]] | None:
+    """Return (path, branch) for every registered worktree, or None.
+
+    ``branch`` is the short name (``refs/heads/`` stripped), or None for a
+    detached worktree, which has no branch identity to probe for an open PR.
+    """
     try:
         proc = subprocess.run(
             ["git", "worktree", "list", "--porcelain"],
@@ -171,11 +187,60 @@ def _registered_worktrees(repo_root: Path) -> list[Path] | None:
         return None
     if proc.returncode != 0:
         return None
-    paths: list[Path] = []
+    entries: list[tuple[Path, str | None]] = []
+    path: Path | None = None
+    branch: str | None = None
     for line in (proc.stdout or "").splitlines():
         if line.startswith("worktree "):
-            paths.append(Path(line[len("worktree ") :].strip()).resolve())
-    return paths
+            if path is not None:
+                entries.append((path, branch))
+            path = Path(line[len("worktree ") :].strip()).resolve()
+            branch = None
+        elif line.startswith("branch ") and path is not None:
+            ref = line[len("branch ") :].strip()
+            branch = ref[len("refs/heads/") :] if ref.startswith("refs/heads/") else ref
+    if path is not None:
+        entries.append((path, branch))
+    return entries
+
+
+def _branch_has_open_pr(
+    repo_root: Path,
+    branch: str | None,
+    *,
+    timeout: float = GH_TIMEOUT_SECONDS,
+) -> bool:
+    """Return True only when ``branch`` provably has an OPEN PR.
+
+    Mirrors the PR-3 reaper's retention rule (``post_task_reap`` retains a
+    bound worktree whose branch still has an open PR) without importing it,
+    per this module's deliberate no-hard-dependency design.
+
+    Fail-closed for this gate, which is the opposite direction from the
+    reaper: an unknown PR state returns False, so the worktree stays counted
+    as an orphan.  The gate must never hand out a verified-clean handoff on a
+    guess -- an unreachable ``gh`` cannot excuse a worktree.
+    """
+    if not branch:
+        return False
+    try:
+        proc = subprocess.run(
+            ["gh", "pr", "list", "--head", branch, "--state", "open", "--json", "number"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if proc.returncode != 0:
+        return False
+    try:
+        rows = json.loads(proc.stdout or "[]")
+    except json.JSONDecodeError:
+        return False
+    return isinstance(rows, list) and len(rows) > 0
 
 
 def _is_under_dispatch_worktrees(path: Path, dispatch_root: Path) -> bool:
@@ -220,6 +285,7 @@ def _detect_zombie_worktrees(
     repo_root: Path,
     dispatch_root: Path,
     tasks_dir: Path,
+    open_pr_probe: OpenPrProbe = _branch_has_open_pr,
 ) -> tuple[list[dict[str, Any]], bool]:
     """Return (zombies, detectable). Read-only: never removes anything.
 
@@ -227,14 +293,24 @@ def _detect_zombie_worktrees(
     whose bound task state is found and terminal — an unbound path is not
     evidence either way and is left out, matching the "if detectable"
     qualifier in the hygiene contract.
+
+    A terminal-task worktree whose branch still has an OPEN PR is NOT an
+    orphan.  The PR-3 reaper deliberately retains exactly that worktree
+    ("open PR present for bound worktree branch"), so flagging it would
+    demand a state the sanctioned tooling refuses to produce: every lane
+    with a merged-pending PR would hold this gate at ``stale`` forever, and
+    a closeout predicate that cannot pass during ordinary fleet operation
+    stops being load-bearing.  The exemption is deliberately narrow — it
+    covers only a provable OPEN PR, and ``_branch_has_open_pr`` fails closed
+    on any unknown state.
     """
-    worktrees = _registered_worktrees(repo_root)
-    if worktrees is None:
+    entries = _registered_worktree_entries(repo_root)
+    if entries is None:
         return [], False
 
     index = _task_state_index(tasks_dir)
     zombies: list[dict[str, Any]] = []
-    for worktree in worktrees:
+    for worktree, branch in entries:
         if not _is_under_dispatch_worktrees(worktree, dispatch_root):
             continue
         state = index.get(worktree)
@@ -242,14 +318,17 @@ def _detect_zombie_worktrees(
             continue
         status = state.get("status")
         status_str = str(status) if status is not None else None
-        if status_str in _TERMINAL_STATUSES:
-            zombies.append(
-                {
-                    "path": str(worktree),
-                    "task_id": state.get("task_id") or worktree.name,
-                    "status": status_str,
-                }
-            )
+        if status_str not in _TERMINAL_STATUSES:
+            continue
+        if open_pr_probe(repo_root, branch):
+            continue
+        zombies.append(
+            {
+                "path": str(worktree),
+                "task_id": state.get("task_id") or worktree.name,
+                "status": status_str,
+            }
+        )
     return zombies, True
 
 
@@ -312,6 +391,7 @@ def hygiene_check(
     dispatch_worktrees_root: Path = _DISPATCH_WORKTREES_ROOT,
     tasks_dir: Path = _TASKS_DIR,
     reader: IssueReader = _gh_issue,
+    open_pr_probe: OpenPrProbe = _branch_has_open_pr,
 ) -> dict[str, Any]:
     """Run every hygiene check and return the JSON receipt (never raises)."""
     reasons: list[str] = []
@@ -358,6 +438,7 @@ def hygiene_check(
         repo_root=repo_root,
         dispatch_root=dispatch_worktrees_root,
         tasks_dir=tasks_dir,
+        open_pr_probe=open_pr_probe,
     )
     if zombies:
         reasons.append(f"{len(zombies)} orphan dispatch worktree(s) bound to finished tasks")
