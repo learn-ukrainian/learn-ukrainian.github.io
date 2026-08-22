@@ -27,6 +27,7 @@ IMPORT_DISTRIBUTIONS = {
     "httpx": "httpx",
     "huggingface_hub": "huggingface_hub",
     "jsonschema": "jsonschema",
+    "referencing": "referencing",
     "lxml": "lxml",
     "numpy": "numpy",
     "PIL": "pillow",
