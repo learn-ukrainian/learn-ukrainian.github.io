@@ -15,10 +15,11 @@ body { min-height: 100vh; }
 .btn:hover { border-color:var(--accent); color:var(--accent); }
 .btn:disabled { opacity:.55; cursor:default; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 72px; width:100%; overflow-x:hidden; }
-.hero { border-bottom: 1.5px solid var(--text); padding-bottom: 18px; margin-bottom: 22px; display:grid; grid-template-columns: 1fr auto; gap:24px; align-items:end; }
+.hero { border-bottom: 1.5px solid var(--text); padding-bottom: 18px; margin-bottom: 22px; display:grid; grid-template-columns: minmax(0, 1fr) auto; gap:24px; align-items:end; }
+.hero > div { min-width: 0; }
 .hero h2 { font-family: Charter, Georgia, serif; font-size: 30px; line-height: 1.15; margin:0 0 8px; }
 .hero p { color: var(--text2); margin:0; max-width: 680px; }
-.hero-count { background: var(--bg2); border:1px solid var(--border); border-radius:4px; padding:14px 18px; min-width:160px; text-align:right; }
+.hero-count { background: var(--bg2); border:1px solid var(--border); border-radius:4px; padding:14px 18px; min-width:160px; max-width:100%; box-sizing:border-box; text-align:right; }
 .hero-count .value { font-family: Charter, Georgia, serif; font-size:34px; font-weight:700; }
 .hero-count .label { color: var(--text3); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
 .hero-count .sub { color: var(--text3); font-size:11px; margin-top:4px; }
@@ -154,7 +155,13 @@ body { min-height: 100vh; }
   <section class="filters" aria-label="Artifact filters">
     <input id="search" placeholder="Search titles, paths, KPI summaries" autocomplete="off">
     <select id="class-filter"><option value="">All classes</option></select>
-    <select id="status-filter"><option value="">All statuses</option></select>
+    <select id="status-filter">
+      <option value="">All statuses</option>
+      <option value="ok">ok</option>
+      <option value="warn">warn</option>
+      <option value="fail">fail</option>
+      <option value="unknown">unknown</option>
+    </select>
     <select id="author-filter"><option value="">All authors</option></select>
     <select id="type-filter"><option value="">All types</option><option value="html">HTML</option><option value="md">MD</option></select>
     <input id="date-filter" type="date" aria-label="Date from">
@@ -199,8 +206,9 @@ function artifactType(item) {
 }
 
 function formatStatus(status) {
-  if (!status || status === 'unknown') return 'unknown';
-  return status;
+  // Artifact statuses are free text in source metadata; the pill shows the
+  // same closed bucket (ok/warn/fail/unknown) that the status filter uses.
+  return statusClass(status);
 }
 
 function formatAuthor(author) {
@@ -220,18 +228,14 @@ function filtersActive() {
 
 function initFilters() {
   const classes = [...new Set(state.artifacts.map(item => item.class).filter(Boolean))].sort();
-  const statuses = [...new Set(state.artifacts.map(item => item.status).filter(Boolean))].sort();
   const authors = [...new Set(state.artifacts.map(item => item.author).filter(Boolean))].sort();
   const keep = {
     class: els.classFilter.value,
-    status: els.statusFilter.value,
     author: els.authorFilter.value,
   };
   els.classFilter.innerHTML = '<option value="">All classes</option>' + optionList(classes);
-  els.statusFilter.innerHTML = '<option value="">All statuses</option>' + optionList(statuses);
   els.authorFilter.innerHTML = '<option value="">All authors</option>' + optionList(authors);
   els.classFilter.value = classes.includes(keep.class) ? keep.class : '';
-  els.statusFilter.value = statuses.includes(keep.status) ? keep.status : '';
   els.authorFilter.value = authors.includes(keep.author) ? keep.author : '';
 }
 
@@ -240,7 +244,7 @@ function artifactMatches(item) {
   const haystack = [item.title, item.path, item.kpi_summary, item.author, item.class].join(' ').toLowerCase();
   if (q && !haystack.includes(q)) return false;
   if (els.classFilter.value && item.class !== els.classFilter.value) return false;
-  if (els.statusFilter.value && item.status !== els.statusFilter.value) return false;
+  if (els.statusFilter.value && statusClass(item.status) !== els.statusFilter.value) return false;
   if (els.authorFilter.value && item.author !== els.authorFilter.value) return false;
   if (els.typeFilter.value && artifactType(item) !== els.typeFilter.value) return false;
   if (els.dateFilter.value && item.date < els.dateFilter.value) return false;
