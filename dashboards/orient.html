@@ -297,12 +297,30 @@ function renderRuntime(runtime) {
   }</div>`;
 }
 
-function renderDelegate(delegate) {
-  const recent = Array.isArray(delegate && delegate.recent) ? delegate.recent : [];
-  document.getElementById('delegate-muted').textContent = `${delegate && delegate.active_count ? delegate.active_count : 0} active`;
+async function renderDelegate(delegate) {
+  let recent = Array.isArray(delegate && delegate.recent) ? delegate.recent : [];
+  let activeCount = delegate && delegate.active_count ? delegate.active_count : 0;
+  let liveChecked = false;
+  if (!recent.length) {
+    // The /api/orient snapshot can lag or truncate; cross-check the live
+    // delegate list before claiming there is nothing recent (#7078).
+    try {
+      const live = await fetchJson('/api/delegate/tasks?limit=5');
+      const liveTasks = Array.isArray(live.tasks) ? live.tasks : [];
+      liveChecked = true;
+      if (liveTasks.length) {
+        recent = liveTasks;
+        activeCount = liveTasks.filter(task => ['running', 'spawning', 'zombie'].includes(task.status)).length;
+      }
+    } catch { /* live list unavailable — keep snapshot-honest copy below */ }
+  }
+  const emptyCopy = liveChecked
+    ? 'No recent delegate tasks'
+    : 'Snapshot shows no recent tasks and the live delegate list is unavailable — open <a href="/delegate.html">Delegate</a>.';
+  document.getElementById('delegate-muted').textContent = `${activeCount} active`;
   document.getElementById('delegate-content').innerHTML = `
     <div class="kv-grid">
-      <div class="kv"><div class="label">Active Tasks</div><div class="value">${delegate && delegate.active_count ? delegate.active_count : 0}</div></div>
+      <div class="kv"><div class="label">Active Tasks</div><div class="value">${activeCount}</div></div>
     </div>
     ${recent.length ? `<table><thead><tr><th>Task</th><th>Agent</th><th>Status</th><th>Started</th></tr></thead><tbody>${
       recent.map(task => `<tr>
@@ -311,7 +329,7 @@ function renderDelegate(delegate) {
         <td><span class="pill ${task.status === 'done' ? 'ok' : task.status === 'failed' || task.status === 'zombie' ? 'err' : 'warn'}">${escapeHtml(task.status || 'unknown')}</span></td>
         <td>${formatTimestamp(task.started_at)}</td>
       </tr>`).join('')
-    }</tbody></table>` : '<div class="empty">No recent tasks</div>'}
+    }</tbody></table>` : `<div class="empty">${emptyCopy}</div>`}
   `;
 }
 
@@ -442,7 +460,7 @@ async function loadOrient() {
     renderIssues(Array.isArray(data.issues) ? data.issues : []);
     renderPipeline(data.pipeline || {});
     renderRuntime(data.runtime || {});
-    renderDelegate(data.delegate || {});
+    await renderDelegate(data.delegate || {});
     renderBridgePending(data.bridge_pending || {});
     renderDiscussions(discussions || {});
     if (discussions && discussions.error) {

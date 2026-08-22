@@ -39,6 +39,10 @@ button, input, select { font: inherit; }
 .panel-head h3 { font-family: Charter, Georgia, serif; font-size: 18px; margin: 0; }
 .panel-head p { color: var(--text3); font-size: 11px; margin: 0; text-align: right; }
 .list { max-height: min(70vh, 760px); overflow: auto; }
+.skeleton-row { border-bottom: 1px solid rgba(212, 205, 184, .68); display: grid; gap: 6px; padding: 12px; }
+.skeleton-bar { animation: skeleton-pulse 1.4s ease-in-out infinite; background: var(--bg2); border-radius: 3px; height: 12px; }
+.skeleton-bar.short { width: 42%; }
+@keyframes skeleton-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 .work-row {
   align-items: stretch; border-bottom: 1px solid rgba(212, 205, 184, .68); cursor: pointer;
   display: grid; gap: 10px; grid-template-columns: 18px minmax(0, 1fr) auto; padding: 10px 12px;
@@ -214,7 +218,12 @@ button, input, select { font: inherit; }
         <h3 id="attention-heading">Attention</h3>
         <p id="attention-meta">Deterministic rank · keyboard j/k · Enter peek</p>
       </div>
-      <div id="attention-list" class="list" role="listbox" aria-label="Attention list" tabindex="0"></div>
+      <div id="attention-list" class="list" role="listbox" aria-label="Attention list" tabindex="0" aria-busy="true">
+        <div class="skeleton-row" aria-hidden="true"><div class="skeleton-bar"></div><div class="skeleton-bar short"></div></div>
+        <div class="skeleton-row" aria-hidden="true"><div class="skeleton-bar"></div><div class="skeleton-bar short"></div></div>
+        <div class="skeleton-row" aria-hidden="true"><div class="skeleton-bar"></div><div class="skeleton-bar short"></div></div>
+        <div class="empty">Loading work projection…</div>
+      </div>
     </article>
     <article class="panel" aria-labelledby="detail-heading">
       <div class="panel-head">
@@ -756,6 +765,7 @@ button, input, select { font: inherit; }
   }
 
   function renderList() {
+    els.list.removeAttribute('aria-busy');
     const attention = state.attention;
     if (!attention.length) {
       if (!state.merged) {
@@ -1141,6 +1151,7 @@ button, input, select { font: inherit; }
     els.publicMeta.textContent = 'status=' + (pubCode === 'schema_mismatch' ? 'schema_mismatch' : 'unavailable');
     els.privateMeta.textContent = state.privateStatusText;
     els.list.innerHTML = '<div class="empty">No source projection is available. Retry refresh.</div>';
+    els.list.removeAttribute('aria-busy');
     renderDetail(null);
   }
 
