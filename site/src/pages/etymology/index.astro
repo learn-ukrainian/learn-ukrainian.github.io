@@ -1,244 +1,99 @@
 ---
 /**
- * Etymology landing page at /etymology/.
+ * Etymology redirect / moved page at /etymology/.
  *
- * Single Astro page using the custom course shell. Reads stats from the build manifest; links to a handful of
- * featured high-frequency lemmas as try-it-now entry points.
- *
- * Phase 2 will add client-side search/typeahead + alphabetical browse here.
+ * Etymology entries are integrated directly into Word Atlas (/lexicon/<lemma>/#etymology).
+ * This page cleanly redirects learners to Word Atlas and provides a direct navigation link.
  */
 import CourseLayout from '../../layouts/CourseLayout.astro';
-import manifest from '../../data/etymology-manifest.json';
 
-const data = manifest as {
-  version: string;
-  generated_at: string;
-  stats: {
-    total_entries: number;
-    unique_slugs: number;
-    polysemy_slugs: number;
-    entries_with_cognate_forms: number;
-    entries_with_cognate_forms_recovered?: number;
-  };
+const frontmatter = {
+  title: 'Етимологія · Атлас слів',
+  description: 'Етимологічні довідки перенесено до Атласу слів (/lexicon/).',
 };
-
-// Featured lemmas — each slug VERIFIED present in the manifest before commit.
-// Verification: scripts/etymology/transliterate.py emits the slug; we check
-// it's in manifest.slug_groups. (Failed once with 'хата' — hand-picked, not
-// an ESUM headword; closest real entries are 'хати' / 'хатьма'. Replaced
-// with 'хліб'.) On 2026-05-21 the manifest was regenerated from new
-// ABBYY+text.pdf parsers (PRs #2180/#2181, commit 7d3ab9d898). The new
-// ingest dropped headwords 'серце' / 'мати'; their featured cards
-// (slugs 'sertse' / 'maty') started 404-ing in dev and the
-// `tests/unit/etymology-featured-slugs.test.ts` quality gate started
-// failing on every CI run from that point. Removed both until the
-// etymology team re-includes those lemmas in a future ingest.
-const featured: Array<{ slug: string; lemma: string; gloss: string }> = [
-  { slug: 'dim', lemma: 'дім', gloss: 'Том 2, с. 90 — псл. *domъ, споріднене з лат. domus' },
-  { slug: 'zhinka', lemma: 'жінка', gloss: 'Том 2, с. 200 — псл. *žena, споріднене з гр. γυνή' },
-  { slug: 'khlib', lemma: 'хліб', gloss: 'Том 6, с. 180 — давнє запозичення з широким розгалуженням' },
-  { slug: 'voda', lemma: 'вода', gloss: 'Том 1, с. 413 — псл. *voda, ие-корінь *wed-' },
-];
-
-const fmtCount = (n: number) => n.toLocaleString('uk-UA');
 ---
 
 <CourseLayout
-  title="Етимологія"
-  description={`Етимологічний словник української мови — ${data.stats.total_entries.toLocaleString('uk-UA')} статей з ЕСУМ, томи 1–6`}
-  eyebrow="Reference"
-  subtitle="ЕСУМ entries rendered as a static reference surface."
+  title={frontmatter.title}
+  description={frontmatter.description}
+  eyebrow="Word Atlas"
+  subtitle="Етимологічні довідки доступні у статтях Атласу слів."
   currentPath="/etymology/"
   heroVariant="lexicon"
 >
-  <p class="lead">
-    {fmtCount(data.stats.total_entries)} статей з <strong>Етимологічного словника української мови</strong>
-    (ЕСУМ, томи 1–6) — походження слів, праслов'янські корені, когнати в інших слов'янських мовах.
-    Дані індексовано локально; жодних зовнішніх запитів під час перегляду.
-  </p>
-
-  <h2>Спробувати</h2>
-
-  <form class="esum-filter" role="search" data-esum-filter>
-    <label for="esum-search">Фільтр демонстраційних статей</label>
-    <div>
-      <input id="esum-search" name="q" type="search" placeholder="дім, вода, хліб..." autocomplete="off" data-esum-search />
-      <button type="submit">Filter</button>
-    </div>
-  </form>
-
-  <div class="esum-empty-state" data-esum-empty hidden>
-    <span class="state-code">Empty Reference</span>
-    <h2>Немає демонстраційної статті для цього запиту.</h2>
-    <p>
-      Повний ЕСУМ має десятки тисяч статей; ця foundation-сторінка показує
-      пошуковий стан на обмеженому наборі прикладів.
-    </p>
-    <a href="/empty-reference/">Open empty-reference template</a>
-  </div>
-
-  <div class="lu-reference-card-grid" data-esum-results>
-    {featured.map((f) => (
-      <a class="lu-reference-card" href={`/etymology/${f.slug}/`} data-esum-entry data-search={`${f.lemma} ${f.gloss}`}>
-        <strong>{f.lemma}</strong>
-        <span>{f.gloss}</span>
-      </a>
-    ))}
-  </div>
-
-  <h2>Як шукати</h2>
-
-  <p>
-    Поки що — за URL: <code>/etymology/&lt;слово-латиницею&gt;/</code>. Транслітерація проста
-    (BGN/PCGN спрощена): <code>серце → sertse</code>, <code>жінка → zhinka</code>,
-    <code>хата → khata</code>. Слова з омонімією (наприклад, <code>мати</code>) ведуть на сторінку
-    розгалуження, де перелічено всі статті з посиланнями на конкретні томи/сторінки.
-  </p>
-
-  <p>Інтерактивний пошук, абетковий перелік та дослідник дерев когнатів — у наступних фазах.</p>
-
-  <h2>Покриття</h2>
-
-  <table class="esum-stats">
-    <tbody>
-      <tr><th>Унікальних статей</th><td>{fmtCount(data.stats.total_entries)}</td></tr>
-      <tr><th>Унікальних лем (після транслітерації)</th><td>{fmtCount(data.stats.unique_slugs)}</td></tr>
-      <tr><th>Сторінок розгалуження (омонімія)</th><td>{fmtCount(data.stats.polysemy_slugs)}</td></tr>
-      <tr><th>Статей із витягнутими формами когнатів</th><td>{fmtCount(data.stats.entries_with_cognate_forms)}</td></tr>
-      {(data.stats.entries_with_cognate_forms_recovered ?? 0) > 0 && (
-        <tr>
-          <th>Статей із відновленими латинськими формами</th>
-          <td>{fmtCount(data.stats.entries_with_cognate_forms_recovered ?? 0)}</td>
-        </tr>
-      )}
-    </tbody>
-  </table>
-
-  <h2>Джерело</h2>
-
-  <p>
-    <em>Етимологічний словник української мови</em>, томи 1–6 (видавництво «Наукова думка»,
-    Київ, 1982–2012). Текст оцифровано з архівних PDF; OCR-артефакти можуть зустрічатися
-    у щільніх блоках транскрипції та квадратних дужок.
-  </p>
-
-  <script is:inline>
-    const filter = document.querySelector('[data-esum-filter]');
-    const input = document.querySelector('[data-esum-search]');
-    const empty = document.querySelector('[data-esum-empty]');
-    const entries = Array.from(document.querySelectorAll('[data-esum-entry]'));
-    const normalize = (value) => String(value || '').toLocaleLowerCase('uk');
-    const applyFilter = (query) => {
-      const q = normalize(query).trim();
-      let visible = 0;
-      for (const entry of entries) {
-        const match = !q || normalize(entry.dataset.search).includes(q);
-        entry.hidden = !match;
-        if (match) visible += 1;
-      }
-      empty.hidden = visible !== 0 || !q;
-    };
-    const params = new URLSearchParams(window.location.search);
-    if (input) {
-      input.value = params.get('q') || '';
-      input.addEventListener('input', () => applyFilter(input.value));
+  <meta slot="head" http-equiv="refresh" content="0; url=/lexicon/" />
+  <script slot="head" is:inline>
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/etymology')) {
+      window.location.replace('/lexicon/');
     }
-    filter?.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const query = input?.value || '';
-      window.history.replaceState(null, '', query ? `/etymology/?q=${encodeURIComponent(query)}` : '/etymology/');
-      applyFilter(query);
-    });
-    applyFilter(input?.value || '');
   </script>
+
+  <div class="etymology-moved-card">
+    <span class="state-code">Moved to Word Atlas</span>
+    <h2>Етимологію перенесено до Атласу слів</h2>
+    <p class="lead">
+      Етимологічні довідки, праслов'янські корені та когнати тепер доступні безпосередньо
+      у статтях <strong>Атласу слів</strong>.
+    </p>
+    <div class="state-actions">
+      <a class="primary-btn" href="/lexicon/">Перейти до Атласу слів →</a>
+      <a class="secondary-btn" href="/search/">Пошук по курсу</a>
+    </div>
+  </div>
 </CourseLayout>
 
 <style>
-  .lead {
-    font-size: var(--sl-text-lg);
-    color: var(--sl-color-gray-2);
-  }
-  .esum-filter {
-    margin: 1rem 0;
-    padding: 1rem;
+  .etymology-moved-card {
+    margin: 2rem 0;
+    padding: 2rem;
     border: 1px solid var(--lu-border);
-    border-radius: 8px;
+    border-radius: 12px;
     background: var(--lu-surface-raised);
     box-shadow: var(--lu-shadow);
   }
-  .esum-filter label {
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--lu-text);
+  .state-code {
+    display: inline-block;
+    font-size: 0.8rem;
     font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--lu-primary);
+    margin-bottom: 0.5rem;
   }
-  .esum-filter div {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.6rem;
-  }
-  .esum-filter input {
-    min-height: 42px;
-    padding: 0 0.75rem;
-    border: 2px solid var(--lu-border);
-    border-radius: 8px;
-    background: var(--lu-surface);
+  .etymology-moved-card h2 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
     color: var(--lu-text);
-    font: inherit;
   }
-  .esum-filter button,
-  .esum-empty-state a {
-    min-height: 42px;
+  .lead {
+    font-size: var(--sl-text-lg);
+    color: var(--sl-color-gray-2);
+    margin-bottom: 1.5rem;
+  }
+  .state-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .primary-btn,
+  .secondary-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0 1rem;
-    border: 0;
+    min-height: 44px;
+    padding: 0 1.25rem;
     border-radius: 8px;
-    background: var(--lu-yellow);
-    color: var(--lu-gray-900);
-    font: inherit;
-    font-weight: 900;
+    font-weight: 700;
     text-decoration: none;
   }
-  .esum-empty-state {
-    margin: 1rem 0;
-    padding: 1.2rem;
+  .primary-btn {
+    background: var(--lu-yellow);
+    color: var(--lu-gray-900);
+    border: none;
+  }
+  .secondary-btn {
+    background: var(--lu-surface);
+    color: var(--lu-text);
     border: 1px solid var(--lu-border);
-    border-left: 4px solid var(--lu-orange);
-    border-radius: 8px;
-    background: var(--lu-surface-muted);
-  }
-  .esum-empty-state h2,
-  .esum-empty-state p {
-    margin: 0.25rem 0 0;
-  }
-  .esum-empty-state p {
-    color: var(--lu-text-muted);
-  }
-  .esum-stats {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-  }
-  .esum-stats th,
-  .esum-stats td {
-    padding: 0.5rem 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--sl-color-gray-5);
-  }
-  .esum-stats th {
-    color: var(--sl-color-gray-3);
-    font-weight: 500;
-    width: 60%;
-  }
-  .esum-stats td {
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-  @media (max-width: 520px) {
-    .esum-filter div {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

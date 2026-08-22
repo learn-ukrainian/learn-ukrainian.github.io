@@ -16,7 +16,7 @@
     "start": "npm run dev",
     "build": "npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build",
     "build:shell": "npm run verify:artifacts && astro build",
-    "build:full": "npm run hydrate && ATLAS_STATIC_ROUTES=1 BUILD_ETYMOLOGY_ROUTES=1 astro build",
+    "build:full": "npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "npm run test:unit && npm run test:built-output",

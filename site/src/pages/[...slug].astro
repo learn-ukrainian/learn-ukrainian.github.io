@@ -251,7 +251,7 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'planned',
     heroVariant: 'seminar',
-    primaryAction: { href: '/etymology/', label: 'Open Etymology' },
+    primaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
     points: [
       'OES is not a beginner lane; it needs a denser reference-first reading surface.',
       'The template reserves space for paleography, glossary, and evidence blocks.',
@@ -268,7 +268,7 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'planned',
     heroVariant: 'seminar',
-    primaryAction: { href: '/etymology/', label: 'Open Etymology' },
+    primaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
     points: [
       'RUTH will use the historical-language seminar surface, not the core lesson ladder.',
       'The planned template emphasizes context, terms, source notes, and careful quotation boundaries.',
@@ -360,13 +360,6 @@ const searchItems: SearchItem[] = [
     track: 'Reference',
     text: `${entry.data.title} ${entry.data.title_en ?? ''} ${entry.data.genre} ${entry.data.author ?? ''} ${entry.data.excerpt}`,
   })),
-  {
-    title: 'Етимологія',
-    href: '/etymology/',
-    type: 'Reference',
-    track: 'Reference',
-    text: 'ЕСУМ etymology reference entries cognates proto forms source dictionary',
-  },
 ];
 
 export async function getStaticPaths() {

@@ -42,22 +42,13 @@ for daily lesson writing.
 
 ## Build Split
 
-Normal author iteration should build the learner surface only:
+Normal author iteration builds the learner surface only:
 
 ```bash
-npm run build:starlight
+npm run build
 ```
 
-Full reference/deploy builds should opt into the ESUM route set:
-
-```bash
-npm run build:starlight:full
-```
-
-Implementation detail: `starlight/src/pages/etymology/[slug].astro` emits
-dynamic pages only when `BUILD_ETYMOLOGY_ROUTES=1` is set. The GitHub Pages
-deploy workflow uses the full build; local lesson builds and frontend CI use
-the fast default.
+Word Atlas routes are generated via `ATLAS_STATIC_ROUTES=1`. Standalone ESUM dynamic routes (`/etymology/[slug]`) have been retired (#7059) in favor of Word Atlas (`/lexicon/`), so `BUILD_ETYMOLOGY_ROUTES` is no longer used and `/etymology/` serves as a clean redirect/moved page to Word Atlas.
 
 ## Service Wrapper
 

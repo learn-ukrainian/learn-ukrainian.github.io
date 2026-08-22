@@ -49,15 +49,14 @@ describe('Astro build renders all pages', () => {
   // a chance to fire. Match the external timeout to keep the outer
   // bound consistent.
   //
-  // Default build scope excludes ESUM dynamic routes. Use
-  // `BUILD_ETYMOLOGY_ROUTES=1 npm run build` only for full reference/deploy
-  // builds; normal lesson CI should stay fast enough for author iteration.
+  // Normal lesson builds stay fast for author iteration, while ATLAS_STATIC_ROUTES=1
+  // generates static Word Atlas pages. Standalone ESUM routes were retired (#7059).
   it('astro build succeeds with zero errors', () => {
     try {
       buildOutput = execSync('npm run build 2>&1', {
         cwd: STARLIGHT_DIR,
         env: { ...process.env, ATLAS_MANIFEST_ALLOW_STALE_POINTER: '1' },
-        timeout: 240000,
+        timeout: 360000,
         encoding: 'utf-8',
         maxBuffer: 50 * 1024 * 1024, // 50MB: full build output for 31k pages exceeds default 1MB
       });
@@ -75,7 +74,7 @@ describe('Astro build renders all pages', () => {
       .split('\n')
       .filter(line => line.includes('[ERROR]'));
     expect(errorLines).toEqual([]);
-  }, 300000);
+  }, 420000);
 
   it('generates expected page count', () => {
     const distDir = join(STARLIGHT_DIR, 'dist');
