@@ -5,7 +5,12 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from scripts.ai_agent_bridge._acp_execution import acp_execution_cwd
+import pytest
+
+from scripts.ai_agent_bridge._acp_execution import (
+    AcpExecutionWorkspaceError,
+    acp_execution_cwd,
+)
 from scripts.guardrails.worktree_containment import classify_repo_path
 
 
@@ -47,3 +52,30 @@ def test_primary_root_call_uses_and_removes_detached_no_checkout_worktree(
     assert not workspace.exists()
     listed = _git(primary, "worktree", "list", "--porcelain").stdout
     assert str(workspace) not in listed
+
+
+@pytest.mark.parametrize(
+    "token",
+    [
+        "-rf",
+        '{"type":"tool","part":{"tool":"bash"}}',
+        'prompt"}}',
+    ],
+)
+def test_transport_fragment_task_id_is_rejected_before_directory_creation(
+    tmp_path: Path,
+    token: str,
+) -> None:
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _git(primary, "init", "-b", "main")
+
+    with pytest.raises(
+        AcpExecutionWorkspaceError,
+        match="unsafe_acp_execution_task_id",
+    ):
+        with acp_execution_cwd(primary, task_id=token):
+            raise AssertionError("unsafe task id reached the ACP execution body")
+
+    assert not (primary / ".worktrees").exists()
+    assert not (primary / token).exists()
