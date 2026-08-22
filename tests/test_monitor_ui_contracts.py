@@ -559,3 +559,31 @@ def test_operations_pages_keep_secondary_navigation():
         assert 'class="ops-nav"' in html, page
         for href in hrefs:
             assert f'href="{href}"' in html, page
+
+
+def test_delegate_completed_rows_open_detail_inspector() -> None:
+    html = (DASHBOARDS / "delegate.html").read_text(encoding="utf-8")
+
+    assert "tr.task-row" in html
+    assert "function openDetail(taskId)" in html
+    assert "class=\"task-row\" onclick='openDetail(" in html
+    assert "View detail" in html
+
+
+def test_delegate_detail_pane_projects_observer_safe_task_json() -> None:
+    html = (DASHBOARDS / "delegate.html").read_text(encoding="utf-8")
+
+    assert "function observerTaskView(task)" in html
+    assert "JSON.stringify(observerTaskView(detail.task || {}), null, 2)" in html
+    assert "Observer-safe task summary" in html
+    for sensitive_key in (
+        "cwd",
+        "runtime_tmp_root",
+        "worktree_path",
+        "result_file",
+        "stderr_excerpt",
+    ):
+        assert f"'{sensitive_key}'" not in html, (
+            f"delegate detail pane must not reference raw task key {sensitive_key!r}"
+        )
+    assert "JSON.stringify(detail.task || {}, null, 2)" not in html
