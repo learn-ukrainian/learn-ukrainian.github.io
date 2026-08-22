@@ -48,7 +48,7 @@ class TestListTools:
 
         expected = {
             "search_sources", "search_text", "search_literary", "search_external",
-            "get_full_text", "get_chunk_context", "collection_stats",
+            "get_full_text", "get_chunk_context", "collection_stats", "mcp_server_identity",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
             "verify_stress",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",

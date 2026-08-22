@@ -3,7 +3,7 @@
   "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_cycle007_evidence_manifest_v1.schema.json",
   "title": "Phase 3 Cycle 007 text-free evidence compile manifest v1",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "text_free", "evaluation_cycle_id", "tokenizer_id", "tokenizer_version", "code_hashes", "server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "packet_count", "row_count", "network_lookups_performed", "counts_by_channel", "counts_by_status", "counts_by_supports", "sufficient_support_rows", "archaic_only_risk_rows", "russian_shadow_suspected_rows", "sidecars", "manifest_sha256"],
+  "required": ["schema_version", "text_free", "evaluation_cycle_id", "tokenizer_id", "tokenizer_version", "code_hashes", "server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "packet_count", "row_count", "network_lookups_performed", "counts_by_channel", "counts_by_status", "counts_by_supports", "sufficient_support_rows", "archaic_only_risk_rows", "russian_shadow_suspected_rows", "sidecars", "source_package_binding", "manifest_sha256"],
   "properties": {
     "schema_version": {"const": "phase3_cycle007_evidence_manifest_v1"},
     "text_free": {"const": true},
@@ -27,19 +27,44 @@
       "type": "array",
       "items": {
         "type": "object", "additionalProperties": false,
-        "required": ["packet_index", "row_count", "sidecar_sha256", "sidecar_id"],
+        "required": ["packet_index", "row_count", "sidecar_sha256", "sidecar_id", "lane", "packet_binding"],
         "properties": {
           "packet_index": {"type": "integer", "minimum": 1},
           "row_count": {"type": "integer", "minimum": 1},
           "sidecar_sha256": {"$ref": "#/$defs/sha256"},
-          "sidecar_id": {"type": "string", "pattern": "^cycle007_sidecar:[a-f0-9]{64}$"}
+          "sidecar_id": {"type": "string", "pattern": "^cycle007_sidecar:[a-f0-9]{64}$"},
+          "lane": {"enum": ["clean_label", "residual_label"]},
+          "packet_binding": {"$ref": "#/$defs/packetBinding"}
         }
+      }
+    },
+    "source_package_binding": {
+      "type": ["object", "null"], "additionalProperties": false,
+      "required": ["source_evaluation_cycle_id", "custody_receipt_raw_sha256", "materialization_manifest_sha256", "ordered_identity_commitment_sha256", "identity_union_commitment_sha256", "ordered_packet_commitment_sha256", "packet_count", "row_count"],
+      "properties": {
+        "source_evaluation_cycle_id": {"type": "string", "minLength": 1},
+        "custody_receipt_raw_sha256": {"$ref": "#/$defs/sha256"},
+        "materialization_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "ordered_identity_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "identity_union_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "ordered_packet_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "packet_count": {"type": "integer", "minimum": 0},
+        "row_count": {"type": "integer", "minimum": 0}
       }
     },
     "manifest_sha256": {"$ref": "#/$defs/sha256"}
   },
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "packetBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_basename", "raw_sha256", "packet_identity_set_sha256"],
+      "properties": {
+        "canonical_basename": {"type": "string", "minLength": 1},
+        "raw_sha256": {"$ref": "#/$defs/sha256"},
+        "packet_identity_set_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "codeHashes": {
       "type": "object", "additionalProperties": false,
       "required": ["compiler_id", "compiler_sha256", "tokenizer_id", "tokenizer_version", "tokenizer_sha256", "compound_parser_id", "compound_parser_version", "compound_parser_sha256", "mcp_response_parser_id", "mcp_response_parser_version", "mcp_response_parser_sha256", "query_plan_id", "query_plan_version", "query_plan_sha256"],

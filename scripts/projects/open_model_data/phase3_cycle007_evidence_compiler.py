@@ -25,6 +25,7 @@ per-packet sidecar file.
 from __future__ import annotations
 
 import asyncio
+import functools
 import json
 import os
 import re
@@ -36,8 +37,10 @@ from collections.abc import Mapping, Sequence
 from concurrent.futures import TimeoutError as FuturesTimeoutError
 from pathlib import Path
 from typing import Any, Protocol
+from urllib.parse import urlparse
 
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
+from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
 ROOT = Path(__file__).resolve().parents[3]
 SIDECAR_SCHEMA_VERSION = "phase3_cycle007_evidence_sidecar_v1"
@@ -50,6 +53,17 @@ PRIVATE_FILE_MODE = 0o600
 DEFAULT_SOURCES_DB = ROOT / "data" / "sources.db"
 DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
 DEFAULT_SERVER_CODE = ROOT / ".mcp" / "servers" / "sources" / "server.py"
+DEFAULT_CHECK_RU_MORPH = ROOT / "scripts" / "verification" / "check_ru_morph.py"
+
+
+@functools.lru_cache(maxsize=1)
+def _russian_shadow_source_version(check_ru_morph_path: Path = DEFAULT_CHECK_RU_MORPH) -> str:
+    """The actual current SHA-256 of check_ru_morph.py (amendment fixes v3, item 6).
+
+    Never a literal version string — memoized so the file is hashed once
+    per process, not once per row.
+    """
+    return contract.sha256_file(check_ru_morph_path)
 
 ANTONENKO_SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
 
@@ -74,6 +88,10 @@ REQUIRED_TOOL_NAMES: frozenset[str] = frozenset(
         "query_ulif",
         "search_slovnyk_me",
         "query_grac",
+        # Amendment (fixes v3, item 1): endpoint identity attestation. A
+        # server that does not advertise this tool is drift and fails
+        # preflight closed the same as a missing evidence-retrieval tool.
+        "mcp_server_identity",
     }
 )
 
@@ -340,6 +358,12 @@ class RealMcpToolTransport:
         ]
         if not texts:
             raise McpTransportError(f"mcp_malformed_content:{name}")
+        # Defense in depth (fixes v3, item 2): a real MCP error is signaled
+        # by ``isError`` above, but a legacy/downgraded server could still
+        # put the old raw-exception prose marker on the wire without it.
+        # Never trust that text as a positive result either way.
+        if any(text.strip().startswith(("Error in ", "Unknown tool:")) for text in texts):
+            raise McpTransportError(f"mcp_tool_error_prose_marker:{name}")
         return "\n".join(texts)
 
     def close(self) -> None:
@@ -445,28 +469,79 @@ _NOT_FOUND_PREFIXES: tuple[str, ...] = (
     "No heritage evidence found",
     "No slovnyk.me results",
     "No pravopys section found",
+    "No results in",  # handle_dict_search family (style guide)
 )
 
+# Fail-closed error/unknown-tool markers a server response can never
+# legitimately carry as a positive result — a real MCP error is signaled by
+# ``isError``, but a downgraded/legacy server (or ``call_tool``'s own legacy
+# text path) could still put this exact prose on the wire. Recognized here so
+# it is never accidentally classified "attested".
+_ERROR_PROSE_PREFIXES: tuple[str, ...] = ("Error in ", "Unknown tool:")
 
-def _prose_status(text: str, *, not_found_prefixes: tuple[str, ...] = _NOT_FOUND_PREFIXES) -> str:
-    """Classify a prose MCP tool response as attested/not_found (amendment step 8).
+# Amendment (fixes v3, item 2): "Prose parsers must recognize only exact
+# reviewed success envelopes; unknown nonempty prose is incomplete/parse_error
+# or terminal, never attested." Each handler's reviewed success text always
+# starts with one of these exact prefixes (see .mcp/servers/sources/server.py
+# handle_search_text / handle_dict_search / handle_search_ua_gec_errors /
+# handle_search_heritage / handle_search_slovnyk_me / handle_query_pravopys).
+# A tool name absent from this table has no prose success path in the
+# compiler (its only call sites use the JSON parsers instead).
+_SUCCESS_PREFIXES_BY_TOOL: dict[str, tuple[str, ...]] = {
+    "search_style_guide": ("Found ",),
+    "search_text": ("Found ",),
+    "search_ua_gec_errors": ("Found ",),
+    "search_heritage": ("Found ",),
+    "search_slovnyk_me": ("Found ",),
+    "query_pravopys": ("**Pravopys section",),
+}
 
-    The exact "no results" sentinels are frozen per tool
-    (``MCP_RESPONSE_PARSER_ID``/``VERSION``) from the reviewed server's own
-    handler text, never guessed. Anything else non-empty is attested.
+
+def _prose_status(text: str, *, tool: str, not_found_prefixes: tuple[str, ...] = _NOT_FOUND_PREFIXES) -> str:
+    """Classify a prose MCP tool response (amendment step 8; fixes v3 item 2).
+
+    The exact "no results" and "found" envelope sentinels are frozen per
+    tool (``MCP_RESPONSE_PARSER_ID``/``VERSION``) from the reviewed server's
+    own handler text, never guessed. Only an exact reviewed success prefix
+    for ``tool`` is ever classified ``attested``; a known "no results"
+    sentinel is ``not_found``; the legacy error/unknown-tool prose marker is
+    ``parse_error`` (defensively — a real MCP error should already have
+    ``isError`` set and never reach this parser); anything else nonempty and
+    unrecognized is ``incomplete`` — it is never silently promoted to
+    ``attested`` just because it is nonempty.
     """
     stripped = text.strip()
     if not stripped:
         return "not_found"
+    if stripped.startswith(_ERROR_PROSE_PREFIXES):
+        return "parse_error"
     for prefix in not_found_prefixes:
         if stripped.startswith(prefix):
             return "not_found"
-    if stripped.startswith("No results in"):  # handle_dict_search family (style guide)
-        return "not_found"
-    return "attested"
+    success_prefixes = _SUCCESS_PREFIXES_BY_TOOL.get(tool, ())
+    if stripped.startswith(success_prefixes):
+        return "attested"
+    return "incomplete"
 
 
 _VERIFY_WORDS_LINE_RE = re.compile(r"^- \*\*(?P<word>.+?)\*\* — (?P<verdict>FOUND|NOT FOUND)", re.MULTILINE)
+
+
+_SERVER_IDENTITY_TOOL = "mcp_server_identity"
+_SERVER_IDENTITY_KEYS: frozenset[str] = frozenset(
+    {"server_code_sha256", "sources_db_sha256", "sources_db_bytes", "vesum_db_sha256", "vesum_db_bytes"}
+)
+
+
+def _is_loopback_host(host: str) -> bool:
+    if host == "localhost":
+        return True
+    import ipaddress
+
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
 
 
 class LocalMcpSourcesClient:
@@ -480,13 +555,14 @@ class LocalMcpSourcesClient:
     slovnyk.me, GRAC) instead asks the server's cache-only tool option; a
     cache miss is reported ``unavailable``, never fetched.
 
-    ``server_identity()`` is the one exception: it hashes the local
-    ``server.py``/``sources.db``/``vesum.db`` files directly. That is not an
-    evidence retrieval — it is the frozen code/database identity binding the
-    amendment requires ("records the exact public Sources server code hash
-    plus the local sources.db and vesum.db hashes"), computed independently
-    of the transport so a canary can prove the endpoint is backed by the
-    same reviewed code/data this process is looking at.
+    ``server_identity()`` (fixes v3, item 1) never trusts a locally computed
+    hash on its own. It hashes the exact local ``server.py``/``sources.db``/
+    ``vesum.db`` files this process reviewed (what it *expects*), calls the
+    endpoint's own ``mcp_server_identity`` tool through the real MCP
+    transport, and requires an exact match on every field — a mismatch,
+    missing tool, or malformed response is terminal. This is what proves the
+    endpoint is actually backed by the same reviewed code/data, not merely
+    files that happen to exist on the caller's own filesystem.
     """
 
     def __init__(
@@ -498,6 +574,9 @@ class LocalMcpSourcesClient:
         vesum_db: Path = DEFAULT_VESUM_DB,
         server_code: Path = DEFAULT_SERVER_CODE,
     ) -> None:
+        host = urlparse(endpoint_url).hostname
+        if not host or not _is_loopback_host(host):
+            raise LocalMcpSourcesClientError(f"non_loopback_mcp_endpoint: {endpoint_url!r}")
         self._sources_db = sources_db
         self._vesum_db = vesum_db
         self._server_code = server_code
@@ -508,15 +587,32 @@ class LocalMcpSourcesClient:
         # Fail closed immediately on drift/unavailability rather than at the
         # first evidence call.
         self._transport.preflight()
+        self._identity: Mapping[str, Any] = self._attest_server_identity()
 
-    def server_identity(self) -> Mapping[str, Any]:
-        return {
+    def _attest_server_identity(self) -> Mapping[str, Any]:
+        expected = {
             "server_code_sha256": contract.sha256_file(self._server_code),
             "sources_db_sha256": contract.sha256_file(self._sources_db),
             "sources_db_bytes": self._sources_db.stat().st_size,
             "vesum_db_sha256": contract.sha256_file(self._vesum_db),
             "vesum_db_bytes": self._vesum_db.stat().st_size,
         }
+        payload = self._call_json(_SERVER_IDENTITY_TOOL, {})
+        if not isinstance(payload, Mapping) or set(payload) != _SERVER_IDENTITY_KEYS:
+            raise LocalMcpSourcesClientError(f"malformed_json_response:{_SERVER_IDENTITY_TOOL}")
+        for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
+            if not (isinstance(payload.get(key), str) and len(payload[key]) == 64):
+                raise LocalMcpSourcesClientError(f"malformed_json_response:{_SERVER_IDENTITY_TOOL}")
+        for key in ("sources_db_bytes", "vesum_db_bytes"):
+            if not isinstance(payload.get(key), int) or isinstance(payload.get(key), bool):
+                raise LocalMcpSourcesClientError(f"malformed_json_response:{_SERVER_IDENTITY_TOOL}")
+        for key in _SERVER_IDENTITY_KEYS:
+            if payload[key] != expected[key]:
+                raise LocalMcpSourcesClientError(f"endpoint_identity_mismatch:{key}")
+        return expected
+
+    def server_identity(self) -> Mapping[str, Any]:
+        return self._identity
 
     def _call_text(self, tool: str, arguments: Mapping[str, Any]) -> str:
         return self._transport.call_tool(tool, arguments)
@@ -544,12 +640,18 @@ class LocalMcpSourcesClient:
         payload = self._call_json("check_modern_form", {"word": word})
         if not isinstance(payload, Mapping):
             raise LocalMcpSourcesClientError("malformed_json_response:check_modern_form")
-        found = "error" not in payload
+        # Amendment (fixes v3, item 2): an empty/malformed payload (``{}``)
+        # must never be treated as "found". A genuine hit always carries the
+        # three reviewed boolean keys and never an "error" key; anything
+        # else — including a payload missing keys entirely — is not found.
+        required_keys = ("is_modern_codified", "has_archaic_form", "has_only_archaic_form")
+        has_required_keys = all(isinstance(payload.get(key), bool) for key in required_keys)
+        found = "error" not in payload and has_required_keys
         return {
             "found": found,
-            "is_modern_codified": bool(payload.get("is_modern_codified")),
-            "has_archaic_form": bool(payload.get("has_archaic_form")),
-            "has_only_archaic_form": bool(payload.get("has_only_archaic_form")),
+            "is_modern_codified": bool(payload.get("is_modern_codified")) if found else False,
+            "has_archaic_form": bool(payload.get("has_archaic_form")) if found else False,
+            "has_only_archaic_form": bool(payload.get("has_only_archaic_form")) if found else False,
         }
 
     def ulif_cached(self, word: str) -> Mapping[str, Any]:
@@ -560,7 +662,7 @@ class LocalMcpSourcesClient:
 
     def slovnyk_me_cached(self, word: str) -> Mapping[str, Any]:
         text = self._call_text("search_slovnyk_me", {"query": word, "live": False})
-        status = _prose_status(text)
+        status = _prose_status(text, tool="search_slovnyk_me")
         return {"status": status, "payload": text if status == "attested" else None}
 
     def grac_cached(self, word: str) -> Mapping[str, Any]:
@@ -571,34 +673,43 @@ class LocalMcpSourcesClient:
 
     def search_style_guide(self, query: str) -> Mapping[str, Any]:
         text = self._call_text("search_style_guide", {"query": query})
-        status = _prose_status(text)
+        status = _prose_status(text, tool="search_style_guide")
         return {"status": status, "hits": text}
 
     def search_antonenko_text(self, query: str) -> Mapping[str, Any]:
         text = self._call_text("search_text", {"query": query, "source_file": ANTONENKO_SOURCE_FILE})
-        status = _prose_status(text)
+        status = _prose_status(text, tool="search_text")
         return {"status": status, "hits": text}
 
     def search_ua_gec_errors(self, query: str) -> Mapping[str, Any]:
         text = self._call_text("search_ua_gec_errors", {"query": query})
-        status = _prose_status(text)
+        status = _prose_status(text, tool="search_ua_gec_errors")
         return {"status": status, "hits": text}
 
     def search_heritage_cached(self, query: str) -> Mapping[str, Any]:
         # include_live_slovnyk explicit False; cache-only, never a live fallback.
         text = self._call_text("search_heritage", {"query": query, "include_live_slovnyk": False})
-        status = _prose_status(text)
+        status = _prose_status(text, tool="search_heritage")
         return {"status": status, "hits": text}
 
     def check_russian_shadow(self, word: str) -> Mapping[str, Any]:
         payload = self._call_json("check_russian_shadow", {"word": word})
-        if not isinstance(payload, Mapping):
+        # Amendment (fixes v3, item 2): require the exact reviewed keys/types
+        # — an empty or partial payload (``{}``) must never be accepted as a
+        # suspicion result.
+        if (
+            not isinstance(payload, Mapping)
+            or not isinstance(payload.get("matches_russian"), bool)
+            or "russian_lemma" not in payload
+            or not isinstance(payload.get("confidence"), (int, float))
+            or isinstance(payload.get("confidence"), bool)
+        ):
             raise LocalMcpSourcesClientError("malformed_json_response:check_russian_shadow")
         return payload
 
     def query_pravopys(self, topic: str) -> Mapping[str, Any]:
         text = self._call_text("query_pravopys", {"topic": topic})
-        status = _prose_status(text)
+        status = _prose_status(text, tool="query_pravopys")
         return {"status": status, "hits": text}
 
     def close(self) -> None:
@@ -847,7 +958,7 @@ def compile_row_evidence(
     """
     vesum_source_version = str(identity["vesum_db_sha256"])
     sources_db_source_version = str(identity["sources_db_sha256"])
-    russian_shadow_source_version = "check-ru-morph-heuristic-v1"
+    russian_shadow_source_version = _russian_shadow_source_version()
 
     source_text = str(row.get("source_text", ""))
     forms = extract_forms(source_text)
@@ -867,6 +978,12 @@ def compile_row_evidence(
     # (amendment step 9) even for this metadata-only record.
     frozen_locator_sha256 = str(row.get("frozen_locator_sha256") or contract.sha256_text(""))
     source_text_sha256 = str(row.get("source_text_sha256") or contract.sha256_text(source_text))
+    # Amendment (fixes v3, item 5): retrieval_sha256 must equal
+    # sha256_value(payload) for the exact payload stored under it — never a
+    # raw file/text hash computed independently of what retrieval_payloads
+    # actually holds.
+    metadata_payload = {"source_text_sha256": source_text_sha256}
+    metadata_retrieval_sha256 = contract.sha256_value(metadata_payload)
     metadata_record = contract.build_evidence_record(
         channel="source_metadata",
         source_identity=str(row.get("family_id") or "unknown"),
@@ -875,13 +992,13 @@ def compile_row_evidence(
         query=None,
         status="attested",
         supports="metadata_only",
-        retrieval_sha256=source_text_sha256,
+        retrieval_sha256=metadata_retrieval_sha256,
         parser_id="phase3-cycle007-row-provenance-v1",
         parser_version="1",
         row=row,
         phenomenon_id=None,
     )
-    retrieval_payloads[source_text_sha256] = {"source_text_sha256": source_text_sha256}
+    retrieval_payloads[metadata_retrieval_sha256] = metadata_payload
     evidence.append(metadata_record)
 
     # VESUM batch + check_modern_form for every extracted form, regardless of
@@ -1031,6 +1148,19 @@ def compile_row_evidence(
             )
         )
 
+    # Amendment (fixes v3, item 3): frozen Cycle005 Pravopys provenance,
+    # bound before any model call. pravopys_2026_normative only ever binds
+    # for a row whose frozen family is Pravopys 2026; pravopys_2019_comparison
+    # is queried once per row and rebound (never re-queried) to every
+    # phenomenon. Both channels are already explicitly phenomenon-scoped by
+    # construction — never routed through the generic row-level rebinder.
+    for record_and_payload in _bind_pravopys_2026_for_row(row, residual_phenomena):
+        _add(record_and_payload)
+    for record_and_payload in _bind_pravopys_2019_comparison_for_row(
+        row, client, residual_phenomena, source_version=sources_db_source_version
+    ):
+        _add(record_and_payload)
+
     # Amendment: phenomenon-scoped evidence, produced before any model call.
     row_level_records = list(evidence)
     for phenomenon_id in residual_phenomena:
@@ -1075,12 +1205,44 @@ DEFAULT_PRAVOPYS_CONTEXT_RECEIPT = (
     ROOT / "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
 )
 
+# The one frozen family/source provenance value (phase3_source_universe.py
+# ``stage_family("pravopys_2026_complete", ...)``) that ever grants a row
+# 2026 normative_rule support. An unrelated family's row must never receive
+# it, no matter how its text looks.
+PRAVOPYS_2026_FAMILY_ID = "pravopys_2026_complete"
+
+
+def _pravopys_2026_locator(context_receipt_path: Path) -> str:
+    return (
+        str(context_receipt_path.relative_to(ROOT))
+        if context_receipt_path.is_absolute() and context_receipt_path.is_relative_to(ROOT)
+        else str(context_receipt_path)
+    )
+
+
+def _pravopys_2026_payload(context_receipt_path: Path) -> tuple[str, dict[str, Any]]:
+    """The frozen 2026 binding fact as a hashable retrieval payload.
+
+    Amendment (fixes v3, item 3/5): ``retrieval_sha256`` must be
+    ``sha256_value`` of the *payload actually stored* under it (the same
+    invariant every other channel holds), never a raw file hash computed
+    independently of what the sidecar's ``retrieval_payloads`` table holds.
+    """
+    receipt_sha256 = contract.sha256_file(context_receipt_path) if context_receipt_path.is_file() else None
+    status = "attested" if receipt_sha256 == PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256 else "unavailable"
+    payload = {
+        "pdf_sha256": PRAVOPYS_2026_PDF_SHA256,
+        "context_receipt_sha256": receipt_sha256,
+        "status": status,
+    }
+    return status, payload
+
 
 def bind_pravopys_2026_evidence(
     row: Mapping[str, Any],
     phenomenon_id: str,
     *,
-    context_receipt_path: Path = DEFAULT_PRAVOPYS_CONTEXT_RECEIPT,
+    context_receipt_path: Path | None = None,
 ) -> dict[str, Any]:
     """Bind the frozen Pravopys 2026 normative fact to one residual phenomenon.
 
@@ -1088,24 +1250,26 @@ def bind_pravopys_2026_evidence(
     Phase 3 evaluation the 2026 edition is bound by explicit task-specific
     identity (PDF + context-receipt SHA-256), not fetched live — the general
     Sources MCP ``query_pravopys`` tool only exposes 2019 and is
-    comparison-only here.
+    comparison-only here. Standalone/manual entry point; ``compile_row_evidence``
+    uses ``_bind_pravopys_2026_for_row`` instead so the receipt is only
+    hashed once per row, not once per phenomenon.
+
+    ``context_receipt_path`` defaults to the current module-level
+    ``DEFAULT_PRAVOPYS_CONTEXT_RECEIPT`` (resolved at call time, not frozen
+    into the function signature) so tests can monkeypatch that constant.
     """
     contract.require(bool(phenomenon_id), "pravopys_2026_normative evidence requires a phenomenon_id")
-    receipt_sha256 = contract.sha256_file(context_receipt_path) if context_receipt_path.is_file() else None
-    status = "attested" if receipt_sha256 == PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256 else "unavailable"
+    context_receipt_path = context_receipt_path or DEFAULT_PRAVOPYS_CONTEXT_RECEIPT
+    status, payload = _pravopys_2026_payload(context_receipt_path)
     return contract.build_evidence_record(
         channel="pravopys_2026_normative",
         source_identity="pravopys-2026-official-edition",
         source_version=PRAVOPYS_2026_PDF_SHA256,
-        locator=(
-            str(context_receipt_path.relative_to(ROOT))
-            if context_receipt_path.is_absolute() and context_receipt_path.is_relative_to(ROOT)
-            else str(context_receipt_path)
-        ),
+        locator=_pravopys_2026_locator(context_receipt_path),
         query=None,
         status=status,
         supports="normative_rule" if status == "attested" else "no_conclusion",
-        retrieval_sha256=receipt_sha256 or contract.sha256_text("unavailable"),
+        retrieval_sha256=contract.sha256_value(payload),
         parser_id="pravopys-2026-frozen-binding-v1",
         parser_version="1",
         row=row,
@@ -1114,27 +1278,65 @@ def bind_pravopys_2026_evidence(
     )
 
 
-def bind_pravopys_2019_comparison_evidence(
+def _bind_pravopys_2026_for_row(
+    row: Mapping[str, Any],
+    residual_phenomena: Sequence[str],
+    *,
+    context_receipt_path: Path | None = None,
+) -> list[tuple[dict[str, Any], Any]]:
+    """Bind the frozen 2026 normative fact to every residual phenomenon of a Pravopys-2026-family row.
+
+    Amendment (fixes v3, item 3): only rows whose frozen family/source
+    provenance is Pravopys 2026 (``row["family_id"] == PRAVOPYS_2026_FAMILY_ID``)
+    ever receive 2026 normative_rule support; every other family gets none —
+    ``bind_phenomenon_scoped_evidence`` never grants it either (this channel
+    is not in ``_PHENOMENON_SCOPABLE_CHANNELS``). The receipt is hashed once
+    per row and the identical retrieval payload is reused (same
+    ``retrieval_sha256``) across all 23 phenomena.
+
+    ``context_receipt_path`` defaults to the current module-level
+    ``DEFAULT_PRAVOPYS_CONTEXT_RECEIPT`` (resolved at call time).
+    """
+    if not residual_phenomena or row.get("family_id") != PRAVOPYS_2026_FAMILY_ID:
+        return []
+    context_receipt_path = context_receipt_path or DEFAULT_PRAVOPYS_CONTEXT_RECEIPT
+    status, payload = _pravopys_2026_payload(context_receipt_path)
+    locator = _pravopys_2026_locator(context_receipt_path)
+    retrieval_sha256 = contract.sha256_value(payload)
+    records: list[tuple[dict[str, Any], Any]] = []
+    for phenomenon_id in residual_phenomena:
+        record = contract.build_evidence_record(
+            channel="pravopys_2026_normative",
+            source_identity="pravopys-2026-official-edition",
+            source_version=PRAVOPYS_2026_PDF_SHA256,
+            locator=locator,
+            query=None,
+            status=status,
+            supports="normative_rule" if status == "attested" else "no_conclusion",
+            retrieval_sha256=retrieval_sha256,
+            parser_id="pravopys-2026-frozen-binding-v1",
+            parser_version="1",
+            row=row,
+            phenomenon_id=phenomenon_id,
+            negative_reason=None if status == "attested" else "pravopys_2026_context_receipt_hash_mismatch",
+        )
+        records.append((record, payload))
+    return records
+
+
+def _pravopys_2019_comparison_record(
     row: Mapping[str, Any],
     phenomenon_id: str,
-    client: SourcesClient,
+    result: Mapping[str, Any],
     *,
     query: str,
+    source_version: str,
 ) -> dict[str, Any]:
-    """Bind a comparison-only 2019 Pravopys result to one residual phenomenon.
-
-    Amendment step 8: this calls the ``query_pravopys`` MCP tool — never
-    ``search_style_guide``, which is a distinct Антоненко-Давидович channel.
-    ``query_pravopys`` is explicitly comparison-only in this evaluation: its
-    result can never carry ``normative_rule`` support (enforced by the
-    closed per-channel claim boundary in the contract module).
-    """
     contract.require(bool(phenomenon_id), "pravopys_2019_comparison evidence requires a phenomenon_id")
-    result = client.query_pravopys(query)
     return contract.build_evidence_record(
         channel="pravopys_2019_comparison",
         source_identity="pravopys-2019-comparison",
-        source_version="2019.pravopys.net",
+        source_version=source_version,
         locator="https://2019.pravopys.net",
         query=query,
         status=result["status"],
@@ -1148,9 +1350,84 @@ def bind_pravopys_2019_comparison_evidence(
     )
 
 
+def bind_pravopys_2019_comparison_evidence(
+    row: Mapping[str, Any],
+    phenomenon_id: str,
+    client: SourcesClient,
+    *,
+    query: str,
+    source_version: str,
+) -> dict[str, Any]:
+    """Bind a comparison-only 2019 Pravopys result to one residual phenomenon.
+
+    Amendment step 8: this calls the ``query_pravopys`` MCP tool — never
+    ``search_style_guide``, which is a distinct Антоненко-Давидович channel.
+    ``query_pravopys`` is explicitly comparison-only in this evaluation: its
+    result can never carry ``normative_rule`` support (enforced by the
+    closed per-channel claim boundary in the contract module).
+    ``source_version`` must be an exact source/database hash (never a
+    URL-like literal) — callers pass the compiler's own
+    ``identity["sources_db_sha256"]``. Standalone/manual entry point;
+    ``compile_row_evidence`` uses ``_bind_pravopys_2019_comparison_for_row``
+    instead so ``query_pravopys`` is only called once per row, not once per
+    phenomenon.
+    """
+    result = client.query_pravopys(query)
+    return _pravopys_2019_comparison_record(row, phenomenon_id, result, query=query, source_version=source_version)
+
+
+def _bind_pravopys_2019_comparison_for_row(
+    row: Mapping[str, Any],
+    client: SourcesClient,
+    residual_phenomena: Sequence[str],
+    *,
+    source_version: str,
+) -> list[tuple[dict[str, Any], Any]]:
+    """One ``query_pravopys`` call per row, rebound to every residual phenomenon.
+
+    Amendment (fixes v3, item 3): "Query the MCP query_pravopys 2019
+    comparison path once per residual row (not once per phenomenon), store/
+    deduplicate its normalized private payload, then rebind that one
+    comparison-only result to all 23 potential phenomena."
+    """
+    if not residual_phenomena:
+        return []
+    query = str(row.get("source_text", "")).strip() or str(row.get("unit_id", ""))
+    result = client.query_pravopys(query)
+    return [
+        (
+            _pravopys_2019_comparison_record(row, phenomenon_id, result, query=query, source_version=source_version),
+            result,
+        )
+        for phenomenon_id in residual_phenomena
+    ]
+
+
 # --------------------------------------------------------------------------
 # Packet-level sidecar assembly and atomic private write.
 # --------------------------------------------------------------------------
+
+
+_PACKET_BINDING_KEYS: frozenset[str] = frozenset({"canonical_basename", "raw_sha256", "packet_identity_set_sha256"})
+
+
+def _default_packet_binding(packet_index: int, rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """A self-derived packet binding for a bare (non-package-bound) compile.
+
+    Always internally recomputable from this exact sidecar's own rows —
+    ``packet_identity_set_sha256`` is the same materializer identity-set
+    hash a real source package carries, and ``raw_sha256`` is a canonical
+    hash of the exact row list this sidecar was built from (not a real
+    packet file's bytes, since a bare ``compile_sidecar_bundle`` call has
+    none — ``compile_cycle007_package`` supplies the real verified
+    materializer binding instead via ``packet_binding``/``packet_bindings``).
+    """
+    materializer = _materializer_module()
+    return {
+        "canonical_basename": f"packet-{packet_index:04d}.json",
+        "raw_sha256": contract.sha256_value({"rows": list(rows)}),
+        "packet_identity_set_sha256": materializer.identity_set(list(rows)),
+    }
 
 
 def compile_packet_sidecar(
@@ -1159,7 +1436,17 @@ def compile_packet_sidecar(
     client: SourcesClient,
     *,
     residual_lane: bool = False,
+    packet_binding: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
+    """Compile one packet's sidecar.
+
+    Amendment (fixes v3, item 4): every sidecar persists its source packet's
+    lane, canonical basename, raw packet SHA-256, and packet identity-set
+    SHA-256 — ``packet_binding`` (when given by ``compile_cycle007_package``,
+    already verified against the materialized source package) or, for a bare
+    compile with no source package, a self-derived binding computed directly
+    from ``rows``.
+    """
     identity = client.server_identity()
     residual_phenomena = contract.RESIDUAL_PHENOMENON_TAXONOMY if residual_lane else ()
     row_records = []
@@ -1168,9 +1455,19 @@ def compile_packet_sidecar(
         row_record = compile_row_evidence(row, client, identity=identity, residual_phenomena=residual_phenomena)
         retrieval_payloads.update(row_record.pop("retrieval_payloads"))
         row_records.append(row_record)
+    if packet_binding is None:
+        packet_binding = _default_packet_binding(packet_index, rows)
+    else:
+        contract.require(set(packet_binding) == _PACKET_BINDING_KEYS, "malformed packet_binding")
     body = {
         "schema_version": SIDECAR_SCHEMA_VERSION,
         "evaluation_cycle_id": EVALUATION_CYCLE_ID,
+        # Amendment (fixes v3, item 5): sidecars must carry their lane so a
+        # validator can require a clean-lane row to carry no
+        # phenomenon-scoped evidence and a residual-lane row to carry
+        # exactly the frozen 23-phenomenon keys.
+        "lane": "residual_label" if residual_lane else "clean_label",
+        "packet_binding": dict(packet_binding),
         "packet_index": packet_index,
         "row_count": len(rows),
         "tokenizer_id": TOKENIZER_ID,
@@ -1234,6 +1531,8 @@ def compile_sidecar_bundle(
     output_dir: Path,
     *,
     residual_lane_packets: Sequence[bool] | None = None,
+    packet_bindings: Sequence[Mapping[str, Any] | None] | None = None,
+    source_package_binding: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compile every packet's sidecar into a fresh staging directory, then atomically install.
 
@@ -1243,11 +1542,22 @@ def compile_sidecar_bundle(
     exists (including as a nonempty directory or a symlink), and on any
     failure only the staging directory this call created is removed —
     ``output_dir`` is never touched unless every packet validated.
+
+    Amendment (fixes v3, item 4): every sidecar and the public manifest
+    index persist their source packet's lane/canonical-basename/raw-SHA-256/
+    identity-set-SHA-256 binding (``packet_bindings`` — real verified
+    materializer values from ``compile_cycle007_package``, or a self-derived
+    binding per packet when omitted). ``source_package_binding`` — the
+    materialization custody/manifest hashes and ordered identity commitment
+    — is persisted in the text-free manifest whenever a real source package
+    backs this compile; ``None`` for a bare, package-free compile.
     """
     if output_dir.exists() or output_dir.is_symlink():
         raise contract.EvidenceContractError(f"refusing to compile into an existing destination: {output_dir}")
     residual_flags = list(residual_lane_packets) if residual_lane_packets is not None else [False] * len(packets)
     contract.require(len(residual_flags) == len(packets), "residual_lane_packets length must match packets")
+    bindings = list(packet_bindings) if packet_bindings is not None else [None] * len(packets)
+    contract.require(len(bindings) == len(packets), "packet_bindings length must match packets")
 
     output_dir.parent.mkdir(parents=True, exist_ok=True, mode=PRIVATE_DIR_MODE)
     staging = Path(tempfile.mkdtemp(prefix=f".{output_dir.name}.staging-", dir=output_dir.parent))
@@ -1255,6 +1565,19 @@ def compile_sidecar_bundle(
     committed = False
     try:
         identity = client.server_identity()
+        # Amendment (fixes v3, item 5/6): the compiler's own freshly derived
+        # current code/source identity — never taken from a sidecar being
+        # validated — so ``validate_sidecar``/``validate_manifest`` reject a
+        # rehashed sidecar that self-consistently substitutes arbitrary
+        # code/source hashes.
+        expected_identity = {
+            "tokenizer_id": TOKENIZER_ID,
+            "tokenizer_version": TOKENIZER_VERSION,
+            "code_hashes": CODE_HASHES,
+            "server_code_sha256": identity["server_code_sha256"],
+            "sources_db_sha256": identity["sources_db_sha256"],
+            "vesum_db_sha256": identity["vesum_db_sha256"],
+        }
         channel_counts: Counter[str] = Counter()
         status_counts: Counter[str] = Counter()
         supports_counts: Counter[str] = Counter()
@@ -1263,8 +1586,15 @@ def compile_sidecar_bundle(
         russian_shadow_suspected_rows = 0
         row_count = 0
         sidecar_index: list[dict[str, Any]] = []
-        for packet_index, (rows, residual_lane) in enumerate(zip(packets, residual_flags, strict=True), start=1):
-            sidecar = compile_packet_sidecar(packet_index, rows, client, residual_lane=residual_lane)
+        for packet_index, (rows, residual_lane, packet_binding) in enumerate(
+            zip(packets, residual_flags, bindings, strict=True), start=1
+        ):
+            sidecar = compile_packet_sidecar(
+                packet_index, rows, client, residual_lane=residual_lane, packet_binding=packet_binding
+            )
+            # Amendment (fixes v3, item 5): validate every sidecar before it
+            # is ever written to disk.
+            validator.validate_sidecar(sidecar, expected_identity=expected_identity)
             payload = (contract.canonical_json(sidecar) + "\n").encode("utf-8")
             sidecar_path = staging / f"sidecar-{packet_index:04d}.json"
             sidecar_sha256 = _atomic_write_private(sidecar_path, payload)
@@ -1283,6 +1613,8 @@ def compile_sidecar_bundle(
                     "row_count": len(rows),
                     "sidecar_sha256": sidecar_sha256,
                     "sidecar_id": sidecar["sidecar_id"],
+                    "lane": sidecar["lane"],
+                    "packet_binding": sidecar["packet_binding"],
                 }
             )
         manifest = {
@@ -1305,14 +1637,20 @@ def compile_sidecar_bundle(
             "archaic_only_risk_rows": archaic_only_risk_rows,
             "russian_shadow_suspected_rows": russian_shadow_suspected_rows,
             "sidecars": sidecar_index,
+            # Amendment (fixes v3, item 4): materialization custody/manifest
+            # hashes and ordered identity commitment, when this compile is
+            # backed by a real materialized source package.
+            "source_package_binding": dict(source_package_binding) if source_package_binding is not None else None,
         }
         manifest["manifest_sha256"] = contract.sha256_value(manifest)
+        # Amendment (fixes v3, item 5): validate the manifest before installation.
+        validator.validate_manifest(manifest, expected_identity=expected_identity)
         manifest_bytes = (contract.canonical_json(manifest) + "\n").encode("utf-8")
         _atomic_write_private(staging / "manifest.json", manifest_bytes)
         _walk_private_modes(staging)
         for child in staging.iterdir():
             _fsync_directory(child.parent)
-        os.replace(staging, output_dir)
+        _install_staged_bundle(staging, output_dir)
         _fsync_directory(output_dir.parent)
         _walk_private_modes(output_dir)
         committed = True
@@ -1322,6 +1660,25 @@ def compile_sidecar_bundle(
             import shutil
 
             shutil.rmtree(staging, ignore_errors=True)
+
+
+def _install_staged_bundle(staging: Path, output_dir: Path) -> None:
+    """Atomically claim ``output_dir`` and move the staged bundle into it.
+
+    ``os.mkdir`` is a single atomic kernel syscall: it fails closed with
+    ``FileExistsError`` if anything — including a directory a concurrent
+    actor created after this call's earlier existence check — now occupies
+    ``output_dir``. This closes the TOCTOU window a plain ``os.replace``
+    onto ``output_dir`` would leave open (POSIX rename silently succeeds
+    when the destination is an existing *empty* directory).
+    """
+    try:
+        os.mkdir(output_dir)
+    except FileExistsError:
+        raise contract.EvidenceContractError(f"destination created concurrently: {output_dir}") from None
+    os.chmod(output_dir, PRIVATE_DIR_MODE)
+    for child in sorted(staging.iterdir()):
+        os.rename(child, output_dir / child.name)
 
 
 # --------------------------------------------------------------------------
@@ -1373,6 +1730,7 @@ def compile_cycle007_package(
 
     packets: list[list[Mapping[str, Any]]] = []
     residual_flags: list[bool] = []
+    packet_bindings: list[dict[str, Any]] = []
     for record in records:
         contract.require(isinstance(record, Mapping), "packet_binding_drift")
         lane = record.get("lane")
@@ -1381,18 +1739,44 @@ def compile_cycle007_package(
         contract.require(Path(basename).name == basename, "packet_binding_drift")
         packet_path = package_dir / lane / basename
         raw = materializer._read_regular(packet_path, "packet_binding_drift")
-        contract.require(materializer.digest(raw) == record.get("raw_sha256"), "packet_binding_drift")
+        raw_sha256 = record.get("raw_sha256")
+        contract.require(materializer.digest(raw) == raw_sha256, "packet_binding_drift")
         packet = materializer.strict_json(packet_path, "packet_binding_drift")
         contract.require(isinstance(packet, Mapping), "packet_binding_drift")
         rows = packet.get("rows")
         contract.require(isinstance(rows, list) and len(rows) == record.get("row_count"), "packet_binding_drift")
-        contract.require(
-            packet.get("packet_identity_set_sha256") == materializer.identity_set(rows), "packet_binding_drift"
-        )
-        contract.require(
-            packet.get("packet_identity_set_sha256") == record.get("packet_identity_set_sha256"), "packet_binding_drift"
-        )
+        packet_identity_set_sha256 = packet.get("packet_identity_set_sha256")
+        contract.require(packet_identity_set_sha256 == materializer.identity_set(rows), "packet_binding_drift")
+        contract.require(packet_identity_set_sha256 == record.get("packet_identity_set_sha256"), "packet_binding_drift")
         packets.append(list(rows))
         residual_flags.append(lane == _RESIDUAL_LANE_NAME)
+        # Amendment (fixes v3, item 4): persist this exact, already-verified
+        # packet binding into the sidecar/manifest — never recomputed from
+        # scratch by compile_packet_sidecar itself.
+        packet_bindings.append(
+            {
+                "canonical_basename": basename,
+                "raw_sha256": raw_sha256,
+                "packet_identity_set_sha256": packet_identity_set_sha256,
+            }
+        )
 
-    return compile_sidecar_bundle(packets, client, output_dir, residual_lane_packets=residual_flags)
+    source_package_binding = {
+        "source_evaluation_cycle_id": manifest.get("source_evaluation_cycle_id"),
+        "custody_receipt_raw_sha256": manifest.get("custody_receipt_raw_sha256"),
+        "materialization_manifest_sha256": manifest.get("receipt_sha256"),
+        "ordered_identity_commitment_sha256": manifest.get("ordered_identity_commitment_sha256"),
+        "identity_union_commitment_sha256": manifest.get("identity_union_commitment_sha256"),
+        "ordered_packet_commitment_sha256": manifest.get("ordered_packet_commitment_sha256"),
+        "packet_count": manifest.get("packet_count"),
+        "row_count": manifest.get("row_count"),
+    }
+
+    return compile_sidecar_bundle(
+        packets,
+        client,
+        output_dir,
+        residual_lane_packets=residual_flags,
+        packet_bindings=packet_bindings,
+        source_package_binding=source_package_binding,
+    )

@@ -390,29 +390,34 @@ def _validate_paths(config: Config) -> None:
 
 
 def _verify_source_package_modes(source: Path, manifest: Mapping[str, Any], fixture: bool) -> None:
-    """Amendment step 15: verify the source package's own custody modes.
+    """Amendment step 15/fixes v3 item 7: verify the source package's own custody modes.
 
     Real (non-fixture) mode only — a held-out package must already be
     mode-0700 directories / mode-0600 files ("operator-owned package with
     mode-0600 files"). Fixture packages built by tests may use whatever
     permissions the test harness happens to create.
+
+    Walks *every* directory and file under ``source`` — not only the
+    manifest-listed packet/custody/manifest files — so a symlink, fifo,
+    device, or unexpected extra file placed anywhere in the package (not
+    just the specific paths this materializer reads) is rejected too.
     """
     if fixture:
         return
+    _directory(source, "source_mode_drift")
     _require(stat.S_IMODE(source.stat().st_mode) == PRIVATE_DIR_MODE, "source_mode_drift")
-    for name in ("custody-receipt.json", "label-manifest.json"):
-        path = source / name
-        _regular(path, "source_mode_drift")
-        _require(stat.S_IMODE(path.stat().st_mode) == PRIVATE_FILE_MODE, "source_mode_drift")
-    for record in manifest.get("packets", []):
-        if not isinstance(record, Mapping):
-            continue
-        lane, basename = record.get("lane"), record.get("canonical_basename")
-        if not (isinstance(lane, str) and isinstance(basename, str)):
-            continue
-        packet_path = source / lane / basename
-        _regular(packet_path, "source_mode_drift")
-        _require(stat.S_IMODE(packet_path.stat().st_mode) == PRIVATE_FILE_MODE, "source_mode_drift")
+    for path in sorted(source.rglob("*")):
+        if path.is_symlink():
+            raise MaterializationError("source_mode_drift")
+        mode = stat.S_IMODE(path.stat().st_mode)
+        if path.is_dir():
+            _require(mode == PRIVATE_DIR_MODE, "source_mode_drift")
+        elif path.is_file():
+            _require(mode == PRIVATE_FILE_MODE, "source_mode_drift")
+        else:
+            # Not a regular file, directory, or symlink — fifo, socket,
+            # device, etc. Never permitted anywhere in a source package.
+            raise MaterializationError("source_mode_drift")
 
 
 def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
@@ -536,6 +541,31 @@ def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
     }
 
 
+def _install_stage(staging: Path, output: Path) -> None:
+    """Atomically claim ``output`` and move the staged tree into it.
+
+    Amendment (fixes v3, item 7): closes the destination TOCTOU window a
+    plain ``os.replace(staging, output)`` would leave open — POSIX rename
+    silently succeeds (replacing the destination) when ``output`` already
+    exists as an *empty* directory, which is exactly what a concurrent actor
+    could have created in the window between ``_validate_paths``'s earlier
+    existence check and this install step. ``os.mkdir`` is a single atomic
+    kernel syscall: it fails closed with ``FileExistsError`` if anything —
+    including that concurrently created directory — now occupies ``output``,
+    and this call never touches or deletes whatever it finds there; it only
+    ever removes its own staging path (handled by the caller's ``finally``).
+    """
+    try:
+        os.mkdir(output)
+    except FileExistsError:
+        raise MaterializationError("output_exists") from None
+    except OSError:
+        raise MaterializationError("transaction_failure") from None
+    os.chmod(output, PRIVATE_DIR_MODE)
+    for name in sorted(OUTPUT_TOP_LEVEL):
+        os.rename(staging / name, output / name)
+
+
 def materialize(
     source: Path,
     output: Path,
@@ -562,7 +592,7 @@ def materialize(
         result = _build_stage(config, staging)
         _require({path.name for path in staging.iterdir()} == OUTPUT_TOP_LEVEL, "transaction_failure")
         _walk_modes(staging)
-        os.replace(staging, config.output)
+        _install_stage(staging, config.output)
         # Amendment step 14: from this point the operation is committed at
         # the filesystem level — a later diagnostic failing must never
         # trigger deleting the artifact that was just correctly installed.

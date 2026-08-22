@@ -100,3 +100,67 @@ def test_query_grac_cache_only_always_unavailable(server):
     payload = json.loads(result[0].text)
     assert payload["status"] == "unavailable"
     assert payload["entry"] is None
+
+
+# --------------------------------------------------------------------------
+# Amendment (fixes v3, item 2): MCP-wire fail-closed error results —
+# ``_on_call_tool`` is the actual ``tools/call`` handler, distinct from the
+# legacy ``call_tool`` module-level entry point exercised above.
+# --------------------------------------------------------------------------
+
+
+def _call_on_call_tool(server, name: str, arguments: dict):
+    params = server.CallToolRequestParams(name=name, arguments=arguments)
+    return asyncio.run(server._on_call_tool(None, params))
+
+
+def test_on_call_tool_marks_a_handler_exception_iserror_true(server):
+    private_word = "СЕКРЕТНЕ_СЛОВО_ІНТЕГРАЦІЙНОГО_ТЕСТУ"
+    result = _call_on_call_tool(server, "verify_word", {"word_typo": private_word})
+    assert result.is_error is True
+    dumped = json.dumps([block.text for block in result.content])
+    # No raw exception message or argument value ever reaches the wire result.
+    assert private_word not in dumped
+    assert "word_typo" not in dumped
+
+
+def test_on_call_tool_marks_unknown_tool_iserror_true(server):
+    result = _call_on_call_tool(server, "not_a_real_tool", {})
+    assert result.is_error is True
+
+
+def test_on_call_tool_success_is_iserror_false(server):
+    result = _call_on_call_tool(server, "collection_stats", {})
+    assert result.is_error is False
+
+
+_SOURCES_DB = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+_VESUM_DB = Path(__file__).resolve().parents[1] / "data" / "vesum.db"
+
+
+@pytest.mark.skipif(
+    not (_SOURCES_DB.exists() and _VESUM_DB.exists()),
+    reason="sources.db/vesum.db not present in this checkout — run locally for coverage",
+)
+def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server):
+    result = _call_on_call_tool(server, "mcp_server_identity", {})
+    assert result.is_error is False
+    payload = json.loads(result.content[0].text)
+    assert set(payload) == {
+        "server_code_sha256",
+        "sources_db_sha256",
+        "sources_db_bytes",
+        "vesum_db_sha256",
+        "vesum_db_bytes",
+    }
+    assert len(payload["server_code_sha256"]) == 64
+    # Public-safe: never a filesystem path in the response.
+    assert "/" not in payload["server_code_sha256"]
+
+
+def test_call_tool_legacy_error_marker_never_appears_on_the_real_wire_path(server):
+    """The legacy 'Error in ...' prose marker stays inside call_tool(); the real MCP path never emits it."""
+    result = _call_on_call_tool(server, "verify_word", {})  # missing required "word"
+    assert result.is_error is True
+    for block in result.content:
+        assert not block.text.startswith("Error in ")

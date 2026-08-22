@@ -277,6 +277,20 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="mcp_server_identity",
+            description=(
+                "Return public-safe exact identity hashes (SHA-256) for the running server.py, "
+                "its actual sources.db, and its actual vesum.db — never a path or content. "
+                "A client can compare these endpoint-reported hashes against the exact locally "
+                "reviewed files it expects to prove the endpoint is backed by the same reviewed "
+                "code/data, not merely files that happen to exist on the caller's own filesystem."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {},
+            },
+        ),
+        Tool(
             name="check_modern_form",
             description=(
                 "Check if a Ukrainian word form is a currently-codified modern form or an archaic/historical form. "
@@ -1307,17 +1321,14 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
-async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
-    """Handle tool calls.
+async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool]:
+    """Core tool-call dispatch. Returns ``(content, is_error)``; never raises.
 
-    Kept as a module-level callable for unit tests and backward compat.
-    The registered MCP 2.0 handler is ``_on_call_tool``.
-
-    ``arguments`` may carry a reserved ``_privacy_mode`` boolean (Cycle 007
-    amendment step 3). It is stripped before dispatch — no handler or tool
-    schema ever sees it — and only switches how this call is logged: with
-    it set, the log entry never contains argument values or response text,
-    only counts/hashes/tool name/duration/error class.
+    This is the one place that turns a handler exception or an unknown tool
+    name into a result — both ``call_tool`` (the legacy module-level
+    callable kept for unit tests/backward compat) and ``_on_call_tool`` (the
+    actual MCP-wire ``tools/call`` handler) build on top of it, so the two
+    can never silently disagree about whether a given call failed.
     """
     import time as _time
     _t0 = _time.monotonic()
@@ -1332,6 +1343,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
+            "mcp_server_identity": lambda: handle_mcp_server_identity(arguments),
             "check_russian_shadow": lambda: handle_check_russian_shadow(arguments),
             "check_modern_form": lambda: handle_check_modern_form(arguments),
             "verify_quote": lambda: handle_verify_quote(arguments),
@@ -1370,7 +1382,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         else:
             result = [TextContent(type="text", text=f"Unknown tool: {name}")]
             _log_tool_call(name, arguments, error="unknown tool", privacy_mode=privacy_mode)
-            return result
+            return result, True
 
         # Log successful call
         _elapsed = _time.monotonic() - _t0
@@ -1379,11 +1391,27 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
             response_text=_resp_text, privacy_mode=privacy_mode,
         )
-        return result
+        return result, False
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
-        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
+        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")], True
+
+
+async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
+    """Legacy module-level entry point — kept for unit tests/backward compat.
+
+    Returns exactly the content ``_dispatch_tool_call`` produced, including
+    the "Error in ..."/"Unknown tool: ..." prose marker on failure. This is
+    NOT the actual MCP wire path (that's ``_on_call_tool`` below) — nothing
+    here ever leaves the process over the real transport, so preserving the
+    legacy diagnostic text (exception class/message) for direct callers/unit
+    tests is safe. ``RealMcpToolTransport`` on the compiler side additionally
+    refuses to trust this exact prose marker defensively, in case a legacy
+    or downgraded server ever puts it on the wire.
+    """
+    content, _is_error = await _dispatch_tool_call(name, arguments)
+    return content
 
 
 async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
@@ -1392,9 +1420,20 @@ async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
 
 
 async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
-    """MCP 2.0 registered handler for tools/call."""
-    result = await call_tool(params.name, params.arguments or {})
-    return CallToolResult(content=result)
+    """MCP 2.0 registered handler for tools/call — the actual wire path.
+
+    Fails closed: any handler exception or unknown-tool name becomes a
+    safe, generic ``isError=True`` result. The raw exception message and
+    argument values never reach this result's text — those stay
+    server-side only, in the hash-only privacy log (``_log_tool_call``).
+    """
+    try:
+        _content, is_error = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
+    except Exception:
+        return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
+    if is_error:
+        return CallToolResult(content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True)
+    return CallToolResult(content=_content, isError=False)
 
 
 server = Server("sources", on_list_tools=_on_list_tools, on_call_tool=_on_call_tool)
@@ -1594,6 +1633,40 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     from wiki.sources_db import list_tables
     stats = await asyncio.to_thread(list_tables)
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
+
+
+def _sha256_of_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
+    """Endpoint identity attestation (Cycle 007 evidence-foundation fixes v3, item 1).
+
+    Public-safe exact identity hashes only — never a path or file content.
+    Callers (``LocalMcpSourcesClient.server_identity()``) compare these
+    endpoint-reported values against the exact locally reviewed files they
+    expect; this handler must never merely echo back whatever a client
+    claims — it hashes the server's own actual running files.
+    """
+    server_path = Path(__file__).resolve()
+    sources_db_path = PROJECT_ROOT / "data" / "sources.db"
+    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+
+    def _identity() -> dict[str, Any]:
+        return {
+            "server_code_sha256": _sha256_of_file(server_path),
+            "sources_db_sha256": _sha256_of_file(sources_db_path),
+            "sources_db_bytes": sources_db_path.stat().st_size,
+            "vesum_db_sha256": _sha256_of_file(vesum_db_path),
+            "vesum_db_bytes": vesum_db_path.stat().st_size,
+        }
+
+    payload = await asyncio.to_thread(_identity)
+    return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
 
 
 def _is_archaic(tags: str | None) -> bool:

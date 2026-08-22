@@ -3,10 +3,12 @@
   "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_cycle007_evidence_sidecar_v1.schema.json",
   "title": "Phase 3 Cycle 007 per-packet evidence sidecar v1",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "evaluation_cycle_id", "packet_index", "row_count", "tokenizer_id", "tokenizer_version", "code_hashes", "server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "network_lookups_performed", "rows", "retrieval_payloads", "sidecar_id"],
+  "required": ["schema_version", "evaluation_cycle_id", "lane", "packet_binding", "packet_index", "row_count", "tokenizer_id", "tokenizer_version", "code_hashes", "server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "network_lookups_performed", "rows", "retrieval_payloads", "sidecar_id"],
   "properties": {
     "schema_version": {"const": "phase3_cycle007_evidence_sidecar_v1"},
     "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-007"},
+    "lane": {"enum": ["clean_label", "residual_label"]},
+    "packet_binding": {"$ref": "#/$defs/packetBinding"},
     "packet_index": {"type": "integer", "minimum": 1},
     "row_count": {"type": "integer", "minimum": 1},
     "tokenizer_id": {"type": "string", "minLength": 1},
@@ -22,6 +24,15 @@
   },
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "packetBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_basename", "raw_sha256", "packet_identity_set_sha256"],
+      "properties": {
+        "canonical_basename": {"type": "string", "minLength": 1},
+        "raw_sha256": {"$ref": "#/$defs/sha256"},
+        "packet_identity_set_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "codeHashes": {
       "type": "object", "additionalProperties": false,
       "required": ["compiler_id", "compiler_sha256", "tokenizer_id", "tokenizer_version", "tokenizer_sha256", "compound_parser_id", "compound_parser_version", "compound_parser_sha256", "mcp_response_parser_id", "mcp_response_parser_version", "mcp_response_parser_sha256", "query_plan_id", "query_plan_version", "query_plan_sha256"],

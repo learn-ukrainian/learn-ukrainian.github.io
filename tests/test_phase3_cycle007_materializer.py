@@ -20,6 +20,7 @@ from scripts.projects.open_model_data import phase3_cycle007_materializer as mat
 def _write(path: Path, value: Any, *, raw: bool = False) -> bytes:
     payload = value if raw else materializer.canonical(value)
     path.parent.mkdir(parents=True, exist_ok=True)
+    os.chmod(path.parent, materializer.PRIVATE_DIR_MODE)
     path.write_bytes(payload)
     os.chmod(path, materializer.PRIVATE_FILE_MODE)
     return payload
@@ -292,6 +293,46 @@ def test_materializer_rollback_never_touches_a_concurrently_created_destination(
     assert (output / "concurrent-marker.json").exists()
 
 
+def test_materializer_toctou_race_fails_closed_when_output_appears_after_validation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Deterministic race: a concurrent actor wins between _validate_paths() and install.
+
+    A plain ``os.replace(staging, output)`` would silently succeed here,
+    because POSIX rename replaces an existing *empty* directory. The
+    install step must instead fail closed and leave the racing actor's own
+    directory untouched.
+    """
+    source, output, _rows = _fixture(tmp_path)
+    real_mkdir = os.mkdir
+    racer_ran = {"done": False}
+
+    def _racing_mkdir(path: Any, *args: Any, **kwargs: Any) -> None:
+        if Path(path) == output and not racer_ran["done"]:
+            racer_ran["done"] = True
+            # Simulate a concurrent actor creating the destination the
+            # instant after _validate_paths()'s existence check passed —
+            # an empty directory, which os.replace() would silently accept.
+            real_mkdir(path, materializer.PRIVATE_DIR_MODE)
+            os.chmod(path, materializer.PRIVATE_DIR_MODE)
+            (Path(path) / "concurrent-marker.json").write_bytes(b"{}")
+            os.chmod(Path(path) / "concurrent-marker.json", materializer.PRIVATE_FILE_MODE)
+        return real_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(materializer.os, "mkdir", _racing_mkdir)
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "output_exists"
+    assert racer_ran["done"]
+    # The racing actor's own directory survives untouched — our rollback
+    # only ever removes this call's own staging path.
+    assert output.exists()
+    assert (output / "concurrent-marker.json").exists()
+    assert not (output / "custody-receipt.json").exists()
+    leftovers = [path for path in tmp_path.iterdir() if path.name.startswith(f".{output.name}.staging-")]
+    assert leftovers == []
+
+
 # --------------------------------------------------------------------------
 # Amendment step 15: source package mode verification, real-mode path
 # disclosure refusal (env/config only, never argv).
@@ -331,6 +372,200 @@ def test_main_real_mode_resolves_paths_from_env(tmp_path: Path, monkeypatch: pyt
     # was never required and env resolution worked), not that it succeeds.
     exit_code = materializer.main([])
     assert exit_code == 2
+    assert not output.exists()
+
+
+# --------------------------------------------------------------------------
+# Amendment (fixes v3, item 4): exact package/packet binding — duplicate
+# identities across packets, claimed/actual row count drift, lane/order
+# swap, raw hash drift, and ordered-commitment drift.
+# --------------------------------------------------------------------------
+
+
+def _rewrite_manifest(source: Path, manifest: dict[str, Any]) -> None:
+    manifest = dict(manifest)
+    manifest.pop("receipt_sha256", None)
+    manifest["receipt_sha256"] = materializer._hash_receipt(manifest)
+    manifest_path = source / "label-manifest.json"
+    manifest_path.unlink()
+    manifest_path.write_bytes(materializer.canonical(manifest))
+    os.chmod(manifest_path, materializer.PRIVATE_FILE_MODE)
+
+
+def test_materializer_rejects_duplicate_identities_across_packets(tmp_path: Path):
+    source, output, _rows = _fixture(tmp_path)
+    manifest = materializer.strict_json(source / "label-manifest.json")
+    # Clone packet 1's first row's identity into residual_label packet 1 —
+    # a duplicate unit_id/unit_sha256 across two distinct packets.
+    clean_packet = materializer.strict_json(source / "clean_label" / "packet-0001.json")
+    residual_path = source / "residual_label" / "packet-0001.json"
+    residual_packet = materializer.strict_json(residual_path)
+    residual_packet = dict(residual_packet)
+    residual_packet["rows"] = [dict(clean_packet["rows"][0]), *residual_packet["rows"][1:]]
+    residual_packet["packet_identity_set_sha256"] = materializer.identity_set(residual_packet["rows"])
+    residual_path.unlink()
+    residual_raw = materializer.canonical(residual_packet)
+    residual_path.write_bytes(residual_raw)
+    os.chmod(residual_path, materializer.PRIVATE_FILE_MODE)
+
+    records = [dict(record) for record in manifest["packets"]]
+    for record in records:
+        if record["lane"] == "residual_label" and record["packet_index"] == 1:
+            record["raw_sha256"] = materializer.digest(residual_raw)
+            record["packet_identity_set_sha256"] = residual_packet["packet_identity_set_sha256"]
+    manifest = dict(manifest)
+    manifest["packets"] = records
+    _rewrite_manifest(source, manifest)
+
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "identity_uniqueness_failure"
+    assert not output.exists()
+
+
+def test_materializer_rejects_claimed_actual_row_count_drift(tmp_path: Path):
+    source, output, _rows = _fixture(tmp_path)
+    manifest = materializer.strict_json(source / "label-manifest.json")
+    records = [dict(record) for record in manifest["packets"]]
+    for record in records:
+        if record["lane"] == "clean_label" and record["packet_index"] == 1:
+            # Claim a row_count that no longer matches the actual packet
+            # file — bump the manifest's own total in lockstep so the drift
+            # is only detectable against the actual packet file's row list,
+            # not the manifest's internal row_count sum.
+            record["row_count"] = record["row_count"] + 1
+    manifest = dict(manifest)
+    manifest["packets"] = records
+    manifest["row_count"] = manifest["row_count"] + 1
+    _rewrite_manifest(source, manifest)
+
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "packet_binding_drift"
+    assert not output.exists()
+
+
+def test_materializer_rejects_a_lane_order_swap(tmp_path: Path):
+    source, output, _rows = _fixture(tmp_path)
+    manifest = materializer.strict_json(source / "label-manifest.json")
+    records = [dict(record) for record in manifest["packets"]]
+    # LANE_ORDER is ("clean_label", "residual_label") — swap them so the
+    # manifest's own packet list is out of frozen lane order.
+    swapped = sorted(records, key=lambda record: (record["lane"] != "residual_label", record["packet_index"]))
+    manifest = dict(manifest)
+    manifest["packets"] = swapped
+    _rewrite_manifest(source, manifest)
+
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "packet_order_failure"
+    assert not output.exists()
+
+
+def test_materializer_rejects_raw_packet_hash_drift(tmp_path: Path):
+    source, output, _rows = _fixture(tmp_path)
+    packet_path = source / "clean_label" / "packet-0001.json"
+    packet = materializer.strict_json(packet_path)
+    packet = dict(packet)
+    packet["rows"] = [dict(row, source_text="TAMPERED-AFTER-MANIFEST-SEALED") for row in packet["rows"]]
+    packet_path.unlink()
+    packet_path.write_bytes(materializer.canonical(packet))
+    os.chmod(packet_path, materializer.PRIVATE_FILE_MODE)
+    # The manifest's raw_sha256 for this packet now drifts from the actual
+    # (tampered) file bytes on disk.
+
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "packet_binding_drift"
+    assert not output.exists()
+
+
+def _uniform_fixture(root: Path, *, packet_size: int) -> Path:
+    """A real-mode-shaped fixture: one clean_label + one residual_label packet, both exactly packet_size rows."""
+    source = root / "cycle005-source-uniform"
+    source.mkdir(mode=materializer.PRIVATE_DIR_MODE)
+    os.chmod(source, materializer.PRIVATE_DIR_MODE)
+    packet_records: list[dict[str, Any]] = []
+    all_rows: list[dict[str, Any]] = []
+    for lane in ("clean_label", "residual_label"):
+        start = len(all_rows)
+        rows = [_row(start + offset, lane, include_cycle=False) for offset in range(packet_size)]
+        all_rows.extend(rows)
+        packet = {
+            "schema_version": "phase3_cycle005_private_packet_v1",
+            "evaluation_cycle_id": materializer.CYCLE005,
+            "lane": lane,
+            "packet_index": 1,
+            "row_count": packet_size,
+            "rows": rows,
+            "packet_identity_set_sha256": materializer.identity_set(rows),
+        }
+        packet_path = source / lane / "packet-0001.json"
+        packet_raw = _write(packet_path, packet)
+        packet_records.append(
+            {
+                "lane": lane,
+                "packet_index": 1,
+                "canonical_basename": packet_path.name,
+                "row_count": packet_size,
+                "raw_sha256": materializer.digest(packet_raw),
+                "packet_identity_set_sha256": packet["packet_identity_set_sha256"],
+            }
+        )
+    manifest = {
+        "schema_version": "phase3_cycle005_label_manifest_v1",
+        "evaluation_cycle_id": materializer.CYCLE005,
+        "text_free": True,
+        "custody_receipt_raw_sha256": "",
+        "packet_count": len(packet_records),
+        "row_count": len(all_rows),
+        "packets": packet_records,
+    }
+    custody = {
+        "schema_version": "phase3_cycle005_custody_receipt_v1",
+        "evaluation_cycle_id": materializer.CYCLE005,
+        "text_free": True,
+        "provider_artifacts_copied": False,
+    }
+    custody["receipt_sha256"] = materializer._hash_receipt(custody)
+    custody_raw = _write(source / "custody-receipt.json", custody)
+    manifest["custody_receipt_raw_sha256"] = materializer.digest(custody_raw)
+    manifest["receipt_sha256"] = materializer._hash_receipt(manifest)
+    _write(source / "label-manifest.json", manifest)
+    return source
+
+
+def test_materializer_recomputes_ordered_identity_and_rejects_a_claimed_commitment_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Real (non-fixture) mode never trusts a claimed ordered_identity_commitment_sha256."""
+    packet_size = 2
+    source = _uniform_fixture(tmp_path, packet_size=packet_size)
+    output = tmp_path / "cycle007-successor-uniform"
+    manifest = materializer.strict_json(source / "label-manifest.json")
+    manifest = dict(manifest)
+    fake_commitment = "9" * 64
+    manifest["ordered_identity_commitment_sha256"] = fake_commitment
+    _rewrite_manifest(source, manifest)
+
+    custody_raw = (source / "custody-receipt.json").read_bytes()
+    manifest_raw = (source / "label-manifest.json").read_bytes()
+    monkeypatch.setattr(materializer, "SOURCE_CUSTODY_SHA256", materializer.digest(custody_raw))
+    monkeypatch.setattr(materializer, "SOURCE_MANIFEST_SHA256", materializer.digest(manifest_raw))
+    # This fixture's true (small, uniform) shape — real mode otherwise
+    # enforces the frozen 40+164/2000+8159 denominator and the 50-row
+    # packet size, neither of which a synthetic fixture can satisfy.
+    monkeypatch.setattr(materializer, "REAL_PACKET_COUNTS", {"clean_label": 1, "residual_label": 1})
+    monkeypatch.setattr(materializer, "REAL_ROW_COUNTS", {"clean_label": packet_size, "residual_label": packet_size})
+    monkeypatch.setattr(materializer, "PACKET_SIZE", packet_size)
+    # The manifest's claimed commitment must match the frozen pin too, or
+    # the earlier pin check fires first — pin it to our fabricated value so
+    # this test isolates the "recompute from actual rows" check specifically.
+    monkeypatch.setattr(materializer, "ORDERED_IDENTITY_COMMITMENT_SHA256", fake_commitment)
+
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=False, strict_counts=True)
+    assert excinfo.value.code == "ordered_identity_commitment_failure"
     assert not output.exists()
 
 

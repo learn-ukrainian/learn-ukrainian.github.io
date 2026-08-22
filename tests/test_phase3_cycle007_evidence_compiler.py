@@ -10,6 +10,7 @@ parsing/fail-closed logic) without ever opening a socket either.
 from __future__ import annotations
 
 import json
+import os
 import stat
 from pathlib import Path
 from typing import Any
@@ -454,7 +455,7 @@ def test_pravopys_2019_comparison_calls_query_pravopys_not_style_guide():
     """Amendment step 8: 2019 comparison evidence must come from query_pravopys, never search_style_guide."""
     row = _row()
     client = SyntheticSourcesClient(pravopys={"апостроф": {"status": "attested", "hits": "text"}})
-    record = compiler.bind_pravopys_2019_comparison_evidence(row, "apostrophe", client, query="апостроф")
+    record = compiler.bind_pravopys_2019_comparison_evidence(row, "apostrophe", client, query="апостроф", source_version="d" * 64)
     assert ("query_pravopys", "апостроф") in client.call_log
     assert not any(name == "search_style_guide" for name, _ in client.call_log)
     assert record["channel"] == "pravopys_2019_comparison"
@@ -465,8 +466,62 @@ def test_pravopys_2019_comparison_calls_query_pravopys_not_style_guide():
 def test_pravopys_2019_comparison_never_carries_normative_support():
     row = _row()
     client = SyntheticSourcesClient(pravopys={"апостроф": {"status": "attested", "hits": "text"}})
-    record = compiler.bind_pravopys_2019_comparison_evidence(row, "apostrophe", client, query="апостроф")
+    record = compiler.bind_pravopys_2019_comparison_evidence(row, "apostrophe", client, query="апостроф", source_version="d" * 64)
     assert record["supports"] != "normative_rule"
+
+
+# --------------------------------------------------------------------------
+# Amendment (fixes v3, item 3): actually compiled pravopys evidence, wired
+# into compile_row_evidence — not merely unused helper functions.
+# --------------------------------------------------------------------------
+
+
+def test_pravopys_2019_comparison_is_queried_once_per_row_not_once_per_phenomenon():
+    row = _row(text="слово")
+    client = SyntheticSourcesClient(pravopys={"слово": {"status": "attested", "hits": "text"}})
+    result = compiler.compile_row_evidence(
+        row, client, identity=_identity(), residual_phenomena=contract.RESIDUAL_PHENOMENON_TAXONOMY
+    )
+    pravopys_calls = [call for call in client.call_log if call[0] == "query_pravopys"]
+    assert pravopys_calls == [("query_pravopys", "слово")]
+    scoped = [record for record in result["evidence"] if record["channel"] == "pravopys_2019_comparison"]
+    assert len(scoped) == 23
+    assert {record["phenomenon_id"] for record in scoped} == set(contract.RESIDUAL_PHENOMENON_TAXONOMY)
+    assert {record["retrieval_sha256"] for record in scoped} == {scoped[0]["retrieval_sha256"]}
+    assert all(record["supports"] == "comparison_only" for record in scoped)
+
+
+def test_pravopys_2019_comparison_never_runs_for_the_clean_lane():
+    row = _row(text="слово")
+    client = SyntheticSourcesClient(pravopys={"слово": {"status": "attested", "hits": "text"}})
+    compiler.compile_row_evidence(row, client, identity=_identity())  # residual_phenomena=() default
+    assert not any(call[0] == "query_pravopys" for call in client.call_log)
+
+
+def test_pravopys_2026_normative_binds_only_for_the_frozen_2026_family(tmp_path: Path):
+    receipt_path = tmp_path / "receipt.json"
+    receipt_path.write_bytes(b"frozen-2026-context-receipt")
+
+    def _run(family_id: str) -> list[dict[str, Any]]:
+        row = dict(_row(text="слово"))
+        row["family_id"] = family_id
+        client = SyntheticSourcesClient()
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(compiler, "PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256", contract.sha256_file(receipt_path))
+            mp.setattr(compiler, "DEFAULT_PRAVOPYS_CONTEXT_RECEIPT", receipt_path)
+            result = compiler.compile_row_evidence(
+                row, client, identity=_identity(), residual_phenomena=contract.RESIDUAL_PHENOMENON_TAXONOMY
+            )
+        return [record for record in result["evidence"] if record["channel"] == "pravopys_2026_normative"]
+
+    unrelated_family_records = _run("synthetic_family")
+    assert unrelated_family_records == []
+
+    pravopys_family_records = _run(compiler.PRAVOPYS_2026_FAMILY_ID)
+    assert len(pravopys_family_records) == 23
+    assert {record["phenomenon_id"] for record in pravopys_family_records} == set(contract.RESIDUAL_PHENOMENON_TAXONOMY)
+    assert all(record["status"] == "attested" and record["supports"] == "normative_rule" for record in pravopys_family_records)
+    assert len({record["retrieval_sha256"] for record in pravopys_family_records}) == 1
 
 
 # --------------------------------------------------------------------------
@@ -552,7 +607,17 @@ def test_row_level_evidence_id_never_satisfies_a_residual_phenomenon():
 # --------------------------------------------------------------------------
 
 
-def _passing_transport(**overrides: Any) -> compiler.FakeMcpToolTransport:
+def _identity_payload(files: dict[str, Path]) -> dict[str, Any]:
+    return {
+        "server_code_sha256": contract.sha256_file(files["server_code"]),
+        "sources_db_sha256": contract.sha256_file(files["sources_db"]),
+        "sources_db_bytes": files["sources_db"].stat().st_size,
+        "vesum_db_sha256": contract.sha256_file(files["vesum_db"]),
+        "vesum_db_bytes": files["vesum_db"].stat().st_size,
+    }
+
+
+def _passing_transport(*, identity_files: dict[str, Path] | None = None, **overrides: Any) -> compiler.FakeMcpToolTransport:
     responses: dict[str, Any] = {
         "verify_words": "Batch verification: 1 words\n\nFound: 1/1\n\n- **слово** — FOUND (1 match): слово(noun)",
         "check_modern_form": json.dumps({"is_modern_codified": True, "has_archaic_form": False, "has_only_archaic_form": False}),
@@ -566,6 +631,8 @@ def _passing_transport(**overrides: Any) -> compiler.FakeMcpToolTransport:
         "check_russian_shadow": json.dumps({"matches_russian": False, "russian_lemma": None, "confidence": 0.0}),
         "query_pravopys": "No pravopys section found for: 'слово'",
     }
+    if identity_files is not None:
+        responses["mcp_server_identity"] = json.dumps(_identity_payload(identity_files))
     responses.update(overrides)
     return compiler.FakeMcpToolTransport(tool_names=compiler.REQUIRED_TOOL_NAMES, responses=responses)
 
@@ -580,8 +647,8 @@ def _stub_client_files(tmp_path: Path) -> dict[str, Path]:
 
 
 def test_local_mcp_client_round_trips_through_fake_transport(tmp_path: Path):
-    transport = _passing_transport()
     files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files)
     client = compiler.LocalMcpSourcesClient(transport=transport, **files)
     result = client.verify_words(["слово"])
     assert result["слово"]
@@ -602,8 +669,8 @@ def test_local_mcp_client_fails_closed_on_tool_set_drift(tmp_path: Path):
 
 
 def test_local_mcp_client_fails_closed_on_malformed_json(tmp_path: Path):
-    transport = _passing_transport(check_modern_form="not json")
     files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, check_modern_form="not json")
     client = compiler.LocalMcpSourcesClient(transport=transport, **files)
     with pytest.raises(compiler.LocalMcpSourcesClientError):
         client.check_modern_form("слово")
@@ -613,11 +680,189 @@ def test_local_mcp_client_fails_closed_on_tool_error(tmp_path: Path):
     def _boom(_args: Any) -> str:
         raise compiler.McpTransportError("mcp_tool_error:check_russian_shadow")
 
-    transport = _passing_transport(check_russian_shadow=_boom)
     files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, check_russian_shadow=_boom)
     client = compiler.LocalMcpSourcesClient(transport=transport, **files)
     with pytest.raises(compiler.McpTransportError):
         client.check_russian_shadow("слово")
+
+
+# --------------------------------------------------------------------------
+# Endpoint identity attestation (fixes v3, item 1)
+# --------------------------------------------------------------------------
+
+
+def test_local_mcp_client_attests_endpoint_identity_matches_local_files(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files)
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    identity = client.server_identity()
+    assert identity["server_code_sha256"] == contract.sha256_file(files["server_code"])
+    assert ("mcp_server_identity", {}) in transport.calls
+
+
+def test_local_mcp_client_fails_closed_on_endpoint_identity_mismatch(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    mismatched = dict(_identity_payload(files))
+    mismatched["server_code_sha256"] = "0" * 64
+    transport = _passing_transport(identity_files=files, mcp_server_identity=json.dumps(mismatched))
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        compiler.LocalMcpSourcesClient(transport=transport, **files)
+
+
+def test_local_mcp_client_fails_closed_on_endpoint_identity_malformed_response(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, mcp_server_identity="{}")
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        compiler.LocalMcpSourcesClient(transport=transport, **files)
+
+
+def test_local_mcp_client_fails_closed_on_endpoint_identity_missing_tool(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    incomplete_tools = compiler.REQUIRED_TOOL_NAMES - {"mcp_server_identity"}
+    transport = compiler.FakeMcpToolTransport(tool_names=incomplete_tools, responses={})
+    with pytest.raises(compiler.McpTransportError):
+        compiler.LocalMcpSourcesClient(transport=transport, **files)
+
+
+def test_local_mcp_client_rejects_a_non_loopback_endpoint(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        compiler.LocalMcpSourcesClient(endpoint_url="http://example.com/mcp", **files)
+
+
+# --------------------------------------------------------------------------
+# Amendment (fixes v3, item 2): fail-closed prose/JSON parsing.
+# --------------------------------------------------------------------------
+
+
+def test_check_modern_form_empty_payload_is_never_found(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, check_modern_form="{}")
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    modern = client.check_modern_form("слово")
+    assert modern["found"] is False
+    assert modern["is_modern_codified"] is False
+
+
+def test_check_russian_shadow_rejects_an_empty_payload(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, check_russian_shadow="{}")
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        client.check_russian_shadow("слово")
+
+
+def test_check_russian_shadow_rejects_wrong_types(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    bad = json.dumps({"matches_russian": "yes", "russian_lemma": None, "confidence": 0.0})
+    transport = _passing_transport(identity_files=files, check_russian_shadow=bad)
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        client.check_russian_shadow("слово")
+
+
+def test_check_russian_shadow_rejects_unexpected_extra_json_keys(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    bad = json.dumps({"matches_russian": False, "russian_lemma": None, "confidence": 0.0, "unexpected": "value"})
+    transport = _passing_transport(identity_files=files, check_russian_shadow=bad)
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    # Extra keys are tolerated as long as the required keys/types hold —
+    # only *missing*/wrong-typed required keys are rejected.
+    result = client.check_russian_shadow("слово")
+    assert result["matches_russian"] is False
+
+
+def test_check_russian_shadow_rejects_a_truncated_payload(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, check_russian_shadow='{"matches_russian": fal')
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        client.check_russian_shadow("слово")
+
+
+def test_check_modern_form_rejects_unexpected_json_keys_without_the_required_shape(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    bad = json.dumps({"unexpected_key": True})
+    transport = _passing_transport(identity_files=files, check_modern_form=bad)
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    modern = client.check_modern_form("слово")
+    assert modern["found"] is False
+
+
+def test_prose_status_empty_text_is_not_found(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, search_style_guide="")
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    result = client.search_style_guide("слово")
+    assert result["status"] == "not_found"
+
+
+def test_local_mcp_client_fails_closed_on_a_truncated_response(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, check_modern_form='{"is_modern_codified": tr')
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        client.check_modern_form("слово")
+
+
+def test_prose_status_rejects_unknown_nonempty_text_as_incomplete_never_attested(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, search_style_guide="some unexpected server text")
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    result = client.search_style_guide("слово")
+    assert result["status"] == "incomplete"
+
+
+def test_prose_status_rejects_a_success_prefix_from_the_wrong_tool(tmp_path: Path):
+    """A search_ua_gec_errors-shaped 'Found ...' response is not a query_pravopys success envelope."""
+    assert compiler._prose_status("Found 3 human-annotated error pairs for: \"x\"", tool="query_pravopys") == "incomplete"
+
+
+def test_prose_status_treats_the_legacy_error_marker_as_parse_error(tmp_path: Path):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, search_heritage="Error in search_heritage: RuntimeError: boom")
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    result = client.search_heritage_cached("слово")
+    assert result["status"] == "parse_error"
+
+
+def test_real_transport_rejects_the_legacy_error_prose_marker_even_without_iserror(tmp_path: Path):
+    class _Block:
+        def __init__(self) -> None:
+            self.type = "text"
+            self.text = "Error in verify_words: KeyError: 'words'"
+
+    class _FakeResult:
+        def __init__(self) -> None:
+            self.isError = False
+            self.content = [_Block()]
+
+    async def _fake_call(_name: str, _arguments: Any) -> Any:
+        return _FakeResult()
+
+    transport = compiler.RealMcpToolTransport("http://127.0.0.1:8766/mcp")
+    transport._tool_names = compiler.REQUIRED_TOOL_NAMES  # skip live preflight
+    transport._call = _fake_call
+    try:
+        with pytest.raises(compiler.McpTransportError):
+            transport.call_tool("verify_words", {"words": []})
+    finally:
+        transport.close()
+
+
+# --------------------------------------------------------------------------
+# Amendment (fixes v3, item 6): exact source/code version bindings.
+# --------------------------------------------------------------------------
+
+
+def test_russian_shadow_source_version_is_the_actual_check_ru_morph_hash():
+    row = _row(text="слово")
+    client = SyntheticSourcesClient()
+    result = compiler.compile_row_evidence(row, client, identity=_identity())
+    shadow_records = [record for record in result["evidence"] if record["channel"] == "russian_shadow_suspicion"]
+    assert shadow_records
+    assert all(record["source_version"] == compiler.contract.sha256_file(compiler.DEFAULT_CHECK_RU_MORPH) for record in shadow_records)
 
 
 def test_fake_transport_rejects_a_call_to_an_undeclared_tool(tmp_path: Path):
@@ -702,6 +947,35 @@ def test_compile_sidecar_bundle_rollback_never_touches_a_concurrently_created_de
     with pytest.raises(RuntimeError):
         compiler.compile_sidecar_bundle([[_row("unit-1")], [_row("unit-2")]], client, output_dir)
     assert not output_dir.exists()
+    staging_leftovers = list(tmp_path.glob(f".{output_dir.name}.staging-*"))
+    assert staging_leftovers == []
+
+
+def test_compile_sidecar_bundle_toctou_race_fails_closed_when_output_appears_after_validation(
+    tmp_path: Path, monkeypatch
+):
+    """Deterministic race: a concurrent actor wins between the up-front check and install."""
+    client = SyntheticSourcesClient()
+    output_dir = tmp_path / "sidecars"
+    real_mkdir = os.mkdir
+    racer_ran = {"done": False}
+
+    def _racing_mkdir(path, *args, **kwargs):
+        if Path(path) == output_dir and not racer_ran["done"]:
+            racer_ran["done"] = True
+            real_mkdir(path, compiler.PRIVATE_DIR_MODE)
+            os.chmod(path, compiler.PRIVATE_DIR_MODE)
+            (Path(path) / "concurrent-marker.json").write_bytes(b"{}")
+            os.chmod(Path(path) / "concurrent-marker.json", compiler.PRIVATE_FILE_MODE)
+        return real_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(compiler.os, "mkdir", _racing_mkdir)
+    with pytest.raises(contract.EvidenceContractError):
+        compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
+    assert racer_ran["done"]
+    assert output_dir.exists()
+    assert (output_dir / "concurrent-marker.json").exists()
+    assert not (output_dir / "manifest.json").exists()
     staging_leftovers = list(tmp_path.glob(f".{output_dir.name}.staging-*"))
     assert staging_leftovers == []
 
@@ -803,6 +1077,47 @@ def test_compile_cycle007_package_binds_lane_packet_index_and_basename(tmp_path:
     assert residual_sidecar["rows"][0]["phenomenon_evidence_ids"]
     clean_sidecar = json.loads((sidecars_out / "sidecar-0001.json").read_text())
     assert clean_sidecar["rows"][0]["phenomenon_evidence_ids"] == {}
+
+    # Amendment (fixes v3, item 4): the real, materializer-verified packet
+    # binding is persisted — not a self-derived placeholder — and the
+    # manifest carries the materialization custody/manifest hashes.
+    package_manifest = json.loads((package / "manifest.json").read_text())
+    expected_bindings = {
+        (record["lane"], record["packet_index"]): record for record in package_manifest["packets"]
+    }
+    assert clean_sidecar["lane"] == "clean_label"
+    clean_binding = expected_bindings[("clean_label", 1)]
+    assert clean_sidecar["packet_binding"] == {
+        "canonical_basename": clean_binding["canonical_basename"],
+        "raw_sha256": clean_binding["raw_sha256"],
+        "packet_identity_set_sha256": clean_binding["packet_identity_set_sha256"],
+    }
+    for entry in manifest["sidecars"]:
+        assert entry["lane"] in {"clean_label", "residual_label"}
+        assert set(entry["packet_binding"]) == {"canonical_basename", "raw_sha256", "packet_identity_set_sha256"}
+    assert manifest["source_package_binding"] == {
+        "source_evaluation_cycle_id": package_manifest["source_evaluation_cycle_id"],
+        "custody_receipt_raw_sha256": package_manifest["custody_receipt_raw_sha256"],
+        "materialization_manifest_sha256": package_manifest["receipt_sha256"],
+        "ordered_identity_commitment_sha256": package_manifest["ordered_identity_commitment_sha256"],
+        "identity_union_commitment_sha256": package_manifest["identity_union_commitment_sha256"],
+        "ordered_packet_commitment_sha256": package_manifest["ordered_packet_commitment_sha256"],
+        "packet_count": package_manifest["packet_count"],
+        "row_count": package_manifest["row_count"],
+    }
+
+
+def test_compile_sidecar_bundle_bare_compile_has_a_null_source_package_binding(tmp_path: Path):
+    """A bare (package-free) compile still carries the key, but its value is None."""
+    client = SyntheticSourcesClient()
+    output_dir = tmp_path / "sidecars"
+    manifest = compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
+    assert manifest["source_package_binding"] is None
+    assert set(manifest["sidecars"][0]["packet_binding"]) == {
+        "canonical_basename",
+        "raw_sha256",
+        "packet_identity_set_sha256",
+    }
 
 
 def test_compile_cycle007_package_rejects_a_tampered_packet_raw_sha(tmp_path: Path):

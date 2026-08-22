@@ -11,6 +11,7 @@ missing/conflicting/unavailable evidence.
 from __future__ import annotations
 
 import copy
+from typing import Any
 
 import pytest
 
@@ -88,6 +89,118 @@ def _row_evidence(row, records, *, phenomenon_evidence_ids=None):
 
 
 # --------------------------------------------------------------------------
+# Sidecar/manifest fixtures — fixes v3, item 5: every schema field and exact
+# constant is mandatory, so these fixtures are fully populated (never the
+# minimal partial dicts a conditional check would have tolerated).
+# --------------------------------------------------------------------------
+
+
+def _expected_identity(**overrides: Any) -> dict[str, Any]:
+    base = {
+        "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
+        "tokenizer_version": "1",
+        "code_hashes": {"compiler_sha256": "e" * 64},
+        "server_code_sha256": "f" * 64,
+        "sources_db_sha256": "1" * 64,
+        "vesum_db_sha256": "2" * 64,
+    }
+    base.update(overrides)
+    return base
+
+
+def _payload_record(row, *, channel="vesum_attestation", source_identity="vesum", status="attested",
+                     supports="attestation", phenomenon_id=None, payload=None):
+    """Build one evidence record whose retrieval_sha256 is a real sha256_value(payload)."""
+    payload = payload if payload is not None else {"marker": f"{channel}:{source_identity}:{phenomenon_id}"}
+    record = contract.build_evidence_record(
+        channel=channel,
+        source_identity=source_identity,
+        source_version="v1",
+        locator="locator",
+        query="слово",
+        status=status,
+        supports=supports if status == "attested" else "no_conclusion",
+        retrieval_sha256=contract.sha256_value(payload),
+        parser_id="test-parser-v1",
+        parser_version="1",
+        row=row,
+        phenomenon_id=phenomenon_id,
+        negative_reason=None if status == "attested" else status,
+    )
+    return record, payload
+
+
+def _packet_binding(**overrides: Any) -> dict[str, Any]:
+    base = {
+        "canonical_basename": "packet-0001.json",
+        "raw_sha256": "3" * 64,
+        "packet_identity_set_sha256": "4" * 64,
+    }
+    base.update(overrides)
+    return base
+
+
+def _full_sidecar(rows, retrieval_payloads, *, lane="clean_label", identity=None, packet_index=1, packet_binding=None):
+    identity = identity or _expected_identity()
+    body = {
+        "schema_version": "phase3_cycle007_evidence_sidecar_v1",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": lane,
+        "packet_binding": packet_binding or _packet_binding(),
+        "packet_index": packet_index,
+        "row_count": len(rows),
+        "tokenizer_id": identity["tokenizer_id"],
+        "tokenizer_version": identity["tokenizer_version"],
+        "code_hashes": identity["code_hashes"],
+        "server_code_sha256": identity["server_code_sha256"],
+        "sources_db_sha256": identity["sources_db_sha256"],
+        "vesum_db_sha256": identity["vesum_db_sha256"],
+        "network_lookups_performed": 0,
+        "rows": rows,
+        "retrieval_payloads": dict(retrieval_payloads),
+    }
+    body["sidecar_id"] = "cycle007_sidecar:" + contract.sha256_value(body)
+    return body
+
+
+def _full_manifest(*, identity=None, packet_count=1, row_count=3, sidecars=None, source_package_binding=None, **overrides):
+    identity = identity or _expected_identity()
+    sidecars = (
+        sidecars
+        if sidecars is not None
+        else [
+            {
+                "packet_index": 1,
+                "row_count": 3,
+                "sidecar_sha256": "a" * 64,
+                "sidecar_id": "cycle007_sidecar:" + "b" * 64,
+                "lane": "clean_label",
+                "packet_binding": _packet_binding(),
+            }
+        ]
+    )
+    manifest = {
+        "schema_version": "phase3_cycle007_evidence_manifest_v1",
+        "text_free": True,
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "tokenizer_id": identity["tokenizer_id"],
+        "tokenizer_version": identity["tokenizer_version"],
+        "code_hashes": identity["code_hashes"],
+        "server_code_sha256": identity["server_code_sha256"],
+        "sources_db_sha256": identity["sources_db_sha256"],
+        "vesum_db_sha256": identity["vesum_db_sha256"],
+        "packet_count": packet_count,
+        "row_count": row_count,
+        "network_lookups_performed": 0,
+        "sidecars": sidecars,
+        "source_package_binding": source_package_binding,
+    }
+    manifest.update(overrides)
+    manifest["manifest_sha256"] = contract.sha256_value(manifest)
+    return manifest
+
+
+# --------------------------------------------------------------------------
 # validate_evidence_record / validate_row_evidence
 # --------------------------------------------------------------------------
 
@@ -158,14 +271,11 @@ def test_validate_row_evidence_rejects_cross_phenomenon_evidence():
 
 
 def test_validate_sidecar_rejects_duplicate_row():
-    row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
-    sidecar = {
-        "schema_version": "phase3_cycle007_evidence_sidecar_v1",
-        "row_count": 2,
-        "rows": [row_a, copy.deepcopy(row_a)],
-    }
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a, copy.deepcopy(row_a)], {record["retrieval_sha256"]: payload})
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_sidecar(sidecar)
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
     assert excinfo.value.code == "duplicate_row"
 
 
@@ -345,71 +455,162 @@ def test_validate_evidence_record_rejects_a_hand_edited_claim_boundary_flag():
 
 
 def test_validate_sidecar_rejects_row_count_mismatch():
-    row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
-    sidecar = {"schema_version": "phase3_cycle007_evidence_sidecar_v1", "row_count": 5, "rows": [row_a]}
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload})
+    sidecar["row_count"] = 5
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_sidecar(sidecar)
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
     assert excinfo.value.code == "sidecar_shape_drift"
 
 
 def test_validate_sidecar_detects_sidecar_id_hash_drift():
-    row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
-    sidecar = {"schema_version": "phase3_cycle007_evidence_sidecar_v1", "row_count": 1, "rows": [row_a]}
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload})
     sidecar["sidecar_id"] = "cycle007_sidecar:" + "0" * 64
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_sidecar(sidecar)
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
     assert excinfo.value.code == "sidecar_id_hash_drift"
 
 
 def test_validate_sidecar_detects_missing_retrieval_payload():
-    record = _vesum_record(ROW_A)
+    record, _payload = _payload_record(ROW_A)
     row_a = _row_evidence(ROW_A, [record])
-    sidecar = {
-        "schema_version": "phase3_cycle007_evidence_sidecar_v1",
-        "row_count": 1,
-        "rows": [row_a],
-        "retrieval_payloads": {},  # the record's retrieval_sha256 is not here
-    }
+    sidecar = _full_sidecar([row_a], {})  # the record's retrieval_sha256 is not here
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_sidecar(sidecar)
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
     assert excinfo.value.code == "retrieval_payload_missing"
 
 
+def test_validate_sidecar_rejects_a_missing_required_field():
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload})
+    del sidecar["code_hashes"]
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+    assert excinfo.value.code == "sidecar_shape_drift"
+
+
+def test_validate_sidecar_detects_identity_hash_drift():
+    """A rehashed sidecar that self-consistently substitutes an arbitrary code/source hash still fails closed."""
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload})
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity(vesum_db_sha256="9" * 64))
+    assert excinfo.value.code == "identity_hash_drift"
+
+
+def test_validate_sidecar_detects_retrieval_payload_hash_drift():
+    record, _payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: {"tampered": True}})
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+    assert excinfo.value.code == "retrieval_payload_hash_drift"
+
+
+def test_validate_sidecar_rejects_an_unreferenced_retrieval_payload():
+    record, payload = _payload_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    extra_payload = {"unused": True}
+    sidecar = _full_sidecar(
+        [row_a],
+        {record["retrieval_sha256"]: payload, contract.sha256_value(extra_payload): extra_payload},
+    )
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+    assert excinfo.value.code == "retrieval_payload_unreferenced"
+
+
+def test_validate_sidecar_rejects_clean_lane_phenomenon_contamination():
+    record, payload = _payload_record(ROW_A, phenomenon_id="apostrophe")
+    row_a = _row_evidence(ROW_A, [record], phenomenon_evidence_ids={"apostrophe": [record["evidence_id"]]})
+    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload}, lane="clean_label")
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+    assert excinfo.value.code == "clean_lane_phenomenon_contamination"
+
+
+def test_validate_sidecar_rejects_residual_lane_missing_a_phenomenon():
+    """Subset of the frozen 23-phenomenon taxonomy — never silently accepted."""
+    pairs = [_payload_record(ROW_A, phenomenon_id=p) for p in contract.RESIDUAL_PHENOMENON_TAXONOMY[:-1]]
+    records = [record for record, _payload in pairs]
+    payload_map = {record["retrieval_sha256"]: payload for record, payload in pairs}
+    phenomenon_evidence_ids = {record["phenomenon_id"]: [record["evidence_id"]] for record in records}
+    row_a = _row_evidence(ROW_A, records, phenomenon_evidence_ids=phenomenon_evidence_ids)
+    sidecar = _full_sidecar([row_a], payload_map, lane="residual_label")
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+    assert excinfo.value.code == "residual_lane_phenomenon_scope_drift"
+
+
+def test_validate_sidecar_rejects_residual_lane_extra_phenomenon_key():
+    pairs = [_payload_record(ROW_A, phenomenon_id=p) for p in contract.RESIDUAL_PHENOMENON_TAXONOMY]
+    records = [record for record, _payload in pairs]
+    payload_map = {record["retrieval_sha256"]: payload for record, payload in pairs}
+    phenomenon_evidence_ids = {record["phenomenon_id"]: [record["evidence_id"]] for record in records}
+    phenomenon_evidence_ids["not-a-real-phenomenon"] = []
+    row_a = _row_evidence(ROW_A, records, phenomenon_evidence_ids=phenomenon_evidence_ids)
+    sidecar = _full_sidecar([row_a], payload_map, lane="residual_label")
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
+    assert excinfo.value.code == "residual_lane_phenomenon_scope_drift"
+
+
 def test_validate_manifest_accepts_a_well_formed_manifest():
-    manifest = {
-        "schema_version": "phase3_cycle007_evidence_manifest_v1",
-        "text_free": True,
-        "packet_count": 1,
-        "row_count": 3,
-        "sidecars": [{"packet_index": 1, "row_count": 3, "sidecar_sha256": "a" * 64}],
-    }
-    manifest["manifest_sha256"] = contract.sha256_value(manifest)
-    validator.validate_manifest(manifest)
+    manifest = _full_manifest()
+    validator.validate_manifest(manifest, expected_identity=_expected_identity())
 
 
 def test_validate_manifest_detects_manifest_sha256_hash_drift():
-    manifest = {
-        "schema_version": "phase3_cycle007_evidence_manifest_v1",
-        "text_free": True,
-        "packet_count": 1,
-        "row_count": 3,
-        "sidecars": [{"packet_index": 1, "row_count": 3, "sidecar_sha256": "a" * 64}],
-        "manifest_sha256": "0" * 64,
-    }
+    manifest = _full_manifest()
+    manifest["manifest_sha256"] = "0" * 64
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_manifest(manifest)
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
     assert excinfo.value.code == "manifest_id_hash_drift"
 
 
 def test_validate_manifest_detects_row_count_mismatch():
-    manifest = {
-        "schema_version": "phase3_cycle007_evidence_manifest_v1",
-        "text_free": True,
-        "packet_count": 1,
-        "row_count": 999,
-        "sidecars": [{"packet_index": 1, "row_count": 3, "sidecar_sha256": "a" * 64}],
-    }
-    manifest["manifest_sha256"] = contract.sha256_value(manifest)
+    manifest = _full_manifest(row_count=999)
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_manifest(manifest)
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
     assert excinfo.value.code == "manifest_shape_drift"
+
+
+def test_validate_manifest_rejects_a_missing_required_field():
+    manifest = _full_manifest()
+    del manifest["code_hashes"]
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "manifest_shape_drift"
+
+
+def test_validate_manifest_detects_identity_hash_drift():
+    manifest = _full_manifest()
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity(server_code_sha256="9" * 64))
+    assert excinfo.value.code == "identity_hash_drift"
+
+
+# --------------------------------------------------------------------------
+# Amendment (fixes v3, item 5): private query field required + recomputed.
+# --------------------------------------------------------------------------
+
+
+def test_validate_evidence_record_detects_query_mutation():
+    record = dict(_vesum_record(ROW_A))
+    record["query"] = "інше слово"  # mutated without updating query_sha256
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "query_sha256_hash_drift"
+
+
+def test_validate_evidence_record_rejects_a_deleted_query_field():
+    record = dict(_vesum_record(ROW_A))
+    del record["query"]
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "evidence_shape_drift"
