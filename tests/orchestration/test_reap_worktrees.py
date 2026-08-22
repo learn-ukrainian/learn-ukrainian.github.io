@@ -1880,3 +1880,73 @@ def test_fresh_main_dispatch_is_not_age_reaped(
     assert result.action == "skipped"
     assert worktree.exists()
 
+
+# --- _query_pr_states must fail CLOSED on unreadable rows (#7126 CF review) --
+
+
+def _gh_stdout(payload: str, returncode: int = 0):
+    return subprocess.CompletedProcess(args=[], returncode=returncode, stdout=payload, stderr="")
+
+
+@pytest.mark.parametrize(
+    ("label", "payload"),
+    [
+        ("null row", "[null]"),
+        ("empty row", "[{}]"),
+        ("row without state", '[{"number": 1}]'),
+        ("row is a string", '["OPEN"]'),
+        ("blank state", '[{"state": "", "number": 1}]'),
+        ("scalar payload", "123"),
+        ("mapping payload", "{}"),
+        ("string payload", '"open"'),
+        ("null payload", "null"),
+    ],
+)
+def test_query_pr_states_reports_unreadable_rows_as_an_error(monkeypatch, label, payload) -> None:
+    """A row the parser cannot read is an UNKNOWN, never an absence.
+
+    Silently skipping made `[null]` / `[{}]` parse as "no open PR", and every
+    caller reads an empty list as permission to DELETE the worktree. That was
+    a destructive fail-open on malformed input.
+    """
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert states == [], label
+    assert error is not None, label
+
+
+def test_query_pr_states_still_reports_a_genuinely_empty_list(monkeypatch) -> None:
+    """An empty list is a real answer (no PR), not an unknown -- reaping must
+    still be possible or nothing would ever be cleaned up."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout("[]"))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert states == []
+    assert error is None
+
+
+def test_query_pr_states_parses_a_well_formed_row(monkeypatch) -> None:
+    payload = json.dumps([{"number": 7120, "state": "OPEN", "headRefOid": "abc123"}])
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert error is None
+    assert [(s.number, s.state, s.head_sha) for s in states] == [(7120, "OPEN", "abc123")]
+
+
+@pytest.mark.parametrize("payload", ["[null]", "[{}]", "123"])
+def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, payload) -> None:
+    """End-to-end on the destructive path: an unreadable PR response must
+    retain, never delete."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    no_open_pr, guard_error = post_task_reap._no_open_pr_for_branch(
+        repo_root=Path("/nonexistent"), branch="some/branch"
+    )
+
+    assert no_open_pr is False
+    assert guard_error is not None

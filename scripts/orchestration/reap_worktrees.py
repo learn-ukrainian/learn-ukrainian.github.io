@@ -250,14 +250,24 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
         raw_items = json.loads(proc.stdout or "[]")
     except json.JSONDecodeError as exc:
         return [], f"gh pr list returned invalid JSON: {exc}"
+    if not isinstance(raw_items, list):
+        # Without this, a scalar payload (`123`) raises TypeError in the loop
+        # below and a mapping would iterate its keys.
+        return [], "gh pr list returned a non-list payload"
 
     states: list[PullRequestState] = []
     for item in raw_items:
+        # A row we cannot read is an UNKNOWN, never an absence. Silently
+        # skipping it made `[null]` / `[{}]` parse as "no open PR", and every
+        # caller reads an empty list as permission to DELETE the worktree --
+        # a destructive fail-open on malformed input. Routing it through the
+        # existing error channel makes all callers retain instead, since each
+        # one already treats a non-None error as skip/retain.
         if not isinstance(item, dict):
-            continue
+            return [], "gh pr list returned a malformed row (not an object)"
         state = str(item.get("state") or "").upper()
         if not state:
-            continue
+            return [], "gh pr list returned a row with no usable state"
         number = item.get("number")
         states.append(
             PullRequestState(
