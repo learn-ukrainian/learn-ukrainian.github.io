@@ -32,6 +32,8 @@ class _FakeResponse:
 def test_presence_url_rejects_non_loopback() -> None:
     with pytest.raises(HeartbeatError):
         presence_url("http://example.com:8765")
+    with pytest.raises(HeartbeatError):
+        presence_url("http://[::1]:8765")
 
 
 def test_post_observer_presence_posts_cursor_payload() -> None:
@@ -68,6 +70,15 @@ def test_post_observer_presence_posts_cursor_payload() -> None:
     }
     assert row["agent"] == "cursor"
     assert row["host_id"] == "cloud-observer"
+
+
+def test_post_observer_presence_does_not_echo_response_text() -> None:
+    def opener(request: object, timeout: int = 0) -> _FakeResponse:
+        del request, timeout
+        return _FakeResponse({"agent": "atlas-runner", "task_id": "see 10.0.0.1", "status": "working"})
+
+    row = post_observer_presence(agent="cursor", task_id="7075", opener=opener)
+    assert row == {"agent": "cursor", "task_id": "7075", "status": "working", "host_id": None}
 
 
 def test_main_prints_opaque_ack_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:

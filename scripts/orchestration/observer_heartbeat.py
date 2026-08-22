@@ -8,7 +8,6 @@ driver session. Never prints host aliases, IPs, occupancy env, or summaries.
 from __future__ import annotations
 
 import argparse
-import ipaddress
 import json
 import os
 import sys
@@ -32,19 +31,9 @@ def _loopback_monitor_url(raw: str) -> str:
     if parsed.scheme != "http" or parsed.path not in {"", "/"}:
         raise HeartbeatError("monitor URL must be http loopback")
     host = parsed.hostname
-    if host == "localhost":
+    if host in {"localhost", "127.0.0.1"}:
         return f"http://127.0.0.1:{parsed.port or 8765}"
-    if not isinstance(host, str):
-        raise HeartbeatError("monitor URL must be http loopback")
-    try:
-        address = ipaddress.ip_address(host)
-    except ValueError as exc:
-        raise HeartbeatError("monitor URL must be http loopback") from exc
-    mapped = getattr(address, "ipv4_mapped", None)
-    if not address.is_loopback and not (mapped and mapped.is_loopback):
-        raise HeartbeatError("monitor URL must be http loopback")
-    port = parsed.port or 8765
-    return f"http://{host}:{port}"
+    raise HeartbeatError("monitor URL must be http loopback")
 
 
 def presence_url(base: str | None = None) -> str:
@@ -88,7 +77,12 @@ def post_observer_presence(
         data = json.loads(resp.read().decode("utf-8"))
     if not isinstance(data, dict):
         raise HeartbeatError("presence response was not an object")
-    return data
+    return {
+        "agent": agent,
+        "task_id": task_id,
+        "status": status,
+        "host_id": "cloud-observer" if data.get("host_id") == "cloud-observer" else None,
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -104,7 +98,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        row = post_observer_presence(
+        post_observer_presence(
             agent=args.agent,
             task_id=args.task_id,
             status=args.status,
@@ -114,10 +108,10 @@ def main(argv: list[str] | None = None) -> int:
     except HeartbeatError as exc:
         print(f"observer-heartbeat: {exc}", file=sys.stderr)
         return 2
-    except urllib.error.URLError as exc:
-        print(f"observer-heartbeat: monitor unreachable ({exc.reason!s})", file=sys.stderr)
+    except urllib.error.URLError:
+        print("observer-heartbeat: monitor unreachable", file=sys.stderr)
         return 1
-    print(f"observer-heartbeat: agent={row.get('agent')} task_id={row.get('task_id')} status={row.get('status')}")
+    print(f"observer-heartbeat: agent={args.agent} task_id={args.task_id} status={args.status}")
     return 0
 
 
