@@ -105,7 +105,7 @@ def test_presence_rejects_ram_lease_fields() -> None:
 
 
 def test_presence_rejects_unknown_agent_and_leaky_summary() -> None:
-    unknown = loop_client.post("/api/observer/presence", json={**_HEARTBEAT, "agent": "cursor"})
+    unknown = loop_client.post("/api/observer/presence", json={**_HEARTBEAT, "agent": "codex"})
     assert unknown.status_code == 400
     for summary in (
         "talk to atlas-runner",
@@ -164,3 +164,31 @@ def test_qa_engineer_and_grok_bot_can_coexist() -> None:
     occupancy = remote_client.get("/api/occupancy?host_id=cloud-observer")
     agents = {row["agent"] for row in occupancy.json()["hosts"]["cloud-observer"]["occupants"]}
     assert agents == {"grok-bot", "qa-engineer"}
+
+
+def test_cursor_driver_heartbeat_appears_under_cloud_observer() -> None:
+    posted = loop_client.post(
+        "/api/observer/presence",
+        json={
+            "agent": "cursor",
+            "kind": "observer",
+            "task_id": "7075",
+            "epic": "7073",
+            "status": "working",
+            "summary": "cursor driver occupancy heartbeat",
+        },
+    )
+    assert posted.status_code == 200
+    assert posted.json()["agent"] == "cursor"
+    occupancy = remote_client.get("/api/occupancy")
+    occupants = occupancy.json()["hosts"]["cloud-observer"]["occupants"]
+    assert occupants == [
+        {
+            "kind": "observer",
+            "agent": "cursor",
+            "task_id": "7075",
+            "epic": "7073",
+            "status": "working",
+        }
+    ]
+    assert "summary" not in occupants[0]

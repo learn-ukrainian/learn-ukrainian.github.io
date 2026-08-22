@@ -294,7 +294,7 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
 
 ### `POST /api/observer/presence`
 
-Loopback-only heartbeat for Grok Bot / QA Engineer. This is **not** a RAM lease (`POST /api/agent-monitor/register`), not a fleet seat, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an issue/PR token. Optional `epic` and `summary`. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show `status` plus `task_id`). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
+Loopback-only heartbeat for Grok Bot, QA Engineer, and the Cursor driver seat. This is **not** a RAM lease (`POST /api/agent-monitor/register`), not evidence of a live fleet registry row, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`, `cursor`. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an issue/PR token. Optional `epic` and `summary`. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show `status` plus `task_id`). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
 
 Rows live 15 minutes and drop when stale or when Monitor restarts. Occupancy then shows them under `cloud-observer`.
 
