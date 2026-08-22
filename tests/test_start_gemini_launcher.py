@@ -2,16 +2,41 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
 from tests.test_launcher_contract import run_launcher
+
+_DRIVE_EPIC_NEEDLE = "agents_extensions/shared/skills/drive-epic/SKILL.md"
+_AGY_PROMPT_FLAG = re.compile(r"(?:^|\s)(-i|--prompt-interactive)(?:\s|$)")
+
+
+def _would_exec_line(stdout: str) -> str:
+    for line in stdout.splitlines():
+        if line.startswith("would exec "):
+            return line
+    raise AssertionError(f"missing would-exec line:\n{stdout}")
+
+
+def _assert_drive_epic_uses_agy_interactive_flag(exec_line: str) -> None:
+    assert _DRIVE_EPIC_NEEDLE in exec_line, exec_line
+    flag = _AGY_PROMPT_FLAG.search(exec_line)
+    assert flag, f"expected -i/--prompt-interactive before drive-epic text:\n{exec_line}"
+    assert flag.start() < exec_line.find(_DRIVE_EPIC_NEEDLE), exec_line
+    before_prompt = exec_line[: exec_line.find(_DRIVE_EPIC_NEEDLE)]
+    assert re.search(r"(?:-i|--prompt-interactive)\s+\S*$", before_prompt), exec_line
+    assert exec_line.count(_DRIVE_EPIC_NEEDLE) == 1, exec_line
 
 
 def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     interactive = run_launcher("start-gemini.sh")
     epic = run_launcher("start-gemini.sh", "--epic", "atlas")
     assert interactive.returncode == 0, interactive.stderr
-    assert "would exec agy --model gemini-3.7-flash-high" in interactive.stdout
+    exec_line = _would_exec_line(interactive.stdout)
+    assert "would exec agy --model gemini-3.7-flash-high" in exec_line
+    assert not _AGY_PROMPT_FLAG.search(exec_line), exec_line
+    assert _DRIVE_EPIC_NEEDLE not in exec_line
     assert epic.returncode == 2
     assert "interactive launchers reject --epic" in epic.stderr
 
@@ -23,6 +48,7 @@ def test_gemini_driver_claims_a_lease_for_supported_selectors(selector: str) -> 
     assert "would claim lease" in result.stdout
     assert "would run provider canary" in result.stdout
     assert "would bind drive-epic" in result.stdout
+    _assert_drive_epic_uses_agy_interactive_flag(_would_exec_line(result.stdout))
 
 
 @pytest.mark.parametrize("model", ("gemini-3.6-flash-high", "gemini-3.1-pro-high"))
@@ -42,4 +68,24 @@ def test_gemini_driver_rejects_uncertified_model_and_non_agy_harness() -> None:
 def test_gemini_forwards_provider_arguments_only_after_separator() -> None:
     result = run_launcher("start-gemini.sh", "--", "--sandbox", "read-only")
     assert result.returncode == 0, result.stderr
-    assert "--sandbox read-only" in result.stdout
+    exec_line = _would_exec_line(result.stdout)
+    assert "--sandbox read-only" in exec_line
+    assert not _AGY_PROMPT_FLAG.search(exec_line), exec_line
+
+
+def test_gemini_driver_passes_binding_via_agy_interactive_flag() -> None:
+    result = run_launcher("start-gemini-driver.sh", "--epic", "hramatka")
+    assert result.returncode == 0, result.stderr
+    exec_line = _would_exec_line(result.stdout)
+    assert "would exec agy --model" in exec_line
+    _assert_drive_epic_uses_agy_interactive_flag(exec_line)
+
+
+def test_gemini_driver_forwards_provider_args_without_duplicating_prompt() -> None:
+    result = run_launcher(
+        "start-gemini-driver.sh", "--epic", "devops", "--", "--sandbox", "read-only"
+    )
+    assert result.returncode == 0, result.stderr
+    exec_line = _would_exec_line(result.stdout)
+    assert "--sandbox read-only" in exec_line
+    _assert_drive_epic_uses_agy_interactive_flag(exec_line)
