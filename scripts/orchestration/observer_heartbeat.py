@@ -31,8 +31,12 @@ def _loopback_monitor_url(raw: str) -> str:
     if parsed.scheme != "http" or parsed.path not in {"", "/"}:
         raise HeartbeatError("monitor URL must be http loopback")
     host = parsed.hostname
+    try:
+        port = parsed.port
+    except ValueError:
+        raise HeartbeatError("monitor URL must be http loopback") from None
     if host in {"localhost", "127.0.0.1"}:
-        return f"http://127.0.0.1:{parsed.port or 8765}"
+        return f"http://127.0.0.1:{port or 8765}"
     raise HeartbeatError("monitor URL must be http loopback")
 
 
