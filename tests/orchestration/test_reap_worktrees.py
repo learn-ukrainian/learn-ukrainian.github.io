@@ -114,9 +114,7 @@ def patch_gh(
                         head = _resolve_head(kwargs["cwd"], branch, item)
                         if head is None or not _ancestor(kwargs["cwd"], sha, head):
                             continue
-                        payload.append(
-                            {"number": item.get("number"), "state": item.get("state")}
-                        )
+                        payload.append({"number": item.get("number"), "state": item.get("state")})
                 return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
             branch = args[args.index("--head") + 1]
             calls.append(branch)
@@ -359,10 +357,7 @@ def test_preserve_then_reap_commits_dirty_worktree_before_removal(
     recovered = tmp_path / "recovered-preserve"
     git(repo, "worktree", "add", str(recovered), "codex/preserve")
     assert (recovered / "artifact.txt").read_text(encoding="utf-8") == "recover me\n"
-    assert (
-        git(recovered, "log", "-1", "--format=%s")
-        == "wip: preserve codex/preserve before reap [skip ci]"
-    )
+    assert git(recovered, "log", "-1", "--format=%s") == "wip: preserve codex/preserve before reap [skip ci]"
     assert_main_checkout_unchanged(repo)
 
 
@@ -472,9 +467,7 @@ def test_class_a_settled_dispatch_removed(
     # Create task JSON
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
 
     # Mock active set and PR state
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
@@ -500,9 +493,7 @@ def test_class_a_no_deliverable_dispatch_removed(
 
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "no_deliverable"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "no_deliverable"}), encoding="utf-8")
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     patch_gh(monkeypatch, {"codex/5800-false-success": []})
@@ -533,9 +524,7 @@ def test_settled_dispatch_with_unpushed_local_commit_is_skipped_unpushed_head(
     # Set task status to done
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
@@ -578,9 +567,7 @@ def test_settled_dispatch_with_head_pushed_to_origin_is_reaped(
     # Set task status to done
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
@@ -615,9 +602,7 @@ def test_settled_dispatch_with_zero_commits_ahead_is_reaped(
 
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
@@ -649,9 +634,7 @@ def test_settled_dispatch_terminal_status_without_commits_is_reaped(
 
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "dry_run"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "dry_run"}), encoding="utf-8")
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
@@ -758,9 +741,7 @@ def test_terminal_dispatch_class_does_not_infer_terminal_from_dead_running_pid(
     add_worktree(repo, "codex/dead-running-pid", path=worktree)
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "running", "pid": 999999}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "running", "pid": 999999}), encoding="utf-8")
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {"codex/dead-running-pid": []})
@@ -812,9 +793,7 @@ def test_class_a_fail_safe_skips(
     assert result_for(results, worktree_path).action == "skipped"
 
     # Re-create task file for remaining cases — live worker PID required
-    task_file.write_text(
-        json.dumps({"status": "running", "pid": os.getpid()}), encoding="utf-8"
-    )
+    task_file.write_text(json.dumps({"status": "running", "pid": os.getpid()}), encoding="utf-8")
 
     # Case 4: task status is not done/failed and worker PID is live
     results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
@@ -883,9 +862,7 @@ def test_class_b_settled_task_removed(
     # Create task JSON
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"status": "done"}), encoding="utf-8"
-    )
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
@@ -1033,11 +1010,7 @@ def test_merged_pr_head_must_match_worktree_head(
     worktree = add_worktree(repo, "codex/mismatched")
     patch_gh(
         monkeypatch,
-        {
-            "codex/mismatched": [
-                {"number": 10, "state": "MERGED", "headRefOid": "0" * 40}
-            ]
-        },
+        {"codex/mismatched": [{"number": 10, "state": "MERGED", "headRefOid": "0" * 40}]},
     )
 
     result = result_for(
@@ -1060,9 +1033,7 @@ def test_closed_pr_requires_matching_worktree_head(
         monkeypatch,
         {
             "codex/closed-matching": [{"number": 12, "state": "CLOSED"}],
-            "codex/closed-mismatched": [
-                {"number": 13, "state": "CLOSED", "headRefOid": "0" * 40}
-            ],
+            "codex/closed-mismatched": [{"number": 13, "state": "CLOSED", "headRefOid": "0" * 40}],
         },
     )
 
@@ -1367,11 +1338,7 @@ def test_merged_pr_ancestor_head_reaps_worktree(
 
     patch_gh(
         monkeypatch,
-        {
-            "codex/ancestor-head": [
-                {"number": 201, "state": "MERGED", "headRefOid": pr_head}
-            ]
-        },
+        {"codex/ancestor-head": [{"number": 201, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
     result = result_for(
@@ -1398,11 +1365,7 @@ def test_detached_worktree_matching_merged_pr_reaps(
 
     patch_gh(
         monkeypatch,
-        {
-            "kimi/6690-ci-fix": [
-                {"number": 6690, "state": "MERGED", "headRefOid": head}
-            ]
-        },
+        {"kimi/6690-ci-fix": [{"number": 6690, "state": "MERGED", "headRefOid": head}]},
     )
 
     result = result_for(
@@ -1434,11 +1397,7 @@ def test_detached_worktree_with_open_pr_is_preserved(
 
     patch_gh(
         monkeypatch,
-        {
-            "codex/open-detached": [
-                {"number": 301, "state": "OPEN", "headRefOid": head}
-            ]
-        },
+        {"codex/open-detached": [{"number": 301, "state": "OPEN", "headRefOid": head}]},
     )
 
     result = result_for(
@@ -1470,11 +1429,7 @@ def test_followup_branch_ancestor_of_merged_pr_head_reaps(
 
     patch_gh(
         monkeypatch,
-        {
-            "kimi/routing-defaults": [
-                {"number": 6687, "state": "MERGED", "headRefOid": pr_head}
-            ]
-        },
+        {"kimi/routing-defaults": [{"number": 6687, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
     result = result_for(
@@ -1503,11 +1458,7 @@ def test_detached_worktree_with_different_pr_head_branch_reaps(
 
     patch_gh(
         monkeypatch,
-        {
-            "agy/delegate-active-timeout": [
-                {"number": 6690, "state": "MERGED", "headRefOid": head}
-            ]
-        },
+        {"agy/delegate-active-timeout": [{"number": 6690, "state": "MERGED", "headRefOid": head}]},
     )
 
     result = result_for(
@@ -1536,11 +1487,7 @@ def test_fresh_branch_on_main_tip_is_not_sha_reaped(
 
     patch_gh(
         monkeypatch,
-        {
-            "agy/original": [
-                {"number": 1, "state": "MERGED", "headRefOid": main_tip}
-            ]
-        },
+        {"agy/original": [{"number": 1, "state": "MERGED", "headRefOid": main_tip}]},
     )
 
     result = result_for(
@@ -1725,9 +1672,7 @@ def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
     actions = [result_for(results, worktree).action for worktree in worktrees]
     assert actions.count("removed") == 2
     blocked = [
-        result_for(results, worktree)
-        for worktree in worktrees
-        if result_for(results, worktree).action == "skipped"
+        result_for(results, worktree) for worktree in worktrees if result_for(results, worktree).action == "skipped"
     ]
     assert len(blocked) == 1
     assert "daily reap cap ceiling reached (2)" in (blocked[0].reason or "")
@@ -1747,11 +1692,7 @@ def test_merged_pr_same_tree_sibling_head_reaps(
     pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
     patch_gh(
         monkeypatch,
-        {
-            "codex/occupancy-fresh": [
-                {"number": 7067, "state": "MERGED", "headRefOid": pr_head}
-            ]
-        },
+        {"codex/occupancy-fresh": [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
     result = result_for(
@@ -1880,3 +1821,297 @@ def test_fresh_main_dispatch_is_not_age_reaped(
     assert result.action == "skipped"
     assert worktree.exists()
 
+
+# --- _query_pr_states must fail CLOSED on unreadable rows (#7126 CF review) --
+
+
+def _gh_stdout(payload: str, returncode: int = 0):
+    return subprocess.CompletedProcess(args=[], returncode=returncode, stdout=payload, stderr="")
+
+
+@pytest.mark.parametrize(
+    ("label", "payload"),
+    [
+        ("null row", "[null]"),
+        ("empty row", "[{}]"),
+        ("row without state", '[{"number": 1}]'),
+        ("row is a string", '["OPEN"]'),
+        ("blank state", '[{"state": "", "number": 1}]'),
+        ("scalar payload", "123"),
+        ("mapping payload", "{}"),
+        ("string payload", '"open"'),
+        ("null payload", "null"),
+    ],
+)
+def test_query_pr_states_reports_unreadable_rows_as_an_error(monkeypatch, label, payload) -> None:
+    """A row the parser cannot read is an UNKNOWN, never an absence.
+
+    Silently skipping made `[null]` / `[{}]` parse as "no open PR", and every
+    caller reads an empty list as permission to DELETE the worktree. That was
+    a destructive fail-open on malformed input.
+    """
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert states == [], label
+    assert error is not None, label
+
+
+def test_query_pr_states_still_reports_a_genuinely_empty_list(monkeypatch) -> None:
+    """An empty list is a real answer (no PR), not an unknown -- reaping must
+    still be possible or nothing would ever be cleaned up."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout("[]"))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert states == []
+    assert error is None
+
+
+def test_query_pr_states_parses_a_well_formed_row(monkeypatch) -> None:
+    payload = json.dumps([{"number": 7120, "state": "OPEN", "headRefOid": "abc123"}])
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert error is None
+    assert [(s.number, s.state, s.head_sha) for s in states] == [(7120, "OPEN", "abc123")]
+
+
+@pytest.mark.parametrize("payload", ["[null]", "[{}]", "123"])
+def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, payload) -> None:
+    """End-to-end on the destructive path: an unreadable PR response must
+    retain, never delete."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    no_open_pr, guard_error = post_task_reap._no_open_pr_for_branch(
+        repo_root=Path("/nonexistent"), branch="some/branch"
+    )
+
+    assert no_open_pr is False
+    assert guard_error is not None
+
+
+@pytest.mark.parametrize(
+    ("label", "payload"),
+    [
+        ("state present but no number", '[{"state": "CLOSED"}]'),
+        ("unrecognised state enum", '[{"state": "NOT_A_GH_PR_STATE", "number": 7126}]'),
+        ("state is not a string", '[{"state": [], "number": 7126}]'),
+        ("number is a bool", '[{"state": "CLOSED", "number": true}]'),
+        ("number is zero", '[{"state": "CLOSED", "number": 0}]'),
+        ("number is a string", '[{"state": "CLOSED", "number": "7126"}]'),
+    ],
+)
+def test_query_pr_states_rejects_incomplete_rows(monkeypatch, label, payload) -> None:
+    """An incomplete or unrecognised row is ambiguous, and ambiguity must not
+    read as "no open PR" -- callers treat that as permission to DELETE."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert states == [], label
+    assert error is not None, label
+
+
+@pytest.mark.parametrize("state", ["OPEN", "MERGED", "CLOSED"])
+def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None:
+    """The tightened validation must not reject legitimate answers, or
+    nothing would ever be reaped."""
+    payload = json.dumps([{"number": 7126, "state": state, "headRefOid": "abc"}])
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
+
+    assert error is None
+    assert [(s.number, s.state) for s in states] == [(7126, state)]
+
+
+@pytest.mark.parametrize(
+    ("label", "payload", "expect_deletion_allowed"),
+    [
+        ("incomplete row", '[{"state": "CLOSED"}]', False),
+        ("bogus enum", '[{"state": "WAT", "number": 1}]', False),
+        ("genuinely empty", "[]", True),
+        ("valid closed", '[{"state": "CLOSED", "number": 1}]', True),
+        ("valid merged", '[{"state": "MERGED", "number": 1}]', True),
+        ("valid open", '[{"state": "OPEN", "number": 1}]', False),
+    ],
+)
+def test_post_task_reap_deletion_authorization_end_to_end(monkeypatch, label, payload, expect_deletion_allowed) -> None:
+    """The destructive authorization itself: ambiguity retains, and a real
+    answer still permits reaping."""
+    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+
+    no_open_pr, _guard_error = post_task_reap._no_open_pr_for_branch(
+        repo_root=Path("/nonexistent"), branch="some/branch"
+    )
+
+    assert no_open_pr is expect_deletion_allowed, label
+
+
+def test_unreadable_branch_query_retains_even_when_the_sha_lookup_succeeds(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An unreadable authoritative branch response must never end in deletion,
+    even when the supplementary SHA lookup happily returns a MERGED PR.
+
+    Honest scope note: this asserts the OUTCOME (retained), which holds both
+    with and without the `if errors:` change at the candidate-query site --
+    a later cleanup-time re-query independently catches the same condition
+    ("PR guard unavailable during cleanup"). The change removes the reliance
+    on that downstream guard rather than closing a demonstrated deletion;
+    this test pins the outcome so a future refactor of either guard cannot
+    silently turn an unreadable response into a reap.
+    """
+    repo = init_repo(tmp_path)
+    task_id = "sha-redeem-guard"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/sha-redeem-guard", path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([], "gh unreadable row"))
+    monkeypatch.setattr(
+        rw,
+        "_query_prs_by_head_sha",
+        lambda _repo, _sha: [rw.PullRequestState(number=42, state="MERGED", head_sha="abc")],
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "PR guard unavailable" in result.reason
+    assert worktree.exists()
+
+
+def test_unreadable_branch_query_retains_in_the_legacy_class(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An unreadable authoritative branch response must retain in EVERY class,
+    including legacy/manual (`--legacy-classes`).
+
+    The retention branch used to be gated on
+    `merged_pr_only or include_terminal_dispatches`, so with both false a
+    failed branch query was recorded and then ignored. A supplementary
+    SHA-search MERGED hit -- which is labelled with the queried worktree SHA
+    and therefore always matches the head -- then qualified the tree for
+    deletion, and that reason does not enable the terminal cleanup-time
+    re-query. That was the configuration where the candidate-query error is
+    the ONLY barrier.
+    """
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "legacy-guard"
+    add_worktree(repo, "codex/legacy-guard", path=worktree)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout.strip()
+
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([], "gh unreadable row"))
+    # head_sha equals the queried SHA, exactly as _query_prs_by_head_sha labels it.
+    monkeypatch.setattr(
+        rw,
+        "_query_prs_by_head_sha",
+        lambda _repo, sha: [rw.PullRequestState(number=42, state="MERGED", head_sha=sha or head)],
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=False,
+            include_terminal_dispatches=False,
+            safe_only=False,
+        ),
+        worktree,
+    )
+
+    assert result.action != "removed", f"deleted on an unreadable PR response: {result.reason}"
+    assert worktree.exists()
+
+
+def _build_branch_reason(tmp_path: Path, **kwargs: Any) -> str | None:
+    repo = init_repo(tmp_path)
+    info = rw.WorktreeInfo(path=repo, branch="build/a1-demo", head="abc", detached=False)
+    return rw._qualifying_reason(
+        repo_root=repo,
+        info=info,
+        build_age_hours=24.0,
+        now=time.time(),
+        active_ids=set(),
+        safe_only=False,
+        merged_pr_only=False,
+        include_terminal_dispatches=False,
+        **kwargs,
+    )
+
+
+def test_aged_build_worktree_is_not_reaped_under_an_unknown_pr_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The build-age return carries no ancestry or remote-reachability
+    precondition, so age alone is not evidence the work is safe to destroy.
+
+    Under `--apply --legacy-classes` a failed PR query did not take the early
+    retain path, and this return fired before any PR guard -- deleting an aged
+    build/* worktree that may have had an unseen OPEN PR.
+    """
+    monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
+
+    assert _build_branch_reason(tmp_path, pr_state=None, pr_unknown=True) is None
+
+
+def test_aged_build_worktree_is_not_reaped_while_a_pr_is_open(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Pre-existing, independent of the unknown-state case: this return
+    ignored pr_state entirely, so an aged build/* worktree was reaped even
+    when an OPEN PR was plainly visible."""
+    monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
+    open_pr = rw.PullRequestState(number=5, state="OPEN", head_sha="abc")
+
+    assert _build_branch_reason(tmp_path, pr_state=open_pr, pr_unknown=False) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "pr_state"),
+    [
+        ("no PR at all", None),
+        ("merged PR", rw.PullRequestState(number=5, state="MERGED", head_sha="zzz")),
+        ("closed PR", rw.PullRequestState(number=5, state="CLOSED", head_sha="zzz")),
+    ],
+)
+def test_aged_build_worktree_is_still_reaped_when_no_pr_is_open(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str, pr_state
+) -> None:
+    """The guard must not make aged build worktrees unreapable."""
+    monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
+
+    reason = _build_branch_reason(tmp_path, pr_state=pr_state, pr_unknown=False)
+
+    assert reason is not None, label
+    assert "build branch age" in reason

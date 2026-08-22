@@ -223,6 +223,11 @@ def _worktree_clean(path: Path) -> bool | None:
     return True
 
 
+# The states `gh pr list` can report. Anything else is an UNKNOWN, never
+# an absence -- callers read "no open PR" as permission to delete.
+_PR_STATES = frozenset({"OPEN", "MERGED", "CLOSED"})
+
+
 def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequestState], str | None]:
     if not branch:
         return [], None
@@ -250,18 +255,36 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
         raw_items = json.loads(proc.stdout or "[]")
     except json.JSONDecodeError as exc:
         return [], f"gh pr list returned invalid JSON: {exc}"
+    if not isinstance(raw_items, list):
+        # Without this, a scalar payload (`123`) raises TypeError in the loop
+        # below and a mapping would iterate its keys.
+        return [], "gh pr list returned a non-list payload"
 
     states: list[PullRequestState] = []
     for item in raw_items:
+        # A row we cannot read is an UNKNOWN, never an absence. Silently
+        # skipping it made `[null]` / `[{}]` parse as "no open PR", and every
+        # caller reads an empty list as permission to DELETE the worktree --
+        # a destructive fail-open on malformed input. Routing it through the
+        # existing error channel makes all callers retain instead, since each
+        # one already treats a non-None error as skip/retain.
         if not isinstance(item, dict):
-            continue
-        state = str(item.get("state") or "").upper()
-        if not state:
-            continue
+            return [], "gh pr list returned a malformed row (not an object)"
+        raw_state = item.get("state")
+        state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+        if state not in _PR_STATES:
+            # An unrecognised state is ambiguous, and ambiguity must not read
+            # as "no open PR". `[{"state": "CLOSED"}]` and an unknown enum
+            # both used to authorise deletion.
+            return [], "gh pr list returned a row with an unusable state"
         number = item.get("number")
+        if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+            # gh always returns `number` when asked for it, so a row without a
+            # usable one is an incomplete answer, not a PR-free branch.
+            return [], "gh pr list returned a row without a usable PR number"
         states.append(
             PullRequestState(
-                number=number if isinstance(number, int) else None,
+                number=number,
                 state=state,
                 head_sha=(
                     str(item.get("headRefOid"))
@@ -683,7 +706,17 @@ def _qualifying_reason(
     safe_only: bool = False,
     merged_pr_only: bool = False,
     include_terminal_dispatches: bool = False,
+    pr_unknown: bool = False,
 ) -> str | None:
+    """``pr_unknown`` marks the PR state as UNREADABLE rather than absent.
+
+    A failed branch query must not read as "no PR": every reason below that
+    consults ``pr_state`` -- directly, or via a ``pr_state is None`` shortcut
+    that means "no open PR" -- becomes unsafe, because an OPEN PR may exist
+    and simply not be visible. Class B stays available: it never consults
+    ``pr_state`` and already requires the head to be an ancestor of
+    origin/main or reachable from a remote, so nothing can be lost.
+    """
     if pr_state is not None:
         pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
         if pr_state.state == "MERGED" and _pr_matches_worktree_head(info, pr_state):
@@ -697,15 +730,26 @@ def _qualifying_reason(
             return f"{pr_label} CLOSED"
 
     if info.branch is not None and not safe_only:
-        if info.branch.startswith("build/"):
+        # Age alone is not evidence the work is safe to destroy: this return
+        # carries no ancestry or remote-reachability precondition. It must
+        # therefore respect PR state exactly like the origin-tip return below
+        # -- it deleted an aged build/* worktree both under an UNKNOWN PR
+        # response and, before that, under a plainly KNOWN OPEN PR.
+        if (
+            info.branch.startswith("build/")
+            and not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+        ):
             age_hours = _worktree_age_hours(info.path, now=now)
             if age_hours is not None and age_hours > build_age_hours:
                 return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
 
         # Never treat "matches remote tip" as reaped-while-OPEN: open PR
         # worktrees commonly match origin/<branch> and must stay mounted.
-        if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
-            info.path, info.branch
+        if (
+            not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+            and _origin_matches_head(info.path, info.branch)
         ):
             return f"HEAD matches origin/{info.branch}"
 
@@ -768,17 +812,23 @@ def _qualifying_reason(
             info=info,
             active_ids=active_ids,
         )
-        if terminal_reason is not None and (pr_state is None or pr_state.state != "OPEN"):
+        if (
+            terminal_reason is not None
+            and not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+        ):
             return terminal_reason
 
-        abandoned = _abandoned_main_dispatch_reason(
-            repo_root=repo_root,
-            info=info,
-            pr_state=pr_state,
-            now=now,
-        )
-        if abandoned is not None:
-            return abandoned
+        # Also PR-dependent: it reads pr_state to decide abandonment.
+        if not pr_unknown:
+            abandoned = _abandoned_main_dispatch_reason(
+                repo_root=repo_root,
+                info=info,
+                pr_state=pr_state,
+                now=now,
+            )
+            if abandoned is not None:
+                return abandoned
 
     return None
 
@@ -1387,10 +1437,13 @@ def reap_worktrees(
             if info.head and not _is_ancestor_of_origin_main(info.path):
                 all_pr_states.extend(_query_prs_by_head_sha(repo_root, info.head))
 
-            if errors and not all_pr_states:
+            # Any candidate-query error blocks qualification. A supplementary
+            # SHA lookup finding *some* PR cannot redeem an unreadable
+            # authoritative branch response -- that made UNKNOWN -> retain
+            # non-universal on the destructive path.
+            pr_state = _best_pr(all_pr_states)
+            if errors:
                 pr_error = "; ".join(errors)
-            else:
-                pr_state = _best_pr(all_pr_states)
 
             if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:
                 results.append(
@@ -1405,16 +1458,24 @@ def reap_worktrees(
                 )
                 continue
 
+            # An unreadable branch response is UNKNOWN, not "no PR": drop the
+            # untrusted pr_state and forbid every PR-dependent reason. Without
+            # this, the legacy/manual class deleted on a failed branch query,
+            # because a supplementary SHA-search MERGED hit is labelled with
+            # the queried worktree SHA, always matches the head, and its
+            # "PR #N MERGED" reason does not enable the cleanup-time re-query.
+            pr_unknown = pr_error is not None
             reason = _qualifying_reason(
                 repo_root=repo_root,
                 info=info,
-                pr_state=pr_state,
+                pr_state=None if pr_unknown else pr_state,
                 build_age_hours=build_age_hours,
                 now=now,
                 active_ids=active_ids,
                 safe_only=safe_only,
                 merged_pr_only=merged_pr_only,
                 include_terminal_dispatches=include_terminal_dispatches,
+                pr_unknown=pr_unknown,
             )
             if reason is None:
                 is_settled, _ = _is_settled_dispatch_task(
