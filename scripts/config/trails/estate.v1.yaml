@@ -4,17 +4,17 @@ title: Estate surface registry seed
 surfaces:
   vps_hosts:
     - name: estate-probe-vps
-      ssh_alias: estate-probe-ssh
-      role: probe_role
+      ssh_alias: surface-ssh-k7m2
+      role: surface-role-n4p8
       mutation_policy: refused
   services:
     - name: estate-probe-service
-      host_alias: estate-probe-ssh
-      systemd_unit: estate-probe-unit
+      host_alias: surface-host-q1w9
+      systemd_unit: surface-unit-j3r5
       mutation_policy: refused
   repositories:
     - name: estate-probe-private-repo
-      local_path: ~/projects/estate-probe-private
+      local_path: ~/projects/surface-repo-x6t0
       visibility: private
       mutation_policy: refused
   public_sites:

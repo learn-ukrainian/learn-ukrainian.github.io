@@ -18,15 +18,14 @@ terminal_outcomes:
 steps:
   - step_id: vps_reachability
     intent: >-
-      Round-trip the ssh alias for estate-probe-vps pinned to scripts/config/trails/estate.v1.yaml by the consistency test
-      with BatchMode and a bounded connect timeout. Target token: "vps_reachable". Any other output is
-      vps_unreachable, routed to judgment.
+      Round-trip the runtime RB6_PROBE_SSH target with BatchMode and a bounded connect timeout.
+      Target token: "vps_reachable". Any other output is vps_unreachable, routed to judgment.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 estate-probe-ssh "echo vps-reachable" 2>/dev/null); printf "%s\n" "${V:-probe-failed}" > "batch_state/rb6-vps-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; [ "$V" = "vps-reachable" ] && echo vps_reachable || echo vps_unreachable
+        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$RB6_PROBE_SSH" "echo vps-reachable" 2>/dev/null); printf "%s\n" "${V:-probe-failed}" > "batch_state/rb6-vps-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; [ "$V" = "vps-reachable" ] && echo vps_reachable || echo vps_unreachable
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -58,14 +57,14 @@ steps:
 
   - step_id: service_probe
     intent: >-
-      Read the estate probe service (estate-probe-unit on host estate-probe-ssh, pinned to the estate registry seed by the consistency test) systemd state.
-      Only "active" proceeds; any other token degrades. Service restart is refused.
+      Read the runtime RB6_PROBE_UNIT systemd state on RB6_PROBE_SSH. Only "active" proceeds;
+      any other token degrades. Service restart is refused.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 estate-probe-ssh "systemctl is-active estate-probe-unit" 2>/dev/null); echo "${V:-probe-failed}" > "batch_state/rb6-service-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$V" in active) echo service_active;; "") echo probe_failed;; *) echo service_not_active;; esac
+        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$RB6_PROBE_SSH" "systemctl is-active $RB6_PROBE_UNIT" 2>/dev/null); echo "${V:-probe-failed}" > "batch_state/rb6-service-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$V" in active) echo service_active;; "") echo probe_failed;; *) echo service_not_active;; esac
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -103,13 +102,13 @@ steps:
 
   - step_id: vps_disk_floor
     intent: >-
-      Check VPS root filesystem available space against a 5G floor on host estate-probe-ssh (pinned to the estate registry seed by the consistency test).
+      Check VPS root filesystem available space against a 5G floor on RB6_PROBE_SSH.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 estate-probe-ssh "df -h / | awk \"NR==2 {print \\\$4}\"" 2>/dev/null); echo "${V:-probe-failed}" > "batch_state/rb6-disk-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor_cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor_cleared\":\"below_floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below_floor\"; ok=1} END{if(!ok) print \"probe_failed\"}"
+        - mkdir -p batch_state && V=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$RB6_PROBE_SSH" "df -h / | awk \"NR==2 {print \\\$4}\"" 2>/dev/null); echo "${V:-probe-failed}" > "batch_state/rb6-disk-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; echo "$V" | awk "/^[0-9.]+Ti?\$/{print \"floor_cleared\"; ok=1} /^[0-9.]+Gi?\$/{sub(/Gi?\$/,\"\"); print (\$0+0>=5)?\"floor_cleared\":\"below_floor\"; ok=1} /^[0-9.]+[MKmk]i?\$/{print \"below_floor\"; ok=1} END{if(!ok) print \"probe_failed\"}"
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -147,14 +146,13 @@ steps:
 
   - step_id: private_repo_probe
     intent: >-
-      Presence probe of the private ops repo (estate-probe-private-repo at ~/projects/estate-probe-private
-      pinned to the estate registry seed by the consistency test).
+      Presence probe of the private ops repo at runtime RB6_PROBE_REPO.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - mkdir -p batch_state && H=$(git -C ~/projects/estate-probe-private rev-parse --short HEAD 2>/dev/null); if [ -z "$H" ]; then D=unknown; elif ST=$(git -C ~/projects/estate-probe-private status --porcelain 2>/dev/null); then D=$(printf "%s" "$ST" | grep -c .); else D=unknown; fi; { echo "head=${H:-absent}"; echo "dirty-lines=$D"; } > "batch_state/rb6-privrepo-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$H" in "") echo repo_absent;; *) echo repo_present;; esac
+        - mkdir -p batch_state && H=$(git -C "$RB6_PROBE_REPO" rev-parse --short HEAD 2>/dev/null); if [ -z "$H" ]; then D=unknown; elif ST=$(git -C "$RB6_PROBE_REPO" status --porcelain 2>/dev/null); then D=$(printf "%s" "$ST" | grep -c .); else D=unknown; fi; { echo "head=${H:-absent}"; echo "dirty-lines=$D"; } > "batch_state/rb6-privrepo-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$H" in "") echo repo_absent;; *) echo repo_present;; esac
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -186,13 +184,13 @@ steps:
 
   - step_id: public_site_probe
     intent: >-
-      HTTP status of the published site (https://learn-ukrainian.github.io/ pinned to the estate registry seed by the consistency test).
+      HTTP status of the published site at runtime RB6_PROBE_SITE.
     command:
       adapter: shell
       argv:
         - sh
         - -c
-        - mkdir -p batch_state && C=$(curl -sI --max-time 8 https://learn-ukrainian.github.io/ 2>/dev/null | head -1 | cut -d' ' -f2 | tr -d '\r'); echo "${C:-probe-failed}" > "batch_state/rb6-site-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$C" in 200) echo site_serving;; *) echo site_not_serving;; esac
+        - mkdir -p batch_state && C=$(curl -sI --max-time 8 "$RB6_PROBE_SITE" 2>/dev/null | head -1 | cut -d' ' -f2 | tr -d '\r'); echo "${C:-probe-failed}" > "batch_state/rb6-site-$HANDOFF_AGENT.txt" || { echo receipt_unwritable; exit 0; }; case "$C" in 200) echo site_serving;; *) echo site_not_serving;; esac
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"

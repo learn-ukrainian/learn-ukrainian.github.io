@@ -234,6 +234,10 @@ def test_load_endpoint_host_filter_rejects_unknown(
     assert resp_runner.status_code == 200
     assert list(resp_runner.json()["hosts"].keys()) == ["atlas-runner"]
 
+    for legacy in ("legacy-box", "legacy-alias"):
+        resp = client.get(f"/api/atlas-jobs/load?host={legacy}")
+        assert resp.status_code == 400
+
     resp_unknown = client.get("/api/atlas-jobs/load?host=unknown-host")
     assert resp_unknown.status_code == 400
 
