@@ -93,6 +93,17 @@ def validate_evidence_record(record: Mapping[str, Any]) -> None:
         _fail("evidence_shape_drift", "attested evidence cannot carry a negative_reason")
     if record["status"] != "attested" and record["supports"] != "no_conclusion":
         _fail("source_role_boundary_violation", "non-attested evidence must carry supports=no_conclusion")
+    # Amendment step 12: raw_payload_publication_allowed=false and the
+    # non-authoritative claim-boundary flags are frozen constants, never
+    # hand-editable to a truthy value.
+    if record.get("raw_payload_publication_allowed") is not False:
+        _fail("evidence_shape_drift", "raw_payload_publication_allowed must be false")
+    claim_boundary = record.get("claim_boundary")
+    if not isinstance(claim_boundary, Mapping) or any(
+        claim_boundary.get(key) is not False
+        for key in ("authoritative", "human_gold", "model_vote_authoritative", "vesum_absence_only_authoritative")
+    ):
+        _fail("evidence_shape_drift", "claim_boundary must be the frozen all-false non-authoritative flag set")
 
 
 def validate_row_evidence(row_evidence: Mapping[str, Any]) -> None:
@@ -135,12 +146,27 @@ def validate_row_evidence(row_evidence: Mapping[str, Any]) -> None:
 
 
 def validate_sidecar(sidecar: Mapping[str, Any]) -> None:
-    """Validate every row in one packet's compiled sidecar."""
+    """Validate every row in one packet's compiled sidecar.
+
+    Amendment step 12: also re-derives ``sidecar_id`` and checks
+    ``row_count`` against the actual ``rows`` list, and, when a
+    ``retrieval_payloads`` dedup table is present, that every evidence
+    record's ``retrieval_sha256`` resolves to an entry in it (nothing is
+    silently missing from the private payload table it claims to hold).
+    """
     if sidecar.get("schema_version") != "phase3_cycle007_evidence_sidecar_v1":
         _fail("sidecar_shape_drift", "unexpected sidecar schema_version")
     rows = sidecar.get("rows", [])
     if not isinstance(rows, list) or not rows:
         _fail("sidecar_shape_drift", "sidecar has no rows")
+    if sidecar.get("row_count") != len(rows):
+        _fail("sidecar_shape_drift", "sidecar row_count does not match len(rows)")
+    if "sidecar_id" in sidecar:
+        body = {key: value for key, value in sidecar.items() if key != "sidecar_id"}
+        recomputed_sidecar_id = "cycle007_sidecar:" + contract.sha256_value(body)
+        if recomputed_sidecar_id != sidecar["sidecar_id"]:
+            _fail("sidecar_id_hash_drift", "sidecar_id does not match its own content hash")
+    retrieval_payloads = sidecar.get("retrieval_payloads")
     seen_units: set[tuple[str, str]] = set()
     for row_evidence in rows:
         validate_row_evidence(row_evidence)
@@ -148,25 +174,66 @@ def validate_sidecar(sidecar: Mapping[str, Any]) -> None:
         if key in seen_units:
             _fail("duplicate_row", f"duplicate row identity within one sidecar: {key}")
         seen_units.add(key)
+        if isinstance(retrieval_payloads, Mapping):
+            for record in row_evidence.get("evidence", []):
+                if str(record["retrieval_sha256"]) not in retrieval_payloads:
+                    _fail(
+                        "retrieval_payload_missing",
+                        f"evidence {record['evidence_id']} retrieval_sha256 absent from retrieval_payloads",
+                    )
 
 
-def classify_sufficiency(row_evidence: Mapping[str, Any]) -> str:
+def validate_manifest(manifest: Mapping[str, Any]) -> None:
+    """Validate the text-free compile manifest's own content hash and shape.
+
+    Amendment step 12: re-derives ``manifest_sha256`` and requires
+    ``packet_count``/``row_count`` to match the actual ``sidecars`` list.
+    """
+    if manifest.get("schema_version") != "phase3_cycle007_evidence_manifest_v1":
+        _fail("manifest_shape_drift", "unexpected manifest schema_version")
+    if manifest.get("text_free") is not True:
+        _fail("manifest_shape_drift", "manifest must be text_free=true")
+    sidecars = manifest.get("sidecars")
+    if not isinstance(sidecars, list) or not sidecars:
+        _fail("manifest_shape_drift", "manifest has no sidecars")
+    if manifest.get("packet_count") != len(sidecars):
+        _fail("manifest_shape_drift", "manifest packet_count does not match len(sidecars)")
+    row_count = sum(int(entry.get("row_count", 0)) for entry in sidecars if isinstance(entry, Mapping))
+    if manifest.get("row_count") != row_count:
+        _fail("manifest_shape_drift", "manifest row_count does not match the sum of sidecar row_counts")
+    if "manifest_sha256" in manifest:
+        body = {key: value for key, value in manifest.items() if key != "manifest_sha256"}
+        recomputed = contract.sha256_value(body)
+        if recomputed != manifest["manifest_sha256"]:
+            _fail("manifest_id_hash_drift", "manifest_sha256 does not match its own content hash")
+
+
+def classify_sufficiency(row_evidence: Mapping[str, Any], *, phenomenon_id: str | None = None) -> str:
     """Classify why a row's evidence is (in)sufficient for a positive decision.
 
     Returns one of ``"sufficient"``, ``"insufficient_conflicting"``,
-    ``"insufficient_unavailable"``, ``"insufficient_missing"``. Priority:
-    conflicting > unavailable > missing, matching "missing, conflicting,
-    truncated, unparseable, or unavailable source evidence is marked
-    unresolved" (amendment, "Frozen Sources MCP evidence layer").
+    ``"insufficient_unavailable"``, ``"insufficient_missing"``. Amendment
+    step 7 ("Frozen Sources MCP evidence layer" / "Fix sufficiency
+    ordering"): a decisive channel's own missing/conflicting/ambiguous/
+    incomplete/parse-error/unavailable result forces the uncertainty path
+    *even when another record is attested* — a negative decisive-channel
+    result is checked first and is never overridden by an unrelated
+    sufficient-positive record. Only once every decisive channel is clean
+    does an attested sufficient-positive record count. When
+    ``phenomenon_id`` is given, both the decisive-channel scan and the
+    sufficient-positive scan are restricted to that phenomenon's bound
+    evidence (row-level channels never satisfy a residual phenomenon).
     """
-    evidence = row_evidence.get("evidence", [])
-    if any(contract.is_sufficient_positive(record) for record in evidence):
-        return "sufficient"
+    evidence: Sequence[Mapping[str, Any]] = row_evidence.get("evidence", [])
+    if phenomenon_id is not None:
+        evidence = [record for record in evidence if str(record.get("phenomenon_id")) == str(phenomenon_id)]
     decisive = [record for record in evidence if record["channel"] in _DECISIVE_CHANNELS]
     if any(record["status"] in {"ambiguous", "incomplete", "parse_error"} for record in decisive):
         return "insufficient_conflicting"
     if any(record["status"] == "unavailable" for record in decisive):
         return "insufficient_unavailable"
+    if any(contract.is_sufficient_positive(record) for record in evidence):
+        return "sufficient"
     return "insufficient_missing"
 
 
@@ -204,8 +271,16 @@ def validate_label_evidence_refs(
     if decision_code in SUFFICIENT_REQUIRED_DECISIONS:
         by_id = {str(record["evidence_id"]): record for record in row_evidence.get("evidence", [])}
         cited_records = [by_id[evidence_id] for evidence_id in ids_list if evidence_id in by_id]
-        if not any(contract.is_sufficient_positive(record) for record in cited_records):
-            sufficiency = classify_sufficiency(row_evidence)
+        # Amendment step 7: a decisive channel's own negative/unresolved
+        # result forces the uncertainty path even when the label additionally
+        # cites an attested sufficient-positive record elsewhere. Sufficiency
+        # is judged over the row's (or, for a residual label, this exact
+        # phenomenon's) full decisive-channel evidence, not merely the cited
+        # subset — a label cannot silently omit a conflicting citation to
+        # manufacture sufficiency.
+        sufficiency = classify_sufficiency(row_evidence, phenomenon_id=phenomenon_id)
+        cited_sufficient_positive = any(contract.is_sufficient_positive(record) for record in cited_records)
+        if sufficiency != "sufficient" or not cited_sufficient_positive:
             _fail(
                 "insufficient_evidence_for_decision",
                 f"decision_code={decision_code!r} requires sufficient normative/attestation evidence "

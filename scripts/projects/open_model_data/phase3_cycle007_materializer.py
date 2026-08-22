@@ -72,8 +72,19 @@ FAILURE_CODES = frozenset(
         "output_exists",
         "path_overlap",
         "transaction_failure",
+        "path_disclosure_refused",
+        "source_mode_drift",
     }
 )
+
+# Amendment step 15: in real (non-fixture) mode, private source/output paths
+# are never taken from argv. A protected environment variable pair, or a
+# mode-0600 JSON config file (``{"source": ..., "output": ...}``) named by
+# ``REAL_CONFIG_ENV``, is the only way to bind them. Public fixture mode may
+# still pass ``--source``/``--output`` explicitly.
+REAL_SOURCE_ENV = "PHASE3_CYCLE007_SOURCE_PACKAGE"
+REAL_OUTPUT_ENV = "PHASE3_CYCLE007_OUTPUT_PACKAGE"
+REAL_CONFIG_ENV = "PHASE3_CYCLE007_MATERIALIZER_CONFIG"
 
 
 class MaterializationError(ValueError):
@@ -378,10 +389,37 @@ def _validate_paths(config: Config) -> None:
     _require(not source_resolved.is_relative_to(output_resolved), "path_overlap")
 
 
+def _verify_source_package_modes(source: Path, manifest: Mapping[str, Any], fixture: bool) -> None:
+    """Amendment step 15: verify the source package's own custody modes.
+
+    Real (non-fixture) mode only — a held-out package must already be
+    mode-0700 directories / mode-0600 files ("operator-owned package with
+    mode-0600 files"). Fixture packages built by tests may use whatever
+    permissions the test harness happens to create.
+    """
+    if fixture:
+        return
+    _require(stat.S_IMODE(source.stat().st_mode) == PRIVATE_DIR_MODE, "source_mode_drift")
+    for name in ("custody-receipt.json", "label-manifest.json"):
+        path = source / name
+        _regular(path, "source_mode_drift")
+        _require(stat.S_IMODE(path.stat().st_mode) == PRIVATE_FILE_MODE, "source_mode_drift")
+    for record in manifest.get("packets", []):
+        if not isinstance(record, Mapping):
+            continue
+        lane, basename = record.get("lane"), record.get("canonical_basename")
+        if not (isinstance(lane, str) and isinstance(basename, str)):
+            continue
+        packet_path = source / lane / basename
+        _regular(packet_path, "source_mode_drift")
+        _require(stat.S_IMODE(packet_path.stat().st_mode) == PRIVATE_FILE_MODE, "source_mode_drift")
+
+
 def _build_stage(config: Config, stage: Path) -> dict[str, Any]:
     source = config.source
     _directory(source, "source_binding_drift")
     manifest, custody_raw, _custody = _source_manifest(source, config)
+    _verify_source_package_modes(source, manifest, bool(config.fixture))
     expected = _expected_order(manifest, bool(config.fixture))
     lane_counts = {lane: 0 for lane in LANE_ORDER}
     output_records: list[dict[str, Any]] = []
@@ -525,9 +563,12 @@ def materialize(
         _require({path.name for path in staging.iterdir()} == OUTPUT_TOP_LEVEL, "transaction_failure")
         _walk_modes(staging)
         os.replace(staging, config.output)
+        # Amendment step 14: from this point the operation is committed at
+        # the filesystem level — a later diagnostic failing must never
+        # trigger deleting the artifact that was just correctly installed.
+        committed = True
         _fsync_directory(config.output.parent)
         _walk_modes(config.output)
-        committed = True
         return result
     except MaterializationError:
         raise
@@ -535,23 +576,54 @@ def materialize(
         raise MaterializationError("transaction_failure") from None
     finally:
         if not committed:
+            # Amendment step 14: on any failure, remove only the
+            # task-owned staging path this call created. ``config.output``
+            # is never touched here — ``_validate_paths`` already refused a
+            # pre-existing destination up front, and by construction this
+            # process is never the one that created it if it exists now
+            # (a concurrently created destination must survive untouched).
             shutil.rmtree(staging, ignore_errors=True)
-            if config.output.exists() and not config.output.is_symlink():
-                shutil.rmtree(config.output, ignore_errors=True)
+
+
+def _resolve_real_paths() -> tuple[Path, Path]:
+    """Amendment step 15: resolve real-mode source/output from env/config, never argv."""
+    config_path_raw = os.environ.get(REAL_CONFIG_ENV)
+    if config_path_raw:
+        config_path = Path(config_path_raw)
+        _regular(config_path, "path_disclosure_refused")
+        _require(stat.S_IMODE(config_path.stat().st_mode) == PRIVATE_FILE_MODE, "path_disclosure_refused")
+        payload = strict_json(config_path, "path_disclosure_refused")
+        _require(
+            isinstance(payload, Mapping) and isinstance(payload.get("source"), str) and isinstance(payload.get("output"), str),
+            "path_disclosure_refused",
+        )
+        return Path(payload["source"]), Path(payload["output"])
+    source_env = os.environ.get(REAL_SOURCE_ENV)
+    output_env = os.environ.get(REAL_OUTPUT_ENV)
+    _require(bool(source_env) and bool(output_env), "path_disclosure_refused")
+    return Path(source_env), Path(output_env)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", "--source-package", dest="source", type=Path, required=True)
-    parser.add_argument("--output", "--output-package", dest="output", type=Path, required=True)
+    parser.add_argument("--source", "--source-package", dest="source", type=Path, default=None)
+    parser.add_argument("--output", "--output-package", dest="output", type=Path, default=None)
     parser.add_argument(
         "--fixture",
         action="store_true",
-        help="use isolated synthetic bindings; never use this for a live package",
+        help="use isolated synthetic bindings with explicit --source/--output; never use this for a live package",
     )
     args = parser.parse_args(argv)
     try:
-        result = materialize(args.source, args.output, fixture=args.fixture)
+        if args.fixture:
+            _require(args.source is not None and args.output is not None, "fixture_flag_required")
+            source, output = args.source, args.output
+        else:
+            # Amendment step 15: real mode never accepts --source/--output —
+            # private paths never appear on argv/CLI for a live package.
+            _require(args.source is None and args.output is None, "path_disclosure_refused")
+            source, output = _resolve_real_paths()
+        result = materialize(source, output, fixture=args.fixture)
     except MaterializationError as exc:
         print(json.dumps({"ok": False, "failure_code": exc.code, "text_free": True}, separators=(",", ":")))
         return 2

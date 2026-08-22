@@ -71,6 +71,9 @@ class SyntheticSourcesClient:
     def check_russian_shadow(self, word):
         return {"matches_russian": False, "russian_lemma": None, "confidence": 0.0}
 
+    def query_pravopys(self, topic):
+        return {"status": "not_found", "hits": []}
+
 
 def _row(unit_id: str, text: str) -> dict:
     return {
@@ -92,7 +95,7 @@ def test_schemas_are_valid_draft_2020_12():
 def test_compiled_evidence_records_validate_against_evidence_schema():
     validators = _validators()
     row = _row("unit-1", "Привіт світ")
-    row_evidence = compiler.compile_row_evidence(row, SyntheticSourcesClient(), source_version="v1")
+    row_evidence = compiler.compile_row_evidence(row, SyntheticSourcesClient(), identity=SyntheticSourcesClient().server_identity())
     for record in row_evidence["evidence"]:
         errors = list(validators[EVIDENCE_SCHEMA].iter_errors(record))
         assert not errors, errors
@@ -123,7 +126,6 @@ def test_evidence_schema_rejects_closed_claim_boundary_violation():
         source_version="v1",
         locator="repo:scripts/verification/check_ru_morph.py",
         query="получити",
-        query_sha256=contract.sha256_text("получити"),
         status="attested",
         supports="suspicion",
         retrieval_sha256=contract.sha256_text("payload"),

@@ -95,6 +95,64 @@ SUFFICIENT_SUPPORTS: frozenset[str] = frozenset({"normative_rule", "attestation"
 # archaic-only VESUM result for mandatory risk review, it never counts as
 # clean-modern support and it never condemns the row either.
 
+# The frozen 23-phenomenon residual taxonomy carried forward unchanged from
+# Cycle 006 (batch_state/phase3-run-cycle006-grok-label-provider-batch-v2.py
+# ``TAX``; also see the 12-phenomenon clean-label subset in
+# scripts/projects/open_model_data/phase3_recovery_contracts.py
+# ``EVALUATION_PHENOMENA``). The amendment "does not reroll or alter ...
+# taxonomy" (Cycle 007 amendment, "Why this is a new cycle") — this tuple
+# must stay byte-identical to the Cycle 006 source; it exists here only so
+# the evidence compiler/validator can phenomenon-scope evidence without a
+# fragile cross-import of a one-off batch_state script.
+RESIDUAL_PHENOMENON_TAXONOMY: tuple[str, ...] = (
+    "alphabet_letter_names_and_graphic_inventory",
+    "phoneme_grapheme_correspondence",
+    "vowel_and_consonant_alternation",
+    "soft_sign_and_miakyi_znak",
+    "apostrophe",
+    "prefix_and_suffix_spelling",
+    "compound_solid_separate_hyphenated_spelling",
+    "capitalization",
+    "foreign_word_and_name_transmission",
+    "proper_and_geographical_names",
+    "declension_and_case_endings",
+    "finite_verb_conjugation_and_forms",
+    "numeral_agreement",
+    "direct_address_vocative",
+    "impersonal_no_to_expressed_agent",
+    "participial_versus_lexicalized_chyi",
+    "prepositional_government_valency",
+    "lexical_interference",
+    "semantic_false_friends_interlanguage_homonyms",
+    "phrase_collocation",
+    "syntactic_calque",
+    "parallel_norms_and_acceptable_variants",
+    "punctuation",
+)
+assert len(RESIDUAL_PHENOMENON_TAXONOMY) == 23 and len(set(RESIDUAL_PHENOMENON_TAXONOMY)) == 23, (
+    "residual phenomenon taxonomy drifted from the frozen 23-phenomenon set"
+)
+
+# Amendment step 9 ("Validate query_sha256 against the actual private query
+# when query is present; use explicit domain-separated fixed hashes when no
+# query exists. Reject tampering."). A caller-supplied query_sha256 is never
+# trusted: build_evidence_record always recomputes it from ``query`` itself.
+NO_QUERY_DOMAIN = "phase3-cycle007-no-query-evidence-v1"
+
+
+def expected_query_sha256(query: str | None, *, channel: str, source_identity: str, locator: str) -> str:
+    """The one legal query_sha256 for a given (query, channel, source, locator).
+
+    When ``query`` is a real private string, its own hash is the only valid
+    value. When there is no query at all, the value is a fixed hash derived
+    from a private domain separator plus the record's own public-safe
+    identity fields — deterministic, but never reusable across a different
+    channel/source/locator, and never guessable from public data alone.
+    """
+    if query is not None:
+        return sha256_text(query)
+    return sha256_text(f"{NO_QUERY_DOMAIN}:{channel}:{source_identity}:{locator}")
+
 
 class EvidenceContractError(ValueError):
     """A Cycle 007 evidence record violates the frozen schema/contract."""
@@ -178,6 +236,10 @@ def evidence_identity(
     require(supports in SUPPORTS, f"unknown evidence supports value: {supports!r}")
     require(len(query_sha256) == 64, "query_sha256 must be a hex sha256")
     require(len(retrieval_sha256) == 64, "retrieval_sha256 must be a hex sha256")
+    require(
+        phenomenon_id is None or phenomenon_id in RESIDUAL_PHENOMENON_TAXONOMY,
+        f"phenomenon_id not in the frozen 23-phenomenon taxonomy: {phenomenon_id!r}",
+    )
     validate_channel_supports(channel, supports)
     return {
         "evidence_schema": EVIDENCE_SCHEMA_VERSION,
@@ -207,7 +269,6 @@ def build_evidence_record(
     source_version: str,
     locator: str,
     query: str | None,
-    query_sha256: str,
     status: str,
     supports: str,
     retrieval_sha256: str,
@@ -223,7 +284,15 @@ def build_evidence_record(
     public receipt projection in the compiler strips it. ``negative_reason``
     is an optional free-text diagnostic for not_found/ambiguous/incomplete/
     parse_error/unavailable statuses; it is never treated as evidence.
+
+    Amendment step 9: ``query_sha256`` is never accepted from a caller — it
+    is always derived here from ``query`` itself (or, when there is no
+    query, from the fixed domain-separated hash), so a hand-tampered
+    query/hash pair can never diverge.
     """
+    query_sha256 = expected_query_sha256(
+        query, channel=channel, source_identity=source_identity, locator=locator
+    )
     identity = evidence_identity(
         channel=channel,
         source_identity=source_identity,

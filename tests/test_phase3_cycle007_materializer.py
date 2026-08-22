@@ -239,3 +239,109 @@ def test_materializer_path_overlap_rejected(tmp_path: Path):
     with pytest.raises(materializer.MaterializationError) as excinfo:
         materializer.materialize(source, source / "nested-output", fixture=True)
     assert excinfo.value.code == "path_overlap"
+
+
+# --------------------------------------------------------------------------
+# Amendment step 14: a post-commit diagnostic failure must never delete the
+# just-installed output, and rollback removes only this call's own staging
+# directory — never a concurrently created destination.
+# --------------------------------------------------------------------------
+
+
+def test_materializer_never_deletes_output_when_a_post_replace_check_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source, output, _rows = _fixture(tmp_path)
+    real_walk_modes = materializer._walk_modes
+    call_count = {"n": 0}
+
+    def _fail_second_call(root: Path) -> None:
+        call_count["n"] += 1
+        if call_count["n"] == 2:  # the post-os.replace() call on config.output
+            raise RuntimeError("synthetic post-replace diagnostic failure")
+        real_walk_modes(root)
+
+    monkeypatch.setattr(materializer, "_walk_modes", _fail_second_call)
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "transaction_failure"
+    # The rename already happened — the correctly-built output must survive
+    # a later diagnostic failure untouched.
+    assert output.exists()
+    custody = materializer.strict_json(output / "custody-receipt.json")
+    assert custody["evaluation_cycle_id"] == materializer.CYCLE007
+
+
+def test_materializer_rollback_never_touches_a_concurrently_created_destination(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source, output, _rows = _fixture(tmp_path)
+
+    def _boom(*_args: Any, **_kwargs: Any):
+        raise RuntimeError("synthetic mid-build failure")
+
+    monkeypatch.setattr(materializer, "_packet_rows", _boom)
+    # Simulate a concurrent process having already created the destination
+    # with unrelated content between _validate_paths() and _build_stage().
+    output.mkdir(mode=materializer.PRIVATE_DIR_MODE)
+    os.chmod(output, materializer.PRIVATE_DIR_MODE)
+    (output / "concurrent-marker.json").write_bytes(b"{}")
+    os.chmod(output / "concurrent-marker.json", materializer.PRIVATE_FILE_MODE)
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    # _validate_paths refuses the pre-existing destination outright...
+    assert excinfo.value.code == "output_exists"
+    # ...and, crucially, never deletes it.
+    assert output.exists()
+    assert (output / "concurrent-marker.json").exists()
+
+
+# --------------------------------------------------------------------------
+# Amendment step 15: source package mode verification, real-mode path
+# disclosure refusal (env/config only, never argv).
+# --------------------------------------------------------------------------
+
+
+def test_materializer_real_mode_rejects_a_world_readable_source_package(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source, output, _rows = _fixture(tmp_path)
+    os.chmod(source / "custody-receipt.json", 0o644)  # no longer mode-0600
+    # Bind the frozen hashes to this fixture so we get past source_binding_drift
+    # and reach the mode-verification step this test is actually about.
+    custody_raw = (source / "custody-receipt.json").read_bytes()
+    manifest_raw = (source / "label-manifest.json").read_bytes()
+    monkeypatch.setattr(materializer, "SOURCE_CUSTODY_SHA256", materializer.digest(custody_raw))
+    monkeypatch.setattr(materializer, "SOURCE_MANIFEST_SHA256", materializer.digest(manifest_raw))
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=False)
+    assert excinfo.value.code == "source_mode_drift"
+    assert not output.exists()
+
+
+def test_main_real_mode_refuses_argv_source_and_output(tmp_path: Path):
+    source, output, _rows = _fixture(tmp_path)
+    exit_code = materializer.main(["--source", str(source), "--output", str(output)])
+    assert exit_code == 2
+    assert not output.exists()
+
+
+def test_main_real_mode_resolves_paths_from_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source, output, _rows = _fixture(tmp_path)
+    monkeypatch.setenv(materializer.REAL_SOURCE_ENV, str(source))
+    monkeypatch.setenv(materializer.REAL_OUTPUT_ENV, str(output))
+    monkeypatch.delenv(materializer.REAL_CONFIG_ENV, raising=False)
+    # Real mode still enforces the frozen Cycle-005 hash pins against this
+    # synthetic fixture, so it fails closed on source_binding_drift — the
+    # point of this test is that it reaches that check at all (i.e. argv
+    # was never required and env resolution worked), not that it succeeds.
+    exit_code = materializer.main([])
+    assert exit_code == 2
+    assert not output.exists()
+
+
+def test_main_real_mode_config_file_must_be_mode_0600(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source, output, _rows = _fixture(tmp_path)
+    config_path = tmp_path / "materializer-config.json"
+    config_path.write_text(materializer.json.dumps({"source": str(source), "output": str(output)}))
+    os.chmod(config_path, 0o644)  # world-readable — must be refused
+    monkeypatch.setenv(materializer.REAL_CONFIG_ENV, str(config_path))
+    monkeypatch.delenv(materializer.REAL_SOURCE_ENV, raising=False)
+    monkeypatch.delenv(materializer.REAL_OUTPUT_ENV, raising=False)
+    exit_code = materializer.main([])
+    assert exit_code == 2
+    assert not output.exists()

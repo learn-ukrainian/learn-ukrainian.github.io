@@ -28,11 +28,28 @@ def _vesum_record(row, *, status="attested", supports="attestation", phenomenon_
         source_version="v1",
         locator="data/vesum.db#forms",
         query="слово",
-        query_sha256=contract.sha256_text("слово"),
         status=status,
         supports=supports if status == "attested" else "no_conclusion",
         retrieval_sha256=contract.sha256_text("payload"),
         parser_id="vesum-forms-v1",
+        parser_version="1",
+        row=row,
+        phenomenon_id=phenomenon_id,
+        negative_reason=None if status == "attested" else status,
+    )
+
+
+def _heritage_record(row, *, status="attested", phenomenon_id=None):
+    return contract.build_evidence_record(
+        channel="heritage_attestation",
+        source_identity="heritage-cache",
+        source_version="v1",
+        locator="repo:data/sources.db#heritage",
+        query="слово",
+        status=status,
+        supports="attestation" if status == "attested" else "no_conclusion",
+        retrieval_sha256=contract.sha256_text("heritage-payload"),
+        parser_id="heritage-cache-search-v1",
         parser_version="1",
         row=row,
         phenomenon_id=phenomenon_id,
@@ -47,7 +64,6 @@ def _shadow_record(row):
         source_version="v1",
         locator="repo:scripts/verification/check_ru_morph.py",
         query="слово",
-        query_sha256=contract.sha256_text("слово"),
         status="attested",
         supports="suspicion",
         retrieval_sha256=contract.sha256_text("payload"),
@@ -134,8 +150,8 @@ def test_validate_row_evidence_rejects_invented_declared_id():
 
 
 def test_validate_row_evidence_rejects_cross_phenomenon_evidence():
-    scoped = _vesum_record(ROW_A, phenomenon_id="phenomenon-a")
-    row_evidence = _row_evidence(ROW_A, [scoped], phenomenon_evidence_ids={"phenomenon-b": [scoped["evidence_id"]]})
+    scoped = _vesum_record(ROW_A, phenomenon_id="apostrophe")
+    row_evidence = _row_evidence(ROW_A, [scoped], phenomenon_evidence_ids={"punctuation": [scoped["evidence_id"]]})
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_row_evidence(row_evidence)
     assert excinfo.value.code == "cross_phenomenon_evidence"
@@ -145,6 +161,7 @@ def test_validate_sidecar_rejects_duplicate_row():
     row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
     sidecar = {
         "schema_version": "phase3_cycle007_evidence_sidecar_v1",
+        "row_count": 2,
         "rows": [row_a, copy.deepcopy(row_a)],
     }
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
@@ -223,11 +240,11 @@ def test_validate_label_evidence_refs_rejects_cross_row_reference():
 
 
 def test_validate_label_evidence_refs_rejects_cross_phenomenon_reference():
-    scoped = _vesum_record(ROW_A, status="attested", supports="attestation", phenomenon_id="phenomenon-a")
-    row_evidence = _row_evidence(ROW_A, [scoped], phenomenon_evidence_ids={"phenomenon-a": [scoped["evidence_id"]]})
+    scoped = _vesum_record(ROW_A, status="attested", supports="attestation", phenomenon_id="apostrophe")
+    row_evidence = _row_evidence(ROW_A, [scoped], phenomenon_evidence_ids={"apostrophe": [scoped["evidence_id"]]})
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_label_evidence_refs(
-            row_evidence, decision_code="positive", evidence_ids=[scoped["evidence_id"]], phenomenon_id="phenomenon-b"
+            row_evidence, decision_code="positive", evidence_ids=[scoped["evidence_id"]], phenomenon_id="punctuation"
         )
     assert excinfo.value.code == "cross_phenomenon_evidence"
 
@@ -248,3 +265,151 @@ def test_validate_label_evidence_refs_rejects_unknown_decision_code():
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_label_evidence_refs(row_evidence, decision_code="not_a_real_code", evidence_ids=[record["evidence_id"]])
     assert excinfo.value.code == "unknown_decision_code"
+
+
+# --------------------------------------------------------------------------
+# Amendment step 7: sufficiency ordering — a decisive negative record forces
+# uncertainty even when an unrelated record is attested.
+# --------------------------------------------------------------------------
+
+
+def test_classify_sufficiency_decisive_unavailable_overrides_an_attested_record_elsewhere():
+    row_evidence = _row_evidence(
+        ROW_A,
+        [
+            _vesum_record(ROW_A, status="attested", supports="attestation"),
+            _heritage_record(ROW_A, status="unavailable"),
+        ],
+    )
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_unavailable"
+
+
+def test_classify_sufficiency_decisive_conflicting_overrides_an_attested_record_elsewhere():
+    row_evidence = _row_evidence(
+        ROW_A,
+        [
+            _vesum_record(ROW_A, status="attested", supports="attestation"),
+            _heritage_record(ROW_A, status="ambiguous"),
+        ],
+    )
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_conflicting"
+
+
+def test_validate_label_evidence_refs_rejects_agree_when_a_decisive_channel_is_unavailable_elsewhere():
+    vesum = _vesum_record(ROW_A, status="attested", supports="attestation")
+    row_evidence = _row_evidence(ROW_A, [vesum, _heritage_record(ROW_A, status="unavailable")])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence, decision_code="agree", evidence_ids=[vesum["evidence_id"]])
+    assert excinfo.value.code == "insufficient_evidence_for_decision"
+    # The uncertainty path remains valid with the same citation.
+    validator.validate_label_evidence_refs(row_evidence, decision_code="abstention", evidence_ids=[vesum["evidence_id"]])
+
+
+def test_classify_sufficiency_is_phenomenon_scoped():
+    """A decisive negative bound to a different phenomenon must not block this one."""
+    scoped_positive = _vesum_record(ROW_A, status="attested", supports="attestation", phenomenon_id="apostrophe")
+    other_phenomenon_negative = _heritage_record(ROW_A, status="unavailable", phenomenon_id="punctuation")
+    row_evidence = _row_evidence(
+        ROW_A,
+        [scoped_positive, other_phenomenon_negative],
+        phenomenon_evidence_ids={
+            "apostrophe": [scoped_positive["evidence_id"]],
+            "punctuation": [other_phenomenon_negative["evidence_id"]],
+        },
+    )
+    assert validator.classify_sufficiency(row_evidence, phenomenon_id="apostrophe") == "sufficient"
+    assert validator.classify_sufficiency(row_evidence, phenomenon_id="punctuation") == "insufficient_unavailable"
+
+
+# --------------------------------------------------------------------------
+# Amendment step 12: raw_payload_publication_allowed / claim_boundary /
+# sidecar_id / manifest_sha256 shape checks.
+# --------------------------------------------------------------------------
+
+
+def test_validate_evidence_record_rejects_a_hand_edited_raw_payload_flag():
+    record = dict(_vesum_record(ROW_A))
+    record["raw_payload_publication_allowed"] = True
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "evidence_shape_drift"
+
+
+def test_validate_evidence_record_rejects_a_hand_edited_claim_boundary_flag():
+    record = dict(_vesum_record(ROW_A))
+    record["claim_boundary"] = dict(record["claim_boundary"])
+    record["claim_boundary"]["authoritative"] = True
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "evidence_shape_drift"
+
+
+def test_validate_sidecar_rejects_row_count_mismatch():
+    row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
+    sidecar = {"schema_version": "phase3_cycle007_evidence_sidecar_v1", "row_count": 5, "rows": [row_a]}
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar)
+    assert excinfo.value.code == "sidecar_shape_drift"
+
+
+def test_validate_sidecar_detects_sidecar_id_hash_drift():
+    row_a = _row_evidence(ROW_A, [_vesum_record(ROW_A)])
+    sidecar = {"schema_version": "phase3_cycle007_evidence_sidecar_v1", "row_count": 1, "rows": [row_a]}
+    sidecar["sidecar_id"] = "cycle007_sidecar:" + "0" * 64
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar)
+    assert excinfo.value.code == "sidecar_id_hash_drift"
+
+
+def test_validate_sidecar_detects_missing_retrieval_payload():
+    record = _vesum_record(ROW_A)
+    row_a = _row_evidence(ROW_A, [record])
+    sidecar = {
+        "schema_version": "phase3_cycle007_evidence_sidecar_v1",
+        "row_count": 1,
+        "rows": [row_a],
+        "retrieval_payloads": {},  # the record's retrieval_sha256 is not here
+    }
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_sidecar(sidecar)
+    assert excinfo.value.code == "retrieval_payload_missing"
+
+
+def test_validate_manifest_accepts_a_well_formed_manifest():
+    manifest = {
+        "schema_version": "phase3_cycle007_evidence_manifest_v1",
+        "text_free": True,
+        "packet_count": 1,
+        "row_count": 3,
+        "sidecars": [{"packet_index": 1, "row_count": 3, "sidecar_sha256": "a" * 64}],
+    }
+    manifest["manifest_sha256"] = contract.sha256_value(manifest)
+    validator.validate_manifest(manifest)
+
+
+def test_validate_manifest_detects_manifest_sha256_hash_drift():
+    manifest = {
+        "schema_version": "phase3_cycle007_evidence_manifest_v1",
+        "text_free": True,
+        "packet_count": 1,
+        "row_count": 3,
+        "sidecars": [{"packet_index": 1, "row_count": 3, "sidecar_sha256": "a" * 64}],
+        "manifest_sha256": "0" * 64,
+    }
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest)
+    assert excinfo.value.code == "manifest_id_hash_drift"
+
+
+def test_validate_manifest_detects_row_count_mismatch():
+    manifest = {
+        "schema_version": "phase3_cycle007_evidence_manifest_v1",
+        "text_free": True,
+        "packet_count": 1,
+        "row_count": 999,
+        "sidecars": [{"packet_index": 1, "row_count": 3, "sidecar_sha256": "a" * 64}],
+    }
+    manifest["manifest_sha256"] = contract.sha256_value(manifest)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest)
+    assert excinfo.value.code == "manifest_shape_drift"

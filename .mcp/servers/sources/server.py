@@ -25,6 +25,7 @@ Tools:
 """
 
 import asyncio
+import hashlib
 import json
 import re
 import sys
@@ -546,7 +547,17 @@ async def list_tools() -> list[Tool]:
                         "type": "integer",
                         "description": "Max results (default 10)",
                         "default": 10
-                    }
+                    },
+                    "cache_only": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": (
+                            "Never make a live GRAC fetch — answer only from a local frequency "
+                            "cache. Returns JSON {status: attested|not_found|unavailable, entry}. "
+                            "No GRAC frequency cache table is ingested today, so this always "
+                            "returns 'unavailable' rather than making the disallowed network call."
+                        ),
+                    },
                 },
                 "required": ["query"]
             },
@@ -573,6 +584,16 @@ async def list_tools() -> list[Tool]:
                         "description": (
                             "Requested DictUA sections. When supplied, including ['paradigm'], "
                             "the response is structured source-attributed JSON."
+                        ),
+                    },
+                    "cache_only": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": (
+                            "Never make a live ULIF fetch — answer only from the local "
+                            "ulif_dictua_entries cache. Returns JSON "
+                            "{status: attested|not_found|unavailable, entry}. A cache miss is "
+                            "'not_found', never fetched live."
                         ),
                     },
                 },
@@ -994,23 +1015,47 @@ async def list_tools() -> list[Tool]:
 
 
 def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0,
-                   duration_s: float = 0.0, error: str = "") -> None:
-    """Log MCP tool call to JSONL for build analytics (#1095)."""
+                   duration_s: float = 0.0, error: str = "", *,
+                   response_text: str = "", privacy_mode: bool = False) -> None:
+    """Log MCP tool call to JSONL for build analytics (#1095).
+
+    ``privacy_mode`` (Cycle 007 amendment, "internal hash-only privacy
+    mode"): the log entry never contains argument values or response text —
+    only the tool name, argument names/count/hash, response length/hash,
+    duration, and error *class* (never the error message, which can embed a
+    private argument). Default (non-privacy) behavior is unchanged.
+    """
     from datetime import datetime as _dt
 
     log_dir = Path(__file__).resolve().parents[2].parent / "logs"
     log_dir.mkdir(exist_ok=True)
     log_path = log_dir / "mcp-sources-requests.jsonl"
 
-    entry = {
-        "ts": _dt.now().isoformat(),
-        "tool": name,
-        "args": {k: str(v)[:200] for k, v in arguments.items()},
-        "response_chars": response_chars,
-        "duration_s": round(duration_s, 2),
-    }
-    if error:
-        entry["error"] = error[:500]
+    if privacy_mode:
+        args_canonical = json.dumps(arguments, ensure_ascii=False, sort_keys=True, default=str)
+        entry: dict[str, Any] = {
+            "ts": _dt.now().isoformat(),
+            "tool": name,
+            "privacy_mode": True,
+            "arg_names": sorted(arguments.keys()),
+            "arg_count": len(arguments),
+            "arg_sha256": hashlib.sha256(args_canonical.encode("utf-8")).hexdigest(),
+            "response_length": response_chars,
+            "response_sha256": hashlib.sha256(response_text.encode("utf-8")).hexdigest() if response_text else None,
+            "duration_s": round(duration_s, 2),
+        }
+        if error:
+            entry["error_class"] = error.split(":", 1)[0][:120]
+    else:
+        entry = {
+            "ts": _dt.now().isoformat(),
+            "tool": name,
+            "args": {k: str(v)[:200] for k, v in arguments.items()},
+            "response_chars": response_chars,
+            "duration_s": round(duration_s, 2),
+        }
+        if error:
+            entry["error"] = error[:500]
 
     try:
         with open(log_path, "a", encoding="utf-8") as f:
@@ -1267,9 +1312,16 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
     Kept as a module-level callable for unit tests and backward compat.
     The registered MCP 2.0 handler is ``_on_call_tool``.
+
+    ``arguments`` may carry a reserved ``_privacy_mode`` boolean (Cycle 007
+    amendment step 3). It is stripped before dispatch — no handler or tool
+    schema ever sees it — and only switches how this call is logged: with
+    it set, the log entry never contains argument values or response text,
+    only counts/hashes/tool name/duration/error class.
     """
     import time as _time
     _t0 = _time.monotonic()
+    privacy_mode = bool(arguments.pop("_privacy_mode", False)) if isinstance(arguments, dict) else False
     try:
         # Dispatch to handler
         _handlers = {
@@ -1317,17 +1369,20 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             result = await handler()
         else:
             result = [TextContent(type="text", text=f"Unknown tool: {name}")]
-            _log_tool_call(name, arguments, error="unknown tool")
+            _log_tool_call(name, arguments, error="unknown tool", privacy_mode=privacy_mode)
             return result
 
         # Log successful call
         _elapsed = _time.monotonic() - _t0
-        _resp_chars = sum(len(t.text) for t in result) if result else 0
-        _log_tool_call(name, arguments, response_chars=_resp_chars, duration_s=_elapsed)
+        _resp_text = "\n".join(t.text for t in result) if result else ""
+        _log_tool_call(
+            name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
+            response_text=_resp_text, privacy_mode=privacy_mode,
+        )
         return result
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
-        _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}")
+        _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
         return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
 
 
@@ -1958,6 +2013,13 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
     mode = args.get("mode", "frequency")
     limit = args.get("limit", 10)
 
+    if args.get("cache_only"):
+        # No GRAC frequency cache table is ingested into sources.db today
+        # (scripts/rag/source_query.py is live-only). Fail closed to
+        # "unavailable" rather than making the disallowed live fetch.
+        payload = {"status": "unavailable", "entry": None, "note": "no GRAC frequency cache table ingested"}
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
     from rag.source_query import (
         grac_collocations,
         grac_concordance,
@@ -2004,6 +2066,26 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
 async def handle_query_ulif(args: dict) -> list[TextContent]:
     word = args["word"]
+    if args.get("cache_only"):
+        # Cache-only: never a live ULIF fetch. A missing/unreadable cache
+        # table is "unavailable"; a present table with no matching row is
+        # "not_found" — neither is ever escalated to a live HTTP call.
+        from wiki.sources_db import _table_columns, get_ulif_dictua_entry
+
+        try:
+            has_table = bool(await asyncio.to_thread(_table_columns, "ulif_dictua_entries"))
+        except Exception:
+            has_table = False
+        if not has_table:
+            payload = {"status": "unavailable", "entry": None}
+        else:
+            try:
+                entry = await asyncio.to_thread(get_ulif_dictua_entry, word)
+            except Exception:
+                payload = {"status": "unavailable", "entry": None}
+            else:
+                payload = {"status": "attested" if entry else "not_found", "entry": entry}
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
     if "sections" not in args:
         from rag.source_query import ulif_paradigm
 
