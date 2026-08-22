@@ -706,7 +706,17 @@ def _qualifying_reason(
     safe_only: bool = False,
     merged_pr_only: bool = False,
     include_terminal_dispatches: bool = False,
+    pr_unknown: bool = False,
 ) -> str | None:
+    """``pr_unknown`` marks the PR state as UNREADABLE rather than absent.
+
+    A failed branch query must not read as "no PR": every reason below that
+    consults ``pr_state`` -- directly, or via a ``pr_state is None`` shortcut
+    that means "no open PR" -- becomes unsafe, because an OPEN PR may exist
+    and simply not be visible. Class B stays available: it never consults
+    ``pr_state`` and already requires the head to be an ancestor of
+    origin/main or reachable from a remote, so nothing can be lost.
+    """
     if pr_state is not None:
         pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
         if pr_state.state == "MERGED" and _pr_matches_worktree_head(info, pr_state):
@@ -727,8 +737,10 @@ def _qualifying_reason(
 
         # Never treat "matches remote tip" as reaped-while-OPEN: open PR
         # worktrees commonly match origin/<branch> and must stay mounted.
-        if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
-            info.path, info.branch
+        if (
+            not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+            and _origin_matches_head(info.path, info.branch)
         ):
             return f"HEAD matches origin/{info.branch}"
 
@@ -791,17 +803,23 @@ def _qualifying_reason(
             info=info,
             active_ids=active_ids,
         )
-        if terminal_reason is not None and (pr_state is None or pr_state.state != "OPEN"):
+        if (
+            terminal_reason is not None
+            and not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+        ):
             return terminal_reason
 
-        abandoned = _abandoned_main_dispatch_reason(
-            repo_root=repo_root,
-            info=info,
-            pr_state=pr_state,
-            now=now,
-        )
-        if abandoned is not None:
-            return abandoned
+        # Also PR-dependent: it reads pr_state to decide abandonment.
+        if not pr_unknown:
+            abandoned = _abandoned_main_dispatch_reason(
+                repo_root=repo_root,
+                info=info,
+                pr_state=pr_state,
+                now=now,
+            )
+            if abandoned is not None:
+                return abandoned
 
     return None
 
@@ -1431,16 +1449,24 @@ def reap_worktrees(
                 )
                 continue
 
+            # An unreadable branch response is UNKNOWN, not "no PR": drop the
+            # untrusted pr_state and forbid every PR-dependent reason. Without
+            # this, the legacy/manual class deleted on a failed branch query,
+            # because a supplementary SHA-search MERGED hit is labelled with
+            # the queried worktree SHA, always matches the head, and its
+            # "PR #N MERGED" reason does not enable the cleanup-time re-query.
+            pr_unknown = pr_error is not None
             reason = _qualifying_reason(
                 repo_root=repo_root,
                 info=info,
-                pr_state=pr_state,
+                pr_state=None if pr_unknown else pr_state,
                 build_age_hours=build_age_hours,
                 now=now,
                 active_ids=active_ids,
                 safe_only=safe_only,
                 merged_pr_only=merged_pr_only,
                 include_terminal_dispatches=include_terminal_dispatches,
+                pr_unknown=pr_unknown,
             )
             if reason is None:
                 is_settled, _ = _is_settled_dispatch_task(

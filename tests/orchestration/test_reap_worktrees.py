@@ -2059,3 +2059,58 @@ def test_unreadable_branch_query_retains_even_when_the_sha_lookup_succeeds(
     assert result.action == "skipped"
     assert "PR guard unavailable" in result.reason
     assert worktree.exists()
+
+
+def test_unreadable_branch_query_retains_in_the_legacy_class(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An unreadable authoritative branch response must retain in EVERY class,
+    including legacy/manual (`--legacy-classes`).
+
+    The retention branch used to be gated on
+    `merged_pr_only or include_terminal_dispatches`, so with both false a
+    failed branch query was recorded and then ignored. A supplementary
+    SHA-search MERGED hit -- which is labelled with the queried worktree SHA
+    and therefore always matches the head -- then qualified the tree for
+    deletion, and that reason does not enable the terminal cleanup-time
+    re-query. That was the configuration where the candidate-query error is
+    the ONLY barrier.
+    """
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "legacy-guard"
+    add_worktree(repo, "codex/legacy-guard", path=worktree)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([], "gh unreadable row"))
+    # head_sha equals the queried SHA, exactly as _query_prs_by_head_sha labels it.
+    monkeypatch.setattr(
+        rw,
+        "_query_prs_by_head_sha",
+        lambda _repo, sha: [rw.PullRequestState(number=42, state="MERGED", head_sha=sha or head)],
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=False,
+            include_terminal_dispatches=False,
+            safe_only=False,
+        ),
+        worktree,
+    )
+
+    assert result.action != "removed", f"deleted on an unreadable PR response: {result.reason}"
+    assert worktree.exists()
