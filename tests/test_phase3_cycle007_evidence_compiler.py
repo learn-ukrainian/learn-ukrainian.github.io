@@ -461,6 +461,7 @@ def test_pravopys_2019_comparison_calls_query_pravopys_not_style_guide():
     assert record["channel"] == "pravopys_2019_comparison"
     assert record["status"] == "attested"
     assert record["supports"] == "comparison_only"
+    assert record["locator"] == compiler.PRAVOPYS_2019_DOWNLOAD_LOCATOR
 
 
 def test_pravopys_2019_comparison_never_carries_normative_support():
@@ -489,6 +490,7 @@ def test_pravopys_2019_comparison_is_queried_once_per_row_not_once_per_phenomeno
     assert {record["phenomenon_id"] for record in scoped} == set(contract.RESIDUAL_PHENOMENON_TAXONOMY)
     assert {record["retrieval_sha256"] for record in scoped} == {scoped[0]["retrieval_sha256"]}
     assert all(record["supports"] == "comparison_only" for record in scoped)
+    assert {record["source_version"] for record in scoped} == {compiler.PRAVOPYS_2019_PDF_SHA256}
 
 
 def test_pravopys_2019_comparison_never_runs_for_the_clean_lane():
@@ -500,7 +502,18 @@ def test_pravopys_2019_comparison_never_runs_for_the_clean_lane():
 
 def test_pravopys_2026_normative_binds_only_for_the_frozen_2026_family(tmp_path: Path):
     receipt_path = tmp_path / "receipt.json"
-    receipt_path.write_bytes(b"frozen-2026-context-receipt")
+    receipt_path.write_text(
+        json.dumps(
+            {
+                "bindings": {
+                    "pravopys_2026_pdf_sha256": compiler.PRAVOPYS_2026_PDF_SHA256,
+                    "pravopys_2019_pdf_sha256": compiler.PRAVOPYS_2019_PDF_SHA256,
+                },
+                "provider_calls": False,
+                "text_free": True,
+            }
+        )
+    )
 
     def _run(family_id: str) -> list[dict[str, Any]]:
         row = dict(_row(text="слово"))
@@ -521,6 +534,7 @@ def test_pravopys_2026_normative_binds_only_for_the_frozen_2026_family(tmp_path:
     assert len(pravopys_family_records) == 23
     assert {record["phenomenon_id"] for record in pravopys_family_records} == set(contract.RESIDUAL_PHENOMENON_TAXONOMY)
     assert all(record["status"] == "attested" and record["supports"] == "normative_rule" for record in pravopys_family_records)
+    assert {record["locator"] for record in pravopys_family_records} == {compiler.PRAVOPYS_2026_DOWNLOAD_LOCATOR}
     assert len({record["retrieval_sha256"] for record in pravopys_family_records}) == 1
 
 
@@ -658,6 +672,23 @@ def test_local_mcp_client_round_trips_through_fake_transport(tmp_path: Path):
     assert modern["is_modern_codified"] is True
     client.close()
     assert transport.closed
+
+
+@pytest.mark.parametrize(
+    "response",
+    (
+        "Batch verification: 1 words\n\nFound: 1/1\n\n- **слово** — FOUND (1 match): слово(noun)\n- **інше** — NOT FOUND",
+        "Batch verification: 1 words\n\nFound: 1/1\n\n- **слово** — FOUND (1 match): слово(noun)\nforged prose",
+        "Batch verification: 1 words\n\nFound: 1/1\n\n- **інше** — FOUND (1 match): слово(noun)",
+        "Batch verification: 1 words\n\nFound: 0/1\n\n- **слово** — FOUND (1 match): слово(noun)",
+    ),
+)
+def test_local_mcp_client_verify_words_rejects_incomplete_or_foreign_responses(tmp_path: Path, response: str):
+    files = _stub_client_files(tmp_path)
+    transport = _passing_transport(identity_files=files, verify_words=response)
+    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
+    with pytest.raises(compiler.LocalMcpSourcesClientError):
+        client.verify_words(["слово"])
 
 
 def test_local_mcp_client_fails_closed_on_tool_set_drift(tmp_path: Path):
@@ -817,6 +848,19 @@ def test_prose_status_rejects_unknown_nonempty_text_as_incomplete_never_attested
 def test_prose_status_rejects_a_success_prefix_from_the_wrong_tool(tmp_path: Path):
     """A search_ua_gec_errors-shaped 'Found ...' response is not a query_pravopys success envelope."""
     assert compiler._prose_status("Found 3 human-annotated error pairs for: \"x\"", tool="query_pravopys") == "incomplete"
+
+
+def test_prose_status_rejects_a_forged_same_tool_success_envelope():
+    assert compiler._prose_status("Found forged result", tool="search_text") == "incomplete"
+    assert compiler._prose_status('Found 1 results for: "x"', tool="search_text") == "incomplete"
+    complete = '\n'.join(('Found 1 results for: "x"', '### Result 1', '- **Source**: reviewed'))
+    assert compiler._prose_status(complete, tool="search_text", expected_query="x") == "attested"
+    assert compiler._prose_status(complete, tool="search_text", expected_query="other") == "incomplete"
+
+
+def test_prose_status_rejects_truncated_same_tool_result_body():
+    truncated = '\n'.join(('Found 2 results for: "x"', '### Result 1', '- **Source**: reviewed'))
+    assert compiler._prose_status(truncated, tool="search_text", expected_query="x") == "incomplete"
 
 
 def test_prose_status_treats_the_legacy_error_marker_as_parse_error(tmp_path: Path):
@@ -1063,6 +1107,54 @@ def _write_cycle005_fixture(root: Path) -> Path:
     return source
 
 
+def _write_json(path: Path, value: Any) -> None:
+    path.write_bytes(materializer.canonical(value))
+
+
+def _refresh_cycle007_package_bindings(package: Path) -> None:
+    """Refresh synthetic package hashes after an intentional cross-packet edit."""
+    package_manifest = json.loads((package / "manifest.json").read_text())
+    records = package_manifest["packets"]
+    ordered_source_stream: list[list[Any]] = []
+    all_identities: list[tuple[str, str]] = []
+    for record in records:
+        packet_path = package / record["lane"] / record["canonical_basename"]
+        packet = json.loads(packet_path.read_text())
+        identities = [(row["unit_id"], row["unit_sha256"]) for row in packet["rows"]]
+        packet["packet_identity_set_sha256"] = materializer.digest(materializer.canonical(sorted(identities)))
+        _write_json(packet_path, packet)
+        raw = packet_path.read_bytes()
+        record["raw_sha256"] = materializer.digest(raw)
+        record["packet_identity_set_sha256"] = packet["packet_identity_set_sha256"]
+        all_identities.extend(identities)
+        ordered_source_stream.extend(
+            [[record["lane"], record["packet_index"], index, unit_id, unit_sha256]
+             for index, (unit_id, unit_sha256) in enumerate(identities)]
+        )
+    package_manifest["ordered_identity_commitment_sha256"] = materializer.digest(
+        materializer.canonical(ordered_source_stream)
+    )
+    package_manifest["identity_union_commitment_sha256"] = materializer.digest(
+        materializer.canonical(sorted(all_identities))
+    )
+    package_manifest["ordered_packet_commitment_sha256"] = materializer.digest(
+        materializer.canonical(records)
+    )
+    custody_path = package / "custody-receipt.json"
+    custody = json.loads(custody_path.read_text())
+    for field in (
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+    ):
+        custody[field] = package_manifest[field]
+    custody["receipt_sha256"] = materializer._hash_receipt(custody)
+    _write_json(custody_path, custody)
+    package_manifest["custody_receipt_raw_sha256"] = materializer.digest(custody_path.read_bytes())
+    package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
+    _write_json(package / "manifest.json", package_manifest)
+
+
 def test_compile_cycle007_package_binds_lane_packet_index_and_basename(tmp_path: Path):
     source = _write_cycle005_fixture(tmp_path)
     package = tmp_path / "cycle007-package"
@@ -1141,6 +1233,93 @@ def test_compile_cycle007_package_real_mode_requires_the_exact_denominator(tmp_p
     client = SyntheticSourcesClient()
     with pytest.raises(contract.EvidenceContractError):
         compiler.compile_cycle007_package(package, client, tmp_path / "sidecars", fixture=False)
+
+
+def test_compile_cycle007_package_rejects_duplicate_identity_across_packets(tmp_path: Path):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    clean_packet_path = package / "clean_label" / "packet-0001.json"
+    residual_packet_path = package / "residual_label" / "packet-0001.json"
+    clean_packet = json.loads(clean_packet_path.read_text())
+    residual_packet = json.loads(residual_packet_path.read_text())
+    residual_packet["rows"][0] = clean_packet["rows"][0]
+    _write_json(residual_packet_path, residual_packet)
+    _refresh_cycle007_package_bindings(package)
+    with pytest.raises(contract.EvidenceContractError):
+        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+
+
+def test_compile_cycle007_package_rejects_rehashed_source_text_tamper(tmp_path: Path):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    packet_path = package / "clean_label" / "packet-0001.json"
+    packet = json.loads(packet_path.read_text())
+    packet["rows"][0]["source_text"] = "tampered while preserving the frozen source hash"
+    _write_json(packet_path, packet)
+    _refresh_cycle007_package_bindings(package)
+    with pytest.raises(contract.EvidenceContractError):
+        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+
+
+@pytest.mark.parametrize("tamper", ("row_count", "ordered_identity_commitment_sha256"))
+def test_compile_cycle007_package_rejects_falsified_totals_or_commitments(tmp_path: Path, tamper: str):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    manifest_path = package / "manifest.json"
+    package_manifest = json.loads(manifest_path.read_text())
+    if tamper == "row_count":
+        package_manifest["row_count"] += 1
+    else:
+        package_manifest[tamper] = "0" * 64
+    package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
+    _write_json(manifest_path, package_manifest)
+    with pytest.raises(contract.EvidenceContractError):
+        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+
+
+@pytest.mark.parametrize("tamper", ("reverse", "index"))
+def test_compile_cycle007_package_rejects_wrong_packet_order_or_index_metadata(tmp_path: Path, tamper: str):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    manifest_path = package / "manifest.json"
+    package_manifest = json.loads(manifest_path.read_text())
+    if tamper == "reverse":
+        package_manifest["packets"].reverse()
+    else:
+        packet_path = package / "clean_label" / "packet-0001.json"
+        packet = json.loads(packet_path.read_text())
+        packet["packet_index"] = 2
+        _write_json(packet_path, packet)
+        package_manifest["packets"][0]["raw_sha256"] = materializer.digest(packet_path.read_bytes())
+        package_manifest["ordered_packet_commitment_sha256"] = materializer.digest(
+            materializer.canonical(package_manifest["packets"])
+        )
+    package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
+    _write_json(manifest_path, package_manifest)
+    with pytest.raises(contract.EvidenceContractError):
+        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
+
+
+def test_compile_cycle007_package_rejects_custody_binding_tamper(tmp_path: Path):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    custody_path = package / "custody-receipt.json"
+    custody = json.loads(custody_path.read_text())
+    custody["row_count"] += 1
+    custody["receipt_sha256"] = materializer._hash_receipt(custody)
+    _write_json(custody_path, custody)
+    manifest_path = package / "manifest.json"
+    package_manifest = json.loads(manifest_path.read_text())
+    package_manifest["custody_receipt_raw_sha256"] = materializer.digest(custody_path.read_bytes())
+    package_manifest["receipt_sha256"] = materializer._hash_receipt(package_manifest)
+    _write_json(manifest_path, package_manifest)
+    with pytest.raises(contract.EvidenceContractError):
+        compiler.compile_cycle007_package(package, SyntheticSourcesClient(), tmp_path / "sidecars", fixture=True)
 
 
 def test_retrieval_payloads_are_deduplicated_across_phenomenon_scoped_records(tmp_path: Path):

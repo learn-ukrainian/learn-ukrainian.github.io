@@ -420,6 +420,10 @@ def classify_sufficiency(row_evidence: Mapping[str, Any], *, phenomenon_id: str 
         return "insufficient_conflicting"
     if any(record["status"] == "unavailable" for record in decisive):
         return "insufficient_unavailable"
+    if any(record["status"] == "not_found" for record in decisive):
+        if any(contract.is_sufficient_positive(record) for record in evidence):
+            return "insufficient_conflicting"
+        return "insufficient_missing"
     if any(contract.is_sufficient_positive(record) for record in evidence):
         return "sufficient"
     return "insufficient_missing"

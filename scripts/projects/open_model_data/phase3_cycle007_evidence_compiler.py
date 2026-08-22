@@ -490,17 +490,39 @@ _ERROR_PROSE_PREFIXES: tuple[str, ...] = ("Error in ", "Unknown tool:")
 # handle_search_heritage / handle_search_slovnyk_me / handle_query_pravopys).
 # A tool name absent from this table has no prose success path in the
 # compiler (its only call sites use the JSON parsers instead).
-_SUCCESS_PREFIXES_BY_TOOL: dict[str, tuple[str, ...]] = {
-    "search_style_guide": ("Found ",),
-    "search_text": ("Found ",),
-    "search_ua_gec_errors": ("Found ",),
-    "search_heritage": ("Found ",),
-    "search_slovnyk_me": ("Found ",),
-    "query_pravopys": ("**Pravopys section",),
+_SUCCESS_ENVELOPES_BY_TOOL: dict[str, re.Pattern[str]] = {
+    "search_style_guide": re.compile(
+        r'^Found (?P<count>[1-9][0-9]*) results in \*\*Антоненко-Давидович\*\* for: "(?P<query>.+)"$'
+    ),
+    "search_text": re.compile(r'^Found (?P<count>[1-9][0-9]*) results for: "(?P<query>.+)"$'),
+    "search_ua_gec_errors": re.compile(
+        r'^Found (?P<count>[1-9][0-9]*) human-annotated error pairs for: "(?P<query>.+)"$'
+    ),
+    "search_heritage": re.compile(
+        r'^Found (?P<count>[1-9][0-9]*) heritage evidence row\(s\) for: "(?P<query>.+)"$'
+    ),
+    "search_slovnyk_me": re.compile(
+        r'^Found (?P<count>[1-9][0-9]*) slovnyk\.me result\(s\) for: "(?P<query>.+)"$'
+    ),
+    "query_pravopys": re.compile(r'^\*\*Pravopys section [0-9]+\*\*$'),
+}
+
+_SUCCESS_ITEM_PREFIX_BY_TOOL: dict[str, str] = {
+    "search_style_guide": "### Result ",
+    "search_text": "### Result ",
+    "search_ua_gec_errors": "### Result ",
+    "search_heritage": "### Evidence ",
+    "search_slovnyk_me": "### Result ",
 }
 
 
-def _prose_status(text: str, *, tool: str, not_found_prefixes: tuple[str, ...] = _NOT_FOUND_PREFIXES) -> str:
+def _prose_status(
+    text: str,
+    *,
+    tool: str,
+    expected_query: str | None = None,
+    not_found_prefixes: tuple[str, ...] = _NOT_FOUND_PREFIXES,
+) -> str:
     """Classify a prose MCP tool response (amendment step 8; fixes v3 item 2).
 
     The exact "no results" and "found" envelope sentinels are frozen per
@@ -521,13 +543,35 @@ def _prose_status(text: str, *, tool: str, not_found_prefixes: tuple[str, ...] =
     for prefix in not_found_prefixes:
         if stripped.startswith(prefix):
             return "not_found"
-    success_prefixes = _SUCCESS_PREFIXES_BY_TOOL.get(tool, ())
-    if stripped.startswith(success_prefixes):
-        return "attested"
-    return "incomplete"
+    lines = stripped.splitlines()
+    success_envelope = _SUCCESS_ENVELOPES_BY_TOOL.get(tool)
+    match = success_envelope.fullmatch(lines[0]) if success_envelope is not None else None
+    if match is None:
+        return "incomplete"
+    if tool == "query_pravopys":
+        if len(lines) < 3 or re.fullmatch(r"\*\*URL\*\*: https://\S+", lines[1]) is None:
+            return "incomplete"
+        return "attested" if any(line.strip() for line in lines[2:]) else "incomplete"
+    if expected_query is not None and match.groupdict().get("query") != expected_query:
+        return "incomplete"
+    expected_count = int(match.group("count"))
+    marker_prefix = _SUCCESS_ITEM_PREFIX_BY_TOOL[tool]
+    markers = [line for line in lines[1:] if line.startswith(marker_prefix)]
+    if markers != [f"{marker_prefix}{index}" for index in range(1, expected_count + 1)]:
+        return "incomplete"
+    marker_positions = [lines.index(marker) for marker in markers]
+    for position, next_position in zip(marker_positions, [*marker_positions[1:], len(lines)], strict=True):
+        if not any(line.startswith("- **") for line in lines[position + 1 : next_position]):
+            return "incomplete"
+    return "attested"
 
 
-_VERIFY_WORDS_LINE_RE = re.compile(r"^- \*\*(?P<word>.+?)\*\* — (?P<verdict>FOUND|NOT FOUND)", re.MULTILINE)
+_VERIFY_WORDS_HEADER_RE = re.compile(r"^Batch verification: (?P<count>[0-9]+) words$")
+_VERIFY_WORDS_SUMMARY_RE = re.compile(r"^Found: (?P<found>[0-9]+)/(?P<count>[0-9]+)$")
+_VERIFY_WORDS_LINE_RE = re.compile(
+    r"^- \*\*(?P<word>[^*\n]+)\*\* — "
+    r"(?:(?P<found>FOUND) \((?P<matches>[1-9][0-9]*) match\): (?P<details>[^\n]+)|(?P<not_found>NOT FOUND))$"
+)
 
 
 _SERVER_IDENTITY_TOOL = "mcp_server_identity"
@@ -630,8 +674,25 @@ class LocalMcpSourcesClient:
     def verify_words(self, words: Sequence[str]) -> Mapping[str, list[Mapping[str, str]]]:
         if not words:
             return {}
+        if any(not isinstance(word, str) or not word for word in words) or len(set(words)) != len(words):
+            raise LocalMcpSourcesClientError("malformed_verify_words_request")
         text = self._call_text("verify_words", {"words": list(words)})
-        found_words = {match.group("word") for match in _VERIFY_WORDS_LINE_RE.finditer(text) if match.group("verdict") == "FOUND"}
+        lines = [line for line in text.strip().splitlines() if line.strip()]
+        if len(lines) != len(words) + 2:
+            raise LocalMcpSourcesClientError("malformed_response:verify_words")
+        header = _VERIFY_WORDS_HEADER_RE.fullmatch(lines[0])
+        summary = _VERIFY_WORDS_SUMMARY_RE.fullmatch(lines[1])
+        if header is None or summary is None or int(header["count"]) != len(words) or int(summary["count"]) != len(words):
+            raise LocalMcpSourcesClientError("malformed_response:verify_words")
+        found_words: set[str] = set()
+        for expected_word, line in zip(words, lines[2:], strict=True):
+            match = _VERIFY_WORDS_LINE_RE.fullmatch(line)
+            if match is None or match["word"] != expected_word:
+                raise LocalMcpSourcesClientError("malformed_response:verify_words")
+            if match["found"] is not None:
+                found_words.add(expected_word)
+        if int(summary["found"]) != len(found_words):
+            raise LocalMcpSourcesClientError("malformed_response:verify_words")
         # The batch response is prose and does not carry per-match tags —
         # check_modern_form (run unconditionally for every extracted form,
         # amendment step 3) is the archaic-detail source of truth. This
@@ -665,7 +726,7 @@ class LocalMcpSourcesClient:
 
     def slovnyk_me_cached(self, word: str) -> Mapping[str, Any]:
         text = self._call_text("search_slovnyk_me", {"query": word, "live": False})
-        status = _prose_status(text, tool="search_slovnyk_me")
+        status = _prose_status(text, tool="search_slovnyk_me", expected_query=word)
         return {"status": status, "payload": text if status == "attested" else None}
 
     def grac_cached(self, word: str) -> Mapping[str, Any]:
@@ -676,23 +737,23 @@ class LocalMcpSourcesClient:
 
     def search_style_guide(self, query: str) -> Mapping[str, Any]:
         text = self._call_text("search_style_guide", {"query": query})
-        status = _prose_status(text, tool="search_style_guide")
+        status = _prose_status(text, tool="search_style_guide", expected_query=query)
         return {"status": status, "hits": text}
 
     def search_antonenko_text(self, query: str) -> Mapping[str, Any]:
         text = self._call_text("search_text", {"query": query, "source_file": ANTONENKO_SOURCE_FILE})
-        status = _prose_status(text, tool="search_text")
+        status = _prose_status(text, tool="search_text", expected_query=query)
         return {"status": status, "hits": text}
 
     def search_ua_gec_errors(self, query: str) -> Mapping[str, Any]:
         text = self._call_text("search_ua_gec_errors", {"query": query})
-        status = _prose_status(text, tool="search_ua_gec_errors")
+        status = _prose_status(text, tool="search_ua_gec_errors", expected_query=query)
         return {"status": status, "hits": text}
 
     def search_heritage_cached(self, query: str) -> Mapping[str, Any]:
         # include_live_slovnyk explicit False; cache-only, never a live fallback.
         text = self._call_text("search_heritage", {"query": query, "include_live_slovnyk": False})
-        status = _prose_status(text, tool="search_heritage")
+        status = _prose_status(text, tool="search_heritage", expected_query=query)
         return {"status": status, "hits": text}
 
     def check_russian_shadow(self, word: str) -> Mapping[str, Any]:
@@ -1160,7 +1221,7 @@ def compile_row_evidence(
     for record_and_payload in _bind_pravopys_2026_for_row(row, residual_phenomena):
         _add(record_and_payload)
     for record_and_payload in _bind_pravopys_2019_comparison_for_row(
-        row, client, residual_phenomena, source_version=sources_db_source_version
+        row, client, residual_phenomena, source_version=PRAVOPYS_2019_PDF_SHA256
     ):
         _add(record_and_payload)
 
@@ -1203,7 +1264,19 @@ def compile_row_evidence(
 # --------------------------------------------------------------------------
 
 PRAVOPYS_2026_PDF_SHA256 = "e593956bfba6737d991a76fa86970db9c10a5cd7fd8895bae67f2b9a950c3a92"
+PRAVOPYS_2019_PDF_SHA256 = "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"
 PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256 = "5da6f60e1cf5527fd98e44b4396472d871d359cd6b9dc76e3806c73a15c2b827"
+PRAVOPYS_2026_DECISION_LOCATOR = (
+    "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/"
+    "rishennia-47-vid-1-bereznia"
+)
+PRAVOPYS_2026_DOWNLOAD_LOCATOR = (
+    "https://mova.gov.ua/storage/app/sites/19/2026/rishennja-komisiji/01-03/"
+    "sdm-ukrayinskii-pravopis-vidannia.pdf"
+)
+PRAVOPYS_2019_DOWNLOAD_LOCATOR = (
+    "https://mon.gov.ua/storage/app/media/zagalna%20serednya/05062019-onovl-pravo.pdf"
+)
 DEFAULT_PRAVOPYS_CONTEXT_RECEIPT = (
     ROOT / "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
 )
@@ -1216,11 +1289,8 @@ PRAVOPYS_2026_FAMILY_ID = "pravopys_2026_complete"
 
 
 def _pravopys_2026_locator(context_receipt_path: Path) -> str:
-    return (
-        str(context_receipt_path.relative_to(ROOT))
-        if context_receipt_path.is_absolute() and context_receipt_path.is_relative_to(ROOT)
-        else str(context_receipt_path)
-    )
+    del context_receipt_path
+    return PRAVOPYS_2026_DOWNLOAD_LOCATOR
 
 
 def _pravopys_2026_payload(context_receipt_path: Path) -> tuple[str, dict[str, Any]]:
@@ -1232,10 +1302,29 @@ def _pravopys_2026_payload(context_receipt_path: Path) -> tuple[str, dict[str, A
     independently of what the sidecar's ``retrieval_payloads`` table holds.
     """
     receipt_sha256 = contract.sha256_file(context_receipt_path) if context_receipt_path.is_file() else None
-    status = "attested" if receipt_sha256 == PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256 else "unavailable"
+    receipt: Mapping[str, Any] = {}
+    if receipt_sha256 == PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256:
+        try:
+            loaded = json.loads(context_receipt_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            loaded = None
+        if isinstance(loaded, Mapping):
+            receipt = loaded
+    bindings = receipt.get("bindings") if isinstance(receipt.get("bindings"), Mapping) else {}
+    status = (
+        "attested"
+        if receipt_sha256 == PRAVOPYS_2026_CONTEXT_RECEIPT_SHA256
+        and bindings.get("pravopys_2026_pdf_sha256") == PRAVOPYS_2026_PDF_SHA256
+        and bindings.get("pravopys_2019_pdf_sha256") == PRAVOPYS_2019_PDF_SHA256
+        and receipt.get("text_free") is True
+        and receipt.get("provider_calls") is False
+        else "unavailable"
+    )
     payload = {
         "pdf_sha256": PRAVOPYS_2026_PDF_SHA256,
         "context_receipt_sha256": receipt_sha256,
+        "official_decision_locator": PRAVOPYS_2026_DECISION_LOCATOR,
+        "official_download_locator": PRAVOPYS_2026_DOWNLOAD_LOCATOR,
         "status": status,
     }
     return status, payload
@@ -1340,7 +1429,7 @@ def _pravopys_2019_comparison_record(
         channel="pravopys_2019_comparison",
         source_identity="pravopys-2019-comparison",
         source_version=source_version,
-        locator="https://2019.pravopys.net",
+        locator=PRAVOPYS_2019_DOWNLOAD_LOCATOR,
         query=query,
         status=result["status"],
         supports="comparison_only" if result["status"] == "attested" else "no_conclusion",
@@ -1692,11 +1781,387 @@ REAL_PACKET_COUNT = 204
 REAL_ROW_COUNT = 10_159
 _RESIDUAL_LANE_NAME = "residual_label"
 
+_MATERIALIZATION_PACKET_RECORD_FIELDS: frozenset[str] = frozenset(
+    {
+        "lane",
+        "packet_index",
+        "canonical_basename",
+        "row_count",
+        "raw_sha256",
+        "packet_identity_set_sha256",
+    }
+)
+_MATERIALIZATION_PACKET_FIELDS: frozenset[str] = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "lane",
+        "packet_index",
+        "row_count",
+        "rows",
+        "packet_identity_set_sha256",
+    }
+)
+_MATERIALIZATION_MANIFEST_FIELDS: frozenset[str] = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "source_evaluation_cycle_id",
+        "text_free",
+        "custody_receipt_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+        "packet_count",
+        "row_count",
+        "lane_row_counts",
+        "packets",
+        "receipt_sha256",
+    }
+)
+_MATERIALIZATION_CUSTODY_FIELDS: frozenset[str] = frozenset(
+    {
+        "schema_version",
+        "evaluation_cycle_id",
+        "source_evaluation_cycle_id",
+        "amendment_reference",
+        "source_custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+        "packet_count",
+        "row_count",
+        "lane_row_counts",
+        "packet_size",
+        "provider_artifacts_copied",
+        "labels_copied",
+        "responses_copied",
+        "prompts_generated",
+        "evidence_sidecars_generated",
+        "text_free",
+        "receipt_sha256",
+    }
+)
+
+
+def _is_sha256(value: Any) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+
 
 def _materializer_module():
     from scripts.projects.open_model_data import phase3_cycle007_materializer as materializer
 
     return materializer
+
+
+def _validate_cycle007_materialization(
+    package_dir: Path,
+    *,
+    fixture: bool,
+) -> tuple[
+    list[list[Mapping[str, Any]]],
+    list[bool],
+    list[dict[str, Any]],
+    dict[str, Any],
+]:
+    """Read and bind every public package byte before compiling any evidence.
+
+    The materializer already validates these invariants while it creates a
+    package.  The compiler must repeat the checks from the package on disk:
+    compilation is a separate trust boundary, and a changed packet,
+    manifest, or custody receipt must never become a self-consistent evidence
+    bundle merely because a caller supplied matching metadata.
+    """
+    materializer = _materializer_module()
+    manifest_path = package_dir / "manifest.json"
+    manifest = materializer.strict_json(manifest_path, "source_binding_drift")
+    contract.require(isinstance(manifest, Mapping), "source_binding_drift")
+    materializer._verify_source_package_modes(package_dir, manifest, fixture)
+    contract.require(
+        {path.name for path in package_dir.iterdir()} == materializer.OUTPUT_TOP_LEVEL,
+        "manifest_binding_drift",
+    )
+    contract.require(set(manifest) == _MATERIALIZATION_MANIFEST_FIELDS, "manifest_binding_drift")
+    contract.require(
+        manifest.get("schema_version") == "phase3_cycle007_materialization_manifest_v1",
+        "manifest_binding_drift",
+    )
+    contract.require(manifest.get("evaluation_cycle_id") == EVALUATION_CYCLE_ID, "manifest_binding_drift")
+    contract.require(
+        manifest.get("source_evaluation_cycle_id") == materializer.CYCLE005,
+        "manifest_binding_drift",
+    )
+    contract.require(manifest.get("text_free") is True, "manifest_binding_drift")
+    contract.require(_is_sha256(manifest.get("receipt_sha256")), "manifest_binding_drift")
+    contract.require(
+        manifest.get("receipt_sha256") == materializer._hash_receipt(manifest),
+        "manifest_binding_drift",
+    )
+
+    records = manifest.get("packets")
+    contract.require(isinstance(records, list) and bool(records), "manifest_binding_drift")
+    packet_count = manifest.get("packet_count")
+    row_count = manifest.get("row_count")
+    contract.require(
+        isinstance(packet_count, int)
+        and not isinstance(packet_count, bool)
+        and packet_count == len(records)
+        and packet_count > 0,
+        "manifest_binding_drift",
+    )
+    contract.require(
+        isinstance(row_count, int) and not isinstance(row_count, bool) and row_count > 0,
+        "manifest_binding_drift",
+    )
+
+    reported_lane_counts = manifest.get("lane_row_counts")
+    contract.require(
+        isinstance(reported_lane_counts, Mapping)
+        and set(reported_lane_counts) == set(materializer.LANE_ORDER)
+        and all(
+            isinstance(reported_lane_counts[lane], int)
+            and not isinstance(reported_lane_counts[lane], bool)
+            and reported_lane_counts[lane] >= 0
+            for lane in materializer.LANE_ORDER
+        ),
+        "manifest_binding_drift",
+    )
+    for field in (
+        "custody_receipt_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+    ):
+        contract.require(_is_sha256(manifest.get(field)), "manifest_binding_drift")
+
+    custody_path = package_dir / "custody-receipt.json"
+    custody_raw = materializer._read_regular(custody_path, "source_binding_drift")
+    contract.require(
+        manifest.get("custody_receipt_raw_sha256") == materializer.digest(custody_raw),
+        "custody_binding_drift",
+    )
+    custody = materializer.strict_json(custody_path, "source_binding_drift")
+    contract.require(isinstance(custody, Mapping), "source_binding_drift")
+    contract.require(set(custody) == _MATERIALIZATION_CUSTODY_FIELDS, "custody_binding_drift")
+    contract.require(
+        custody.get("schema_version") == "phase3_cycle007_custody_receipt_v1"
+        and custody.get("evaluation_cycle_id") == EVALUATION_CYCLE_ID
+        and custody.get("source_evaluation_cycle_id") == materializer.CYCLE005
+        and custody.get("text_free") is True,
+        "custody_binding_drift",
+    )
+    contract.require(
+        isinstance(custody.get("amendment_reference"), str) and bool(custody["amendment_reference"]),
+        "custody_binding_drift",
+    )
+    for field in (
+        "source_custody_receipt_raw_sha256",
+        "source_label_manifest_raw_sha256",
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+        "receipt_sha256",
+    ):
+        contract.require(_is_sha256(custody.get(field)), "custody_binding_drift")
+    contract.require(
+        custody.get("receipt_sha256") == materializer._hash_receipt(custody),
+        "custody_binding_drift",
+    )
+    contract.require(custody.get("packet_size") == materializer.PACKET_SIZE, "custody_binding_drift")
+    contract.require(
+        all(custody.get(field) is False for field in (
+            "provider_artifacts_copied",
+            "labels_copied",
+            "responses_copied",
+            "prompts_generated",
+            "evidence_sidecars_generated",
+        )),
+        "custody_binding_drift",
+    )
+    if not fixture:
+        contract.require(
+            custody.get("source_custody_receipt_raw_sha256") == materializer.SOURCE_CUSTODY_SHA256
+            and custody.get("source_label_manifest_raw_sha256") == materializer.SOURCE_MANIFEST_SHA256
+            and custody.get("amendment_reference")
+            == "batch_state/phase3-cycle007-source-grounded-amendment-v1.md",
+            "custody_binding_drift",
+        )
+
+    packets: list[list[Mapping[str, Any]]] = []
+    residual_flags: list[bool] = []
+    packet_bindings: list[dict[str, Any]] = []
+    seen_identities: set[tuple[str, str]] = set()
+    ordered_identity_stream: list[list[Any]] = []
+    lane_row_counts = {lane: 0 for lane in materializer.LANE_ORDER}
+    next_index = {lane: 1 for lane in materializer.LANE_ORDER}
+    last_lane_position = -1
+
+    for record in records:
+        contract.require(
+            isinstance(record, Mapping) and set(record) == _MATERIALIZATION_PACKET_RECORD_FIELDS,
+            "packet_order_failure",
+        )
+        lane = record.get("lane")
+        packet_index = record.get("packet_index")
+        basename = record.get("canonical_basename")
+        contract.require(lane in materializer.LANE_ORDER, "packet_order_failure")
+        contract.require(
+            isinstance(packet_index, int) and not isinstance(packet_index, bool) and packet_index >= 1,
+            "packet_order_failure",
+        )
+        lane_position = materializer.LANE_ORDER.index(lane)
+        contract.require(lane_position >= last_lane_position, "packet_order_failure")
+        expected_index = next_index[lane]
+        contract.require(packet_index == expected_index, "packet_order_failure")
+        if lane_position > last_lane_position:
+            contract.require(packet_index == 1, "packet_order_failure")
+        last_lane_position = lane_position
+        next_index[lane] += 1
+
+        contract.require(
+            isinstance(basename, str)
+            and Path(basename).name == basename
+            and basename == f"packet-{packet_index:04d}.json",
+            "packet_binding_drift",
+        )
+        row_count_for_packet = record.get("row_count")
+        contract.require(
+            isinstance(row_count_for_packet, int)
+            and not isinstance(row_count_for_packet, bool)
+            and 1 <= row_count_for_packet <= materializer.PACKET_SIZE,
+            "packet_binding_drift",
+        )
+        if not fixture:
+            expected_row_count = (
+                9
+                if lane == _RESIDUAL_LANE_NAME and packet_index == materializer.REAL_PACKET_COUNTS[lane]
+                else materializer.PACKET_SIZE
+            )
+            contract.require(row_count_for_packet == expected_row_count, "packet_binding_drift")
+        raw_sha256 = record.get("raw_sha256")
+        identity_set_sha256 = record.get("packet_identity_set_sha256")
+        contract.require(_is_sha256(raw_sha256) and _is_sha256(identity_set_sha256), "packet_binding_drift")
+
+        packet_path = package_dir / lane / basename
+        raw = materializer._read_regular(packet_path, "packet_binding_drift")
+        contract.require(materializer.digest(raw) == raw_sha256, "packet_binding_drift")
+        packet = materializer.strict_json(packet_path, "packet_binding_drift")
+        contract.require(isinstance(packet, Mapping), "packet_binding_drift")
+        contract.require(set(packet) == _MATERIALIZATION_PACKET_FIELDS, "packet_binding_drift")
+        contract.require(
+            packet.get("schema_version") == "phase3_cycle007_evidence_packet_v1"
+            and packet.get("evaluation_cycle_id") == EVALUATION_CYCLE_ID
+            and packet.get("lane") == lane
+            and packet.get("packet_index") == packet_index
+            and packet.get("row_count") == row_count_for_packet,
+            "packet_binding_drift",
+        )
+        rows = packet.get("rows")
+        contract.require(
+            isinstance(rows, list) and len(rows) == row_count_for_packet,
+            "packet_binding_drift",
+        )
+
+        packet_identities: list[tuple[str, str]] = []
+        for row_index, row in enumerate(rows):
+            contract.require(isinstance(row, Mapping), "packet_binding_drift")
+            contract.require(not (materializer.FORBIDDEN_ROW_KEYS & set(row)), "label_leak_detected")
+            if "evaluation_cycle_id" in row:
+                contract.require(row.get("evaluation_cycle_id") == EVALUATION_CYCLE_ID, "packet_binding_drift")
+            source_text = row.get("source_text")
+            source_text_sha256 = row.get("source_text_sha256")
+            contract.require(
+                isinstance(source_text, str)
+                and _is_sha256(source_text_sha256)
+                and contract.sha256_text(source_text) == source_text_sha256,
+                "packet_binding_drift",
+            )
+            unit_id = row.get("unit_id")
+            unit_sha256 = row.get("unit_sha256")
+            contract.require(
+                isinstance(unit_id, str)
+                and bool(unit_id)
+                and _is_sha256(unit_sha256),
+                "packet_binding_drift",
+            )
+            identity = (unit_id, unit_sha256)
+            contract.require(identity not in packet_identities, "identity_uniqueness_failure")
+            contract.require(identity not in seen_identities, "identity_uniqueness_failure")
+            packet_identities.append(identity)
+            seen_identities.add(identity)
+            ordered_identity_stream.append([lane, packet_index, row_index, unit_id, unit_sha256])
+
+        recomputed_packet_identity_set = materializer.digest(materializer.canonical(sorted(packet_identities)))
+        contract.require(
+            packet.get("packet_identity_set_sha256") == recomputed_packet_identity_set
+            and packet.get("packet_identity_set_sha256") == identity_set_sha256,
+            "packet_binding_drift",
+        )
+        packets.append(list(rows))
+        residual_flags.append(lane == _RESIDUAL_LANE_NAME)
+        packet_bindings.append(
+            {
+                "canonical_basename": basename,
+                "raw_sha256": raw_sha256,
+                "packet_identity_set_sha256": identity_set_sha256,
+            }
+        )
+        lane_row_counts[lane] += row_count_for_packet
+
+    contract.require(all(next_index[lane] > 1 for lane in materializer.LANE_ORDER), "packet_order_failure")
+    if not fixture:
+        contract.require(
+            {lane: next_index[lane] - 1 for lane in materializer.LANE_ORDER}
+            == materializer.REAL_PACKET_COUNTS,
+            "packet_order_failure",
+        )
+        contract.require(
+            manifest.get("packet_count") == REAL_PACKET_COUNT and manifest.get("row_count") == REAL_ROW_COUNT,
+            "manifest_binding_drift",
+        )
+        contract.require(lane_row_counts == materializer.REAL_ROW_COUNTS, "manifest_binding_drift")
+    recomputed_row_count = sum(lane_row_counts.values())
+    contract.require(recomputed_row_count == manifest.get("row_count"), "manifest_binding_drift")
+    contract.require(dict(reported_lane_counts) == lane_row_counts, "manifest_binding_drift")
+    contract.require(len(packets) == manifest.get("packet_count"), "manifest_binding_drift")
+
+    ordered_identity_commitment = materializer.digest(materializer.canonical(ordered_identity_stream))
+    identity_union_commitment = materializer.digest(materializer.canonical(sorted(seen_identities)))
+    ordered_packet_commitment = materializer.digest(materializer.canonical(records))
+    contract.require(
+        manifest.get("ordered_identity_commitment_sha256") == ordered_identity_commitment
+        and manifest.get("identity_union_commitment_sha256") == identity_union_commitment
+        and manifest.get("ordered_packet_commitment_sha256") == ordered_packet_commitment,
+        "manifest_binding_drift",
+    )
+    if not fixture:
+        contract.require(
+            ordered_identity_commitment == materializer.ORDERED_IDENTITY_COMMITMENT_SHA256,
+            "ordered_identity_commitment_failure",
+        )
+
+    for field in (
+        "ordered_identity_commitment_sha256",
+        "identity_union_commitment_sha256",
+        "ordered_packet_commitment_sha256",
+        "packet_count",
+        "row_count",
+        "lane_row_counts",
+    ):
+        contract.require(custody.get(field) == manifest.get(field), "custody_binding_drift")
+
+    source_package_binding = {
+        "source_evaluation_cycle_id": manifest["source_evaluation_cycle_id"],
+        "custody_receipt_raw_sha256": manifest["custody_receipt_raw_sha256"],
+        "materialization_manifest_sha256": manifest["receipt_sha256"],
+        "ordered_identity_commitment_sha256": manifest["ordered_identity_commitment_sha256"],
+        "identity_union_commitment_sha256": manifest["identity_union_commitment_sha256"],
+        "ordered_packet_commitment_sha256": manifest["ordered_packet_commitment_sha256"],
+        "packet_count": manifest["packet_count"],
+        "row_count": manifest["row_count"],
+    }
+    return packets, residual_flags, packet_bindings, source_package_binding
 
 
 def compile_cycle007_package(
@@ -1717,63 +2182,10 @@ def compile_cycle007_package(
     before compilation. Real mode enforces the exact 204-packet/10,159-row
     denominator; a smaller synthetic run requires ``fixture=True``.
     """
-    materializer = _materializer_module()
-    manifest_path = package_dir / "manifest.json"
-    manifest = materializer.strict_json(manifest_path, "source_binding_drift")
-    contract.require(isinstance(manifest, Mapping), "source_binding_drift")
-    contract.require(manifest.get("schema_version") == "phase3_cycle007_materialization_manifest_v1", "manifest_binding_drift")
-    contract.require(manifest.get("evaluation_cycle_id") == EVALUATION_CYCLE_ID, "manifest_binding_drift")
-    contract.require(manifest.get("receipt_sha256") == materializer._hash_receipt(manifest), "manifest_binding_drift")
-    records = manifest.get("packets")
-    contract.require(isinstance(records, list) and bool(records), "manifest_binding_drift")
-    contract.require(manifest.get("packet_count") == len(records), "manifest_binding_drift")
-    if not fixture:
-        contract.require(manifest.get("packet_count") == REAL_PACKET_COUNT, "manifest_binding_drift")
-        contract.require(manifest.get("row_count") == REAL_ROW_COUNT, "manifest_binding_drift")
-
-    packets: list[list[Mapping[str, Any]]] = []
-    residual_flags: list[bool] = []
-    packet_bindings: list[dict[str, Any]] = []
-    for record in records:
-        contract.require(isinstance(record, Mapping), "packet_binding_drift")
-        lane = record.get("lane")
-        basename = record.get("canonical_basename")
-        contract.require(isinstance(lane, str) and isinstance(basename, str), "packet_binding_drift")
-        contract.require(Path(basename).name == basename, "packet_binding_drift")
-        packet_path = package_dir / lane / basename
-        raw = materializer._read_regular(packet_path, "packet_binding_drift")
-        raw_sha256 = record.get("raw_sha256")
-        contract.require(materializer.digest(raw) == raw_sha256, "packet_binding_drift")
-        packet = materializer.strict_json(packet_path, "packet_binding_drift")
-        contract.require(isinstance(packet, Mapping), "packet_binding_drift")
-        rows = packet.get("rows")
-        contract.require(isinstance(rows, list) and len(rows) == record.get("row_count"), "packet_binding_drift")
-        packet_identity_set_sha256 = packet.get("packet_identity_set_sha256")
-        contract.require(packet_identity_set_sha256 == materializer.identity_set(rows), "packet_binding_drift")
-        contract.require(packet_identity_set_sha256 == record.get("packet_identity_set_sha256"), "packet_binding_drift")
-        packets.append(list(rows))
-        residual_flags.append(lane == _RESIDUAL_LANE_NAME)
-        # Amendment (fixes v3, item 4): persist this exact, already-verified
-        # packet binding into the sidecar/manifest — never recomputed from
-        # scratch by compile_packet_sidecar itself.
-        packet_bindings.append(
-            {
-                "canonical_basename": basename,
-                "raw_sha256": raw_sha256,
-                "packet_identity_set_sha256": packet_identity_set_sha256,
-            }
-        )
-
-    source_package_binding = {
-        "source_evaluation_cycle_id": manifest.get("source_evaluation_cycle_id"),
-        "custody_receipt_raw_sha256": manifest.get("custody_receipt_raw_sha256"),
-        "materialization_manifest_sha256": manifest.get("receipt_sha256"),
-        "ordered_identity_commitment_sha256": manifest.get("ordered_identity_commitment_sha256"),
-        "identity_union_commitment_sha256": manifest.get("identity_union_commitment_sha256"),
-        "ordered_packet_commitment_sha256": manifest.get("ordered_packet_commitment_sha256"),
-        "packet_count": manifest.get("packet_count"),
-        "row_count": manifest.get("row_count"),
-    }
+    packets, residual_flags, packet_bindings, source_package_binding = _validate_cycle007_materialization(
+        package_dir,
+        fixture=fixture,
+    )
 
     return compile_sidecar_bundle(
         packets,

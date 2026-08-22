@@ -405,6 +405,29 @@ def test_classify_sufficiency_decisive_conflicting_overrides_an_attested_record_
     assert validator.classify_sufficiency(row_evidence) == "insufficient_conflicting"
 
 
+def test_classify_sufficiency_decisive_not_found_overrides_an_attested_record_elsewhere():
+    row_evidence = _row_evidence(
+        ROW_A,
+        [
+            _vesum_record(ROW_A, status="not_found"),
+            _heritage_record(ROW_A, status="attested"),
+        ],
+    )
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_conflicting"
+
+
+def test_validate_label_rejects_positive_when_vesum_is_not_found():
+    heritage = _heritage_record(ROW_A, status="attested")
+    row_evidence = _row_evidence(ROW_A, [_vesum_record(ROW_A, status="not_found"), heritage])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(
+            row_evidence,
+            decision_code="positive",
+            evidence_ids=[heritage["evidence_id"]],
+        )
+    assert excinfo.value.code == "insufficient_evidence_for_decision"
+
+
 def test_validate_label_evidence_refs_rejects_agree_when_a_decisive_channel_is_unavailable_elsewhere():
     vesum = _vesum_record(ROW_A, status="attested", supports="attestation")
     row_evidence = _row_evidence(ROW_A, [vesum, _heritage_record(ROW_A, status="unavailable")])
