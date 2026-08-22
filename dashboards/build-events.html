@@ -179,7 +179,12 @@ function renderActive(active) {
 
 function renderRecent(events) {
   if (!events.length) {
-    document.getElementById('recent-content').innerHTML = '<div class="empty">No build events match the current filters</div>';
+    const level = document.getElementById('level-filter')?.value.trim();
+    const slug = document.getElementById('slug-filter')?.value.trim();
+    const message = (level || slug)
+      ? 'No build events match the current filters'
+      : 'No recent build events';
+    document.getElementById('recent-content').innerHTML = `<div class="empty">${message}</div>`;
     return;
   }
   document.getElementById('recent-content').innerHTML = `<table>
