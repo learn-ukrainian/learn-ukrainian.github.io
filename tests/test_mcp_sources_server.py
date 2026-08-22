@@ -19,7 +19,13 @@ import sys
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import mcp  # noqa: F401  # Declares the Sources wire dependency to the CI fastlane.
+import numpy  # noqa: F401  # Declares the Sources runtime dependency to the CI fastlane.
+import pymorphy3  # noqa: F401  # Declares the Russian-shadow runtime dependency.
+import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dictionary.
 import pytest
+import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
+import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 
@@ -48,7 +54,7 @@ class TestListTools:
 
         expected = {
             "search_sources", "search_text", "search_literary", "search_external",
-            "get_full_text", "get_chunk_context", "collection_stats",
+            "get_full_text", "get_chunk_context", "collection_stats", "mcp_server_identity",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
             "verify_stress",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",

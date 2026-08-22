@@ -25,6 +25,7 @@ Tools:
 """
 
 import asyncio
+import hashlib
 import json
 import re
 import sys
@@ -148,6 +149,10 @@ async def list_tools() -> list[Tool]:
                         ),
                         "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
                     },
+                    "source_file": {
+                        "type": "string",
+                        "description": "Optional exact textbook source file to scope the search.",
+                    },
                     "limit": {
                         "type": "integer",
                         "description": "Max results to return (default 5, max 20)",
@@ -266,6 +271,20 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="collection_stats",
             description="Get row counts for all available content tables in the sources database.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+            },
+        ),
+        Tool(
+            name="mcp_server_identity",
+            description=(
+                "Return public-safe exact identity hashes (SHA-256) for the running server.py, "
+                "its actual sources.db, and its actual vesum.db — never a path or content. "
+                "A client can compare these endpoint-reported hashes against the exact locally "
+                "reviewed files it expects to prove the endpoint is backed by the same reviewed "
+                "code/data, not merely files that happen to exist on the caller's own filesystem."
+            ),
             inputSchema={
                 "type": "object",
                 "properties": {},
@@ -542,7 +561,17 @@ async def list_tools() -> list[Tool]:
                         "type": "integer",
                         "description": "Max results (default 10)",
                         "default": 10
-                    }
+                    },
+                    "cache_only": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": (
+                            "Never make a live GRAC fetch — answer only from a local frequency "
+                            "cache. Returns JSON {status: attested|not_found|unavailable, entry}. "
+                            "No GRAC frequency cache table is ingested today, so this always "
+                            "returns 'unavailable' rather than making the disallowed network call."
+                        ),
+                    },
                 },
                 "required": ["query"]
             },
@@ -569,6 +598,16 @@ async def list_tools() -> list[Tool]:
                         "description": (
                             "Requested DictUA sections. When supplied, including ['paradigm'], "
                             "the response is structured source-attributed JSON."
+                        ),
+                    },
+                    "cache_only": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": (
+                            "Never make a live ULIF fetch — answer only from the local "
+                            "ulif_dictua_entries cache. Returns JSON "
+                            "{status: attested|not_found|unavailable, entry}. A cache miss is "
+                            "'not_found', never fetched live."
                         ),
                     },
                 },
@@ -990,23 +1029,47 @@ async def list_tools() -> list[Tool]:
 
 
 def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0,
-                   duration_s: float = 0.0, error: str = "") -> None:
-    """Log MCP tool call to JSONL for build analytics (#1095)."""
+                   duration_s: float = 0.0, error: str = "", *,
+                   response_text: str = "", privacy_mode: bool = False) -> None:
+    """Log MCP tool call to JSONL for build analytics (#1095).
+
+    ``privacy_mode`` (Cycle 007 amendment, "internal hash-only privacy
+    mode"): the log entry never contains argument values or response text —
+    only the tool name, argument names/count/hash, response length/hash,
+    duration, and error *class* (never the error message, which can embed a
+    private argument). Default (non-privacy) behavior is unchanged.
+    """
     from datetime import datetime as _dt
 
     log_dir = Path(__file__).resolve().parents[2].parent / "logs"
     log_dir.mkdir(exist_ok=True)
     log_path = log_dir / "mcp-sources-requests.jsonl"
 
-    entry = {
-        "ts": _dt.now().isoformat(),
-        "tool": name,
-        "args": {k: str(v)[:200] for k, v in arguments.items()},
-        "response_chars": response_chars,
-        "duration_s": round(duration_s, 2),
-    }
-    if error:
-        entry["error"] = error[:500]
+    if privacy_mode:
+        args_canonical = json.dumps(arguments, ensure_ascii=False, sort_keys=True, default=str)
+        entry: dict[str, Any] = {
+            "ts": _dt.now().isoformat(),
+            "tool": name,
+            "privacy_mode": True,
+            "arg_names": sorted(arguments.keys()),
+            "arg_count": len(arguments),
+            "arg_sha256": hashlib.sha256(args_canonical.encode("utf-8")).hexdigest(),
+            "response_length": response_chars,
+            "response_sha256": hashlib.sha256(response_text.encode("utf-8")).hexdigest() if response_text else None,
+            "duration_s": round(duration_s, 2),
+        }
+        if error:
+            entry["error_class"] = error.split(":", 1)[0][:120]
+    else:
+        entry = {
+            "ts": _dt.now().isoformat(),
+            "tool": name,
+            "args": {k: str(v)[:200] for k, v in arguments.items()},
+            "response_chars": response_chars,
+            "duration_s": round(duration_s, 2),
+        }
+        if error:
+            entry["error"] = error[:500]
 
     try:
         with open(log_path, "a", encoding="utf-8") as f:
@@ -1258,14 +1321,18 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
-async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
-    """Handle tool calls.
+async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool]:
+    """Core tool-call dispatch. Returns ``(content, is_error)``; never raises.
 
-    Kept as a module-level callable for unit tests and backward compat.
-    The registered MCP 2.0 handler is ``_on_call_tool``.
+    This is the one place that turns a handler exception or an unknown tool
+    name into a result — both ``call_tool`` (the legacy module-level
+    callable kept for unit tests/backward compat) and ``_on_call_tool`` (the
+    actual MCP-wire ``tools/call`` handler) build on top of it, so the two
+    can never silently disagree about whether a given call failed.
     """
     import time as _time
     _t0 = _time.monotonic()
+    privacy_mode = bool(arguments.pop("_privacy_mode", False)) if isinstance(arguments, dict) else False
     try:
         # Dispatch to handler
         _handlers = {
@@ -1276,6 +1343,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
+            "mcp_server_identity": lambda: handle_mcp_server_identity(arguments),
             "check_russian_shadow": lambda: handle_check_russian_shadow(arguments),
             "check_modern_form": lambda: handle_check_modern_form(arguments),
             "verify_quote": lambda: handle_verify_quote(arguments),
@@ -1313,18 +1381,37 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             result = await handler()
         else:
             result = [TextContent(type="text", text=f"Unknown tool: {name}")]
-            _log_tool_call(name, arguments, error="unknown tool")
-            return result
+            _log_tool_call(name, arguments, error="unknown tool", privacy_mode=privacy_mode)
+            return result, True
 
         # Log successful call
         _elapsed = _time.monotonic() - _t0
-        _resp_chars = sum(len(t.text) for t in result) if result else 0
-        _log_tool_call(name, arguments, response_chars=_resp_chars, duration_s=_elapsed)
-        return result
+        _resp_text = "\n".join(t.text for t in result) if result else ""
+        _log_tool_call(
+            name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
+            response_text=_resp_text, privacy_mode=privacy_mode,
+        )
+        return result, False
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
-        _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}")
-        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
+        _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
+        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")], True
+
+
+async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
+    """Legacy module-level entry point — kept for unit tests/backward compat.
+
+    Returns exactly the content ``_dispatch_tool_call`` produced, including
+    the "Error in ..."/"Unknown tool: ..." prose marker on failure. This is
+    NOT the actual MCP wire path (that's ``_on_call_tool`` below) — nothing
+    here ever leaves the process over the real transport, so preserving the
+    legacy diagnostic text (exception class/message) for direct callers/unit
+    tests is safe. ``RealMcpToolTransport`` on the compiler side additionally
+    refuses to trust this exact prose marker defensively, in case a legacy
+    or downgraded server ever puts it on the wire.
+    """
+    content, _is_error = await _dispatch_tool_call(name, arguments)
+    return content
 
 
 async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
@@ -1333,9 +1420,20 @@ async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
 
 
 async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
-    """MCP 2.0 registered handler for tools/call."""
-    result = await call_tool(params.name, params.arguments or {})
-    return CallToolResult(content=result)
+    """MCP 2.0 registered handler for tools/call — the actual wire path.
+
+    Fails closed: any handler exception or unknown-tool name becomes a
+    safe, generic ``isError=True`` result. The raw exception message and
+    argument values never reach this result's text — those stay
+    server-side only, in the hash-only privacy log (``_log_tool_call``).
+    """
+    try:
+        _content, is_error = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
+    except Exception:
+        return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
+    if is_error:
+        return CallToolResult(content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True)
+    return CallToolResult(content=_content, isError=False)
 
 
 server = Server("sources", on_list_tools=_on_list_tools, on_call_tool=_on_call_tool)
@@ -1345,10 +1443,11 @@ async def handle_search_text(args: dict) -> list[TextContent]:
     query = args["query"]
     limit = min(args.get("limit", 5), 20)
     subject = args.get("subject")
+    source_file = args.get("source_file")
 
     from wiki.sources_db import search_textbooks
     keywords = {w for w in query.lower().split() if len(w) >= 3}
-    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject)
+    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file)
 
     if not hits:
         return [TextContent(type="text", text="No results found.")]
@@ -1359,6 +1458,7 @@ async def handle_search_text(args: dict) -> list[TextContent]:
         lines.append(f"- **Section**: {hit.get('section_title', hit.get('title', ''))}")
         lines.append(f"- **Source**: Grade {hit.get('grade', '?')}, {hit.get('author', '?')}")
         lines.append(f"- **Subject**: {hit.get('subject', '')}")
+        lines.append(f"- **Source file**: `{hit.get('source_file', '')}`")
         lines.append(f"- **Chunk ID**: `{hit.get('chunk_id', '')}`")
         lines.append(f"- **Text**:\n{hit.get('text', '')}")
         lines.append("")
@@ -1535,6 +1635,40 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
+def _sha256_of_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
+    """Endpoint identity attestation (Cycle 007 evidence-foundation fixes v3, item 1).
+
+    Public-safe exact identity hashes only — never a path or file content.
+    Callers (``LocalMcpSourcesClient.server_identity()``) compare these
+    endpoint-reported values against the exact locally reviewed files they
+    expect; this handler must never merely echo back whatever a client
+    claims — it hashes the server's own actual running files.
+    """
+    server_path = Path(__file__).resolve()
+    sources_db_path = PROJECT_ROOT / "data" / "sources.db"
+    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+
+    def _identity() -> dict[str, Any]:
+        return {
+            "server_code_sha256": _sha256_of_file(server_path),
+            "sources_db_sha256": _sha256_of_file(sources_db_path),
+            "sources_db_bytes": sources_db_path.stat().st_size,
+            "vesum_db_sha256": _sha256_of_file(vesum_db_path),
+            "vesum_db_bytes": vesum_db_path.stat().st_size,
+        }
+
+    payload = await asyncio.to_thread(_identity)
+    return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+
 def _is_archaic(tags: str | None) -> bool:
     """Helper to check if 'arch' tag exists in VESUM tag string."""
     if not tags:
@@ -1664,10 +1798,9 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     words = submitted_words[:500]
     include_definitions = bool(args.get("include_definitions", False))
 
-    from wiki import sources_db as sdb
-
     from scripts.verification.check_ru_morph import check_russian_patterns_batch
     from scripts.verification.vesum import verify_words
+    from wiki import sources_db as sdb
 
     vesum_results = await asyncio.to_thread(verify_words, words)
     lookup_terms = list(dict.fromkeys(
@@ -1953,6 +2086,13 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
     mode = args.get("mode", "frequency")
     limit = args.get("limit", 10)
 
+    if args.get("cache_only"):
+        # No GRAC frequency cache table is ingested into sources.db today
+        # (scripts/rag/source_query.py is live-only). Fail closed to
+        # "unavailable" rather than making the disallowed live fetch.
+        payload = {"status": "unavailable", "entry": None, "note": "no GRAC frequency cache table ingested"}
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
     from rag.source_query import (
         grac_collocations,
         grac_concordance,
@@ -1999,6 +2139,26 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
 async def handle_query_ulif(args: dict) -> list[TextContent]:
     word = args["word"]
+    if args.get("cache_only"):
+        # Cache-only: never a live ULIF fetch. A missing/unreadable cache
+        # table is "unavailable"; a present table with no matching row is
+        # "not_found" — neither is ever escalated to a live HTTP call.
+        from wiki.sources_db import _table_columns, get_ulif_dictua_entry
+
+        try:
+            has_table = bool(await asyncio.to_thread(_table_columns, "ulif_dictua_entries"))
+        except Exception:
+            has_table = False
+        if not has_table:
+            payload = {"status": "unavailable", "entry": None}
+        else:
+            try:
+                entry = await asyncio.to_thread(get_ulif_dictua_entry, word)
+            except Exception:
+                payload = {"status": "unavailable", "entry": None}
+            else:
+                payload = {"status": "attested" if entry else "not_found", "entry": entry}
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
     if "sections" not in args:
         from rag.source_query import ulif_paradigm
 
