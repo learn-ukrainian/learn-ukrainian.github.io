@@ -100,6 +100,16 @@ def _directory(path: Path, mode: int | None = 0o700) -> None:
         raise Error("mode_drift")
 
 
+def _private_directory(package: Path, path: Path) -> None:
+    """Create a package subtree and enforce private modes on every new level."""
+    path.mkdir(parents=True, exist_ok=True, mode=0o700)
+    current = path
+    while current != package:
+        current.chmod(0o700)
+        current = current.parent
+    _directory(package, 0o700)
+
+
 def read(path: Path, label: str = "sealed value") -> Any:
     try:
         _regular(path, 0o600)
@@ -213,8 +223,7 @@ def adjudicate_packet(
                 unresolved_records.append(record)
 
     out_dir = package / OUTPUT / "final" / lane
-    out_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    _directory(out_dir, 0o700)
+    _private_directory(package, out_dir)
 
     labels_hash = atomic(out_dir / f"labels-{index:04d}.json", {"labels": final_labels})
     unresolved_hash = atomic(out_dir / f"unresolved-{index:04d}.json", {"records": unresolved_records})
@@ -261,8 +270,7 @@ def adjudicate_all(
             all_unresolved.extend(unres_data.get("records", []))
 
     out_root = package / OUTPUT
-    out_root.mkdir(parents=True, exist_ok=True, mode=0o700)
-    _directory(out_root, 0o700)
+    _private_directory(package, out_root)
 
     if all_unresolved:
         request_body = {

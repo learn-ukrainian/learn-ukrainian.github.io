@@ -91,6 +91,16 @@ def _directory(path: Path, mode: int | None = 0o700) -> None:
         raise Error("mode_drift")
 
 
+def _private_directory(package: Path, path: Path) -> None:
+    """Create a package subtree and enforce private modes on every new level."""
+    path.mkdir(parents=True, exist_ok=True, mode=0o700)
+    current = path
+    while current != package:
+        current.chmod(0o700)
+        current = current.parent
+    _directory(package, 0o700)
+
+
 def _read(path: Path) -> tuple[Any, bytes]:
     _regular(path, 0o600)
     raw = path.read_bytes()
@@ -247,8 +257,7 @@ def resolve_packet(
         })
 
     out_dir = package / RESOLUTION_OUTPUT / "final" / lane
-    out_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    _directory(out_dir, 0o700)
+    _private_directory(package, out_dir)
 
     labels_hash = atomic(out_dir / f"labels-{index:04d}.json", {"labels": ordered_labels})
     decisions_hash = atomic(out_dir / f"decisions-{index:04d}.json", {"decisions": ordered_decisions})
@@ -287,8 +296,7 @@ def resolve_all(package: Path, authorization_path: Path | None = None) -> dict[s
             receipts.append(resolve_packet(package, lane, index, authorizations))
 
     out_root = package / RESOLUTION_OUTPUT
-    out_root.mkdir(parents=True, exist_ok=True, mode=0o700)
-    _directory(out_root, 0o700)
+    _private_directory(package, out_root)
 
     body = {
         "schema_version": "phase3_cycle007_operator_resolution_batch_receipt_v1",

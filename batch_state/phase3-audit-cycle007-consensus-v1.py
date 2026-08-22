@@ -102,6 +102,16 @@ def _directory(path: Path, mode: int | None = 0o700) -> None:
         raise Error("mode_drift")
 
 
+def _private_directory(package: Path, path: Path) -> None:
+    """Create a package subtree and enforce private modes on every new level."""
+    path.mkdir(parents=True, exist_ok=True, mode=0o700)
+    current = path
+    while current != package:
+        current.chmod(0o700)
+        current = current.parent
+    _directory(package, 0o700)
+
+
 def read(path: Path, label: str = "sealed value") -> Any:
     try:
         _regular(path, 0o600)
@@ -357,8 +367,7 @@ def run_audit(package: Path) -> dict[str, Any]:
         audit_row_evidence(r, r_ev)
 
     out_dir = package / OUTPUT
-    out_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    _directory(out_dir, 0o700)
+    _private_directory(package, out_dir)
 
     # Write sample
     atomic(out_dir / "clean-consensus-sample.json", sample_receipt)

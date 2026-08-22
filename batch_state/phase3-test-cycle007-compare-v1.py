@@ -26,6 +26,11 @@ def _load_compare():
 compare_mod = _load_compare()
 
 
+def _private_tree(package: Path) -> None:
+    for directory in [package, *(path for path in package.rglob("*") if path.is_dir())]:
+        directory.chmod(0o700)
+
+
 def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_negative_control=False):
     pkg = tmp_path / "pkg"
     pkg.mkdir(parents=True, mode=0o700)
@@ -279,6 +284,7 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
     ev_manifest_p.write_text(json.dumps(ev_manifest, sort_keys=True) + "\n")
     ev_manifest_p.chmod(0o600)
 
+    _private_tree(pkg)
     return pkg, clean_row_list, residual_row_list, clean_ev_rows, res_ev_rows
 
 
@@ -318,6 +324,7 @@ def _setup_provider_labels(pkg: Path, lane: str, index: int, grok_labels: list, 
         rcpt_p = out / f"receipt-{index:04d}.json"
         rcpt_p.write_text(json.dumps(receipt, sort_keys=True) + "\n")
         rcpt_p.chmod(0o600)
+    _private_tree(pkg)
 
 
 def test_compare_refuses_to_run_without_both_provider_seals(tmp_path):
@@ -339,6 +346,7 @@ def test_compare_refuses_to_run_without_both_provider_seals(tmp_path):
     lbl_p = out / "labels-0001.json"
     lbl_p.write_text(json.dumps({"labels": grok_labels}) + "\n")
     lbl_p.chmod(0o600)
+    _private_tree(pkg)
 
     with pytest.raises(compare_mod.Error) as exc:
         compare_mod.compare(pkg, "clean_label", 1)

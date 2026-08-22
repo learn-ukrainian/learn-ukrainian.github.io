@@ -331,6 +331,8 @@ def _setup_certified_package(tmp_path: Path):
     (res_dir / "batch-receipt.json").write_text(json.dumps(res_batch) + "\n")
     (res_dir / "batch-receipt.json").chmod(0o600)
 
+    for directory in [pkg, *(path for path in pkg.rglob("*") if path.is_dir())]:
+        directory.chmod(0o700)
     return pkg
 
 
@@ -403,4 +405,3 @@ def test_certifier_fails_on_terminal_audit_finding(tmp_path):
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__]))
-
