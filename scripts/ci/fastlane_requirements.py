@@ -29,6 +29,7 @@ IMPORT_DISTRIBUTIONS = {
     "jsonschema": "jsonschema",
     "referencing": "referencing",
     "lxml": "lxml",
+    "mcp": "mcp",
     "numpy": "numpy",
     "PIL": "pillow",
     "pymorphy3": "pymorphy3",
