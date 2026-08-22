@@ -10,6 +10,11 @@ from tests.test_launcher_contract import run_launcher
 
 _DRIVE_EPIC_NEEDLE = "agents_extensions/shared/skills/drive-epic/SKILL.md"
 _AGY_PROMPT_FLAG = re.compile(r"(?:^|\s)(-i|--prompt-interactive)(?:\s|$)")
+# Dry-run uses bash %q, so the prompt may appear as Load\ agents_extensions/...
+# or as a quoted string. The flag must attach to that argument.
+_AGY_BOUND_PROMPT = re.compile(
+    r"(?:-i|--prompt-interactive)\s+(?:Load\\ |'Load |\"Load )"
+)
 
 
 def _would_exec_line(stdout: str) -> str:
@@ -21,12 +26,12 @@ def _would_exec_line(stdout: str) -> str:
 
 def _assert_drive_epic_uses_agy_interactive_flag(exec_line: str) -> None:
     assert _DRIVE_EPIC_NEEDLE in exec_line, exec_line
-    flag = _AGY_PROMPT_FLAG.search(exec_line)
-    assert flag, f"expected -i/--prompt-interactive before drive-epic text:\n{exec_line}"
-    assert flag.start() < exec_line.find(_DRIVE_EPIC_NEEDLE), exec_line
-    before_prompt = exec_line[: exec_line.find(_DRIVE_EPIC_NEEDLE)]
-    assert re.search(r"(?:-i|--prompt-interactive)\s+\S*$", before_prompt), exec_line
+    bound = _AGY_BOUND_PROMPT.search(exec_line)
+    assert bound, f"expected -i/--prompt-interactive before drive-epic text:\n{exec_line}"
+    assert bound.start() < exec_line.find(_DRIVE_EPIC_NEEDLE), exec_line
     assert exec_line.count(_DRIVE_EPIC_NEEDLE) == 1, exec_line
+    # Regression: --model <id> followed by the prompt with no -i.
+    assert not re.search(r"--model\s+\S+\s+Load\\?\s", exec_line), exec_line
 
 
 def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
