@@ -429,6 +429,31 @@ def test_managed_sources_server_refuses_preexisting_listener(monkeypatch: pytest
         CANARY._start_reviewed_sources_server(compiler.DEFAULT_MCP_ENDPOINT)
 
 
+def test_runtime_python_preserves_virtualenv_symlink(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    base_python = tmp_path / "base-python"
+    base_python.write_bytes(b"#!/bin/sh\n")
+    base_python.chmod(0o700)
+    venv_python = tmp_path / "venv-python"
+    venv_python.symlink_to(base_python)
+    monkeypatch.setattr(CANARY.sys, "executable", str(venv_python))
+
+    selected = CANARY._runtime_python()
+
+    assert selected == venv_python
+    assert selected.resolve() == base_python
+
+
+def test_runtime_python_rejects_missing_entry_point(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(CANARY.sys, "executable", str(tmp_path / "missing-python"))
+
+    with pytest.raises(CANARY.CanaryError, match="reviewed_python_executable_unavailable"):
+        CANARY._runtime_python()
+
+
 def test_cli_synthetic_mcp_cannot_execute_real_provider(monkeypatch: pytest.MonkeyPatch) -> None:
     called = False
 

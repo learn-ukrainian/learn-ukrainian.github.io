@@ -107,6 +107,20 @@ def _endpoint_is_listening(host: str, port: int) -> bool:
         return False
 
 
+def _runtime_python() -> Path:
+    """Preserve the active virtual-environment entry point for child servers.
+
+    Resolving a venv's ``python`` symlink selects the base interpreter and
+    drops the venv's installed packages.  Validate the entry point through the
+    filesystem, but keep its lexical path when launching the reviewed Sources
+    server.
+    """
+    executable = Path(os.path.abspath(sys.executable))
+    if not executable.is_file() or not os.access(executable, os.X_OK):
+        raise CanaryError("reviewed_python_executable_unavailable")
+    return executable
+
+
 def _start_reviewed_sources_server(endpoint: str) -> subprocess.Popen[bytes]:
     parsed = urlparse(endpoint)
     if (
@@ -128,7 +142,7 @@ def _start_reviewed_sources_server(endpoint: str) -> subprocess.Popen[bytes]:
         raise CanaryError("reviewed_sources_server_path_drift")
     process = subprocess.Popen(
         [
-            str(Path(sys.executable).resolve(strict=True)),
+            str(_runtime_python()),
             str(server_path),
             "--standalone",
             "--host",
