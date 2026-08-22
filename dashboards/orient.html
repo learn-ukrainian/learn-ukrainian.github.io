@@ -277,19 +277,106 @@ function renderPipeline(pipeline) {
   }</div>`;
 }
 
+const RETIRED_AGENTS = new Set(['gemini']);
+
+function extractRuntimeAgents(runtime) {
+  const seen = new Set();
+  const list = [];
+
+  const addAgent = (name) => {
+    if (!name || typeof name !== 'string') return;
+    const clean = name.trim();
+    if (!clean) return;
+    const lower = clean.toLowerCase();
+    if (RETIRED_AGENTS.has(lower)) return;
+    if (!seen.has(clean)) {
+      seen.add(clean);
+      list.push(clean);
+    }
+  };
+
+  if (runtime && Array.isArray(runtime.agents)) {
+    for (const item of runtime.agents) {
+      const name = typeof item === 'string' ? item : (item && item.name);
+      addAgent(name);
+    }
+  }
+
+  if (runtime && runtime.headroom && typeof runtime.headroom === 'object') {
+    for (const key of Object.keys(runtime.headroom)) {
+      addAgent(key);
+    }
+  }
+
+  if (runtime && runtime.by_agent && typeof runtime.by_agent === 'object') {
+    for (const key of Object.keys(runtime.by_agent)) {
+      addAgent(key);
+    }
+  }
+
+  if (runtime && runtime.recent_outcomes && typeof runtime.recent_outcomes === 'object') {
+    for (const [key, val] of Object.entries(runtime.recent_outcomes)) {
+      if (val && typeof val === 'object') {
+        addAgent(key);
+      }
+    }
+  }
+
+  return list;
+}
+
+function getAgentHeadroom(runtime, agent) {
+  if (!runtime || !runtime.headroom || typeof runtime.headroom !== 'object') {
+    return false;
+  }
+  const val = runtime.headroom[agent];
+  if (typeof val === 'boolean') return val;
+  if (val && typeof val.has_headroom === 'boolean') return val.has_headroom;
+  return false;
+}
+
+function getAgentOutcomes(runtime, agent) {
+  if (!runtime || !agent) {
+    return { ok: 0, error: 0, rate_limited: 0 };
+  }
+  if (runtime.by_agent && typeof runtime.by_agent[agent] === 'object' && runtime.by_agent[agent] !== null) {
+    return runtime.by_agent[agent];
+  }
+  if (runtime.recent_outcomes_by_agent && typeof runtime.recent_outcomes_by_agent[agent] === 'object' && runtime.recent_outcomes_by_agent[agent] !== null) {
+    return runtime.recent_outcomes_by_agent[agent];
+  }
+  if (runtime.outcomes_by_agent && typeof runtime.outcomes_by_agent[agent] === 'object' && runtime.outcomes_by_agent[agent] !== null) {
+    return runtime.outcomes_by_agent[agent];
+  }
+  if (runtime.recent_outcomes && typeof runtime.recent_outcomes[agent] === 'object' && runtime.recent_outcomes[agent] !== null) {
+    return runtime.recent_outcomes[agent];
+  }
+  if (runtime.outcomes && typeof runtime.outcomes[agent] === 'object' && runtime.outcomes[agent] !== null) {
+    return runtime.outcomes[agent];
+  }
+  return { ok: 0, error: 0, rate_limited: 0 };
+}
+
 function renderRuntime(runtime) {
-  const agents = ['claude', 'gemini', 'codex'];
-  const outcomes = runtime && runtime.recent_outcomes ? runtime.recent_outcomes : {};
+  const agents = extractRuntimeAgents(runtime);
+  if (!agents.length) {
+    document.getElementById('runtime-content').innerHTML = '<div class="empty">No runtime agents</div>';
+    return;
+  }
   document.getElementById('runtime-content').innerHTML = `<div class="agent-grid">${
     agents.map(agent => {
-      const hasHeadroom = runtime && runtime.headroom ? runtime.headroom[agent] : false;
+      const hasHeadroom = getAgentHeadroom(runtime, agent);
+      const outcomes = getAgentOutcomes(runtime, agent);
+      const okCount = typeof outcomes.ok === 'number' ? outcomes.ok : 0;
+      const errCount = typeof outcomes.error === 'number' ? outcomes.error : 0;
+      const rateCount = typeof outcomes.rate_limited === 'number' ? outcomes.rate_limited : 0;
       return `<div class="mini-card">
-        <div class="title">${agent}</div>
+        <div class="title">${escapeHtml(agent)}</div>
         <div class="big" style="color:${hasHeadroom ? 'var(--green)' : 'var(--red)'}">${hasHeadroom ? '&#10003;' : '&#10007;'}</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-          <span class="pill ok">ok ${outcomes.ok || 0}</span>
-          <span class="pill err">error ${outcomes.error || 0}</span>
-          <span class="pill warn">rate ${outcomes.rate_limited || 0}</span>
+          <span class="pill ok">ok ${okCount}</span>
+          <span class="pill err">error ${errCount}</span>
+          <span class="pill warn">rate ${rateCount}</span>
         </div>
         <div class="sub">Today across runtime usage</div>
       </div>`;

@@ -949,9 +949,13 @@ def _collect_runtime_orient_data() -> dict:
             ok = False
         headroom[str(name)] = ok
 
+    usage = runtime_api.summarize_runtime_usage(days=1)
+    by_agent = usage.get("by_agent", {})
+
     res = {
         "agents": [agent["name"] for agent in agents if agent.get("name")],
         "recent_outcomes": runtime_api.runtime_recent_outcomes_today(),
+        "by_agent": by_agent,
         "headroom": headroom,
     }
     if _last_gc_sweep_summary is not None:
