@@ -195,6 +195,10 @@ Related MCP source lookup: `mcp__sources__search_external` searches the chunked 
 
 ## Health & Config — `/api/`
 
+### `GET /api`
+
+Redirects (`307`) to the interactive API docs explorer at `/docs` (#7090). The bare `/api` path serves no payload of its own; use `/api/contracts/routes` for the machine-readable route registry.
+
 ### `GET /api/health`
 
 Server health check — returns status, version, uptime. Use for monitoring scripts and load balancers.

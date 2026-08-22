@@ -27,7 +27,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 
 from scripts.guardrails import worktree_containment
 from scripts.research import registry as reg
@@ -1288,6 +1288,12 @@ def _health_instance_identity() -> dict[str, str | None]:
     head_proc = _run_command(["git", "rev-parse", "HEAD"])
     git_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
     return {"host": host_label, "git_sha": git_sha}
+
+
+@app.get("/api", status_code=307)
+async def api_index():
+    """API root — redirect humans to the interactive docs explorer (#7090)."""
+    return RedirectResponse(url="/docs", status_code=307)
 
 
 @app.get("/api/health")
