@@ -353,8 +353,27 @@ def _update_comparison_side(
         side["total_tokens"] += tokens
 
 
+def _last_used_agent_models(*, days: int = 7) -> dict[str, str]:
+    """Extract the most recently used model per agent from runtime usage records."""
+    latest_by_agent: dict[str, tuple[datetime, str]] = {}
+    for record in _iter_usage_records(_usage_files(days=days)):
+        agent = record.get("agent")
+        model = record.get("model")
+        if not isinstance(agent, str) or not isinstance(model, str):
+            continue
+        model_str = model.strip()
+        if not model_str:
+            continue
+        ts = _parse_iso_datetime(record.get("ts")) or datetime.min.replace(tzinfo=UTC)
+        current = latest_by_agent.get(agent)
+        if current is None or ts >= current[0]:
+            latest_by_agent[agent] = (ts, model_str)
+    return {agent: model for agent, (_, model) in latest_by_agent.items()}
+
+
 def list_runtime_agents() -> list[dict[str, Any]]:
     _refresh_agent_registry_if_changed()
+    last_used = _last_used_agent_models()
     agents: list[dict[str, Any]] = []
     for path in sorted(ADAPTERS_DIR.glob("*.py")):
         # Skip non-agent helper modules and alternate-harness adapters that
@@ -390,10 +409,17 @@ def list_runtime_agents() -> list[dict[str, Any]]:
                 binary = "codex"
             else:
                 binary = str(obj.name)
+
+            agent_name = str(obj.name)
+            registry_default = _registry_models.get(agent_name, getattr(obj, "default_model", None))
+            last_model = last_used.get(agent_name)
+            headroom_model = last_model or registry_default
             agents.append({
-                "name": str(obj.name),
+                "name": agent_name,
                 "binary": binary,
-                "default_model": _registry_models.get(str(obj.name), getattr(obj, "default_model", None)),
+                "default_model": registry_default,
+                "last_used_model": last_model,
+                "headroom_model": headroom_model,
                 "supported_modes": sorted(str(mode) for mode in getattr(obj, "supported_modes", [])),
             })
             break
