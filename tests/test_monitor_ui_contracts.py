@@ -382,8 +382,14 @@ def test_progress_page_surfaces_freshness_and_dossiers():
     assert "nextAction" in html
     assert "Research gap" in html
     assert "Build content" in html
+    assert "s TTL" not in html
+    assert "State:</strong>" not in html
+    assert "meta?.source" not in html
+    assert "meta?.cache" not in html
     index_html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
     assert "t.dossier_done ?? 0" in index_html
+    assert "operationalTrackEntries" in index_html
+    assert "resolveOperationalBuildState" in index_html
 
 
 def test_monitor_dashboards_hide_legacy_pipeline_version_labels():
@@ -448,6 +454,7 @@ def test_operational_dashboards_hide_plan_fallback_tracks():
         assert "plans-fallback" in html, f"{page} must filter fallback-only plan tracks"
 
     assert "operationalTrackIdSetFromSummary" in dashboard_text["index.html"]
+    assert "operationalTrackEntries" in dashboard_text["index.html"]
     assert "operationalTrackEntries" in dashboard_text["progress.html"]
     assert "operationalTracks" in dashboard_text["curriculum-dashboard.html"]
     assert "/api/state/summary?fresh=true" in dashboard_text["wiki.html"]

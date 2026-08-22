@@ -143,8 +143,7 @@ a:hover { text-decoration: underline; }
 
 <div class="container">
   <div class="freshness-banner" id="freshness-banner">
-    <span><strong>State:</strong> loading current API snapshot</span>
-    <span></span>
+    <span>Loading latest snapshot…</span>
   </div>
 
   <div class="legend">
@@ -394,15 +393,8 @@ function formatTimestamp(value) {
 
 function renderFreshness(meta) {
   const banner = document.getElementById('freshness-banner');
-  const cache = meta?.cache || 'unknown';
-  const age = typeof meta?.age_s === 'number' ? `${Math.round(meta.age_s)}s old` : 'fresh read';
-  const ttl = typeof meta?.stale_after_s === 'number' ? `${Math.round(meta.stale_after_s)}s TTL` : 'TTL unknown';
   const generated = formatTimestamp(meta?.generated_at);
-  const cls = cache === 'hit' ? 'warn' : '';
-  banner.innerHTML = `
-    <span><strong>State:</strong> ${escapeHtml(meta?.source || 'unknown source')} · generated ${escapeHtml(generated)}</span>
-    <span class="${cls}">${escapeHtml(cache)} · ${escapeHtml(age)} · ${escapeHtml(ttl)}</span>
-  `;
+  banner.innerHTML = `<span>Last updated <strong>${escapeHtml(generated)}</strong></span>`;
 }
 
 function escapeHtml(value) {

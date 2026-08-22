@@ -218,13 +218,18 @@ function setStat(id, text) {
   if (el) el.textContent = text || '';
 }
 
+function operationalTrackEntries(tracks) {
+  return Object.entries(tracks || {})
+    .filter(([, track]) => (track.total || 0) > 0 && track.module_source !== 'plans-fallback');
+}
+
+function operationalTrackIdSet(trackEntries) {
+  return new Set(trackEntries.map(([id]) => id));
+}
+
 function operationalTrackIdSetFromSummary(summary) {
   if (!summary?.tracks) return null;
-  const tracks = summary.tracks;
-  const ids = Object.entries(tracks)
-    .filter(([, track]) => track.module_source !== 'plans-fallback')
-    .map(([id]) => id);
-  return new Set(ids);
+  return operationalTrackIdSet(operationalTrackEntries(summary.tracks));
 }
 
 function filterOperationalDashboardTracks(tracks, summary) {
@@ -285,6 +290,11 @@ function buildStateSummary(pv, trackIds) {
   };
 }
 
+function resolveOperationalBuildState(pv, summary) {
+  const trackIds = operationalTrackIdSet(operationalTrackEntries(summary?.tracks));
+  return buildStateSummary(pv, trackIds);
+}
+
 async function loadStats() {
   let buildState = { current: 0, backlog: 0, builtPct: 0 };
   let pendingConsultations = 0;
@@ -304,11 +314,12 @@ async function loadStats() {
   ]);
 
   try {
-    if (!data || !pv) throw new Error('overview unavailable');
+    if (!data) throw new Error('overview unavailable');
     const dashboardTracks = filterOperationalDashboardTracks(data.tracks, summary);
-    const operationalIds = new Set(dashboardTracks.map(track => track.id));
     const t = sumDashboardTotals(dashboardTracks);
-    buildState = buildStateSummary(pv, operationalIds);
+    if (summary && pv) {
+      buildState = resolveOperationalBuildState(pv, summary);
+    }
     pendingConsultations = cMetrics?.pending_queue || 0;
 
     document.getElementById('stats-row').innerHTML = `
@@ -332,10 +343,11 @@ async function loadStats() {
 
   try {
     if (!summary) throw new Error('summary unavailable');
-    const dashboardTracks = filterOperationalDashboardTracks(data?.tracks || [], summary);
-    const operationalIds = dashboardTracks.length
-      ? new Set(dashboardTracks.map(track => track.id))
-      : operationalTrackIdSetFromSummary(summary);
+    const trackEntries = operationalTrackEntries(summary.tracks);
+    const operationalIds = operationalTrackIdSet(trackEntries);
+    if (pv) {
+      buildState = resolveOperationalBuildState(pv, summary);
+    }
     const t = sumSummaryTotals(summary, operationalIds);
     const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
