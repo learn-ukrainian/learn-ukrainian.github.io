@@ -49,6 +49,8 @@ table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
 td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
 tr:last-child td { border-bottom: none; }
+tr.task-row { cursor: pointer; }
+tr.task-row:hover { background: var(--bg3); }
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 20; }
 .overlay.open { display: block; }
 .modal { max-width: 1100px; width: calc(100% - 48px); max-height: calc(100vh - 48px); overflow: auto; margin: 24px auto; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
@@ -108,7 +110,7 @@ pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px
     <div class="muted" id="detail-meta" style="margin-bottom:12px"></div>
     <div class="modal-grid">
       <div>
-        <div class="muted" style="margin-bottom:8px">Task state JSON</div>
+        <div class="muted" style="margin-bottom:8px">Observer-safe task summary</div>
         <pre id="task-json">Loading...</pre>
       </div>
       <div>
@@ -183,6 +185,28 @@ function statusClass(status) {
   return 'gray';
 }
 
+function observerTaskView(task) {
+  if (!task || typeof task !== 'object') return {};
+  const timings = {};
+  for (const key of ['started_at', 'finished_at', 'duration_s', 'elapsed_s', 'age_s']) {
+    if (task[key] != null) timings[key] = task[key];
+  }
+  const verdict = {};
+  if (task.verdict != null) verdict.outcome = task.verdict;
+  for (const key of ['returncode', 'no_deliverable_reason', 'delivery_declaration', 'substitution']) {
+    if (task[key] != null) verdict[key] = task[key];
+  }
+  const view = {
+    task_id: task.task_id ?? null,
+    agent: task.agent ?? null,
+    model: task.model ?? null,
+    status: task.status ?? null,
+  };
+  if (Object.keys(timings).length) view.timings = timings;
+  if (Object.keys(verdict).length) view.verdict = verdict;
+  return view;
+}
+
 function renderActive(tasks) {
   document.getElementById('active-muted').textContent = `${tasks.length} visible`;
   if (!tasks.length) {
@@ -213,7 +237,7 @@ function renderCompleted(tasks) {
   }
   document.getElementById('completed-content').innerHTML = `<table>
     <thead><tr><th>task_id</th><th>agent</th><th>status</th><th>duration</th><th>finished_at</th></tr></thead>
-    <tbody>${tasks.map(task => `<tr>
+    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))})'>
       <td class="mono">${escapeHtml(task.task_id || '—')}</td>
       <td>${escapeHtml(task.agent || '—')}</td>
       <td><span class="pill ${statusClass(task.status)}">${escapeHtml(task.status || 'unknown')}</span></td>
@@ -233,7 +257,7 @@ async function openDetail(taskId) {
   try {
     const detail = await fetchJson(`/api/delegate/tasks/${encodeURIComponent(taskId)}`);
     document.getElementById('detail-meta').textContent = detail.result_truncated ? 'Result truncated to 64 KiB' : 'Result loaded';
-    document.getElementById('task-json').textContent = JSON.stringify(detail.task || {}, null, 2);
+    document.getElementById('task-json').textContent = JSON.stringify(observerTaskView(detail.task || {}), null, 2);
     document.getElementById('task-result').textContent = detail.result ? detail.result : 'no result';
   } catch (error) {
     setBanner('detail-banner', `API unavailable: ${error.message}`);
