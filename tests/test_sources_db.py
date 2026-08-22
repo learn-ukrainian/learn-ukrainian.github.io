@@ -1113,6 +1113,39 @@ class TestHeadwordFirstRanking:
         assert hits
         assert hits[0]["lemma"] == "книга"
 
+    def test_search_esum_oversized_document_query_fails_closed_without_fuzzy_sql(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum, search_heritage
+
+        oversized_document = ("український текст\n" * 3_000).strip()
+
+        assert len(oversized_document.encode("utf-8")) > 50_000
+        assert search_esum(oversized_document, db_path=esum_heritage_rank_db, limit=5) == []
+        assert search_heritage(
+            oversized_document,
+            db_path=esum_heritage_rank_db,
+            include_live_slovnyk=False,
+            limit=5,
+        ) == []
+
+    def test_search_esum_oversized_exact_lemma_still_resolves(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum
+
+        oversized_lemma = "а" * 25_001
+        conn = sqlite3.connect(esum_heritage_rank_db)
+        conn.execute(
+            """
+            INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (99, oversized_lemma, 1, 999, "synthetic exact entry", "[]", "ЕСУМ synthetic"),
+        )
+        conn.commit()
+        conn.close()
+
+        hits = search_esum(oversized_lemma, db_path=esum_heritage_rank_db, limit=5)
+
+        assert [hit["lemma"] for hit in hits] == [oversized_lemma]
+
     def test_search_esum_volume_filter_headword_and_body(self, esum_heritage_rank_db):
         from wiki.sources_db import search_esum
 

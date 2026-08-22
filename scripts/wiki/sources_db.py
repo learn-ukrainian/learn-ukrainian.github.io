@@ -1831,6 +1831,21 @@ def _fold_dict_key(value: str) -> str:
     return cleaned.lower()
 
 
+_SQLITE_MAX_LIKE_PATTERN_BYTES = 50_000
+
+
+def _dictionary_fuzzy_query_is_safe(query: str) -> bool:
+    """Whether a prefix pattern stays within SQLite's default LIKE limit.
+
+    The Sources runtime is compiled with ``MAX_LIKE_PATTERN_LENGTH=50000``.
+    A whole source document can legitimately reach the heritage aggregator,
+    but it is not a useful dictionary prefix/body query.  Keep exact metadata
+    matching available while skipping LIKE and FTS fuzzy paths that would
+    otherwise raise ``LIKE or GLOB pattern too complex``.
+    """
+    return len(query.encode("utf-8")) + 1 <= _SQLITE_MAX_LIKE_PATTERN_BYTES
+
+
 def _dict_lookup_contains(
     conn: sqlite3.Connection,
     table: str,
@@ -2452,12 +2467,13 @@ def search_esum(
             query.replace("\u0301", "").strip(),
         ]))
         meta_placeholders = ",".join("?" for _ in query_variants)
-        meta_params: list[object] = [
-            *query_variants,
-            clean_query,
-            f"{clean_query}%",
-            f"{clean_query}%",
-        ]
+        fuzzy_query_is_safe = _dictionary_fuzzy_query_is_safe(clean_query)
+        meta_where = f"(lemma IN ({meta_placeholders}) OR replace(lemma, char(0x301), '') = ? COLLATE NOCASE"
+        meta_params: list[object] = [*query_variants, clean_query]
+        if fuzzy_query_is_safe:
+            meta_where += " OR lemma LIKE ? COLLATE NOCASE OR replace(lemma, char(0x301), '') LIKE ? COLLATE NOCASE"
+            meta_params.extend((f"{clean_query}%", f"{clean_query}%"))
+        meta_where += ")"
         meta_vol_filter = ""
         if volume is not None:
             meta_vol_filter = " AND vol = ?"
@@ -2468,10 +2484,7 @@ def search_esum(
             f"""
             SELECT id AS rowid, lemma, etymology_text, cognates, vol, page, source
             FROM esum_etymology_meta
-            WHERE (lemma IN ({meta_placeholders})
-                   OR replace(lemma, char(0x301), '') = ? COLLATE NOCASE
-                   OR lemma LIKE ? COLLATE NOCASE
-                   OR replace(lemma, char(0x301), '') LIKE ? COLLATE NOCASE){meta_vol_filter}
+            WHERE {meta_where}{meta_vol_filter}
             ORDER BY vol, page, lemma
             LIMIT ?
             """,
@@ -2484,7 +2497,7 @@ def search_esum(
             item["source"] = item.get("source") or "ЕСУМ"
             candidates[item["rowid"]] = item
 
-        fts_query = _escape_fts5_phrase(clean_query)
+        fts_query = _escape_fts5_phrase(clean_query) if fuzzy_query_is_safe else ""
         if fts_query:
             fts_params: list[object] = [fts_query]
             fts_vol_filter = ""
