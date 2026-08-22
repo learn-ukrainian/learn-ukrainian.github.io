@@ -39,6 +39,7 @@ def _plan(**overrides: object) -> dict:
 @pytest.fixture(autouse=True)
 def _isolate(tmp_path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     yield fake

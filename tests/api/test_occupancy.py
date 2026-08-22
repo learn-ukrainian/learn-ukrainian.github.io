@@ -35,6 +35,11 @@ def _clear_observer_presence() -> None:
     reset_observer_presence()
 
 
+@pytest.fixture(autouse=True)
+def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
+
+
 def _plan(**overrides: object) -> dict:
     base: dict = {
         "schema": "atlas-job.v1",

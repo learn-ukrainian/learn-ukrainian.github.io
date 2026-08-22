@@ -149,6 +149,11 @@ def test_submit_dry_run_sets_host_and_workdir(capsys: pytest.CaptureFixture[str]
     assert "run-atlas-job-missing-tr-example" in out
 
 
+def test_submit_fails_closed_without_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    assert atlas_job.submit(_plan(), dry_run=True) == 2
+
+
 def test_submit_dry_run_uses_env_run_root_for_any_host(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

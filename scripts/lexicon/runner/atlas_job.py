@@ -1187,7 +1187,11 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
     host = str(plan["host"])
     sink = plan.get("result_sink")
     unit = unit_name(job_id)
-    workdir = work_dir_for(job_id, plan)
+    try:
+        workdir = work_dir_for(job_id, plan)
+    except ValueError as exc:
+        print(f"invalid workdir: {exc}", file=sys.stderr)
+        return 2
     plan_blob = json.dumps(plan, sort_keys=True).encode()
     row = {
         "id": job_id,
