@@ -40,6 +40,12 @@ policy:
       first-party xai/grok-4.5 for orchestrator seats — opencode is no longer a sanctioned grok
       route for any seat. Hermes and OpenRouter grok routes remain banned.
     - >-
+      Kimi K3 workers (`kimi`, `kimicc`, and catalog ids `kimi-code/k3*`) use the
+      native `kimi` CLI subscription path only (`catalog_transport` /
+      `transports`: `native_kimi`). OpenRouter is forbidden as a Kimi worker
+      bus. Do not relaunch OpenRouter-for-subscribed-models patterns for
+      Moonshot/Kimi K3. OpenRouter remains mainly Pool + Gemma access.
+    - >-
       EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION
       still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer /
       cross_family_code_infra_reviewer / textbook_nonhit_auditor (and OPENCODE_REVIEW_MODEL
@@ -143,6 +149,7 @@ review_scheduler:
       models: []
       participant: kimi
       adapter_transport: acp
+      # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
       catalog_transport: native_kimi
       sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
       quota_bucket: kimi
@@ -156,6 +163,7 @@ review_scheduler:
       models: [kimi-code/k3, kimi-code/k3-256k]
       participant: kimicc
       adapter_transport: acp
+      # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
       catalog_transport: native_kimi
       sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
       quota_bucket: kimi
@@ -421,6 +429,7 @@ models:
       coding_model_id: k3
       context_profile: kimicc_k3
     roles: [consequential_coding, strong_review, long_context_debugging, multimodal_analysis]
+    # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
     strengths: [strong_agentic_coding, max_effort, image_video_tools]
     # 2026-08-07 release notes (operator-supplied): k3 now supports low/high/max
@@ -450,6 +459,7 @@ models:
       coding_model_id: k3-256k
       context_profile: kimicc_k3_256k
     roles: [routine_coding, everyday_review]
+    # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
     strengths: [strong_agentic_coding, half_quota_vs_k3, effort_low_high_max]
     weaknesses: [no_video_input, context_capped_256k, parity_and_quota_claims_not_verified]
@@ -466,6 +476,7 @@ models:
       coding_model_id: kimi-k3-max
       context_profile: kimicc_k3
     roles: [architecture, critical_review, long_context_debugging, advisor]
+    # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
     strengths: [frontier_reasoning, max_effort, long_context_review]
     weaknesses: [max_effort_only, subscription_quota]
@@ -758,6 +769,7 @@ review_candidates:
     model_id: kimi-code/k3
     # kimicc is the concrete K3 ACP participant; bare `kimi` is a launcher
     # family and must never be serialized as the participant identity.
+    # Transport is native_kimi only — never OpenRouter as a Kimi worker bus.
     route: kimicc
     transport: native_kimi
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent kimi --model k3
