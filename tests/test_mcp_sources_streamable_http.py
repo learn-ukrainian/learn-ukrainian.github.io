@@ -169,18 +169,23 @@ def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
     content = body["result"].get("content", [])
     assert content, f"verify_word returned empty content: {body}"
     text_blob = content[0].get("text", "")
-    # Acceptance: any one of two shapes proves the streamable-HTTP transport
-    # round-tripped a real tool call (the test's actual subject).
-    #   (a) `lemma` / `v_naz` — VESUM data present (local dev path).
-    #   (b) explicit `Error in verify_word:` envelope — VESUM db missing on
-    #       the runner; the tool caught it and returned a structured error
-    #       through the MCP response channel (CI path). Earlier shape:
-    #       FileNotFoundError surfaced via the JSON-RPC `content.text` field.
-    # If both shapes are absent, the transport itself is broken (was the
-    # original symptom of the ASGI bug we fixed at 8174ea3f52).
+    # Acceptance: any one of these shapes proves the streamable-HTTP transport
+    # round-tripped a real tools/call (the test's actual subject).
+    #   (a) `lemma` / `v_naz` — VESUM data present (local / cached-db path).
+    #   (b) fail-closed MCP-wire envelope ``Tool call failed: verify_word.`` —
+    #       the real `_on_call_tool` path (Cycle007 fixes v3 / c28df06).
+    #       Handler exceptions (VESUM db missing on the runner, KeyError on
+    #       a bad argument, …) are isError=True with a privacy-safe generic
+    #       text; the raw exception never leaves the process. This is the
+    #       merge_group CI path. The legacy ``Error in verify_word:`` prose
+    #       stays on the in-process `call_tool()` helper only — see
+    #       test_call_tool_legacy_error_marker_never_appears_on_the_real_wire_path.
+    # If none of these shapes appear, the transport itself is broken (was
+    # the original symptom of the ASGI bug we fixed at 8174ea3f52).
     has_vesum_data = "v_naz" in text_blob or "lemma" in text_blob
-    has_tool_error_envelope = "Error in verify_word" in text_blob
-    assert has_vesum_data or has_tool_error_envelope, (
+    has_fail_closed_envelope = "Tool call failed: verify_word" in text_blob
+    has_legacy_inprocess_envelope = "Error in verify_word" in text_blob
+    assert has_vesum_data or has_fail_closed_envelope or has_legacy_inprocess_envelope, (
         f"verify_word response is neither VESUM data nor structured error envelope; "
         f"transport likely broken. text_blob (truncated): {text_blob[:300]}"
     )
