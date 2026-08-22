@@ -348,7 +348,10 @@ class RealMcpToolTransport:
         if name not in tool_names:
             raise McpTransportError(f"mcp_tool_set_drift:unknown_tool={name}")
         result = self._submit(self._call(name, arguments))
-        if getattr(result, "isError", False):
+        # MCP's wire field is ``isError`` but the Python SDK exposes the
+        # validated model attribute as ``is_error``. Check both so an SDK
+        # model cannot silently turn a real tool failure into ordinary text.
+        if getattr(result, "is_error", getattr(result, "isError", False)):
             raise McpTransportError(f"mcp_tool_error:{name}")
         content = getattr(result, "content", None) or []
         texts = [

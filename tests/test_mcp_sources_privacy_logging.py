@@ -19,12 +19,17 @@ import json
 from pathlib import Path
 
 import pytest
+import requests
 
 SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 LOG_PATH = SERVER_PATH.parents[2].parent / "logs" / "mcp-sources-requests.jsonl"
 
 
 def _load_sources_server():
+    # The dynamically loaded server imports requests at module scope. Keep
+    # this direct import visible to the changed-test fastlane dependency
+    # planner so its slim environment matches the real runtime dependency.
+    assert requests.__name__ == "requests"
     spec = importlib.util.spec_from_file_location("mcp_sources_privacy_logging_server", SERVER_PATH)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
