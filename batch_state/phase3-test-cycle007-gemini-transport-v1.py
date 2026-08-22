@@ -61,37 +61,53 @@ def rows(count: int, lane: str = "clean_label") -> list[dict[str, Any]]:
     ]
 
 
-def _build_row_evidence(row: dict[str, Any], *, lane: str = "clean_label") -> tuple[dict[str, Any], dict[str, Any]]:
-    phenomenon_id = "apostrophe" if lane == "residual_label" else None
-    rec = contract.build_evidence_record(
-        channel="vesum_attestation",
-        source_identity="vesum",
-        source_version="v1",
-        locator="data/vesum.db#forms",
-        query="слово",
-        status="attested",
-        supports="attestation",
-        retrieval_sha256=contract.sha256_value({"mock": "payload"}),
-        parser_id="vesum-forms-v1",
-        parser_version="1",
-        row=row,
-        phenomenon_id=phenomenon_id,
+def _build_row_evidence(
+    row: dict[str, Any], *, lane: str = "clean_label"
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    phenomenon_ids: tuple[str | None, ...] = (
+        contract.RESIDUAL_PHENOMENON_TAXONOMY if lane == "residual_label" else (None,)
     )
-    if lane == "residual_label":
-        phenomenon_evidence_ids = {k: ([rec["evidence_id"]] if k == "apostrophe" else []) for k in contract.RESIDUAL_PHENOMENON_TAXONOMY}
-    else:
-        phenomenon_evidence_ids = {}
+    records = [
+        contract.build_evidence_record(
+            channel="vesum_attestation",
+            source_identity="vesum",
+            source_version="v1",
+            locator="data/vesum.db#forms",
+            query="слово",
+            status="attested",
+            supports="attestation",
+            retrieval_sha256=contract.sha256_value({"mock": "payload"}),
+            parser_id="vesum-forms-v1",
+            parser_version="1",
+            row=row,
+            phenomenon_id=phenomenon_id,
+        )
+        for phenomenon_id in phenomenon_ids
+    ]
+    evidence_ids = sorted(record["evidence_id"] for record in records)
+    phenomenon_evidence_ids = (
+        {
+            record["phenomenon_id"]: [record["evidence_id"]]
+            for record in records
+            if record["phenomenon_id"] is not None
+        }
+        if lane == "residual_label"
+        else {}
+    )
     row_ev = {
         "unit_id": row["unit_id"],
         "unit_sha256": row["unit_sha256"],
-        "evidence": [rec],
-        "evidence_ids": [rec["evidence_id"]],
+        "tokenizer_id": compiler.TOKENIZER_ID,
+        "tokenizer_version": compiler.TOKENIZER_VERSION,
+        "extracted_forms": [],
+        "evidence": records,
+        "evidence_ids": evidence_ids,
         "phenomenon_evidence_ids": phenomenon_evidence_ids,
         "sufficient_support": True,
         "archaic_only_risk": False,
         "russian_shadow_suspected": False,
     }
-    return rec, row_ev
+    return records, row_ev
 
 
 def synthetic_prompt(lane: str) -> bytes:
@@ -125,8 +141,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "ordered_identity_commitment_sha256": RUN.ORDERED_IDENTITY_COMMITMENT_SHA256,
         "identity_union_commitment_sha256": "5" * 64,
         "ordered_packet_commitment_sha256": "6" * 64,
-        "packet_count": 204,
-        "row_count": 10159,
+        "packet_count": 1,
+        "row_count": count,
         "text_free": True,
     }
     custody_val["receipt_sha256"] = RUN.digest(RUN.canonical(custody_val))
@@ -162,8 +178,8 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "ordered_identity_commitment_sha256": RUN.ORDERED_IDENTITY_COMMITMENT_SHA256,
         "identity_union_commitment_sha256": "5" * 64,
         "ordered_packet_commitment_sha256": "6" * 64,
-        "packet_count": 204,
-        "row_count": 10159,
+        "packet_count": 1,
+        "row_count": count,
         "packets": [entry],
         "text_free": True,
     }
@@ -172,12 +188,12 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
     RUN.EXPECTED_LABEL_MANIFEST_SHA256 = RUN.digest(manifest_bytes)
 
     # Sidecar
-    evidence_records = []
+    evidence_records: list[dict[str, Any]] = []
     sidecar_rows = []
     retrieval_payloads = {contract.sha256_value({"mock": "payload"}): {"mock": "payload"}}
     for row in packet_rows:
-        rec, row_ev = _build_row_evidence(row, lane=lane)
-        evidence_records.append(rec)
+        records, row_ev = _build_row_evidence(row, lane=lane)
+        evidence_records.extend(records)
         sidecar_rows.append(row_ev)
 
     sidecar_body = {
@@ -218,6 +234,12 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "packet_count": 1,
         "row_count": count,
         "network_lookups_performed": 0,
+        "counts_by_channel": {"vesum_attestation": len(evidence_records)},
+        "counts_by_status": {"attested": len(evidence_records)},
+        "counts_by_supports": {"attestation": len(evidence_records)},
+        "sufficient_support_rows": count,
+        "archaic_only_risk_rows": 0,
+        "russian_shadow_suspected_rows": 0,
         "sidecars": [
             {
                 "packet_index": index,
