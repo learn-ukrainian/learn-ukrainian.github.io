@@ -131,6 +131,12 @@ function escapeHtml(value) {
   }[ch]));
 }
 
+function formatTs(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+}
+
 function pct(value) {
   const num = Number(value);
   return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
@@ -275,7 +281,7 @@ function renderDelegates(delegates) {
     <td>${escapeHtml(task.model || '')}</td>
     <td>${statusPill(task.status)}</td>
     <td>${task.duration_s == null ? '' : `${Number(task.duration_s).toFixed(1)}s`}</td>
-    <td>${escapeHtml(task.started_at || '')}</td>
+    <td>${formatTs(task.started_at)}</td>
   </tr>`).join('');
   document.getElementById('delegate-table').innerHTML = `<table>
     <tr><th>Task</th><th>Agent</th><th>Model</th><th>Status</th><th>Duration</th><th>Started</th></tr>
