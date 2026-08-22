@@ -9,6 +9,64 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
+from wiki import sources_db
+
+
+@pytest.fixture()
+def ua_gec_search_conn(monkeypatch: pytest.MonkeyPatch):
+    """Small deterministic UA-GEC FTS database for query-safety tests."""
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute(
+        """
+        CREATE TABLE ua_gec_errors (
+            id INTEGER PRIMARY KEY,
+            error TEXT NOT NULL,
+            correct TEXT NOT NULL,
+            error_type TEXT NOT NULL,
+            doc_id TEXT NOT NULL,
+            is_native INTEGER NOT NULL,
+            source_lang TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE VIRTUAL TABLE ua_gec_errors_fts USING fts5(
+            error, correct, error_type,
+            content='ua_gec_errors', content_rowid='id', tokenize='unicode61'
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO ua_gec_errors(id, error, correct, error_type, doc_id, is_native, source_lang)
+        VALUES (1, 'приймати участь', 'брати участь', 'F/Calque', 'synthetic-doc', 1, 'uk')
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO ua_gec_errors_fts(rowid, error, correct, error_type)
+        VALUES (1, 'приймати участь', 'брати участь', 'F/Calque')
+        """
+    )
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    yield conn
+    conn.close()
+
+
+@pytest.mark.parametrize("query", ['"брати участь', "брати\x00участь"])
+def test_search_ua_gec_errors_treats_fts_control_input_as_literal_text(ua_gec_search_conn, query: str) -> None:
+    results = sources_db.search_ua_gec_errors(query)
+
+    assert [row["correct"] for row in results] == ["брати участь"]
+
+
+@pytest.mark.parametrize("query", ['"', '  ""  '])
+def test_search_ua_gec_errors_returns_empty_for_quote_only_query(ua_gec_search_conn, query: str) -> None:
+    assert sources_db.search_ua_gec_errors(query) == []
+
 
 @pytest.fixture()
 def sample_data(tmp_path):
@@ -1055,6 +1113,39 @@ class TestHeadwordFirstRanking:
         assert hits
         assert hits[0]["lemma"] == "книга"
 
+    def test_search_esum_oversized_document_query_fails_closed_without_fuzzy_sql(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum, search_heritage
+
+        oversized_document = ("український текст\n" * 3_000).strip()
+
+        assert len(oversized_document.encode("utf-8")) > 50_000
+        assert search_esum(oversized_document, db_path=esum_heritage_rank_db, limit=5) == []
+        assert search_heritage(
+            oversized_document,
+            db_path=esum_heritage_rank_db,
+            include_live_slovnyk=False,
+            limit=5,
+        ) == []
+
+    def test_search_esum_oversized_exact_lemma_still_resolves(self, esum_heritage_rank_db):
+        from wiki.sources_db import search_esum
+
+        oversized_lemma = "а" * 25_001
+        conn = sqlite3.connect(esum_heritage_rank_db)
+        conn.execute(
+            """
+            INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (99, oversized_lemma, 1, 999, "synthetic exact entry", "[]", "ЕСУМ synthetic"),
+        )
+        conn.commit()
+        conn.close()
+
+        hits = search_esum(oversized_lemma, db_path=esum_heritage_rank_db, limit=5)
+
+        assert [hit["lemma"] for hit in hits] == [oversized_lemma]
+
     def test_search_esum_volume_filter_headword_and_body(self, esum_heritage_rank_db):
         from wiki.sources_db import search_esum
 
@@ -1131,4 +1222,3 @@ class TestHeadwordFirstRanking:
             hits = search_definitions(query, db_path=esum_heritage_rank_db)
             assert len(hits) == 1, f"Failed for query {query!r}"
             assert hits[0]["word"] == "книга"
-
