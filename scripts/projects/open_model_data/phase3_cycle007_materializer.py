@@ -20,6 +20,7 @@ relaxes shape, ordering, identity, permission, or atomicity checks.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import copy
 import json
 import os
@@ -561,9 +562,32 @@ def _install_stage(staging: Path, output: Path) -> None:
         raise MaterializationError("output_exists") from None
     except OSError:
         raise MaterializationError("transaction_failure") from None
-    os.chmod(output, PRIVATE_DIR_MODE)
-    for name in sorted(OUTPUT_TOP_LEVEL):
-        os.rename(staging / name, output / name)
+    # ``rename`` cannot install this tree in one non-replacing operation on
+    # every supported platform.  Once the destination has been claimed, move
+    # its entries one at a time, but restore every one already moved if a
+    # later rename fails.  The final ``rmdir`` deliberately refuses to remove
+    # a non-empty destination: if another actor has written there, preserving
+    # that actor's data is more important than pretending rollback succeeded.
+    moved: list[str] = []
+    try:
+        os.chmod(output, PRIVATE_DIR_MODE)
+        for name in sorted(OUTPUT_TOP_LEVEL):
+            os.rename(staging / name, output / name)
+            moved.append(name)
+    except BaseException:
+        for name in reversed(moved):
+            installed = output / name
+            if not installed.exists() and not installed.is_symlink():
+                break
+            try:
+                os.rename(installed, staging / name)
+            except OSError:
+                break
+        # ``rmdir`` only succeeds for the empty directory we claimed.  Never
+        # recursively delete a destination after an install error.
+        with contextlib.suppress(OSError):
+            os.rmdir(output)
+        raise
 
 
 def materialize(

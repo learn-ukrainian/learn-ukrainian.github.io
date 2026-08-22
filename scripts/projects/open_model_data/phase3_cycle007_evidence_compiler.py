@@ -25,6 +25,7 @@ per-packet sidecar file.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import copy
 import functools
 import json
@@ -505,7 +506,7 @@ _SUCCESS_ENVELOPES_BY_TOOL: dict[str, re.Pattern[str]] = {
     "search_slovnyk_me": re.compile(
         r'^Found (?P<count>[1-9][0-9]*) slovnyk\.me result\(s\) for: "(?P<query>.+)"$'
     ),
-    "query_pravopys": re.compile(r'^\*\*Pravopys section [0-9]+\*\*$'),
+    "query_pravopys": re.compile(r"^\*\*Pravopys section [1-9][0-9]*\*\*$"),
 }
 
 _SUCCESS_ITEM_PREFIX_BY_TOOL: dict[str, str] = {
@@ -515,6 +516,17 @@ _SUCCESS_ITEM_PREFIX_BY_TOOL: dict[str, str] = {
     "search_heritage": "### Evidence ",
     "search_slovnyk_me": "### Result ",
 }
+
+# ``handle_query_pravopys`` is backed only by ``scripts.rag.source_query``.
+# That reviewed adapter exposes sections 1--61 at this exact origin and path;
+# accepting a generic HTTPS URL or an unrelated body would turn untrusted MCP
+# prose into an attestation.
+_PRAVOPYS_2019_RESPONSE_RE = re.compile(
+    r"^\*\*Pravopys section (?P<section>[1-9]|[1-5][0-9]|6[0-1])\*\*\n"
+    r"\*\*URL\*\*: https://2019\.pravopys\.net/sections/(?P<url_section>[1-9]|[1-5][0-9]|6[0-1])/\n\n"
+    r"(?P<body>.+)$",
+    re.DOTALL,
+)
 
 
 def _prose_status(
@@ -550,9 +562,18 @@ def _prose_status(
     if match is None:
         return "incomplete"
     if tool == "query_pravopys":
-        if len(lines) < 3 or re.fullmatch(r"\*\*URL\*\*: https://\S+", lines[1]) is None:
+        pravopys_match = _PRAVOPYS_2019_RESPONSE_RE.fullmatch(stripped)
+        if pravopys_match is None:
             return "incomplete"
-        return "attested" if any(line.strip() for line in lines[2:]) else "incomplete"
+        section = pravopys_match.group("section")
+        if pravopys_match.group("url_section") != section:
+            return "incomplete"
+        # ``_extract_pravopys_text`` preserves the authoritative section
+        # marker.  Requiring that marker binds the returned prose to the same
+        # reviewed section instead of accepting arbitrary nonblank text.
+        if re.search(rf"(?:^|\n)§\s*{re.escape(section)}(?:\D|$)", pravopys_match.group("body")) is None:
+            return "incomplete"
+        return "attested"
     if expected_query is not None and match.groupdict().get("query") != expected_query:
         return "incomplete"
     expected_count = int(match.group("count"))
@@ -1769,9 +1790,30 @@ def _install_staged_bundle(staging: Path, output_dir: Path) -> None:
         os.mkdir(output_dir)
     except FileExistsError:
         raise contract.EvidenceContractError(f"destination created concurrently: {output_dir}") from None
-    os.chmod(output_dir, PRIVATE_DIR_MODE)
-    for child in sorted(staging.iterdir()):
-        os.rename(child, output_dir / child.name)
+    # See the materializer's equivalent installer.  Claiming the destination
+    # preserves no-overwrite semantics; restoring entries already moved makes
+    # a later rename failure atomic from callers' perspective.  Use ``rmdir``
+    # only, so a concurrently written destination is never recursively
+    # deleted during error handling.
+    moved: list[Path] = []
+    try:
+        os.chmod(output_dir, PRIVATE_DIR_MODE)
+        for child in sorted(staging.iterdir()):
+            os.rename(child, output_dir / child.name)
+            moved.append(child)
+    except BaseException:
+        for child in reversed(moved):
+            installed = output_dir / child.name
+            if not installed.exists() and not installed.is_symlink():
+                break
+            try:
+                os.rename(installed, staging / child.name)
+            except OSError:
+                break
+        # Do not recursively remove a destination after an install error.
+        with contextlib.suppress(OSError):
+            os.rmdir(output_dir)
+        raise
 
 
 # --------------------------------------------------------------------------

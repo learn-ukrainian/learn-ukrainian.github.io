@@ -333,6 +333,30 @@ def test_materializer_toctou_race_fails_closed_when_output_appears_after_validat
     assert leftovers == []
 
 
+def test_materializer_rolls_back_the_claimed_destination_when_a_mid_install_rename_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """A failed second install rename must leave neither a partial output nor staging debris."""
+    source, output, _rows = _fixture(tmp_path)
+    real_rename = os.rename
+    forward_renames = {"count": 0}
+
+    def _fail_second_forward_rename(old: Any, new: Any, *args: Any, **kwargs: Any) -> None:
+        if Path(new).parent == output and Path(old).parent != output:
+            forward_renames["count"] += 1
+            if forward_renames["count"] == 2:
+                raise OSError("synthetic mid-install rename failure")
+        return real_rename(old, new, *args, **kwargs)
+
+    monkeypatch.setattr(materializer.os, "rename", _fail_second_forward_rename)
+    with pytest.raises(materializer.MaterializationError) as excinfo:
+        materializer.materialize(source, output, fixture=True)
+    assert excinfo.value.code == "transaction_failure"
+    assert forward_renames["count"] == 2
+    assert not output.exists()
+    assert list(tmp_path.glob(f".{output.name}.staging-*")) == []
+
+
 # --------------------------------------------------------------------------
 # Amendment step 15: source package mode verification, real-mode path
 # disclosure refusal (env/config only, never argv).

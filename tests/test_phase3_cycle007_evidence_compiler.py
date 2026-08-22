@@ -871,6 +871,60 @@ def test_prose_status_treats_the_legacy_error_marker_as_parse_error(tmp_path: Pa
     assert result["status"] == "parse_error"
 
 
+def test_query_pravopys_accepts_only_the_reviewed_2019_section_shape():
+    valid = "\n".join(
+        (
+            "**Pravopys section 7**",
+            "**URL**: https://2019.pravopys.net/sections/7/",
+            "",
+            "§ 7. Апостроф",
+            "Правило.",
+        )
+    )
+    assert compiler._prose_status(valid, tool="query_pravopys") == "attested"
+
+
+@pytest.mark.parametrize(
+    "response",
+    (
+        "\n".join(
+            (
+                "**Pravopys section 7**",
+                "**URL**: https://attacker.example/sections/7/",
+                "",
+                "§ 7. Forged host.",
+            )
+        ),
+        "\n".join(
+            (
+                "**Pravopys section 7**",
+                "**URL**: https://2019.pravopys.net/sections/8/",
+                "",
+                "§ 7. Mismatched URL section.",
+            )
+        ),
+        "\n".join(
+            (
+                "**Pravopys section 62**",
+                "**URL**: https://2019.pravopys.net/sections/62/",
+                "",
+                "§ 62. Outside the reviewed range.",
+            )
+        ),
+        "\n".join(
+            (
+                "**Pravopys section 7**",
+                "**URL**: https://2019.pravopys.net/sections/7/",
+                "",
+                "Arbitrary forged prose without the authoritative section marker.",
+            )
+        ),
+    ),
+)
+def test_query_pravopys_rejects_forged_host_section_or_prose(response: str):
+    assert compiler._prose_status(response, tool="query_pravopys") == "incomplete"
+
+
 def test_real_transport_rejects_the_legacy_error_prose_marker_even_without_iserror(tmp_path: Path):
     class _Block:
         def __init__(self) -> None:
@@ -1022,6 +1076,29 @@ def test_compile_sidecar_bundle_toctou_race_fails_closed_when_output_appears_aft
     assert not (output_dir / "manifest.json").exists()
     staging_leftovers = list(tmp_path.glob(f".{output_dir.name}.staging-*"))
     assert staging_leftovers == []
+
+
+def test_compile_sidecar_bundle_rolls_back_the_claimed_destination_when_a_mid_install_rename_fails(
+    tmp_path: Path, monkeypatch
+):
+    client = SyntheticSourcesClient()
+    output_dir = tmp_path / "sidecars"
+    real_rename = os.rename
+    forward_renames = {"count": 0}
+
+    def _fail_second_forward_rename(old, new, *args, **kwargs):
+        if Path(new).parent == output_dir and Path(old).parent != output_dir:
+            forward_renames["count"] += 1
+            if forward_renames["count"] == 2:
+                raise OSError("synthetic mid-install rename failure")
+        return real_rename(old, new, *args, **kwargs)
+
+    monkeypatch.setattr(compiler.os, "rename", _fail_second_forward_rename)
+    with pytest.raises(OSError, match="synthetic mid-install rename failure"):
+        compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
+    assert forward_renames["count"] == 2
+    assert not output_dir.exists()
+    assert list(tmp_path.glob(f".{output_dir.name}.staging-*")) == []
 
 
 # --------------------------------------------------------------------------
