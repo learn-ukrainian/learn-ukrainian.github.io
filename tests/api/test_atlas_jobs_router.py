@@ -632,7 +632,7 @@ def test_results_allowlist_and_sorting(
             "circuit_breaker_tripped": False,
             "extra_raw_metric": "ignore_me",
         },
-        "raw_forbidden_workdir": "/home/ops/workdir",
+        "raw_forbidden_workdir": "/tmp/forbidden-workdir",
         "plan_sha256": "abcdef123456",
         "backup": {"attempted": True, "ok": True},
     }
@@ -652,7 +652,7 @@ def test_results_allowlist_and_sorting(
             "filled_translation": 0,
             "circuit_breaker_tripped": True,
         },
-        "raw_forbidden_workdir": "/home/ops/workdir2",
+        "raw_forbidden_workdir": "/tmp/forbidden-workdir-2",
     }
 
     (tmp_path / "job-001.result.json").write_text(json.dumps(receipt1), encoding="utf-8")

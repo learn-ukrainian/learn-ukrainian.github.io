@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Mac-side orchestrator for #6369 Class-B residual EN re-enrich. Runs the job
-# on the remote Atlas host (atlas-runner by default, hramatka/vps per #6876),
+# on the remote Atlas host from operator env (ATLAS_RUNNER_HOST),
 # never on this laptop.
 #
 # The VPS repo checkout is routinely stale (large data/ dirs deliberately
@@ -20,10 +20,8 @@
 #   scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --no-poll    # fire-and-forget
 #   scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --pull-only  # just pull artifacts back
 #
-# Env overrides:
-#   ATLAS_RUNNER_HOST (default atlas-runner), ATLAS_RUN_ROOT (default per
-#   host: /home/ops/atlas-jobs for hramatka/vps, /home/ops/atlas-runner
-#   otherwise), ATLAS_REPO,
+# Env:
+#   ATLAS_RUNNER_HOST (required), ATLAS_RUN_ROOT (required), ATLAS_REPO,
 #   ATLAS_PRIMARY_ROOT (default: primary checkout from shared .git common dir),
 #   ATLAS_RE_ENRICH_WORK_DIR, ATLAS_RE_ENRICH_RESIDUAL (local slugs dump),
 #   ATLAS_LOCAL_VESUM_DB, ATLAS_LOCAL_SLOVNYK_CACHE
@@ -53,15 +51,16 @@ esac
 PRIMARY_ROOT="${ATLAS_PRIMARY_ROOT:-$(cd "$_primary_common_dir/.." && pwd)}"
 PYTHON_BIN="${ATLAS_RE_ENRICH_PYTHON:-$PRIMARY_ROOT/.venv/bin/python}"
 
-HOST="${ATLAS_RUNNER_HOST:-atlas-runner}"
-# Per-host run root (#6876): jobs on hramatka/vps live under
-# /home/ops/atlas-jobs; every other host keeps /home/ops/atlas-runner. An
-# explicit ATLAS_RUN_ROOT always wins.
-case "$HOST" in
-  hramatka|vps) DEFAULT_RUN_ROOT="/home/ops/atlas-jobs" ;;
-  *) DEFAULT_RUN_ROOT="/home/ops/atlas-runner" ;;
-esac
-RUN_ROOT="${ATLAS_RUN_ROOT:-$DEFAULT_RUN_ROOT}"
+if [[ -z "${ATLAS_RUNNER_HOST:-}" ]]; then
+  echo "ATLAS_RUNNER_HOST is required" >&2
+  exit 2
+fi
+HOST="$ATLAS_RUNNER_HOST"
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  echo "ATLAS_RUN_ROOT is required" >&2
+  exit 2
+fi
+RUN_ROOT="$ATLAS_RUN_ROOT"
 REMOTE_REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 REMOTE_WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
 
@@ -123,8 +122,7 @@ if ! ssh_q "true" 2>/dev/null; then
   exit 1
 fi
 
-# Materialize the per-host run root before any scp/rsync writes into it — a
-# fresh hramatka/vps layout has no /home/ops/atlas-jobs yet (#6876).
+# Materialize the configured run root before any scp/rsync writes into it.
 ssh_q "mkdir -p $(printf '%q' "$RUN_ROOT")"
 
 # HARD GATE — sources.db on VPS must match local Mac (operator 2026-08-06).
@@ -139,7 +137,7 @@ ssh_q "mkdir -p $(printf '%q' "$RUN_ROOT")"
 # target path, not the file it points to) causes rsync to overwrite the
 # remote's real multi-GB file with a dangling symlink pointing at a
 # Mac-only path — a real data-loss incident hit exactly this on 2026-08-06,
-# recovered from a /home/ops/atlas-runner/data/sources.db backup copy.
+# recovered from a remote sources.db backup copy.
 # Always resolve to a real regular-file path before comparing or syncing.
 LOCAL_SOURCES_DB_CANDIDATE="${ATLAS_LOCAL_SOURCES_DB:-$WORKTREE/data/sources.db}"
 REMOTE_SOURCES_DB="${ATLAS_SOURCES_DB:-$REMOTE_REPO/data/sources.db}"

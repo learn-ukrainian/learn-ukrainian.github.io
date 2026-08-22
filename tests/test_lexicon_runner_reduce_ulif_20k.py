@@ -120,6 +120,20 @@ def test_in_process_reduce_never_applies_worker_memory_limit_to_coordinator(
     assert candidate["entries"][0]["lemma"] == "привіт"
 
 
+def test_source_has_no_baked_ops_home_defaults() -> None:
+    assert "/home/ops" not in (
+        ROOT / "scripts" / "lexicon" / "runner" / "reduce_ulif_20k.py"
+    ).read_text(encoding="utf-8")
+
+
+def test_work_dir_flag_is_required() -> None:
+    from scripts.lexicon.runner.reduce_ulif_20k import main as reduce_main
+
+    with pytest.raises(SystemExit) as exc:
+        reduce_main([])
+    assert exc.value.code == 2
+
+
 def test_help_exits_zero_without_side_effects(tmp_path: Path) -> None:
     """Sanity companion: --help must not start a reduce run or write work artifacts."""
     import subprocess

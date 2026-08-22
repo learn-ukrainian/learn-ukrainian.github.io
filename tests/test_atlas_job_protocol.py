@@ -50,6 +50,16 @@ def _isolate_host(monkeypatch: pytest.MonkeyPatch) -> atlas_job.FakeHostAdapter:
     atlas_job.set_host_adapter(None)
 
 
+@pytest.fixture(autouse=True)
+def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
+
+
+def test_source_has_no_baked_ops_home_defaults() -> None:
+    text = Path(atlas_job.__file__).read_text(encoding="utf-8")
+    assert "/home/ops" not in text
+
+
 def test_valid_plan_is_ok() -> None:
     assert atlas_job.validate_plan(_plan()) == []
 
@@ -59,7 +69,7 @@ def test_allows_hramatka_for_reenrich() -> None:
 
 
 def test_allows_vps_alias_for_reenrich() -> None:
-    # "vps" is the ssh alias for the hramatka host — same allowance.
+    # "vps" remains an allowed plan-host token (occupancy sanitizer denylist).
     assert atlas_job.validate_plan(_plan(host="vps")) == []
 
 
@@ -139,21 +149,21 @@ def test_submit_dry_run_sets_host_and_workdir(capsys: pytest.CaptureFixture[str]
     assert "run-atlas-job-missing-tr-example" in out
 
 
-def test_submit_dry_run_hramatka_uses_atlas_jobs_workdir(
+def test_submit_dry_run_uses_env_run_root_for_any_host(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     rc = atlas_job.submit(_plan(id="hramatka-dry", host="hramatka"), dry_run=True)
     assert rc == 0
     out = capsys.readouterr().out
     assert "hramatka" in out
-    assert "/home/ops/atlas-jobs/run-atlas-job-hramatka-dry" in out
+    assert "/tmp/atlas-run-root/run-atlas-job-hramatka-dry" in out
 
 
-def test_submit_forwards_per_host_run_root_env(
+def test_submit_forwards_required_run_root_env(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
 ) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/custom-run-root")
     captured_env: dict[str, str] = {}
 
     def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
@@ -164,7 +174,7 @@ def test_submit_forwards_per_host_run_root_env(
     plan = _plan(id="hramatka-run-root", host="hramatka")
     rc = atlas_job.submit(plan, dry_run=False, host_adapter=_isolate_host)
     assert rc == 0
-    assert captured_env["ATLAS_RUN_ROOT"] == "/home/ops/atlas-jobs"
+    assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
 
 
 def test_submit_invalid_plan_exits_2() -> None:
@@ -349,7 +359,7 @@ def test_audit_with_running_id_matches_main_pid() -> None:
         {
             "id": "missing-tr-example",
             "unit": "atlas-job-missing-tr-example.service",
-            "workdir": "/home/ops/atlas-runner/run-atlas-job-missing-tr-example",
+            "workdir": "/tmp/atlas-run-root/run-atlas-job-missing-tr-example",
             "main_pid": 4242,
         }
     ]
@@ -413,9 +423,9 @@ def test_pull_accepts_hramatka(monkeypatch: pytest.MonkeyPatch) -> None:
     assert launched
 
 
-def test_pull_forwards_per_host_run_root_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    """hramatka pull must forward /home/ops/atlas-jobs (mirrors submit)."""
-    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+def test_pull_forwards_required_run_root_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """pull must forward ATLAS_RUN_ROOT (mirrors submit)."""
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/custom-run-root")
     captured_env: dict[str, str] = {}
 
     def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
@@ -425,7 +435,7 @@ def test_pull_forwards_per_host_run_root_env(monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
     rc = atlas_job.pull(host="hramatka")
     assert rc == 0
-    assert captured_env["ATLAS_RUN_ROOT"] == "/home/ops/atlas-jobs"
+    assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
 
 
 def test_git_receipt_rejects_absolute_paths() -> None:
@@ -445,7 +455,7 @@ def test_build_git_receipt_redacts_absolute_paths_in_backup_error() -> None:
         "id": "smoke",
         "state": "succeeded",
         "delivery": "ok",
-        "workdir": "/home/ops/atlas-runner/run-atlas-job-smoke",
+        "workdir": "/tmp/atlas-run-root/run-atlas-job-smoke",
         "backup": {
             "attempted": True,
             "ok": False,
@@ -559,24 +569,26 @@ def test_workdir_honored_only_when_safe(tmp_path: Path, monkeypatch: pytest.Monk
         assert errors, bad
 
     monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
-    assert (
-        atlas_job.require_safe_workdir("/home/ops/atlas-runner/run-atlas-job-test")
-        == "/home/ops/atlas-runner/run-atlas-job-test"
-    )
+    with pytest.raises(ValueError, match="ATLAS_RUN_ROOT is required"):
+        atlas_job.require_safe_workdir("/tmp/atlas-run-root/run-atlas-job-test")
 
 
-def test_work_dir_for_uses_per_host_default_root(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+def test_work_dir_for_requires_run_root_and_ignores_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
     assert atlas_job.work_dir_for("ar-job", _plan(id="ar-job")) == (
-        "/home/ops/atlas-runner/run-atlas-job-ar-job"
+        "/tmp/atlas-run-root/run-atlas-job-ar-job"
     )
     assert atlas_job.work_dir_for(
         "hramatka-job", _plan(id="hramatka-job", host="hramatka")
-    ) == "/home/ops/atlas-jobs/run-atlas-job-hramatka-job"
-    # "vps" is the same physical host as "hramatka" — same default root.
-    assert atlas_job.work_dir_for(
-        "vps-job", _plan(id="vps-job", host="vps")
-    ) == "/home/ops/atlas-jobs/run-atlas-job-vps-job"
+    ) == "/tmp/atlas-run-root/run-atlas-job-hramatka-job"
+    assert atlas_job.work_dir_for("vps-job", _plan(id="vps-job", host="vps")) == (
+        "/tmp/atlas-run-root/run-atlas-job-vps-job"
+    )
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    with pytest.raises(ValueError, match="ATLAS_RUN_ROOT is required"):
+        atlas_job.work_dir_for("ar-job", _plan(id="ar-job"))
 
 
 def test_close_and_cli_reject_unsafe_job_id(

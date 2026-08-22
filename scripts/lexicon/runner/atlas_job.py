@@ -2,8 +2,8 @@
 
 **systemd on the host is truth; the local registry is a journal/mirror.**
 
-Batch kinds run on atlas-runner or hramatka (each host is its own mutex —
-submit refuses a second active unit on the SAME host; the two hosts may run
+Batch kinds run on an allowed plan-host token (each host is its own mutex —
+submit refuses a second active unit on the SAME host; distinct hosts may run
 concurrently). Registry lives under batch_state/atlas-jobs/ (restic-covered).
 Close writes a fail-closed result receipt; large artifacts go through
 durable_mirror + backup-data.sh. Publish/pointer flip is never this module.
@@ -30,8 +30,7 @@ from typing import Any, Protocol
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"
 BATCH_KINDS = frozenset({"reenrich"})
-# "vps" is the operator ssh alias for the hramatka host (hramatka-api's box;
-# see scripts/config/trails/estate.v1.yaml) — same machine, same allowance.
+# Plan-host tokens kept so occupancy sanitizer can redact them from API output.
 HRAMATKA_ALIASES = frozenset({"hramatka", "vps"})
 ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"}) | HRAMATKA_ALIASES}
 RESULT_SINKS = frozenset({"git", "restic", "both"})
@@ -80,15 +79,6 @@ _HOSTNAME_HINT = re.compile(
     r"(?i)\b(?:[a-z0-9-]+\.)+(?:internal|local|lan|corp|example)\b|\b\d{1,3}(?:\.\d{1,3}){3}\b"
 )
 DEFAULT_TIMEOUT_SECONDS = 86400
-DEFAULT_RUN_ROOT = "/home/ops/atlas-runner"
-# hramatka's work root is separate from its teacher-facing /opt/hramatka and
-# /srv trees — reenrich jobs never touch those. Dir does not exist yet on the
-# host; submit/launcher mkdir it on first use.
-DEFAULT_HRAMATKA_RUN_ROOT = "/home/ops/atlas-jobs"
-DEFAULT_RUN_ROOTS = {
-    "atlas-runner": DEFAULT_RUN_ROOT,
-    "hramatka": DEFAULT_HRAMATKA_RUN_ROOT,
-}
 DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
 # Same operator env file as ~/.local/bin/learn-ukrainian-backup (launchd wrapper).
 DEFAULT_BACKUP_ENV_FILE = Path.home() / ".secrets" / "learn-ukrainian-backup.env"
@@ -640,12 +630,14 @@ def _canonical_host(host: str | None) -> str:
     return host or "atlas-runner"
 
 
-def _run_root(host: str | None = None) -> Path:
-    override = os.environ.get("ATLAS_RUN_ROOT")
-    if override:
-        return Path(override)
-    canonical = _canonical_host(host)
-    return Path(DEFAULT_RUN_ROOTS.get(canonical, DEFAULT_RUN_ROOT))
+def _run_root(_host: str | None = None) -> Path:
+    # Run root is env-only; plan-host tokens must not select a path.
+    override = os.environ.get("ATLAS_RUN_ROOT", "").strip()
+    if not override:
+        raise ValueError("ATLAS_RUN_ROOT is required")
+    if not override.startswith("/"):
+        raise ValueError("ATLAS_RUN_ROOT must be an absolute path")
+    return Path(override)
 
 
 def _safe_id_token(part: str) -> str:
@@ -675,8 +667,8 @@ def _path_under(root: Path, *parts: str) -> Path:
 def require_safe_workdir(workdir: object, host: str | None = None) -> str:
     """Fail closed for plan/registry workdirs used in path and SSH contexts.
 
-    Rejects ``..``, absolute paths outside ``ATLAS_RUN_ROOT`` / the
-    per-host default run root (see ``DEFAULT_RUN_ROOTS``), and any path
+    Rejects ``..``, absolute paths outside the required ``ATLAS_RUN_ROOT``,
+    and any path
     whose segments are not ``_SAFE_ID`` tokens. Returns a newly constructed
     path from validated tokens (or ``str(resolved)`` for absolute paths
     under the run root), never the original relative ``workdir`` string.
@@ -1303,10 +1295,6 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
         args.append("--no-poll")
     env = os.environ.copy()
     env["ATLAS_RUNNER_HOST"] = host
-    # Forward the per-host default run root so the remote launcher's
-    # REMOTE_REPO derivation (RUN_ROOT/repo) matches the host actually
-    # targeted, not atlas-runner's default, when ATLAS_RUN_ROOT isn't
-    # already set by the caller.
     env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     env["ATLAS_RE_ENRICH_UNIT"] = unit
     env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
@@ -1630,10 +1618,6 @@ def pull(
         workdir = require_safe_workdir(workdir, host=host)
     env = os.environ.copy()
     env["ATLAS_RUNNER_HOST"] = host
-    # Mirror submit(): forward the per-host default run root so the
-    # remote pull resolves workdirs under the host actually targeted
-    # (e.g. /home/ops/atlas-jobs on hramatka), not atlas-runner's
-    # default, when ATLAS_RUN_ROOT isn't already set by the caller.
     env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     if workdir:
         env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir

@@ -364,7 +364,7 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
         "10.0.0.1",
         "2001:db8::1",
         "box.example.com",
-        "/home/ops/job",
+        "/tmp/hidden/job",
     ):
         assert _safe_field(leaked) is None
         assert _safe_field(leaked, role="task_id") is None

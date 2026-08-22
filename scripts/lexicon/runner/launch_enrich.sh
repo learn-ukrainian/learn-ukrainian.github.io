@@ -15,12 +15,16 @@
 #   scripts/lexicon/runner/launch_enrich.sh --stop-after-chunks 2   # smoke
 #   scripts/lexicon/runner/launch_enrich.sh --force-new-run
 #
-# Env overrides:
-#   ATLAS_RUN_ROOT, ATLAS_REPO, ATLAS_WORK_DIR, ATLAS_ENRICH_UNIT,
+# Env:
+#   ATLAS_RUN_ROOT (required), ATLAS_REPO, ATLAS_WORK_DIR, ATLAS_ENRICH_UNIT,
 #   ATLAS_ENRICH_DRIVER, ATLAS_CANDIDATE, ATLAS_SOURCES_DB, ATLAS_KAIKKI_JSON
 set -euo pipefail
 
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  echo "ATLAS_RUN_ROOT is required" >&2
+  exit 2
+fi
+RUN_ROOT="$ATLAS_RUN_ROOT"
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
 UNIT="${ATLAS_ENRICH_UNIT:-atlas-20k-enrich.service}"

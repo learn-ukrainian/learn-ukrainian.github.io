@@ -49,7 +49,7 @@ sections.usage_notes = { items[{title?, text, source, source_url}], source }  # 
 
 ### Disk / deploy hygiene
 
-- Mass re-enrich on VPS atlas-runner
+- Mass re-enrich on a configured runner host
 - Reap worktrees/temps after each large job; keep ≥15% free when possible
 - No sealed formal CF / multi-GB lu-review trees
 - Publish shard pointer only with integrity hashes + residual metrics

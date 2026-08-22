@@ -477,7 +477,12 @@ def _run(args: argparse.Namespace) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
-    parser.add_argument("--work-dir", type=Path, default=Path("/home/ops/atlas-runner/run-20k"))
+    parser.add_argument(
+        "--work-dir",
+        type=Path,
+        required=True,
+        help="Runner work-dir (required; no baked default).",
+    )
     parser.add_argument(
         "--cohort",
         type=Path,
