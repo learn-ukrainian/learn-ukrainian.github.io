@@ -529,6 +529,7 @@ def test_runner_script_rejects_missing_sha() -> None:
         ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--nonce", "token123"],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode != 0
     assert "--sha is required" in proc.stderr
@@ -540,6 +541,7 @@ def test_runner_script_rejects_invalid_sha() -> None:
         ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", "invalid-sha", "--nonce", "token123"],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode != 0
     assert "40-character hex string" in proc.stderr
@@ -551,6 +553,7 @@ def test_runner_script_rejects_missing_nonce() -> None:
         ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", TEST_SHA],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode != 0
     assert "--nonce is required" in proc.stderr
@@ -563,6 +566,7 @@ def test_runner_script_rejects_head_sha_mismatch() -> None:
         ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", dummy_sha, "--nonce", "token123", "--build-id", "build-test"],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode != 0
     assert "does not match requested --sha" in proc.stderr or "dirty" in proc.stderr
@@ -661,6 +665,7 @@ def test_runner_script_help_flag() -> None:
         ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--help"],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode == 0
     assert "Usage:" in proc.stdout
@@ -730,6 +735,7 @@ def test_runner_script_rejects_shard_count_collapse() -> None:
         ],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode != 0
     assert "--shard-count must be 4" in proc.stderr
@@ -1016,6 +1022,7 @@ def test_runner_script_rejects_regex_metachar_nonce() -> None:
         ],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode != 0
     assert "--nonce must match ^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" in proc.stderr
@@ -1033,6 +1040,7 @@ def test_runner_script_rejects_path_nonce() -> None:
             ],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         assert proc.returncode != 0, f"nonce {bad_nonce!r} was accepted"
         assert "--nonce must match" in proc.stderr
@@ -1049,6 +1057,7 @@ def test_runner_script_rejects_missing_build_id() -> None:
         ],
         capture_output=True,
         text=True,
+        timeout=30,
         env=env,
     )
     assert proc.returncode != 0
@@ -1067,6 +1076,7 @@ def test_runner_script_rejects_empty_build_id() -> None:
             ],
             capture_output=True,
             text=True,
+            timeout=30,
         )
         assert proc.returncode != 0, f"build_id {bad_build_id!r} was accepted"
         assert "--build-id is required and cannot be empty" in proc.stderr
@@ -1086,6 +1096,7 @@ def test_dirty_tree_filter_nonce_regex_injection_cannot_hide_dirty_file(tmp_path
         input=porcelain,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode == 0
     # Every dirty line must survive the filter (nothing is allowlisted by 'x|.*'
@@ -1112,6 +1123,7 @@ def test_dirty_tree_filter_allowlists_only_untracked_nonce_prefix(tmp_path: Path
         input=allowlisted + reported,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert proc.returncode == 0
     assert "?? artifacts/token123/pytest-shard-1/main.log" not in proc.stdout
