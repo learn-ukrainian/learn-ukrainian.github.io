@@ -1436,7 +1436,11 @@ jobs:
     name: CI Gate
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: always()
+    # When cancel-in-progress aborts a PR run, Gate must not start and must
+    # not fail-close the superseded SHA; the new head run is the merge
+    # signal (#7136). merge_group keeps cancel-in-progress false so Gate
+    # still always evaluates live merge candidates.
+    if: always() && !cancelled()
     needs:
       - ruff
       - landing-class
