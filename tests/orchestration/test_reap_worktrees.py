@@ -2114,3 +2114,66 @@ def test_unreadable_branch_query_retains_in_the_legacy_class(
 
     assert result.action != "removed", f"deleted on an unreadable PR response: {result.reason}"
     assert worktree.exists()
+
+
+def _build_branch_reason(tmp_path: Path, **kwargs: Any) -> str | None:
+    repo = init_repo(tmp_path)
+    info = rw.WorktreeInfo(path=repo, branch="build/a1-demo", head="abc", detached=False)
+    return rw._qualifying_reason(
+        repo_root=repo,
+        info=info,
+        build_age_hours=24.0,
+        now=time.time(),
+        active_ids=set(),
+        safe_only=False,
+        merged_pr_only=False,
+        include_terminal_dispatches=False,
+        **kwargs,
+    )
+
+
+def test_aged_build_worktree_is_not_reaped_under_an_unknown_pr_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The build-age return carries no ancestry or remote-reachability
+    precondition, so age alone is not evidence the work is safe to destroy.
+
+    Under `--apply --legacy-classes` a failed PR query did not take the early
+    retain path, and this return fired before any PR guard -- deleting an aged
+    build/* worktree that may have had an unseen OPEN PR.
+    """
+    monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
+
+    assert _build_branch_reason(tmp_path, pr_state=None, pr_unknown=True) is None
+
+
+def test_aged_build_worktree_is_not_reaped_while_a_pr_is_open(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Pre-existing, independent of the unknown-state case: this return
+    ignored pr_state entirely, so an aged build/* worktree was reaped even
+    when an OPEN PR was plainly visible."""
+    monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
+    open_pr = rw.PullRequestState(number=5, state="OPEN", head_sha="abc")
+
+    assert _build_branch_reason(tmp_path, pr_state=open_pr, pr_unknown=False) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "pr_state"),
+    [
+        ("no PR at all", None),
+        ("merged PR", rw.PullRequestState(number=5, state="MERGED", head_sha="zzz")),
+        ("closed PR", rw.PullRequestState(number=5, state="CLOSED", head_sha="zzz")),
+    ],
+)
+def test_aged_build_worktree_is_still_reaped_when_no_pr_is_open(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str, pr_state
+) -> None:
+    """The guard must not make aged build worktrees unreapable."""
+    monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
+
+    reason = _build_branch_reason(tmp_path, pr_state=pr_state, pr_unknown=False)
+
+    assert reason is not None, label
+    assert "build branch age" in reason

@@ -730,7 +730,16 @@ def _qualifying_reason(
             return f"{pr_label} CLOSED"
 
     if info.branch is not None and not safe_only:
-        if info.branch.startswith("build/"):
+        # Age alone is not evidence the work is safe to destroy: this return
+        # carries no ancestry or remote-reachability precondition. It must
+        # therefore respect PR state exactly like the origin-tip return below
+        # -- it deleted an aged build/* worktree both under an UNKNOWN PR
+        # response and, before that, under a plainly KNOWN OPEN PR.
+        if (
+            info.branch.startswith("build/")
+            and not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+        ):
             age_hours = _worktree_age_hours(info.path, now=now)
             if age_hours is not None and age_hours > build_age_hours:
                 return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
