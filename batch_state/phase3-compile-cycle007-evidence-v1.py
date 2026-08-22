@@ -29,7 +29,27 @@ MCP_START_TIMEOUT_SECONDS = 15.0
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
+from scripts.projects.open_model_data import (
+    phase3_cycle007_evidence_compiler as compiler,
+)
+from scripts.projects.open_model_data import (
+    phase3_cycle007_evidence_contract as evidence_contract,
+)
+from scripts.projects.open_model_data import (
+    phase3_cycle007_materializer as materializer,
+)
+
+_CONTRACT_FAILURE_CODES = {
+    "source_binding_drift": "compile_source_binding_drift",
+    "manifest_binding_drift": "compile_manifest_binding_drift",
+    "custody_binding_drift": "compile_custody_binding_drift",
+    "packet_order_failure": "compile_packet_order_failure",
+    "packet_binding_drift": "compile_packet_binding_drift",
+    "source_content_binding_drift": "compile_source_content_binding_drift",
+    "label_leak_detected": "compile_label_leak_detected",
+    "identity_uniqueness_failure": "compile_identity_uniqueness_failure",
+    "ordered_identity_commitment_failure": "compile_ordered_identity_commitment_failure",
+}
 
 
 class RunnerError(ValueError):
@@ -69,8 +89,11 @@ def _validate_paths(package: Path, source_manifest: Path, output: Path) -> tuple
         raise RunnerError("package_invalid")
     if _lstat_mode(package) != 0o700:
         raise RunnerError("package_mode_invalid")
-    if source_manifest != package / "manifest.json":
+    if source_manifest == package / "manifest.json" or source_manifest.name != "label-manifest.json":
         raise RunnerError("source_manifest_path_invalid")
+    source_parent = source_manifest.parent
+    if source_parent.is_symlink() or not source_parent.is_dir() or _lstat_mode(source_parent) != 0o700:
+        raise RunnerError("source_manifest_parent_invalid")
     if source_manifest.is_symlink() or not source_manifest.is_file():
         raise RunnerError("source_manifest_invalid")
     if _lstat_mode(source_manifest) != 0o600:
@@ -218,7 +241,7 @@ def _compile(package: Path, source_manifest: Path, output: Path, endpoint: str) 
     except RunnerError:
         raise
     except Exception as exc:
-        raise RunnerError("compile_failed") from exc
+        raise RunnerError(_compile_failure_code(exc)) from exc
     finally:
         _stop_reviewed_sources_server(process)
     try:
@@ -232,6 +255,19 @@ def _compile(package: Path, source_manifest: Path, output: Path, endpoint: str) 
         }
     except (KeyError, TypeError) as exc:
         raise RunnerError("compile_receipt_invalid") from exc
+
+
+def _compile_failure_code(exc: Exception) -> str:
+    """Reduce compiler failures to a closed code without exposing exception text."""
+    if isinstance(exc, compiler.McpTransportError):
+        return "compile_sources_transport_failed"
+    if isinstance(exc, compiler.LocalMcpSourcesClientError):
+        return "compile_sources_client_failed"
+    if isinstance(exc, materializer.MaterializationError):
+        return "compile_materialization_failed"
+    if isinstance(exc, evidence_contract.EvidenceContractError):
+        return _CONTRACT_FAILURE_CODES.get(str(exc), "compile_evidence_contract_failed")
+    return "compile_failed"
 
 
 def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
