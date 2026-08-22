@@ -47,7 +47,7 @@ REQUIRED_CODE_PATHS = {
     "grok_runner": HERE / "phase3-run-cycle007-grok-label-provider-batch-v1.py",
     "compare_runner": HERE / "phase3-compare-cycle007-dual-labels-v1.py",
     "audit_runner": HERE / "phase3-audit-cycle007-consensus-v1.py",
-    "adjudicate_runner": HERE / "phase3-adjudicate-cycle007-dual-labels-v1.py",
+    "adjudicate_runner": HERE / "phase3-run-cycle007-dual-label-adjudication-v1.py",
     "resolve_runner": HERE / "phase3-apply-cycle007-operator-resolutions-v1.py",
     "certify_runner": HERE / "phase3-verify-cycle007-label-completion-v1.py",
 }
