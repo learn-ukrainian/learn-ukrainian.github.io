@@ -213,6 +213,21 @@ async function safeFetch(path) {
   }
 }
 
+function taskTouchedToday(task) {
+  if (!task || !task.started_at) return false;
+  const start = new Date(task.started_at);
+  const now = new Date();
+  const sameDay = (d) => d && !Number.isNaN(d.getTime())
+    && d.getFullYear() === now.getFullYear()
+    && d.getMonth() === now.getMonth()
+    && d.getDate() === now.getDate();
+  if (sameDay(start)) return true;
+  if (typeof task.duration_s === 'number' && !Number.isNaN(start.getTime())) {
+    return sameDay(new Date(start.getTime() + task.duration_s * 1000));
+  }
+  return false;
+}
+
 function setStat(id, text) {
   const el = document.getElementById(id);
   if (el) el.textContent = text || '';
@@ -392,7 +407,11 @@ async function loadStats() {
     const tasks = delegate.tasks || [];
     const active = tasks.filter(task => task.status === 'running' || task.status === 'spawning').length;
     const zombies = tasks.filter(task => task.status === 'zombie').length;
-    setStat('card-stat-delegate', zombies ? `${active} active · ${zombies} zombie` : `${active} active`);
+    const finishedToday = tasks.filter(task => ['done', 'failed'].includes(task.status) && taskTouchedToday(task)).length;
+    const parts = [`${active} active`];
+    if (zombies) parts.push(`${zombies} zombie`);
+    if (!active && finishedToday) parts.push(`${finishedToday} finished today`);
+    setStat('card-stat-delegate', parts.join(' · '));
   }
 
   if (buildEvents) {
