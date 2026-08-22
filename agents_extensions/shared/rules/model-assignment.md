@@ -28,6 +28,26 @@ Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degra
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
 
+### Wave 1 CF SCORECARD fold (provisional, 2026-08-23)
+
+Operator/CTO GO 2026-08-23. Letter grades are **advisory labels** on the existing
+`quality_tiers` — not a parallel ranking and not a `reviewed_on` refresh. **Hold
+merge / do not jump MQ ahead of Foundry #7102.**
+
+| Seat | Provisional lock | Catalog tier (unchanged) | Wave 1 CF evidence |
+| --- | --- | --- | --- |
+| Fable (`claude-fable-5`) | **S+** | `frontier_authority` | operator lock (no Wave 1 public CF cell required) |
+| `gpt-5.6-sol` / Codex | **A** / hard advisory; careful/small, thorough — not a speed winner | `frontier_authority` | #7142 thorough/confirmational on docs |
+| Grok (`grok-4.6`) | **≥B, NOT C** — do not demote | `frontier_practical` | #7133 pass with nits; residual-positional finding |
+| Kimi (native `kimi` CLI) | strong root-cause; densest useful CI nits | `frontier_practical` | #7143 pass with nits |
+| AGY (`gemini-3.7-flash-high`) | fast scoped CF | `frontier_practical` | #7137 pass, wall ~47s, low noise, concrete finding |
+| GLM-5.3 | ships-heavier; **LOCAL-ONLY** (zai-coding-plan) | `frontier_practical` | #7144 pass with nits; solid root-cause; also #7121 fetch refspecs |
+
+OpenRouter remains **mainly Pool + Gemma**. Kimi / Gemini (AGY) / GLM subscribed seats
+**never** route through OpenRouter. Do not reopen Kimi-OpenRouter; keep the native
+`kimi` CLI. This fold does not change review ladders, formal-eligibility bits, or
+`reviewed_on` (2026-08-16) — notes and strengths only.
+
 **Unknown-Auto AUTHORS (Cursor Auto) — allowlist-union family (#6955):** when the author ran
 `cursor:auto` and reports `resolved_model=unknown`, the resolver attributes the author to the
 **allowlist-union family {xAI, Moonshot}** (`grok-4.6` [xAI] | `composer-2.5` [Moonshot]) instead
@@ -124,13 +144,15 @@ or count as a formal review.
   **`kimi-code/k3`** (aliases `k3`) @ high/max = **advisory/complex only** (long-context /
   consequential). Do not burn full-K3 on routine queue when k3-256k fits. Outside Moonshot
   lineage for CF of non-Moonshot authors; Composer shares Moonshot lineage conservatively.
+  Native `kimi` CLI only — never OpenRouter (Wave 1 fold + #7142).
 * **glm / Z.AI** (operator 2026-08-08 / #6468): **keep and use** — first-class rotation member
   (`glm-5.3` @ high default / max advisory, z.ai Coding Plan). Prefer the **z.ai account** over any legacy GLM account.
-  Rails unchanged: **LOCAL-ONLY**, bridge-diff, never CI/sensitive. Route everyday local-rail
+  Rails unchanged: **LOCAL-ONLY**, bridge-diff, never CI/sensitive, **never OpenRouter**. Route everyday local-rail
   code/security/coherence work here when the 5h or monthly window has headroom.
 * **OpenRouter** (operator 2026-08-08): **mainly Pool + Gemma access.** Can reach more models;
   **we do not need to** — prefer native/first-party seats. Not a general multi-model bus.
   **Never** a Kimi K3 worker bus (`kimi` / `kimicc` / `kimi-code/k3*` stay `native_kimi` only).
+  Gemini (AGY) / GLM subscribed seats never OpenRouter.
 * **ox-alpha / OpenRouter stealth** (operator 2026-08-23, #6943): cataloged as
   `openrouter/stealth/ox-alpha` at **workhorse tier** (`frontier_practical`) with
   `lifecycle: hold` — **LOCAL-ONLY local shadow/compare seat only**; probe via
@@ -439,7 +461,7 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 | **Native CLIs** (claude, codex, cursor, grok, kimi, agy) | default dispatch + ask for those families | Kimi workers: native `kimi` CLI subscription path only — never OpenRouter |
 | **DeepSeek first-party** (`deepseek-direct` / Hermes) | all DeepSeek work (`deepseek-v4-flash` only) | `openrouter/deepseek/*` is guard-REFUSED |
 | **Z.AI / opencode glm** | `glm-5.3` @ high (advisory max) LOCAL-ONLY reviews | general multi-model fallback |
-| **OpenRouter** | **mainly Pool + Gemma access** when that is the named path | **not** a general multi-model bus; **not** a Kimi K3 worker bus (`kimi`/`kimicc`/`kimi-code/k3*` = `native_kimi` only) |
+| **OpenRouter** | **mainly Pool + Gemma access** when that is the named path | **not** a general multi-model bus; **not** a Kimi K3 worker bus (`kimi`/`kimicc`/`kimi-code/k3*` = `native_kimi` only); never Gemini (AGY) / GLM subscribed seats |
 | **Cursor multi-model pin** | Fable/Grok **availability fallback** only when native dark; Composer 2.5 when family pin required | formal CF as `auto`; quality escalate disguised as pin |
 
 After merge: reap worktrees and free branch holds so the next free lane can attach (`reap_worktrees`,
