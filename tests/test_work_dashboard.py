@@ -293,3 +293,12 @@ def test_work_page_actionable_predicate_behavioral_js_parity():
     # Explicit kill for the boolean-inversion residual the substring scan misses.
     assert expected[fixtures.index({"health": "ON_TRACK", "safe_next_action": {"code": "NONE"}})] is False
     assert expected[fixtures.index({"health": "ON_TRACK", "safe_next_action": {"code": "MERGE_WHEN_READY"}})] is True
+
+
+def test_work_page_actionable_honesty_banner_contract():
+    """#7084: Actionable default provides honesty banner and switch to all view."""
+    html = WORK.read_text(encoding="utf-8")
+    assert 'id="actionable-banner"' in html
+    assert "renderActionableBanner" in html
+    assert "actionable-view-all-link" in html
+    assert "filteredCount" in html
