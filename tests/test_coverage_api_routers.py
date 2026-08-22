@@ -870,9 +870,16 @@ class TestAdminHealth:
         assert set(data) >= {"status", "timestamp", "uptime_seconds", "broker", "disk"}
 
 
-# NOTE: TestAdminDiskUsage moved to tests/test_admin_disk_usage_opsec.py so
-# the pytest fastlane can collect it without importing the optional pymupdf
-# dependency used by TestPDFPool below.
+class TestAdminDiskUsage:
+    """Tests for /api/admin/disk-usage endpoint."""
+
+    def test_disk_usage(self, admin_client, mock_project_root):
+        # Create some files
+        (mock_project_root / "data" / "textbook_images" / "test.png").write_bytes(b"x" * 100)
+        r = admin_client.get("/api/admin/disk-usage")
+        data = r.json()
+        assert "breakdown" in data
+        assert data["total_bytes"] >= 0
 
 
 class TestAdminMaintenance:
