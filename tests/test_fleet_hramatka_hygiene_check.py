@@ -336,37 +336,166 @@ def test_open_pr_exemption_is_per_branch_not_blanket(hermetic_repo) -> None:
 
 
 def test_unknown_pr_state_still_counts_the_worktree(hermetic_repo) -> None:
-    """The exemption needs a PROVABLE open PR. An unreachable/failing probe
+    """The exemption needs a PROVABLE open PR. A probe that cannot confirm one
     must not excuse a worktree — this gate never passes on a guess."""
     repo_root, tasks_dir = hermetic_repo
     worktree = _add_dispatch_worktree(repo_root, "kimi", "unknown-pr-task")
     _write_task_state(tasks_dir, "unknown-pr-task", "done", worktree)
 
-    def _probe_blows_up(_repo_root: Path, _branch: str | None) -> bool:
-        return False  # what _branch_has_open_pr returns on any failure
-
     receipt = hygiene.hygiene_check(
         reader=_reader_clean(),
-        **_base_kwargs(repo_root, tasks_dir, open_pr_probe=_probe_blows_up),
+        **_base_kwargs(repo_root, tasks_dir, open_pr_probe=_no_open_prs),
     )
 
     assert receipt["status"] == "stale"
     assert [z["task_id"] for z in receipt["zombie_worktrees"]] == ["unknown-pr-task"]
 
 
-def test_branch_probe_fails_closed_on_subprocess_error(monkeypatch, tmp_path) -> None:
-    """_branch_has_open_pr itself: every failure mode returns False."""
+def test_duplicate_branch_worktrees_are_never_exempted(hermetic_repo) -> None:
+    """One open PR speaks for one checkout. A branch registered by two
+    worktrees leaves both counted, even with an open PR on that branch."""
+    repo_root, tasks_dir = hermetic_repo
+    first = _add_dispatch_worktree(repo_root, "kimi", "dup-task")
+    _write_task_state(tasks_dir, "dup-task", "done", first)
 
-    def _raise(*_args: Any, **_kwargs: Any):
-        raise OSError("gh missing")
+    second = repo_root / ".worktrees" / "dispatch" / "kimi" / "dup-task-copy"
+    _run(["git", "worktree", "add", "--detach", str(second), "kimi/dup-task"], cwd=repo_root)
+    _run(["git", "checkout", "kimi/dup-task", "--ignore-other-worktrees"], cwd=second, check=False)
+    _write_task_state(tasks_dir, "dup-task-copy", "done", second)
 
-    monkeypatch.setattr(hygiene.subprocess, "run", _raise)
-    assert hygiene._branch_has_open_pr(tmp_path, "some/branch") is False
+    receipt = hygiene.hygiene_check(
+        reader=_reader_clean(),
+        **_base_kwargs(repo_root, tasks_dir, open_pr_probe=_open_pr_for("kimi/dup-task")),
+    )
+
+    assert receipt["status"] == "stale"
+    assert "dup-task" in {z["task_id"] for z in receipt["zombie_worktrees"]}
 
 
-def test_branch_probe_returns_false_for_detached_worktree(tmp_path) -> None:
+# --- the real _branch_has_open_pr probe (no injected stand-in) -------------
+
+
+def _gh_result(stdout: str, returncode: int = 0):
+    return subprocess.CompletedProcess(args=[], returncode=returncode, stdout=stdout, stderr="")
+
+
+def _probe_with(monkeypatch, result: Any) -> bool:
+    def _fake_run(*_args: Any, **_kwargs: Any):
+        if isinstance(result, BaseException):
+            raise result
+        return result
+
+    monkeypatch.setattr(hygiene.subprocess, "run", _fake_run)
+    return hygiene._branch_has_open_pr(Path("/nonexistent"), "kimi/some-task")
+
+
+_OPEN_ROW = {
+    "number": 7120,
+    "state": "OPEN",
+    "headRefName": "kimi/some-task",
+    "isCrossRepository": False,
+}
+
+
+def test_probe_true_only_for_a_well_formed_open_same_repo_row(monkeypatch) -> None:
+    assert _probe_with(monkeypatch, _gh_result(json.dumps([_OPEN_ROW]))) is True
+
+
+@pytest.mark.parametrize(
+    ("label", "payload"),
+    [
+        ("empty list", "[]"),
+        ("null body", "null"),
+        ("object not list", "{}"),
+        ("null row", "[null]"),
+        ("empty row", "[{}]"),
+        ("row is a string", '["open"]'),
+        ("malformed json", "not json"),
+        ("empty stdout", ""),
+    ],
+)
+def test_probe_fails_closed_on_untrusted_payloads(monkeypatch, label: str, payload: str) -> None:
+    """`[{}]` and `[null]` are successful-but-untrusted shapes: a partially
+    understood response is an unknown, and unknowns never exempt."""
+    assert _probe_with(monkeypatch, _gh_result(payload)) is False, label
+
+
+@pytest.mark.parametrize(
+    ("label", "row"),
+    [
+        ("closed state", {**_OPEN_ROW, "state": "CLOSED"}),
+        ("merged state", {**_OPEN_ROW, "state": "MERGED"}),
+        ("state missing", {k: v for k, v in _OPEN_ROW.items() if k != "state"}),
+        ("fork head", {**_OPEN_ROW, "isCrossRepository": True}),
+        ("cross-repo unknown", {k: v for k, v in _OPEN_ROW.items() if k != "isCrossRepository"}),
+        ("different branch", {**_OPEN_ROW, "headRefName": "kimi/other-task"}),
+        ("head missing", {k: v for k, v in _OPEN_ROW.items() if k != "headRefName"}),
+        ("number missing", {k: v for k, v in _OPEN_ROW.items() if k != "number"}),
+        ("number not int", {**_OPEN_ROW, "number": "7120"}),
+        ("number bool", {**_OPEN_ROW, "number": True}),
+        ("number non-positive", {**_OPEN_ROW, "number": 0}),
+    ],
+)
+def test_probe_rejects_rows_that_do_not_bind_to_this_branch(monkeypatch, label, row) -> None:
+    """A same-named branch on a fork, or after a force-push/rename, must not
+    excuse a stale local worktree."""
+    assert _probe_with(monkeypatch, _gh_result(json.dumps([row]))) is False, label
+
+
+def test_probe_one_bad_row_poisons_a_good_one(monkeypatch) -> None:
+    payload = json.dumps([_OPEN_ROW, {}])
+    assert _probe_with(monkeypatch, _gh_result(payload)) is False
+
+
+def test_probe_fails_closed_on_nonzero_exit(monkeypatch) -> None:
+    assert _probe_with(monkeypatch, _gh_result(json.dumps([_OPEN_ROW]), returncode=1)) is False
+
+
+def test_probe_fails_closed_on_timeout(monkeypatch) -> None:
+    assert _probe_with(monkeypatch, subprocess.TimeoutExpired(cmd="gh", timeout=1)) is False
+
+
+def test_probe_fails_closed_on_subprocess_error(monkeypatch) -> None:
+    assert _probe_with(monkeypatch, OSError("gh missing")) is False
+
+
+def test_probe_returns_false_for_detached_worktree() -> None:
     """A detached worktree has no branch identity to probe."""
-    assert hygiene._branch_has_open_pr(tmp_path, None) is False
+    assert hygiene._branch_has_open_pr(Path("/nonexistent"), None) is False
+
+
+def test_probe_queries_an_explicit_repository(monkeypatch) -> None:
+    """Without --repo the answer depends on cwd, so a worktree could be
+    excused by a PR in a different repository."""
+    seen: dict[str, Any] = {}
+
+    def _fake_run(cmd: list[str], **_kwargs: Any):
+        seen["cmd"] = cmd
+        return _gh_result("[]")
+
+    monkeypatch.setattr(hygiene.subprocess, "run", _fake_run)
+    hygiene._branch_has_open_pr(Path("/nonexistent"), "kimi/some-task")
+
+    cmd = seen["cmd"]
+    assert "--repo" in cmd
+    assert cmd[cmd.index("--repo") + 1] == hygiene.PUBLIC_REPOSITORY
+    assert cmd[cmd.index("--head") + 1] == "kimi/some-task"
+
+
+def test_registered_worktree_entries_handles_detached_and_flushes_last(hermetic_repo) -> None:
+    """Detached entries carry no branch, and the final entry must still be
+    emitted after the parse loop ends."""
+    repo_root, _tasks_dir = hermetic_repo
+    detached = repo_root / ".worktrees" / "dispatch" / "kimi" / "detached-task"
+    detached.parent.mkdir(parents=True, exist_ok=True)
+    _run(["git", "worktree", "add", "--detach", str(detached)], cwd=repo_root)
+
+    entries = hygiene._registered_worktree_entries(repo_root)
+
+    assert entries is not None
+    by_name = {path.name: branch for path, branch in entries}
+    assert by_name["detached-task"] is None
+    assert len(entries) == len({path for path, _ in entries})
 
 
 def test_registered_worktree_entries_reports_branches(hermetic_repo) -> None:

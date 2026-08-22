@@ -77,8 +77,13 @@ handoff:
   A terminal-task worktree whose branch still has an **open PR** is not
   counted: `post_task_reap` deliberately retains that worktree, so counting it
   would hold the gate at `stale` for as long as any lane has a PR in flight.
-  The exemption requires a *provable* open PR — an unreachable `gh` leaves the
-  worktree counted, because this gate never passes on an unknown.
+  The exemption is deliberately narrow and fails closed — the worktree stays
+  counted unless the PR is *provably* open, in this repository, on exactly
+  that branch head, and not a fork. An unreachable `gh`, a non-zero exit, or
+  any row the gate cannot fully parse is an unknown, and unknowns never
+  exempt. A branch registered by **two** worktrees is never exempted either:
+  one PR speaks for one checkout, so the duplicates are exactly the stale
+  copies this gate exists to surface.
 - **unknown** (exit 2) — GitHub was unreachable for the public epic or the
   private board. This is never a pass.
 

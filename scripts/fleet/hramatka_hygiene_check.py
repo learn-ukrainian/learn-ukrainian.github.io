@@ -208,24 +208,56 @@ def _branch_has_open_pr(
     repo_root: Path,
     branch: str | None,
     *,
+    repo: str = PUBLIC_REPOSITORY,
     timeout: float = GH_TIMEOUT_SECONDS,
 ) -> bool:
-    """Return True only when ``branch`` provably has an OPEN PR.
+    """Return True only when ``branch`` provably has an OPEN same-repo PR.
 
     Mirrors the PR-3 reaper's retention rule (``post_task_reap`` retains a
     bound worktree whose branch still has an open PR) without importing it,
     per this module's deliberate no-hard-dependency design.
 
     Fail-closed for this gate, which is the opposite direction from the
-    reaper: an unknown PR state returns False, so the worktree stays counted
-    as an orphan.  The gate must never hand out a verified-clean handoff on a
-    guess -- an unreachable ``gh`` cannot excuse a worktree.
+    reaper: ANY doubt returns False and the worktree stays counted.  The gate
+    must never hand out a verified-clean handoff on a guess.  Concretely,
+    every one of these counts the worktree rather than excusing it:
+
+    * no branch identity (a detached worktree);
+    * ``gh`` missing, timing out, or exiting non-zero;
+    * output that is not JSON, or not a JSON list;
+    * a list containing anything that is not an object (``[null]``);
+    * a row missing/!= ``state == "OPEN"``;
+    * a row whose ``headRefName`` is not exactly this branch;
+    * a cross-repository (fork) head;
+    * a row without a positive integer ``number``.
+
+    A single malformed row poisons the whole answer -- a partially
+    understood response is an unknown, and unknowns do not exempt.
+
+    Deliberately NOT required: that the PR head OID equals the local
+    worktree HEAD.  A worktree legitimately sits ahead of or behind its
+    pushed PR head, so demanding equality would recreate the unpassable-gate
+    bug this change fixes, in a new form.  Branch identity plus a same-repo
+    head is the binding that answers the actual question -- is this worktree
+    still serving an open PR?
     """
     if not branch:
         return False
     try:
         proc = subprocess.run(
-            ["gh", "pr", "list", "--head", branch, "--state", "open", "--json", "number"],
+            [
+                "gh",
+                "pr",
+                "list",
+                "--repo",
+                repo,
+                "--head",
+                branch,
+                "--state",
+                "open",
+                "--json",
+                "number,state,headRefName,isCrossRepository",
+            ],
             cwd=repo_root,
             capture_output=True,
             text=True,
@@ -240,7 +272,24 @@ def _branch_has_open_pr(
         rows = json.loads(proc.stdout or "[]")
     except json.JSONDecodeError:
         return False
-    return isinstance(rows, list) and len(rows) > 0
+    if not isinstance(rows, list):
+        return False
+
+    matched = False
+    for row in rows:
+        if not isinstance(row, dict):
+            return False
+        number = row.get("number")
+        if not isinstance(number, int) or isinstance(number, bool) or number <= 0:
+            return False
+        if row.get("state") != "OPEN":
+            return False
+        if row.get("isCrossRepository") is not False:
+            return False
+        if row.get("headRefName") != branch:
+            return False
+        matched = True
+    return matched
 
 
 def _is_under_dispatch_worktrees(path: Path, dispatch_root: Path) -> bool:
@@ -308,6 +357,15 @@ def _detect_zombie_worktrees(
     if entries is None:
         return [], False
 
+    # A branch registered by more than one worktree cannot be excused by a
+    # single open PR: the PR speaks for one checkout, so the duplicates are
+    # exactly the stale copies this gate exists to surface. Fail closed and
+    # let every one of them be counted.
+    branch_counts: dict[str, int] = {}
+    for _path, branch in entries:
+        if branch:
+            branch_counts[branch] = branch_counts.get(branch, 0) + 1
+
     index = _task_state_index(tasks_dir)
     zombies: list[dict[str, Any]] = []
     for worktree, branch in entries:
@@ -320,7 +378,8 @@ def _detect_zombie_worktrees(
         status_str = str(status) if status is not None else None
         if status_str not in _TERMINAL_STATUSES:
             continue
-        if open_pr_probe(repo_root, branch):
+        duplicated = bool(branch) and branch_counts.get(branch, 0) > 1
+        if not duplicated and open_pr_probe(repo_root, branch):
             continue
         zombies.append(
             {
