@@ -174,11 +174,15 @@ function renderSummary(payload) {
     const totals = data.totals || {};
     const active = key === activeWindow ? ' style="border-color:var(--red)"' : '';
     const label = key === 'all_time' ? 'All-time' : key === 'last_7_days' ? 'Last 7 days' : 'Last 30 days';
+    const runtimeNote = data.ledger_empty
+      ? `<div class="muted" style="color:var(--yellow)">ledger empty · ${fmtInt(data.runtime_calls_total)} runtime call(s) not costed</div>`
+      : `<div class="muted">${fmtInt(data.runtime_calls_total)} runtime call(s) recorded</div>`;
     return `<div class="stat"${active}>
       <div class="label">${label}</div>
       <div class="value">${fmtCost(totals.cost_usd_est)}</div>
       <div class="muted">${fmtInt(totals.prompt_tokens_est)} prompt est. · ${fmtInt(totals.response_tokens_est)} output est.</div>
       <div class="muted">${totals.calls || 0} call(s)</div>
+      ${runtimeNote}
     </div>`;
   }).join('');
 }
