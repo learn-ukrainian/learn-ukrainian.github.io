@@ -127,6 +127,9 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
     manifest_p = pkg / "manifest.json"
     manifest_p.write_text(json.dumps(manifest, sort_keys=True) + "\n")
     manifest_p.chmod(0o600)
+    manifest["receipt_sha256"] = compare_mod.digest(compare_mod.canonical(manifest))
+    manifest_p.write_text(json.dumps(manifest, sort_keys=True) + "\n")
+    manifest_p.chmod(0o600)
 
     # Evidence setup
     evidence_dir = pkg / "evidence"
@@ -277,7 +280,16 @@ def _make_fixture_package(tmp_path: Path, *, clean_rows=2, residual_rows=2, is_n
                 "packet_binding": res_sidecar["packet_binding"],
             },
         ],
-        "source_package_binding": None,
+        "source_package_binding": {
+            "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+            "custody_receipt_raw_sha256": compare_mod.digest(custody_p.read_bytes()),
+            "materialization_manifest_sha256": manifest["receipt_sha256"],
+            "ordered_identity_commitment_sha256": manifest["ordered_identity_commitment_sha256"],
+            "identity_union_commitment_sha256": manifest["identity_union_commitment_sha256"],
+            "ordered_packet_commitment_sha256": manifest["ordered_packet_commitment_sha256"],
+            "packet_count": manifest["packet_count"],
+            "row_count": manifest["row_count"],
+        },
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_manifest_p = evidence_dir / "manifest.json"
@@ -301,25 +313,56 @@ def _setup_provider_labels(pkg: Path, lane: str, index: int, grok_labels: list, 
 
         packet_p = pkg / lane / f"packet-{index:04d}.json"
         packet_contents = compare_mod.read(packet_p, "packet")
+        evidence_manifest = compare_mod.read(pkg / "evidence" / "manifest.json", "evidence manifest")
+        sidecar_entry = next(
+            entry
+            for entry in evidence_manifest["sidecars"]
+            if entry["lane"] == lane
+            and entry["packet_binding"]["raw_sha256"] == compare_mod.digest(packet_p.read_bytes())
+        )
+        sidecar_p = pkg / "evidence" / f"sidecar-{sidecar_entry['packet_index']:04d}.json"
+        raw_manifest_p = out / f"raw-manifest-{index:04d}.json"
+        raw_manifest_p.write_text(json.dumps({"synthetic": provider["root"]}, sort_keys=True) + "\n")
+        raw_manifest_p.chmod(0o600)
         receipt = {
             "schema_version": schema_name,
             "evaluation_cycle_id": compare_mod.CYCLE,
             "amendment_sha256": compare_mod.AMENDMENT_SHA256,
             "custody_receipt_raw_sha256": compare_mod.digest((pkg / "custody-receipt.json").read_bytes()),
-            "source_label_manifest_raw_sha256": compare_mod.SOURCE_MANIFEST_SHA256,
-            "manifest_raw_sha256": compare_mod.digest((pkg / "manifest.json").read_bytes()),
+            "materialization_manifest_raw_sha256": compare_mod.digest((pkg / "manifest.json").read_bytes()),
+            "evidence_manifest_raw_sha256": compare_mod.digest((pkg / "evidence" / "manifest.json").read_bytes()),
             "lane": lane,
             "packet_index": index,
             "row_count": len(labels),
             "packet_raw_sha256": compare_mod.digest(packet_p.read_bytes()),
             "packet_identity_set_sha256": packet_contents.get("packet_identity_set_sha256"),
+            "sidecar_raw_sha256": compare_mod.digest(sidecar_p.read_bytes()),
+            "sidecar_id": sidecar_entry["sidecar_id"],
+            "raw_manifest_sha256": compare_mod.digest(raw_manifest_p.read_bytes()),
             "labels_sha256": compare_mod.digest(lbl_p.read_bytes()),
             "exact_model": provider["exact_model"],
             "model_family": provider["model_family"],
             "harness": provider["harness"],
-            "attempt_count": 1,
             "text_free": True,
         }
+        if provider is compare_mod.GROK:
+            raw_p = out / f"raw-{index:04d}.raw"
+            raw_p.write_bytes(b"{}\n")
+            raw_p.chmod(0o600)
+            prompt_p = pkg / "prompts" / f"grok-{'clean' if lane == 'clean_label' else 'residual'}-label.md"
+            prompt_p.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            prompt_p.write_text("synthetic fixture\n")
+            prompt_p.chmod(0o600)
+            receipt.update(
+                {
+                    "response_raw_sha256": compare_mod.digest(raw_p.read_bytes()),
+                    "prompt_path": prompt_p.relative_to(pkg).as_posix(),
+                    "prompt_sha256": compare_mod.digest(prompt_p.read_bytes()),
+                    "attempt_count": 1,
+                }
+            )
+        else:
+            receipt["chunk_count"] = (len(labels) + compare_mod.CHUNK_SIZE - 1) // compare_mod.CHUNK_SIZE
         receipt["receipt_sha256"] = compare_mod.digest(compare_mod.canonical(receipt))
         rcpt_p = out / f"receipt-{index:04d}.json"
         rcpt_p.write_text(json.dumps(receipt, sort_keys=True) + "\n")
@@ -458,6 +501,93 @@ def test_compare_rejects_invalid_evidence_reference(tmp_path):
     with pytest.raises(compare_mod.Error) as exc:
         compare_mod.compare(pkg, "clean_label", 1)
     assert exc.value.failure_code == "evidence_reference_invalid"
+
+
+def test_compare_rejects_missing_source_package_binding(tmp_path):
+    pkg, *_ = _make_fixture_package(tmp_path, clean_rows=1, residual_rows=1)
+    path = pkg / "evidence" / "manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest["source_package_binding"] = None
+    manifest["manifest_sha256"] = contract.sha256_value({k: v for k, v in manifest.items() if k != "manifest_sha256"})
+    path.write_text(json.dumps(manifest, sort_keys=True) + "\n")
+    path.chmod(0o600)
+
+    with pytest.raises(compare_mod.Error) as exc:
+        compare_mod._evidence_manifest(pkg, compare_mod._manifest(pkg))
+    assert exc.value.failure_code == "missing_evidence_sidecar"
+
+
+def test_compare_rejects_omitted_provider_receipt_field(tmp_path):
+    pkg, clean_rows, _, clean_ev, _ = _make_fixture_package(tmp_path, clean_rows=1, residual_rows=1)
+    labels = [
+        {
+            "unit_id": clean_rows[0]["unit_id"],
+            "unit_sha256": clean_rows[0]["unit_sha256"],
+            "decision_code": "agree",
+            "clean_modern_standard_prose": True,
+            "modern_genre_id": "expository_narrative",
+            "evidence_ids": clean_ev[0]["evidence_ids"],
+        }
+    ]
+    _setup_provider_labels(pkg, "clean_label", 1, labels, labels)
+    receipt_path = pkg / compare_mod.GEMINI["root"] / "clean_label" / "receipt-0001.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt.pop("sidecar_id")
+    receipt["receipt_sha256"] = compare_mod.digest(
+        compare_mod.canonical({key: value for key, value in receipt.items() if key != "receipt_sha256"})
+    )
+    receipt_path.write_text(json.dumps(receipt, sort_keys=True) + "\n")
+    receipt_path.chmod(0o600)
+
+    with pytest.raises(compare_mod.Error) as exc:
+        compare_mod.compare(pkg, "clean_label", 1)
+    assert exc.value.failure_code == "label_count_or_envelope_drift"
+
+
+@pytest.mark.parametrize("field", ["sidecar_sha256", "sidecar_id", "packet_binding_raw_sha256"])
+def test_compare_rejects_substituted_sidecar_entry_hash_id_or_packet_binding(tmp_path, field):
+    pkg, *_ = _make_fixture_package(tmp_path, clean_rows=1, residual_rows=1)
+    path = pkg / "evidence" / "manifest.json"
+    manifest = json.loads(path.read_text())
+    if field == "packet_binding_raw_sha256":
+        manifest["sidecars"][0]["packet_binding"]["raw_sha256"] = "0" * 64
+    else:
+        manifest["sidecars"][0][field] = "0" * 64
+    manifest["manifest_sha256"] = contract.sha256_value({k: v for k, v in manifest.items() if k != "manifest_sha256"})
+    path.write_text(json.dumps(manifest, sort_keys=True) + "\n")
+    path.chmod(0o600)
+
+    with pytest.raises(compare_mod.Error) as exc:
+        compare_mod.compare_all(pkg, fixture=True)
+    assert exc.value.failure_code == "missing_evidence_sidecar"
+
+
+@pytest.mark.parametrize("mutate", ["missing", "duplicate"])
+def test_compare_rejects_missing_or_duplicate_row_evidence(tmp_path, mutate):
+    pkg, *_ = _make_fixture_package(tmp_path, clean_rows=2, residual_rows=1)
+    sidecar_path = pkg / "evidence" / "sidecar-0001.json"
+    sidecar = json.loads(sidecar_path.read_text())
+    if mutate == "missing":
+        sidecar["rows"] = sidecar["rows"][:-1]
+        sidecar["row_count"] = 1
+    else:
+        sidecar["rows"][1] = sidecar["rows"][0]
+    sidecar.pop("sidecar_id")
+    sidecar["sidecar_id"] = "cycle007_sidecar:" + contract.sha256_value(sidecar)
+    sidecar_path.write_text(json.dumps(sidecar, sort_keys=True) + "\n")
+    sidecar_path.chmod(0o600)
+    manifest_path = pkg / "evidence" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["sidecars"][0]["sidecar_sha256"] = compare_mod.digest(sidecar_path.read_bytes())
+    manifest["sidecars"][0]["sidecar_id"] = sidecar["sidecar_id"]
+    manifest["sidecars"][0]["row_count"] = sidecar["row_count"]
+    manifest["manifest_sha256"] = contract.sha256_value({k: v for k, v in manifest.items() if k != "manifest_sha256"})
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True) + "\n")
+    manifest_path.chmod(0o600)
+
+    with pytest.raises(compare_mod.Error) as exc:
+        compare_mod.compare_all(pkg, fixture=True)
+    assert exc.value.failure_code == "missing_evidence_sidecar"
 
 
 def test_compare_residual_lane(tmp_path):

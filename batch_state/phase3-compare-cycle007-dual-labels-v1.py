@@ -398,7 +398,32 @@ def _manifest(package: Path, *, strict: bool = False) -> dict[str, Any]:
     return value
 
 
-def _evidence_manifest(package: Path) -> dict[str, Any]:
+def _source_package_binding(
+    custody_bytes: bytes, manifest_bytes: bytes, manifest: Mapping[str, Any], evidence_manifest: Mapping[str, Any]
+) -> None:
+    """Require the evidence compiler's exact live-package custody binding."""
+    binding = evidence_manifest.get("source_package_binding")
+    expected = {
+        "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+        "custody_receipt_raw_sha256": digest(custody_bytes),
+        "materialization_manifest_sha256": manifest.get("receipt_sha256"),
+        "ordered_identity_commitment_sha256": manifest.get("ordered_identity_commitment_sha256"),
+        "identity_union_commitment_sha256": manifest.get("identity_union_commitment_sha256"),
+        "ordered_packet_commitment_sha256": manifest.get("ordered_packet_commitment_sha256"),
+        "packet_count": manifest.get("packet_count"),
+        "row_count": manifest.get("row_count"),
+    }
+    if (
+        not isinstance(binding, dict)
+        or not isinstance(manifest.get("receipt_sha256"), str)
+        or manifest.get("receipt_sha256") != digest(canonical({key: value for key, value in manifest.items() if key != "receipt_sha256"}))
+        or digest(manifest_bytes) == binding.get("materialization_manifest_sha256")
+        or binding != expected
+    ):
+        raise Error("missing_evidence_sidecar")
+
+
+def _evidence_manifest(package: Path, materialization_manifest: dict[str, Any]) -> dict[str, Any]:
     evidence_dir = package / "evidence"
     _directory(evidence_dir, 0o700)
     manifest_path = evidence_dir / "manifest.json"
@@ -409,7 +434,63 @@ def _evidence_manifest(package: Path) -> dict[str, Any]:
         validator.validate_manifest(manifest, expected_identity=expected_identity)
     except validator.EvidenceValidationError as exc:
         raise Error("missing_evidence_sidecar") from exc
+    _source_package_binding(
+        (package / "custody-receipt.json").read_bytes(),
+        (package / "manifest.json").read_bytes(),
+        materialization_manifest,
+        manifest,
+    )
     return manifest
+
+
+def _validate_evidence_coverage(
+    package: Path, materialization_manifest: Mapping[str, Any], evidence_manifest: Mapping[str, Any]
+) -> None:
+    """Bind every manifest packet to one exact indexed sidecar and its rows."""
+    packets = materialization_manifest.get("packets")
+    entries = evidence_manifest.get("sidecars")
+    if not isinstance(packets, list) or not isinstance(entries, list) or len(entries) != len(packets):
+        raise Error("missing_evidence_sidecar")
+    seen_packet_keys: set[tuple[str, int]] = set()
+    seen_sidecar_indexes: set[int] = set()
+    for packet_entry in packets:
+        if not isinstance(packet_entry, dict):
+            raise Error("missing_evidence_sidecar")
+        lane, index = packet_entry.get("lane"), packet_entry.get("packet_index")
+        if not isinstance(lane, str) or not isinstance(index, int) or (lane, index) in seen_packet_keys:
+            raise Error("missing_evidence_sidecar")
+        seen_packet_keys.add((lane, index))
+        packet_path, packet = _packet(package, lane, index, materialization_manifest)
+        binding = {
+            "canonical_basename": packet_path.name,
+            "raw_sha256": digest(packet_path.read_bytes()),
+            "packet_identity_set_sha256": packet.get("packet_identity_set_sha256"),
+        }
+        matches = [entry for entry in entries if isinstance(entry, dict) and entry.get("lane") == lane and entry.get("packet_binding") == binding]
+        if len(matches) != 1:
+            raise Error("missing_evidence_sidecar")
+        entry = matches[0]
+        sidecar_index = entry.get("packet_index")
+        if not isinstance(sidecar_index, int) or sidecar_index < 1 or sidecar_index in seen_sidecar_indexes:
+            raise Error("missing_evidence_sidecar")
+        seen_sidecar_indexes.add(sidecar_index)
+        sidecar_path = package / "evidence" / f"sidecar-{sidecar_index:04d}.json"
+        _regular(sidecar_path, 0o600)
+        sidecar = read(sidecar_path, f"sidecar {sidecar_index}")
+        if (
+            entry.get("row_count") != len(packet.get("rows", []))
+            or entry.get("sidecar_sha256") != digest(sidecar_path.read_bytes())
+            or entry.get("sidecar_id") != sidecar.get("sidecar_id")
+            or sidecar.get("lane") != lane
+            or sidecar.get("packet_binding") != binding
+            or sidecar.get("row_count") != len(packet.get("rows", []))
+            or not isinstance(sidecar.get("rows"), list)
+        ):
+            raise Error("missing_evidence_sidecar")
+        packet_ids = [(row.get("unit_id"), row.get("unit_sha256")) for row in packet["rows"]]
+        sidecar_ids = [(row.get("unit_id"), row.get("unit_sha256")) for row in sidecar["rows"]]
+        if len(packet_ids) != len(set(packet_ids)) or sidecar_ids != packet_ids:
+            raise Error("missing_evidence_sidecar")
 
 
 def _packet(package: Path, lane: str, index: int, manifest_value: dict[str, Any]) -> tuple[Path, dict[str, Any]]:
@@ -439,21 +520,27 @@ def _packet(package: Path, lane: str, index: int, manifest_value: dict[str, Any]
 
 
 def _sidecar(
-    package: Path, lane: str, index: int, evidence_manifest: dict[str, Any]
+    package: Path,
+    lane: str,
+    index: int,
+    packet_path: Path,
+    packet: dict[str, Any],
+    evidence_manifest: dict[str, Any],
 ) -> tuple[Path, dict[str, Any]]:
     matching_entries = [
         entry
         for entry in evidence_manifest["sidecars"]
         if isinstance(entry, dict)
         and entry.get("lane") == lane
-        and entry.get("packet_binding", {}).get("canonical_basename") == f"packet-{index:04d}.json"
+        and entry.get("packet_binding")
+        == {
+            "canonical_basename": packet_path.name,
+            "raw_sha256": digest(packet_path.read_bytes()),
+            "packet_identity_set_sha256": packet.get("packet_identity_set_sha256"),
+        }
     ]
     if len(matching_entries) != 1:
-        lane_entries = [e for e in evidence_manifest["sidecars"] if e.get("lane") == lane]
-        if 1 <= index <= len(lane_entries):
-            matching_entries = [lane_entries[index - 1]]
-        else:
-            raise Error("missing_evidence_sidecar")
+        raise Error("missing_evidence_sidecar")
 
     sidecar_entry = matching_entries[0]
     sidecar_packet_index = sidecar_entry["packet_index"]
@@ -465,6 +552,18 @@ def _sidecar(
         validator.validate_sidecar(sidecar, expected_identity=expected_identity)
     except validator.EvidenceValidationError as exc:
         raise Error("missing_evidence_sidecar") from exc
+    if (
+        sidecar_entry.get("row_count") != len(packet.get("rows", []))
+        or sidecar_entry.get("sidecar_sha256") != digest(sidecar_path.read_bytes())
+        or sidecar_entry.get("sidecar_id") != sidecar.get("sidecar_id")
+        or sidecar.get("packet_binding") != sidecar_entry.get("packet_binding")
+        or sidecar.get("row_count") != len(packet.get("rows", []))
+    ):
+        raise Error("missing_evidence_sidecar")
+    packet_ids = [(row.get("unit_id"), row.get("unit_sha256")) for row in packet.get("rows", [])]
+    sidecar_ids = [(row.get("unit_id"), row.get("unit_sha256")) for row in sidecar.get("rows", [])]
+    if len(packet_ids) != len(set(packet_ids)) or sidecar_ids != packet_ids:
+        raise Error("missing_evidence_sidecar")
     return sidecar_path, sidecar
 
 
@@ -475,6 +574,8 @@ def _receipt_common(
     index: int,
     contents: dict[str, Any],
     packet_path: Path,
+    sidecar_path: Path,
+    sidecar: Mapping[str, Any],
 ) -> tuple[dict[str, Any], Path, Path, dict[str, Any]]:
     out = package / provider["root"] / lane
     _directory(package / provider["root"], 0o700)
@@ -490,13 +591,15 @@ def _receipt_common(
         "evaluation_cycle_id": CYCLE,
         "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
-        "source_label_manifest_raw_sha256": SOURCE_MANIFEST_SHA256,
-        "manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
+        "materialization_manifest_raw_sha256": digest((package / "manifest.json").read_bytes()),
+        "evidence_manifest_raw_sha256": digest((package / "evidence" / "manifest.json").read_bytes()),
         "lane": lane,
         "packet_index": index,
         "row_count": len(contents["rows"]),
         "packet_raw_sha256": digest(packet_path.read_bytes()),
         "packet_identity_set_sha256": contents.get("packet_identity_set_sha256"),
+        "sidecar_raw_sha256": digest(sidecar_path.read_bytes()),
+        "sidecar_id": sidecar.get("sidecar_id"),
         "labels_sha256": digest(labels_path.read_bytes()),
         "exact_model": provider["exact_model"],
         "model_family": provider["model_family"],
@@ -514,16 +617,33 @@ def _verify_grok(
     packet_path: Path,
     sidecar: dict[str, Any],
 ) -> list[dict[str, Any]]:
-    value, labels_path, _receipt_path, common = _receipt_common(GROK, package, lane, index, contents, packet_path)
+    sidecar_path, _bound_sidecar = _sidecar(
+        package, lane, index, packet_path, contents, _evidence_manifest(package, _manifest(package))
+    )
+    value, labels_path, _receipt_path, common = _receipt_common(
+        GROK, package, lane, index, contents, packet_path, sidecar_path, sidecar
+    )
+    raw_path = package / GROK["root"] / lane / f"raw-{index:04d}.raw"
+    raw_manifest_path = package / GROK["root"] / lane / f"raw-manifest-{index:04d}.json"
+    prompt_path = package / "prompts" / f"grok-{'clean' if lane == 'clean_label' else 'residual'}-label.md"
+    _regular(raw_path, 0o600)
+    _regular(raw_manifest_path, 0o600)
+    _regular(prompt_path, 0o600)
     expected = {
         "schema_version": "phase3_cycle007_grok_packet_label_receipt_v1",
         **common,
+        "raw_manifest_sha256": digest(raw_manifest_path.read_bytes()),
+        "response_raw_sha256": digest(raw_path.read_bytes()),
+        "prompt_path": prompt_path.relative_to(package).as_posix(),
+        "prompt_sha256": digest(prompt_path.read_bytes()),
         "attempt_count": value.get("attempt_count"),
     }
-    for key, expected_val in expected.items():
-        if key in value and value.get(key) != expected_val:
-            raise Error("label_count_or_envelope_drift")
-    if value.get("receipt_sha256") != digest(canonical({k: v for k, v in value.items() if k != "receipt_sha256"})):
+    if (
+        value.get("attempt_count") not in {1, 2}
+        or set(value) != set(expected) | {"receipt_sha256"}
+        or any(value.get(key) != expected_value for key, expected_value in expected.items())
+        or value.get("receipt_sha256") != digest(canonical(expected))
+    ):
         raise Error("label_count_or_envelope_drift")
     labels = read(labels_path, "grok labels")
     if not isinstance(labels, dict) or "labels" not in labels or not isinstance(labels["labels"], list):
@@ -548,15 +668,25 @@ def _verify_gemini(
     packet_path: Path,
     sidecar: dict[str, Any],
 ) -> list[dict[str, Any]]:
-    value, labels_path, _receipt_path, common = _receipt_common(GEMINI, package, lane, index, contents, packet_path)
+    sidecar_path, _bound_sidecar = _sidecar(
+        package, lane, index, packet_path, contents, _evidence_manifest(package, _manifest(package))
+    )
+    value, labels_path, _receipt_path, common = _receipt_common(
+        GEMINI, package, lane, index, contents, packet_path, sidecar_path, sidecar
+    )
+    raw_manifest_path = package / GEMINI["root"] / lane / f"raw-manifest-{index:04d}.json"
+    _regular(raw_manifest_path, 0o600)
     expected = {
         "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
         **common,
+        "raw_manifest_sha256": digest(raw_manifest_path.read_bytes()),
+        "chunk_count": (len(contents["rows"]) + CHUNK_SIZE - 1) // CHUNK_SIZE,
     }
-    for key, expected_val in expected.items():
-        if key in value and value.get(key) != expected_val:
-            raise Error("label_count_or_envelope_drift")
-    if value.get("receipt_sha256") != digest(canonical({k: v for k, v in value.items() if k != "receipt_sha256"})):
+    if (
+        set(value) != set(expected) | {"receipt_sha256"}
+        or any(value.get(key) != expected_value for key, expected_value in expected.items())
+        or value.get("receipt_sha256") != digest(canonical(expected))
+    ):
         raise Error("label_count_or_envelope_drift")
     labels = read(labels_path, "gemini labels")
     if not isinstance(labels, dict) or "labels" not in labels or not isinstance(labels["labels"], list):
@@ -579,11 +709,15 @@ def inputs(
     index: int,
     manifest_value: dict[str, Any] | None = None,
     evidence_manifest: dict[str, Any] | None = None,
+    *,
+    verify_coverage: bool = True,
 ) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], list[dict[str, Any]]]:
     val = manifest_value or _manifest(package)
-    ev_val = evidence_manifest or _evidence_manifest(package)
+    ev_val = evidence_manifest or _evidence_manifest(package, val)
+    if verify_coverage:
+        _validate_evidence_coverage(package, val, ev_val)
     packet_path, contents = _packet(package, lane, index, val)
-    _sidecar_path, sidecar = _sidecar(package, lane, index, ev_val)
+    _sidecar_path, sidecar = _sidecar(package, lane, index, packet_path, contents, ev_val)
     grok = _verify_grok(package, lane, index, contents, packet_path, sidecar)
     gemini = _verify_gemini(package, lane, index, contents, packet_path, sidecar)
     if len(grok) != len(gemini) or len(grok) != len(contents["rows"]):
@@ -613,7 +747,9 @@ def compare(
             right.get("unit_sha256"),
         ) != identity:
             raise Error("identity_or_order_drift")
-        row_ev = sidecar_by_id[identity]
+        row_ev = sidecar_by_id.get(identity)
+        if row_ev is None:
+            raise Error("missing_evidence_sidecar")
 
         if semantic(left) == semantic(right):
             is_risk, reasons = is_risk_triggered(source, row_ev, left, right)
@@ -648,13 +784,12 @@ def compare(
     risk_hash = atomic(out / f"risk-consensus-{index:04d}.json", {"records": risk_consensus})
     disagreements_hash = atomic(out / f"disagreements-{index:04d}.json", {"records": disagreements})
 
-    packet_path = package / lane / f"packet-{index:04d}.json"
-    sidecar_path = package / "evidence" / f"sidecar-{index:04d}.json"
-    if not sidecar_path.exists():
-        for entry in _evidence_manifest(package)["sidecars"]:
-            if entry.get("lane") == lane and entry.get("packet_binding", {}).get("canonical_basename") == packet_path.name:
-                sidecar_path = package / "evidence" / f"sidecar-{entry['packet_index']:04d}.json"
-                break
+    manifest_value = _manifest(package)
+    evidence_manifest = _evidence_manifest(package, manifest_value)
+    packet_path, packet_contents = _packet(package, lane, index, manifest_value)
+    sidecar_path, bound_sidecar = _sidecar(package, lane, index, packet_path, packet_contents, evidence_manifest)
+    if bound_sidecar != sidecar:
+        raise Error("missing_evidence_sidecar")
 
     body = {
         "schema_version": "phase3_cycle007_dual_label_packet_receipt_v1",
@@ -669,7 +804,7 @@ def compare(
         "row_count": len(contents["rows"]),
         "packet_identity_set_sha256": contents.get("packet_identity_set_sha256"),
         "sidecar_id": sidecar.get("sidecar_id"),
-        "sidecar_sha256": digest(sidecar_path.read_bytes()) if sidecar_path.exists() else "",
+        "sidecar_sha256": digest(sidecar_path.read_bytes()),
         "grok": {key: GROK[key] for key in ("exact_model", "model_family", "harness")},
         "gemini": {key: GEMINI[key] for key in ("exact_model", "model_family", "harness")},
         "clean_consensus_count": len(clean_consensus),
@@ -688,12 +823,13 @@ def compare(
 
 def compare_all(package: Path, *, fixture: bool = False) -> dict[str, Any]:
     val = _manifest(package, strict=not fixture)
-    ev_val = _evidence_manifest(package)
+    ev_val = _evidence_manifest(package, val)
+    _validate_evidence_coverage(package, val, ev_val)
     expected_packets = {(item.get("lane"), item.get("packet_index")) for item in val["packets"] if isinstance(item, dict)}
 
     prepared: dict[tuple[str, int], tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], list[dict[str, Any]]]] = {}
     for lane, index in expected_packets:
-        prepared[(lane, index)] = inputs(package, lane, index, val, ev_val)
+        prepared[(lane, index)] = inputs(package, lane, index, val, ev_val, verify_coverage=False)
 
     receipts: list[dict[str, Any]] = []
     for lane, index in sorted(expected_packets):

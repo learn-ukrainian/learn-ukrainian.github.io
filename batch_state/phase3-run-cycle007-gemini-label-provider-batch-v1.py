@@ -217,6 +217,31 @@ def _get_expected_identity() -> dict[str, Any]:
     }
 
 
+def _verify_source_package_binding(
+    evidence_manifest: dict[str, Any], custody_bytes: bytes, manifest_bytes: bytes, manifest: dict[str, Any]
+) -> None:
+    """A provider may run only against the current, receipt-bound package."""
+    binding = evidence_manifest.get("source_package_binding")
+    expected = {
+        "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+        "custody_receipt_raw_sha256": digest(custody_bytes),
+        "materialization_manifest_sha256": manifest.get("receipt_sha256"),
+        "ordered_identity_commitment_sha256": manifest.get("ordered_identity_commitment_sha256"),
+        "identity_union_commitment_sha256": manifest.get("identity_union_commitment_sha256"),
+        "ordered_packet_commitment_sha256": manifest.get("ordered_packet_commitment_sha256"),
+        "packet_count": manifest.get("packet_count"),
+        "row_count": manifest.get("row_count"),
+    }
+    if (
+        not isinstance(binding, dict)
+        or not isinstance(manifest.get("receipt_sha256"), str)
+        or manifest.get("receipt_sha256") != digest(canonical({key: value for key, value in manifest.items() if key != "receipt_sha256"}))
+        or digest(manifest_bytes) == binding.get("materialization_manifest_sha256")
+        or binding != expected
+    ):
+        raise Error("evidence_manifest_binding_drift")
+
+
 def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], Path, dict[str, Any]]:
     if lane not in LANES or not 1 <= index <= LANES[lane]:
         raise Error("ordinal_identity_binding_drift")
@@ -318,26 +343,7 @@ def packet(package: Path, lane: str, index: int) -> tuple[Path, dict[str, Any], 
     if ev_manifest.get("manifest_sha256") != contract.sha256_value(body_ev):
         raise Error("evidence_manifest_binding_drift")
 
-    spb = ev_manifest.get("source_package_binding")
-    if spb is not None and (
-        not isinstance(spb, dict)
-        or spb.get("source_evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-005"
-        or spb.get("custody_receipt_raw_sha256") != digest(custody_bytes)
-        or spb.get("materialization_manifest_sha256") not in {digest(manifest_bytes), manifest.get("receipt_sha256")}
-        or spb.get("ordered_identity_commitment_sha256")
-        != manifest.get("ordered_identity_commitment_sha256", ORDERED_IDENTITY_COMMITMENT_SHA256)
-        or (
-            manifest.get("identity_union_commitment_sha256")
-            and spb.get("identity_union_commitment_sha256") != manifest.get("identity_union_commitment_sha256")
-        )
-        or (
-            manifest.get("ordered_packet_commitment_sha256")
-            and spb.get("ordered_packet_commitment_sha256") != manifest.get("ordered_packet_commitment_sha256")
-        )
-        or (manifest.get("packet_count") and spb.get("packet_count") != manifest.get("packet_count"))
-        or (manifest.get("row_count") and spb.get("row_count") != manifest.get("row_count"))
-    ):
-        raise Error("evidence_manifest_binding_drift")
+    _verify_source_package_binding(ev_manifest, custody_bytes, manifest_bytes, manifest)
 
     expected_identity = _get_expected_identity()
     try:

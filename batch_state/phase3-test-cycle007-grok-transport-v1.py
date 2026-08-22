@@ -155,6 +155,9 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "evaluation_cycle_id": RUN.CYCLE,
         "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
         "custody_receipt_raw_sha256": RUN.digest(custody_bytes),
+        "ordered_identity_commitment_sha256": RUN.ORDERED_IDENTITY_COMMITMENT_SHA256,
+        "identity_union_commitment_sha256": "5" * 64,
+        "ordered_packet_commitment_sha256": "6" * 64,
         "packet_count": 204,
         "row_count": 10159,
         "packets": [entry],
@@ -222,7 +225,16 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
                 "packet_binding": sidecar_body["packet_binding"],
             }
         ],
-        "source_package_binding": None,
+        "source_package_binding": {
+            "source_evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-005",
+            "custody_receipt_raw_sha256": RUN.digest(custody_bytes),
+            "materialization_manifest_sha256": manifest["receipt_sha256"],
+            "ordered_identity_commitment_sha256": manifest["ordered_identity_commitment_sha256"],
+            "identity_union_commitment_sha256": manifest["identity_union_commitment_sha256"],
+            "ordered_packet_commitment_sha256": manifest["ordered_packet_commitment_sha256"],
+            "packet_count": manifest["packet_count"],
+            "row_count": manifest["row_count"],
+        },
     }
     ev_manifest["manifest_sha256"] = contract.sha256_value(ev_manifest)
     ev_manifest_bytes = put(package / "evidence" / "manifest.json", ev_manifest)
@@ -462,6 +474,26 @@ def test_missing_evidence_manifest_hash_rejected(tmp_path: Path, monkeypatch: py
     with pytest.raises(RUN.Error) as exc_info:
         RUN.run_packet(pkg, "clean_label", 1, fake_bin, synthetic_provider=True)
     assert exc_info.value.code in {"evidence_manifest_binding_drift", "label_count_or_envelope_drift"}
+
+
+def test_missing_source_package_binding_rejected_before_synthetic_provider(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    manifest_path = pkg / "evidence" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["source_package_binding"] = None
+    manifest["manifest_sha256"] = contract.sha256_value(
+        {key: value for key, value in manifest.items() if key != "manifest_sha256"}
+    )
+    manifest_bytes = put(manifest_path, manifest)
+    RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = RUN.digest(manifest_bytes)
+
+    with pytest.raises(RUN.Error) as exc_info:
+        RUN.run_packet(pkg, "clean_label", 1, fake_bin, synthetic_provider=True)
+    assert exc_info.value.code == "evidence_manifest_binding_drift"
 
 
 def test_sidecar_path_drift_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
