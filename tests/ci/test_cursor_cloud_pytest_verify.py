@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -559,7 +560,7 @@ def test_runner_script_rejects_head_sha_mismatch() -> None:
     """Runner script exits non-zero if requested --sha does not match git HEAD."""
     dummy_sha = "0000000000000000000000000000000000000000"
     proc = subprocess.run(
-        ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", dummy_sha, "--nonce", "token123"],
+        ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", dummy_sha, "--nonce", "token123", "--build-id", "build-test"],
         capture_output=True,
         text=True,
     )
@@ -977,3 +978,143 @@ def test_empty_build_id_in_metadata_rejected_as_unknown_infra(tmp_path: Path) ->
     assert result_ws.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert result_ws.is_pass is False
 
+
+
+# =============================================================================
+# 6. Delta r3 — Nonce Regex-Injection and Build-ID Fail-Closed Tests (#7113)
+# =============================================================================
+
+RUNNER_SCRIPT = Path("scripts/ci/cursor_cloud_full_pytest.sh")
+_FILTER_START_MARKER = "# >>> dirty-tree-allowlist-filter"
+_FILTER_END_MARKER = "# <<< dirty-tree-allowlist-filter"
+
+
+def _extract_dirty_tree_filter(tmp_path: Path) -> Path:
+    """Extract the runner's dirty-tree allowlist filter into an executable script.
+
+    The extracted block is the exact code shipped in the runner (delimited by
+    sentinels), so executing it tests the production filter, not a copy.
+    """
+    script_text = RUNNER_SCRIPT.read_text(encoding="utf-8")
+    start = script_text.index(_FILTER_START_MARKER)
+    end = script_text.index(_FILTER_END_MARKER)
+    assert start < end
+    block = script_text[start:end]
+    filter_script = tmp_path / "dirty_tree_filter.sh"
+    filter_script.write_text(block + '\n_filter_dirty_entries "$1"\n', encoding="utf-8")
+    return filter_script
+
+
+def test_runner_script_rejects_regex_metachar_nonce() -> None:
+    """Runner rejects a regex-injection nonce ('x|.*') before any work is done."""
+    proc = subprocess.run(
+        [
+            "bash", "scripts/ci/cursor_cloud_full_pytest.sh",
+            "--sha", TEST_SHA,
+            "--nonce", "x|.*",
+            "--build-id", "build-test",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode != 0
+    assert "--nonce must match ^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" in proc.stderr
+
+
+def test_runner_script_rejects_path_nonce() -> None:
+    """Runner rejects nonce values containing slashes or path traversal."""
+    for bad_nonce in ("a/b", "../x", ".", ".."):
+        proc = subprocess.run(
+            [
+                "bash", "scripts/ci/cursor_cloud_full_pytest.sh",
+                "--sha", TEST_SHA,
+                "--nonce", bad_nonce,
+                "--build-id", "build-test",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert proc.returncode != 0, f"nonce {bad_nonce!r} was accepted"
+        assert "--nonce must match" in proc.stderr
+
+
+def test_runner_script_rejects_missing_build_id() -> None:
+    """Runner fails closed (before the expensive suite) when --build-id is absent and BUILD_ID is unset."""
+    env = {k: v for k, v in os.environ.items() if k != "BUILD_ID"}
+    proc = subprocess.run(
+        [
+            "bash", "scripts/ci/cursor_cloud_full_pytest.sh",
+            "--sha", TEST_SHA,
+            "--nonce", "token123",
+        ],
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert proc.returncode != 0
+    assert "--build-id is required and cannot be empty" in proc.stderr
+
+
+def test_runner_script_rejects_empty_build_id() -> None:
+    """Runner fails closed on empty or whitespace-only --build-id values."""
+    for bad_build_id in ("", "   "):
+        proc = subprocess.run(
+            [
+                "bash", "scripts/ci/cursor_cloud_full_pytest.sh",
+                "--sha", TEST_SHA,
+                "--nonce", "token123",
+                "--build-id", bad_build_id,
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert proc.returncode != 0, f"build_id {bad_build_id!r} was accepted"
+        assert "--build-id is required and cannot be empty" in proc.stderr
+
+
+def test_dirty_tree_filter_nonce_regex_injection_cannot_hide_dirty_file(tmp_path: Path) -> None:
+    """Executable proof: nonce 'x|.*' cannot hide ' M source.py' from the dirty-tree filter.
+
+    With the old regex interpolation, 'x|.*' made the allowlist match every
+    porcelain line (ERE alternation '.*(/|$)'), silently hiding dirty files.
+    The literal-prefix filter must report them instead.
+    """
+    filter_script = _extract_dirty_tree_filter(tmp_path)
+    porcelain = " M source.py\n?? artifacts/evil/main.log\n?? source.py\n"
+    proc = subprocess.run(
+        ["bash", str(filter_script), "x|.*"],
+        input=porcelain,
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0
+    # Every dirty line must survive the filter (nothing is allowlisted by 'x|.*'
+    # unless the path literally starts with 'artifacts/x|.*/').
+    assert " M source.py" in proc.stdout
+    assert "?? artifacts/evil/main.log" in proc.stdout
+    assert "?? source.py" in proc.stdout
+
+
+def test_dirty_tree_filter_allowlists_only_untracked_nonce_prefix(tmp_path: Path) -> None:
+    """Executable proof: the filter allowlists exactly untracked artifacts/<nonce>/ paths."""
+    filter_script = _extract_dirty_tree_filter(tmp_path)
+    allowlisted = (
+        "?? artifacts/token123/pytest-shard-1/main.log\n"
+        '?? "artifacts/token123/weird file.log"\n'
+    )
+    reported = (
+        "?? artifacts/token1234/main.log\n"   # prefix boundary: token1234 != token123
+        " M artifacts/token123/tracked.py\n"  # tracked modification is never allowlisted
+        " M source.py\n"
+    )
+    proc = subprocess.run(
+        ["bash", str(filter_script), "token123"],
+        input=allowlisted + reported,
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0
+    assert "?? artifacts/token123/pytest-shard-1/main.log" not in proc.stdout
+    assert '?? "artifacts/token123/weird file.log"' not in proc.stdout
+    for line in reported.splitlines():
+        assert line in proc.stdout

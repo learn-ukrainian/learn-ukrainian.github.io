@@ -7,7 +7,10 @@
 #
 # Contract:
 # - Takes --sha <40hex> (must match `git rev-parse HEAD`); dirty tree -> non-zero.
-# - Takes --nonce <token> (required); writes exclusively under `artifacts/<nonce>/`.
+# - Takes --nonce <token> (required, charset [A-Za-z0-9._-], max 64 chars);
+#   writes exclusively under `artifacts/<nonce>/`.
+# - Takes --build-id <id> (required, non-empty; may be supplied via BUILD_ID env);
+#   fails closed before the expensive test suite if missing or empty.
 # - Installs CI venv like `ci.yml` (lockfile + CPU torch 2.13.0 carve-out) in a
 #   temporary directory outside the git worktree (never overwriting repo .venv).
 # - Asserts Node 22 (`node -v` is v22); runs `npm ci --ignore-scripts` only if
@@ -20,7 +23,8 @@
 # - Emits per shard: plan.json, test-nodeids.txt, main-junit.xml, main.log, exit_code;
 #   shard 1 also playground-junit.xml.
 # - Bundle metadata: git_head, runner_sha256, nonce, build_id, started_at.
-# - Performs final dirty-tree check allowlisting only artifacts/<nonce>/.
+# - Performs final dirty-tree check allowlisting only artifacts/<nonce>/
+#   (literal string-prefix match; the nonce is never regex-interpolated).
 # - Performs ZERO GitHub API calls.
 # =============================================================================
 
@@ -35,14 +39,14 @@ SHARD_COUNT=4
 
 usage() {
   cat <<USAGE_EOF
-Usage: $0 --sha <40hex-sha> --nonce <token> [options]
+Usage: $0 --sha <40hex-sha> --nonce <token> --build-id <id> [options]
 
 Required arguments:
   --sha <40hex>          Expected commit SHA; must match HEAD exactly.
   --nonce <token>        Run nonce token; output written to artifacts/<nonce>/
+  --build-id <id>        Build provenance ID, non-empty (may fall back to BUILD_ID env var)
 
 Optional arguments:
-  --build-id <id>        Build provenance ID (default: empty string)
   --durations <path>     Path to durations JSON dataset (default: ci-artifacts/pytest-durations.json)
   --venv <path>          Path to Python virtualenv (default: temp workdir outside git worktree)
   --shard-count <count>  Number of pytest shards to plan and run (fixed: must be 4)
@@ -127,13 +131,23 @@ if [[ -z "$NONCE" ]]; then
   exit 1
 fi
 
-if [[ "$NONCE" =~ [/\] || "$NONCE" == ".." || "$NONCE" == "." ]]; then
-  echo "Error: invalid --nonce value: $NONCE" >&2
+# Strict nonce charset: no regex metacharacters, slashes, or path traversal.
+# The nonce is interpolated into path-prefix comparisons below; a value like
+# 'x|.*' must be impossible so it can never broaden the dirty-tree allowlist.
+if [[ ! "$NONCE" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$ ]]; then
+  echo "Error: --nonce must match ^[A-Za-z0-9][A-Za-z0-9._-]{0,63}\$ (got: $NONCE)" >&2
   exit 1
 fi
 
 if [[ "$SHARD_COUNT" -ne 4 ]]; then
   echo "Error: --shard-count must be 4 (fixed four-shard plane), got: $SHARD_COUNT" >&2
+  exit 1
+fi
+
+# Fail closed before any expensive work if Build provenance is absent
+# (the controller verifier never passes an empty build_id; do not invent one).
+if [[ -z "${BUILD_ID//[[:space:]]/}" ]]; then
+  echo "Error: --build-id is required and cannot be empty (missing Build provenance is never PASS); set --build-id or the BUILD_ID env var" >&2
   exit 1
 fi
 
@@ -324,7 +338,35 @@ for shard in 1 2 3 4; do
 done
 
 # 11. Final dirty-tree check (allowlist only artifacts/<nonce>/; any other untracked/tracked dirty -> fail)
-DIRTY_ENTRIES="$(git status --porcelain --untracked-files=all | grep -vE '^\?\? "?artifacts/'"${NONCE}"'(/|$)' || true)"
+# >>> dirty-tree-allowlist-filter (extracted and executed by tests/ci/test_cursor_cloud_pytest_verify.py)
+# Prints porcelain lines that are NOT allowlisted. Allowlist: untracked ('??') entries
+# whose path equals artifacts/<nonce> or sits under artifacts/<nonce>/, matched by
+# literal string prefix (bash glob with quoted variable parts) -- the nonce is never
+# regex-interpolated, so a value like 'x|.*' cannot broaden the allowlist.
+_filter_dirty_entries() {
+  local filter_nonce="$1"
+  local artifact_prefix="artifacts/${filter_nonce}"
+  local status_line status_code entry_path
+  while IFS= read -r status_line; do
+    [[ -z "${status_line}" ]] && continue
+    status_code="${status_line:0:2}"
+    entry_path="${status_line:3}"
+    # Strip the C-style surrounding quotes git adds around paths with special chars
+    if [[ "${entry_path}" == \"*\" ]]; then
+      entry_path="${entry_path#\"}"
+      entry_path="${entry_path%\"}"
+    fi
+    if [[ "${status_code}" == "??" ]]; then
+      case "${entry_path}" in
+        "${artifact_prefix}" | "${artifact_prefix}/"*) continue ;;
+      esac
+    fi
+    printf '%s\n' "${status_line}"
+  done
+}
+# <<< dirty-tree-allowlist-filter
+
+DIRTY_ENTRIES="$(git status --porcelain --untracked-files=all | _filter_dirty_entries "${NONCE}")"
 if [[ -n "${DIRTY_ENTRIES}" ]]; then
   echo "Error: git working tree has unallowlisted dirty or untracked files after test execution (only artifacts/${NONCE}/ is allowed)" >&2
   echo "${DIRTY_ENTRIES}" >&2
