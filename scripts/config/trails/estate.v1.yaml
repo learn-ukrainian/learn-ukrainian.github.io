@@ -3,18 +3,18 @@ version: "1.0.0"
 title: Estate surface registry seed
 surfaces:
   vps_hosts:
-    - name: pilot-vps
-      ssh_alias: vps
-      role: pilot_host
+    - name: estate-probe-vps
+      ssh_alias: surface-ssh-k7m2
+      role: surface-role-n4p8
       mutation_policy: refused
   services:
-    - name: hramatka-api
-      host_alias: vps
-      systemd_unit: hramatka-api
+    - name: estate-probe-service
+      host_alias: surface-host-q1w9
+      systemd_unit: surface-unit-j3r5
       mutation_policy: refused
   repositories:
-    - name: learn-ukrainian-infra-private
-      local_path: ~/projects/learn-ukrainian-infra-private
+    - name: estate-probe-private-repo
+      local_path: ~/projects/surface-repo-x6t0
       visibility: private
       mutation_policy: refused
   public_sites:
@@ -37,7 +37,7 @@ surfaces:
     - surface_id: dispatch-task-queue
       mutation_policy: judgment_only
 refused_mutation_surfaces:
-  - pilot-vps
-  - hramatka-api
-  - learn-ukrainian-infra-private
+  - estate-probe-vps
+  - estate-probe-service
+  - estate-probe-private-repo
   - public-site

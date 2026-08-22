@@ -8,9 +8,9 @@
 #   scripts/lexicon/runner/mirror_20k_runner.sh                 # sync + snapshot
 #   scripts/lexicon/runner/mirror_20k_runner.sh --require-only   # verify a backed-up mirror
 #
-# Env overrides:
-#   ATLAS_RUNNER_HOST  ssh destination, e.g. ops@atlas-runner.example (required to sync)
-#   ATLAS_RUN_ROOT      remote run root (default /home/ops/atlas-runner)
+# Env:
+#   ATLAS_RUNNER_HOST  ssh destination from operator env (required to sync)
+#   ATLAS_RUN_ROOT      remote run root (required)
 #   ATLAS_WORK_DIR_NAME remote work-dir under ATLAS_RUN_ROOT (default run-20k)
 #   ATLAS_MIRROR_DIR    local mirror dir (default <repo>/data/lexicon/runner-mirror/<work-dir-name>)
 #   ATLAS_MIRROR_MAX_AGE_HOURS  staleness gate for --require-only (default 24)
@@ -28,8 +28,12 @@ if [[ "${1:-}" == "--require-only" ]]; then
   exit $?
 fi
 
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
-: "${ATLAS_RUNNER_HOST:?set ATLAS_RUNNER_HOST=user@host to sync from the VPS (or run durable_mirror.py snapshot --source directly)}"
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  echo "ATLAS_RUN_ROOT is required" >&2
+  exit 2
+fi
+RUN_ROOT="$ATLAS_RUN_ROOT"
+: "${ATLAS_RUNNER_HOST:?ATLAS_RUNNER_HOST is required to sync (or run durable_mirror.py snapshot --source directly)}"
 SOURCE="${ATLAS_RUNNER_HOST}:${RUN_ROOT}/${WORK_DIR_NAME}"
 
 echo "syncing ${SOURCE} -> ${MIRROR_DIR}"

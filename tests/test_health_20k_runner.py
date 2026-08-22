@@ -65,12 +65,26 @@ def test_health_probe_requires_runner_host() -> None:
     ]
 
 
+def test_health_probe_requires_run_root() -> None:
+    result = _run_probe(env={"ATLAS_RUNNER_HOST": "test-runner-host", "ATLAS_RUN_ROOT": ""})
+
+    assert result.returncode == 2
+    assert "ATLAS_RUN_ROOT is required" in result.stderr
+    assert result.stdout.splitlines() == [
+        "host_set=true",
+        "mirror_present=false",
+        "mirror_require_ok=false",
+        "mirror_age_hint=max_age_hours=24",
+    ]
+
+
 def test_health_probe_fails_closed_when_ssh_check_fails(tmp_path: Path) -> None:
     fake_bin = _stub_ssh(tmp_path, exit_code=1)
 
     result = _run_probe(
         env={
-            "ATLAS_RUNNER_HOST": "ops@runner.example",
+            "ATLAS_RUNNER_HOST": "test-runner-host",
+            "ATLAS_RUN_ROOT": "/tmp/atlas-run-root",
             "PATH": f"{fake_bin}:{os.environ['PATH']}",
         }
     )
@@ -91,7 +105,8 @@ def test_health_probe_fails_closed_without_local_mirror(tmp_path: Path) -> None:
 
     result = _run_probe(
         env={
-            "ATLAS_RUNNER_HOST": "ops@runner.example",
+            "ATLAS_RUNNER_HOST": "test-runner-host",
+            "ATLAS_RUN_ROOT": "/tmp/atlas-run-root",
             "ATLAS_MIRROR_DIR": str(missing_mirror),
             "PATH": f"{fake_bin}:{os.environ['PATH']}",
         }
@@ -114,7 +129,8 @@ def test_health_probe_fails_closed_when_mirror_is_not_durable(tmp_path: Path) ->
 
     result = _run_probe(
         env={
-            "ATLAS_RUNNER_HOST": "ops@runner.example",
+            "ATLAS_RUNNER_HOST": "test-runner-host",
+            "ATLAS_RUN_ROOT": "/tmp/atlas-run-root",
             "ATLAS_MIRROR_DIR": str(mirror),
             "PATH": f"{fake_bin}:{os.environ['PATH']}",
         }
@@ -137,7 +153,8 @@ def test_health_probe_succeeds_with_reachable_runner_and_durable_mirror(tmp_path
 
     result = _run_probe(
         env={
-            "ATLAS_RUNNER_HOST": "ops@runner.example",
+            "ATLAS_RUNNER_HOST": "test-runner-host",
+            "ATLAS_RUN_ROOT": "/tmp/atlas-run-root",
             "ATLAS_MIRROR_DIR": str(mirror),
             "PATH": f"{fake_bin}:{os.environ['PATH']}",
             "SSH_ARGS_FILE": str(ssh_args),

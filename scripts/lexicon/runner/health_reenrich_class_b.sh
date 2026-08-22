@@ -3,12 +3,22 @@
 # never syncs, launches, or mutates anything on the VPS (mirrors
 # health_20k_runner.sh's fail-closed reporting shape).
 #
-# Env overrides:
-#   ATLAS_RUNNER_HOST (default vps), ATLAS_RUN_ROOT, ATLAS_RE_ENRICH_WORK_DIR
+# Required env:
+#   ATLAS_RUNNER_HOST, ATLAS_RUN_ROOT
+# Optional:
+#   ATLAS_RE_ENRICH_WORK_DIR
 set -uo pipefail
 
-HOST="${ATLAS_RUNNER_HOST:-vps}"
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
+if [[ -z "${ATLAS_RUNNER_HOST:-}" ]]; then
+  echo "ATLAS_RUNNER_HOST is required" >&2
+  exit 2
+fi
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  echo "ATLAS_RUN_ROOT is required" >&2
+  exit 2
+fi
+HOST="$ATLAS_RUNNER_HOST"
+RUN_ROOT="$ATLAS_RUN_ROOT"
 WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
 
 host_reachable=false

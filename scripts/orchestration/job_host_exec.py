@@ -4,18 +4,18 @@
 Notebook orchestrators keep talking to tunneled ``127.0.0.1`` APIs. Both
 occupancy hosts are the worker pool: agent CLIs and long Python jobs run
 on either box. The job host also holds Monitor and fleet-comms. The
-teacher host also holds the teacher product — workers stay out of
-``/opt/hramatka`` and ``/srv``, and occupancy headroom decides who takes
-the next job. Notebook ``delegate.py dispatch`` is the fallback only when
+teacher host also holds the teacher product. Workers stay out of teacher
+product data trees. Occupancy headroom decides who takes the next job.
+Notebook ``delegate.py dispatch`` is the fallback only when
 **every** VPS worker host is unavailable or full. This helper never prints
 host aliases, IPs, or occupancy env.
 
-SSH aliases stay in operator env (not git):
+SSH aliases and remote checkout paths stay in operator env (not git):
 
 - ``LU_DISPATCH_SSH`` — ``opaque-id=ssh-alias,...``
-- ``LU_JOB_DISPATCH_HOST`` / ``ATLAS_RUNNER_HOST`` — job-host fallback
-- ``LU_TEACHER_DISPATCH_HOST`` — teacher-host fallback
-- ``LU_JOB_REPO`` / ``LU_TEACHER_REPO`` — absolute remote checkouts
+- ``LU_JOB_DISPATCH_HOST`` / ``ATLAS_RUNNER_HOST`` — job-host (required)
+- ``LU_TEACHER_DISPATCH_HOST`` — teacher-host (required for teacher host_id)
+- ``LU_JOB_REPO`` / ``LU_TEACHER_REPO`` — absolute remote checkouts (required)
 
 Remote PATH always includes ``$HOME/.local/bin`` and ``$HOME/.opencode/bin``.
 """
@@ -55,11 +55,6 @@ ENV_MEM_FULL = "LU_JOB_MEM_FULL_PCT"
 ENV_DISK_FULL = "LU_JOB_DISK_FULL_PCT"
 REMOTE_PATH_EXPORT = 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"'
 _REMOTE_VAR_PREFIX = "__LU_REMOTE_VAR:"
-# Canonical SSH Host names already used by atlas_job (public repo contract).
-DEFAULT_JOB_SSH = "atlas-runner"
-DEFAULT_TEACHER_SSH = "hramatka"
-DEFAULT_JOB_REPO = "/home/ops/services/learn-ukrainian"
-DEFAULT_TEACHER_REPO = "/home/ops/learn-ukrainian"
 DEFAULT_MEM_FULL_PCT = 85.0
 DEFAULT_DISK_FULL_PCT = 85.0
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
@@ -87,15 +82,19 @@ class SshTransportError(OSError):
 
 
 def job_dispatch_host() -> str:
-    return (
+    host = (
         os.environ.get(ENV_HOST, "").strip()
         or os.environ.get(ENV_HOST_FALLBACK, "").strip()
-        or DEFAULT_JOB_SSH
     )
+    if not host:
+        raise ValueError(f"{ENV_HOST} or {ENV_HOST_FALLBACK} is required")
+    return host
 
 
 def job_dispatch_repo() -> str:
-    repo = os.environ.get(ENV_REPO, "").strip() or DEFAULT_JOB_REPO
+    repo = os.environ.get(ENV_REPO, "").strip()
+    if not repo:
+        raise ValueError(f"{ENV_REPO} is required")
     if not repo.startswith("/"):
         raise ValueError(f"{ENV_REPO} must be an absolute remote path")
     return repo
@@ -120,7 +119,10 @@ def ssh_alias_for_host_id(host_id: str) -> str:
     if host_id in mapped:
         return mapped[host_id]
     if host_id == TEACHER_HOST_ID:
-        return os.environ.get(ENV_TEACHER_HOST, "").strip() or DEFAULT_TEACHER_SSH
+        alias = os.environ.get(ENV_TEACHER_HOST, "").strip()
+        if not alias:
+            raise ValueError(f"{ENV_TEACHER_HOST} or {ENV_DISPATCH_SSH} is required")
+        return alias
     if host_id == JOB_HOST_ID:
         return job_dispatch_host()
     raise ValueError(f"no SSH alias configured for occupancy host {host_id}")
@@ -128,7 +130,9 @@ def ssh_alias_for_host_id(host_id: str) -> str:
 
 def repo_for_host_id(host_id: str) -> str:
     if host_id == TEACHER_HOST_ID:
-        teacher_repo = os.environ.get(ENV_TEACHER_REPO, "").strip() or DEFAULT_TEACHER_REPO
+        teacher_repo = os.environ.get(ENV_TEACHER_REPO, "").strip()
+        if not teacher_repo:
+            raise ValueError(f"{ENV_TEACHER_REPO} is required")
         if not teacher_repo.startswith("/"):
             raise ValueError(f"{ENV_TEACHER_REPO} must be an absolute remote path")
         return teacher_repo

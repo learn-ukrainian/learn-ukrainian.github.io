@@ -4,7 +4,8 @@ Fixes #5884. Related incident: 2026-07-29 wipe (sole laptop copies fail).
 
 The `fetch_ulif_20k.py` / `reduce_ulif_20k.py` / `enrich_offline_20k.py`
 runners write their durable state under a work-dir on the remote runner VPS
-(default `/home/ops/atlas-runner/run-20k`):
+(`$ATLAS_RUN_ROOT/$ATLAS_WORK_DIR_NAME`, default work-dir name `run-20k`;
+`ATLAS_RUN_ROOT` is required):
 
 | Artifact | Path |
 | --- | --- |
@@ -42,7 +43,7 @@ open-dataset export, not for private durability of in-progress runner state.
 # Sync a source (local path or user@host:/path) into a local mirror and
 # (re)write its manifest.json (sha256 per file):
 .venv/bin/python scripts/lexicon/runner/durable_mirror.py snapshot \
-  --source ops@<runner-host>:/home/ops/atlas-runner/run-20k \
+  --source "$ATLAS_RUNNER_HOST:$ATLAS_RUN_ROOT/run-20k" \
   --mirror-dir data/lexicon/runner-mirror/run-20k
 
 # Recompute checksums and compare against the manifest (corruption check):
@@ -65,7 +66,7 @@ case (env: `ATLAS_RUNNER_HOST`, `ATLAS_RUN_ROOT`, `ATLAS_WORK_DIR_NAME`,
 `ATLAS_MIRROR_DIR`):
 
 ```bash
-ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
+scripts/lexicon/runner/mirror_20k_runner.sh
 scripts/lexicon/runner/mirror_20k_runner.sh --require-only   # gate only, no sync
 ```
 
@@ -75,7 +76,7 @@ requires a fresh, restic-covered local mirror. It never starts enrichment or
 changes runner state:
 
 ```bash
-ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/health_20k_runner.sh
+scripts/lexicon/runner/health_20k_runner.sh
 ```
 
 ## Required workflow
@@ -84,7 +85,7 @@ ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/health_20k_runner.sh
    during an active run), sync:
 
    ```bash
-   ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
+   scripts/lexicon/runner/mirror_20k_runner.sh
    ```
 
 2. Push the refreshed mirror into the restic bus:
@@ -125,7 +126,7 @@ After a VPS wipe or a fresh runner host:
 
 # 3) Copy the verified mirror back to a fresh VPS work-dir.
 rsync -az /absolute/path/to/restore-test/data/lexicon/runner-mirror/run-20k/ \
-  ops@<new-runner-host>:/home/ops/atlas-runner/run-20k/
+  "$ATLAS_RUNNER_HOST:$ATLAS_RUN_ROOT/run-20k/"
 
 # 4) Resume. The fetch/enrich ledgers are resumable by design — the same
 #    work-dir with an intact ledger.sqlite resumes rather than restarting:

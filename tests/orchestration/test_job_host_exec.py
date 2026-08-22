@@ -81,18 +81,28 @@ def test_build_ssh_argv_is_batchmode() -> None:
     assert argv[5] == "job-alias"
 
 
-def test_defaults_when_env_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_source_has_no_baked_ops_home_defaults() -> None:
+    text = Path(jh.__file__).read_text(encoding="utf-8")
+    assert "/home/ops" not in text
+
+
+def test_fails_closed_when_env_unset(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(jh.ENV_HOST, raising=False)
     monkeypatch.delenv(jh.ENV_HOST_FALLBACK, raising=False)
     monkeypatch.delenv(jh.ENV_REPO, raising=False)
     monkeypatch.delenv(jh.ENV_TEACHER_HOST, raising=False)
     monkeypatch.delenv(jh.ENV_TEACHER_REPO, raising=False)
     monkeypatch.delenv(jh.ENV_DISPATCH_SSH, raising=False)
-    assert jh.job_dispatch_host() == jh.DEFAULT_JOB_SSH
-    assert jh.job_dispatch_repo() == jh.DEFAULT_JOB_REPO
-    assert jh.ssh_alias_for_host_id("host-job") == jh.DEFAULT_JOB_SSH
-    assert jh.ssh_alias_for_host_id("host-teacher") == jh.DEFAULT_TEACHER_SSH
-    assert jh.repo_for_host_id("host-teacher") == jh.DEFAULT_TEACHER_REPO
+    with pytest.raises(ValueError, match="is required"):
+        jh.job_dispatch_host()
+    with pytest.raises(ValueError, match="is required"):
+        jh.job_dispatch_repo()
+    with pytest.raises(ValueError, match="is required"):
+        jh.ssh_alias_for_host_id("host-job")
+    with pytest.raises(ValueError, match="is required"):
+        jh.ssh_alias_for_host_id("host-teacher")
+    with pytest.raises(ValueError, match="is required"):
+        jh.repo_for_host_id("host-teacher")
 
 
 def test_no_marker_stays_notebook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

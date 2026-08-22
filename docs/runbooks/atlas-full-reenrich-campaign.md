@@ -1,12 +1,12 @@
 # Atlas Full-Reenrich Campaign Runbook (#6466)
 
 This runbook documents the operator and driver procedures for the full-catalog Atlas re-enrichment campaign tooling (#6466).
-Tracked submit/status/close: [`atlas-job-protocol.md`](atlas-job-protocol.md). Default host is `atlas-runner`.
+Tracked submit/status/close: [`atlas-job-protocol.md`](atlas-job-protocol.md). Set `ATLAS_RUNNER_HOST` and `ATLAS_RUN_ROOT` from operator env.
 
 ## Overview & Campaign Architecture
 
 The full-catalog campaign re-enriches all entries in `lexicon-manifest.json` using the VPS runner.
-Because the remote VPS repo checkout (`/home/ops/atlas-runner/repo`) is deliberately dirty/stale (large data directories deleted for disk space), execution is isolated to the isolated work directory (`$ATLAS_RE_ENRICH_WORK_DIR`).
+Because the remote VPS repo checkout (`$ATLAS_RUN_ROOT/repo`) is deliberately dirty/stale (large data directories deleted for disk space), execution is isolated to the isolated work directory (`$ATLAS_RE_ENRICH_WORK_DIR`).
 
 ### Key Invariants
 1. **Entry-count invariance**: Live manifest entry count is strictly unchanged.
@@ -64,12 +64,13 @@ From the Mac worktree, deploy the driver and launcher to the remote VPS and laun
 ```bash
 # Smoke test (small limit)
 # Prefer the job protocol (tracked plan + result). See atlas-job-protocol.md.
-ATLAS_RUNNER_HOST=atlas-runner scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
+# ATLAS_RUNNER_HOST and ATLAS_RUN_ROOT must already be set in operator env.
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
   --target full-catalog \
   --limit 10
 
 # Full campaign launch (detached systemd-run under 1.5G/2.0G memory limits)
-ATLAS_RUNNER_HOST=atlas-runner scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
   --target full-catalog \
   --no-poll
 ```
@@ -94,11 +95,11 @@ Resuming a dead run reuses this snapshot and manifest checkpoint without restart
 Check status and logs on the VPS runner:
 
 ```bash
-# Check if driver process is active
-ssh atlas-runner "ps aux | grep reenrich_thin_manifest_entries"
+# Check if the tracked unit is still the mutex (do not bake SSH host tokens here)
+.venv/bin/python -m scripts.lexicon.runner.atlas_job status --host "$ATLAS_RUNNER_HOST" --audit
 
-# Inspect live log tail
-ssh atlas-runner "tail -n 60 /home/ops/atlas-runner/run-class-b-reenrich/reenrich.log"
+# Inspect live log tail under the configured work-dir
+ssh "$ATLAS_RUNNER_HOST" "tail -n 60 \"$ATLAS_RUN_ROOT/run-class-b-reenrich/reenrich.log\""
 ```
 
 If 50 consecutive entries fail to hit any source/cache, the circuit breaker trips, returning exit code `70` (`CIRCUIT_BREAKER_EXIT_CODE`) and logging `circuit_breaker_tripped: true`.
@@ -110,7 +111,7 @@ If 50 consecutive entries fail to hit any source/cache, the circuit breaker trip
 Once complete, pull back the output manifest and run summary:
 
 ```bash
-ATLAS_RUNNER_HOST=atlas-runner scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh \
   --pull-only
 ```
 

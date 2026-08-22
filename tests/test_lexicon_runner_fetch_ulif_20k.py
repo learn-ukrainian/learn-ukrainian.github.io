@@ -3,13 +3,26 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = str(ROOT / ".venv" / "bin" / "python")
+PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "fetch_ulif_20k.py"
+
+
+def test_source_has_no_baked_ops_home_defaults() -> None:
+    assert "/home/ops" not in DRIVER.read_text(encoding="utf-8")
+
+
+def test_work_dir_flag_is_required() -> None:
+    from scripts.lexicon.runner.fetch_ulif_20k import main as fetch_main
+
+    with pytest.raises(SystemExit) as exc:
+        fetch_main([])
+    assert exc.value.code == 2
 
 
 def test_help_exits_zero_without_side_effects(tmp_path: Path) -> None:

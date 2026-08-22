@@ -3,7 +3,11 @@
 # Mirrors run-20k/launch.sh resume pattern under MemoryHigh=1.5G MemoryMax=2.0G.
 set -euo pipefail
 
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  echo "ATLAS_RUN_ROOT is required" >&2
+  exit 2
+fi
+RUN_ROOT="$ATLAS_RUN_ROOT"
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
 UNIT="${ATLAS_REDUCE_UNIT:-atlas-20k-reduce.service}"

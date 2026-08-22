@@ -38,7 +38,7 @@ Bare invocation and `--help` never start a multi-hour run (#5393 class).
 
 ## VPS recipe (run-20k, post-reduce)
 
-Assumes fetch + reduce already completed under `/home/ops/atlas-runner/run-20k`:
+Assumes fetch + reduce already completed under `$ATLAS_RUN_ROOT/run-20k`:
 
 | Artifact | Path |
 | --- | --- |
@@ -52,9 +52,9 @@ Assumes fetch + reduce already completed under `/home/ops/atlas-runner/run-20k`:
 # Optional: plan against live reduce artifact
 .venv/bin/python scripts/lexicon/runner/enrich_offline_20k.py \
   --dry-run \
-  --repo /home/ops/atlas-runner/repo \
-  --work-dir /home/ops/atlas-runner/run-20k/offline_enrich \
-  --candidate /home/ops/atlas-runner/run-20k/candidate-ulif-reduce.json
+  --repo "$ATLAS_RUN_ROOT/repo" \
+  --work-dir "$ATLAS_RUN_ROOT/run-20k/offline_enrich" \
+  --candidate "$ATLAS_RUN_ROOT/run-20k/candidate-ulif-reduce.json"
 
 # Detached under MemoryHigh=1.5G MemoryMax=2.0G (idempotent)
 scripts/lexicon/runner/launch_enrich.sh
@@ -69,7 +69,7 @@ scripts/lexicon/runner/launch_enrich.sh --stop-after-chunks 1
 Tail progress:
 
 ```bash
-tail -f /home/ops/atlas-runner/run-20k/enrich.log | grep --line-buffered '"event"'
+tail -f "$ATLAS_RUN_ROOT/run-20k/enrich.log" | grep --line-buffered '"event"'
 ```
 
 ## Durability (#5884)
@@ -81,14 +81,14 @@ cleanup means a full ULIF refetch. After every fetch/reduce/enrich phase
 covers it:
 
 ```bash
-ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/mirror_20k_runner.sh
+scripts/lexicon/runner/mirror_20k_runner.sh
 ```
 
 Atlas drivers can prove this run's remote work-dir and local durability state
 without starting enrichment by running:
 
 ```bash
-ATLAS_RUNNER_HOST=ops@<runner-host> scripts/lexicon/runner/health_20k_runner.sh
+scripts/lexicon/runner/health_20k_runner.sh
 ```
 
 Before any cleanup, execute the full durability order — **snapshot → restic

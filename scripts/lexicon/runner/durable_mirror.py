@@ -3,7 +3,7 @@
 
 The fetch/enrich runners write their durable state (``ledger.sqlite``,
 ``network-cache.sqlite``, reduce/enrich candidates) under a work-dir on the
-remote runner host (default ``/home/ops/atlas-runner/run-20k``), which has no
+remote runner host (``ATLAS_RUN_ROOT`` / ``--work-dir``; no baked default), which has no
 backup of its own. ``scripts/backup-data.sh`` (#6014) already makes encrypted,
 versioned restic snapshots of everything under this repo's local ``data/`` —
 so the fix is to mirror the runner work-dir into a checksummed copy under

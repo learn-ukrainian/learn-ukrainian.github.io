@@ -3,10 +3,10 @@
 # it never syncs a mirror, changes runner files, or starts enrichment (#6077).
 #
 # Required environment:
-#   ATLAS_RUNNER_HOST  ssh destination for the runner, for example ops@<runner-host>
+#   ATLAS_RUNNER_HOST  ssh destination from operator env
+#   ATLAS_RUN_ROOT               remote run root (absolute path)
 #
 # Optional environment follows mirror_20k_runner.sh:
-#   ATLAS_RUN_ROOT               remote run root (default /home/ops/atlas-runner)
 #   ATLAS_WORK_DIR_NAME          work-dir below the run root (default run-20k)
 #   ATLAS_MIRROR_DIR             local durable mirror directory
 #   ATLAS_MIRROR_MAX_AGE_HOURS   durable mirror age limit (default 24)
@@ -14,7 +14,6 @@ set -uo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 WORK_DIR_NAME="${ATLAS_WORK_DIR_NAME:-run-20k}"
-RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
 MIRROR_DIR="${ATLAS_MIRROR_DIR:-$REPO/data/lexicon/runner-mirror/$WORK_DIR_NAME}"
 MAX_AGE_HOURS="${ATLAS_MIRROR_MAX_AGE_HOURS:-24}"
 DURABLE_MIRROR=("$REPO/.venv/bin/python" "$REPO/scripts/lexicon/runner/durable_mirror.py")
@@ -36,6 +35,13 @@ if [[ -z "${ATLAS_RUNNER_HOST:-}" ]]; then
   exit 2
 fi
 host_set=true
+
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  printf 'ATLAS_RUN_ROOT is required.\n' >&2
+  print_summary
+  exit 2
+fi
+RUN_ROOT="$ATLAS_RUN_ROOT"
 
 if ! command -v ssh >/dev/null 2>&1; then
   printf 'runner SSH work-dir check failed: ssh is not available.\n' >&2

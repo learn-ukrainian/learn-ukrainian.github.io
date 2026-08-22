@@ -60,74 +60,84 @@ def test_estate_registry_seed_validates() -> None:
 
 
 def test_rb6_references_estate_registry_entries() -> None:
-    """RB-6 probes explicitly reference estate surfaces defined in estate.v1.yaml."""
+    """RB-6 probes must not reconstruct estate topology from the public registry seed."""
     estate_data = _load_yaml(ESTATE_PATH)
     rb6_data = _load_yaml(RB6_TRAIL_PATH)
 
     surfaces = estate_data["surfaces"]
     refused = set(estate_data["refused_mutation_surfaces"])
 
-    # Extract declared estate surface identities
-    vps_aliases = {v["ssh_alias"] for v in surfaces["vps_hosts"]}
-    services = {s["systemd_unit"] for s in surfaces["services"]}
-    repos = {Path(r["local_path"]).name for r in surfaces["repositories"]}
+    # Declared estate surface identities (opaque tokens — not probe command literals).
+    vps_names = {v["name"] for v in surfaces["vps_hosts"]}
+    service_names = {s["name"] for s in surfaces["services"]}
+    repo_names = {r["name"] for r in surfaces["repositories"]}
     sites = {s["url"] for s in surfaces["public_sites"]}
 
-    assert "vps" in vps_aliases
-    assert "hramatka-api" in services
-    assert "learn-ukrainian-infra-private" in repos
+    assert "estate-probe-vps" in vps_names
+    assert "estate-probe-service" in service_names
+    assert "estate-probe-private-repo" in repo_names
     # Exact-set equality (not substring membership): stricter, and it avoids the
     # URL-substring pattern CodeQL flags (py/incomplete-url-substring-sanitization).
     assert sites == {"https://learn-ukrainian.github.io/"}
 
     # Refused surfaces check
-    assert "pilot-vps" in refused
-    assert "hramatka-api" in refused
-    assert "learn-ukrainian-infra-private" in refused
+    assert "estate-probe-vps" in refused
+    assert "estate-probe-service" in refused
+    assert "estate-probe-private-repo" in refused
     assert "public-site" in refused
 
-    # Consistency pin: the registry values must appear in the probe COMMANDS
-    # (not just intent prose). RB-6 probes deliberately hardcode these values
-    # for runtime robustness; this assertion is what makes the registry the
-    # source of truth — drifting a command away from the registry fails here.
-    _assert_registry_consumed_by_commands(estate_data, rb6_data)
+    # Decoupling pin: registry fields must not jointly appear in probe commands.
+    _assert_registry_decoupled_from_commands(estate_data, rb6_data)
 
 
-def _assert_registry_consumed_by_commands(estate_data: dict, rb6_data: dict) -> None:
+def _assert_registry_decoupled_from_commands(estate_data: dict, rb6_data: dict) -> None:
     surfaces = estate_data["surfaces"]
     step_commands = " ".join(
         s["command"]["argv"][-1] for s in rb6_data["steps"] if s["command"]["argv"]
     )
+    ssh_aliases = {v["ssh_alias"] for v in surfaces["vps_hosts"]}
     for vps in surfaces["vps_hosts"]:
-        alias = vps["ssh_alias"]
-        assert f"ssh -o BatchMode=yes -o ConnectTimeout=5 {alias} " in step_commands, (
-            f"registry ssh alias '{alias}' is not consumed by any RB-6 probe command"
+        assert vps["ssh_alias"] not in step_commands, (
+            f"registry ssh alias '{vps['ssh_alias']}' must not appear in RB-6 probe commands"
+        )
+        assert vps["role"] not in step_commands, (
+            f"registry role '{vps['role']}' must not appear in RB-6 probe commands"
         )
     for service in surfaces["services"]:
-        assert service["systemd_unit"] in step_commands, (
-            f"registry systemd unit '{service['systemd_unit']}' is not consumed "
-            "by any RB-6 probe command"
+        assert service["host_alias"] not in step_commands, (
+            f"registry host alias '{service['host_alias']}' must not appear in RB-6 probe commands"
+        )
+        assert service["systemd_unit"] not in step_commands, (
+            f"registry systemd unit '{service['systemd_unit']}' must not appear in RB-6 probe commands"
+        )
+        assert service["host_alias"] not in ssh_aliases, (
+            "registry must not cross-link service host_alias to vps ssh_alias"
         )
     for repo in surfaces["repositories"]:
-        assert repo["local_path"] in step_commands, (
-            f"registry repo path '{repo['local_path']}' is not consumed by any RB-6 probe command"
+        assert repo["local_path"] not in step_commands, (
+            f"registry repo path '{repo['local_path']}' must not appear in RB-6 probe commands"
         )
-    # Token equality (not substring): the URL must appear as a standalone shell
-    # token of a probe command — stricter, and clear of the CodeQL URL-substring rule.
     command_tokens = step_commands.split()
     for site in surfaces["public_sites"]:
-        assert any(token == site["url"] for token in command_tokens), (
-            f"registry site url '{site['url']}' is not consumed by any RB-6 probe command"
+        assert site["url"] not in command_tokens, (
+            f"registry site url '{site['url']}' must not appear in RB-6 probe commands"
+        )
+
+    for env_key in ("RB6_PROBE_SSH", "RB6_PROBE_UNIT", "RB6_PROBE_REPO", "RB6_PROBE_SITE"):
+        assert env_key in step_commands, (
+            f"RB-6 probe commands must use runtime env placeholder {env_key}"
         )
 
 
-def test_negative_rb6_registry_drift_fails_consistency() -> None:
-    """Mutation negative: a registry value drifting away from the commands FAILS the pin."""
+def test_negative_rb6_cross_linked_host_alias_fails_decoupling() -> None:
+    """Mutation negative: cross-linking host_alias to ssh_alias FAILS the decoupling pin."""
     estate_data = _load_yaml(ESTATE_PATH)
     rb6_data = _load_yaml(RB6_TRAIL_PATH)
-    estate_data["surfaces"]["vps_hosts"][0]["ssh_alias"] = "vps-renamed"
-    with pytest.raises(AssertionError, match="vps-renamed"):
-        _assert_registry_consumed_by_commands(estate_data, rb6_data)
+    estate_data["surfaces"]["services"][0]["host_alias"] = estate_data["surfaces"]["vps_hosts"][0][
+        "ssh_alias"
+    ]
+    with pytest.raises(AssertionError, match="cross-link"):
+        _assert_registry_decoupled_from_commands(estate_data, rb6_data)
 
 
 def test_negative_rb1_dropped_predicate_clause_fails() -> None:
@@ -313,8 +323,8 @@ def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
 
     estate_data = _load_yaml(ESTATE_PATH)
     assert validate_estate_registry_data(estate_data)["ok"] is True
-    estate_data["refused_mutation_surfaces"].remove("pilot-vps")
-    with pytest.raises(TrailSpecValidationError, match="pilot-vps"):
+    estate_data["refused_mutation_surfaces"].remove("estate-probe-vps")
+    with pytest.raises(TrailSpecValidationError, match="estate-probe-vps"):
         validate_estate_registry_data(estate_data)
 
 

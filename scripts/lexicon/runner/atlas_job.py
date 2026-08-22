@@ -2,8 +2,8 @@
 
 **systemd on the host is truth; the local registry is a journal/mirror.**
 
-Batch kinds run on atlas-runner or hramatka (each host is its own mutex —
-submit refuses a second active unit on the SAME host; the two hosts may run
+Batch kinds run on an allowed plan-host token (each host is its own mutex —
+submit refuses a second active unit on the SAME host; distinct hosts may run
 concurrently). Registry lives under batch_state/atlas-jobs/ (restic-covered).
 Close writes a fail-closed result receipt; large artifacts go through
 durable_mirror + backup-data.sh. Publish/pointer flip is never this module.
@@ -30,10 +30,7 @@ from typing import Any, Protocol
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"
 BATCH_KINDS = frozenset({"reenrich"})
-# "vps" is the operator ssh alias for the hramatka host (hramatka-api's box;
-# see scripts/config/trails/estate.v1.yaml) — same machine, same allowance.
-HRAMATKA_ALIASES = frozenset({"hramatka", "vps"})
-ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"}) | HRAMATKA_ALIASES}
+ALLOWED_HOSTS = {"reenrich": frozenset({"atlas-runner"})}
 RESULT_SINKS = frozenset({"git", "restic", "both"})
 RESUME_MODES = frozenset({"idempotent", "checkpoint", "never"})
 DRIVER_NEEDLES = (
@@ -80,15 +77,6 @@ _HOSTNAME_HINT = re.compile(
     r"(?i)\b(?:[a-z0-9-]+\.)+(?:internal|local|lan|corp|example)\b|\b\d{1,3}(?:\.\d{1,3}){3}\b"
 )
 DEFAULT_TIMEOUT_SECONDS = 86400
-DEFAULT_RUN_ROOT = "/home/ops/atlas-runner"
-# hramatka's work root is separate from its teacher-facing /opt/hramatka and
-# /srv trees — reenrich jobs never touch those. Dir does not exist yet on the
-# host; submit/launcher mkdir it on first use.
-DEFAULT_HRAMATKA_RUN_ROOT = "/home/ops/atlas-jobs"
-DEFAULT_RUN_ROOTS = {
-    "atlas-runner": DEFAULT_RUN_ROOT,
-    "hramatka": DEFAULT_HRAMATKA_RUN_ROOT,
-}
 DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
 # Same operator env file as ~/.local/bin/learn-ukrainian-backup (launchd wrapper).
 DEFAULT_BACKUP_ENV_FILE = Path.home() / ".secrets" / "learn-ukrainian-backup.env"
@@ -238,6 +226,17 @@ class FakeHostAdapter:
 
 
 ENV_SELF_HOST = "ATLAS_JOB_SELF_HOST"
+ENV_RUNNER_HOST = "ATLAS_RUNNER_HOST"
+
+
+def resolve_runner_host(host: str | None = None) -> str:
+    """Return the plan-host token for status/pull; fail closed without env."""
+    if host:
+        return host
+    env_host = os.environ.get(ENV_RUNNER_HOST, "").strip()
+    if not env_host:
+        raise ValueError(f"{ENV_RUNNER_HOST} is required")
+    return env_host
 
 
 def self_host_aliases() -> frozenset[str]:
@@ -634,18 +633,18 @@ def require_safe_job_id(job_id: object) -> str:
 
 
 def _canonical_host(host: str | None) -> str:
-    """Map ssh-alias variants (``vps``) onto the canonical host name."""
-    if host in HRAMATKA_ALIASES:
-        return "hramatka"
+    """Normalize a plan-host token (no alias remapping)."""
     return host or "atlas-runner"
 
 
-def _run_root(host: str | None = None) -> Path:
-    override = os.environ.get("ATLAS_RUN_ROOT")
-    if override:
-        return Path(override)
-    canonical = _canonical_host(host)
-    return Path(DEFAULT_RUN_ROOTS.get(canonical, DEFAULT_RUN_ROOT))
+def _run_root(_host: str | None = None) -> Path:
+    # Run root is env-only; plan-host tokens must not select a path.
+    override = os.environ.get("ATLAS_RUN_ROOT", "").strip()
+    if not override:
+        raise ValueError("ATLAS_RUN_ROOT is required")
+    if not override.startswith("/"):
+        raise ValueError("ATLAS_RUN_ROOT must be an absolute path")
+    return Path(override)
 
 
 def _safe_id_token(part: str) -> str:
@@ -675,8 +674,8 @@ def _path_under(root: Path, *parts: str) -> Path:
 def require_safe_workdir(workdir: object, host: str | None = None) -> str:
     """Fail closed for plan/registry workdirs used in path and SSH contexts.
 
-    Rejects ``..``, absolute paths outside ``ATLAS_RUN_ROOT`` / the
-    per-host default run root (see ``DEFAULT_RUN_ROOTS``), and any path
+    Rejects ``..``, absolute paths outside the required ``ATLAS_RUN_ROOT``,
+    and any path
     whose segments are not ``_SAFE_ID`` tokens. Returns a newly constructed
     path from validated tokens (or ``str(resolved)`` for absolute paths
     under the run root), never the original relative ``workdir`` string.
@@ -770,8 +769,8 @@ def validate_plan(plan: dict[str, Any]) -> list[str]:
     if not isinstance(job_id, str) or _SAFE_ID.fullmatch(job_id) is None:
         errors.append("id must be a filesystem/systemd-safe token")
     host = plan.get("host")
-    if host != "atlas-runner" and host not in HRAMATKA_ALIASES:
-        errors.append("host must be atlas-runner, hramatka, or vps")
+    if host != "atlas-runner":
+        errors.append("host must be atlas-runner")
     kind = plan.get("kind")
     if kind not in BATCH_KINDS:
         errors.append(f"kind must be one of {sorted(BATCH_KINDS)}")
@@ -1195,7 +1194,11 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
     host = str(plan["host"])
     sink = plan.get("result_sink")
     unit = unit_name(job_id)
-    workdir = work_dir_for(job_id, plan)
+    try:
+        workdir = work_dir_for(job_id, plan)
+    except ValueError as exc:
+        print(f"invalid workdir: {exc}", file=sys.stderr)
+        return 2
     plan_blob = json.dumps(plan, sort_keys=True).encode()
     row = {
         "id": job_id,
@@ -1302,11 +1305,7 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
     if "--no-poll" not in args:
         args.append("--no-poll")
     env = os.environ.copy()
-    env["ATLAS_RUNNER_HOST"] = host
-    # Forward the per-host default run root so the remote launcher's
-    # REMOTE_REPO derivation (RUN_ROOT/repo) matches the host actually
-    # targeted, not atlas-runner's default, when ATLAS_RUN_ROOT isn't
-    # already set by the caller.
+    env[ENV_RUNNER_HOST] = host
     env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
     env["ATLAS_RE_ENRICH_UNIT"] = unit
     env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
@@ -1551,18 +1550,25 @@ def _unit_is_active(unit: dict[str, Any]) -> bool:
     ).startswith("running")
 
 
-def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None = None) -> int:
+def status(
+    *, host: str | None = None, audit: bool = False, host_adapter: HostAdapter | None = None
+) -> int:
+    try:
+        resolved = resolve_runner_host(host)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     adapter = host_adapter or get_host_adapter()
     try:
-        if not adapter.reachable(host):
-            print(f"host {host} unreachable", file=sys.stderr)
+        if not adapter.reachable(resolved):
+            print(f"host {resolved} unreachable", file=sys.stderr)
             return 2
-        host_units = adapter.list_atlas_job_units(host)
+        host_units = adapter.list_atlas_job_units(resolved)
     except (ConnectionError, OSError, ValueError) as exc:
         print(f"host status failed: {exc}", file=sys.stderr)
         return 2
 
-    rows = [r for r in list_registry() if r.get("host") == host]
+    rows = [r for r in list_registry() if r.get("host") == resolved]
     for row in rows:
         if row.get("state") == "running":
             row = reconcile_row(row, host_units=host_units, host_adapter=adapter)
@@ -1595,7 +1601,7 @@ def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None =
         )
 
     try:
-        lines = adapter.pgrep_drivers(host)
+        lines = adapter.pgrep_drivers(resolved)
     except (ConnectionError, OSError) as exc:
         print(f"audit pgrep failed: {exc}", file=sys.stderr)
         return 2
@@ -1620,21 +1626,22 @@ def status(*, host: str, audit: bool = False, host_adapter: HostAdapter | None =
 
 def pull(
     *,
-    host: str,
+    host: str | None = None,
     job_id: str | None = None,
     workdir: str | None = None,
 ) -> int:
+    try:
+        resolved = resolve_runner_host(host)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     if job_id is not None:
         job_id = require_safe_job_id(job_id)
     if workdir:
-        workdir = require_safe_workdir(workdir, host=host)
+        workdir = require_safe_workdir(workdir, host=resolved)
     env = os.environ.copy()
-    env["ATLAS_RUNNER_HOST"] = host
-    # Mirror submit(): forward the per-host default run root so the
-    # remote pull resolves workdirs under the host actually targeted
-    # (e.g. /home/ops/atlas-jobs on hramatka), not atlas-runner's
-    # default, when ATLAS_RUN_ROOT isn't already set by the caller.
-    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(host)))
+    env[ENV_RUNNER_HOST] = resolved
+    env.setdefault("ATLAS_RUN_ROOT", str(_run_root(resolved)))
     if workdir:
         env["ATLAS_RE_ENRICH_WORK_DIR"] = workdir
     if job_id:
@@ -1660,7 +1667,7 @@ def main(argv: list[str] | None = None) -> int:
     p_sub.add_argument("--dry-run", action="store_true")
 
     p_st = sub.add_parser("status", help="List registry rows; optional untracked audit")
-    p_st.add_argument("--host", default="atlas-runner")
+    p_st.add_argument("--host", default=None)
     p_st.add_argument("--audit", action="store_true")
 
     p_close = sub.add_parser("close", help="Seal a result receipt for a registered job")
@@ -1672,7 +1679,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("list", help="List registry rows")
 
     p_pull = sub.add_parser("pull", help="Pull work-dir artifacts (no pointer flip)")
-    p_pull.add_argument("--host", default="atlas-runner")
+    p_pull.add_argument("--host", default=None)
     p_pull.add_argument("--job-id")
 
     args = parser.parse_args(argv)

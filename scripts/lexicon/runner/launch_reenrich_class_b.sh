@@ -29,26 +29,18 @@
 #   scripts/lexicon/runner/launch_reenrich_class_b.sh
 #   scripts/lexicon/runner/launch_reenrich_class_b.sh --limit 5   # smoke
 #
-# Env overrides:
-#   ATLAS_RUN_ROOT (default per host: /home/ops/atlas-jobs on hramatka/vps,
-#   /home/ops/atlas-runner otherwise), ATLAS_REPO, ATLAS_RE_ENRICH_WORK_DIR,
+# Env:
+#   ATLAS_RUN_ROOT (required), ATLAS_REPO, ATLAS_RE_ENRICH_WORK_DIR,
 #   ATLAS_RE_ENRICH_CODE_ROOT, ATLAS_RE_ENRICH_RUNNER_PYTHON,
 #   ATLAS_RE_ENRICH_UNIT, ATLAS_RE_ENRICH_DRIVER, ATLAS_RE_ENRICH_SLUGS_FILE,
 #   ATLAS_SOURCES_DB, ATLAS_KAIKKI_JSON, ATLAS_LIVE_MANIFEST
 set -euo pipefail
 
-# Per-host run root (#6876): the Mac-side wrapper always forwards an explicit
-# ATLAS_RUN_ROOT, so this default only matters for direct on-host invocation.
-# hramatka/vps keep their run tree under /home/ops/atlas-jobs; every other
-# host keeps /home/ops/atlas-runner.
-if [[ -n "${ATLAS_RUN_ROOT:-}" ]]; then
-  RUN_ROOT="$ATLAS_RUN_ROOT"
-else
-  case "$(hostname -s 2>/dev/null || hostname)" in
-    hramatka*|vps*) RUN_ROOT="/home/ops/atlas-jobs" ;;
-    *) RUN_ROOT="/home/ops/atlas-runner" ;;
-  esac
+if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
+  echo "ATLAS_RUN_ROOT is required" >&2
+  exit 2
 fi
+RUN_ROOT="$ATLAS_RUN_ROOT"
 
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"

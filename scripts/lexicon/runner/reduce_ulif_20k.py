@@ -180,7 +180,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--work-dir",
         type=Path,
-        default=Path("/home/ops/atlas-runner/run-20k"),
+        required=True,
+        help="Runner work-dir (required; no baked default).",
     )
     parser.add_argument(
         "--network-cache",
