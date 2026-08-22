@@ -2394,6 +2394,21 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
     return bool((status_proc.stdout or "").strip())
 
 
+# Top-level checkout dirs the read-only snapshot never records. Other lanes'
+# dispatch worktrees live under ``.worktrees/`` (layout A): concurrent activity
+# there — including writes inside a sandbox that already existed at pre-snapshot
+# time — is never this task's mutation, and it false-failed cleanly-successful
+# read-only dispatches (#7124). The guard diffs only what the task could own.
+_READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS = frozenset({".worktrees"})
+
+
+def _is_read_only_snapshot_excluded_path(path: str) -> bool:
+    """Return whether a checkout-relative path is outside the snapshot scope."""
+    normalized = _normalize_read_only_relpath(path)
+    top_level = normalized.split("/", 1)[0]
+    return top_level in _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS
+
+
 def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
     """Capture the observable Git state of a read-only worker's checkout.
 
@@ -2401,6 +2416,9 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     create ignored cache entries that ordinary ``git status`` deliberately
     hides.  It is diagnostic only: this guard reports leaked paths and never
     removes them, since a pre-existing user file cannot be attributed safely.
+
+    Paths under ``.worktrees/`` are excluded entirely (#7124): they belong to
+    concurrent dispatch lanes, not to the task being guarded.
     """
     commands = (
         (
@@ -2440,15 +2458,21 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         if len(record) < 4 or record[2] != " ":
             return None, "status snapshot returned an unparseable porcelain record"
         state, path = record[:2], record[3:]
-        entries[path] = state
         # Porcelain v1 emits the pre-rename/pre-copy path as a second NUL item.
+        # Consume it even for excluded paths so the record stream stays aligned.
+        rename_source: str | None = None
         if "R" in state or "C" in state:
             if index >= len(status_records) or not status_records[index]:
                 return None, "status snapshot returned an incomplete rename/copy record"
-            entries[status_records[index]] = f"{state}:source"
+            rename_source = status_records[index]
             index += 1
+        if _is_read_only_snapshot_excluded_path(path):
+            continue
+        entries[path] = state
+        if rename_source is not None:
+            entries[rename_source] = f"{state}:source"
     for path in outputs["ignored"].split("\0"):
-        if path:
+        if path and not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
     return entries, None
 
@@ -2620,8 +2644,9 @@ def _read_only_mutation_paths(
     Newly appeared sibling dispatch sandboxes under
     ``.worktrees/dispatch/<agent>/<task>/`` are also excluded (#6938): concurrent
     ``git worktree add`` on the shared primary checkout is not this task's
-    mutation. Writes under a sandbox that already existed in the pre-snapshot
-    remain visible.
+    mutation. Since #7124 the snapshot itself already drops every
+    ``.worktrees/`` path; this exemption remains as defense in depth for
+    snapshots persisted by older workers.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -4193,6 +4218,18 @@ def _run_worker(
             stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
         elif returncode is None and returncode_reason is None:
             returncode_reason = "no terminal subprocess returncode was available"
+        if returncode is not None and returncode < 0 and returncode_reason is None:
+            # Python reports signal deaths as negative returncodes. Decode the
+            # signal so a SIGKILLed worker persists as SIGKILL, not an opaque
+            # -9 (#7124).
+            signum = -returncode
+            try:
+                signal_name = signal.Signals(signum).name
+            except ValueError:
+                signal_name = f"signal {signum}"
+            returncode_reason = (
+                f"worker subprocess terminated by {signal_name} (returncode {returncode})"
+            )
 
         final_state = _read_state(state_path) or {}
 
@@ -4339,9 +4376,16 @@ def _run_worker(
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
         if read_only_mutation_paths:
-            last_error = (
+            mutation_diagnostic = (
                 "read-only checkout mutation detected: "
                 + ", ".join(read_only_mutation_paths)
+            )
+            # Never REPLACE a real failure with the guard diagnostic (#7124):
+            # overwriting it hid the actual cause (e.g. a SIGKILLed worker's
+            # stderr) behind the mutation list. The paths stay independently
+            # queryable via ``read_only_mutation_paths`` either way.
+            last_error = (
+                f"{last_error}; {mutation_diagnostic}" if last_error else mutation_diagnostic
             )
         if no_deliverable_reason is not None:
             last_error = no_deliverable_reason
