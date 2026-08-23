@@ -11,7 +11,9 @@ from scripts.ci.secret_scan_scope import resolve_scan_scope
 
 
 def _git(root: Path, *args: str) -> str:
-    return subprocess.check_output(["git", *args], cwd=root, text=True).strip()
+    return subprocess.check_output(
+        ["git", *args], cwd=root, text=True, timeout=30
+    ).strip()
 
 
 def _repo_with_range(root: Path) -> tuple[str, str, str]:
@@ -28,13 +30,14 @@ def _repo_with_range(root: Path) -> tuple[str, str, str]:
     head = _git(root, "rev-parse", "HEAD")
 
     empty_tree = subprocess.check_output(
-        ["git", "mktree"], cwd=root, input="", text=True
+        ["git", "mktree"], cwd=root, input="", text=True, timeout=30
     ).strip()
     unrelated = subprocess.check_output(
         ["git", "commit-tree", empty_tree],
         cwd=root,
         input="unrelated\n",
         text=True,
+        timeout=30,
     ).strip()
     return base, head, unrelated
 
@@ -57,6 +60,7 @@ def _repo_with_merge_group(root: Path) -> tuple[str, str]:
         cwd=root,
         input="merge group\n",
         text=True,
+        timeout=30,
     ).strip()
     return base, merge_group_head
 

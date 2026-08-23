@@ -194,7 +194,9 @@ def test_symmetric_diff_uses_its_head_for_blob_reads(monkeypatch):
 
 def test_commit_range_mode_keeps_union_of_touched_public_paths(monkeypatch, tmp_path):
     def git(*args: str) -> str:
-        return subprocess.check_output(["git", *args], cwd=tmp_path, text=True).strip()
+        return subprocess.check_output(
+            ["git", *args], cwd=tmp_path, text=True, timeout=30
+        ).strip()
 
     git("init", "--initial-branch=main")
     git("config", "user.email", "ci@example.com")
