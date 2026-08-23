@@ -354,7 +354,9 @@ def fetch_workflow_runs_from_api(
     *,
     since_dt: datetime | None = None,
     limit: int | None = None,
+    event: str | None = None,
     branch: str | None = None,
+    status: str | None = "completed",
     token: str | None = None,
     max_pages: int = MAX_PAGINATION_PAGES,
 ) -> list[dict[str, Any]]:
@@ -364,6 +366,10 @@ def fetch_workflow_runs_from_api(
     per_page = 100
 
     query_parts = [f"per_page={per_page}"]
+    if status:
+        query_parts.append(f"status={status}")
+    if event and event != "all":
+        query_parts.append(f"event={event}")
     if branch:
         query_parts.append(f"branch={branch}")
 
@@ -781,7 +787,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--limit",
         type=int,
         default=None,
-        help="Maximum number of runs to evaluate.",
+        help="Maximum number of most recent matching runs to evaluate (default: all matching runs in window).",
     )
     parser.add_argument(
         "--branch",
@@ -840,6 +846,7 @@ def main(argv: list[str] | None = None) -> int:
                 workflow_file=workflow_file,
                 since_dt=since_dt,
                 limit=args.limit,
+                event=args.event,
                 branch=args.branch,
                 token=token,
             )

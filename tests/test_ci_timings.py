@@ -26,6 +26,7 @@ from scripts.ci.ci_timings import (
     analyze_timings,
     compute_metric_stats,
     extract_pr_number,
+    fetch_workflow_runs_from_api,
     load_runs_and_jobs_from_fixture,
     main,
     nearest_rank_percentile,
@@ -339,3 +340,122 @@ def test_cli_main_invalid_since(capsys: pytest.CaptureFixture[str]) -> None:
     assert exit_code == 2
     _out, err = capsys.readouterr()
     assert "Error: Invalid --since format" in err
+
+
+def test_analyze_timings_limit_with_newer_non_matching_runs() -> None:
+    """Verify --limit on fixture data selects the N most recent matching runs.
+
+    In the fixture, there are 15 total runs (pull_request, merge_group, push).
+    There are only 3 push runs, and several newer pull_request and merge_group
+    runs occurred after them. Specifying event_filter='push' with limit=2 must
+    return the 2 most recent push runs, ignoring newer non-matching runs.
+    """
+    runs, jobs_by_run = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
+    report = analyze_timings(
+        runs=runs,
+        jobs_fetcher=jobs_by_run,
+        event_filter="push",
+        limit=2,
+    )
+    push = report.events["push"]
+    assert push.runs_count == 2
+    assert push.wall_clock_minutes["n"] == 2
+
+
+def test_fetch_workflow_runs_passes_query_params(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify fetch_workflow_runs_from_api constructs correct API query parameters."""
+    captured_paths: list[str] = []
+
+    def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any]:
+        captured_paths.append(path)
+        return {"workflow_runs": []}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+
+    # 1. Event + branch + default status
+    fetch_workflow_runs_from_api(
+        repo="learn-ukrainian/learn-ukrainian.github.io",
+        workflow_file="ci.yml",
+        event="push",
+        branch="main",
+        limit=5,
+    )
+    assert len(captured_paths) == 1
+    assert "event=push" in captured_paths[0]
+    assert "branch=main" in captured_paths[0]
+    assert "status=completed" in captured_paths[0]
+    assert "per_page=100" in captured_paths[0]
+
+    captured_paths.clear()
+
+    # 2. Event == 'all' should NOT pass event=all
+    fetch_workflow_runs_from_api(
+        repo="learn-ukrainian/learn-ukrainian.github.io",
+        workflow_file="ci.yml",
+        event="all",
+    )
+    assert len(captured_paths) == 1
+    assert "event=" not in captured_paths[0]
+
+
+def test_fetch_workflow_runs_api_event_limit_with_newer_non_matching_runs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Verify limit operates on matching runs when API filters by event.
+
+    Simulates the GitHub Actions API returning runs based on query params:
+    - Without event= in query: returns all runs (where top runs are non-push).
+    - With event=push in query: returns push runs only.
+    Demonstrates that fetching with event='push' and limit=2 fetches the 2 push runs.
+    """
+    runs, _ = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
+
+    def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any]:
+        if "event=push" in path:
+            matching = [r for r in runs if r.get("event") == "push" and r.get("status") == "completed"]
+            return {"workflow_runs": matching}
+        # If API was called without event filter, it returns unfiltered runs (starting with non-push)
+        return {"workflow_runs": runs}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+
+    fetched = fetch_workflow_runs_from_api(
+        repo="learn-ukrainian/learn-ukrainian.github.io",
+        workflow_file="ci.yml",
+        event="push",
+        limit=2,
+    )
+    assert len(fetched) == 2
+    assert all(r.get("event") == "push" for r in fetched)
+
+
+def test_cli_main_api_event_limit_matching_runs(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """End-to-end test of main() with API fetch, verifying --limit N returns N matching runs.
+
+    If the fix were missing (i.e. event filter omitted during fetch), fetch would return
+    the newest runs which are non-push, resulting in 'push (0 completed runs)'.
+    With the fix, main() produces 'push (2 completed runs)'.
+    """
+    runs, jobs_by_run = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
+
+    def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any] | list[Any]:
+        if "actions/runs/" in path and "/jobs" in path:
+            run_id = path.split("actions/runs/")[1].split("/jobs")[0]
+            return jobs_by_run.get(run_id, [])
+        if "event=push" in path:
+            matching = [r for r in runs if r.get("event") == "push" and r.get("status") == "completed"]
+            return {"workflow_runs": matching}
+        # Unfiltered returns all runs (the top ones are non-push)
+        return {"workflow_runs": runs}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+
+    exit_code = main(["--event", "push", "--limit", "2"])
+    assert exit_code == 0
+    out, err = capsys.readouterr()
+    assert not err
+    assert "## push (2 completed runs)" in out
+    assert "## push (0 completed runs)" not in out
