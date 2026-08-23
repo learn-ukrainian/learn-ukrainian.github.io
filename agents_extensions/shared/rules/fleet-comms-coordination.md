@@ -29,6 +29,20 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 at the **onboarding contract** for ownership and experimental ACPX scope; this rule does
 **not** duplicate mutable model pins, effort ladders, or a hard-coded live plane mode.
 
+## Communication & execution layers (do not conflate)
+
+| Layer | Role |
+| --- | --- |
+| Fleet-comms | Durable authority for queues, receipts, jobs |
+| ACP / ACPX | Toolless provider transport for ordinary inter-agent asks/discuss only |
+| Toolful native / `delegate.py` | Plan, create, review, design, implementation |
+| Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
+
+- ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
+- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/kimi/glm/opencode/agy).
+- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = toolful seat + verdict posted on the PR.
+- Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
+
 ## Two halves (do not conflate)
 
 | Half | Status | Surfaces |
