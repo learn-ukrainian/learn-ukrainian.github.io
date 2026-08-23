@@ -8,7 +8,10 @@ Services bind `127.0.0.1` only. Reach them from another machine with an SSH
 tunnel; set `MONITOR_INSTANCE_ID` in the environment so `/api/health`
 distinguishes hosts. For `GET /api/occupancy`, set `MONITOR_OCCUPANCY_HOST_IDS`
 to comma-separated `canonical=opaque-id` pairs (opaque values only, e.g.
-`host-job`). Do not put addresses or SSH hostnames in the occupancy JSON.
+`host-job`). Optional local seats: `ATLAS_JOB_SELF_HOST` or
+`MONITOR_OCCUPANCY_DRIVER_HOST_ID` attaches session-stream driver leases;
+`MONITOR_OCCUPANCY_MARKERS` publishes Foundry/compiler heartbeats. Do not put
+addresses or SSH hostnames in the occupancy JSON.
 
 Units are **Linux-native `Type=simple`** processes. Do not wrap
 `./services.sh start` in `Type=oneshot RemainAfterExit=yes`: that is

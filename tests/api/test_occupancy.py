@@ -6,6 +6,7 @@ import json
 import re
 import threading
 import time
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -38,6 +39,18 @@ def _clear_observer_presence() -> None:
 @pytest.fixture(autouse=True)
 def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_local_occupants(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(tmp_path / "no-markers"))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+    monkeypatch.delenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", raising=False)
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    monkeypatch.setattr(
+        "scripts.api.occupancy_local.session_streams_db_path",
+        lambda: tmp_path / "missing-session-streams.sqlite3",
+    )
 
 
 def _plan(**overrides: object) -> dict:

@@ -910,16 +910,24 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "prepare":
-            result = prepare(
-                input_path=args.input,
-                output_dir=args.output_dir,
-                max_records=args.max_records,
-                evaluation_artifacts=tuple(args.evaluation_artifact),
-                tokenizer_path=args.tokenizer_path,
-                tokenizer_identifier=args.tokenizer_identifier,
-                tokenizer_revision=args.tokenizer_revision,
-                cost_path=args.cost_config,
-            )
+            from scripts.api.occupancy_local import occupancy_marker_scope
+
+            with occupancy_marker_scope(
+                kind="service",
+                agent="foundry",
+                task_id="ukrainian-data-foundry",
+                epic="foundry",
+            ):
+                result = prepare(
+                    input_path=args.input,
+                    output_dir=args.output_dir,
+                    max_records=args.max_records,
+                    evaluation_artifacts=tuple(args.evaluation_artifact),
+                    tokenizer_path=args.tokenizer_path,
+                    tokenizer_identifier=args.tokenizer_identifier,
+                    tokenizer_revision=args.tokenizer_revision,
+                    cost_path=args.cost_config,
+                )
             print(canonical_json(result.receipt))
         else:
             print(canonical_json(verify(args.output_dir)))
