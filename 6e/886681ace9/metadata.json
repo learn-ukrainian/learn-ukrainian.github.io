@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6e886681ace9",
+  "strategy": "manual-commit",
+  "branch": "agy/split-brain-7168-p2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/delegate_router.py",
+    "scripts/delegate.py",
+    "scripts/orchestration/job_host_exec.py",
+    "tests/test_delegate.py",
+    "tests/test_delegate_api.py",
+    "tests/test_delegate_primary_integrity.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6e/886681ace9/0/metadata.json",
+      "transcript": "/6e/886681ace9/0/full.jsonl",
+      "compact_transcript": "/6e/886681ace9/0/transcript.jsonl",
+      "content_hash": "/6e/886681ace9/0/content_hash.txt",
+      "prompt": "/6e/886681ace9/0/prompt.txt"
+    }
+  ]
+}

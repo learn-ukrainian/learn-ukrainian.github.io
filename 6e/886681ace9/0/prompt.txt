@@ -1,0 +1,45 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/split-brain-7168-p2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7168 part 2 — cross-host task-state split-brain (one shippable unit, one PR)
+
+Read `gh issue view 7168 -R learn-ukrainian/learn-ukrainian.github.io` — part 1 (branch-attach
+refspecs) is fixed by #7193; THIS task is the 2026-08-23T15:14Z comment: re-dispatching a task-id
+that previously ran on one host, when routing places it on another, leaves TWO
+`batch_state/tasks/<id>.json` records. A settle-watch reading the wrong host sees the stale
+terminal `done` from the PREVIOUS round while the real worker is still running elsewhere.
+
+## Outcome
+A settle-watch (orchestrator, Monitor loop, or `/api/delegate` reader) can never mistake a stale
+prior-round record for the live run's terminal state. The issue accepts either shape: a single
+authoritative state locus, or a run-nonce making stale reads detectable. Choose the smallest
+robust design; post a short design-note comment on #7168 (chosen shape + why + rejected
+alternative) BEFORE implementing, then implement in the same task. If your design grows beyond
+task-record read/write and settle paths into cross-host coordination infrastructure, STOP after
+the design note and report — that variant needs advisor review first.
+
+## Also (same lane, named by operator on #7168)
+The recovery hint at `scripts/delegate.py:3462` still suggests `git fetch origin <branch>`, which
+reproduces the part-1 failure on a main-only-refspec host — update it to the explicit-refspec
+form that #7193 uses.
+
+## Acceptance (quote raw output)
+1. A test reproducing the split-brain: stale terminal record for the same task-id (as from a
+   prior round) + live record → the reader/watcher path reports the LIVE state, or detectably
+   refuses the stale one. Mutation-check: with your fix reverted the test fails; quote both runs.
+2. Existing delegate/dispatch tests green: `.venv/bin/pytest -q` on the files
+   `grep -rl "batch_state/tasks" tests/ | head` names, plus any test file you touched;
+   `.venv/bin/ruff check` clean on changed files.
+3. Design-note comment URL on #7168.
+4. One conventional commit (`fix(delegate): detect stale cross-host task records (#7168)`,
+   X-Agent trailer, `Refs #7141`). NO push, NO auto-merge, NO amend after reporting. Report HEAD
+   SHA + evidence + ready PR body.
