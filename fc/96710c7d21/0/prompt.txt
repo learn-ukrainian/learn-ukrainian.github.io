@@ -1,0 +1,45 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/delegate-sweep-7203-delta
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta: cursor/delegate-sweep-7203 — make the legacy path read-free and self-healing (same branch, on top)
+
+Driver review of head 3d461512f1 (your #7203 fix). Both halves are correct and stay. One residual makes the
+fix incomplete on THIS machine: every existing lease dir (25 today) has no marker, so
+`_build_runtime_tmp_legacy_lease_index` runs on every dispatch and calls `_read_state_json` on all
+~2,000 records (4.8 GB, 30+ MB each) — once per sweep instead of 25×, but still tens of seconds per
+dispatch, and forever, because nothing ever writes the marker for a legacy lease.
+
+Facts you can rely on: `_runtime_tmp_lease_name(task_id)` is a pure sanitization of the task id
+(`scripts/delegate.py:680-682`), and task records are named `batch_state/tasks/<task_id>.json`.
+
+## Outcome
+A sweep over legacy leases opens ZERO task records in the common case, and a legacy lease is resolved at
+most once in its lifetime.
+
+## Do
+1. Build the legacy index from record filename STEMS: `lease_name(stem) → stem`, no JSON reads. Only if
+   a legacy lease name is absent from that stem index, fall back to the existing bounded one-pass read —
+   and keep that fallback bounded to the unresolved leases, never all leases.
+2. When a legacy lease is resolved by either path, BACKFILL its `.delegate-task-id` marker so the next
+   sweep takes the O(1) path. Never write into a lease dir the sweep is about to remove.
+3. Extend `tests/test_delegate_runtime_tmp_sweep.py`: (a) legacy leases whose task ids exist as records →
+   zero `_read_state_json` calls (counting monkeypatch), mutation-check by removing the stem index;
+   (b) after one sweep the marker exists and a second sweep is O(1) even with the fallback disabled.
+
+## Acceptance (quote raw output)
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_delegate_runtime_tmp_sweep.py
+  tests/test_delegate_readonly_guard.py tests/test_delegate.py` green; ruff clean on changed files.
+- Both mutation checks quoted (revert → fail, restore → pass).
+- One conventional commit on top (`fix(delegate): read-free legacy lease index with marker backfill (#7203)`,
+  X-Agent trailer). NO push, NO amend, NO rebase, NO auto-merge. Report new HEAD SHA + evidence.
+Coordination: PR #7201's delta (agy) is editing wait/status/dispatch-summary regions of delegate.py on
+another branch; do not restructure those regions.
