@@ -7,9 +7,10 @@ name: CI
 #
 # Two-tier merge-queue cutover (#6943 stage 2): one workflow, two events.
 # pull_request tier (light): ruff + fastlane + contracts + frontend.
-# merge_group / push / workflow_dispatch tier (full): light PLUS planner
-# contract, four shards, and coverage floor. CI Gate remains the sole required context,
-# reports on both events, and fail-closes on missing/skipped required deps.
+# merge_group / push / schedule / workflow_dispatch tier (full): light PLUS
+# planner contract, four shards, and coverage floor. CI Gate remains the sole
+# required context, reports on all full-tier events, and fail-closes on
+# missing/skipped required deps.
 #
 # Third class (#7018): docs_skills — decided by scripts/ci/landing_class.py on
 # merge_group / push / workflow_dispatch (NOT GitHub paths:/paths-ignore).
@@ -18,6 +19,22 @@ name: CI
 # verify-artifacts so CI Gate still sees success, never skipped (#5762).
 # Any off-allowlist path or classifier error → full suite (fail closed).
 # The full tier still never path-filters pytest collection for product code.
+#
+# Push-to-main dedup (#7173) ships OFF: only vars.CI_PUSH_DEDUP == 'on' may
+# classify a plain push as mq_validated. That class is a run-level proof of one
+# ci.yml merge_group run for the pushed SHA with successful CI Gate, all four
+# Python jobs, and pytest-shard-1..4 artifacts; unknown or ambiguous proof is
+# full. The push parent must equal that run's queue base, an independent
+# before..sha re-derivation must be non-docs_skills, and the push must be plain
+# with no self-reference in its diff. It skips only the pytest
+# spine/planner/coverage combine/Gate artifact verify on the push run; frontend
+# and E2E stay out of this patch.
+#
+# Residual: main-scoped pip-wheels-*, lexicon-manifest-*, and npm caches can
+# stay cold after a lockfile/manifest rotation because queue-branch caches are
+# not readable from main. They refresh on the daily backstop only until Wave B
+# patch 4 adds cache warming. Measure every push run, with >=10 pushes after
+# enablement, using scripts/ci/ci_timings.py.
 #
 # Invariant (encodes #3873 #4888 #4936 #5351 #5354): on the full tier, pytest
 # must NEVER be selected or skipped by changed files. pytest-fastlane uses
@@ -42,6 +59,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
 
 jobs:
   # ---------------------------------------------------------------------
@@ -84,11 +103,10 @@ jobs:
           python -m ruff check scripts/
 
   # ---------------------------------------------------------------------
-  # 0b. landing-class — classify merge_group/push/dispatch diffs (#7018).
+  # 0b. landing-class — classify merge_group/push/dispatch diffs (#7018/#7173).
   #     Always runs on the full tier; always succeeds; outputs class=
-  #     docs_skills|full (fail closed → full). Downstream pytest-plan /
-  #     python / coverage-floor take no-op success when docs_skills so CI
-  #     Gate can require them unconditionally (never skipped).
+  #     docs_skills|full|mq_validated (fail closed → full). mq_validated is
+  #     push-only; merge_group never takes a class-keyed mq skip path.
   # ---------------------------------------------------------------------
   landing-class:
     name: Landing class
@@ -97,9 +115,11 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      actions: read
     outputs:
       # Belt-and-suspenders: empty/missing step output → full (fail closed).
       class: ${{ steps.classify.outputs.class || 'full' }}
+      validating_run_id: ${{ steps.classify.outputs.validating_run_id || '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -109,7 +129,12 @@ jobs:
         id: classify
         env:
           BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.before }}
-          HEAD_SHA: ${{ github.event.merge_group.head_sha || github.sha }}
+          HEAD_SHA: ${{ github.sha }}
+          BEFORE_SHA: ${{ github.event.before || '' }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_FORCED: ${{ github.event.forced || 'false' }}
+          CI_PUSH_DEDUP: ${{ vars.CI_PUSH_DEDUP || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           # Stdlib-only classifier; system python3 matches frontend_change_scope.
@@ -117,6 +142,9 @@ jobs:
           python3 scripts/ci/landing_class.py \
             --base "${BASE_SHA:-}" \
             --head "${HEAD_SHA:-HEAD}" \
+            --before "${BEFORE_SHA:-}" \
+            --event "${EVENT_NAME:-}" \
+            --repository "${GITHUB_REPOSITORY:-}" \
             --github-output
           if ! grep -q '^class=' "${GITHUB_OUTPUT}"; then
             echo "class=full" >> "${GITHUB_OUTPUT}"
@@ -180,28 +208,38 @@ jobs:
       contents: read
     steps:
       - name: Docs/skills-only — planner no-op success
-        if: needs.landing-class.outputs.class == 'docs_skills'
-        run: echo "landing-class=docs_skills; pytest-plan no-op success (#7018)"
+        if: >-
+          needs.landing-class.outputs.class == 'docs_skills'
+          || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
+        run: echo "landing-class=${{ needs.landing-class.outputs.class }}; pytest-plan no-op success"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           persist-credentials: false
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           python-version-file: '.python-version'
 
       - name: Download immutable pytest duration snapshot
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pytest-duration-snapshot
           path: ci-artifacts
 
       - name: Validate planner contract without collection
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         run: |
           python scripts/ci/pytest_shards.py validate-snapshot \
             --snapshot ci-artifacts/pytest-duration-snapshot.json \
@@ -387,7 +425,8 @@ jobs:
   # exactly once. Each shard makes the same deterministic plan from one frozen
   # duration snapshot; four parallel jobs are the topology that completed under
   # the #5776 hang investigation; one xdist session did not.
-  # docs_skills (#7018): no-op success (job still runs; never skipped).
+  # docs_skills (#7018) and mq_validated (#7173): no-op success (job still
+  # runs; never skipped). mq_validated is explicitly push-only.
   python:
     name: Python (pytest) [${{ matrix.shard }}/4]
     if: github.event_name != 'pull_request'
@@ -398,42 +437,59 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4]
     needs: [landing-class]
+    outputs:
+      no_op: ${{ steps.noop.outputs.no_op || 'false' }}
     permissions:
       contents: read
     steps:
       - name: Docs/skills-only — shard no-op success
-        if: needs.landing-class.outputs.class == 'docs_skills'
-        run: echo "landing-class=docs_skills; python shard ${{ matrix.shard }} no-op success (#7018)"
+        id: noop
+        if: >-
+          needs.landing-class.outputs.class == 'docs_skills'
+          || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
+        run: |
+          echo "no_op=true" >> "$GITHUB_OUTPUT"
+          echo "landing-class=${{ needs.landing-class.outputs.class }}; python shard ${{ matrix.shard }} no-op success"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           persist-credentials: false
           fetch-depth: 0
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           python-version-file: '.python-version'
 
       # Keep the ACP protocol test's Node runtime deterministic regardless of
       # which round-robin shard owns its test file.
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
       - name: Download immutable pytest duration snapshot
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pytest-duration-snapshot
           path: ci-artifacts
 
       - name: Restore Atlas lexicon manifest cache
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         id: atlas-manifest-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -441,12 +497,17 @@ jobs:
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         run: |
           python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
 
       - name: Save Atlas lexicon manifest cache
-        if: needs.landing-class.outputs.class != 'docs_skills' && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: site/src/data/lexicon-manifest.json
@@ -456,7 +517,9 @@ jobs:
       # Cache-service errors are recoverable: continue to a cold pip install.
       # A restore miss or outage must not kill the shard (#7002).
       - name: Restore pip wheel cache
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         id: pip-wheel-cache
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -469,7 +532,9 @@ jobs:
       # but exclude Stanza and torch: every live Stressifier test is slow and
       # belongs to the dedicated scheduled model-provisioning lane.
       - name: Install dependencies
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         run: |
           set -euo pipefail
           python -m venv .venv
@@ -493,14 +558,19 @@ jobs:
           exit 1
 
       - name: Save pip wheel cache
-        if: needs.landing-class.outputs.class != 'docs_skills' && steps.pip-wheel-cache.outputs.cache-hit != 'true'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && steps.pip-wheel-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
           key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
 
       - name: Collect and plan this pytest shard locally
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         env:
           SHARD: ${{ matrix.shard }}
         run: |
@@ -516,14 +586,16 @@ jobs:
       # exception, never a changed-file filter; all other collected tests run
       # through the file-grouped LPT plan exactly once.
       - name: Run planned pytest shard
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         id: pytest
         continue-on-error: true
         timeout-minutes: 25
         env:
-          # Coverage collection on the trees that land: merge_group (queued
-          # merge commit) and push to main. PR heads stay coverage-free.
-          COLLECT_COVERAGE: ${{ github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+          # Coverage collection on landing trees and the daily backstop:
+          # merge_group, push to main, and schedule. PR heads stay coverage-free.
+          COLLECT_COVERAGE: ${{ github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule' }}
           # LINE coverage only (no branch=true). sys.monitoring is near-free
           # on coverage 7.14.1 / Python 3.12 vs the C-tracer's ~35% tax.
           # Unused when COLLECT_COVERAGE is false (--cov is not passed).
@@ -566,7 +638,10 @@ jobs:
 
       - name: Playground perf probe (serial, shard 1 only)
         id: playground
-        if: needs.landing-class.outputs.class != 'docs_skills' && matrix.shard == 1
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && matrix.shard == 1
         continue-on-error: true
         run: |
           for attempt in 1 2 3; do
@@ -581,20 +656,29 @@ jobs:
           exit 1
 
       - name: Upload pytest shard plan and results
-        if: always() && needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          always()
+          && needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-shard-${{ matrix.shard }}
           path: ci-artifacts/
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 3
 
       - name: Fail after preserving pytest evidence
-        if: needs.landing-class.outputs.class != 'docs_skills' && (steps.pytest.outcome != 'success' || (matrix.shard == 1 && steps.playground.outcome != 'success'))
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && (steps.pytest.outcome != 'success' || (matrix.shard == 1 && steps.playground.outcome != 'success'))
         run: exit 1
 
       - name: Upload test breadcrumbs
-        if: always() && needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          always()
+          && needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-breadcrumbs-shard-${{ matrix.shard }}
@@ -614,8 +698,10 @@ jobs:
       - name: Upload shard coverage data
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
           && (github.event_name == 'merge_group'
-           || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+           || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+           || github.event_name == 'schedule')
           && steps.pytest.outcome == 'success'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -1319,16 +1405,24 @@ jobs:
   #    failure as `failure`/`cancelled`.
 
   # Duration data is intentionally published only after every matrix member of
-  # a push to main succeeds. PRs and failed main runs can consume a prior main
-  # dataset but can never overwrite it.
+  # a push to main succeeds. For mq_validated it republishes the proof run's
+  # shard artifacts; the job is in the push Gate required set, so missing
+  # artifacts fail visibly instead of silently starving the main cache. PRs
+  # and failed main runs can consume a prior main dataset but can never
+  # overwrite it.
   pytest-duration-publish:
     name: Publish pytest durations
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.python.result == 'success'
-    needs: [python]
+    if: >-
+      github.event_name == 'push'
+      && github.ref == 'refs/heads/main'
+      && needs.python.result == 'success'
+      && needs.landing-class.outputs.class != 'docs_skills'
+    needs: [python, landing-class]
     permissions:
       contents: read
+      actions: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -1348,6 +1442,18 @@ jobs:
         with:
           pattern: pytest-shard-*
           path: ci-artifacts
+          run-id: ${{ needs.landing-class.outputs.validating_run_id || github.run_id }}
+          github-token: ${{ github.token }}
+      - name: Require four shard logs for duration publication
+        run: |
+          set -euo pipefail
+          for shard in 1 2 3 4; do
+            log="ci-artifacts/pytest-shard-${shard}/main.log"
+            if [[ ! -s "$log" ]]; then
+              echo "::error::pytest shard artifact/log missing for duration publication: $log" >&2
+              exit 1
+            fi
+          done
       - name: Publish successful-main durations and p95 summary
         run: |
           python scripts/ci/pytest_shards.py publish-durations \
@@ -1367,7 +1473,8 @@ jobs:
   # ---------------------------------------------------------------------
   # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
   # guarantee cross-family review flagged as a P1 when the reboot dropped it.
-  # docs_skills (#7018): no-op success (do not download missing coverage).
+  # docs_skills (#7018) and mq_validated (#7173): no-op success (do not
+  # download missing coverage). mq_validated is push-only.
   # Gate path ends at `coverage report --fail-under=35`. XML/HTML rendering is
   # off-path because nothing in-repo consumes those artifacts; combined
   # `.coverage` + text report remain downloadable for offline
@@ -1382,22 +1489,30 @@ jobs:
       contents: read
     steps:
       - name: Docs/skills-only — coverage floor no-op success
-        if: needs.landing-class.outputs.class == 'docs_skills'
-        run: echo "landing-class=docs_skills; coverage-floor no-op success (#7018)"
+        if: >-
+          needs.landing-class.outputs.class == 'docs_skills'
+          || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
+        run: echo "landing-class=${{ needs.landing-class.outputs.class }}; coverage-floor no-op success"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        if: needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           python-version: '3.12'
       - name: Download shard coverage data
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
           && (github.event_name == 'merge_group'
-              || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+              || github.event_name == 'schedule')
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: coverage-shard-*
@@ -1405,8 +1520,10 @@ jobs:
       - name: Combine and enforce
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
           && (github.event_name == 'merge_group'
-              || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+              || github.event_name == 'schedule')
         run: |
           set -euo pipefail
           # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
@@ -1437,8 +1554,10 @@ jobs:
       - name: Upload coverage report and combined data
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
           && (github.event_name == 'merge_group'
-              || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+              || github.event_name == 'schedule')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-report
@@ -1449,12 +1568,14 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Not a landing event — coverage floor is merge_group/main-push only
+      - name: Not a landing event — coverage floor is merge_group/main-push/schedule only
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
           && github.event_name != 'merge_group'
+          && github.event_name != 'schedule'
           && !(github.event_name == 'push' && github.ref == 'refs/heads/main')
-        run: echo "coverage floor applies to merge_group and pushes to main; job succeeds so CI Gate can require it unconditionally"
+        run: echo "coverage floor applies to merge_group, pushes to main, and schedule; job succeeds so CI Gate can require it unconditionally"
 
   ci-gate:
     name: CI Gate
@@ -1474,6 +1595,7 @@ jobs:
       - contracts
       - frontend
       - coverage-floor
+      - pytest-duration-publish
     permissions:
       contents: read
       pull-requests: write
@@ -1485,16 +1607,25 @@ jobs:
         with:
           python-version-file: '.python-version'
       - name: Docs/skills-only — skip shard artifact verify (no-op success)
-        if: github.event_name != 'pull_request' && needs.landing-class.outputs.class == 'docs_skills'
-        run: echo "landing-class=docs_skills; CI Gate verify-artifacts no-op success (#7018)"
+        if: >-
+          github.event_name != 'pull_request'
+          && (needs.landing-class.outputs.class == 'docs_skills'
+              || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated'))
+        run: echo "landing-class=${{ needs.landing-class.outputs.class }}; CI Gate verify-artifacts no-op success"
       - name: Download pytest shard plans and JUnit results
-        if: github.event_name != 'pull_request' && needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          github.event_name != 'pull_request'
+          && needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: pytest-shard-*
           path: ci-artifacts
       - name: Verify pytest shard completeness
-        if: github.event_name != 'pull_request' && needs.landing-class.outputs.class != 'docs_skills'
+        if: >-
+          github.event_name != 'pull_request'
+          && needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         run: |
           python scripts/ci/pytest_shards.py verify-artifacts \
             --artifact-dir ci-artifacts \
@@ -1504,13 +1635,19 @@ jobs:
       - name: Fail unless every event-required job succeeded
         env:
           EVENT_NAME: ${{ github.event_name }}
+          LANDING_CLASS: ${{ needs.landing-class.outputs.class || 'full' }}
+          PYTHON_NOOP: ${{ needs.python.outputs.no_op || 'false' }}
+          VALIDATING_RUN_ID: ${{ needs.landing-class.outputs.validating_run_id || '' }}
           # Explicit pairs — join(needs.*.result) loses job ids and cannot
           # distinguish expected PR-tier skips from unexpected ones.
           RESULTS: >-
-            ruff=${{ needs.ruff.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
+            ruff=${{ needs.ruff.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }},pytest-duration-publish=${{ needs.pytest-duration-publish.result }}
         run: |
           python scripts/ci/gate_required_results.py \
             --event "$EVENT_NAME" \
+            --class "$LANDING_CLASS" \
+            --python-noop "$PYTHON_NOOP" \
+            --validating-run-id "$VALIDATING_RUN_ID" \
             --results "$RESULTS"
 
       # Kicked PRs must not look CLEAN and sit (#7042): a merge_group failure

@@ -4,11 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.ci import changed_tests
 
+pytestmark = pytest.mark.repo_invariant
+
 REPO_INVARIANT_TESTS = [
+    "tests/test_ci_changed_tests.py",
     "tests/test_cyrillic_roundtrip_invariant.py",
     "tests/test_fleet_routing_open_model_data_import_guard.py",
+    "tests/test_frontend_change_scope.py",
     "tests/test_lint_test_assertions.py",
     "tests/test_subprocess_timeout_guard.py",
     "tests/test_threshold_source_of_truth.py",
@@ -64,6 +70,7 @@ def test_config_and_fixture_changes_trigger_repo_invariant_manifest() -> None:
         "pyproject.toml",
         "requirements-dev.txt",
         ".github/workflows/ci.yml",
+        "scripts/ci/fastlane_always_tests.txt",
         "tests/fixtures/example.json",
     ):
         assert changed_tests.select_test_modules([path], include_repo_invariants=True) == REPO_INVARIANT_TESTS
@@ -76,8 +83,10 @@ def test_repo_invariant_manifest_entries_are_not_duplicated() -> None:
     )
 
     assert selected == [
+        "tests/test_ci_changed_tests.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
+        "tests/test_frontend_change_scope.py",
         "tests/test_lint_test_assertions.py",
         "tests/test_subprocess_timeout_guard.py",
         "tests/test_threshold_source_of_truth.py",

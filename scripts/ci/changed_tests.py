@@ -61,6 +61,7 @@ def is_repo_invariant_trigger(path: str) -> bool:
         or path == "pyproject.toml"
         or fnmatchcase(candidate.name, "requirements*.txt")
         or path == ".github/workflows/ci.yml"
+        or path == "scripts/ci/fastlane_always_tests.txt"
         or path.startswith("tests/fixtures/")
     )
 
