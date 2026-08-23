@@ -329,6 +329,8 @@ action. Read and apply every `unread` or `read-but-not-live-consumed` entry, the
 A review of record is **independent and cross-family** (outside the author's model
 family; never self-review, never same-family).
 
+- **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or native harnesses); ACP is toolless intercomm only, and caveman lite is style (never persisted review text).
+
 **Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
 `review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
 closed. Use lightweight direct review:
@@ -493,6 +495,7 @@ stores are read-only migration/projection inputs, not a live write target.
   handoff-status` / `handoff-claim` (#5530).
 - **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
   not `review-pr` / sealed `lu-review-*`.
+- **ACP provider transport:** ACP is toolless intercomm only (state transfer / ordinary asks/discuss); CF, design, and plan use toolful seats (`delegate.py` or native harnesses), and caveman lite is style.
 - **Never** flip the plane, enable retention apply, or invent a competing comms design
   from this skill — those remain the infra lane's gated actions, even post-cutover.
 

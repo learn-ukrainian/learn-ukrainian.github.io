@@ -59,6 +59,18 @@ and the narrowly allowlisted dual paths.
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
+### Caveman output-style skill
+
+Shared skill `agents_extensions/shared/skills/caveman/` — default intensity **lite**
+(drop filler/hedging; keep articles and full sentences). `npm run agents:deploy`
+(`scripts/deploy_prompts.sh`) rsyncs it to `.claude/skills/caveman`, `.codex/skills/caveman`,
+the `.agent` overlay, `.agents/skills/caveman`, and `.gemini/skills/caveman`. Never hand-edit
+those deploy copies. Caveman is **style only** — never persisted artifacts (commits, PR/issue
+bodies, curriculum, runbooks, review-of-record text on GitHub) and never a substitute for
+fleet-comms durable state. Cursor, Kimi, GLM, and OpenCode consume it through the **host
+harness** skill tree of the CLI that actually launches them (same rule as Entire capture), not
+a model-named extra copy.
+
 ### Entire recall onboarding matrix
 
 Capture belongs to the **host harness**, not to a model label. The same model
