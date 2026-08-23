@@ -36,6 +36,7 @@ IMPORT_DISTRIBUTIONS = {
     "PIL": "pillow",
     "pymorphy3": "pymorphy3",
     "pymorphy3_dicts_uk": "pymorphy3-dicts-uk",
+    "pydantic": "pydantic",
     "pypdf": "pypdf",
     "psutil": "psutil",
     "pydantic": "pydantic",
@@ -93,6 +94,7 @@ def _imported_modules(path: Path, project_root: Path, *, module_level_only: bool
 
     nodes = ast.walk(tree)
     if module_level_only:
+
         class ModuleImports(ast.NodeVisitor):
             def __init__(self) -> None:
                 self.nodes: list[ast.AST] = []
@@ -207,9 +209,7 @@ def read_lock(path: Path) -> dict[str, str]:
 def read_requirements(path: Path) -> list[str]:
     """Read non-comment requirement lines while retaining their source order."""
     return [
-        line
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line and not line.lstrip().startswith("#")
+        line for line in path.read_text(encoding="utf-8").splitlines() if line and not line.lstrip().startswith("#")
     ]
 
 

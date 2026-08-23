@@ -24,6 +24,7 @@ mcp==2.0.0
 pymorphy3-dicts-uk==2.4.1.1.1663094765
 PyYAML==6.0.3
 pytest==9.0.3
+pydantic==2.13.4
 referencing==0.37.0
 requests==2.34.2
 """,
@@ -98,6 +99,20 @@ def test_mcp_direct_import_uses_reviewed_exact_lock_pin(tmp_path: Path) -> None:
     )
 
     assert selected == ["mcp==2.0.0"]
+
+
+def test_pydantic_direct_import_uses_reviewed_exact_lock_pin(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    test_path = _write(project_root / "tests" / "test_api_model.py", "from pydantic import BaseModel\n")
+
+    selected = fastlane_requirements.select_requirements(
+        [test_path],
+        base_requirements=[],
+        lock_requirements=_lock(tmp_path),
+        project_root=project_root,
+    )
+
+    assert selected == ["pydantic==2.13.4"]
 
 
 def test_pymorphy_uk_dictionary_import_uses_reviewed_exact_lock_pin(tmp_path: Path) -> None:
