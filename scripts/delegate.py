@@ -2466,10 +2466,15 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
                 return None, "status snapshot returned an incomplete rename/copy record"
             rename_source = status_records[index]
             index += 1
-        if _is_read_only_snapshot_excluded_path(path):
-            continue
-        entries[path] = state
-        if rename_source is not None:
+        # Filter the rename/copy source and destination independently
+        # (#7147): ``git mv tracked.txt .worktrees/lane/tracked.txt`` must still
+        # surface the tracked source deletion even though the destination is
+        # out of snapshot scope.
+        if not _is_read_only_snapshot_excluded_path(path):
+            entries[path] = state
+        if rename_source is not None and not _is_read_only_snapshot_excluded_path(
+            rename_source
+        ):
             entries[rename_source] = f"{state}:source"
     for path in outputs["ignored"].split("\0"):
         if path and not _is_read_only_snapshot_excluded_path(path):

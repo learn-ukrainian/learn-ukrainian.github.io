@@ -144,6 +144,36 @@ def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypat
     )
 
 
+def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(
+    tmp_path, monkeypatch
+):
+    """#7147: renaming a tracked file INTO ``.worktrees/`` keeps the source.
+
+    ``git mv tracked.txt .worktrees/lane/tracked.txt`` is a mutation of the
+    tracked source even though the destination is out of snapshot scope, so
+    the source must still be recorded instead of the whole record dropping.
+    """
+    repo = (tmp_path / "repo").resolve()
+    repo.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(repo, monkeypatch)
+    lane = repo / ".worktrees" / "lane"
+    lane.mkdir(parents=True)
+    subprocess.run(
+        ["git", "mv", "tracked.txt", ".worktrees/lane/tracked.txt"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    snapshot, error = delegate._read_only_checkout_snapshot(repo)
+
+    assert error is None
+    assert snapshot is not None
+    assert snapshot["tracked.txt"] == "R :source"
+    assert ".worktrees/lane/tracked.txt" not in snapshot
+
+
 def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     tmp_tasks_dir,
     tmp_path,
