@@ -96,6 +96,26 @@ dispatch worktree.
   render|install|status|uninstall`.
 - Reference: [Archived thread cleanup](archived-thread-cleanup.md).
 
+### `com.learn-ukrainian.mac-observer-heartbeat`
+
+- Purpose: Heartbeats live Mac GUI sessions (Cursor IDE and Codex UI) to
+  `POST /api/observer/presence` over the loopback Monitor tunnel so
+  occupancy shows supervision seats under `cloud-observer` without claiming
+  stream leases (#7104).
+- Program: `/bin/bash --noprofile --norc
+  scripts/orchestration/run_mac_observer_heartbeat.sh --repo-root <primary
+  checkout>`. The wrapper execs the primary `.venv/bin/python` with
+  `scripts/orchestration/observer_heartbeat.py --mac-gui`. `Program` must stay
+  `/bin/bash` so a venv rebuild cannot invalidate launchd LWCR (exit 78; #6937, #6941).
+- Schedule: at load and every 8 minutes (`StartInterval=480`), well within
+  the 15-minute presence TTL.
+- Delete authority: none. It posts loopback presence only.
+- Logs: `~/.codex/mac-observer/logs/` — outside the repository.
+- Manage: `.venv/bin/python
+  scripts/orchestration/install_mac_observer_launchd.py
+  render|install|status|uninstall`.
+- Reference: [Cursor driver](cursor-driver.md) and #7104.
+
 ## Invariants
 
 - Logs and receipts of scheduled jobs must live outside the repository so
