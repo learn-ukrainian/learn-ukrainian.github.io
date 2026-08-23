@@ -1332,6 +1332,32 @@ def test_compile_cycle007_package_binds_legacy_source_without_text_hash(tmp_path
     assert manifest["row_count"] == 4
 
 
+def test_materialization_validation_allows_only_the_reviewed_resume_root(tmp_path: Path):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+    resume_root_name = ".evidence.resume-v1"
+    (package / resume_root_name).mkdir()
+
+    packets, _, _, binding = compiler._validate_cycle007_materialization(
+        package,
+        source / "label-manifest.json",
+        fixture=True,
+        allowed_top_level_entries=(resume_root_name,),
+    )
+    assert len(packets) == 2
+    assert binding["packet_count"] == 2
+
+    (package / "foreign-entry").mkdir()
+    with pytest.raises(contract.EvidenceContractError, match="manifest_binding_drift"):
+        compiler._validate_cycle007_materialization(
+            package,
+            source / "label-manifest.json",
+            fixture=True,
+            allowed_top_level_entries=(resume_root_name,),
+        )
+
+
 def test_compile_sidecar_bundle_bare_compile_has_a_null_source_package_binding(tmp_path: Path):
     """A bare (package-free) compile still carries the key, but its value is None."""
     client = SyntheticSourcesClient()

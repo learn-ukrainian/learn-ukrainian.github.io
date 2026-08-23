@@ -2337,6 +2337,7 @@ def _validate_cycle007_materialization(
     source_manifest_path: Path,
     *,
     fixture: bool,
+    allowed_top_level_entries: Sequence[str] = (),
 ) -> tuple[
     list[list[Mapping[str, Any]]],
     list[bool],
@@ -2357,7 +2358,17 @@ def _validate_cycle007_materialization(
     contract.require(isinstance(manifest, Mapping), "source_binding_drift")
     materializer._verify_source_package_modes(package_dir, manifest, fixture)
     contract.require(
-        {path.name for path in package_dir.iterdir()} == materializer.OUTPUT_TOP_LEVEL,
+        all(
+            isinstance(name, str)
+            and bool(name)
+            and Path(name).name == name
+            for name in allowed_top_level_entries
+        ),
+        "manifest_binding_drift",
+    )
+    contract.require(
+        {path.name for path in package_dir.iterdir()}
+        == materializer.OUTPUT_TOP_LEVEL | set(allowed_top_level_entries),
         "manifest_binding_drift",
     )
     contract.require(set(manifest) == _MATERIALIZATION_MANIFEST_FIELDS, "manifest_binding_drift")
@@ -2719,10 +2730,20 @@ def compile_cycle007_package(
             "real package compile requires the reviewed streamable-HTTP MCP transport"
         )
 
+    allowed_top_level_entries: tuple[str, ...] = ()
+    if not fixture:
+        from scripts.projects.open_model_data import phase3_cycle007_evidence_compile_throughput as throughput
+
+        resume_root = throughput.resume_root_for(output_dir)
+        contract.require(resume_root.parent == package_dir, "manifest_binding_drift")
+        if os.path.lexists(resume_root):
+            allowed_top_level_entries = (resume_root.name,)
+
     packets, residual_flags, packet_bindings, source_package_binding = _validate_cycle007_materialization(
         package_dir,
         source_manifest_path,
         fixture=fixture,
+        allowed_top_level_entries=allowed_top_level_entries,
     )
 
     if fixture:
