@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Plan and verify duration-balanced pytest shards for the CI Gate.
 
-The planner collects the selected suite exactly once, groups every selected
+Each full-tier shard collects the selected suite locally, groups every selected
 node ID by test file, then uses deterministic longest-processing-time (LPT)
-assignment.  Workers execute only the planner-produced node-ID list; CI Gate
-reconstructs and verifies the complete partition from their JUnit artifacts.
+assignment.  The collection and assignment run in parallel across the matrix;
+CI Gate reconstructs and verifies the complete partition from the shard
+artifacts.  ``write_plans`` remains available for offline tooling that wants
+all four plans in one directory.
 
 Required selection (stage-1 slow-split): the identical mark expression
-``not atlas_release and not slow`` is applied on the planner, every shard
-worker invocation path that re-collects, fastlane, and coverage inputs.
+``not atlas_release and not slow`` is applied on every shard collection and
+worker invocation path, fastlane, and coverage inputs.
 ``pyproject.toml`` ``addopts`` keeps ``-m 'not atlas_release'`` only — never
 put ``not slow`` in global addopts (nightly would inherit it).
 """
@@ -18,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import statistics
 import sys
@@ -39,9 +42,23 @@ COMMON_ARGS = (
     REQUIRED_MARKEXPR,
     "--strict-markers",
 )
+PLANNER_SCHEMA_VERSION = 2
+DURATION_SNAPSHOT_SCHEMA_VERSION = 1
 _DURATION_LINE = re.compile(r"^\s*(?P<seconds>\d+(?:\.\d+)?)s\s+(?:call|setup|teardown)\s+(?P<nodeid>\S+)")
 _DATASET_VERSION = 1
 _P95_HISTORY_LIMIT = 40
+
+
+def _canonical_digest(value: Any) -> str:
+    payload = json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _duration_digest(durations: dict[str, float]) -> str:
+    return _canonical_digest(durations)
+
+
+SELECTION_DIGEST = _canonical_digest(COMMON_ARGS)
 
 
 def _digest(nodeids: Iterable[str]) -> str:
@@ -55,6 +72,26 @@ def _read_json(path: Path) -> Any:
 def _write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _normalise_durations(source: Any, *, label: str, strict: bool = False) -> dict[str, float]:
+    if not isinstance(source, dict):
+        raise ValueError(f"duration file {label} has invalid node_durations")
+    durations: dict[str, float] = {}
+    for nodeid, duration in source.items():
+        valid = (
+            isinstance(nodeid, str)
+            and isinstance(duration, (int, float))
+            and not isinstance(duration, bool)
+            and math.isfinite(float(duration))
+            and float(duration) > 0
+        )
+        if not valid:
+            if strict:
+                raise ValueError(f"duration file {label} contains an invalid timing")
+            continue
+        durations[nodeid] = float(duration)
+    return durations
 
 
 class _NodeidCollector:
@@ -88,13 +125,77 @@ def load_durations(path: Path | None) -> dict[str, float]:
     if not isinstance(raw, dict):
         raise ValueError(f"duration file {path} must be a JSON object")
     source = raw.get("node_durations", raw)
-    if not isinstance(source, dict):
-        raise ValueError(f"duration file {path} has invalid node_durations")
-    return {
-        nodeid: float(duration)
-        for nodeid, duration in source.items()
-        if isinstance(nodeid, str) and isinstance(duration, (int, float)) and duration > 0
+    return _normalise_durations(source, label=str(path))
+
+
+def write_duration_snapshot(
+    *,
+    durations_path: Path | None,
+    output: Path,
+    source_sha: str,
+    cache_primary_key: str,
+    cache_matched_key: str | None,
+    cache_hit: str,
+) -> None:
+    """Freeze one duration input for every shard in this CI event."""
+    durations = load_durations(durations_path)
+    mode = "cache" if durations else "median-fallback"
+    primary_key = cache_primary_key.strip() or "unspecified"
+    matched_key = (cache_matched_key or "").strip()
+    snapshot = {
+        "cache_hit": cache_hit.strip().lower() == "true",
+        "duration_cache_key": matched_key or (primary_key if mode == "cache" else "none"),
+        "duration_cache_matched_key": matched_key or None,
+        "duration_cache_primary_key": primary_key,
+        "duration_mode": mode,
+        "duration_snapshot_digest": _duration_digest(durations),
+        "node_durations": durations,
+        "planner_schema_version": PLANNER_SCHEMA_VERSION,
+        "schema_version": DURATION_SNAPSHOT_SCHEMA_VERSION,
+        "selection_digest": SELECTION_DIGEST,
+        "source_sha": source_sha.strip(),
     }
+    if not snapshot["source_sha"]:
+        raise ValueError("duration snapshot source_sha must not be empty")
+    _write_json(output, snapshot)
+
+
+def load_duration_snapshot(path: Path, *, expected_source_sha: str | None = None) -> dict[str, Any]:
+    """Load and validate the immutable duration snapshot shared by all shards."""
+    raw = _read_json(path)
+    if not isinstance(raw, dict) or raw.get("schema_version") != DURATION_SNAPSHOT_SCHEMA_VERSION:
+        raise ValueError(f"duration snapshot {path} has an unsupported schema")
+    if raw.get("planner_schema_version") != PLANNER_SCHEMA_VERSION:
+        raise ValueError(f"duration snapshot {path} has an unsupported planner schema")
+    if raw.get("selection_digest") != SELECTION_DIGEST:
+        raise ValueError(f"duration snapshot {path} has a selection digest mismatch")
+    source_sha = raw.get("source_sha")
+    if not isinstance(source_sha, str) or not source_sha.strip():
+        raise ValueError(f"duration snapshot {path} has no source SHA")
+    if expected_source_sha is not None and source_sha != expected_source_sha.strip():
+        raise ValueError(f"duration snapshot source SHA {source_sha!r} does not match {expected_source_sha!r}")
+    durations = _normalise_durations(raw.get("node_durations"), label=str(path), strict=True)
+    if raw.get("duration_snapshot_digest") != _duration_digest(durations):
+        raise ValueError(f"duration snapshot {path} has a duration digest mismatch")
+    mode = raw.get("duration_mode")
+    if mode not in {"cache", "median-fallback"}:
+        raise ValueError(f"duration snapshot {path} has an invalid duration mode")
+    cache_key = raw.get("duration_cache_key")
+    if not isinstance(cache_key, str) or not cache_key:
+        raise ValueError(f"duration snapshot {path} has no duration cache identity")
+    return {**raw, "node_durations": durations}
+
+
+def validate_duration_snapshot(path: Path, *, expected_source_sha: str | None = None) -> None:
+    """Validate the fast planner-contract input without collecting tests."""
+    snapshot = load_duration_snapshot(path, expected_source_sha=expected_source_sha)
+    print(
+        "validated pytest duration snapshot: "
+        f"source_sha={snapshot['source_sha']} "
+        f"mode={snapshot['duration_mode']} "
+        f"timings={len(snapshot['node_durations'])} "
+        f"digest={snapshot['duration_snapshot_digest']}"
+    )
 
 
 def _file_nodeids(nodeids: Sequence[str]) -> dict[str, list[str]]:
@@ -134,6 +235,51 @@ def assign_shards(nodeids: Sequence[str], shard_count: int, durations: dict[str,
     return shard_groups
 
 
+def _plan_payload(
+    *,
+    nodeids: Sequence[str],
+    assigned: Sequence[str],
+    weights: dict[str, float],
+    shard_id: int,
+    shard_count: int,
+    snapshot: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metadata = snapshot or {
+        "duration_cache_key": "offline",
+        "duration_mode": "local",
+        "duration_snapshot_digest": _duration_digest({}),
+        "planner_schema_version": PLANNER_SCHEMA_VERSION,
+        "selection_digest": SELECTION_DIGEST,
+        "source_sha": "offline",
+    }
+    assigned_files = sorted({nodeid.split("::", 1)[0] for nodeid in assigned})
+    return {
+        "assigned_digest": _digest(assigned),
+        "assigned_nodeids": list(assigned),
+        "collected_count": len(nodeids),
+        "collected_digest": _digest(nodeids),
+        "duration_cache_key": metadata["duration_cache_key"],
+        "duration_mode": metadata["duration_mode"],
+        "duration_snapshot_digest": metadata["duration_snapshot_digest"],
+        "estimated_seconds": sum(weights[filename] for filename in assigned_files),
+        "grouping": "file",
+        "markexpr": REQUIRED_MARKEXPR,
+        "planner_schema_version": metadata["planner_schema_version"],
+        "selection_digest": metadata["selection_digest"],
+        "serial_nodeids": list(SERIAL_TESTS) if shard_id == 1 else [],
+        "shard_count": shard_count,
+        "shard_id": shard_id,
+        "source_sha": metadata["source_sha"],
+        "partition_mode": "lpt-durations",
+    }
+
+
+def _write_plan_outputs(output_dir: Path, plan: dict[str, Any]) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "test-nodeids.txt").write_text("\n".join(plan["assigned_nodeids"]) + "\n", encoding="utf-8")
+    _write_json(output_dir / "plan.json", plan)
+
+
 def assert_set_integrity(nodeids: Sequence[str], shards: Sequence[Sequence[str]]) -> None:
     """Fail closed unless shard union equals the fast collection exactly.
 
@@ -169,25 +315,47 @@ def write_plans(*, durations_path: Path | None, output_dir: Path, shard_count: i
     weights = _file_weights(nodeids, durations)
     for shard_id, assigned in enumerate(shards, start=1):
         shard_dir = output_dir / f"pytest-shard-{shard_id}"
-        shard_dir.mkdir(parents=True, exist_ok=True)
-        (shard_dir / "test-nodeids.txt").write_text("\n".join(assigned) + "\n", encoding="utf-8")
-        assigned_files = sorted({nodeid.split("::", 1)[0] for nodeid in assigned})
-        _write_json(
-            shard_dir / "plan.json",
-            {
-                "assigned_digest": _digest(assigned),
-                "assigned_nodeids": assigned,
-                "collected_count": len(nodeids),
-                "collected_digest": _digest(nodeids),
-                "estimated_seconds": sum(weights[filename] for filename in assigned_files),
-                "grouping": "file",
-                "markexpr": REQUIRED_MARKEXPR,
-                "partition_mode": "lpt-durations",
-                "serial_nodeids": list(SERIAL_TESTS) if shard_id == 1 else [],
-                "shard_count": shard_count,
-                "shard_id": shard_id,
-            },
+        _write_plan_outputs(
+            shard_dir,
+            _plan_payload(
+                nodeids=nodeids,
+                assigned=assigned,
+                weights=weights,
+                shard_id=shard_id,
+                shard_count=shard_count,
+                snapshot=None,
+            ),
         )
+
+
+def write_shard_plan(
+    *,
+    snapshot_path: Path,
+    output_dir: Path,
+    shard_id: int,
+    shard_count: int = SHARD_COUNT,
+    expected_source_sha: str | None = None,
+) -> None:
+    """Collect and materialize one shard's deterministic plan."""
+    if shard_id < 1 or shard_id > shard_count:
+        raise ValueError(f"shard_id must be between 1 and {shard_count}")
+    snapshot = load_duration_snapshot(snapshot_path, expected_source_sha=expected_source_sha)
+    nodeids = collect_nodeids()
+    durations = snapshot["node_durations"]
+    shards = assign_shards(nodeids, shard_count, durations)
+    assert_set_integrity(nodeids, shards)
+    weights = _file_weights(nodeids, durations)
+    _write_plan_outputs(
+        output_dir,
+        _plan_payload(
+            nodeids=nodeids,
+            assigned=shards[shard_id - 1],
+            weights=weights,
+            shard_id=shard_id,
+            shard_count=shard_count,
+            snapshot=snapshot,
+        ),
+    )
 
 
 def _junit_count(path: Path) -> int:
@@ -197,21 +365,32 @@ def _junit_count(path: Path) -> int:
     return sum(int(suite.attrib.get("tests", "0")) for suite in root.iter("testsuite"))
 
 
-def verify_artifacts(artifact_dir: Path, shard_count: int) -> None:
+def verify_artifacts(
+    artifact_dir: Path,
+    shard_count: int,
+    *,
+    expected_source_sha: str | None = None,
+    require_plan_metadata: bool = False,
+    require_execution_receipt: bool = False,
+) -> None:
     """Fail closed unless plan, execution count, and partition all agree."""
     plans: list[dict[str, Any]] = []
     for shard_id in range(1, shard_count + 1):
         shard_dir = artifact_dir / f"pytest-shard-{shard_id}"
         plan_path = shard_dir / "plan.json"
+        nodeids_path = shard_dir / "test-nodeids.txt"
         main_junit = shard_dir / "main-junit.xml"
-        if not plan_path.exists() or not main_junit.exists():
-            raise RuntimeError(f"missing plan or main JUnit artifact for shard {shard_id}")
+        if not plan_path.exists() or not nodeids_path.exists() or not main_junit.exists():
+            raise RuntimeError(f"missing plan, node-ID, or main JUnit artifact for shard {shard_id}")
         plan = _read_json(plan_path)
         if plan.get("shard_id") != shard_id or plan.get("shard_count") != shard_count:
             raise RuntimeError(f"invalid shard identity in {plan_path}")
         assigned = plan.get("assigned_nodeids")
         if not isinstance(assigned, list) or not all(isinstance(nodeid, str) for nodeid in assigned):
             raise RuntimeError(f"invalid assigned node IDs in {plan_path}")
+        listed = [line.strip() for line in nodeids_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        if listed != assigned:
+            raise RuntimeError(f"test-nodeids.txt does not match plan.json in shard {shard_id}")
         if not assigned:
             raise RuntimeError(f"empty shard {shard_id} collapses the required gate")
         if _digest(assigned) != plan.get("assigned_digest"):
@@ -224,6 +403,37 @@ def verify_artifacts(artifact_dir: Path, shard_count: int) -> None:
             )
         if _junit_count(main_junit) != len(assigned):
             raise RuntimeError(f"main JUnit count does not match plan for shard {shard_id}")
+        if expected_source_sha is not None and plan.get("source_sha") != expected_source_sha.strip():
+            raise RuntimeError(f"source SHA does not match the event SHA for shard {shard_id}")
+        if require_plan_metadata:
+            for field in (
+                "duration_cache_key",
+                "duration_mode",
+                "duration_snapshot_digest",
+                "planner_schema_version",
+                "selection_digest",
+                "source_sha",
+            ):
+                if field not in plan:
+                    raise RuntimeError(f"plan {plan_path} is missing required field {field}")
+            if plan["planner_schema_version"] != PLANNER_SCHEMA_VERSION:
+                raise RuntimeError(f"unsupported planner schema in {plan_path}")
+            if plan["selection_digest"] != SELECTION_DIGEST:
+                raise RuntimeError(f"selection digest mismatch in {plan_path}")
+        if require_execution_receipt:
+            receipt_path = shard_dir / "execution.json"
+            if not receipt_path.exists():
+                raise RuntimeError(f"missing execution receipt for shard {shard_id}")
+            receipt = _read_json(receipt_path)
+            if receipt.get("planned_nodeids") != assigned:
+                raise RuntimeError(f"execution receipt plan mismatch for shard {shard_id}")
+            reported = receipt.get("reported_nodeids")
+            if not isinstance(reported, list) or set(reported) != set(assigned) or len(reported) != len(assigned):
+                raise RuntimeError(f"execution receipt does not cover the assigned set for shard {shard_id}")
+            if receipt.get("reported_count") != len(assigned) or receipt.get("reported_digest") != _digest(reported):
+                raise RuntimeError(f"execution receipt count or digest mismatch for shard {shard_id}")
+            if receipt.get("pytest_exit_code") != 0:
+                raise RuntimeError(f"pytest execution receipt is not green for shard {shard_id}")
         serial = plan.get("serial_nodeids")
         if shard_id == 1:
             playground_junit = shard_dir / "playground-junit.xml"
@@ -246,6 +456,10 @@ def verify_artifacts(artifact_dir: Path, shard_count: int) -> None:
         raise RuntimeError("a serial test was also assigned to a parallel shard")
     if len(assigned) != counts.pop() or _digest(assigned) != digests.pop():
         raise RuntimeError("shards do not form a complete partition of the collected selection")
+    if require_plan_metadata:
+        for field in ("source_sha", "duration_snapshot_digest", "duration_cache_key", "duration_mode"):
+            if len({plan[field] for plan in plans}) != 1:
+                raise RuntimeError(f"shards disagree about {field}")
 
 
 def parse_durations(log_paths: Sequence[Path]) -> dict[str, float]:
@@ -296,8 +510,39 @@ def publish_durations(*, log_paths: Sequence[Path], previous: Path | None, outpu
     )
 
 
-def run_nodeids(nodeids_path: Path, pytest_args: Sequence[str]) -> int:
-    """Invoke pytest with a planner-produced node-ID list (not shell @file)."""
+class _ExecutionRecorder:
+    def __init__(self) -> None:
+        self.reported_nodeids: set[str] = set()
+
+    def pytest_runtest_logreport(self, report: Any) -> None:
+        self.reported_nodeids.add(report.nodeid)
+
+
+def _write_execution_receipt(
+    path: Path,
+    *,
+    planned_nodeids: Sequence[str],
+    reported_nodeids: Iterable[str],
+    pytest_exit_code: int,
+) -> None:
+    reported = sorted(set(reported_nodeids))
+    _write_json(
+        path,
+        {
+            "planned_count": len(planned_nodeids),
+            "planned_digest": _digest(planned_nodeids),
+            "planned_nodeids": list(planned_nodeids),
+            "pytest_exit_code": pytest_exit_code,
+            "reported_count": len(reported),
+            "reported_digest": _digest(reported),
+            "reported_nodeids": reported,
+            "schema_version": 1,
+        },
+    )
+
+
+def run_nodeids(nodeids_path: Path, pytest_args: Sequence[str], receipt_path: Path | None = None) -> int:
+    """Invoke pytest with a shard-produced node-ID list (not shell @file)."""
     import pytest
 
     if __package__ in (None, ""):
@@ -318,27 +563,72 @@ def run_nodeids(nodeids_path: Path, pytest_args: Sequence[str]) -> int:
     # inside xdist workers, so a hang in the controller or a full worker pipe
     # is otherwise silent until the job's timeout-minutes cancels it.
     with StallWatcher.from_env():
-        return int(pytest.main([*args, *nodeids]))
+        if receipt_path is None:
+            return int(pytest.main([*args, *nodeids]))
+        recorder = _ExecutionRecorder()
+        exit_code = int(pytest.main([*args, *nodeids], plugins=[recorder]))
+        _write_execution_receipt(
+            receipt_path,
+            planned_nodeids=nodeids,
+            reported_nodeids=recorder.reported_nodeids,
+            pytest_exit_code=exit_code,
+        )
+        return exit_code
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    commands = parser.add_subparsers(dest="command", required=True)
-    plan = commands.add_parser("plan")
-    plan.add_argument("--durations", type=Path)
-    plan.add_argument("--output-dir", type=Path, required=True)
-    plan.add_argument("--shard-count", type=int, default=SHARD_COUNT)
-    verify = commands.add_parser("verify-artifacts")
-    verify.add_argument("--artifact-dir", type=Path, required=True)
-    verify.add_argument("--shard-count", type=int, default=SHARD_COUNT)
-    publish = commands.add_parser("publish-durations")
-    publish.add_argument("--log", type=Path, action="append", required=True)
-    publish.add_argument("--previous", type=Path)
-    publish.add_argument("--output", type=Path, required=True)
-    publish.add_argument("--summary", type=Path, required=True)
-    run = commands.add_parser("run")
-    run.add_argument("--nodeids", type=Path, required=True)
-    run.add_argument("pytest_args", nargs=argparse.REMAINDER)
+    formatter = argparse.RawDescriptionHelpFormatter
+    parser = argparse.ArgumentParser(
+        description=(
+            "Plan, execute, and verify the CI Gate's deterministic pytest shard partition.\n"
+            "Use it for full-tier CI evidence and local planner/partition tests; it does not replace pytest itself."
+        ),
+        formatter_class=formatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/ci/pytest_shards.py plan-shard --snapshot ci-artifacts/pytest-duration-snapshot.json --shard-id 1 --output-dir ci-artifacts\n"
+            "  .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
+            "Outputs: shard plans, node-ID lists, execution receipts, and validation errors; no databases or remote state.\n"
+            "Exit codes: 0 means the requested operation passed; 1 means an input, partition, or test failed; 2 means CLI usage failed.\n"
+            "Related: .github/workflows/ci.yml, tests/test_ci_shard_partition.py, and docs/runbooks/ci-gate.md."
+        ),
+    )
+    commands = parser.add_subparsers(dest="command", required=True, title="commands")
+    plan = commands.add_parser("plan", help="Materialize all shard plans in one directory for offline use.", description="Collect once and write all four offline LPT plans.", formatter_class=formatter)
+    plan.add_argument("--durations", type=Path, help="Optional JSON duration dataset; missing input uses median fallback.")
+    plan.add_argument("--output-dir", type=Path, required=True, help="Directory receiving pytest-shard-N/plan.json and test-nodeids.txt.")
+    plan.add_argument("--shard-count", type=int, default=SHARD_COUNT, help=f"Number of shards (default: {SHARD_COUNT}).")
+    snapshot = commands.add_parser("snapshot", help="Freeze one shared duration input for a CI event.", description="Normalize a cache restore into an immutable shard input snapshot.", formatter_class=formatter)
+    snapshot.add_argument("--durations", type=Path, help="Optional restored duration JSON; missing input selects median fallback.")
+    snapshot.add_argument("--output", type=Path, required=True, help="Output JSON snapshot path.")
+    snapshot.add_argument("--source-sha", required=True, help="Exact event tree SHA, normally GITHUB_SHA.")
+    snapshot.add_argument("--cache-primary-key", required=True, help="Requested cache key used for this event.")
+    snapshot.add_argument("--cache-matched-key", help="Matched restore key, when the cache action exposes one.")
+    snapshot.add_argument("--cache-hit", default="false", help="Exact cache-hit output (default: false).")
+    plan_shard = commands.add_parser("plan-shard", help="Collect and write one shard's plan locally.", description="Collect the required suite once and write one deterministic shard-local LPT plan.", formatter_class=formatter)
+    plan_shard.add_argument("--snapshot", type=Path, required=True, help="Immutable duration snapshot JSON shared by all shards.")
+    plan_shard.add_argument("--shard-id", type=int, required=True, help="1-based shard number, e.g. 1.")
+    plan_shard.add_argument("--output-dir", type=Path, required=True, help="Directory receiving plan.json and test-nodeids.txt.")
+    plan_shard.add_argument("--shard-count", type=int, default=SHARD_COUNT, help=f"Total shard count (default: {SHARD_COUNT}).")
+    plan_shard.add_argument("--expected-source-sha", help="Require the snapshot source SHA to equal this event SHA.")
+    validate = commands.add_parser("validate-snapshot", help="Validate the fast planner-contract snapshot without collection.", description="Check snapshot schema, planner version, selection digest, and source identity without collecting tests.", formatter_class=formatter)
+    validate.add_argument("--snapshot", type=Path, required=True, help="Immutable duration snapshot JSON to validate.")
+    validate.add_argument("--expected-source-sha", help="Require the snapshot source SHA to equal this event SHA.")
+    verify = commands.add_parser("verify-artifacts", help="Fail closed unless all shard evidence forms one complete partition.", description="Verify plans, node-ID lists, JUnit counts, and optional execution/provenance evidence.", formatter_class=formatter)
+    verify.add_argument("--artifact-dir", type=Path, required=True, help="Directory containing pytest-shard-1 through pytest-shard-N artifacts.")
+    verify.add_argument("--shard-count", type=int, default=SHARD_COUNT, help=f"Expected number of shards (default: {SHARD_COUNT}).")
+    verify.add_argument("--expected-source-sha", help="Require every plan source SHA to equal this event SHA.")
+    verify.add_argument("--require-plan-metadata", action="store_true", help="Require and cross-check immutable snapshot/planner metadata.")
+    verify.add_argument("--require-execution-receipt", action="store_true", help="Require each shard's reported execution node-ID receipt.")
+    publish = commands.add_parser("publish-durations", help="Publish successful-main test timings for later shard balancing.", description="Parse shard logs and write the rolling duration dataset.", formatter_class=formatter)
+    publish.add_argument("--log", type=Path, action="append", required=True, help="Pytest log path; repeat once per shard.")
+    publish.add_argument("--previous", type=Path, help="Prior duration dataset, if available.")
+    publish.add_argument("--output", type=Path, required=True, help="Output duration dataset JSON path.")
+    publish.add_argument("--summary", type=Path, required=True, help="Markdown summary output path.")
+    run = commands.add_parser("run", help="Run exactly the node IDs in a shard plan.", description="Execute a node-ID file with pytest and optionally record reported execution IDs.", formatter_class=formatter)
+    run.add_argument("--nodeids", type=Path, required=True, help="Newline-delimited planned node-ID file.")
+    run.add_argument("--execution-receipt", type=Path, help="Optional JSON receipt path recording planned and reported node IDs.")
+    run.add_argument("pytest_args", nargs=argparse.REMAINDER, help="Arguments passed to pytest after `--`, e.g. -- -q --junitxml=main-junit.xml.")
     return parser
 
 
@@ -347,12 +637,37 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.command == "plan":
             write_plans(durations_path=args.durations, output_dir=args.output_dir, shard_count=args.shard_count)
+        elif args.command == "snapshot":
+            write_duration_snapshot(
+                durations_path=args.durations,
+                output=args.output,
+                source_sha=args.source_sha,
+                cache_primary_key=args.cache_primary_key,
+                cache_matched_key=args.cache_matched_key,
+                cache_hit=args.cache_hit,
+            )
+        elif args.command == "plan-shard":
+            write_shard_plan(
+                snapshot_path=args.snapshot,
+                output_dir=args.output_dir,
+                shard_id=args.shard_id,
+                shard_count=args.shard_count,
+                expected_source_sha=args.expected_source_sha,
+            )
+        elif args.command == "validate-snapshot":
+            validate_duration_snapshot(args.snapshot, expected_source_sha=args.expected_source_sha)
         elif args.command == "verify-artifacts":
-            verify_artifacts(args.artifact_dir, args.shard_count)
+            verify_artifacts(
+                args.artifact_dir,
+                args.shard_count,
+                expected_source_sha=args.expected_source_sha,
+                require_plan_metadata=args.require_plan_metadata,
+                require_execution_receipt=args.require_execution_receipt,
+            )
         elif args.command == "publish-durations":
             publish_durations(log_paths=args.log, previous=args.previous, output=args.output, summary=args.summary)
         elif args.command == "run":
-            return run_nodeids(args.nodeids, args.pytest_args)
+            return run_nodeids(args.nodeids, args.pytest_args, receipt_path=args.execution_receipt)
     except (OSError, RuntimeError, ValueError, element_tree.ParseError) as error:
         print(f"pytest shard error: {error}", file=sys.stderr)
         return 1

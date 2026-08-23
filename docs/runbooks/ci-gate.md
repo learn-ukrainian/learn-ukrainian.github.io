@@ -13,15 +13,21 @@ an operational guard, not a change to `ci.yml`'s job graph or `CI Gate` needs.
 - **pull_request (light tier):** `ruff`, `pytest-fastlane`, `contracts`,
   `frontend`. Planner / four shards / coverage floor are intentionally skipped.
 - **merge_group / push / workflow_dispatch (full tier):** the light set plus
-  `pytest-plan`, all four `python` shards, and `coverage-floor`. Skipped ≠
-  success on this tier.
+  the `pytest-plan` contract, all four `python` shards, and `coverage-floor`.
+  Skipped ≠ success on this tier. `landing-class` freezes one immutable
+  duration snapshot; each Python shard collects the required selection and
+  computes its own file-grouped LPT plan in parallel. CI Gate verifies the
+  source/selection/snapshot metadata, exact node-ID receipts, JUnit counts,
+  and complete four-shard partition.
 
 Aggregation is `scripts/ci/gate_required_results.py` (fail-closed on missing,
 failed, cancelled, or unexpectedly skipped required jobs). The fastlane's
 changed-file selection is only an early signal: it never selects, skips, or
-replaces the full-suite shard plan on the full tier. The workflow remains the
-authoritative job composition; this runbook deliberately does not duplicate
-its YAML.
+replaces the full-suite shard plan on the full tier. The planner contract does
+not collect tests and is not a shard dependency; its result validates the
+immutable snapshot and planner schema while Gate remains authoritative for
+actual planning and execution. The workflow remains the authoritative job
+composition; this runbook deliberately does not duplicate its YAML.
 
 The contracts job's BIO preparation validation is load-bearing. In particular,
 an active BIO hold must continue to fail closed (`PREPARATION_HOLD_ACTIVE`),

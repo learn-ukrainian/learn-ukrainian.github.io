@@ -2,19 +2,19 @@ name: CI
 
 # CI Gate reboot (#5762) made every required job unconditional after the prior
 # paths-filtered control plane caused four consecutive gate failures. #5744
-# restores the proven pytest topology: one deterministic planner, four
+# restores the proven pytest topology: four deterministic,
 # duration-balanced file shards, and JUnit reconstruction inside CI Gate.
 #
 # Two-tier merge-queue cutover (#6943 stage 2): one workflow, two events.
 # pull_request tier (light): ruff + fastlane + contracts + frontend.
-# merge_group / push / workflow_dispatch tier (full): light PLUS planner +
-# four shards + coverage floor. CI Gate remains the sole required context,
+# merge_group / push / workflow_dispatch tier (full): light PLUS planner
+# contract, four shards, and coverage floor. CI Gate remains the sole required context,
 # reports on both events, and fail-closes on missing/skipped required deps.
 #
 # Third class (#7018): docs_skills — decided by scripts/ci/landing_class.py on
 # merge_group / push / workflow_dispatch (NOT GitHub paths:/paths-ignore).
 # Allowlist-only diffs (shared skills + docs/**/*.md + repo-root *.md) take
-# no-op success on pytest-plan / python shards / coverage-floor / Gate
+# no-op success on the planner contract / python shards / coverage-floor / Gate
 # verify-artifacts so CI Gate still sees success, never skipped (#5762).
 # Any off-allowlist path or classifier error → full suite (fail closed).
 # The full tier still never path-filters pytest collection for product code.
@@ -122,17 +122,59 @@ jobs:
             echo "class=full" >> "${GITHUB_OUTPUT}"
           fi
 
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: steps.classify.outputs.class != 'docs_skills'
+        with:
+          python-version-file: '.python-version'
+
+      - name: Restore successful-main pytest duration dataset
+        if: steps.classify.outputs.class != 'docs_skills'
+        id: pytest-duration-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ci-artifacts/pytest-durations.json
+          key: pytest-shard-durations-v1-main-${{ github.sha }}
+          restore-keys: |
+            pytest-shard-durations-v1-main-
+
+      - name: Freeze immutable pytest duration snapshot
+        if: steps.classify.outputs.class != 'docs_skills'
+        env:
+          EVENT_SHA: ${{ github.sha }}
+          CACHE_PRIMARY_KEY: pytest-shard-durations-v1-main-${{ github.sha }}
+          CACHE_MATCHED_KEY: ${{ steps.pytest-duration-cache.outputs.cache-matched-key || '' }}
+          CACHE_HIT: ${{ steps.pytest-duration-cache.outputs.cache-hit || 'false' }}
+        run: |
+          set -euo pipefail
+          python scripts/ci/pytest_shards.py snapshot \
+            --durations ci-artifacts/pytest-durations.json \
+            --output ci-artifacts/pytest-duration-snapshot.json \
+            --source-sha "$EVENT_SHA" \
+            --cache-primary-key "$CACHE_PRIMARY_KEY" \
+            --cache-matched-key "$CACHE_MATCHED_KEY" \
+            --cache-hit "$CACHE_HIT"
+
+      - name: Upload immutable pytest duration snapshot
+        if: steps.classify.outputs.class != 'docs_skills'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-duration-snapshot
+          path: ci-artifacts/pytest-duration-snapshot.json
+          if-no-files-found: error
+          retention-days: 1
+
   # ---------------------------------------------------------------------
-  # 1. pytest-plan — collect once, then produce all four LPT file plans from
-  #    one duration dataset restored from a successful main run (#5744).
+  # 1. pytest-plan — validate the immutable planner input and schema without
+  #    collecting tests. The four shards collect and plan independently after
+  #    landing-class, so this job is not on their critical path (#7141).
   #    Full tier only (merge_group / push / workflow_dispatch).
   #    docs_skills (#7018): no-op success (job still runs; never skipped).
   # ---------------------------------------------------------------------
   pytest-plan:
-    name: Pytest plan
+    name: Pytest plan contract
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     needs: [landing-class]
     permissions:
       contents: read
@@ -141,90 +183,29 @@ jobs:
         if: needs.landing-class.outputs.class == 'docs_skills'
         run: echo "landing-class=docs_skills; pytest-plan no-op success (#7018)"
 
-      # Default checkout is the event SHA: for merge_group that is the
-      # merge-group commit (never the PR head). Do not override with
-      # pull_request.head.sha — that would test a stale tree.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           persist-credentials: false
-          fetch-depth: 0
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         if: needs.landing-class.outputs.class != 'docs_skills'
         with:
           python-version-file: '.python-version'
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Download immutable pytest duration snapshot
         if: needs.landing-class.outputs.class != 'docs_skills'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          name: pytest-duration-snapshot
+          path: ci-artifacts
 
-      - name: Restore Atlas lexicon manifest cache
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        id: atlas-manifest-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: site/src/data/lexicon-manifest.json
-          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
-
-      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+      - name: Validate planner contract without collection
         if: needs.landing-class.outputs.class != 'docs_skills'
         run: |
-          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-
-      - name: Install planner dependencies
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        run: |
-          set -euo pipefail
-          python -m venv .venv
-          # The planner collects `not atlas_release and not slow`: retain the
-          # offline ukrainian_word_stress trie, but never install the live
-          # Stanza/torch stack for a selection that excludes its tests.
-          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
-            > "${RUNNER_TEMP}/requirements-ci.txt"
-          # Bounded retry absorbs transient PyPI blips (#7002).
-          for attempt in 1 2 3; do
-            echo "planner pip install attempt ${attempt}/3"
-            if .venv/bin/python -m pip install --upgrade pip \
-              && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
-              && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
-              exit 0
-            fi
-            case "${attempt}" in
-              1) sleep 10 ;;
-              2) sleep 30 ;;
-            esac
-          done
-          echo "::error::Install planner dependencies failed after 3 attempts" >&2
-          exit 1
-
-      - name: Restore successful-main pytest duration dataset
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ci-artifacts/pytest-durations.json
-          key: pytest-shard-durations-v1-main-${{ github.sha }}
-          restore-keys: |
-            pytest-shard-durations-v1-main-
-
-      - name: Plan all duration-balanced pytest shards
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        run: |
-          .venv/bin/python scripts/ci/pytest_shards.py plan \
-            --durations ci-artifacts/pytest-durations.json \
-            --output-dir ci-artifacts/plans
-
-      - name: Upload pytest plans
-        if: needs.landing-class.outputs.class != 'docs_skills'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: pytest-plans
-          path: ci-artifacts/plans/
-          if-no-files-found: error
-          retention-days: 1
+          python scripts/ci/pytest_shards.py validate-snapshot \
+            --snapshot ci-artifacts/pytest-duration-snapshot.json \
+            --expected-source-sha "$GITHUB_SHA"
 
   # ---------------------------------------------------------------------
   # 2. pytest-fastlane — direct changed-test signal, independent of the full
@@ -395,11 +376,12 @@ jobs:
           exit "$status"
 
   # ---------------------------------------------------------------------
-  # 3. python — execute the planner's four unconditional test partitions.
+  # 3. python — collect and execute four unconditional test partitions.
   # ---------------------------------------------------------------------
   # The selection still never consults changed files: every collected test runs
-  # exactly once. Four parallel jobs are the topology that completed under the
-  # #5776 hang investigation; one xdist session did not.
+  # exactly once. Each shard makes the same deterministic plan from one frozen
+  # duration snapshot; four parallel jobs are the topology that completed under
+  # the #5776 hang investigation; one xdist session did not.
   # docs_skills (#7018): no-op success (job still runs; never skipped).
   python:
     name: Python (pytest) [${{ matrix.shard }}/4]
@@ -410,7 +392,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
-    needs: [pytest-plan, landing-class]
+    needs: [landing-class]
     permissions:
       contents: read
     steps:
@@ -437,6 +419,13 @@ jobs:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: package-lock.json
+
+      - name: Download immutable pytest duration snapshot
+        if: needs.landing-class.outputs.class != 'docs_skills'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pytest-duration-snapshot
+          path: ci-artifacts
 
       - name: Restore Atlas lexicon manifest cache
         if: needs.landing-class.outputs.class != 'docs_skills'
@@ -505,14 +494,17 @@ jobs:
           path: ~/.cache/pip
           key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
 
-      - name: Download the single planner's shard plans
+      - name: Collect and plan this pytest shard locally
         if: needs.landing-class.outputs.class != 'docs_skills'
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: pytest-plans
-          path: ci-artifacts/plans
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/ci/pytest_shards.py plan-shard \
+            --snapshot ci-artifacts/pytest-duration-snapshot.json \
+            --shard-id "$SHARD" \
+            --expected-source-sha "$GITHUB_SHA" \
+            --output-dir ci-artifacts
 
-      # The playground probe is deliberately excluded from the planner's bulk
+      # The playground probe is deliberately excluded from the bulk
       # collection and is run serially on shard 1. It is a named isolation
       # exception, never a changed-file filter; all other collected tests run
       # through the file-grouped LPT plan exactly once.
@@ -535,8 +527,6 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p ci-artifacts
-          cp "ci-artifacts/plans/pytest-shard-${SHARD}/plan.json" ci-artifacts/plan.json
-          cp "ci-artifacts/plans/pytest-shard-${SHARD}/test-nodeids.txt" ci-artifacts/test-nodeids.txt
           if grep -q '^tests/agent_runtime/test_acp_text_agent.py::' ci-artifacts/test-nodeids.txt; then
             # npm registry blips (#7002; Stanza provision idiom).
             for attempt in 1 2 3; do
@@ -559,7 +549,9 @@ jobs:
             cov_args="--cov=scripts --cov-report="
           fi
           # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
-          .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
+          .venv/bin/python scripts/ci/pytest_shards.py run \
+            --nodeids ci-artifacts/test-nodeids.txt \
+            --execution-receipt ci-artifacts/execution.json -- \
             -n auto --dist=loadfile --strict-markers --timeout=120 --timeout-method=thread \
             -m 'not atlas_release and not slow' \
             --junitxml=ci-artifacts/main-junit.xml --durations=0 $cov_args \
@@ -1465,7 +1457,7 @@ jobs:
       - name: Docs/skills-only — skip shard artifact verify (no-op success)
         if: github.event_name != 'pull_request' && needs.landing-class.outputs.class == 'docs_skills'
         run: echo "landing-class=docs_skills; CI Gate verify-artifacts no-op success (#7018)"
-      - name: Download pytest plans and JUnit results
+      - name: Download pytest shard plans and JUnit results
         if: github.event_name != 'pull_request' && needs.landing-class.outputs.class != 'docs_skills'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -1473,7 +1465,12 @@ jobs:
           path: ci-artifacts
       - name: Verify pytest shard completeness
         if: github.event_name != 'pull_request' && needs.landing-class.outputs.class != 'docs_skills'
-        run: python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts
+        run: |
+          python scripts/ci/pytest_shards.py verify-artifacts \
+            --artifact-dir ci-artifacts \
+            --expected-source-sha "$GITHUB_SHA" \
+            --require-plan-metadata \
+            --require-execution-receipt
       - name: Fail unless every event-required job succeeded
         env:
           EVENT_NAME: ${{ github.event_name }}
