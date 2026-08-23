@@ -1,0 +1,57 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/delegate-sweep-7203
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7203 — every dispatch hangs minutes in the runtime-tmp orphan sweep (one PR, two halves)
+
+Read `gh issue view 7203 -R learn-ukrainian/learn-ukrainian.github.io` — it carries the measured
+faulthandler traceback and numbers. Summary: `cmd_dispatch` → `_sweep_runtime_tmp_orphans` →
+`_runtime_tmp_state_for_lease(lease_name)` globs EVERY `batch_state/tasks/*.json` and `json.loads` each
+until it finds the record whose task_id maps to that lease name — once per runtime lease dir. On the
+Mac: 25 lease dirs × 2,002 records (4.8 GB; single records up to 39 MB) ≈ 50k full JSON parses per
+dispatch → 12+ minutes before a worker even spawns. Reproduced tonight on every dispatch.
+
+## Outcome
+`delegate.py dispatch` reaches worker spawn in seconds regardless of how many task records exist. The
+orphan sweep still reclaims exactly what it reclaims today (no behaviour change in WHAT is swept), and
+future task records stay small enough that a full read is cheap.
+
+## Two halves (both required; the second is the root cause of the record bloat)
+1. **Lookup** — the lease name is a deterministic function of the task id (`_runtime_tmp_lease_name`).
+   Resolve lease → task id directly (persist the task id in the lease dir at creation, or maintain a
+   name index) so the sweep never parses a task record to answer a name question. Keep a bounded,
+   clearly-labelled fallback for legacy lease dirs that predate the marker, and make sure that fallback
+   cannot regress into the full scan per lease (at most one pass, or an index built once per sweep).
+2. **Record bloat** — read-only dispatches embed `read_only_checkout_pre` / `read_only_checkout_post`
+   whole-checkout snapshots inside the task record (32–39 MB records). Move those beside the record
+   (sidecar file under the task's runtime tmp or `batch_state/tasks/<id>.snapshots/…`) or store a digest
+   + path, whichever keeps the existing consumers working. Grep every reader of those keys before
+   choosing; list them in the PR body.
+
+## Acceptance (quote raw output)
+1. Regression test: with N synthetic task records (make N large enough to matter, e.g. 500) and K lease
+   dirs, the sweep opens ZERO record files for leases resolvable by name (assert via a counting
+   monkeypatch on `_read_state` / `open`), and the legacy fallback opens each record at most once per
+   sweep. Mutation-check: revert half 1 → the test fails; quote both runs.
+2. Record-size budget test: a read-only dispatch's persisted task record stays under a stated byte
+   budget (pick it from the real distribution and state it) with the snapshot stored beside it;
+   mutation-check: revert half 2 → fails.
+3. Timing evidence on THIS machine: `time` a `delegate.py dispatch --dry-run`-style path (or the smallest
+   invocation that runs the sweep) before and after, quoted. Before is minutes; after must be seconds.
+4. Existing tests green: `.venv/bin/pytest -q tests/test_delegate.py tests/test_delegate_primary_integrity.py`
+   plus any file that names `read_only_checkout` or `_sweep_runtime_tmp_orphans`; `.venv/bin/ruff check` clean.
+5. One conventional commit (`fix(delegate): resolve runtime-tmp leases by name and stop embedding checkout
+   snapshots in task records (#7203)`, X-Agent trailer, `Refs #6943`). NO push, NO auto-merge, NO amend
+   after reporting. Report HEAD SHA + evidence + ready PR body.
+
+Coordination: PR #7201 (run-nonce, #7168) is open against the same file (wait/status/cancel + initial
+state); avoid restructuring those hunks. Do not touch session-handoff/session-handling code (another
+session owns it).
