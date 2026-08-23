@@ -126,13 +126,26 @@ def test_path_has_live_process_matching_and_nonmatching(tmp_path: Path, monkeypa
     )
     assert tls.path_has_live_process(target) is True
 
-    # returncode != 0 means no process found -> False
+    # returncode == 1 means proven no-match -> False
     monkeypatch.setattr(
         tls.subprocess,
         "run",
         lambda *args, **kwargs: tls.subprocess.CompletedProcess(args=args[0], returncode=1, stdout=b"", stderr=b""),
     )
     assert tls.path_has_live_process(target) is False
+
+
+def test_path_has_live_process_rc3_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    """pgrep exit code 3 (fatal error) must fail closed as live (rc 1 is only non-live rc)."""
+    target = tmp_path / "review-rc3-check"
+    monkeypatch.setattr(
+        tls.subprocess,
+        "run",
+        lambda *args, **kwargs: tls.subprocess.CompletedProcess(
+            args=args[0], returncode=3, stdout=b"", stderr=b"pgrep: fatal error\n"
+        ),
+    )
+    assert tls.path_has_live_process(target) is True
 
 
 def test_path_has_live_process_fails_closed_on_exceptions(tmp_path: Path, monkeypatch) -> None:

@@ -126,9 +126,9 @@ def path_owned_by_self(path: Path) -> bool:
 def path_has_live_process(path: Path) -> bool:
     """Best-effort check: any process whose cmdline mentions this path.
 
-    Fails CLOSED on error/timeout/missing pgrep: if we cannot reliably prove
-    a path is unreferenced by running processes, treat it as live to avoid
-    deleting active task scratch.
+    Fails CLOSED on error/timeout/missing pgrep/fatal exit codes: if we cannot
+    reliably prove a path is unreferenced by running processes (rc == 1),
+    treat it as live to avoid deleting active task scratch.
     """
     try:
         completed = subprocess.run(
@@ -140,7 +140,7 @@ def path_has_live_process(path: Path) -> bool:
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         # Fail closed: cannot prove unreferenced -> treat as live
         return True
-    return completed.returncode == 0
+    return completed.returncode != 1
 
 
 def _entry_age_s(path: Path, *, now: float) -> float | None:
