@@ -1,0 +1,35 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-atlas-6370-paired-split-multiword-leg-2026-08-23
+batch_label: atlas-6370-paired-split-multiword-leg-approve-2026-08-23
+reviewer: operator-atlas-6370-residual-27-review
+reviewed_at: '2026-08-23'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 1
+  approved_in_queue: 1
+  promotion_batch_size: 1
+production_outputs_updated: []
+decisions:
+  - lemma: виходити заміж
+    decision: approve_for_publish
+    approved_pos: phrase
+    approved_gloss: to marry (a man)
+    sense_note: >-
+      #6370 residual-27 (2026-08-18) named multiword-leg admission; parent paired
+      headword 'виходити заміж, вийти' (ohoiko-1000-words entry 99) already
+      approve_for_publish in 2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml
+      (source_inventory.key dc445291d202bc25); this leg was held by the #6678
+      split-leg promoter's multiword_after_split residual and is admitted here as
+      entry_type expression — СУМ-11 lists 'виходити (вийти) заміж' as a fixed
+      collocation under за́між.
+    source_inventory:
+      key: b7467d052beb1e1f
+      path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-multiword-legs-2026-08-23.yaml
+      locator: 'ohoiko-1000-words entry 99 :: paired-split-leg::виходити заміж, вийти -> виходити заміж'
+      source_id: ohoiko-ulp-paired-split-multiword-legs-2026-08-23-ohoiko
+      source_family: ohoiko
+    evidence_refs:
+      - curated source family ohoiko (parent decision dc445291d202bc25 already approved)
+      - 'СУМ-11 за́між: "Вихо́дити (ви́йти, іти́, піти́ і т. ін.) за́між — брати шлюб, одружуватися" (fixed collocation, mcp__sources__search_definitions)'
+      - 'components VESUM-verified: виходити (verb), заміж (adv) — mcp__sources__verify_words'
