@@ -1,10 +1,7 @@
-import sys
-from pathlib import Path
+import subprocess
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts/audit"))
-
-import lint_opsec_leaks as opsec_linter
-from lint_opsec_leaks import check_content
+from scripts.audit import lint_opsec_leaks as opsec_linter
+from scripts.audit.lint_opsec_leaks import check_content
 
 
 def test_f002_pkcs8_unqualified_private_key_detected():
@@ -193,3 +190,41 @@ def test_symmetric_diff_uses_its_head_for_blob_reads(monkeypatch):
     assert paths == ["site/src/data/a.json"]
     assert mode == "git diff (base-sha...head-sha)"
     assert revision == "head-sha"
+
+
+def test_commit_range_mode_keeps_union_of_touched_public_paths(monkeypatch, tmp_path):
+    def git(*args: str) -> str:
+        return subprocess.check_output(
+            ["git", *args], cwd=tmp_path, text=True, timeout=30
+        ).strip()
+
+    git("init", "--initial-branch=main")
+    git("config", "user.email", "ci@example.com")
+    git("config", "user.name", "ci")
+    (tmp_path / "README.md").write_text("base\n", encoding="utf-8")
+    git("add", "README.md")
+    git("commit", "-m", "base")
+    base = git("rev-parse", "HEAD")
+
+    public_path = tmp_path / "site/src/data/changed.json"
+    public_path.parent.mkdir(parents=True)
+    public_path.write_text("Alona\n", encoding="utf-8")
+    git("add", str(public_path.relative_to(tmp_path)))
+    git("commit", "-m", "introduce public path")
+
+    public_path.write_text("clean\n", encoding="utf-8")
+    git("commit", "-am", "revert public identifier")
+    head = git("rev-parse", "HEAD")
+
+    monkeypatch.setattr(opsec_linter, "REPO_ROOT", tmp_path)
+    scanned_paths: list[str] = []
+
+    def get_content(path: str, rev: str) -> str:
+        scanned_paths.append(path)
+        assert rev == head
+        return "clean content"
+
+    monkeypatch.setattr(opsec_linter, "get_git_content", get_content)
+
+    assert opsec_linter.main(["--commit-range", f"{base}..{head}", "--public-identifiers"]) == 0
+    assert scanned_paths == ["site/src/data/changed.json"]
