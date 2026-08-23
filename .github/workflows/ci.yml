@@ -240,9 +240,14 @@ jobs:
             base_ref="origin/main"
           fi
           mkdir -p ci-artifacts
-          python scripts/ci/changed_tests.py \
-            --base "$base_ref" \
+          selector_args=(
+            --base "$base_ref"
             --output ci-artifacts/fastlane-test-files.txt
+          )
+          if [[ "${GITHUB_EVENT_NAME:-}" == "pull_request" ]]; then
+            selector_args+=(--include-repo-invariants)
+          fi
+          python scripts/ci/changed_tests.py "${selector_args[@]}"
           if [[ -s ci-artifacts/fastlane-test-files.txt ]]; then
             echo "has_tests=true" >> "$GITHUB_OUTPUT"
             echo "Selected test modules:"

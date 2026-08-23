@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Build a slim dependency file, constrained by the repository lock, for changed pytest modules.
 
-Use this helper only for CI's advisory changed-test fastlane. It maps direct
-third-party imports in selected tests through an explicit, reviewed mapping;
-unknown imports fail closed instead of guessing a distribution name. The
-required full pytest tier remains responsible for the complete dependency set.
+Use this helper only for CI's advisory changed-test fastlane. It maps
+third-party imports reachable from selected tests through an explicit,
+reviewed mapping; unknown imports fail closed instead of guessing a
+distribution name. The required full pytest tier remains responsible for the
+complete dependency set.
 """
 
 from __future__ import annotations
@@ -79,6 +80,96 @@ def import_roots(path: Path) -> set[str]:
     return roots
 
 
+def _imported_modules(path: Path, project_root: Path, *, module_level_only: bool = False) -> set[str]:
+    """Return absolute module names imported by ``path`` for graph traversal."""
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    modules: set[str] = set()
+    rel_path = path.resolve().relative_to(project_root.resolve())
+    module_parts = rel_path.with_suffix("").parts
+    package_parts = module_parts[:-1]
+
+    nodes = ast.walk(tree)
+    if module_level_only:
+        class ModuleImports(ast.NodeVisitor):
+            def __init__(self) -> None:
+                self.nodes: list[ast.AST] = []
+
+            def visit(self, node: ast.AST) -> None:
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+                    return
+                self.nodes.append(node)
+                for child in ast.iter_child_nodes(node):
+                    self.visit(child)
+
+        visitor = ModuleImports()
+        visitor.visit(tree)
+        nodes = visitor.nodes
+
+    for node in nodes:
+        if isinstance(node, ast.Import):
+            modules.update(alias.name for alias in node.names)
+            continue
+        if not isinstance(node, ast.ImportFrom):
+            continue
+
+        if node.level == 0:
+            base_parts = tuple(node.module.split(".")) if node.module else ()
+        else:
+            trim = max(0, node.level - 1)
+            base_parts = package_parts[: max(0, len(package_parts) - trim)]
+            if node.module:
+                base_parts += tuple(node.module.split("."))
+
+        if base_parts:
+            modules.add(".".join(base_parts))
+        for alias in node.names:
+            if alias.name != "*" and base_parts:
+                modules.add(".".join((*base_parts, alias.name)))
+
+    return modules
+
+
+def _resolve_project_module(module: str, project_root: Path) -> Path | None:
+    """Resolve a module name to a project Python file, if it is project-local."""
+    parts = tuple(part for part in module.split(".") if part)
+    if not parts:
+        return None
+
+    relative = Path(*parts)
+    candidates = (
+        project_root / relative.with_suffix(".py"),
+        project_root / relative / "__init__.py",
+        project_root / "scripts" / relative.with_suffix(".py"),
+        project_root / "scripts" / relative / "__init__.py",
+    )
+    return next((candidate for candidate in candidates if candidate.is_file()), None)
+
+
+def _reachable_import_roots(test_paths: Iterable[Path], project_root: Path) -> set[str]:
+    """Collect third-party roots from selected tests and reachable project modules."""
+    initial_paths = {path.resolve() for path in test_paths}
+    pending = [(path, True) for path in initial_paths]
+    visited: set[Path] = set()
+    roots: set[str] = set()
+
+    while pending:
+        path, is_initial_test = pending.pop()
+        if path in visited:
+            continue
+        visited.add(path)
+        for module in _imported_modules(path, project_root, module_level_only=not is_initial_test):
+            root = module.split(".", 1)[0]
+            if root in LIVE_MODEL_IMPORTS or root == "__future__":
+                continue
+            resolved = _resolve_project_module(module, project_root)
+            if resolved is not None:
+                pending.append((resolved, False))
+            elif not is_project_import(root, project_root):
+                roots.add(root)
+
+    return roots
+
+
 def read_lock(path: Path) -> dict[str, str]:
     """Read exact version pins from the lock file, keyed canonically."""
     requirements: dict[str, str] = {}
@@ -116,8 +207,8 @@ def select_requirements(
     lock_requirements: dict[str, str],
     project_root: Path,
 ) -> list[str]:
-    """Return the base profile plus pins for reviewed direct test imports."""
-    roots = set().union(*(import_roots(path) for path in test_paths))
+    """Return the base profile plus pins for reviewed reachable test imports."""
+    roots = _reachable_import_roots(test_paths, project_root)
     unknown: set[str] = set()
     additions: set[str] = set()
 

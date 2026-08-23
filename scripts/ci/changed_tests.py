@@ -11,7 +11,10 @@ import argparse
 import subprocess
 import sys
 from collections.abc import Iterable, Sequence
-from pathlib import PurePosixPath
+from fnmatch import fnmatchcase
+from pathlib import Path, PurePosixPath
+
+REPO_INVARIANTS_MANIFEST = Path(__file__).with_name("fastlane_always_tests.txt")
 
 
 def comparison_range(base: str, head: str) -> str:
@@ -50,9 +53,38 @@ def is_test_module(path: str) -> bool:
     )
 
 
-def select_test_modules(paths: Iterable[str]) -> list[str]:
-    """Return a sorted, duplicate-free direct-test plan from changed paths."""
-    return sorted({path for path in paths if is_test_module(path)})
+def is_repo_invariant_trigger(path: str) -> bool:
+    """Whether a PR-tier change can affect a repo-wide invariant."""
+    candidate = PurePosixPath(path)
+    return (
+        candidate.suffix == ".py"
+        or path == "pyproject.toml"
+        or fnmatchcase(candidate.name, "requirements*.txt")
+        or path == ".github/workflows/ci.yml"
+        or path.startswith("tests/fixtures/")
+    )
+
+
+def load_repo_invariant_tests() -> list[str]:
+    """Read the explicit fastlane manifest in its declared order."""
+    return [
+        line.strip()
+        for line in REPO_INVARIANTS_MANIFEST.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+
+
+def select_test_modules(
+    paths: Iterable[str], *, include_repo_invariants: bool = False
+) -> list[str]:
+    """Return direct tests, optionally unioned with triggered repo invariants."""
+    changed_paths = list(paths)
+    selected = sorted({path for path in changed_paths if is_test_module(path)})
+
+    if include_repo_invariants and any(is_repo_invariant_trigger(path) for path in changed_paths):
+        selected = sorted(set(selected).union(load_repo_invariant_tests()))
+
+    return selected
 
 
 def write_plan(path: str, selected: Sequence[str]) -> None:
@@ -71,10 +103,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     parser.add_argument("--head", default="HEAD", help="head SHA/ref when --base is a ref (default: HEAD)")
     parser.add_argument("--output", help="write the newline-delimited selected test-file plan here")
+    parser.add_argument(
+        "--include-repo-invariants",
+        action="store_true",
+        help="append the invariant manifest when repository-wide trigger paths changed",
+    )
     args = parser.parse_args(argv)
 
     try:
-        selected = select_test_modules(changed_files(comparison_range(args.base, args.head)))
+        selected = select_test_modules(
+            changed_files(comparison_range(args.base, args.head)),
+            include_repo_invariants=args.include_repo_invariants,
+        )
     except subprocess.CalledProcessError as exc:
         print(f"changed-test selection failed: git exited {exc.returncode}", file=sys.stderr)
         return exc.returncode or 1
