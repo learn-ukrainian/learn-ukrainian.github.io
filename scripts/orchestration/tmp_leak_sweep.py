@@ -24,6 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.scratch import resolve_scratch_root
 from scripts.path_safety import assert_delete_target
 
 # 2h normal; 30m under disk pressure.
@@ -36,6 +37,8 @@ _LEAK_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^review-\d+"),
     re.compile(r"^pr\d+"),  # pr + digits only (not pr* / process_ / protocol_)
     re.compile(r"^lu-"),
+    re.compile(r"^mq-"),  # merge-queue log pulls (#7164)
+    re.compile(r"^contracts-"),  # contracts-job scratch (#7164)
     re.compile(r"^atlas6507-"),
     re.compile(r"^data_test_"),
     re.compile(r"^data_debug"),
@@ -59,10 +62,20 @@ class LeakCandidate:
 
 
 def default_tmp_roots() -> list[Path]:
-    """Return distinct existing temp roots to scan (never $HOME)."""
+    """Return distinct existing temp roots to scan (never $HOME).
+
+    #7164: includes the disk-backed fleet scratch root (and the dispatcher's
+    recorded base) alongside the legacy tmpfs locations, so residue drains
+    from both old and new homes.
+    """
     roots: list[Path] = []
     seen: set[Path] = set()
-    for raw in (tempfile.gettempdir(), "/private/tmp", "/tmp"):
+    raws = [str(resolve_scratch_root())]
+    base_override = os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", "").strip()
+    if base_override:
+        raws.append(base_override)
+    raws.extend([tempfile.gettempdir(), "/private/tmp", "/tmp"])
+    for raw in raws:
         if not raw:
             continue
         path = Path(raw)

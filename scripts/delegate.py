@@ -125,6 +125,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.scratch import ensure_scratch_root, resolve_scratch_root, scratch_scan_roots
 from scripts.config import DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
 from scripts.orchestration import reaper_lifecycle
 
@@ -595,8 +596,12 @@ def _create_runtime_tmp_lease(task_id: str) -> tuple[Path, Path]:
     The lease is intentionally deterministic per task ID: a task can restart
     after its previous worker has finished and re-create the same root, while
     Stage 2 will eventually handle roots left by crashed processes.
+
+    #7164: the namespace lives under the disk-backed fleet scratch root
+    (``scripts/common/scratch.py``), not tmpfs ``/tmp`` — worker TMPDIR
+    payloads must not be able to exhaust the small per-user tmpfs quota.
     """
-    namespace_root = Path(tempfile.gettempdir()) / "learn-ukrainian"
+    namespace_root = ensure_scratch_root() / "learn-ukrainian"
     try:
         namespace_root.mkdir(parents=True, exist_ok=True)
         namespace_stat = namespace_root.lstat()
@@ -791,58 +796,69 @@ def _sweep_runtime_tmp_orphans(
         "errors": 0,
         "error_details": error_details,
     }
-    tmp_root = Path(tempfile.gettempdir())
-    namespace = tmp_root / "learn-ukrainian"
-    try:
-        namespace_stat = namespace.lstat()
-    except FileNotFoundError:
-        return result
-    except OSError as exc:
-        result["errors"] += 1
-        error_details.append((namespace.name, exc.errno, str(exc.filename or namespace)))
-        return result
-    if stat.S_ISLNK(namespace_stat.st_mode) or not stat.S_ISDIR(namespace_stat.st_mode):
-        result["errors"] += 1
-        return result
-
+    # #7164: the lease namespace moved to the disk-backed fleet scratch root;
+    # sweep every known scratch base (new root + legacy tmpfs $TMPDIR) so old
+    # namespaces still drain.
+    namespaces: list[Path] = []
+    seen_namespaces: set[Path] = set()
+    for scratch_base in scratch_scan_roots():
+        namespace = scratch_base / "learn-ukrainian"
+        if namespace in seen_namespaces:
+            continue
+        seen_namespaces.add(namespace)
+        namespaces.append(namespace)
     cutoff = (time.time() if now is None else now) - _RUNTIME_TMP_ORPHAN_MAX_AGE_S
-    try:
-        candidates = tuple(namespace.iterdir())
-    except OSError as exc:
-        result["errors"] += 1
-        error_details.append((namespace.name, exc.errno, str(exc.filename or namespace)))
-        return result
-    for lease in candidates:
+
+    for namespace in namespaces:
         try:
-            lease_stat = lease.lstat()
+            namespace_stat = namespace.lstat()
         except FileNotFoundError:
             continue
         except OSError as exc:
             result["errors"] += 1
-            if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
-                error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
+            error_details.append((namespace.name, exc.errno, str(exc.filename or namespace)))
             continue
-        if stat.S_ISLNK(lease_stat.st_mode) or not stat.S_ISDIR(lease_stat.st_mode):
-            continue
-
-        state = _runtime_tmp_state_for_lease(lease.name)
-        if state is not None:
-            status = state.get("status")
-            if status not in _RUNTIME_TMP_TERMINAL_STATUSES or _runtime_tmp_state_has_live_pid(state):
-                continue
-        elif lease_stat.st_mtime >= cutoff:
+        if stat.S_ISLNK(namespace_stat.st_mode) or not stat.S_ISDIR(namespace_stat.st_mode):
+            result["errors"] += 1
             continue
 
         try:
-            bytes_freed = _runtime_tmp_lease_bytes(lease)
-            _remove_runtime_tmp_lease(lease, namespace)
+            candidates = tuple(namespace.iterdir())
         except OSError as exc:
             result["errors"] += 1
-            if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
-                error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
+            error_details.append((namespace.name, exc.errno, str(exc.filename or namespace)))
             continue
-        result["leases_reaped"] += 1
-        result["bytes_freed"] += bytes_freed
+        for lease in candidates:
+            try:
+                lease_stat = lease.lstat()
+            except FileNotFoundError:
+                continue
+            except OSError as exc:
+                result["errors"] += 1
+                if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
+                    error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
+                continue
+            if stat.S_ISLNK(lease_stat.st_mode) or not stat.S_ISDIR(lease_stat.st_mode):
+                continue
+
+            state = _runtime_tmp_state_for_lease(lease.name)
+            if state is not None:
+                status = state.get("status")
+                if status not in _RUNTIME_TMP_TERMINAL_STATUSES or _runtime_tmp_state_has_live_pid(state):
+                    continue
+            elif lease_stat.st_mtime >= cutoff:
+                continue
+
+            try:
+                bytes_freed = _runtime_tmp_lease_bytes(lease)
+                _remove_runtime_tmp_lease(lease, namespace)
+            except OSError as exc:
+                result["errors"] += 1
+                if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
+                    error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
+                continue
+            result["leases_reaped"] += 1
+            result["bytes_freed"] += bytes_freed
     return result
 
 
@@ -889,10 +905,18 @@ def _reap_runtime_tmp_lease(
             runtime_tmp_base_root = os.environ.get("LU_RUNTIME_TMP_BASE_ROOT")
             if not runtime_tmp_base_root:
                 raise ValueError("runtime tmp worker is missing its base root")
-            resolved_tmp_root = Path(runtime_tmp_base_root).resolve(strict=True)
-        if resolved_namespace.parent != resolved_tmp_root:
+            accepted_parents = {Path(runtime_tmp_base_root).resolve(strict=True)}
+        else:
+            # #7164: leases live under the disk-backed fleet scratch root; the
+            # legacy tmpfs $TMPDIR namespace stays accepted so pre-change
+            # leases can still be reaped.
+            accepted_parents = {
+                resolve_scratch_root().resolve(),
+                resolved_tmp_root,
+            }
+        if resolved_namespace.parent not in accepted_parents:
             raise ValueError(
-                "resolved runtime tmp namespace is not directly under $TMPDIR",
+                "resolved runtime tmp namespace is not directly under an approved scratch root",
             )
         if resolved_lease.parent != resolved_namespace:
             raise ValueError(

@@ -20,6 +20,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.scratch import ensure_scratch_root
 
 REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 PYTHON = ".venv/bin/python"
@@ -95,7 +96,7 @@ def _prompt_directory() -> Iterator[Path]:
         yield lease_root
         return
 
-    with tempfile.TemporaryDirectory(prefix="learn-ukrainian-bridge-") as directory:
+    with tempfile.TemporaryDirectory(prefix="learn-ukrainian-bridge-", dir=ensure_scratch_root()) as directory:
         yield Path(directory)
 
 

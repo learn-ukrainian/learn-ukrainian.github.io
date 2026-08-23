@@ -36,6 +36,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.scratch import ensure_scratch_root, make_scratch_dir
 from scripts.review.isolation import (
     REVIEW_TEMP_ROOT_MARKER_NAME,
     ReviewIsolationError,
@@ -474,7 +475,7 @@ def _neutral_local_git_view(
             shared_path.name,
             allow_binary=True,
         )
-    neutral_parent = Path(tempfile.mkdtemp(prefix="lu-review-neutral-git-"))
+    neutral_parent = make_scratch_dir(prefix="lu-review-neutral-git-")
     neutral = neutral_parent / "git"
     try:
         _run_git(
@@ -1915,7 +1916,9 @@ def materialize_review_snapshot(
         overlay_entries=overlay_entries,
     )
 
-    parent = temp_parent or Path(tempfile.gettempdir())
+    # #7164: default to the disk-backed fleet scratch root (not tmpfs /tmp);
+    # an explicit temp_parent still wins.
+    parent = temp_parent or ensure_scratch_root()
     parent.mkdir(parents=True, exist_ok=True)
     if is_within(parent.resolve(), root):
         raise ReviewSnapshotError("tmpdir_inside_repo")
@@ -2233,7 +2236,7 @@ def _immutable_local_patch(
         for path in (*deleted_paths, *(old for old, _new in rename_pairs))
     }
 
-    neutral_parent = Path(tempfile.mkdtemp(prefix="lu-review-immutable-patch-"))
+    neutral_parent = make_scratch_dir(prefix="lu-review-immutable-patch-")
     neutral = neutral_parent / "git"
     try:
         _run_git(

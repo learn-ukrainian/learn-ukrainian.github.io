@@ -1240,8 +1240,29 @@ def _worktree_cleanup_integrity_canary() -> bool:
     return ok
 
 
+def _tmp_usability_canary() -> dict:
+    """Detection probe for issue #7164: /tmp usage plus a small write probe.
+
+    A quota-exhausted tmpfs fails every write with EDQUOT while ``df`` still
+    looks healthy; the probe classifies EDQUOT distinctly so the state is
+    visible on the health glance instead of masquerading as random crashes.
+    Never raises: the canary must not break health collection.
+    """
+    try:
+        from scripts.audit.check_tmp_usability import probe_tmp_usability  # noqa: PLC0415 — script-path fallback
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_tmp_usability import probe_tmp_usability  # noqa: PLC0415 — script-path fallback
+    try:
+        return probe_tmp_usability()
+    except Exception:
+        logger.exception("tmp-usability canary (#7164) failed to run")
+        # fail-open: don't raise a false alarm on canary error
+        return {"ok": True, "writable": True, "error": None, "probe_error": True}
+
+
 def _collect_health_orient_data() -> dict:
     mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
+    tmp_usability = _tmp_usability_canary()
     return {
         "api": True,
         "mcp_sources": mcp_sources_ok,
@@ -1254,6 +1275,8 @@ def _collect_health_orient_data() -> dict:
         "node_modules_integrity_ok": _node_modules_integrity_canary(),
         "venv_integrity_ok": _venv_integrity_canary(),
         "worktree_cleanup_integrity_ok": _worktree_cleanup_integrity_canary(),
+        "tmp_usability_ok": bool(tmp_usability.get("ok")),
+        "tmp_usability": tmp_usability,
     }
 
 

@@ -26,10 +26,27 @@ def test_name_patterns_match_known_leaks() -> None:
     assert tls.name_matches_leak_pattern("lu-agent-runtime-git")
     assert tls.name_matches_leak_pattern("data_test_pipe3")
     assert tls.name_matches_leak_pattern("atlas6507-build.DnfqH3")
+    assert tls.name_matches_leak_pattern("mq-runner-log-123")
+    assert tls.name_matches_leak_pattern("contracts-job-scratch-456")
     assert not tls.name_matches_leak_pattern("com.apple.imagent")
     assert not tls.name_matches_leak_pattern("claude-501")
     assert not tls.name_matches_leak_pattern("cc-socks")
     assert not tls.name_matches_leak_pattern("random-scratch")
+
+
+def test_default_tmp_roots_includes_scratch_and_base_override(tmp_path: Path, monkeypatch) -> None:
+    scratch_root = tmp_path / "scratch"
+    scratch_root.mkdir()
+    base_root = tmp_path / "base"
+    base_root.mkdir()
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(base_root))
+
+    roots = tls.default_tmp_roots()
+    resolved_roots = [r.resolve() for r in roots]
+    assert scratch_root.resolve() in resolved_roots
+    assert base_root.resolve() in resolved_roots
 
 
 def test_discover_skips_young_and_unrelated(tmp_path: Path) -> None:

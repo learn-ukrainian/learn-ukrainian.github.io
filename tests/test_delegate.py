@@ -219,7 +219,7 @@ def test_state_path_sanitizes_slashes(tmp_tasks_dir):
 
 
 def test_create_runtime_tmp_lease_sanitizes_task_id(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
 
     lease_root, namespace_root = delegate._create_runtime_tmp_lease(
         "codex/4956 tmp/../lease",
@@ -259,7 +259,7 @@ def test_runtime_tmp_reap_refuses_namespace_outside_tempdir(tmp_path, monkeypatc
     result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
 
     assert result["tmp_bytes_freed"] == 0
-    assert "not directly under $TMPDIR" in str(result["tmp_reap_error"])
+    assert "not directly under an approved scratch root" in str(result["tmp_reap_error"])
     assert payload.read_text(encoding="utf-8") == "keep"
 
 

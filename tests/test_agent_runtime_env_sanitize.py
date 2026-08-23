@@ -165,6 +165,7 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
             "LU_BYPASS_RATE_LIMIT": "1",
             "LU_RUNTIME_TMP_BASE_ROOT": "/tmp",
             "LU_RUNTIME_TMP_ROOT": "/tmp/learn-ukrainian/task-4956",
+            "LU_SCRATCH_ROOT": "/var/tmp/lu",
             "UNRELATED": "drop-me",
         },
         clear=True,
@@ -188,6 +189,7 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
     assert env["LU_BYPASS_RATE_LIMIT"] == "1"
     assert env["LU_RUNTIME_TMP_BASE_ROOT"] == "/tmp"
     assert env["LU_RUNTIME_TMP_ROOT"] == "/tmp/learn-ukrainian/task-4956"
+    assert env["LU_SCRATCH_ROOT"] == "/var/tmp/lu"
     assert env["GEMINI_AUTH_MODE"] == "subscription"
     assert "AB_BAD_OVERRIDE" not in env
     assert "GITHUB_TOKEN" not in env
