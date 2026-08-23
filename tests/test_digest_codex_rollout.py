@@ -31,16 +31,28 @@ def _write_jsonl(path: Path, rows: list[object]) -> None:
 
 
 class DigestCodexRolloutTests(unittest.TestCase):
-    def test_prefers_rollout_jsonl_over_generic(self) -> None:
+    def test_mtime_first_newer_claude_beats_old_rollout(self) -> None:
         root = Path(self._tmp()) / "sessions"
-        generic = root / "other.jsonl"
-        rollout = root / "2026" / "08" / "23" / "rollout-abc.jsonl"
-        _write_jsonl(generic, [{"text": "generic failed merge"}])
+        claude = root / "claude-session.jsonl"
+        rollout = root / "2026" / "08" / "21" / "rollout-abc.jsonl"
         _write_jsonl(rollout, [{"text": "rollout blocked on review"}])
-        generic.write_text(
-            generic.read_text(encoding="utf-8") + '{"text":"newer generic error"}\n',
-            encoding="utf-8",
-        )
+        _write_jsonl(claude, [{"text": "claude failed merge"}])
+        older = 1_724_220_000  # 2026-08-21-ish
+        newer = older + 172_800
+        os.utime(rollout, (older, older))
+        os.utime(claude, (newer, newer))
+        sources = digest.collect_sources([root], limit=1)
+        self.assertEqual(sources, [claude])
+
+    def test_rollout_name_is_mtime_tie_break_only(self) -> None:
+        root = Path(self._tmp()) / "sessions"
+        claude = root / "claude-session.jsonl"
+        rollout = root / "rollout-abc.jsonl"
+        _write_jsonl(claude, [{"text": "claude failed merge"}])
+        _write_jsonl(rollout, [{"text": "rollout blocked on review"}])
+        stamp = 1_724_400_000
+        os.utime(claude, (stamp, stamp))
+        os.utime(rollout, (stamp, stamp))
         sources = digest.collect_sources([root], limit=1)
         self.assertEqual(sources, [rollout])
 

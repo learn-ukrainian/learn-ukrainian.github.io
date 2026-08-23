@@ -136,43 +136,32 @@ def env_roots(environ: dict[str, str] | None = None) -> list[Path]:
     return [path.expanduser() for path in DEFAULT_ROOTS]
 
 
-def _mtime(path: Path) -> float:
-    try:
-        return path.stat().st_mtime
-    except OSError:
-        return 0.0
-
-
 def collect_sources(roots: Iterable[Path], limit: int) -> list[Path]:
-    """Collect jsonl tails, preferring ``rollout-*.jsonl`` over generic jsonl."""
-    rollouts: list[Path] = []
-    others: list[Path] = []
+    """Collect jsonl tails, newest mtime first; rollout name is tie-break only."""
+    found: list[Path] = []
     seen: set[Path] = set()
 
     for root in roots:
         if not root.is_dir():
             continue
         try:
-            rollout_hits = list(root.rglob("rollout-*.jsonl"))
-            all_hits = list(root.rglob("*.jsonl"))
+            hits = list(root.rglob("rollout-*.jsonl")) + list(root.rglob("*.jsonl"))
         except OSError:
             continue
-        for path in rollout_hits:
-            resolved = path.resolve()
-            if resolved in seen or not path.is_file():
+        for path in hits:
+            try:
+                resolved = path.resolve()
+                if resolved in seen or not path.is_file():
+                    continue
+                path.stat()
+            except OSError:
                 continue
             seen.add(resolved)
-            rollouts.append(path)
-        for path in all_hits:
-            resolved = path.resolve()
-            if resolved in seen or not path.is_file():
-                continue
-            seen.add(resolved)
-            others.append(path)
+            found.append(path)
 
-    rollouts.sort(key=_mtime, reverse=True)
-    others.sort(key=_mtime, reverse=True)
-    return (rollouts + others)[:limit]
+    # mtime newest first; rollout-* wins only when timestamps tie.
+    found.sort(key=lambda p: (-p.stat().st_mtime, 0 if "rollout-" in p.name else 1))
+    return found[:limit]
 
 
 def tail_lines(path: Path, count: int = TAIL_LINES) -> list[str]:
