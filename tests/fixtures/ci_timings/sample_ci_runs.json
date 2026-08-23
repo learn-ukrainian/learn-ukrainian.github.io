@@ -1,0 +1,1890 @@
+{
+  "jobs_by_run_id": {
+    "32648081859": [
+      {
+        "completed_at": "2026-08-23T15:22:29Z",
+        "conclusion": "success",
+        "id": 97215340516,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:17:26Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:16Z",
+        "conclusion": "success",
+        "id": 97215340619,
+        "name": "Landing class",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:17:27Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:25:53Z",
+        "conclusion": "success",
+        "id": 97215340622,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:17:27Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:05Z",
+        "conclusion": "success",
+        "id": 97215340653,
+        "name": "Ruff",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:17:27Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:24Z",
+        "conclusion": "success",
+        "id": 97215340701,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:17:27Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:42Z",
+        "conclusion": "failure",
+        "id": 97215452537,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:18:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:25:10Z",
+        "conclusion": "success",
+        "id": 97215452544,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:18:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:43Z",
+        "conclusion": "success",
+        "id": 97215452550,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:18:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:58Z",
+        "conclusion": "success",
+        "id": 97215452551,
+        "name": "Pytest plan contract",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:18:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:58Z",
+        "conclusion": "success",
+        "id": 97215452562,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:18:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:27:33Z",
+        "conclusion": "failure",
+        "id": 97216551912,
+        "name": "CI Gate",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:27:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:58Z",
+        "conclusion": "skipped",
+        "id": 97216552389,
+        "name": "Publish pytest durations",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:26:58Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:58Z",
+        "conclusion": "skipped",
+        "id": 97216552440,
+        "name": "Coverage floor",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:26:58Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:27:33Z",
+        "conclusion": "skipped",
+        "id": 97216630306,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32648081859,
+        "started_at": "2026-08-23T15:27:34Z",
+        "status": "completed"
+      }
+    ],
+    "32648130467": [
+      {
+        "completed_at": "2026-08-23T15:19:40Z",
+        "conclusion": "success",
+        "id": 97215458989,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:19:03Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:21:46Z",
+        "conclusion": "success",
+        "id": 97215459074,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:19:14Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:20:02Z",
+        "conclusion": "success",
+        "id": 97215459108,
+        "name": "Ruff",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:19:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:20:59Z",
+        "conclusion": "success",
+        "id": 97215459115,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:19:37Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:19Z",
+        "conclusion": "skipped",
+        "id": 97215459406,
+        "name": "Landing class",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:18:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:20Z",
+        "conclusion": "skipped",
+        "id": 97215459671,
+        "name": "Pytest plan",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:18:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:20Z",
+        "conclusion": "skipped",
+        "id": 97215459839,
+        "name": "Python (pytest) [${{ matrix.shard }}/4]",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:18:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:20Z",
+        "conclusion": "skipped",
+        "id": 97215459856,
+        "name": "Coverage floor",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:18:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:18:20Z",
+        "conclusion": "skipped",
+        "id": 97215459959,
+        "name": "Publish pytest durations",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:18:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:22:24Z",
+        "conclusion": "success",
+        "id": 97215903203,
+        "name": "CI Gate",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:21:49Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:23:03Z",
+        "conclusion": "success",
+        "id": 97215981229,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32648130467,
+        "started_at": "2026-08-23T15:22:27Z",
+        "status": "completed"
+      }
+    ],
+    "32648135039": [
+      {
+        "completed_at": "2026-08-23T15:20:06Z",
+        "conclusion": "success",
+        "id": 97215471282,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:19:05Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:20:27Z",
+        "conclusion": "success",
+        "id": 97215471283,
+        "name": "Landing class",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:19:42Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:28:10Z",
+        "conclusion": "success",
+        "id": 97215471284,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:19:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:24:53Z",
+        "conclusion": "success",
+        "id": 97215471315,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:19:38Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:20:14Z",
+        "conclusion": "success",
+        "id": 97215471412,
+        "name": "Ruff",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:19:40Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:21:08Z",
+        "conclusion": "success",
+        "id": 97215739086,
+        "name": "Pytest plan contract",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:20:30Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:28:59Z",
+        "conclusion": "success",
+        "id": 97215739136,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:20:30Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:29:36Z",
+        "conclusion": "success",
+        "id": 97215739137,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:20:30Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:28:39Z",
+        "conclusion": "success",
+        "id": 97215739140,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:20:48Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:28:50Z",
+        "conclusion": "success",
+        "id": 97215739145,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:20:30Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:30:48Z",
+        "conclusion": "success",
+        "id": 97216886270,
+        "name": "Coverage floor",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:29:38Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:29:36Z",
+        "conclusion": "skipped",
+        "id": 97216887110,
+        "name": "Publish pytest durations",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:29:37Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:31:25Z",
+        "conclusion": "success",
+        "id": 97217046755,
+        "name": "CI Gate",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:30:50Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:37:16Z",
+        "conclusion": "success",
+        "id": 97217123920,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32648135039,
+        "started_at": "2026-08-23T15:31:28Z",
+        "status": "completed"
+      }
+    ],
+    "32648359540": [
+      {
+        "completed_at": "2026-08-23T15:23:19Z",
+        "conclusion": "success",
+        "id": 97216016614,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:22:43Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:25:08Z",
+        "conclusion": "success",
+        "id": 97216016728,
+        "name": "Ruff",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:24:33Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:23:31Z",
+        "conclusion": "success",
+        "id": 97216016730,
+        "name": "Landing class",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:22:46Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:28:31Z",
+        "conclusion": "success",
+        "id": 97216016734,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:23:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:22Z",
+        "conclusion": "success",
+        "id": 97216016749,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:24:54Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:26:12Z",
+        "conclusion": "success",
+        "id": 97216120548,
+        "name": "Pytest plan contract",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:25:38Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:34:24Z",
+        "conclusion": "success",
+        "id": 97216120569,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:26:23Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:34:03Z",
+        "conclusion": "success",
+        "id": 97216120573,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:25:55Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:36:01Z",
+        "conclusion": "success",
+        "id": 97216120608,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:26:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:33:59Z",
+        "conclusion": "success",
+        "id": 97216120627,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:26:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:37:02Z",
+        "conclusion": "success",
+        "id": 97217701899,
+        "name": "Coverage floor",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:36:03Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:36:01Z",
+        "conclusion": "skipped",
+        "id": 97217702316,
+        "name": "Publish pytest durations",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:36:01Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:37:42Z",
+        "conclusion": "success",
+        "id": 97217831387,
+        "name": "CI Gate",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:37:04Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:38:20Z",
+        "conclusion": "success",
+        "id": 97217917357,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32648359540,
+        "started_at": "2026-08-23T15:37:44Z",
+        "status": "completed"
+      }
+    ],
+    "32648373059": [
+      {
+        "completed_at": "2026-08-23T15:26:16Z",
+        "conclusion": "success",
+        "id": 97216052306,
+        "name": "Ruff",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:25:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:35:14Z",
+        "conclusion": "success",
+        "id": 97216052352,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:26:15Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:27:14Z",
+        "conclusion": "failure",
+        "id": 97216052357,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:26:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:28:39Z",
+        "conclusion": "success",
+        "id": 97216052372,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:26:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:22:59Z",
+        "conclusion": "skipped",
+        "id": 97216052894,
+        "name": "Landing class",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:23:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:23:00Z",
+        "conclusion": "skipped",
+        "id": 97216053280,
+        "name": "Pytest plan",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:23:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:23:00Z",
+        "conclusion": "skipped",
+        "id": 97216053423,
+        "name": "Python (pytest) [${{ matrix.shard }}/4]",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:23:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:23:00Z",
+        "conclusion": "skipped",
+        "id": 97216053558,
+        "name": "Coverage floor",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:23:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:23:00Z",
+        "conclusion": "skipped",
+        "id": 97216053623,
+        "name": "Publish pytest durations",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:23:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:35:50Z",
+        "conclusion": "failure",
+        "id": 97217607682,
+        "name": "CI Gate",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:35:16Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:35:51Z",
+        "conclusion": "skipped",
+        "id": 97217680832,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32648373059,
+        "started_at": "2026-08-23T15:35:51Z",
+        "status": "completed"
+      }
+    ],
+    "32648847308": [
+      {
+        "completed_at": "2026-08-23T15:33:04Z",
+        "conclusion": "success",
+        "id": 97217199320,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:02Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:32:41Z",
+        "conclusion": "success",
+        "id": 97217199383,
+        "name": "Ruff",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:02Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:32:44Z",
+        "conclusion": "success",
+        "id": 97217199415,
+        "name": "Landing class",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:01Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:34:47Z",
+        "conclusion": "success",
+        "id": 97217199462,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:01Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:40:29Z",
+        "conclusion": "success",
+        "id": 97217199467,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:01Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:41:29Z",
+        "conclusion": "success",
+        "id": 97217292820,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:46Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:40:27Z",
+        "conclusion": "success",
+        "id": 97217292842,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:46Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:33:09Z",
+        "conclusion": "success",
+        "id": 97217292843,
+        "name": "Pytest plan contract",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:46Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:40:34Z",
+        "conclusion": "success",
+        "id": 97217292854,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:47Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:38:50Z",
+        "conclusion": "success",
+        "id": 97217292860,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:32:46Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:42:07Z",
+        "conclusion": "success",
+        "id": 97218398736,
+        "name": "Publish pytest durations",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:41:31Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:42:31Z",
+        "conclusion": "success",
+        "id": 97218398769,
+        "name": "Coverage floor",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:41:31Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:42:56Z",
+        "conclusion": "success",
+        "id": 97218527315,
+        "name": "CI Gate",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:42:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:48:19Z",
+        "conclusion": "success",
+        "id": 97218575664,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32648847308,
+        "started_at": "2026-08-23T15:42:58Z",
+        "status": "completed"
+      }
+    ],
+    "32649173637": [
+      {
+        "completed_at": "2026-08-23T15:49:11Z",
+        "conclusion": "success",
+        "id": 97219243786,
+        "name": "Landing class",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:48:21Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:48:58Z",
+        "conclusion": "success",
+        "id": 97219243874,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:48:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:49:29Z",
+        "conclusion": "success",
+        "id": 97219243895,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:48:21Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:48:58Z",
+        "conclusion": "success",
+        "id": 97219243901,
+        "name": "Ruff",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:48:21Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:50:29Z",
+        "conclusion": "success",
+        "id": 97219243924,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:48:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:49:48Z",
+        "conclusion": "success",
+        "id": 97219350566,
+        "name": "Pytest plan contract",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:49:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:57:05Z",
+        "conclusion": "success",
+        "id": 97219350599,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:49:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:56:09Z",
+        "conclusion": "success",
+        "id": 97219350635,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:49:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:57:49Z",
+        "conclusion": "success",
+        "id": 97219350672,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:49:14Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:56:23Z",
+        "conclusion": "success",
+        "id": 97219350680,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:49:14Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:58:46Z",
+        "conclusion": "success",
+        "id": 97220431385,
+        "name": "Coverage floor",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:57:51Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:58:33Z",
+        "conclusion": "success",
+        "id": 97220431397,
+        "name": "Publish pytest durations",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:57:51Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:59:10Z",
+        "conclusion": "success",
+        "id": 97220546382,
+        "name": "CI Gate",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:58:48Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:59:47Z",
+        "conclusion": "success",
+        "id": 97220595616,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32649173637,
+        "started_at": "2026-08-23T15:59:12Z",
+        "status": "completed"
+      }
+    ],
+    "32649642970": [
+      {
+        "completed_at": "2026-08-23T15:47:56Z",
+        "conclusion": "success",
+        "id": 97219117994,
+        "name": "Ruff",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:49:47Z",
+        "conclusion": "success",
+        "id": 97219118114,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:48:40Z",
+        "conclusion": "success",
+        "id": 97219118126,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:20Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:53:56Z",
+        "conclusion": "success",
+        "id": 97219118157,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:21Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:47:18Z",
+        "conclusion": "skipped",
+        "id": 97219118637,
+        "name": "Landing class",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:19Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:47:19Z",
+        "conclusion": "skipped",
+        "id": 97219118655,
+        "name": "Pytest plan contract",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:19Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:47:19Z",
+        "conclusion": "skipped",
+        "id": 97219118876,
+        "name": "Publish pytest durations",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:19Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:47:19Z",
+        "conclusion": "skipped",
+        "id": 97219118958,
+        "name": "Python (pytest) [${{ matrix.shard }}/4]",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:19Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:47:19Z",
+        "conclusion": "skipped",
+        "id": 97219119075,
+        "name": "Coverage floor",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:47:19Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T15:54:33Z",
+        "conclusion": "success",
+        "id": 97219946115,
+        "name": "CI Gate",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:53:58Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:00:05Z",
+        "conclusion": "success",
+        "id": 97220026777,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32649642970,
+        "started_at": "2026-08-23T15:54:36Z",
+        "status": "completed"
+      }
+    ],
+    "32650358337": [
+      {
+        "completed_at": "2026-08-23T16:02:23Z",
+        "conclusion": "success",
+        "id": 97220847662,
+        "name": "Landing class",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:01:11Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:02:15Z",
+        "conclusion": "success",
+        "id": 97220847786,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:01:12Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:01:48Z",
+        "conclusion": "success",
+        "id": 97220847823,
+        "name": "Ruff",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:01:10Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:10:07Z",
+        "conclusion": "success",
+        "id": 97220847829,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:01:09Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:03:34Z",
+        "conclusion": "success",
+        "id": 97220847911,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:01:10Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:03:02Z",
+        "conclusion": "success",
+        "id": 97221010493,
+        "name": "Pytest plan contract",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:02:25Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:10:45Z",
+        "conclusion": "success",
+        "id": 97221010512,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:02:25Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:10:16Z",
+        "conclusion": "failure",
+        "id": 97221010552,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:02:25Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:10:11Z",
+        "conclusion": "success",
+        "id": 97221010573,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:02:25Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:11:03Z",
+        "conclusion": "success",
+        "id": 97221010576,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:02:25Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:11:42Z",
+        "conclusion": "failure",
+        "id": 97222171212,
+        "name": "CI Gate",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:11:05Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:11:03Z",
+        "conclusion": "skipped",
+        "id": 97222171346,
+        "name": "Publish pytest durations",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:11:04Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:11:03Z",
+        "conclusion": "skipped",
+        "id": 97222171359,
+        "name": "Coverage floor",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:11:04Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:11:42Z",
+        "conclusion": "skipped",
+        "id": 97222260223,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32650358337,
+        "started_at": "2026-08-23T16:11:42Z",
+        "status": "completed"
+      }
+    ],
+    "32651140179": [
+      {
+        "completed_at": "2026-08-23T16:17:20Z",
+        "conclusion": "success",
+        "id": 97222819420,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:12Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:19:16Z",
+        "conclusion": "success",
+        "id": 97222819502,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:10Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:48Z",
+        "conclusion": "success",
+        "id": 97222819536,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:11Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:49Z",
+        "conclusion": "success",
+        "id": 97222819545,
+        "name": "Ruff",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:11Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:08Z",
+        "conclusion": "skipped",
+        "id": 97222820000,
+        "name": "Pytest plan contract",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:09Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:08Z",
+        "conclusion": "skipped",
+        "id": 97222820001,
+        "name": "Landing class",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:09Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:08Z",
+        "conclusion": "skipped",
+        "id": 97222820006,
+        "name": "Python (pytest) [${{ matrix.shard }}/4]",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:09Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:08Z",
+        "conclusion": "skipped",
+        "id": 97222820146,
+        "name": "Publish pytest durations",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:09Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:16:08Z",
+        "conclusion": "skipped",
+        "id": 97222820396,
+        "name": "Coverage floor",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:16:09Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:19:55Z",
+        "conclusion": "success",
+        "id": 97223213011,
+        "name": "CI Gate",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:19:18Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T16:20:34Z",
+        "conclusion": "success",
+        "id": 97223288868,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32651140179,
+        "started_at": "2026-08-23T16:19:57Z",
+        "status": "completed"
+      }
+    ],
+    "32653487238": [
+      {
+        "completed_at": "2026-08-23T17:05:31Z",
+        "conclusion": "success",
+        "id": 97228559167,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:01:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:01:51Z",
+        "conclusion": "success",
+        "id": 97228559224,
+        "name": "Ruff",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:01:14Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:01:58Z",
+        "conclusion": "success",
+        "id": 97228559241,
+        "name": "Landing class",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:01:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:01:50Z",
+        "conclusion": "success",
+        "id": 97228559255,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:01:15Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:02:13Z",
+        "conclusion": "success",
+        "id": 97228559263,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:01:13Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:10:16Z",
+        "conclusion": "success",
+        "id": 97228662853,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:02:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:08:10Z",
+        "conclusion": "success",
+        "id": 97228662856,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:02:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:02:37Z",
+        "conclusion": "success",
+        "id": 97228662858,
+        "name": "Pytest plan contract",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:02:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:10:16Z",
+        "conclusion": "success",
+        "id": 97228662885,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:02:03Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:10:30Z",
+        "conclusion": "success",
+        "id": 97228663170,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:02:00Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:11:36Z",
+        "conclusion": "success",
+        "id": 97229788490,
+        "name": "Coverage floor",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:10:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:10:30Z",
+        "conclusion": "skipped",
+        "id": 97229789510,
+        "name": "Publish pytest durations",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:10:31Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:12:17Z",
+        "conclusion": "success",
+        "id": 97229934223,
+        "name": "CI Gate",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:11:39Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:12:54Z",
+        "conclusion": "success",
+        "id": 97230024396,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32653487238,
+        "started_at": "2026-08-23T17:12:19Z",
+        "status": "completed"
+      }
+    ],
+    "32654108689": [
+      {
+        "completed_at": "2026-08-23T17:15:40Z",
+        "conclusion": "success",
+        "id": 97230097585,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:12:53Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:14:05Z",
+        "conclusion": "success",
+        "id": 97230097654,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:12:53Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:13:25Z",
+        "conclusion": "success",
+        "id": 97230097687,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:12:53Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:13:30Z",
+        "conclusion": "success",
+        "id": 97230097704,
+        "name": "Ruff",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:12:53Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:13:42Z",
+        "conclusion": "success",
+        "id": 97230097710,
+        "name": "Landing class",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:12:55Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:21:48Z",
+        "conclusion": "success",
+        "id": 97230207264,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:13:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:14:18Z",
+        "conclusion": "success",
+        "id": 97230207266,
+        "name": "Pytest plan contract",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:13:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:22:25Z",
+        "conclusion": "success",
+        "id": 97230207282,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:13:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:22:20Z",
+        "conclusion": "success",
+        "id": 97230207289,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:13:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:21:38Z",
+        "conclusion": "success",
+        "id": 97230207316,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:13:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:23:08Z",
+        "conclusion": "success",
+        "id": 97231328231,
+        "name": "Publish pytest durations",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:22:28Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:23:28Z",
+        "conclusion": "success",
+        "id": 97231328275,
+        "name": "Coverage floor",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:22:27Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:24:05Z",
+        "conclusion": "success",
+        "id": 97231466917,
+        "name": "CI Gate",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:23:30Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:24:42Z",
+        "conclusion": "success",
+        "id": 97231545784,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32654108689,
+        "started_at": "2026-08-23T17:24:08Z",
+        "status": "completed"
+      }
+    ],
+    "32654243140": [
+      {
+        "completed_at": "2026-08-23T17:16:42Z",
+        "conclusion": "success",
+        "id": 97230422400,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:24Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:17:59Z",
+        "conclusion": "success",
+        "id": 97230422434,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:24Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:15:58Z",
+        "conclusion": "success",
+        "id": 97230422439,
+        "name": "Ruff",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:24Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:24:59Z",
+        "conclusion": "success",
+        "id": 97230422447,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:24Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:15:22Z",
+        "conclusion": "skipped",
+        "id": 97230423005,
+        "name": "Landing class",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:15:22Z",
+        "conclusion": "skipped",
+        "id": 97230423049,
+        "name": "Python (pytest) [${{ matrix.shard }}/4]",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:15:22Z",
+        "conclusion": "skipped",
+        "id": 97230423098,
+        "name": "Publish pytest durations",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:22Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:15:22Z",
+        "conclusion": "skipped",
+        "id": 97230423250,
+        "name": "Coverage floor",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:23Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:15:22Z",
+        "conclusion": "skipped",
+        "id": 97230423319,
+        "name": "Pytest plan contract",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:15:23Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:25:37Z",
+        "conclusion": "success",
+        "id": 97231666041,
+        "name": "CI Gate",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:25:01Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:31:05Z",
+        "conclusion": "success",
+        "id": 97231748988,
+        "name": "Frontend E2E (playwright)",
+        "run_id": 32654243140,
+        "started_at": "2026-08-23T17:25:39Z",
+        "status": "completed"
+      }
+    ],
+    "32654807589": [
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97231792499,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:25:59Z",
+        "status": "in_progress"
+      },
+      {
+        "completed_at": "2026-08-23T17:26:35Z",
+        "conclusion": "success",
+        "id": 97231792590,
+        "name": "Ruff",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:25:59Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:28:33Z",
+        "conclusion": "success",
+        "id": 97231792592,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:25:59Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:26:45Z",
+        "conclusion": "success",
+        "id": 97231792605,
+        "name": "Landing class",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:25:59Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:27:06Z",
+        "conclusion": "success",
+        "id": 97231792624,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:25:59Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:27:22Z",
+        "conclusion": "success",
+        "id": 97231897108,
+        "name": "Pytest plan contract",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:26:47Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97231897116,
+        "name": "Python (pytest) [3/4]",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:26:47Z",
+        "status": "in_progress"
+      },
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97231897117,
+        "name": "Python (pytest) [1/4]",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:26:47Z",
+        "status": "in_progress"
+      },
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97231897135,
+        "name": "Python (pytest) [4/4]",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:26:48Z",
+        "status": "in_progress"
+      },
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97231897199,
+        "name": "Python (pytest) [2/4]",
+        "run_id": 32654807589,
+        "started_at": "2026-08-23T17:26:47Z",
+        "status": "in_progress"
+      }
+    ],
+    "32655220697": [
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97232753338,
+        "name": "Contracts (schema, MDX, atlas, BIO)",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:33Z",
+        "status": "in_progress"
+      },
+      {
+        "completed_at": "2026-08-23T17:34:12Z",
+        "conclusion": "success",
+        "id": 97232753411,
+        "name": "Frontend (build + vitest)",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:33Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:34:12Z",
+        "conclusion": "success",
+        "id": 97232753426,
+        "name": "Ruff",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:33Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": null,
+        "conclusion": null,
+        "id": 97232753431,
+        "name": "Pytest fastlane (changed tests)",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:33Z",
+        "status": "in_progress"
+      },
+      {
+        "completed_at": "2026-08-23T17:33:31Z",
+        "conclusion": "skipped",
+        "id": 97232753861,
+        "name": "Landing class",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:33:31Z",
+        "conclusion": "skipped",
+        "id": 97232753881,
+        "name": "Python (pytest) [${{ matrix.shard }}/4]",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:33:31Z",
+        "conclusion": "skipped",
+        "id": 97232753909,
+        "name": "Coverage floor",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:33:31Z",
+        "conclusion": "skipped",
+        "id": 97232753914,
+        "name": "Pytest plan contract",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:32Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-08-23T17:33:31Z",
+        "conclusion": "skipped",
+        "id": 97232754080,
+        "name": "Publish pytest durations",
+        "run_id": 32655220697,
+        "started_at": "2026-08-23T17:33:32Z",
+        "status": "completed"
+      }
+    ]
+  },
+  "workflow_runs": [
+    {
+      "conclusion": null,
+      "created_at": "2026-08-23T17:33:31Z",
+      "event": "pull_request",
+      "head_branch": "cursor/ox-alpha-workhorse-catalog-v1",
+      "head_sha": "39d6b3f8a4bf56052ee1aefc8fb9fe0cb3eee076",
+      "id": 32655220697,
+      "name": "CI",
+      "run_started_at": "2026-08-23T17:33:31Z",
+      "status": "in_progress",
+      "updated_at": "2026-08-23T17:33:44Z"
+    },
+    {
+      "conclusion": null,
+      "created_at": "2026-08-23T17:25:57Z",
+      "event": "merge_group",
+      "head_branch": "gh-readonly-queue/main/pr-7169-0a26cee2cc16b2096391548210b6929f469addc8",
+      "head_sha": "ec7d990daf610aec460336143b842b6b8fb6beec",
+      "id": 32654807589,
+      "name": "CI",
+      "run_started_at": "2026-08-23T17:25:57Z",
+      "status": "in_progress",
+      "updated_at": "2026-08-23T17:26:48Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T17:15:22Z",
+      "event": "pull_request",
+      "head_branch": "codex/ci-waveb-w3-trufflehog",
+      "head_sha": "97d6f25d26c338ba37a297320ba6d2b3a18ece81",
+      "id": 32654243140,
+      "name": "CI",
+      "run_started_at": "2026-08-23T17:15:22Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T17:31:06Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T17:12:51Z",
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "0a26cee2cc16b2096391548210b6929f469addc8",
+      "id": 32654108689,
+      "name": "CI",
+      "run_started_at": "2026-08-23T17:12:51Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T17:24:43Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T17:01:11Z",
+      "event": "merge_group",
+      "head_branch": "gh-readonly-queue/main/pr-7170-0224500326cbe490cd890784f67741ca1d8ef65b",
+      "head_sha": "0a26cee2cc16b2096391548210b6929f469addc8",
+      "id": 32653487238,
+      "name": "CI",
+      "run_started_at": "2026-08-23T17:01:11Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T17:12:54Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T16:16:08Z",
+      "event": "pull_request",
+      "head_branch": "codex/6375-cycle007-resume",
+      "head_sha": "6df75c6bb3cec64e62ca9c838383819fc397f60f",
+      "id": 32651140179,
+      "name": "CI",
+      "run_started_at": "2026-08-23T16:16:08Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T16:20:35Z"
+    },
+    {
+      "conclusion": "failure",
+      "created_at": "2026-08-23T16:01:07Z",
+      "event": "merge_group",
+      "head_branch": "gh-readonly-queue/main/pr-7169-0224500326cbe490cd890784f67741ca1d8ef65b",
+      "head_sha": "f4a0c0b824e106fffed4e5dec5f156e53c16236c",
+      "id": 32650358337,
+      "name": "CI",
+      "run_started_at": "2026-08-23T16:01:07Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T16:11:43Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T15:47:18Z",
+      "event": "pull_request",
+      "head_branch": "codex/ci-waveb-w3-trufflehog",
+      "head_sha": "b2923061d0fc28ed3fcb6f2585c1fbc65969834a",
+      "id": 32649642970,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:47:18Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T16:00:07Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T15:38:15Z",
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "0224500326cbe490cd890784f67741ca1d8ef65b",
+      "id": 32649173637,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:38:15Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:59:48Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T15:31:59Z",
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "257aff00e0bd89fe99d77f75e49c9431f62e6747",
+      "id": 32648847308,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:31:59Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:48:20Z"
+    },
+    {
+      "conclusion": "failure",
+      "created_at": "2026-08-23T15:22:59Z",
+      "event": "pull_request",
+      "head_branch": "codex/ci-waveb-w3-trufflehog",
+      "head_sha": "9c7dca1afe11c6c210e8ca9702cc1ee7aecec678",
+      "id": 32648373059,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:22:59Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:35:51Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T15:22:41Z",
+      "event": "merge_group",
+      "head_branch": "gh-readonly-queue/main/pr-7167-257aff00e0bd89fe99d77f75e49c9431f62e6747",
+      "head_sha": "0224500326cbe490cd890784f67741ca1d8ef65b",
+      "id": 32648359540,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:22:41Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:38:21Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T15:18:25Z",
+      "event": "merge_group",
+      "head_branch": "gh-readonly-queue/main/pr-7165-156516942dfee287b7971270203dc4ee39d26624",
+      "head_sha": "257aff00e0bd89fe99d77f75e49c9431f62e6747",
+      "id": 32648135039,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:18:25Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:37:17Z"
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-08-23T15:18:19Z",
+      "event": "pull_request",
+      "head_branch": "agy/tmp-hygiene-7164",
+      "head_sha": "7356a37e705af0ec732cfef91697acace02870e5",
+      "id": 32648130467,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:18:19Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:23:04Z"
+    },
+    {
+      "conclusion": "failure",
+      "created_at": "2026-08-23T15:17:24Z",
+      "event": "merge_group",
+      "head_branch": "gh-readonly-queue/main/pr-7165-ee2bbe0181f064762e041e373979497e5aa704ab",
+      "head_sha": "8f682ad658a920bd06ff53360874d0e6e3563e42",
+      "id": 32648081859,
+      "name": "CI",
+      "run_started_at": "2026-08-23T15:17:24Z",
+      "status": "completed",
+      "updated_at": "2026-08-23T15:27:34Z"
+    }
+  ]
+}
