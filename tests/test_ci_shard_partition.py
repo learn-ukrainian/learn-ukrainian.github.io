@@ -355,6 +355,19 @@ def test_ci_workflow_uses_shard_local_planner_and_ci_gate_verifier() -> None:
     assert nightly.splitlines()[0] == "name: Pytest slow nightly"
 
 
+def test_ci_shard_planner_declares_matrix_shard_env() -> None:
+    workflow = yaml.safe_load(
+        (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    )
+    planner_step = next(
+        step
+        for step in workflow["jobs"]["python"]["steps"]
+        if step.get("name") == "Collect and plan this pytest shard locally"
+    )
+
+    assert planner_step["env"]["SHARD"] == "${{ matrix.shard }}"
+
+
 def test_required_lanes_exclude_live_model_setup_and_fastlane_is_slim() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     workflow = yaml.safe_load((repo_root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))

@@ -496,6 +496,8 @@ jobs:
 
       - name: Collect and plan this pytest shard locally
         if: needs.landing-class.outputs.class != 'docs_skills'
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           set -euo pipefail
           .venv/bin/python scripts/ci/pytest_shards.py plan-shard \
