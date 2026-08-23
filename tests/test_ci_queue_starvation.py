@@ -58,7 +58,9 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     }
     assert jobs["pytest-plan"].get("if") == "github.event_name != 'pull_request'"
     assert jobs["python"].get("if") == "github.event_name != 'pull_request'"
+    assert jobs["python"]["needs"] == ["landing-class"]
     assert jobs["coverage-floor"].get("if") == "github.event_name != 'pull_request'"
+    assert "pytest-plans" not in _CI.read_text(encoding="utf-8")
     assert "ruff" in jobs
     gate_steps = "\n".join(
         step.get("name", "") + "\n" + str(step.get("run", "")) for step in jobs["ci-gate"]["steps"]
