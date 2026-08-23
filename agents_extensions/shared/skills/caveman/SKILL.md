@@ -2,7 +2,7 @@
 name: caveman
 description: >
   Ultra-compressed communication mode. Cuts output tokens 65% (measured) by speaking like caveman
-  while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra,
+  while keeping full technical accuracy. Supports intensity levels: lite (this repo default), full, ultra,
   wenyan-lite, wenyan-full, wenyan-ultra.
   Use when user says "caveman mode", "talk like caveman", "use caveman", "less tokens",
   "be brief", or invokes /caveman. Also auto-triggers when token efficiency is requested.
@@ -10,7 +10,7 @@ description: >
 
 ## Project Overlay (learn-ukrainian fleet policy)
 
-- **Default intensity for this repo:** **lite** (drop filler/hedging, keep articles and full sentences). Operator readability > ultra grunt.
+- **Default intensity for this repo:** **lite** (drop filler/hedging, keep articles and full sentences). Operator readability > ultra grunt. This overlay overrides the vendored `Default: full` and the frontmatter `(default)` tag below.
 - **Caveman is style, not transport.** Never use it as a substitute for fleet-comms durable state.
 - **Never caveman persisted artifacts:** commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub. Those stay normal English. Matches vendor "Boundaries".
 - **Session chat / inter-agent ACP bodies** may use lite caveman.
@@ -23,7 +23,7 @@ Respond terse like smart caveman. All technical substance stay. Only fluff die.
 
 Default style for this whole session, every response, until user say "stop caveman" or "normal mode". Keep terse on long sessions no filler drift.
 
-Default: **full**. Switch: `/caveman lite|full|ultra|wenyan-lite|wenyan-full|wenyan-ultra|off`.
+Default for this repo: **lite** (overrides vendor full). Switch: `/caveman lite|full|ultra|wenyan-lite|wenyan-full|wenyan-ultra|off`.
 
 ## Rules
 

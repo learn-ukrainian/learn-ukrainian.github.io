@@ -327,7 +327,9 @@ action. Read and apply every `unread` or `read-but-not-live-consumed` entry, the
 ### 6. Cross-family review gate (load-bearing — discussion ≠ review)
 
 A review of record is **independent and cross-family** (outside the author's model
-family; never self-review, never same-family). CF, design, and plan use toolful seats (`delegate.py` or native harnesses); ACP is toolless intercomm only, and caveman lite is style (never persisted review text).
+family; never self-review, never same-family).
+
+- **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or native harnesses); ACP is toolless intercomm only, and caveman lite is style (never persisted review text).
 
 **Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
 `review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
