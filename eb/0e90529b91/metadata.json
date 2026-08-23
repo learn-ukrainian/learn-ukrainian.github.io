@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "eb0e90529b91",
+  "strategy": "manual-commit",
+  "branch": "cursor/fastlane-deps-mapping",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/fastlane_requirements.py",
+    "scripts/ci/requirements-fastlane.txt"
+  ],
+  "sessions": [
+    {
+      "metadata": "/eb/0e90529b91/0/metadata.json",
+      "transcript": "/eb/0e90529b91/0/full.jsonl",
+      "compact_transcript": "/eb/0e90529b91/0/transcript.jsonl",
+      "content_hash": "/eb/0e90529b91/0/content_hash.txt",
+      "prompt": "/eb/0e90529b91/0/prompt.txt"
+    }
+  ]
+}
