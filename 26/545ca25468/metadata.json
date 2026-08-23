@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "26545ca25468",
+  "strategy": "manual-commit",
+  "branch": "agy/monitor-epic-register-7177",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/WORKSTREAMS.md",
+    "docs/runbooks/epic-orchestrator-roster.md",
+    "scripts/audit/test_handoff_identity.sh",
+    "scripts/config/issue_streams.yaml",
+    "scripts/lib/handoff_identity.sh",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_handoff_identity.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/26/545ca25468/0/metadata.json",
+      "transcript": "/26/545ca25468/0/full.jsonl",
+      "compact_transcript": "/26/545ca25468/0/transcript.jsonl",
+      "content_hash": "/26/545ca25468/0/content_hash.txt",
+      "prompt": "/26/545ca25468/0/prompt.txt"
+    }
+  ]
+}

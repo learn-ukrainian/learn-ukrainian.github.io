@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "26545ca25468",
+  "session_id": "fleet-68f3800b456d4d479bd28371fe36ebac",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T18:23:29.811681Z",
+  "branch": "agy/monitor-epic-register-7177",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/WORKSTREAMS.md",
+    "docs/runbooks/epic-orchestrator-roster.md",
+    "scripts/audit/test_handoff_identity.sh",
+    "scripts/config/issue_streams.yaml",
+    "scripts/lib/handoff_identity.sh",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_handoff_identity.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "ca3faca47788",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T18:23:29.807179Z",
+    "agent_lines": 53,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 53,
+    "total_lines_changed": 53,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

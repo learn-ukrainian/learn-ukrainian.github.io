@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/monitor-epic-register-7177
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: register the new `monitor` epic stream (#7177) so it is audited and drivable
+
+Evidence rule (#M-4): every claim in your final message must be backed by a command you ran in this task
+(test output, file paths, PR URL). Do not assert; show.
+
+## Outcome wanted
+1. The new stream `monitor` (anchor epic #7177, title "Monitor API + UI — fleet & host observability") is
+   registered wherever streams are registered as the single source of truth (`scripts/config/issue_streams.yaml`
+   is documented as that SSOT; `docs/WORKSTREAMS.md` § Streams mirrors it). The issue-stream auditor
+   (`scripts/orchestration/issue_stream_audit.py --check`) must recognise #7177's native sub-issues as members.
+2. `--epic monitor` (and `infra.monitor`) resolves for every driver launcher to lane `monitor` and stream
+   `epic:7177`, the same way `devops` resolves today (`scripts/lib/handoff_identity.sh`), including the
+   per-provider handoff slots (`claude-monitor`, `codex-monitor`, `gemini-monitor`) and the launcher help text.
+   Keep the existing selectors byte-identical in behaviour.
+3. The existing shell test for selectors (`scripts/audit/test_handoff_identity.sh`) covers the new selector
+   and the slots; any pytest that pins the registry/stream list is updated. Mutation-check: revert your
+   selector change and show the test fails.
+4. The roster runbook (`docs/runbooks/epic-orchestrator-roster.md`) gets one row for `monitor` (driver per
+   the infra row; Codex alternate) — no other prose changes.
+
+## Constraints
+- Do NOT make the selector table registry-driven in this task (that refactor is a separate M2 child of #7177).
+- OPSEC: no hostnames, IPs, SSH aliases, or absolute home paths anywhere in the diff.
+- No auto-merge. Do not touch `.claude/`, `.codex/`, `.agent/` deploy targets (source is `agents_extensions/shared/`).
+
+## Steps
+1. Work in the dispatch worktree you were started in (never the primary checkout). `git fetch origin && git rebase origin/main` first.
+2. Make the changes for outcomes 1–4.
+3. Run: `.venv/bin/python scripts/orchestration/issue_stream_audit.py --check` (report its result even if it flags
+   unrelated orphans), `bash scripts/audit/test_handoff_identity.sh`, and `.venv/bin/pytest -q` for any test file
+   that references `issue_streams` or `handoff_identity`.
+4. `.venv/bin/ruff check` on any Python you touched.
+5. Commit with a conventional message, e.g. `chore(streams): register monitor epic stream #7177 and launcher selector`,
+   including the `X-Agent` trailer convention from `AGENTS.md`.
+6. Push the branch and open a PR against `main` whose body states: what changed, the exact commands run with their
+   results, the mutation-check evidence, and `Parent: #7177`. Do NOT enable auto-merge.
+7. Final message: PR URL + the evidence summary. Nothing else.
