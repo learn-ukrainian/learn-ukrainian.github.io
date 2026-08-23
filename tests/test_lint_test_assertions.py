@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.lint import lint_test_assertions
+
+pytestmark = pytest.mark.repo_invariant
 
 
 def test_lint_detects_hardcoded_epic_in_assertion(tmp_path: Path) -> None:
@@ -77,6 +81,21 @@ def test_lint_detects_string_concatenation(tmp_path: Path) -> None:
     epic_ids = {v.epic_id for v in violations}
     assert "epic:4707" in epic_ids  # allow-hardcoded-epic: test linter detection
     assert "epic:5703" in epic_ids  # allow-hardcoded-epic: test linter detection
+
+
+def test_lint_detects_split_epic_fragments(tmp_path: Path) -> None:
+    """The static-scan fast path must retain split literal constructions."""
+    test_file = tmp_path / "tests" / "test_example.py"
+    test_file.parent.mkdir()
+    test_file.write_text(
+        'def test_split(out):\n    assert ("e" + "pic:" + str(5703)) in out\n',
+        encoding="utf-8",
+    )
+
+    violations = lint_test_assertions.scan_file(test_file, repo_root=tmp_path)
+    assert len(violations) == 1
+    assert violations[0].epic_id == "epic:5703"  # allow-hardcoded-epic: test linter detection
+    assert lint_test_assertions.find_stale_pinned_assertions(repo_root=tmp_path) == violations
 
 
 def test_lint_detects_fstring_assertion(tmp_path: Path) -> None:

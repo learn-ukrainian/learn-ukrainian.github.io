@@ -30,6 +30,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.ci.test_source_cache import parse_test_source, read_test_source
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # Regex matching epic ID stream literals
@@ -177,6 +179,79 @@ def _extract_epic_ids(val: object) -> set[str]:
             results.update(_extract_epic_ids(k))
             results.update(_extract_epic_ids(v))
     return results
+
+
+def _may_evaluate_epic_literal(tree: ast.AST) -> bool:
+    """Keep scanning when an assertion can statically evaluate an epic ID."""
+
+    def expression_has_epic(node: ast.AST, env: _Environment) -> bool:
+        return any(
+            _extract_epic_ids(_eval_expr(sub, env))
+            for sub in ast.walk(node)
+        )
+
+    def block_has_epic(stmts: Sequence[ast.stmt], env: _Environment) -> bool:
+        for stmt in stmts:
+            if isinstance(stmt, ast.Assign):
+                _bind_targets(stmt.targets, _eval_expr(stmt.value, env), env)
+            elif isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+                _bind_targets([stmt.target], _eval_expr(stmt.value, env), env)
+            elif isinstance(stmt, ast.AugAssign) and isinstance(stmt.target, ast.Name):
+                old_val = env.get(stmt.target.id)
+                inc_val = _eval_expr(stmt.value, env)
+                if isinstance(stmt.op, ast.Add) and isinstance(old_val, str) and isinstance(inc_val, str):
+                    env.set(stmt.target.id, old_val + inc_val)
+            elif isinstance(stmt, ast.Assert):
+                if expression_has_epic(stmt.test, env):
+                    return True
+            elif isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                if block_has_epic(stmt.body, _Environment(parent=env)):
+                    return True
+            elif isinstance(stmt, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.With, ast.AsyncWith)):
+                if block_has_epic(stmt.body, env):
+                    return True
+                if getattr(stmt, "orelse", None) and block_has_epic(stmt.orelse, env):
+                    return True
+            elif isinstance(stmt, ast.Try):
+                if block_has_epic(stmt.body, env):
+                    return True
+                if any(block_has_epic(handler.body, env) for handler in stmt.handlers):
+                    return True
+                if stmt.orelse and block_has_epic(stmt.orelse, env):
+                    return True
+                if stmt.finalbody and block_has_epic(stmt.finalbody, env):
+                    return True
+        return False
+
+    return block_has_epic(tree.body, _Environment()) if isinstance(tree, ast.Module) else False
+
+
+def _source_may_contain_split_epic_literal(source_code: str) -> bool:
+    """Recognize split/escaped literal pieces before paying for an AST scan."""
+    values: list[str] = []
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(source_code).readline)
+        for token in tokens:
+            if token.type == tokenize.STRING:
+                try:
+                    value = ast.literal_eval(token.string)
+                except (SyntaxError, ValueError):
+                    value = token.string
+                if isinstance(value, str):
+                    values.append(value)
+            elif token.type == tokenize.NUMBER:
+                values.append(token.string)
+    except (tokenize.TokenError, IndentationError, SyntaxError):
+        return True
+
+    literal_text = "".join(values).lower()
+    return bool(
+        _EPIC_ID_RE.search(literal_text)
+        or (
+            all(fragment in literal_text for fragment in ("e", "p", "i", "c", ":"))
+            and any(char.isdigit() for char in literal_text)
+        )
+    )
 
 
 def _find_positive_epic_violations(test_node: ast.AST, env: _Environment, polarity: bool = True) -> set[str]:
@@ -329,9 +404,11 @@ def scan_file(file_path: Path, repo_root: Path | None = None) -> list[AssertionV
     rel_path = file_path.resolve().relative_to(root).as_posix()
 
     try:
-        content = file_path.read_text(encoding="utf-8")
-        tree = ast.parse(content, filename=str(file_path))
+        content = read_test_source(file_path)
+        tree = parse_test_source(file_path)
     except (OSError, UnicodeDecodeError, SyntaxError):
+        return []
+    if not _may_evaluate_epic_literal(tree):
         return []
 
     lines = content.splitlines()
@@ -359,6 +436,14 @@ def find_stale_pinned_assertions(
 
     findings: list[AssertionViolation] = []
     for file_path in target_files:
+        try:
+            source = read_test_source(file_path)
+            if "epic" not in source.lower() and not _source_may_contain_split_epic_literal(source):
+                tree = parse_test_source(file_path)
+                if not _may_evaluate_epic_literal(tree):
+                    continue
+        except (OSError, UnicodeDecodeError, SyntaxError):
+            continue
         findings.extend(scan_file(file_path, repo_root=root))
 
     return findings

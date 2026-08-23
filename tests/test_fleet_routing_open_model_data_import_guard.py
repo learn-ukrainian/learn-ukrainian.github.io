@@ -11,6 +11,10 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.repo_invariant
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # Fleet routing surfaces only. WHY this list (not broader scripts/): #6870

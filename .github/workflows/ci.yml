@@ -240,9 +240,14 @@ jobs:
             base_ref="origin/main"
           fi
           mkdir -p ci-artifacts
-          python scripts/ci/changed_tests.py \
-            --base "$base_ref" \
+          selector_args=(
+            --base "$base_ref"
             --output ci-artifacts/fastlane-test-files.txt
+          )
+          if [[ "${GITHUB_EVENT_NAME:-}" == "pull_request" ]]; then
+            selector_args+=(--include-repo-invariants)
+          fi
+          python scripts/ci/changed_tests.py "${selector_args[@]}"
           if [[ -s ci-artifacts/fastlane-test-files.txt ]]; then
             echo "has_tests=true" >> "$GITHUB_OUTPUT"
             echo "Selected test modules:"
@@ -738,31 +743,14 @@ jobs:
       - name: Check internal IDs are not published
         run: .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
 
-      - name: Resolve secret scan commit scope (#7141)
-        id: secret-scan-scope
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha || '' }}
-          MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}
-          PUSH_BEFORE_SHA: ${{ github.event.before || '' }}
-          PUSH_AFTER_SHA: ${{ github.event.after || '' }}
-        run: |
-          set -euo pipefail
-          .venv/bin/python scripts/ci/secret_scan_scope.py
-
       - name: Gate scrubbed public identifiers and teacher-cloze answers
         env:
-          EVENT_NAME: ${{ github.event_name }}
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          OPSEC_RANGE: ${{ steps.secret-scan-scope.outputs.opsec_range }}
         run: |
-          if [ "$EVENT_NAME" = "pull_request" ]; then
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             .venv/bin/python scripts/audit/lint_opsec_leaks.py \
               "${PR_BASE_SHA}...${PR_HEAD_SHA}" --public-identifiers
-          elif [ -n "$OPSEC_RANGE" ]; then
-            .venv/bin/python scripts/audit/lint_opsec_leaks.py \
-              --commit-range "$OPSEC_RANGE" --public-identifiers
           else
             .venv/bin/python scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
@@ -994,8 +982,6 @@ jobs:
         continue-on-error: true
         uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
         with:
-          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
-          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
 
       - name: Sleep before TruffleHog retry 1
@@ -1008,8 +994,6 @@ jobs:
         continue-on-error: true
         uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
         with:
-          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
-          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
 
       - name: Sleep before TruffleHog retry 2
@@ -1022,8 +1006,6 @@ jobs:
         continue-on-error: true
         uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
         with:
-          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
-          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
 
       - name: Fail if TruffleHog exhausted retries

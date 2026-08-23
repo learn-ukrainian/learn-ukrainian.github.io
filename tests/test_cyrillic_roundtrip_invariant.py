@@ -19,6 +19,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+pytestmark = pytest.mark.repo_invariant
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:

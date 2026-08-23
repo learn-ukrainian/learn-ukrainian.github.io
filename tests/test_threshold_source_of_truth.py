@@ -14,7 +14,10 @@ from __future__ import annotations
 import ast
 import re
 import sys
+from functools import cache
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -28,6 +31,7 @@ from common.thresholds import (
 
 SCRIPTS_ROOT = Path(__file__).resolve().parent.parent / "scripts"
 SOURCE_OF_TRUTH = SCRIPTS_ROOT / "common" / "thresholds.py"
+pytestmark = pytest.mark.repo_invariant
 
 # Canonical names that must never be redeclared outside the source-of-truth.
 # The values are the source-of-truth values — any other file claiming to
@@ -115,14 +119,30 @@ _EXCLUDED_DIRS: tuple[str, ...] = (
 )
 
 
-def _iter_python_files() -> list[Path]:
+@cache
+def _iter_python_files() -> tuple[Path, ...]:
     files: list[Path] = []
     for path in SCRIPTS_ROOT.rglob("*.py"):
         rel = path.relative_to(SCRIPTS_ROOT).as_posix()
         if any(excl in rel for excl in _EXCLUDED_DIRS):
             continue
         files.append(path)
-    return files
+    return tuple(files)
+
+
+@cache
+def _read_script_text(path: Path) -> str:
+    """Read each scanned script once for the module's repeated invariants."""
+    return path.read_text("utf-8")
+
+
+@cache
+def _parse_script(path: Path) -> ast.Module | None:
+    """Parse each scanned script once for the module's AST invariants."""
+    try:
+        return ast.parse(_read_script_text(path), filename=str(path))
+    except SyntaxError:
+        return None
 
 
 def _module_level_name_assignments(tree: ast.Module) -> list[tuple[str, int]]:
@@ -164,9 +184,11 @@ def test_no_canonical_name_redeclared_outside_thresholds() -> None:
     for path in _iter_python_files():
         if path.resolve() == SOURCE_OF_TRUTH.resolve():
             continue
-        try:
-            tree = ast.parse(path.read_text("utf-8"))
-        except SyntaxError:
+        source = _read_script_text(path)
+        if not any(name in source for name in _CANONICAL_NAMES):
+            continue
+        tree = _parse_script(path)
+        if tree is None:
             continue
         for name, lineno in _module_level_name_assignments(tree):
             if name in _CANONICAL_NAMES:
@@ -190,9 +212,11 @@ def test_review_pass_floor_imports_are_legacy_allowlisted() -> None:
         if path.resolve() == SOURCE_OF_TRUTH.resolve():
             continue
         rel = path.relative_to(SCRIPTS_ROOT).as_posix()
-        try:
-            tree = ast.parse(path.read_text("utf-8"))
-        except SyntaxError:
+        source = _read_script_text(path)
+        if "REVIEW_PASS_FLOOR" not in source or "threshold" not in source.lower():
+            continue
+        tree = _parse_script(path)
+        if tree is None:
             continue
         for node in ast.walk(tree):
             if not isinstance(node, ast.ImportFrom):
@@ -225,8 +249,9 @@ def test_no_duplicate_target_words_module_level() -> None:
     for path in _iter_python_files():
         if path.resolve() == SOURCE_OF_TRUTH.resolve():
             continue
-        for match in pattern.finditer(path.read_text("utf-8")):
-            lineno = path.read_text("utf-8")[: match.start()].count("\n") + 1
+        source = _read_script_text(path)
+        for match in pattern.finditer(source):
+            lineno = source[: match.start()].count("\n") + 1
             rel = path.relative_to(SCRIPTS_ROOT).as_posix()
             offenders.append(f"{rel}:{lineno} — {match.group(0).strip()}")
 
@@ -249,7 +274,10 @@ def test_no_threshold_float_literals_in_threshold_context() -> None:
         if path.resolve() == SOURCE_OF_TRUTH.resolve():
             continue
         rel = path.relative_to(SCRIPTS_ROOT).as_posix()
-        lines = path.read_text("utf-8").splitlines()
+        source = _read_script_text(path)
+        if not any(f"{value:.1f}" in source for value in _THRESHOLD_VALUES):
+            continue
+        lines = source.splitlines()
         for idx, line in enumerate(lines, start=1):
             stripped_line = line.strip()
             if _matching_allowlist_patterns(rel, stripped_line):

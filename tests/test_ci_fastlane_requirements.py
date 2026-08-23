@@ -147,3 +147,37 @@ from ukrainian_word_stress import Stressifier
     )
 
     assert selected == ["pytest==9.0.3"]
+
+
+def test_project_import_graph_adds_transitive_third_party_pin(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    _write(project_root / "scripts" / "__init__.py", "")
+    _write(project_root / "scripts" / "helper.py", "import requests\n")
+    test_path = _write(project_root / "tests" / "test_example.py", "from scripts.helper import value\n")
+
+    selected = fastlane_requirements.select_requirements(
+        [test_path],
+        base_requirements=[],
+        lock_requirements=_lock(tmp_path),
+        project_root=project_root,
+    )
+
+    assert selected == ["requests==2.34.2"]
+
+
+def test_unknown_transitive_project_import_fails_closed(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    _write(project_root / "scripts" / "__init__.py", "")
+    _write(project_root / "scripts" / "helper.py", "import unreviewed_transitive_vendor\n")
+    test_path = _write(project_root / "tests" / "test_example.py", "from scripts.helper import value\n")
+
+    with pytest.raises(
+        fastlane_requirements.RequirementSelectionError,
+        match="unreviewed_transitive_vendor",
+    ):
+        fastlane_requirements.select_requirements(
+            [test_path],
+            base_requirements=[],
+            lock_requirements=_lock(tmp_path),
+            project_root=project_root,
+        )
