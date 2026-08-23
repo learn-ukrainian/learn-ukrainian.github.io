@@ -22,9 +22,7 @@ def test_prompt_directory_uses_runtime_tmp_lease(tmp_path: Path, monkeypatch: py
     assert lease_dir.is_dir()
 
 
-def test_prompt_directory_raises_on_invalid_runtime_tmp_root(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_prompt_directory_raises_on_invalid_runtime_tmp_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     missing_dir = tmp_path / "missing-lease"
     monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(missing_dir))
 
@@ -51,3 +49,15 @@ def test_prompt_directory_allocates_under_scratch_root_when_no_lease(
     # Temporary directory must be self-cleaned upon exit
     assert yielded_dir is not None
     assert not yielded_dir.exists()
+
+
+def test_agy_ask_scratch_cwd_allocates_under_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.ai_agent_bridge._agy import _agy_ask_scratch_cwd
+
+    scratch_root = tmp_path / "scratch"
+    scratch_root.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
+
+    cwd = _agy_ask_scratch_cwd()
+    assert cwd.is_dir()
+    assert cwd.resolve() == (scratch_root / "learn-ukrainian-bridge-asks" / "agy").resolve()

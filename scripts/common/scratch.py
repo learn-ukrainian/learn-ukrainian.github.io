@@ -31,12 +31,34 @@ DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
 FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
 
 
+def fallback_scratch_root() -> Path:
+    """Return the fallback scratch root under system temp."""
+    return Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME
+
+
+def _is_usable_scratch_dir(path: Path) -> bool:
+    try:
+        if path.exists():
+            return path.is_dir() and os.access(path, os.W_OK | os.X_OK)
+        parent = path.parent
+        return parent.exists() and parent.is_dir() and os.access(parent, os.W_OK | os.X_OK)
+    except OSError:
+        return False
+
+
 def resolve_scratch_root() -> Path:
-    """Return the configured fleet scratch root (not yet created/validated)."""
+    """Return the fleet scratch root in use.
+
+    If LU_SCRATCH_ROOT override is set, returns that path.
+    Otherwise, returns DEFAULT_SCRATCH_ROOT if accessible/creatable,
+    or falls back to <system temp>/lu-scratch.
+    """
     override = os.environ.get(SCRATCH_ROOT_ENV_VAR, "").strip()
     if override:
         return Path(override)
-    return DEFAULT_SCRATCH_ROOT
+    if _is_usable_scratch_dir(DEFAULT_SCRATCH_ROOT):
+        return DEFAULT_SCRATCH_ROOT
+    return fallback_scratch_root()
 
 
 def ensure_scratch_root() -> Path:
@@ -47,13 +69,15 @@ def ensure_scratch_root() -> Path:
     built-in default falls back to ``<system temp>/lu-scratch``.
     """
     override = os.environ.get(SCRATCH_ROOT_ENV_VAR, "").strip()
-    root = Path(override) if override else DEFAULT_SCRATCH_ROOT
+    if override:
+        root = Path(override)
+        root.mkdir(parents=True, exist_ok=True)
+        return root
+    root = DEFAULT_SCRATCH_ROOT
     try:
         root.mkdir(parents=True, exist_ok=True)
     except OSError:
-        if override:
-            raise
-        root = Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME
+        root = fallback_scratch_root()
         root.mkdir(parents=True, exist_ok=True)
     return root
 
@@ -66,12 +90,17 @@ def make_scratch_dir(prefix: str) -> Path:
 def scratch_scan_roots() -> list[Path]:
     """Return existing roots a reaper must scan for stale fleet scratch.
 
-    Covers the current scratch root plus the legacy tmpfs locations that
-    pre-#7164 tooling used, so the reaper drains both old and new residue.
+    Covers the current scratch root plus the fallback root, default root,
+    dispatcher base override, and legacy tmpfs locations that pre-#7164
+    tooling used, so the reaper drains both old and new residue.
     """
     roots: list[Path] = []
     seen: set[Path] = set()
-    candidates = [resolve_scratch_root()]
+    candidates = [
+        resolve_scratch_root(),
+        DEFAULT_SCRATCH_ROOT,
+        fallback_scratch_root(),
+    ]
     base_override = os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", "").strip()
     if base_override:
         candidates.append(Path(base_override))

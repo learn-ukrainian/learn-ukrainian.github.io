@@ -34,6 +34,9 @@ def _classify_os_error(exc: OSError) -> str:
     return f"oserror-{exc.errno}"
 
 
+DEFAULT_TMP_PROBE_PATH = Path("/tmp")
+
+
 def probe_tmp_usability(path: Path | None = None) -> dict:
     """Probe tmp usability: volume usage plus a small write test.
 
@@ -42,7 +45,7 @@ def probe_tmp_usability(path: Path | None = None) -> dict:
     (``used_pct``, ``free_bytes``). Never raises on OSError — the failure IS
     the signal.
     """
-    target = Path(path) if path is not None else Path(tempfile.gettempdir())
+    target = Path(path) if path is not None else DEFAULT_TMP_PROBE_PATH
     result: dict = {
         "ok": True,
         "writable": True,

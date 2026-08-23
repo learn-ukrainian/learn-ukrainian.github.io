@@ -33,7 +33,13 @@ def test_probe_tmp_usability_healthy(tmp_path: Path) -> None:
     assert not list(tmp_path.glob(".lu-tmp-probe-*"))
 
 
-def test_probe_tmp_usability_default_path() -> None:
+def test_probe_tmp_usability_default_path(monkeypatch) -> None:
+    assert Path("/tmp") == ctu.DEFAULT_TMP_PROBE_PATH
+    # Redirect tempfile.gettempdir to custom dir; default probe must still probe /tmp explicitly
+    custom_tmp = Path("/nonexistent/custom/tmpdir")
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(custom_tmp))
+    assert Path(tempfile.gettempdir()) == custom_tmp
+
     res = ctu.probe_tmp_usability()
     assert isinstance(res["ok"], bool)
     assert isinstance(res["writable"], bool)

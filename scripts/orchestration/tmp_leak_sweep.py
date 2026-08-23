@@ -39,6 +39,8 @@ _LEAK_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^lu-"),
     re.compile(r"^mq-"),  # merge-queue log pulls (#7164)
     re.compile(r"^contracts-"),  # contracts-job scratch (#7164)
+    re.compile(r"^learn-ukrainian-bridge-"),  # agent bridge asks (#7164)
+    re.compile(r"^learn-ukrainian-"),
     re.compile(r"^atlas6507-"),
     re.compile(r"^data_test_"),
     re.compile(r"^data_debug"),
@@ -113,7 +115,6 @@ def free_space_gb(path: Path) -> float | None:
     return usage.free / (1024**3)
 
 
-
 def path_owned_by_self(path: Path) -> bool:
     """Return True when the entry is owned by the current effective UID."""
     try:
@@ -123,7 +124,12 @@ def path_owned_by_self(path: Path) -> bool:
 
 
 def path_has_live_process(path: Path) -> bool:
-    """Best-effort check: any process whose cmdline mentions this path."""
+    """Best-effort check: any process whose cmdline mentions this path.
+
+    Fails CLOSED on error/timeout/missing pgrep: if we cannot reliably prove
+    a path is unreferenced by running processes, treat it as live to avoid
+    deleting active task scratch.
+    """
     try:
         completed = subprocess.run(
             ["pgrep", "-f", str(path)],
@@ -132,9 +138,8 @@ def path_has_live_process(path: Path) -> bool:
             timeout=5,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
-        # Fail open: cannot prove live → treat as not live for age-gated junk,
-        # but still only delete pattern matches older than min_age.
-        return False
+        # Fail closed: cannot prove unreferenced -> treat as live
+        return True
     return completed.returncode == 0
 
 
@@ -265,9 +270,7 @@ def sweep_tmp_leaks(
     for candidate in candidates:
         if path_has_live_process(candidate.path):
             result["skipped_live"] += 1
-            result["skipped"].append(
-                {"path": str(candidate.path), "reason": "live_process"}
-            )
+            result["skipped"].append({"path": str(candidate.path), "reason": "live_process"})
             continue
         if not apply:
             result["reaped"].append(
@@ -279,6 +282,11 @@ def sweep_tmp_leaks(
                 }
             )
             continue
+        # Re-check liveness immediately before deletion in apply mode
+        if path_has_live_process(candidate.path):
+            result["skipped_live"] += 1
+            result["skipped"].append({"path": str(candidate.path), "reason": "live_process"})
+            continue
         try:
             size = candidate.size_bytes or _entry_size_bytes(candidate.path)
             _remove_path(
@@ -289,9 +297,7 @@ def sweep_tmp_leaks(
             # Confirm gone; if still present count as error.
             if candidate.path.exists():
                 result["errors"] += 1
-                result["skipped"].append(
-                    {"path": str(candidate.path), "reason": "survived_remove"}
-                )
+                result["skipped"].append({"path": str(candidate.path), "reason": "survived_remove"})
                 continue
             result["roots_reaped"] += 1
             result["bytes_freed"] += size
@@ -305,14 +311,10 @@ def sweep_tmp_leaks(
             )
         except ValueError:
             result["errors"] += 1
-            result["skipped"].append(
-                {"path": str(candidate.path), "reason": "delete_guard_refused"}
-            )
+            result["skipped"].append({"path": str(candidate.path), "reason": "delete_guard_refused"})
         except OSError:
             result["errors"] += 1
-            result["skipped"].append(
-                {"path": str(candidate.path), "reason": "os_error"}
-            )
+            result["skipped"].append({"path": str(candidate.path), "reason": "os_error"})
     return result
 
 
@@ -326,10 +328,7 @@ def _print_human(report: dict[str, Any]) -> None:
         f"errors={report['errors']} bytes_freed={report['bytes_freed']} ({free_s})"
     )
     for item in report.get("reaped") or []:
-        print(
-            f"  {item.get('action')}: {item.get('path')} "
-            f"({item.get('bytes', 0)} bytes, age={item.get('age_s')}s)"
-        )
+        print(f"  {item.get('action')}: {item.get('path')} ({item.get('bytes', 0)} bytes, age={item.get('age_s')}s)")
     for item in report.get("skipped") or []:
         print(f"  skip: {item.get('path')} ({item.get('reason')})")
 

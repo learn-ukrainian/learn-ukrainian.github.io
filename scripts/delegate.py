@@ -125,7 +125,13 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import resolve_repo_root
-from scripts.common.scratch import ensure_scratch_root, resolve_scratch_root, scratch_scan_roots
+from scripts.common.scratch import (
+    DEFAULT_SCRATCH_ROOT,
+    ensure_scratch_root,
+    fallback_scratch_root,
+    resolve_scratch_root,
+    scratch_scan_roots,
+)
 from scripts.config import DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
 from scripts.orchestration import reaper_lifecycle
 
@@ -909,11 +915,15 @@ def _reap_runtime_tmp_lease(
         else:
             # #7164: leases live under the disk-backed fleet scratch root; the
             # legacy tmpfs $TMPDIR namespace stays accepted so pre-change
-            # leases can still be reaped.
-            accepted_parents = {
-                resolve_scratch_root().resolve(),
-                resolved_tmp_root,
-            }
+            # leases can still be reaped. Fallback scratch root is also accepted.
+            accepted_parents = {root.resolve() for root in scratch_scan_roots()}
+            with contextlib.suppress(OSError):
+                accepted_parents.add(resolve_scratch_root().resolve())
+            with contextlib.suppress(OSError):
+                accepted_parents.add(fallback_scratch_root().resolve())
+            with contextlib.suppress(OSError):
+                accepted_parents.add(DEFAULT_SCRATCH_ROOT.resolve())
+            accepted_parents.add(resolved_tmp_root)
         if resolved_namespace.parent not in accepted_parents:
             raise ValueError(
                 "resolved runtime tmp namespace is not directly under an approved scratch root",
@@ -1010,9 +1020,7 @@ _NO_DELIVERABLE_STATUS = "no_deliverable"
 # Explicit unattested classification for Cursor Auto when no concrete model was
 # extracted (#6964 / #6953). Never record a bare ``"unknown"`` here.
 _CURSOR_UNKNOWN_MODEL = "unattested-harness"
-_NON_CONCRETE_MODEL_VALUES = frozenset(
-    {"", "auto", "default", "unknown", "none", "null", "n/a", "unattested-harness"}
-)
+_NON_CONCRETE_MODEL_VALUES = frozenset({"", "auto", "default", "unknown", "none", "null", "n/a", "unattested-harness"})
 
 
 def _cursor_model_state(
@@ -1459,7 +1467,6 @@ def _is_verified_added_worktree(path: Path) -> bool:
     return _resolve_verified_worktree_path(path) is not None
 
 
-
 def _apply_worktree_git_ceiling(worker_env: dict[str, str], worktree_path: Path) -> None:
     """Pin GIT_CEILING_DIRECTORIES at the worktree's PARENT (#5803 follow-up).
 
@@ -1549,9 +1556,7 @@ def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> 
 # Declared receipt collection points unignored in .gitignore as tracked-by-design (#6967).
 # Untracked files under these directories are allowlisted by the clean-tree guard so
 # concurrent jobs writing receipts do not block write-capable dispatches.
-_CLEAN_TREE_UNTRACKED_RECEIPT_ALLOWLIST: tuple[str, ...] = (
-    "batch_state/atlas-jobs/receipts/",
-)
+_CLEAN_TREE_UNTRACKED_RECEIPT_ALLOWLIST: tuple[str, ...] = ("batch_state/atlas-jobs/receipts/",)
 
 
 def _is_untracked_receipt_allowlisted(entry: dict[str, str]) -> bool:
@@ -2135,11 +2140,7 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
     )
     if activity is not None:
         return False, activity
-    status = (
-        str(task_state.get("status"))
-        if task_state and task_state.get("status") is not None
-        else None
-    )
+    status = str(task_state.get("status")) if task_state and task_state.get("status") is not None else None
     if task_state is None:
         return True, "clean+synced; task record absent; activity probes empty"
     if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
@@ -2365,17 +2366,11 @@ def _pinned_worker_venv_env(source: dict[str, str]) -> dict[str, str]:
     pinned = dict(source)
     inherited_path = source.get("PATH", "")
     inherited_venv = source.get("VIRTUAL_ENV")
-    inherited_venv_bin = (
-        os.path.normpath(str(Path(inherited_venv) / "bin"))
-        if inherited_venv
-        else None
-    )
+    inherited_venv_bin = os.path.normpath(str(Path(inherited_venv) / "bin")) if inherited_venv else None
     path_entries = [
         entry
         for entry in inherited_path.split(os.pathsep)
-        if entry
-        and not _is_virtualenv_bin_path(entry)
-        and os.path.normpath(entry) != inherited_venv_bin
+        if entry and not _is_virtualenv_bin_path(entry) and os.path.normpath(entry) != inherited_venv_bin
     ]
     pinned["PATH"] = os.pathsep.join((str(venv_bin), *path_entries))
     pinned["VIRTUAL_ENV"] = str(venv_root)
@@ -2496,9 +2491,7 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         # out of snapshot scope.
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = state
-        if rename_source is not None and not _is_read_only_snapshot_excluded_path(
-            rename_source
-        ):
+        if rename_source is not None and not _is_read_only_snapshot_excluded_path(rename_source):
             entries[rename_source] = f"{state}:source"
     for path in outputs["ignored"].split("\0"):
         if path and not _is_read_only_snapshot_excluded_path(path):
@@ -2577,8 +2570,7 @@ def _is_read_only_runtime_telemetry_path(path: str) -> bool:
     if normalized in _READ_ONLY_RUNTIME_TELEMETRY_FILES:
         return True
     return any(
-        normalized == prefix or normalized.startswith(f"{prefix}/")
-        for prefix in _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES
+        normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_RUNTIME_TELEMETRY_PREFIXES
     )
 
 
@@ -2615,16 +2607,10 @@ def _read_only_dispatch_sandbox_root(path: str) -> str | None:
 
 def _read_only_dispatch_sandbox_roots(snapshot: dict[str, str]) -> frozenset[str]:
     """Collect dispatch sandbox roots visible in a read-only checkout snapshot."""
-    return frozenset(
-        root
-        for path in snapshot
-        if (root := _read_only_dispatch_sandbox_root(path)) is not None
-    )
+    return frozenset(root for path in snapshot if (root := _read_only_dispatch_sandbox_root(path)) is not None)
 
 
-def _is_read_only_new_sibling_dispatch_sandbox_path(
-    path: str, *, before_roots: frozenset[str]
-) -> bool:
+def _is_read_only_new_sibling_dispatch_sandbox_path(path: str, *, before_roots: frozenset[str]) -> bool:
     """Return whether *path* belongs to a sibling sandbox absent from *before*.
 
     Only newly appeared ``.worktrees/dispatch/<agent>/<task>/`` trees are
@@ -2649,20 +2635,16 @@ def _is_read_only_untracked_or_ignored_status(state: str | None) -> bool:
     return state[:2] in _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES
 
 
-def _is_read_only_runtime_state_exemption(
-    path: str, *, before_state: str | None, after_state: str | None
-) -> bool:
+def _is_read_only_runtime_state_exemption(path: str, *, before_state: str | None, after_state: str | None) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
     if not _is_read_only_runtime_state_path(path):
         return False
-    return _is_read_only_untracked_or_ignored_status(
-        before_state
-    ) and _is_read_only_untracked_or_ignored_status(after_state)
+    return _is_read_only_untracked_or_ignored_status(before_state) and _is_read_only_untracked_or_ignored_status(
+        after_state
+    )
 
 
-def _read_only_mutation_paths(
-    before: dict[str, str], after: dict[str, str]
-) -> list[str]:
+def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
     Gitignored harness/tooling runtime state is excluded when it is ignored or
@@ -2687,9 +2669,7 @@ def _read_only_mutation_paths(
             before_state=before.get(path),
             after_state=after.get(path),
         )
-        and not _is_read_only_new_sibling_dispatch_sandbox_path(
-            path, before_roots=before_roots
-        )
+        and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
     )
 
 
@@ -3683,9 +3663,7 @@ def _ensure_worktree(
         )
         if upstream_proc.returncode != 0:
             detail = (upstream_proc.stderr or upstream_proc.stdout or "git branch failed").strip()
-            raise RuntimeError(
-                f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}"
-            )
+            raise RuntimeError(f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}")
     _provision_data_symlinks(worktree_path, _REPO_ROOT)
     telemetry["sparse"] = _apply_dispatch_sparse_checkout(
         worktree_path,
@@ -4256,9 +4234,7 @@ def _run_worker(
                 signal_name = signal.Signals(signum).name
             except ValueError:
                 signal_name = f"signal {signum}"
-            returncode_reason = (
-                f"worker subprocess terminated by {signal_name} (returncode {returncode})"
-            )
+            returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
 
@@ -4405,17 +4381,12 @@ def _run_worker(
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
         if read_only_mutation_paths:
-            mutation_diagnostic = (
-                "read-only checkout mutation detected: "
-                + ", ".join(read_only_mutation_paths)
-            )
+            mutation_diagnostic = "read-only checkout mutation detected: " + ", ".join(read_only_mutation_paths)
             # Never REPLACE a real failure with the guard diagnostic (#7124):
             # overwriting it hid the actual cause (e.g. a SIGKILLed worker's
             # stderr) behind the mutation list. The paths stay independently
             # queryable via ``read_only_mutation_paths`` either way.
-            last_error = (
-                f"{last_error}; {mutation_diagnostic}" if last_error else mutation_diagnostic
-            )
+            last_error = f"{last_error}; {mutation_diagnostic}" if last_error else mutation_diagnostic
         if no_deliverable_reason is not None:
             last_error = no_deliverable_reason
 
@@ -4637,8 +4608,7 @@ def _run_worker(
             )
     except Exception as nmi_exc:
         print(
-            f"[delegate] WARNING: node_modules-integrity post-worker sweep failed: "
-            f"{type(nmi_exc).__name__}: {nmi_exc}",
+            f"[delegate] WARNING: node_modules-integrity post-worker sweep failed: {type(nmi_exc).__name__}: {nmi_exc}",
             file=sys.stderr,
         )
 
@@ -4680,9 +4650,7 @@ def _run_worker(
                 check_worktree_cleanup_integrity,
             )
 
-        wci_ok, wci_message = check_worktree_cleanup_integrity(
-            _REPO_ROOT, tasks_dir=_TASKS_DIR
-        )
+        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
         if not wci_ok:
             _append_dispatch_event(
                 "worktree_cleanup_integrity_post_worker",
@@ -4923,11 +4891,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         live_pid = False
         if status in ("running", "spawning") and not isinstance(pid, bool):
             try:
-                live_pid = (
-                    isinstance(pid, (int, str))
-                    and int(pid) > 0
-                    and _pid_alive(int(pid))
-                )
+                live_pid = isinstance(pid, (int, str)) and int(pid) > 0 and _pid_alive(int(pid))
             except (TypeError, ValueError):
                 live_pid = False
         if live_pid:
@@ -5056,9 +5020,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     resolved_worktree_raw: str | None = None
     if worktree_arg:
         resolved_worktree_raw = (
-            str(_auto_worktree_path(dispatch_agent, task_id))
-            if worktree_arg == "auto"
-            else worktree_arg
+            str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
         )
         try:
             resolved_worktree_base_sha = _resolve_worktree_base_sha(
@@ -5172,67 +5134,71 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
             return 1
 
-        start_telemetry = resolve_dispatch_start_telemetry(
-            agent_name=dispatch_agent,
-            requested_model=args.model,
-            requested_effort=getattr(args, "effort", None),
-            harness=requested_harness,
-        )
-        dry_run_state = {
-            "task_id": task_id,
-            "repository": _resolve_dispatch_repository(
-                dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
-            ),
-            "initiator": attribution.initiator,
-            "attribution_source": attribution.source,
-            "agent": dispatch_agent,
-            "model": start_telemetry.model,
-            **_cursor_model_state(agent=dispatch_agent, initial=True),
-            "effort": start_telemetry.effort,
-            "cli_version": start_telemetry.cli_version,
-            "mode": args.mode,
-            "cwd": str(dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)),
-            "worktree_path": str(dry_run_worktree) if dry_run_worktree else None,
-            "worktree_branch": dry_run_branch,
-            "worktree_base_sha": dry_run_worktree_telemetry.get("base_sha"),
-            "runtime_tmp_root": str(runtime_tmp_root),
-            "output_schema_path": output_schema_path,
-            "output_schema_sha256": output_schema_sha256,
-            "tmp_bytes_freed": None,
-            "tmp_reap_error": None,
-            "pid": None,
-            "status": "dry_run",
-            "started_at": datetime.now(UTC).isoformat(),
-            "finished_at": None,
-            "duration_s": None,
-            "prompt_chars": len(prompt),
-            "response_chars": None,
-            "result_file": None,
-            "stderr_excerpt": None,
-            "returncode": None,
-            "returncode_reason": None,
-            "last_error": None,
-            "exit_code": None,
-            "substitution": None,
-            "agent_alias_note": agent_alias_note,
-        }
-        if requested_harness is not None:
-            dry_run_state["harness"] = requested_harness
-        if lifecycle_carrier is not None:
-            dry_run_state["task_lifecycle"] = lifecycle_carrier
-        dry_run_reap = _reap_runtime_tmp_lease(
-            runtime_tmp_root,
-            runtime_tmp_namespace_root,
-        )
-        dry_run_state.update(
-            {
-                "finished_at": datetime.now(UTC).isoformat(),
-                "duration_s": 0.0,
-                "tmp_bytes_freed": dry_run_reap["tmp_bytes_freed"],
-                "tmp_reap_error": dry_run_reap["tmp_reap_error"],
+        try:
+            start_telemetry = resolve_dispatch_start_telemetry(
+                agent_name=dispatch_agent,
+                requested_model=args.model,
+                requested_effort=getattr(args, "effort", None),
+                harness=requested_harness,
+            )
+            dry_run_state = {
+                "task_id": task_id,
+                "repository": _resolve_dispatch_repository(
+                    dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
+                ),
+                "initiator": attribution.initiator,
+                "attribution_source": attribution.source,
+                "agent": dispatch_agent,
+                "model": start_telemetry.model,
+                **_cursor_model_state(agent=dispatch_agent, initial=True),
+                "effort": start_telemetry.effort,
+                "cli_version": start_telemetry.cli_version,
+                "mode": args.mode,
+                "cwd": str(dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)),
+                "worktree_path": str(dry_run_worktree) if dry_run_worktree else None,
+                "worktree_branch": dry_run_branch,
+                "worktree_base_sha": dry_run_worktree_telemetry.get("base_sha"),
+                "runtime_tmp_root": str(runtime_tmp_root),
+                "output_schema_path": output_schema_path,
+                "output_schema_sha256": output_schema_sha256,
+                "tmp_bytes_freed": None,
+                "tmp_reap_error": None,
+                "pid": None,
+                "status": "dry_run",
+                "started_at": datetime.now(UTC).isoformat(),
+                "finished_at": None,
+                "duration_s": None,
+                "prompt_chars": len(prompt),
+                "response_chars": None,
+                "result_file": None,
+                "stderr_excerpt": None,
+                "returncode": None,
+                "returncode_reason": None,
+                "last_error": None,
+                "exit_code": None,
+                "substitution": None,
+                "agent_alias_note": agent_alias_note,
             }
-        )
-        _write_state_atomic(state_path, dry_run_state)
+            if requested_harness is not None:
+                dry_run_state["harness"] = requested_harness
+            if lifecycle_carrier is not None:
+                dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_reap = _reap_runtime_tmp_lease(
+                runtime_tmp_root,
+                runtime_tmp_namespace_root,
+            )
+            dry_run_state.update(
+                {
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "duration_s": 0.0,
+                    "tmp_bytes_freed": dry_run_reap["tmp_bytes_freed"],
+                    "tmp_reap_error": dry_run_reap["tmp_reap_error"],
+                }
+            )
+            _write_state_atomic(state_path, dry_run_state)
+        except BaseException:
+            _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+            raise
         if requested_branch:
             print(
                 f"🌲 branch reuse validated: branch={dry_run_branch} "
@@ -5308,196 +5274,197 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
 
-    cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
-    prompt = _augment_prompt_with_worktree(
-        prompt,
-        worktree_path,
-        mode=args.mode,
-        sparse_telemetry=worktree_telemetry.get("sparse")
-        if isinstance(worktree_telemetry.get("sparse"), dict)
-        else None,
-    )
-
-    # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
-    # instruction (never digest bodies) when an explicit context was supplied and
-    # the registry is enabled. Fail-open — a disabled/malformed registry leaves the
-    # prompt and state untouched.
-    research_state: dict[str, Any] | None = None
-    if research_ctx is not None:
-        research_block, research_state = _resolve_research_injection(research_ctx, task_id)
-        prompt = prompt + research_block
-
-    start_telemetry = resolve_dispatch_start_telemetry(
-        agent_name=dispatch_agent,
-        requested_model=args.model,
-        requested_effort=getattr(args, "effort", None),
-        harness=requested_harness,
-    )
-
-    # Write initial state BEFORE forking so a fast caller can see it.
-    # pid is filled in by the worker once it starts; for now we record
-    # the parent PID as a placeholder (overwritten by worker).
-    worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
-    initial_state = {
-        "task_id": task_id,
-        # Authoritative repository identity for the Work projection's scoped
-        # delegate join (#7083); None stays unclassified and fails closed.
-        "repository": _resolve_dispatch_repository(cwd),
-        "initiator": attribution.initiator,
-        "attribution_source": attribution.source,
-        "agent": dispatch_agent,
-        "model": start_telemetry.model,
-        **_cursor_model_state(agent=dispatch_agent, initial=True),
-        "effort": start_telemetry.effort,
-        "cli_version": start_telemetry.cli_version,
-        "allow_merge": bool(getattr(args, "allow_merge", False)),
-        "mode": args.mode,
-        "cwd": cwd,
-        "worktree_path": str(worktree_path) if worktree_path else None,
-        "worktree_branch": worktree_branch,
-        "worktree_base_sha": worktree_telemetry.get("base_sha"),
-        "worktree_base": getattr(args, "base", None) or ("main" if worktree_path else None),
-        "worktree_rebased": bool(worktree_telemetry.get("rebased")),
-        "worktree_reused": bool(worktree_telemetry.get("reused")),
-        "worktree_layout": worktree_layout,
-        "worktree_sparse": worktree_telemetry.get("sparse"),
-        "worktree_local_venv": worktree_telemetry.get("local_venv"),
-        "runtime_tmp_root": str(runtime_tmp_root),
-        "tmp_bytes_freed": None,
-        "tmp_reap_error": None,
-        "keep_worktree": keep_worktree,
-        "hard_timeout": args.hard_timeout,
-        "silence_timeout": silence_timeout,
-        "initial_response_timeout": initial_response_timeout,
-        "max_budget_usd": max_budget_usd,
-        "output_schema_path": output_schema_path,
-        "output_schema_sha256": output_schema_sha256,
-        "pid": None,  # worker fills this
-        "status": "spawning",
-        "started_at": datetime.now(UTC).isoformat(),
-        "finished_at": None,
-        "duration_s": None,
-        "prompt_chars": len(prompt),
-        "response_chars": None,
-        "result_file": None,
-        "stderr_excerpt": None,
-        "returncode": None,
-        "returncode_reason": None,
-        "last_error": None,
-        "exit_code": None,
-        "substitution": None,
-        "agent_alias_note": agent_alias_note,
-    }
-    if requested_harness is not None:
-        initial_state["harness"] = requested_harness
-    if lifecycle_carrier is not None:
-        initial_state["task_lifecycle"] = lifecycle_carrier
-    initial_state = _with_optional_research_state(initial_state, research_state)
-    _write_state_atomic(state_path, initial_state)
-
-    # Fix 5 (#1476 AC 5) — dispatch-start telemetry.
-    if worktree_path:
-        sparse_meta = worktree_telemetry.get("sparse") or {}
-        sparse_tag = ""
-        if sparse_meta.get("full_checkout"):
-            sparse_tag = " [full-checkout]"
-        elif sparse_meta.get("excluded"):
-            sparse_tag = f" [sparse-exclude={','.join(sparse_meta['excluded'])}]"
-        print(
-            f"🌲 dispatch {task_id}: branch={worktree_branch} "
-            f"base_sha={worktree_telemetry.get('base_sha') or '?'} "
-            f"path={worktree_path} layout={worktree_layout}"
-            + (" [rebased]" if worktree_telemetry.get("rebased") else "")
-            + (" [reused]" if worktree_telemetry.get("reused") else "")
-            + sparse_tag,
-            file=sys.stderr,
+    spawned = False
+    try:
+        cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
+        prompt = _augment_prompt_with_worktree(
+            prompt,
+            worktree_path,
+            mode=args.mode,
+            sparse_telemetry=worktree_telemetry.get("sparse")
+            if isinstance(worktree_telemetry.get("sparse"), dict)
+            else None,
         )
-        if worktree_layout == "flat":
+
+        # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
+        # instruction (never digest bodies) when an explicit context was supplied and
+        # the registry is enabled. Fail-open — a disabled/malformed registry leaves the
+        # prompt and state untouched.
+        research_state: dict[str, Any] | None = None
+        if research_ctx is not None:
+            research_block, research_state = _resolve_research_injection(research_ctx, task_id)
+            prompt = prompt + research_block
+
+        start_telemetry = resolve_dispatch_start_telemetry(
+            agent_name=dispatch_agent,
+            requested_model=args.model,
+            requested_effort=getattr(args, "effort", None),
+            harness=requested_harness,
+        )
+
+        # Write initial state BEFORE forking so a fast caller can see it.
+        # pid is filled in by the worker once it starts; for now we record
+        # the parent PID as a placeholder (overwritten by worker).
+        worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
+        initial_state = {
+            "task_id": task_id,
+            # Authoritative repository identity for the Work projection's scoped
+            # delegate join (#7083); None stays unclassified and fails closed.
+            "repository": _resolve_dispatch_repository(cwd),
+            "initiator": attribution.initiator,
+            "attribution_source": attribution.source,
+            "agent": dispatch_agent,
+            "model": start_telemetry.model,
+            **_cursor_model_state(agent=dispatch_agent, initial=True),
+            "effort": start_telemetry.effort,
+            "cli_version": start_telemetry.cli_version,
+            "allow_merge": bool(getattr(args, "allow_merge", False)),
+            "mode": args.mode,
+            "cwd": cwd,
+            "worktree_path": str(worktree_path) if worktree_path else None,
+            "worktree_branch": worktree_branch,
+            "worktree_base_sha": worktree_telemetry.get("base_sha"),
+            "worktree_base": getattr(args, "base", None) or ("main" if worktree_path else None),
+            "worktree_rebased": bool(worktree_telemetry.get("rebased")),
+            "worktree_reused": bool(worktree_telemetry.get("reused")),
+            "worktree_layout": worktree_layout,
+            "worktree_sparse": worktree_telemetry.get("sparse"),
+            "worktree_local_venv": worktree_telemetry.get("local_venv"),
+            "runtime_tmp_root": str(runtime_tmp_root),
+            "tmp_bytes_freed": None,
+            "tmp_reap_error": None,
+            "keep_worktree": keep_worktree,
+            "hard_timeout": args.hard_timeout,
+            "silence_timeout": silence_timeout,
+            "initial_response_timeout": initial_response_timeout,
+            "max_budget_usd": max_budget_usd,
+            "output_schema_path": output_schema_path,
+            "output_schema_sha256": output_schema_sha256,
+            "pid": None,  # worker fills this
+            "status": "spawning",
+            "started_at": datetime.now(UTC).isoformat(),
+            "finished_at": None,
+            "duration_s": None,
+            "prompt_chars": len(prompt),
+            "response_chars": None,
+            "result_file": None,
+            "stderr_excerpt": None,
+            "returncode": None,
+            "returncode_reason": None,
+            "last_error": None,
+            "exit_code": None,
+            "substitution": None,
+            "agent_alias_note": agent_alias_note,
+        }
+        if requested_harness is not None:
+            initial_state["harness"] = requested_harness
+        if lifecycle_carrier is not None:
+            initial_state["task_lifecycle"] = lifecycle_carrier
+        initial_state = _with_optional_research_state(initial_state, research_state)
+        _write_state_atomic(state_path, initial_state)
+
+        # Fix 5 (#1476 AC 5) — dispatch-start telemetry.
+        if worktree_path:
+            sparse_meta = worktree_telemetry.get("sparse") or {}
+            sparse_tag = ""
+            if sparse_meta.get("full_checkout"):
+                sparse_tag = " [full-checkout]"
+            elif sparse_meta.get("excluded"):
+                sparse_tag = f" [sparse-exclude={','.join(sparse_meta['excluded'])}]"
             print(
-                f"⚠️  task {task_id!r} is using the DEPRECATED flat worktree "
-                f"layout ({worktree_path}). New dispatches should use "
-                f"`--worktree` (bare) to land in "
-                f".worktrees/dispatch/{{agent}}/{{task}}/.",
+                f"🌲 dispatch {task_id}: branch={worktree_branch} "
+                f"base_sha={worktree_telemetry.get('base_sha') or '?'} "
+                f"path={worktree_path} layout={worktree_layout}"
+                + (" [rebased]" if worktree_telemetry.get("rebased") else "")
+                + (" [reused]" if worktree_telemetry.get("reused") else "")
+                + sparse_tag,
                 file=sys.stderr,
             )
+            if worktree_layout == "flat":
+                print(
+                    f"⚠️  task {task_id!r} is using the DEPRECATED flat worktree "
+                    f"layout ({worktree_path}). New dispatches should use "
+                    f"`--worktree` (bare) to land in "
+                    f".worktrees/dispatch/{{agent}}/{{task}}/.",
+                    file=sys.stderr,
+                )
 
-    # Fork a detached subprocess that runs this same script with
-    # --worker. We use Popen rather than os.fork for portability.
-    #
-    # Python interpreter: the project rule (non-negotiable-rules.md)
-    # is to always use .venv/bin/python. delegate.py follows that rule
-    # strictly.
-    venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
-    python_bin = str(venv_python)
-    cmd = [
-        python_bin,
-        str(Path(__file__).resolve()),
-        "_worker",
-        "--task-id",
-        task_id,
-        "--agent",
-        dispatch_agent,
-        "--mode",
-        args.mode,
-        "--cwd",
-        cwd,
-        "--hard-timeout",
-        str(args.hard_timeout),
-        "--silence-timeout",
-        str(silence_timeout),
-        "--initial-response-timeout",
-        str(initial_response_timeout),
-        "--runtime-tmp-root",
-        str(runtime_tmp_root),
-        "--runtime-tmp-namespace-root",
-        str(runtime_tmp_namespace_root),
-    ]
-    if requested_harness is not None:
-        cmd.extend(["--harness", requested_harness])
-    if keep_worktree:
-        cmd.append("--keep-worktree")
-    if max_budget_usd is not None:
-        cmd.extend(["--max-budget-usd", str(max_budget_usd)])
-    if output_schema_path is not None:
-        cmd.extend(
-            [
-                "--output-schema",
-                output_schema_path,
-                "--output-schema-sha256",
-                str(output_schema_sha256),
-            ]
-        )
-    if args.model:
-        cmd.extend(["--model", args.model])
-    if getattr(args, "provider", None):
-        cmd.extend(["--provider", args.provider])
-    effort = getattr(args, "effort", None)
-    if effort:
-        cmd.extend(["--effort", effort])
+        # Fork a detached subprocess that runs this same script with
+        # --worker. We use Popen rather than os.fork for portability.
+        #
+        # Python interpreter: the project rule (non-negotiable-rules.md)
+        # is to always use .venv/bin/python. delegate.py follows that rule
+        # strictly.
+        venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
+        python_bin = str(venv_python)
+        cmd = [
+            python_bin,
+            str(Path(__file__).resolve()),
+            "_worker",
+            "--task-id",
+            task_id,
+            "--agent",
+            dispatch_agent,
+            "--mode",
+            args.mode,
+            "--cwd",
+            cwd,
+            "--hard-timeout",
+            str(args.hard_timeout),
+            "--silence-timeout",
+            str(silence_timeout),
+            "--initial-response-timeout",
+            str(initial_response_timeout),
+            "--runtime-tmp-root",
+            str(runtime_tmp_root),
+            "--runtime-tmp-namespace-root",
+            str(runtime_tmp_namespace_root),
+        ]
+        if requested_harness is not None:
+            cmd.extend(["--harness", requested_harness])
+        if keep_worktree:
+            cmd.append("--keep-worktree")
+        if max_budget_usd is not None:
+            cmd.extend(["--max-budget-usd", str(max_budget_usd)])
+        if output_schema_path is not None:
+            cmd.extend(
+                [
+                    "--output-schema",
+                    output_schema_path,
+                    "--output-schema-sha256",
+                    str(output_schema_sha256),
+                ]
+            )
+        if args.model:
+            cmd.extend(["--model", args.model])
+        if getattr(args, "provider", None):
+            cmd.extend(["--provider", args.provider])
+        effort = getattr(args, "effort", None)
+        if effort:
+            cmd.extend(["--effort", effort])
 
-    # Pipe the prompt via stdin so it doesn't hit argv length limits.
-    # start_new_session=True detaches from our process group — the
-    # worker survives our exit, which is what we want.
-    # Pin the worker to this checkout's venv before it can invoke a CLI.  Do
-    # not retain a parent process's activated venv: pip can otherwise rewrite
-    # console scripts in that foreign checkout (#5134).
-    worker_env = _pinned_worker_venv_env(os.environ)
-    worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
-    worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
-    _inject_gh_token_for_agent(worker_env, dispatch_agent)
-    worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
-    worker_env["TMPDIR"] = str(runtime_tmp_root)
-    worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
-    worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
-    if worktree_path is not None:
-        _apply_worktree_git_ceiling(worker_env, worktree_path)
-    if getattr(args, "allow_merge", False):
-        worker_env.pop("AGENT_NO_MERGE", None)
-        worker_env["AGENT_ALLOW_MERGE"] = "1"
-    else:
-        worker_env["AGENT_NO_MERGE"] = "1"
-        worker_env.pop("AGENT_ALLOW_MERGE", None)
-    try:
+        # Pipe the prompt via stdin so it doesn't hit argv length limits.
+        # start_new_session=True detaches from our process group — the
+        # worker survives our exit, which is what we want.
+        # Pin the worker to this checkout's venv before it can invoke a CLI.  Do
+        # not retain a parent process's activated venv: pip can otherwise rewrite
+        # console scripts in that foreign checkout (#5134).
+        worker_env = _pinned_worker_venv_env(os.environ)
+        worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
+        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
+        _inject_gh_token_for_agent(worker_env, dispatch_agent)
+        worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+        worker_env["TMPDIR"] = str(runtime_tmp_root)
+        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
+        if worktree_path is not None:
+            _apply_worktree_git_ceiling(worker_env, worktree_path)
+        if getattr(args, "allow_merge", False):
+            worker_env.pop("AGENT_NO_MERGE", None)
+            worker_env["AGENT_ALLOW_MERGE"] = "1"
+        else:
+            worker_env["AGENT_NO_MERGE"] = "1"
+            worker_env.pop("AGENT_ALLOW_MERGE", None)
         try:
             proc = subprocess.Popen(
                 cmd,
@@ -5508,6 +5475,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 start_new_session=True,  # detach from our process group
                 close_fds=True,
             )
+            spawned = True
         except (OSError, FileNotFoundError, ValueError) as exc:
             # Popen itself failed — typically because the Python
             # interpreter isn't where we expected, or the file
@@ -5576,6 +5544,10 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             proc.stdin.close()
         except BrokenPipeError:
             pass  # worker crashed before reading; zombie detector will catch it
+    except BaseException:
+        if not spawned:
+            _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+        raise
     finally:
         # The Popen child inherited these FDs via dup; our copies can
         # be closed immediately without affecting the child.
@@ -5662,6 +5634,7 @@ def _dispatch_check_budget_enabled(args: argparse.Namespace) -> bool:
     if getattr(args, "check_budget", False):
         return True
     return os.environ.get("LU_DISPATCH_CHECK_BUDGET", "").strip() in {"1", "true", "yes", "on"}
+
 
 def _age_seconds_from_started_at(started_at: Any) -> int:
     try:
@@ -5852,8 +5825,7 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     # refuse or advisory, not silently resurrect an old route).
     if sub and sub not in _DISPATCH_AGENT_CHOICES:
         print(
-            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, "
-            "not a known dispatch agent — ignoring hard sub.",
+            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, not a known dispatch agent — ignoring hard sub.",
             file=sys.stderr,
         )
         sub = None
@@ -6490,8 +6462,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--force-agent",
         action="store_true",
         help=(
-            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard "
-            "and dispatch with the requested agent."
+            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard and dispatch with the requested agent."
         ),
     )
     d.add_argument(
