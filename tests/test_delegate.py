@@ -4330,7 +4330,7 @@ def test_fetch_base_strips_origin_prefix(monkeypatch):
     assert delegate._fetch_base("origin/main") is True
 
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
-    assert fetch_cmd == ["git", "fetch", "origin", "main"]
+    assert fetch_cmd == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
     verify_cmd = next(c for c in calls if c[:2] == ["git", "rev-parse"] and "--verify" in c)
     assert verify_cmd[-1] == "origin/main"
 
@@ -4342,7 +4342,7 @@ def test_fetch_base_plain_branch_unchanged(monkeypatch):
     assert delegate._fetch_base("main") is True
 
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
-    assert fetch_cmd == ["git", "fetch", "origin", "main"]
+    assert fetch_cmd == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
 
 
 def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
@@ -4383,7 +4383,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
 
     assert rc == 0
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
-    assert fetch_cmd == ["git", "fetch", "origin", "main"]
+    assert fetch_cmd == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == "feedc0de", f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
 
@@ -4998,7 +4998,7 @@ def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir
 
     assert actual_branch == branch
     assert telemetry["reused"] is False
-    assert ["git", "fetch", "origin", branch] in calls
+    assert ["git", "fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"] in calls
     add_cmd = next(command for command in calls if command[:3] == ["git", "worktree", "add"])
     assert add_cmd == [
         "git",
@@ -5053,7 +5053,7 @@ def test_branch_reuse_resets_behind_local_ref_to_fetched_origin(tmp_tasks_dir, t
     assert path == target.resolve()
     assert actual_branch == branch
     assert telemetry["base_sha"] == "1ef217eed9"
-    assert ["git", "fetch", "origin", branch] in calls
+    assert ["git", "fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"] in calls
     assert [
         "git",
         "merge-base",
@@ -5131,6 +5131,82 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
     assert reused_branch == "claude/predeploy-visibility"
     assert telemetry["reused"] is True
     assert telemetry["rebased"] is False
+
+
+def test_branch_reuse_fetches_under_main_only_fetch_refspec(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#7168: `_fetch_existing_branch` + `_require_local_branch_is_ancestor_of_origin`
+    must succeed when `remote.origin.fetch` is configured for main-only (e.g. on
+    job hosts like hramatka).
+    """
+    remote = tmp_path / "remote.git"
+    source = tmp_path / "source"
+    client = tmp_path / "client"
+    branch = "cursor/lane-branch"
+    env = delegate._sanitized_git_env()
+    env.pop("AGENT_NO_MERGE", None)
+
+    def git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=30,
+        )
+
+    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env, timeout=30)
+    source.mkdir()
+    git(source, "init", "-b", "main")
+    git(source, "config", "user.email", "test@example.com")
+    git(source, "config", "user.name", "Test")
+    git(source, "config", "core.hooksPath", "/dev/null")
+    git(source, "commit", "--allow-empty", "-m", "base")
+    git(source, "remote", "add", "origin", str(remote))
+    git(source, "push", "-u", "origin", "main")
+
+    # Set up client clone with main-only fetch refspec
+    subprocess.run(
+        ["git", "clone", "--single-branch", "--branch", "main", str(remote), str(client)],
+        check=True,
+        capture_output=True,
+        env=env,
+        timeout=30,
+    )
+    git(client, "config", "user.email", "test@example.com")
+    git(client, "config", "user.name", "Test")
+    git(client, "config", "core.hooksPath", "/dev/null")
+    git(client, "config", "--unset-all", "remote.origin.fetch")
+    git(client, "config", "--add", "remote.origin.fetch", "+refs/heads/main:refs/remotes/origin/main")
+
+    # Create lane branch on remote
+    git(source, "switch", "-c", branch)
+    git(source, "commit", "--allow-empty", "-m", "remote lane commit")
+    git(source, "push", "-u", "origin", branch)
+    expected_sha = git(source, "rev-parse", "HEAD").stdout.strip()
+
+    monkeypatch.setattr(delegate, "_REPO_ROOT", client.resolve())
+
+    # Precondition: origin/<branch> does not yet exist in client
+    rev_parse_before = subprocess.run(
+        ["git", "rev-parse", "--verify", f"origin/{branch}"],
+        cwd=client,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=env,
+        timeout=30,
+    )
+    assert rev_parse_before.returncode != 0
+
+    # Under main-only refspec, _fetch_existing_branch + _require_local_branch_is_ancestor_of_origin
+    # must fetch the branch and resolve its SHA without failing.
+    delegate._fetch_existing_branch(branch)
+    resolved_sha = delegate._require_local_branch_is_ancestor_of_origin(branch)
+
+    assert resolved_sha == expected_sha
+    assert git(client, "rev-parse", "--verify", f"origin/{branch}").stdout.strip() == expected_sha
 
 
 def test_branch_reuse_existing_pr_worktree_with_merge_refuses_staleness_without_rebase(
@@ -5310,7 +5386,7 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     )
 
     assert delegate.cmd_dispatch(args) == 0
-    assert ["git", "fetch", "origin", branch] in calls
+    assert ["git", "fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"] in calls
     output = capsys.readouterr()
     assert "branch reuse validated" in output.err
     assert "[reused]" in output.err
@@ -5751,7 +5827,7 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     fetch_calls = [c for c in calls if c[:2] == ["git", "fetch"]]
     add_calls = [c for c in calls if c[:3] == ["git", "worktree", "add"]]
     assert fetch_calls, "must fetch origin/main before branching"
-    assert fetch_calls[0] == ["git", "fetch", "origin", "main"]
+    assert fetch_calls[0] == ["git", "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main"]
     assert add_calls, "must invoke git worktree add"
     assert add_calls[0][-1] == "origin/main", "must branch from origin/main, not local main"
     assert telemetry["base_sha"] == "sha-from-origin"
