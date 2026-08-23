@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "255f6b5e2942",
+  "session_id": "fleet-30812720044048daa45bddfdfc8f215c",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T23:38:10.076763Z",
+  "branch": "agy/split-brain-7168-p2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "scripts/orchestration/job_host_exec.py",
+    "tests/orchestration/test_job_host_exec.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "558f08d0aeff",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T23:38:10.067003Z",
+    "agent_lines": 253,
+    "agent_removed": 21,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 253,
+    "total_lines_changed": 274,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
