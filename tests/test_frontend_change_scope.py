@@ -376,11 +376,11 @@ def test_removing_denominator_entry_fails_hydrate_guard(tmp_path: Path) -> None:
         scope.assert_hydrate_entrypoints_in_denominator(denominator=loaded)
 
 
-def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> None:
+def test_ci_yml_uses_shared_scope_helper_with_full_tier_frontend_job() -> None:
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
 
-    assert "if" not in jobs["frontend"]
+    assert jobs["frontend"]["if"] == "github.event_name != 'pull_request'"
     # Rule of thumb: assert an invariant, not a snapshot; if changing X
     # legitimately requires editing >1 test, the test is a snapshot.
     # ci-gate.needs is pinned exactly once — by the canonical set the gate

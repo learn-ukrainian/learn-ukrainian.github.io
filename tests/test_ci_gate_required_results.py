@@ -71,9 +71,10 @@ def test_merge_group_rejects_missing_dep() -> None:
 @pytest.mark.parametrize("bad", ["failure", "cancelled", "skipped"])
 def test_pull_request_rejects_bad_light_dep(bad: str) -> None:
     results = {job: "success" for job in LIGHT_REQUIRED}
-    results["contracts"] = bad
+    required_job = LIGHT_REQUIRED[0]
+    results[required_job] = bad
     failures = evaluate_gate("pull_request", results)
-    assert any(f"contracts: {bad}" in item for item in failures)
+    assert any(f"{required_job}: {bad}" in item for item in failures)
 
 
 def test_parse_results_round_trip() -> None:

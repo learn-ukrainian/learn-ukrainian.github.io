@@ -1,12 +1,12 @@
 name: CI
 
-# CI Gate reboot (#5762) made every required job unconditional after the prior
+# CI Gate reboot (#5762) made every event-required job unconditional after the prior
 # paths-filtered control plane caused four consecutive gate failures. #5744
 # restores the proven pytest topology: four deterministic,
 # duration-balanced file shards, and JUnit reconstruction inside CI Gate.
 #
 # Two-tier merge-queue cutover (#6943 stage 2): one workflow, two events.
-# pull_request tier (light): ruff + fastlane + contracts + frontend.
+# pull_request tier (light): ruff + fastlane + secret scan.
 # merge_group / push / schedule / workflow_dispatch tier (full): light PLUS
 # planner contract, four shards, and coverage floor. CI Gate remains the sole
 # required context, reports on all full-tier events, and fail-closes on
@@ -302,24 +302,29 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
-      - name: Install slim fastlane test dependencies
+      - name: Restore pip wheel cache
+        if: steps.plan.outputs.has_tests == 'true'
+        id: pip-wheel-cache
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
+
+      - name: Install fastlane test dependencies (lock minus live ML)
         if: steps.plan.outputs.has_tests == 'true'
         run: |
           set -euo pipefail
           python -m venv .venv
-          python scripts/ci/fastlane_requirements.py \
-            --tests ci-artifacts/fastlane-test-files.txt \
-            --base scripts/ci/requirements-fastlane.txt \
-            --lock requirements-lock.txt \
-            --output "${RUNNER_TEMP}/requirements-fastlane.txt"
-          # The checked-in profile plus the selected tests' reviewed direct
-          # imports resolve under the full lock as constraints; do not install
-          # every pinned package merely to run a small changed-test plan.
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          # Match the required Python-shard lock-minus-live-ML profile and
+          # cache; live-model packages remain post-failure escalations below.
           for attempt in 1 2 3; do
-            echo "fastlane slim pip install attempt ${attempt}/3"
+            echo "fastlane pip install attempt ${attempt}/3"
             if .venv/bin/python -m pip install --upgrade pip \
-              && .venv/bin/python -m pip install \
-                -c requirements-lock.txt -r "${RUNNER_TEMP}/requirements-fastlane.txt"; then
+              && .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt" \
+              && .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
               exit 0
             fi
             case "${attempt}" in
@@ -327,8 +332,15 @@ jobs:
               2) sleep 30 ;;
             esac
           done
-          echo "::error::Install slim fastlane test dependencies failed after 3 attempts" >&2
+          echo "::error::Install fastlane test dependencies failed after 3 attempts" >&2
           exit 1
+
+      - name: Save pip wheel cache
+        if: steps.plan.outputs.has_tests == 'true' && steps.pip-wheel-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
 
       - name: Run directly changed test modules
         if: steps.plan.outputs.has_tests == 'true'
@@ -417,6 +429,99 @@ jobs:
           fi
 
           exit "$status"
+
+  # ---------------------------------------------------------------------
+  # 2b. secret-scan — PR-required security checks. It has no venv/npm setup;
+  #    the stdlib-only range resolver and linter stay on every event.
+  # ---------------------------------------------------------------------
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Resolve secret scan commit scope (#7141)
+        id: secret-scan-scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha || '' }}
+          MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}
+          PUSH_BEFORE_SHA: ${{ github.event.before || '' }}
+          PUSH_AFTER_SHA: ${{ github.event.after || '' }}
+        run: |
+          set -euo pipefail
+          python3 scripts/ci/secret_scan_scope.py
+
+      - name: Gate scrubbed public identifiers
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          OPSEC_RANGE: ${{ steps.secret-scan-scope.outputs.opsec_range }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            python3 scripts/audit/lint_opsec_leaks.py \
+              "${PR_BASE_SHA}...${PR_HEAD_SHA}" --public-identifiers
+          elif [ -n "$OPSEC_RANGE" ]; then
+            python3 scripts/audit/lint_opsec_leaks.py \
+              --commit-range "$OPSEC_RANGE" --public-identifiers
+          else
+            python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
+          fi
+
+      # TruffleHog downloads its scanner binary on first use — retry the
+      # SHA-pinned action with the existing 3-attempt / backoff cadence.
+      - name: TruffleHog secret scan (attempt 1)
+        id: trufflehog1
+        continue-on-error: true
+        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
+        with:
+          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
+          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Sleep before TruffleHog retry 1
+        if: steps.trufflehog1.outcome == 'failure'
+        run: sleep 10
+
+      - name: TruffleHog secret scan (attempt 2)
+        id: trufflehog2
+        if: steps.trufflehog1.outcome == 'failure'
+        continue-on-error: true
+        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
+        with:
+          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
+          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Sleep before TruffleHog retry 2
+        if: steps.trufflehog1.outcome == 'failure' && steps.trufflehog2.outcome == 'failure'
+        run: sleep 30
+
+      - name: TruffleHog secret scan (attempt 3)
+        id: trufflehog3
+        if: steps.trufflehog1.outcome == 'failure' && steps.trufflehog2.outcome == 'failure'
+        continue-on-error: true
+        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
+        with:
+          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
+          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Fail if TruffleHog exhausted retries
+        if: >-
+          steps.trufflehog1.outcome == 'failure'
+          && steps.trufflehog2.outcome != 'success'
+          && steps.trufflehog3.outcome != 'success'
+        run: |
+          echo "::error::TruffleHog secret scan failed after 3 attempts" >&2
+          exit 1
 
   # ---------------------------------------------------------------------
   # 3. python — collect and execute four unconditional test partitions.
@@ -712,12 +817,13 @@ jobs:
           retention-days: 1
 
   # ---------------------------------------------------------------------
-  # 3. contracts — deterministic drift/artifact checks. Unconditional:
-  #    every check here diffs against origin/main or a committed file
-  #    itself, so an untouched input is a fast no-op, not a skip.
+  # 3. contracts — full-tier deterministic drift/artifact checks. Every check
+  #    here diffs against origin/main or a committed file itself, so an
+  #    untouched input is a fast no-op on merge_group/push/dispatch events.
   # ---------------------------------------------------------------------
   contracts:
     name: Contracts (schema, MDX, atlas, BIO)
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -829,35 +935,8 @@ jobs:
       - name: Check internal IDs are not published
         run: .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
 
-      - name: Resolve secret scan commit scope (#7141)
-        id: secret-scan-scope
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha || '' }}
-          MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}
-          PUSH_BEFORE_SHA: ${{ github.event.before || '' }}
-          PUSH_AFTER_SHA: ${{ github.event.after || '' }}
-        run: |
-          set -euo pipefail
-          .venv/bin/python scripts/ci/secret_scan_scope.py
-
-      - name: Gate scrubbed public identifiers and teacher-cloze answers
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          OPSEC_RANGE: ${{ steps.secret-scan-scope.outputs.opsec_range }}
-        run: |
-          if [ "$EVENT_NAME" = "pull_request" ]; then
-            .venv/bin/python scripts/audit/lint_opsec_leaks.py \
-              "${PR_BASE_SHA}...${PR_HEAD_SHA}" --public-identifiers
-          elif [ -n "$OPSEC_RANGE" ]; then
-            .venv/bin/python scripts/audit/lint_opsec_leaks.py \
-              --commit-range "$OPSEC_RANGE" --public-identifiers
-          else
-            .venv/bin/python scripts/audit/lint_opsec_leaks.py --public-identifiers
-          fi
-          .venv/bin/python scripts/audit/check_teacher_cloze_content.py
+      - name: Gate teacher-cloze answers
+        run: .venv/bin/python scripts/audit/check_teacher_cloze_content.py
 
       - name: Check locked modules are not published
         run: .venv/bin/python scripts/audit/check_locked_module_not_published.py --changed-vs-base origin/main
@@ -1073,59 +1152,6 @@ jobs:
           )
           PY
 
-      # Folded from standalone jobs (#4811): each extra always-on job competed for
-      # the account concurrent-runner pool and delayed CI Gate (last to start).
-      # TruffleHog downloads its scanner binary on first use — retry the SHA-pinned
-      # action with the same 3-attempt / backoff cadence as Stanza (#7002). A
-      # `uses:` step cannot sit inside a shell for-loop, so this is the
-      # fail-closed sibling of paths-filter-retry (continue-on-error per attempt,
-      # then hard-fail if all three miss).
-      - name: TruffleHog secret scan (attempt 1)
-        id: trufflehog1
-        continue-on-error: true
-        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
-        with:
-          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
-          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
-
-      - name: Sleep before TruffleHog retry 1
-        if: steps.trufflehog1.outcome == 'failure'
-        run: sleep 10
-
-      - name: TruffleHog secret scan (attempt 2)
-        id: trufflehog2
-        if: steps.trufflehog1.outcome == 'failure'
-        continue-on-error: true
-        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
-        with:
-          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
-          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
-
-      - name: Sleep before TruffleHog retry 2
-        if: steps.trufflehog1.outcome == 'failure' && steps.trufflehog2.outcome == 'failure'
-        run: sleep 30
-
-      - name: TruffleHog secret scan (attempt 3)
-        id: trufflehog3
-        if: steps.trufflehog1.outcome == 'failure' && steps.trufflehog2.outcome == 'failure'
-        continue-on-error: true
-        uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
-        with:
-          base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
-          head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
-
-      - name: Fail if TruffleHog exhausted retries
-        if: >-
-          steps.trufflehog1.outcome == 'failure'
-          && steps.trufflehog2.outcome != 'success'
-          && steps.trufflehog3.outcome != 'success'
-        run: |
-          echo "::error::TruffleHog secret scan failed after 3 attempts" >&2
-          exit 1
-
       - name: Reject negated closing references
         env:
           PR_BODY: ${{ github.event.pull_request.body || '' }}
@@ -1133,14 +1159,13 @@ jobs:
           printf '%s' "$PR_BODY" | .venv/bin/python scripts/audit/lint_pr_closing_references.py --stdin
 
   # ---------------------------------------------------------------------
-  # 4. frontend — build + vitest. Unconditional job start (#6917): never
-  #    job-level if:/skip. First real step cheap-exits 0 (success) when the
-  #    diff misses scripts/ci/frontend_change_denominator.json; remaining
-  #    steps are gated on steps.scope.outputs.run so CI Gate still sees
-  #    success, not skipped.
+  # 4. frontend — full-tier build + vitest. The job is absent from the PR
+  #    tier; on full events the first real step cheap-exits 0 when the diff
+  #    misses scripts/ci/frontend_change_denominator.json.
   # ---------------------------------------------------------------------
   frontend:
     name: Frontend (build + vitest)
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -1271,7 +1296,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: [ci-gate]
-    if: ${{ always() && needs.ci-gate.result == 'success' }}
+    if: ${{ always() && needs.ci-gate.result == 'success' && github.event_name != 'pull_request' }}
     permissions:
       contents: read
     steps:
@@ -1399,10 +1424,10 @@ jobs:
 
   # ---------------------------------------------------------------------
   # ---------------------------------------------------------------------
-  # 4. Coverage floor + CI Gate. Secret scanning and the PR-body reference
-  #    guard live inside `contracts` (#4811 slot cut). Every remaining
-  #    required job above is unconditional, so `skipped` is as much a
-  #    failure as `failure`/`cancelled`.
+  # 4. Coverage floor + CI Gate. Secret scanning is a separate required job;
+  #    the PR-body reference guard remains in full-tier `contracts`. Every
+  #    required job above is unconditional for its tier, so `skipped` is as
+  #    much a failure as `failure`/`cancelled` when it is required.
 
   # Duration data is intentionally published only after every matrix member of
   # a push to main succeeds. For mq_validated it republishes the proof run's
@@ -1588,6 +1613,7 @@ jobs:
     if: always() && !cancelled()
     needs:
       - ruff
+      - secret-scan
       - landing-class
       - pytest-plan
       - pytest-fastlane
@@ -1641,7 +1667,7 @@ jobs:
           # Explicit pairs — join(needs.*.result) loses job ids and cannot
           # distinguish expected PR-tier skips from unexpected ones.
           RESULTS: >-
-            ruff=${{ needs.ruff.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }},pytest-duration-publish=${{ needs.pytest-duration-publish.result }}
+            ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }},pytest-duration-publish=${{ needs.pytest-duration-publish.result }}
         run: |
           python scripts/ci/gate_required_results.py \
             --event "$EVENT_NAME" \
@@ -1661,7 +1687,7 @@ jobs:
           HEAD_REF: ${{ github.event.merge_group.head_ref }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           RESULTS: >-
-            ruff=${{ needs.ruff.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
+            ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
         run: |
           set +e
           pr_number=$(printf '%s' "$HEAD_REF" | grep -oE 'pr-[0-9]+' | grep -oE '[0-9]+' | head -n1)
