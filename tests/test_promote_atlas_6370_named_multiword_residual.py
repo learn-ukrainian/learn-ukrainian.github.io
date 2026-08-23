@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
+import requests  # noqa: F401  # Declares promote_grow_candidates's transitive enrich_manifest HTTP dependency to the CI fastlane.
 
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner

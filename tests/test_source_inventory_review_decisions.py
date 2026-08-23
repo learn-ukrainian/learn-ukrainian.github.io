@@ -6,6 +6,7 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+import requests  # noqa: F401  # Declares generate_source_inventory_review_candidates's transitive enrich_manifest HTTP dependency to the CI fastlane.
 import yaml
 
 from scripts.audit import source_inventory_review_decisions as decisions
