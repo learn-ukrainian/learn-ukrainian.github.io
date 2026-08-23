@@ -1336,14 +1336,20 @@ def test_materialization_validation_allows_only_the_reviewed_resume_root(tmp_pat
     source = _write_cycle005_fixture(tmp_path)
     package = tmp_path / "cycle007-package"
     materializer.materialize(source, package, fixture=True)
+    output = package / "evidence"
     resume_root_name = ".evidence.resume-v1"
-    (package / resume_root_name).mkdir()
+    resume_root = package / resume_root_name
+    assert compiler._allowed_materialization_runtime_entries(package, output, fixture=False) == ()
+    resume_root.mkdir()
+    allowed_entries = compiler._allowed_materialization_runtime_entries(package, output, fixture=False)
+    assert allowed_entries == (resume_root_name,)
+    assert compiler._allowed_materialization_runtime_entries(package, output, fixture=True) == ()
 
     packets, _, _, binding = compiler._validate_cycle007_materialization(
         package,
         source / "label-manifest.json",
         fixture=True,
-        allowed_top_level_entries=(resume_root_name,),
+        allowed_top_level_entries=allowed_entries,
     )
     assert len(packets) == 2
     assert binding["packet_count"] == 2
@@ -1354,7 +1360,40 @@ def test_materialization_validation_allows_only_the_reviewed_resume_root(tmp_pat
             package,
             source / "label-manifest.json",
             fixture=True,
-            allowed_top_level_entries=(resume_root_name,),
+            allowed_top_level_entries=allowed_entries,
+        )
+
+
+@pytest.mark.parametrize("entry_type", ("file", "symlink"))
+def test_materialization_runtime_entry_rejects_non_directory_resume_root(
+    tmp_path: Path,
+    entry_type: str,
+):
+    package = tmp_path / "cycle007-package"
+    package.mkdir()
+    output = package / "evidence"
+    resume_root = package / ".evidence.resume-v1"
+    if entry_type == "file":
+        resume_root.touch()
+    else:
+        resume_root.symlink_to(tmp_path / "outside")
+
+    with pytest.raises(contract.EvidenceContractError, match="manifest_binding_drift"):
+        compiler._allowed_materialization_runtime_entries(package, output, fixture=False)
+
+
+@pytest.mark.parametrize("name", (".", "..", "/absolute", "nested/entry"))
+def test_materialization_validation_rejects_invalid_runtime_entry_names(tmp_path: Path, name: str):
+    source = _write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    materializer.materialize(source, package, fixture=True)
+
+    with pytest.raises(contract.EvidenceContractError, match="manifest_binding_drift"):
+        compiler._validate_cycle007_materialization(
+            package,
+            source / "label-manifest.json",
+            fixture=True,
+            allowed_top_level_entries=(name,),
         )
 
 

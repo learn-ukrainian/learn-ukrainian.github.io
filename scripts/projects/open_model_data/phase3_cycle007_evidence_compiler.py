@@ -2361,6 +2361,8 @@ def _validate_cycle007_materialization(
         all(
             isinstance(name, str)
             and bool(name)
+            and name not in {".", ".."}
+            and not Path(name).is_absolute()
             and Path(name).name == name
             for name in allowed_top_level_entries
         ),
@@ -2703,6 +2705,32 @@ def _validate_cycle007_materialization(
     return packets, residual_flags, packet_bindings, source_package_binding
 
 
+def _allowed_materialization_runtime_entries(
+    package_dir: Path,
+    output_dir: Path,
+    *,
+    fixture: bool,
+) -> tuple[str, ...]:
+    if fixture:
+        return ()
+
+    from scripts.projects.open_model_data import phase3_cycle007_evidence_compile_throughput as throughput
+
+    resume_root = throughput.resume_root_for(output_dir)
+    contract.require(resume_root.parent == package_dir, "manifest_binding_drift")
+    if not os.path.lexists(resume_root):
+        return ()
+    try:
+        resume_info = resume_root.lstat()
+    except OSError as exc:
+        raise contract.EvidenceContractError("manifest_binding_drift") from exc
+    contract.require(
+        stat.S_ISDIR(resume_info.st_mode) and not stat.S_ISLNK(resume_info.st_mode),
+        "manifest_binding_drift",
+    )
+    return (resume_root.name,)
+
+
 def compile_cycle007_package(
     package_dir: Path,
     source_manifest_path: Path,
@@ -2730,20 +2758,15 @@ def compile_cycle007_package(
             "real package compile requires the reviewed streamable-HTTP MCP transport"
         )
 
-    allowed_top_level_entries: tuple[str, ...] = ()
-    if not fixture:
-        from scripts.projects.open_model_data import phase3_cycle007_evidence_compile_throughput as throughput
-
-        resume_root = throughput.resume_root_for(output_dir)
-        contract.require(resume_root.parent == package_dir, "manifest_binding_drift")
-        if os.path.lexists(resume_root):
-            allowed_top_level_entries = (resume_root.name,)
-
     packets, residual_flags, packet_bindings, source_package_binding = _validate_cycle007_materialization(
         package_dir,
         source_manifest_path,
         fixture=fixture,
-        allowed_top_level_entries=allowed_top_level_entries,
+        allowed_top_level_entries=_allowed_materialization_runtime_entries(
+            package_dir,
+            output_dir,
+            fixture=fixture,
+        ),
     )
 
     if fixture:
