@@ -312,9 +312,7 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         load_mod.clear_host_load_cache()
 
 
-def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(
-    tmp_path, monkeypatch
-) -> None:
+def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     fake = atlas_job.FakeHostAdapter()
@@ -356,9 +354,7 @@ def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(
 
 
 def test_parse_host_id_map_drops_non_opaque_values() -> None:
-    parsed = parse_host_id_map(
-        "job-box=host-job,teach-box=atlas-runner,bad=1.2.3.4,also=vps,ok=host-teacher"
-    )
+    parsed = parse_host_id_map("job-box=host-job,teach-box=atlas-runner,bad=1.2.3.4,also=vps,ok=host-teacher")
     assert parsed == {"job-box": "host-job", "ok": "host-teacher"}
     assert not _opaque_host_id("atlas-runner")
     assert not _opaque_host_id("hramatka")

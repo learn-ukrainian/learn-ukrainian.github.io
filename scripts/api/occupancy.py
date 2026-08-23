@@ -120,9 +120,8 @@ def _is_idle_or_empty(
     occupants: list[dict[str, str | None]],
     load_entry: dict[str, Any] | None = None,
 ) -> bool:
-    if occupants:
-        if not all(o.get("kind") == "observer" and o.get("status") == "idle" for o in occupants):
-            return False
+    if occupants and not all(o.get("kind") == "observer" and o.get("status") == "idle" for o in occupants):
+        return False
     if status == "unavailable":
         return True
     if load_entry:
