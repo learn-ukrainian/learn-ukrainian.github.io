@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import os
 import sqlite3
@@ -184,10 +185,13 @@ def _init_task_cache_db(db_path: Path) -> sqlite3.Connection | None:
                 effort TEXT,
                 cli_version TEXT,
                 substitution TEXT,
-                claimed_repo TEXT
+                claimed_repo TEXT,
+                run_nonce TEXT
             )
             """
         )
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("ALTER TABLE task_cache ADD COLUMN run_nonce TEXT")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
         conn.commit()
         return conn
@@ -202,13 +206,15 @@ def _load_task_cache_from_db(
     if not db_path.exists():
         return {}
     try:
-        conn = sqlite3.connect(str(db_path), timeout=2.0)
+        conn = _init_task_cache_db(db_path)
+        if conn is None:
+            return {}
         cursor = conn.cursor()
         cursor.execute(
             """
             SELECT path, mtime, task_id, status, derived_status, pid, alive,
                    started_at, duration_s, agent, model, effort, cli_version,
-                   substitution, claimed_repo
+                   substitution, claimed_repo, run_nonce
             FROM task_cache
             """
         )
@@ -234,6 +240,7 @@ def _load_task_cache_from_db(
                 cli_version,
                 subst_str,
                 claimed_repo,
+                run_nonce,
             ) = row
             subst = None
             if subst_str:
@@ -251,6 +258,7 @@ def _load_task_cache_from_db(
                 "status": raw_status,
                 "started_at": started_at,
                 "duration_s": duration_s,
+                "run_nonce": run_nonce,
             }
             cache[path_str] = (
                 float(mtime),
@@ -273,7 +281,7 @@ def _save_task_cache_entries(tasks_dir_str: str, records: list[tuple]) -> None:
             return
         conn.executemany(
             """
-            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             records,
         )
@@ -353,6 +361,7 @@ def _delegate_task_rows(
             task_id = str(task.get("task_id") or entry.name[:-5])
             raw_status = str(task.get("status") or "")
             subst = task.get("substitution")
+            run_nonce = task.get("run_nonce")
             summary = {
                 "task_id": task_id,
                 "agent": task.get("agent"),
@@ -363,6 +372,7 @@ def _delegate_task_rows(
                 "status": raw_status,
                 "started_at": task.get("started_at"),
                 "duration_s": task.get("duration_s"),
+                "run_nonce": run_nonce,
             }
             cached_tuple = (
                 mtime,
@@ -395,6 +405,7 @@ def _delegate_task_rows(
                     summary["cli_version"],
                     subst_str,
                     claimed_repo,
+                    run_nonce,
                 )
             )
 
@@ -458,11 +469,18 @@ def list_delegate_tasks(
     return {"total": len(rows), "tasks": rows[:task_limit]}
 
 
-def get_delegate_task_detail(task_id: str) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+def get_delegate_task_detail(
+    task_id: str,
+    *,
+    run_nonce: str | None = None,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None, bool]:
     path = _task_state_path(task_id)
     task = _read_task_state(path)
     if task is None:
-        return None, None
+        return None, None, False
+
+    if run_nonce is not None and task.get("run_nonce") != run_nonce:
+        return task, None, True
 
     _, alive = _derived_task_status(task)
     result_text = None
@@ -481,7 +499,7 @@ def get_delegate_task_detail(task_id: str) -> tuple[dict[str, Any] | None, dict[
         "result": result_text,
         "result_truncated": truncated,
         "alive": alive,
-    }
+    }, False
 
 
 def active_delegate_count() -> int:
@@ -517,8 +535,20 @@ async def delegate_active():
 
 
 @router.get("/tasks/{task_id}")
-async def delegate_task_detail(task_id: str):
-    task, response = await asyncio.to_thread(get_delegate_task_detail, task_id)
+async def delegate_task_detail(
+    task_id: str,
+    run_nonce: str | None = Query(None),
+):
+    task, response, nonce_mismatch = await asyncio.to_thread(
+        get_delegate_task_detail,
+        task_id,
+        run_nonce=run_nonce,
+    )
+    if nonce_mismatch:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Task run_nonce mismatch: expected {run_nonce!r}, got {task.get('run_nonce')!r}",
+        )
     if task is None or response is None:
         raise HTTPException(status_code=404, detail=f"Task not found: {task_id}")
     return response

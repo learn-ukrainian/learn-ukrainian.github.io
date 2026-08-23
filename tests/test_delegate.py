@@ -6038,7 +6038,7 @@ def test_ensure_worktree_refuses_stale_base_when_fetch_fails(tmp_tasks_dir, tmp_
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    with pytest.raises(RuntimeError, match="git fetch origin main"):
+    with pytest.raises(RuntimeError, match=r"git fetch origin \+refs/heads/main:refs/remotes/origin/main"):
         delegate._ensure_worktree(
             agent="codex",
             task_id="1476-offline",
@@ -8817,3 +8817,121 @@ def test_dispatch_reaps_lease_on_pre_spawn_error(tmp_tasks_dir, tmp_path, monkey
 
     lease_root = tmp_path / "learn-ukrainian" / "live-crash"
     assert not lease_root.exists()
+
+
+# ---------------------------------------------------------------------------
+# #7168: Cross-host task-state split-brain detection via run_nonce
+# ---------------------------------------------------------------------------
+
+
+def test_split_brain_stale_terminal_record_refused_by_wait_and_status(tmp_tasks_dir, capsys):
+    """#7168: Settle-wait and status readers must detect and refuse stale prior-round records."""
+    tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
+    stale_file = tmp_tasks_dir / "task-split-7168.json"
+    stale_record = {
+        "task_id": "task-split-7168",
+        "run_nonce": "round-1-stale-nonce",
+        "status": "done",
+        "agent": "codex",
+        "started_at": "2026-08-20T10:00:00Z",
+        "finished_at": "2026-08-20T10:05:00Z",
+        "duration_s": 300.0,
+    }
+    stale_file.write_text(json.dumps(stale_record), encoding="utf-8")
+
+    # 1. Reader with expected run_nonce for round 2 queries the stale host state via status
+    status_args = delegate.build_parser().parse_args(
+        ["status", "task-split-7168", "--run-nonce", "round-2-live-nonce"]
+    )
+    rc_status = delegate.cmd_status(status_args)
+    assert rc_status == 1
+    err = capsys.readouterr().err
+    assert "stale_run_nonce" in err
+
+    # 2. Settle-watcher with expected run_nonce for round 2 polls the stale host state via wait
+    wait_args = delegate.build_parser().parse_args(
+        [
+            "wait",
+            "task-split-7168",
+            "--run-nonce",
+            "round-2-live-nonce",
+            "--timeout",
+            "0.5",
+            "--poll-interval",
+            "0.5",
+        ]
+    )
+    rc_wait = delegate.cmd_wait(wait_args)
+    # Must refuse the stale "done" and exit 1 (stale nonce timeout), NOT 0 (done)
+    assert rc_wait == 1
+    err = capsys.readouterr().err
+    assert "stale_run_nonce" in err
+
+    # 3. When the live host's terminal record with round 2 nonce is polled, wait reports LIVE state
+    live_record = {
+        "task_id": "task-split-7168",
+        "run_nonce": "round-2-live-nonce",
+        "status": "done",
+        "agent": "codex",
+        "started_at": "2026-08-23T15:00:00Z",
+        "finished_at": "2026-08-23T15:02:00Z",
+        "duration_s": 120.0,
+    }
+    stale_file.write_text(json.dumps(live_record), encoding="utf-8")
+
+    rc_live_wait = delegate.cmd_wait(wait_args)
+    assert rc_live_wait == 0
+    out = capsys.readouterr().out
+    data = json.loads(out)
+    assert data["status"] == "done"
+    assert data["run_nonce"] == "round-2-live-nonce"
+    assert data["duration_s"] == 120.0
+
+
+def test_split_brain_cancel_refuses_stale_record(tmp_tasks_dir, capsys):
+    """#7168: Cancel must refuse to signal a worker if run_nonce does not match."""
+    tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
+    state_file = tmp_tasks_dir / "task-cancel-7168.json"
+    state_file.write_text(
+        json.dumps(
+            {
+                "task_id": "task-cancel-7168",
+                "run_nonce": "round-1-nonce",
+                "status": "running",
+                "pid": 99999,
+            }
+        ),
+        encoding="utf-8",
+    )
+    cancel_args = delegate.build_parser().parse_args(
+        ["cancel", "task-cancel-7168", "--run-nonce", "round-2-nonce"]
+    )
+    rc = delegate.cmd_cancel(cancel_args)
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "run_nonce mismatch" in err
+
+
+def test_dispatch_generates_and_persists_run_nonce(tmp_tasks_dir, monkeypatch):
+    """#7168: Dispatch automatically generates a run_nonce if not provided."""
+    tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "nonce-gen-task",
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test prompt",
+            "--dry-run",
+        ]
+    )
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    state = json.loads((tmp_tasks_dir / "nonce-gen-task.json").read_text(encoding="utf-8"))
+    assert "run_nonce" in state
+    assert len(state["run_nonce"]) == 16
+

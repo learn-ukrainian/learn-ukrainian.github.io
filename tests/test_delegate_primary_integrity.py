@@ -196,7 +196,7 @@ def test_ensure_worktree_fetch_failure_is_actionable_error(tmp_tasks_dir, tmp_pa
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    with pytest.raises(RuntimeError, match="git fetch origin main"):
+    with pytest.raises(RuntimeError, match=r"git fetch origin \+refs/heads/main:refs/remotes/origin/main"):
         delegate._ensure_worktree(
             agent="codex",
             task_id="5803-offline",

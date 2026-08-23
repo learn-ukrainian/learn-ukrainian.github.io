@@ -477,6 +477,7 @@ def forward_dispatch(
     argv: list[str],
     initiator: str | None = None,
     initiator_source: str | None = None,
+    run_nonce: str | None = None,
 ) -> int:
     """SSH a notebook ``delegate.py dispatch`` onto the chosen VPS and spawn there.
 
@@ -499,19 +500,30 @@ def forward_dispatch(
         idx = next_idx if prompt_val is not None else idx + 1
     rest, payloads = materialize_local_dispatch_argv(payload, stdin_body=stdin_body)
     has_initiator = False
+    has_run_nonce = False
     scan = 0
     while scan < len(rest):
         value, next_scan = _flag_value(rest, scan, "--initiator")
         if value is not None:
             has_initiator = True
-            break
-        scan = next_scan if value is not None else scan + 1
+            scan = next_scan
+            continue
+        value, next_scan = _flag_value(rest, scan, "--run-nonce")
+        if value is not None:
+            has_run_nonce = True
+            scan = next_scan
+            continue
+        scan += 1
     if initiator and not has_initiator:
         rest.extend(["--initiator", initiator])
+    if run_nonce and not has_run_nonce:
+        rest.extend(["--run-nonce", run_nonce])
     extra_exports = [f"export {ENV_ALLOW_NOTEBOOK}=1"]
     if initiator and initiator_source and initiator_source != "unknown":
         extra_exports.append(f"export {ENV_RUNTIME_INITIATOR}={shlex.quote(initiator)}")
         extra_exports.append(f"export {ENV_RUNTIME_INITIATOR_SOURCE}={shlex.quote(initiator_source)}")
+    if run_nonce:
+        extra_exports.append(f"export LU_RUNTIME_RUN_NONCE={shlex.quote(run_nonce)}")
     remote_script = _build_remote_dispatch_script(
         argv=rest,
         remote_repo=repo,
@@ -620,6 +632,7 @@ def main(argv: list[str] | None = None) -> int:
 
             explicit = None
             task_id = None
+            run_nonce = None
             idx = 0
             while idx < len(dispatch_argv):
                 value, nxt = _flag_value(dispatch_argv, idx, "--initiator")
@@ -632,6 +645,11 @@ def main(argv: list[str] | None = None) -> int:
                     task_id = value
                     idx = nxt
                     continue
+                value, nxt = _flag_value(dispatch_argv, idx, "--run-nonce")
+                if value is not None:
+                    run_nonce = value
+                    idx = nxt
+                    continue
                 idx += 1
             attribution = resolve_invocation_attribution(explicit=explicit, task_id=task_id)
             try:
@@ -640,6 +658,7 @@ def main(argv: list[str] | None = None) -> int:
                     argv=dispatch_argv,
                     initiator=attribution.initiator,
                     initiator_source=attribution.source,
+                    run_nonce=run_nonce,
                 )
             except SshTransportError as exc:
                 print(f"error: {exc}", file=sys.stderr)
