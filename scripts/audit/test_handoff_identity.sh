@@ -56,6 +56,8 @@ eq "$(handoff_epic_from_argv)" "" "empty argv (epic)"
 eq "$(launcher_selector_lane infra.fleet-comms)" "infra" "fleet-comms resolves to infra"
 eq "$(launcher_selector_lane devops)" "devops" "devops resolves to dedicated lane"
 eq "$(launcher_selector_stream infra.devops)" "epic:5703" "devops resolves to dedicated stream"
+eq "$(launcher_selector_lane monitor)" "monitor" "monitor resolves to dedicated lane"
+eq "$(launcher_selector_stream infra.monitor)" "epic:7177" "monitor resolves to dedicated stream"
 eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
 eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
 # corpus is a documented, currently-recommended driver epic
@@ -71,6 +73,8 @@ eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → 
 eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
 eq "$(handoff_identity_for_epic infra.devops)" "claude-devops" "dot devops → claude-devops"
+eq "$(handoff_identity_for_epic monitor)" "claude-monitor" "epic monitor → claude-monitor"
+eq "$(handoff_identity_for_epic infra.monitor)" "claude-monitor" "dot monitor → claude-monitor"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
 # Codex uses provider-specific per-epic slots; DevOps is independent from Infra.
@@ -79,6 +83,8 @@ eq "$(handoff_identity_for_codex_epic hramatka)" "codex-hramatka" "Codex hramatk
 eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness → codex-infra"
 eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
 eq "$(handoff_identity_for_codex_epic infra.devops)" "codex-devops" "Codex dot devops → codex-devops"
+eq "$(handoff_identity_for_codex_epic monitor)" "codex-monitor" "Codex epic monitor → codex-monitor"
+eq "$(handoff_identity_for_codex_epic infra.monitor)" "codex-monitor" "Codex dot monitor → codex-monitor"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
 # Gemini uses provider-specific per-epic slots; DevOps is independent from Infra.
@@ -87,6 +93,8 @@ eq "$(handoff_identity_for_gemini_epic hramatka)" "gemini-hramatka" "Gemini hram
 eq "$(handoff_identity_for_gemini_epic harness)" "gemini-infra" "Gemini harness → gemini-infra"
 eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → gemini-infra alias"
 eq "$(handoff_identity_for_gemini_epic infra.devops)" "gemini-devops" "Gemini dot devops → gemini-devops"
+eq "$(handoff_identity_for_gemini_epic monitor)" "gemini-monitor" "Gemini epic monitor → gemini-monitor"
+eq "$(handoff_identity_for_gemini_epic infra.monitor)" "gemini-monitor" "Gemini dot monitor → gemini-monitor"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
 
 

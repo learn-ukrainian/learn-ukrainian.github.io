@@ -25,6 +25,9 @@ streams:
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
     epics: [5703]
+  monitor:
+    title: "Monitor API + UI — fleet & host observability"
+    epics: [7177]
   eval-harness:
     title: "Internal UA quality machinery — QG gates, validators, product adapters"
     epics: [4913]
