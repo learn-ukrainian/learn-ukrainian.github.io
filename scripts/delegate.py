@@ -172,6 +172,11 @@ _RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
 )
 _RUNTIME_TMP_ORPHAN_MAX_AGE_S = 7 * 24 * 60 * 60
 _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT = 10
+_RUNTIME_TMP_TASK_ID_MARKER = ".delegate-task-id"
+_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX = ".snapshots"
+# Task records must stay small enough for frequent reads during dispatch sweeps.
+# Whole-checkout read-only snapshots live in ``<task>.snapshots/`` sidecars (#7203).
+_READ_ONLY_CHECKOUT_RECORD_BYTE_BUDGET = 256 * 1024
 _FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
 # Single source for dispatchable agents: argparse choices AND the hard-sub
 # validation in _resolve_agent_with_budget_guard (a yaml typo must never
@@ -325,6 +330,57 @@ def _archived_artifact_path(path: Path, stamp: str) -> Path:
     return dest
 
 
+def _read_only_snapshot_dir_for(task_id: str) -> Path:
+    state_path = _state_path(task_id)
+    return state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
+
+
+def _read_only_snapshot_sidecar_path(task_id: str, phase: str) -> Path:
+    return _read_only_snapshot_dir_for(task_id) / f"read_only_checkout_{phase}.json"
+
+
+def _write_read_only_snapshot_sidecar(
+    task_id: str,
+    phase: str,
+    snapshot: dict[str, str] | None,
+) -> None:
+    """Persist a read-only checkout snapshot beside the task record."""
+    path = _read_only_snapshot_sidecar_path(task_id, phase)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
+    tmp.write_text(
+        json.dumps(snapshot if snapshot is not None else {}, separators=(",", ":")),
+        encoding="utf-8",
+    )
+    os.replace(tmp, path)
+
+
+def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
+    path = _read_only_snapshot_sidecar_path(task_id, phase)
+    if not path.exists():
+        return None
+    try:
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return loaded if isinstance(loaded, dict) else None
+
+
+def _hydrate_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, Any]:
+    """Load sidecar snapshots into the in-memory state dict when present."""
+    task_id = state.get("task_id")
+    if not isinstance(task_id, str):
+        return state
+    for phase in ("pre", "post"):
+        key = f"read_only_checkout_{phase}"
+        if key in state and isinstance(state[key], dict):
+            continue
+        sidecar = _load_read_only_snapshot_sidecar(task_id, phase)
+        if sidecar is not None:
+            state[key] = sidecar
+    return state
+
+
 def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
     """Move the prior record and result aside. Never overwrite an archive."""
     stamp = stamp or _archive_stamp()
@@ -334,6 +390,13 @@ def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[P
             continue
         dest = _archived_artifact_path(path, stamp)
         os.replace(path, dest)
+        archived.append(dest)
+    snapshot_dir = _read_only_snapshot_dir_for(task_id)
+    if snapshot_dir.is_dir():
+        dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
+        if dest.exists():
+            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
+        os.replace(snapshot_dir, dest)
         archived.append(dest)
     return archived
 
@@ -431,6 +494,19 @@ def _sigterm_deferred():
             signal.signal(signal.SIGTERM, previous)
 
 
+def _detach_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, Any]:
+    """Drop hydrated snapshot dicts before persisting; sidecars are canonical."""
+    task_id = state.get("task_id")
+    if not isinstance(task_id, str):
+        return state
+    detached = dict(state)
+    for phase in ("pre", "post"):
+        key = f"read_only_checkout_{phase}"
+        if key in detached and _read_only_snapshot_sidecar_path(task_id, phase).exists():
+            detached.pop(key, None)
+    return detached
+
+
 def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     """Write state JSON atomically via write-rename.
 
@@ -447,6 +523,7 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     writer that's still writing to it, causing FileNotFoundError on
     the second os.replace. Fixed after Gemini review 2026-04-10.
     """
+    state = _detach_read_only_checkout_snapshots(state)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
     tmp.write_text(json.dumps(state, indent=2, default=str))
@@ -479,14 +556,23 @@ def _append_dispatch_event(event: str, **fields: Any) -> None:
         )
 
 
-def _read_state(path: Path) -> dict[str, Any] | None:
-    """Read a state file; return None if missing or corrupted."""
+def _read_state_json(path: Path) -> dict[str, Any] | None:
+    """Read a state file without hydrating read-only snapshot sidecars."""
     if not path.exists():
         return None
     try:
-        return json.loads(path.read_text())
+        loaded = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
+    return loaded if isinstance(loaded, dict) else None
+
+
+def _read_state(path: Path) -> dict[str, Any] | None:
+    """Read a state file; return None if missing or corrupted."""
+    state = _read_state_json(path)
+    if state is None:
+        return None
+    return _hydrate_read_only_checkout_snapshots(state)
 
 
 def _pid_alive(pid: int) -> bool:
@@ -638,7 +724,29 @@ def _create_runtime_tmp_lease(task_id: str) -> tuple[Path, Path]:
         raise RuntimeError(
             f"runtime tmp lease is not a direct child of its namespace: {lease_root}",
         )
+    _write_runtime_tmp_task_id_marker(resolved_lease, task_id)
     return resolved_lease, resolved_namespace
+
+
+def _runtime_tmp_task_id_marker_path(lease_root: Path) -> Path:
+    return lease_root / _RUNTIME_TMP_TASK_ID_MARKER
+
+
+def _write_runtime_tmp_task_id_marker(lease_root: Path, task_id: str) -> None:
+    """Persist the owning task id so orphan sweeps never scan task records."""
+    marker = _runtime_tmp_task_id_marker_path(lease_root)
+    tmp = marker.with_suffix(f".tmp.{os.getpid()}")
+    tmp.write_text(task_id, encoding="utf-8")
+    os.replace(tmp, marker)
+
+
+def _read_runtime_tmp_task_id_marker(lease_root: Path) -> str | None:
+    marker = _runtime_tmp_task_id_marker_path(lease_root)
+    try:
+        task_id = marker.read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    return task_id or None
 
 
 def _runtime_tmp_lease_bytes(lease_root: Path) -> int:
@@ -758,20 +866,38 @@ def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
     raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
 
 
-def _runtime_tmp_state_for_lease(lease_name: str) -> dict[str, Any] | None:
-    """Find the task state that owns a deterministic runtime-lease name."""
+def _build_runtime_tmp_legacy_lease_index() -> dict[str, dict[str, Any]]:
+    """Map lease names to task state for dirs that predate the task-id marker."""
+    index: dict[str, dict[str, Any]] = {}
     try:
         state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
     except OSError:
-        return None
+        return index
     for state_path in state_files:
         if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
             continue
-        state = _read_state(state_path)
-        task_id = state.get("task_id") if isinstance(state, dict) else None
-        if isinstance(task_id, str) and _runtime_tmp_lease_name(task_id) == lease_name:
-            return state
-    return None
+        state = _read_state_json(state_path)
+        if not isinstance(state, dict):
+            continue
+        task_id = state.get("task_id")
+        if isinstance(task_id, str):
+            index[_runtime_tmp_lease_name(task_id)] = state
+    return index
+
+
+def _runtime_tmp_state_for_lease(
+    lease_name: str,
+    lease_root: Path,
+    *,
+    legacy_index: dict[str, dict[str, Any]] | None,
+) -> dict[str, Any] | None:
+    """Find the task state that owns a runtime-lease directory."""
+    task_id = _read_runtime_tmp_task_id_marker(lease_root)
+    if task_id is not None:
+        return _read_state_json(_state_path(task_id))
+    if legacy_index is None:
+        return None
+    return legacy_index.get(lease_name)
 
 
 def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
@@ -814,6 +940,7 @@ def _sweep_runtime_tmp_orphans(
         seen_namespaces.add(namespace)
         namespaces.append(namespace)
     cutoff = (time.time() if now is None else now) - _RUNTIME_TMP_ORPHAN_MAX_AGE_S
+    legacy_index: dict[str, dict[str, Any]] | None = None
 
     for namespace in namespaces:
         try:
@@ -847,7 +974,14 @@ def _sweep_runtime_tmp_orphans(
             if stat.S_ISLNK(lease_stat.st_mode) or not stat.S_ISDIR(lease_stat.st_mode):
                 continue
 
-            state = _runtime_tmp_state_for_lease(lease.name)
+            task_id = _read_runtime_tmp_task_id_marker(lease)
+            if task_id is None and legacy_index is None:
+                legacy_index = _build_runtime_tmp_legacy_lease_index()
+            state = _runtime_tmp_state_for_lease(
+                lease.name,
+                lease,
+                legacy_index=legacy_index,
+            )
             if state is not None:
                 status = state.get("status")
                 if status not in _RUNTIME_TMP_TERMINAL_STATUSES or _runtime_tmp_state_has_live_pid(state):
@@ -2580,6 +2714,19 @@ def _is_read_only_runtime_telemetry_path(path: str) -> bool:
     )
 
 
+def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
+    """Return whether *path* is a delegate-owned read-only snapshot sidecar."""
+    normalized = _normalize_read_only_relpath(path)
+    if not normalized.endswith(".json"):
+        return False
+    parts = normalized.split("/")
+    if len(parts) < 2:
+        return False
+    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith(
+        "read_only_checkout_"
+    )
+
+
 def _is_read_only_runtime_state_path(path: str) -> bool:
     """Return whether a path is harness/tooling runtime state, not repo content.
 
@@ -2587,6 +2734,8 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     sidecars that false-failed successful read-only tasks (#6860). Task-authored
     ignored leaks such as ``.cache/`` stay visible to the guard (#4840).
     """
+    if _is_read_only_delegate_snapshot_sidecar_path(path):
+        return True
     if _is_read_only_runtime_telemetry_path(path):
         return True
     normalized = _normalize_read_only_relpath(path)
@@ -4055,7 +4204,7 @@ def _run_worker(
     read_only_mutation_paths: list[str] = []
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
-        state["read_only_checkout_pre"] = read_only_checkout_pre
+        _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
         state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
         _write_state_atomic(state_path, state)
     start = time.monotonic()
@@ -4246,7 +4395,7 @@ def _run_worker(
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
-            final_state["read_only_checkout_post"] = read_only_checkout_post
+            _write_read_only_snapshot_sidecar(task_id, "post", read_only_checkout_post)
             if read_only_snapshot_error is None and post_snapshot_error is not None:
                 read_only_snapshot_error = post_snapshot_error
             final_state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
