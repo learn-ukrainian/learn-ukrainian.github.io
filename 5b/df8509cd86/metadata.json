@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5bdf8509cd86",
+  "strategy": "manual-commit",
+  "branch": "agy/ci-timings-7174",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/SCRIPTS.md",
+    "scripts/ci/ci_timings.py",
+    "tests/fixtures/ci_timings/sample_ci_runs.json",
+    "tests/test_ci_timings.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/5b/df8509cd86/0/metadata.json",
+      "transcript": "/5b/df8509cd86/0/full.jsonl",
+      "compact_transcript": "/5b/df8509cd86/0/transcript.jsonl",
+      "content_hash": "/5b/df8509cd86/0/content_hash.txt",
+      "prompt": "/5b/df8509cd86/0/prompt.txt"
+    }
+  ]
+}
