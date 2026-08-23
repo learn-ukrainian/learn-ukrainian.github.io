@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.ci import gate_required_results as gate
 from scripts.ci.queue_starvation_recovery import (
     TAIL_JOB_NAMES,
     decide_queue_starvation_rerun,
@@ -46,17 +47,11 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     )
     assert "trufflesecurity/trufflehog@" in contracts_steps
     assert "lint_pr_closing_references.py" in contracts_steps
-    assert set(jobs["ci-gate"]["needs"]) == {
-        "ruff",
-        "landing-class",
-        "pytest-plan",
-        "pytest-fastlane",
-        "python",
-        "contracts",
-        "frontend",
-        "coverage-floor",
-        "pytest-duration-publish",
-    }
+    # Rule of thumb: assert an invariant, not a snapshot; if changing X
+    # legitimately requires editing >1 test, the test is a snapshot.
+    # ci-gate.needs is pinned exactly once — by the canonical set the gate
+    # evaluator itself exports (gate_required_results.GATE_NEEDS_JOBS).
+    assert set(jobs["ci-gate"]["needs"]) == set(gate.GATE_NEEDS_JOBS)
     assert jobs["pytest-plan"].get("if") == "github.event_name != 'pull_request'"
     assert jobs["python"].get("if") == "github.event_name != 'pull_request'"
     assert jobs["python"]["needs"] == ["landing-class"]
