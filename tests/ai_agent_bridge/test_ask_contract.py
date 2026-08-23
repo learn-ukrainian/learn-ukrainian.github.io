@@ -492,23 +492,40 @@ def test_non_evidentiary_review_ask_terminalizes_through_real_authority_store(
         ("ask-claude", "_handle_ask_claude", ["--review"]),
     ],
 )
-def test_review_intent_reaches_the_compat_shim_from_either_spelling(
+def test_review_intent_never_reaches_the_toolless_acp_shim(
     command: str, handler_name: str, extra_argv: list[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """#6805: drivers pass --type review; the validation must key off it."""
+    """#7155: review intent must reach a reviewer WITH tools, never ACP.
+
+    ACP's `--deny-all --no-fs --no-terminal` transport cannot run `gh`
+    (Terra ABSTAIN on #7155). Both spellings of review intent — `--type
+    review` and `--review` — must route to headless dispatch instead of
+    `run_compat_ask`.
+    """
+
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("run_compat_ask must not be called for review intent (#7155)")
+
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", fail_if_called)
+
     captured: dict[str, object] = {}
-    monkeypatch.setattr(
-        _acp_compat,
-        "run_compat_ask",
-        lambda *args, **kwargs: captured.update(kwargs) or SimpleNamespace(ok=True),
-    )
+    from scripts.ai_agent_bridge import _dispatch_wrappers
+
+    def fake_dispatch(agent, content, **kwargs):
+        captured["agent"] = agent
+        captured["content"] = content
+        captured.update(kwargs)
+        return {"ok": True, "status": "done", "response": "VERDICT: APPROVED\nEvidence: reviewed diff."}
+
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", fake_dispatch)
+
     args = _cli._build_parser().parse_args(
         [command, "question", "--task-id", "review-intent", "--from", "kimi", *extra_argv]
     )
 
     getattr(_cli, handler_name)(args)
 
-    assert captured["review"] is True
+    assert captured["agent"] == command.removeprefix("ask-")
 
 
 @pytest.mark.parametrize(("command", "handler_name", "target"), RETIRED_ASK_SEATS)
