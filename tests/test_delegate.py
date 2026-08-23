@@ -3006,9 +3006,8 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["last_error"] is None
     assert sibling.exists()
     post = state["read_only_checkout_post"]
-    assert any(
-        delegate._read_only_dispatch_sandbox_root(path) == _SIBLING_DISPATCH_SANDBOX
-        for path in post
+    assert not any(
+        delegate._is_read_only_snapshot_excluded_path(path) for path in post
     )
 
 
