@@ -72,6 +72,7 @@ from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
 from .attribution import InvocationAttribution, resolve_invocation_attribution
+from .binary_resolve import augment_path_for_login_bins, resolve_agent_binary
 from .env_sanitize import build_agent_env
 from .errors import (
     AgentRuntimeError,
@@ -566,6 +567,27 @@ def _spawn_subprocess(
             stacklevel=2,
         )
         return _spawn_pipe_subprocess(cmd, cwd=cwd, env=env, stdin=stdin)
+
+
+def _prepare_spawn_command(
+    cmd: Sequence[str],
+    env: Mapping[str, str],
+) -> tuple[list[str], dict[str, str]]:
+    """Resolve argv[0] under login PATH dirs and augment child PATH when needed."""
+    prepared_cmd = list(cmd)
+    prepared_env = dict(env)
+    if not prepared_cmd:
+        return prepared_cmd, prepared_env
+
+    original_path = prepared_env.get("PATH", "")
+    augmented_path = augment_path_for_login_bins(original_path)
+    if augmented_path != original_path:
+        prepared_env["PATH"] = augmented_path
+
+    resolved = resolve_agent_binary(prepared_cmd[0], path=augmented_path)
+    if resolved is not None:
+        prepared_cmd[0] = resolved
+    return prepared_cmd, prepared_env
 
 
 def _normalize_mcp_url(url: str | None) -> str:
@@ -1381,6 +1403,7 @@ def _execute_invocation_plan(
                     )
                 else:
                     stdin_handle, stdin_temp_path = _prepare_stdin_handle(plan.stdin_payload)
+            review_cmd, env = _prepare_spawn_command(review_cmd, env)
             proc, stdout_master_fd, stderr_master_fd = _spawn_subprocess(
                 review_cmd,
                 cwd=review_cwd,
