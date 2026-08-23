@@ -324,6 +324,13 @@ class CodexAdapter:
             cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
+        # Dispatched workers must have NO write-capable GitHub connector tools
+        # (#7181). Disabling the `apps` feature suppresses `codex_apps` MCP
+        # connectors (including `github.create_commit`, `github.update_ref`,
+        # `github.create_pr`) across all runtime invocations (fresh & resume).
+        # ORDER MATTERS: must come after `_mode_flags` in case any mode
+        # enables toggles.
+        cmd.extend(["--disable", "apps"])
         cmd.extend(self._tool_config_flags(tool_config))
         if has_session_to_resume:
             cmd.append(session_id)
@@ -401,7 +408,7 @@ class CodexAdapter:
         disable_features = tool_config.get("disable_features")
         if isinstance(disable_features, (list, tuple)):
             for feature in disable_features:
-                if isinstance(feature, str) and feature:
+                if isinstance(feature, str) and feature and feature != "apps":
                     flags.extend(["--disable", feature])
 
         output_schema_path = tool_config.get("output_schema_path")

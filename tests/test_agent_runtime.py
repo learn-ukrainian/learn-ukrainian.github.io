@@ -785,9 +785,9 @@ def test_codex_adapter_disable_features_emits_flags(tmp_path):
             "disable_features": ["shell_tool"],
         },
     )
-    assert "--disable" in plan.cmd
-    disable_idx = plan.cmd.index("--disable")
-    assert plan.cmd[disable_idx + 1] == "shell_tool"
+    disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
+    assert "apps" in disable_pairs
+    assert "shell_tool" in disable_pairs
     # Both flags coexist with MCP override.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
@@ -808,7 +808,78 @@ def test_codex_adapter_disable_features_multiple(tmp_path):
         },
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["shell_tool", "browser_use"]
+    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
+
+
+@pytest.mark.parametrize(
+    ("mode", "session_id", "tool_config"),
+    [
+        ("workspace-write", None, None),
+        ("read-only", None, None),
+        ("workspace-write", "prior-session-123", None),
+        ("read-only", "prior-session-123", None),
+        ("workspace-write", None, {"disable_features": ["apps"]}),
+        ("workspace-write", None, {"disable_features": ["shell_tool", "apps"]}),
+    ],
+)
+def test_codex_adapter_disables_apps_connector_across_all_invocations(tmp_path, mode, session_id, tool_config):
+    """Dispatched workers must have NO write-capable GitHub connector tools (#7181).
+
+    --disable apps must be present across fresh, read-only, and resumed
+    invocations, and must not duplicate when disable_features explicitly lists apps.
+    """
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode=mode,
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=session_id,
+        tool_config=tool_config,
+    )
+    disable_flags = [plan.cmd[i + 1] for i, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
+    assert "apps" in disable_flags
+    assert disable_flags.count("apps") == 1
+    if "--enable" in plan.cmd:
+        enable_indices = [i for i, token in enumerate(plan.cmd) if token == "--enable"]
+        apps_indices = [i for i, token in enumerate(plan.cmd[:-1]) if token == "--disable" and plan.cmd[i + 1] == "apps"]
+        assert apps_indices[0] > max(enable_indices)
+
+
+def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
+    """Dispatched review isolation workers must also disable apps connector (#7181)."""
+    from scripts.review.isolation import review_isolation_tool_config
+    from tests.test_review_isolation import _private_review_roots
+
+    fake = tmp_path / "codex"
+    fake.write_text("#!/bin/sh\n", encoding="utf-8")
+    fake.chmod(0o755)
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    write_root, exec_root = _private_review_roots(tmp_path, "codex-test-7181")
+
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="review prompt",
+        mode="read-only",
+        cwd=snapshot,
+        model=None,
+        task_id="review-7181-test",
+        session_id=None,
+        tool_config={
+            **review_isolation_tool_config("codex"),
+            "review_engine_binary": str(fake.resolve()),
+            "review_snapshot_root": str(snapshot),
+            "review_reject_root": str(snapshot),
+            "review_reject_roots": [str(snapshot)],
+            "review_write_root": str(write_root),
+            "review_exec_root": str(exec_root),
+        },
+    )
+    disable_flags = [plan.cmd[i + 1] for i, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
+    assert "apps" in disable_flags
+    assert disable_flags.count("apps") == 1
 
 
 def test_codex_adapter_binds_valid_output_schema(tmp_path):
@@ -908,7 +979,7 @@ def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):
         },
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["shell_tool", "browser_use"]
+    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
 
 
 def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
