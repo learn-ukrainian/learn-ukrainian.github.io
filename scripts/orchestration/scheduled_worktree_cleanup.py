@@ -29,7 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.hygiene import home_session_retention_check
+from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.orchestration import reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
@@ -363,6 +363,18 @@ def cleanup_stale_origin_branches(
             branch=branch,
             expected_head=head_sha,
         )
+        # Deleting the origin head without dropping the matching fetch
+        # refspec is the #7121 landmine: the next bare fetch hard-fails.
+        refspec_dropped = False
+        if error is None or error == "origin HEAD disappeared during cleanup":
+            try:
+                refspec_dropped = fetch_refspecs.drop_fetch_refspec_for_branch(
+                    repo_root,
+                    branch,
+                )
+            except Exception as exc:
+                if error is None:
+                    error = f"origin head deleted but fetch refspec drop failed: {exc}"
         results.append(
             {
                 "action": "error" if error else "deleted",
@@ -370,6 +382,7 @@ def cleanup_stale_origin_branches(
                 "head_sha": head_sha,
                 "reason": reason,
                 "error": error,
+                "refspec_dropped": refspec_dropped,
             }
         )
     return results
@@ -698,6 +711,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
     return {
         "repo_root": str(repo_root),
         "fetch": None,
+        "fetch_refspecs": None,
         "worktree_prune": None,
         "activity_probe": None,
         "results": [],
@@ -717,6 +731,22 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     if not (repo_root / ".git").exists():
         result["errors"].append("repository .git metadata is missing")
         return result
+
+    # Self-heal stale per-branch fetch refspecs before fetch (#7121).
+    # A configured refspec whose remote head is gone is a hard error, so
+    # this must run before the first `git fetch --prune`.
+    try:
+        refspec_report = fetch_refspecs.reconcile_fetch_refspecs(
+            repo_root, apply=True
+        )
+        result["fetch_refspecs"] = refspec_report
+        if not refspec_report.get("ok"):
+            result["errors"].append(
+                f"fetch refspec reconcile failed ({refspec_report.get('error')})"
+            )
+    except Exception as exc:
+        result["fetch_refspecs"] = {"ok": False, "error": str(exc)}
+        result["errors"].append(f"fetch refspec reconcile failed: {exc}")
 
     fetch = _run_git(repo_root, "fetch", "--prune", "origin")
     result["fetch"] = {
@@ -776,6 +806,15 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         else:
             origin_branches = cleanup_stale_origin_branches(repo_root, apply=apply)
             if apply:
+                if any(row.get("action") == "deleted" for row in origin_branches):
+                    try:
+                        fetch_refspecs.reconcile_fetch_refspecs(
+                            repo_root, apply=True
+                        )
+                    except Exception as exc:
+                        result["errors"].append(
+                            f"post-origin fetch refspec reconcile failed: {exc}"
+                        )
                 prune_after = _run_git(repo_root, "fetch", "--prune", "origin")
                 if prune_after.returncode != 0:
                     result["errors"].append(
