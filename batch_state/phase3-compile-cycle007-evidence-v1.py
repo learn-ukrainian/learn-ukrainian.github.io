@@ -30,6 +30,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.projects.open_model_data import (
+    phase3_cycle007_evidence_compile_throughput as throughput,
+)
+from scripts.projects.open_model_data import (
     phase3_cycle007_evidence_compiler as compiler,
 )
 from scripts.projects.open_model_data import (
@@ -102,7 +105,11 @@ def _validate_paths(package: Path, source_manifest: Path, output: Path) -> tuple
         raise RunnerError("output_path_invalid")
     if output.is_symlink():
         raise RunnerError("output_symlink")
-    if os.path.lexists(output):
+    if os.path.lexists(output) and (
+        not output.is_dir()
+        or _lstat_mode(output) != 0o700
+        or output.lstat().st_uid != os.geteuid()
+    ):
         raise RunnerError("output_exists")
     return package, source_manifest, output
 
@@ -267,6 +274,8 @@ def _compile_failure_code(exc: Exception) -> str:
         return "compile_materialization_failed"
     if isinstance(exc, evidence_contract.EvidenceContractError):
         return _CONTRACT_FAILURE_CODES.get(str(exc), "compile_evidence_contract_failed")
+    if isinstance(exc, throughput.ThroughputResumeError):
+        return "compile_resume_failed"
     return "compile_failed"
 
 
