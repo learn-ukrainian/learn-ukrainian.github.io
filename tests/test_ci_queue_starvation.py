@@ -55,6 +55,7 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
         "contracts",
         "frontend",
         "coverage-floor",
+        "pytest-duration-publish",
     }
     assert jobs["pytest-plan"].get("if") == "github.event_name != 'pull_request'"
     assert jobs["python"].get("if") == "github.event_name != 'pull_request'"

@@ -7,6 +7,7 @@ import pytest
 from scripts.ci.gate_required_results import (
     FULL_REQUIRED,
     LIGHT_REQUIRED,
+    PUSH_REQUIRED,
     evaluate_gate,
     main,
     parse_results,
@@ -31,12 +32,14 @@ def test_required_jobs_merge_group_is_full_superset() -> None:
 
 
 def test_required_jobs_push_and_dispatch_are_full() -> None:
-    assert required_jobs("push") == FULL_REQUIRED
+    assert required_jobs("push") == PUSH_REQUIRED
+    assert set(FULL_REQUIRED) < set(PUSH_REQUIRED)
     assert required_jobs("workflow_dispatch") == FULL_REQUIRED
+    assert required_jobs("schedule") == FULL_REQUIRED
 
 
 def test_unknown_event_fails_closed_as_full_tier() -> None:
-    assert required_jobs("schedule") == FULL_REQUIRED
+    assert required_jobs("unknown-event") == FULL_REQUIRED
 
 
 def test_merge_group_green_when_all_full_deps_succeed() -> None:
