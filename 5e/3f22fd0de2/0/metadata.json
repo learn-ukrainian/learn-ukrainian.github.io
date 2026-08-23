@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5e3f22fd0de2",
+  "session_id": "fleet-e22d06803bff46db8a5a6a05420ab21f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T18:01:27.314926Z",
+  "branch": "agy/ci-timings-7174",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/ci_timings.py",
+    "tests/test_ci_timings.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "73c9532f7dcb",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T18:01:27.294356Z",
+    "agent_lines": 196,
+    "agent_removed": 21,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 196,
+    "total_lines_changed": 217,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

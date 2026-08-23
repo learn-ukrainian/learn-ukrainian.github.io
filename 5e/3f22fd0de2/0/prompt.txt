@@ -1,0 +1,22 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/ci-timings-7174
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta 2 on PR #7175 (branch agy/ci-timings-7174) — fold the reviewer's non-blocking findings that affect measurement honesty
+
+Read the Kimi review comment on PR #7175 (`gh pr view 7175 --comments`; if gh is unauthenticated in your shell, the findings are restated here). Implement exactly these three, nothing else:
+
+1. **Wall-clock population** (`scripts/ci/ci_timings.py` ~L494): run wall-clock currently pools failed/cancelled runs with successful ones, so early-cancelled runs pull the average down. Report run wall-clock for **successful runs only** as the primary row, and add a second row for all completed runs (or a clear per-conclusion count) — and print the population definition in the report header so a reader cannot misread it. JSON keys stay stable-ordered.
+2. **Jobs pagination** (~L414): `fetch_run_jobs_from_api` fetches one page of 100; paginate jobs with the same bounded-pages guard as runs, and emit a warning line if the bound is hit (never silently drop).
+3. **Malformed-payload test**: add a fixture test that exercises `load_runs_and_jobs_from_fixture` on a non-list/non-dict payload and the JSONDecodeError branch (~L283-286), asserting the documented error.
+
+Acceptance (quote raw output): `.venv/bin/pytest -q tests/test_ci_timings.py tests/test_subprocess_timeout_guard.py` passes with the new tests; mutation-check item 1 (revert the population change → the new test fails, quote, restore); `.venv/bin/ruff check` clean; one live run `--event merge_group --since 2d --limit 5` showing the new header note and both wall-clock rows.
+Commit on the same branch (conventional, X-Agent trailer), push, do NOT merge. Report the new head SHA.
