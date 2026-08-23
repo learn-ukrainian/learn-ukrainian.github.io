@@ -13,6 +13,8 @@ import yaml
 
 from scripts.ci import frontend_change_scope as scope
 
+pytestmark = pytest.mark.repo_invariant
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
 _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
@@ -380,6 +382,7 @@ def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> No
     assert "if" not in jobs["frontend"]
     # Two-tier cutover (#6943 stage 2): CI Gate also needs `ruff` so the
     # pull_request light tier can require lint without the four-shard suite.
+    # #7173: push Gate requires duration publication so publish failures are visible.
     assert set(jobs["ci-gate"]["needs"]) == {
         "ruff",
         "landing-class",
@@ -389,6 +392,7 @@ def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> No
         "contracts",
         "frontend",
         "coverage-floor",
+        "pytest-duration-publish",
     }
 
     for job_name in ("frontend", "frontend-e2e"):
