@@ -8,6 +8,7 @@ emits no paths, source responses, prompts, exception details, or raw logs.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import socket
@@ -233,11 +234,46 @@ def _start_reviewed_sources_server(endpoint: str) -> subprocess.Popen[bytes]:
         raise
 
 
+@contextlib.contextmanager
+def _admit_reviewed_resume_root(package: Path, output: Path):
+    """Admit only the reviewed runtime resume root without changing compiler identity."""
+    original_top_level = materializer.OUTPUT_TOP_LEVEL
+    resume_root = throughput.resume_root_for(output)
+    if resume_root.parent != package:
+        raise RunnerError("resume_metadata_invalid")
+    if not os.path.lexists(resume_root):
+        yield
+        return
+    try:
+        info = resume_root.lstat()
+    except OSError as exc:
+        raise RunnerError("resume_metadata_invalid") from exc
+    if (
+        not stat.S_ISDIR(info.st_mode)
+        or stat.S_ISLNK(info.st_mode)
+        or stat.S_IMODE(info.st_mode) != compiler.PRIVATE_DIR_MODE
+        or info.st_uid != os.geteuid()
+    ):
+        raise RunnerError("resume_metadata_invalid")
+
+    # This runner is a single-compile process. Keep the process-wide admission
+    # scoped to that one call and always restore it; concurrent in-process
+    # compilation would require a call-scoped materializer API instead.
+    materializer.OUTPUT_TOP_LEVEL = original_top_level | {resume_root.name}
+    try:
+        yield
+    finally:
+        materializer.OUTPUT_TOP_LEVEL = original_top_level
+
+
 def _compile(package: Path, source_manifest: Path, output: Path, endpoint: str) -> dict[str, Any]:
     process: subprocess.Popen[bytes] | None = None
     try:
         process = _start_reviewed_sources_server(endpoint)
-        with compiler.LocalMcpSourcesClient(endpoint_url=endpoint) as client:
+        with (
+            compiler.LocalMcpSourcesClient(endpoint_url=endpoint) as client,
+            _admit_reviewed_resume_root(package, output),
+        ):
             manifest = compiler.compile_cycle007_package(
                 package,
                 source_manifest,

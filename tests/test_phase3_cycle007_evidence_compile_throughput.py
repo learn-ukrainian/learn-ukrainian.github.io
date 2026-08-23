@@ -74,6 +74,98 @@ def _private_parent(tmp_path: Path, name: str) -> Path:
     return parent
 
 
+def test_runner_temporarily_admits_only_reviewed_resume_root(tmp_path: Path) -> None:
+    package = _private_parent(tmp_path, "package")
+    output = package / "evidence"
+    root = throughput.resume_root_for(output)
+    root.mkdir(mode=0o700)
+    original = _RUNNER.materializer.OUTPUT_TOP_LEVEL
+
+    with _RUNNER._admit_reviewed_resume_root(package, output):
+        assert original | {root.name} == _RUNNER.materializer.OUTPUT_TOP_LEVEL
+    assert original == _RUNNER.materializer.OUTPUT_TOP_LEVEL
+
+
+def test_runner_admission_preserves_strict_compiler_and_allows_actual_compile(tmp_path: Path) -> None:
+    source = _HELPERS._write_cycle005_fixture(tmp_path)
+    package = tmp_path / "cycle007-package"
+    _RUNNER.materializer.materialize(source, package, fixture=True)
+    output = package / "evidence"
+    throughput.resume_root_for(output).mkdir(mode=0o700)
+    client = _HELPERS.SyntheticSourcesClient()
+
+    with pytest.raises(compiler.contract.EvidenceContractError, match="manifest_binding_drift"):
+        compiler._validate_cycle007_materialization(
+            package,
+            source / "label-manifest.json",
+            fixture=True,
+        )
+
+    with _RUNNER._admit_reviewed_resume_root(package, output):
+        manifest = compiler.compile_cycle007_package(
+            package,
+            source / "label-manifest.json",
+            client,
+            output,
+            fixture=True,
+        )
+    assert manifest["packet_count"] == 2
+    assert manifest["row_count"] == 4
+
+
+@pytest.mark.parametrize("entry_type", ("file", "symlink"))
+def test_runner_rejects_non_directory_resume_metadata(
+    tmp_path: Path,
+    entry_type: str,
+) -> None:
+    package = _private_parent(tmp_path, "package")
+    output = package / "evidence"
+    root = throughput.resume_root_for(output)
+    if entry_type == "file":
+        root.touch(mode=0o600)
+    else:
+        root.symlink_to(tmp_path / "outside")
+
+    with pytest.raises(_RUNNER.RunnerError, match="resume_metadata_invalid"):
+        with _RUNNER._admit_reviewed_resume_root(package, output):
+            pass
+
+
+def test_runner_rejects_resume_metadata_with_wrong_mode(tmp_path: Path) -> None:
+    package = _private_parent(tmp_path, "package")
+    output = package / "evidence"
+    root = throughput.resume_root_for(output)
+    root.mkdir(mode=0o755)
+
+    with pytest.raises(_RUNNER.RunnerError, match="resume_metadata_invalid"):
+        with _RUNNER._admit_reviewed_resume_root(package, output):
+            pass
+
+
+def test_runner_rejects_resume_metadata_with_wrong_owner(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    package = _private_parent(tmp_path, "package")
+    output = package / "evidence"
+    root = throughput.resume_root_for(output)
+    root.mkdir(mode=0o700)
+    real_lstat = Path.lstat
+
+    def _wrong_owner_lstat(path: Path):
+        info = real_lstat(path)
+        if path == root:
+            values = list(info)
+            values[4] = os.geteuid() + 1
+            return os.stat_result(values)
+        return info
+
+    monkeypatch.setattr(Path, "lstat", _wrong_owner_lstat)
+    with pytest.raises(_RUNNER.RunnerError, match="resume_metadata_invalid"):
+        with _RUNNER._admit_reviewed_resume_root(package, output):
+            pass
+
+
 def test_resume_is_serial_only() -> None:
     assert throughput.packet_loop_is_serial() is True
     assert throughput.bound_packet_workers(1) == 1
