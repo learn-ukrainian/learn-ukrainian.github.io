@@ -237,9 +237,9 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 ### `GET /api/occupancy[?host_id=x][&fresh=true]`
 
-Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). Host keys are opaque `host_id` values from `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Without that map the `hosts` object is empty — canonical aliases are never used as JSON keys.
+Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The payload always enumerates both opaque hosts `host-teacher` and `host-job` (and any additional mapped hosts). Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped default hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
-Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
+Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), and `idle_or_empty` (boolean indicating near-zero burn). Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
 
 On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
 
@@ -263,6 +263,17 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
       "status": "fresh",
       "observed_at": "2026-08-19T12:00:00Z",
       "age_seconds": 1.5,
+      "occupants": [
+        {
+          "kind": "job",
+          "agent": null,
+          "task_id": "example-job",
+          "epic": "atlas"
+        }
+      ],
+      "occupant_count": 1,
+      "ai_seats": [],
+      "idle_or_empty": false,
       "cpu_count": 4,
       "loadavg": [0.15, 0.22, 0.18],
       "mem": {
@@ -274,15 +285,7 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
         "available_bytes": 53687091200,
         "total_bytes": 107374182400,
         "pct": 50.0
-      },
-      "occupants": [
-        {
-          "kind": "job",
-          "agent": null,
-          "task_id": "example-job",
-          "epic": "atlas"
-        }
-      ]
+      }
     },
     "host-teacher": {
       "host_id": "host-teacher",
@@ -290,7 +293,10 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
       "error": "unreachable",
       "observed_at": "2026-08-19T12:00:00Z",
       "age_seconds": 0.0,
-      "occupants": []
+      "occupants": [],
+      "occupant_count": 0,
+      "ai_seats": [],
+      "idle_or_empty": false
     }
   }
 }

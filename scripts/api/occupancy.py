@@ -29,6 +29,18 @@ OCCUPANCY_SCHEMA = "monitor-occupancy.v1"
 _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
 
 
+DEFAULT_HOST_IDS = ("host-teacher", "host-job")
+
+
+def _unavailable_load_entry() -> dict[str, Any]:
+    return {
+        "status": "unavailable",
+        "error": "unreachable",
+        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "age_seconds": 0.0,
+    }
+
+
 def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
     """Parse ``canonical=opaque`` pairs. Drop anything that is not opaque."""
     text = (raw if raw is not None else os.environ.get("MONITOR_OCCUPANCY_HOST_IDS", "")).strip()
@@ -103,14 +115,53 @@ def _merge_occupants(*groups: list[dict[str, str | None]]) -> list[dict[str, str
     return merged
 
 
-def _shape_host(host_id: str, load_entry: dict[str, Any], occupants: list[dict[str, str | None]]) -> dict[str, Any]:
+def _is_idle_or_empty(
+    status: str,
+    occupants: list[dict[str, str | None]],
+    load_entry: dict[str, Any] | None = None,
+) -> bool:
+    if occupants and not all(o.get("kind") == "observer" and o.get("status") == "idle" for o in occupants):
+        return False
+    if status == "unavailable":
+        # Unreachable burn is unknown, not proven idle.
+        return False
+    if load_entry:
+        job_unit = load_entry.get("job_unit")
+        if isinstance(job_unit, dict) and int(job_unit.get("active_count") or 0) > 0:
+            return False
+        loadavg = load_entry.get("loadavg")
+        if isinstance(loadavg, list) and loadavg:
+            try:
+                load1 = float(loadavg[0])
+                if load1 >= 1.0:
+                    return False
+            except (TypeError, ValueError, IndexError):
+                pass
+    return True
+
+
+def _shape_host(
+    host_id: str,
+    load_entry: dict[str, Any],
+    occupants: list[dict[str, str | None]],
+) -> dict[str, Any]:
     status = str(load_entry.get("status") or "unavailable")
+    valid_status = status if status in {"fresh", "stale", "unavailable"} else "unavailable"
+    ai_seats: list[str] = []
+    for o in occupants:
+        agent = o.get("agent")
+        if agent and agent not in ai_seats:
+            ai_seats.append(str(agent))
+    idle = _is_idle_or_empty(valid_status, occupants, load_entry)
     shaped: dict[str, Any] = {
         "host_id": host_id,
-        "status": status if status in {"fresh", "stale", "unavailable"} else "unavailable",
+        "status": valid_status,
         "observed_at": load_entry.get("observed_at"),
         "age_seconds": load_entry.get("age_seconds", 0.0),
         "occupants": occupants,
+        "occupant_count": len(occupants),
+        "ai_seats": ai_seats,
+        "idle_or_empty": idle,
     }
     if shaped["status"] == "unavailable":
         shaped["error"] = "unreachable"
@@ -137,12 +188,21 @@ def _occupants_from_observers() -> list[dict[str, str | None]]:
 
 
 def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, Any]:
+    ai_seats: list[str] = []
+    for o in occupants:
+        agent = o.get("agent")
+        if agent and agent not in ai_seats:
+            ai_seats.append(str(agent))
+    idle = (not occupants) or all(o.get("status") == "idle" for o in occupants)
     return {
         "host_id": CLOUD_OBSERVER_HOST_ID,
         "status": "fresh",
         "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "age_seconds": 0.0,
         "occupants": occupants,
+        "occupant_count": len(occupants),
+        "ai_seats": ai_seats,
+        "idle_or_empty": idle,
     }
 
 
@@ -156,20 +216,26 @@ def _attach_cloud_observer(payload: dict[str, Any], host_id: str | None) -> dict
     return payload
 
 
-def _selected_hosts(host_id: str | None) -> dict[str, str]:
+def _selected_hosts(host_id: str | None) -> dict[str, str | None]:
     if host_id == CLOUD_OBSERVER_HOST_ID:
         return {}
 
     mapping = parse_host_id_map()
-    if not mapping:
-        return {}
-
     reverse = {opaque: canonical for canonical, opaque in mapping.items()}
     if host_id is not None:
-        if host_id not in reverse:
-            raise HTTPException(status_code=400, detail="unknown host_id")
-        return {host_id: reverse[host_id]}
-    return {opaque: canonical for canonical, opaque in mapping.items()}
+        if host_id in reverse:
+            return {host_id: reverse[host_id]}
+        if host_id in DEFAULT_HOST_IDS:
+            return {host_id: None}
+        raise HTTPException(status_code=400, detail="unknown host_id")
+
+    selected: dict[str, str | None] = {}
+    for default_id in DEFAULT_HOST_IDS:
+        selected[default_id] = reverse.get(default_id)
+    for opaque, canonical in reverse.items():
+        if opaque not in selected:
+            selected[opaque] = canonical
+    return selected
 
 
 def _empty_payload() -> dict[str, Any]:
@@ -180,14 +246,20 @@ def _empty_payload() -> dict[str, Any]:
     }
 
 
-def _payload_from_entries(selected: dict[str, str], load_entries: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def _payload_from_entries(
+    selected: dict[str, str | None],
+    load_entries: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
     hosts: dict[str, Any] = {}
     for opaque, canonical in selected.items():
-        load_entry = load_entries[canonical]
-        occupants = _merge_occupants(
-            _occupants_from_registry(canonical),
-            _occupants_from_job_unit(canonical, load_entry),
-        )
+        load_entry = load_entries.get(opaque) or _unavailable_load_entry()
+        if canonical is not None:
+            occupants = _merge_occupants(
+                _occupants_from_registry(canonical),
+                _occupants_from_job_unit(canonical, load_entry),
+            )
+        else:
+            occupants = []
         hosts[opaque] = _shape_host(opaque, load_entry, occupants)
 
     return {
@@ -203,7 +275,12 @@ def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dic
     if not selected:
         return _attach_cloud_observer(_empty_payload(), host_id)
 
-    load_entries = {canonical: load_mod._get_host_load_entry(canonical, fresh=fresh) for canonical in selected.values()}
+    load_entries: dict[str, dict[str, Any]] = {}
+    for opaque, canonical in selected.items():
+        if canonical is None:
+            load_entries[opaque] = _unavailable_load_entry()
+        else:
+            load_entries[opaque] = load_mod._get_host_load_entry(canonical, fresh=fresh)
     return _attach_cloud_observer(_payload_from_entries(selected, load_entries), host_id)
 
 
@@ -212,10 +289,17 @@ async def _occupancy_payload_async(*, host_id: str | None = None, fresh: bool = 
     if not selected:
         return _attach_cloud_observer(_empty_payload(), host_id)
 
-    entries = await asyncio.gather(
-        *(load_mod._get_host_load_entry_async(canonical, fresh=fresh) for canonical in selected.values())
-    )
-    load_entries = dict(zip(selected.values(), entries, strict=True))
+    tasks = []
+    keys = []
+    for opaque, canonical in selected.items():
+        keys.append(opaque)
+        if canonical is None:
+            tasks.append(asyncio.sleep(0, result=_unavailable_load_entry()))
+        else:
+            tasks.append(load_mod._get_host_load_entry_async(canonical, fresh=fresh))
+
+    entries = await asyncio.gather(*tasks)
+    load_entries = dict(zip(keys, entries, strict=True))
     return _attach_cloud_observer(_payload_from_entries(selected, load_entries), host_id)
 
 
