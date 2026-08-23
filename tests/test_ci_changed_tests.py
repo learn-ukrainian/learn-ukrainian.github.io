@@ -1,4 +1,12 @@
-"""Unit tests for the advisory changed-test fastlane selector."""
+"""Unit tests for the advisory changed-test fastlane selector.
+
+Rule of thumb for every guard in this file: assert an invariant, not a
+snapshot; if changing X legitimately requires editing >1 test, the test is a
+snapshot. The fastlane manifest content is owned by
+``scripts/ci/fastlane_always_tests.txt`` and its property guards (sorted, no
+dupes, marker parity, slim-deps satisfiable, work-privacy excluded) live in
+``tests/test_subprocess_timeout_guard.py`` — nothing here restates the list.
+"""
 
 from __future__ import annotations
 
@@ -10,15 +18,10 @@ from scripts.ci import changed_tests
 
 pytestmark = pytest.mark.repo_invariant
 
-REPO_INVARIANT_TESTS = [
-    "tests/test_ci_changed_tests.py",
-    "tests/test_cyrillic_roundtrip_invariant.py",
-    "tests/test_fleet_routing_open_model_data_import_guard.py",
-    "tests/test_frontend_change_scope.py",
-    "tests/test_lint_test_assertions.py",
-    "tests/test_subprocess_timeout_guard.py",
-    "tests/test_threshold_source_of_truth.py",
-]
+
+def _manifest() -> list[str]:
+    """Read the fastlane repo-invariant manifest from its source of truth."""
+    return changed_tests.load_repo_invariant_tests()
 
 
 def test_comparison_range_accepts_base_ref_or_explicit_range() -> None:
@@ -58,7 +61,7 @@ def test_code_only_change_can_opt_into_repo_invariant_manifest() -> None:
         ["scripts/ci/changed_tests.py"], include_repo_invariants=True
     )
 
-    assert selected == REPO_INVARIANT_TESTS
+    assert selected == sorted(_manifest())
 
 
 def test_docs_only_change_stays_empty_with_repo_invariant_opt_in() -> None:
@@ -73,22 +76,16 @@ def test_config_and_fixture_changes_trigger_repo_invariant_manifest() -> None:
         "scripts/ci/fastlane_always_tests.txt",
         "tests/fixtures/example.json",
     ):
-        assert changed_tests.select_test_modules([path], include_repo_invariants=True) == REPO_INVARIANT_TESTS
+        assert changed_tests.select_test_modules([path], include_repo_invariants=True) == sorted(_manifest())
 
 
 def test_repo_invariant_manifest_entries_are_not_duplicated() -> None:
+    manifest = _manifest()
+    assert manifest, "the repo-invariant manifest must not be empty"
     selected = changed_tests.select_test_modules(
-        ["tests/test_threshold_source_of_truth.py", "pyproject.toml"],
+        [manifest[0], "pyproject.toml"],
         include_repo_invariants=True,
     )
 
-    assert selected == [
-        "tests/test_ci_changed_tests.py",
-        "tests/test_cyrillic_roundtrip_invariant.py",
-        "tests/test_fleet_routing_open_model_data_import_guard.py",
-        "tests/test_frontend_change_scope.py",
-        "tests/test_lint_test_assertions.py",
-        "tests/test_subprocess_timeout_guard.py",
-        "tests/test_threshold_source_of_truth.py",
-    ]
+    assert selected == sorted(manifest)
     assert len(selected) == len(set(selected))
