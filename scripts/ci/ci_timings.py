@@ -207,6 +207,7 @@ class EventReport:
     event: str
     runs_count: int
     wall_clock_minutes: dict[str, Any]
+    wall_clock_all_minutes: dict[str, Any]
     jobs: list[JobStats]
     queue_timing: dict[str, Any] | None = None
 
@@ -214,6 +215,7 @@ class EventReport:
         data: dict[str, Any] = {
             "jobs": [j.to_dict() for j in self.jobs],
             "runs_count": self.runs_count,
+            "wall_clock_all_minutes": self.wall_clock_all_minutes,
             "wall_clock_minutes": self.wall_clock_minutes,
         }
         if self.queue_timing is not None:
@@ -409,15 +411,48 @@ def fetch_run_jobs_from_api(
     run_id: int,
     *,
     token: str | None = None,
+    max_pages: int = MAX_PAGINATION_PAGES,
 ) -> list[dict[str, Any]]:
-    """Fetch completed jobs for a given workflow run."""
-    path = f"repos/{repo}/actions/runs/{run_id}/jobs?per_page=100"
-    data = gh_api_get(path, token=token)
-    if isinstance(data, dict):
-        return data.get("jobs", [])
-    if isinstance(data, list):
-        return data
-    return []
+    """Fetch completed jobs for a given workflow run with bounded pagination."""
+    all_jobs: list[dict[str, Any]] = []
+    page = 1
+    per_page = 100
+
+    while page <= max_pages:
+        path = f"repos/{repo}/actions/runs/{run_id}/jobs?per_page={per_page}&page={page}"
+        data = gh_api_get(path, token=token)
+        if isinstance(data, dict):
+            jobs_page = data.get("jobs", [])
+            total_count = data.get("total_count")
+        elif isinstance(data, list):
+            jobs_page = data
+            total_count = None
+        else:
+            break
+
+        if not jobs_page:
+            break
+
+        for job in jobs_page:
+            if isinstance(job, dict):
+                all_jobs.append(job)
+
+        if len(jobs_page) < per_page:
+            break
+        if total_count is not None and len(all_jobs) >= total_count:
+            break
+
+        if page == max_pages:
+            print(
+                f"Warning: Reached maximum pagination limit ({max_pages} pages) for run {run_id} jobs; "
+                f"retrieved {len(all_jobs)} jobs.",
+                file=sys.stderr,
+            )
+            break
+
+        page += 1
+
+    return all_jobs
 
 
 def analyze_timings(
@@ -484,7 +519,8 @@ def analyze_timings(
 
     for ev in target_events:
         ev_runs = runs_by_event.get(ev, [])
-        wall_clock_durs: list[float] = []
+        wall_clock_succ_durs: list[float] = []
+        wall_clock_all_durs: list[float] = []
         job_durs_by_name: dict[str, list[float]] = {}
 
         for r in ev_runs:
@@ -492,7 +528,11 @@ def analyze_timings(
             st = parse_github_timestamp(r.get("run_started_at") or r.get("created_at"))
             ut = parse_github_timestamp(r.get("updated_at"))
             if st is not None and ut is not None and ut >= st:
-                wall_clock_durs.append((ut - st).total_seconds() / 60.0)
+                dur = (ut - st).total_seconds() / 60.0
+                wall_clock_all_durs.append(dur)
+                conc = str(r.get("conclusion") or "").lower()
+                if conc == "success":
+                    wall_clock_succ_durs.append(dur)
 
             # Fetch jobs
             if callable(jobs_fetcher):
@@ -533,7 +573,8 @@ def analyze_timings(
                 )
             )
 
-        wall_clock_stats = compute_metric_stats(wall_clock_durs)
+        wall_clock_stats = compute_metric_stats(wall_clock_succ_durs)
+        wall_clock_all_stats = compute_metric_stats(wall_clock_all_durs)
 
         # Queue timing for merge_group
         queue_timing_report: dict[str, Any] | None = None
@@ -544,6 +585,7 @@ def analyze_timings(
             event=ev,
             runs_count=len(ev_runs),
             wall_clock_minutes=wall_clock_stats,
+            wall_clock_all_minutes=wall_clock_all_stats,
             jobs=job_stats_list,
             queue_timing=queue_timing_report,
         )
@@ -690,6 +732,7 @@ def render_markdown(report: TimingReport) -> str:
         f"- **Repository:** `{report.repo}`",
         f"- **Window Since:** `{report.since or 'all available'}`",
         f"- **Generated At:** `{report.generated_at}`",
+        "- **Population:** Wall-clock primary row includes successful runs only (conclusion=success); all completed runs reported for comparison.",
         "",
     ]
 
@@ -709,11 +752,16 @@ def render_markdown(report: TimingReport) -> str:
                     f"{j.p95_minutes:.1f} | {j.max_minutes:.1f} |"
                 )
 
-            # Add run wall-clock row
-            wc = ev_report.wall_clock_minutes
+            # Add run wall-clock rows
+            wc_succ = ev_report.wall_clock_minutes
+            wc_all = ev_report.wall_clock_all_minutes
             lines.append(
-                f"| **Run Wall-clock** | {wc['n']} | **{wc['avg']:.1f}** | **{wc['median']:.1f}** | "
-                f"**{wc['p95']:.1f}** | **{wc['max']:.1f}** |"
+                f"| **Run Wall-clock (success)** | {wc_succ['n']} | **{wc_succ['avg']:.1f}** | "
+                f"**{wc_succ['median']:.1f}** | **{wc_succ['p95']:.1f}** | **{wc_succ['max']:.1f}** |"
+            )
+            lines.append(
+                f"| **Run Wall-clock (all)** | {wc_all['n']} | **{wc_all['avg']:.1f}** | "
+                f"**{wc_all['median']:.1f}** | **{wc_all['p95']:.1f}** | **{wc_all['max']:.1f}** |"
             )
             lines.append("")
 

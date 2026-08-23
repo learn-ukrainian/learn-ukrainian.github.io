@@ -11,6 +11,8 @@ Hermetic, offline test suite verifying:
 from __future__ import annotations
 
 import json
+import re
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -26,7 +28,9 @@ from scripts.ci.ci_timings import (
     analyze_timings,
     compute_metric_stats,
     extract_pr_number,
+    fetch_run_jobs_from_api,
     fetch_workflow_runs_from_api,
+    gh_api_get,
     load_runs_and_jobs_from_fixture,
     main,
     nearest_rank_percentile,
@@ -156,6 +160,7 @@ def test_since_window_boundary_filtering() -> None:
         {
             "id": 101,
             "status": "completed",
+            "conclusion": "success",
             "event": "push",
             "created_at": "2026-08-22T05:00:00Z",
             "updated_at": "2026-08-22T05:15:00Z",
@@ -164,6 +169,7 @@ def test_since_window_boundary_filtering() -> None:
         {
             "id": 102,
             "status": "completed",
+            "conclusion": "success",
             "event": "push",
             "created_at": "2026-08-22T10:00:00Z",
             "updated_at": "2026-08-22T10:15:00Z",
@@ -172,6 +178,7 @@ def test_since_window_boundary_filtering() -> None:
         {
             "id": 103,
             "status": "completed",
+            "conclusion": "success",
             "event": "push",
             "created_at": "2026-08-23T01:00:00Z",
             "updated_at": "2026-08-23T01:15:00Z",
@@ -189,6 +196,7 @@ def test_since_window_boundary_filtering() -> None:
     # Run 101 (created at 05:00) is before 08:00 cutoff; runs 102 and 103 must be retained
     assert push_report.runs_count == 2
     assert push_report.wall_clock_minutes["n"] == 2
+    assert push_report.wall_clock_all_minutes["n"] == 2
 
 
 def test_extract_pr_number() -> None:
@@ -221,12 +229,17 @@ def test_analyze_timings_on_recorded_fixture() -> None:
 
     assert set(report.events.keys()) == {"pull_request", "merge_group", "push"}
 
-    # Validate merge_group analysis
+    # Validate merge_group analysis: 5 total completed runs, 3 successful
     mg = report.events["merge_group"]
     assert mg.runs_count == 5
-    assert mg.wall_clock_minutes["n"] == 5
-    assert mg.wall_clock_minutes["avg"] > 0
-    assert mg.wall_clock_minutes["median"] > 0
+    assert mg.wall_clock_minutes["n"] == 3
+    assert mg.wall_clock_minutes["avg"] == 15.4
+    assert mg.wall_clock_minutes["median"] == 15.7
+    assert mg.wall_clock_minutes["max"] == 18.9
+    assert mg.wall_clock_all_minutes["n"] == 5
+    assert mg.wall_clock_all_minutes["avg"] == 13.4
+    assert mg.wall_clock_all_minutes["median"] == 11.7
+    assert mg.wall_clock_all_minutes["max"] == 18.9
 
     job_names = {j.name for j in mg.jobs}
     assert "Contracts (schema, MDX, atlas, BIO)" in job_names
@@ -271,6 +284,7 @@ def test_render_json_stable_ordering() -> None:
                 event="merge_group",
                 runs_count=1,
                 wall_clock_minutes=compute_metric_stats([12.5]),
+                wall_clock_all_minutes=compute_metric_stats([12.5]),
                 jobs=[
                     JobStats(
                         name="Contracts",
@@ -291,10 +305,16 @@ def test_render_json_stable_ordering() -> None:
 
     parsed = json.loads(json_str_1)
     assert list(parsed.keys()) == ["events", "generated_at", "repo", "since", "workflow"]
+    assert list(parsed["events"]["merge_group"].keys()) == [
+        "jobs",
+        "runs_count",
+        "wall_clock_all_minutes",
+        "wall_clock_minutes",
+    ]
 
 
 def test_render_markdown_table_formatting() -> None:
-    """Verify Markdown report renders table headers, jobs, and queue stats."""
+    """Verify Markdown report renders table headers, jobs, population note, and queue stats."""
     runs, jobs_by_run = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
     report = analyze_timings(
         runs=runs,
@@ -305,10 +325,12 @@ def test_render_markdown_table_formatting() -> None:
     )
     md = render_markdown(report)
     assert "# CI Timing & Queue Report — CI" in md
+    assert "- **Population:**" in md
     assert "## merge_group (5 completed runs)" in md
     assert "| job | n | avg | med | p95 | max |" in md
     assert "Python (pytest) [1/4]" in md
-    assert "**Run Wall-clock**" in md
+    assert "**Run Wall-clock (success)**" in md
+    assert "**Run Wall-clock (all)**" in md
     assert "### merge_group Time-in-Queue & Kicks" in md
     assert "#7170" in md
 
@@ -459,3 +481,108 @@ def test_cli_main_api_event_limit_matching_runs(
     assert not err
     assert "## push (2 completed runs)" in out
     assert "## push (0 completed runs)" not in out
+
+
+def test_fetch_run_jobs_pagination(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify fetch_run_jobs_from_api paginates across multiple pages."""
+    calls: list[str] = []
+
+    def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any]:
+        calls.append(path)
+        m = re.search(r"[?&]page=(\d+)", path)
+        page_num = int(m.group(1)) if m else 1
+        if page_num == 1:
+            return {
+                "total_count": 125,
+                "jobs": [{"id": i, "name": f"job-{i}", "status": "completed"} for i in range(100)],
+            }
+        if page_num == 2:
+            return {
+                "total_count": 125,
+                "jobs": [{"id": 100 + i, "name": f"job-{100+i}", "status": "completed"} for i in range(25)],
+            }
+        return {"total_count": 125, "jobs": []}
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+
+    jobs = fetch_run_jobs_from_api(
+        repo="learn-ukrainian/learn-ukrainian.github.io",
+        run_id=12345,
+    )
+    assert len(jobs) == 125
+    assert len(calls) == 2
+    assert "page=1" in calls[0]
+    assert "page=2" in calls[1]
+
+
+def test_fetch_run_jobs_pagination_max_pages_warning(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Verify fetch_run_jobs_from_api emits a warning when max_pages limit is reached."""
+
+    def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any]:
+        return {
+            "total_count": 500,
+            "jobs": [{"id": i, "name": f"job-{i}", "status": "completed"} for i in range(100)],
+        }
+
+    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+
+    jobs = fetch_run_jobs_from_api(
+        repo="learn-ukrainian/learn-ukrainian.github.io",
+        run_id=99999,
+        max_pages=2,
+    )
+    assert len(jobs) == 200
+    _, err = capsys.readouterr()
+    assert "Warning: Reached maximum pagination limit (2 pages) for run 99999 jobs; retrieved 200 jobs." in err
+
+
+def test_load_runs_and_jobs_from_fixture_non_list_non_dict(tmp_path: Path) -> None:
+    """Verify load_runs_and_jobs_from_fixture raises ValueError on non-list/non-dict JSON payloads."""
+    str_file = tmp_path / "string_fixture.json"
+    str_file.write_text(json.dumps("plain string value"), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid fixture format: expected JSON object or array"):
+        load_runs_and_jobs_from_fixture(str_file)
+
+    int_file = tmp_path / "int_fixture.json"
+    int_file.write_text(json.dumps(12345), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid fixture format: expected JSON object or array"):
+        load_runs_and_jobs_from_fixture(int_file)
+
+
+def test_load_runs_and_jobs_from_fixture_json_decode_error(tmp_path: Path) -> None:
+    """Verify load_runs_and_jobs_from_fixture propagates json.JSONDecodeError on malformed JSON."""
+    bad_file = tmp_path / "malformed.json"
+    bad_file.write_text("{not valid json: 123", encoding="utf-8")
+
+    with pytest.raises(json.JSONDecodeError):
+        load_runs_and_jobs_from_fixture(bad_file)
+
+
+def test_load_runs_and_jobs_from_fixture_file_not_found() -> None:
+    """Verify load_runs_and_jobs_from_fixture raises FileNotFoundError for non-existent path."""
+    with pytest.raises(FileNotFoundError, match="Fixture file not found"):
+        load_runs_and_jobs_from_fixture("does_not_exist_fixture.json")
+
+
+def test_gh_api_get_json_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify gh_api_get raises RuntimeError with documented message on malformed JSON from API."""
+
+    def fake_subprocess_run(*args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(
+            args=["gh", "api", "repos/owner/repo/test"],
+            returncode=0,
+            stdout="<html>502 Bad Gateway</html>",
+            stderr="",
+        )
+
+    monkeypatch.setattr(subprocess, "run", fake_subprocess_run)
+
+    with pytest.raises(
+        RuntimeError, match="Failed to parse JSON response from gh api repos/owner/repo/test"
+    ):
+        gh_api_get("repos/owner/repo/test")
