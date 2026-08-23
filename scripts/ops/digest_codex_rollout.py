@@ -23,9 +23,10 @@ import json
 import os
 import re
 from collections import deque
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 DEFAULT_LABEL = "local"
 DEFAULT_REPO = Path.home() / "projects" / "learn-ukrainian"
@@ -313,7 +314,7 @@ def write_digest(
     digest_dir = repo / "logs" / "agent-digests"
     digest_dir.mkdir(parents=True, exist_ok=True)
     sources = collect_sources(roots, limit)
-    generated = datetime.now(timezone.utc)
+    generated = datetime.now(UTC)
     body = render_digest(label=label, sources=sources, generated=generated)
     output = digest_dir / f"{label}-latest.md"
     output.write_text(body, encoding="utf-8")
