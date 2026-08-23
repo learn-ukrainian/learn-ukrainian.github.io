@@ -772,3 +772,34 @@ def test_main_missing_ssh_plain_command_returns_255(
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
     rc = jh.main(["--host-id", "host-job", "--", "true"])
     assert rc == 255
+
+
+def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#7168: forward_dispatch passes --run-nonce in remote argv and exports LU_RUNTIME_RUN_NONCE."""
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
+        run_nonce="nonce-fwd-9876",
+    )
+    assert rc == 0
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
+    assert "--run-nonce" in script
+    assert "nonce-fwd-9876" in script
+    assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=" in script

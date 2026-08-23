@@ -34,6 +34,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
 
     {
         "task_id": str,
+        "run_nonce": str,           # unique run identifier for split-brain detection (#7168)
         "repository": str | null,   # authoritative "owner/repo" of the dispatch target (#7083)
         "agent": str,
         "model": str,
@@ -4043,8 +4044,9 @@ def _run_worker(
     state["pid"] = os.getpid()
     state["status"] = "running"
     state["max_budget_usd"] = max_budget_usd
-    if run_nonce:
-        state["run_nonce"] = run_nonce
+    effective_nonce = run_nonce or os.environ.get("LU_RUNTIME_RUN_NONCE")
+    if effective_nonce:
+        state["run_nonce"] = effective_nonce
     if "cli_version" not in state:
         start_telemetry = resolve_dispatch_start_telemetry(
             agent_name=agent,
@@ -4717,7 +4719,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     )
 
     task_id = args.task_id
-    run_nonce = getattr(args, "run_nonce", None) or _generate_run_nonce()
+    run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
 
     try:
         attribution = resolve_invocation_attribution(
@@ -4731,7 +4733,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if not bool(getattr(args, "dry_run", False)):
         placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
         if placement == "vps" and host_id:
-            print(f"→ forwarding dispatch to {host_id}", file=sys.stderr)
+            print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
             forward_error: BaseException | None = None
             forward_rc: int | None = None
             try:
@@ -5227,6 +5229,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
         print(task_id)
+        print(run_nonce)
         return 0
 
     # Set up log files before provisioning a worktree. If this cheap
@@ -5393,7 +5396,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             elif sparse_meta.get("excluded"):
                 sparse_tag = f" [sparse-exclude={','.join(sparse_meta['excluded'])}]"
             print(
-                f"🌲 dispatch {task_id}: branch={worktree_branch} "
+                f"🌲 dispatch {task_id}: run_nonce={run_nonce} branch={worktree_branch} "
                 f"base_sha={worktree_telemetry.get('base_sha') or '?'} "
                 f"path={worktree_path} layout={worktree_layout}"
                 + (" [rebased]" if worktree_telemetry.get("rebased") else "")
@@ -5409,6 +5412,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     f".worktrees/dispatch/{{agent}}/{{task}}/.",
                     file=sys.stderr,
                 )
+        else:
+            print(
+                f"🌲 dispatch {task_id}: run_nonce={run_nonce}",
+                file=sys.stderr,
+            )
 
         # Fork a detached subprocess that runs this same script with
         # --worker. We use Popen rather than os.fork for portability.
@@ -5475,6 +5483,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         worker_env = _pinned_worker_venv_env(os.environ)
         worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
         worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
+        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
         _inject_gh_token_for_agent(worker_env, dispatch_agent)
         worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
         worker_env["TMPDIR"] = str(runtime_tmp_root)
@@ -5577,8 +5586,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         stdout_fd.close()
         stderr_fd.close()
 
-    # Return task-id on stdout so shell callers can capture it.
+    # Return task-id and run_nonce on stdout so shell callers can capture them (#7168).
     print(task_id)
+    print(run_nonce)
     return 0
 
 
@@ -5961,13 +5971,15 @@ def _status_or_fail_payload(task_id: str, *, run_nonce: str | None = None) -> di
     status = str(task.get("status") or "unknown")
     if status == "running" and payload.get("alive") is False:
         status = "stale"
-    return {
+    result = {
         "task_id": task.get("task_id") or task_id,
         "status": status,
         "age_s": _age_seconds_from_started_at(task.get("started_at")),
         "alive": payload.get("alive"),
-        "run_nonce": task.get("run_nonce"),
     }
+    if run_nonce is not None:
+        result["run_nonce"] = task.get("run_nonce")
+    return result
 
 
 def cmd_status_or_fail(args: argparse.Namespace) -> int:
@@ -6026,13 +6038,13 @@ def cmd_wait(args: argparse.Namespace) -> int:
     while True:
         state = _read_state(state_path)
         if state is None:
-            if deadline and time.monotonic() >= deadline:
-                print(
-                    json.dumps({"error": f"no state file for task {args.task_id!r}"}),
-                )
-                return 1
-            time.sleep(poll_interval)
-            continue
+            if expected_nonce is not None and (deadline is None or time.monotonic() < deadline):
+                time.sleep(poll_interval)
+                continue
+            print(
+                json.dumps({"error": f"no state file for task {args.task_id!r}"}),
+            )
+            return 1
 
         record_nonce = state.get("run_nonce")
         if expected_nonce is not None and record_nonce != expected_nonce:
@@ -6309,7 +6321,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         keep_worktree=bool(getattr(args, "keep_worktree", False)),
         runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
         runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
-        run_nonce=getattr(args, "run_nonce", None),
+        run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
     )
 
 

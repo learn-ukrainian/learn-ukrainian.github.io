@@ -5389,8 +5389,11 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     assert ["git", "fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"] in calls
     output = capsys.readouterr()
     assert "branch reuse validated" in output.err
-    assert "[reused]" in output.err
-    assert output.out.strip() == "branch-reuse-dry-run"
+    lines = output.out.strip().splitlines()
+    assert lines[0] == "branch-reuse-dry-run"
+    state = delegate._read_state(delegate._state_path("branch-reuse-dry-run"))
+    assert state is not None
+    assert lines[1] == state["run_nonce"]
 
 
 def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkeypatch):
@@ -8912,8 +8915,8 @@ def test_split_brain_cancel_refuses_stale_record(tmp_tasks_dir, capsys):
     assert "run_nonce mismatch" in err
 
 
-def test_dispatch_generates_and_persists_run_nonce(tmp_tasks_dir, monkeypatch):
-    """#7168: Dispatch automatically generates a run_nonce if not provided."""
+def test_dispatch_generates_and_persists_run_nonce(tmp_tasks_dir, monkeypatch, capsys):
+    """#7168: Dispatch automatically generates a run_nonce if not provided, emitting it to stdout."""
     tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
     args = delegate.build_parser().parse_args(
         [
@@ -8934,4 +8937,187 @@ def test_dispatch_generates_and_persists_run_nonce(tmp_tasks_dir, monkeypatch):
     state = json.loads((tmp_tasks_dir / "nonce-gen-task.json").read_text(encoding="utf-8"))
     assert "run_nonce" in state
     assert len(state["run_nonce"]) == 16
+    out = capsys.readouterr().out
+    lines = out.strip().splitlines()
+    assert len(lines) == 2
+    assert lines[0] == "nonce-gen-task"
+    assert lines[1] == state["run_nonce"]
+
+
+def test_dispatch_emits_run_nonce_in_summary_and_stdout(tmp_tasks_dir, monkeypatch, capsys):
+    """#7168: Live dispatch surfaces run_nonce in the summary line and machine-readable stdout."""
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
+    args = _write_args(
+        task_id="live-summary-nonce",
+        mode="read-only",
+        cwd=None,
+        worktree=None,
+    )
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("live-summary-nonce"))
+    assert state is not None
+    nonce = state["run_nonce"]
+    assert len(nonce) == 16
+
+    captured = capsys.readouterr()
+    assert nonce in captured.out
+    assert f"🌲 dispatch live-summary-nonce: run_nonce={nonce}" in captured.err
+
+
+def test_wait_missing_file_without_nonce_returns_immediately_with_error(tmp_tasks_dir, capsys):
+    """#7168: With no --run-nonce and default --timeout 0, wait on missing state file returns immediately."""
+    import argparse
+
+    args = argparse.Namespace(
+        task_id="nonexistent-task",
+        timeout=0,
+        poll_interval=0.1,
+        run_nonce=None,
+    )
+    t0 = time.monotonic()
+    rc = delegate.cmd_wait(args)
+    elapsed = time.monotonic() - t0
+
+    assert rc == 1
+    assert elapsed < 0.5, f"wait on missing file without nonce should return immediately, took {elapsed}s"
+    out = capsys.readouterr().out
+    data = json.loads(out)
+    assert data == {"error": "no state file for task 'nonexistent-task'"}
+
+
+def test_wait_missing_file_with_nonce_polls_until_timeout(tmp_tasks_dir, capsys):
+    """#7168: When --run-nonce is passed, wait polls for state file until deadline."""
+    import argparse
+
+    args = argparse.Namespace(
+        task_id="nonexistent-task-with-nonce",
+        timeout=0.5,
+        poll_interval=0.1,
+        run_nonce="expected-nonce-99",
+    )
+    t0 = time.monotonic()
+    rc = delegate.cmd_wait(args)
+    elapsed = time.monotonic() - t0
+
+    assert rc == 1
+    assert elapsed >= 0.4, f"wait with nonce should poll until timeout, took {elapsed}s"
+    out = capsys.readouterr().out
+    data = json.loads(out)
+    assert data == {"error": "no state file for task 'nonexistent-task-with-nonce'"}
+
+
+def test_status_or_fail_verbose_byte_compatible_without_run_nonce(monkeypatch, capsys):
+    """#7168: status-or-fail --verbose output is byte-compatible with base when no run_nonce requested."""
+    fake_record = {
+        "task": {
+            "task_id": "test-sof-task",
+            "status": "running",
+            "started_at": "2026-08-20T10:00:00Z",
+            "run_nonce": "sof-nonce-12345",
+        },
+        "alive": True,
+    }
+    monkeypatch.setattr(delegate, "_fetch_monitor_task", lambda tid, run_nonce=None: fake_record)
+
+    # 1. Without --run-nonce: result must NOT include run_nonce key (byte-compatible with base)
+    args_no_nonce = delegate.build_parser().parse_args(
+        ["status-or-fail", "test-sof-task", "--verbose"]
+    )
+    rc = delegate.cmd_status_or_fail(args_no_nonce)
+    assert rc == 0
+    out_no_nonce = capsys.readouterr().out
+    data_no_nonce = json.loads(out_no_nonce)
+    assert list(data_no_nonce.keys()) == ["task_id", "status", "age_s", "alive"]
+    assert "run_nonce" not in data_no_nonce
+
+    # 2. With --run-nonce: result includes run_nonce key
+    args_with_nonce = delegate.build_parser().parse_args(
+        ["status-or-fail", "test-sof-task", "--verbose", "--run-nonce", "sof-nonce-12345"]
+    )
+    rc2 = delegate.cmd_status_or_fail(args_with_nonce)
+    assert rc2 == 0
+    out_with_nonce = capsys.readouterr().out
+    data_with_nonce = json.loads(out_with_nonce)
+    assert data_with_nonce["run_nonce"] == "sof-nonce-12345"
+
+
+def test_dispatch_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, monkeypatch, capsys):
+    """#7168: Dispatch consumes LU_RUNTIME_RUN_NONCE from environment when not passed via CLI."""
+    tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setenv("LU_RUNTIME_RUN_NONCE", "env-nonce-123456")
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "env-nonce-task",
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test prompt",
+            "--dry-run",
+        ]
+    )
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    state = json.loads((tmp_tasks_dir / "env-nonce-task.json").read_text(encoding="utf-8"))
+    assert state["run_nonce"] == "env-nonce-123456"
+    out = capsys.readouterr().out
+    lines = out.strip().splitlines()
+    assert lines[1] == "env-nonce-123456"
+
+
+def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, monkeypatch):
+    """#7168: _run_worker consumes LU_RUNTIME_RUN_NONCE from environment."""
+    from unittest.mock import patch
+
+    tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
+    state_path = tmp_tasks_dir / "worker-env-nonce-task.json"
+    state_path.write_text(
+        json.dumps(
+            {
+                "task_id": "worker-env-nonce-task",
+                "status": "spawning",
+                "mode": "read-only",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setenv("LU_RUNTIME_RUN_NONCE", "worker-env-nonce-789")
+
+    mock_result = type(
+        "MockResult",
+        (),
+        {
+            "ok": True,
+            "response": "fake response",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6-luna",
+            "effort": "max",
+            "cli_version": "1.0",
+            "duration_s": 1.0,
+            "prompt_chars": 10,
+            "response_chars": 13,
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="worker-env-nonce-task",
+            agent="codex",
+            prompt="hello",
+            mode="read-only",
+            cwd_str=str(delegate._REPO_ROOT),
+            model="gpt-5.6-luna",
+            hard_timeout=60,
+            run_nonce=None,
+        )
+    assert rc == 0
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert state["run_nonce"] == "worker-env-nonce-789"
 

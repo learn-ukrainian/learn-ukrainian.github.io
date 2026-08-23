@@ -50,6 +50,7 @@ ENV_TEACHER_REPO = "LU_TEACHER_REPO"
 ENV_ALLOW_NOTEBOOK = "LU_ALLOW_NOTEBOOK_DISPATCH"
 ENV_RUNTIME_INITIATOR = "LU_RUNTIME_INITIATOR"
 ENV_RUNTIME_INITIATOR_SOURCE = "LU_RUNTIME_INITIATOR_SOURCE"
+ENV_RUNTIME_RUN_NONCE = "LU_RUNTIME_RUN_NONCE"
 ENV_OCCUPANCY_HOST = "LU_JOB_OCCUPANCY_HOST_ID"
 ENV_MEM_FULL = "LU_JOB_MEM_FULL_PCT"
 ENV_DISK_FULL = "LU_JOB_DISK_FULL_PCT"
@@ -511,6 +512,8 @@ def forward_dispatch(
         value, next_scan = _flag_value(rest, scan, "--run-nonce")
         if value is not None:
             has_run_nonce = True
+            if not run_nonce:
+                run_nonce = value
             scan = next_scan
             continue
         scan += 1
@@ -523,7 +526,7 @@ def forward_dispatch(
         extra_exports.append(f"export {ENV_RUNTIME_INITIATOR}={shlex.quote(initiator)}")
         extra_exports.append(f"export {ENV_RUNTIME_INITIATOR_SOURCE}={shlex.quote(initiator_source)}")
     if run_nonce:
-        extra_exports.append(f"export LU_RUNTIME_RUN_NONCE={shlex.quote(run_nonce)}")
+        extra_exports.append(f"export {ENV_RUNTIME_RUN_NONCE}={shlex.quote(run_nonce)}")
     remote_script = _build_remote_dispatch_script(
         argv=rest,
         remote_repo=repo,
