@@ -7,6 +7,7 @@ script as the "agent" via monkey-patching.
 
 Issue: #1184.
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -178,18 +179,14 @@ def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
 
     env = delegate._pinned_worker_venv_env(
         {
-            "PATH": os.pathsep.join(
-                (f"{foreign_venv}/bin", "/usr/local/bin", "/usr/bin")
-            ),
+            "PATH": os.pathsep.join((f"{foreign_venv}/bin", "/usr/local/bin", "/usr/bin")),
             "VIRTUAL_ENV": foreign_venv,
             "PYTHONHOME": "/tmp/foreign-python-home",
         }
     )
 
     assert env["VIRTUAL_ENV"] == str(project_venv)
-    assert env["PATH"] == os.pathsep.join(
-        (str(project_venv / "bin"), "/usr/local/bin", "/usr/bin")
-    )
+    assert env["PATH"] == os.pathsep.join((str(project_venv / "bin"), "/usr/local/bin", "/usr/bin"))
     assert "PYTHONHOME" not in env
 
 
@@ -206,6 +203,7 @@ def test_pinned_worker_venv_env_uses_canonical_path_even_before_venv_exists(tmp_
 # State file helpers
 # ---------------------------------------------------------------------------
 
+
 def test_state_path_creates_dir(tmp_tasks_dir):
     p = delegate._state_path("my-task")
     assert tmp_tasks_dir.exists()
@@ -219,7 +217,7 @@ def test_state_path_sanitizes_slashes(tmp_tasks_dir):
 
 
 def test_create_runtime_tmp_lease_sanitizes_task_id(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
 
     lease_root, namespace_root = delegate._create_runtime_tmp_lease(
         "codex/4956 tmp/../lease",
@@ -259,7 +257,7 @@ def test_runtime_tmp_reap_refuses_namespace_outside_tempdir(tmp_path, monkeypatc
     result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
 
     assert result["tmp_bytes_freed"] == 0
-    assert "not directly under $TMPDIR" in str(result["tmp_reap_error"])
+    assert "not directly under an approved scratch root" in str(result["tmp_reap_error"])
     assert payload.read_text(encoding="utf-8") == "keep"
 
 
@@ -506,69 +504,80 @@ def test_read_state_corrupted_json(tmp_tasks_dir):
 
 
 def test_classify_final_status_prioritizes_cancelled_over_other_flags():
-    assert delegate._classify_final_status(
-        cancelled=True,
-        rate_limited=True,
-        ok_outcome=True,
-        timed_out=True,
-    ) == "cancelled"
+    assert (
+        delegate._classify_final_status(
+            cancelled=True,
+            rate_limited=True,
+            ok_outcome=True,
+            timed_out=True,
+        )
+        == "cancelled"
+    )
 
 
 def test_dispatch_parser_timeout_defaults():
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "defaults",
-        "--prompt",
-        "hi",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "defaults",
+            "--prompt",
+            "hi",
+        ]
+    )
 
     assert args.hard_timeout == 7200
     assert args.silence_timeout == 3600
 
 
 def test_dispatch_parser_mode_defaults_to_read_only():
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "defaults",
-        "--prompt",
-        "review the implementation without editing files",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "defaults",
+            "--prompt",
+            "review the implementation without editing files",
+        ]
+    )
 
     assert args.mode == "read-only"
 
 
 def test_silence_timeout_default_is_3600():
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "defaults",
-        "--prompt",
-        "hi",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "defaults",
+            "--prompt",
+            "hi",
+        ]
+    )
 
     assert args.silence_timeout == 3600
 
 
 def test_explicit_silence_timeout_override_still_works():
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "override",
-        "--prompt",
-        "hi",
-        "--silence-timeout",
-        "600",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "override",
+            "--prompt",
+            "hi",
+            "--silence-timeout",
+            "600",
+        ]
+    )
 
     assert args.silence_timeout == 600
 
@@ -576,32 +585,36 @@ def test_explicit_silence_timeout_override_still_works():
 def test_initial_response_timeout_default_is_600():
     """Reasoning-heavy models think for minutes before their first token;
     the default startup probe must tolerate that (# dispatch-timeouts)."""
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "defaults",
-        "--prompt",
-        "hi",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "defaults",
+            "--prompt",
+            "hi",
+        ]
+    )
 
     assert args.initial_response_timeout == 600
     assert delegate.DEFAULT_INITIAL_RESPONSE_TIMEOUT_S == 600
 
 
 def test_explicit_initial_response_timeout_override_still_works():
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "override",
-        "--prompt",
-        "hi",
-        "--initial-response-timeout",
-        "120",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "override",
+            "--prompt",
+            "hi",
+            "--initial-response-timeout",
+            "120",
+        ]
+    )
 
     assert args.initial_response_timeout == 120
 
@@ -626,6 +639,7 @@ def test_dispatch_help_documents_timeout_interaction(capsys):
 # PID liveness probe
 # ---------------------------------------------------------------------------
 
+
 def test_pid_alive_true_for_own_process():
     """Our own process is definitely alive."""
     assert delegate._pid_alive(os.getpid()) is True
@@ -640,20 +654,25 @@ def test_pid_alive_false_for_nonexistent_pid():
 # cmd_status zombie detection
 # ---------------------------------------------------------------------------
 
+
 def test_status_detects_zombie_when_pid_dead(tmp_tasks_dir, capsys):
     """Regression: if state says 'running' but PID is dead, status must
     flip the state to 'crashed' and persist the correction."""
     path = delegate._state_path("zombie-task")
-    delegate._write_state_atomic(path, {
-        "task_id": "zombie-task",
-        "agent": "codex",
-        "status": "running",
-        "pid": 999_999_998,  # guaranteed dead
-        "started_at": "2026-04-10T12:00:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "zombie-task",
+            "agent": "codex",
+            "status": "running",
+            "pid": 999_999_998,  # guaranteed dead
+            "started_at": "2026-04-10T12:00:00+00:00",
+        },
+    )
 
     # Run the status command
     import argparse
+
     args = argparse.Namespace(task_id="zombie-task")
     rc = delegate.cmd_status(args)
     assert rc == 0
@@ -675,15 +694,19 @@ def test_status_detects_zombie_when_pid_dead(tmp_tasks_dir, capsys):
 def test_status_leaves_running_alone_when_pid_alive(tmp_tasks_dir, capsys):
     """If the PID is our own (always alive), status must NOT flip to crashed."""
     path = delegate._state_path("alive-task")
-    delegate._write_state_atomic(path, {
-        "task_id": "alive-task",
-        "agent": "codex",
-        "status": "running",
-        "pid": os.getpid(),
-        "started_at": "2026-04-10T12:00:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "alive-task",
+            "agent": "codex",
+            "status": "running",
+            "pid": os.getpid(),
+            "started_at": "2026-04-10T12:00:00+00:00",
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(task_id="alive-task")
     delegate.cmd_status(args)
 
@@ -694,16 +717,20 @@ def test_status_leaves_running_alone_when_pid_alive(tmp_tasks_dir, capsys):
 def test_status_done_task_unchanged(tmp_tasks_dir, capsys):
     """A task already in a terminal state must not be touched."""
     path = delegate._state_path("done-task")
-    delegate._write_state_atomic(path, {
-        "task_id": "done-task",
-        "agent": "codex",
-        "status": "done",
-        "pid": 999_999_998,  # dead, but should not trigger zombie flip
-        "started_at": "2026-04-10T12:00:00+00:00",
-        "finished_at": "2026-04-10T12:01:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "done-task",
+            "agent": "codex",
+            "status": "done",
+            "pid": 999_999_998,  # dead, but should not trigger zombie flip
+            "started_at": "2026-04-10T12:00:00+00:00",
+            "finished_at": "2026-04-10T12:01:00+00:00",
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(task_id="done-task")
     delegate.cmd_status(args)
 
@@ -713,6 +740,7 @@ def test_status_done_task_unchanged(tmp_tasks_dir, capsys):
 
 def test_status_missing_task_returns_error(tmp_tasks_dir, capsys):
     import argparse
+
     args = argparse.Namespace(task_id="nonexistent")
     rc = delegate.cmd_status(args)
     assert rc == 1
@@ -751,14 +779,10 @@ def test_status_or_fail_running_task_exits_zero_quiet(monkeypatch, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_args, **_kwargs: _FakeMonitorResponse(
-            _monitor_payload("sleep-task", "running")
-        ),
+        lambda *_args, **_kwargs: _FakeMonitorResponse(_monitor_payload("sleep-task", "running")),
     )
 
-    rc = delegate.cmd_status_or_fail(
-        argparse.Namespace(task_id="sleep-task", verbose=False)
-    )
+    rc = delegate.cmd_status_or_fail(argparse.Namespace(task_id="sleep-task", verbose=False))
 
     assert rc == 0
     captured = capsys.readouterr()
@@ -772,14 +796,10 @@ def test_status_or_fail_completed_task_exits_one(monkeypatch, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_args, **_kwargs: _FakeMonitorResponse(
-            _monitor_payload("sleep-task", "done", alive=False)
-        ),
+        lambda *_args, **_kwargs: _FakeMonitorResponse(_monitor_payload("sleep-task", "done", alive=False)),
     )
 
-    rc = delegate.cmd_status_or_fail(
-        argparse.Namespace(task_id="sleep-task", verbose=False)
-    )
+    rc = delegate.cmd_status_or_fail(argparse.Namespace(task_id="sleep-task", verbose=False))
 
     assert rc == 1
     captured = capsys.readouterr()
@@ -801,9 +821,7 @@ def test_status_or_fail_unknown_task_exits_one(monkeypatch, capsys):
 
     monkeypatch.setattr(delegate.urllib.request, "urlopen", fake_urlopen)
 
-    rc = delegate.cmd_status_or_fail(
-        argparse.Namespace(task_id="missing", verbose=False)
-    )
+    rc = delegate.cmd_status_or_fail(argparse.Namespace(task_id="missing", verbose=False))
 
     assert rc == 1
     captured = capsys.readouterr()
@@ -819,9 +837,7 @@ def test_status_or_fail_monitor_api_down_exits_two(monkeypatch, capsys):
 
     monkeypatch.setattr(delegate.urllib.request, "urlopen", fake_urlopen)
 
-    rc = delegate.cmd_status_or_fail(
-        argparse.Namespace(task_id="sleep-task", verbose=False)
-    )
+    rc = delegate.cmd_status_or_fail(argparse.Namespace(task_id="sleep-task", verbose=False))
 
     assert rc == 2
     captured = capsys.readouterr()
@@ -832,18 +848,25 @@ def test_status_or_fail_monitor_api_down_exits_two(monkeypatch, capsys):
 # cmd_wait polling loop
 # ---------------------------------------------------------------------------
 
+
 def test_wait_returns_immediately_when_already_done(tmp_tasks_dir, capsys):
     path = delegate._state_path("wait-done")
-    delegate._write_state_atomic(path, {
-        "task_id": "wait-done",
-        "agent": "codex",
-        "status": "done",
-        "started_at": "2026-04-10T12:00:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "wait-done",
+            "agent": "codex",
+            "status": "done",
+            "started_at": "2026-04-10T12:00:00+00:00",
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(
-        task_id="wait-done", timeout=0, poll_interval=0.1,
+        task_id="wait-done",
+        timeout=0,
+        poll_interval=0.1,
     )
     t0 = time.monotonic()
     rc = delegate.cmd_wait(args)
@@ -855,13 +878,19 @@ def test_wait_returns_immediately_when_already_done(tmp_tasks_dir, capsys):
 
 def test_wait_returns_nonzero_on_failed(tmp_tasks_dir, capsys):
     path = delegate._state_path("wait-failed")
-    delegate._write_state_atomic(path, {
-        "task_id": "wait-failed",
-        "status": "failed",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "wait-failed",
+            "status": "failed",
+        },
+    )
     import argparse
+
     args = argparse.Namespace(
-        task_id="wait-failed", timeout=0, poll_interval=0.1,
+        task_id="wait-failed",
+        timeout=0,
+        poll_interval=0.1,
     )
     rc = delegate.cmd_wait(args)
     assert rc == 1  # nonzero for any non-done terminal status
@@ -870,13 +899,19 @@ def test_wait_returns_nonzero_on_failed(tmp_tasks_dir, capsys):
 def test_wait_returns_immediately_on_no_deliverable_with_default_timeout(tmp_tasks_dir, capsys):
     """A completion-contract failure is terminal even when wait has no deadline."""
     path = delegate._state_path("wait-no-deliverable")
-    delegate._write_state_atomic(path, {
-        "task_id": "wait-no-deliverable",
-        "status": "no_deliverable",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "wait-no-deliverable",
+            "status": "no_deliverable",
+        },
+    )
     import argparse
+
     args = argparse.Namespace(
-        task_id="wait-no-deliverable", timeout=0, poll_interval=0.1,
+        task_id="wait-no-deliverable",
+        timeout=0,
+        poll_interval=0.1,
     )
     t0 = time.monotonic()
     rc = delegate.cmd_wait(args)
@@ -888,13 +923,19 @@ def test_wait_returns_immediately_on_no_deliverable_with_default_timeout(tmp_tas
 
 def test_wait_returns_124_on_task_timeout(tmp_tasks_dir, capsys):
     path = delegate._state_path("wait-task-timeout")
-    delegate._write_state_atomic(path, {
-        "task_id": "wait-task-timeout",
-        "status": "timeout",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "wait-task-timeout",
+            "status": "timeout",
+        },
+    )
     import argparse
+
     args = argparse.Namespace(
-        task_id="wait-task-timeout", timeout=0, poll_interval=0.1,
+        task_id="wait-task-timeout",
+        timeout=0,
+        poll_interval=0.1,
     )
     rc = delegate.cmd_wait(args)
     assert rc == 124
@@ -904,15 +945,21 @@ def test_wait_timeout_returns_124(tmp_tasks_dir, capsys):
     """Regression: on timeout, wait should return 124 (conventional
     timeout exit code) and print a timeout error on stderr."""
     path = delegate._state_path("wait-timeout")
-    delegate._write_state_atomic(path, {
-        "task_id": "wait-timeout",
-        "status": "running",
-        "pid": os.getpid(),  # alive, so no zombie detection
-        "started_at": "2026-04-10T12:00:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "wait-timeout",
+            "status": "running",
+            "pid": os.getpid(),  # alive, so no zombie detection
+            "started_at": "2026-04-10T12:00:00+00:00",
+        },
+    )
     import argparse
+
     args = argparse.Namespace(
-        task_id="wait-timeout", timeout=1.0, poll_interval=0.1,
+        task_id="wait-timeout",
+        timeout=1.0,
+        poll_interval=0.1,
     )
     t0 = time.monotonic()
     rc = delegate.cmd_wait(args)
@@ -926,15 +973,21 @@ def test_wait_timeout_returns_124(tmp_tasks_dir, capsys):
 
 def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
     path = delegate._state_path("wait-zombie")
-    delegate._write_state_atomic(path, {
-        "task_id": "wait-zombie",
-        "status": "running",
-        "pid": 999_999_998,
-        "started_at": "2026-04-10T12:00:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "wait-zombie",
+            "status": "running",
+            "pid": 999_999_998,
+            "started_at": "2026-04-10T12:00:00+00:00",
+        },
+    )
     import argparse
+
     args = argparse.Namespace(
-        task_id="wait-zombie", timeout=5.0, poll_interval=0.1,
+        task_id="wait-zombie",
+        timeout=5.0,
+        poll_interval=0.1,
     )
     rc = delegate.cmd_wait(args)
     assert rc == 1  # crashed → nonzero
@@ -985,9 +1038,7 @@ def test_dispatch_rejects_unsupported_native_grok_effort_before_spawn(
         pytest.param(["--mode", "read-only"], id="explicit-read-only"),
     ],
 )
-def test_dispatch_rejects_write_shaped_prompt_in_read_only_mode(
-    tmp_tasks_dir, monkeypatch, capsys, mode_args
-):
+def test_dispatch_rejects_write_shaped_prompt_in_read_only_mode(tmp_tasks_dir, monkeypatch, capsys, mode_args):
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -1013,9 +1064,7 @@ def test_dispatch_rejects_write_shaped_prompt_in_read_only_mode(
     assert "--mode workspace-write --worktree" in captured.err
 
 
-def test_dispatch_rejects_write_shaped_prompt_file_in_read_only_mode(
-    tmp_tasks_dir, tmp_path, capsys
-):
+def test_dispatch_rejects_write_shaped_prompt_file_in_read_only_mode(tmp_tasks_dir, tmp_path, capsys):
     prompt_file = tmp_path / "write-brief.md"
     prompt_file.write_text("- Update scripts/delegate.py and add tests.\n", encoding="utf-8")
     args = delegate.build_parser().parse_args(
@@ -1037,17 +1086,23 @@ def test_dispatch_rejects_write_shaped_prompt_file_in_read_only_mode(
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_write_shaped_prompt_is_admitted_by_write_capable_modes(mode):
-    assert delegate._read_only_write_intent_error(
-        mode=mode,
-        prompt="Fix the dispatch guard and update its tests.",
-    ) is None
+    assert (
+        delegate._read_only_write_intent_error(
+            mode=mode,
+            prompt="Fix the dispatch guard and update its tests.",
+        )
+        is None
+    )
 
 
 def test_read_only_change_discussion_is_not_misclassified_as_write_intent():
-    assert delegate._read_only_write_intent_error(
-        mode="read-only",
-        prompt="Review the proposed changes and explain the safest implementation; do not edit files.",
-    ) is None
+    assert (
+        delegate._read_only_write_intent_error(
+            mode="read-only",
+            prompt="Review the proposed changes and explain the safest implementation; do not edit files.",
+        )
+        is None
+    )
 
 
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
@@ -1055,6 +1110,7 @@ def test_read_only_change_discussion_is_not_misclassified_as_write_intent():
 def test_dispatch_accepts_native_grok_effort_vocabulary(agent, effort):
     """The dispatch guard admits every native Grok CLI effort level."""
     delegate._validate_dispatch_effort(agent, effort)
+
 
 def _minimal_dispatch_args(task_id: str, **overrides):
     import argparse
@@ -1117,6 +1173,7 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     path = delegate._state_path("popen-failure")
 
     import argparse
+
     args = argparse.Namespace(
         agent="codex",
         task_id="popen-failure",
@@ -1153,13 +1210,19 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
 
 def test_dispatch_parses_max_budget_usd_flag():
     parser = delegate.build_parser()
-    args = parser.parse_args([
-        "dispatch",
-        "--agent", "claude",
-        "--task-id", "budget-task",
-        "--prompt", "hi",
-        "--max-budget-usd", "0.50",
-    ])
+    args = parser.parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "claude",
+            "--task-id",
+            "budget-task",
+            "--prompt",
+            "hi",
+            "--max-budget-usd",
+            "0.50",
+        ]
+    )
 
     assert args.max_budget_usd == 0.5
 
@@ -1214,14 +1277,21 @@ def test_resolve_output_schema_rejects_invalid_json_object(tmp_path, payload):
 
 def test_worker_parser_accepts_max_budget_usd():
     parser = delegate.build_parser()
-    args = parser.parse_args([
-        "_worker",
-        "--task-id", "budget-task",
-        "--agent", "claude",
-        "--mode", "read-only",
-        "--cwd", "/tmp",
-        "--max-budget-usd", "0.50",
-    ])
+    args = parser.parse_args(
+        [
+            "_worker",
+            "--task-id",
+            "budget-task",
+            "--agent",
+            "claude",
+            "--mode",
+            "read-only",
+            "--cwd",
+            "/tmp",
+            "--max-budget-usd",
+            "0.50",
+        ]
+    )
 
     assert args.max_budget_usd == 0.5
 
@@ -1248,13 +1318,19 @@ def test_worker_parser_accepts_output_schema(tmp_path):
 
 
 def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
-    args = delegate.build_parser().parse_args([
-        "dispatch",
-        "--agent", "claude",
-        "--task-id", "budget-dispatch",
-        "--prompt", "hi",
-        "--max-budget-usd", "0.50",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "claude",
+            "--task-id",
+            "budget-dispatch",
+            "--prompt",
+            "hi",
+            "--max-budget-usd",
+            "0.50",
+        ]
+    )
     captured: dict[str, list[str]] = {}
 
     class _FakeStdin:
@@ -1319,10 +1395,13 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
         {"model": "gpt-5.5", "effort": "high", "cli_version": "0.123.0"},
     )()
 
-    with patch(
-        "agent_runtime.telemetry.resolve_dispatch_start_telemetry",
-        return_value=telemetry,
-    ), patch("delegate.subprocess.Popen", return_value=_FakeProc()):
+    with (
+        patch(
+            "agent_runtime.telemetry.resolve_dispatch_start_telemetry",
+            return_value=telemetry,
+        ),
+        patch("delegate.subprocess.Popen", return_value=_FakeProc()),
+    ):
         rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
@@ -1339,8 +1418,11 @@ def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeyp
     import argparse
 
     class _FakeStdin:
-        def write(self, _data): pass
-        def close(self): pass
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
 
     class _FakeProc:
         pid = 12345
@@ -1381,13 +1463,17 @@ def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
     # Done task with a stored PID that happens to be our own (alive)
     # — cancel must still refuse because the TASK is done regardless
     # of whether the PID is alive.
-    delegate._write_state_atomic(path, {
-        "task_id": "already-done",
-        "status": "done",
-        "pid": os.getpid(),
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "already-done",
+            "status": "done",
+            "pid": os.getpid(),
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(task_id="already-done")
     rc = delegate.cmd_cancel(args)
 
@@ -1400,12 +1486,16 @@ def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
 def test_cancel_refuses_crashed_task(tmp_tasks_dir, capsys):
     """Crashed is also terminal — cancel must refuse."""
     path = delegate._state_path("crashed-task")
-    delegate._write_state_atomic(path, {
-        "task_id": "crashed-task",
-        "status": "crashed",
-        "pid": 999_999_999,
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "crashed-task",
+            "status": "crashed",
+            "pid": 999_999_999,
+        },
+    )
     import argparse
+
     args = argparse.Namespace(task_id="crashed-task")
     rc = delegate.cmd_cancel(args)
     assert rc == 1
@@ -1416,12 +1506,16 @@ def test_cancel_refuses_crashed_task(tmp_tasks_dir, capsys):
 def test_cancel_refuses_no_deliverable_task(tmp_tasks_dir, capsys):
     """no_deliverable is terminal, so cancel must not signal its stale PID."""
     path = delegate._state_path("no-deliverable-task")
-    delegate._write_state_atomic(path, {
-        "task_id": "no-deliverable-task",
-        "status": "no_deliverable",
-        "pid": os.getpid(),
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "no-deliverable-task",
+            "status": "no_deliverable",
+            "pid": os.getpid(),
+        },
+    )
     import argparse
+
     rc = delegate.cmd_cancel(argparse.Namespace(task_id="no-deliverable-task"))
 
     assert rc == 1
@@ -1465,9 +1559,7 @@ def test_write_state_atomic_uses_pid_suffixed_tmp(tmp_tasks_dir):
 
     assert len(captured_tmps) == 1
     tmp_name = captured_tmps[0].name
-    assert str(os.getpid()) in tmp_name, (
-        f"tmp filename should include PID for concurrency safety: {tmp_name}"
-    )
+    assert str(os.getpid()) in tmp_name, f"tmp filename should include PID for concurrency safety: {tmp_name}"
     assert ".json.tmp" in tmp_name
 
 
@@ -1483,13 +1575,17 @@ def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsy
     run). status must flip it to crashed.
     """
     path = delegate._state_path("early-crash")
-    delegate._write_state_atomic(path, {
-        "task_id": "early-crash",
-        "status": "spawning",
-        "pid": 999_999_997,  # parent wrote this, worker never ran
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "early-crash",
+            "status": "spawning",
+            "pid": 999_999_997,  # parent wrote this, worker never ran
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(task_id="early-crash")
     delegate.cmd_status(args)
 
@@ -1538,9 +1634,7 @@ def test_dispatch_clobber_guard_rejects_spawning_status(tmp_tasks_dir, capsys):
         ("prior-dead-spawning", "spawning", 999_999_995),
     ],
 )
-def test_dispatch_refuses_existing_task_record_in_any_state(
-    tmp_tasks_dir, capsys, monkeypatch, task_id, status, pid
-):
+def test_dispatch_refuses_existing_task_record_in_any_state(tmp_tasks_dir, capsys, monkeypatch, task_id, status, pid):
     """#6980: a task-id already on disk is fail-closed, including terminal
     receipts and dead-PID running/spawning records. The previous guard only
     refused live running/spawning PIDs and silently clobbered everything else.
@@ -1574,9 +1668,7 @@ def test_dispatch_refuses_existing_task_record_in_any_state(
 
 
 @pytest.mark.parametrize("status", ["running", "spawning"])
-def test_dispatch_force_new_refuses_live_running_or_spawning(
-    tmp_tasks_dir, capsys, monkeypatch, status
-):
+def test_dispatch_force_new_refuses_live_running_or_spawning(tmp_tasks_dir, capsys, monkeypatch, status):
     """#6981 F1: --force-new has no escape for a live running/spawning pid.
 
     Archiving that record and spawning again is the duplicate-worker race
@@ -1611,9 +1703,7 @@ def test_dispatch_force_new_refuses_live_running_or_spawning(
     assert list(tmp_tasks_dir.glob(f"{task_id}.*.archived.result")) == []
 
 
-def test_dispatch_force_new_archives_state_and_result_then_proceeds(
-    tmp_tasks_dir, capsys
-):
+def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys):
     """#6980: --force-new is the only reuse escape, and it must archive both
     the prior record and the prior result before writing a new spawn state.
     """
@@ -1630,9 +1720,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(
     result_path.write_text("completed receipt evidence\n", encoding="utf-8")
 
     with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
-        rc = delegate.cmd_dispatch(
-            _minimal_dispatch_args("force-new-task", force_new=True)
-        )
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args("force-new-task", force_new=True))
 
     assert rc == 0
     archived_json = list(tmp_tasks_dir.glob("force-new-task.*.archived.json"))
@@ -1670,12 +1758,15 @@ def test_dispatch_parser_accepts_force_new_flag():
 def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     """Worker completion should backfill runtime-resolved telemetry fields."""
     state_path = delegate._state_path("worker-telemetry")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "worker-telemetry",
-        "model": "unknown",
-        "effort": "unknown",
-        "cli_version": "unknown",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "worker-telemetry",
+            "model": "unknown",
+            "effort": "unknown",
+            "cli_version": "unknown",
+        },
+    )
 
     mock_result = type(
         "_Result",
@@ -1866,9 +1957,7 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     assert state["exit_code"] == 2
     assert state["last_error"] == "error: Cannot combine --prompt with --yolo."
     assert state["stderr_excerpt"] == state["last_error"]
-    assert stderr_log.read_text(encoding="utf-8") == (
-        "error: Cannot combine --prompt with --yolo.\n"
-    )
+    assert stderr_log.read_text(encoding="utf-8") == ("error: Cannot combine --prompt with --yolo.\n")
 
 
 def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
@@ -1896,18 +1985,21 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
 
     state_path = delegate._state_path("worker-dispatch-event")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "worker-dispatch-event",
-        "model": "unknown",
-        "effort": "unknown",
-        "cli_version": "unknown",
-        "prompt_chars": 2,
-        "worktree_branch": "deepseek/worker-dispatch-event",
-        "worktree_path": str(tmp_path),
-        "runtime_tmp_root": str(runtime_tmp_root),
-        "tmp_bytes_freed": None,
-        "tmp_reap_error": None,
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "worker-dispatch-event",
+            "model": "unknown",
+            "effort": "unknown",
+            "cli_version": "unknown",
+            "prompt_chars": 2,
+            "worktree_branch": "deepseek/worker-dispatch-event",
+            "worktree_path": str(tmp_path),
+            "runtime_tmp_root": str(runtime_tmp_root),
+            "tmp_bytes_freed": None,
+            "tmp_reap_error": None,
+        },
+    )
 
     mock_result = type(
         "_Result",
@@ -1949,10 +2041,7 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     assert rc == 0
     event_files = sorted(event_dir.glob("*.jsonl"))
     assert len(event_files) == 1
-    events = [
-        json.loads(line)
-        for line in event_files[0].read_text(encoding="utf-8").splitlines()
-    ]
+    events = [json.loads(line) for line in event_files[0].read_text(encoding="utf-8").splitlines()]
     dispatch_events = [event for event in events if event["event_type"] == "dispatch"]
     assert len(dispatch_events) == 1
     event = dispatch_events[0]
@@ -2000,11 +2089,14 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
         capture_output=True,
         timeout=30,
     )
-    delegate._write_state_atomic(state_path, {
-        "task_id": "needs-finalize",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "needs-finalize",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
     (tmp_path / "orphan.txt").write_text("left behind", encoding="utf-8")
 
     mock_result = type(
@@ -2171,9 +2263,7 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == (
-        "write_capable_clean_worktree_zero_commits_short_response"
-    )
+    assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
     assert state["last_error"] == state["no_deliverable_reason"]
 
 
@@ -2450,10 +2540,7 @@ def test_read_only_mutation_paths_ignore_entire_telemetry_only():
 
     # Force-added tracked file under an exempted prefix must still trip (#6803 r2).
     tracked_telemetry = ".entire/metadata/force-added.jsonl"
-    assert (
-        delegate._read_only_mutation_paths({}, {tracked_telemetry: " M"})
-        == [tracked_telemetry]
-    )
+    assert delegate._read_only_mutation_paths({}, {tracked_telemetry: " M"}) == [tracked_telemetry]
 
 
 @pytest.mark.parametrize(
@@ -2647,9 +2734,7 @@ def _write_read_only_runtime_state(repo: Path) -> None:
         target.write_text("harness runtime state\n", encoding="utf-8")
 
 
-_READ_ONLY_DEPLOY_TARGET_DIR_NAMES = frozenset(
-    {".agents", ".claude", ".codex", ".cursor", ".gemini"}
-)
+_READ_ONLY_DEPLOY_TARGET_DIR_NAMES = frozenset({".agents", ".claude", ".codex", ".cursor", ".gemini"})
 _UNTRACKED_CLAUDE_HOOKS_PATH = ".claude/hooks/planted.sh"
 
 
@@ -2659,9 +2744,7 @@ def test_read_only_runtime_state_path_classification():
         assert delegate._is_read_only_runtime_state_path(path)
     assert delegate._is_read_only_runtime_state_path(".agent/session-streams/v1/session-streams.sqlite3-wal")
     assert delegate._is_read_only_runtime_state_path("data/sources.sqlite3-shm")
-    assert _READ_ONLY_DEPLOY_TARGET_DIR_NAMES.isdisjoint(
-        delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
-    )
+    assert _READ_ONLY_DEPLOY_TARGET_DIR_NAMES.isdisjoint(delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES)
     assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
     assert not delegate._is_read_only_runtime_state_path(".claude/projects/session.json")
     assert not delegate._is_read_only_runtime_state_path(".codex/hooks/planted.sh")
@@ -2686,21 +2769,16 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
     assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
 
     after_cache_leak = {**after_runtime, ".cache/lemma-frequency-c1-999.json": "!!"}
-    assert delegate._read_only_mutation_paths(before, after_cache_leak) == [
-        ".cache/lemma-frequency-c1-999.json"
-    ]
+    assert delegate._read_only_mutation_paths(before, after_cache_leak) == [".cache/lemma-frequency-c1-999.json"]
 
     # Force-added tracked file under an exempted prefix must still trip (#6803 r2 / #6860).
     tracked_session = ".agent/sessions/force-added.json"
-    assert (
-        delegate._read_only_mutation_paths({}, {tracked_session: " M"})
-        == [tracked_session]
-    )
+    assert delegate._read_only_mutation_paths({}, {tracked_session: " M"}) == [tracked_session]
 
     # Deploy-target untracked files stay visible (#6860 r2).
-    assert delegate._read_only_mutation_paths(
-        {}, {_UNTRACKED_CLAUDE_HOOKS_PATH: "??"}
-    ) == [_UNTRACKED_CLAUDE_HOOKS_PATH]
+    assert delegate._read_only_mutation_paths({}, {_UNTRACKED_CLAUDE_HOOKS_PATH: "??"}) == [
+        _UNTRACKED_CLAUDE_HOOKS_PATH
+    ]
 
 
 @pytest.mark.parametrize(
@@ -2852,9 +2930,7 @@ def test_read_only_dispatch_fails_on_untracked_claude_hooks_file(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [_UNTRACKED_CLAUDE_HOOKS_PATH]
-    assert state["last_error"] == (
-        f"read-only checkout mutation detected: {_UNTRACKED_CLAUDE_HOOKS_PATH}"
-    )
+    assert state["last_error"] == (f"read-only checkout mutation detected: {_UNTRACKED_CLAUDE_HOOKS_PATH}")
     assert state["read_only_checkout_post"][_UNTRACKED_CLAUDE_HOOKS_PATH] == "??"
     assert planted.exists()
 
@@ -2870,9 +2946,7 @@ def test_read_only_deploy_target_dir_exemption_mutation_check(monkeypatch):
 
     assert ".claude" not in delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
     assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
-    assert delegate._read_only_mutation_paths({}, planted) == [
-        _UNTRACKED_CLAUDE_HOOKS_PATH
-    ]
+    assert delegate._read_only_mutation_paths({}, planted) == [_UNTRACKED_CLAUDE_HOOKS_PATH]
 
     monkeypatch.setattr(
         delegate,
@@ -2885,9 +2959,7 @@ def test_read_only_deploy_target_dir_exemption_mutation_check(monkeypatch):
     monkeypatch.undo()
     assert ".claude" not in delegate._READ_ONLY_RUNTIME_STATE_DIR_NAMES
     assert not delegate._is_read_only_runtime_state_path(_UNTRACKED_CLAUDE_HOOKS_PATH)
-    assert delegate._read_only_mutation_paths({}, planted) == [
-        _UNTRACKED_CLAUDE_HOOKS_PATH
-    ]
+    assert delegate._read_only_mutation_paths({}, planted) == [_UNTRACKED_CLAUDE_HOOKS_PATH]
 
 
 _SIBLING_DISPATCH_SANDBOX = ".worktrees/dispatch/cursor/codeql-path-injection-fix"
@@ -2901,13 +2973,9 @@ _SIBLING_DISPATCH_SANDBOX_PATHS = (
 def test_read_only_dispatch_sandbox_root_classification():
     """#6938: only layout-A dispatch sandboxes map to a sibling-root key."""
     assert (
-        delegate._read_only_dispatch_sandbox_root(f"{_SIBLING_DISPATCH_SANDBOX}/README.md")
-        == _SIBLING_DISPATCH_SANDBOX
+        delegate._read_only_dispatch_sandbox_root(f"{_SIBLING_DISPATCH_SANDBOX}/README.md") == _SIBLING_DISPATCH_SANDBOX
     )
-    assert (
-        delegate._read_only_dispatch_sandbox_root(f"{_SIBLING_DISPATCH_SANDBOX}/")
-        == _SIBLING_DISPATCH_SANDBOX
-    )
+    assert delegate._read_only_dispatch_sandbox_root(f"{_SIBLING_DISPATCH_SANDBOX}/") == _SIBLING_DISPATCH_SANDBOX
     assert delegate._read_only_dispatch_sandbox_root(".worktrees/other/sandbox/file") is None
     assert delegate._read_only_dispatch_sandbox_root("tracked.txt") is None
     assert delegate._read_only_dispatch_sandbox_root(".worktrees/dispatch/cursor") is None
@@ -3006,9 +3074,7 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["last_error"] is None
     assert sibling.exists()
     post = state["read_only_checkout_post"]
-    assert not any(
-        delegate._is_read_only_snapshot_excluded_path(path) for path in post
-    )
+    assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in post)
 
 
 def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_worktree(
@@ -3190,9 +3256,7 @@ def test_run_worker_flags_real_world_other_branch_delivery_miss(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == (
-        "write_capable_clean_worktree_zero_commits_short_response"
-    )
+    assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
 
 
 @pytest.mark.parametrize(
@@ -3226,11 +3290,14 @@ def test_run_worker_marks_needs_finalize_for_dirty_workspace_write_worktree(
     task_id = f"needs-finalize-ws-{case}"
     state_path = delegate._state_path(task_id)
     _init_git_repo_for_test(tmp_path, monkeypatch)
-    delegate._write_state_atomic(state_path, {
-        "task_id": task_id,
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
     (tmp_path / "finished_work.txt").write_text("uncommitted", encoding="utf-8")
 
     auto_finalize_calls = []
@@ -3287,11 +3354,14 @@ def test_run_worker_marks_needs_finalize_when_dirty_state_is_unknown(
     task_id = "needs-finalize-unknown-dirty"
     state_path = delegate._state_path(task_id)
     _init_git_repo_for_test(tmp_path, monkeypatch)
-    delegate._write_state_atomic(state_path, {
-        "task_id": task_id,
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     monkeypatch.setattr(delegate, "_auto_finalize_dirty_worktree", lambda **_k: None)
 
@@ -3382,12 +3452,15 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     )
 
     state_path = delegate._state_path("agy-auto-finalize-test")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "agy-auto-finalize-test",
-        "worktree_path": str(worktree),
-        "worktree_branch": "agy/auto-finalize-test",
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "agy-auto-finalize-test",
+            "worktree_path": str(worktree),
+            "worktree_branch": "agy/auto-finalize-test",
+            "worktree_base": "main",
+        },
+    )
     (worktree / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
 
     pushed: list[str] = []
@@ -3404,12 +3477,14 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         title: str,
         body: str,
     ) -> str:
-        created_prs.append({
-            "branch": branch,
-            "base_branch": base_branch,
-            "title": title,
-            "body": body,
-        })
+        created_prs.append(
+            {
+                "branch": branch,
+                "base_branch": base_branch,
+                "title": title,
+                "body": body,
+            }
+        )
         return "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/999"
 
     monkeypatch.setattr(delegate, "_push_auto_finalize_branch", fake_push)
@@ -3544,12 +3619,15 @@ def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
     )
 
     state_path = delegate._state_path("agy-junk-only-finalize-test")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "agy-junk-only-finalize-test",
-        "worktree_path": str(worktree),
-        "worktree_branch": "agy/junk-only-finalize-test",
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "agy-junk-only-finalize-test",
+            "worktree_path": str(worktree),
+            "worktree_branch": "agy/junk-only-finalize-test",
+            "worktree_base": "main",
+        },
+    )
     (worktree / ".venv").symlink_to(tmp_path / "primary-venv", target_is_directory=True)
 
     def fail_push(*_args: Any, **_kwargs: Any) -> None:
@@ -3587,14 +3665,17 @@ def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
         "changed_files": [".venv"],
     }
     assert (worktree / ".venv").is_symlink()
-    assert subprocess.run(
-        ["git", "rev-list", "--count", "origin/main..HEAD"],
-        cwd=worktree,
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    ).stdout.strip() == "0"
+    assert (
+        subprocess.run(
+            ["git", "rev-list", "--count", "origin/main..HEAD"],
+            cwd=worktree,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).stdout.strip()
+        == "0"
+    )
 
 
 def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypatch):
@@ -3899,10 +3980,7 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(
     elapsed = time.monotonic() - started
 
     state = delegate._read_state(state_path)
-    events = [
-        json.loads(line)
-        for line in (tmp_tasks_dir / "dispatch_events.jsonl").read_text().splitlines()
-    ]
+    events = [json.loads(line) for line in (tmp_tasks_dir / "dispatch_events.jsonl").read_text().splitlines()]
 
     assert rc == 1
     assert elapsed < 6
@@ -3940,9 +4018,7 @@ def _sleeping_adapter(returncode_file: Path) -> Any:
     return SleepingAdapter()
 
 
-def _patch_runtime_for_sleeping_adapter(
-    monkeypatch: pytest.MonkeyPatch, adapter: Any
-) -> None:
+def _patch_runtime_for_sleeping_adapter(monkeypatch: pytest.MonkeyPatch, adapter: Any) -> None:
     from agent_runtime import runner as runtime_runner
 
     monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
@@ -3970,9 +4046,7 @@ def test_run_worker_initial_response_timeout_still_reaps_silent_startup(
     state_path = delegate._state_path("initial-timeout")
     returncode_file = tmp_path / "returncode.txt"
     delegate._write_state_atomic(state_path, {"task_id": "initial-timeout"})
-    _patch_runtime_for_sleeping_adapter(
-        monkeypatch, _sleeping_adapter(returncode_file)
-    )
+    _patch_runtime_for_sleeping_adapter(monkeypatch, _sleeping_adapter(returncode_file))
 
     started = time.monotonic()
     rc = delegate._run_worker(
@@ -4013,9 +4087,7 @@ def test_run_worker_silence_timeout_message_names_flag_and_value(
     state_path = delegate._state_path("silence-message")
     returncode_file = tmp_path / "returncode.txt"
     delegate._write_state_atomic(state_path, {"task_id": "silence-message"})
-    _patch_runtime_for_sleeping_adapter(
-        monkeypatch, _sleeping_adapter(returncode_file)
-    )
+    _patch_runtime_for_sleeping_adapter(monkeypatch, _sleeping_adapter(returncode_file))
 
     rc = delegate._run_worker(
         task_id="silence-message",
@@ -4057,14 +4129,7 @@ def test_run_worker_periodic_stdout_avoids_silence_timeout(
         supported_modes = frozenset({"read-only"})
 
         def build_invocation(self, **kwargs: Any) -> InvocationPlan:
-            script = (
-                "i=0; "
-                "while [ $i -lt 5 ]; do "
-                "echo tick-$i; "
-                "i=$((i + 1)); "
-                "sleep 0.2; "
-                "done"
-            )
+            script = "i=0; while [ $i -lt 5 ]; do echo tick-$i; i=$((i + 1)); sleep 0.2; done"
             return InvocationPlan(
                 cmd=["/bin/sh", "-c", script],
                 cwd=Path(kwargs["cwd"]),
@@ -4247,9 +4312,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert any(c[:2] == ["git", "fetch"] for c in calls)
     # Dispatch admission and worktree creation share one immutable resolved SHA.
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "deadbeef", (
-        f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
-    )
+    assert add_cmd[-1] == "deadbeef", f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
     captured = capsys.readouterr()
     assert "issue-1383-smoke" in captured.out
 
@@ -4268,9 +4331,7 @@ def test_fetch_base_strips_origin_prefix(monkeypatch):
 
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
     assert fetch_cmd == ["git", "fetch", "origin", "main"]
-    verify_cmd = next(
-        c for c in calls if c[:2] == ["git", "rev-parse"] and "--verify" in c
-    )
+    verify_cmd = next(c for c in calls if c[:2] == ["git", "rev-parse"] and "--verify" in c)
     assert verify_cmd[-1] == "origin/main"
 
 
@@ -4324,9 +4385,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
     assert fetch_cmd == ["git", "fetch", "origin", "main"]
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
-    assert add_cmd[-1] == "feedc0de", (
-        f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
-    )
+    assert add_cmd[-1] == "feedc0de", f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
 
 
 def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
@@ -4335,16 +4394,12 @@ def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
     calls, fake_run = _make_run_stub(rev_list_count="2", abbrev_ref="codex/x")
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    rebased = delegate._validate_existing_worktree(
-        path=tmp_path, expected_branch="codex/x", base="origin/main"
-    )
+    rebased = delegate._validate_existing_worktree(path=tmp_path, expected_branch="codex/x", base="origin/main")
 
     assert rebased is True
     rev_list_cmd = next(c for c in calls if c[:2] == ["git", "rev-list"])
     assert rev_list_cmd[-1] == "HEAD..origin/main"
-    rebase_cmd = next(
-        c for c in calls if c[:2] == ["git", "rebase"] and "--abort" not in c
-    )
+    rebase_cmd = next(c for c in calls if c[:2] == ["git", "rebase"] and "--abort" not in c)
     assert rebase_cmd[-1] == "origin/main"
 
 
@@ -4432,9 +4487,7 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
 
     env = recorded["env"]
     assert env["VIRTUAL_ENV"] == str(delegate._REPO_ROOT / ".venv")
-    assert env["PATH"] == os.pathsep.join(
-        (str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin")
-    )
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin"))
 
 
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
@@ -4460,7 +4513,7 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
         recorded["env"] = kwargs["env"]
         return _FakeProc()
 
-    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     args = delegate.build_parser().parse_args(
         [
@@ -4554,7 +4607,7 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
     tmp_path,
     monkeypatch,
 ):
-    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(
         delegate,
         "_sweep_runtime_tmp_orphans",
@@ -4648,7 +4701,9 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
 
 
 def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     import argparse
 
@@ -4698,7 +4753,8 @@ def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
 
 
 def test_dispatch_gemini_worker_env_strips_gh_token(
-    tmp_tasks_dir, monkeypatch,
+    tmp_tasks_dir,
+    monkeypatch,
 ):
     import argparse
 
@@ -4745,7 +4801,8 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
 
 
 def test_dispatch_agy_worker_env_strips_gh_token(
-    tmp_tasks_dir, monkeypatch,
+    tmp_tasks_dir,
+    monkeypatch,
 ):
     """The GH_TOKEN strip is a seat policy, not a spelling policy (#7020).
 
@@ -4800,7 +4857,8 @@ def test_dispatch_agy_worker_env_strips_gh_token(
 
 
 def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
-    tmp_tasks_dir, monkeypatch,
+    tmp_tasks_dir,
+    monkeypatch,
 ):
     """`--agent gemini` is a permanent retired-CLI alias (operator 2026-08-18):
     the gemini CLI is not installed, so dispatch MUST resolve to agy before
@@ -5022,7 +5080,8 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
             check=True,
             capture_output=True,
             text=True,
-            env=env, timeout=30,
+            env=env,
+            timeout=30,
         )
 
     subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env, timeout=30)
@@ -5052,11 +5111,14 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
 
     assert path == worktree.resolve()
     assert branch == "claude/predeploy-visibility"
-    assert git(path, "rev-parse", "HEAD").stdout.strip() == git(
-        client,
-        "rev-parse",
-        "origin/claude/predeploy-visibility",
-    ).stdout.strip()
+    assert (
+        git(path, "rev-parse", "HEAD").stdout.strip()
+        == git(
+            client,
+            "rev-parse",
+            "origin/claude/predeploy-visibility",
+        ).stdout.strip()
+    )
 
     reused_path, reused_branch, telemetry = delegate._ensure_worktree(
         agent="claude",
@@ -5135,9 +5197,7 @@ def test_branch_reuse_existing_pr_worktree_with_merge_refuses_staleness_without_
     assert git(client, "rev-list", "--merges", "--count", f"origin/{branch}").stdout.strip() == "1"
 
 
-def test_resolve_existing_branch_reuse_refuses_unpushed_local_commits(
-    tmp_path, monkeypatch
-):
+def test_resolve_existing_branch_reuse_refuses_unpushed_local_commits(tmp_path, monkeypatch):
     """Immutable-base resolution must not admit an unpushed attached branch."""
     branch = "claude/attached-pr"
     worktree = tmp_path / "attached-pr"
@@ -5305,19 +5365,11 @@ def test_branch_reuse_refuses_branch_checked_out_in_another_worktree(tmp_path, m
         )
 
 
-def test_branch_reuse_releases_clean_terminal_holder_then_attaches(
-    tmp_path, monkeypatch, tmp_tasks_dir
-):
+def test_branch_reuse_releases_clean_terminal_holder_then_attaches(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340: clean + synced + terminal-task holder is released, not a bounce."""
     target = tmp_path / "target"
     # Layout matches .worktrees/dispatch/<agent>/<task>/
-    occupied = (
-        Path(delegate._REPO_ROOT)
-        / ".worktrees"
-        / "dispatch"
-        / "deepseek"
-        / "review-5338-deepseek"
-    )
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "deepseek" / "review-5338-deepseek"
     branch = "grok-build/atlas-slice3-vendoring-retry"
     calls, base_stub = _make_run_stub(
         status_porcelain="",
@@ -5331,11 +5383,7 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
             # First list: still occupied. After remove: free.
-            body = (
-                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n"
-                if list_hits["n"] == 1
-                else ""
-            )
+            body = f"worktree {occupied}\nbranch refs/heads/{branch}\n\n" if list_hits["n"] == 1 else ""
             return subprocess.CompletedProcess(cmd, 0, body, "")
         if cmd[:3] == ["git", "worktree", "remove"]:
             removes.append(list(cmd))
@@ -5375,18 +5423,10 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
 
 
-def test_branch_reuse_refuses_clean_holder_with_active_task(
-    tmp_path, monkeypatch, tmp_tasks_dir
-):
+def test_branch_reuse_refuses_clean_holder_with_active_task(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340: clean synced holder with running task still refuses."""
     target = tmp_path / "target"
-    occupied = (
-        Path(delegate._REPO_ROOT)
-        / ".worktrees"
-        / "dispatch"
-        / "cursor"
-        / "atlas-5230-runner-pr1-delta"
-    )
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "cursor" / "atlas-5230-runner-pr1-delta"
     branch = "cursor/atlas-5230"
     _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
 
@@ -5425,18 +5465,10 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(
         )
 
 
-def test_branch_reuse_releases_clean_holder_with_absent_task_record(
-    tmp_path, monkeypatch, tmp_tasks_dir
-):
+def test_branch_reuse_releases_clean_holder_with_absent_task_record(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340: legacy holder without state releases after empty activity probes."""
     target = tmp_path / "target"
-    occupied = (
-        Path(delegate._REPO_ROOT)
-        / ".worktrees"
-        / "dispatch"
-        / "codex"
-        / "foo"
-    )
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "foo"
     branch = "codex/foo"
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
@@ -5493,9 +5525,7 @@ def test_branch_holder_rejects_reaper_reservation(tmp_path, monkeypatch, tmp_tas
     assert reason == "reaper lifecycle reservation is pending"
 
 
-def test_branch_holder_releases_reaped_task_after_empty_activity_probes(
-    tmp_path, monkeypatch, tmp_tasks_dir
-):
+def test_branch_holder_releases_reaped_task_after_empty_activity_probes(tmp_path, monkeypatch, tmp_tasks_dir):
     """A reaped task record is terminal but still requires empty probes."""
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "reaped"
     branch = "codex/reaped"
@@ -5583,18 +5613,10 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
     assert reason == "active dispatch task-id=codex-legacy"
 
 
-def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(
-    tmp_path, monkeypatch, tmp_tasks_dir
-):
+def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340 CF F001: state key codex_foo vs path component foo still finds owner."""
     target = tmp_path / "target"
-    occupied = (
-        Path(delegate._REPO_ROOT)
-        / ".worktrees"
-        / "dispatch"
-        / "codex"
-        / "foo"
-    )
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "foo"
     branch = "codex/foo-followup"
     calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     list_hits = {"n": 0}
@@ -5604,11 +5626,7 @@ def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
-            body = (
-                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n"
-                if list_hits["n"] == 1
-                else ""
-            )
+            body = f"worktree {occupied}\nbranch refs/heads/{branch}\n\n" if list_hits["n"] == 1 else ""
             return subprocess.CompletedProcess(cmd, 0, body, "")
         if cmd[:3] == ["git", "worktree", "remove"]:
             removes.append(list(cmd))
@@ -5646,18 +5664,35 @@ def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(
 # cmd_list
 # ---------------------------------------------------------------------------
 
+
 def test_list_filters_by_status(tmp_tasks_dir, capsys):
-    delegate._write_state_atomic(delegate._state_path("t1"), {
-        "task_id": "t1", "agent": "codex", "status": "done",
-    })
-    delegate._write_state_atomic(delegate._state_path("t2"), {
-        "task_id": "t2", "agent": "gemini", "status": "failed",
-    })
-    delegate._write_state_atomic(delegate._state_path("t3"), {
-        "task_id": "t3", "agent": "codex", "status": "done",
-    })
+    delegate._write_state_atomic(
+        delegate._state_path("t1"),
+        {
+            "task_id": "t1",
+            "agent": "codex",
+            "status": "done",
+        },
+    )
+    delegate._write_state_atomic(
+        delegate._state_path("t2"),
+        {
+            "task_id": "t2",
+            "agent": "gemini",
+            "status": "failed",
+        },
+    )
+    delegate._write_state_atomic(
+        delegate._state_path("t3"),
+        {
+            "task_id": "t3",
+            "agent": "codex",
+            "status": "done",
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(status="done")
     rc = delegate.cmd_list(args)
     assert rc == 0
@@ -5669,11 +5704,17 @@ def test_list_filters_by_status(tmp_tasks_dir, capsys):
 
 
 def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
-    delegate._write_state_atomic(delegate._state_path("dead"), {
-        "task_id": "dead", "agent": "codex",
-        "status": "running", "pid": 999_999_998,
-    })
+    delegate._write_state_atomic(
+        delegate._state_path("dead"),
+        {
+            "task_id": "dead",
+            "agent": "codex",
+            "status": "running",
+            "pid": 999_999_998,
+        },
+    )
     import argparse
+
     args = argparse.Namespace(status=None)
     delegate.cmd_list(args)
     captured = capsys.readouterr()
@@ -5685,6 +5726,7 @@ def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
 # ---------------------------------------------------------------------------
 # #1476 — Fix 1: fetch-before-branch (stale-base footgun)
 # ---------------------------------------------------------------------------
+
 
 def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monkeypatch):
     """Fix 1 (#1476): _ensure_worktree must fetch origin and branch from
@@ -5711,9 +5753,7 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     assert fetch_calls, "must fetch origin/main before branching"
     assert fetch_calls[0] == ["git", "fetch", "origin", "main"]
     assert add_calls, "must invoke git worktree add"
-    assert add_calls[0][-1] == "origin/main", (
-        "must branch from origin/main, not local main"
-    )
+    assert add_calls[0][-1] == "origin/main", "must branch from origin/main, not local main"
     assert telemetry["base_sha"] == "sha-from-origin"
     assert telemetry["reused"] is False
     sparse_calls = [c for c in calls if c[:2] == ["git", "sparse-checkout"]]
@@ -5831,15 +5871,11 @@ def test_apply_dispatch_sparse_checkout_include_curriculum(tmp_path, monkeypatch
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
         if cmd[:2] == ["git", "ls-tree"]:
-            return subprocess.CompletedProcess(
-                cmd, 0, "curriculum\ndocs\nscripts\nwiki\n", ""
-            )
+            return subprocess.CompletedProcess(cmd, 0, "curriculum\ndocs\nscripts\nwiki\n", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
-    meta = delegate._apply_dispatch_sparse_checkout(
-        tmp_path, sparse_include=("curriculum",)
-    )
+    meta = delegate._apply_dispatch_sparse_checkout(tmp_path, sparse_include=("curriculum",))
     assert meta["excluded"] == ["wiki"]
     assert "curriculum" in meta["included_dirs"]
     set_cmd = next(c for c in calls if c[:3] == ["git", "sparse-checkout", "set"])
@@ -5941,6 +5977,7 @@ def test_ensure_worktree_refuses_stale_base_when_fetch_fails(tmp_tasks_dir, tmp_
 # #1476 — Fix 2: branch-name normalization
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize(
     "agent, task_id, expected_branch",
     [
@@ -5986,6 +6023,7 @@ def test_derive_branch_never_doubles_prefix_across_agents():
 # ---------------------------------------------------------------------------
 # #1476 — Fix 3: worktree-reuse validation
 # ---------------------------------------------------------------------------
+
 
 def test_ensure_worktree_reuse_dirty_raises(tmp_tasks_dir, tmp_path, monkeypatch):
     """Fix 3 (#1476): a dirty existing worktree must raise WorktreeDirty
@@ -6098,14 +6136,13 @@ def test_ensure_worktree_reuse_stale_base_rebase_fail_raises(tmp_tasks_dir, tmp_
             base="main",
         )
     # Must abort so the worktree isn't left mid-rebase.
-    assert any(c[:2] == ["git", "rebase"] and "--abort" in c for c in abort_calls), (
-        "rebase must be aborted on failure"
-    )
+    assert any(c[:2] == ["git", "rebase"] and "--abort" in c for c in abort_calls), "rebase must be aborted on failure"
 
 
 # ---------------------------------------------------------------------------
 # #1476 — Fix 4: dispatch/ subtree layout
 # ---------------------------------------------------------------------------
+
 
 def test_auto_worktree_path_is_dispatch_subtree():
     """Fix 4 (#1476): the auto-derived default worktree path is under
@@ -6119,15 +6156,22 @@ def test_classify_worktree_layout_distinguishes_flat_and_dispatch(tmp_path):
     """Fix 4 (#1476): layout classifier tells flat from dispatch paths,
     so list/status can emit deprecation messages."""
     repo = delegate._REPO_ROOT
-    assert delegate._classify_worktree_layout(
-        repo / ".worktrees" / "codex-1453-sidecar-freshness",
-    ) == "flat"
-    assert delegate._classify_worktree_layout(
-        repo / ".worktrees" / "dispatch" / "codex" / "1476",
-    ) == "dispatch"
+    assert (
+        delegate._classify_worktree_layout(
+            repo / ".worktrees" / "codex-1453-sidecar-freshness",
+        )
+        == "flat"
+    )
+    assert (
+        delegate._classify_worktree_layout(
+            repo / ".worktrees" / "dispatch" / "codex" / "1476",
+        )
+        == "dispatch"
+    )
     assert delegate._classify_worktree_layout(None) is None
     assert delegate._classify_worktree_layout(tmp_path / "anywhere-else") in (
-        "external", None,
+        "external",
+        None,
     )
 
 
@@ -6137,8 +6181,11 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
     import argparse
 
     class _FakeStdin:
-        def write(self, _data): pass
-        def close(self): pass
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
 
     class _FakeProc:
         pid = 54321
@@ -6205,7 +6252,10 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     def _git(cwd: Path, *args: str) -> None:
         subprocess.run(
             ["git", "-C", str(cwd), *args],
-            check=True, capture_output=True, text=True, env=env,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
             timeout=30,
         )
 
@@ -6213,7 +6263,10 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     main.mkdir()
     subprocess.run(
         ["git", "init", "-q", "-b", "main", str(main)],
-        check=True, capture_output=True, text=True, env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
         timeout=30,
     )
     _git(main, "config", "user.email", "test@example.com")
@@ -6286,22 +6339,34 @@ def _write_args(**overrides):
 
 
 def test_write_guard_allows_read_only_repo_root():
-    assert delegate._resolve_write_cwd_error(
-        mode="read-only", worktree_arg=None, cwd_arg=None,
-    ) is None
+    assert (
+        delegate._resolve_write_cwd_error(
+            mode="read-only",
+            worktree_arg=None,
+            cwd_arg=None,
+        )
+        is None
+    )
 
 
 def test_write_guard_allows_bare_worktree_for_both_write_modes():
     for mode in ("workspace-write", "danger"):
-        assert delegate._resolve_write_cwd_error(
-            mode=mode, worktree_arg="auto", cwd_arg=None,
-        ) is None
+        assert (
+            delegate._resolve_write_cwd_error(
+                mode=mode,
+                worktree_arg="auto",
+                cwd_arg=None,
+            )
+            is None
+        )
 
 
 def test_write_guard_rejects_write_mode_without_isolation():
     for mode in ("workspace-write", "danger"):
         err = delegate._resolve_write_cwd_error(
-            mode=mode, worktree_arg=None, cwd_arg=None,
+            mode=mode,
+            worktree_arg=None,
+            cwd_arg=None,
         )
         assert err is not None
         assert "worktree" in err
@@ -6310,7 +6375,9 @@ def test_write_guard_rejects_write_mode_without_isolation():
 def test_write_guard_rejects_cwd_primary_checkout(tmp_path):
     main, _ = _init_repo_with_worktree(tmp_path)
     err = delegate._resolve_write_cwd_error(
-        mode="workspace-write", worktree_arg=None, cwd_arg=str(main),
+        mode="workspace-write",
+        worktree_arg=None,
+        cwd_arg=str(main),
     )
     assert err is not None
     assert "primary checkout" in err
@@ -6321,7 +6388,9 @@ def test_write_guard_rejects_cwd_in_repo_outside_worktrees(tmp_path):
     subdir = main / "pkg"
     subdir.mkdir()
     err = delegate._resolve_write_cwd_error(
-        mode="danger", worktree_arg=None, cwd_arg=str(subdir),
+        mode="danger",
+        worktree_arg=None,
+        cwd_arg=str(subdir),
     )
     assert err is not None
     assert "primary checkout" in err
@@ -6329,15 +6398,25 @@ def test_write_guard_rejects_cwd_in_repo_outside_worktrees(tmp_path):
 
 def test_write_guard_accepts_cwd_added_worktree(tmp_path):
     _, dispatch_wt = _init_repo_with_worktree(tmp_path)
-    assert delegate._resolve_write_cwd_error(
-        mode="workspace-write", worktree_arg=None, cwd_arg=str(dispatch_wt),
-    ) is None
+    assert (
+        delegate._resolve_write_cwd_error(
+            mode="workspace-write",
+            worktree_arg=None,
+            cwd_arg=str(dispatch_wt),
+        )
+        is None
+    )
     # A subdirectory inside the verified worktree is equally fine.
     sub = dispatch_wt / "nested"
     sub.mkdir()
-    assert delegate._resolve_write_cwd_error(
-        mode="danger", worktree_arg=None, cwd_arg=str(sub),
-    ) is None
+    assert (
+        delegate._resolve_write_cwd_error(
+            mode="danger",
+            worktree_arg=None,
+            cwd_arg=str(sub),
+        )
+        is None
+    )
 
 
 def test_write_guard_rejects_cwd_unregistered_worktree_dir(tmp_path):
@@ -6347,7 +6426,9 @@ def test_write_guard_rejects_cwd_unregistered_worktree_dir(tmp_path):
     ghost = main / ".worktrees" / "dispatch" / "codex" / "ghost"
     ghost.mkdir(parents=True)
     err = delegate._resolve_write_cwd_error(
-        mode="workspace-write", worktree_arg=None, cwd_arg=str(ghost),
+        mode="workspace-write",
+        worktree_arg=None,
+        cwd_arg=str(ghost),
     )
     assert err is not None
     assert "verified git worktree" in err
@@ -6356,7 +6437,9 @@ def test_write_guard_rejects_cwd_unregistered_worktree_dir(tmp_path):
 def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     main, _ = _init_repo_with_worktree(tmp_path)
     err = delegate._resolve_write_cwd_error(
-        mode="danger", worktree_arg=str(main), cwd_arg=None,
+        mode="danger",
+        worktree_arg=str(main),
+        cwd_arg=None,
     )
     assert err is not None
     assert "primary checkout" in err
@@ -6373,9 +6456,7 @@ def test_auto_worktree_path_ignores_sibling_invocation_cwd(tmp_path, monkeypatch
 
     derived = delegate._auto_worktree_path("codex", "private-492-private-increment")
 
-    assert derived == (
-        primary / ".worktrees" / "dispatch" / "codex" / "private-492-private-increment"
-    )
+    assert derived == (primary / ".worktrees" / "dispatch" / "codex" / "private-492-private-increment")
     assert derived.is_relative_to(primary)
     assert not derived.is_relative_to(sibling)
 
@@ -6384,12 +6465,15 @@ def test_cross_repo_guard_allows_primary_invocation(tmp_path, monkeypatch):
     primary, _ = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
-    assert delegate._resolve_cross_repo_binding_error(
-        worktree_arg="auto",
-        cwd_arg=None,
-        requested_branch=None,
-        invocation_cwd=primary,
-    ) is None
+    assert (
+        delegate._resolve_cross_repo_binding_error(
+            worktree_arg="auto",
+            cwd_arg=None,
+            requested_branch=None,
+            invocation_cwd=primary,
+        )
+        is None
+    )
 
 
 def test_cross_repo_guard_refuses_worktree_from_sibling(tmp_path, monkeypatch):
@@ -6447,12 +6531,15 @@ def test_cross_repo_guard_allows_explicit_cwd_from_sibling(tmp_path, monkeypatch
     primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
-    assert delegate._resolve_cross_repo_binding_error(
-        worktree_arg=None,
-        cwd_arg=str(sibling_wt),
-        requested_branch=None,
-        invocation_cwd=sibling,
-    ) is None
+    assert (
+        delegate._resolve_cross_repo_binding_error(
+            worktree_arg=None,
+            cwd_arg=str(sibling_wt),
+            requested_branch=None,
+            invocation_cwd=sibling,
+        )
+        is None
+    )
 
 
 def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch):
@@ -6462,11 +6549,14 @@ def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch):
     loose.mkdir()
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
-    assert delegate._resolve_cross_repo_binding_error(
-        worktree_arg="auto",
-        cwd_arg=None,
-        invocation_cwd=loose,
-    ) is None
+    assert (
+        delegate._resolve_cross_repo_binding_error(
+            worktree_arg="auto",
+            cwd_arg=None,
+            invocation_cwd=loose,
+        )
+        is None
+    )
 
 
 def test_cross_repo_guard_allows_invocation_from_primary_worktree(tmp_path, monkeypatch):
@@ -6474,12 +6564,15 @@ def test_cross_repo_guard_allows_invocation_from_primary_worktree(tmp_path, monk
     primary, dispatch_wt = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
-    assert delegate._resolve_cross_repo_binding_error(
-        worktree_arg="auto",
-        cwd_arg=None,
-        requested_branch=None,
-        invocation_cwd=dispatch_wt,
-    ) is None
+    assert (
+        delegate._resolve_cross_repo_binding_error(
+            worktree_arg="auto",
+            cwd_arg=None,
+            requested_branch=None,
+            invocation_cwd=dispatch_wt,
+        )
+        is None
+    )
 
 
 def test_cross_repo_guard_mutation_check(tmp_path, monkeypatch):
@@ -6562,43 +6655,78 @@ def test_primary_dirty_status_ignores_gitignored_local_state(tmp_path):
 
 
 def test_is_untracked_receipt_allowlisted_unit():
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": "??",
-        "path": "batch_state/atlas-jobs/receipts/job-1.json",
-        "kind": "untracked",
-    }) is True
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": "??",
-        "path": "batch_state/atlas-jobs/receipts/sub/job-2.json",
-        "kind": "untracked",
-    }) is True
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": "??",
-        "path": "./batch_state/atlas-jobs/receipts/job-3.json",
-        "kind": "untracked",
-    }) is True
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": "??",
+                "path": "batch_state/atlas-jobs/receipts/job-1.json",
+                "kind": "untracked",
+            }
+        )
+        is True
+    )
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": "??",
+                "path": "batch_state/atlas-jobs/receipts/sub/job-2.json",
+                "kind": "untracked",
+            }
+        )
+        is True
+    )
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": "??",
+                "path": "./batch_state/atlas-jobs/receipts/job-3.json",
+                "kind": "untracked",
+            }
+        )
+        is True
+    )
     # Non-receipt untracked paths must not be allowlisted
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": "??",
-        "path": "batch_state/atlas-jobs/results/job-1.json",
-        "kind": "untracked",
-    }) is False
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": "??",
-        "path": "batch_state/random.json",
-        "kind": "untracked",
-    }) is False
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": "??",
-        "path": "scratch.txt",
-        "kind": "untracked",
-    }) is False
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": "??",
+                "path": "batch_state/atlas-jobs/results/job-1.json",
+                "kind": "untracked",
+            }
+        )
+        is False
+    )
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": "??",
+                "path": "batch_state/random.json",
+                "kind": "untracked",
+            }
+        )
+        is False
+    )
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": "??",
+                "path": "scratch.txt",
+                "kind": "untracked",
+            }
+        )
+        is False
+    )
     # Tracked modifications must NOT be allowlisted even under receipts/
-    assert delegate._is_untracked_receipt_allowlisted({
-        "xy": " M",
-        "path": "batch_state/atlas-jobs/receipts/job-1.json",
-        "kind": "tracked",
-    }) is False
+    assert (
+        delegate._is_untracked_receipt_allowlisted(
+            {
+                "xy": " M",
+                "path": "batch_state/atlas-jobs/receipts/job-1.json",
+                "kind": "tracked",
+            }
+        )
+        is False
+    )
 
 
 def test_dirty_primary_guard_allowlists_untracked_receipts(tmp_path, monkeypatch):
@@ -6640,11 +6768,19 @@ def test_dirty_primary_guard_rejects_tracked_modified_receipt(tmp_path, monkeypa
     env = delegate._sanitized_git_env()
     subprocess.run(
         ["git", "-C", str(main), "add", "-A"],
-        check=True, capture_output=True, text=True, env=env, timeout=30,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
     )
     subprocess.run(
         ["git", "-C", str(main), "commit", "-q", "-m", "add receipt"],
-        check=True, capture_output=True, text=True, env=env, timeout=30,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
     )
     # Now modify the tracked receipt
     receipt_file.write_text('{"status": "modified"}\n')
@@ -6673,7 +6809,9 @@ def test_dispatch_read_only_allows_repo_root(tmp_tasks_dir, monkeypatch):
 
 
 def test_dispatch_read_only_allows_dirty_primary_checkout(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """Read-only preflight still runs so agents can inspect and report dirt."""
     main, _ = _init_repo_with_worktree(tmp_path)
@@ -6692,7 +6830,10 @@ def test_dispatch_read_only_allows_dirty_primary_checkout(
 
 
 def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
 ):
     main, _ = _init_repo_with_worktree(tmp_path)
     (main / "tracked.txt").write_text("dirty\n")
@@ -6726,7 +6867,9 @@ def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
 
 
 def test_dispatch_allows_write_capable_when_primary_has_untracked_receipt(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """#6967: write-capable dispatch succeeds when only untracked receipt exists."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
@@ -6750,7 +6893,10 @@ def test_dispatch_allows_write_capable_when_primary_has_untracked_receipt(
 
 
 def test_dispatch_rejects_write_capable_when_primary_has_untracked_non_receipt_file(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
 ):
     """#6967: untracked random file still blocks write-capable dispatch."""
     main, _ = _init_repo_with_worktree(tmp_path)
@@ -6788,11 +6934,16 @@ def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys
 
 
 def test_dispatch_rejects_workspace_write_cwd_primary_checkout(
-    tmp_tasks_dir, tmp_path, capsys,
+    tmp_tasks_dir,
+    tmp_path,
+    capsys,
 ):
     main, _ = _init_repo_with_worktree(tmp_path)
     args = _write_args(
-        task_id="ww-cwd-main", mode="workspace-write", cwd=str(main), worktree=None,
+        task_id="ww-cwd-main",
+        mode="workspace-write",
+        cwd=str(main),
+        worktree=None,
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -6803,13 +6954,18 @@ def test_dispatch_rejects_workspace_write_cwd_primary_checkout(
 
 
 def test_dispatch_accepts_workspace_write_cwd_added_worktree(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     _patch_worker_popen(monkeypatch)
     args = _write_args(
-        task_id="ww-cwd-wt", mode="workspace-write", cwd=str(dispatch_wt), worktree=None,
+        task_id="ww-cwd-wt",
+        mode="workspace-write",
+        cwd=str(dispatch_wt),
+        worktree=None,
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -6821,13 +6977,17 @@ def test_dispatch_accepts_workspace_write_cwd_added_worktree(
 
 
 def test_dispatch_accepts_bare_worktree_for_workspace_write(
-    tmp_tasks_dir, monkeypatch,
+    tmp_tasks_dir,
+    monkeypatch,
 ):
     _, fake_run = _make_run_stub()
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
     args = _write_args(
-        task_id="ww-bare", mode="workspace-write", cwd=None, worktree="auto",
+        task_id="ww-bare",
+        mode="workspace-write",
+        cwd=None,
+        worktree="auto",
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -6872,7 +7032,10 @@ def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monke
 
 
 def test_dispatch_refuses_worktree_from_sibling_repo(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
 ):
     """#6900: --worktree invoked from a sibling git root must not bind primary."""
     primary, sibling, _ = _init_sibling_pair(tmp_path)
@@ -6897,7 +7060,10 @@ def test_dispatch_refuses_worktree_from_sibling_repo(
 
 
 def test_dispatch_refuses_branch_from_sibling_repo(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
 ):
     """#6900: --branch fetches/attaches in the primary, same silent bind."""
     primary, sibling, _ = _init_sibling_pair(tmp_path)
@@ -6923,7 +7089,9 @@ def test_dispatch_refuses_branch_from_sibling_repo(
 
 
 def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """Documented sibling flow: manual worktree + --cwd, no --worktree."""
     primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
@@ -6952,11 +7120,7 @@ def test_dispatch_help_omits_deprecated_cwd_dot_example():
     worktree layout for write-capable work."""
     parser = delegate.build_parser()
     root_help = parser.format_help()
-    dispatch_parser = next(
-        action.choices["dispatch"]
-        for action in parser._actions
-        if action.dest == "command"
-    )
+    dispatch_parser = next(action.choices["dispatch"] for action in parser._actions if action.dest == "command")
     help_text = dispatch_parser.format_help()
     assert "--cwd ." not in root_help
     assert "--mode workspace-write --cwd" not in root_help
@@ -6979,20 +7143,27 @@ def test_list_and_status_walk_both_layouts(tmp_tasks_dir, tmp_path, capsys, monk
     flat_path = repo / ".worktrees" / "codex-1453-sidecar-freshness"
     dispatch_path = repo / ".worktrees" / "dispatch" / "codex" / "1476-new"
 
-    delegate._write_state_atomic(delegate._state_path("flat-task"), {
-        "task_id": "flat-task",
-        "agent": "codex",
-        "status": "done",
-        "worktree_path": str(flat_path),
-    })
-    delegate._write_state_atomic(delegate._state_path("new-task"), {
-        "task_id": "new-task",
-        "agent": "codex",
-        "status": "done",
-        "worktree_path": str(dispatch_path),
-    })
+    delegate._write_state_atomic(
+        delegate._state_path("flat-task"),
+        {
+            "task_id": "flat-task",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(flat_path),
+        },
+    )
+    delegate._write_state_atomic(
+        delegate._state_path("new-task"),
+        {
+            "task_id": "new-task",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(dispatch_path),
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(status=None)
     delegate.cmd_list(args)
     captured = capsys.readouterr()
@@ -7012,14 +7183,18 @@ def test_status_warns_on_flat_layout(tmp_tasks_dir, capsys):
     deprecation notice in addition to the JSON state."""
     repo = delegate._REPO_ROOT
     flat_path = repo / ".worktrees" / "codex-old-thing"
-    delegate._write_state_atomic(delegate._state_path("flat-status"), {
-        "task_id": "flat-status",
-        "agent": "codex",
-        "status": "done",
-        "worktree_path": str(flat_path),
-    })
+    delegate._write_state_atomic(
+        delegate._state_path("flat-status"),
+        {
+            "task_id": "flat-status",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(flat_path),
+        },
+    )
 
     import argparse
+
     args = argparse.Namespace(task_id="flat-status")
     delegate.cmd_status(args)
     captured = capsys.readouterr()
@@ -7085,12 +7260,9 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
     assert rev_list_calls, "reuse validation must check staleness via rev-list"
     for cmd in rev_list_calls:
         assert cmd[-1] == f"HEAD..origin/{branch}", (
-            "staleness must be checked against the requested branch, "
-            f"got {cmd[-1]!r}"
+            f"staleness must be checked against the requested branch, got {cmd[-1]!r}"
         )
-    assert not any(c[:2] == ["git", "rebase"] for c in calls), (
-        "branch-reuse dry-run must never rebase"
-    )
+    assert not any(c[:2] == ["git", "rebase"] for c in calls), "branch-reuse dry-run must never rebase"
 
 
 def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
@@ -7104,7 +7276,8 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     clean_env = {
         k: v
         for k, v in os.environ.items()
-        if k not in {
+        if k
+        not in {
             "GIT_DIR",
             "GIT_WORK_TREE",
             "GIT_INDEX_FILE",
@@ -7153,9 +7326,7 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (primary / "curriculum" / "f.txt").is_file()
     assert (primary / "wiki" / "f.txt").is_file()
 
-    meta2 = delegate._apply_dispatch_sparse_checkout(
-        worktree, sparse_include=("curriculum",)
-    )
+    meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum",))
     assert meta2["excluded"] == ["wiki"]
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert not (worktree / "wiki").exists()
@@ -7191,12 +7362,15 @@ def test_run_worker_reaches_a_terminal_status_when_finalize_telemetry_raises(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("finalize-explodes")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "finalize-explodes",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "finalize-explodes",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
     (tmp_path / "work.txt").write_text("finished work", encoding="utf-8")
 
     mock_result = type(
@@ -7257,12 +7431,15 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("reap-explodes")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "reap-explodes",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "reap-explodes",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
@@ -7337,19 +7514,27 @@ def test_run_worker_records_completion_even_when_cancelled_during_finalize(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("cancelled-in-finalize")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "cancelled-in-finalize",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "cancelled-in-finalize",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7396,19 +7581,27 @@ def test_interrupt_before_telemetry_still_records_the_outcome(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("interrupt-early")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "interrupt-early",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "interrupt-early",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "a response", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "a response",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7455,19 +7648,27 @@ def test_interrupt_after_clean_telemetry_does_not_invent_finalize_work(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("interrupt-after-clean")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "interrupt-after-clean",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "interrupt-after-clean",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7526,19 +7727,27 @@ def test_terminal_fallback_write_defers_a_second_sigterm(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("double-sigterm")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "double-sigterm",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "double-sigterm",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7593,19 +7802,27 @@ def test_sigterm_during_runtime_lease_cleanup_cannot_lose_the_outcome(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("sigterm-in-cleanup")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "sigterm-in-cleanup",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "sigterm-in-cleanup",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7658,19 +7875,27 @@ def test_interrupt_in_the_post_cleanup_gap_still_records_the_outcome(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("gap-interrupt")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "gap-interrupt",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "gap-interrupt",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7747,12 +7972,15 @@ def test_interrupt_during_the_runtime_call_still_records_a_terminal_status(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("interrupt-mid-runtime")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "interrupt-mid-runtime",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "interrupt-mid-runtime",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     def cancel_mid_run(*_args, **_kwargs):
         raise KeyboardInterrupt("SIGTERM while the worker was running")
@@ -7791,19 +8019,27 @@ def test_interrupt_at_the_cleanup_boundary_is_inside_the_region(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("boundary-interrupt")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "boundary-interrupt",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "boundary-interrupt",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7854,25 +8090,33 @@ def test_interrupt_fallback_preserves_the_task_record(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("preserve-record")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "preserve-record",
-        "status": "running",
-        "pid": 4242,
-        "mode": "workspace-write",
-        "agent": "codex",
-        "cwd": str(tmp_path),
-        "worktree_path": str(tmp_path),
-        "worktree_branch": "codex/preserve-record",
-        "worktree_base": "main",
-        "prompt_chars": 17,
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "preserve-record",
+            "status": "running",
+            "pid": 4242,
+            "mode": "workspace-write",
+            "agent": "codex",
+            "cwd": str(tmp_path),
+            "worktree_path": str(tmp_path),
+            "worktree_branch": "codex/preserve-record",
+            "worktree_base": "main",
+            "prompt_chars": 17,
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7929,19 +8173,27 @@ def test_interrupt_fallback_defers_sigterm_before_computing(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("defer-before-compute")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "defer-before-compute",
-        "status": "running",
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "defer-before-compute",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "done", "stderr_excerpt": None, "returncode": 0,
-            "rate_limited": False, "model": "gpt-5.5", "effort": "xhigh",
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
             "cli_version": "0.131.0",
         },
     )()
@@ -7992,22 +8244,30 @@ def test_interrupt_fallback_records_the_complete_outcome(
     """
     _init_git_repo_for_test(tmp_path, monkeypatch)
     state_path = delegate._state_path("complete-outcome")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "complete-outcome",
-        "status": "running",
-        "response_chars": None,
-        "exit_code": None,
-        "worktree_path": str(tmp_path),
-        "worktree_base": "main",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "complete-outcome",
+            "status": "running",
+            "response_chars": None,
+            "exit_code": None,
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+        },
+    )
 
     mock_result = type(
         "_Result",
         (),
         {
-            "ok": True, "response": "a real response body", "stderr_excerpt": None,
-            "returncode": 0, "rate_limited": False, "model": "gpt-5.5",
-            "effort": "xhigh", "cli_version": "0.131.0",
+            "ok": True,
+            "response": "a real response body",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
         },
     )()
 
@@ -8047,8 +8307,11 @@ def test_interrupt_fallback_records_the_complete_outcome(
 # Issue #6426: finalizer deliverable counting on --cwd reuse worktrees
 # ---------------------------------------------------------------------------
 
+
 def _init_private_remote_worktree(
-    tmp_path: Path, *, stale_local_main: bool = False,
+    tmp_path: Path,
+    *,
+    stale_local_main: bool = False,
 ) -> tuple[Path, Path]:
     """Create a worktree based on a non-origin private remote.
 
@@ -8140,7 +8403,9 @@ def test_count_commits_ahead_uses_private_tracking_remote_without_origin_or_loca
 
 
 def test_finalize_private_remote_pushed_commit_is_a_deliverable(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """A pushed secondary-remote commit must not settle as commit_count_unknown."""
     main, dispatch_wt = _init_private_remote_worktree(tmp_path)
@@ -8149,15 +8414,18 @@ def test_finalize_private_remote_pushed_commit_is_a_deliverable(
     _commit_private_dispatch_delivery(dispatch_wt)
 
     state_path = delegate._state_path("private-remote-delivery")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "private-remote-delivery",
-        "agent": "codex",
-        "mode": "workspace-write",
-        "cwd": str(dispatch_wt),
-        "worktree_path": str(dispatch_wt),
-        "worktree_base": "main",
-        "status": "running",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "private-remote-delivery",
+            "agent": "codex",
+            "mode": "workspace-write",
+            "cwd": str(dispatch_wt),
+            "worktree_path": str(dispatch_wt),
+            "worktree_base": "main",
+            "status": "running",
+        },
+    )
     mock_result = type(
         "_Result",
         (),
@@ -8194,7 +8462,9 @@ def test_finalize_private_remote_pushed_commit_is_a_deliverable(
 
 
 def test_finalize_private_remote_zero_commits_ignores_stale_local_base(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """A stale local base must not turn a zero-commit dispatch into a delivery."""
     main, dispatch_wt = _init_private_remote_worktree(tmp_path, stale_local_main=True)
@@ -8209,15 +8479,18 @@ def test_finalize_private_remote_zero_commits_ignores_stale_local_base(
     assert delegate._count_commits_ahead(dispatch_wt, "origin/main") == 0
 
     state_path = delegate._state_path("private-remote-zero-commits")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "private-remote-zero-commits",
-        "agent": "codex",
-        "mode": "workspace-write",
-        "cwd": str(dispatch_wt),
-        "worktree_path": str(dispatch_wt),
-        "worktree_base": "main",
-        "status": "running",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "private-remote-zero-commits",
+            "agent": "codex",
+            "mode": "workspace-write",
+            "cwd": str(dispatch_wt),
+            "worktree_path": str(dispatch_wt),
+            "worktree_base": "main",
+            "status": "running",
+        },
+    )
 
     empty_result = _finalize_mock_result()
     empty_result.response = ""
@@ -8238,13 +8511,13 @@ def test_finalize_private_remote_zero_commits_ignores_stale_local_base(
     assert state is not None
     assert state["status"] == "no_deliverable"
     assert state["commits_ahead"] == 0
-    assert state["no_deliverable_reason"] == (
-        "write_capable_clean_worktree_zero_commits_short_response"
-    )
+    assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
 
 
 def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """Dispatch with --cwd pointing to a registered worktree populates worktree_path and metadata."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
@@ -8271,7 +8544,9 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
 
 
 def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """Reused --cwd worktree with commits ahead of base counts commits_ahead > 0 and settles as done."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
@@ -8284,13 +8559,16 @@ def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(
     subprocess.run(["git", "commit", "-m", "add feature"], cwd=dispatch_wt, check=True, timeout=30)
 
     state_path = delegate._state_path("task-cwd-commits")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "task-cwd-commits",
-        "agent": "codex",
-        "mode": "workspace-write",
-        "cwd": str(dispatch_wt),
-        "status": "running",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "task-cwd-commits",
+            "agent": "codex",
+            "mode": "workspace-write",
+            "cwd": str(dispatch_wt),
+            "status": "running",
+        },
+    )
 
     mock_result = type(
         "_Result",
@@ -8330,7 +8608,9 @@ def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(
 
 
 def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
-    tmp_tasks_dir, tmp_path, monkeypatch,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
 ):
     """When worktree_path is missing in state, _run_worker resolves it from cwd if inside a registered worktree."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
@@ -8343,14 +8623,17 @@ def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
 
     # State file lacks worktree_path but has cwd
     state_path = delegate._state_path("task-legacy-cwd")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "task-legacy-cwd",
-        "agent": "codex",
-        "mode": "workspace-write",
-        "cwd": str(dispatch_wt),
-        "worktree_path": None,
-        "status": "running",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "task-legacy-cwd",
+            "agent": "codex",
+            "mode": "workspace-write",
+            "cwd": str(dispatch_wt),
+            "worktree_path": None,
+            "status": "running",
+        },
+    )
 
     mock_result = type(
         "_Result",
@@ -8385,3 +8668,76 @@ def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
     assert state["status"] == "done"
     assert state.get("no_deliverable_reason") is None
     assert state.get("commits_ahead", 0) > 0
+
+
+def test_dispatch_dry_run_reaps_lease_on_post_allocation_error(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#7164: Leases allocated during dry-run must not be orphaned if post-allocation fails."""
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(
+        delegate,
+        "_sweep_runtime_tmp_orphans",
+        lambda: {"leases_reaped": 0, "bytes_freed": 0, "errors": 0, "error_details": []},
+    )
+    import agent_runtime.telemetry as art
+
+    monkeypatch.setattr(
+        art,
+        "resolve_dispatch_start_telemetry",
+        lambda **_kwargs: (_ for _ in ()).throw(RuntimeError("telemetry resolution crash")),
+    )
+
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dry-run-crash",
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test",
+            "--dry-run",
+        ],
+    )
+
+    with pytest.raises(RuntimeError, match="telemetry resolution crash"):
+        delegate.cmd_dispatch(args)
+
+    lease_root = tmp_path / "learn-ukrainian" / "dry-run-crash"
+    assert not lease_root.exists()
+
+
+def test_dispatch_reaps_lease_on_pre_spawn_error(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#7164: Leases allocated during live dispatch must not be orphaned if pre-spawn setup fails."""
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(
+        delegate,
+        "_sweep_runtime_tmp_orphans",
+        lambda: {"leases_reaped": 0, "bytes_freed": 0, "errors": 0, "error_details": []},
+    )
+    monkeypatch.setattr(
+        delegate,
+        "_write_state_atomic",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("atomic write disk error")),
+    )
+
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "live-crash",
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test",
+        ],
+    )
+
+    with pytest.raises(RuntimeError, match="atomic write disk error"):
+        delegate.cmd_dispatch(args)
+
+    lease_root = tmp_path / "learn-ukrainian" / "live-crash"
+    assert not lease_root.exists()

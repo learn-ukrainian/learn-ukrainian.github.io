@@ -43,6 +43,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+from scripts.common.scratch import ensure_scratch_root, scratch_scan_roots
 from scripts.orchestration.thread_handoff import (
     _default_machine_id,
     _default_process_snapshot,
@@ -182,6 +183,11 @@ def create_review_temp_root(
             "set LU_FORMAL_SHIELDED_CF=1 only for unit tests. "
             "Use direct ask-* cross-family review on the PR instead of review-pr."
         )
+    if dir is None:
+        # #7164: sizeable review extractions go to the disk-backed fleet
+        # scratch root, not tmpfs /tmp (per-user quota exhaustion there
+        # surfaced as unrelated EDQUOT crashes across the fleet).
+        dir = ensure_scratch_root()
     root = Path(tempfile.mkdtemp(prefix=prefix, dir=dir))
     try:
         _write_review_temp_root_marker(root, prefix=prefix, context=context)
@@ -542,69 +548,75 @@ def sweep_review_temp_orphans(
     }
     # Delegate workers override TMPDIR with their lease. The dispatcher keeps
     # this base value so nested review cleanup can still cover both loose and
-    # task-namespaced review roots.
-    base = Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", tempfile.gettempdir()))
+    # task-namespaced review roots. #7164: review roots now live under the
+    # disk-backed fleet scratch root; scan it plus every legacy tmp base so
+    # pre-change residue still drains.
+    bases = scratch_scan_roots()
+    if not bases:
+        bases = [Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", tempfile.gettempdir()))]
     current_time = time.time() if now is None else now
-    disk_pressure = _is_disk_pressure_active(base, min_free_gb=min_free_gb)
-    result["disk_pressure"] = disk_pressure
 
     normal_unmanifested_cutoff = current_time - REVIEW_TEMP_ORPHAN_MAX_AGE_S
-    pressure_unmanifested_cutoff = (
-        current_time - REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S
-    )
 
-    for root in _review_temp_orphan_candidates(base):
-        try:
-            root_stat = root.lstat()
-        except FileNotFoundError:
-            continue
-        except OSError:
-            result["errors"] += 1
-            continue
-
-        manifest = _read_review_temp_root_manifest(root)
-        creation_time = (
-            manifest.get("created_at_epoch")
-            if manifest and isinstance(manifest.get("created_at_epoch"), (int, float))
-            else root_stat.st_mtime
+    for base in bases:
+        disk_pressure = _is_disk_pressure_active(base, min_free_gb=min_free_gb)
+        result["disk_pressure"] = result["disk_pressure"] or disk_pressure
+        pressure_unmanifested_cutoff = (
+            current_time - REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S
         )
-        age = current_time - float(creation_time)
 
-        should_reap = False
-        if manifest is not None:
-            liveness, reason = _evaluate_root_owner_liveness(manifest)
-            if liveness == "alive":
-                should_reap = False
-            elif liveness == "dead":
-                should_reap = (
-                    (reason == "ESRCH")
-                    if age < REVIEW_TEMP_GRACE_WINDOW_S and not disk_pressure
-                    else True
-                )
-            else:  # uncheckable
-                cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
-                should_reap = creation_time < cutoff
-        else:
-            cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
-            should_reap = creation_time < cutoff
-
-        if not should_reap:
-            continue
-
-        # TOCTOU double check immediately before removal
-        if manifest is not None:
-            recheck_liveness, _ = _evaluate_root_owner_liveness(manifest)
-            if recheck_liveness != "dead":
+        for root in _review_temp_orphan_candidates(base):
+            try:
+                root_stat = root.lstat()
+            except FileNotFoundError:
+                continue
+            except OSError:
+                result["errors"] += 1
                 continue
 
-        try:
-            bytes_freed = _review_temp_root_bytes(root)
-            _remove_review_temp_orphan(root)
-        except OSError:
-            result["errors"] += 1
-            continue
-        result["roots_reaped"] += 1
-        result["bytes_freed"] += bytes_freed
+            manifest = _read_review_temp_root_manifest(root)
+            creation_time = (
+                manifest.get("created_at_epoch")
+                if manifest and isinstance(manifest.get("created_at_epoch"), (int, float))
+                else root_stat.st_mtime
+            )
+            age = current_time - float(creation_time)
+
+            should_reap = False
+            if manifest is not None:
+                liveness, reason = _evaluate_root_owner_liveness(manifest)
+                if liveness == "alive":
+                    should_reap = False
+                elif liveness == "dead":
+                    should_reap = (
+                        (reason == "ESRCH")
+                        if age < REVIEW_TEMP_GRACE_WINDOW_S and not disk_pressure
+                        else True
+                    )
+                else:  # uncheckable
+                    cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
+                    should_reap = creation_time < cutoff
+            else:
+                cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
+                should_reap = creation_time < cutoff
+
+            if not should_reap:
+                continue
+
+            # TOCTOU double check immediately before removal
+            if manifest is not None:
+                recheck_liveness, _ = _evaluate_root_owner_liveness(manifest)
+                if recheck_liveness != "dead":
+                    continue
+
+            try:
+                bytes_freed = _review_temp_root_bytes(root)
+                _remove_review_temp_orphan(root)
+            except OSError:
+                result["errors"] += 1
+                continue
+            result["roots_reaped"] += 1
+            result["bytes_freed"] += bytes_freed
 
     return result
 

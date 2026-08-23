@@ -10,7 +10,6 @@ execution. Long-running V7 writer-phase work goes through
 
 import json
 import os
-import tempfile
 from pathlib import Path
 
 from agent_runtime import runner as agent_runner
@@ -20,6 +19,8 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+
+from scripts.common.scratch import ensure_scratch_root
 
 from ._ask_contract import (
     requested_effort,
@@ -65,8 +66,11 @@ def _agy_ask_scratch_cwd() -> Path:
     guard (#4444) refuses write-capable spawns from the protected primary
     checkout, and any in-tree path classifies against it. Out-of-tree cwds
     are isolated by definition and skip the git classify entirely.
+
+    #7164: routed to disk-backed fleet scratch root so asks do not exhaust
+    tmpfs /tmp quotas, and scanned by tmp leak sweep.
     """
-    scratch = Path(tempfile.gettempdir()) / "learn-ukrainian-bridge-asks" / "agy"
+    scratch = ensure_scratch_root() / "learn-ukrainian-bridge-asks" / "agy"
     scratch.mkdir(parents=True, exist_ok=True)
     return scratch
 
@@ -410,9 +414,7 @@ def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
     print(f"\n❌ Agy error for message #{message_id}: {reason}")
     from ._ask_contract import failed_response_provenance
 
-    data, from_model = failed_response_provenance(
-        msg, bridge_model="agy-bridge-error", harness="agy"
-    )
+    data, from_model = failed_response_provenance(msg, bridge_model="agy-bridge-error", harness="agy")
     send_message(
         content=f"[Agy error] {reason}",
         task_id=msg["task_id"],

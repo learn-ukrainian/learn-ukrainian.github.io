@@ -383,3 +383,22 @@ def test_terminal_task_reaped_with_none_active_ids(tmp_path: Path) -> None:
 
     assert reason is not None
     assert "settled dispatch task-id=task-789" in reason
+
+
+def test_create_review_temp_root_defaults_to_scratch_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#7164: create_review_temp_root without explicit dir defaults to ensure_scratch_root()."""
+    scratch_root = tmp_path / "fleet-scratch"
+    scratch_root.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
+
+    root = create_review_temp_root(prefix="lu-review-snap-")
+    try:
+        assert root.is_dir()
+        assert root.parent.resolve() == scratch_root.resolve()
+        assert (root / REVIEW_TEMP_ROOT_MARKER_NAME).is_file()
+        assert (root / REVIEW_TEMP_ROOT_MANIFEST_NAME).is_file()
+    finally:
+        isolation.remove_review_temp_tree(root)
+
