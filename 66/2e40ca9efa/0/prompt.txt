@@ -1,0 +1,23 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/fix-7161-agent-path
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix #7161 (as corrected) — dispatch runtime must find agent binaries under the login PATH (one shippable unit, one PR)
+
+Read `gh issue view 7161 -R learn-ukrainian/learn-ukrainian.github.io`, especially the CORRECTION comment (2026-08-23): every seat binary exists on both job hosts in `/home/ops/.local/bin` (opencode in `/home/ops/.opencode/bin`), but the dispatch runtime and the ACP compat path spawn without the login PATH, so `Popen('cursor-agent')` etc. fail with FileNotFoundError. Evidence: task `review-7191-cursor` on hramatka (`AgentUnavailableError ... FileNotFoundError: 'cursor-agent'`) while `bash -lc 'command -v cursor-agent'` resolves.
+
+Root-cause fix in `scripts/agent_runtime/` (find the spawn/adapter layer — where agent argv[0] is resolved): resolve the agent binary via a deterministic candidate list (`shutil.which` under an augmented PATH that appends `~/.local/bin` and `~/.opencode/bin` when absent) and pass the ABSOLUTE path to Popen; fail with the current clear error only when genuinely absent. Do not mutate global env for the child beyond PATH augmentation; do not shell out to `bash -lc`.
+
+Acceptance (quote raw output):
+1. Unit test: with a fake binary placed only in a tmp dir standing in for `~/.local/bin` and a PATH that excludes it, the resolver finds it; with the fix reverted the test fails (mutation-check, quote both).
+2. Existing runtime tests green: `.venv/bin/pytest -q tests/test_agent_runtime*.py` (or the files `grep -rl "AgentUnavailableError" tests/` names) + `tests/test_subprocess_timeout_guard.py`; `.venv/bin/ruff check` clean on changed files.
+3. Live proof AFTER commit, on hramatka if reachable (the driver can run it for you if you lack ssh): a real `delegate.py dispatch --agent cursor --mode read-only` with a trivial prompt spawns instead of FileNotFoundError. If you cannot run it, say so — the driver will run it before merge.
+4. One conventional commit (`fix(runtime): resolve agent binaries under the login PATH for spawns (#7161)`, X-Agent trailer). NO push, NO github_* connector tools, NO amend after reporting. Report HEAD SHA + evidence + ready PR body (`Refs #7161` — close only if ACP compat path is also covered; otherwise name the residual).
