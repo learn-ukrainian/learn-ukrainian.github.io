@@ -32,6 +32,17 @@ class AcpExecutionWorkspaceError(RuntimeError):
     """ACP could not obtain or release its isolated execution cwd."""
 
 
+def _execution_label(task_id: str) -> str:
+    """Return a bounded directory label, rejecting transport-shaped debris."""
+    raw = task_id.strip()
+    if not raw or raw.startswith("-") or "{" in raw or "}" in raw:
+        raise AcpExecutionWorkspaceError("unsafe_acp_execution_task_id")
+    label = _SAFE_TASK.sub("-", raw).strip("-._")[:32]
+    if not label or label.startswith("-") or label in {".", ".."}:
+        raise AcpExecutionWorkspaceError("unsafe_acp_execution_task_id")
+    return label
+
+
 def _git_binary() -> str:
     binary = shutil.which("git")
     if binary is None:
@@ -59,6 +70,11 @@ def acp_execution_cwd(repo_root: Path, *, task_id: str) -> Iterator[Path]:
     unique detached worktree with no checkout, so the runtime gains only the
     Git/worktree identity required by ACP admission—not another source copy.
     """
+    # Validate before any mkdir/worktree operation.  ACP/opencode stdout is an
+    # NDJSON event stream; a wiring or quoting fault must fail closed instead
+    # of turning a raw event line, JSON fragment, or flag-shaped token into a
+    # filesystem segment (#6863).
+    label = _execution_label(task_id)
     resolved = repo_root.resolve()
     path_class = classify_repo_path(resolved, cwd=resolved)
     if path_class in {"dispatch_worktree", "other_worktree"}:
@@ -68,7 +84,6 @@ def acp_execution_cwd(repo_root: Path, *, task_id: str) -> Iterator[Path]:
         raise AcpExecutionWorkspaceError("acp_repo_root_must_be_a_registered_checkout")
 
     main_root = resolve_main_root(resolved)
-    label = _SAFE_TASK.sub("-", task_id).strip("-._")[:32] or "task"
     workspace = main_root / ".worktrees" / "dispatch" / "acp" / f"runtime-{label}-{uuid.uuid4().hex[:10]}"
     workspace.parent.mkdir(parents=True, exist_ok=True)
     created = False
