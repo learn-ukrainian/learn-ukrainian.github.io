@@ -1,11 +1,7 @@
 import subprocess
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts/audit"))
-
-import lint_opsec_leaks as opsec_linter
-from lint_opsec_leaks import check_content
+from scripts.audit import lint_opsec_leaks as opsec_linter
+from scripts.audit.lint_opsec_leaks import check_content
 
 
 def test_f002_pkcs8_unqualified_private_key_detected():
