@@ -1,0 +1,23 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/ci-guard-pins-7194
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: implement #7194 — derive guard pins from source of truth (one shippable unit, one PR)
+
+Read `gh issue view 7194` — it is the spec (problem, proposal, acceptance). Base your branch on origin/main AFTER PR #7191 is merged (verify `git log --oneline -3 origin/main` shows the #7191 squash; if it does not, stop and report).
+
+Scope: `tests/test_ci_changed_tests.py` (three manifest-content pins), `tests/test_frontend_change_scope.py` (`ci-gate.needs` set pin), plus any other literal restatement of the fastlane manifest or Gate job inventory you find (`ugrep -l "fastlane_always_tests\|ci-gate" tests/ | head`). Refactor per the issue: read the source of truth and assert properties / use one exported canonical constant; exactly one literal pin per deliberately-frozen fact. Add the rule-of-thumb comment atop each guard.
+
+Acceptance (quote raw output):
+1. Growing the manifest by one entry in a scratch copy requires zero test edits (demonstrate: add a fake entry + marker in a scratch worktree copy, run the pin tests — they pass; parity guard still fails when the marker is missing — quote both).
+2. Mutation checks: every OLD failure mode still fails (remove a manifest entry → fail; drop a job from ci-gate.needs in a scratch ci.yml → fail). Quote each.
+3. Full CI-adjacent sweep green: `.venv/bin/pytest -q tests/test_ci_*.py tests/test_frontend_change_scope.py tests/test_subprocess_timeout_guard.py tests/test_landing_class.py` · `.venv/bin/ruff check` clean on changed files.
+4. One conventional commit (`test(ci): derive guard pins from source of truth (#7194)`, `Refs #7141`, X-Agent trailer). Do NOT push, NO github_* connector tools, NO amend after reporting. Report HEAD SHA + quoted evidence + ready-to-use PR body (`Closes #7194`); the driver relays.

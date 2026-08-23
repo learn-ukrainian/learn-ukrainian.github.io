@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d460f8e65848",
+  "session_id": "session_55d79d3e-9f91-4bfd-8c57-e8957ee303b3",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T21:27:06.935537Z",
+  "branch": "kimi/ci-guard-pins-7194",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/gate_required_results.py",
+    "tests/test_ci_changed_tests.py",
+    "tests/test_ci_gate_merge_kick_comment.py",
+    "tests/test_ci_queue_starvation.py",
+    "tests/test_frontend_change_scope.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "1c6c1c0641c3",
+  "token_usage": {
+    "input_tokens": 63127,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2586510,
+    "output_tokens": 20312,
+    "api_call_count": 45
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T21:27:06.908041Z",
+    "agent_lines": 49,
+    "agent_removed": 60,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 49,
+    "total_lines_changed": 109,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

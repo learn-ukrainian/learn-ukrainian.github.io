@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d460f8e65848",
+  "strategy": "manual-commit",
+  "branch": "kimi/ci-guard-pins-7194",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/gate_required_results.py",
+    "tests/test_ci_changed_tests.py",
+    "tests/test_ci_gate_merge_kick_comment.py",
+    "tests/test_ci_queue_starvation.py",
+    "tests/test_frontend_change_scope.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d4/60f8e65848/0/metadata.json",
+      "transcript": "/d4/60f8e65848/0/full.jsonl",
+      "content_hash": "/d4/60f8e65848/0/content_hash.txt",
+      "prompt": "/d4/60f8e65848/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 63127,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2586510,
+    "output_tokens": 20312,
+    "api_call_count": 45
+  }
+}
