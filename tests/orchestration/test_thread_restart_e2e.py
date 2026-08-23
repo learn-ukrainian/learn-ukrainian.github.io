@@ -23,6 +23,7 @@ from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLi
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from tests.epics_monitor_stub import epics_monitor_stub
 from tests.project_python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -1080,11 +1081,13 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
             "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
         }
     )
-    launched = run(
-        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
-        cwd=primary,
-        env=env,
-    )
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        launched = run(
+            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
+            cwd=primary,
+            env=env,
+        )
 
     assert launched.returncode == 0, launched.stderr + launched.stdout
     assert "Rollover preflight: exact fresh packet" in launched.stdout
@@ -1224,14 +1227,18 @@ def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
             "PYENV_ROOT": os.fspath(tmp_path / "pyenv"),
         }
     )
-    launched = run(
-        [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
-        cwd=primary,
-        env=env,
-    )
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        launched = run(
+            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol"],
+            cwd=primary,
+            env=env,
+        )
 
     assert launched.returncode == 1
     assert "already has live session" in launched.stderr
+    assert "live-devops" in launched.stderr
+    assert "expires_at=" in launched.stderr
     assert not started.exists()
     assert len(store.dump_stream("epic:5703")["sessions"]) == 1  # allow-hardcoded-epic: e2e rollover fixture stream
     assert (
@@ -1257,35 +1264,40 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     if second_provider == "codex":
         prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
+    store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
     env, started = launcher_environment(tmp_path, first_provider, second_provider)
     env["LAUNCHER_TEST_HOLD_PROVIDER"] = "1"
-    first = subprocess.Popen(
-        [primary / f"start-{first_provider}-driver.sh", "devops", "--model", first_model],
-        cwd=primary,
-        env=env,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        text=True,
-    )
-    try:
-        deadline = time.monotonic() + 10
-        while not started[first_provider].exists() and time.monotonic() < deadline:
-            time.sleep(0.05)
-        assert started[first_provider].exists(), (
-            f"{first_provider} launcher did not reach provider stub; returncode={first.poll()}"
-        )
-        second = run(
-            [primary / f"start-{second_provider}-driver.sh", "devops", "--model", second_model],
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        first = subprocess.Popen(
+            [primary / f"start-{first_provider}-driver.sh", "devops", "--model", first_model],
             cwd=primary,
             env=env,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            text=True,
         )
-    finally:
-        first.terminate()
-        first.communicate(timeout=10)
+        try:
+            deadline = time.monotonic() + 10
+            while not started[first_provider].exists() and time.monotonic() < deadline:
+                time.sleep(0.05)
+            assert started[first_provider].exists(), (
+                f"{first_provider} launcher did not reach provider stub; returncode={first.poll()}"
+            )
+            second = run(
+                [primary / f"start-{second_provider}-driver.sh", "devops", "--model", second_model],
+                cwd=primary,
+                env=env,
+            )
+        finally:
+            first.terminate()
+            first.communicate(timeout=10)
 
     assert second.returncode == 1
     assert "already has live session" in second.stderr
+    assert first_provider in second.stderr
+    assert "expires_at=" in second.stderr
     assert not started[second_provider].exists()
     stream = SessionStreamStore(
         SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
@@ -1296,7 +1308,7 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
     assert stream["lease"]["holder_agent"] == first_provider
 
 
-def test_real_grok_driver_recovers_dead_unexpired_holder_via_session_supervisor(tmp_path: Path) -> None:
+def test_real_grok_driver_refuses_dead_unexpired_holder_via_remote_ttl(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     store = seed_driver_stream(
         primary,
@@ -1307,18 +1319,23 @@ def test_real_grok_driver_recovers_dead_unexpired_holder_via_session_supervisor(
     )
     env, started = launcher_environment(tmp_path, "grok")
 
-    launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
 
-    assert launched.returncode == 0, launched.stderr + launched.stdout
-    assert started["grok"].exists()
+    assert launched.returncode == 1
+    assert "already has live session" in launched.stderr
+    assert "dead-holder" in launched.stderr
+    assert "expires_at=" in launched.stderr
+    assert not started["grok"].exists()
     stream = store.dump_stream("epic:5703")
-    assert [session["state"] for session in stream["sessions"]] == ["closed", "closed"]
-    assert stream["lease"]["generation"] == 2
-    assert stream["lease"]["holder_agent"] == "grok"
-    assert stream["lease"]["state"] == "released"
+    assert [session["state"] for session in stream["sessions"]] == ["open"]
+    assert stream["lease"]["generation"] == 1
+    assert stream["lease"]["holder_instance_id"] == "dead-holder"
+    assert stream["lease"]["state"] == "active"
 
 
-def test_real_grok_driver_refuses_expired_app_thread_holder_before_provider_executes(
+def test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl(
     tmp_path: Path,
 ) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
@@ -1364,27 +1381,59 @@ def test_real_grok_driver_refuses_expired_app_thread_holder_before_provider_exec
     )
     env, started = launcher_environment(tmp_path, "grok")
 
-    launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
 
-    assert launched.returncode == 1
-    assert "app-thread holder requires verified GUI lifecycle recovery" in launched.stderr
-    assert not started["grok"].exists()
+    assert launched.returncode == 0, launched.stderr + launched.stdout
+    assert started["grok"].exists()
     stream = store.dump_stream("epic:5703")
-    assert stream["sessions"][0]["state"] == "open"
-    assert stream["lease"]["holder_kind"] == HolderKind.APP_THREAD.value
+    assert [session["state"] for session in stream["sessions"]] == ["closed", "closed"]
+    assert stream["lease"]["generation"] == 2
+    assert stream["lease"]["holder_agent"] == "grok"
+    assert stream["lease"]["state"] == "released"
+    assert "recovered" in [event["event_type"] for event in stream["lease_events"]]
 
 
 def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
     env, started = launcher_environment(tmp_path, "grok")
+    env.update(
+        {
+            "LAUNCHER_TEST_HOLD_PROVIDER": "1",
+            "SESSION_STREAM_RENEW_INTERVAL_SECONDS": "1",
+            "SESSION_STREAM_RENEW_JITTER_SECONDS": "0",
+        }
+    )
 
-    launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        launched_process = subprocess.Popen(
+            [primary / "start-grok-driver.sh", "devops"],
+            cwd=primary,
+            env=env,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        try:
+            deadline = time.monotonic() + 10
+            while not started["grok"].exists() and time.monotonic() < deadline:
+                time.sleep(0.05)
+            assert started["grok"].exists(), f"grok launcher did not reach provider: {launched_process.poll()}"
+            time.sleep(1.5)
+            stdout, stderr = launched_process.communicate(input="\n", timeout=30)
+        finally:
+            if launched_process.poll() is None:
+                launched_process.terminate()
+                launched_process.communicate(timeout=10)
 
-    assert launched.returncode == 0, launched.stderr + launched.stdout
+    assert launched_process.returncode == 0, stderr + stdout
     assert started["grok"].exists()
-    stream = SessionStreamStore(
-        SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
-    ).dump_stream("epic:5703")
+    stream = store.dump_stream("epic:5703")
     assert [session["state"] for session in stream["sessions"]] == ["closed"]
     assert stream["lease"]["holder_agent"] == "grok"
     assert stream["lease"]["state"] == "released"
+    assert "heartbeat" in [event["event_type"] for event in stream["lease_events"]]

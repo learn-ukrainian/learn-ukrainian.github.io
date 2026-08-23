@@ -5,11 +5,9 @@ from __future__ import annotations
 import os
 import shutil
 import signal
-import socket
 import subprocess
 import sys
 import time
-import urllib.request
 from datetime import timedelta
 from pathlib import Path
 
@@ -19,6 +17,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
+from tests.epics_monitor_stub import epics_monitor_stub
 
 REPO = Path(__file__).resolve().parents[1]
 PUBLIC = (
@@ -417,42 +416,9 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["PYTHONPATH"] = os.fspath(REPO)
     env["LEARN_UK_REPO_ROOT"] = os.fspath(root)
-    with socket.socket() as probe:
-        probe.bind(("127.0.0.1", 0))
-        monitor_port = int(probe.getsockname()[1])
-    monitor = subprocess.Popen(
-        [
-            sys.executable,
-            "-m",
-            "uvicorn",
-            "scripts.api.main:app",
-            "--host",
-            "127.0.0.1",
-            "--port",
-            str(monitor_port),
-            "--lifespan",
-            "off",
-        ],
-        cwd=REPO,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    try:
-        health_url = f"http://127.0.0.1:{monitor_port}/api/epics/v1/health"
-        for _ in range(100):
-            try:
-                with urllib.request.urlopen(health_url, timeout=1) as response:
-                    if response.status == 200:
-                        break
-            except OSError:
-                time.sleep(0.05)
-        else:
-            monitor.kill()
-            stdout, stderr = monitor.communicate(timeout=5)
-            pytest.fail(f"Monitor API did not start: {stdout}{stderr}")
-        env["LU_MONITOR_LOOPBACK"] = f"http://127.0.0.1:{monitor_port}"
+    store = SessionStreamStore(SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3"))
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
         result = subprocess.run(
             ["bash", os.fspath(root / "start-claude-driver.sh"), "--epic", "devops"],
             cwd=root,
@@ -462,17 +428,8 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
             check=False,
             timeout=30,
         )
-    finally:
-        monitor.terminate()
-        try:
-            monitor.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            monitor.kill()
-            monitor.wait(timeout=5)
     assert result.returncode == 0, result.stderr + result.stdout
 
-    database = SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3")
-    store = SessionStreamStore(database)
     history = store.dump_stream("epic:5703")
     assert history["sessions"][0]["state"] == "closed"
     assert history["lease"]["state"] == "released"

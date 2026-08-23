@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import json
 import urllib.error
 from pathlib import Path
@@ -138,6 +139,29 @@ def test_remote_claim_fail_closed_without_api_and_does_not_post() -> None:
     else:  # pragma: no cover - assertion branch
         raise AssertionError("unreachable Monitor API must refuse the claim")
     assert calls == ["GET"]
+
+
+def test_remote_claim_missing_epics_route_explains_deployment_remedy() -> None:
+    def opener(request: object, timeout: int = 0) -> _Response:
+        del timeout
+        raise urllib.error.HTTPError(
+            str(getattr(request, "full_url", "")),
+            404,
+            "Not Found",
+            {},
+            io.BytesIO(b'{"detail":"Not Found"}'),
+        )
+
+    client = RemoteEpicClient(opener=opener)
+    with pytest.raises(
+        RemoteSupervisorError,
+        match=r"missing route /api/epics/v1/health.*deploy a Monitor build that includes /api/epics/v1",
+    ):
+        client.claim(
+            stream_id="epic:7178",
+            holder=LeaseHolder("codex", "codex-cli", "missing-route", process_id=1, host_id="missing-host"),
+            lineage_id="missing-route-lineage",
+        )
 
 
 def test_remote_claim_fail_closed_when_health_is_unhealthy() -> None:

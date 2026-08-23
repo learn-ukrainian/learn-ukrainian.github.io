@@ -114,15 +114,29 @@ class RemoteEpicClient:
                 detail = json.loads(raw).get("detail", "request refused")
             except (ValueError, json.JSONDecodeError, OSError):
                 detail = "request refused"
-            if exc.code == 409:
+            if exc.code == 409 and not path.endswith("/claim"):
                 raise RemoteLeaseLostError("LEASE LOST: Monitor fenced the exact lease") from None
+            if exc.code == 404:
+                raise RemoteSupervisorError(
+                    f"Monitor API refused request (404): missing route {path}; "
+                    "deploy a Monitor build that includes /api/epics/v1"
+                ) from None
             raise RemoteSupervisorError(f"Monitor API refused request ({exc.code}): {detail}") from None
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             raise RemoteUnreachableError("Monitor API unreachable; no remote claim was made") from exc
         if status >= 400:
-            if status == 409:
+            if status == 409 and not path.endswith("/claim"):
                 raise RemoteLeaseLostError("LEASE LOST: Monitor fenced the exact lease")
-            raise RemoteSupervisorError("Monitor API returned an error")
+            if status == 404:
+                raise RemoteSupervisorError(
+                    f"Monitor API refused request (404): missing route {path}; "
+                    "deploy a Monitor build that includes /api/epics/v1"
+                )
+            try:
+                detail = json.loads(raw).get("detail", "request refused")
+            except (ValueError, json.JSONDecodeError, OSError):
+                detail = "request refused"
+            raise RemoteSupervisorError(f"Monitor API returned an error ({status}): {detail}")
         try:
             data = json.loads(raw)
         except json.JSONDecodeError as exc:

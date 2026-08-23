@@ -149,11 +149,10 @@ class SessionSupervisor:
     ) -> Lease:
         """Open one exact fenced driver lease before a harness is started.
 
-        If the stream has an active lease whose holder PID is dead, proof-gated
-        force-close runs automatically (even when wall-clock TTL has not expired)
-        so launchers do not need a manual recovery step or multi-hour wait.
-        Same safety gates as handoff-claim / #5530, plus dead-unexpired reclaim.
-        Live holder processes still refuse.
+        Remote mode delegates claim authority to Monitor, where an unexpired lease
+        is live regardless of the holder PID. Local mode retains the historical
+        proof-gated dead-process recovery for ``--local`` callers. Live holders
+        still refuse in both modes.
         """
         self._require_driver(role)
         if self.remote is not None:

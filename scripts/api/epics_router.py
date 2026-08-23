@@ -349,8 +349,22 @@ def remote_claim(stream_id: str, request: Request, body: dict[str, Any]) -> JSON
         response = _stream_response(store, stream_id, limit)
         response["outcome"] = outcome
         return JSONResponse(content=response, headers={"Cache-Control": "no-store"})
-    except LeaseConflictError:
-        return _error(409, "live holder or fenced claim conflict")
+    except LeaseConflictError as exc:
+        try:
+            projection = _stream_response(store, stream_id, limit)
+        except Exception:
+            return _error(409, str(exc))
+        lease = projection.get("lease")
+        if not isinstance(lease, dict) or lease.get("state") != "active":
+            return _error(409, str(exc))
+        holder = lease.get("holder") or {}
+        return _error(
+            409,
+            "epic stream already has live session; "
+            f"current holder={holder.get('agent', '?')}/{holder.get('harness', '?')} "
+            f"instance_id={holder.get('instance_id', '?')}; "
+            f"expires_at={lease.get('expires_at', '?')}",
+        )
     except (ValueError, ContentRejectedError):
         return _error(400, "invalid epic claim request")
     except Exception:

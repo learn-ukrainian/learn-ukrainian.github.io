@@ -95,6 +95,28 @@ def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path:
     assert bad.status_code == 400
 
 
+def test_router_live_claim_conflict_names_holder_and_expiry(tmp_path: Path, monkeypatch) -> None:
+    client = _client(tmp_path, monkeypatch)
+    _claim(client)
+    competing = client.post(
+        "/api/epics/v1/epic:7178/claim",
+        json={
+            "session_id": "other-session",
+            "lease_id": "other-lease",
+            "lineage_id": "other-lineage",
+            "agent": "gemini",
+            "harness": "agy",
+            "instance_id": "other-instance",
+            "process_id": 5678,
+            "host_id": "other-host",
+        },
+    )
+    assert competing.status_code == 409
+    assert "current holder=codex/codex-cli" in competing.text
+    assert "instance_id=api-instance" in competing.text
+    assert "expires_at=" in competing.text
+
+
 def test_router_responses_have_no_paths_or_host_network_tokens(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
     response = _claim(client)
