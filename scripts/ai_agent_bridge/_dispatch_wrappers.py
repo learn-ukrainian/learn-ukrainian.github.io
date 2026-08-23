@@ -20,7 +20,6 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.common.repo_root import resolve_repo_root
-from scripts.common.scratch import ensure_scratch_root
 
 REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 PYTHON = ".venv/bin/python"
@@ -95,6 +94,8 @@ def _prompt_directory() -> Iterator[Path]:
             raise RuntimeError(f"runtime tmp lease is not a directory: {lease_root}")
         yield lease_root
         return
+
+    from scripts.common.scratch import ensure_scratch_root
 
     with tempfile.TemporaryDirectory(prefix="learn-ukrainian-bridge-", dir=ensure_scratch_root()) as directory:
         yield Path(directory)
@@ -403,12 +404,8 @@ def run_ask_review_dispatch(
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
         prompt_path.write_text(content, encoding="utf-8")
-        dispatch_command = build_ask_review_dispatch_command(
-            agent, task_id, prompt_path, model=model, effort=effort
-        )
-        dispatch_proc = subprocess.run(
-            dispatch_command, cwd=REPO_ROOT, capture_output=True, text=True
-        )
+        dispatch_command = build_ask_review_dispatch_command(agent, task_id, prompt_path, model=model, effort=effort)
+        dispatch_proc = subprocess.run(dispatch_command, cwd=REPO_ROOT, capture_output=True, text=True)
         if dispatch_proc.returncode != 0:
             raise RuntimeError(
                 f"delegate.py dispatch failed rc={dispatch_proc.returncode}: "
@@ -436,7 +433,5 @@ def run_ask_review_dispatch(
         state["response"] = response
         state["ok"] = wait_proc.returncode == 0
         if not state["ok"] and not state.get("stderr_excerpt"):
-            state["stderr_excerpt"] = (
-                f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
-            )
+            state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
         return state

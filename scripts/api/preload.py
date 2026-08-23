@@ -24,7 +24,6 @@ PRELOAD_MODULES = [
     "asyncio",
     "pathlib",
     "fastapi.responses",
-
     # Internal required modules
     "scripts.api.state_build",
     "scripts.api.state_helpers",
@@ -49,6 +48,8 @@ PRELOAD_MODULES = [
     "audit.check_venv_integrity",
     "scripts.audit.check_worktree_cleanup_integrity",
     "audit.check_worktree_cleanup_integrity",
+    "scripts.audit.check_tmp_usability",
+    "audit.check_tmp_usability",
     "scripts.build.phase_constants",
     "agent_runtime.adapters.gemini",
     "research_quality",
@@ -79,16 +80,15 @@ DYNAMIC_LOADERS = {
             {"func": "import_module", "caller": "list_runtime_agents"},
             {"func": "import_module", "caller": "list_routing_assignments"},
             {"func": "spec_from_file_location", "caller": "_load_registry_default_models"},
-        ]
+        ],
     },
     "scripts.api.comms_router": {
         "description": "Loads broker migration files dynamically using spec_from_file_location",
         "strategy": "load_migration",
-        "calls": [
-            {"func": "spec_from_file_location", "caller": "ensure_broker_db_ready"}
-        ]
-    }
+        "calls": [{"func": "spec_from_file_location", "caller": "ensure_broker_db_ready"}],
+    },
 }
+
 
 def _walk_adapters_strategy() -> tuple[int, int, list[str]]:
     pinned = 0
