@@ -1,0 +1,31 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: ohoiko-ulp-paired-split-multiword-legs-2026-08-23-ohoiko
+    source_family: ohoiko
+    extraction_mode: paired_split_multiword_admit
+    title: ohoiko paired-headword multiword-leg admission 2026-08-23
+    locator: private Ohoiko/ULP extracts — lemmas only committed
+    notes: >-
+      #6370 residual-27 (2026-08-18) named 'виходити заміж' as a legitimate multiword
+      expression, not a space-collapse OCR artifact. The comma-paired parent headword
+      'виходити заміж, вийти' (ohoiko-1000-words entry 99) was already approved for
+      publish (2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml, source_inventory.key
+      dc445291d202bc25), but scripts/lexicon/ohoiko_paired_headword_split.py (#6678)
+      binding split policy sends multiword legs to the multiword_after_split residual
+      instead of promoting them, so the split leg 'виходити заміж' was never admitted
+      on its own. This inventory row records that specific multiword leg admission
+      with a distinct locator so its source_inventory key does not collide with the
+      parent paired-headword decision. No invented lemma or gloss: both the lemma and
+      gloss below are copied verbatim from the already-committed parent inventory row.
+    headwords:
+      - lemma: виходити заміж
+        pos: phrase
+        gloss: to marry (a man)
+        locator: 'ohoiko-1000-words entry 99 :: paired-split-leg::виходити заміж, вийти -> виходити заміж'
+        context: >-
+          Multiword leg of comma-paired ohoiko-1000-words entry 99 ('виходити заміж, вийти');
+          #6370/#6678 split policy — leg kept verbatim, not promoted by the single-word-only
+          split-leg promoter. Admitted here as a reviewed multiword expression
+          (СУМ-11 lists 'виходити (вийти) заміж' as a fixed collocation under the за́між
+          headword) per #6370 residual-27.

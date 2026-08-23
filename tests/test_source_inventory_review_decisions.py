@@ -6,6 +6,7 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+import requests  # noqa: F401  # Declares generate_source_inventory_review_candidates's transitive enrich_manifest HTTP dependency to the CI fastlane.
 import yaml
 
 from scripts.audit import source_inventory_review_decisions as decisions
@@ -14,7 +15,7 @@ from scripts.audit.source_inventory_intake import SourceInventoryError, SourceIn
 FIRST_BATCH = (
     decisions.DEFAULT_DECISION_DIR / "2026-06-29-first-approved-publish-batch.yaml"
 )
-EXPECTED_COMMITTED_DECISION_FILE_COUNT = 57
+EXPECTED_COMMITTED_DECISION_FILE_COUNT = 58
 COMMITTED_DECISION_FILES = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
 DECISION_LINE = re.compile(r"^\s+decision:\s+([a-z_]+)\s*$")
 

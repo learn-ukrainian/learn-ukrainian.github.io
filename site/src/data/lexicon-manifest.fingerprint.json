@@ -210,6 +210,10 @@
         "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
       },
       {
+        "path": "scripts/lexicon/promote_atlas_6370_named_multiword_residual.py",
+        "sha256": "d90ca7fc87ab5ec958dfc64a28f3e618326265af806c5857fc70e6ee75b62cf7"
+      },
+      {
         "path": "scripts/lexicon/promote_grow_candidates.py",
         "sha256": "8470daefaacadd1829977b97ad1cadeac6713409ce6c3acabeb22512b2f5eb16"
       },
