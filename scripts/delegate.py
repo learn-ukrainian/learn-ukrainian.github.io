@@ -1798,18 +1798,18 @@ def _fetch_base(base: str) -> bool:
 
     ``base`` may be a plain branch name (``main``) or an origin-prefixed ref
     (``origin/main`` — the form the dispatch runbooks mandate). The remote
-    refspec is always the plain branch: ``git fetch origin origin/main`` asks
-    the remote for a ref literally named ``origin/main``, which does not
-    exist, so the fetch fails and callers silently fall back to the local
-    (possibly stale) remote-tracking ref.
+    refspec is an explicit mapping ``+refs/heads/<branch>:refs/remotes/origin/<branch>``
+    so the remote-tracking ref exists regardless of host git fetch refspec config (#7168).
     """
     branch = _base_branch_name(base)
+    refspec = f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
     proc = subprocess.run(
-        ["git", "fetch", "origin", branch],
+        ["git", "fetch", "origin", refspec],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
         check=False,
+        env=_sanitized_git_env(),
     )
     if proc.returncode != 0:
         return False
@@ -1819,6 +1819,7 @@ def _fetch_base(base: str) -> bool:
         capture_output=True,
         text=True,
         check=False,
+        env=_sanitized_git_env(),
     )
     return verify.returncode == 0
 
@@ -1840,9 +1841,14 @@ def _validate_branch_reuse_name(branch: str) -> str:
 
 
 def _fetch_existing_branch(branch: str) -> None:
-    """Fetch and verify the remote branch used by ``--branch`` reuse mode."""
+    """Fetch and verify the remote branch used by ``--branch`` reuse mode.
+
+    The remote refspec is an explicit mapping ``+refs/heads/<branch>:refs/remotes/origin/<branch>``
+    so the remote-tracking ref exists regardless of host git fetch refspec config (#7168).
+    """
+    refspec = f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
     proc = subprocess.run(
-        ["git", "fetch", "origin", branch],
+        ["git", "fetch", "origin", refspec],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
