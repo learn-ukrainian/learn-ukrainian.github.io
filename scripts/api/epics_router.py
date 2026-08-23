@@ -180,7 +180,7 @@ def _safe_entry(payload: dict[str, Any]) -> dict[str, Any]:
     """Never echo legacy unsafe text or URI references through the remote API."""
     safe = {
         **payload,
-        "stream": _response_token(payload.get("stream")),
+        "stream": _response_stream(payload.get("stream")),
         "session_id": _response_token(payload.get("session_id")),
         "agent": _response_token(payload.get("agent")),
         "harness": _response_token(payload.get("harness")),
@@ -204,6 +204,13 @@ def _safe_entry(payload: dict[str, Any]) -> dict[str, Any]:
 
 def _response_token(value: Any) -> str:
     return value if isinstance(value, str) and safe_field(value, role="task_id") == value else "[redacted]"
+
+
+def _response_stream(value: Any) -> str:
+    try:
+        return _epic_stream(value)
+    except (TypeError, ValueError):
+        return "[redacted]"
 
 
 def _response_optional_token(value: Any) -> str | None:

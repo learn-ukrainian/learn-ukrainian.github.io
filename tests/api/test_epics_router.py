@@ -144,4 +144,5 @@ def test_router_redacts_legacy_uri_references(tmp_path: Path, monkeypatch) -> No
     }
     sanitized = epics_router._safe_entry(payload)
     assert "/Users/" not in json.dumps(sanitized)
+    assert sanitized["stream"] == "epic:7178"
     assert sanitized["refs"] == []
