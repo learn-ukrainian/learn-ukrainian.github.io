@@ -543,7 +543,7 @@ function renderOccupancy(data) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
     const occupants = listValue(host.occupants);
-    const idleState = host.idle_or_empty ? 'idle' : 'active';
+    const idleState = host.status === 'unavailable' ? 'unknown' : (host.idle_or_empty ? 'idle' : 'active');
     let utilText = '—';
     if (host.status !== 'unavailable') {
       const parts = [];

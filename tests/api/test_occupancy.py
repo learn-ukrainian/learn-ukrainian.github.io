@@ -81,7 +81,7 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
             assert entry["host_id"] == host_id
             assert entry["status"] == "unavailable"
             assert entry["error"] == "unreachable"
-            assert entry["idle_or_empty"] is True
+            assert entry["idle_or_empty"] is False
             assert entry["occupants"] == []
             assert entry["occupant_count"] == 0
             assert entry["ai_seats"] == []
@@ -203,6 +203,7 @@ def test_occupancy_unavailable_has_no_metrics_or_ssh_text(tmp_path, monkeypatch)
         dead = data["hosts"]["host-teacher"]
         assert dead["status"] == "unavailable"
         assert dead["error"] == "unreachable"
+        assert dead["idle_or_empty"] is False
         assert "cpu_count" not in dead
         assert "mem" not in dead
         assert "ssh" not in json.dumps(dead).lower()
@@ -450,7 +451,7 @@ def test_occupancy_dual_host_partial_map(tmp_path, monkeypatch) -> None:
         assert data["hosts"]["host-job"]["cpu_count"] == 4
         assert data["hosts"]["host-teacher"]["status"] == "unavailable"
         assert data["hosts"]["host-teacher"]["error"] == "unreachable"
-        assert data["hosts"]["host-teacher"]["idle_or_empty"] is True
+        assert data["hosts"]["host-teacher"]["idle_or_empty"] is False
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -534,7 +535,7 @@ def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
         assert teacher["host_id"] == "host-teacher"
         assert teacher["status"] == "unavailable"
         assert teacher["error"] == "unreachable"
-        assert teacher["idle_or_empty"] is True
+        assert teacher["idle_or_empty"] is False
         assert teacher["occupant_count"] == 0
         assert teacher["ai_seats"] == []
     finally:

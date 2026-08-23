@@ -123,7 +123,8 @@ def _is_idle_or_empty(
     if occupants and not all(o.get("kind") == "observer" and o.get("status") == "idle" for o in occupants):
         return False
     if status == "unavailable":
-        return True
+        # Unreachable burn is unknown, not proven idle.
+        return False
     if load_entry:
         job_unit = load_entry.get("job_unit")
         if isinstance(job_unit, dict) and int(job_unit.get("active_count") or 0) > 0:
