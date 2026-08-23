@@ -657,6 +657,7 @@ class LocalMcpSourcesClient:
         self._tool_call_count = 0
         self._tool_call_counts: Counter[str] = Counter()
         self._tool_call_commitment = contract.sha256_text("phase3-cycle007-mcp-tool-call-chain-v1")
+        self._tool_call_records: list[dict[str, Any]] = []
         # Fail closed immediately on drift/unavailability rather than at the
         # first evidence call.
         self._transport.preflight()
@@ -689,18 +690,79 @@ class LocalMcpSourcesClient:
 
     def _call_text(self, tool: str, arguments: Mapping[str, Any]) -> str:
         response = self._transport.call_tool(tool, arguments)
+        self._record_tool_call(
+            tool=tool,
+            arguments_sha256=contract.sha256_value(arguments),
+            response_sha256=contract.sha256_text(response),
+        )
+        return response
+
+    def _record_tool_call(
+        self,
+        *,
+        tool: str,
+        arguments_sha256: str,
+        response_sha256: str,
+    ) -> None:
         self._tool_call_count += 1
         self._tool_call_counts[tool] += 1
         call = {
             "ordinal": self._tool_call_count,
             "tool": tool,
-            "arguments_sha256": contract.sha256_value(arguments),
-            "response_sha256": contract.sha256_text(response),
+            "arguments_sha256": arguments_sha256,
+            "response_sha256": response_sha256,
         }
         self._tool_call_commitment = contract.sha256_text(
             self._tool_call_commitment + "\n" + contract.canonical_json(call)
         )
-        return response
+        self._tool_call_records.append(call)
+
+    def transport_call_records(self) -> list[dict[str, Any]]:
+        """Return the private text-free ledger behind the public commitment.
+
+        Records contain only ordinals, fixed tool names, and SHA-256 values;
+        arguments, responses, row text, and locators are never persisted here.
+        """
+        return copy.deepcopy(self._tool_call_records)
+
+    def resume_transport_state(
+        self,
+        prior_attestation: Mapping[str, Any],
+        prior_call_records: Sequence[Mapping[str, Any]],
+    ) -> None:
+        """Restore a verified sealed-prefix call chain and append this process's identity call.
+
+        The caller must first validate the durable receipt and recompute the
+        prior commitment from ``prior_call_records``. This method repeats the
+        transport-shape checks and can run only immediately after construction,
+        when the sole current-process call is ``mcp_server_identity``.
+        """
+        from scripts.projects.open_model_data import phase3_cycle007_evidence_compile_throughput as throughput
+
+        if self._tool_call_count != 1 or len(self._tool_call_records) != 1:
+            raise LocalMcpSourcesClientError("resume_transport_state_too_late")
+        current_identity_call = dict(self._tool_call_records[0])
+        if current_identity_call.get("tool") != _SERVER_IDENTITY_TOOL:
+            raise LocalMcpSourcesClientError("resume_transport_identity_missing")
+        current_attestation = self.transport_attestation()
+        throughput.validate_transport_state(
+            prior_attestation,
+            prior_call_records,
+            expected_transport=str(current_attestation["transport"]),
+            expected_endpoint_sha256=str(current_attestation["endpoint_sha256"]),
+            expected_tool_set_sha256=str(current_attestation["required_tool_set_sha256"]),
+        )
+        self._tool_call_count = int(prior_attestation["tool_call_count"])
+        self._tool_call_counts = Counter(
+            {str(name): int(count) for name, count in prior_attestation["counts_by_tool"].items()}
+        )
+        self._tool_call_commitment = str(prior_attestation["ordered_call_commitment_sha256"])
+        self._tool_call_records = [dict(record) for record in prior_call_records]
+        self._record_tool_call(
+            tool=str(current_identity_call["tool"]),
+            arguments_sha256=str(current_identity_call["arguments_sha256"]),
+            response_sha256=str(current_identity_call["response_sha256"]),
+        )
 
     def transport_attestation(self) -> Mapping[str, Any]:
         """Return a text-free commitment to the actual ordered MCP calls."""
@@ -1831,6 +1893,323 @@ def compile_sidecar_bundle(
             shutil.rmtree(staging, ignore_errors=True)
 
 
+def _empty_bundle_aggregate() -> dict[str, Any]:
+    return {
+        "channel_counts": Counter(),
+        "status_counts": Counter(),
+        "supports_counts": Counter(),
+        "sufficient_support_rows": 0,
+        "archaic_only_risk_rows": 0,
+        "russian_shadow_suspected_rows": 0,
+        "row_count": 0,
+        "sidecar_index": [],
+    }
+
+
+def _accumulate_validated_sidecar(
+    aggregate: dict[str, Any],
+    sidecar: Mapping[str, Any],
+    sidecar_sha256: str,
+) -> None:
+    for row_record in sidecar["rows"]:
+        aggregate["row_count"] += 1
+        aggregate["sufficient_support_rows"] += int(row_record["sufficient_support"])
+        aggregate["archaic_only_risk_rows"] += int(row_record["archaic_only_risk"])
+        aggregate["russian_shadow_suspected_rows"] += int(row_record["russian_shadow_suspected"])
+        for evidence_record in row_record["evidence"]:
+            aggregate["channel_counts"][evidence_record["channel"]] += 1
+            aggregate["status_counts"][evidence_record["status"]] += 1
+            aggregate["supports_counts"][evidence_record["supports"]] += 1
+    aggregate["sidecar_index"].append(
+        {
+            "packet_index": sidecar["packet_index"],
+            "row_count": sidecar["row_count"],
+            "sidecar_sha256": sidecar_sha256,
+            "sidecar_id": sidecar["sidecar_id"],
+            "lane": sidecar["lane"],
+            "packet_binding": sidecar["packet_binding"],
+        }
+    )
+
+
+def _build_bundle_manifest(
+    *,
+    aggregate: Mapping[str, Any],
+    packet_count: int,
+    identity: Mapping[str, Any],
+    source_package_binding: Mapping[str, Any] | None,
+    transport_attestation: Mapping[str, Any],
+) -> dict[str, Any]:
+    manifest = {
+        "schema_version": MANIFEST_SCHEMA_VERSION,
+        "text_free": True,
+        "evaluation_cycle_id": EVALUATION_CYCLE_ID,
+        "tokenizer_id": TOKENIZER_ID,
+        "tokenizer_version": TOKENIZER_VERSION,
+        "code_hashes": CODE_HASHES,
+        "server_code_sha256": identity["server_code_sha256"],
+        "sources_db_sha256": identity["sources_db_sha256"],
+        "vesum_db_sha256": identity["vesum_db_sha256"],
+        "packet_count": packet_count,
+        "row_count": aggregate["row_count"],
+        "network_lookups_performed": 0,
+        "counts_by_channel": dict(sorted(aggregate["channel_counts"].items())),
+        "counts_by_status": dict(sorted(aggregate["status_counts"].items())),
+        "counts_by_supports": dict(sorted(aggregate["supports_counts"].items())),
+        "sufficient_support_rows": aggregate["sufficient_support_rows"],
+        "archaic_only_risk_rows": aggregate["archaic_only_risk_rows"],
+        "russian_shadow_suspected_rows": aggregate["russian_shadow_suspected_rows"],
+        "sidecars": aggregate["sidecar_index"],
+        "source_package_binding": dict(source_package_binding) if source_package_binding is not None else None,
+        "mcp_transport_attestation": dict(transport_attestation),
+    }
+    manifest["manifest_sha256"] = contract.sha256_value(manifest)
+    return manifest
+
+
+def compile_sidecar_bundle_resumable(
+    packets: Sequence[Sequence[Mapping[str, Any]]],
+    client: LocalMcpSourcesClient,
+    output_dir: Path,
+    *,
+    residual_lane_packets: Sequence[bool],
+    packet_bindings: Sequence[Mapping[str, Any] | None],
+    source_package_binding: Mapping[str, Any] | None,
+    _interrupt_after_packet: int | None = None,
+    _interrupt_after_install: bool = False,
+) -> dict[str, Any]:
+    """Compile serially with a validated, durable sealed-packet prefix.
+
+    Resume changes custody only. Every reused sidecar is re-read, checked
+    against the current frozen identity and packet binding, and passed through
+    the production validator before it contributes to the final manifest.
+    """
+    from scripts.projects.open_model_data import phase3_cycle007_evidence_compile_throughput as throughput
+
+    if not isinstance(client, LocalMcpSourcesClient):
+        raise contract.EvidenceContractError("resumable compile requires LocalMcpSourcesClient")
+    residual_flags = list(residual_lane_packets)
+    bindings = list(packet_bindings)
+    contract.require(len(residual_flags) == len(packets), "residual_lane_packets length must match packets")
+    contract.require(len(bindings) == len(packets), "packet_bindings length must match packets")
+    identity = client.server_identity()
+    expected_identity = {
+        "tokenizer_id": TOKENIZER_ID,
+        "tokenizer_version": TOKENIZER_VERSION,
+        "code_hashes": CODE_HASHES,
+        "server_code_sha256": identity["server_code_sha256"],
+        "sources_db_sha256": identity["sources_db_sha256"],
+        "vesum_db_sha256": identity["vesum_db_sha256"],
+    }
+    target_row_count = sum(len(packet) for packet in packets)
+    resume_identity = throughput.build_resume_identity(
+        expected_identity,
+        source_package_binding=source_package_binding,
+        packet_bindings=bindings,
+        residual_lane_packets=residual_flags,
+        target_packet_count=len(packets),
+        target_row_count=target_row_count,
+    )
+    root = throughput.resume_root_for(output_dir)
+
+    # A crash after the single atomic install but before metadata cleanup is
+    # repaired by validating the installed bundle and removing only metadata.
+    if os.path.lexists(output_dir):
+        if os.path.lexists(root) and (not root.is_dir() or root.is_symlink()):
+            raise contract.EvidenceContractError("invalid resume metadata root")
+        root_is_live = root.is_dir()
+        lock_context = throughput.exclusive_resume_lock(root) if root_is_live else contextlib.nullcontext()
+        with lock_context:
+            if root_is_live:
+                throughput.inspect_resume_root(root)
+            throughput.assert_private_tree(output_dir)
+            actual_names = {path.name for path in output_dir.iterdir()}
+            expected_names = {"manifest.json"} | {
+                throughput.sidecar_filename(index) for index in range(1, len(packets) + 1)
+            }
+            contract.require(actual_names == expected_names, "installed bundle shape drift")
+            manifest_path = output_dir / "manifest.json"
+            manifest = throughput.load_sidecar(manifest_path)
+            validator.validate_manifest(manifest, expected_identity=expected_identity)
+            contract.require(manifest["packet_count"] == len(packets), "installed packet count drift")
+            contract.require(manifest["row_count"] == target_row_count, "installed row count drift")
+            contract.require(
+                manifest["source_package_binding"] == source_package_binding,
+                "installed source package binding drift",
+            )
+            progress: Mapping[str, Any] | None = None
+            if root_is_live and os.path.lexists(root / throughput.PROGRESS_NAME):
+                current_attestation = client.transport_attestation()
+                progress = throughput.read_progress(root / throughput.PROGRESS_NAME)
+                throughput.validate_progress_receipt(
+                    progress,
+                    resume_identity,
+                    expected_transport=str(current_attestation["transport"]),
+                    expected_endpoint_sha256=str(current_attestation["endpoint_sha256"]),
+                    expected_tool_set_sha256=str(current_attestation["required_tool_set_sha256"]),
+                    sealed_packet_count=len(packets),
+                )
+            aggregate = _empty_bundle_aggregate()
+            last_sha256: str | None = None
+            for packet_index, expected_binding in enumerate(bindings, start=1):
+                sidecar_path = output_dir / throughput.sidecar_filename(packet_index)
+                sidecar = throughput.load_sidecar(sidecar_path)
+                validator.validate_sidecar(sidecar, expected_identity=expected_identity)
+                contract.require(sidecar["packet_binding"] == expected_binding, "installed packet binding drift")
+                expected_lane = "residual_label" if residual_flags[packet_index - 1] else "clean_label"
+                contract.require(sidecar["lane"] == expected_lane, "installed lane drift")
+                contract.require(sidecar["row_count"] == len(packets[packet_index - 1]), "installed row count drift")
+                last_sha256 = contract.sha256_file(sidecar_path)
+                _accumulate_validated_sidecar(aggregate, sidecar, last_sha256)
+            if progress is not None:
+                contract.require(
+                    progress["last_sealed_sidecar_sha256"] == last_sha256,
+                    "installed last sidecar drift",
+                )
+            rebuilt = _build_bundle_manifest(
+                aggregate=aggregate,
+                packet_count=len(packets),
+                identity=identity,
+                source_package_binding=source_package_binding,
+                transport_attestation=manifest["mcp_transport_attestation"],
+            )
+            contract.require(rebuilt == manifest, "installed manifest/file drift")
+            if root_is_live:
+                throughput.cleanup_resume_metadata(root)
+            else:
+                throughput.reap_cleanup_tombstone(root)
+        return manifest
+
+    root, bundle = throughput.prepare_resume_root(output_dir)
+    with throughput.exclusive_resume_lock(root):
+        throughput.inspect_resume_root(root)
+        indexes, sealed = throughput.inspect_sealed_prefix(bundle)
+        progress_path = root / throughput.PROGRESS_NAME
+        progress: Mapping[str, Any] | None = None
+        if os.path.lexists(progress_path):
+            progress = throughput.read_progress(progress_path)
+            progress_sealed = progress.get("sealed_packet_count")
+            contract.require(
+                isinstance(progress_sealed, int) and not isinstance(progress_sealed, bool),
+                "resume progress count invalid",
+            )
+            if sealed == progress_sealed + 1:
+                trailing = bundle / throughput.sidecar_filename(sealed)
+                trailing.unlink()
+                _fsync_directory(bundle)
+                indexes.pop()
+                sealed -= 1
+            contract.require(sealed == progress_sealed, "resume prefix/progress mismatch")
+        elif sealed:
+            raise contract.EvidenceContractError("resume progress missing")
+
+        aggregate = _empty_bundle_aggregate()
+        last_sha256: str | None = None
+        last_sidecar_id: str | None = None
+        for packet_index in indexes:
+            sidecar_path = bundle / throughput.sidecar_filename(packet_index)
+            sidecar = throughput.load_sidecar(sidecar_path)
+            validator.validate_sidecar(sidecar, expected_identity=expected_identity)
+            contract.require(sidecar["packet_index"] == packet_index, "resume packet index drift")
+            contract.require(sidecar["packet_binding"] == bindings[packet_index - 1], "resume packet binding drift")
+            expected_lane = "residual_label" if residual_flags[packet_index - 1] else "clean_label"
+            contract.require(sidecar["lane"] == expected_lane, "resume lane drift")
+            contract.require(sidecar["row_count"] == len(packets[packet_index - 1]), "resume row count drift")
+            last_sha256 = contract.sha256_file(sidecar_path)
+            last_sidecar_id = str(sidecar["sidecar_id"])
+            _accumulate_validated_sidecar(aggregate, sidecar, last_sha256)
+
+        current_attestation = client.transport_attestation()
+        if progress is not None:
+            throughput.validate_progress_receipt(
+                progress,
+                resume_identity,
+                expected_transport=str(current_attestation["transport"]),
+                expected_endpoint_sha256=str(current_attestation["endpoint_sha256"]),
+                expected_tool_set_sha256=str(current_attestation["required_tool_set_sha256"]),
+                sealed_packet_count=sealed,
+                last_sealed_sidecar_sha256=last_sha256,
+            )
+            contract.require(progress["target_packet_count"] == len(packets), "resume packet target drift")
+            contract.require(progress["target_row_count"] == target_row_count, "resume row target drift")
+            if sealed:
+                contract.require(progress["last_sealed_sidecar_id"] == last_sidecar_id, "resume sidecar id drift")
+            client.resume_transport_state(
+                progress["mcp_transport_attestation"],
+                progress["mcp_call_records"],
+            )
+        else:
+            throughput.write_progress(
+                root,
+                throughput.build_progress_receipt(
+                    sealed_packet_count=0,
+                    target_packet_count=len(packets),
+                    target_row_count=target_row_count,
+                    last_sealed_sidecar_sha256=None,
+                    last_sealed_sidecar_id=None,
+                    resume_identity=resume_identity,
+                    mcp_transport_attestation=client.transport_attestation(),
+                    mcp_call_records=client.transport_call_records(),
+                ),
+            )
+
+        manifest_path = bundle / "manifest.json"
+        if os.path.lexists(manifest_path):
+            manifest_path.unlink()
+            _fsync_directory(bundle)
+        for packet_index in range(sealed + 1, len(packets) + 1):
+            sidecar = compile_packet_sidecar(
+                packet_index,
+                packets[packet_index - 1],
+                client,
+                residual_lane=residual_flags[packet_index - 1],
+                packet_binding=bindings[packet_index - 1],
+            )
+            validator.validate_sidecar(sidecar, expected_identity=expected_identity)
+            payload = (contract.canonical_json(sidecar) + "\n").encode("utf-8")
+            sidecar_path = bundle / throughput.sidecar_filename(packet_index)
+            last_sha256 = _atomic_write_private(sidecar_path, payload)
+            _fsync_directory(bundle)
+            last_sidecar_id = str(sidecar["sidecar_id"])
+            _accumulate_validated_sidecar(aggregate, sidecar, last_sha256)
+            throughput.write_progress(
+                root,
+                throughput.build_progress_receipt(
+                    sealed_packet_count=packet_index,
+                    target_packet_count=len(packets),
+                    target_row_count=target_row_count,
+                    last_sealed_sidecar_sha256=last_sha256,
+                    last_sealed_sidecar_id=last_sidecar_id,
+                    resume_identity=resume_identity,
+                    mcp_transport_attestation=client.transport_attestation(),
+                    mcp_call_records=client.transport_call_records(),
+                ),
+            )
+            if _interrupt_after_packet == packet_index:
+                raise RuntimeError("synthetic_interrupt_after_seal")
+
+        manifest = _build_bundle_manifest(
+            aggregate=aggregate,
+            packet_count=len(packets),
+            identity=identity,
+            source_package_binding=source_package_binding,
+            transport_attestation=client.transport_attestation(),
+        )
+        validator.validate_manifest(manifest, expected_identity=expected_identity)
+        _atomic_write_private(
+            manifest_path,
+            (contract.canonical_json(manifest) + "\n").encode("utf-8"),
+        )
+        _fsync_directory(bundle)
+        throughput.assert_private_tree(root)
+        throughput.atomic_install_bundle(bundle, output_dir)
+        if _interrupt_after_install:
+            raise RuntimeError("synthetic_interrupt_after_install")
+        throughput.cleanup_resume_metadata(root)
+    throughput.assert_private_tree(output_dir)
+    return manifest
+
+
 def _install_staged_bundle(staging: Path, output_dir: Path) -> None:
     """Atomically claim ``output_dir`` and move the staged bundle into it.
 
@@ -2346,7 +2725,16 @@ def compile_cycle007_package(
         fixture=fixture,
     )
 
-    return compile_sidecar_bundle(
+    if fixture:
+        return compile_sidecar_bundle(
+            packets,
+            client,
+            output_dir,
+            residual_lane_packets=residual_flags,
+            packet_bindings=packet_bindings,
+            source_package_binding=source_package_binding,
+        )
+    return compile_sidecar_bundle_resumable(
         packets,
         client,
         output_dir,
