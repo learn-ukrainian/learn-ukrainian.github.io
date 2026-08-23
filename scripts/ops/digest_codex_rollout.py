@@ -30,6 +30,7 @@ from typing import Any, Iterable
 DEFAULT_LABEL = "local"
 DEFAULT_REPO = Path.home() / "projects" / "learn-ukrainian"
 DEFAULT_MAX = 12
+MIN_SOURCE_BYTES = 64
 TAIL_LINES = 500
 SNIPPET_LIMIT = 16
 SNIPPET_CHARS = 220
@@ -153,7 +154,8 @@ def collect_sources(roots: Iterable[Path], limit: int) -> list[Path]:
                 resolved = path.resolve()
                 if resolved in seen or not path.is_file():
                     continue
-                path.stat()
+                if path.stat().st_size < MIN_SOURCE_BYTES:
+                    continue
             except OSError:
                 continue
             seen.add(resolved)

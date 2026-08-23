@@ -54,7 +54,7 @@ python3 scripts/ops/digest_codex_rollout.py
 | `DIGEST_REPO` | `~/projects/learn-ukrainian` |
 | `DIGEST_MAX` | `12` |
 
-Behavior: glob `**/rollout-*.jsonl` and `**/*.jsonl`, sort mtime newest first (rollout name is tie-break only — do not rank an old Codex rollout over a newer Claude/other jsonl), tail last 500 lines, keep material keywords, drop AGENTS.md / cold_start / rules-load noise, write `logs/agent-digests/<label>-latest.md`, refresh `logs/agent-digests/index.md`, print the output path plus `bytes= sources= label=`.
+Behavior: glob `**/rollout-*.jsonl` and `**/*.jsonl`, apply a size floor, sort mtime newest first (rollout name is tie-break only — do not rank an old Codex rollout over a newer Claude/other jsonl), cap at `DIGEST_MAX`, tail last 500 lines, keep material keywords, drop AGENTS.md / cold_start / rules-load noise, write `logs/agent-digests/<label>-latest.md`, refresh `logs/agent-digests/index.md`, print the output path plus `bytes= sources= label=`.
 
 Those files are local artifacts. They are gitignored and must not be committed.
 
