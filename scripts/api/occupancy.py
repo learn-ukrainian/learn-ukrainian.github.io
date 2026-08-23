@@ -2,8 +2,10 @@
 
 Sibling of ``GET /api/atlas-jobs/load`` — one occupancy board, no second probe
 path. Canonical SSH aliases never appear as JSON keys. Map them with
-``MONITOR_OCCUPANCY_HOST_IDS`` (``alias=opaque-id,...``). Observer heartbeats
-from ``POST /api/observer/presence`` appear under ``cloud-observer``.
+``MONITOR_OCCUPANCY_HOST_IDS`` (``alias=opaque-id,...``). Occupants come from
+the atlas-job registry, the cached job unit, local session-stream driver
+leases, and optional occupancy markers. Observer heartbeats from
+``POST /api/observer/presence`` appear under ``cloud-observer``.
 """
 
 from __future__ import annotations
@@ -18,6 +20,7 @@ from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.observer_presence import list_live
+from scripts.api.occupancy_local import occupants_from_markers, occupants_from_session_streams
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
@@ -251,15 +254,22 @@ def _payload_from_entries(
     load_entries: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
     hosts: dict[str, Any] = {}
+    mapping = parse_host_id_map()
     for opaque, canonical in selected.items():
         load_entry = load_entries.get(opaque) or _unavailable_load_entry()
+        groups: list[list[dict[str, str | None]]] = []
         if canonical is not None:
-            occupants = _merge_occupants(
-                _occupants_from_registry(canonical),
-                _occupants_from_job_unit(canonical, load_entry),
+            groups.append(_occupants_from_registry(canonical))
+            groups.append(_occupants_from_job_unit(canonical, load_entry))
+        groups.append(
+            occupants_from_session_streams(
+                host_id=opaque,
+                mapping=mapping,
+                selected=selected,
             )
-        else:
-            occupants = []
+        )
+        groups.append(occupants_from_markers(host_id=opaque))
+        occupants = _merge_occupants(*groups)
         hosts[opaque] = _shape_host(opaque, load_entry, occupants)
 
     return {

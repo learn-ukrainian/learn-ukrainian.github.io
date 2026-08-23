@@ -239,7 +239,14 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The payload always enumerates both opaque hosts `host-teacher` and `host-job` (and any additional mapped hosts). Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped default hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
-Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), and `idle_or_empty` (boolean indicating near-zero burn). Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
+Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), and `idle_or_empty` (boolean indicating near-zero burn). Sources, in order:
+
+- atlas-job registry rows in `running` / `queued` / `submitted` / `needs_finalize`
+- the cached load `job_unit` when a unit is active
+- local session-stream epic-driver leases (active, unexpired). Attached to `MONITOR_OCCUPANCY_DRIVER_HOST_ID` when that value is an enumerated opaque host, otherwise to the opaque id of `ATLAS_JOB_SELF_HOST` when that token is mapped. Remote tmux seats are not scraped.
+- optional occupancy markers (`MONITOR_OCCUPANCY_MARKERS` file or directory, else `.agent/occupancy/markers` on the live checkout). Foundry / evidence-compiler (or any service) can publish `{kind, agent, task_id, epic, host_id}` with an `expires_at`. `idle_or_empty` stays false while those occupants are active.
+
+Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics. Unavailable hosts still report `idle_or_empty: false` (burn unknown).
 
 On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
 

@@ -886,7 +886,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Opaque host occupancy: load fields plus occupants {kind, agent, task_id, epic}; observer heartbeats appear under host_id cloud-observer.",
-        "In-process atlas-jobs load cache plus local atlas-jobs registry; host keys from MONITOR_OCCUPANCY_HOST_IDS; in-process observer presence store for cloud-observer.",
+        "In-process atlas-jobs load cache plus local atlas-jobs registry, local session-stream driver leases, and optional occupancy markers; host keys from MONITOR_OCCUPANCY_HOST_IDS; in-process observer presence store for cloud-observer.",
         "Stale-while-revalidate via the existing load cache (fresh <=30s, stale <=300s); observer rows TTL 15 minutes; never probes SSH on the request path.",
         ("operators", "dispatch", "tests", "qa-engineer", "grok-bot"),
         "Reuses GET /api/atlas-jobs/load cache; does not add a second probe board. Observer presence is not a RAM lease.",
