@@ -385,7 +385,9 @@ def _probe_with(monkeypatch, result: Any) -> bool:
             raise result
         return result
 
-    monkeypatch.setattr(hygiene.subprocess, "run", _fake_run)
+    # The gate's gh access now lives in the shared probe (#7127); patch the
+    # probe's subprocess boundary, not this module's own subprocess module.
+    monkeypatch.setattr(hygiene.pr_identity, "_run_gh", _fake_run)
     return hygiene._branch_has_open_pr(Path("/nonexistent"), "kimi/some-task")
 
 
@@ -473,7 +475,7 @@ def test_probe_queries_an_explicit_repository(monkeypatch) -> None:
         seen["cmd"] = cmd
         return _gh_result("[]")
 
-    monkeypatch.setattr(hygiene.subprocess, "run", _fake_run)
+    monkeypatch.setattr(hygiene.pr_identity, "_run_gh", _fake_run)
     hygiene._branch_has_open_pr(Path("/nonexistent"), "kimi/some-task")
 
     cmd = seen["cmd"]

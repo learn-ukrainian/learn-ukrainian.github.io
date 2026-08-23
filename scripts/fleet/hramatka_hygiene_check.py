@@ -10,7 +10,10 @@ filesystem — this is PR-4 of the stream-hygiene package
 (`conversation_7b6241377cd44c7ea5265da5c85efb5c`); it does not implement or
 import the PR-2 scope gate (`hramatka_scope_gate.py`) or the PR-3 reaper
 (`post_task_reap.py`) bodies, by design, so this gate has no hard dependency
-on either PR's merge order.
+on either PR's merge order.  The one deliberate exception is the shared
+open-PR identity probe (`scripts/fleet/pr_identity.py`, #7127): a leaf module
+that imports neither this gate nor the reaper, so both callers express the
+PR-identity binding once without any import cycle.
 
 Usage:
   .venv/bin/python -m scripts.fleet.hramatka_hygiene_check
@@ -39,6 +42,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.fleet import pr_identity
 
 REPO_ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 
@@ -213,83 +217,24 @@ def _branch_has_open_pr(
 ) -> bool:
     """Return True only when ``branch`` provably has an OPEN same-repo PR.
 
-    Mirrors the PR-3 reaper's retention rule (``post_task_reap`` retains a
-    bound worktree whose branch still has an open PR) without importing it,
-    per this module's deliberate no-hard-dependency design.
-
-    Fail-closed for this gate, which is the opposite direction from the
-    reaper: ANY doubt returns False and the worktree stays counted.  The gate
-    must never hand out a verified-clean handoff on a guess.  Concretely,
-    every one of these counts the worktree rather than excusing it:
-
-    * no branch identity (a detached worktree);
-    * ``gh`` missing, timing out, or exiting non-zero;
-    * output that is not JSON, or not a JSON list;
-    * a list containing anything that is not an object (``[null]``);
-    * a row missing/!= ``state == "OPEN"``;
-    * a row whose ``headRefName`` is not exactly this branch;
-    * a cross-repository (fork) head;
-    * a row without a positive integer ``number``.
-
-    A single malformed row poisons the whole answer -- a partially
-    understood response is an unknown, and unknowns do not exempt.
-
-    Deliberately NOT required: that the PR head OID equals the local
-    worktree HEAD.  A worktree legitimately sits ahead of or behind its
-    pushed PR head, so demanding equality would recreate the unpassable-gate
-    bug this change fixes, in a new form.  Branch identity plus a same-repo
-    head is the binding that answers the actual question -- is this worktree
-    still serving an open PR?
+    PR identity binding lives in one shared probe (scripts.fleet.pr_identity,
+    #7127) — the same binding post_task_reap's reaper uses — so this gate and
+    the reaper cannot drift apart again.  This caller keeps the gate's
+    fail-closed direction, which is the opposite direction from the reaper:
+    ANY unknown (no branch identity, gh failure, malformed row such as
+    ``[{}]``, fork head, mismatched branch) returns False and the worktree
+    stays counted.  The gate must never hand out a verified-clean handoff on
+    a guess.
     """
     if not branch:
         return False
-    try:
-        proc = subprocess.run(
-            [
-                "gh",
-                "pr",
-                "list",
-                "--repo",
-                repo,
-                "--head",
-                branch,
-                "--state",
-                "open",
-                "--json",
-                "number,state,headRefName,isCrossRepository",
-            ],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return False
-    if proc.returncode != 0:
-        return False
-    try:
-        rows = json.loads(proc.stdout or "[]")
-    except json.JSONDecodeError:
-        return False
-    if not isinstance(rows, list):
-        return False
-
-    matched = False
-    for row in rows:
-        if not isinstance(row, dict):
-            return False
-        number = row.get("number")
-        if not isinstance(number, int) or isinstance(number, bool) or number <= 0:
-            return False
-        if row.get("state") != "OPEN":
-            return False
-        if row.get("isCrossRepository") is not False:
-            return False
-        if row.get("headRefName") != branch:
-            return False
-        matched = True
-    return matched
+    has_open_pr, _error = pr_identity.probe_open_pr_for_branch(
+        repo_root=repo_root,
+        repo=repo,
+        branch=branch,
+        timeout=timeout,
+    )
+    return has_open_pr is True
 
 
 def _is_under_dispatch_worktrees(path: Path, dispatch_root: Path) -> bool:

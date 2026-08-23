@@ -1931,18 +1931,37 @@ def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None
 @pytest.mark.parametrize(
     ("label", "payload", "expect_deletion_allowed"),
     [
-        ("incomplete row", '[{"state": "CLOSED"}]', False),
-        ("bogus enum", '[{"state": "WAT", "number": 1}]', False),
+        ("incomplete row", "[{}]", False),
+        (
+            "bogus enum",
+            '[{"state": "WAT", "number": 1, "headRefName": "some/branch", "isCrossRepository": false}]',
+            False,
+        ),
+        (
+            "non-open row under an open-state query",
+            '[{"state": "CLOSED", "number": 1, "headRefName": "some/branch", "isCrossRepository": false}]',
+            False,
+        ),
         ("genuinely empty", "[]", True),
-        ("valid closed", '[{"state": "CLOSED", "number": 1}]', True),
-        ("valid merged", '[{"state": "MERGED", "number": 1}]', True),
-        ("valid open", '[{"state": "OPEN", "number": 1}]', False),
+        (
+            "valid open",
+            '[{"state": "OPEN", "number": 1, "headRefName": "some/branch", "isCrossRepository": false}]',
+            False,
+        ),
     ],
 )
 def test_post_task_reap_deletion_authorization_end_to_end(monkeypatch, label, payload, expect_deletion_allowed) -> None:
     """The destructive authorization itself: ambiguity retains, and a real
-    answer still permits reaping."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    answer still permits reaping.
+
+    #7127: the authorization now flows through the one shared PR-identity
+    probe (scripts.fleet.pr_identity), so the gh boundary faked here is the
+    probe's, not reap_worktrees'.  A CLOSED row would be a contract violation
+    for the probe's ``--state open`` query and is treated as unknown (retain);
+    the branch whose PRs are all closed/merged is answered by ``[]`` instead.
+    """
+    monkeypatch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "octo/fleet")
+    monkeypatch.setattr(post_task_reap.pr_identity, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     no_open_pr, _guard_error = post_task_reap._no_open_pr_for_branch(
         repo_root=Path("/nonexistent"), branch="some/branch"

@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.fleet import pr_identity
 from scripts.orchestration import reap_worktrees, reaper_lifecycle
 from scripts.path_safety import assert_delete_target
 
@@ -500,16 +501,23 @@ def _no_open_pr_for_branch(
 ) -> tuple[bool, str | None]:
     """Return (no_open_pr, failure) for the branch that owns the bound tree.
 
-    Reuses the canonical reaper's candidate derivation so detached and
-    dispatch-layout worktrees are checked under the same branch names that the
-    canonical path would have probed.  A probe error is fail-closed.
+    PR identity binding lives in one shared probe (scripts.fleet.pr_identity,
+    #7127) — the same binding hramatka_hygiene_check uses — so the reaper and
+    the closeout gate cannot drift apart again.  This caller keeps only its
+    fail-closed direction: an unknown answer retains the worktree instead of
+    deleting it.
     """
     if not branch:
         return False, "no branch identity to probe for an open PR"
-    prs, error = reap_worktrees._query_pr_states(repo_root, branch)
-    if error is not None:
+    repo = pr_identity.resolve_repo_slug(repo_root)
+    has_open_pr, error = pr_identity.probe_open_pr_for_branch(
+        repo_root=repo_root,
+        repo=repo,
+        branch=branch,
+    )
+    if has_open_pr is None:
         return False, f"PR guard unavailable; {error}"
-    return all(pr.state != "OPEN" for pr in prs), None
+    return not has_open_pr, None
 
 
 def _reap_terminal_without_pr(
