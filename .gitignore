@@ -93,6 +93,9 @@ site/public/atlas/
 
 # Logs
 logs/
+# Fleet session digest artifacts (local-only). Script + charter stay tracked.
+# See docs/ops/fleet-agent-eyes.md and scripts/ops/digest_codex_rollout.py.
+logs/agent-digests/
 .runtime/
 *.log
 npm-debug.log*
