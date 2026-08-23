@@ -866,9 +866,9 @@ def _remove_runtime_tmp_lease(lease: Path, namespace: Path) -> None:
     raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
 
 
-def _build_runtime_tmp_legacy_lease_index() -> dict[str, dict[str, Any]]:
-    """Map lease names to task state for dirs that predate the task-id marker."""
-    index: dict[str, dict[str, Any]] = {}
+def _build_runtime_tmp_legacy_stem_index() -> dict[str, str]:
+    """Map lease names to task-record stems without opening any JSON."""
+    index: dict[str, str] = {}
     try:
         state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
     except OSError:
@@ -876,28 +876,52 @@ def _build_runtime_tmp_legacy_lease_index() -> dict[str, dict[str, Any]]:
     for state_path in state_files:
         if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
             continue
+        stem = state_path.stem
+        index[_runtime_tmp_lease_name(stem)] = stem
+    return index
+
+
+def _read_runtime_tmp_state_for_legacy_lease(
+    lease_name: str,
+    *,
+    legacy_stem_index: dict[str, str],
+) -> dict[str, Any] | None:
+    """Resolve one marker-less lease, falling back to a bounded record scan."""
+    stem = legacy_stem_index.get(lease_name)
+    if stem is not None:
+        return _read_state_json(_TASKS_DIR / f"{stem}.json")
+    try:
+        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+    except OSError:
+        return None
+    for state_path in state_files:
+        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
+            continue
         state = _read_state_json(state_path)
         if not isinstance(state, dict):
             continue
         task_id = state.get("task_id")
-        if isinstance(task_id, str):
-            index[_runtime_tmp_lease_name(task_id)] = state
-    return index
+        if isinstance(task_id, str) and _runtime_tmp_lease_name(task_id) == lease_name:
+            return state
+    return None
 
 
 def _runtime_tmp_state_for_lease(
     lease_name: str,
     lease_root: Path,
     *,
-    legacy_index: dict[str, dict[str, Any]] | None,
+    legacy_stem_index: dict[str, str] | None,
 ) -> dict[str, Any] | None:
     """Find the task state that owns a runtime-lease directory."""
     task_id = _read_runtime_tmp_task_id_marker(lease_root)
     if task_id is not None:
         return _read_state_json(_state_path(task_id))
-    if legacy_index is None:
+    if legacy_stem_index is None:
         return None
-    return legacy_index.get(lease_name)
+    return _read_runtime_tmp_state_for_legacy_lease(
+        lease_name,
+        legacy_stem_index=legacy_stem_index,
+    )
 
 
 def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
@@ -940,7 +964,7 @@ def _sweep_runtime_tmp_orphans(
         seen_namespaces.add(namespace)
         namespaces.append(namespace)
     cutoff = (time.time() if now is None else now) - _RUNTIME_TMP_ORPHAN_MAX_AGE_S
-    legacy_index: dict[str, dict[str, Any]] | None = None
+    legacy_stem_index: dict[str, str] | None = None
 
     for namespace in namespaces:
         try:
@@ -974,17 +998,21 @@ def _sweep_runtime_tmp_orphans(
             if stat.S_ISLNK(lease_stat.st_mode) or not stat.S_ISDIR(lease_stat.st_mode):
                 continue
 
-            task_id = _read_runtime_tmp_task_id_marker(lease)
-            if task_id is None and legacy_index is None:
-                legacy_index = _build_runtime_tmp_legacy_lease_index()
+            had_marker = _read_runtime_tmp_task_id_marker(lease) is not None
+            if not had_marker and legacy_stem_index is None:
+                legacy_stem_index = _build_runtime_tmp_legacy_stem_index()
             state = _runtime_tmp_state_for_lease(
                 lease.name,
                 lease,
-                legacy_index=legacy_index,
+                legacy_stem_index=legacy_stem_index,
             )
             if state is not None:
                 status = state.get("status")
                 if status not in _RUNTIME_TMP_TERMINAL_STATUSES or _runtime_tmp_state_has_live_pid(state):
+                    if not had_marker:
+                        resolved_task_id = state.get("task_id")
+                        if isinstance(resolved_task_id, str):
+                            _write_runtime_tmp_task_id_marker(lease, resolved_task_id)
                     continue
             elif lease_stat.st_mtime >= cutoff:
                 continue

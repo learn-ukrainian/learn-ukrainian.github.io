@@ -42,6 +42,7 @@ def _seed_sweep_fixture(
     marked_lease_count: int,
     legacy_lease_count: int,
     decoy_record_count: int,
+    legacy_status: str = "done",
 ) -> Path:
     namespace = tmp_path / "learn-ukrainian"
     namespace.mkdir(parents=True, exist_ok=True)
@@ -65,7 +66,7 @@ def _seed_sweep_fixture(
         lease.mkdir(parents=True)
         delegate._write_state_atomic(
             delegate._state_path(task_id),
-            {"task_id": task_id, "status": "done", "pid": None},
+            {"task_id": task_id, "status": legacy_status, "pid": None},
         )
 
     return namespace
@@ -116,11 +117,8 @@ def test_runtime_tmp_orphan_sweep_avoids_record_scan_for_marked_leases(
 
     result = delegate._sweep_runtime_tmp_orphans()
 
-    total_records = (
-        SYNTHETIC_TASK_RECORD_COUNT + MARKED_LEASE_DIR_COUNT + LEGACY_LEASE_DIR_COUNT
-    )
     assert result["leases_reaped"] == MARKED_LEASE_DIR_COUNT + LEGACY_LEASE_DIR_COUNT
-    assert counts["read_state_json"] == MARKED_LEASE_DIR_COUNT + total_records
+    assert counts["read_state_json"] == MARKED_LEASE_DIR_COUNT + LEGACY_LEASE_DIR_COUNT
 
 
 def test_runtime_tmp_orphan_sweep_marker_lookup_mutation_check(
@@ -149,7 +147,7 @@ def test_runtime_tmp_orphan_sweep_marker_lookup_mutation_check(
     )
     reverted_counts = _count_task_record_reads(monkeypatch)
 
-    def legacy_lookup(lease_name: str, _lease_root: Path, *, legacy_index):
+    def legacy_lookup(lease_name: str, lease_root: Path, *, legacy_stem_index):
         return _old_runtime_tmp_state_for_lease(lease_name)
 
     monkeypatch.setattr(delegate, "_runtime_tmp_state_for_lease", legacy_lookup)
@@ -159,6 +157,85 @@ def test_runtime_tmp_orphan_sweep_marker_lookup_mutation_check(
     assert fixed_reads == MARKED_LEASE_DIR_COUNT
     assert reverted_reads > fixed_reads
     assert reverted_reads >= 5_000
+
+
+def test_runtime_tmp_orphan_sweep_stem_index_mutation_check(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Reverting the stem index would scan records for every legacy lease."""
+    _seed_sweep_fixture(
+        tmp_path,
+        tmp_tasks_dir,
+        marked_lease_count=0,
+        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
+        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
+    )
+    fixed_counts = _count_task_record_reads(monkeypatch)
+    delegate._sweep_runtime_tmp_orphans()
+    fixed_reads = fixed_counts["read_state_json"]
+
+    _seed_sweep_fixture(
+        tmp_path,
+        tmp_tasks_dir,
+        marked_lease_count=0,
+        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
+        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
+    )
+    reverted_counts = _count_task_record_reads(monkeypatch)
+    monkeypatch.setattr(
+        delegate,
+        "_build_runtime_tmp_legacy_stem_index",
+        lambda: {},
+    )
+    delegate._sweep_runtime_tmp_orphans()
+    reverted_reads = reverted_counts["read_state_json"]
+
+    assert fixed_reads == LEGACY_LEASE_DIR_COUNT
+    assert reverted_reads > fixed_reads
+    assert reverted_reads >= 500
+
+
+def test_runtime_tmp_orphan_sweep_marker_backfill_second_sweep(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """After one sweep, marker backfill makes the next sweep O(1) without legacy fallback."""
+    namespace = _seed_sweep_fixture(
+        tmp_path,
+        tmp_tasks_dir,
+        marked_lease_count=0,
+        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
+        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
+        legacy_status="running",
+    )
+    delegate._sweep_runtime_tmp_orphans()
+
+    for index in range(LEGACY_LEASE_DIR_COUNT):
+        task_id = f"legacy-task-{index:04d}"
+        lease = namespace / delegate._runtime_tmp_lease_name(task_id)
+        assert lease.is_dir()
+        assert delegate._read_runtime_tmp_task_id_marker(lease) == task_id
+
+    def forbid_legacy_paths(*_args, **_kwargs):
+        raise AssertionError("legacy resolution should not run after marker backfill")
+
+    monkeypatch.setattr(
+        delegate,
+        "_build_runtime_tmp_legacy_stem_index",
+        forbid_legacy_paths,
+    )
+    monkeypatch.setattr(
+        delegate,
+        "_read_runtime_tmp_state_for_legacy_lease",
+        forbid_legacy_paths,
+    )
+
+    second_counts = _count_task_record_reads(monkeypatch)
+    delegate._sweep_runtime_tmp_orphans()
+    assert second_counts["read_state_json"] == LEGACY_LEASE_DIR_COUNT
 
 
 def test_read_only_dispatch_task_record_stays_within_byte_budget(
