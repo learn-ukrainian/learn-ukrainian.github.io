@@ -129,18 +129,39 @@ def _imported_modules(path: Path, project_root: Path, *, module_level_only: bool
     return modules
 
 
-def _resolve_project_module(module: str, project_root: Path) -> Path | None:
-    """Resolve a module name to a project Python file, if it is project-local."""
+def _resolve_project_module(
+    module: str,
+    project_root: Path,
+    *,
+    importing_file: Path | None = None,
+) -> Path | None:
+    """Resolve a module name to a project Python file, if it is project-local.
+
+    Script entry points can put their own directory on ``sys.path`` and use a
+    flat import as the fallback for a package import. Include that directory
+    when resolving a module reached from such a file so the fallback remains
+    first-party instead of being treated as an unmapped dependency.
+    """
     parts = tuple(part for part in module.split(".") if part)
     if not parts:
         return None
 
     relative = Path(*parts)
-    candidates = (
-        project_root / relative.with_suffix(".py"),
-        project_root / relative / "__init__.py",
-        project_root / "scripts" / relative.with_suffix(".py"),
-        project_root / "scripts" / relative / "__init__.py",
+    candidates: list[Path] = []
+    if importing_file is not None:
+        candidates.extend(
+            (
+                importing_file.parent / relative.with_suffix(".py"),
+                importing_file.parent / relative / "__init__.py",
+            )
+        )
+    candidates.extend(
+        (
+            project_root / relative.with_suffix(".py"),
+            project_root / relative / "__init__.py",
+            project_root / "scripts" / relative.with_suffix(".py"),
+            project_root / "scripts" / relative / "__init__.py",
+        )
     )
     return next((candidate for candidate in candidates if candidate.is_file()), None)
 
@@ -161,7 +182,7 @@ def _reachable_import_roots(test_paths: Iterable[Path], project_root: Path) -> s
             root = module.split(".", 1)[0]
             if root in LIVE_MODEL_IMPORTS or root == "__future__":
                 continue
-            resolved = _resolve_project_module(module, project_root)
+            resolved = _resolve_project_module(module, project_root, importing_file=path)
             if resolved is not None:
                 pending.append((resolved, False))
             elif not is_project_import(root, project_root):
