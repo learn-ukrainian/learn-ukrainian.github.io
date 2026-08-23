@@ -170,14 +170,14 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   touch {os.fspath(claim_marker)!r}
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_streams" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "close" ]]; then
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
@@ -257,13 +257,13 @@ def _core_driver_exit_fixture(
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_streams" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "close" ]]; then
   count=0
   if [[ -f {os.fspath(close_attempts)!r} ]]; then count="$(< {os.fspath(close_attempts)!r})"; fi
   count=$((count + 1))

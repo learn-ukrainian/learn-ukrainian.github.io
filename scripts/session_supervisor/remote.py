@@ -195,7 +195,9 @@ class RemoteEpicClient:
         digest_limit: int = 20,
     ) -> tuple[Lease, dict[str, Any]]:
         # A health read is deliberate: a failed preflight cannot have mutated a lease.
-        self.health()
+        health = self.health()
+        if health.get("ok") is not True:
+            raise RemoteSupervisorError("Monitor API health check failed; no remote claim was made")
         session_id = session_id or f"session-{uuid.uuid4().hex}"
         lease_id = lease_id or f"lease-{uuid.uuid4().hex}"
         holder_payload = {

@@ -6,9 +6,11 @@ import json
 import urllib.error
 from pathlib import Path
 
+import pytest
+
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from scripts.session_supervisor import main
-from scripts.session_supervisor.remote import RemoteEpicClient, RemoteUnreachableError
+from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError, RemoteUnreachableError
 
 
 class _Response:
@@ -132,6 +134,24 @@ def test_remote_claim_fail_closed_without_api_and_does_not_post() -> None:
         pass
     else:  # pragma: no cover - assertion branch
         raise AssertionError("unreachable Monitor API must refuse the claim")
+    assert calls == ["GET"]
+
+
+def test_remote_claim_fail_closed_when_health_is_unhealthy() -> None:
+    calls: list[str] = []
+
+    def opener(request: object, timeout: int = 0) -> _Response:
+        del timeout
+        calls.append(str(getattr(request, "method", "")))
+        return _Response({"schema": "remote-epic-lifecycle.v1", "ok": False})
+
+    client = RemoteEpicClient(opener=opener)
+    with pytest.raises(RemoteSupervisorError, match="health check failed"):
+        client.claim(
+            stream_id="epic:7178",
+            holder=LeaseHolder("codex", "codex-cli", "unhealthy", process_id=1, host_id="unhealthy-host"),
+            lineage_id="unhealthy-lineage",
+        )
     assert calls == ["GET"]
 
 

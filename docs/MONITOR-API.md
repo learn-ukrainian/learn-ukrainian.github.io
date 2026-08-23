@@ -239,7 +239,9 @@ loopback tunnel is therefore the client boundary for another machine.
 The client is `scripts.session_supervisor` and uses stdlib `urllib` with a
 10-second request timeout. Its default is remote Monitor mode. The explicit
 `--local` mode prints `LOCAL-ONLY LEASE — not visible to the fleet`; launchers
-do not select that mode. API responses contain opaque validated holder IDs but
+do not select that mode; launcher normal exit and signal teardown use the
+remote `release` path. Claim preflight requires a healthy (`ok: true`) Monitor
+response before it sends a mutation. API responses contain opaque validated holder IDs but
 no paths, hostnames, IP addresses, SSH aliases, or home paths. Handoff bodies
 containing those tokens are rejected.
 

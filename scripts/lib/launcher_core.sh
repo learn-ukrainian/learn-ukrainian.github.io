@@ -533,7 +533,7 @@ launcher_close_driver_lease() {
   local attempt
   for attempt in 1 2; do
     if "$LC_SESSION_ROOT/.venv/bin/python" \
-        -m agents_extensions.shared.session_streams hook close >/dev/null 2>&1; then
+        -m scripts.session_supervisor close --role driver >/dev/null 2>&1; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0
     fi
