@@ -85,6 +85,7 @@ def test_remote_claim_preflights_health_and_emits_one_json_document(monkeypatch,
         )
 
     monkeypatch.setattr("urllib.request.urlopen", opener)
+    # allow-hardcoded-epic: remote supervisor request fixture
     assert (
         main(
             [
@@ -112,7 +113,9 @@ def test_remote_claim_preflights_health_and_emits_one_json_document(monkeypatch,
     output = capsys.readouterr()
     assert json.loads(output.out)["schema"] == "session-supervisor-bootstrap.v1"
     assert calls[0].startswith("/api/epics/v1/health")
-    assert any(path.startswith("/api/epics/v1/epic:7178/claim") for path in calls)
+    assert any(
+        path.startswith("/api/epics/v1/epic:7178/claim") for path in calls
+    )  # allow-hardcoded-epic: remote supervisor request fixture
 
 
 def test_remote_claim_fail_closed_without_api_and_does_not_post() -> None:
@@ -156,6 +159,7 @@ def test_remote_claim_fail_closed_when_health_is_unhealthy() -> None:
 
 
 def test_local_flag_warns_and_keeps_stdout_as_one_json_document(tmp_path: Path, capsys) -> None:
+    # allow-hardcoded-epic: local supervisor request fixture
     assert (
         main(
             [

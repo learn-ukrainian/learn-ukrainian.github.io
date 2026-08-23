@@ -132,7 +132,9 @@ def test_expired_claim_recovery_is_one_cas_receipt_and_old_lease_is_expired(tmp_
     assert outcome == "recovered"
     assert new.generation == old.generation + 1
     assert new.fencing_token == old.fencing_token + 1
-    assert store.session_state("epic:7000", "old-session").value == "expired"
+    assert (
+        store.session_state("epic:7000", "old-session").value == "expired"
+    )  # allow-hardcoded-epic: synthetic expiry recovery stream fixture
     with store._read_snapshot() as connection:
         recovery = connection.execute(
             "SELECT proof_json FROM lease_events WHERE stream_id = ? AND event_type = 'recovered'",

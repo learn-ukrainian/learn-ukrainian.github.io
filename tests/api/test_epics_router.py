@@ -61,7 +61,9 @@ def test_router_claim_heartbeat_handoff_release_round_trip(tmp_path: Path, monke
     released = client.post("/api/epics/v1/epic:7178/release", json=exact)
     assert released.status_code == 200
     assert released.json()["outcome"] == "released"
-    assert client.post("/api/epics/v1/epic:7178/release", json=exact).status_code == 200
+    assert (
+        client.post("/api/epics/v1/epic:7178/release", json=exact).status_code == 200
+    )  # allow-hardcoded-epic: remote lifecycle route fixture
 
 
 def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path: Path, monkeypatch) -> None:
@@ -81,7 +83,9 @@ def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path:
         },
     )
     assert competing.status_code == 409
-    assert client.post("/api/epics/v1/epic:7178/release", json={"force": True}).status_code == 400
+    assert (
+        client.post("/api/epics/v1/epic:7178/release", json={"force": True}).status_code == 400
+    )  # allow-hardcoded-epic: remote lifecycle route fixture
 
     bad = client.post(
         "/api/epics/v1/epic:7178/handoff",
@@ -144,5 +148,5 @@ def test_router_redacts_legacy_uri_references(tmp_path: Path, monkeypatch) -> No
     }
     sanitized = epics_router._safe_entry(payload)
     assert "/Users/" not in json.dumps(sanitized)
-    assert sanitized["stream"] == "epic:7178"
+    assert sanitized["stream"] == "epic:7178"  # allow-hardcoded-epic: remote lifecycle response fixture
     assert sanitized["refs"] == []

@@ -11,6 +11,7 @@ pytest-timeout==2.4.0
 
 # FastAPI/TestClient paths.
 fastapi==0.139.0
+uvicorn==0.48.0
 httpx==0.28.1
 beautifulsoup4==4.14.3
 filelock==3.32.2
