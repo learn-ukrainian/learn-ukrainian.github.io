@@ -252,12 +252,64 @@ def run_git_nul_separated(cmd: list[str]) -> list[str]:
     return decoded
 
 
+def run_git_lines(cmd: list[str]) -> list[str]:
+    """Run a git command whose output is one record per line."""
+    res = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT, check=True)
+    return [line for line in res.stdout.splitlines() if line]
+
+
 def get_diff_range_head(diff_range: str) -> str:
     """Return the revision containing files at the right side of a git range."""
     for separator in ("...", ".."):
         if separator in diff_range:
             return diff_range.rsplit(separator, 1)[1]
     return "HEAD"
+
+
+def get_files_changed_in_commit_range(
+    commit_range: str,
+    *,
+    apply_infrastructure_skips: bool = True,
+) -> tuple[list[str], str, str]:
+    """Return the union of paths touched by every commit in ``commit_range``.
+
+    A tree diff can omit a path changed and then reverted by a later queued
+    commit.  Landing scans must retain the union of the constituent PR
+    surfaces, so collect each commit's changed paths and read the resulting
+    tree at the range head exactly once.
+    """
+    commits = run_git_lines(["git", "rev-list", commit_range])
+    paths: list[str] = []
+    for commit in commits:
+        paths.extend(
+            run_git_nul_separated(
+                [
+                    "git",
+                    "diff-tree",
+                    "--root",
+                    "-r",
+                    "-m",
+                    "--no-commit-id",
+                    "--no-renames",
+                    "--name-only",
+                    "--diff-filter=ACMRT",
+                    "-z",
+                    commit,
+                ]
+            )
+        )
+    head = get_diff_range_head(commit_range)
+    head_paths = set(
+        run_git_nul_separated(["git", "ls-tree", "-rz", "--name-only", head])
+    )
+    return (
+        filter_rel_paths(
+            sorted(set(paths) & head_paths),
+            apply_infrastructure_skips=apply_infrastructure_skips,
+        ),
+        f"git commit range ({commit_range})",
+        head,
+    )
 
 
 def get_files_to_check(
@@ -352,6 +404,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--staged", action="store_true", help="Inspect staged git index blobs")
     parser.add_argument("--all", action="store_true", help="Explicitly scan all tracked files in repo")
     parser.add_argument(
+        "--commit-range",
+        help="Scan the union of paths changed by every commit in a range",
+    )
+    parser.add_argument(
         "--public-identifiers",
         action="store_true",
         help="Scan learner-facing files for scrubbed personal identifiers only",
@@ -364,14 +420,27 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.public_identifiers and (args.staged or args.all):
         parser.error("--public-identifiers cannot be combined with --staged or --all")
+    if args.commit_range and (args.diff_range or args.staged or args.all):
+        parser.error("--commit-range cannot be combined with a diff range, --staged, or --all")
+    if args.commit_range and not args.public_identifiers:
+        parser.error("--commit-range requires --public-identifiers")
     if args.revision and not args.public_identifiers:
         parser.error("--revision requires --public-identifiers")
-    if args.revision and args.diff_range:
-        parser.error("--revision cannot be combined with a diff range")
+    if args.revision and (args.diff_range or args.commit_range):
+        parser.error("--revision cannot be combined with a diff range or --commit-range")
 
     try:
         if args.public_identifiers:
-            if args.diff_range:
+            if args.commit_range:
+                changed_paths, diff_mode, rev_target = get_files_changed_in_commit_range(
+                    args.commit_range,
+                    apply_infrastructure_skips=False,
+                )
+                rel_paths = [
+                    path for path in changed_paths if is_public_personal_identifier_path(path)
+                ]
+                mode_str = f"changed learner-facing files (--public-identifiers; {diff_mode})"
+            elif args.diff_range:
                 changed_paths, diff_mode, rev_target = get_files_to_check(
                     args.diff_range, apply_infrastructure_skips=False
                 )

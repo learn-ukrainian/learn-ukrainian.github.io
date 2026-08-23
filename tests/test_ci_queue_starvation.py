@@ -66,6 +66,22 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     assert "gate_required_results.py" in gate_steps
     assert "contains(needs.*.result, 'skipped')" not in gate_steps
 
+
+def test_contracts_bounds_landing_secret_and_opsec_scans() -> None:
+    workflow = _CI.read_text(encoding="utf-8")
+    assert "Resolve secret scan commit scope (#7141)" in workflow
+    assert "MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha || '' }}" in workflow
+    assert "MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}" in workflow
+    assert "PUSH_BEFORE_SHA: ${{ github.event.before || '' }}" in workflow
+    assert "PUSH_AFTER_SHA: ${{ github.event.after || '' }}" in workflow
+    assert "base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}" in workflow
+    assert "head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}" in workflow
+    assert '--commit-range "$OPSEC_RANGE" --public-identifiers' in workflow
+    assert 'if [ "$EVENT_NAME" = "pull_request" ]; then' in workflow
+    scope_index = workflow.index("Resolve secret scan commit scope (#7141)")
+    assert scope_index < workflow.index("Gate scrubbed public identifiers")
+    assert scope_index < workflow.index("TruffleHog secret scan (attempt 1)")
+
 def test_frontend_e2e_waits_for_ci_gate_success() -> None:
     e2e = _load(_CI)["jobs"]["frontend-e2e"]
     assert e2e["needs"] == ["ci-gate"]
