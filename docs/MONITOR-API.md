@@ -237,7 +237,7 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 ### `GET /api/occupancy[?host_id=x][&fresh=true]`
 
-Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The payload always enumerates both opaque hosts `host-teacher` and `host-job` (and any additional mapped hosts). Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped default hosts return `status: "unavailable"` with `idle_or_empty: true`. Canonical aliases are never used as JSON keys.
+Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The payload always enumerates both opaque hosts `host-teacher` and `host-job` (and any additional mapped hosts). Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped default hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
 Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), and `idle_or_empty` (boolean indicating near-zero burn). Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics.
 
@@ -296,7 +296,7 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
       "occupants": [],
       "occupant_count": 0,
       "ai_seats": [],
-      "idle_or_empty": true
+      "idle_or_empty": false
     }
   }
 }
