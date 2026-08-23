@@ -83,11 +83,35 @@ def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
+    ("resolver", "expected"),
+    [
+        ("handoff_identity_for_epic", "claude-monitor"),
+        ("handoff_identity_for_gemini_epic", "gemini-monitor"),
+        ("handoff_identity_for_codex_epic", "codex-monitor"),
+        ("handoff_identity_for_cursor_epic", "cursor-monitor"),
+    ],
+)
+def test_monitor_resolves_to_dedicated_provider_slot(resolver: str, expected: str) -> None:
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; "$2" monitor', "bash", str(_HANDOFF_IDENTITY), resolver],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
     ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot"),
     [
         ("infra.fleet-comms", "infra", INFRA_STREAM_ID, "claude-infra", "gemini-infra", "grok-infra"),
         ("infra.devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
         ("devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
+        ("infra.monitor", "monitor", "epic:7177", "claude-monitor", "gemini-monitor", "grok-monitor"),
+        ("monitor", "monitor", "epic:7177", "claude-monitor", "gemini-monitor", "grok-monitor"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
         ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
@@ -162,6 +186,15 @@ def test_devops_epic_is_registered_separately_from_infra() -> None:
     assert registry["devops"]["epics"] == [5703]
     assert registry["infra-harness"]["epics"] != registry["devops"]["epics"]
     assert f"epic:{int(registry['infra-harness']['epics'][0])}" == INFRA_STREAM_ID
+
+
+def test_monitor_epic_is_registered_separately_from_infra() -> None:
+    registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
+
+    assert registry["infra-harness"]["epics"]
+    assert registry["monitor"]["epics"] == [7177]
+    assert registry["infra-harness"]["epics"] != registry["monitor"]["epics"]
+    assert registry["devops"]["epics"] != registry["monitor"]["epics"]
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")

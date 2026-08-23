@@ -79,6 +79,9 @@ launcher_selector_resolve() {
     devops|infra.devops)
       printf 'devops\tepic:5703\n'
       ;;
+    monitor|infra.monitor)
+      printf 'monitor\tepic:7177\n'
+      ;;
     atlas|practice|practice-hub|atlas.practice)
       printf 'atlas\tepic:4387\n'
       ;;
@@ -122,6 +125,7 @@ launcher_selector_help() {
 Valid lane selectors:
   infra | harness | infra.fleet-comms
   devops | infra.devops
+  monitor | infra.monitor
   atlas | practice | atlas.practice
   hramatka | hramatka.lessons
   folk | seminars-folk

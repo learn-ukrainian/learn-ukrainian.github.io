@@ -169,6 +169,8 @@ def test_inventory_session_streams_wiring() -> None:
         ("infra.fleet-comms", "infra", INFRA_STREAM_ID),
         ("devops", "devops", "epic:5703"),
         ("infra.devops", "devops", "epic:5703"),
+        ("monitor", "monitor", "epic:7177"),
+        ("infra.monitor", "monitor", "epic:7177"),
         ("atlas", "atlas", "epic:4387"),
         ("practice", "atlas", "epic:4387"),
         ("practice-hub", "atlas", "epic:4387"),
