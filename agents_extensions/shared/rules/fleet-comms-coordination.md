@@ -78,6 +78,10 @@ cold-prompts; silent plane flips; “for now” cutovers.
 # ONE round. Ask a cross-family lane for verdict + findings at the current head,
 # then post on the PR (gh pr comment / gh pr review). Merge when CI is green.
 # Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
+# `--type review` routes to a headless native CLI WITH tools (delegate.py
+# dispatch --agent <lane> --worktree; gh/pytest available), never tool-less
+# ACP (operator 2026-08-23, #7155) — this command line is unchanged, the
+# transport underneath it is not.
 printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review
 # SHIELDED formal path (review-pr / lu-review snaps / shielded-reviews) is RETIRED —
@@ -195,12 +199,23 @@ Never auto-reset branches for review thrash. Do not reintroduce sealed formal CF
 ## ACP provider transport
 
 For normal **read-only inter-agent communication**, ACP is the only provider
-transport. Fleet launchers make ordinary `ask-*` and 2–6 participant `discuss`
-calls use the durable ACP controller for enabled routes: Codex, Grok, Claude,
-Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and DeepSeek. The direct
-`.venv/bin/python -m scripts.fleet_comms acp-discuss` surface remains available
-to operators. Selection starts no process at cold start and does not change
-`delegate.py`. The default is two rounds and the hard maximum is three.
+transport. Fleet launchers make ordinary (non-review) `ask-*` and 2–6
+participant `discuss` calls use the durable ACP controller for enabled
+routes: Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and
+DeepSeek. The direct `.venv/bin/python -m scripts.fleet_comms acp-discuss`
+surface remains available to operators. Selection starts no process at cold
+start and does not change `delegate.py`. The default is two rounds and the
+hard maximum is three.
+
+**ACP is intercommunication only — never review** (operator 2026-08-23,
+#7155). Its `--deny-all --no-fs --no-terminal` chat transport cannot run
+`gh`/pytest/fs, so a reviewer seated there cannot ground a verdict (live
+proof: `ask-codex --review --pr 7155` ABSTAINed via ACP with `gh auth`
+unavailable; the same review via headless dispatch with tools approved).
+`ask-<lane> --review` / `--type review` / `--pr` / `--branch` therefore never
+reach `run_compat_ask` — they route to `delegate.py dispatch --agent <lane>
+--worktree` (a real TUI agent with tools) and block on `delegate.py wait` for
+the result. Only non-review `ask-*` stays on ACP.
 
 There is no bridge/provider-execution fallback. Unknown routes, invalid model or
 effort overrides, unavailable ACP, cancellation, timeout, and partial results are

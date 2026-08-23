@@ -340,6 +340,12 @@ printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings.
 # Post verdict on the PR, then merge when CI is green.
 ```
 
+This command line is unchanged, but the transport underneath it is not ACP
+(operator 2026-08-23, #7155): `--type review` / `--review` / `--pr` / `--branch`
+route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
+--worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
+--no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
+
 Pick the reviewer family from the served reviewer-seat rule; the writer's family
 is never eligible. Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself.

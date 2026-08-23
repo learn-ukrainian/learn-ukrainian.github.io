@@ -1500,11 +1500,32 @@ def _handle_acp_compat(args, target: str) -> None:
             target_desc = f"remote branch origin/{branch}"
         content = f"Cross-family review target: {target_desc}.\n\n{content}"
         review = True
+
+    if review:
+        # #7155: a reviewer must be able to use tools (gh, fs, pytest) — ACP's
+        # `--deny-all --no-fs --no-terminal` chat transport cannot (Terra
+        # ABSTAIN on #7155: `gh auth` unavailable in ACP). Review intent goes
+        # to the headless native-CLI dispatch path, never run_compat_ask.
         print(
-            f"ask-{target}: --pr/--branch use the lightweight direct review path "
-            "(sealed review-pr is retired); review mode forced.",
+            f"ask-{target}: review intent routes to headless dispatch "
+            "(`delegate.py dispatch --agent ... --worktree --mode read-only`), not ACP.",
             file=sys.stderr,
         )
+        _dispatch_headless_review(
+            target,
+            content,
+            data=data,
+            task_id=task_id,
+            model=model,
+            effort=getattr(args, "effort", None),
+            output_path=getattr(args, "output_path", None),
+            stdout_only=bool(getattr(args, "stdout_only", False)),
+            # None resolves the seat's per-seat timeout profile default;
+            # --no-timeout bypasses it with a generous ceiling.
+            hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
+        )
+        return
+
     from ._acp_compat import (
         ASK_HARD_TIMEOUT_DEFAULT_S,
         ask_hard_timeout,
@@ -1522,7 +1543,9 @@ def _handle_acp_compat(args, target: str) -> None:
             model=model,
             effort=getattr(args, "effort", None),
             data=data,
-            review=review,
+            # Review intent already returned above via headless dispatch; this
+            # ACP call is reached only for ordinary (non-review) asks.
+            review=False,
             output_path=getattr(args, "output_path", None),
             stdout_only=bool(getattr(args, "stdout_only", False)),
             # None resolves the seat's per-seat timeout profile (#6877);
@@ -1542,6 +1565,63 @@ def _handle_acp_compat(args, target: str) -> None:
             f"generic default {ASK_HARD_TIMEOUT_DEFAULT_S}s). "
             "Retry with --no-timeout to lift the wall-clock cap for this ask."
         ) from exc
+
+
+def _dispatch_headless_review(
+    target: str,
+    content: str,
+    *,
+    data: str | None,
+    task_id: str,
+    model: str | None,
+    effort: str | None,
+    output_path: str | None,
+    stdout_only: bool,
+    hard_timeout: int | None,
+) -> None:
+    """Run a review-intent ask-* through the headless native-CLI dispatch path.
+
+    `delegate.py dispatch --agent <target> --worktree --mode read-only` spawns
+    a real TUI agent with tools (gh, fs, pytest) in an isolated worktree, then
+    `delegate.py wait` blocks for the terminal result — this is the reviewer
+    seat other headless reviews already use. Never falls back to ACP.
+    """
+    from ._acp_compat import require_compat_target
+    from ._dispatch_wrappers import run_ask_review_dispatch
+
+    try:
+        # Same legacy-alias resolution as the ACP path (e.g. hermes→deepseek,
+        # gemini→agy) so `--agent` is a name `delegate.py dispatch` accepts.
+        dispatch_agent = require_compat_target(target)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+
+    prompt = content
+    if data:
+        prompt += "\n\n--- attached inert text ---\n" + data
+
+    try:
+        result = run_ask_review_dispatch(
+            dispatch_agent,
+            prompt,
+            task_id=task_id,
+            model=model,
+            effort=effort,
+            hard_timeout=hard_timeout,
+        )
+    except RuntimeError as exc:
+        raise SystemExit(str(exc)) from exc
+
+    response = str(result.get("response") or "")
+    if output_path:
+        Path(output_path).write_text(response, encoding="utf-8")
+    if stdout_only or response:
+        print(response)
+    if not result.get("ok"):
+        raise SystemExit(
+            result.get("stderr_excerpt")
+            or f"ask-{target} review dispatch ended without success (status={result.get('status')!r})"
+        )
 
 
 def _handle_ask_claude(args):

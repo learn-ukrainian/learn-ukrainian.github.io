@@ -289,7 +289,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   (`review-pr`, sealed multi-GB `lu-review-*` / `shielded-reviews` isolation) is
   RETIRED (operator 2026-08-07)** — fail-closed in the CLI. Do not reintroduce
   it. Lightweight agent review + green CI + merge + worktree/temp cleanup is
-  the path.
+  the path. `ask-<lane> --type review` (or `--review`/`--pr`/`--branch`) is a
+  headless native CLI dispatch WITH tools (`delegate.py dispatch --agent
+  <lane> --worktree`; `gh`/pytest available) — never tool-less ACP (operator
+  2026-08-23, #7155): ACP's `--deny-all --no-fs --no-terminal` transport
+  cannot run `gh auth`, so it cannot ground a review verdict.
 
   **Historical projection only — not the live CF gate (#7017).** The table
   below mirrors `scripts/config/fleet_communications.yaml`'s endpoint

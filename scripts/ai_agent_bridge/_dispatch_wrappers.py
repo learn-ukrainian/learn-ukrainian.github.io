@@ -325,3 +325,117 @@ def handle_review_deep(args: Any) -> int:
         prompt_file = _review_prompt_file(args.target, prompt_directory)
         command = build_review_deep_command(args.target, prompt_file, args.effort)
         return _run_dispatch(command, args.dry_run, prompt_file)
+
+
+# ---------------------------------------------------------------------------
+# ask-* review-intent dispatch (#7155) — headless native CLI, never ACP.
+#
+# A reviewer must be able to use tools (gh, fs, pytest). ACP's
+# `--deny-all --no-fs --no-terminal` chat transport cannot do that (Terra
+# ABSTAIN on #7155: `gh auth` unavailable in ACP). `ask-<lane> --review` /
+# `--type review` / `--pr` / `--branch` route here instead of run_compat_ask.
+# ---------------------------------------------------------------------------
+
+
+def build_ask_review_dispatch_command(
+    agent: str,
+    task_id: str,
+    prompt_file: Path,
+    *,
+    model: str | None,
+    effort: str | None,
+) -> list[str]:
+    """Headless dispatch command for one review-intent ask-*.
+
+    ``--mode read-only`` still grants `gh pr view` / `gh pr diff` / repo read
+    inside an isolated `--worktree` — read-only is exactly what `review-deep`
+    already uses for the same class of work, it is not a tool restriction.
+    """
+    cmd = [
+        PYTHON,
+        "scripts/delegate.py",
+        "dispatch",
+        "--agent",
+        agent,
+        "--mode",
+        "read-only",
+        "--worktree",
+        "--task-id",
+        task_id,
+        "--prompt-file",
+        str(prompt_file),
+    ]
+    if model:
+        cmd += ["--model", model]
+    if effort:
+        cmd += ["--effort", effort]
+    return cmd
+
+
+def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
+    return [PYTHON, "scripts/delegate.py", "wait", task_id, "--timeout", str(timeout)]
+
+
+_ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
+
+
+def run_ask_review_dispatch(
+    agent: str,
+    content: str,
+    *,
+    task_id: str,
+    model: str | None = None,
+    effort: str | None = None,
+    hard_timeout: int | None = None,
+) -> dict[str, Any]:
+    """Dispatch one review-intent ask-* to the headless native CLI and block for it.
+
+    Fires `delegate.py dispatch --agent <agent> --worktree --mode read-only`
+    (a real TUI agent with tools in an isolated worktree), then
+    `delegate.py wait` to block for the terminal state. Returns the terminal
+    state dict plus the read-back ``response`` text and a normalized ``ok``.
+    Raises ``RuntimeError`` if dispatch itself could not be started or the
+    wait output could not be parsed — callers turn that into a hard failure,
+    never a silent fallback to ACP.
+    """
+    timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
+    with _prompt_directory() as prompt_directory:
+        prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
+        prompt_path.write_text(content, encoding="utf-8")
+        dispatch_command = build_ask_review_dispatch_command(
+            agent, task_id, prompt_path, model=model, effort=effort
+        )
+        dispatch_proc = subprocess.run(
+            dispatch_command, cwd=REPO_ROOT, capture_output=True, text=True
+        )
+        if dispatch_proc.returncode != 0:
+            raise RuntimeError(
+                f"delegate.py dispatch failed rc={dispatch_proc.returncode}: "
+                f"{(dispatch_proc.stderr or dispatch_proc.stdout).strip()}\n"
+                f"Command: {' '.join(dispatch_command)}"
+            )
+
+        wait_command = build_ask_review_wait_command(task_id, timeout=timeout)
+        wait_proc = subprocess.run(wait_command, cwd=REPO_ROOT, capture_output=True, text=True)
+        try:
+            state = json.loads(wait_proc.stdout or "{}")
+        except json.JSONDecodeError as exc:
+            raise RuntimeError(
+                f"delegate.py wait produced non-JSON output (rc={wait_proc.returncode}): "
+                f"stdout={wait_proc.stdout!r} stderr={wait_proc.stderr!r}"
+            ) from exc
+
+        result_file = state.get("result_file")
+        response = ""
+        if result_file:
+            try:
+                response = Path(result_file).read_text(encoding="utf-8")
+            except OSError:
+                response = ""
+        state["response"] = response
+        state["ok"] = wait_proc.returncode == 0
+        if not state["ok"] and not state.get("stderr_excerpt"):
+            state["stderr_excerpt"] = (
+                f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
+            )
+        return state
