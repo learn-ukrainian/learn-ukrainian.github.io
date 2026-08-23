@@ -1346,6 +1346,10 @@ jobs:
   # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
   # guarantee cross-family review flagged as a P1 when the reboot dropped it.
   # docs_skills (#7018): no-op success (do not download missing coverage).
+  # Gate path ends at `coverage report --fail-under=35`. XML/HTML rendering is
+  # off-path because nothing in-repo consumes those artifacts; combined
+  # `.coverage` + text report remain downloadable for offline
+  # `coverage html` / `coverage xml`.
   coverage-floor:
     name: Coverage floor
     if: github.event_name != 'pull_request'
@@ -1407,10 +1411,8 @@ jobs:
           if [ "$i" -eq 0 ]; then echo "::error::no coverage data — refusing to pass vacuously"; exit 1; fi
           python -m coverage combine
           python -m coverage report --fail-under=35 | tee coverage-report.txt
-          python -m coverage xml -o coverage.xml
-          python -m coverage html -d coverage-html
 
-      - name: Upload full coverage report
+      - name: Upload coverage report and combined data
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
           && (github.event_name == 'merge_group'
@@ -1420,8 +1422,8 @@ jobs:
           name: coverage-report
           path: |
             coverage-report.txt
-            coverage.xml
-            coverage-html/
+            .coverage
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
 
