@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4a61e3c2320a",
+  "session_id": "fleet-dc2d7f5815be4e46b6917e839d35a921",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T23:06:34.699578Z",
+  "branch": "agy/ui-codex-lockdown-7202",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/codex.py",
+    "scripts/ai_agent_bridge/_ui_codex.py",
+    "tests/ai_agent_bridge/test_ui_codex.py",
+    "tests/test_agent_runtime.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "2feedb981de7",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T23:06:34.688751Z",
+    "agent_lines": 238,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 238,
+    "total_lines_changed": 247,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

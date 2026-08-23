@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4a61e3c2320a",
+  "strategy": "manual-commit",
+  "branch": "agy/ui-codex-lockdown-7202",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/codex.py",
+    "scripts/ai_agent_bridge/_ui_codex.py",
+    "tests/ai_agent_bridge/test_ui_codex.py",
+    "tests/test_agent_runtime.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/4a/61e3c2320a/0/metadata.json",
+      "transcript": "/4a/61e3c2320a/0/full.jsonl",
+      "compact_transcript": "/4a/61e3c2320a/0/transcript.jsonl",
+      "content_hash": "/4a/61e3c2320a/0/content_hash.txt",
+      "prompt": "/4a/61e3c2320a/0/prompt.txt"
+    }
+  ]
+}
