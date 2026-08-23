@@ -14,7 +14,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 .venv/bin/python -m scripts.orchestration.observer_heartbeat \
   --agent cursor --task-id <issue-or-task> --epic <epic> --status working
 ```
-- **GUI Cursor IDE = Human Supervision Only:** GUI Cursor chat is interactive human supervision and inspection. It is **not** a second driver protocol, does not claim autonomous stream leases, and does not run an unmonitored alternate orchestration loop.
+- **GUI Cursor IDE = Human Supervision Only:** GUI Cursor chat is interactive human supervision and inspection. It is **not** a second driver protocol, does not claim autonomous stream leases, and does not run an unmonitored alternate orchestration loop. Idle GUI supervision heartbeats automatically via the Mac observer LaunchAgent (`scripts/orchestration/install_mac_observer_launchd.py`, #7104).
 
 ## Identity Contract & Attestation
 
