@@ -165,6 +165,38 @@ def test_project_import_graph_adds_transitive_third_party_pin(tmp_path: Path) ->
     assert selected == ["requests==2.34.2"]
 
 
+def test_script_context_fallback_import_resolves_relative_to_importer(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    orchestration = project_root / "scripts" / "orchestration"
+    _write(orchestration / "__init__.py", "")
+    _write(orchestration / "task_identity.py", "import requests\n")
+    _write(orchestration / "thread_handoff_canary.py", "")
+    _write(
+        orchestration / "thread_handoff.py",
+        """\
+try:
+    from scripts.orchestration import task_identity, thread_handoff_canary
+except ImportError:
+    import task_identity
+    import thread_handoff_canary
+""",
+    )
+    test_path = _write(
+        project_root / "tests" / "test_example.py",
+        "from scripts.orchestration import thread_handoff\n",
+    )
+
+    assert fastlane_requirements._reachable_import_roots([test_path], project_root) == {"requests"}
+    selected = fastlane_requirements.select_requirements(
+        [test_path],
+        base_requirements=[],
+        lock_requirements=_lock(tmp_path),
+        project_root=project_root,
+    )
+
+    assert selected == ["requests==2.34.2"]
+
+
 def test_unknown_transitive_project_import_fails_closed(tmp_path: Path) -> None:
     project_root = tmp_path / "project"
     _write(project_root / "scripts" / "__init__.py", "")

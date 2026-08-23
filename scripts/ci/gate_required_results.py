@@ -36,6 +36,13 @@ FULL_REQUIRED: tuple[str, ...] = (
 # set makes a missing validating-run artifact fail on the visible push check.
 PUSH_REQUIRED: tuple[str, ...] = (*FULL_REQUIRED, "pytest-duration-publish")
 
+# The one canonical inventory of the workflow's ``ci-gate.needs``: every job
+# whose result the gate evaluates across all events (the push tier is the
+# superset) plus ``landing-class``, whose outputs the gate step consumes.
+# Tests compare ci.yml against this set instead of restating it, so a
+# legitimate needs change is a one-file edit here, not a test-pin cascade.
+GATE_NEEDS_JOBS: frozenset[str] = frozenset({"landing-class", *PUSH_REQUIRED})
+
 FULL_TIER_EVENTS: frozenset[str] = frozenset(
     {"merge_group", "push", "schedule", "workflow_dispatch"}
 )

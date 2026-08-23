@@ -18,6 +18,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.ci import gate_required_results as gate
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
@@ -80,19 +82,13 @@ def test_comment_step_reads_pr_number_and_results_from_env_not_interpolation() -
 
 def test_no_new_job_was_added_to_ci_workflow() -> None:
     workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
-    expected_jobs = {
-        "ruff",
-        "landing-class",
-        "pytest-plan",
-        "pytest-fastlane",
-        "python",
-        "contracts",
-        "frontend",
-        "frontend-e2e",
-        "pytest-duration-publish",
-        "coverage-floor",
-        "ci-gate",
-    }
+    # Rule of thumb: assert an invariant, not a snapshot; if changing X
+    # legitimately requires editing >1 test, the test is a snapshot. The job
+    # inventory derives from the one canonical ci-gate.needs set exported by
+    # the gate evaluator, plus the two frozen-by-decision jobs that hang off
+    # the gate rather than feed it (frontend-e2e waits on ci-gate; ci-gate is
+    # the gate itself).
+    expected_jobs = set(gate.GATE_NEEDS_JOBS) | {"frontend-e2e", "ci-gate"}
     assert set(workflow["jobs"]) == expected_jobs, (
         "the merge-group kick comment must be a step on ci-gate, not a new job "
         "(brief: no new workflow, no new required check)"
