@@ -44,6 +44,7 @@ def lease_from_environment(environment: Mapping[str, str] | None = None) -> Leas
         task_id=values.get(f"{ENV_PREFIX}TASK_ID") or None,
         process_id=int(process_id) if process_id else None,
         holder_kind=holder_kind,
+        host_id=values.get("LU_MONITOR_HOST_ID") or None,
     )
     holder.validate()
     return Lease(

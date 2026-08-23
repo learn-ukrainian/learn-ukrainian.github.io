@@ -123,7 +123,11 @@ claim_session_supervisor_env() {
 
   local stream_normalized="${stream//:/-}"
   local lineage_id="lineage-${stream_normalized}-${agent}-${$}"
-  local ttl_seconds=21600
+  # Remote v1 uses the design-note TTL; liveness is carried by the independent
+  # launcher renew loop, never by a server-side PID probe.
+  local ttl_seconds=900
+  local host_id="${LU_MONITOR_HOST_ID:-local}"
+  export LU_MONITOR_HOST_ID="$host_id"
   local heartbeat_at
   heartbeat_at="$(_iso_timestamp)"
 
@@ -138,6 +142,7 @@ claim_session_supervisor_env() {
     "--process-id" "$$"
     "--lineage-id" "$lineage_id"
     "--ttl-seconds" "$ttl_seconds"
+    "--host-id" "$host_id"
   )
   if [ -n "$task_id" ]; then
     supervisor_args+=("--task-id" "$task_id")

@@ -236,13 +236,9 @@ def test_recover_expired_driver_force_closes_claimable(tmp_path: Path) -> None:
         instance_id="grok-recover-cli",
         process_id=os.getpid(),
     )
-    assert supervisor.recover_expired_driver(
-        role="driver", stream_id=INFRA_STREAM_ID, holder=holder
-    ) is True
+    assert supervisor.recover_expired_driver(role="driver", stream_id=INFRA_STREAM_ID, holder=holder) is True
     # Second recover finds nothing open.
-    assert supervisor.recover_expired_driver(
-        role="driver", stream_id=INFRA_STREAM_ID, holder=holder
-    ) is False
+    assert supervisor.recover_expired_driver(role="driver", stream_id=INFRA_STREAM_ID, holder=holder) is False
 
 
 def _pid_alive(pid: int) -> bool:
@@ -258,6 +254,7 @@ def _pid_alive(pid: int) -> bool:
 def test_cli_refuses_worker_open_attempt(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     exit_code = main(
         [
+            "--local",
             "--db",
             str(tmp_path / "streams.sqlite3"),
             "--repo-root",

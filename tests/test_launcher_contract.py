@@ -5,9 +5,11 @@ from __future__ import annotations
 import os
 import shutil
 import signal
+import socket
 import subprocess
 import sys
 import time
+import urllib.request
 from datetime import timedelta
 from pathlib import Path
 
@@ -167,7 +169,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     python_stub = root / ".venv" / "bin" / "python"
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
-        f'''#!/usr/bin/env bash
+        f"""#!/usr/bin/env bash
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
   touch {os.fspath(claim_marker)!r}
   cat <<'JSON'
@@ -180,7 +182,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_stre
   exit 0
 fi
 exec {sys.executable!r} "$@"
-''',
+""",
         encoding="utf-8",
     )
     python_stub.chmod(0o755)
@@ -254,7 +256,7 @@ def _core_driver_exit_fixture(
     python_stub = root / ".venv" / "bin" / "python"
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
-        f'''#!/usr/bin/env bash
+        f"""#!/usr/bin/env bash
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
@@ -271,7 +273,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_stre
   exit 0
 fi
 exec {sys.executable!r} "$@"
-''',
+""",
         encoding="utf-8",
     )
     python_stub.chmod(0o755)
@@ -361,9 +363,7 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
     if not child_started.is_file():
         process.kill()
         stdout, stderr = process.communicate(timeout=10)
-        pytest.fail(
-            f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}"
-        )
+        pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
 
     process.send_signal(termination_signal)
     stdout, stderr = process.communicate(timeout=10)
@@ -416,16 +416,59 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["PYTHONPATH"] = os.fspath(REPO)
-
-    result = subprocess.run(
-        ["bash", os.fspath(root / "start-claude-driver.sh"), "--epic", "devops"],
-        cwd=root,
+    env["LEARN_UK_REPO_ROOT"] = os.fspath(root)
+    with socket.socket() as probe:
+        probe.bind(("127.0.0.1", 0))
+        monitor_port = int(probe.getsockname()[1])
+    monitor = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "scripts.api.main:app",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            str(monitor_port),
+            "--lifespan",
+            "off",
+        ],
+        cwd=REPO,
         env=env,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        check=False,
-        timeout=30,
     )
+    try:
+        health_url = f"http://127.0.0.1:{monitor_port}/api/epics/v1/health"
+        for _ in range(100):
+            try:
+                with urllib.request.urlopen(health_url, timeout=1) as response:
+                    if response.status == 200:
+                        break
+            except OSError:
+                time.sleep(0.05)
+        else:
+            monitor.kill()
+            stdout, stderr = monitor.communicate(timeout=5)
+            pytest.fail(f"Monitor API did not start: {stdout}{stderr}")
+        env["LU_MONITOR_LOOPBACK"] = f"http://127.0.0.1:{monitor_port}"
+        result = subprocess.run(
+            ["bash", os.fspath(root / "start-claude-driver.sh"), "--epic", "devops"],
+            cwd=root,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    finally:
+        monitor.terminate()
+        try:
+            monitor.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            monitor.kill()
+            monitor.wait(timeout=5)
     assert result.returncode == 0, result.stderr + result.stdout
 
     database = SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3")

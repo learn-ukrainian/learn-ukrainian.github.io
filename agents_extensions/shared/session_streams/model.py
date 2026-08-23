@@ -34,6 +34,9 @@ class SessionState(StrEnum):
     OPEN = "open"
     ROLLING = "rolling"
     CLOSED = "closed"
+    # The durable row remains terminal ``closed`` for schema compatibility;
+    # ``expired_at`` projects this state for remote TTL recovery.
+    EXPIRED = "expired"
 
 
 class HolderKind(StrEnum):
@@ -53,6 +56,7 @@ class LeaseHolder:
     process_id: int | None = None
     task_id: str | None = None
     holder_kind: HolderKind = HolderKind.PROCESS
+    host_id: str | None = None
 
     def validate(self) -> None:
         for label, value in (
@@ -64,6 +68,8 @@ class LeaseHolder:
                 raise ValueError(f"{label} must be a non-empty path-safe identity")
         if self.task_id is not None and not IDENTITY_RE.fullmatch(self.task_id):
             raise ValueError("task_id must be a path-safe identity when supplied")
+        if self.host_id is not None and not IDENTITY_RE.fullmatch(self.host_id):
+            raise ValueError("host_id must be a path-safe identity when supplied")
         if self.holder_kind is HolderKind.PROCESS:
             if not isinstance(self.process_id, int) or self.process_id <= 0:
                 raise ValueError("process_id must be a positive integer for a process holder")

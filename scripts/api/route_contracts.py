@@ -70,6 +70,19 @@ class PageContract:
 
 ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(
+        "/api/epics/v1",
+        "prefix",
+        "http",
+        "Remote TTL-fenced epic claim, heartbeat, handoff, release, and bounded digest projection.",
+        "API-host SessionStreamStore session-stream SQLite database; no PID probe and no GitHub enrichment.",
+        "Lease writes are transactional; heartbeat TTL and bounded digest are read per request.",
+        ("remote orchestrators", "launchers", "Monitor"),
+        "Complements local session-supervisor hooks; it is the remote authority for v1 epic leases.",
+        "high if callers infer liveness from transport or host telemetry instead of TTL and heartbeat",
+        "keep as the M1 remote lifecycle contract",
+        mutates=True,
+    ),
+    RouteContract(
         "/api/ops/entire-context",
         "prefix",
         "http",

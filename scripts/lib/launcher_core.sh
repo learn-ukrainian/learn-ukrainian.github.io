@@ -473,6 +473,57 @@ launcher_stop_cursor_observer_renew() {
   fi
 }
 
+launcher_driver_renew_loop() {
+  [ "$LC_MODE" = "driver" ] || return 0
+  [ "${LC_DRIVER_LEASE_CLAIMED:-0}" = "1" ] || return 0
+  [ "$LC_DRY_RUN" != "1" ] || return 0
+  local child_pid="$1"
+  local renew_started=$SECONDS
+  local heartbeat_error
+  local renew_interval="${SESSION_STREAM_RENEW_INTERVAL_SECONDS:-300}"
+  local renew_jitter="${SESSION_STREAM_RENEW_JITTER_SECONDS:-30}"
+  (
+    local sleep_pid=""
+    trap '[ -n "$sleep_pid" ] && kill "$sleep_pid" 2>/dev/null || true; exit 143' INT TERM HUP
+    trap '[ -n "$sleep_pid" ] && kill "$sleep_pid" 2>/dev/null || true' EXIT
+    while kill -0 "$child_pid" 2>/dev/null; do
+      # Five minutes with a bounded +/-30s jitter avoids synchronized renewals.
+      sleep $((renew_interval - renew_jitter + RANDOM % (2 * renew_jitter + 1))) &
+      sleep_pid=$!
+      wait "$sleep_pid" || break
+      sleep_pid=""
+      if ! kill -0 "$child_pid" 2>/dev/null; then
+        break
+      fi
+      if heartbeat_error="$($LC_ROOT/.venv/bin/python -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
+        renew_started=$SECONDS
+        continue
+      fi
+      if printf '%s' "$heartbeat_error" | grep -q 'LEASE LOST'; then
+        printf 'LEASE LOST — stopping driver after fenced heartbeat.\n' >&2
+        kill -TERM "$child_pid" 2>/dev/null || true
+        break
+      fi
+      # Transport errors are retryable until this lease could no longer be
+      # alive.  A failed heartbeat is not permission to claim a new lease.
+      if [ $((SECONDS - renew_started)) -ge "${SESSION_STREAM_TTL_SECONDS:-900}" ]; then
+        printf 'LEASE LOST — Monitor heartbeat did not recover before TTL.\n' >&2
+        kill -TERM "$child_pid" 2>/dev/null || true
+        break
+      fi
+    done
+  ) &
+  LC_DRIVER_RENEW_PID=$!
+}
+
+launcher_stop_driver_renew() {
+  if [ -n "${LC_DRIVER_RENEW_PID:-}" ]; then
+    kill "$LC_DRIVER_RENEW_PID" 2>/dev/null || true
+    wait "$LC_DRIVER_RENEW_PID" 2>/dev/null || true
+    LC_DRIVER_RENEW_PID=""
+  fi
+}
+
 launcher_close_driver_lease() {
   # Close only the exact exported, fenced lease. The store operation is
   # idempotent, so a bounded retry is safe when the first client invocation is
@@ -512,6 +563,7 @@ launcher_forward_driver_signal() {
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
   fi
   LC_DRIVER_CHILD_PID=""
+  launcher_stop_driver_renew
   launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || true
   trap - EXIT INT TERM HUP
@@ -532,6 +584,7 @@ launcher_exec_command() {
   local close_rc=0
   LC_DRIVER_CHILD_PID=""
   LC_DRIVER_LEASE_CLOSED=0
+  LC_DRIVER_RENEW_PID=""
   trap 'launcher_close_driver_lease || true' EXIT
   trap 'launcher_forward_driver_signal INT 130' INT
   trap 'launcher_forward_driver_signal TERM 143' TERM
@@ -546,6 +599,7 @@ launcher_exec_command() {
     exec "$@"
   ) 0<&0 &
   LC_DRIVER_CHILD_PID=$!
+  launcher_driver_renew_loop "$LC_DRIVER_CHILD_PID"
   launcher_cursor_observer_renew_loop "$LC_DRIVER_CHILD_PID"
   if wait "$LC_DRIVER_CHILD_PID"; then
     provider_rc=0
@@ -553,6 +607,7 @@ launcher_exec_command() {
     provider_rc=$?
   fi
   LC_DRIVER_CHILD_PID=""
+  launcher_stop_driver_renew
   launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || close_rc=$?
   trap - EXIT INT TERM HUP
