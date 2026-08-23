@@ -12,6 +12,7 @@ import pytest
 import yaml
 
 from scripts.ci import frontend_change_scope as scope
+from scripts.ci import gate_required_results as gate
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -380,20 +381,13 @@ def test_ci_yml_uses_shared_scope_helper_without_job_level_frontend_skip() -> No
     jobs = workflow["jobs"]
 
     assert "if" not in jobs["frontend"]
-    # Two-tier cutover (#6943 stage 2): CI Gate also needs `ruff` so the
-    # pull_request light tier can require lint without the four-shard suite.
-    # #7173: push Gate requires duration publication so publish failures are visible.
-    assert set(jobs["ci-gate"]["needs"]) == {
-        "ruff",
-        "landing-class",
-        "pytest-plan",
-        "pytest-fastlane",
-        "python",
-        "contracts",
-        "frontend",
-        "coverage-floor",
-        "pytest-duration-publish",
-    }
+    # Rule of thumb: assert an invariant, not a snapshot; if changing X
+    # legitimately requires editing >1 test, the test is a snapshot.
+    # ci-gate.needs is pinned exactly once — by the canonical set the gate
+    # evaluator itself exports (gate_required_results.GATE_NEEDS_JOBS: the
+    # push tier, which is the superset of the light/full tiers, plus
+    # landing-class whose outputs the gate step consumes).
+    assert set(jobs["ci-gate"]["needs"]) == set(gate.GATE_NEEDS_JOBS)
 
     for job_name in ("frontend", "frontend-e2e"):
         steps = jobs[job_name]["steps"]
