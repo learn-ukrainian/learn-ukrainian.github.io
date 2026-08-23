@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime.registry import AGENTS
+from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     ModelCatalogError,
@@ -29,10 +30,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-08-16"
-    assert catalog_age_days(catalog, as_of=date(2026, 8, 16)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 9, 14))
-    assert catalog_is_stale(catalog, as_of=date(2026, 9, 16))
+    assert catalog["reviewed_on"] == "2026-08-23"
+    assert catalog_age_days(catalog, as_of=date(2026, 8, 23)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 9, 21))
+    assert catalog_is_stale(catalog, as_of=date(2026, 9, 24))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -64,6 +65,26 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-m.1"]["lifecycle"] == "fallback"
     assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
+
+
+def test_ox_alpha_is_cataloged_as_local_shadow_compare_only() -> None:
+    """OpenRouter stealth ox-alpha is a hold-tier local shadow seat, not a CF route."""
+    catalog = load_model_catalog()
+    ox = catalog["models"]["openrouter/stealth/ox-alpha"]
+    assert ox["tier"] == "frontier_practical"
+    assert ox["lifecycle"] == "hold"
+    assert ox["transports"] == ["opencode"]
+    assert ox["family"] == "zhipu"
+    assert set(ox["aliases"]) == {"ox-alpha", "0x-alpha", "stealth/ox-alpha"}
+    assert "openrouter/stealth/ox-alpha" not in catalog["review_candidates"]
+    for ladder in catalog["review_ladders"].values():
+        candidates = {candidate for rung in ladder for candidate in rung}
+        assert not any("ox-alpha" in name for name in candidates)
+    aliases = model_aliases()
+    assert aliases["ox-alpha"] == "openrouter/stealth/ox-alpha"
+    assert aliases["0x-alpha"] == "openrouter/stealth/ox-alpha"
+    assert aliases["stealth/ox-alpha"] == "openrouter/stealth/ox-alpha"
+    assert model_families.normalize_family("openrouter/stealth/ox-alpha") is model_families.Family.UNKNOWN
 
 
 def test_luna_worker_does_not_enter_formal_review_ladders() -> None:
