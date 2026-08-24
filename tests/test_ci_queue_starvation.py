@@ -23,6 +23,8 @@ from scripts.ci.queue_starvation_recovery import (
     select_candidate_runs,
 )
 
+pytestmark = pytest.mark.repo_invariant
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
 _HYGIENE = _REPO_ROOT / ".github/workflows/hygiene.yml"

@@ -62,7 +62,7 @@ def is_repo_invariant_trigger(path: str) -> bool:
         candidate.suffix == ".py"
         or path == "pyproject.toml"
         or fnmatchcase(candidate.name, "requirements*.txt")
-        or path == ".github/workflows/ci.yml"
+        or path.startswith(".github/workflows/")
         or path == "scripts/ci/fastlane_always_tests.txt"
         or candidate.suffix == ".sh"
         or path == "services.sh"

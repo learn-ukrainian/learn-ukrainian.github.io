@@ -53,6 +53,10 @@ ADJUDICATIONS: dict[str, tuple[str, str]] = {
         "listed",
         "cheap deterministic scan of the script-path bridge package",
     ),
+    "tests/test_ci_queue_starvation.py": (
+        "listed",
+        "pins workflow structure and queue starvation mitigations",
+    ),
     "tests/test_work_privacy.py": (
         "exempt",
         "private-boundary canary sweep stays out of the public PR fastlane",
