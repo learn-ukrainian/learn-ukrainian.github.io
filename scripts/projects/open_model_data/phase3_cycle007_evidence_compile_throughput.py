@@ -23,6 +23,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from scripts.api.occupancy_local import occupancy_marker_scope
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 
@@ -381,7 +382,7 @@ def inspect_resume_root(root: Path) -> None:
 
 
 @contextlib.contextmanager
-def exclusive_resume_lock(root: Path) -> Iterator[None]:
+def _exclusive_resume_lock(root: Path) -> Iterator[None]:
     _assert_private_path(root, directory=True)
     path = root / LOCK_NAME
     flags = os.O_CREAT | os.O_RDWR
@@ -400,6 +401,18 @@ def exclusive_resume_lock(root: Path) -> Iterator[None]:
         with contextlib.suppress(OSError):
             fcntl.flock(descriptor, fcntl.LOCK_UN)
         os.close(descriptor)
+
+
+@contextlib.contextmanager
+def exclusive_resume_lock(root: Path) -> Iterator[None]:
+    """Hold the resumable compile lock while publishing the compiler marker."""
+    with occupancy_marker_scope(
+        kind="service",
+        agent="evidence-compiler",
+        task_id="phase3-cycle007-evidence-compiler",
+        epic="phase3-cycle007",
+    ), _exclusive_resume_lock(root):
+        yield
 
 
 def inspect_sealed_prefix(bundle: Path) -> tuple[list[int], int]:

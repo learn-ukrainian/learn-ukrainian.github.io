@@ -11,6 +11,7 @@ leases, and optional occupancy markers. Observer heartbeats from
 from __future__ import annotations
 
 import asyncio
+import math
 import os
 from datetime import UTC, datetime
 from typing import Any
@@ -20,7 +21,7 @@ from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.observer_presence import list_live
-from scripts.api.occupancy_local import occupants_from_markers, occupants_from_session_streams
+from scripts.api.occupancy_local import OccupancyRead, read_markers, read_session_streams
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
@@ -33,6 +34,8 @@ _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
 
 
 DEFAULT_HOST_IDS = ("host-teacher", "host-job")
+_BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry")
+_BURN_SOURCE_STATES = frozenset({"active", "clear", "unknown"})
 
 
 def _unavailable_load_entry() -> dict[str, Any]:
@@ -63,13 +66,15 @@ def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
     return mapping
 
 
-def _occupants_from_registry(canonical: str) -> list[dict[str, str | None]]:
+def _read_occupants_from_registry(
+    canonical: str,
+) -> tuple[list[dict[str, str | None]], bool]:
     occupants: list[dict[str, str | None]] = []
     seen: set[tuple[str, str]] = set()
     try:
         rows = atlas_job.list_registry()
     except Exception:
-        rows = []
+        return [], False
     for row in rows:
         if not isinstance(row, dict):
             continue
@@ -92,7 +97,12 @@ def _occupants_from_registry(canonical: str) -> list[dict[str, str | None]]:
             continue
         seen.add(key)
         occupants.append(occupant)
-    return occupants
+    return occupants, True
+
+
+def _occupants_from_registry(canonical: str) -> list[dict[str, str | None]]:
+    """Compatibility list-only view of the Atlas registry source."""
+    return _read_occupants_from_registry(canonical)[0]
 
 
 def _occupants_from_job_unit(canonical: str, load_entry: dict[str, Any]) -> list[dict[str, str | None]]:
@@ -143,10 +153,86 @@ def _is_idle_or_empty(
     return True
 
 
+def _safe_age(value: Any) -> float:
+    try:
+        age = float(value)
+    except (TypeError, ValueError):
+        return 0.0
+    if not math.isfinite(age):
+        return 0.0
+    return round(max(0.0, age), 2)
+
+
+def _source_state(*, readable: bool, occupants: list[dict[str, str | None]], active: bool = False) -> str:
+    if not readable:
+        return "unknown"
+    state = "active" if active or occupants else "clear"
+    return state if state in _BURN_SOURCE_STATES else "unknown"
+
+
+def _atlas_load_is_active(load_entry: dict[str, Any]) -> bool:
+    job_unit = load_entry.get("job_unit")
+    if isinstance(job_unit, dict):
+        try:
+            if int(job_unit.get("active_count") or 0) > 0:
+                return True
+        except (TypeError, ValueError):
+            pass
+    loadavg = load_entry.get("loadavg")
+    if isinstance(loadavg, list) and loadavg:
+        try:
+            return float(loadavg[0]) >= 1.0
+        except (TypeError, ValueError, IndexError):
+            return False
+    return False
+
+
+def _atlas_job_read(
+    canonical: str | None,
+    load_entry: dict[str, Any],
+) -> tuple[list[dict[str, str | None]], dict[str, Any]]:
+    if canonical is None:
+        registry_occupants: list[dict[str, str | None]] = []
+        registry_readable = False
+    else:
+        registry_occupants, registry_readable = _read_occupants_from_registry(canonical)
+    job_unit_occupants = _occupants_from_job_unit(canonical or "", load_entry)
+    occupants = _merge_occupants(registry_occupants, job_unit_occupants)
+    load_readable = str(load_entry.get("status") or "") in {"fresh", "stale"}
+    readable = registry_readable and load_readable
+    source = {
+        "state": _source_state(
+            readable=readable,
+            occupants=occupants,
+            active=_atlas_load_is_active(load_entry),
+        ),
+        "observation_age_s": _safe_age(load_entry.get("age_seconds")),
+    }
+    return occupants, source
+
+
+def _local_source_payload(read: OccupancyRead) -> dict[str, Any]:
+    return {
+        "state": _source_state(readable=read.readable, occupants=read.occupants),
+        "observation_age_s": _safe_age(read.observation_age_s),
+    }
+
+
+def _burn_state(burn_sources: dict[str, dict[str, Any]]) -> str:
+    states = {str(source.get("state")) for source in burn_sources.values()}
+    if "active" in states:
+        return "active"
+    if "unknown" in states:
+        return "unknown"
+    return "idle"
+
+
 def _shape_host(
     host_id: str,
     load_entry: dict[str, Any],
     occupants: list[dict[str, str | None]],
+    burn_state: str,
+    burn_sources: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
     status = str(load_entry.get("status") or "unavailable")
     valid_status = status if status in {"fresh", "stale", "unavailable"} else "unavailable"
@@ -155,7 +241,6 @@ def _shape_host(
         agent = o.get("agent")
         if agent and agent not in ai_seats:
             ai_seats.append(str(agent))
-    idle = _is_idle_or_empty(valid_status, occupants, load_entry)
     shaped: dict[str, Any] = {
         "host_id": host_id,
         "status": valid_status,
@@ -164,7 +249,9 @@ def _shape_host(
         "occupants": occupants,
         "occupant_count": len(occupants),
         "ai_seats": ai_seats,
-        "idle_or_empty": idle,
+        "burn_state": burn_state,
+        "burn_sources": burn_sources,
+        "idle_or_empty": burn_state == "idle",
     }
     if shaped["status"] == "unavailable":
         shaped["error"] = "unreachable"
@@ -257,20 +344,29 @@ def _payload_from_entries(
     mapping = parse_host_id_map()
     for opaque, canonical in selected.items():
         load_entry = load_entries.get(opaque) or _unavailable_load_entry()
-        groups: list[list[dict[str, str | None]]] = []
-        if canonical is not None:
-            groups.append(_occupants_from_registry(canonical))
-            groups.append(_occupants_from_job_unit(canonical, load_entry))
-        groups.append(
-            occupants_from_session_streams(
-                host_id=opaque,
-                mapping=mapping,
-                selected=selected,
+        atlas_occupants, atlas_source = _atlas_job_read(canonical, load_entry)
+        driver_read = read_session_streams(
+            host_id=opaque,
+            mapping=mapping,
+            selected=selected,
+        )
+        foundry_read = read_markers(host_id=opaque)
+        groups = [atlas_occupants, driver_read.occupants, foundry_read.occupants]
+        occupants = _merge_occupants(*groups)
+        burn_sources = dict(
+            zip(
+                _BURN_SOURCE_NAMES,
+                (atlas_source, _local_source_payload(driver_read), _local_source_payload(foundry_read)),
+                strict=True,
             )
         )
-        groups.append(occupants_from_markers(host_id=opaque))
-        occupants = _merge_occupants(*groups)
-        hosts[opaque] = _shape_host(opaque, load_entry, occupants)
+        hosts[opaque] = _shape_host(
+            opaque,
+            load_entry,
+            occupants,
+            _burn_state(burn_sources),
+            burn_sources,
+        )
 
     return {
         "schema": OCCUPANCY_SCHEMA,

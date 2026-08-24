@@ -11,9 +11,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -34,6 +34,15 @@ MARKERS_SCHEMA = "monitor-occupancy-markers.v1"
 MARKER_KINDS = frozenset({"driver", "worker", "job", "service"})
 DEFAULT_MARKER_TTL_S = 15 * 60
 _MARKERS_REL = Path(".agent") / "occupancy" / "markers"
+
+
+@dataclass(frozen=True)
+class OccupancyRead:
+    """Sanitized occupants plus the read health needed by burn-state derivation."""
+
+    occupants: list[dict[str, str | None]]
+    readable: bool
+    observation_age_s: float
 
 
 def markers_root() -> Path:
@@ -79,27 +88,37 @@ def _epic_from_stream(stream_id: str) -> str | None:
     return number if number.isdigit() else None
 
 
-def occupants_from_session_streams(
+def _observation_age(observed_at: list[datetime], *, now: datetime) -> float:
+    if not observed_at:
+        return 0.0
+    return round(max(0.0, min((now - value).total_seconds() for value in observed_at)), 2)
+
+
+def read_session_streams(
     *,
     host_id: str,
     mapping: dict[str, str],
     selected: dict[str, str | None],
     db_path: Path | None = None,
     now: datetime | None = None,
-) -> list[dict[str, str | None]]:
+) -> OccupancyRead:
     """Active epic-driver leases attached to one opaque host."""
     if driver_seat_host_id(mapping, selected) != host_id:
-        return []
+        return OccupancyRead([], True, 0.0)
     path = session_streams_db_path() if db_path is None else db_path
-    if not path.is_file():
-        return []
+    try:
+        if not path.is_file():
+            return OccupancyRead([], False, 0.0)
+    except OSError:
+        return OccupancyRead([], False, 0.0)
     clock = now or datetime.now(UTC)
     try:
         database = SessionStreamDatabase(path)
         with database.connect(read_only=True) as conn:
             rows = conn.execute(
                 """
-                SELECT l.stream_id, l.holder_agent, l.holder_task_id, l.expires_at
+                SELECT l.stream_id, l.holder_agent, l.holder_task_id,
+                       l.heartbeat_at, l.expires_at
                 FROM stream_leases AS l
                 JOIN sessions AS s ON s.stream_id = l.stream_id
                     AND s.session_id = l.session_id
@@ -107,16 +126,19 @@ def occupants_from_session_streams(
                   AND s.state IN ('open', 'rolling')
                 """
             ).fetchall()
-    except (OSError, sqlite3.Error, ValueError):
-        return []
+    except Exception:
+        return OccupancyRead([], False, 0.0)
 
     occupants: list[dict[str, str | None]] = []
     seen: set[tuple[str, str]] = set()
+    observed_at: list[datetime] = []
     for row in rows:
         try:
+            heartbeat_at = parse_timestamp(str(row["heartbeat_at"]))
             expires_at = parse_timestamp(str(row["expires_at"]))
-        except (KeyError, ValueError):
-            continue
+        except (KeyError, TypeError, ValueError):
+            return OccupancyRead(occupants, False, _observation_age(observed_at, now=clock))
+        observed_at.append(heartbeat_at)
         if expires_at <= clock:
             continue
         stream_id = str(row["stream_id"] or "")
@@ -137,7 +159,25 @@ def occupants_from_session_streams(
             continue
         seen.add(key)
         occupants.append(occupant)
-    return occupants
+    return OccupancyRead(occupants, True, _observation_age(observed_at, now=clock))
+
+
+def occupants_from_session_streams(
+    *,
+    host_id: str,
+    mapping: dict[str, str],
+    selected: dict[str, str | None],
+    db_path: Path | None = None,
+    now: datetime | None = None,
+) -> list[dict[str, str | None]]:
+    """Compatibility list-only view of the read-only lease projection."""
+    return read_session_streams(
+        host_id=host_id,
+        mapping=mapping,
+        selected=selected,
+        db_path=db_path,
+        now=now,
+    ).occupants
 
 
 def _marker_fresh(payload: dict[str, Any], *, now: datetime) -> bool:
@@ -184,8 +224,8 @@ def _iter_marker_payloads(root: Path) -> Iterator[dict[str, Any]]:
     for path in candidates:
         try:
             raw = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError, UnicodeError):
-            continue
+        except (OSError, json.JSONDecodeError, UnicodeError) as exc:
+            raise OSError from exc
         if isinstance(raw, list):
             for item in raw:
                 if isinstance(item, dict):
@@ -202,31 +242,53 @@ def _iter_marker_payloads(root: Path) -> Iterator[dict[str, Any]]:
         yield raw
 
 
+def read_markers(
+    *,
+    host_id: str,
+    root: Path | None = None,
+    now: datetime | None = None,
+) -> OccupancyRead:
+    """Optional Foundry/compiler (or other service) heartbeats for one host."""
+    path = markers_root() if root is None else root
+    clock = now or datetime.now(UTC)
+    occupants: list[dict[str, str | None]] = []
+    seen: set[tuple[str, str]] = set()
+    observed_at: list[datetime] = []
+    optional_default = root is None and not os.environ.get(ENV_MARKERS, "").strip()
+    try:
+        if not path.exists():
+            return OccupancyRead([], optional_default, 0.0)
+        if not path.is_file() and not path.is_dir():
+            return OccupancyRead([], False, 0.0)
+        for payload in _iter_marker_payloads(path):
+            for timestamp_key in ("updated_at", "expires_at"):
+                if timestamp_key in payload and payload[timestamp_key] is not None:
+                    parsed = _parse_when(payload[timestamp_key])
+                    if parsed is None:
+                        return OccupancyRead(occupants, False, _observation_age(observed_at, now=clock))
+                    if timestamp_key == "updated_at":
+                        observed_at.append(parsed)
+            occupant = _occupant_from_marker(payload, host_id=host_id, now=clock)
+            if occupant is None:
+                continue
+            key = (occupant["kind"], occupant["task_id"] or "")
+            if key in seen:
+                continue
+            seen.add(key)
+            occupants.append(occupant)
+    except OSError:
+        return OccupancyRead(occupants, False, _observation_age(observed_at, now=clock))
+    return OccupancyRead(occupants, True, _observation_age(observed_at, now=clock))
+
+
 def occupants_from_markers(
     *,
     host_id: str,
     root: Path | None = None,
     now: datetime | None = None,
 ) -> list[dict[str, str | None]]:
-    """Optional Foundry/compiler (or other service) heartbeats for one host."""
-    path = markers_root() if root is None else root
-    clock = now or datetime.now(UTC)
-    occupants: list[dict[str, str | None]] = []
-    seen: set[tuple[str, str]] = set()
-    try:
-        payloads = _iter_marker_payloads(path)
-    except OSError:
-        return []
-    for payload in payloads:
-        occupant = _occupant_from_marker(payload, host_id=host_id, now=clock)
-        if occupant is None:
-            continue
-        key = (occupant["kind"], occupant["task_id"] or "")
-        if key in seen:
-            continue
-        seen.add(key)
-        occupants.append(occupant)
-    return occupants
+    """Compatibility list-only view of the marker store."""
+    return read_markers(host_id=host_id, root=root, now=now).occupants
 
 
 def _marker_filename(kind: str, task_id: str) -> str:
