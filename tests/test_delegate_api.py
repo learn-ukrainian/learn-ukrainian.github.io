@@ -434,3 +434,28 @@ def test_delegate_http_redacts_repository_even_when_task_state_has_private(
         assert public_repo not in blob
         assert "secret-org" not in blob
         assert "/Users/private/" not in blob
+
+
+def test_task_detail_detects_stale_run_nonce_split_brain(tmp_path, monkeypatch):
+    """#7168: Monitor API task detail returns 409 Conflict if expected run_nonce mismatches."""
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _write_task(
+        tasks_dir / "split-task.json",
+        _task_payload(
+            "split-task",
+            status="done",
+            run_nonce="round-1-stale-nonce",
+        ),
+    )
+
+    # Reader queries with stale nonce from round 1 -> 200 OK
+    resp_match = client.get("/api/delegate/tasks/split-task?run_nonce=round-1-stale-nonce")
+    assert resp_match.status_code == 200
+    assert resp_match.json()["task"]["run_nonce"] == "round-1-stale-nonce"
+
+    # Reader queries with live nonce from round 2 -> 409 Conflict
+    resp_mismatch = client.get("/api/delegate/tasks/split-task?run_nonce=round-2-live-nonce")
+    assert resp_mismatch.status_code == 409
+    assert "Task run_nonce mismatch" in resp_mismatch.json()["detail"]
+

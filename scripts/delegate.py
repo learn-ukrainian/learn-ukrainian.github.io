@@ -34,6 +34,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
 
     {
         "task_id": str,
+        "run_nonce": str,           # unique run identifier for split-brain detection (#7168)
         "repository": str | null,   # authoritative "owner/repo" of the dispatch target (#7083)
         "agent": str,
         "model": str,
@@ -108,6 +109,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import uuid
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -317,6 +319,11 @@ def _state_path(task_id: str) -> Path:
 
 def _result_path(task_id: str) -> Path:
     return _state_path(task_id).with_suffix(".result")
+
+
+def _generate_run_nonce() -> str:
+    """Generate a unique run identifier to disambiguate dispatches (#7168)."""
+    return uuid.uuid4().hex[:16]
 
 
 def _archive_stamp() -> str:
@@ -2768,9 +2775,7 @@ def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
     parts = normalized.split("/")
     if len(parts) < 2:
         return False
-    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith(
-        "read_only_checkout_"
-    )
+    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith("read_only_checkout_")
 
 
 def _is_read_only_runtime_state_path(path: str) -> bool:
@@ -3654,7 +3659,7 @@ def _resolve_worktree_base_sha(
         f"{branch_name}. Check connectivity and that "
         "`git remote get-url origin` points at the canonical remote "
         "(github.com:learn-ukrainian/learn-ukrainian.github.io), then "
-        f"run `git fetch origin {branch_name}` and retry the dispatch. "
+        f"run `git fetch origin +refs/heads/{branch_name}:refs/remotes/origin/{branch_name}` and retry the dispatch. "
         "Do NOT use the primary checkout as a freshness source."
     )
 
@@ -3803,7 +3808,7 @@ def _ensure_worktree(
                 f"{branch_name}. Check connectivity and that "
                 "`git remote get-url origin` points at the canonical remote "
                 "(github.com:learn-ukrainian/learn-ukrainian.github.io), then "
-                f"run `git fetch origin {branch_name}` and retry the dispatch. "
+                f"run `git fetch origin +refs/heads/{branch_name}:refs/remotes/origin/{branch_name}` and retry the dispatch. "
                 "Do NOT use the primary checkout as a freshness source."
             )
 
@@ -4197,6 +4202,7 @@ def _run_worker(
     harness: str | None = None,
     runtime_tmp_root: str | None = None,
     runtime_tmp_namespace_root: str | None = None,
+    run_nonce: str | None = None,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -4231,6 +4237,9 @@ def _run_worker(
     state["pid"] = os.getpid()
     state["status"] = "running"
     state["max_budget_usd"] = max_budget_usd
+    effective_nonce = run_nonce or os.environ.get("LU_RUNTIME_RUN_NONCE")
+    if effective_nonce:
+        state["run_nonce"] = effective_nonce
     if "cli_version" not in state:
         start_telemetry = resolve_dispatch_start_telemetry(
             agent_name=agent,
@@ -4893,7 +4902,7 @@ def _run_worker(
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
-    """Spawn a detached worker and return immediately with the task-id."""
+    """Spawn a detached worker and return immediately (stdout: `<task_id>\\n<run_nonce>`)."""
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -4902,10 +4911,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         notebook_fallback_after_forward,
     )
 
+    task_id = args.task_id
+    run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
+
     try:
         attribution = resolve_invocation_attribution(
             explicit=getattr(args, "initiator", None),
-            task_id=args.task_id,
+            task_id=task_id,
         )
     except ValueError as exc:
         print(f"❌ invalid --initiator: {exc}", file=sys.stderr)
@@ -4914,7 +4926,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if not bool(getattr(args, "dry_run", False)):
         placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
         if placement == "vps" and host_id:
-            print(f"→ forwarding dispatch to {host_id}", file=sys.stderr)
+            print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
             forward_error: BaseException | None = None
             forward_rc: int | None = None
             try:
@@ -4923,6 +4935,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     argv=sys.argv,
                     initiator=attribution.initiator,
                     initiator_source=attribution.source,
+                    run_nonce=run_nonce,
                 )
             except SshTransportError as exc:
                 forward_error = exc
@@ -5344,6 +5357,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             )
             dry_run_state = {
                 "task_id": task_id,
+                "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
                     dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
                 ),
@@ -5408,6 +5422,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
         print(task_id)
+        print(run_nonce)
         return 0
 
     # Set up log files before provisioning a worktree. If this cheap
@@ -5509,6 +5524,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
         initial_state = {
             "task_id": task_id,
+            "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped
             # delegate join (#7083); None stays unclassified and fails closed.
             "repository": _resolve_dispatch_repository(cwd),
@@ -5573,7 +5589,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             elif sparse_meta.get("excluded"):
                 sparse_tag = f" [sparse-exclude={','.join(sparse_meta['excluded'])}]"
             print(
-                f"🌲 dispatch {task_id}: branch={worktree_branch} "
+                f"🌲 dispatch {task_id}: run_nonce={run_nonce} branch={worktree_branch} "
                 f"base_sha={worktree_telemetry.get('base_sha') or '?'} "
                 f"path={worktree_path} layout={worktree_layout}"
                 + (" [rebased]" if worktree_telemetry.get("rebased") else "")
@@ -5589,6 +5605,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     f".worktrees/dispatch/{{agent}}/{{task}}/.",
                     file=sys.stderr,
                 )
+        else:
+            print(
+                f"🌲 dispatch {task_id}: run_nonce={run_nonce}",
+                file=sys.stderr,
+            )
 
         # Fork a detached subprocess that runs this same script with
         # --worker. We use Popen rather than os.fork for portability.
@@ -5643,6 +5664,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         effort = getattr(args, "effort", None)
         if effort:
             cmd.extend(["--effort", effort])
+        if run_nonce:
+            cmd.extend(["--run-nonce", run_nonce])
 
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
@@ -5653,6 +5676,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         worker_env = _pinned_worker_venv_env(os.environ)
         worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
         worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
+        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
         _inject_gh_token_for_agent(worker_env, dispatch_agent)
         worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
         worker_env["TMPDIR"] = str(runtime_tmp_root)
@@ -5755,8 +5779,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         stdout_fd.close()
         stderr_fd.close()
 
-    # Return task-id on stdout so shell callers can capture it.
+    # Return task-id and run_nonce on stdout so shell callers can capture them (#7168).
     print(task_id)
+    print(run_nonce)
     return 0
 
 
@@ -5771,6 +5796,22 @@ def cmd_status(args: argparse.Namespace) -> int:
     if state is None:
         print(
             json.dumps({"error": f"no state file for task {args.task_id!r}"}),
+        )
+        return 1
+
+    expected_nonce = getattr(args, "run_nonce", None)
+    if expected_nonce is not None and state.get("run_nonce") != expected_nonce:
+        print(
+            json.dumps(
+                {
+                    "error": "stale_run_nonce",
+                    "task_id": args.task_id,
+                    "expected_run_nonce": expected_nonce,
+                    "record_run_nonce": state.get("run_nonce"),
+                    "status": "stale",
+                }
+            ),
+            file=sys.stderr,
         )
         return 1
 
@@ -5847,15 +5888,19 @@ def _age_seconds_from_started_at(started_at: Any) -> int:
     return max(0, round((datetime.now(UTC) - started.astimezone(UTC)).total_seconds()))
 
 
-def _fetch_monitor_task(task_id: str) -> dict[str, Any] | None:
+def _fetch_monitor_task(task_id: str, *, run_nonce: str | None = None) -> dict[str, Any] | None:
     quoted = urllib.parse.quote(task_id, safe="")
     url = f"{_monitor_api_base_url()}/api/delegate/tasks/{quoted}"
+    if run_nonce:
+        url += f"?run_nonce={urllib.parse.quote(run_nonce, safe='')}"
     try:
         with urllib.request.urlopen(url, timeout=2) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
             return None
+        if exc.code == 409:
+            return {"task": {"status": "stale_run_nonce", "task_id": task_id}, "alive": False, "stale_run_nonce": True}
         raise MonitorApiUnavailable(str(exc)) from exc
     except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
         raise MonitorApiUnavailable(str(exc)) from exc
@@ -6110,8 +6155,8 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
             )
 
 
-def _status_or_fail_payload(task_id: str) -> dict[str, Any]:
-    payload = _fetch_monitor_task(task_id)
+def _status_or_fail_payload(task_id: str, *, run_nonce: str | None = None) -> dict[str, Any]:
+    payload = _fetch_monitor_task(task_id, run_nonce=run_nonce)
     if payload is None:
         return {"task_id": task_id, "status": "task not found", "age_s": 0}
 
@@ -6119,18 +6164,22 @@ def _status_or_fail_payload(task_id: str) -> dict[str, Any]:
     status = str(task.get("status") or "unknown")
     if status == "running" and payload.get("alive") is False:
         status = "stale"
-    return {
+    result = {
         "task_id": task.get("task_id") or task_id,
         "status": status,
         "age_s": _age_seconds_from_started_at(task.get("started_at")),
         "alive": payload.get("alive"),
     }
+    if run_nonce is not None:
+        result["run_nonce"] = task.get("run_nonce")
+    return result
 
 
 def cmd_status_or_fail(args: argparse.Namespace) -> int:
     """Exit 0 only when Monitor API confirms a task is currently running."""
+    run_nonce = getattr(args, "run_nonce", None)
     try:
-        status = _status_or_fail_payload(args.task_id)
+        status = _status_or_fail_payload(args.task_id, run_nonce=run_nonce)
     except MonitorApiUnavailable as exc:
         print(f"Monitor API unreachable: {exc}", file=sys.stderr)
         return 2
@@ -6177,14 +6226,38 @@ def cmd_wait(args: argparse.Namespace) -> int:
     state_path = _state_path(args.task_id)
     poll_interval = max(0.5, float(args.poll_interval))
     deadline = time.monotonic() + float(args.timeout) if args.timeout else None
+    expected_nonce = getattr(args, "run_nonce", None)
 
     while True:
         state = _read_state(state_path)
         if state is None:
+            if expected_nonce is not None and (deadline is None or time.monotonic() < deadline):
+                time.sleep(poll_interval)
+                continue
             print(
                 json.dumps({"error": f"no state file for task {args.task_id!r}"}),
             )
             return 1
+
+        record_nonce = state.get("run_nonce")
+        if expected_nonce is not None and record_nonce != expected_nonce:
+            if deadline and time.monotonic() >= deadline:
+                print(
+                    json.dumps(
+                        {
+                            "error": "stale_run_nonce",
+                            "task_id": args.task_id,
+                            "expected_run_nonce": expected_nonce,
+                            "record_run_nonce": record_nonce,
+                            "last_known_status": state.get("status"),
+                            "waited_s": args.timeout,
+                        }
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            time.sleep(poll_interval)
+            continue
 
         # Zombie probe (same logic as cmd_status)
         prior_status = state.get("status")
@@ -6240,6 +6313,15 @@ def cmd_cancel(args: argparse.Namespace) -> int:
     state = _read_state(state_path)
     if state is None:
         print(f"❌ no state file for task {args.task_id!r}", file=sys.stderr)
+        return 1
+
+    expected_nonce = getattr(args, "run_nonce", None)
+    if expected_nonce is not None and state.get("run_nonce") != expected_nonce:
+        print(
+            f"❌ task {args.task_id!r} run_nonce mismatch (expected {expected_nonce!r}, "
+            f"got {state.get('run_nonce')!r}); refusing to cancel unrelated worker",
+            file=sys.stderr,
+        )
         return 1
 
     status = state.get("status")
@@ -6432,6 +6514,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         keep_worktree=bool(getattr(args, "keep_worktree", False)),
         runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
         runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
+        run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
     )
 
 
@@ -6480,7 +6563,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     d = sub.add_parser(
         "dispatch",
-        help="Fire a task, return immediately",
+        help="Fire a task, return immediately (stdout: `<task_id>\\n<run_nonce>`)",
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument(
@@ -6523,6 +6606,11 @@ def build_parser() -> argparse.ArgumentParser:
             "Initiating orchestrator identity for runtime attribution. Launcher "
             "and Codex Desktop identity are detected automatically when omitted."
         ),
+    )
+    d.add_argument(
+        "--run-nonce",
+        default=None,
+        help="Unique run identifier for detecting stale cross-host task records (#7168).",
     )
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
@@ -6787,6 +6875,11 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     s.add_argument("task_id", help="Task ID to inspect, e.g. review-123.")
+    s.add_argument(
+        "--run-nonce",
+        default=None,
+        help="Expected run nonce to detect stale records from prior rounds (#7168).",
+    )
     s.set_defaults(func=cmd_status)
 
     # status-or-fail
@@ -6810,6 +6903,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sof.add_argument("task_id", help="Task ID to verify, e.g. review-123.")
     sof.add_argument(
+        "--run-nonce",
+        default=None,
+        help="Expected run nonce to verify against the running task (#7168).",
+    )
+    sof.add_argument(
         "--verbose",
         action="store_true",
         help="Print structured status JSON before exiting.",
@@ -6821,11 +6919,21 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("task_id", help="Task ID to wait for, e.g. review-123.")
     w.add_argument("--timeout", type=float, default=0, help="Max wait seconds (0 = forever)")
     w.add_argument("--poll-interval", type=float, default=2.0, help="Poll interval seconds (default: 2.0)")
+    w.add_argument(
+        "--run-nonce",
+        default=None,
+        help="Expected run nonce to verify before accepting terminal status (#7168).",
+    )
     w.set_defaults(func=cmd_wait)
 
     # cancel
     c = sub.add_parser("cancel", help="SIGTERM the worker")
     c.add_argument("task_id", help="Task ID to cancel, e.g. review-123.")
+    c.add_argument(
+        "--run-nonce",
+        default=None,
+        help="Expected run nonce to verify before cancelling worker (#7168).",
+    )
     c.set_defaults(func=cmd_cancel)
 
     # list
@@ -6889,6 +6997,7 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--output-schema-sha256", default=None)
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
+    wk.add_argument("--run-nonce", default=None)
     wk.set_defaults(func=cmd_worker)
 
     return p
