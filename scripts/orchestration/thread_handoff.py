@@ -11,15 +11,23 @@ until the replacement thread is explicitly confirmed.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
+import copy
+import gzip
 import hashlib
+import io
 import json
 import os
 import re
 import shlex
+import shutil
 import socket
 import sqlite3
 import subprocess
 import sys
+import tarfile
+import tempfile
 import urllib.error
 import urllib.request
 import uuid
@@ -29,6 +37,15 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode, urlparse
+
+# Script-by-path execution under the shared primary interpreter can expose the
+# primary checkout through a site-packages ``.pth`` file before this linked
+# worktree.  Prefer the code that is actually being executed without asking
+# callers to mutate PYTHONPATH.
+_LOCAL_REPO_ROOT = str(Path(__file__).resolve().parents[2])
+if _LOCAL_REPO_ROOT not in sys.path:
+    sys.path.insert(0, _LOCAL_REPO_ROOT)
 
 try:
     from scripts import context_canary
@@ -69,6 +86,18 @@ ROLLOVER_ID_RE = re.compile(r"^rollover-[a-z0-9]+(?:-[a-z0-9]+)*$")
 DEFAULT_ROUTER_PATH = Path("docs/session-state/current.md")
 ORCHESTRATOR_HANDOFF_PATH = Path("docs/session-state/codex-orchestrator-handoff.md")
 DEFAULT_STALE_HOURS = 12
+ROLLOVER_BUNDLE_SCHEMA = "rollover-bundle.v1"
+ROLLOVER_BUNDLE_MANIFEST_NAME = "manifest.json"
+ROLLOVER_BUNDLE_MAX_BYTES = 4 * 1024 * 1024
+ROLLOVER_BUNDLE_REPO_TOKEN = "{{REPO_ROOT}}"
+ROLLOVER_BUNDLE_STATUS_RANK = {
+    "superseded": 0,
+    "pending_start": 1,
+    "resumed": 2,
+    "confirmed": 3,
+    # The existing state machine calls the confirmed replacement ``started``.
+    "started": 3,
+}
 # Default warning threshold (percentage of window)
 DEFAULT_CONTEXT_THRESHOLD = 88.0
 THREAD_LEASE_SCHEMA_VERSION = 2
@@ -169,6 +198,13 @@ def normalize_rollover_id(value: str) -> str:
 def argparse_lineage_id(value: str) -> str:
     try:
         return normalize_lineage_id(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from exc
+
+
+def argparse_rollover_id(value: str) -> str:
+    try:
+        return normalize_rollover_id(value)
     except ValueError as exc:
         raise argparse.ArgumentTypeError(str(exc)) from exc
 
@@ -405,6 +441,550 @@ def http_get_json(base_url: str, path: str, timeout_s: float = 3.0) -> dict[str,
     except json.JSONDecodeError as exc:
         return {"_error": f"JSONDecodeError: {exc}"}
     return data if isinstance(data, dict) else {"value": data}
+
+
+def _bundle_json(value: Any) -> bytes:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _bundle_member_path(value: str) -> str:
+    if not isinstance(value, str) or not value or "\\" in value:
+        raise ValueError("bundle member path is malformed")
+    path = Path(value)
+    if not path.parts or path.is_absolute() or ".." in path.parts or path.parts[0] == ROLLOVER_BUNDLE_MANIFEST_NAME:
+        raise ValueError(f"bundle member path is unsafe: {value!r}")
+    return path.as_posix()
+
+
+def _bundle_archive(members: Mapping[str, bytes], manifest: Mapping[str, Any]) -> bytes:
+    """Build a deterministic gzip tar; deterministic bytes make the receipt verifiable."""
+    raw = io.BytesIO()
+    with tarfile.open(fileobj=raw, mode="w") as archive:
+        manifest_info = tarfile.TarInfo(ROLLOVER_BUNDLE_MANIFEST_NAME)
+        manifest_bytes = _bundle_json(manifest)
+        manifest_info.size = len(manifest_bytes)
+        manifest_info.mode = 0o600
+        manifest_info.mtime = 0
+        manifest_info.uid = 0
+        manifest_info.gid = 0
+        manifest_info.uname = ""
+        manifest_info.gname = ""
+        archive.addfile(manifest_info, io.BytesIO(manifest_bytes))
+        for name in sorted(members):
+            member_name = _bundle_member_path(name)
+            payload = members[name]
+            info = tarfile.TarInfo(member_name)
+            info.size = len(payload)
+            info.mode = 0o600
+            info.mtime = 0
+            info.uid = 0
+            info.gid = 0
+            info.uname = ""
+            info.gname = ""
+            archive.addfile(info, io.BytesIO(payload))
+    return gzip.compress(raw.getvalue(), compresslevel=9, mtime=0)
+
+
+def _bundle_digest(members: Mapping[str, bytes], manifest: Mapping[str, Any]) -> str:
+    unsigned = copy.deepcopy(dict(manifest))
+    unsigned["bundle_sha256"] = ""
+    return hashlib.sha256(_bundle_archive(members, unsigned)).hexdigest()
+
+
+def _bundle_text_member(name: str) -> bool:
+    return Path(name).suffix.lower() in {".md", ".txt"}
+
+
+def _bundle_tokenize(data: bytes, *, repo_root: Path, state_root: Path) -> bytes:
+    text = data.decode("utf-8")
+    for root in (repo_root.resolve(), state_root.resolve()):
+        text = text.replace(str(root), ROLLOVER_BUNDLE_REPO_TOKEN)
+    return text.encode("utf-8")
+
+
+def _bundle_rewrite(data: bytes, *, repo_root: Path) -> bytes:
+    return data.replace(ROLLOVER_BUNDLE_REPO_TOKEN.encode("utf-8"), str(repo_root.resolve()).encode("utf-8"))
+
+
+def _bundle_replacement_status(replacement: Mapping[str, Any]) -> str:
+    status = str(replacement.get("status") or "")
+    if status not in ROLLOVER_BUNDLE_STATUS_RANK:
+        raise ValueError(f"replacement status is not bundle-orderable: {status!r}")
+    return status
+
+
+def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str, int]:
+    try:
+        generation = int(manifest["generation"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("bundle generation is malformed") from exc
+    status = _bundle_replacement_status(manifest)
+    prepared_at = parse_iso_datetime(str(manifest.get("prepared_at") or ""))
+    if prepared_at is None:
+        raise ValueError("bundle prepared_at is malformed")
+    rollover_id = normalize_rollover_id(str(manifest.get("rollover_id") or ""))
+    try:
+        upload_seq = int(manifest.get("upload_seq", 0))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("bundle upload_seq is malformed") from exc
+    if generation < 1 or upload_seq < 0:
+        raise ValueError("bundle generation or upload_seq is out of range")
+    return generation, ROLLOVER_BUNDLE_STATUS_RANK[status], prepared_at, rollover_id, upload_seq
+
+
+def _bundle_state_manifest(state: Mapping[str, Any], *, stream_id: str, upload_seq: int | None = None) -> dict[str, Any]:
+    replacement = state.get("replacement")
+    if not isinstance(replacement, dict):
+        raise ValueError("rollover state has no replacement")
+    agent = normalize_agent_name(str(state.get("agent") or ""))
+    lineage_id = normalize_lineage_id(str(state.get("lineage_id") or replacement.get("lineage_id") or ""))
+    status = _bundle_replacement_status(replacement)
+    generation = int(replacement.get("generation"))
+    rollover_id = normalize_rollover_id(str(replacement.get("rollover_id") or ""))
+    prepared_at = str(replacement.get("prepared_at") or "")
+    if parse_iso_datetime(prepared_at) is None:
+        raise ValueError("rollover replacement prepared_at is malformed")
+    if upload_seq is None:
+        upload_seq = int(state.get("bundle_upload_seq", 0))
+    return {
+        "schema": ROLLOVER_BUNDLE_SCHEMA,
+        "agent": agent,
+        "stream_id": stream_id,
+        "lineage_id": lineage_id,
+        "rollover_id": rollover_id,
+        "generation": generation,
+        "status": status,
+        "prepared_at": prepared_at,
+        "source_root": ROLLOVER_BUNDLE_REPO_TOKEN,
+        "exported_at": isoformat_z(utc_now()),
+        "files": [],
+        "tokenized_members": [],
+        "upload_seq": upload_seq,
+        "bundle_sha256": "",
+    }
+
+
+def _bundle_state_candidates(state_root: Path, agent: str) -> list[tuple[Path, dict[str, Any]]]:
+    root = state_root / ".agent" / "thread-rollovers" / agent
+    candidates: list[tuple[Path, dict[str, Any]]] = []
+    if not root.is_dir():
+        return candidates
+    for path in sorted(root.glob("*/lease.json")):
+        state = load_state(path)
+        replacement = state.get("replacement")
+        if not isinstance(replacement, dict) or replacement.get("status") not in ROLLOVER_BUNDLE_STATUS_RANK:
+            continue
+        candidates.append((path, state))
+    return candidates
+
+
+def _select_bundle_state(
+    state_root: Path,
+    *,
+    agent: str,
+    lineage_id: str | None,
+    rollover_id: str | None,
+) -> tuple[Path, dict[str, Any]]:
+    candidates = _bundle_state_candidates(state_root, agent)
+    if lineage_id is not None:
+        wanted_lineage = normalize_lineage_id(lineage_id)
+        candidates = [item for item in candidates if item[1].get("lineage_id") == wanted_lineage]
+    if rollover_id is not None:
+        wanted_rollover = normalize_rollover_id(rollover_id)
+        candidates = [
+            item for item in candidates if (item[1].get("replacement") or {}).get("rollover_id") == wanted_rollover
+        ]
+    if not candidates:
+        raise ValueError("no matching rollover lineage exists")
+    if len(candidates) == 1:
+        return candidates[0]
+    ranked = sorted(
+        candidates,
+        key=lambda item: _bundle_order(
+            _bundle_state_manifest(item[1], stream_id="shared:rollover")
+        ),
+        reverse=True,
+    )
+    return ranked[0]
+
+
+def _bundle_handoff_candidates(repo_root: Path, stream_id: str) -> tuple[str, ...]:
+    try:
+        from agents_extensions.shared.session_streams.inventory import epic_handoff_map
+
+        return tuple(epic_handoff_map(repo_root).get(stream_id, ()))
+    except (OSError, ValueError, ImportError):
+        return ()
+
+
+def _bundle_handoff_candidates_for_agent(repo_root: Path, stream_id: str, agent: str) -> tuple[str, ...]:
+    """Resolve the inventory lane first, then the canonical agent-slug template."""
+    candidates = list(_bundle_handoff_candidates(repo_root, stream_id))
+    if agent.startswith("claude-"):
+        candidates.append(f".claude/{agent.removeprefix('claude-')}-epic/CLAUDE-DRIVER-HANDOFF.md")
+    return tuple(dict.fromkeys(candidates))
+
+
+def _bundle_source_members(
+    repo_root: Path,
+    state_root: Path,
+    *,
+    agent: str,
+    state: Mapping[str, Any],
+    stream_id: str,
+) -> dict[str, bytes]:
+    lineage_id = normalize_lineage_id(str(state.get("lineage_id") or ""))
+    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
+    if not lineage_root.is_dir():
+        raise ValueError(f"rollover lineage directory is missing: {lineage_id}")
+    members: dict[str, bytes] = {}
+    for path in sorted(lineage_root.rglob("*")):
+        if not path.is_file() or path.is_symlink() or path.name == ".native-intent.lock" or path.name.endswith(".bundle.tgz"):
+            continue
+        member_name = (Path(".agent") / "thread-rollovers" / agent / lineage_id / path.relative_to(lineage_root)).as_posix()
+        payload = path.read_bytes()
+        if _bundle_text_member(member_name):
+            payload = _bundle_tokenize(payload, repo_root=repo_root, state_root=state_root)
+        members[_bundle_member_path(member_name)] = payload
+
+    for candidate in _bundle_handoff_candidates_for_agent(repo_root, stream_id, agent):
+        path = repo_root / candidate
+        if path.is_file() and not path.is_symlink():
+            payload = _bundle_tokenize(path.read_bytes(), repo_root=repo_root, state_root=state_root)
+            members[_bundle_member_path(candidate)] = payload
+            break
+    return members
+
+
+def _bundle_secret_hits(members: Mapping[str, bytes]) -> list[tuple[str, str]]:
+    try:
+        from agents_extensions.shared.session_streams.store import SECRET_PATTERNS
+    except ImportError:
+        return []
+    hits: list[tuple[str, str]] = []
+    for name, payload in members.items():
+        try:
+            text = payload.decode("utf-8")
+        except UnicodeDecodeError:
+            hits.append((name, "invalid-utf8-text"))
+            continue
+        for rule, pattern in SECRET_PATTERNS:
+            if pattern.search(text):
+                hits.append((name, rule))
+    return hits
+
+
+def _build_rollover_bundle(
+    repo_root: Path,
+    state_root: Path,
+    *,
+    agent: str,
+    state: Mapping[str, Any],
+    stream_id: str,
+) -> tuple[dict[str, Any], bytes, list[tuple[str, str]]]:
+    stream_id = str(stream_id)
+    if not stream_id:
+        raise ValueError("--stream is required for a rollover bundle")
+    manifest = _bundle_state_manifest(state, stream_id=stream_id)
+    members = _bundle_source_members(repo_root, state_root, agent=agent, state=state, stream_id=stream_id)
+    files = []
+    tokenized_members: list[str] = []
+    for name in sorted(members):
+        tokenized = _bundle_text_member(name)
+        if tokenized:
+            tokenized_members.append(name)
+        files.append({"path": name, "sha256": hashlib.sha256(members[name]).hexdigest(), "bytes": len(members[name]), "tokenized": tokenized})
+    manifest["files"] = files
+    manifest["tokenized_members"] = tokenized_members
+    manifest["bundle_sha256"] = _bundle_digest(members, manifest)
+    archive = _bundle_archive(members, manifest)
+    if len(archive) > ROLLOVER_BUNDLE_MAX_BYTES:
+        raise ValueError("rollover bundle exceeds the 4 MiB cap")
+    return manifest, archive, _bundle_secret_hits(members)
+
+
+def _bundle_extract(blob: bytes, *, manifest_override: Mapping[str, Any] | None = None) -> tuple[dict[str, Any], dict[str, bytes]]:
+    if len(blob) > ROLLOVER_BUNDLE_MAX_BYTES:
+        raise ValueError("rollover bundle exceeds the 4 MiB cap")
+    members: dict[str, bytes] = {}
+    manifest: dict[str, Any] | None = None
+    try:
+        with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
+            for info in archive.getmembers():
+                if info.name == ROLLOVER_BUNDLE_MANIFEST_NAME:
+                    if manifest is not None or not info.isfile():
+                        raise ValueError("bundle manifest is malformed")
+                    raw_manifest = archive.extractfile(info)
+                    if raw_manifest is None:
+                        raise ValueError("bundle manifest is unreadable")
+                    value = json.loads(raw_manifest.read().decode("utf-8"))
+                    if not isinstance(value, dict):
+                        raise ValueError("bundle manifest must be an object")
+                    manifest = value
+                    continue
+                name = _bundle_member_path(info.name)
+                if name in members or not info.isfile():
+                    raise ValueError("bundle contains a duplicate or non-regular member")
+                payload = archive.extractfile(info)
+                if payload is None:
+                    raise ValueError("bundle member is unreadable")
+                members[name] = payload.read()
+    except (tarfile.TarError, OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise ValueError(f"rollover bundle is not a valid tar.gz: {exc}") from exc
+    if manifest is None or manifest.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
+        raise ValueError("rollover bundle manifest schema is invalid")
+    declared_files = manifest.get("files")
+    if not isinstance(declared_files, list) or not declared_files:
+        raise ValueError("rollover bundle manifest has no files")
+    declared_names: set[str] = set()
+    declared_tokenized: set[str] = set()
+    for item in declared_files:
+        if not isinstance(item, dict):
+            raise ValueError("rollover bundle file manifest is malformed")
+        name = _bundle_member_path(item.get("path"))
+        if name in declared_names or name not in members:
+            raise ValueError("rollover bundle file manifest does not match the tar")
+        declared_names.add(name)
+        payload = members[name]
+        tokenized = item.get("tokenized")
+        if not isinstance(tokenized, bool) or tokenized != _bundle_text_member(name):
+            raise ValueError(f"rollover bundle tokenization declaration is invalid: {name}")
+        if tokenized:
+            declared_tokenized.add(name)
+        if item.get("bytes") != len(payload) or item.get("sha256") != hashlib.sha256(payload).hexdigest():
+            raise ValueError(f"rollover bundle member fingerprint mismatch: {name}")
+    if declared_names != set(members):
+        raise ValueError("rollover bundle tar contains an unmanifested member")
+    tokenized_members = manifest.get("tokenized_members")
+    if not isinstance(tokenized_members, list) or set(tokenized_members) != declared_tokenized:
+        raise ValueError("rollover bundle tokenized_members does not match its file manifest")
+    _bundle_order(manifest)
+    expected_digest = _bundle_digest(members, manifest)
+    if manifest.get("bundle_sha256") != expected_digest:
+        raise ValueError("rollover bundle fingerprint mismatch")
+    if manifest_override is not None:
+        outer = dict(manifest_override)
+        if outer.get("schema") != ROLLOVER_BUNDLE_SCHEMA or outer.get("bundle_sha256") != manifest.get("bundle_sha256"):
+            raise ValueError("API manifest does not match the bundle")
+        for key in ("agent", "stream_id", "lineage_id", "rollover_id", "generation", "status", "prepared_at"):
+            if outer.get(key) != manifest.get(key):
+                raise ValueError(f"API manifest differs from bundle at {key}")
+        manifest = {**manifest, "upload_seq": outer.get("upload_seq", manifest.get("upload_seq", 0))}
+        _bundle_order(manifest)
+    return manifest, members
+
+
+def _bundle_local_members(repo_root: Path, state_root: Path, *, agent: str, lineage_id: str, stream_id: str) -> dict[str, bytes]:
+    state_path = state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json"
+    state = load_state(state_path)
+    return _bundle_source_members(repo_root, state_root, agent=agent, state=state, stream_id=stream_id)
+
+
+def _bundle_write_member(repo_root: Path, state_root: Path, name: str, payload: bytes) -> None:
+    target_root = state_root if name.startswith(".agent/thread-rollovers/") else repo_root
+    target = (target_root / name).resolve()
+    target.relative_to(target_root.resolve())
+    if _bundle_text_member(name):
+        payload = _bundle_rewrite(payload, repo_root=repo_root)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    write_bytes_atomic(target, payload)
+
+
+def _bundle_archive_local_lineage(
+    state_root: Path,
+    *,
+    agent: str,
+    lineage_id: str,
+    remote_manifest: Mapping[str, Any],
+) -> Path | None:
+    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
+    if not lineage_root.exists():
+        return None
+    timestamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
+    archive_root = state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}"
+    suffix = 1
+    while archive_root.exists():
+        archive_root = state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}-{suffix}"
+        suffix += 1
+    archive_root.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(os.fspath(lineage_root), os.fspath(archive_root))
+    archived_state_path = archive_root / "lease.json"
+    archived_state = load_state(archived_state_path)
+    replacement = archived_state.get("replacement")
+    if isinstance(replacement, dict) and replacement.get("status") in {"pending_start", "resumed"}:
+        replacement["status"] = "superseded"
+        replacement["superseded_by"] = {
+            "lineage_id": remote_manifest.get("lineage_id"),
+            "generation": remote_manifest.get("generation"),
+            "rollover_id": remote_manifest.get("rollover_id"),
+        }
+        archived_state["replacement"] = replacement
+        write_rollover_state(archived_state_path, state_root, archived_state)
+    return archive_root
+
+
+def _bundle_install(
+    repo_root: Path,
+    state_root: Path,
+    *,
+    manifest: Mapping[str, Any],
+    members: Mapping[str, bytes],
+) -> None:
+    agent = normalize_agent_name(str(manifest["agent"]))
+    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+    lineage_prefix = f".agent/thread-rollovers/{agent}/{lineage_id}/"
+    if not any(name.startswith(lineage_prefix) for name in members):
+        raise ValueError("bundle has no lineage state members")
+    scratch_root = state_root / ".agent"
+    scratch_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="rollover-import-", dir=os.fspath(scratch_root)) as scratch:
+        staging = Path(scratch)
+        for name, payload in members.items():
+            destination = staging / name if name.startswith(lineage_prefix) else staging / "repo" / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(_bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload)
+        names = sorted(members, key=lambda name: ("identity-receipt.json" not in name, name == "lease.json", name))
+        for name in names:
+            source = staging / name if name.startswith(lineage_prefix) else staging / "repo" / name
+            target_root = state_root if name.startswith(".agent/thread-rollovers/") else repo_root
+            target = (target_root / name).resolve()
+            target.relative_to(target_root.resolve())
+            target.parent.mkdir(parents=True, exist_ok=True)
+            write_bytes_atomic(target, source.read_bytes())
+
+
+def _bundle_status_manifest(state_root: Path, *, agent: str, lineage_id: str) -> dict[str, Any] | None:
+    state_path = state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json"
+    if not state_path.is_file():
+        return None
+    state = load_state(state_path)
+    try:
+        receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
+        receipt = load_state(receipt_path) if receipt_path.is_file() else {}
+        return _bundle_state_manifest(
+            state,
+            stream_id="shared:rollover",
+            upload_seq=int(receipt.get("upload_seq", 0)),
+        )
+    except (TypeError, ValueError):
+        return None
+
+
+class RolloverBundleAPIUnavailable(RuntimeError):
+    """The optional remote bundle authority cannot be reached."""
+
+
+def _bundle_monitor_url(base_url: str) -> str:
+    value = str(base_url or DEFAULT_MONITOR_BASE_URL).rstrip("/")
+    parsed = urlparse(value)
+    if parsed.scheme != "http" or parsed.hostname not in {"localhost", "127.0.0.1"}:
+        raise ValueError("bundle API URL must be an HTTP loopback URL")
+    return f"http://127.0.0.1:{parsed.port or 8765}"
+
+
+def _bundle_lease_payload(stream_id: str) -> dict[str, Any] | None:
+    session_id = os.environ.get("SESSION_STREAM_SESSION_ID", "").strip()
+    lease_id = os.environ.get("SESSION_STREAM_LEASE_ID", "").strip()
+    if not session_id or not lease_id:
+        return None
+    try:
+        generation = int(os.environ.get("SESSION_STREAM_GENERATION", ""))
+        fencing_token = int(os.environ.get("SESSION_STREAM_FENCING_TOKEN", ""))
+    except ValueError:
+        return None
+    holder_kind = os.environ.get("SESSION_STREAM_HOLDER_KIND", "process")
+    process_id: int | None
+    if holder_kind == "app_thread":
+        process_id = None
+    else:
+        try:
+            process_id = int(os.environ.get("SESSION_STREAM_PROCESS_ID", str(os.getpid())))
+        except ValueError:
+            return None
+    task_id = os.environ.get("SESSION_STREAM_TASK_ID") or None
+    return {
+        "stream_id": stream_id,
+        "session_id": session_id,
+        "lease_id": lease_id,
+        "generation": generation,
+        "fencing_token": fencing_token,
+        "holder": {
+            "agent": os.environ.get("SESSION_STREAM_AGENT", ""),
+            "harness": os.environ.get("SESSION_STREAM_HARNESS", ""),
+            "instance_id": os.environ.get("SESSION_STREAM_INSTANCE_ID", ""),
+            "task_id": task_id,
+            "process_id": process_id,
+            "holder_kind": holder_kind,
+            "host_id": os.environ.get("LU_MONITOR_HOST_ID") or None,
+        },
+    }
+
+
+def _bundle_api_request(
+    base_url: str,
+    *,
+    method: str,
+    path: str,
+    payload: Mapping[str, Any] | None = None,
+    timeout_s: float = 3.0,
+) -> dict[str, Any]:
+    body = None if payload is None else _bundle_json(payload)
+    request = urllib.request.Request(
+        f"{_bundle_monitor_url(base_url)}{path}",
+        data=body,
+        headers={"Accept": "application/json", "Content-Type": "application/json"},
+        method=method,
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+            raw = response.read().decode("utf-8")
+            status = int(getattr(response, "status", 200))
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
+        raise RolloverBundleAPIUnavailable(f"bundle API unavailable: {type(exc).__name__}") from exc
+    try:
+        value = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data") from exc
+    if status >= 400:
+        detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
+        raise RuntimeError(f"bundle API refused request ({status}): {detail}")
+    if not isinstance(value, dict):
+        raise RuntimeError("bundle API returned a non-object JSON document")
+    return value
+
+
+def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Mapping[str, Any], blob: bytes) -> dict[str, Any]:
+    lease = _bundle_lease_payload(stream_id)
+    if lease is None:
+        raise RolloverBundleAPIUnavailable("SESSION_STREAM_* fenced lease envelope is unavailable")
+    return _bundle_api_request(
+        args.monitor_base_url,
+        method="POST",
+        path=f"/api/epics/v1/{stream_id}/bundles",
+        payload={
+            **lease,
+            "manifest": dict(manifest),
+            "blob": base64.b64encode(blob).decode("ascii"),
+        },
+    )
+
+
+def _bundle_api_latest(args: argparse.Namespace, *, stream_id: str, agent: str) -> tuple[dict[str, Any], bytes]:
+    query = urlencode({"agent": agent})
+    payload = _bundle_api_request(
+        args.monitor_base_url,
+        method="GET",
+        path=f"/api/epics/v1/{stream_id}/bundles/latest?{query}",
+    )
+    manifest = payload.get("manifest")
+    encoded = payload.get("blob")
+    if not isinstance(manifest, dict) or not isinstance(encoded, str):
+        raise ValueError("bundle API latest response omitted its manifest or blob")
+    try:
+        blob = base64.b64decode(encoded.encode("ascii"), validate=True)
+    except (ValueError, binascii.Error) as exc:
+        raise ValueError("bundle API latest blob is not valid base64") from exc
+    return manifest, blob
 
 
 def gh_json(repo_root: Path, args: list[str], timeout_s: int = 15) -> Any:
@@ -1745,6 +2325,13 @@ def write_text_atomic(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
     tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def write_bytes_atomic(path: Path, payload: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
+    tmp.write_bytes(payload)
     os.replace(tmp, path)
 
 
@@ -3320,6 +3907,16 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
         )
         return 2
 
+    bundle_upload: dict[str, Any] = {"status": "not-requested"}
+    if getattr(args, "stream", None):
+        bundle_upload = _maybe_auto_upload_bundle(
+            args,
+            repo_root=repo_root,
+            state_root=state_root,
+            agent=agent,
+            state=prepared_state,
+        )
+
     if agent == "claude" or agent.startswith("claude-"):
         # The packet is sealed and every fallible prepare step (including the
         # Claudex rollover request above) has already succeeded: only now is
@@ -3392,6 +3989,7 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
     }
     if claudex_request is not None:
         output["claudex_rollover_request"] = claudex_request
+    output["bundle_upload"] = bundle_upload
     print(json.dumps(output, indent=2))
     return 0
 
@@ -4080,6 +4678,13 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
     write_rollover_state(state_path, state_root, confirmed, already_locked=True)
+    bundle_upload = _maybe_auto_upload_bundle(
+        args,
+        repo_root=repo_root,
+        state_root=state_root,
+        agent=agent,
+        state=confirmed,
+    ) if getattr(args, "stream", None) else {"status": "not-requested"}
     print(
         json.dumps(
             {
@@ -4096,6 +4701,7 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
                 "identity_receipt_file": confirmed["replacement"]["identity_receipt_path"],
                 "old_automation_ready_to_delete": confirmed["cleanup"]["old_automation_ready_to_delete"],
                 "next_native_action": "Run native-action --action archive with authoritative idle and unpinned app evidence; unknown state preserves the predecessor.",
+                "bundle_upload": bundle_upload,
             },
             indent=2,
         )
@@ -4394,6 +5000,7 @@ def cmd_confirm_replacement(args: argparse.Namespace) -> int:
         strict_probe=probe_path,
         strict_verdict=verdict_path,
         confirmed_by=args.confirmed_by,
+        stream=getattr(args, "stream", None),
     )
     return cmd_confirm_started(confirm_args)
 
@@ -4443,6 +5050,309 @@ def cmd_audit(args: argparse.Namespace) -> int:
     except ValueError as exc:
         audit["task_identity"] = {"error": str(exc)}
     print(json.dumps(audit, indent=2))
+    return 0
+
+
+def _bundle_output_path(state_root: Path, *, agent: str, lineage_id: str, rollover_id: str, supplied: Path | None) -> Path:
+    if supplied is not None:
+        return supplied.expanduser().resolve()
+    return (
+        state_root
+        / ".agent"
+        / "thread-rollovers"
+        / agent
+        / lineage_id
+        / f"{rollover_id}.bundle.tgz"
+    )
+
+
+def cmd_export_bundle(args: argparse.Namespace) -> int:
+    try:
+        repo_root, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        state_path, state = _select_bundle_state(
+            state_root,
+            agent=agent,
+            lineage_id=args.lineage_id,
+            rollover_id=args.rollover_id,
+        )
+        stream_id = str(args.stream or "")
+        manifest, blob, secret_hits = _build_rollover_bundle(
+            repo_root,
+            state_root,
+            agent=agent,
+            state=state,
+            stream_id=stream_id,
+        )
+        output_path = _bundle_output_path(
+            state_root,
+            agent=agent,
+            lineage_id=str(manifest["lineage_id"]),
+            rollover_id=str(manifest["rollover_id"]),
+            supplied=args.file,
+        )
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        write_bytes_atomic(output_path, blob)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(json.dumps({"error": str(exc), "action": "export-bundle"}, indent=2))
+        return 2
+
+    result: dict[str, Any] = {
+        "status": "exported",
+        "agent": agent,
+        "lineage_id": manifest["lineage_id"],
+        "rollover_id": manifest["rollover_id"],
+        "generation": manifest["generation"],
+        "stream_id": stream_id,
+        "file": rel(output_path, repo_root) if output_path.is_relative_to(repo_root) else str(output_path),
+        "bytes": len(blob),
+        "bundle_sha256": manifest["bundle_sha256"],
+        "source_state": rel(state_path, state_root),
+        "upload": "not-requested",
+    }
+    for member, rule in secret_hits:
+        print(
+            f"WARNING: rollover bundle secret scan hit member={member} rule={rule}; "
+            "local bundle was written but upload was skipped.",
+            file=sys.stderr,
+        )
+    if args.upload:
+        if secret_hits:
+            result["upload"] = "skipped-secret-scan"
+        else:
+            try:
+                response = _bundle_api_upload(args, stream_id=stream_id, manifest=manifest, blob=blob)
+                result["upload"] = "uploaded"
+                result["upload_seq"] = response.get("upload_seq")
+            except (RolloverBundleAPIUnavailable, RuntimeError, ValueError) as exc:
+                result["upload"] = "skipped"
+                print(f"WARNING: rollover bundle upload skipped (fail-open): {exc}", file=sys.stderr)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 0
+
+
+def _maybe_auto_upload_bundle(
+    args: argparse.Namespace,
+    *,
+    repo_root: Path,
+    state_root: Path,
+    agent: str,
+    state: dict[str, Any],
+) -> dict[str, Any]:
+    """Best-effort prepare/confirm upload; never changes the lifecycle result."""
+    stream_id = str(getattr(args, "stream", "") or "").strip()
+    if not stream_id:
+        return {"status": "not-requested"}
+    try:
+        manifest, blob, secret_hits = _build_rollover_bundle(
+            repo_root,
+            state_root,
+            agent=agent,
+            state=state,
+            stream_id=stream_id,
+        )
+        output_path = _bundle_output_path(
+            state_root,
+            agent=agent,
+            lineage_id=str(manifest["lineage_id"]),
+            rollover_id=str(manifest["rollover_id"]),
+            supplied=None,
+        )
+        write_bytes_atomic(output_path, blob)
+        for member, rule in secret_hits:
+            print(
+                f"WARNING: rollover bundle secret scan hit member={member} rule={rule}; "
+                "local bundle was written but upload was skipped.",
+                file=sys.stderr,
+            )
+        if secret_hits:
+            return {
+                "status": "skipped-secret-scan",
+                "file": rel(output_path, repo_root) if output_path.is_relative_to(repo_root) else str(output_path),
+                "bundle_sha256": manifest["bundle_sha256"],
+            }
+        response = _bundle_api_upload(args, stream_id=stream_id, manifest=manifest, blob=blob)
+        upload_seq = response.get("upload_seq")
+        if isinstance(upload_seq, int) and upload_seq >= 0:
+            receipt_path = (
+                state_root
+                / ".agent"
+                / "thread-rollovers"
+                / agent
+                / "_bundle-receipts"
+                / f"{manifest['lineage_id']}.json"
+            )
+            write_json_atomic(
+                receipt_path,
+                {"schema": "rollover-bundle-receipt.v1", "upload_seq": upload_seq},
+            )
+        return {
+            "status": "uploaded",
+            "file": rel(output_path, repo_root) if output_path.is_relative_to(repo_root) else str(output_path),
+            "bundle_sha256": manifest["bundle_sha256"],
+            "upload_seq": upload_seq,
+        }
+    except Exception as exc:
+        print(f"WARNING: automatic rollover bundle upload skipped (fail-open): {exc}", file=sys.stderr)
+        return {"status": "skipped", "reason": str(exc)}
+
+
+def _bundle_preserve_handoff_files(
+    repo_root: Path,
+    *,
+    agent: str,
+    stream_id: str,
+    members: Mapping[str, bytes],
+) -> list[str]:
+    preserved: list[str] = []
+    candidates = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
+    for name, payload in members.items():
+        if name.startswith(".agent/") or name not in candidates:
+            continue
+        target = repo_root / name
+        if not target.is_file():
+            continue
+        installed = _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
+        if target.read_bytes() == installed:
+            continue
+        timestamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
+        superseded = target.with_name(f"{target.stem}.{timestamp}.superseded{target.suffix}")
+        suffix = 1
+        while superseded.exists():
+            superseded = target.with_name(f"{target.stem}.{timestamp}-{suffix}.superseded{target.suffix}")
+            suffix += 1
+        write_bytes_atomic(superseded, target.read_bytes())
+        preserved.append(superseded.as_posix())
+    return preserved
+
+
+def cmd_import_bundle(args: argparse.Namespace) -> int:
+    try:
+        repo_root, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
+        return 2
+
+    api_manifest: dict[str, Any] | None = None
+    try:
+        if args.file is not None:
+            blob = args.file.expanduser().resolve().read_bytes()
+        else:
+            stream_id = str(args.from_api)
+            api_manifest, blob = _bundle_api_latest(args, stream_id=stream_id, agent=agent)
+        manifest, members = _bundle_extract(blob, manifest_override=api_manifest)
+        if manifest.get("agent") != agent:
+            raise ValueError("bundle agent does not match --agent")
+        stream_id = str(manifest.get("stream_id") or "")
+        if args.from_api is not None and stream_id != str(args.from_api):
+            raise ValueError("bundle stream does not match --from-api")
+        if args.stream is not None and stream_id != str(args.stream):
+            raise ValueError("bundle stream does not match --stream")
+        if not stream_id:
+            raise ValueError("bundle stream_id is missing")
+    except RolloverBundleAPIUnavailable as exc:
+        print(f"WARNING: rollover bundle import skipped (fail-open): {exc}", file=sys.stderr)
+        print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, indent=2))
+        return 0
+    except FileNotFoundError as exc:
+        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
+        return 2
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
+        return 2
+
+    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+    remote_order = _bundle_order(manifest)
+    local_manifest = _bundle_status_manifest(state_root, agent=agent, lineage_id=lineage_id)
+    if local_manifest is not None:
+        local_members = _bundle_local_members(
+            repo_root,
+            state_root,
+            agent=agent,
+            lineage_id=lineage_id,
+            stream_id=stream_id,
+        )
+        if local_members == members and local_manifest.get("generation") == manifest.get("generation"):
+            print(
+                json.dumps(
+                    {
+                        "status": "noop",
+                        "reason": "identical bundle content",
+                        "agent": agent,
+                        "lineage_id": lineage_id,
+                        "rollover_id": manifest["rollover_id"],
+                    },
+                    indent=2,
+                )
+            )
+            return 0
+        local_order = _bundle_order(local_manifest)
+        if local_order > remote_order and not args.force:
+            print(
+                json.dumps(
+                    {
+                        "status": "refused",
+                        "error": "local rollover copy is newer; refusing to clobber it",
+                        "local": {
+                            "generation": local_order[0],
+                            "status_rank": local_order[1],
+                            "prepared_at": isoformat_z(local_order[2]),
+                            "rollover_id": local_order[3],
+                        },
+                        "remote": {
+                            "generation": remote_order[0],
+                            "status_rank": remote_order[1],
+                            "prepared_at": isoformat_z(remote_order[2]),
+                            "rollover_id": remote_order[3],
+                        },
+                    },
+                    indent=2,
+                )
+            )
+            return 2
+        if local_order == remote_order and not args.force:
+            print(
+                json.dumps(
+                    {
+                        "status": "refused",
+                        "error": "bundle order ties but content differs; refusing to choose a copy",
+                        "generation": manifest["generation"],
+                        "rollover_id": manifest["rollover_id"],
+                    },
+                    indent=2,
+                )
+            )
+            return 2
+        archived = _bundle_archive_local_lineage(
+            state_root,
+            agent=agent,
+            lineage_id=lineage_id,
+            remote_manifest=manifest,
+        )
+    else:
+        archived = None
+
+    preserved = _bundle_preserve_handoff_files(repo_root, agent=agent, stream_id=stream_id, members=members)
+    try:
+        _bundle_install(repo_root, state_root, manifest=manifest, members=members)
+        receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
+        write_json_atomic(receipt_path, {"schema": "rollover-bundle-receipt.v1", "upload_seq": int(manifest.get("upload_seq", 0))})
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
+        return 2
+    result = {
+        "status": "installed",
+        "agent": agent,
+        "lineage_id": lineage_id,
+        "rollover_id": manifest["rollover_id"],
+        "generation": manifest["generation"],
+        "stream_id": stream_id,
+        "archived": str(archived.relative_to(state_root)) if archived is not None else None,
+        "preserved_handoffs": preserved,
+        "upload_seq": manifest.get("upload_seq", 0),
+    }
+    print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -4506,7 +5416,13 @@ def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> di
 
 
 
-def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str, current_thread_id: str) -> str:
+def render_session_start_context(
+    candidate: dict[str, Any] | None,
+    *,
+    agent: str,
+    current_thread_id: str,
+    stream_id: str | None = None,
+) -> str:
     """Render the only SessionStart handoff text; shell hooks never parse leases."""
     if candidate is None or candidate.get("status") == "none":
         facts_path = ".agent/orientation-health-facts.json"
@@ -4535,18 +5451,19 @@ def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str
     thread_id = current_thread_id or "<current-codex-thread-id>"
     lineage_id = candidate["lineage_id"]
     rollover_id = candidate["rollover_id"]
+    stream_arg = f" --stream {stream_id}" if stream_id else ""
     if candidate["status"] == "resumed":
         title = "RESUMED THREAD ROLLOVER DETECTED"
     else:
         title = "PENDING THREAD ROLLOVER DETECTED"
-    lines = [title, "```bash"]
+    lines = [title, f"Replacement generation: {candidate.get('generation', 'unknown')}", "```bash"]
     if candidate["status"] == "pending_start":
         lines.append(
             f".venv/bin/python scripts/orchestration/thread_handoff.py bootstrap-replacement -a {agent} -l {lineage_id} -r {rollover_id} -t {thread_id} -e <binding>"
         )
     lines.extend(
         [
-            f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-replacement -a {agent} -l {lineage_id} -r {rollover_id}",
+            f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-replacement -a {agent} -l {lineage_id} -r {rollover_id}{stream_arg}",
             "```",
             "Fill snapshot; first confirm emits questions. Failure keeps cleanup locked.",
         ]
@@ -4718,7 +5635,12 @@ def cmd_detect(args: argparse.Namespace) -> int:
         if registry_errors:
             output["registry_errors"] = registry_errors
         print(
-            render_session_start_context(output, agent=agent, current_thread_id=args.current_thread_id)
+            render_session_start_context(
+                output,
+                agent=agent,
+                current_thread_id=args.current_thread_id,
+                stream_id=getattr(args, "stream", None),
+            )
             if args.format == "session-start"
             else json.dumps(output, indent=2)
         )
@@ -4803,6 +5725,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         "packet_agent": scan_agent,
         "lineage_id": state.get("lineage_id"),
         "rollover_id": replacement.get("rollover_id"),
+        "generation": replacement.get("generation"),
         "status": replacement.get("status"),
         "state_file": rel(path, state_root),
         "state": "live",
@@ -4828,7 +5751,12 @@ def cmd_detect(args: argparse.Namespace) -> int:
         output["registry_errors"] = registry_errors
 
     print(
-        render_session_start_context(output, agent=agent, current_thread_id=args.current_thread_id)
+        render_session_start_context(
+            output,
+            agent=agent,
+            current_thread_id=args.current_thread_id,
+            stream_id=getattr(args, "stream", None),
+        )
         if args.format == "session-start"
         else json.dumps(output, indent=2)
     )
@@ -4981,7 +5909,10 @@ def cmd_refresh_thread_lease_heartbeat(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path)
-    parser.add_argument("--monitor-base-url", default=os.environ.get("MONITOR_API_BASE_URL", DEFAULT_MONITOR_BASE_URL))
+    parser.add_argument(
+        "--monitor-base-url",
+        default=os.environ.get("LU_MONITOR_LOOPBACK", os.environ.get("MONITOR_API_BASE_URL", DEFAULT_MONITOR_BASE_URL)),
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     prepare = subparsers.add_parser("prepare", help="Prepare a rollover handoff and bootstrap prompt.")
@@ -5026,6 +5957,7 @@ def build_parser() -> argparse.ArgumentParser:
     prepare.add_argument("--context-percent", type=float)
     prepare.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)
     prepare.add_argument("--force-new-replacement", action="store_true")
+    prepare.add_argument("--stream", help="Explicit session stream id used for an optional bundle upload.")
     prepare.add_argument(
         "--migrate-v1", action="store_true", help="Explicitly migrate a v1 lease into a fresh v2 rollover."
     )
@@ -5141,6 +6073,7 @@ def build_parser() -> argparse.ArgumentParser:
     confirm.add_argument("--strict-probe", type=Path, required=True)
     confirm.add_argument("--strict-verdict", type=Path, required=True)
     confirm.add_argument("--confirmed-by", default=os.environ.get("USER", "operator"))
+    confirm.add_argument("--stream", help="Explicit session stream id used for an optional bundle upload.")
     confirm.set_defaults(func=cmd_confirm_started)
 
     resume = subparsers.add_parser(
@@ -5180,7 +6113,32 @@ def build_parser() -> argparse.ArgumentParser:
     )
     confirm_replacement.add_argument("--new-automation-id")
     confirm_replacement.add_argument("--confirmed-by", default=os.environ.get("USER", "operator"))
+    confirm_replacement.add_argument("--stream", help="Explicit session stream id used for an optional bundle upload.")
     confirm_replacement.set_defaults(func=cmd_confirm_replacement)
+
+    export_bundle = subparsers.add_parser(
+        "export-bundle",
+        help="Export one lineage rollover packet and its stream-lane handoff as a bounded bundle.",
+    )
+    export_bundle.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    export_bundle.add_argument("--lineage-id", type=argparse_lineage_id)
+    export_bundle.add_argument("--rollover-id", type=argparse_rollover_id)
+    export_bundle.add_argument("--stream", help="Explicit launcher-derived stream id for the lane handoff/API.")
+    export_bundle.add_argument("--file", type=Path, help="Write the local .tgz to this path.")
+    export_bundle.add_argument("--upload", action="store_true", help="Upload through the loopback Monitor API.")
+    export_bundle.set_defaults(func=cmd_export_bundle)
+
+    import_bundle = subparsers.add_parser(
+        "import-bundle",
+        help="Install a newer cross-host rollover bundle without silently clobbering local state.",
+    )
+    import_bundle.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    import_source = import_bundle.add_mutually_exclusive_group(required=True)
+    import_source.add_argument("--from-api", metavar="STREAM", help="Fetch the latest bundle for this stream.")
+    import_source.add_argument("--file", type=Path, help="Read a local/scp/rsync .tgz bundle.")
+    import_bundle.add_argument("--stream", help="Expected stream id for a file import.")
+    import_bundle.add_argument("--force", action="store_true", help="Archive a newer local copy before installing.")
+    import_bundle.set_defaults(func=cmd_import_bundle)
 
     check = subparsers.add_parser("check", help="Detect stale or unsafe handoff state.")
     check.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
@@ -5203,6 +6161,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     detect.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     detect.add_argument("--current-thread-id", default="")
+    detect.add_argument("--stream", help="Explicit launcher-derived stream id for the confirm/upload card.")
     detect.add_argument(
         "--task-family",
         default="",

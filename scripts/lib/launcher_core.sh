@@ -409,6 +409,31 @@ launcher_prepare_driver_identity() {
   export SESSION_HANDOFF_AGENT="$LC_DRIVER_HANDOFF"
 }
 
+launcher_import_rollover_bundle() {
+  local stream helper_root python script output rc
+  stream="$(launcher_selector_stream "$LC_EPIC" 2>/dev/null || true)"
+  case "$stream" in
+    epic:*) ;;
+    *) return 0 ;;
+  esac
+  helper_root="${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}"
+  python="$helper_root/.venv/bin/python"
+  script="$helper_root/scripts/orchestration/thread_handoff.py"
+  if [ ! -x "$python" ] || [ ! -f "$script" ]; then
+    printf 'WARNING: rollover bundle pre-lease import unavailable; continuing fail-open (helper=%s).\n' "$helper_root" >&2
+    return 0
+  fi
+  output=""
+  rc=0
+  output="$("$python" "$script" \
+    --repo-root "$helper_root" \
+    --monitor-base-url "${LU_MONITOR_LOOPBACK:-http://127.0.0.1:8765}" \
+    import-bundle --agent "$LC_DRIVER_HANDOFF" --from-api "$stream" --stream "$stream" 2>&1)" || rc=$?
+  if [ "$rc" -ne 0 ] || [[ "$output" == *WARNING:* ]]; then
+    printf 'WARNING: rollover bundle pre-lease import refused or failed (fail-open); launcher continues.\n%s\n' "$output" >&2
+  fi
+}
+
 launcher_claim_driver_lease() {
   local stream task_id instance_id
   stream="$(launcher_selector_stream "$LC_EPIC")"
@@ -694,6 +719,11 @@ launcher_main() {
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
     local canary_rc=0
     launcher_prepare_driver_identity
+    if [ "$LC_DRY_RUN" != "1" ]; then
+      # This is deliberately before adapter prelease and before any provider
+      # packet scan: every driver must see an imported packet at cold start.
+      launcher_import_rollover_bundle
+    fi
     if [ "$LC_DRY_RUN" != "1" ] && declare -F launcher_adapter_prelease >/dev/null 2>&1; then
       # Continuity refusal (rollover ambiguity / already-resumed packet) is the
       # legacy public exit 1 — NOT 5, which is reserved for transport

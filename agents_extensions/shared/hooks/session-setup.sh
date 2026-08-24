@@ -149,11 +149,20 @@ else
   fi
 fi
 
-# Interpreter for bounded session-record calls: the CANONICAL checkout owns the
+# Interpreter for bounded session-record calls: the canonical checkout owns the
 # shared venv — linked worktrees have none (formal CF r4 F001 on #5896: the
-# PROJECT_DIR default 127s every worktree session). Hermetic tests inject
-# CLAUDE_SESSION_RECORD_PYTHON explicitly instead.
-BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
+# PROJECT_DIR default 127s every worktree session). If an explicit canonical
+# root points at a linked worktree, resolve the shared interpreter from its Git
+# common directory instead of creating or looking for a worktree venv.
+SHARED_VENV_ROOT="$CANONICAL_ROOT"
+if [ ! -x "$SHARED_VENV_ROOT/.venv/bin/python" ]; then
+  SHARED_GIT_COMMON_DIR=$(_hook_deadline 2 git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [ -n "$SHARED_GIT_COMMON_DIR" ] && [ "$(basename "$SHARED_GIT_COMMON_DIR")" = ".git" ]; then
+    SHARED_VENV_ROOT=$(dirname "$SHARED_GIT_COMMON_DIR")
+  fi
+fi
+SHARED_PYTHON="$SHARED_VENV_ROOT/.venv/bin/python"
+BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$SHARED_PYTHON}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
 SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
 if ! [[ "$SESSION_START_BUDGET_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
@@ -238,7 +247,7 @@ fi
 # The resolver's own interpreter default is $PROJECT_DIR/.venv — absent in
 # linked worktrees (F001 r5 class). Point it at the canonical venv here; an
 # explicit CLAUDE_PROFILE_RESOLVER_PYTHON still wins.
-export CLAUDE_PROFILE_RESOLVER_PYTHON="${CLAUDE_PROFILE_RESOLVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
+export CLAUDE_PROFILE_RESOLVER_PYTHON="${CLAUDE_PROFILE_RESOLVER_PYTHON:-$SHARED_PYTHON}"
 # shellcheck disable=SC1090
 source "$PROFILE_RESOLVER_SH"
 if ! resolve_context_profile "$REQUESTED_PROFILE_ID" "$OBSERVED_MODEL"; then
@@ -259,7 +268,7 @@ fi
 # to Claude Code's official SessionStart id before any rollover can be requested.
 if [ -n "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID:-}" ]; then
   CLAUDEX_SUPERVISOR_SCRIPT="${CLAUDEX_SUPERVISOR_SCRIPT:-$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py}"
-  CLAUDEX_SUPERVISOR_PYTHON="${CLAUDEX_SUPERVISOR_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+  CLAUDEX_SUPERVISOR_PYTHON="${CLAUDEX_SUPERVISOR_PYTHON:-$SHARED_PYTHON}"
   if [ -z "$SESSION_ID" ] || [ ! -f "$CLAUDEX_SUPERVISOR_SCRIPT" ] || [ ! -x "$CLAUDEX_SUPERVISOR_PYTHON" ]; then
     ISSUES+=("CLAUDEX SUPERVISOR BIND FAILED: official session identity or runtime helper is unavailable.")
   else
@@ -281,7 +290,7 @@ fi
 
 # 1. Venv-missing is checked in shell (the gate itself needs the venv python);
 # the exact version pin comparison happens inside the gate, in-process.
-if [ ! -x "$CANONICAL_ROOT/.venv/bin/python" ]; then
+if [ ! -x "$SHARED_PYTHON" ]; then
   ISSUES+=("VENV MISSING: canonical .venv/bin/python not found. Recreate it with the version in .python-version.")
 fi
 
@@ -412,7 +421,7 @@ fi
 # 13. Session handoff. Claude uses the official SessionStart session id; Codex
 # retains its documented environment fallback for non-Claude fixtures.
 CURRENT_THREAD_ID="${SESSION_ID:-${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}}"
-ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"  # canonical: worktrees carry no venv (F001 r5)
+ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$SHARED_PYTHON}"  # canonical: worktrees carry no venv (F001 r5)
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
@@ -681,6 +690,15 @@ fi
 if [ ${#TASK_FAMILY_ARGS[@]} -gt 0 ]; then
   GATE_ARGS+=(--task-family "$SESSION_EPIC")
 fi
+ROLLOVER_BUNDLE_STREAM=""
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
+  && declare -f launcher_selector_stream >/dev/null 2>&1; then
+  ROLLOVER_BUNDLE_STREAM="$(launcher_selector_stream "$SESSION_EPIC" 2>/dev/null || true)"
+  case "$ROLLOVER_BUNDLE_STREAM" in
+    epic:*) GATE_ARGS+=(--import-bundle --stream "$ROLLOVER_BUNDLE_STREAM") ;;
+    *) ROLLOVER_BUNDLE_STREAM="" ;;
+  esac
+fi
 
 GATE_RC=0
 GATE_JSON=$(run_bounded 9 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
@@ -698,7 +716,8 @@ if [ "$GATE_RC" -eq 0 ] && [ -n "$GATE_JSON" ]; then
       (.thread_lease.status // ""), (.thread_lease.context // ""),
       (.thread_lease.generation // ""), (.thread_lease.takeover_banner // ""),
       (.rollover_detect.status // ""), (.rollover_detect.context // ""),
-      (.rollover_detect.detect_status // "")
+      (.rollover_detect.detect_status // ""),
+      (.rollover_import.warning // .rollover_import.error // "")
     ] | .[] | tostring, ([0] | implode)' 2>/dev/null)
   unset _gate_field
 fi
@@ -756,6 +775,9 @@ else
       fi
       ;;
   esac
+  if [ ${#GATE_FIELDS[@]} -ge 14 ]; then
+    [ -n "${GATE_FIELDS[13]}" ] && ISSUES+=("${GATE_FIELDS[13]}")
+  fi
 fi
 unset GATE_JSON GATE_FIELDS GATE_RC
 
@@ -828,7 +850,7 @@ fi
 # established thread-handoff path under the aggregate startup budget.
 if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
   && declare -f launcher_selector_stream >/dev/null 2>&1; then
-  REMOTE_EPIC_STREAM="$(launcher_selector_stream "$SESSION_EPIC" 2>/dev/null || true)"
+  REMOTE_EPIC_STREAM="$ROLLOVER_BUNDLE_STREAM"
   case "$REMOTE_EPIC_STREAM" in
     epic:*)
       REMOTE_EPIC_NUMBER="${REMOTE_EPIC_STREAM#epic:}"
@@ -841,6 +863,7 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
   esac
   unset REMOTE_EPIC_STREAM
 fi
+unset ROLLOVER_BUNDLE_STREAM
 
 # Epic assignment banner
 EPIC_BANNER=""

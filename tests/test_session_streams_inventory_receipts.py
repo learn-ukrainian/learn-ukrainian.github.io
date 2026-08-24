@@ -83,21 +83,23 @@ def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> Non
 
 def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
     migrations = load_migrations()
-    assert [m.version for m in migrations] == [1, 2, 3, 4]
+    assert [m.version for m in migrations] == [1, 2, 3, 4, 5]
     assert "inventory_receipts" in migrations[1].name
     assert "app_thread_holders" in migrations[2].name
     assert "remote_epic_lifecycle" in migrations[3].name
+    assert "rollover_bundles" in migrations[4].name
     db = SessionStreamDatabase(tmp_path / "streams.sqlite3")
     conn = db.connect()
     try:
         versions = [int(r[0]) for r in conn.execute("SELECT version FROM schema_migrations ORDER BY 1")]
-        assert versions == [1, 2, 3, 4]
+        assert versions == [1, 2, 3, 4, 5]
         for table in (
             "stream_migration_state",
             "stream_inventory_receipts",
             "legacy_import_receipts",
             "legacy_projection_receipts",
             "stream_control_events",
+            "rollover_bundles",
         ):
             row = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",

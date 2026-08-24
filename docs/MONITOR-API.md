@@ -279,6 +279,9 @@ boundary for another machine.
 | POST | `/api/epics/v1/epic:<N>/claim` | Client-supplied IDs; same IDs plus same holder replay; expired recovery increments generation and fence atomically |
 | POST | `/api/epics/v1/epic:<N>/heartbeat` | Exact fenced lease heartbeat; `409 LEASE LOST` fences the client |
 | POST | `/api/epics/v1/epic:<N>/handoff` | Appends one existing entry type with an idempotency key |
+| POST | `/api/epics/v1/epic:<N>/bundles` | Uploads one verified `rollover-bundle.v1`; loopback mutation, fenced lease, secret scan, SHA idempotency, and 4 MiB cap |
+| GET | `/api/epics/v1/epic:<N>/bundles` | Lists retained bundle manifests and receipts without blobs; optional `agent`, `lineage_id`, and `limit` |
+| GET | `/api/epics/v1/epic:<N>/bundles/latest` | Returns the newest matching manifest plus base64 blob; `agent` is required and `lineage_id` is optional |
 | POST | `/api/epics/v1/epic:<N>/release` | Exact release is idempotent; `force` requires actor host and reason |
 
 Driver leases are claimed on the API host through this surface. Remote mode is
@@ -286,6 +289,28 @@ the default; `--local` is an offline-only fallback that prints a warning and
 does not create a fleet-visible lease. A driver on any machine resumes by
 claiming the same stream, and a typed handoff is appended with
 `POST /api/epics/v1/epic:<N>/handoff`.
+
+### Rollover bundle routes
+
+Bundles are agent-to-agent, gitignored continuity artifacts. The upload body
+contains the same lease fields accepted by `heartbeat`/`handoff`, a manifest,
+and a base64 tarball. The server validates archive member fingerprints and the
+canonical `bundle_sha256`, rejects secret-pattern hits with the member and rule
+identified, and assigns a monotonic `upload_seq` from the SQLite row id. The
+same SHA re-upload returns the existing row. Retention keeps the latest five
+rows per `(stream, agent, lineage)`.
+
+Only text members are root-tokenised; the manifest's `tokenized_members` makes
+that explicit. JSON artifacts are byte-exact. `.native-intent.lock` is excluded;
+present semantic-snapshot templates, all strict JSON artifacts, identity
+receipts, and `canary-pass.json` are included. The list route omits blobs; the
+latest route returns the manifest and blob for import.
+
+All three bundle routes use the same API-host loopback boundary as claim and
+handoff. A remote machine reaches the API through its SSH tunnel; a direct
+non-loopback POST is rejected. If the API or tunnel is unavailable, launcher
+and SessionStart imports warn loudly and continue fail-open; the `--file`
+export/import path is the scp/rsync fallback.
 
 ### Registry and lease fields
 

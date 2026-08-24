@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sqlite3
 import uuid
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager, suppress
 from datetime import datetime, timedelta
 from typing import Any
@@ -35,6 +36,9 @@ from .model import (
 
 MAX_ENTRY_BYTES = 65_536
 MAX_TTL_SECONDS = 86_400
+MAX_ROLLOVER_BUNDLE_BYTES = 4 * 1024 * 1024
+ROLLOVER_BUNDLE_SCHEMA = "rollover-bundle.v1"
+ROLLOVER_BUNDLE_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 SECRET_PATTERNS = (
     ("private-key", re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC |PGP )?PRIVATE KEY-----")),
     ("credential-token", re.compile(r"(?:sk-|gh[pousr]_|AIza)[A-Za-z0-9_-]{16,}")),
@@ -1536,6 +1540,248 @@ class SessionStreamStore:
             if row is None:
                 raise SessionStreamError("entry insert did not produce a readable row")
             return self._entry_from_row(connection, row)
+
+    def upload_rollover_bundle(
+        self,
+        lease: Lease,
+        *,
+        manifest: Mapping[str, Any],
+        blob: bytes,
+        now: datetime | None = None,
+        app_proof: VerifiedAppLifecycleProof | None = None,
+    ) -> dict[str, Any]:
+        """Store one verified rollover bundle under the exact fenced lease.
+
+        This deliberately mirrors ``append_entry``'s lease and app-proof
+        contract.  Process holders use the ordinary fenced lease path;
+        app-thread holders must carry the same verified lifecycle receipt used
+        by other immutable mutations.
+        """
+        if not isinstance(manifest, Mapping):
+            raise ValueError("rollover bundle manifest must be an object")
+        if not isinstance(blob, bytes) or not blob:
+            raise ContentRejectedError("rollover bundle blob must be non-empty bytes")
+        if len(blob) > MAX_ROLLOVER_BUNDLE_BYTES:
+            raise ContentRejectedError("rollover bundle exceeds the 4 MiB cap")
+        manifest_value = dict(manifest)
+        if manifest_value.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
+            raise ValueError("rollover bundle manifest schema is invalid")
+        stream_id = validate_stream_id(lease.stream_id)
+        if manifest_value.get("stream_id") != stream_id:
+            raise ValueError("rollover bundle stream_id does not match the lease")
+        for field in ("agent", "lineage_id", "rollover_id"):
+            value = manifest_value.get(field)
+            if not isinstance(value, str) or not value or not self._identity_is_safe(value):
+                raise ValueError(f"rollover bundle {field} is malformed")
+        try:
+            generation = int(manifest_value["generation"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("rollover bundle generation is malformed") from exc
+        if generation < 1:
+            raise ValueError("rollover bundle generation must be positive")
+        if manifest_value.get("status") not in {"pending_start", "resumed", "started", "confirmed", "superseded"}:
+            raise ValueError("rollover bundle status is invalid")
+        prepared_at = manifest_value.get("prepared_at")
+        if not isinstance(prepared_at, str):
+            raise ValueError("rollover bundle prepared_at is malformed")
+        parse_timestamp(prepared_at)
+        bundle_sha256 = manifest_value.get("bundle_sha256")
+        if not isinstance(bundle_sha256, str) or not ROLLOVER_BUNDLE_SHA256_RE.fullmatch(bundle_sha256):
+            raise ValueError("rollover bundle fingerprint is malformed")
+        files = manifest_value.get("files")
+        if not isinstance(files, list) or not files:
+            raise ValueError("rollover bundle manifest has no files")
+        current_time = now or utc_now()
+        self._require_app_proof(
+            app_proof,
+            operation="append",
+            holder=lease.holder,
+            stream_id=stream_id,
+            session_id=lease.session_id,
+            lease_id=lease.lease_id,
+            generation=lease.generation,
+            fencing_token=lease.fencing_token,
+            now=current_time,
+        )
+        uploaded_at = isoformat_z(current_time)
+        manifest_json = canonical_json(manifest_value)
+        try:
+            with self._transaction(now=current_time) as connection:
+                lease_row = self._require_current_lease(connection, lease, require_valid_at=current_time)
+                existing_by_sha = connection.execute(
+                    "SELECT * FROM rollover_bundles WHERE bundle_sha256 = ?",
+                    (bundle_sha256,),
+                ).fetchone()
+                if existing_by_sha is not None:
+                    if (
+                        existing_by_sha["stream_id"] != stream_id
+                        or existing_by_sha["agent"] != manifest_value["agent"]
+                        or existing_by_sha["lineage_id"] != manifest_value["lineage_id"]
+                        or existing_by_sha["rollover_id"] != manifest_value["rollover_id"]
+                    ):
+                        raise LeaseConflictError("bundle fingerprint is already bound to another lineage")
+                    return self._rollover_bundle_payload(existing_by_sha, include_blob=True)
+                existing_by_rollover = connection.execute(
+                    "SELECT bundle_sha256 FROM rollover_bundles "
+                    "WHERE stream_id = ? AND agent = ? AND lineage_id = ? AND rollover_id = ?",
+                    (stream_id, manifest_value["agent"], manifest_value["lineage_id"], manifest_value["rollover_id"]),
+                ).fetchone()
+                if existing_by_rollover is not None:
+                    raise LeaseConflictError("rollover id already binds different immutable bundle content")
+                cursor = connection.execute(
+                    "INSERT INTO rollover_bundles("
+                    "stream_id, agent, lineage_id, generation, rollover_id, bundle_sha256, "
+                    "manifest_json, blob, uploaded_at, uploaded_by_lease_id) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        stream_id,
+                        manifest_value["agent"],
+                        manifest_value["lineage_id"],
+                        generation,
+                        manifest_value["rollover_id"],
+                        bundle_sha256,
+                        manifest_json,
+                        blob,
+                        uploaded_at,
+                        lease.lease_id,
+                    ),
+                )
+                bundle_id = int(cursor.lastrowid)
+                if app_proof is not None:
+                    event_id = self._insert_lease_event_from_row(
+                        connection,
+                        row=lease_row,
+                        event_type="appended",
+                        timestamp=uploaded_at,
+                        proof={
+                            "kind": "session_stream_rollover_bundle_upload.v1",
+                            "bundle_sha256": bundle_sha256,
+                            **self._proof_payload(app_proof),
+                        },
+                        reason="verified GUI-native rollover bundle upload",
+                    )
+                    connection.execute(
+                        "UPDATE stream_leases SET version = version + 1, last_event_id = ? WHERE stream_id = ?",
+                        (event_id, stream_id),
+                    )
+                old_rows = connection.execute(
+                    "SELECT bundle_id FROM rollover_bundles "
+                    "WHERE stream_id = ? AND agent = ? AND lineage_id = ? "
+                    "ORDER BY bundle_id DESC LIMIT -1 OFFSET 5",
+                    (stream_id, manifest_value["agent"], manifest_value["lineage_id"]),
+                ).fetchall()
+                if old_rows:
+                    connection.executemany(
+                        "DELETE FROM rollover_bundles WHERE bundle_id = ?",
+                        ((int(row["bundle_id"]),) for row in old_rows),
+                    )
+                row = connection.execute(
+                    "SELECT * FROM rollover_bundles WHERE bundle_id = ?",
+                    (bundle_id,),
+                ).fetchone()
+                if row is None:
+                    raise SessionStreamError("rollover bundle insert did not produce a readable row")
+                return self._rollover_bundle_payload(row, include_blob=True)
+        except sqlite3.IntegrityError as exc:
+            raise LeaseConflictError("rollover bundle conflicts with an existing immutable row") from exc
+
+    def list_rollover_bundles(
+        self,
+        stream_id: str,
+        *,
+        agent: str | None = None,
+        lineage_id: str | None = None,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        stream_id = validate_stream_id(stream_id)
+        if limit < 1 or limit > 100:
+            raise ValueError("rollover bundle limit must be between 1 and 100")
+        if agent is not None:
+            self._validate_identity("agent", agent)
+        if lineage_id is not None:
+            self._validate_identity("lineage_id", lineage_id)
+        with self._read_snapshot() as connection:
+            if connection.execute("SELECT 1 FROM streams WHERE stream_id = ?", (stream_id,)).fetchone() is None:
+                raise NotFoundError(f"stream not found: {stream_id}")
+            clauses = ["stream_id = ?"]
+            values: list[Any] = [stream_id]
+            if agent is not None:
+                clauses.append("agent = ?")
+                values.append(agent)
+            if lineage_id is not None:
+                clauses.append("lineage_id = ?")
+                values.append(lineage_id)
+            values.append(limit)
+            rows = connection.execute(
+                "SELECT * FROM rollover_bundles WHERE " + " AND ".join(clauses) + " "
+                "ORDER BY bundle_id DESC LIMIT ?",
+                tuple(values),
+            ).fetchall()
+            return [self._rollover_bundle_payload(row, include_blob=False) for row in rows]
+
+    def upload_bundle(
+        self,
+        lease: Lease,
+        *,
+        manifest: Mapping[str, Any],
+        blob: bytes,
+        now: datetime | None = None,
+        app_proof: VerifiedAppLifecycleProof | None = None,
+    ) -> dict[str, Any]:
+        """Compatibility name for callers that treat bundles as uploads."""
+        return self.upload_rollover_bundle(
+            lease,
+            manifest=manifest,
+            blob=blob,
+            now=now,
+            app_proof=app_proof,
+        )
+
+    def latest_rollover_bundle(
+        self,
+        stream_id: str,
+        *,
+        agent: str,
+        lineage_id: str | None = None,
+    ) -> dict[str, Any]:
+        stream_id = validate_stream_id(stream_id)
+        self._validate_identity("agent", agent)
+        if lineage_id is not None:
+            self._validate_identity("lineage_id", lineage_id)
+        with self._read_snapshot() as connection:
+            clauses = ["stream_id = ?", "agent = ?"]
+            values: list[Any] = [stream_id, agent]
+            if lineage_id is not None:
+                clauses.append("lineage_id = ?")
+                values.append(lineage_id)
+            row = connection.execute(
+                "SELECT * FROM rollover_bundles WHERE " + " AND ".join(clauses) + " "
+                "ORDER BY bundle_id DESC LIMIT 1",
+                tuple(values),
+            ).fetchone()
+            if row is None:
+                raise NotFoundError("no rollover bundle exists for the requested lineage")
+            return self._rollover_bundle_payload(row, include_blob=True)
+
+    @staticmethod
+    def _identity_is_safe(value: str) -> bool:
+        return bool(value) and len(value) <= 256 and all(char.isalnum() or char in "._:/-" for char in value)
+
+    @staticmethod
+    def _rollover_bundle_payload(row: sqlite3.Row, *, include_blob: bool) -> dict[str, Any]:
+        manifest = json.loads(str(row["manifest_json"]))
+        manifest["upload_seq"] = int(row["bundle_id"])
+        payload: dict[str, Any] = {
+            "manifest": manifest,
+            "upload_seq": int(row["bundle_id"]),
+            "bundle_sha256": str(row["bundle_sha256"]),
+            "bytes": len(row["blob"]),
+            "uploaded_at": str(row["uploaded_at"]),
+            "uploaded_by_lease_id": str(row["uploaded_by_lease_id"]),
+        }
+        if include_blob:
+            payload["blob"] = bytes(row["blob"])
+        return payload
 
     def load_digest(self, stream_id: str, *, limit: int) -> StreamDigest:
         """Load all pinned entries first, then the last N non-pinned entries."""

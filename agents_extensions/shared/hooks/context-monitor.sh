@@ -143,7 +143,23 @@ else
   HANDOFF_AGENT="claude"
 fi
 
+HANDOFF_IDENTITY_SH="${CLAUDE_HANDOFF_IDENTITY_SH:-$PROJECT_DIR/scripts/lib/handoff_identity.sh}"
+if [ -f "$HANDOFF_IDENTITY_SH" ]; then
+  # shellcheck disable=SC1090
+  source "$HANDOFF_IDENTITY_SH"
+fi
+ROLLOVER_STREAM=""
+ROLLOVER_STREAM_EPIC=""
+if [ -n "${SESSION_EPIC:-}" ] && declare -f launcher_selector_stream >/dev/null 2>&1; then
+  ROLLOVER_STREAM="$(launcher_selector_stream "$SESSION_EPIC" 2>/dev/null || true)"
+  case "$ROLLOVER_STREAM" in
+    epic:*) ROLLOVER_STREAM_EPIC="${ROLLOVER_STREAM#epic:}" ;;
+    *) ROLLOVER_STREAM=""; ROLLOVER_STREAM_EPIC="" ;;
+  esac
+fi
 PREPARE_CMD=".venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent ${HANDOFF_AGENT} --context-percent ${PCT}"
+[ -n "$ROLLOVER_STREAM" ] && PREPARE_CMD="$PREPARE_CMD --stream $ROLLOVER_STREAM --stream-epic $ROLLOVER_STREAM_EPIC"
+unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC
 BOOTSTRAP_FILE=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
 HANDOFF_FILE=".agent/${HANDOFF_AGENT}-thread-handoff.md"
 CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW}; ${USAGE_SOURCE}; capacity: ${WINDOW_PROVENANCE}]"
