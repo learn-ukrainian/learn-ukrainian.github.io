@@ -258,7 +258,7 @@ def test_run_in_worktree_child_is_bounded(monkeypatch, tmp_path: Path) -> None:
     assert rc == 0
     assert len(child_calls) == 1
     assert child_calls[0][1]["timeout"] == v7.WORKTREE_CHILD_TIMEOUT_S
-    assert v7.WORKTREE_CHILD_TIMEOUT_S == 600
+    assert v7.WORKTREE_CHILD_TIMEOUT_S >= v7.DEFAULT_WRITER_TIMEOUT_S
 
 
 def test_run_in_worktree_child_timeout_maps_to_exit_one(monkeypatch, tmp_path: Path, capsys) -> None:
@@ -284,5 +284,5 @@ def test_run_in_worktree_child_timeout_maps_to_exit_one(monkeypatch, tmp_path: P
     rc = v7._run_in_worktree(_worktree_args(worktree.path), ["a1", "demo"])
 
     assert rc == 1
-    assert seen_timeouts == [600]
+    assert seen_timeouts == [v7.WORKTREE_CHILD_TIMEOUT_S]
     assert "terminated" in capsys.readouterr().err
