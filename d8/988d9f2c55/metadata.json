@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d8988d9f2c55",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7139-empty-host-alarm",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "LICENSE-CONTENT.md",
+    "agents_extensions/codex/hooks.json",
+    "agents_extensions/shared/hooks/release-thread-lease.sh",
+    "agents_extensions/shared/hooks/session-setup.sh",
+    "docs/MONITOR-API.md",
+    "docs/runbooks/cursor-driver.md",
+    "docs/runbooks/launchd-inventory.md",
+    "scripts/api/observer_presence.py",
+    "scripts/api/occupancy.py",
+    "scripts/api/occupancy_local.py",
+    "scripts/api/occupancy_sanitize.py",
+    "scripts/api/route_contracts.py",
+    "scripts/api/telemetry/response.py",
+    "scripts/lexicon/enrich_manifest.py",
+    "scripts/lexicon/source_attribution.py",
+    "scripts/orchestration/install_mac_observer_launchd.py",
+    "scripts/orchestration/observer_heartbeat.py",
+    "scripts/orchestration/session_markers.py",
+    "scripts/rag/source_query.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/api/test_notebook_presence.py",
+    "tests/orchestration/test_notebook_observer_heartbeat.py",
+    "tests/orchestration/test_session_markers.py",
+    "tests/test_lexicon_enrich_manifest.py",
+    "tests/test_source_attribution.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d8/988d9f2c55/0/metadata.json",
+      "transcript": "/d8/988d9f2c55/0/full.jsonl",
+      "compact_transcript": "/d8/988d9f2c55/0/transcript.jsonl",
+      "content_hash": "/d8/988d9f2c55/0/content_hash.txt",
+      "prompt": "/d8/988d9f2c55/0/prompt.txt"
+    }
+  ]
+}
