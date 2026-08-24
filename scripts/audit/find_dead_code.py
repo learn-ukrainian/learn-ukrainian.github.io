@@ -33,14 +33,22 @@ def _ugrep_exclude_flags() -> list[str]:
 
 def _vulture_exclude_glob() -> str:
     """Comma-joined `*/<name>/*` globs for vulture's --exclude."""
-    return ",".join(f"*/{name}/*" for name in EXCLUDE_DIR_NAMES)
+DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 60.0
 
 
-def run_cmd(cmd, cwd=None):
+def run_cmd(cmd, cwd=None, timeout=DEFAULT_COMMAND_TIMEOUT_SECONDS):
     try:
-        res = subprocess.run(cmd, cwd=cwd, shell=isinstance(cmd, str), capture_output=True, text=True, check=False)
+        res = subprocess.run(
+            cmd,
+            cwd=cwd,
+            shell=isinstance(cmd, str),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
+        )
         return res
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
 
 

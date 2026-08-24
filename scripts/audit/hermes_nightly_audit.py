@@ -19,6 +19,9 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+DEFAULT_TRACK_AUDIT_TIMEOUT_SECONDS: float = 300.0
+DEFAULT_HERMES_TIMEOUT_SECONDS: float = 30.0
+
 
 def run_track_audit(track: str) -> dict:
     """Run track_deterministic_audit.py for a single track and return its JSON output."""
@@ -34,8 +37,41 @@ def run_track_audit(track: str) -> dict:
         "never",
     ]
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        res = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=DEFAULT_TRACK_AUDIT_TIMEOUT_SECONDS)
         return json.loads(res.stdout)
+    except subprocess.TimeoutExpired:
+        return {
+            "track": track,
+            "summary": {
+                "findings_total": 1,
+                "findings_by_severity": {
+                    "blocker": 1,
+                    "high": 0,
+                    "medium": 0,
+                    "low": 0,
+                    "info": 0,
+                },
+                "modules_selected": 0,
+                "modules_built": 0,
+                "modules_not_built": 0,
+                "skipped_checks": 0,
+            },
+            "findings": [
+                {
+                    "track": track,
+                    "module_num": None,
+                    "slug": None,
+                    "category": "process",
+                    "severity": "blocker",
+                    "file": "scripts/audit/track_deterministic_audit.py",
+                    "line": None,
+                    "message": f"Audit process timed out after {DEFAULT_TRACK_AUDIT_TIMEOUT_SECONDS}s",
+                    "evidence": f"cmd: {' '.join(cmd)}",
+                    "auto_fixable": False,
+                    "recommended_remediation_batch": "infrastructure",
+                }
+            ],
+        }
     except subprocess.CalledProcessError as e:
         # If it failed to run (e.g. exit code 1), check if we got JSON output anyway
         try:
@@ -111,7 +147,13 @@ def run_track_audit(track: str) -> dict:
 def get_hermes_insights(insights_cmd: str = "hermes") -> str:
     """Retrieve hermes insights snapshot if available, otherwise return 'insights unavailable'."""
     try:
-        res = subprocess.run([insights_cmd, "insights"], capture_output=True, text=True, check=True)
+        res = subprocess.run(
+            [insights_cmd, "insights"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=DEFAULT_HERMES_TIMEOUT_SECONDS,
+        )
         return res.stdout
     except Exception:
         return "insights unavailable"

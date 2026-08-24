@@ -63,6 +63,9 @@ def utc_timestamp() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
+
 def pull_calibration_cases(
     *,
     ref: str | None = None,
@@ -91,13 +94,20 @@ def pull_calibration_cases(
 
     if text is None:
         effective_ref = ref or PR_2006_REF
-        proc = subprocess.run(
-            ["git", "show", f"{effective_ref}:{blob}"],
-            cwd=str(project_root),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        try:
+            proc = subprocess.run(
+                ["git", "show", f"{effective_ref}:{blob}"],
+                cwd=str(project_root),
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired:
+            sys.exit(
+                f"ERROR: timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s reading {blob} from {effective_ref}.\n"
+                f"Working-tree path also missing: {project_root / blob}\n"
+            )
         if proc.returncode != 0:
             sys.exit(
                 f"ERROR: could not read {blob} from {effective_ref}.\n"

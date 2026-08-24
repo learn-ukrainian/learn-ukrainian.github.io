@@ -23,6 +23,9 @@ from scripts.build import linear_pipeline
 
 SEMINAR_LEVELS = linear_pipeline.SEMINAR_LEVELS
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_GENERATE_TIMEOUT_SECONDS: float = 60.0
+
 
 @dataclass(frozen=True, order=True)
 class ModuleTarget:
@@ -41,16 +44,21 @@ def _git_changed_files(base: str) -> list[Path]:
             ["git", "merge-base", base, "HEAD"],
             cwd=PROJECT_ROOT,
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         ).strip()
         rev_range = f"{merge_base}...HEAD"
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         rev_range = f"{base}...HEAD"
 
-    output = subprocess.check_output(
-        ["git", "diff", "--name-only", "--diff-filter=AMR", rev_range],
-        cwd=PROJECT_ROOT,
-        text=True,
-    )
+    try:
+        output = subprocess.check_output(
+            ["git", "diff", "--name-only", "--diff-filter=AMR", rev_range],
+            cwd=PROJECT_ROOT,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git diff timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
     return [PROJECT_ROOT / line for line in output.splitlines() if line]
 
 
@@ -181,6 +189,7 @@ def _run_generator(target: ModuleTarget) -> None:
         ],
         cwd=PROJECT_ROOT,
         check=True,
+        timeout=DEFAULT_GENERATE_TIMEOUT_SECONDS,
     )
 
 

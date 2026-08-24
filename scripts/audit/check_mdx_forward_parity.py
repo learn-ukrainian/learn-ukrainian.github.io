@@ -46,6 +46,8 @@ SOURCE_FILENAMES = {
 }
 IGNORED_FRONTMATTER_RE = re.compile(r"^(prev|next|pipeline|build_status):(?:\s|$)")
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 
 @dataclass(frozen=True, order=True)
 class ModuleTarget:
@@ -115,8 +117,8 @@ def _get_local_changed_files(*, cached: bool = False) -> list[Path]:
     if cached:
         cmd.append("--cached")
     try:
-        output = subprocess.check_output(cmd, cwd=PROJECT_ROOT, text=True)
-    except subprocess.CalledProcessError:
+        output = subprocess.check_output(cmd, cwd=PROJECT_ROOT, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return []
     return [PROJECT_ROOT / line for line in output.splitlines() if line]
 

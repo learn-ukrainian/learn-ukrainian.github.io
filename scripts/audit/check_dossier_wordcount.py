@@ -26,6 +26,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WORD_FLOOR = 1200
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 # Subdirs under docs/research/ that hold tooling / research notes rather than
 # curriculum dossiers. Files here are exempt from the dossier word-count floor.
@@ -86,13 +87,18 @@ def _resolve_path(path: Path) -> Path:
 
 
 def changed_paths() -> list[Path]:
-    result = subprocess.run(
-        ["git", "diff", "--name-only", "--diff-filter=AM", "origin/main...HEAD"],
-        cwd=PROJECT_ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--name-only", "--diff-filter=AM", "origin/main...HEAD"],
+            cwd=PROJECT_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        print(f"git diff timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s", file=sys.stderr)
+        raise SystemExit(124) from exc
     if result.returncode != 0:
         print(result.stderr.strip(), file=sys.stderr)
         raise SystemExit(result.returncode)

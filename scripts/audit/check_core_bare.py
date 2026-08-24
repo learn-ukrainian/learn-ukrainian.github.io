@@ -46,6 +46,8 @@ _GIT_REDIRECT_KEYS = frozenset(
     }
 )
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 
 def _clean_git_env() -> dict[str, str]:
     return {k: v for k, v in os.environ.items() if k not in _GIT_REDIRECT_KEYS}
@@ -74,12 +76,16 @@ def _git_config_cmd_prefix(repo: Path) -> list[str]:
 
 def _git_config_get(repo: Path, key: str) -> str | None:
     """Return the effective git config value for ``key``, or None if unset."""
-    proc = subprocess.run(
-        [*_git_config_cmd_prefix(repo), "config", "--get", key],
-        capture_output=True,
-        text=True,
-        env=_clean_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            [*_git_config_cmd_prefix(repo), "config", "--get", key],
+            capture_output=True,
+            text=True,
+            env=_clean_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return None
     if proc.returncode != 0:
         return None
     return proc.stdout.strip()
@@ -90,6 +96,7 @@ def _git_config_set(repo: Path, key: str, value: str) -> None:
         [*_git_config_cmd_prefix(repo), "config", key, value],
         check=True,
         env=_clean_git_env(),
+        timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
     )
 
 
@@ -119,13 +126,17 @@ def _is_bare_broken(repo: Path) -> bool:
         return True
     if _config_file_says_bare(repo):
         return True
-    proc = subprocess.run(
-        [*_git_config_cmd_prefix(repo), "rev-parse", "--is-bare-repository"],
-        capture_output=True,
-        text=True,
-        env=_clean_git_env(),
-    )
-    return proc.returncode == 0 and proc.stdout.strip().lower() == "true"
+    try:
+        proc = subprocess.run(
+            [*_git_config_cmd_prefix(repo), "rev-parse", "--is-bare-repository"],
+            capture_output=True,
+            text=True,
+            env=_clean_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+        return proc.returncode == 0 and proc.stdout.strip().lower() == "true"
+    except subprocess.TimeoutExpired:
+        return False
 
 
 def check_core_bare(repo: Path, *, fix: bool) -> tuple[bool, str]:

@@ -22,6 +22,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 PY = REPO / ".venv" / "bin" / "python"
+DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS: float = 600.0
 
 ALL_FIXTURES = [
     "vesnianky",
@@ -110,29 +111,35 @@ def _run_cell(out: Path, model: str, slug: str, arm: str) -> int:
         _log(out, f"skip {slug}/{arm} (artifact exists)")
         return 0
     _log(out, f"run {slug}/{arm}")
-    proc = subprocess.run(
-        [
-            str(PY),
-            "-m",
-            "scripts.audit.qg_bakeoff",
-            "--models",
-            model,
-            "--arm",
-            arm,
-            "--fixture",
-            slug,
-            "--out-dir",
-            str(out),
-        ],
-        cwd=str(REPO),
-        env={**os.environ, "QG_BAKEOFF": "1"},
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            [
+                str(PY),
+                "-m",
+                "scripts.audit.qg_bakeoff",
+                "--models",
+                model,
+                "--arm",
+                arm,
+                "--fixture",
+                slug,
+                "--out-dir",
+                str(out),
+            ],
+            cwd=str(REPO),
+            env={**os.environ, "QG_BAKEOFF": "1"},
+            check=False,
+            timeout=DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS,
+        )
+        rc = proc.returncode
+    except subprocess.TimeoutExpired:
+        _log(out, f"ERROR: {slug}/{arm} timed out after {DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS}s")
+        rc = 124
     _record(out, model, slug, arm)
     pause = 90 if arm == "tooled" else 60
     _log(out, f"pause {pause}s after {slug}/{arm}")
     time.sleep(pause)
-    return proc.returncode
+    return rc
 
 
 def main(argv: list[str] | None = None) -> int:

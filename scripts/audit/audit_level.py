@@ -38,6 +38,8 @@ from pathlib import Path
 
 import yaml
 
+DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
+
 
 def get_module_order_from_curriculum(level: str) -> list[str]:
     """Get canonical module order from curriculum.yaml for a level."""
@@ -212,18 +214,24 @@ def run_audit(files: list[Path], fix: bool = False, verbose: bool = False, skip_
             cmd.append("--skip-activities")
 
         # Run audit
-        if verbose:
-            print()  # Newline before verbose output
-            result = subprocess.run(cmd)
-        else:
-            result = subprocess.run(cmd, capture_output=True, text=True)
+        try:
+            if verbose:
+                print()  # Newline before verbose output
+                result = subprocess.run(cmd, timeout=DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS)
+            else:
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS)
+            rc = result.returncode
+        except subprocess.TimeoutExpired:
+            print("❌ (timed out)")
+            rc = 124
 
-        if result.returncode == 0:
+        if rc == 0:
             print("✅")
             passed += 1
             slug_results[slug] = "pass"
         else:
-            print("❌")
+            if rc != 124:
+                print("❌")
             failed += 1
             failed_modules.append(module_id)
             slug_results[slug] = "fail"

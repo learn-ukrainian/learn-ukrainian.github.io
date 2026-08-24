@@ -21,6 +21,7 @@ from scripts.agent_runtime.registry import get_agent_entry
 from scripts.build import linear_pipeline
 
 DEFAULT_WRITERS = "claude-tools,gemini-tools,codex-tools"
+DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 300.0
 PYTHON = Path(".venv/bin/python")
 V7_BUILD = Path("scripts/build/v7_build.py")
 V7_REVIEW = Path("scripts/build/v7_review.py")
@@ -158,14 +159,27 @@ def _preflight(level: str, slug: str, writers: Sequence[str]) -> list[str]:
     return errors
 
 
-def run_command(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        list(argv),
-        cwd=PROJECT_ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+def run_command(
+    argv: Sequence[str],
+    *,
+    timeout: float = DEFAULT_COMMAND_TIMEOUT_SECONDS,
+) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(
+            list(argv),
+            cwd=PROJECT_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return subprocess.CompletedProcess(
+            args=list(argv),
+            returncode=124,
+            stdout=exc.stdout or "" if isinstance(exc.stdout, str) else "",
+            stderr=f"command timed out after {timeout}s",
+        )
 
 
 def _run_or_report(label: str, argv: Sequence[str]) -> StepResult:

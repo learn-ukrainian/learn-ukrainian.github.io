@@ -46,6 +46,7 @@ from _judge_eval_lib import CYRILLIC_TOKEN_RE, UA_GEC_ANN_RE
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 TARGET_TAGS = ("F/Calque", "G/Case", "G/Gender")
 DEFAULT_TAG_LIMITS = {
@@ -622,12 +623,16 @@ def run_curation(
 
 def source_commit(ua_gec_root: Path) -> str:
     """Return the local UA-GEC git commit, or ``unknown`` if unavailable."""
-    proc = subprocess.run(
-        ["git", "-C", str(ua_gec_root), "rev-parse", "HEAD"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(ua_gec_root), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return "unknown"
     if proc.returncode != 0:
         return "unknown"
     return proc.stdout.strip() or "unknown"

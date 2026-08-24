@@ -910,19 +910,24 @@ def _load_manifest(path: Path) -> dict[str, Any]:
 
 
 GIT_SCOPE_ENV_VARS = ("GIT_COMMON_DIR", "GIT_DIR", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_WORK_TREE")
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
 def _git_show_json(ref: str, repository_path: str) -> dict[str, Any] | None:
     env = os.environ.copy()
     for name in GIT_SCOPE_ENV_VARS:
         env.pop(name, None)
-    result = subprocess.run(
-        ["git", "show", f"{ref}:{repository_path}"],
-        cwd=PROJECT_ROOT,
-        env=env,
-        capture_output=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "show", f"{ref}:{repository_path}"],
+            cwd=PROJECT_ROOT,
+            env=env,
+            capture_output=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return None
     if result.returncode != 0:
         return None
     try:

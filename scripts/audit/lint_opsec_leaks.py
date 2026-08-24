@@ -28,6 +28,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 # Regex to match IPv4 addresses: X.X.X.X where each X is 1-3 digits
 _IPV4_RE = re.compile(r"\b(?P<ip>(?:[0-9]{1,3}\.){3}[0-9]{1,3})\b")
 
@@ -230,16 +232,17 @@ def get_git_content(rel_path: str, rev: str = "") -> str | None:
             ["git", "show", git_target],
             capture_output=True,
             cwd=REPO_ROOT,
-            check=True
+            check=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
         return res.stdout.decode("utf-8", errors="ignore")
-    except (subprocess.CalledProcessError, UnicodeDecodeError):
+    except (subprocess.CalledProcessError, UnicodeDecodeError, subprocess.TimeoutExpired):
         return None
 
 
 def run_git_nul_separated(cmd: list[str]) -> list[str]:
     """Sol F003: Run git command returning NUL-separated path bytes to handle quoted Unicode paths cleanly."""
-    res = subprocess.run(cmd, capture_output=True, cwd=REPO_ROOT, check=True)
+    res = subprocess.run(cmd, capture_output=True, cwd=REPO_ROOT, check=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
     raw_paths = res.stdout.split(b"\x00")
     decoded: list[str] = []
     for raw in raw_paths:
@@ -254,7 +257,7 @@ def run_git_nul_separated(cmd: list[str]) -> list[str]:
 
 def run_git_lines(cmd: list[str]) -> list[str]:
     """Run a git command whose output is one record per line."""
-    res = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT, check=True)
+    res = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT, check=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
     return [line for line in res.stdout.splitlines() if line]
 
 
@@ -353,7 +356,14 @@ def get_files_to_check(
 
     # Feature branch diff mode
     try:
-        branch_res = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True, cwd=REPO_ROOT, check=True)
+        branch_res = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd=REPO_ROOT,
+            check=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
         curr_branch = branch_res.stdout.strip()
         if curr_branch and curr_branch != "main":
             cmd = ["git", "diff", "-z", "--name-only", "--diff-filter=ACMRT", "origin/main..HEAD"]

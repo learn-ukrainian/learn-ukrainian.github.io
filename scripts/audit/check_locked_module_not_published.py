@@ -39,6 +39,7 @@ LANDING_DOC_TRACKS = {
     "ruth",
 }
 NON_PUBLISHED_STATUSES = {"locked", "planned", "todo"}
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 MODULE_OBJECT_RE = re.compile(r"\{[^{}]*\}", re.DOTALL)
 PROP_RE = re.compile(r"""\b(?P<name>slug|status)\s*:\s*["'](?P<value>[^"']+)["']""")
 DRAFT_TRUE_RE = re.compile(r"^draft:\s*true\s*(?:#.*)?$", re.IGNORECASE)
@@ -202,7 +203,7 @@ def affected_scope(paths: list[Path]) -> CheckScope:
 
 
 def _git_output(args: list[str]) -> str:
-    return subprocess.check_output(["git", *args], cwd=PROJECT_ROOT, text=True)
+    return subprocess.check_output(["git", *args], cwd=PROJECT_ROOT, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
 
 
 def get_changed_files(base: str) -> list[Path]:

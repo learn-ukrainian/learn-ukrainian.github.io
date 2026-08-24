@@ -28,13 +28,19 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 
+DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
+DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
 
-def _run_gh(args: list[str], check: bool = True) -> str:
+
+def _run_gh(args: list[str], check: bool = True, timeout: float = DEFAULT_GH_TIMEOUT_SECONDS) -> str:
     """Run a gh CLI command and return stdout."""
     result = subprocess.run(
         ["gh", *args],
-        capture_output=True, text=True, check=check,
+        capture_output=True,
+        text=True,
+        check=check,
         cwd=str(PROJECT_ROOT),
+        timeout=timeout,
     )
     return result.stdout.strip()
 
@@ -93,22 +99,27 @@ def _find_module_md(slug: str, level: str) -> Path | None:
     return None
 
 
-def _run_audit(md_path: Path) -> tuple[bool, str]:
+def _run_audit(md_path: Path, timeout: float = DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS) -> tuple[bool, str]:
     """Run audit_module.py and return (all_passed, output_text)."""
-    result = subprocess.run(
-        [VENV_PYTHON, str(PROJECT_ROOT / "scripts" / "audit_module.py"), str(md_path)],
-        capture_output=True, text=True,
-        cwd=str(PROJECT_ROOT),
-    )
-    output = result.stdout + result.stderr
-    # Check for overall pass — audit_module prints "PASS" or all gates show ✅
-    all_passed = result.returncode == 0 and "FAIL" not in output.upper().split("GATE")[-1:]
-    # More reliable: check if any ❌ appears
-    if "❌" in output:
-        all_passed = False
-    if "✅" in output and "❌" not in output:
-        all_passed = True
-    return all_passed, output
+    try:
+        result = subprocess.run(
+            [VENV_PYTHON, str(PROJECT_ROOT / "scripts" / "audit_module.py"), str(md_path)],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            timeout=timeout,
+        )
+        output = result.stdout + result.stderr
+        # Check for overall pass — audit_module prints "PASS" or all gates show ✅
+        all_passed = result.returncode == 0 and "FAIL" not in output.upper().split("GATE")[-1:]
+        # More reliable: check if any ❌ appears
+        if "❌" in output:
+            all_passed = False
+        if "✅" in output and "❌" not in output:
+            all_passed = True
+        return all_passed, output
+    except subprocess.TimeoutExpired:
+        return False, f"audit_module.py timed out after {timeout}s"
 
 
 def _close_issue(number: int, comment: str) -> None:
