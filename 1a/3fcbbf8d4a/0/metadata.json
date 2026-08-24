@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1a3fcbbf8d4a",
+  "session_id": "fleet-765cff823ce74902bd738554d7934a9b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T08:41:46.427385Z",
+  "branch": "agy/launcher-flake-7209",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_launcher_contract.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "1b325e260202",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T08:41:46.421345Z",
+    "agent_lines": 43,
+    "agent_removed": 27,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 43,
+    "total_lines_changed": 70,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

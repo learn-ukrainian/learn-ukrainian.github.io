@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1a3fcbbf8d4a",
+  "strategy": "manual-commit",
+  "branch": "agy/launcher-flake-7209",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_launcher_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/1a/3fcbbf8d4a/0/metadata.json",
+      "transcript": "/1a/3fcbbf8d4a/0/full.jsonl",
+      "compact_transcript": "/1a/3fcbbf8d4a/0/transcript.jsonl",
+      "content_hash": "/1a/3fcbbf8d4a/0/content_hash.txt",
+      "prompt": "/1a/3fcbbf8d4a/0/prompt.txt"
+    }
+  ]
+}
