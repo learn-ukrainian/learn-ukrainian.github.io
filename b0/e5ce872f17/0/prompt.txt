@@ -1,0 +1,53 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/monitor-7182-family2-fixes
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: PR #7278 (#7182 PR-B family 2) — close the two cross-family BLOCKERS and make the sweep see the board producer (epic #7177).
+
+Evidence rule (#M-4): back every claim with a command you ran. Commit on the attached branch `cursor/monitor-7182-burndown-family2`
+(no push credentials — main pushes). Ruff on EVERY changed .py (scripts AND tests). Before finishing run the repo-wide guards
+(tests/test_lint_test_assertions.py tests/api/test_import_pinning.py tests/test_subprocess_timeout_guard.py), `tests/api` in full,
+and the sweep serial + `-n 4 --basetemp=/tmp/<x>`.
+
+## Blockers (review of record, Codex seat; main re-probed both unmocked — they are real)
+1. `GET /api/fleet/facade/board` still leaks: `scripts/api/fleet_router.py:562-574` returns the unfiltered board and
+   `scripts/fleet_comms/cold_start_board.py:175-221` emits `db_path` (main's unmocked probe: 200 with an absolute `…/comms.sqlite3`).
+   The sweep did not catch it because `tests/api/opsec_sweep/test_opsec_route_sweep.py:237` monkeypatches
+   `fleet_router.build_cold_start_board` with a fixture stub, and `tests/test_fleet_observer_api.py:212-216` does the same. Removing the
+   `fleet-facade-db-paths` row made the sweep false-green on a real leak.
+2. `comms.v2` is not atomic: legacy HTTP collectors in `scripts/api/comms_router.py:1837-1871` (`payload["db_path"] = str(MESSAGE_DB)`
+   ×3) and the CLI collectors in `scripts/fleet_comms/cli.py:218-254,277-373` still append `db_path`, contradicting the bumped contracts
+   (`route_contracts.py:360-372`) and the "done" manifest row (`docs/MONITOR-API.md:157-164`).
+
+## Outcome
+- `cold_start_board.py` emits `store` descriptors (via `scripts/fleet_comms/opsec_store.py` — the single producer) instead of any path;
+  every DB branch. `fleet_router` board route shape follows. Consumers of the board (dashboards, CLI, tests) updated atomically.
+- Legacy collectors in `comms_router.py` and `cli.py` stop emitting `db_path` (use the same descriptor); find every route that serves
+  those collectors and assert absence on each.
+- **Seam honesty:** the sweep fixture must exercise the REAL `build_cold_start_board` against fixture roots (point its plane root / broker
+  DB resolution at the fixture store; keep the network/subprocess denial) instead of substituting a stub — so the board's real shape is
+  scanned. Same for `tests/test_fleet_observer_api.py:212-216`: keep at least one test that runs the real producer and asserts no `db_path`.
+  If the real producer needs a seam, seam the PATH RESOLUTION, never the output shape.
+- Table: if a producer cannot be fixed in this PR, re-add its row with owner/reason/expiry — do not leave a leak untabled and unseen.
+
+## Mutation checks (report the output)
+(a) re-add `db_path` to `cold_start_board` → a test fails (name it); (b) restore the fixture stub for `build_cold_start_board` → the
+seam-honesty assertion fails.
+
+## Constraints
+Fenced: `.github/workflows/ci.yml`, `scripts/ci/*`, `session_streams_router.py`, `repository_authority.py`, orient code, `opsec_scan.py`,
+the sweep skip list. Do not touch family-1 rows or the occupancy/workers canary rows.
+
+## Report
+Commit SHA(s), routes touched with before/after field names, mutation-check output, passing lines for every suite above.
+
+## Research registry classification
+Monitor API OPSEC field-shape fix — no research dimension; pointer-free by deliberate classification.

@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b0e5ce872f17",
+  "session_id": "fleet-b3c6470c932f4267a54a2465d2270570",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T23:03:23.264223Z",
+  "branch": "cursor/monitor-7182-burndown-family2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/comms_router.py",
+    "scripts/fleet_comms/cli.py",
+    "scripts/fleet_comms/cold_start_board.py",
+    "scripts/fleet_comms/opsec_store.py",
+    "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/test_comms_plane_status_api.py",
+    "tests/test_fleet_comms_cli.py",
+    "tests/test_fleet_observer_api.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "6627bc7234d4",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T23:03:23.256722Z",
+    "agent_lines": 311,
+    "agent_removed": 39,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 311,
+    "total_lines_changed": 350,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
