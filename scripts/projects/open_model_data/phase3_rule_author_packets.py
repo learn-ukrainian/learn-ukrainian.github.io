@@ -39,6 +39,7 @@ SCHEMA_PATH = CONTRACTS / "phase3_rule_author_packet_bundle_v1.schema.json"
 CLEARANCE_SCHEMA_PATH = CONTRACTS / "phase3_heldout_partition_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_packets.py"
 IMPLEMENTATION_VERSION = "phase3_rule_author_packet_compiler_v1"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 PHASE3_V2_CONTRACT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 PHASE3_V2_1_AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
 PHASE3_V2_1_COMBINED_CONTRACT_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
@@ -168,11 +169,15 @@ def _output_is_private(path: Path) -> None:
         relative = resolved.relative_to(ROOT)
     except ValueError:
         return
-    ignored = subprocess.run(
-        ["git", "-C", str(ROOT), "check-ignore", "-q", "--", str(relative)],
-        check=False,
-        capture_output=True,
-    )
+    try:
+        ignored = subprocess.run(
+            ["git", "-C", str(ROOT), "check-ignore", "-q", "--", str(relative)],
+            check=False,
+            capture_output=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        require(False, "packet output path is not ignored by Git")
     require(ignored.returncode == 0, "packet output path is not ignored by Git")
 
 

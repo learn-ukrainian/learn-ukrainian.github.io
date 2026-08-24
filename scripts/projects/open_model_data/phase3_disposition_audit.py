@@ -55,6 +55,7 @@ SQUASH_SUBJECT = re.compile(r"\(#[1-9][0-9]*\)$")
 ENTROPY_CONTRACT_VERSION = "phase3_common_audit_entropy_v1"
 ORIGIN_MAIN_REF = "origin/main"
 AUDIT_KINDS = frozenset({"source_disposition", "textbook_nonhit", "pravopys_delta"})
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
 class AuditError(ValueError):
@@ -184,8 +185,9 @@ def _git(repo_root: Path, arguments: Sequence[str], *, text: bool = True) -> str
             check=False,
             capture_output=True,
             text=text,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
-    except OSError as exc:
+    except (OSError, subprocess.TimeoutExpired) as exc:
         raise AuditError(f"cannot execute git for entropy binding: {exc}") from exc
     require(completed.returncode == 0, "cannot verify origin/main entropy binding")
     return completed.stdout

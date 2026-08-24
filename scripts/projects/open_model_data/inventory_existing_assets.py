@@ -31,6 +31,7 @@ LEDGER_NAME = "recovery_ledger_v1.jsonl"
 SUMMARY_NAME = "aggregate_summary_v1.json"
 SCHEMA_VERSION = "existing_asset_inventory_v1"
 SUMMARY_SCHEMA_VERSION = "existing_asset_inventory_summary_v1"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 ORIGIN_CLASSES = (
     "human_authored_source",
@@ -942,13 +943,14 @@ def collect_repo_records(repo_root: Path) -> list[dict[str, Any]]:
     return records
 
 
-def _run_git(repo_root: Path, *arguments: str) -> str:
+def _run_git(repo_root: Path, *arguments: str, timeout: float = DEFAULT_GIT_TIMEOUT_SECONDS) -> str:
     result = subprocess.run(
         ["git", *arguments],
         cwd=repo_root,
         check=True,
         capture_output=True,
         text=True,
+        timeout=timeout,
     )
     return result.stdout
 

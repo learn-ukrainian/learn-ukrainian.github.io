@@ -27,6 +27,7 @@ RECEIPT_FILE = "source-universe-freeze-receipt.json"
 STRUCTURAL_FILE = "lexical_structural_freeze_v1.json"
 GIT_SHA40 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 LEDGER_FAMILIES = frozenset({
     "antonenko_style_guide",
@@ -298,8 +299,9 @@ def _git_bytes(repo_root: Path, arguments: Sequence[str], label: str) -> bytes:
             ["git", "-C", str(repo_root), *arguments],
             check=False,
             capture_output=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
-    except OSError as exc:
+    except (OSError, subprocess.TimeoutExpired) as exc:
         raise IntegrityError(f"unable to run git for {label}") from exc
     require(result.returncode == 0, f"git verification failed: {label}")
     return result.stdout

@@ -48,6 +48,7 @@ V2_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
 PRIVATE_FILENAME = "ua_gec_complete_context_v1.jsonl"
 PRIVATE_EXCLUSIONS_FILENAME = "ua_gec_complete_context_exclusions_v1.jsonl"
 SCHEMA_VERSION = "phase3_ua_gec_complete_context_receipt_v1"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 IMPLEMENTATION_VERSION = "phase3_ua_gec_complete_context_v1"
 UA_GEC_REPOSITORY = "https://github.com/grammarly/ua-gec"
 UA_GEC_COMMIT = "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6"
@@ -135,8 +136,9 @@ def _checkout_commit(checkout: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise UaGecCompleteContextError("cannot verify UA-GEC checkout commit") from exc
     commit = result.stdout.strip()
     require(commit == UA_GEC_COMMIT, "UA-GEC checkout is not at the pinned commit")
@@ -146,8 +148,9 @@ def _checkout_commit(checkout: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise UaGecCompleteContextError("cannot verify UA-GEC checkout cleanliness") from exc
     require(not status_result.stdout, "UA-GEC checkout has modified tracked files")
     return commit

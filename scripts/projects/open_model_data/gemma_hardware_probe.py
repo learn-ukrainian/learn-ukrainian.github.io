@@ -77,6 +77,10 @@ SNAPSHOT_FILES = {
     "tokenizer.json": (32169626, "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"),
     "tokenizer_config.json": (3082, "9f4fec4b1dc6ecddf8f4a92e9caea5971c0e67d81309f3f9066a2bee8c362633"),
 }
+DEFAULT_NVIDIA_SMI_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_HF_CLI_TIMEOUT_SECONDS: float = 60.0
+DEFAULT_HF_LAUNCH_TIMEOUT_SECONDS: float = 120.0
+DEFAULT_HF_JOBS_WAIT_TIMEOUT_SECONDS: float = 5400.0
 
 
 class HardwareProbeError(RuntimeError):
@@ -286,13 +290,17 @@ def parse_job_id(output: str) -> str:
 
 
 def require_hf_auth(hf_cli: str) -> None:
-    auth_probe = subprocess.run(
-        [hf_cli, "auth", "whoami"],
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        text=True,
-    )
+    try:
+        auth_probe = subprocess.run(
+            [hf_cli, "auth", "whoami"],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=DEFAULT_HF_CLI_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise HardwareProbeError("Hugging Face authentication is not configured") from exc
     if auth_probe.returncode:
         raise HardwareProbeError("Hugging Face authentication is not configured")
 
@@ -309,22 +317,26 @@ def _parse_json_array(payload: str, *, label: str) -> list[dict[str, Any]]:
 
 def require_no_provider_attempt(*, hf_cli: str, authorization_sha256: str) -> None:
     """Fail before launch if the provider already knows this authorization."""
-    result = subprocess.run(
-        [
-            hf_cli,
-            "jobs",
-            "list",
-            "--all",
-            "--limit",
-            "0",
-            "--label",
-            f"authorization_sha256={authorization_sha256}",
-            "--json",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            [
+                hf_cli,
+                "jobs",
+                "list",
+                "--all",
+                "--limit",
+                "0",
+                "--label",
+                f"authorization_sha256={authorization_sha256}",
+                "--json",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_HF_CLI_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise HardwareProbeError("cannot establish the provider-side paid-attempt state") from exc
     if result.returncode:
         raise HardwareProbeError("cannot establish the provider-side paid-attempt state")
     jobs = _parse_json_array(result.stdout, label="provider paid-attempt query")
@@ -334,7 +346,16 @@ def require_no_provider_attempt(*, hf_cli: str, authorization_sha256: str) -> No
 
 def launch_job(command: Sequence[str]) -> str:
     require_hf_auth(command[0])
-    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    try:
+        result = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_HF_LAUNCH_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise HardwareProbeError(f"Hugging Face Job launch failed: {exc}") from exc
     if result.returncode:
         message = result.stderr.strip() or result.stdout.strip() or "unknown launch error"
         raise HardwareProbeError(f"Hugging Face Job launch failed: {message}")
@@ -509,30 +530,37 @@ def collect_job(
     if not hf_cli.is_file() or not os.access(hf_cli, os.X_OK):
         raise HardwareProbeError(f"Hugging Face CLI is not executable: {hf_cli}")
     require_hf_auth(str(hf_cli))
-    wait_result = subprocess.run(
-        [str(hf_cli), "jobs", "wait", "--timeout", "75m", job_id],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    inspect_result = subprocess.run(
-        [str(hf_cli), "jobs", "inspect", "--json", job_id],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    stats_result = subprocess.run(
-        [str(hf_cli), "jobs", "stats", job_id],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    logs_result = subprocess.run(
-        [str(hf_cli), "jobs", "logs", job_id],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        wait_result = subprocess.run(
+            [str(hf_cli), "jobs", "wait", "--timeout", "75m", job_id],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_HF_JOBS_WAIT_TIMEOUT_SECONDS,
+        )
+        inspect_result = subprocess.run(
+            [str(hf_cli), "jobs", "inspect", "--json", job_id],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_HF_CLI_TIMEOUT_SECONDS,
+        )
+        stats_result = subprocess.run(
+            [str(hf_cli), "jobs", "stats", job_id],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_HF_CLI_TIMEOUT_SECONDS,
+        )
+        logs_result = subprocess.run(
+            [str(hf_cli), "jobs", "logs", job_id],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_HF_CLI_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise HardwareProbeError("provider evidence collection failed") from exc
     output_directory.mkdir(parents=True, exist_ok=True)
     write_atomic_bytes(output_directory / "provider-wait.stdout.txt", wait_result.stdout.encode("utf-8"))
     write_atomic_bytes(output_directory / "provider-wait.stderr.txt", wait_result.stderr.encode("utf-8"))
@@ -644,12 +672,16 @@ def _cuda_evidence() -> tuple[str, str]:
     import torch
 
     runtime = str(torch.version.cuda or "unknown")
-    result = subprocess.run(
-        ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_NVIDIA_SMI_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise HardwareProbeError("cannot resolve the NVIDIA driver version") from exc
     driver = result.stdout.strip()
     if result.returncode or not driver:
         raise HardwareProbeError("cannot resolve the NVIDIA driver version")
@@ -1392,9 +1424,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             "status": "authorized_snapshot_verified_before_provider_call",
         }
         write_atomic(global_claim_path, {**ready_claim, "claim_scope": "host_global_all_worktrees"})
-        write_atomic(ATTEMPT_LEDGER_PATH, ready_claim)
-        result = subprocess.run(command, check=False, capture_output=True, text=True)
-        if result.returncode:
+        try:
+            result = subprocess.run(
+                command,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=DEFAULT_HF_LAUNCH_TIMEOUT_SECONDS,
+            )
+            failed = result.returncode != 0
+        except (OSError, subprocess.TimeoutExpired):
+            failed = True
+            result = None
+        if failed:
             failure = {
                 **prepared,
                 "launch_started_at": launch_started_at,
@@ -1406,6 +1448,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             write_atomic(ATTEMPT_LEDGER_PATH, failure)
             write_atomic(global_claim_path, {**failure, "claim_scope": "host_global_all_worktrees"})
             raise HardwareProbeError("Hugging Face Job launch failed after the paid attempt was claimed")
+        assert result is not None
         job_id = parse_job_id(f"{result.stdout}\n{result.stderr}")
         launch_receipt = {
             **prepared,

@@ -42,6 +42,7 @@ MATERIALIZATION_COUNT = 67041
 LABEL_PROMPT_SHA256 = "d607e77fd20ef037385bce365f8854fe51e308ce3b05cafc71ea795e32e37195"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
+DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 ROLE_ID = "heldout_label_reviewer"
 TASK_ID = "phase3-v2-1-heldout-label-review"
 ACTOR = {
@@ -1464,7 +1465,16 @@ def run_cycle002(
             "preserve row order, and copy every unit_id, unit_sha256, and document identity exactly."
         ).encode("utf-8")
     payload = prompt + retry_note + b"\n\n" + canonical_json(packet).encode("utf-8")
-    completed = subprocess.run(command, input=payload, capture_output=True, check=False)
+    try:
+        completed = subprocess.run(
+            command,
+            input=payload,
+            capture_output=True,
+            check=False,
+            timeout=DEFAULT_BRIDGE_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise HeldoutLabelTransportError("cycle002 Codex bridge invocation failed") from exc
     require(completed.returncode == 0, "cycle002 Codex bridge invocation failed")
     return _cycle002_ingest_bytes(
         manifest_path=manifest_path,

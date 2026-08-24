@@ -29,6 +29,9 @@ SHA256 = re.compile(r"^[a-f0-9]{64}$")
 SHA1 = re.compile(r"^[a-f0-9]{40}$")
 
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
+
 class AuditEntropyError(ValueError):
     """An entropy receipt is incomplete, mutable, or not first-contained."""
 
@@ -65,26 +68,39 @@ def _validate_schema(value: Mapping[str, Any], definition: str, label: str) -> d
 
 
 def _git(repo_root: Path, *args: str, check: bool = True) -> bytes:
-    completed = subprocess.run(
-        ["git", "-C", str(repo_root), *args],
-        check=False,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-    )
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(repo_root), *args],
+            check=False,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        if check:
+            raise AuditEntropyError("required local git object is unavailable") from exc
+        return b""
     if check and completed.returncode != 0:
         raise AuditEntropyError("required local git object is unavailable")
     return completed.stdout if completed.returncode == 0 else b""
 
 
 def _git_ok(repo_root: Path, *args: str) -> bool:
-    return subprocess.run(
-        ["git", "-C", str(repo_root), *args],
-        check=False,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    ).returncode == 0
+    try:
+        return (
+            subprocess.run(
+                ["git", "-C", str(repo_root), *args],
+                check=False,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            ).returncode
+            == 0
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
 
 
 def _safe_repo_path(value: str) -> str:

@@ -264,6 +264,7 @@ ACCEPTED_PUBLIC_RECEIPT_MODES = frozenset({PRIVATE_FILE_MODE, TRACKED_PUBLIC_FIL
 CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 DRIVE_IDENTITY_TIMEOUT_SECONDS = 120.0
 DRIVE_IDENTITY_POLL_SECONDS = 2.0
+DEFAULT_XATTR_TIMEOUT_SECONDS: float = 30.0
 RIGHTS_STATEMENT = "public institutional access; author copyright; reuse license not stated"
 PROVISIONAL_NARROW_CELLS = ["morphemics", "word_formation"]
 SECONDARY_OBSERVATION_CELLS = ["semantics", "phraseology"]
@@ -482,8 +483,9 @@ def _drive_item_id(path: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_XATTR_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise DriveIdentityPendingError("artifact lacks Google Drive provider identity") from exc
     value = probe.stdout.strip()
     require(value, "artifact has an empty Google Drive provider identity")

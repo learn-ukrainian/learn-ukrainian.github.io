@@ -43,6 +43,8 @@ ISO_8601_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 GIT_SHA40 = re.compile(r"^[0-9a-f]{40}$")
 FREEZER_IMPLEMENTATION_VERSION = "phase3_source_universe_freezer_v2"
 FREEZER_SCRIPT_PATH = "scripts/projects/open_model_data/phase3_source_universe.py"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS: float = 30.0
 
 SOURCES_FAMILIES = {
     "lexical_balla_en_uk": "balla_en_uk",
@@ -118,13 +120,15 @@ def _verify_merged_main_binding(merged_main_sha: str) -> dict[str, str]:
             ["git", "-C", str(ROOT), "rev-parse", "origin/main"],
             check=False,
             capture_output=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
         merged_script = subprocess.run(
             ["git", "-C", str(ROOT), "show", f"{merged_main_sha}:{FREEZER_SCRIPT_PATH}"],
             check=False,
             capture_output=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
-    except OSError as exc:
+    except (OSError, subprocess.TimeoutExpired) as exc:
         raise FreezeError(f"unable to verify merged-main binding: {exc}") from exc
     require(remote_head.returncode == 0, "unable to resolve origin/main for freeze binding")
     require(remote_head.stdout.decode("ascii").strip() == merged_main_sha, "freeze SHA is not the current origin/main head")
@@ -329,7 +333,15 @@ def _r2u_units(path: Path, family: Mapping[str, Any]) -> list[dict[str, Any]]:
 def extract_pdf_pages(path: Path, pdftotext: Path) -> list[str]:
     """Return normalized page strings without retaining or publishing them."""
     require(pdftotext.is_file() and os.access(pdftotext, os.X_OK), f"missing pdftotext executable: {pdftotext}")
-    result = subprocess.run([str(pdftotext), "-layout", str(path), "-"], check=False, capture_output=True)
+    try:
+        result = subprocess.run(
+            [str(pdftotext), "-layout", str(path), "-"],
+            check=False,
+            capture_output=True,
+            timeout=DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise FreezeError(f"pdftotext failed for {path.name}: {exc}") from exc
     require(result.returncode == 0, f"pdftotext failed for {path.name}")
     text = result.stdout.decode("utf-8", errors="strict")
     pages = [unicodedata.normalize("NFC", page).replace("\r\n", "\n").strip() for page in text.split("\f")]

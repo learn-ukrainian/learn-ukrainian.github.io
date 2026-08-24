@@ -25,6 +25,7 @@ from scripts.projects.open_model_data import phase3_functional_roles as function
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 SCHEMA_PATH = DATA / "contracts/phase3_v2_compatibility_matrix_v1.schema.json"
 MATRIX_PATH = DATA / "evidence/phase3_v2_compatibility_matrix_v1.json"
 SCRIPT_PATH = ROOT / "scripts/projects/open_model_data/phase3_v2_compatibility.py"
@@ -158,12 +159,16 @@ def read_json(path: Path) -> dict[str, Any]:
 
 
 def _tracked_evidence_paths() -> set[str]:
-    result = subprocess.run(
-        ["git", "-C", str(ROOT), "ls-files", "data/projects/open_model_data/evidence/**"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "data/projects/open_model_data/evidence/**"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise CompatibilityError("cannot enumerate tracked evidence") from exc
     require(result.returncode == 0, "cannot enumerate tracked evidence")
     paths = {line for line in result.stdout.splitlines() if line and line != MATRIX_LOGICAL_PATH}
     for logical_path in (

@@ -49,9 +49,9 @@ def _authorization() -> dict:
         },
         "probe_id": probe.PROBE_ID,
         "runner": {
-            "bytes": 58901,
+            "bytes": 60839,
             "logical_path": "scripts/projects/open_model_data/gemma_hardware_probe.py",
-            "sha256": "bd8f973570140b32e7e3c8f74f80f905dea4afd02cb09f2061b4f13213e32504",
+            "sha256": "0a62badd81177f9fc247fdd94bc8005538ae52371dd91ffa3345378867868853",
         },
         "schema_version": "gemma_hardware_probe_authorization_v1",
     }

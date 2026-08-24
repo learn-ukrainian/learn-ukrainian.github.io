@@ -38,6 +38,7 @@ OUTSIDER_INPUT_SCHEMA_VERSION = "phase3_outsider_reproduction_input_manifest_v1"
 EVALUATION_CYCLE_ID = "phase3-v2-1-evaluation-cycle-001"
 FIXED_RELEASE_TASK_ID = "phase3-v2-1-fixed-release-freeze"
 SCORER_ACTION_KIND = "score_fixed_release_against_sealed_heldout"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 OUTSIDER_ACTION_KIND = "fresh_worktree_byte_identical_reproduction"
 SHA256_RE = re.compile(r"[a-f0-9]{64}")
 GIT_SHA_RE = re.compile(r"[a-f0-9]{40}")
@@ -122,8 +123,9 @@ def _verify_outsider_commit(artifact_root: Path, commit_sha: str) -> None:
             check=False,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
-    except OSError as exc:
+    except (OSError, subprocess.TimeoutExpired) as exc:
         raise EvaluationReproductionError("cannot inspect artifact-root Git commit") from exc
     require(completed.returncode == 0, "artifact root is not a local Git worktree")
     require(completed.stdout.strip() == commit_sha, "artifact root HEAD does not match outsider worktree commit")
