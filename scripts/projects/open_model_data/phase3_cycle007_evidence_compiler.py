@@ -41,6 +41,7 @@ from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlparse
 
+from scripts.api.occupancy_local import occupancy_marker_scope
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
@@ -1753,7 +1754,7 @@ def _walk_private_modes(root: Path) -> None:
         contract.require(mode == expected, f"sidecar output permission drift: {path}")
 
 
-def compile_sidecar_bundle(
+def _compile_sidecar_bundle(
     packets: Sequence[Sequence[Mapping[str, Any]]],
     client: SourcesClient,
     output_dir: Path,
@@ -1891,6 +1892,32 @@ def compile_sidecar_bundle(
             import shutil
 
             shutil.rmtree(staging, ignore_errors=True)
+
+
+def compile_sidecar_bundle(
+    packets: Sequence[Sequence[Mapping[str, Any]]],
+    client: SourcesClient,
+    output_dir: Path,
+    *,
+    residual_lane_packets: Sequence[bool] | None = None,
+    packet_bindings: Sequence[Mapping[str, Any] | None] | None = None,
+    source_package_binding: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Compile a fixture/bare bundle while publishing a short-lived burn marker."""
+    with occupancy_marker_scope(
+        kind="service",
+        agent="evidence-compiler",
+        task_id="phase3-cycle007-evidence-compiler",
+        epic="phase3-cycle007",
+    ):
+        return _compile_sidecar_bundle(
+            packets,
+            client,
+            output_dir,
+            residual_lane_packets=residual_lane_packets,
+            packet_bindings=packet_bindings,
+            source_package_binding=source_package_binding,
+        )
 
 
 def _empty_bundle_aggregate() -> dict[str, Any]:

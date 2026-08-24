@@ -543,7 +543,7 @@ function renderOccupancy(data) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
     const occupants = listValue(host.occupants);
-    const idleState = host.status === 'unavailable' ? 'unknown' : (host.idle_or_empty ? 'idle' : 'active');
+    const idleState = host.burn_state || (host.status === 'unavailable' ? 'unknown' : (host.idle_or_empty ? 'idle' : 'active'));
     let utilText = '—';
     if (host.status !== 'unavailable') {
       const parts = [];
@@ -552,13 +552,20 @@ function renderOccupancy(data) {
       if (Array.isArray(host.loadavg) && host.loadavg.length) parts.push(`Load ${host.loadavg[0]}`);
       if (parts.length) utilText = parts.join(' · ');
     }
-    if (!occupants.length) {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
-      continue;
-    }
-    occupants.forEach(item => {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
+    const sourceRows = Object.entries(objectValue(host.burn_sources)).map(([source, detail]) => {
+      const sourceState = detail && ['active', 'clear', 'unknown'].includes(detail.state) ? detail.state : 'unknown';
+      const rawAge = detail && Number(detail.observation_age_s);
+      const ageText = Number.isFinite(rawAge) && rawAge >= 0 ? `${Math.round(rawAge * 100) / 100}s` : '—';
+      return `<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>source</td><td class="mono">—</td><td class="mono">${escapeHtml(source)}</td><td class="mono">—</td><td>${pill(sourceState)} <span class="muted mono">${escapeHtml(ageText)}</span></td></tr>`;
     });
+    if (!occupants.length && !sourceRows.length) {
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+    } else {
+      occupants.forEach(item => {
+        rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
+      });
+      rows.push(...sourceRows);
+    }
   }
   document.getElementById('occupancy-content').innerHTML = table(
     ['Host', 'Probe', 'Burn', 'Utilization', 'Kind', 'Agent', 'Task', 'Epic', 'Status'],

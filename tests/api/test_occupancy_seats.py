@@ -32,7 +32,9 @@ def _client() -> TestClient:
 @pytest.fixture(autouse=True)
 def _isolate_local_occupants(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
-    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(tmp_path / "no-markers"))
+    marker_root = tmp_path / "no-markers"
+    marker_root.mkdir()
+    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(marker_root))
     monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
     monkeypatch.delenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
