@@ -87,6 +87,7 @@ from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
     CORRECTION_DICTIONARIES_LABEL,
     DAVYDOV_LABEL,
+    E2U_LABEL,
     ESUM_LABEL,
     GOROH_LABEL,
     GRINCHENKO_LABEL,
@@ -237,6 +238,9 @@ _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = BALLA_LABEL
 _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
 _GOROH_TRANSLATION_SOURCE = GOROH_LABEL
+_E2U_TRANSLATION_SOURCE = E2U_LABEL
+_E2U_DELAY_SECONDS = float(os.environ.get("LEXICON_E2U_DELAY", "0.34"))
+_E2U_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup)"
 _SLOVNYK_BASE = "https://slovnyk.me"
 # v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
 # written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
@@ -328,6 +332,7 @@ _SYNONYM_LABEL_RE = re.compile(
 )
 
 _last_slovnyk_fetch = 0.0
+_last_e2u_fetch = 0.0
 _stressifier: Any | None = None
 
 # Same-sense A1 allowlist. A synonym is emitted only when it is both present in
@@ -1516,6 +1521,15 @@ def _polite_slovnyk_delay() -> None:
         if elapsed < _SLOVNYK_DELAY_SECONDS:
             time.sleep(_SLOVNYK_DELAY_SECONDS - elapsed)
     _last_slovnyk_fetch = time.monotonic()
+
+
+def _polite_e2u_delay() -> None:
+    global _last_e2u_fetch
+    if _last_e2u_fetch:
+        elapsed = time.monotonic() - _last_e2u_fetch
+        if elapsed < _E2U_DELAY_SECONDS:
+            time.sleep(_E2U_DELAY_SECONDS - elapsed)
+    _last_e2u_fetch = time.monotonic()
 
 
 def _parse_retry_after(value: str | None) -> float | None:
@@ -6069,8 +6083,9 @@ def _clean_ukreng_gloss(candidate: str) -> str | None:
     cleaned = clean_html_entities(candidate)
     cleaned = re.sub(r"\b(?:also|fig|figurative|literally|lit)\.?\b", " ", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\(\s*(?:pl|sg|plural|singular)\.?\s*\)", " ", cleaned, flags=re.IGNORECASE)
-    cleaned = re.sub(r"\s+", " ", cleaned).strip(" \t\r\n.,;:!?()[]{}«»\"“”")
+    cleaned = re.sub(r"\s+", " ", cleaned).strip(" \t\r\n.,;:!?()[]{}«»\"“”▪•–—·*~")
     cleaned = re.sub(r"^(?:to|a|an|the)\s+", "", cleaned, flags=re.IGNORECASE)
+    cleaned = cleaned.strip(" \t\r\n.,;:!?()[]{}«»\"“”▪•–—·*~")
     # A sense boundary the chunker cannot split on (no preceding ")" before the
     # next "2)") leaves the next sense's number glued to the gloss tail
     # («амброзія міф. ambrosia 2) бот. ragweed» -> "ambrosia 2"). Strip a
@@ -6325,6 +6340,192 @@ def _goroh_translation(lemma: str) -> dict[str, object] | None:
     return None
 
 
+_E2U_REVERSE_POS_MAP: dict[str, str] = {
+    "n": "noun",
+    "noun": "noun",
+    "імен": "noun",
+    "ім": "noun",
+    "ч": "noun",
+    "ж": "noun",
+    "с": "noun",
+    "чол": "noun",
+    "жін": "noun",
+    "сер": "noun",
+    "v": "verb",
+    "vb": "verb",
+    "verb": "verb",
+    "дієсл": "verb",
+    "дієслово": "verb",
+    "infinitive": "verb",
+    "adj": "adj",
+    "a": "adj",
+    "adjective": "adj",
+    "прикм": "adj",
+    "прикметник": "adj",
+    "adv": "adv",
+    "adverb": "adv",
+    "присл": "adv",
+    "прислівник": "adv",
+}
+
+
+def _normalize_e2u_uk_headword(hw: str) -> str:
+    """Normalize a Ukrainian headword from e2u (strip stress, parenthetical morphology, expand ||, casefold)."""
+    cleaned = _strip_stress(hw)
+    cleaned = re.sub(r"\([^)]*\)", " ", cleaned)
+    cleaned = cleaned.replace("||", "")
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned.casefold()
+
+
+def _extract_e2u_uk_glosses(raw_translation: str, *, limit: int = 6) -> list[str]:
+    """Extract English glosses from a UK-headword translation text."""
+    text = clean_html_entities(str(raw_translation or "")).strip()
+    text = re.sub(r"<[^>]+>", " ", text)
+    if not text:
+        return []
+    first_latin = _LATIN_RE.search(text)
+    if not first_latin:
+        return []
+    english_part = text[first_latin.start() :]
+    first_cyrillic = _CYRILLIC_RE.search(english_part)
+    if first_cyrillic:
+        english_part = english_part[: first_cyrillic.start()]
+    english_part = re.sub(r"\([^)]*\)", " ", english_part)
+    english_part = re.split(r"\s+[—–-]\s+", english_part, maxsplit=1)[0]
+    out: list[str] = []
+    seen: set[str] = set()
+    for chunk in re.split(r";|\n", english_part):
+        chunk = re.sub(r"^\s*\d+[\).]\s*", "", chunk.strip())
+        for candidate in re.split(r",|/|\bor\b", chunk, flags=re.IGNORECASE):
+            candidate = re.sub(r"^(?:[a-zA-Z]{1,6}\.\s*)+", "", candidate.strip())
+            candidate = re.sub(
+                r"^(?:[mfnvd]|adj|adv|prep|conj|interj|phr)\b[\s:.-]*",
+                "",
+                candidate.strip(),
+                flags=re.IGNORECASE,
+            )
+            gloss = _clean_ukreng_gloss(candidate)
+            if not gloss or not _is_learner_english_text(gloss):
+                continue
+            key = gloss.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(gloss)
+            if len(out) >= limit:
+                return out
+    return out
+
+
+def _e2u_extract_row_pos(text: str) -> str | None:
+    """Extract and normalize POS tag from an e2u translation string or None if unmapped."""
+    cleaned = clean_html_entities(text)
+    match = re.search(
+        r"\b(n|noun|імен|ім|ч|ж|с|чол|жін|сер|v|vb|verb|дієсл|дієслово|adj|a|adjective|прикм|прикметник|adv|adverb|присл|прислівник)\b\.?",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    if match:
+        tag = match.group(1).lower()
+        return _E2U_REVERSE_POS_MAP.get(tag)
+    return None
+
+
+@functools.cache
+def query_e2u_uk_en(lemma: str) -> list[dict[str, str]]:
+    """Wrapper around rag.source_query.e2u_translate to support caching and unit test mocking."""
+    if _phase1_offline_mode():
+        return []
+
+    try:
+        _polite_e2u_delay()
+        from scripts.rag.source_query import e2u_translate
+
+        headers = {"User-Agent": _E2U_USER_AGENT}
+        return e2u_translate(lemma, exact=False, headers=headers) or []
+    except Exception:
+        return []
+
+
+def _e2u_translation(lemma: str, *, entry_pos: object = None) -> dict[str, object] | None:
+    """English translations for a Ukrainian lemma via e2u.org.ua (#4387)."""
+    # Step 1 & 2: Preferred UK-headword exact match across all variants
+    for variant in _split_lemma_variants(lemma):
+        rows = query_e2u_uk_en(variant)
+        if not rows:
+            continue
+        variant_key = _strip_stress(variant).strip().casefold()
+        uk_glosses: list[str] = []
+        seen: set[str] = set()
+        for row in rows:
+            hw = str(row.get("headword") or "")
+            if not _CYRILLIC_RE.search(hw):
+                continue
+            if _normalize_e2u_uk_headword(hw) != variant_key:
+                continue
+            for gloss in _extract_e2u_uk_glosses(str(row.get("translation") or "")):
+                key = gloss.casefold()
+                if key not in seen:
+                    seen.add(key)
+                    uk_glosses.append(gloss)
+                    if len(uk_glosses) >= 6:
+                        break
+            if len(uk_glosses) >= 6:
+                break
+        if uk_glosses:
+            block: dict[str, object] = {
+                "en": uk_glosses[:6],
+                "source": _E2U_TRANSLATION_SOURCE,
+            }
+            e2u_url = f"https://e2u.org.ua/s?w={quote(variant, safe='')}&dicts=all"
+            attach_official_url(block, mirror_url=e2u_url, word=variant)
+            return block
+
+    # Step 4: EN reverse match only if UK-headword exact produced nothing
+    target_pos = (
+        _E2U_REVERSE_POS_MAP.get(_lookup_key(str(entry_pos or "")))
+        or _MANIFEST_POS_TO_VESUM_POS.get(_lookup_key(str(entry_pos or "")))
+    )
+    for variant in _split_lemma_variants(lemma):
+        rows = query_e2u_uk_en(variant)
+        if not rows:
+            continue
+        distinct_en_headwords: dict[str, str] = {}
+        for row in rows:
+            hw = str(row.get("headword") or "").strip()
+            # Must be EN headword: no Cyrillic, has Latin
+            if not hw or _CYRILLIC_RE.search(hw) or not _LATIN_RE.search(hw):
+                continue
+            translation_text = clean_html_entities(str(row.get("translation") or ""))
+            # Must contain Ukrainian token as a whole word
+            if not _contains_whole_token(translation_text, variant):
+                continue
+            # POS filter: if target_pos is present and row has POS, check if they agree
+            if target_pos:
+                row_pos = _e2u_extract_row_pos(translation_text)
+                if row_pos and row_pos != target_pos:
+                    continue
+            clean_hw = _clean_ukreng_gloss(hw) or hw
+            if not clean_hw or not _is_learner_english_text(clean_hw):
+                continue
+            key = clean_hw.casefold()
+            if key not in distinct_en_headwords:
+                distinct_en_headwords[key] = clean_hw
+
+        if len(distinct_en_headwords) == 1:
+            unique_headword = next(iter(distinct_en_headwords.values()))
+            block = {
+                "en": [unique_headword],
+                "source": _E2U_TRANSLATION_SOURCE,
+            }
+            e2u_url = f"https://e2u.org.ua/s?w={quote(variant, safe='')}&dicts=all"
+            attach_official_url(block, mirror_url=e2u_url, word=variant)
+            return block
+
+    return None
+
+
 def _translation(
     conn: sqlite3.Connection,
     lemma: str,
@@ -6343,7 +6544,8 @@ def _translation(
     exact Ukrainian token resolves to one unique English headword that matches an
     existing learner-gloss hint from the source entry. When slovnyk.me has a cached or
     fetched ukreng entry, that is used next. When all previous sources miss, fall back
-    to goroh.pp.ua translation (#6876). Returns up to six glosses.
+    to goroh.pp.ua translation (#6876). When goroh misses, fall back to e2u.org.ua
+    translation (#4387). Returns up to six glosses.
     """
     for variant in _split_lemma_variants(lemma):
         rows = _dmklinger_lookup(conn, _dmklinger_key(variant))
@@ -6382,6 +6584,9 @@ def _translation(
     goroh_translation = _goroh_translation(lemma)
     if goroh_translation:
         return goroh_translation
+    e2u_translation = _e2u_translation(lemma, entry_pos=entry_pos)
+    if e2u_translation:
+        return e2u_translation
 
     for variant in _split_lemma_variants(lemma):
         curated = _CURATED_LEARNER_TRANSLATIONS.get(_lookup_key(variant).casefold())

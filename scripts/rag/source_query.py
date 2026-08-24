@@ -919,7 +919,11 @@ def r2u_translate(russian_word: str) -> list[dict[str, str]]:
 E2U_BASE = "https://e2u.org.ua"
 
 
-def e2u_translate(english_word: str, exact: bool = True) -> list[dict[str, str]]:
+def e2u_translate(
+    english_word: str,
+    exact: bool = True,
+    headers: dict[str, str] | None = None,
+) -> list[dict[str, str]]:
     """Look up English→Ukrainian translation on e2u.org.ua.
 
     Uses the /s endpoint (?w=word). 331,723 entries across general, IT,
@@ -929,9 +933,13 @@ def e2u_translate(english_word: str, exact: bool = True) -> list[dict[str, str]]
         english_word: English word or phrase to look up.
         exact: If True, only return entries whose headword starts with the
                search word (filters out compound-word noise).
+        headers: Optional HTTP headers for the request.
     """
     try:
-        r = _get(f"{E2U_BASE}/s", params={"w": english_word, "dicts": "all"}, timeout=20)
+        kwargs: dict[str, Any] = {}
+        if headers:
+            kwargs["headers"] = headers
+        r = _get(f"{E2U_BASE}/s", params={"w": english_word, "dicts": "all"}, timeout=20, **kwargs)
         if r.status_code == 404:
             return []
         r.raise_for_status()
