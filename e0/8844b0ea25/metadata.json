@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e08844b0ea25",
+  "strategy": "manual-commit",
+  "branch": "agy/dispatch-forward-env-7230",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e0/8844b0ea25/0/metadata.json",
+      "transcript": "/e0/8844b0ea25/0/full.jsonl",
+      "compact_transcript": "/e0/8844b0ea25/0/transcript.jsonl",
+      "content_hash": "/e0/8844b0ea25/0/content_hash.txt",
+      "prompt": "/e0/8844b0ea25/0/prompt.txt"
+    }
+  ]
+}
