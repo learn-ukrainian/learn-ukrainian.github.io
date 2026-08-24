@@ -586,6 +586,20 @@ def _read_state(path: Path) -> dict[str, Any] | None:
     return _hydrate_read_only_checkout_snapshots(state)
 
 
+def _state_file_unparseable(path: Path) -> bool:
+    """True when a state file exists on disk but cannot be parsed to a dict."""
+    return path.is_file() and _read_state_json(path) is None
+
+
+def _bound_task_state_unparseable_reason(path: Path) -> str | None:
+    """Return a refusal reason when a layout-bound state file is corrupt."""
+    for task_id in _task_status_candidates_for_worktree(path):
+        state_path = _state_path(task_id)
+        if _state_file_unparseable(state_path):
+            return f"unparseable task state for task-id={task_id}"
+    return None
+
+
 def _pid_alive(pid: int) -> bool:
     """Check if a PID is currently alive via signal-0 probe.
 
@@ -2320,6 +2334,10 @@ def _branch_holder_activity_reason(
     if not candidate_task_ids:
         return "holder is outside the dispatch layout"
 
+    unparseable = _bound_task_state_unparseable_reason(path)
+    if unparseable is not None:
+        return unparseable
+
     try:
         from scripts.orchestration import reap_worktrees
 
@@ -2373,6 +2391,9 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
         return False, "dirty"
     if not _worktree_matches_origin_branch(path, branch):
         return False, "HEAD != origin/<branch>"
+    unparseable = _bound_task_state_unparseable_reason(path)
+    if unparseable is not None:
+        return False, unparseable
     task_id, task_state = _task_state_for_worktree(path)
     activity = _branch_holder_activity_reason(
         path,
@@ -2417,7 +2438,9 @@ def _release_stale_branch_holders(
             released.append(path)
             continue
         # No --force: if the tree went dirty after the cleanliness check
-        # (TOCTOU), git refuses removal and we leave the holder mounted (#5708 CF).
+        # (dirty-TOCTOU), or a process adopted the holder as cwd after the
+        # live-CWD probe (live-cwd TOCTOU — accepted residual), git refuses
+        # removal and we leave the holder mounted (#5708 CF, #7242).
         try:
             proc = subprocess.run(
                 ["git", "worktree", "remove", str(path)],
@@ -5063,8 +5086,12 @@ def _record_worktree_prep_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
-) -> None:
-    """Persist a terminal failed task record when worktree provisioning is refused."""
+) -> bool:
+    """Persist a terminal failed task record when worktree provisioning is refused.
+
+    Returns True when a record was written. Refuses to overwrite an existing
+    running/spawning record (pre-write re-check closes the guard→write race).
+    """
     if str(_REPO_ROOT / "scripts") not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
@@ -5132,7 +5159,12 @@ def _record_worktree_prep_failure(
         failed_state["harness"] = requested_harness
     if lifecycle_carrier is not None:
         failed_state["task_lifecycle"] = lifecycle_carrier
-    _write_state_atomic(_state_path(task_id), failed_state)
+    state_path = _state_path(task_id)
+    existing = _read_state(state_path)
+    if existing is not None and existing.get("status") in ("running", "spawning"):
+        return False
+    _write_state_atomic(state_path, failed_state)
+    return True
 
 
 # ---------------------------------------------------------------------------

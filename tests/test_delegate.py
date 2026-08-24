@@ -9381,3 +9381,98 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     assert state["returncode_reason"] == "worktree preparation failed"
     assert "could not fetch origin/non-existent-base-branch" in (state["last_error"] or "")
     assert state["finished_at"] is not None
+
+
+# --- Issue #7242: Branch-holder release hardening ---
+
+
+def test_branch_holder_refuses_unparseable_bound_task_state(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#7242: exists-but-unparseable bound state must refuse release (P0-reaper posture)."""
+    from scripts.orchestration import reap_worktrees
+
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "corrupt-7242"
+    branch = "codex/corrupt-7242"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    monkeypatch.setattr(delegate.subprocess, "run", base_stub)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+
+    corrupt_path = delegate._state_path("codex-corrupt-7242")
+    corrupt_path.parent.mkdir(parents=True, exist_ok=True)
+    corrupt_path.write_text("{not valid json", encoding="utf-8")
+
+    releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
+
+    assert releasable is False
+    assert reason == "unparseable task state for task-id=codex-corrupt-7242"
+
+    # Mutation check: bypassing the guard must falsely treat corrupt state as absent.
+    original_unparseable_check = delegate._bound_task_state_unparseable_reason
+    monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
+    releasable_broken, reason_broken = delegate._stale_branch_holder_releasable(occupied, branch)
+    assert releasable_broken is True, (
+        "mutation check failed: without unparseable guard corrupt state must not read as releasable"
+    )
+    assert "task record absent" in reason_broken
+
+    # Restore and confirm refusal again.
+    monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", original_unparseable_check)
+    releasable_restored, reason_restored = delegate._stale_branch_holder_releasable(occupied, branch)
+    assert releasable_restored is False
+    assert reason_restored == "unparseable task state for task-id=codex-corrupt-7242"
+
+
+def test_record_worktree_prep_failure_refuses_clobber_running_record(tmp_tasks_dir, monkeypatch):
+    """#7242: prep-failure record must not overwrite a concurrent running task."""
+    path = delegate._state_path("prep-clobber-7242")
+    original = {
+        "task_id": "prep-clobber-7242",
+        "status": "running",
+        "pid": os.getpid(),
+        "receipt": "do-not-clobber-prep-failure",
+    }
+    delegate._write_state_atomic(path, original)
+
+    wrote = delegate._record_worktree_prep_failure(
+        task_id="prep-clobber-7242",
+        run_nonce="nonce-7242",
+        attribution=type("Attr", (), {"initiator": "test", "source": "test"})(),
+        agent="cursor",
+        mode="workspace-write",
+        prompt="prep failure probe",
+        error=RuntimeError("simulated worktree prep failure"),
+    )
+
+    assert wrote is False
+    assert delegate._read_state(path) == original
+
+    # Mutation check: bypassing the live-record guard must clobber running state.
+    original_read_state = delegate._read_state
+    monkeypatch.setattr(delegate, "_read_state", lambda _path: None)
+    wrote_broken = delegate._record_worktree_prep_failure(
+        task_id="prep-clobber-7242",
+        run_nonce="nonce-7242-broken",
+        attribution=type("Attr", (), {"initiator": "test", "source": "test"})(),
+        agent="cursor",
+        mode="workspace-write",
+        prompt="prep failure probe",
+        error=RuntimeError("simulated worktree prep failure"),
+    )
+    assert wrote_broken is True
+    clobbered = json.loads(path.read_text(encoding="utf-8"))
+    assert clobbered["status"] == "failed", "mutation check failed: guard must block clobber of running record"
+
+    # Restore and confirm the live record is preserved again.
+    monkeypatch.setattr(delegate, "_read_state", original_read_state)
+    delegate._write_state_atomic(path, original)
+    wrote_restored = delegate._record_worktree_prep_failure(
+        task_id="prep-clobber-7242",
+        run_nonce="nonce-7242-restored",
+        attribution=type("Attr", (), {"initiator": "test", "source": "test"})(),
+        agent="cursor",
+        mode="workspace-write",
+        prompt="prep failure probe",
+        error=RuntimeError("simulated worktree prep failure"),
+    )
+    assert wrote_restored is False
+    assert delegate._read_state(path) == original
