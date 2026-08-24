@@ -316,11 +316,33 @@ def test_delegate_adapter_liveness_matrix(tmp_path: Path) -> None:
     tasks.mkdir()
     now = datetime.now(UTC)
     cases = [
-        ("spawning.json", {"task_id": "spawning-1", "agent": "cursor", "status": "spawning", "started_at": now.isoformat()}, "starting"),
-        ("live.json", {"task_id": "live-1", "agent": "cursor", "status": "running", "pid": 1, "started_at": now.isoformat()}, "live"),
-        ("zombie.json", {"task_id": "zombie-1", "agent": "cursor", "status": "running", "pid": 999999, "started_at": now.isoformat()}, "zombie"),
+        (
+            "spawning.json",
+            {"task_id": "spawning-1", "agent": "cursor", "status": "spawning", "started_at": now.isoformat()},
+            "starting",
+        ),
+        (
+            "live.json",
+            {"task_id": "live-1", "agent": "cursor", "status": "running", "pid": 1, "started_at": now.isoformat()},
+            "live",
+        ),
+        (
+            "zombie.json",
+            {
+                "task_id": "zombie-1",
+                "agent": "cursor",
+                "status": "running",
+                "pid": 999999,
+                "started_at": now.isoformat(),
+            },
+            "zombie",
+        ),
         ("done.json", {"task_id": "done-1", "agent": "cursor", "status": "done", "started_at": now.isoformat()}, None),
-        ("failed.json", {"task_id": "failed-1", "agent": "cursor", "status": "failed", "started_at": now.isoformat()}, None),
+        (
+            "failed.json",
+            {"task_id": "failed-1", "agent": "cursor", "status": "failed", "started_at": now.isoformat()},
+            None,
+        ),
     ]
     for name, payload, _expected in cases:
         (tasks / name).write_text(json.dumps(payload), encoding="utf-8")
@@ -335,6 +357,19 @@ def test_delegate_adapter_liveness_matrix(tmp_path: Path) -> None:
 
 
 def test_driver_hostless_lease_unattributed_bucket(tmp_path: Path) -> None:
+    db = _driver_lease_db(tmp_path)
+    expires = (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
+    heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    _insert_driver_lease(db, holder_host_id=None, heartbeat=heartbeat, expires=expires, instance_id="inst-alpha")
+    _, unattributed = collect_mod.collect_driver_workers(db_path=db)
+    assert len(unattributed) == 1
+    assert unattributed[0].row.id == "inst-alpha"
+    payload = workers_payload(session_db=db, host_id=UNATTRIBUTED_HOST_ID)
+    host = _host_by_id(payload, UNATTRIBUTED_HOST_ID)
+    assert host["reason"] == "lease has no host claim"
+
+
+def _driver_lease_db(tmp_path: Path) -> Path:
     db = tmp_path / "streams.db"
     conn = sqlite3.connect(db)
     conn.executescript(
@@ -359,28 +394,101 @@ def test_driver_hostless_lease_unattributed_bucket(tmp_path: Path) -> None:
         );
         """
     )
-    expires = (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
-    heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
-    conn.execute(
-        "INSERT INTO sessions VALUES ('epic:7177', 'sess-1', 'open')"
-    )
+    conn.execute("INSERT INTO sessions VALUES ('epic:7177', 'sess-1', 'open')")
+    conn.commit()
+    conn.close()
+    return db
+
+
+def _insert_driver_lease(
+    db: Path,
+    *,
+    holder_host_id: str | None,
+    heartbeat: str,
+    expires: str,
+    instance_id: str = "inst-alpha",
+    stream_id: str = "epic:7177",
+    session_id: str = "sess-1",
+) -> None:
+    conn = sqlite3.connect(db)
     conn.execute(
         """
         INSERT INTO stream_leases VALUES (
-            'epic:7177', 'sess-1', 'active', 'claude', 'claude-tools',
-            'inst-alpha', 'task-1', NULL, ?, ?
+            ?, ?, 'active', 'claude', 'claude-tools',
+            ?, 'task-1', ?, ?, ?
         )
         """,
-        (heartbeat, expires),
+        (stream_id, session_id, instance_id, holder_host_id, heartbeat, expires),
     )
     conn.commit()
     conn.close()
-    _, unattributed = collect_mod.collect_driver_workers(db_path=db)
+
+
+@pytest.mark.parametrize("holder_host_id", [None, "", "local"])
+def test_driver_missing_host_claim_unattributed_bucket(
+    tmp_path: Path,
+    holder_host_id: str | None,
+) -> None:
+    db = _driver_lease_db(tmp_path)
+    expires = (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
+    heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    suffix = holder_host_id if holder_host_id is not None else "null"
+    instance_id = f"inst-{suffix}"
+    _insert_driver_lease(
+        db,
+        holder_host_id=holder_host_id,
+        heartbeat=heartbeat,
+        expires=expires,
+        instance_id=instance_id,
+    )
+    attributed, unattributed = collect_mod.collect_driver_workers(db_path=db)
+    assert attributed == []
     assert len(unattributed) == 1
-    assert unattributed[0].row.id == "inst-alpha"
-    payload = workers_payload(session_db=db, host_id=UNATTRIBUTED_HOST_ID)
+    assert unattributed[0].row.id == instance_id
+    payload = workers_payload(session_db=db)
     host = _host_by_id(payload, UNATTRIBUTED_HOST_ID)
     assert host["reason"] == "lease has no host claim"
+    worker_ids = {row["id"] for row in host["workers"]}
+    assert worker_ids == {instance_id}
+    assert payload["counts"]["live"] == 1
+
+
+def test_driver_opaque_host_claim_not_unattributed(tmp_path: Path) -> None:
+    db = _driver_lease_db(tmp_path)
+    expires = (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
+    heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    _insert_driver_lease(
+        db,
+        holder_host_id="host-job",
+        heartbeat=heartbeat,
+        expires=expires,
+        instance_id="inst-real",
+    )
+    attributed, unattributed = collect_mod.collect_driver_workers(db_path=db)
+    assert unattributed == []
+    assert len(attributed) == 1
+    assert attributed[0].host_id == "host-job"
+    assert attributed[0].row.id == "inst-real"
+    payload = workers_payload(session_db=db)
+    assert UNATTRIBUTED_HOST_ID not in {host["host_id"] for host in payload["hosts"]}
+
+
+def test_driver_local_host_id_fails_without_host_claim_normalization(tmp_path: Path) -> None:
+    """Mutation guard: treating 'local' as a real host drops the lease from unattributed."""
+    db = _driver_lease_db(tmp_path)
+    expires = (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
+    heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    _insert_driver_lease(
+        db,
+        holder_host_id="local",
+        heartbeat=heartbeat,
+        expires=expires,
+        instance_id="inst-local",
+    )
+    _, unattributed = collect_mod.collect_driver_workers(db_path=db)
+    assert len(unattributed) == 1
+    broken = [item for item in unattributed if item.host_id == "local"]
+    assert broken == []
 
 
 def test_related_links_equal_instance_id(tmp_path: Path) -> None:
@@ -447,9 +555,7 @@ def test_related_links_equal_instance_id(tmp_path: Path) -> None:
 
 
 def test_observer_adapter_identity() -> None:
-    upsert_presence(
-        PresenceRequest(agent="cursor", task_id="observe-1", status="working", epic="7177")
-    )
+    upsert_presence(PresenceRequest(agent="cursor", task_id="observe-1", status="working", epic="7177"))
     rows = collect_mod.collect_observer_workers()
     assert len(rows) == 1
     assert rows[0].row.id == "cursor"

@@ -593,6 +593,9 @@ function renderWorkers(data) {
     if (workersStatus === 'unreported') {
       banners.push(`<div class="context-muted">Workers unknown for ${escapeHtml(hostId)} — reporter has not published a v2 workers block.</div>`);
     }
+    if (hostId === 'unattributed' && host.reason) {
+      banners.push(`<div class="context-muted">${escapeHtml(hostId)} — ${escapeHtml(host.reason)} (launcher <span class="mono">local</span> is not a host).</div>`);
+    }
     const workers = listValue(host.workers);
     if (!workers.length) {
       rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
