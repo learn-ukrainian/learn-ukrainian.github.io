@@ -13,6 +13,7 @@ from unittest.mock import patch
 import pytest
 
 import scripts.delegate as delegate
+from scripts.orchestration import job_host_exec
 from tests.test_delegate import _init_git_repo_for_test, _seed_read_only_checkout_fixture
 
 SYNTHETIC_TASK_RECORD_COUNT = 500
@@ -380,6 +381,7 @@ def test_dispatch_survives_runtime_tmp_backfill_write_failure(
     monkeypatch,
 ):
     """Dispatch must proceed when orphan-sweep marker backfill is best-effort."""
+    monkeypatch.setenv(job_host_exec.ENV_ALLOW_NOTEBOOK, "1")
     _seed_legacy_running_lease(tmp_path, tmp_tasks_dir)
     original_write = delegate._write_runtime_tmp_task_id_marker
 
