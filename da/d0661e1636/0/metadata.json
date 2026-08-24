@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "dad0661e1636",
+  "session_id": "fleet-420f0fc87a344e1eb3e51748e780917f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T09:04:26.992215Z",
+  "branch": "agy/timeout-burndown-7213-s5",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/orchestration/curriculum_lifecycle_pilot.py",
+    "scripts/orchestration/dispatch_settle.py",
+    "scripts/orchestration/handoff_ready.py",
+    "scripts/orchestration/install_archived_thread_cleanup_launchd.py",
+    "scripts/orchestration/install_mac_observer_launchd.py",
+    "scripts/orchestration/install_worktree_cleanup_launchd.py",
+    "scripts/orchestration/integration_sweep.py",
+    "scripts/orchestration/job_host_exec.py",
+    "scripts/orchestration/orchestrator_control.py",
+    "scripts/orchestration/reaper_lifecycle.py",
+    "scripts/orchestration/task_closeout.py",
+    "scripts/orchestration/task_lifecycle.py",
+    "tests/orchestration/test_orchestration_timeouts.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "b88c9d9018d1",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T09:04:26.986639Z",
+    "agent_lines": 839,
+    "agent_removed": 87,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 839,
+    "total_lines_changed": 926,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
