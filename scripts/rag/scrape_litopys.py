@@ -199,12 +199,16 @@ class HTMLTextExtractor(HTMLParser):
 
 def fetch_page(url: str) -> str:
     """Fetch a page from litopys.org.ua handling windows-1251 encoding."""
-    result = subprocess.run(
-        ["curl", "-sL", "--max-time", "30",
-         "-e", "http://litopys.org.ua/",  # Referer header (some sections block without it)
-         url],
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            ["curl", "-sL", "--max-time", "30",
+             "-e", "http://litopys.org.ua/",  # Referer header (some sections block without it)
+             url],
+            capture_output=True,
+            timeout=60,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"curl timed out for {url}") from exc
     if result.returncode != 0:
         raise RuntimeError(f"curl failed for {url}: {result.stderr.decode()}")
 

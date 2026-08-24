@@ -58,10 +58,14 @@ def main():
 
     # ── Step 1: Run FULL audit (no --skip-activities) ─────────
     print("[1/4] Running full audit...")
-    result = subprocess.run(
-        [str(audit_script), str(content_path)],
-        capture_output=True, text=True, cwd=str(project_root),
-    )
+    try:
+        result = subprocess.run(
+            [str(audit_script), str(content_path)],
+            capture_output=True, text=True, cwd=str(project_root), timeout=180,
+        )
+    except subprocess.TimeoutExpired:
+        print("FAIL: audit timed out after 180 seconds")
+        return 1
     audit_exit = result.returncode
 
     # ── Step 2: Check sidecar files exist ─────────────────────

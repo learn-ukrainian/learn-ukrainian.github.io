@@ -147,7 +147,12 @@ def notify_human(from_agent: str, to_agent: str, message_id: int, task_id: str):
             f'subtitle "{subtitle}" '
             f'sound name "Submarine"'
         )
-        subprocess.run(["osascript", "-e", notification], check=False, capture_output=True)
+        subprocess.run(
+            ["osascript", "-e", notification],
+            check=False,
+            capture_output=True,
+            timeout=30,
+        )
     except Exception:
         pass  # Notification is best-effort
 
@@ -304,7 +309,7 @@ def is_any_agent_active() -> bool:
             try:
                 result = subprocess.run(
                     ["pgrep", "-f", pattern],
-                    capture_output=True, text=True
+                    capture_output=True, text=True, timeout=10
                 )
                 if result.returncode == 0 and result.stdout.strip():
                     return True
