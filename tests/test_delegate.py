@@ -8843,9 +8843,7 @@ def test_split_brain_stale_terminal_record_refused_by_wait_and_status(tmp_tasks_
     stale_file.write_text(json.dumps(stale_record), encoding="utf-8")
 
     # 1. Reader with expected run_nonce for round 2 queries the stale host state via status
-    status_args = delegate.build_parser().parse_args(
-        ["status", "task-split-7168", "--run-nonce", "round-2-live-nonce"]
-    )
+    status_args = delegate.build_parser().parse_args(["status", "task-split-7168", "--run-nonce", "round-2-live-nonce"])
     rc_status = delegate.cmd_status(status_args)
     assert rc_status == 1
     err = capsys.readouterr().err
@@ -8906,9 +8904,7 @@ def test_split_brain_cancel_refuses_stale_record(tmp_tasks_dir, capsys):
         ),
         encoding="utf-8",
     )
-    cancel_args = delegate.build_parser().parse_args(
-        ["cancel", "task-cancel-7168", "--run-nonce", "round-2-nonce"]
-    )
+    cancel_args = delegate.build_parser().parse_args(["cancel", "task-cancel-7168", "--run-nonce", "round-2-nonce"])
     rc = delegate.cmd_cancel(cancel_args)
     assert rc == 1
     err = capsys.readouterr().err
@@ -9021,9 +9017,7 @@ def test_status_or_fail_verbose_byte_compatible_without_run_nonce(monkeypatch, c
     monkeypatch.setattr(delegate, "_fetch_monitor_task", lambda tid, run_nonce=None: fake_record)
 
     # 1. Without --run-nonce: result must NOT include run_nonce key (byte-compatible with base)
-    args_no_nonce = delegate.build_parser().parse_args(
-        ["status-or-fail", "test-sof-task", "--verbose"]
-    )
+    args_no_nonce = delegate.build_parser().parse_args(["status-or-fail", "test-sof-task", "--verbose"])
     rc = delegate.cmd_status_or_fail(args_no_nonce)
     assert rc == 0
     out_no_nonce = capsys.readouterr().out
@@ -9121,3 +9115,269 @@ def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, monkeypatch):
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert state["run_nonce"] == "worker-env-nonce-789"
 
+
+# --- Issue #7236: Branch holder auto-release and refusal task state tests ---
+
+
+def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#7236: terminal+clean branch holder auto-releases even when active-task API is unreachable."""
+    from scripts.orchestration import reap_worktrees
+
+    target = tmp_path / "target"
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "task-7236-prior"
+    branch = "cursor/feature-7236"
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    list_hits = {"n": 0}
+    removes: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["git", "worktree", "list"]:
+            list_hits["n"] += 1
+            body = f"worktree {occupied}\nbranch refs/heads/{branch}\n\n" if list_hits["n"] == 1 else ""
+            return subprocess.CompletedProcess(cmd, 0, body, "")
+        if cmd[:3] == ["git", "worktree", "remove"]:
+            removes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        calls.pop()
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # Active-task probe is unreachable (returns None), live process cwd probe is empty.
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+
+    # Bound prior task is terminal (done) with dead PID.
+    delegate._write_state_atomic(
+        delegate._state_path("task-7236-prior"),
+        {
+            "task_id": "task-7236-prior",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(occupied),
+            "pid": 999999,
+        },
+    )
+
+    _, actual_branch, telemetry = delegate._ensure_worktree(
+        agent="agy",
+        task_id="task-7236-next",
+        raw_path=str(target),
+        branch=branch,
+    )
+
+    assert actual_branch == branch
+    assert telemetry["reused"] is False
+    assert list_hits["n"] >= 2
+    assert removes and removes[0][:3] == ["git", "worktree", "remove"]
+    assert str(occupied) in removes[0]
+    assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
+
+
+def test_branch_reuse_refuses_running_task_holder_and_preserves_tree(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#7236: running task branch holder is refused even if PID is dead and tree is clean."""
+    from scripts.orchestration import reap_worktrees
+
+    target = tmp_path / "target"
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "cursor" / "task-7236-running"
+    branch = "cursor/feature-7236"
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    removes: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                "",
+            )
+        if cmd[:3] == ["git", "worktree", "remove"]:
+            removes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        calls.pop()
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+
+    # Bound prior task has non-terminal status "running".
+    delegate._write_state_atomic(
+        delegate._state_path("task-7236-running"),
+        {
+            "task_id": "task-7236-running",
+            "agent": "cursor",
+            "status": "running",
+            "worktree_path": str(occupied),
+            "pid": 999999,
+        },
+    )
+
+    with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out in"):
+        delegate._ensure_worktree(
+            agent="agy",
+            task_id="task-7236-next",
+            raw_path=str(target),
+            branch=branch,
+        )
+
+    assert not removes
+
+
+def test_branch_reuse_refuses_dirty_holder_even_if_terminal(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#7236: dirty branch holder is refused even if task record is terminal (done)."""
+    from scripts.orchestration import reap_worktrees
+
+    target = tmp_path / "target"
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "task-7236-dirty"
+    branch = "cursor/feature-7236"
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    removes: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                "",
+            )
+        if cmd[:3] == ["git", "worktree", "remove"]:
+            removes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "status"] and kwargs.get("cwd") == occupied:
+            # Dirty worktree!
+            return subprocess.CompletedProcess(cmd, 0, " M modified_file.py\n", "")
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        calls.pop()
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+
+    delegate._write_state_atomic(
+        delegate._state_path("task-7236-dirty"),
+        {
+            "task_id": "task-7236-dirty",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(occupied),
+            "pid": 999999,
+        },
+    )
+
+    with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out in"):
+        delegate._ensure_worktree(
+            agent="agy",
+            task_id="task-7236-next",
+            raw_path=str(target),
+            branch=branch,
+        )
+
+    assert not removes
+
+
+def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
+    tmp_path,
+    monkeypatch,
+    tmp_tasks_dir,
+):
+    """#7236: worktree prep refusal in cmd_dispatch writes a failed task record with the reason."""
+    from scripts.orchestration import reap_worktrees
+
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "cursor" / "task-7236-held"
+    branch = "cursor/feature-7236"
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                "",
+            )
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        calls.pop()
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    _patch_worker_popen(monkeypatch)
+
+    # Prior holder has running task.
+    delegate._write_state_atomic(
+        delegate._state_path("task-7236-held"),
+        {
+            "task_id": "task-7236-held",
+            "agent": "cursor",
+            "status": "running",
+            "worktree_path": str(occupied),
+            "pid": 999999,
+        },
+    )
+
+    args = _write_args(
+        agent="agy",
+        task_id="task-7236-refused",
+        branch=branch,
+        worktree="auto",
+        mode="workspace-write",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    state_file = delegate._state_path("task-7236-refused")
+    assert state_file.exists()
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "worktree preparation failed"
+    assert "already checked out in" in (state["last_error"] or "")
+    assert "worktree preparation failed:" in (state["stderr_excerpt"] or "")
+    assert state["finished_at"] is not None
+    assert state["duration_s"] == 0.0
+
+
+def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
+    tmp_path,
+    monkeypatch,
+    tmp_tasks_dir,
+):
+    """#7236: base resolution refusal writes a failed task record with the reason."""
+    args = _write_args(
+        agent="agy",
+        task_id="task-7236-bad-base",
+        branch=None,
+        worktree="auto",
+        base="non-existent-base-branch",
+        mode="workspace-write",
+    )
+
+    def fail_base_sha(*a, **k):
+        raise RuntimeError("could not fetch origin/non-existent-base-branch")
+
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", fail_base_sha)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    state_file = delegate._state_path("task-7236-bad-base")
+    assert state_file.exists()
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "worktree preparation failed"
+    assert "could not fetch origin/non-existent-base-branch" in (state["last_error"] or "")
+    assert state["finished_at"] is not None
