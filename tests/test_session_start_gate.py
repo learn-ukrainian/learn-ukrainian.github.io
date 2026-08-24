@@ -320,6 +320,50 @@ def test_detect_pending_returns_formatted_stop(monkeypatch: pytest.MonkeyPatch) 
     assert result["detect_status"] == "pending_start"
 
 
+def test_import_bundle_runs_before_detect_and_is_fail_open(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    events: list[str] = []
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            if "import-bundle" in argv:
+                events.append("import")
+                print(json.dumps({"status": "warning", "reason": "API unavailable"}))
+                return 0
+            if "detect" in argv:
+                events.append("detect")
+                print(json.dumps({"status": "none"}))
+                return 0
+            raise AssertionError(f"unexpected thread_handoff invocation: {argv}")
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped"})
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(REPO_ROOT),
+            "--project-dir",
+            str(REPO_ROOT),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-1",
+            "--import-bundle",
+            "--stream",
+            "epic:6943",
+            "--detect",
+        ]
+    )
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert events == ["import", "detect"]
+    assert result["rollover_import"]["status"] == "issue"
+    assert result["rollover_detect"] == {"status": "ok", "detect_status": "none"}
+
+
 def test_python_version_matches_pin() -> None:
     # The suite runs on the canonical venv python, which must match the pin.
     result = gate.phase_python_version(_args())

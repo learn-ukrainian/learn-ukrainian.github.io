@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import base64
+import binascii
 import logging
 import re
 from datetime import datetime
@@ -29,6 +31,7 @@ from agents_extensions.shared.session_streams.model import (
 )
 from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
 from agents_extensions.shared.session_streams.store import (
+    MAX_ROLLOVER_BUNDLE_BYTES,
     ContentRejectedError,
     LeaseConflictError,
     NotFoundError,
@@ -38,6 +41,7 @@ from agents_extensions.shared.session_streams.store import (
 from scripts.api.config import LIVE_REPO_ROOT
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
+from scripts.orchestration.thread_handoff import _bundle_extract, _bundle_secret_hits
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -461,6 +465,29 @@ def _check_mutation_peer(request: Request) -> JSONResponse | None:
     return None
 
 
+def _bundle_blob_from_body(body: dict[str, Any]) -> bytes:
+    encoded = body.get("blob")
+    if not isinstance(encoded, str) or not encoded:
+        raise ValueError("bundle blob must be base64 text")
+    try:
+        blob = base64.b64decode(encoded.encode("ascii"), validate=True)
+    except (UnicodeEncodeError, binascii.Error, ValueError) as exc:
+        raise ValueError("bundle blob is not valid base64") from exc
+    if not blob or len(blob) > MAX_ROLLOVER_BUNDLE_BYTES:
+        raise ContentRejectedError("rollover bundle exceeds the 4 MiB cap")
+    return blob
+
+
+def _bundle_api_payload(row: dict[str, Any], *, include_blob: bool) -> dict[str, Any]:
+    payload = dict(row)
+    blob = payload.pop("blob", None)
+    if include_blob:
+        if not isinstance(blob, bytes):
+            raise ValueError("stored rollover bundle blob is malformed")
+        payload["blob"] = base64.b64encode(blob).decode("ascii")
+    return payload
+
+
 def _claim_values(body: dict[str, Any]) -> tuple[str, str, str, LeaseHolder, int, int]:
     session_id = _token(body.get("session_id"), "session_id")
     lease_id = _token(body.get("lease_id"), "lease_id")
@@ -571,14 +598,14 @@ def remote_claim(stream_id: str, request: Request, body: dict[str, Any]) -> JSON
         response = _stream_response(store, stream_id, limit)
         response["outcome"] = outcome
         return JSONResponse(content=response, headers={"Cache-Control": "no-store"})
-    except LeaseConflictError as exc:
+    except LeaseConflictError:
         try:
             projection = _stream_response(store, stream_id, limit)
         except Exception:
-            return _error(409, str(exc))
+            return _error(409, "lease conflict")
         lease = projection.get("lease")
         if not isinstance(lease, dict) or lease.get("state") != "active":
-            return _error(409, str(exc))
+            return _error(409, "lease conflict")
         holder = lease.get("holder") or {}
         return _error(
             409,
@@ -672,6 +699,101 @@ def remote_handoff(stream_id: str, request: Request, body: dict[str, Any]) -> JS
         return _error(409, "LEASE LOST")
     except (ValueError, ContentRejectedError):
         return _error(400, "invalid epic handoff request")
+    except Exception:
+        return _server_error()
+
+
+@router.post("/v1/{stream_id}/bundles")
+def remote_bundle_upload(stream_id: str, request: Request, body: dict[str, Any]) -> JSONResponse:
+    """Upload one cross-host bundle through the same fenced loopback mutation path."""
+    denied = _check_mutation_peer(request)
+    if denied is not None:
+        return denied
+    try:
+        stream_id = _epic_stream(stream_id)
+        lease = _lease_from_payload({**body, "stream_id": stream_id})
+        if lease.stream_id != stream_id:
+            raise ValueError("stream mismatch")
+        manifest = body.get("manifest")
+        if not isinstance(manifest, dict):
+            raise ValueError("bundle manifest must be an object")
+        blob = _bundle_blob_from_body(body)
+        _, members = _bundle_extract(blob, manifest_override=manifest)
+        secret_hits = _bundle_secret_hits(members)
+        if secret_hits:
+            member, rule = secret_hits[0]
+            raise ContentRejectedError(f"bundle member {member} matched {rule} rule")
+        store = _store()
+        stored = store.upload_bundle(lease, manifest=manifest, blob=blob)
+        return JSONResponse(
+            content={"schema": SCHEMA, **_bundle_api_payload(stored, include_blob=False)},
+            headers={"Cache-Control": "no-store"},
+        )
+    except LeaseConflictError:
+        return _error(409, "lease conflict")
+    except (ValueError, ContentRejectedError, binascii.Error):
+        return _error(400, "invalid rollover bundle upload request")
+    except Exception:
+        return _server_error()
+
+
+@router.get("/v1/{stream_id}/bundles")
+def remote_bundle_list(
+    stream_id: str,
+    agent: str | None = None,
+    lineage_id: str | None = None,
+    limit: int = 20,
+) -> JSONResponse:
+    try:
+        stream_id = _epic_stream(stream_id)
+        bundles = _store().list_rollover_bundles(
+            stream_id,
+            agent=agent,
+            lineage_id=lineage_id,
+            limit=limit,
+        )
+        return JSONResponse(
+            content={"schema": SCHEMA, "stream_id": stream_id, "bundles": bundles},
+            headers={"Cache-Control": "no-store"},
+        )
+    except NotFoundError:
+        return _error(404, "epic stream not found")
+    except (ValueError, ContentRejectedError):
+        return _error(400, "invalid rollover bundle list request")
+    except Exception:
+        return _server_error()
+
+
+@router.get("/v1/{stream_id}/bundles/latest")
+def remote_bundle_latest(stream_id: str, agent: str | None = None, lineage_id: str | None = None) -> JSONResponse:
+    try:
+        stream_id = _epic_stream(stream_id)
+        stored = _store().latest_rollover_bundle(stream_id, agent=agent, lineage_id=lineage_id)
+        return JSONResponse(
+            content={"schema": SCHEMA, "stream_id": stream_id, **_bundle_api_payload(stored, include_blob=True)},
+            headers={"Cache-Control": "no-store"},
+        )
+    except NotFoundError:
+        return _error(404, "rollover bundle not found")
+    except (ValueError, ContentRejectedError):
+        return _error(400, "invalid latest rollover bundle request")
+    except Exception:
+        return _server_error()
+
+
+@router.get("/v1/{stream_id}/bundles/{upload_seq}")
+def remote_bundle_by_upload_seq(stream_id: str, upload_seq: int) -> JSONResponse:
+    try:
+        stream_id = _epic_stream(stream_id)
+        stored = _store().rollover_bundle_by_upload_seq(stream_id, upload_seq)
+        return JSONResponse(
+            content={"schema": SCHEMA, "stream_id": stream_id, **_bundle_api_payload(stored, include_blob=True)},
+            headers={"Cache-Control": "no-store"},
+        )
+    except NotFoundError:
+        return _error(404, "rollover bundle not found")
+    except (ValueError, ContentRejectedError):
+        return _error(400, "invalid rollover bundle sequence request")
     except Exception:
         return _server_error()
 

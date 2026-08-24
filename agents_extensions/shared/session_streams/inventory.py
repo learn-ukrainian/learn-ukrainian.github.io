@@ -23,9 +23,15 @@ MAX_EPIC_NUMBER = 9_999_999_999
 
 # Optional explicit handoff path overrides (relative to repo root).
 # First existing path wins when resolving a live mirror source.
-# Keys are stream ids ``epic:<number>`` or issue-stream names. Infra is keyed
-# by stream name so the harness-epic paths survive epic succession (#6949).
+# Keys are stream ids ``epic:<number>`` or issue-stream names. The infra
+# successor has an explicit stream-id override; the legacy stream-name entry
+# keeps harness-epic paths available for older assignments (#6949).
 HANDOFF_PATH_OVERRIDES: dict[str, tuple[str, ...]] = {
+    "epic:6943": (
+        ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md",
+        ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md",
+        "docs/session-state/current.claude-infra.md",
+    ),
     "epic:4387": (
         ".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
         ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md",

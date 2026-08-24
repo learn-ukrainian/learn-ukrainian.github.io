@@ -5,12 +5,15 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_PROJECT_PYTHON = _REPO_ROOT / ".venv" / "bin" / "python"
+# Tests spawn the same prescribed project interpreter that is running pytest;
+# dispatch worktrees intentionally do not contain a private .venv.
+_PROJECT_PYTHON = Path(sys.executable)
 _LAUNCHER_FILES = (
     Path("start-codex.sh"),
     Path("start-codex-driver.sh"),
@@ -74,6 +77,9 @@ def _prepare_repo(
         venv_bin / "python",
         f'''#!/usr/bin/env bash
 if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" detect "* ]]; then
+  if [[ -n "${{CODEX_LAUNCHER_TEST_ORDER:-}}" ]]; then
+    printf '%s\n' 'prelease-scan' >> "$CODEX_LAUNCHER_TEST_ORDER"
+  fi
   case "${{CODEX_LAUNCHER_TEST_ROLLOVER:-none}}" in
     none)
       printf '%s\\n' '{{"agent":"codex-test","status":"none"}}'
@@ -97,11 +103,22 @@ JSON
       ;;
   esac
 fi
+if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" import-bundle "* ]]; then
+  if [[ -n "${{CODEX_LAUNCHER_TEST_ORDER:-}}" ]]; then
+    printf '%s\n' 'import-bundle' >> "$CODEX_LAUNCHER_TEST_ORDER"
+    [[ "$*" == *"--from-api"* ]] && printf '%s\n' 'from-api' >> "$CODEX_LAUNCHER_TEST_ORDER"
+    [[ "$*" != *"--agent"* ]] && printf '%s\n' 'agent-unpinned' >> "$CODEX_LAUNCHER_TEST_ORDER"
+  fi
+  exit 0
+fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.codex_transport_health" ]]; then
   printf '%s\\n' '{{"status":"healthy","fresh":true}}'
   exit 0
 fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+  if [[ -n "${{CODEX_LAUNCHER_TEST_ORDER:-}}" && "$*" == *" open "* ]]; then
+    printf '%s\n' 'lease-claim' >> "$CODEX_LAUNCHER_TEST_ORDER"
+  fi
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
@@ -154,6 +171,7 @@ def _launch(
     provide_canonical_root: bool = False,
     ambient_profile: tuple[str, str] | None = None,
     rollover: str = "none",
+    order_capture: Path | None = None,
     expect_success: bool = True,
 ) -> tuple[dict[str, str], list[str], subprocess.CompletedProcess[str], Path, Path]:
     primary, linked = _prepare_repo(tmp_path, separate_git_dir=separate_git_dir)
@@ -202,6 +220,8 @@ def _launch(
             "CODEX_LAUNCHER_TEST_ROLLOVER": rollover,
         }
     )
+    if order_capture is not None:
+        env["CODEX_LAUNCHER_TEST_ORDER"] = os.fspath(order_capture)
     if provide_canonical_root:
         env["CODEX_CANONICAL_REPO_ROOT"] = os.fspath(primary)
     if ambient_profile is not None:
@@ -284,6 +304,23 @@ def test_launcher_binds_epic_and_strips_private_flag(tmp_path: Path) -> None:
     assert "orchestrate this epic" in forwarded
     assert "--epic" not in forwarded
     assert any("already claimed the hramatka lease" in arg for arg in forwarded)
+
+
+def test_launcher_imports_bundle_before_prelease_scan_and_lease_claim(tmp_path: Path) -> None:
+    order_capture = tmp_path / "launcher-order.txt"
+    _launch(
+        tmp_path,
+        ["--epic", "hramatka", "--model", "gpt-5.6-sol"],
+        driver=True,
+        order_capture=order_capture,
+    )
+    assert order_capture.read_text(encoding="utf-8").splitlines() == [
+        "import-bundle",
+        "from-api",
+        "agent-unpinned",
+        "prelease-scan",
+        "lease-claim",
+    ]
 
 
 def test_launcher_binds_epic_when_no_codex_args_remain(tmp_path: Path) -> None:

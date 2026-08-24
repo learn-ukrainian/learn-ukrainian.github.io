@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from pathlib import Path
 
@@ -83,21 +84,23 @@ def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> Non
 
 def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
     migrations = load_migrations()
-    assert [m.version for m in migrations] == [1, 2, 3, 4]
+    assert [m.version for m in migrations] == [1, 2, 3, 4, 5, 6]
     assert "inventory_receipts" in migrations[1].name
     assert "app_thread_holders" in migrations[2].name
     assert "remote_epic_lifecycle" in migrations[3].name
+    assert "rollover_bundles" in migrations[4].name
     db = SessionStreamDatabase(tmp_path / "streams.sqlite3")
     conn = db.connect()
     try:
         versions = [int(r[0]) for r in conn.execute("SELECT version FROM schema_migrations ORDER BY 1")]
-        assert versions == [1, 2, 3, 4]
+        assert versions == [1, 2, 3, 4, 5, 6]
         for table in (
             "stream_migration_state",
             "stream_inventory_receipts",
             "legacy_import_receipts",
             "legacy_projection_receipts",
             "stream_control_events",
+            "rollover_bundles",
         ):
             row = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
@@ -106,6 +109,83 @@ def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
             assert row is not None, table
     finally:
         conn.close()
+
+
+def test_rollover_bundle_v5_receipt_upgrades_to_status_binding_schema(tmp_path: Path) -> None:
+    path = tmp_path / "v5.sqlite3"
+    migrations = load_migrations()
+    timestamp = "2026-08-24T10:00:00Z"
+    manifest = {
+        "schema": "rollover-bundle.v1",
+        "status": "pending_start",
+        "prepared_at": timestamp,
+    }
+    with sqlite3.connect(path) as connection:
+        connection.execute("PRAGMA foreign_keys = ON")
+        for migration in migrations[:5]:
+            connection.executescript(migration.sql)
+            connection.execute(
+                "INSERT INTO schema_migrations VALUES (?, ?, ?, ?)",
+                (migration.version, migration.name, migration.sha256, timestamp),
+            )
+        connection.execute("INSERT INTO streams VALUES ('epic:7260', 'epic', 7260, ?)", (timestamp,))
+        connection.execute(
+            "INSERT INTO sessions("
+            "session_id, stream_id, state, lineage_id, opened_at, updated_at, closed_at, state_version, expired_at"
+            ") VALUES ('session-v5', 'epic:7260', 'open', 'lineage-v5', ?, ?, NULL, 1, NULL)",
+            (timestamp, timestamp),
+        )
+        event = connection.execute(
+            "INSERT INTO lease_events("
+            "stream_id, session_id, lease_id, generation, fencing_token, event_type, "
+            "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, "
+            "ttl_seconds, ts, proof_json, reason, holder_host_id) VALUES ("
+            "'epic:7260', 'session-v5', 'lease-v5', 3, 7, 'acquired', 'process', "
+            "'codex', 'codex-cli', 'instance-v5', 'task-v5', 4321, 900, ?, '{}', 'fixture', NULL)",
+            (timestamp,),
+        )
+        connection.execute(
+            "INSERT INTO stream_leases("
+            "stream_id, session_id, lease_id, generation, fencing_token, state, holder_kind, holder_agent, "
+            "holder_harness, holder_instance_id, holder_task_id, holder_process_id, heartbeat_at, expires_at, "
+            "ttl_seconds, version, last_event_id, holder_host_id) VALUES ("
+            "'epic:7260', 'session-v5', 'lease-v5', 3, 7, 'active', 'process', 'codex', 'codex-cli', "
+            "'instance-v5', 'task-v5', 4321, ?, ?, 900, 1, ?, NULL)",
+            (timestamp, "2026-08-24T10:15:00Z", int(event.lastrowid)),
+        )
+        connection.execute(
+            "INSERT INTO rollover_bundles("
+            "stream_id, agent, lineage_id, generation, rollover_id, bundle_sha256, "
+            "manifest_json, blob, uploaded_at, uploaded_by_lease_id) VALUES ("
+            "'epic:7260', 'codex', 'lineage-v5', 3, 'rollover-v5', ?, ?, ?, ?, 'lease-v5')",
+            (
+                "a" * 64,
+                json.dumps(manifest, separators=(",", ":")),
+                b"v5-bundle",
+                timestamp,
+            ),
+        )
+
+    connection = SessionStreamDatabase(path).connect()
+    try:
+        row = connection.execute(
+            "SELECT status, prepared_at FROM rollover_bundles WHERE rollover_id = 'rollover-v5'"
+        ).fetchone()
+        assert row["status"] == "pending_start"
+        assert row["prepared_at"] == timestamp
+        unique_indexes = {
+            str(item[1])
+            for item in connection.execute("PRAGMA index_list('rollover_bundles')").fetchall()
+            if int(item[2]) == 1
+        }
+        assert unique_indexes == {
+            "rollover_bundles_bundle_sha256_unique",
+            "rollover_bundles_identity_unique",
+        }
+        versions = [int(item[0]) for item in connection.execute("SELECT version FROM schema_migrations ORDER BY 1")]
+        assert versions == [1, 2, 3, 4, 5, 6]
+    finally:
+        connection.close()
 
 
 def test_app_holder_migration_preserves_legacy_process_projection_and_indexes(tmp_path: Path) -> None:
