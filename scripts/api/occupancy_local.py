@@ -399,9 +399,31 @@ def foundry_marker_host_id(mapping: dict[str, str]) -> str | None:
     return None
 
 
+def resolve_launcher_host_id() -> str:
+    """Resolve the launcher host id from the canonical occupancy configuration."""
+    explicit = os.environ.get("LU_MONITOR_HOST_ID")
+    if explicit is not None:
+        return explicit or "local"
+
+    driver_host_id = os.environ.get(ENV_DRIVER_HOST_ID, "").strip().lower()
+    if driver_host_id and _opaque_host_id(driver_host_id):
+        return driver_host_id
+
+    try:
+        from scripts.api.occupancy import parse_host_id_map  # noqa: PLC0415 — # lazy-ok: occupancy cycle breaker
+
+        claimed = self_host_opaque_ids(parse_host_id_map())
+    except Exception:
+        return "local"
+    if len(claimed) == 1:
+        return next(iter(claimed))
+    return "local"
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Publish or clear a sanitized occupancy marker (opaque host_id only).")
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("resolve-host-id", help="resolve the current process's opaque occupancy host id")
     heartbeat = sub.add_parser("heartbeat", help="write one marker")
     heartbeat.add_argument("--kind", required=True)
     heartbeat.add_argument("--task-id", required=True)
@@ -417,6 +439,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
+    if args.command == "resolve-host-id":
+        print(resolve_launcher_host_id())
+        return 0
     if args.command == "heartbeat":
         written = write_marker(
             kind=args.kind,

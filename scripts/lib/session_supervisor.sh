@@ -126,7 +126,15 @@ claim_session_supervisor_env() {
   # Remote v1 uses the design-note TTL; liveness is carried by the independent
   # launcher renew loop, never by a server-side PID probe.
   local ttl_seconds=900
-  local host_id="${LU_MONITOR_HOST_ID:-local}"
+  local host_id
+  if [ "${LU_MONITOR_HOST_ID+x}" = x ]; then
+    host_id="${LU_MONITOR_HOST_ID:-local}"
+  else
+    host_id="$("$python_bin" -m scripts.api.occupancy_local resolve-host-id 2>/dev/null)" || host_id="local"
+    if [ -z "$host_id" ]; then
+      host_id="local"
+    fi
+  fi
   export LU_MONITOR_HOST_ID="$host_id"
   local heartbeat_at
   heartbeat_at="$(_iso_timestamp)"

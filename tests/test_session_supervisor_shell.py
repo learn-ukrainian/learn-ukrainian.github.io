@@ -36,6 +36,14 @@ def _write_executable(path: Path, body: str) -> None:
 
 def _supervisor_ok_body(capture: Path) -> str:
     return f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.api.occupancy_local" && "${{3:-}}" == "resolve-host-id" ]]; then
+  if [[ "${{FAKE_RESOLVER_FAILURE:-0}}" == "1" ]]; then
+    echo "resolver unavailable" >&2
+    exit 1
+  fi
+  printf '%s\\n' "${{FAKE_RESOLVED_HOST_ID:-local}}"
+  exit 0
+fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   {{
     printf '%s\\n' "$@" > "{capture}"
@@ -204,6 +212,57 @@ printf 'INSTANCE=%s\\n' "$SESSION_STREAM_INSTANCE_ID"
 
     supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
     assert supervisor_args[supervisor_args.index("--instance-id") + 1].startswith("test-agent-")
+
+
+def test_claim_resolves_unset_host_id_and_preserves_explicit_override(tmp_path: Path) -> None:
+    project, supervisor_capture = _build_fake_project(tmp_path)
+    env = _clean_environ()
+    env["FAKE_RESOLVED_HOST_ID"] = "host-job"
+
+    script = f"""
+set -euo pipefail
+source "{project}/scripts/lib/session_supervisor.sh"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    assert supervisor_args[supervisor_args.index("--host-id") + 1] == "host-job"
+
+    env["LU_MONITOR_HOST_ID"] = "host-explicit"
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    assert supervisor_args[supervisor_args.index("--host-id") + 1] == "host-explicit"
+
+    env.pop("LU_MONITOR_HOST_ID")
+    env["FAKE_RESOLVER_FAILURE"] = "1"
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert result.stderr == ""
+    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
+    assert supervisor_args[supervisor_args.index("--host-id") + 1] == "local"
 
 
 def test_claim_fails_closed_on_missing_required_fields(tmp_path: Path) -> None:
