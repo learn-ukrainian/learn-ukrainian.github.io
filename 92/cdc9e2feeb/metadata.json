@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "92cdc9e2feeb",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/changed_tests.py",
+    "scripts/ci/frontend_change_scope.py",
+    "scripts/ci/queue_starvation_recovery.py",
+    "scripts/ci/secret_scan_scope.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/test_ci_changed_tests.py",
+    "tests/test_ci_queue_starvation.py",
+    "tests/test_frontend_change_scope.py",
+    "tests/test_secret_scan_scope.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/92/cdc9e2feeb/0/metadata.json",
+      "transcript": "/92/cdc9e2feeb/0/full.jsonl",
+      "compact_transcript": "/92/cdc9e2feeb/0/transcript.jsonl",
+      "content_hash": "/92/cdc9e2feeb/0/content_hash.txt",
+      "prompt": "/92/cdc9e2feeb/0/prompt.txt"
+    }
+  ]
+}

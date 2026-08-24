@@ -1,0 +1,40 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/timeout-burndown-7213-s1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7213 slice 1 — burn down the subprocess-timeout allowlist for `scripts/ci/` only (one PR)
+
+Read `gh issue view 7213 -R learn-ukrainian/learn-ukrainian.github.io` and the allowlist header in
+`scripts/ci/subprocess_timeout_allowlist.txt` (stage 1 landed in #7212). This slice covers ONLY entries whose path
+starts with `scripts/ci/` — CI helpers with small blast radius and existing tests.
+
+## Outcome
+Every `scripts/ci/` entry in the allowlist is either (a) fixed — the call gets an explicit `timeout=` with a value
+justified by the command's nature — and removed from the allowlist (the shrink-only guard enforces removal), or
+(b) explicitly skipped with a one-line reason in the PR body (long-running/streaming child, or a bound that would
+change behaviour). No other directories.
+
+## Rules for values
+- Reuse the file's or module's existing convention where one exists (grep for `timeout=` nearby first).
+- git/gh/pip/network commands: bounded generously (e.g. 300–900 s), never below what CI actually observes; consult
+  `scripts/ci/ci_timings.py` data or the workflow step budgets if unsure.
+- A child that legitimately streams for the job's lifetime is a SKIP, not a guess.
+- Do not change retry logic, exit codes, or output handling; only add the bound (and the `TimeoutExpired` handling
+  the surrounding code needs to keep its current failure semantics — say where you had to).
+
+## Acceptance (quote raw output; PRIMARY interpreter — worktrees have no .venv)
+1. `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py` green
+   (allowlist shrank; no stale entries) and the CI-helper test files for every touched module
+   (`grep -rl "<module>" tests/ | head`), plus `tests/test_ci_*.py`; ruff clean.
+2. Table in the PR body: entry → fixed (value + why) / skipped (why). Counts: fixed N, skipped M, remaining `scripts/ci/`
+   entries must be exactly M.
+3. One conventional commit (`fix(ci): bound subprocess calls in CI helpers — allowlist burn-down slice 1 (#7213)`,
+   X-Agent trailer). NO push, NO auto-merge, NO amend after reporting. Report HEAD SHA + evidence + ready PR body.
