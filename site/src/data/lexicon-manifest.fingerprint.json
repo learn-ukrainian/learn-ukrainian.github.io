@@ -55,7 +55,7 @@
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
-        "sha256": "002fd1fa8d0d5647de50c49358409d91ee98b66456e3a8fa83013f77c7f0fb33"
+        "sha256": "6737fc9befb4e349e81011713ee8f7fc5c466aadbd34fdd318851391250dd08a"
       },
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
@@ -159,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
-        "sha256": "ec8b76e8979fbbb533f31e8fddc2933fb354ae943203f17d8d7b4648e4bde796"
+        "sha256": "35d3564cc7e75c26d20ecfcd18699410183292ca58ff61d9cdd8663311fa82cb"
       },
       {
         "path": "scripts/lexicon/measure_manifest_coverage.py",

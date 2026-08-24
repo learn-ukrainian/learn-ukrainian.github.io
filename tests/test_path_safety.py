@@ -9,6 +9,8 @@ import pytest
 from scripts.hygiene import lint_raw_rm_rf
 from scripts.path_safety import assert_delete_target
 
+pytestmark = pytest.mark.repo_invariant
+
 
 def test_delete_guard_allows_descendants_of_standard_and_approved_roots(
     tmp_path: Path,

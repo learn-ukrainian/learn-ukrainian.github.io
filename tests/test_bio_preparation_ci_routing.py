@@ -34,6 +34,8 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 
+pytestmark = pytest.mark.repo_invariant
+
 VALIDATOR_STEP_NAME = "Validate BIO preparation capsules and active holds"
 CONTRACTS_TIER_IF = "github.event_name != 'pull_request'"
 LANDING_EVENTS = ("merge_group", "push")

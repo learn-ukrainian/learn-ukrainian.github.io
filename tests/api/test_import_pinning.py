@@ -8,10 +8,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
 from scripts.api.preload import DYNAMIC_LOADERS, OPTIONAL_MODULES, PRELOAD_MODULES
+
+pytestmark = pytest.mark.repo_invariant
 
 
 def resolve_import_names(node: ast.Import | ast.ImportFrom, file_path: Path) -> list[str]:

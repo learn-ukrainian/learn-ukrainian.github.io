@@ -68,12 +68,21 @@ def test_docs_only_change_stays_empty_with_repo_invariant_opt_in() -> None:
     assert changed_tests.select_test_modules(["docs/foo.md"], include_repo_invariants=True) == []
 
 
+def test_shell_changes_trigger_repo_invariant_manifest_but_docs_do_not() -> None:
+    for path in ("scripts/cleanup.sh", "services.sh"):
+        assert changed_tests.select_test_modules([path], include_repo_invariants=True) == sorted(_manifest())
+
+    assert changed_tests.select_test_modules(["docs/cleanup.md"], include_repo_invariants=True) == []
+
+
 def test_config_and_fixture_changes_trigger_repo_invariant_manifest() -> None:
     for path in (
         "pyproject.toml",
         "requirements-dev.txt",
         ".github/workflows/ci.yml",
         "scripts/ci/fastlane_always_tests.txt",
+        "site/src/data/lexicon-manifest.fingerprint.json",
+        "site/src/data/lexicon-manifest.pointer.json",
         "tests/fixtures/example.json",
     ):
         assert changed_tests.select_test_modules([path], include_repo_invariants=True) == sorted(_manifest())

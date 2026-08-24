@@ -6,8 +6,10 @@ not have. This module fingerprints the lexicon source files CI can see.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -96,3 +98,28 @@ def write_fingerprint(path: Path = DEFAULT_FINGERPRINT, *, root: Path = ROOT) ->
         encoding="utf-8",
     )
     return payload
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Refresh only the DB-free lexicon-code fingerprint sidecar."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="write the current lexicon-code fingerprint sidecar",
+    )
+    args = parser.parse_args(argv)
+    if not args.write:
+        parser.error("--write is required to refresh the fingerprint sidecar")
+
+    payload = write_fingerprint()
+    print(
+        "Atlas lexicon fingerprint written: "
+        f"{payload['fingerprint']} "
+        f"({payload['stats']['lexicon_code_files']} lexicon code files)."
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

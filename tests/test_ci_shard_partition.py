@@ -408,6 +408,7 @@ def test_required_lanes_exclude_live_model_setup_and_fastlane_matches_shard_inst
     assert all("-no-live-ml" in str(step) for step in fastlane_cache_steps)
     assert "No module named" in fastlane_run["run"]
     assert "CPU torch" in fastlane_run["run"]
+    assert "-n auto --dist=loadfile" in fastlane_run["run"]
     names = [step.get("name", "") for step in fastlane_steps]
     assert names.index("Select directly changed test modules") < names.index(
         "Install fastlane test dependencies (lock minus live ML)"

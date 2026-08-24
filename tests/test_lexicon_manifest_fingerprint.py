@@ -3,13 +3,16 @@ import os
 import subprocess
 from pathlib import Path
 
-from scripts.lexicon.check_manifest_freshness import (
-    GIT_SCOPE_ENV_VARS,
-    check_freshness,
-    pr_touches_manifest_scope,
-)
+import pytest
+
+from scripts.lexicon.check_manifest_freshness import check_freshness
 from scripts.lexicon.check_manifest_vocabulary_coverage import check_vocabulary_coverage
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, sidecar_payload, write_fingerprint
+
+pytestmark = pytest.mark.repo_invariant
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+_GIT_SCOPE_ENV_VARS = ("GIT_COMMON_DIR", "GIT_DIR", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_WORK_TREE")
 
 
 def _fixture_repo(tmp_path: Path) -> Path:
@@ -31,7 +34,7 @@ def _fixture_repo(tmp_path: Path) -> Path:
 
 def _git(root: Path, *args: str) -> None:
     env = os.environ.copy()
-    for name in GIT_SCOPE_ENV_VARS:
+    for name in _GIT_SCOPE_ENV_VARS:
         env.pop(name, None)
     subprocess.run(
         ["git", "-c", "core.hooksPath=/dev/null", *args],
@@ -114,9 +117,9 @@ def test_manifest_fingerprint_ignores_vocab_lemma_churn(tmp_path: Path) -> None:
 
 
 def test_write_fingerprint_is_idempotent(tmp_path: Path) -> None:
-    # The pre-commit hook regenerates the sidecar then `git diff --exit-code`s it.
-    # If write_fingerprint were non-deterministic, that gate would block every
-    # commit. Guarantee re-running on unchanged code yields byte-identical output.
+    # The PR-tier repo-invariant guard compares the committed sidecar with the
+    # real lexicon tree. If write_fingerprint were non-deterministic, that guard
+    # would report drift on every run. Guarantee byte-identical output.
     root = _fixture_repo(tmp_path)
     sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
 
@@ -141,7 +144,7 @@ def test_sidecar_omits_aggregate_fields_that_cause_concurrent_conflicts(tmp_path
 
 def test_write_fingerprint_changes_after_lexicon_edit(tmp_path: Path) -> None:
     # Conversely, editing lexicon code MUST change the regenerated sidecar — that
-    # is the drift the pre-commit `git diff --exit-code` is meant to catch.
+    # is the drift the PR-tier repo-invariant guard is meant to catch.
     root = _fixture_repo(tmp_path)
     sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
 
@@ -165,6 +168,12 @@ def test_manifest_freshness_check_passes_on_matching_sidecar(tmp_path: Path, cap
     assert "Atlas manifest freshness OK" in output
 
 
+def test_committed_manifest_fingerprint_matches_real_lexicon_tree(capsys) -> None:
+    """The PR tier must catch drift in the committed sidecar itself."""
+    assert check_freshness(root=REPO_ROOT) == 0
+    assert "Atlas manifest freshness OK" in capsys.readouterr().out
+
+
 def test_manifest_freshness_check_fails_on_mismatched_sidecar(tmp_path: Path, capsys) -> None:
     root = _fixture_repo(tmp_path)
     sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
@@ -174,6 +183,8 @@ def test_manifest_freshness_check_fails_on_mismatched_sidecar(tmp_path: Path, ca
     assert check_freshness(root=root, fingerprint_path=sidecar) == 2
     output = capsys.readouterr().out
     assert "Atlas manifest stale vs lexicon code" in output
+    assert "python -m scripts.lexicon.manifest_fingerprint --write" in output
+    assert "make atlas" in output
     assert "dictionary DB/cache version drift is out of scope" in output
 
 
@@ -206,64 +217,6 @@ def test_manifest_freshness_rejects_conflicting_union_duplicate_record(tmp_path:
     sidecar.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     assert check_freshness(root=root, fingerprint_path=sidecar) == 2
-
-
-def test_pr_scoped_freshness_allows_unrelated_drift(tmp_path: Path, capsys) -> None:
-    root = _fixture_repo(tmp_path)
-    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
-    write_fingerprint(sidecar, root=root)
-    _commit_fixture_repo(root)
-    (root / "README.md").write_text("unrelated PR change\n", encoding="utf-8")
-    _git(root, "add", "README.md")
-    _git(root, "commit", "--quiet", "-m", "docs change")
-    (root / "scripts" / "lexicon" / "beta.py").write_text("VALUE = 200\n", encoding="utf-8")
-
-    assert pr_touches_manifest_scope(root=root, base_ref="base") is False
-    assert check_freshness(
-        root=root,
-        fingerprint_path=sidecar,
-        pr_scoped=True,
-        base_ref="base",
-    ) == 0
-    assert "allowing unrelated drift" in capsys.readouterr().out
-
-
-def test_pr_scoped_freshness_fails_when_pr_changes_lexicon(tmp_path: Path, capsys) -> None:
-    root = _fixture_repo(tmp_path)
-    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
-    write_fingerprint(sidecar, root=root)
-    _commit_fixture_repo(root)
-    (root / "scripts" / "lexicon" / "beta.py").write_text("VALUE = 200\n", encoding="utf-8")
-    _git(root, "add", "scripts/lexicon/beta.py")
-    _git(root, "commit", "--quiet", "-m", "lexicon change")
-
-    assert pr_touches_manifest_scope(root=root, base_ref="base") is True
-    assert check_freshness(
-        root=root,
-        fingerprint_path=sidecar,
-        pr_scoped=True,
-        base_ref="base",
-    ) == 2
-    assert "Atlas manifest stale vs lexicon code" in capsys.readouterr().out
-
-
-def test_pr_scoped_freshness_fails_when_pr_changes_sidecar(tmp_path: Path, capsys) -> None:
-    root = _fixture_repo(tmp_path)
-    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
-    write_fingerprint(sidecar, root=root)
-    _commit_fixture_repo(root)
-    sidecar.write_text('{"fingerprint": "stale"}\n', encoding="utf-8")
-    _git(root, "add", sidecar.relative_to(root).as_posix())
-    _git(root, "commit", "--quiet", "-m", "sidecar change")
-
-    assert pr_touches_manifest_scope(root=root, base_ref="base") is True
-    assert check_freshness(
-        root=root,
-        fingerprint_path=sidecar,
-        pr_scoped=True,
-        base_ref="base",
-    ) == 2
-    assert "Atlas manifest stale vs lexicon code" in capsys.readouterr().out
 
 
 def test_union_merge_keeps_independent_fingerprint_updates_fresh(tmp_path: Path) -> None:
