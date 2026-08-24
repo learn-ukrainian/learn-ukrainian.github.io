@@ -1,0 +1,55 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3eb87f48fc34",
+  "session_id": "fleet-4eeefbfad931411b945e0c4288d07fe9",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T17:22:32.543945Z",
+  "branch": "cursor/monitor-7187-worker-map",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/fleet.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/fleet_workers_collect.py",
+    "scripts/api/fleet_workers_models.py",
+    "scripts/api/fleet_workers_router.py",
+    "scripts/api/fleet_workers_sanitize.py",
+    "scripts/api/main.py",
+    "scripts/api/occupancy_local.py",
+    "scripts/api/preload.py",
+    "scripts/api/project_state_collect.py",
+    "scripts/api/project_state_local.py",
+    "scripts/api/project_state_router.py",
+    "scripts/api/project_state_sanitize.py",
+    "scripts/api/project_state_store.py",
+    "scripts/api/route_contracts.py",
+    "tests/api/test_fleet_workers.py",
+    "tests/api/test_fleet_workers_sanitize.py",
+    "tests/api/test_fleet_workers_unmocked.py",
+    "tests/test_fleet_dashboard_contract.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "5b061789f420",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T17:22:32.531531Z",
+    "agent_lines": 1538,
+    "agent_removed": 16,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1538,
+    "total_lines_changed": 1554,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
