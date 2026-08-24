@@ -219,6 +219,7 @@ def test_correct_existing_mounts_are_idempotent(
     monkeypatch.setattr(guardian, "_bind_mount", lambda *_args: pytest.fail("mount command invoked"))
     mounts = guardian._ensure_mounts(config, mutate=True)
     assert len(mounts) == len(guardian.OUTPUT_ROOTS)
+    assert all(set(mount) == {"name", "identity_sha256"} for mount in mounts)
 
 
 def test_orphan_guardian_temporary_is_quarantined_without_reading(
@@ -403,6 +404,27 @@ def test_plan_uses_status_only_and_reports_next_stage(
     result = guardian._safe_status(config, mounts=[])
     assert result["next_stage"] == "grok"
     assert calls == [("status", None)]
+
+
+def test_controller_status_drops_ambient_execution_descriptor(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="status")
+    captured_environment: dict[str, str] = {}
+    monkeypatch.setenv(guardian.EXECUTION_LOCK_FD_ENV, "999999")
+
+    def run(*_args: Any, **kwargs: Any) -> Any:
+        captured_environment.update(kwargs["env"])
+        return subprocess.CompletedProcess(
+            args=[],
+            returncode=0,
+            stdout=b'{"ok":true,"text_free":true}\n',
+            stderr=b"",
+        )
+
+    monkeypatch.setattr(guardian.subprocess, "run", run)
+    guardian._invoke_controller(config, "status")
+    assert guardian.EXECUTION_LOCK_FD_ENV not in captured_environment
 
 
 def test_resume_stops_at_requested_boundary(

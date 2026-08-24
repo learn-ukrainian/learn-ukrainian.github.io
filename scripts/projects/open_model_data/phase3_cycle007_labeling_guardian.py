@@ -295,7 +295,6 @@ def _ensure_mounts(config: Config, *, mutate: bool) -> list[dict[str, Any]]:
         result.append(
             {
                 "name": root_name,
-                "device": entry.device,
                 "identity_sha256": _digest(f"{source_info.st_dev}:{source_info.st_ino}".encode()),
             }
         )
@@ -413,6 +412,7 @@ def _controller_command(config: Config, action: str, stage: str | None = None) -
 
 def _invoke_controller(config: Config, action: str, *, execution_fd: int | None = None, stage: str | None = None) -> dict[str, Any]:
     environment = os.environ.copy()
+    environment.pop(EXECUTION_LOCK_FD_ENV, None)
     pass_fds: tuple[int, ...] = ()
     if execution_fd is not None:
         environment[EXECUTION_LOCK_FD_ENV] = str(execution_fd)
