@@ -23,9 +23,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 from starlette.requests import Request
 
+from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     docs_router,
     entire_context_router,
+    epics_router,
     fleet_router,
     git_hygiene_router,
     governance_router,
@@ -236,6 +239,8 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(state_helpers, "_curriculum_cache", None)
     monkeypatch.setattr(state_helpers, "_curriculum_mtime", 0.0)
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
+    epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
+    monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
     monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
     monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
@@ -529,6 +534,12 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert by_key["GET /api/session-streams/v1/drift"].query["dry_run"] == "true"
     assert by_key["POST /api/comms/send"].expected_statuses == (410,)
     assert by_key["POST /api/comms/send"].body() is not None
+    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].classification == "mutation"
+    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].body() is not None
+    assert by_key["POST /api/epics/v1/{stream_id}/bundles"].expected_statuses == (403,)
+    assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
+    assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
+    assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
     for record in records:
         if record.fixture == "skip":
             assert record.owner and record.reason and record.expiry
