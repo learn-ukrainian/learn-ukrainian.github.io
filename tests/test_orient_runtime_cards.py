@@ -108,10 +108,10 @@ def test_orient_runtime_cards_inventory_agents_and_gemini_retired():
 
     # Each live agent has a card title
     for agent in ("claude", "codex", "cursor", "kimi", "grok", "deepseek", "agy"):
-        assert f'<div class="title">{agent}</div>' in html
+        assert f"<div class=\"title\">{agent}</div>" in html
 
     # Retired agent gemini must NOT be present as a live card
-    assert '<div class="title">gemini</div>' not in html
+    assert "<div class=\"title\">gemini</div>" not in html
 
 
 def test_orient_runtime_cards_headroom_keys_inclusion():
@@ -128,21 +128,17 @@ def test_orient_runtime_cards_headroom_keys_inclusion():
     out = _eval_orient_runtime_js(payload)
     html = out["html"]
 
-    assert '<div class="title">cursor</div>' in html
-    assert '<div class="title">kimi</div>' in html
-    assert '<div class="title">grok</div>' in html
-    assert '<div class="title">deepseek</div>' in html
-    assert '<div class="title">agy</div>' in html
+    assert "<div class=\"title\">cursor</div>" in html
+    assert "<div class=\"title\">kimi</div>" in html
+    assert "<div class=\"title\">grok</div>" in html
+    assert "<div class=\"title\">deepseek</div>" in html
+    assert "<div class=\"title\">agy</div>" in html
 
     # Check green vs red headroom indicators
     # cursor is True (green check)
-    assert re.search(
-        r"<div class=\"title\">cursor</div>\s*<div class=\"big\" style=\"color:var\(--green\)\">&#10003;</div>", html
-    )
+    assert re.search(r"<div class=\"title\">cursor</div>\s*<div class=\"big\" style=\"color:var\(--green\)\">&#10003;</div>", html)
     # kimi is False (red cross)
-    assert re.search(
-        r"<div class=\"title\">kimi</div>\s*<div class=\"big\" style=\"color:var\(--red\)\">&#10007;</div>", html
-    )
+    assert re.search(r"<div class=\"title\">kimi</div>\s*<div class=\"big\" style=\"color:var\(--red\)\">&#10007;</div>", html)
 
 
 def test_orient_runtime_cards_per_agent_outcome_counts():
@@ -186,7 +182,7 @@ def test_orient_runtime_cards_per_agent_outcome_counts():
 def test_orient_runtime_cards_empty_runtime():
     """#7089: empty runtime shows empty message."""
     out = _eval_orient_runtime_js({})
-    assert '<div class="empty">No runtime agents</div>' in out["html"]
+    assert "<div class=\"empty\">No runtime agents</div>" in out["html"]
 
 
 def _write_usage_file(path: Path, records: list[dict]) -> None:
@@ -198,10 +194,9 @@ def _write_usage_file(path: Path, records: list[dict]) -> None:
 
 def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """#7089: _collect_runtime_orient_data() populates by_agent from real usage records."""
-    from datetime import UTC, datetime, timedelta
-
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
+    from datetime import UTC, datetime, timedelta
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
@@ -210,64 +205,22 @@ def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Pat
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=10)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 5.0,
-                "outcome": "ok",
-            },
-            {
-                "ts": (today - timedelta(minutes=8)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 4.5,
-                "outcome": "ok",
-            },
-            {
-                "ts": (today - timedelta(minutes=6)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 2.0,
-                "outcome": "error",
-            },
+            {"ts": (today - timedelta(minutes=10)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 5.0, "outcome": "ok"},
+            {"ts": (today - timedelta(minutes=8)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 4.5, "outcome": "ok"},
+            {"ts": (today - timedelta(minutes=6)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 2.0, "outcome": "error"},
         ],
     )
     _write_usage_file(
         usage_dir / f"usage_codex-bridge_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=5)).isoformat(),
-                "agent": "codex",
-                "entrypoint": "bridge",
-                "model": "gpt-5.5",
-                "duration_s": 3.2,
-                "outcome": "ok",
-            },
-            {
-                "ts": (today - timedelta(minutes=3)).isoformat(),
-                "agent": "codex",
-                "entrypoint": "bridge",
-                "model": "gpt-5.5",
-                "duration_s": 0.5,
-                "outcome": "rate_limited",
-            },
+            {"ts": (today - timedelta(minutes=5)).isoformat(), "agent": "codex", "entrypoint": "bridge", "model": "gpt-5.5", "duration_s": 3.2, "outcome": "ok"},
+            {"ts": (today - timedelta(minutes=3)).isoformat(), "agent": "codex", "entrypoint": "bridge", "model": "gpt-5.5", "duration_s": 0.5, "outcome": "rate_limited"},
         ],
     )
     _write_usage_file(
         usage_dir / f"usage_grok-dispatch_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=2)).isoformat(),
-                "agent": "grok",
-                "entrypoint": "dispatch",
-                "model": "grok-code",
-                "duration_s": 6.1,
-                "outcome": "ok",
-            },
+            {"ts": (today - timedelta(minutes=2)).isoformat(), "agent": "grok", "entrypoint": "dispatch", "model": "grok-code", "duration_s": 6.1, "outcome": "ok"},
         ],
     )
 
@@ -289,10 +242,9 @@ def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Pat
 
 def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """#7089: API-to-render contract test using live collector output with non-zero per-agent outcomes."""
-    from datetime import UTC, datetime, timedelta
-
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
+    from datetime import UTC, datetime, timedelta
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
@@ -301,64 +253,22 @@ def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, mo
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=10)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 5.0,
-                "outcome": "ok",
-            },
-            {
-                "ts": (today - timedelta(minutes=8)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 4.5,
-                "outcome": "ok",
-            },
-            {
-                "ts": (today - timedelta(minutes=6)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 2.0,
-                "outcome": "error",
-            },
+            {"ts": (today - timedelta(minutes=10)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 5.0, "outcome": "ok"},
+            {"ts": (today - timedelta(minutes=8)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 4.5, "outcome": "ok"},
+            {"ts": (today - timedelta(minutes=6)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 2.0, "outcome": "error"},
         ],
     )
     _write_usage_file(
         usage_dir / f"usage_codex-bridge_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=5)).isoformat(),
-                "agent": "codex",
-                "entrypoint": "bridge",
-                "model": "gpt-5.5",
-                "duration_s": 3.2,
-                "outcome": "ok",
-            },
-            {
-                "ts": (today - timedelta(minutes=3)).isoformat(),
-                "agent": "codex",
-                "entrypoint": "bridge",
-                "model": "gpt-5.5",
-                "duration_s": 0.5,
-                "outcome": "rate_limited",
-            },
+            {"ts": (today - timedelta(minutes=5)).isoformat(), "agent": "codex", "entrypoint": "bridge", "model": "gpt-5.5", "duration_s": 3.2, "outcome": "ok"},
+            {"ts": (today - timedelta(minutes=3)).isoformat(), "agent": "codex", "entrypoint": "bridge", "model": "gpt-5.5", "duration_s": 0.5, "outcome": "rate_limited"},
         ],
     )
     _write_usage_file(
         usage_dir / f"usage_grok-dispatch_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=2)).isoformat(),
-                "agent": "grok",
-                "entrypoint": "dispatch",
-                "model": "grok-code",
-                "duration_s": 6.1,
-                "outcome": "ok",
-            },
+            {"ts": (today - timedelta(minutes=2)).isoformat(), "agent": "grok", "entrypoint": "dispatch", "model": "grok-code", "duration_s": 6.1, "outcome": "ok"},
         ],
     )
 
@@ -395,17 +305,15 @@ def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, mo
             )
 
     # Gemini (retired in registry) is not rendered
-    assert '<div class="title">gemini</div>' not in html
+    assert "<div class=\"title\">gemini</div>" not in html
 
 
 def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """#7089: End-to-end GET /api/orient response rendered into HTML cards."""
-    from datetime import UTC, datetime, timedelta
-
     from fastapi.testclient import TestClient
-
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
+    from datetime import UTC, datetime, timedelta
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
@@ -414,14 +322,7 @@ def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",
         [
-            {
-                "ts": (today - timedelta(minutes=10)).isoformat(),
-                "agent": "claude",
-                "entrypoint": "dispatch",
-                "model": "claude-sonnet-4-6",
-                "duration_s": 5.0,
-                "outcome": "ok",
-            },
+            {"ts": (today - timedelta(minutes=10)).isoformat(), "agent": "claude", "entrypoint": "dispatch", "model": "claude-sonnet-4-6", "duration_s": 5.0, "outcome": "ok"},
         ],
     )
 
@@ -444,4 +345,4 @@ def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.
         r"<div class=\"title\">claude</div>[\s\S]*?<span class=\"pill ok\">ok 1</span>[\s\S]*?<span class=\"pill err\">error 0</span>[\s\S]*?<span class=\"pill warn\">rate 0</span>",
         html,
     )
-    assert '<div class="title">gemini</div>' not in html
+    assert "<div class=\"title\">gemini</div>" not in html

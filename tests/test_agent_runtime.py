@@ -859,6 +859,11 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
     snapshot.mkdir()
     write_root, exec_root = _private_review_roots(tmp_path, "codex-test-7181")
 
+    base_config = review_isolation_tool_config("codex")
+    # Strip disable_features from tool_config to prove build_invocation emits
+    # --disable apps unconditionally rather than relying on tool_config.
+    config_without_disable_features = {k: v for k, v in base_config.items() if k != "disable_features"}
+
     adapter = CodexAdapter()
     plan = adapter.build_invocation(
         prompt="review prompt",
@@ -868,7 +873,7 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
         task_id="review-7181-test",
         session_id=None,
         tool_config={
-            **review_isolation_tool_config("codex"),
+            **config_without_disable_features,
             "review_engine_binary": str(fake.resolve()),
             "review_snapshot_root": str(snapshot),
             "review_reject_root": str(snapshot),
@@ -877,9 +882,10 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
             "review_exec_root": str(exec_root),
         },
     )
+    bypass_idx = plan.cmd.index("--dangerously-bypass-approvals-and-sandbox")
+    assert plan.cmd[bypass_idx + 1 : bypass_idx + 3] == ["--disable", "apps"]
     disable_flags = [plan.cmd[i + 1] for i, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert "apps" in disable_flags
-    assert disable_flags.count("apps") == 1
+    assert disable_flags == ["apps"]
 
 
 def test_codex_adapter_binds_valid_output_schema(tmp_path):

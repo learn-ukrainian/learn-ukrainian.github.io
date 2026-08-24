@@ -16,17 +16,18 @@ import argparse
 import sys
 from collections.abc import Mapping
 
-# Light PR tier: early signal without the four-shard suite.
+# Light PR tier: quick signal plus security scanning without the full suite.
 LIGHT_REQUIRED: tuple[str, ...] = (
     "ruff",
     "pytest-fastlane",
-    "contracts",
-    "frontend",
+    "secret-scan",
 )
 
 # Merge-queue / main / dispatch tier: strictly a superset of the light tier.
 FULL_REQUIRED: tuple[str, ...] = (
     *LIGHT_REQUIRED,
+    "contracts",
+    "frontend",
     "pytest-plan",
     "python",
     "coverage-floor",

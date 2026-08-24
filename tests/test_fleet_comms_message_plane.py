@@ -39,7 +39,9 @@ def test_resolve_plane_mode_env_unset_uses_configured_default(
     assert resolve_plane_mode(None) == "dual_write"
 
 
-def test_default_plane_root_anchors_linked_worktree_to_primary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_default_plane_root_anchors_linked_worktree_to_primary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     primary = tmp_path / "primary"
     (primary / ".git").mkdir(parents=True)
@@ -78,8 +80,10 @@ def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
     )
 
 
-def test_default_plane_root_refuses_retired_local_marker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER, PlaneRootAnchorError
+def test_default_plane_root_refuses_retired_local_marker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.fleet_comms.paths import PlaneRootAnchorError, RETIRED_LOCAL_MARKER
 
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
@@ -95,7 +99,9 @@ def test_default_plane_root_refuses_retired_local_marker(tmp_path: Path, monkeyp
     assert default_plane_root(repo_root=primary) == plane.resolve()
 
 
-def test_default_plane_root_makes_relative_override_stable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_default_plane_root_makes_relative_override_stable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     caller_root = tmp_path / "caller"
     caller_root.mkdir()
     monkeypatch.chdir(caller_root)
@@ -115,14 +121,18 @@ def test_message_plane_preserves_public_root_constants() -> None:
     assert message_plane.ENV_ROOT is ENV_ROOT
 
 
-def test_configured_default_fail_open_on_malformed_yaml(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_configured_default_fail_open_on_malformed_yaml(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Malformed fleet_communications.yaml must not crash resolve (CF #5666 F001)."""
     import scripts.fleet_comms.message_plane as mp
 
     checkout = tmp_path / "repo"
     cfg_dir = checkout / "scripts" / "config"
     cfg_dir.mkdir(parents=True)
-    (cfg_dir / "fleet_communications.yaml").write_text("message_plane: [\n  not: valid\n", encoding="utf-8")
+    (cfg_dir / "fleet_communications.yaml").write_text(
+        "message_plane: [\n  not: valid\n", encoding="utf-8"
+    )
     fake_file = checkout / "scripts" / "fleet_comms" / "message_plane.py"
     fake_file.parent.mkdir(parents=True)
     fake_file.write_text("# stub\n", encoding="utf-8")
@@ -248,9 +258,7 @@ def test_parity_flags_legacy_replied_when_incomplete(tmp_path: Path) -> None:
             legacy_status="replied:99",
         )
         assert report.parity_ok is False
-        assert (
-            "incomplete_classified_as_replied" in report.notes or "unproven_completion_marked_replied" in report.notes
-        )
+        assert "incomplete_classified_as_replied" in report.notes or "unproven_completion_marked_replied" in report.notes
 
 
 def test_length_limited_increments_continuation_budget(tmp_path: Path) -> None:

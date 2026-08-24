@@ -13,7 +13,10 @@ What genuinely still needs defending, and is covered here:
 
 * the validator survived the move into the ``contracts`` job and is reachable from the one
   required gate (``ci-gate``);
-* nothing can silently skip it — no ``if:`` on either the job or the step;
+* the #7141 minimal PR tier leaves ``contracts`` out of pull-request pushes, but its exact
+  landing-tier condition runs the job on every ``merge_group``/``push`` event, with no separate
+  path-based condition that could skip the validator;
+* the validator step itself has no ``if:``;
 * its internal change detection is intact (rename decomposition + registry-entry tracking);
 * the path classifier deciding *which* BIO files it validates still recognises every capsule
   surface. That logic moved out of the YAML filter and into the embedded script, so it is
@@ -32,6 +35,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 
 VALIDATOR_STEP_NAME = "Validate BIO preparation capsules and active holds"
+CONTRACTS_TIER_IF = "github.event_name != 'pull_request'"
+LANDING_EVENTS = ("merge_group", "push")
 
 BIO_PREPARATION_PATHS = (
     "curriculum/l2-uk-en/plans/bio/knyahynia-olha.yaml",
@@ -54,6 +59,32 @@ MANIFEST_SET = {"knyahynia-olha"}
 
 def _workflow() -> dict:
     return yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
+
+
+def _normalise_expression(value: object) -> str:
+    return " ".join(str(value).split())
+
+
+def _evaluate_event_name_condition(condition: str, event_name: str) -> bool:
+    """Evaluate the simple GitHub event condition pinned by #7141."""
+    try:
+        expression = ast.parse(condition, mode="eval").body
+    except SyntaxError:
+        return False
+    if not (
+        isinstance(expression, ast.Compare)
+        and isinstance(expression.left, ast.Attribute)
+        and isinstance(expression.left.value, ast.Name)
+        and expression.left.value.id == "github"
+        and expression.left.attr == "event_name"
+        and len(expression.ops) == 1
+        and isinstance(expression.ops[0], ast.NotEq)
+        and len(expression.comparators) == 1
+        and isinstance(expression.comparators[0], ast.Constant)
+        and isinstance(expression.comparators[0].value, str)
+    ):
+        return False
+    return event_name != expression.comparators[0].value
 
 
 def _validator_job_and_step() -> tuple[str, dict, dict]:
@@ -100,12 +131,21 @@ def test_bio_preparation_validator_is_reachable_from_the_required_gate() -> None
 
 
 def test_nothing_can_skip_the_bio_preparation_validator() -> None:
+    """#7141: the minimal PR tier is conditional only at the job boundary."""
     job_name, job, step = _validator_job_and_step()
-    assert "if" not in job, (
-        f"job {job_name!r} carries an `if:` — the BIO preparation gate must not be conditional now "
-        "that changed-files selection is gone (#5766)"
+    contracts_if = _normalise_expression(job.get("if"))
+    assert contracts_if == CONTRACTS_TIER_IF, (
+        f"job {job_name!r} must carry exactly the #7141 minimal PR tier condition "
+        f"{CONTRACTS_TIER_IF!r}; got {contracts_if!r}"
     )
-    assert "if" not in step, f"the {VALIDATOR_STEP_NAME!r} step carries an `if:` and could be skipped"
+    for event_name in LANDING_EVENTS:
+        assert _evaluate_event_name_condition(contracts_if, event_name), (
+            f"job {job_name!r} must be unconditional for {event_name!r} landing events; "
+            f"its tier condition is {contracts_if!r}"
+        )
+    assert "if" not in step, (
+        f"the {VALIDATOR_STEP_NAME!r} step carries an `if:` and could be skipped"
+    )
 
 
 def test_validator_change_detection_is_intact() -> None:

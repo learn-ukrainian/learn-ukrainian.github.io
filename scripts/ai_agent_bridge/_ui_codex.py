@@ -137,7 +137,7 @@ def send(
     start = datetime.now(UTC)
     try:
         proc = subprocess.run(
-            ["codex", "exec", "resume", "--json", thread_id, "-"],
+            ["codex", "exec", "resume", "--json", "--disable", "apps", thread_id, "-"],
             input=framed_message,
             cwd=str(cwd) if cwd else None,
             capture_output=True,

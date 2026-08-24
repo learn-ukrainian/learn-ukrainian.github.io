@@ -19,10 +19,8 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# Linked worktrees intentionally do not carry a private venv.  The supervisor
-# is already running under the project interpreter, so reuse that exact
-# interpreter for the launch gate and keep the child on the same code/runtime.
-REPO_PYTHON = Path(sys.executable)
+# Pin child launches to this checkout; an inherited interpreter may belong to another worktree.
+REPO_PYTHON = PROJECT_ROOT / ".venv/bin/python"
 if __package__:
     from scripts.lib.session_record import canonical_state_root, validate_session_id
     from scripts.orchestration import thread_handoff
@@ -264,13 +262,23 @@ def _validate_runtime(payload: dict[str, Any], *, run_id: str) -> dict[str, Any]
     }:
         raise SupervisorError("runtime metadata state is malformed")
     supervisor_pid = payload.get("supervisor_pid")
-    if isinstance(supervisor_pid, bool) or not isinstance(supervisor_pid, int) or supervisor_pid <= 0:
+    if (
+        isinstance(supervisor_pid, bool)
+        or not isinstance(supervisor_pid, int)
+        or supervisor_pid <= 0
+    ):
         raise SupervisorError("runtime metadata supervisor_pid is malformed")
     launch_generation = payload.get("launch_generation")
-    if isinstance(launch_generation, bool) or not isinstance(launch_generation, int) or launch_generation < 0:
+    if (
+        isinstance(launch_generation, bool)
+        or not isinstance(launch_generation, int)
+        or launch_generation < 0
+    ):
         raise SupervisorError("runtime metadata launch_generation is malformed")
     child_pid = payload.get("child_pid")
-    if child_pid is not None and (isinstance(child_pid, bool) or not isinstance(child_pid, int) or child_pid <= 0):
+    if child_pid is not None and (
+        isinstance(child_pid, bool) or not isinstance(child_pid, int) or child_pid <= 0
+    ):
         raise SupervisorError("runtime metadata child_pid is malformed")
     command_hash = payload.get("command_hash")
     if not isinstance(command_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", command_hash):
@@ -281,7 +289,9 @@ def _validate_runtime(payload: dict[str, Any], *, run_id: str) -> dict[str, Any]
     _safe_identity(payload.get("agent"), "agent", allow_empty=True)
     _safe_identity(payload.get("epic"), "epic", allow_empty=True)
     session_id = payload.get("session_id")
-    if session_id is not None and (not isinstance(session_id, str) or not validate_session_id(session_id)):
+    if session_id is not None and (
+        not isinstance(session_id, str) or not validate_session_id(session_id)
+    ):
         raise SupervisorError("runtime metadata session_id is malformed")
     for field in ("session_source", "handoff_agent"):
         value = payload.get(field)
@@ -297,11 +307,14 @@ def _validate_runtime(payload: dict[str, Any], *, run_id: str) -> dict[str, Any]
         _parse_timestamp(bound_at, "bound_at")
     accepted_request_id = payload.get("accepted_request_id")
     if accepted_request_id is not None and (
-        not isinstance(accepted_request_id, str) or not RUN_ID_RE.fullmatch(accepted_request_id)
+        not isinstance(accepted_request_id, str)
+        or not RUN_ID_RE.fullmatch(accepted_request_id)
     ):
         raise SupervisorError("runtime metadata accepted_request_id is malformed")
     exit_code = payload.get("exit_code")
-    if exit_code is not None and (isinstance(exit_code, bool) or not isinstance(exit_code, int)):
+    if exit_code is not None and (
+        isinstance(exit_code, bool) or not isinstance(exit_code, int)
+    ):
         raise SupervisorError("runtime metadata exit_code is malformed")
     return dict(payload)
 
@@ -333,8 +346,12 @@ def bind_session(
         {
             "session_id": session_id,
             "session_source": _safe_identity(source, "session source", allow_empty=True),
-            "session_model_id": (_safe_model(model_id, "session model") if model_id else None),
-            "handoff_agent": _safe_identity(handoff_agent, "handoff_agent", allow_empty=True),
+            "session_model_id": (
+                _safe_model(model_id, "session model") if model_id else None
+            ),
+            "handoff_agent": _safe_identity(
+                handoff_agent, "handoff_agent", allow_empty=True
+            ),
             "bound_at": _timestamp(),
             "updated_at": _timestamp(),
         }
@@ -358,7 +375,9 @@ def _load_valid_lease(
     rollover_id = thread_handoff.normalize_rollover_id(rollover_id)
     lease_path = state_root / thread_handoff.default_state_path(handoff_agent, lineage_id)
     state = _load_json(lease_path)
-    replacement, error = thread_handoff.validate_live_lease(state, agent=handoff_agent, state_path=lease_path)
+    replacement, error = thread_handoff.validate_live_lease(
+        state, agent=handoff_agent, state_path=lease_path
+    )
     if error or replacement is None:
         raise SupervisorError(f"rollover lease is invalid: {error or 'unknown error'}")
     active = state["active"]
@@ -462,17 +481,25 @@ def _validate_request_shape(request: dict[str, Any]) -> None:
         if not isinstance(value, str) or not RUN_ID_RE.fullmatch(value):
             raise SupervisorError(f"rollover request {field} is malformed")
     child_pid = request.get("child_pid")
-    if isinstance(child_pid, bool) or not isinstance(child_pid, int) or child_pid <= 0:
+    if (
+        isinstance(child_pid, bool)
+        or not isinstance(child_pid, int)
+        or child_pid <= 0
+    ):
         raise SupervisorError("rollover request child_pid is malformed")
     for field in ("launch_generation", "rollover_generation"):
         value = request.get(field)
         if isinstance(value, bool) or not isinstance(value, int) or value < 0:
             raise SupervisorError(f"rollover request {field} is malformed")
     source_session_id = request.get("source_session_id")
-    if not isinstance(source_session_id, str) or not validate_session_id(source_session_id):
+    if not isinstance(source_session_id, str) or not validate_session_id(
+        source_session_id
+    ):
         raise SupervisorError("rollover request source_session_id is malformed")
     command_hash = request.get("command_hash")
-    if not isinstance(command_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", command_hash):
+    if not isinstance(command_hash, str) or not re.fullmatch(
+        r"[0-9a-f]{64}", command_hash
+    ):
         raise SupervisorError("rollover request command_hash is malformed")
     _safe_identity(request.get("profile_id"), "profile_id")
     _safe_model(request.get("lead_model_id"), "lead_model_id")
@@ -629,7 +656,9 @@ class ClaudexSupervisor:
             {
                 "LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH": "1",
                 "LEARN_UKRAINIAN_CLAUDEX_RUN_ID": self.run_id,
-                "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION": str(self.launch_generation),
+                "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION": str(
+                    self.launch_generation
+                ),
             }
         )
         command = [self.script_path, *self.forward_argv]
@@ -812,7 +841,9 @@ def main() -> int:
 
     bind_parser = subparsers.add_parser("bind-session")
     bind_parser.add_argument("--state-root", type=Path)
-    bind_parser.add_argument("--run-id", default=os.environ.get("LEARN_UKRAINIAN_CLAUDEX_RUN_ID"))
+    bind_parser.add_argument(
+        "--run-id", default=os.environ.get("LEARN_UKRAINIAN_CLAUDEX_RUN_ID")
+    )
     bind_parser.add_argument(
         "--launch-generation",
         type=int,
@@ -825,13 +856,17 @@ def main() -> int:
 
     request_parser = subparsers.add_parser("request-rollover")
     request_parser.add_argument("--state-root", type=Path)
-    request_parser.add_argument("--run-id", default=os.environ.get("LEARN_UKRAINIAN_CLAUDEX_RUN_ID"))
+    request_parser.add_argument(
+        "--run-id", default=os.environ.get("LEARN_UKRAINIAN_CLAUDEX_RUN_ID")
+    )
     request_parser.add_argument(
         "--launch-generation",
         type=int,
         default=_env_int("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION"),
     )
-    request_parser.add_argument("--session-id", default=os.environ.get("LEARN_UKRAINIAN_SESSION_ID"))
+    request_parser.add_argument(
+        "--session-id", default=os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
+    )
     request_parser.add_argument("--lineage-id", required=True)
     request_parser.add_argument("--rollover-generation", required=True, type=int)
     request_parser.add_argument("--rollover-id", required=True)
@@ -894,7 +929,9 @@ def main() -> int:
         return 2
     state_root = _state_root_from_args(None)
     try:
-        supervisor = ClaudexSupervisor(sys.argv[1], sys.argv[2:], state_root=state_root)
+        supervisor = ClaudexSupervisor(
+            sys.argv[1], sys.argv[2:], state_root=state_root
+        )
         return supervisor.run()
     except SupervisorError as exc:
         print(f"Error: {exc}", file=sys.stderr)

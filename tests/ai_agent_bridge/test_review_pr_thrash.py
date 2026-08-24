@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from scripts.ai_agent_bridge._review_pr_thrash import (
+    ThrashDecision,
     evaluate_formal_cf_thrash,
     github_actions_outaged,
 )
@@ -125,17 +127,13 @@ def test_github_actions_outaged_parses_status():
             {"name": "Actions", "status": "major_outage"},
         ]
     }
-
     class _Resp:
         def __enter__(self):
             return self
-
         def __exit__(self, *a):
             return False
-
         def read(self):
             import json
-
             return json.dumps(payload).encode()
 
     with patch(

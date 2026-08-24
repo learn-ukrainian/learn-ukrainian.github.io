@@ -368,7 +368,7 @@ def test_ci_shard_planner_declares_matrix_shard_env() -> None:
     assert planner_step["env"]["SHARD"] == "${{ matrix.shard }}"
 
 
-def test_required_lanes_exclude_live_model_setup_and_fastlane_is_slim() -> None:
+def test_required_lanes_exclude_live_model_setup_and_fastlane_matches_shard_install() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     workflow = yaml.safe_load((repo_root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
@@ -377,9 +377,15 @@ def test_required_lanes_exclude_live_model_setup_and_fastlane_is_slim() -> None:
     planner_validate = next(step for step in planner_steps if step.get("name") == "Validate planner contract without collection")
     shard_steps = jobs["python"]["steps"]
     shard_install = next(step for step in shard_steps if step.get("name") == "Install dependencies")
+    shard_cache = next(step for step in shard_steps if step.get("name") == "Restore pip wheel cache")
     fastlane_steps = jobs["pytest-fastlane"]["steps"]
-    fastlane_install = next(step for step in fastlane_steps if step.get("name") == "Install slim fastlane test dependencies")
+    fastlane_install = next(
+        step
+        for step in fastlane_steps
+        if step.get("name") == "Install fastlane test dependencies (lock minus live ML)"
+    )
     fastlane_run = next(step for step in fastlane_steps if step.get("name") == "Run directly changed test modules")
+    fastlane_cache_steps = [step for step in fastlane_steps if "pip wheel cache" in step.get("name", "").lower()]
 
     assert jobs["python"]["needs"] == ["landing-class"]
     assert "validate-snapshot" in planner_validate["run"]
@@ -391,13 +397,21 @@ def test_required_lanes_exclude_live_model_setup_and_fastlane_is_slim() -> None:
         assert "|stanza)" in run
     assert "stanza_resources" not in "\n".join(str(step) for step in shard_steps)
 
-    assert "requirements-fastlane.txt" in fastlane_install["run"]
-    assert "-c requirements-lock.txt" in fastlane_install["run"]
-    assert "pip install --no-deps -r" not in fastlane_install["run"]
+    live_ml_filter = "grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt"
+    assert live_ml_filter in shard_install["run"]
+    assert live_ml_filter in fastlane_install["run"]
+    assert "pip install --no-deps -r" in fastlane_install["run"]
+    assert "fastlane_requirements.py" not in fastlane_install["run"]
+    assert "requirements-fastlane.txt" not in fastlane_install["run"]
+    assert fastlane_cache_steps
+    assert all(step["with"]["key"] == shard_cache["with"]["key"] for step in fastlane_cache_steps)
+    assert all("-no-live-ml" in str(step) for step in fastlane_cache_steps)
     assert "No module named" in fastlane_run["run"]
     assert "CPU torch" in fastlane_run["run"]
     names = [step.get("name", "") for step in fastlane_steps]
-    assert names.index("Select directly changed test modules") < names.index("Install slim fastlane test dependencies")
+    assert names.index("Select directly changed test modules") < names.index(
+        "Install fastlane test dependencies (lock minus live ML)"
+    )
 
 
 def test_codeql_default_setup_scope_excludes_content_generated_and_sparse_paths() -> None:
