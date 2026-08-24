@@ -4,18 +4,26 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
-from scripts.api.observer_presence import reset_observer_presence, upsert_presence
-from scripts.api.observer_presence import PresenceRequest
+from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
 from scripts.api.occupancy_local import write_marker
 from scripts.api.project_state_store import reset_project_state_store
 
 client = TestClient(app, raise_server_exceptions=False)
+
+
+def _host_by_id(payload: dict, host_id: str) -> dict:
+    hosts = payload["hosts"]
+    assert isinstance(hosts, list)
+    for host in hosts:
+        if host.get("host_id") == host_id:
+            return host
+    raise AssertionError(f"host {host_id!r} not in {hosts!r}")
 
 
 def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch) -> None:
@@ -54,12 +62,13 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == "monitor-fleet-workers.v1"
-    host = payload["hosts"]["host-job"]
+    assert isinstance(payload["hosts"], list)
+    host = _host_by_id(payload, "host-job")
     assert host["workers_status"] == "reported"
     kinds = {row["kind"] for row in host["workers"]}
     assert "delegate" in kinds
 
-    observer = client.get("/api/fleet/workers/v1?host_id=cloud-observer").json()["hosts"]["cloud-observer"]
+    observer = _host_by_id(client.get("/api/fleet/workers/v1?host_id=cloud-observer").json(), "cloud-observer")
     assert any(row["kind"] == "observer" for row in observer["workers"])
 
     print("UNMOCKED_WORKERS_PROBE_OK", json.dumps({"delegate_kinds": sorted(kinds), "observer_count": len(observer["workers"])}))

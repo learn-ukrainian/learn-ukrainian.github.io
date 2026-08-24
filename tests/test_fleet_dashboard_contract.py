@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -35,6 +36,7 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "AI workers" in html
     assert "workers-content" in html
     assert "renderWorkers" in html
+    assert "listValue(data.hosts)" in html
     assert "cloud-observer" in html
     assert "host.burn_state ||" in html
     assert "Object.entries(objectValue(host.burn_sources))" in html

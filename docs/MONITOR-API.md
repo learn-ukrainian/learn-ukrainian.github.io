@@ -277,7 +277,8 @@ schema: `monitor-fleet-workers.v1` with `hosts[]` entries containing
 `workers[]` (each with `source`, `related`, and `WorkerRow` fields),
 `unattributed_burn`, and optional `reason`. Hostless driver leases appear under
 `host_id: unattributed` with `reason: lease has no host claim`. Counts include
-`live`, `hosts_unknown`, `workers_total`, and `attention` items (for example
+`live`, `hosts_unknown`, `workers_total`, `skipped` (malformed or oversized
+source ids dropped without 500), and `attention` items (for example
 `unreported:host-teacher`). Read path is cache-only — never probes SSH or
 occupancy load refresh.
 

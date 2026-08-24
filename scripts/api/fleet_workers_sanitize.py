@@ -73,4 +73,9 @@ def validate_workers_list(workers: Any) -> list[WorkerRow]:
         raise ProjectStateValidationError("invalid workers")
     if len(workers) > MAX_WORKERS_PER_REPORT:
         raise ProjectStateValidationError("workers list too long")
-    return [validate_worker_row_dict(item) for item in workers if isinstance(item, dict)]
+    validated: list[WorkerRow] = []
+    for item in workers:
+        if not isinstance(item, dict):
+            raise ProjectStateValidationError("invalid worker row")
+        validated.append(validate_worker_row_dict(item))
+    return validated

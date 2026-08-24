@@ -582,10 +582,10 @@ function renderProjects(data) {
 }
 
 function renderWorkers(data) {
-  const hosts = objectValue(data.hosts);
+  const hosts = listValue(data.hosts);
   const rows = [];
   const banners = [];
-  for (const host of Object.values(hosts)) {
+  for (const host of hosts) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
     const freshness = short(host.freshness);

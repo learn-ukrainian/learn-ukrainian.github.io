@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import re
 import sqlite3
-import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -14,15 +15,14 @@ import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api import fleet_workers_collect as collect_mod
-from scripts.api import project_state_router as router_mod
 from scripts.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, workers_payload
 from scripts.api.fleet_workers_models import WorkerRow
+from scripts.api.fleet_workers_sanitize import validate_workers_list
 from scripts.api.main import app
-from scripts.api.observer_presence import reset_observer_presence, upsert_presence
-from scripts.api.observer_presence import PresenceRequest
-from scripts.api.occupancy_local import write_marker
-from scripts.api.project_state_store import reset_project_state_store, upsert_report
-from scripts.lexicon.runner import atlas_job
+from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
+from scripts.api.occupancy_local import _marker_fresh
+from scripts.api.project_state_sanitize import ProjectStateValidationError
+from scripts.api.project_state_store import get_stored_report, reset_project_state_store
 
 client = TestClient(app, raise_server_exceptions=False)
 loop_client = TestClient(
@@ -38,6 +38,15 @@ _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 
 SHA_MAIN = "a" * 40
 SHA_HEAD = "c" * 40
+
+
+def _host_by_id(payload: dict[str, Any], host_id: str) -> dict[str, Any]:
+    hosts = payload["hosts"]
+    assert isinstance(hosts, list)
+    for host in hosts:
+        if host.get("host_id") == host_id:
+            return host
+    raise AssertionError(f"host {host_id!r} not in {hosts!r}")
 
 
 def _primary() -> dict[str, Any]:
@@ -112,14 +121,14 @@ def test_workers_route_schema(monkeypatch: pytest.MonkeyPatch) -> None:
     data = response.json()
     assert data["schema"] == "monitor-fleet-workers.v1"
     assert "counts" in data
-    assert "hosts" in data
+    assert isinstance(data["hosts"], list)
 
 
 def test_v1_report_workers_unreported(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document())
-    host = client.get("/api/fleet/workers/v1?host_id=host-job").json()["hosts"]["host-job"]
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")
     assert host["workers_status"] == "unreported"
     assert host["workers"] == []
     assert "unreported:host-job" in client.get("/api/fleet/workers/v1").json()["attention"]
@@ -129,7 +138,7 @@ def test_v2_empty_workers_verified_zero(monkeypatch: pytest.MonkeyPatch) -> None
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[]))
-    host = client.get("/api/fleet/workers/v1?host_id=host-job").json()["hosts"]["host-job"]
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")
     assert host["workers_status"] == "reported"
     assert host["workers"] == []
 
@@ -141,7 +150,7 @@ def test_remote_reported_workers_surface(monkeypatch: pytest.MonkeyPatch) -> Non
         "/api/fleet/projects/v1/report",
         json=_document(workers=[_worker_row()]),
     )
-    host = client.get("/api/fleet/workers/v1?host_id=host-job").json()["hosts"]["host-job"]
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")
     assert host["workers_status"] == "reported"
     assert len(host["workers"]) == 1
     assert host["workers"][0]["source"] == "project_state"
@@ -160,19 +169,49 @@ def test_same_task_id_different_run_id_two_rows(monkeypatch: pytest.MonkeyPatch)
             ]
         ),
     )
-    workers = client.get("/api/fleet/workers/v1?host_id=host-job").json()["hosts"]["host-job"]["workers"]
+    workers = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")["workers"]
     run_ids = {row["run_id"] for row in workers}
     assert run_ids == {"11111111", "22222222"}
+
+
+def test_delegate_run_id_matches_sha256_nonce(tmp_path: Path) -> None:
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    nonce = "known-run-nonce-7187"
+    expected_run_id = hashlib.sha256(nonce.encode("utf-8")).hexdigest()[:8]
+    now = datetime.now(UTC)
+    (tasks / "nonce-task.json").write_text(
+        json.dumps(
+            {
+                "task_id": "nonce-task",
+                "agent": "cursor",
+                "status": "running",
+                "pid": os.getpid(),
+                "started_at": now.isoformat(),
+                "run_nonce": nonce,
+            }
+        ),
+        encoding="utf-8",
+    )
+    rows = collect_mod.collect_delegate_workers(tasks, now=now)
+    assert len(rows) == 1
+    assert rows[0].row.run_id == expected_run_id
 
 
 def test_monotonic_ingest_rejects_stale_report(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     newer = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     older = (datetime.now(UTC) - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
-    assert loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[], collected_at=newer)).status_code == 200
+    newer_doc = _document(workers=[], collected_at=newer)
+    assert loop_client.post("/api/fleet/projects/v1/report", json=newer_doc).status_code == 200
+    stored_before = get_stored_report("host-job")
+    assert stored_before is not None
     stale = loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[], collected_at=older))
     assert stale.status_code == 409
     assert stale.json()["detail"] == "stale_report"
+    stored_after = get_stored_report("host-job")
+    assert stored_after is not None
+    assert stored_after.document == stored_before.document
 
 
 def test_collected_at_bounds_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -191,8 +230,74 @@ def test_no_occupancy_probe_on_read_path(monkeypatch: pytest.MonkeyPatch) -> Non
 
     monkeypatch.setattr("scripts.api.occupancy._occupancy_payload_async", _boom)
     monkeypatch.setattr("scripts.api.atlas_jobs_router._get_host_load_entry", _boom)
+    monkeypatch.setattr("scripts.api.atlas_jobs_router._get_host_load_entry_async", _boom)
+    monkeypatch.setattr("scripts.api.atlas_jobs_router._schedule_host_load_refresh", _boom)
     response = client.get("/api/fleet/workers/v1")
     assert response.status_code == 200
+
+
+def test_oversized_task_id_dropped_not_500(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    long_id = "a" * 65
+    now = datetime.now(UTC)
+    (tasks / "long.json").write_text(
+        json.dumps(
+            {
+                "task_id": long_id,
+                "agent": "cursor",
+                "status": "running",
+                "pid": os.getpid(),
+                "started_at": now.isoformat(),
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-job"})
+    monkeypatch.setattr("scripts.api.delegate_router.TASKS_DIR", tasks)
+    response = client.get("/api/fleet/workers/v1?host_id=host-job")
+    assert response.status_code == 200
+    data = response.json()
+    host = _host_by_id(data, "host-job")
+    assert not any(worker["id"] == long_id for worker in host["workers"])
+    assert data["counts"]["skipped"] >= 1
+
+
+def test_validate_workers_list_rejects_none() -> None:
+    with pytest.raises(ProjectStateValidationError):
+        validate_workers_list([None])
+
+
+def test_marker_without_timestamps_not_live() -> None:
+    now = datetime.now(UTC)
+    assert _marker_fresh({"host_id": "host-job", "kind": "service", "task_id": "x", "agent": "codex"}, now=now) is False
+
+
+def test_marker_within_ttl_is_live() -> None:
+    now = datetime.now(UTC)
+    payload = {
+        "host_id": "host-job",
+        "kind": "service",
+        "task_id": "x",
+        "agent": "codex",
+        "updated_at": now.isoformat().replace("+00:00", "Z"),
+    }
+    assert _marker_fresh(payload, now=now) is True
+
+
+def test_marker_past_ttl_not_live() -> None:
+    now = datetime.now(UTC)
+    stale = now - timedelta(hours=1)
+    payload = {
+        "host_id": "host-job",
+        "kind": "service",
+        "task_id": "x",
+        "agent": "codex",
+        "updated_at": stale.isoformat().replace("+00:00", "Z"),
+    }
+    assert _marker_fresh(payload, now=now) is False
 
 
 def test_delegate_adapter_liveness_matrix(tmp_path: Path) -> None:
@@ -203,15 +308,19 @@ def test_delegate_adapter_liveness_matrix(tmp_path: Path) -> None:
         ("spawning.json", {"task_id": "spawning-1", "agent": "cursor", "status": "spawning", "started_at": now.isoformat()}, "starting"),
         ("live.json", {"task_id": "live-1", "agent": "cursor", "status": "running", "pid": 1, "started_at": now.isoformat()}, "live"),
         ("zombie.json", {"task_id": "zombie-1", "agent": "cursor", "status": "running", "pid": 999999, "started_at": now.isoformat()}, "zombie"),
+        ("done.json", {"task_id": "done-1", "agent": "cursor", "status": "done", "started_at": now.isoformat()}, None),
+        ("failed.json", {"task_id": "failed-1", "agent": "cursor", "status": "failed", "started_at": now.isoformat()}, None),
     ]
-    for name, payload, expected in cases:
+    for name, payload, _expected in cases:
         (tasks / name).write_text(json.dumps(payload), encoding="utf-8")
     rows = collect_mod.collect_delegate_workers(tasks, now=now)
     states = {row.row.id: row.row.state for row in rows}
-    assert states["spawning-1"] == "starting"
-    assert states["live-1"] == "live"
-    assert states["zombie-1"] == "zombie"
-    assert "done-1" not in states
+    for _name, payload, expected in cases:
+        task_id = payload["task_id"]
+        if expected is None:
+            assert task_id not in states
+        else:
+            assert states[task_id] == expected
 
 
 def test_driver_hostless_lease_unattributed_bucket(tmp_path: Path) -> None:
@@ -259,8 +368,8 @@ def test_driver_hostless_lease_unattributed_bucket(tmp_path: Path) -> None:
     assert len(unattributed) == 1
     assert unattributed[0].row.id == "inst-alpha"
     payload = workers_payload(session_db=db, host_id=UNATTRIBUTED_HOST_ID)
-    assert UNATTRIBUTED_HOST_ID in payload["hosts"]
-    assert payload["hosts"][UNATTRIBUTED_HOST_ID]["reason"] == "lease has no host claim"
+    host = _host_by_id(payload, UNATTRIBUTED_HOST_ID)
+    assert host["reason"] == "lease has no host claim"
 
 
 def test_related_links_equal_instance_id(tmp_path: Path) -> None:

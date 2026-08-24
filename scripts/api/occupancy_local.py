@@ -186,7 +186,7 @@ def _marker_fresh(payload: dict[str, Any], *, now: datetime) -> bool:
         return expires > now
     updated = _parse_when(payload.get("updated_at"))
     if updated is None:
-        return True
+        return False
     return (now - updated).total_seconds() <= DEFAULT_MARKER_TTL_S
 
 
