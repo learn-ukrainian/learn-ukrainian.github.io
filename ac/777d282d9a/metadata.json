@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ac777d282d9a",
+  "strategy": "manual-commit",
+  "branch": "agy/monitor-m3-epics-ui",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/epics.html",
+    "dashboards/index.html",
+    "scripts/api/route_contracts.py",
+    "tests/test_epics_dashboard_contract.py",
+    "tests/test_fleet_dashboard_contract.py",
+    "tests/test_monitor_ui_contracts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ac/777d282d9a/0/metadata.json",
+      "transcript": "/ac/777d282d9a/0/full.jsonl",
+      "compact_transcript": "/ac/777d282d9a/0/transcript.jsonl",
+      "content_hash": "/ac/777d282d9a/0/content_hash.txt",
+      "prompt": "/ac/777d282d9a/0/prompt.txt"
+    }
+  ]
+}
