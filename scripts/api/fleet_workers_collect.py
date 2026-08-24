@@ -223,6 +223,16 @@ def collect_delegate_workers(
     return rows
 
 
+def _driver_holder_host_id(raw: Any) -> str | None:
+    """Opaque host id from a lease, or None when the lease has no host claim."""
+    if raw is None:
+        return None
+    text = str(raw).strip().lower()
+    if not text or text == "local":
+        return None
+    return text
+
+
 def _read_driver_leases(
     *,
     db_path: Path | None = None,
@@ -294,7 +304,7 @@ def collect_driver_workers(
         collected = CollectedWorker(
             source="driver",
             row=row,
-            host_id=str(lease.get("holder_host_id") or "").strip().lower() or None,
+            host_id=_driver_holder_host_id(lease.get("holder_host_id")),
             identity=WorkerIdentity("driver", "driver", instance_id),
             instance_id=instance_id,
             task_id=task_id,
@@ -634,9 +644,7 @@ def workers_payload(
             if canonical is not None:
                 job_rows, _ = collect_job_workers(canonical_host=canonical, now=clock, tally=tally)
                 host_workers.extend(job_rows)
-            host_workers.extend(
-                collect_marker_workers(host_id=opaque, root=markers_root, now=clock, tally=tally)
-            )
+            host_workers.extend(collect_marker_workers(host_id=opaque, root=markers_root, now=clock, tally=tally))
             selected_map = {item: reverse.get(item) for item in selected if item != CLOUD_OBSERVER_HOST_ID}
             driver_read: OccupancyRead = read_session_streams(
                 host_id=opaque,

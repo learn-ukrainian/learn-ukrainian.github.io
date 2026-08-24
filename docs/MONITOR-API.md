@@ -275,8 +275,10 @@ Joins every live AI worker exactly once per source on each opaque host. Response
 schema: `monitor-fleet-workers.v1` with `hosts[]` entries containing
 `host_id`, `freshness`, `workers_status` (`reported|unreported`), sanitized
 `workers[]` (each with `source`, `related`, and `WorkerRow` fields),
-`unattributed_burn`, and optional `reason`. Hostless driver leases appear under
-`host_id: unattributed` with `reason: lease has no host claim`. Counts include
+`unattributed_burn`, and optional `reason`. Driver leases with no host claim
+(`holder_host_id` null, empty, or the launcher fail-safe `local`) appear under
+`host_id: unattributed` with `reason: lease has no host claim` — never silently
+attributed to the API host. Counts include
 `live`, `hosts_unknown`, `workers_total`, `skipped` (malformed or oversized
 source ids dropped without 500), and `attention` items (for example
 `unreported:host-teacher`). Read path is cache-only — never probes SSH or
