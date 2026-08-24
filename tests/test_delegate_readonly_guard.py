@@ -124,6 +124,14 @@ def test_read_only_snapshot_excluded_path_classification():
     assert not delegate._is_read_only_snapshot_excluded_path(".worktreesish/file")
 
 
+def test_read_only_delegate_snapshot_sidecar_path_is_runtime_state():
+    """#7203: task snapshot sidecars live under ``tasks/``, not ``batch_state/``."""
+    sidecar = "tasks/read-only-task.snapshots/read_only_checkout_pre.json"
+    assert delegate._is_read_only_delegate_snapshot_sidecar_path(sidecar)
+    assert delegate._is_read_only_runtime_state_path(sidecar)
+    assert not delegate._is_read_only_runtime_telemetry_path(sidecar)
+
+
 def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypatch):
     """#7124: the snapshot records no ``.worktrees/`` entries at all."""
     repo = (tmp_path / "repo").resolve()
