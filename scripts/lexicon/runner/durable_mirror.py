@@ -47,6 +47,7 @@ IGNORED_DIR_NAMES = {"__pycache__"}
 IGNORED_FILE_NAMES = {".DS_Store"}
 IGNORED_SUFFIXES = {".pid", ".lock"}
 DEFAULT_MAX_AGE_HOURS = 24.0
+DEFAULT_SSH_PROBE_TIMEOUT_SECONDS: float = 30.0
 
 
 class DurableMirrorError(RuntimeError):
@@ -368,11 +369,18 @@ def snapshot(source: str, mirror_dir: Path, *, dry_run: bool = False, allow_live
         if _is_remote_rsync_source(source):
             host, remote_path = _remote_host_and_path(source)
             remote_pid = f"{remote_path.rstrip('/')}/enrich-driver.pid"
-            probe = subprocess.run(
-                ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", host, "test", "-f", remote_pid],
-                check=False,
-                capture_output=True,
-            )
+            try:
+                probe = subprocess.run(
+                    ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", host, "test", "-f", remote_pid],
+                    check=False,
+                    capture_output=True,
+                    timeout=DEFAULT_SSH_PROBE_TIMEOUT_SECONDS,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise DurableMirrorError(
+                    f"could not probe remote runner liveness at {source} "
+                    f"(ssh timed out after {DEFAULT_SSH_PROBE_TIMEOUT_SECONDS}s)"
+                ) from exc
             if probe.returncode == 0:
                 raise DurableMirrorError(
                     f"refusing to snapshot live remote runner at {source} (found enrich-driver.pid); "

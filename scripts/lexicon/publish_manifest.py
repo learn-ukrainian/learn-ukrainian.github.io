@@ -37,6 +37,7 @@ DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-manifest.json.gz"
 DEFAULT_RELEASE_TAG = "atlas-manifest"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-manifest.json.gz"
+DEFAULT_GH_TIMEOUT_SECONDS: float = 180.0
 VERSIONED_ASSET_PREFIX = "lexicon-manifest-"
 VERSIONED_ASSET_SUFFIX = ".json.gz"
 REQUIRED_POINTER_KEYS = (
@@ -259,7 +260,7 @@ def upload_release_asset(
         ]
         if clobber:
             command.append("--clobber")
-        subprocess.run(command, check=True)
+        subprocess.run(command, check=True, timeout=DEFAULT_GH_TIMEOUT_SECONDS)
 
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
@@ -268,6 +269,7 @@ def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = 
         check=True,
         capture_output=True,
         text=True,
+        timeout=DEFAULT_GH_TIMEOUT_SECONDS,
     )
     payload = json.loads(result.stdout)
     assets = payload.get("assets", [])
@@ -286,6 +288,7 @@ def _download_release_asset(
         ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
         check=True,
         capture_output=True,
+        timeout=DEFAULT_GH_TIMEOUT_SECONDS,
     )
     return result.stdout
 
@@ -312,7 +315,7 @@ def download_published_manifest(
     try:
         manifest_bytes = gzip.decompress(_download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo))
         manifest = json.loads(manifest_bytes.decode("utf-8"))
-    except (subprocess.CalledProcessError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         excerpt = _stderr_excerpt(exc) if isinstance(exc, subprocess.CalledProcessError) else ""
         detail = f" (gh stderr: {excerpt})" if excerpt else ""
         raise ManifestPublishError(
@@ -453,7 +456,7 @@ def canonical_published_manifest_exists(
     """Return whether the canonical baseline asset exists on the configured release."""
     try:
         return ASSET_NAME in _release_asset_names(release_tag=release_tag, repo=repo)
-    except subprocess.CalledProcessError as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         excerpt = _stderr_excerpt(exc)
         raise ManifestPublishError(
             "could not determine whether the canonical published Atlas manifest exists"

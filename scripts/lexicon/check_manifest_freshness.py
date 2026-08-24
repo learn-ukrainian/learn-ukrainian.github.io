@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, build_fingerprint, sidecar_payload
 
 LEXICON_PATH_PREFIX = "scripts/lexicon/"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 FINGERPRINT_SIDECAR_PATH = "site/src/data/lexicon-manifest.fingerprint.json"
 GIT_SCOPE_ENV_VARS = ("GIT_COMMON_DIR", "GIT_DIR", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_WORK_TREE")
 
@@ -102,6 +103,7 @@ def pr_touches_manifest_scope(*, root: Path, base_ref: str, head_ref: str = "HEA
         capture_output=True,
         text=True,
         env=_git_env(),
+        timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
     )
     return any(
         path.startswith(LEXICON_PATH_PREFIX) or path == FINGERPRINT_SIDECAR_PATH
@@ -138,10 +140,11 @@ def check_freshness(
                     base_ref=base_ref,
                     head_ref=head_ref,
                 )
-            except subprocess.CalledProcessError as error:
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+                detail = error.stderr.strip() if isinstance(error, subprocess.CalledProcessError) else str(error)
                 print(
                     "::error::Atlas manifest freshness could not determine PR-scoped "
-                    f"changes against {base_ref!r}: {error.stderr.strip()}"
+                    f"changes against {base_ref!r}: {detail}"
                 )
                 return 2
             if not touches_manifest_scope:

@@ -34,6 +34,7 @@ from scripts.verification.vesum import verify_words
 DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 READINGS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "readings"
 CONTENT_ROOTS = (DOCS_ROOT, READINGS_ROOT)
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 LEXICON_MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 VERIFY_BATCH_SIZE = 500
 
@@ -413,8 +414,13 @@ def _get_local_changed_files(*, cached: bool) -> list[Path]:
     if cached:
         cmd.append("--cached")
     try:
-        output = subprocess.check_output(cmd, cwd=PROJECT_ROOT, text=True)
-    except subprocess.CalledProcessError:
+        output = subprocess.check_output(
+            cmd,
+            cwd=PROJECT_ROOT,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return []
     return [PROJECT_ROOT / line for line in output.splitlines() if line]
 

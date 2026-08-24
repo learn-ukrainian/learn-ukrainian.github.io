@@ -42,6 +42,7 @@ SOURCE_FAMILY = "ohoiko"
 EXTRACTION_MODE = "headword_inventory"
 DEFAULT_BATCH_SIZE = 500
 MAX_UNKNOWN_FORM_RATE = 0.20
+DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS: float = 30.0
 
 _NUMBERED_MODULE_HEADER_RE = re.compile(r"^\s*(?:«\s*)?(?P<number>[1-9]\d?)\s+\S")
 _SECTION_HEADER_RE = re.compile(
@@ -498,7 +499,18 @@ def _resolve_binary(name: str) -> str:
 
 
 def _run(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
-    completed = subprocess.run(command, capture_output=True, text=True, check=False)
+    try:
+        completed = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ExtractionError(
+            f"command timed out ({Path(command[0]).name}): after {DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS}s"
+        ) from exc
     if completed.returncode != 0:
         detail = completed.stderr.strip().splitlines()[-1] if completed.stderr.strip() else "no stderr"
         raise ExtractionError(f"command failed ({Path(command[0]).name}): {detail}")

@@ -29,6 +29,8 @@ from scripts.lexicon.runner.contracts import (
     canonical_json,
 )
 
+DEFAULT_ZSTD_TIMEOUT_SECONDS: float = 60.0
+
 # Soft bound so one changed item never requires retransmitting multi-GB archives.
 DEFAULT_MAX_BUNDLE_ITEMS = 500
 DEFAULT_MAX_BUNDLE_UNCOMPRESSED_BYTES = 64 * 1024 * 1024  # 64 MiB
@@ -69,12 +71,18 @@ def zstd_compress(data: bytes, *, level: int = 3) -> bytes:
         raise TransportError(
             "zstd compression requires the 'zstandard' package or a 'zstd' binary on PATH"
         )
-    proc = subprocess.run(
-        ["zstd", f"-{int(level)}", "-c", "-"],
-        input=data,
-        capture_output=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["zstd", f"-{int(level)}", "-c", "-"],
+            input=data,
+            capture_output=True,
+            check=False,
+            timeout=DEFAULT_ZSTD_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise TransportError(
+            f"zstd compress timed out after {DEFAULT_ZSTD_TIMEOUT_SECONDS}s"
+        ) from exc
     if proc.returncode != 0:
         raise TransportError(f"zstd compress failed: {proc.stderr[:200]!r}")
     return proc.stdout
@@ -92,12 +100,18 @@ def zstd_decompress(data: bytes) -> bytes:
         raise TransportError(
             "zstd decompression requires the 'zstandard' package or a 'zstd' binary on PATH"
         )
-    proc = subprocess.run(
-        ["zstd", "-d", "-c", "-"],
-        input=data,
-        capture_output=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["zstd", "-d", "-c", "-"],
+            input=data,
+            capture_output=True,
+            check=False,
+            timeout=DEFAULT_ZSTD_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise TransportError(
+            f"zstd decompress timed out after {DEFAULT_ZSTD_TIMEOUT_SECONDS}s"
+        ) from exc
     if proc.returncode != 0:
         raise TransportError(f"zstd decompress failed: {proc.stderr[:200]!r}")
     return proc.stdout
