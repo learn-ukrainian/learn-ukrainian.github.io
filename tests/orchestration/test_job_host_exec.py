@@ -803,3 +803,36 @@ def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     assert "--run-nonce" in script
     assert "nonce-fwd-9876" in script
     assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=" in script
+
+
+def test_format_forward_config_refusal_names_both_recovery_paths() -> None:
+    """#7230: format_forward_config_refusal explicitly names both recovery paths and fail-closed policy."""
+    err = jh.ForwardConfigError("LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required")
+    msg = jh.format_forward_config_refusal(err, host_id="host-job")
+    assert "❌ VPS forward configuration refusal for host-job:" in msg
+    assert "LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required" in msg
+    assert "LU_JOB_DISPATCH_HOST" in msg
+    assert "ATLAS_RUNNER_HOST" in msg
+    assert "LU_JOB_REPO" in msg
+    assert "LU_ALLOW_NOTEBOOK_DISPATCH=1" in msg
+    assert "deliberately do not fall back" in msg
+
+
+def test_forward_config_error_inherits_value_error() -> None:
+    """#7230: ForwardConfigError must be a ValueError subclass for backward compatibility."""
+    err = jh.ForwardConfigError("missing env")
+    assert isinstance(err, ValueError)
+
+
+def test_job_host_exec_main_refusal_names_both_recovery_paths(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """#7230: job_host_exec.py CLI prints the refusal naming recovery paths and exits rc 2 on config error."""
+    monkeypatch.delenv(jh.ENV_HOST, raising=False)
+    monkeypatch.delenv(jh.ENV_HOST_FALLBACK, raising=False)
+    rc = jh.main(["--host-id", "host-job", "--", "scripts/delegate.py", "dispatch", "--task-id", "t-1"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "❌ VPS forward configuration refusal for host-job:" in captured.err
+    assert "LU_JOB_DISPATCH_HOST" in captured.err
+    assert "LU_ALLOW_NOTEBOOK_DISPATCH=1" in captured.err

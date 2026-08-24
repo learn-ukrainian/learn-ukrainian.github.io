@@ -9476,3 +9476,113 @@ def test_record_worktree_prep_failure_refuses_clobber_running_record(tmp_tasks_d
     )
     assert wrote_restored is False
     assert delegate._read_state(path) == original
+
+
+def test_forward_config_refusal_names_both_recovery_paths(tmp_tasks_dir, monkeypatch, capsys):
+    """#7230: VPS forward config refusal names both recovery paths and exits 2 without traceback."""
+    monkeypatch.delenv(job_host_exec.ENV_ALLOW_NOTEBOOK, raising=False)
+    monkeypatch.delenv(job_host_exec.ENV_HOST, raising=False)
+    monkeypatch.delenv(job_host_exec.ENV_HOST_FALLBACK, raising=False)
+    monkeypatch.setattr(
+        job_host_exec,
+        "decide_dispatch_placement",
+        lambda **_kwargs: ("vps", "available", "host-job"),
+    )
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "forward-refusal-7230",
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test forward config refusal",
+        ]
+    )
+
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 2
+
+    captured = capsys.readouterr()
+    stderr = captured.err
+    assert "❌ VPS forward configuration refusal for host-job:" in stderr
+    assert "LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required" in stderr
+    # Recovery path 1: real forward (names variables)
+    assert "LU_JOB_DISPATCH_HOST" in stderr
+    assert "ATLAS_RUNNER_HOST" in stderr
+    assert "LU_JOB_REPO" in stderr
+    # Recovery path 2: local notebook dispatch
+    assert "LU_ALLOW_NOTEBOOK_DISPATCH=1" in stderr
+    # States that config errors fail closed without fallback
+    assert "deliberately do not fall back" in stderr
+
+
+def test_forward_config_refusal_writes_terminal_task_record(tmp_tasks_dir, monkeypatch):
+    """#7230: VPS forward config refusal writes terminal failed task record for settle-loops."""
+    monkeypatch.delenv(job_host_exec.ENV_ALLOW_NOTEBOOK, raising=False)
+    monkeypatch.delenv(job_host_exec.ENV_HOST, raising=False)
+    monkeypatch.delenv(job_host_exec.ENV_HOST_FALLBACK, raising=False)
+    monkeypatch.setattr(
+        job_host_exec,
+        "decide_dispatch_placement",
+        lambda **_kwargs: ("vps", "available", "host-job"),
+    )
+    task_id = "forward-record-7230"
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            task_id,
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test record write on refusal",
+        ]
+    )
+
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 2
+
+    state_file = delegate._state_path(task_id)
+    assert state_file.is_file(), "terminal task record must be written on forward config refusal"
+
+    state = delegate._read_state(state_file)
+    assert state is not None
+    assert state["task_id"] == task_id
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "forward configuration failed"
+    assert "LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required" in state["last_error"]
+    assert "forward configuration failed" in state["stderr_excerpt"]
+    assert state["started_at"] is not None
+    assert state["finished_at"] is not None
+    assert state["agent"] == "codex"
+    assert state["initiator"] == "codex"
+
+
+def test_record_forward_failure_refuses_clobber_running_record(tmp_tasks_dir, monkeypatch):
+    """#7230: forward-failure record must not overwrite a concurrent running task."""
+    path = delegate._state_path("forward-clobber-7230")
+    original = {
+        "task_id": "forward-clobber-7230",
+        "status": "running",
+        "pid": os.getpid(),
+        "receipt": "do-not-clobber-forward-failure",
+    }
+    delegate._write_state_atomic(path, original)
+
+    wrote = delegate._record_forward_failure(
+        task_id="forward-clobber-7230",
+        run_nonce="nonce-7230",
+        attribution=type("Attr", (), {"initiator": "test", "source": "test"})(),
+        agent="codex",
+        mode="read-only",
+        prompt="forward failure probe",
+        error=job_host_exec.ForwardConfigError("simulated forward config failure"),
+    )
+
+    assert wrote is False
+    assert delegate._read_state(path) == original
