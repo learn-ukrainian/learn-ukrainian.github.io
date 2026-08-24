@@ -19,8 +19,6 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# Pin child launches to this checkout; an inherited interpreter may belong to another worktree.
-REPO_PYTHON = PROJECT_ROOT / ".venv/bin/python"
 if __package__:
     from scripts.lib.session_record import canonical_state_root, validate_session_id
     from scripts.orchestration import thread_handoff
@@ -28,6 +26,43 @@ else:
     sys.path.insert(0, os.fspath(PROJECT_ROOT))
     from scripts.lib.session_record import canonical_state_root, validate_session_id
     from scripts.orchestration import thread_handoff
+
+
+def resolve_relaunch_python(project_root: Path = PROJECT_ROOT) -> Path:
+    """Resolve the Python interpreter for launching supervisor child gates.
+
+    Preserves the launcher contract:
+    1. Local checkout virtualenv (project_root / ".venv/bin/python") if present.
+    2. Canonical repository virtualenv (canonical_state_root(project_root) / ".venv/bin/python")
+       for venv-less linked worktrees or detached checkouts.
+    3. The active interpreter (sys.executable), e.g. for CI or environments without .venv.
+    4. Fallback to project_root / ".venv/bin/python" if no valid executable is found.
+    """
+    local = project_root / ".venv" / "bin" / "python"
+    if local.is_file() and os.access(local, os.X_OK):
+        return local
+
+    try:
+        canonical_root = canonical_state_root(project_root)
+        canonical = canonical_root / ".venv" / "bin" / "python"
+        if canonical.is_file() and os.access(canonical, os.X_OK):
+            return canonical
+    except Exception as exc:
+        print(
+            f"[supervisor] warning: failed to resolve canonical state root ({type(exc).__name__}): {exc}",
+            file=sys.stderr,
+        )
+
+    if sys.executable:
+        current = Path(sys.executable)
+        if current.is_file() and os.access(current, os.X_OK):
+            return current
+
+    return local
+
+
+# Pin child launches to this checkout or its canonical virtualenv in worktrees
+REPO_PYTHON = resolve_relaunch_python(PROJECT_ROOT)
 
 SCHEMA_VERSION = 1
 REQUEST_TTL_SECONDS = 300
@@ -652,6 +687,14 @@ class ClaudexSupervisor:
         with contextlib.suppress(OSError):
             ready_file.unlink()
         launch_env = self.base_env.copy()
+        venv_bin = os.fspath(REPO_PYTHON.parent)
+        current_path = launch_env.get("PATH", "")
+        if current_path:
+            launch_env["PATH"] = f"{venv_bin}{os.pathsep}{current_path}"
+        else:
+            launch_env["PATH"] = venv_bin
+        if (REPO_PYTHON.parent.parent / "pyvenv.cfg").is_file():
+            launch_env["VIRTUAL_ENV"] = os.fspath(REPO_PYTHON.parent.parent)
         launch_env.update(
             {
                 "LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH": "1",

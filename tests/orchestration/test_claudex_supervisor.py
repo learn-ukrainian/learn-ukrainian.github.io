@@ -4,6 +4,7 @@ import json
 import os
 import stat
 import subprocess
+import sys
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -22,12 +23,18 @@ from scripts.orchestration.claudex_supervisor import (
     compute_command_hash,
     create_rollover_request,
     load_runtime,
+    resolve_relaunch_python,
 )
 from tests.project_python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+_CANONICAL_REPO_ROOT = th.canonical_state_root(_REPO_ROOT)
+
+
 def _repo_python() -> Path:
     return project_python()
+
+
 _SUPERVISOR = _REPO_ROOT / "scripts/orchestration/claudex_supervisor.py"
 _SESSION_ID = "official-session-5265"
 _HANDOFF_AGENT = "claude-infra"
@@ -153,14 +160,10 @@ def _wait_for_runtime(
 
 def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
     wait_source = (
-        "\nif generation == 0:\n"
-        "    while True:\n"
-        "        time.sleep(1)\n"
-        if wait_on_first_launch
-        else "\nsys.exit(7)\n"
+        "\nif generation == 0:\n    while True:\n        time.sleep(1)\n" if wait_on_first_launch else "\nsys.exit(7)\n"
     )
     path.write_text(
-        "#!/usr/bin/env python3\n"
+        "#!/usr/bin/env python\n"
         "import json\n"
         "import os\n"
         "import sys\n"
@@ -169,6 +172,7 @@ def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
         "generation = int(os.environ['LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION'])\n"
         "record = {\n"
         "    'argv': sys.argv[1:],\n"
+        "    'executable': sys.executable,\n"
         "    'generation': generation,\n"
         "    'profile': os.environ['LEARN_UKRAINIAN_PROFILE_ID'],\n"
         "    'lead': os.environ['LEARN_UKRAINIAN_MAIN_MODEL_ID'],\n"
@@ -178,8 +182,7 @@ def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
         "}\n"
         "log = Path(os.environ['SUPERVISOR_CHILD_LOG'])\n"
         "with log.open('a', encoding='utf-8') as handle:\n"
-        "    handle.write(json.dumps(record, sort_keys=True) + '\\n')\n"
-        + wait_source,
+        "    handle.write(json.dumps(record, sort_keys=True) + '\\n')\n" + wait_source,
         encoding="utf-8",
     )
     path.chmod(0o755)
@@ -333,9 +336,7 @@ def test_malformed_request_is_quarantined_once_without_persisting_payload(
     supervisor = _seed_running_supervisor(tmp_path)
     _bind(supervisor)
     request_path = _request_path(tmp_path, supervisor.run_id)
-    request_path.write_text(
-        json.dumps({"authorization": "private-rejected-value"}), encoding="utf-8"
-    )
+    request_path.write_text(json.dumps({"authorization": "private-rejected-value"}), encoding="utf-8")
     request_path.chmod(0o600)
 
     assert supervisor._check_request() is None
@@ -441,7 +442,7 @@ def test_valid_rollover_relaunches_exact_route_once(
         monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION", "0")
         monkeypatch.setenv("LEARN_UKRAINIAN_SESSION_ID", _SESSION_ID)
         request = th.request_claudex_rollover(
-            repo_root=_REPO_ROOT,
+            repo_root=_CANONICAL_REPO_ROOT,
             state_root=tmp_path,
             lineage_id=state["lineage_id"],
             replacement=replacement,
@@ -528,3 +529,93 @@ def test_relaunch_failure_leaves_handoff_lease_for_manual_recovery(tmp_path: Pat
     assert lease_path.exists()
     preserved = json.loads(lease_path.read_text(encoding="utf-8"))
     assert preserved["replacement"]["status"] == "pending_start"
+
+
+def test_resolve_relaunch_python_priorities(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    sentinel_python = tmp_path / "sentinel_python"
+    sentinel_python.touch(mode=0o755)
+    monkeypatch.setattr(sys, "executable", os.fspath(sentinel_python))
+
+    # 1. Local checkout with .venv/bin/python
+    mock_local = tmp_path / "local"
+    local_python = mock_local / ".venv/bin/python"
+    local_python.parent.mkdir(parents=True)
+    local_python.touch(mode=0o755)
+    assert resolve_relaunch_python(mock_local) == local_python
+
+    # 2. Venv-less checkout in git repository finds canonical venv
+    worktree = tmp_path / "venv_less_wt"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", os.fspath(worktree), "HEAD"],
+        cwd=_REPO_ROOT,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    try:
+        assert resolve_relaunch_python(worktree) == _repo_python()
+    finally:
+        subprocess.run(
+            ["git", "worktree", "remove", "--force", os.fspath(worktree)],
+            cwd=_REPO_ROOT,
+            check=False,
+            capture_output=True,
+            timeout=30,
+        )
+
+    # 3. Non-git directory falls back to sys.executable
+    non_git = tmp_path / "non_git"
+    non_git.mkdir()
+    assert resolve_relaunch_python(non_git) == sentinel_python
+
+
+def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
+    """Issue #7210: supervisor child relaunch must work from venv-less linked worktrees."""
+    worktree = tmp_path / "venv_less_wt"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", os.fspath(worktree), "HEAD"],
+        cwd=_REPO_ROOT,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    try:
+        assert not (worktree / ".venv").exists()
+        child = tmp_path / "child.py"
+        child_log = tmp_path / "child.jsonl"
+        _write_child(child, wait_on_first_launch=False)
+        raw_path = os.environ.get("PATH", "")
+        repo_venv_bin = _repo_python().parent.resolve()
+        cleaned_path = os.pathsep.join(
+            p for p in raw_path.split(os.pathsep) if p and Path(p).resolve() != repo_venv_bin
+        )
+        env = _route_env(
+            PATH=cleaned_path,
+            CLAUDEX_SUPERVISOR_TEST_STATE_ROOT=os.fspath(tmp_path),
+            SUPERVISOR_CHILD_LOG=os.fspath(child_log),
+        )
+        supervisor_script = worktree / "scripts/orchestration/claudex_supervisor.py"
+        supervisor_script.write_text(_SUPERVISOR.read_text(encoding="utf-8"), encoding="utf-8")
+        completed = subprocess.run(
+            [os.fspath(_repo_python()), os.fspath(supervisor_script), os.fspath(child), *_argv()],
+            cwd=worktree,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert completed.returncode == 7, completed.stderr
+        rows = _wait_for_log(child_log, 1)
+        assert len(rows) == 1, f"expected 1 log row, got {len(rows)}\nstderr:\n{completed.stderr}"
+        assert Path(rows[0]["executable"]) == _repo_python(), (
+            f"expected child interpreter {_repo_python()} but got {rows[0]['executable']}\n"
+            f"supervisor stderr:\n{completed.stderr}"
+        )
+    finally:
+        subprocess.run(
+            ["git", "worktree", "remove", "--force", os.fspath(worktree)],
+            cwd=_REPO_ROOT,
+            check=False,
+            capture_output=True,
+            timeout=30,
+        )

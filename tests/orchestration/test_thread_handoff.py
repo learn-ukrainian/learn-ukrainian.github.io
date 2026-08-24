@@ -83,7 +83,7 @@ def seed_supervised_claudex(
     *,
     session_id: str = "official-session-5265",
 ) -> cs.ClaudexSupervisor:
-    (tmp_path / ".venv").symlink_to(_REPO_ROOT / ".venv", target_is_directory=True)
+    (tmp_path / ".venv").symlink_to(project_python().parent.parent, target_is_directory=True)
     supervisor_env = os.environ.copy()
     supervisor_env.update(
         {
