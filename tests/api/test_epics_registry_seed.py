@@ -213,7 +213,7 @@ def test_malformed_yaml_is_invalid_but_does_not_block_seed_call(
     release = tmp_path / "release"
     _write_registry(release, "streams: [", raw=True)
     store = _store(tmp_path)
-    _add_store_only(store, "epic:9998")
+    _add_store_only(store, "epic:9999")
 
     health = epics_router.seed_manifest_inventory(release, store=store, now=NOW)
     client = _client(store, monkeypatch)
@@ -221,7 +221,7 @@ def test_malformed_yaml_is_invalid_but_does_not_block_seed_call(
     assert health["status"] == "invalid"
     assert health["skipped"] == 1
     assert client.get("/api/epics/v1").status_code == 200
-    assert client.get("/api/epics/v1/epic:9998").status_code == 200
+    assert client.get("/api/epics/v1/epic:9999").status_code == 200
 
 
 def test_list_and_detail_distinguish_registered_and_store_only_rows(
@@ -231,13 +231,13 @@ def test_list_and_detail_distinguish_registered_and_store_only_rows(
     _write_registry(release, {"alpha": {"title": "Alpha stream", "epics": [1001]}})
     store = _store(tmp_path)
     epics_router.seed_manifest_inventory(release, store=store, handoff_root=tmp_path / "live", now=NOW)
-    _add_store_only(store, "epic:9997")
+    _add_store_only(store, "epic:999999")
     client = _client(store, monkeypatch)
 
     listing = client.get("/api/epics/v1")
     rows = {row["stream_id"]: row for row in listing.json()["streams"]}
     registered = rows["epic:1001"]
-    store_only = rows["epic:9997"]
+    store_only = rows["epic:999999"]
 
     assert listing.status_code == 200
     assert listing.json()["registry_status"] == "ok"
@@ -249,7 +249,7 @@ def test_list_and_detail_distinguish_registered_and_store_only_rows(
     assert store_only["stream_name"] is None
     assert store_only["title"] is None
     assert client.get("/api/epics/v1/epic:1001").json()["registered"] is True
-    assert client.get("/api/epics/v1/epic:9997").json()["registered"] is False
+    assert client.get("/api/epics/v1/epic:999999").json()["registered"] is False
 
 
 def test_removed_epic_keeps_row_as_stale_metadata(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
