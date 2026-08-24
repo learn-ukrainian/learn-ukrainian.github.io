@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4ed307d1c129",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7187-worker-map",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/fleet.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/fleet_workers_collect.py",
+    "scripts/api/fleet_workers_sanitize.py",
+    "scripts/api/occupancy_local.py",
+    "tests/api/test_fleet_workers.py",
+    "tests/api/test_fleet_workers_unmocked.py",
+    "tests/api/test_occupancy_local.py",
+    "tests/test_fleet_dashboard_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/4e/d307d1c129/0/metadata.json",
+      "transcript": "/4e/d307d1c129/0/full.jsonl",
+      "compact_transcript": "/4e/d307d1c129/0/transcript.jsonl",
+      "content_hash": "/4e/d307d1c129/0/content_hash.txt",
+      "prompt": "/4e/d307d1c129/0/prompt.txt"
+    }
+  ]
+}
