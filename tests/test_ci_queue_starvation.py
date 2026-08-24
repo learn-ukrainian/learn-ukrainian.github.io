@@ -31,6 +31,19 @@ _RECOVERY = _REPO_ROOT / ".github/workflows/ci-gate-queue-recovery.yml"
 # Always-on jobs that start together on every CI event (matrix shards count).
 _MAX_ALWAYS_ON_PARALLEL_SLOTS = 6
 
+# Secret-scan timeout budget (#7263 / #4811):
+# Sized to the 3-attempt TruffleHog cadence with backoff sleeps:
+# 75s checkout + 3*(10s pull + 50s scan) + (10s + 30s) sleeps = 295s (~5 min) + 2 min margin = 7 min.
+# A 7-minute bound keeps landing secret scanning bounded without starving the runner queue (#4811):
+# 1. Parallel slots: secret-scan occupies 1 runner slot, keeping always-on parallel
+#    jobs (6) within the _MAX_ALWAYS_ON_PARALLEL_SLOTS budget.
+# 2. Critical path: on merge_group, secret-scan (<=7m) completes well before the
+#    Python test shards (30m timeout, ~10-15m runtime) and contracts/frontend (25m),
+#    so it is not on the merge-group critical path to CI Gate.
+# 3. PR tier: PRs only run 3 lightweight jobs (ruff, pytest-fastlane, secret-scan)
+#    with cancel-in-progress, finishing in 1-2m nominally.
+_MAX_SECRET_SCAN_TIMEOUT_MINUTES = 7
+
 
 def _load(path: Path) -> dict:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -92,7 +105,7 @@ def test_ci_keeps_secret_scan_separate_from_full_contracts() -> None:
 def test_secret_scan_bounds_landing_secret_and_opsec_scans() -> None:
     workflow = _CI.read_text(encoding="utf-8")
     secret_scan = _load(_CI)["jobs"]["secret-scan"]
-    assert secret_scan["timeout-minutes"] <= 2
+    assert secret_scan["timeout-minutes"] <= _MAX_SECRET_SCAN_TIMEOUT_MINUTES
     assert "Resolve secret scan commit scope (#7141)" in workflow
     assert "MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha || '' }}" in workflow
     assert "MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}" in workflow
