@@ -131,3 +131,33 @@ def test_raw_rm_rf_lint_detects_unscoped_line(tmp_path: Path) -> None:
 
     findings = lint_raw_rm_rf.find_raw_rm_rf(repo_root=tmp_path)
     assert findings == [("scripts/evil.sh:1", 'rm -rf "$HOME"')]
+
+
+def test_raw_rm_rf_lint_allowlist_keyed_by_content_not_line(tmp_path: Path) -> None:
+    """Allowlisted snippets survive line shifts; excess copies still fail."""
+    lockdir_rm = "rm -rf \"$lockdir\" 2>/dev/null || true"
+    services = tmp_path / "services.sh"
+    services.write_text(
+        "\n".join(
+            [
+                "# preamble inserted above allowlisted cleanups",
+                "# more lines to shift line numbers",
+                lockdir_rm,
+                lockdir_rm,
+                "rm -rf \"$vite_cache_dir\"",
+                "rm -rf \"$dist_dir\"",
+                "rm -rf \"$astro_dir\"",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    findings = lint_raw_rm_rf.find_raw_rm_rf(repo_root=tmp_path)
+    assert findings == [], f"shifted allowlisted snippets should pass: {findings}"
+
+    services.write_text(services.read_text(encoding="utf-8") + lockdir_rm + "\n", encoding="utf-8")
+    findings = lint_raw_rm_rf.find_raw_rm_rf(repo_root=tmp_path)
+    assert len(findings) == 1
+    assert findings[0][1] == lockdir_rm
+    assert findings[0][0].startswith("services.sh:")
