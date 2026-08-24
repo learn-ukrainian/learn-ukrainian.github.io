@@ -1,0 +1,193 @@
+# Cycle 007 resumable labeling runtime
+
+Status: implementation plan for issue #6375. Labeling remains OFF until the
+operator explicitly starts a provider stage.
+
+## Frozen outcome contract
+
+- User-visible outcome: independently label every one of the 10,159 frozen
+  Cycle 007 rows with Gemini and Grok, deterministically compare both label
+  sets, adjudicate every disagreement, resolve any explicitly authorized
+  residual, and certify zero unresolved rows.
+- Source denominator: 204 immutable evidence packets containing 10,159 rows.
+- Completion terms:
+  - `storage_ready`: every runtime output root is mounted on the explicit
+    backing filesystem and passes identity, permission, and free-space checks.
+  - `provider_complete`: one provider has a verified sealed result for all
+    204 packets and all 10,159 row identities.
+  - `dual_complete`: both providers independently satisfy
+    `provider_complete`.
+  - `compared`: deterministic comparison covers the exact dual-complete
+    identity set.
+  - `adjudicated`: every disagreement has a verified adjudication result.
+  - `certified`: the existing Cycle 007 certifier reports 204 packets, 10,159
+    rows, both providers complete, and zero unresolved rows.
+- Stop policy: stop without deleting a committed packet on mount drift,
+  identity drift, a second guardian, inadequate actual free space, a provider
+  stop receipt, a non-contiguous stage seal, an invalid committed packet, or
+  an ambiguous provider/adjudicator attempt that started but did not commit a
+  terminal receipt. A bind-mount command that exceeds 30 seconds stops with
+  `bind_mount_timeout`. A controller status call that exceeds 300 seconds or a
+  stage call that exceeds 72 hours stops with `controller_timeout`. The stage
+  timeout kills only the controller wrapper, not a possibly surviving paid
+  runner; the runner retains the inherited execution lock until it exits.
+- Residual policy: provider or semantic failures remain explicit stop receipts;
+  they are never normalized away or automatically retried by the guardian.
+- Independent held-out evaluation: a frozen black-box fixture and expected
+  text-free receipts, separate from the implementation-focused unit fixtures,
+  use fake packages and fake providers to prove mount restoration, duplicate
+  exclusion, exact packet resume, stage resume, and terminal completion without
+  reading or depending on production content.
+
+## Non-goals
+
+- No evidence, packet, prompt, label schema, model, validator, endpoint,
+  denominator, chunk size, custody, or certification-policy change.
+- No copy of the approximately 81 GiB evidence bundle.
+- No database, queue service, container platform, or new background daemon.
+- No provider call during installation, storage preparation, status, or plan.
+- No automatic clearing of provider-stop receipts or semantic failures.
+- No persistent `/etc/fstab` or systemd mutation. Re-running the same guardian
+  command after reboot restores the bind mounts and resumes from seals.
+
+## Minimal architecture
+
+The existing reviewed controller remains the authority for preflight, packet
+verification, stage ordering, and stage seals. A small Linux-only guardian adds
+only the missing operational layer:
+
+1. Acquire one non-blocking outer guardian lock located outside the disposable
+   worktree and hold it through storage validation and child completion. Pass a
+   different stable lock path to the existing controller; the guardian never
+   tries to acquire the controller lock itself. Also acquire a third stable
+   execution lock and explicitly inherit its open descriptor through the
+   guardian, controller, and actual provider/adjudicator runner. Because the
+   kernel lock survives until the last inheriting process exits, a replacement
+   guardian cannot start a duplicate even if the guardian and controller are
+   killed while their runner remains alive.
+2. Validate the explicit package and backing roots without discovering either.
+3. Create six private backing directories and six empty package mountpoints
+   with the frozen lexical names `label-output-gemini-cycle007-v1`,
+   `label-output-grok-cycle007-v1`, `dual-label-output-cycle007-v1`,
+   `consensus-audit-cycle007-v1`, `dual-label-adjudication-cycle007-v1`, and
+   `dual-label-final-cycle007-v1`.
+4. Idempotently bind-mount each backing directory at the unchanged package path.
+   Package and backing roots must be absolute, distinct, non-overlapping, and
+   contain no symlink component. The backing device must differ from the
+   package/evidence device. An unmounted target must be empty. An existing mount
+   is accepted only when `/proc/self/mountinfo` has an exact target entry,
+   source and target have the same device and inode, all six targets share the
+   backing device, ownership matches the explicit required `--owner-uid` and
+   `--owner-gid` values, and modes are `0700`. A wrong existing mount fails
+   without unmounting or remounting it.
+   Actual free space is computed from `statvfs.f_bavail * f_frsize` and must be
+   at least the operator-supplied floor before every stage.
+5. Quarantine automatically only orphan atomic temporary names that cannot be
+   a committed result, using a same-filesystem rename into a private bounded
+   recovery directory. Automatic quarantine is capped at 64 files and 16 MiB
+   per invocation; exceeding either bound fails with
+   `recovery_bound_exceeded`. Never copy, read, delete, move, or overwrite a complete
+   verified packet. A started-without-terminal attempt, partial provider or
+   adjudicator final set, or provider-stop receipt is ambiguous and always
+   blocks for explicit operator recovery. Package-top `.cycle007-*` residue
+   remains on the package filesystem and is never copied across filesystems.
+6. Read the existing text-free stage-seal chain and invoke the existing
+   controller for exactly the first incomplete stage. Repeat until the requested
+   terminal stage is sealed or a safe stop occurs.
+7. For Gemini and Grok, use their existing per-attempt and packet/chunk receipts
+   rather than a stage-wide marker. When the execution lock is free, resume at
+   the first missing packet only after every committed unit verifies and there
+   is no started attempt lacking either a complete verified unit or a terminal
+   failure receipt, no partial seal, and no provider stop. For `audit` and
+   `adjudicate`, which lack equivalent durable per-call markers, atomically write
+   and parent-directory-fsync a conservative text-free active-stage marker
+   before invoking the controller. Remove it and fsync the directory only after
+   the controller has committed and verified that stage seal. If such a marker
+   exists without its complete stage seal, a replacement guardian reports
+   `ambiguous_provider_attempt` and performs zero provider calls. If the stage
+   seal is complete, the marker is safely stale and may be removed without
+   rerunning the stage.
+8. Atomically write a text-free guardian receipt containing counts, stage,
+   mount identities, code identity, and safe failure code. It contains no
+   packet content, prompts, labels, responses, account data, or infrastructure
+   locator.
+
+The provider concurrency remains exactly one. The inherited execution lock is
+held by the actual child runner for its entire lifetime, including before the
+child writes its started marker. Packet and chunk receipts are the
+durable checkpoint; the guardian does not maintain a second progress database.
+Certification and controller files intentionally remain on the package
+filesystem. The existing provider atomic helpers are not changed by this
+runtime and do not fsync parent directories after every rename, so the guarantee
+is deliberately limited to process death and orderly reboot. A power-loss or
+kernel/filesystem crash that leaves an ambiguous attempt fails closed instead
+of being claimed as automatically resumable.
+
+## Recovery guarantees
+
+| Interruption | Recovery behavior |
+| --- | --- |
+| Guardian killed between packets | Next invocation validates all committed packets and starts at the first missing packet. |
+| Orderly server reboot | Next invocation recreates missing bind mounts, validates their identity, and resumes from the existing seals. |
+| Process death during an atomic file write, before a provider attempt starts | The orphan atomic temporary name is moved without inspection by same-filesystem rename; the uncommitted unit is rerun. |
+| Started provider/adjudicator attempt without a terminal receipt | Fail with `ambiguous_provider_attempt`; preserve every file and wait for explicit operator recovery. |
+| Partial provider/adjudicator final set | Fail with `ambiguous_partial_seal`; preserve every file and wait for explicit operator recovery. |
+| Guardian/controller/runner killed after an adjudicator or audit provider returns but before its stage seal | The durable active-stage marker remains; replacement returns `ambiguous_provider_attempt` and makes zero provider calls. |
+| Guardian/controller killed between two verified Gemini or Grok packets | With no surviving execution lock or ambiguous attempt, replacement verifies the durable prefix and starts exactly at the next packet. |
+| Crash between stages | The completed stage seal is validated and the next stage starts. |
+| Wrong backing directory mounted | Fail with `mount_identity_drift`; do not run a provider. |
+| Duplicate guardian | Fail with `guardian_already_running`; do not run a provider. |
+| Guardian and controller killed while their runner survives | The runner retains the inherited execution lock; a replacement fails with `active_worker` and makes zero provider calls. |
+| Bind-mount command exceeds 30 seconds | Fail with `bind_mount_timeout`; no provider has been invoked and the operator must inspect storage state before retrying. |
+| Controller status call exceeds 300 seconds | Fail with `controller_timeout`; status never invokes a provider, so no paid runner is created by this path. |
+| Controller stage call exceeds 72 hours | Kill only the controller wrapper and fail with `controller_timeout`. A surviving paid runner is deliberately not signalled, retains the inherited execution lock, and makes a replacement return `active_worker` with zero additional provider calls. After it exits, durable receipts, seals, and active-stage markers determine the only safe recovery point. |
+| Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
+
+## Run sequence
+
+1. `prepare`: mount and verify storage only; provider calls remain off.
+2. `plan`: report the next missing stage and safe counts only.
+3. `resume --through gemini`: finish and seal Gemini.
+4. `resume --through grok`: finish and seal Grok.
+5. `resume --through adjudicate`: compare, audit, and adjudicate after both
+   provider seals exist.
+6. `resume --through certify`: run authorized resolution when required and the
+   existing certifier; success requires zero unresolved rows.
+
+The staged `--through` boundary prevents an operator intending to start one
+provider from accidentally starting the other or entering adjudication.
+
+## Acceptance evidence
+
+- Unit tests cover exact mount-table identity, no-symlink components, ownership,
+  permissions, `f_bavail` free-space floor, distinct devices, non-overlapping
+  roots, empty targets, wrong-mount refusal, idempotent remount, distinct outer
+  and controller locks, inherited execution-lock continuity, a real child lock
+  invocation, duplicate guardian,
+  zero-provider prepare/plan/status, completed-packet preservation, requested
+  `--through` boundaries, stage continuation, and safe stop receipts.
+- Interruption tests cover the boundary before a started marker, after the
+  started marker, after provider return, after each final file, and after the
+  terminal receipt. Only the pre-start orphan-temp case auto-recovers; every
+  ambiguous paid-call boundary preserves files and stops.
+- One process test pauses a runner before its started marker, kills its guardian
+  and controller, and proves a replacement guardian returns `active_worker`
+  while making zero additional provider calls.
+- One process test triggers the guardian's real controller-timeout path against
+  a long-running controller with a long-running child, proves the controller is
+  killed while its child survives with the inherited execution lock, and proves
+  a replacement guardian returns `active_worker` with zero additional provider
+  calls.
+- One process test kills the guardian and controller immediately after a
+  verified Gemini/Grok packet boundary, then proves replacement execution starts
+  at exactly the next packet with no duplicate provider call.
+- A second process test kills the adjudicator after provider return and runtime
+  cleanup but before its stage seal, then proves the durable active-stage marker
+  makes replacement execution return `ambiguous_provider_attempt` with zero
+  additional provider calls and no file loss.
+- A synthetic end-to-end run reaches the existing certification stage, then a
+  second invocation performs zero provider work.
+- The exact PR head passes repository CI and an independent cross-family code
+  review before merge.
+- Production preflight is content-blind and labeling stays OFF until the
+  operator executes an explicit `resume --through ...` command.
