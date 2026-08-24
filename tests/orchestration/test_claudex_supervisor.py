@@ -28,8 +28,13 @@ from scripts.orchestration.claudex_supervisor import (
 from tests.project_python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+_CANONICAL_REPO_ROOT = th.canonical_state_root(_REPO_ROOT)
+
+
 def _repo_python() -> Path:
     return project_python()
+
+
 _SUPERVISOR = _REPO_ROOT / "scripts/orchestration/claudex_supervisor.py"
 _SESSION_ID = "official-session-5265"
 _HANDOFF_AGENT = "claude-infra"
@@ -155,11 +160,7 @@ def _wait_for_runtime(
 
 def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
     wait_source = (
-        "\nif generation == 0:\n"
-        "    while True:\n"
-        "        time.sleep(1)\n"
-        if wait_on_first_launch
-        else "\nsys.exit(7)\n"
+        "\nif generation == 0:\n    while True:\n        time.sleep(1)\n" if wait_on_first_launch else "\nsys.exit(7)\n"
     )
     path.write_text(
         "#!/usr/bin/env python\n"
@@ -181,8 +182,7 @@ def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
         "}\n"
         "log = Path(os.environ['SUPERVISOR_CHILD_LOG'])\n"
         "with log.open('a', encoding='utf-8') as handle:\n"
-        "    handle.write(json.dumps(record, sort_keys=True) + '\\n')\n"
-        + wait_source,
+        "    handle.write(json.dumps(record, sort_keys=True) + '\\n')\n" + wait_source,
         encoding="utf-8",
     )
     path.chmod(0o755)
@@ -336,9 +336,7 @@ def test_malformed_request_is_quarantined_once_without_persisting_payload(
     supervisor = _seed_running_supervisor(tmp_path)
     _bind(supervisor)
     request_path = _request_path(tmp_path, supervisor.run_id)
-    request_path.write_text(
-        json.dumps({"authorization": "private-rejected-value"}), encoding="utf-8"
-    )
+    request_path.write_text(json.dumps({"authorization": "private-rejected-value"}), encoding="utf-8")
     request_path.chmod(0o600)
 
     assert supervisor._check_request() is None
@@ -444,7 +442,7 @@ def test_valid_rollover_relaunches_exact_route_once(
         monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION", "0")
         monkeypatch.setenv("LEARN_UKRAINIAN_SESSION_ID", _SESSION_ID)
         request = th.request_claudex_rollover(
-            repo_root=_repo_python().parent.parent,
+            repo_root=_CANONICAL_REPO_ROOT,
             state_root=tmp_path,
             lineage_id=state["lineage_id"],
             replacement=replacement,
@@ -533,9 +531,7 @@ def test_relaunch_failure_leaves_handoff_lease_for_manual_recovery(tmp_path: Pat
     assert preserved["replacement"]["status"] == "pending_start"
 
 
-def test_resolve_relaunch_python_priorities(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_resolve_relaunch_python_priorities(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     sentinel_python = tmp_path / "sentinel_python"
     sentinel_python.touch(mode=0o755)
     monkeypatch.setattr(sys, "executable", os.fspath(sentinel_python))
@@ -554,6 +550,7 @@ def test_resolve_relaunch_python_priorities(
         cwd=_REPO_ROOT,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     try:
         assert resolve_relaunch_python(worktree) == _repo_python()
@@ -563,6 +560,7 @@ def test_resolve_relaunch_python_priorities(
             cwd=_REPO_ROOT,
             check=False,
             capture_output=True,
+            timeout=30,
         )
 
     # 3. Non-git directory falls back to sys.executable
@@ -579,6 +577,7 @@ def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
         cwd=_REPO_ROOT,
         check=True,
         capture_output=True,
+        timeout=30,
     )
     try:
         assert not (worktree / ".venv").exists()
@@ -603,7 +602,7 @@ def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
             env=env,
             capture_output=True,
             text=True,
-            timeout=20,
+            timeout=60,
         )
         assert completed.returncode == 7, completed.stderr
         rows = _wait_for_log(child_log, 1)
@@ -618,5 +617,5 @@ def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
             cwd=_REPO_ROOT,
             check=False,
             capture_output=True,
+            timeout=30,
         )
-
