@@ -50,6 +50,7 @@ def run_command(cmd: list[str], capture: bool = True) -> tuple[int, str, str]:
             cmd,
             capture_output=capture,
             text=True,
+            timeout=300,
             cwd=PROJECT_ROOT
         )
         return result.returncode, result.stdout, result.stderr
