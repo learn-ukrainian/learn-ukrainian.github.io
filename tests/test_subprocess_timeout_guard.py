@@ -20,7 +20,9 @@ import os
 import re
 import subprocess
 import textwrap
+from collections import Counter, defaultdict
 from pathlib import Path
+from typing import NamedTuple
 
 import pytest
 
@@ -31,6 +33,8 @@ pytestmark = pytest.mark.repo_invariant
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TESTS_ROOT = _REPO_ROOT / "tests"
+_SCRIPTS_ROOT = _REPO_ROOT / "scripts"
+_ALLOWLIST_PATH = _SCRIPTS_ROOT / "ci" / "subprocess_timeout_allowlist.txt"
 _BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
 _SUBPROCESS_IMPORT_RE = re.compile(r"(?m)^\s*(?:import subprocess|from subprocess import)\b")
 
@@ -39,13 +43,57 @@ _EXPECTED_PYTEST_TIMEOUT_SECONDS = 120
 _EXPECTED_TIMEOUT_METHOD = "thread"
 
 
-def _timeout_less_calls(path: Path) -> list[tuple[int, str]]:
+class TimeoutLessCall(NamedTuple):
+    lineno: int
+    name: str
+    qualname: str
+
+
+class _SubprocessCallVisitor(ast.NodeVisitor):
+    def __init__(self, aliases: dict[str, str | None]) -> None:
+        self._aliases = aliases
+        self._scope_stack: list[str] = []
+        self.hits: list[TimeoutLessCall] = []
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        self._scope_stack.append(node.name)
+        self.generic_visit(node)
+        self._scope_stack.pop()
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        self._scope_stack.append(node.name)
+        self.generic_visit(node)
+        self._scope_stack.pop()
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+        self._scope_stack.append(node.name)
+        self.generic_visit(node)
+        self._scope_stack.pop()
+
+    def visit_Call(self, node: ast.Call) -> None:
+        name: str | None = None
+        if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
+            base = node.func.value.id
+            if base in self._aliases and self._aliases[base] is None and node.func.attr in _BOUNDED_FUNCS:
+                name = f"subprocess.{node.func.attr}"
+        elif isinstance(node.func, ast.Name) and node.func.id in self._aliases:
+            attr = self._aliases[node.func.id]
+            if attr in _BOUNDED_FUNCS:
+                name = f"subprocess.{attr}"
+        if name is not None:
+            kwargs = {kw.arg for kw in node.keywords if kw.arg}
+            if "timeout" not in kwargs:
+                qualname = ".".join(self._scope_stack) if self._scope_stack else "<module>"
+                self.hits.append(TimeoutLessCall(node.lineno, name, qualname))
+        self.generic_visit(node)
+
+
+def _timeout_less_calls(path: Path) -> list[TimeoutLessCall]:
     src = read_test_source(path)
-    if not _SUBPROCESS_IMPORT_RE.search(src):
+    if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
         return []
     tree = parse_test_source(path)
     aliases: dict[str, str | None] = {}
-    calls: list[ast.Call] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.module == "subprocess":
             for alias in node.names:
@@ -54,32 +102,21 @@ def _timeout_less_calls(path: Path) -> list[tuple[int, str]]:
             for alias in node.names:
                 if alias.name == "subprocess":
                     aliases[alias.asname or "subprocess"] = None
-        elif isinstance(node, ast.Call):
-            calls.append(node)
+    visitor = _SubprocessCallVisitor(aliases)
+    visitor.visit(tree)
+    return visitor.hits
 
-    found: list[tuple[int, str]] = []
-    for node in calls:
-        name: str | None = None
-        if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
-            base = node.func.value.id
-            if base in aliases and aliases[base] is None and node.func.attr in _BOUNDED_FUNCS:
-                name = f"subprocess.{node.func.attr}"
-        elif isinstance(node.func, ast.Name) and node.func.id in aliases:
-            attr = aliases[node.func.id]
-            if attr in _BOUNDED_FUNCS:
-                name = f"subprocess.{attr}"
-        if name is not None:
-            kwargs = {kw.arg for kw in node.keywords if kw.arg}
-            if "timeout" not in kwargs:
-                found.append((node.lineno, name))
-    return found
+
+def _load_subprocess_timeout_allowlist() -> list[str]:
+    text = _ALLOWLIST_PATH.read_text(encoding="utf-8")
+    return [line.strip() for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")]
 
 
 def test_pytest_timeout_budget_is_documented_in_pyproject() -> None:
     """The 120s per-test budget must stay explicit in tool.pytest.ini_options."""
     # Avoid importing tomllib only for this — pyproject is small; parse lightly.
     text = (_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "timeout = 120" in text or 'timeout = 120' in text
+    assert "timeout = 120" in text or "timeout = 120" in text
     assert 'timeout_method = "thread"' in text or "timeout_method = 'thread'" in text
     assert "pytest-timeout" in (_REPO_ROOT / "requirements.txt").read_text(encoding="utf-8")
     lock = (_REPO_ROOT / "requirements-lock.txt").read_text(encoding="utf-8")
@@ -101,15 +138,88 @@ def test_no_timeout_less_subprocess_calls_under_tests() -> None:
         except SyntaxError as exc:
             offenders.append(f"{path}: syntax error while scanning ({exc})")
             continue
-        for lineno, name in hits:
-            offenders.append(f"{path.relative_to(_REPO_ROOT)}:{lineno} {name}")
+        for hit in hits:
+            offenders.append(f"{path.relative_to(_REPO_ROOT)}:{hit.lineno} {hit.name}")
 
     assert not offenders, (
         "Timeout-less subprocess calls under tests/ (issue #5740). "
         "Pass an explicit timeout= (typically 30 for git fixtures, 60–120 for "
-        "heavier scripts). Popen must bound wait()/communicate() instead.\n"
-        + "\n".join(offenders)
+        "heavier scripts). Popen must bound wait()/communicate() instead.\n" + "\n".join(offenders)
     )
+
+
+def test_subprocess_timeout_allowlist_is_sorted_and_valid() -> None:
+    """The allowlist must be non-empty, sorted, and well-formed (#7176)."""
+    assert _ALLOWLIST_PATH.is_file(), f"allowlist not found at {_ALLOWLIST_PATH}"
+    entries = _load_subprocess_timeout_allowlist()
+    assert entries, "subprocess timeout allowlist must not be empty"
+    assert entries == sorted(entries), (
+        "subprocess timeout allowlist must be sorted alphabetically. "
+        "Run a sort on scripts/ci/subprocess_timeout_allowlist.txt."
+    )
+    for entry in entries:
+        parts = entry.split("::")
+        assert len(parts) >= 3, f"invalid allowlist entry format (expected path::qualname::callee): {entry}"
+        path = _REPO_ROOT / parts[0]
+        assert path.is_file(), f"allowlist entry refers to non-existent file: {parts[0]}"
+
+
+def test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts() -> None:
+    """Fail CI on unallowlisted timeout-less subprocess calls in scripts/ and reject stale allowlist entries (#7176)."""
+    allowlist_entries = _load_subprocess_timeout_allowlist()
+    allowlist_counts = Counter(allowlist_entries)
+
+    actual_hits: dict[str, list[tuple[Path, TimeoutLessCall]]] = defaultdict(list)
+    scan_errors: list[str] = []
+
+    for path in sorted(_SCRIPTS_ROOT.rglob("*.py")):
+        try:
+            hits = _timeout_less_calls(path)
+        except SyntaxError as exc:
+            scan_errors.append(f"{path}: syntax error while scanning ({exc})")
+            continue
+        rel = path.relative_to(_REPO_ROOT).as_posix()
+        for hit in hits:
+            key = f"{rel}::{hit.qualname}::{hit.name}"
+            actual_hits[key].append((path, hit))
+
+    if scan_errors:
+        pytest.fail("Syntax errors encountered while scanning scripts/:\n" + "\n".join(scan_errors))
+
+    unallowlisted: list[str] = []
+    for key, hits in sorted(actual_hits.items()):
+        allowed_count = allowlist_counts.get(key, 0)
+        if len(hits) > allowed_count:
+            excess = hits[allowed_count:]
+            for path, hit in excess:
+                rel = path.relative_to(_REPO_ROOT).as_posix()
+                unallowlisted.append(
+                    f"{rel}:{hit.lineno} {hit.name} in {hit.qualname} "
+                    f"(found {len(hits)}, allowlist permits {allowed_count})"
+                )
+
+    stale_entries: list[str] = []
+    for key, allowed_count in sorted(allowlist_counts.items()):
+        actual_count = len(actual_hits.get(key, []))
+        if allowed_count > actual_count:
+            stale_entries.append(f"{key} (allowlist has {allowed_count}, actual violations {actual_count})")
+
+    errors: list[str] = []
+    if unallowlisted:
+        errors.append(
+            "Timeout-less subprocess calls under scripts/ not in allowlist (issue #7176).\n"
+            "Pass an explicit timeout= (typically 30 for git fixtures/helpers, 60–120 for "
+            "heavier scripts) to bound the subprocess call. Popen callers must bound "
+            ".wait() / .communicate() instead.\n" + "\n".join(unallowlisted)
+        )
+    if stale_entries:
+        errors.append(
+            "Stale entries in scripts/ci/subprocess_timeout_allowlist.txt (issue #7176).\n"
+            "The allowlist is shrink-only. When a subprocess call is given a timeout= or removed, "
+            "its entry must be removed from scripts/ci/subprocess_timeout_allowlist.txt:\n" + "\n".join(stale_entries)
+        )
+
+    assert not errors, "\n\n".join(errors)
 
 
 def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) -> None:
@@ -165,18 +275,13 @@ def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) ->
     )
 
     combined = f"{completed.stdout}\n{completed.stderr}"
-    assert completed.returncode != 0, (
-        "hanging test must fail under pytest-timeout, not pass/skip:\n" + combined
-    )
+    assert completed.returncode != 0, "hanging test must fail under pytest-timeout, not pass/skip:\n" + combined
     assert "test_intentional_forever_sleep" in combined, (
         "pytest-timeout must name the hanging test in its output "
-        f"(budget={_EXPECTED_PYTEST_TIMEOUT_SECONDS}s documented; child used 0.25s):\n"
-        + combined
+        f"(budget={_EXPECTED_PYTEST_TIMEOUT_SECONDS}s documented; child used 0.25s):\n" + combined
     )
     # Either Failed: Timeout / +++ Timeout / Failed: Timeout >… depending on version.
-    assert "timeout" in combined.lower(), (
-        "expected a timeout failure signal in child pytest output:\n" + combined
-    )
+    assert "timeout" in combined.lower(), "expected a timeout failure signal in child pytest output:\n" + combined
 
 
 _FASTLANE_MANIFEST = _REPO_ROOT / "scripts" / "ci" / "fastlane_always_tests.txt"
@@ -245,9 +350,9 @@ def test_fastlane_manifest_entries_exist_and_excludes_work_privacy() -> None:
 def test_fastlane_manifest_matches_repo_invariant_markers() -> None:
     manifest = set(_fastlane_manifest())
     marked = _marked_repo_invariant_modules()
-    assert manifest - marked == set(), (
-        "manifest entries missing repo_invariant marker: " + ", ".join(sorted(manifest - marked))
+    assert manifest - marked == set(), "manifest entries missing repo_invariant marker: " + ", ".join(
+        sorted(manifest - marked)
     )
-    assert marked - manifest == set(), (
-        "repo_invariant test modules missing from fastlane manifest: " + ", ".join(sorted(marked - manifest))
+    assert marked - manifest == set(), "repo_invariant test modules missing from fastlane manifest: " + ", ".join(
+        sorted(marked - manifest)
     )
