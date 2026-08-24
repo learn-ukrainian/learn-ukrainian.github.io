@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "04909b9b00cf",
+  "session_id": "fleet-899632067ca347d99551fcc6a1f8418e",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T00:45:21.993246Z",
+  "branch": "cursor/delegate-sweep-7203",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate_runtime_tmp_sweep.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "35bcb83d7b90",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T00:45:21.988666Z",
+    "agent_lines": 11,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 11,
+    "total_lines_changed": 12,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
