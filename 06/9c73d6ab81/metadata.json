@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "069c73d6ab81",
+  "strategy": "manual-commit",
+  "branch": "ox-alpha/timeout-burndown-7213-s11",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/ua_open_weight_eval/v0.1.0/release_receipt.json",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py",
+    "scripts/projects/ua_open_weight_eval/hf_jobs_transport.py",
+    "scripts/projects/ua_open_weight_eval/suite_cli.py",
+    "tests/test_ua_open_weight_eval_hf_jobs.py",
+    "tests/test_ua_open_weight_eval_timeouts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/06/9c73d6ab81/0/metadata.json",
+      "transcript": "/06/9c73d6ab81/0/full.jsonl",
+      "compact_transcript": "/06/9c73d6ab81/0/transcript.jsonl",
+      "content_hash": "/06/9c73d6ab81/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 91826,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2384256,
+    "output_tokens": 14782,
+    "api_call_count": 34
+  }
+}
