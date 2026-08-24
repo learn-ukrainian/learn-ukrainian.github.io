@@ -8,6 +8,8 @@ import sys
 import time
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 GUARDIAN = ROOT / "scripts/projects/open_model_data/phase3_cycle007_labeling_guardian.py"
 EXPECTED_TERMINAL = (
@@ -53,7 +55,13 @@ def _fixture_tree(tmp_path: Path) -> dict[str, Path]:
     }
 
 
-def _write_harness(tmp_path: Path, fixture: dict[str, Path], controller: Path) -> Path:
+def _write_harness(
+    tmp_path: Path,
+    fixture: dict[str, Path],
+    controller: Path,
+    *,
+    stage_timeout_seconds: float | None = None,
+) -> Path:
     harness = tmp_path / "guardian-harness.py"
     code_paths = {
         "grok_runner": fixture["runner"],
@@ -72,6 +80,7 @@ spec = importlib.util.spec_from_file_location("held_out_guardian", {str(GUARDIAN
 module = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = module
 spec.loader.exec_module(module)
+{f"module.STAGE_TIMEOUT_SECONDS = {stage_timeout_seconds!r}" if stage_timeout_seconds is not None else ""}
 config = module.Config(
     action="resume",
     package=Path({str(fixture['package'])!r}),
@@ -276,6 +285,63 @@ else:
     try:
         replacement = _run_harness(harness, "gemini")
         assert replacement.returncode == 0
+        assert json.loads(replacement.stdout)["failure_code"] == "active_worker"
+    finally:
+        os.kill(int(child_pid.read_text(encoding="utf-8")), signal.SIGKILL)
+
+
+def test_real_controller_timeout_leaves_runner_lock_blocking_replacement(tmp_path: Path) -> None:
+    fixture = _fixture_tree(tmp_path)
+    controller = tmp_path / "timeout-controller.py"
+    controller_pid = tmp_path / "controller.pid"
+    child_pid = tmp_path / "child.pid"
+    child = tmp_path / "timeout-runner-child.py"
+    child.write_text(
+        "import os,time; os.fstat(int(os.environ['LOCK_FD'])); time.sleep(60)\n",
+        encoding="utf-8",
+    )
+    controller.write_text(
+        f"""
+import argparse, json, os, subprocess, sys, time
+from pathlib import Path
+
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument("action")
+parser.add_argument("--stage")
+args, _unknown = parser.parse_known_args()
+if args.action == "status":
+    print(json.dumps({{"ok": True, "completed_stages": [], "ready": False, "text_free": True}}))
+else:
+    Path({str(controller_pid)!r}).write_text(str(os.getpid()))
+    descriptor = int(os.environ["PHASE3_CYCLE007_EXECUTION_LOCK_FD"])
+    process = subprocess.Popen(
+        [sys.executable, {str(child)!r}],
+        env={{**os.environ, "LOCK_FD": str(descriptor)}},
+        pass_fds=(descriptor,),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    Path({str(child_pid)!r}).write_text(str(process.pid))
+    time.sleep(60)
+""",
+        encoding="utf-8",
+    )
+    timed_harness = _write_harness(
+        tmp_path,
+        fixture,
+        controller,
+        stage_timeout_seconds=0.5,
+    )
+    timed = _run_harness(timed_harness, "gemini")
+    assert timed.returncode == 0, timed.stderr
+    assert json.loads(timed.stdout)["failure_code"] == "controller_timeout"
+    _wait_for(child_pid)
+    with pytest.raises(ProcessLookupError):
+        os.kill(int(controller_pid.read_text(encoding="utf-8")), 0)
+    try:
+        replacement = _run_harness(timed_harness, "gemini")
+        assert replacement.returncode == 0, replacement.stderr
         assert json.loads(replacement.stdout)["failure_code"] == "active_worker"
     finally:
         os.kill(int(child_pid.read_text(encoding="utf-8")), signal.SIGKILL)

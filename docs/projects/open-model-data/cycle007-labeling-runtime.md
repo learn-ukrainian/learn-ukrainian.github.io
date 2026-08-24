@@ -26,7 +26,11 @@ operator explicitly starts a provider stage.
   identity drift, a second guardian, inadequate actual free space, a provider
   stop receipt, a non-contiguous stage seal, an invalid committed packet, or
   an ambiguous provider/adjudicator attempt that started but did not commit a
-  terminal receipt.
+  terminal receipt. A bind-mount command that exceeds 30 seconds stops with
+  `bind_mount_timeout`. A controller status call that exceeds 300 seconds or a
+  stage call that exceeds 72 hours stops with `controller_timeout`. The stage
+  timeout kills only the controller wrapper, not a possibly surviving paid
+  runner; the runner retains the inherited execution lock until it exits.
 - Residual policy: provider or semantic failures remain explicit stop receipts;
   they are never normalized away or automatically retried by the guardian.
 - Independent held-out evaluation: a frozen black-box fixture and expected
@@ -134,6 +138,9 @@ of being claimed as automatically resumable.
 | Wrong backing directory mounted | Fail with `mount_identity_drift`; do not run a provider. |
 | Duplicate guardian | Fail with `guardian_already_running`; do not run a provider. |
 | Guardian and controller killed while their runner survives | The runner retains the inherited execution lock; a replacement fails with `active_worker` and makes zero provider calls. |
+| Bind-mount command exceeds 30 seconds | Fail with `bind_mount_timeout`; no provider has been invoked and the operator must inspect storage state before retrying. |
+| Controller status call exceeds 300 seconds | Fail with `controller_timeout`; status never invokes a provider, so no paid runner is created by this path. |
+| Controller stage call exceeds 72 hours | Kill only the controller wrapper and fail with `controller_timeout`. A surviving paid runner is deliberately not signalled, retains the inherited execution lock, and makes a replacement return `active_worker` with zero additional provider calls. After it exits, durable receipts, seals, and active-stage markers determine the only safe recovery point. |
 | Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
 
 ## Run sequence
@@ -166,6 +173,11 @@ provider from accidentally starting the other or entering adjudication.
 - One process test pauses a runner before its started marker, kills its guardian
   and controller, and proves a replacement guardian returns `active_worker`
   while making zero additional provider calls.
+- One process test triggers the guardian's real controller-timeout path against
+  a long-running controller with a long-running child, proves the controller is
+  killed while its child survives with the inherited execution lock, and proves
+  a replacement guardian returns `active_worker` with zero additional provider
+  calls.
 - One process test kills the guardian and controller immediately after a
   verified Gemini/Grok packet boundary, then proves replacement execution starts
   at exactly the next packet with no duplicate provider call.
