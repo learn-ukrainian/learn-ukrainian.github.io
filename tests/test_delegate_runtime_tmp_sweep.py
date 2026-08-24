@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import stat
 import subprocess
 import time
 from pathlib import Path
@@ -472,6 +473,15 @@ def test_runtime_tmp_orphan_sweep_marker_without_record_uses_orphan_age(
     old_result = delegate._sweep_runtime_tmp_orphans(now=now)
     assert old_result["leases_reaped"] == 1
     assert not lease.exists()
+
+
+def test_runtime_tmp_task_id_marker_no_clobber_created_owner_only(tmp_path):
+    """No-clobber marker creation must use owner-only permissions."""
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    delegate._write_runtime_tmp_task_id_marker(lease, "task/live", no_clobber=True)
+    marker = delegate._runtime_tmp_task_id_marker_path(lease)
+    assert stat.S_IMODE(marker.stat().st_mode) == 0o600
 
 
 def test_runtime_tmp_orphan_sweep_marker_backfill_does_not_clobber(

@@ -742,7 +742,7 @@ def _write_runtime_tmp_task_id_marker(
     marker = _runtime_tmp_task_id_marker_path(lease_root)
     if no_clobber:
         try:
-            fd = os.open(marker, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+            fd = os.open(marker, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         except FileExistsError:
             return
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
