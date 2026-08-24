@@ -2327,14 +2327,24 @@ def _branch_holder_activity_reason(
         live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
     except Exception as exc:
         return f"activity probes unavailable ({type(exc).__name__})"
-    if active_ids is None:
+    if task_state is None and active_ids is None:
         return "active-task probe unavailable"
     if live_cwds is None:
         return "process-CWD activity probe unavailable"
-    active_task_id = next((candidate for candidate in candidate_task_ids if candidate in active_ids), None)
-    if active_task_id is not None:
-        return f"active dispatch task-id={active_task_id}"
-    if reap_worktrees._task_pid_alive(task_state):
+    if active_ids is not None:
+        active_task_id = next((candidate for candidate in candidate_task_ids if candidate in active_ids), None)
+        if active_task_id is not None:
+            return f"active dispatch task-id={active_task_id}"
+    if task_state is None:
+        for candidate in candidate_task_ids:
+            cand_state = _read_state(_state_path(candidate))
+            if isinstance(cand_state, dict):
+                cand_status = cand_state.get("status")
+                if cand_status not in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+                    return f"active dispatch task-id={candidate}"
+                if reap_worktrees._task_pid_alive(cand_state):
+                    return f"live task PID for task-id={candidate}"
+    elif reap_worktrees._task_pid_alive(task_state):
         return f"live task PID for task-id={candidate_task_ids[0]}"
 
     worktree = path.resolve()
@@ -3565,7 +3575,9 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"could not list top-level dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
+        raise RuntimeError(
+            f"could not list top-level dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s"
+        ) from exc
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
         raise RuntimeError(f"could not list top-level dirs in {worktree_path}: {detail}")
@@ -5026,6 +5038,103 @@ def _run_worker(
     return 0 if ok_outcome and not needs_finalize and not no_deliverable else 1
 
 
+def _record_worktree_prep_failure(
+    *,
+    task_id: str,
+    run_nonce: str,
+    attribution: Any,
+    agent: str,
+    mode: str,
+    prompt: str,
+    error: Exception | str,
+    requested_model: str | None = None,
+    requested_effort: str | None = None,
+    requested_harness: str | None = None,
+    lifecycle_carrier: Any = None,
+    worktree_path: str | Path | None = None,
+    worktree_branch: str | None = None,
+    worktree_base_sha: str | None = None,
+    worktree_base: str | None = None,
+    agent_alias_note: str | None = None,
+    output_schema_path: str | None = None,
+    output_schema_sha256: str | None = None,
+    keep_worktree: bool = False,
+    hard_timeout: float | None = None,
+    silence_timeout: float | None = None,
+    initial_response_timeout: float | None = None,
+    max_budget_usd: float | None = None,
+) -> None:
+    """Persist a terminal failed task record when worktree provisioning is refused."""
+    if str(_REPO_ROOT / "scripts") not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
+
+    start_telemetry = resolve_dispatch_start_telemetry(
+        agent_name=agent,
+        requested_model=requested_model,
+        requested_effort=requested_effort,
+        harness=requested_harness,
+    )
+    now_iso = datetime.now(UTC).isoformat()
+    error_str = str(error)
+    wt_path_str = str(worktree_path) if worktree_path else None
+    wt_layout = _classify_worktree_layout(Path(worktree_path)) if worktree_path else None
+    failed_state: dict[str, Any] = {
+        "task_id": task_id,
+        "run_nonce": run_nonce,
+        "repository": _resolve_dispatch_repository(_REPO_ROOT),
+        "initiator": attribution.initiator,
+        "attribution_source": attribution.source,
+        "agent": agent,
+        "model": start_telemetry.model,
+        **_cursor_model_state(agent=agent, initial=True),
+        "effort": start_telemetry.effort,
+        "cli_version": start_telemetry.cli_version,
+        "allow_merge": False,
+        "mode": mode,
+        "cwd": wt_path_str or str(_REPO_ROOT),
+        "worktree_path": wt_path_str,
+        "worktree_branch": worktree_branch,
+        "worktree_base_sha": worktree_base_sha,
+        "worktree_base": worktree_base,
+        "worktree_rebased": False,
+        "worktree_reused": False,
+        "worktree_layout": wt_layout,
+        "worktree_sparse": None,
+        "worktree_local_venv": None,
+        "runtime_tmp_root": None,
+        "tmp_bytes_freed": None,
+        "tmp_reap_error": None,
+        "keep_worktree": keep_worktree,
+        "hard_timeout": hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "output_schema_path": output_schema_path,
+        "output_schema_sha256": output_schema_sha256,
+        "pid": None,
+        "status": "failed",
+        "started_at": now_iso,
+        "finished_at": now_iso,
+        "duration_s": 0.0,
+        "prompt_chars": len(prompt) if prompt else 0,
+        "response_chars": None,
+        "result_file": None,
+        "stderr_excerpt": f"worktree preparation failed: {error_str}"[:500],
+        "returncode": None,
+        "returncode_reason": "worktree preparation failed",
+        "last_error": _first_error_line(error_str) or error_str,
+        "exit_code": None,
+        "substitution": None,
+        "agent_alias_note": agent_alias_note,
+    }
+    if requested_harness is not None:
+        failed_state["harness"] = requested_harness
+    if lifecycle_carrier is not None:
+        failed_state["task_lifecycle"] = lifecycle_carrier
+    _write_state_atomic(_state_path(task_id), failed_state)
+
+
 # ---------------------------------------------------------------------------
 # Dispatch command — spawn detached worker
 # ---------------------------------------------------------------------------
@@ -5376,6 +5485,31 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 allow_rebase=not bool(getattr(args, "dry_run", False)),
             )
         except (ValueError, RuntimeError) as exc:
+            if not bool(getattr(args, "dry_run", False)):
+                _record_worktree_prep_failure(
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                    attribution=attribution,
+                    agent=dispatch_agent,
+                    mode=args.mode,
+                    prompt=prompt,
+                    error=exc,
+                    requested_model=args.model,
+                    requested_effort=getattr(args, "effort", None),
+                    requested_harness=requested_harness,
+                    lifecycle_carrier=lifecycle_carrier,
+                    worktree_path=resolved_worktree_raw,
+                    worktree_branch=requested_branch,
+                    worktree_base=getattr(args, "base", None) or "main",
+                    agent_alias_note=agent_alias_note,
+                    output_schema_path=output_schema_path,
+                    output_schema_sha256=output_schema_sha256,
+                    keep_worktree=keep_worktree,
+                    hard_timeout=args.hard_timeout,
+                    silence_timeout=silence_timeout,
+                    initial_response_timeout=initial_response_timeout,
+                    max_budget_usd=max_budget_usd,
+                )
             print(f"❌ failed to resolve immutable worktree base for {task_id!r}: {exc}", file=sys.stderr)
             return 1
 
@@ -5594,6 +5728,33 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 sparse_include=sparse_include,
             )
         except (ValueError, RuntimeError) as exc:
+            stdout_fd.close()
+            stderr_fd.close()
+            _record_worktree_prep_failure(
+                task_id=task_id,
+                run_nonce=run_nonce,
+                attribution=attribution,
+                agent=dispatch_agent,
+                mode=args.mode,
+                prompt=prompt,
+                error=exc,
+                requested_model=args.model,
+                requested_effort=getattr(args, "effort", None),
+                requested_harness=requested_harness,
+                lifecycle_carrier=lifecycle_carrier,
+                worktree_path=resolved_raw,
+                worktree_branch=requested_branch or _derive_worktree_branch(dispatch_agent, task_id),
+                worktree_base_sha=resolved_worktree_base_sha,
+                worktree_base=getattr(args, "base", None) or "main",
+                agent_alias_note=agent_alias_note,
+                output_schema_path=output_schema_path,
+                output_schema_sha256=output_schema_sha256,
+                keep_worktree=keep_worktree,
+                hard_timeout=args.hard_timeout,
+                silence_timeout=silence_timeout,
+                initial_response_timeout=initial_response_timeout,
+                max_budget_usd=max_budget_usd,
+            )
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
             return 1
     elif args.cwd:
@@ -5617,6 +5778,31 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     except RuntimeError as exc:
         stdout_fd.close()
         stderr_fd.close()
+        _record_worktree_prep_failure(
+            task_id=task_id,
+            run_nonce=run_nonce,
+            attribution=attribution,
+            agent=dispatch_agent,
+            mode=args.mode,
+            prompt=prompt,
+            error=exc,
+            requested_model=args.model,
+            requested_effort=getattr(args, "effort", None),
+            requested_harness=requested_harness,
+            lifecycle_carrier=lifecycle_carrier,
+            worktree_path=worktree_path,
+            worktree_branch=worktree_branch,
+            worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
+            worktree_base=getattr(args, "base", None) or "main",
+            agent_alias_note=agent_alias_note,
+            output_schema_path=output_schema_path,
+            output_schema_sha256=output_schema_sha256,
+            keep_worktree=keep_worktree,
+            hard_timeout=args.hard_timeout,
+            silence_timeout=silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            max_budget_usd=max_budget_usd,
+        )
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
 
