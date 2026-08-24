@@ -57,10 +57,14 @@ def main():
 
     # ── Step 1: Run the actual audit ──────────────────────────
     print("[1/3] Running audit with --skip-activities...")
-    result = subprocess.run(
-        [str(audit_script), "--skip-activities", str(content_path)],
-        capture_output=True, text=True, cwd=str(project_root),
-    )
+    try:
+        result = subprocess.run(
+            [str(audit_script), "--skip-activities", str(content_path)],
+            capture_output=True, text=True, cwd=str(project_root), timeout=180,
+        )
+    except subprocess.TimeoutExpired:
+        print("FAIL: audit timed out after 180 seconds")
+        return 1
     audit_exit = result.returncode
 
     # ── Step 2: Read status JSON (written by audit) ───────────

@@ -369,7 +369,10 @@ def main():
     target = out_dir / f"{stem}_index.html" if len(page_nums) > 1 else out_dir / f"{stem}_p{page_nums[0]:03d}.html"
     if args.open:
         import subprocess
-        subprocess.run(["open", str(target)])
+        try:
+            subprocess.run(["open", str(target)], timeout=30)
+        except subprocess.TimeoutExpired:
+            print(f"\n  Open with: open {target}")
     else:
         print(f"\n  Open with: open {target}")
 

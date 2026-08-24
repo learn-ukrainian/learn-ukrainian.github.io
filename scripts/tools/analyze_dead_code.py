@@ -40,7 +40,8 @@ class DeadCodeAnalyzer:
                 ['git', 'log', '-1', '--format=%ci', '--', str(script_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root
+                cwd=self.project_root,
+                timeout=30,
             )
             if result.stdout.strip():
                 date_str = result.stdout.strip().split()[0]
@@ -61,7 +62,8 @@ class DeadCodeAnalyzer:
                  '--glob', '!scripts/**'],  # Exclude scripts directory
                 capture_output=True,
                 text=True,
-                cwd=self.project_root
+                cwd=self.project_root,
+                timeout=30,
             )
 
             files = [f for f in result.stdout.strip().split('\n') if f]
@@ -81,7 +83,8 @@ class DeadCodeAnalyzer:
                  '--glob', f'!scripts/{script_name}'],  # Exclude the script itself
                 capture_output=True,
                 text=True,
-                cwd=self.project_root
+                cwd=self.project_root,
+                timeout=30,
             )
 
             files = [f for f in result.stdout.strip().split('\n') if f]

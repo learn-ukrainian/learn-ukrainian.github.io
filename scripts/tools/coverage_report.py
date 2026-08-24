@@ -39,7 +39,11 @@ def main() -> int:
             "tests/",
             "-q",
         ]
-        completed = subprocess.run(cmd, check=False)
+        try:
+            completed = subprocess.run(cmd, check=False, timeout=180)
+        except subprocess.TimeoutExpired:
+            print("coverage pytest run timed out after 180 seconds", file=sys.stderr)
+            return 1
         if not report_path.exists():
             print("coverage JSON was not produced", file=sys.stderr)
             return completed.returncode or 1
