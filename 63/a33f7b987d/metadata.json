@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "63a33f7b987d",
+  "strategy": "manual-commit",
+  "branch": "cursor/fix-7161-agent-path",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/binary_resolve.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/ai_agent_bridge/test_ask_contract.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/63/a33f7b987d/0/metadata.json",
+      "transcript": "/63/a33f7b987d/0/full.jsonl",
+      "compact_transcript": "/63/a33f7b987d/0/transcript.jsonl",
+      "content_hash": "/63/a33f7b987d/0/content_hash.txt",
+      "prompt": "/63/a33f7b987d/0/prompt.txt"
+    }
+  ]
+}
