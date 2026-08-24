@@ -1,0 +1,36 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/monitor-7188-timeout-guard
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: PR #7255 — CI guard `tests/test_subprocess_timeout_guard.py` (#7176) fails on the branch. Same authoring lane (cursor).
+
+Evidence rule (#M-4): back every claim with a command you ran. You are attached to `cursor/monitor-7188-project-state`
+(head e2acd94c0e). Do not rebase or force-push; commit on top.
+
+## What is wrong (tool-backed, PR-tier CI run 32746604204 + reproduced by main at e2acd94c0e)
+    FAILED tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts
+    scripts/orchestration/install_mac_project_state_launchd.py:77 subprocess.run in main (found 3, allowlist permits 0)
+    scripts/orchestration/install_mac_project_state_launchd.py:78 subprocess.run in main (found 3, allowlist permits 0)
+    scripts/orchestration/install_mac_project_state_launchd.py:79 subprocess.run in main (found 3, allowlist permits 0)
+The guard's rule (read its docstring): every `subprocess` call under `scripts/` passes an explicit bounded `timeout=`; the
+allowlist is for burn-down of pre-existing calls only — new code never adds allowlist entries.
+
+## Outcome
+`.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py` passes on the branch; the installer still works as documented
+(bounded timeouts, a timeout ⇒ clear error, non-zero exit). Nothing else changes.
+
+## Steps
+1. `git log -1` must show e2acd94c0e. Reproduce with the pytest command above.
+2. Fix; run `.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py tests/orchestration/test_project_state_reporter.py tests/api/test_project_state_local_cli.py`
+   and `.venv/bin/ruff check scripts/orchestration/install_mac_project_state_launchd.py`.
+3. Conventional commit (`fix(fleet): …`) with the `X-Agent` trailer; PUSH to `cursor/monitor-7188-project-state` and confirm with
+   `git status -sb` that the branch is not ahead of origin (the two previous runs finished without pushing).
+4. Report: commit SHA, the passing pytest line.
