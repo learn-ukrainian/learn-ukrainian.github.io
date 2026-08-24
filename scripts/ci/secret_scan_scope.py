@@ -17,6 +17,8 @@ from pathlib import Path
 _SHA_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
 _ZERO_SHA = "0" * 40
 _SCOPED_EVENTS = frozenset({"merge_group", "push"})
+GIT_CAT_FILE_TIMEOUT_SECONDS = 10
+GIT_IS_ANCESTOR_TIMEOUT_SECONDS = 30
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,8 +66,9 @@ def _commit_exists(repo_root: Path, sha: str) -> bool:
             cwd=repo_root,
             capture_output=True,
             check=False,
+            timeout=GIT_CAT_FILE_TIMEOUT_SECONDS,
         )
-    except OSError:
+    except (OSError, subprocess.SubprocessError):
         return False
     return result.returncode == 0
 
@@ -77,8 +80,9 @@ def _is_ancestor(repo_root: Path, base_sha: str, head_sha: str) -> bool:
             cwd=repo_root,
             capture_output=True,
             check=False,
+            timeout=GIT_IS_ANCESTOR_TIMEOUT_SECONDS,
         )
-    except OSError:
+    except (OSError, subprocess.SubprocessError):
         return False
     return result.returncode == 0
 

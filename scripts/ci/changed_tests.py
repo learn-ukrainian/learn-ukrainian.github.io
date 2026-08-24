@@ -15,6 +15,7 @@ from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
 REPO_INVARIANTS_MANIFEST = Path(__file__).with_name("fastlane_always_tests.txt")
+GIT_DIFF_TIMEOUT_SECONDS = 30
 
 
 def comparison_range(base: str, head: str) -> str:
@@ -38,6 +39,7 @@ def changed_files(git_range: str, *, cwd: str | None = None) -> list[str]:
         capture_output=True,
         cwd=cwd,
         text=True,
+        timeout=GIT_DIFF_TIMEOUT_SECONDS,
     )
     return sorted(path for path in result.stdout.splitlines() if path)
 
@@ -75,9 +77,7 @@ def load_repo_invariant_tests() -> list[str]:
     ]
 
 
-def select_test_modules(
-    paths: Iterable[str], *, include_repo_invariants: bool = False
-) -> list[str]:
+def select_test_modules(paths: Iterable[str], *, include_repo_invariants: bool = False) -> list[str]:
     """Return direct tests, optionally unioned with triggered repo invariants."""
     changed_paths = list(paths)
     selected = sorted({path for path in changed_paths if is_test_module(path)})
@@ -119,6 +119,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     except subprocess.CalledProcessError as exc:
         print(f"changed-test selection failed: git exited {exc.returncode}", file=sys.stderr)
         return exc.returncode or 1
+    except subprocess.TimeoutExpired as exc:
+        print(f"changed-test selection failed: git timed out after {exc.timeout}s", file=sys.stderr)
+        return 1
 
     if args.output:
         write_plan(args.output, selected)

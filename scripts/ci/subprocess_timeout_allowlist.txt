@@ -100,12 +100,6 @@ scripts/build/run_archive.py::RunArchive.write_commit_diff_summary::subprocess.r
 scripts/build/v7_build.py::_persist_build_artifacts::subprocess.run
 scripts/build/v7_build.py::_persist_build_artifacts::subprocess.run
 scripts/build/v7_build.py::_run_in_worktree::subprocess.run
-scripts/ci/changed_tests.py::changed_files::subprocess.run
-scripts/ci/frontend_change_scope.py::changed_files::subprocess.run
-scripts/ci/frontend_change_scope.py::git_merge_base::subprocess.run
-scripts/ci/queue_starvation_recovery.py::_gh_api::subprocess.run
-scripts/ci/secret_scan_scope.py::_commit_exists::subprocess.run
-scripts/ci/secret_scan_scope.py::_is_ancestor::subprocess.run
 scripts/delegate.py::_apply_dispatch_sparse_checkout._run_git::subprocess.run
 scripts/delegate.py::_auto_finalize_changed_files::subprocess.run
 scripts/delegate.py::_auto_finalize_changed_files::subprocess.run

@@ -45,6 +45,7 @@ CI_WORKFLOW_FILE = "ci.yml"
 DEFAULT_MAX_ATTEMPTS = 2
 DEFAULT_LOOKBACK_MINUTES = 90
 DEFAULT_MAX_RUNS = 30
+DEFAULT_GH_API_TIMEOUT = 60
 _CANDIDATE_CONCLUSIONS = frozenset({"cancelled", "failure"})
 
 
@@ -164,9 +165,7 @@ def decide_queue_starvation_rerun(
                 )
             job_ids_by_name[name] = job_id
 
-    job_ids = tuple(
-        job_ids_by_name[name] for name in TAIL_RERUN_ORDER if name in job_ids_by_name
-    )
+    job_ids = tuple(job_ids_by_name[name] for name in TAIL_RERUN_ORDER if name in job_ids_by_name)
 
     return RecoveryDecision(
         True,
@@ -317,13 +316,19 @@ def _gh_env(token: str) -> dict[str, str]:
     return env
 
 
-def _gh_api(args: Sequence[str], *, token: str) -> subprocess.CompletedProcess[str]:
+def _gh_api(
+    args: Sequence[str],
+    *,
+    token: str,
+    timeout: int = DEFAULT_GH_API_TIMEOUT,
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["gh", "api", *args],
         check=False,
         capture_output=True,
         text=True,
         env=_gh_env(token),
+        timeout=timeout,
     )
 
 
@@ -355,11 +360,11 @@ def _decode_paginated_json_arrays(text: str) -> list[Any]:
 
 
 def _list_workflow_runs(repo: str, *, token: str, per_page: int) -> list[dict[str, Any]]:
-    path = (
-        f"repos/{repo}/actions/workflows/{CI_WORKFLOW_FILE}/runs"
-        f"?status=completed&per_page={per_page}"
-    )
-    completed = _gh_api(["--paginate", path, "--jq", ".workflow_runs"], token=token)
+    path = f"repos/{repo}/actions/workflows/{CI_WORKFLOW_FILE}/runs?status=completed&per_page={per_page}"
+    try:
+        completed = _gh_api(["--paginate", path, "--jq", ".workflow_runs"], token=token)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"gh api timed out after {exc.timeout}s listing runs for {path}") from exc
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "").strip()
         raise RuntimeError(detail or f"gh api failed listing runs for {path}")
@@ -369,15 +374,18 @@ def _list_workflow_runs(repo: str, *, token: str, per_page: int) -> list[dict[st
 
 def _fetch_run_jobs(repo: str, run_id: int, *, token: str) -> list[dict[str, Any]]:
     path = f"repos/{repo}/actions/runs/{run_id}/jobs?per_page=100"
-    completed = _gh_api(
-        [
-            "--paginate",
-            path,
-            "--jq",
-            ".jobs[] | {id, name, conclusion, status}",
-        ],
-        token=token,
-    )
+    try:
+        completed = _gh_api(
+            [
+                "--paginate",
+                path,
+                "--jq",
+                ".jobs[] | {id, name, conclusion, status}",
+            ],
+            token=token,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"gh api timed out after {exc.timeout}s listing jobs for run {run_id}") from exc
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "").strip()
         raise RuntimeError(detail or f"gh api failed listing jobs for run {run_id}")
@@ -393,7 +401,10 @@ def _fetch_run_jobs(repo: str, run_id: int, *, token: str) -> list[dict[str, Any
 
 def _rerun_job(repo: str, job_id: int, *, token: str) -> None:
     path = f"repos/{repo}/actions/jobs/{job_id}/rerun"
-    completed = _gh_api(["--method", "POST", path], token=token)
+    try:
+        completed = _gh_api(["--method", "POST", path], token=token)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"gh api timed out after {exc.timeout}s re-running job {job_id}") from exc
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "").strip()
         raise RuntimeError(detail or f"gh api failed re-running job {job_id}")
