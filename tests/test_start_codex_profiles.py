@@ -106,6 +106,8 @@ fi
 if [[ "${{1:-}}" == */scripts/orchestration/thread_handoff.py && "$*" == *" import-bundle "* ]]; then
   if [[ -n "${{CODEX_LAUNCHER_TEST_ORDER:-}}" ]]; then
     printf '%s\n' 'import-bundle' >> "$CODEX_LAUNCHER_TEST_ORDER"
+    [[ "$*" == *"--from-api"* ]] && printf '%s\n' 'from-api' >> "$CODEX_LAUNCHER_TEST_ORDER"
+    [[ "$*" != *"--agent"* ]] && printf '%s\n' 'agent-unpinned' >> "$CODEX_LAUNCHER_TEST_ORDER"
   fi
   exit 0
 fi
@@ -314,6 +316,8 @@ def test_launcher_imports_bundle_before_prelease_scan_and_lease_claim(tmp_path: 
     )
     assert order_capture.read_text(encoding="utf-8").splitlines() == [
         "import-bundle",
+        "from-api",
+        "agent-unpinned",
         "prelease-scan",
         "lease-claim",
     ]

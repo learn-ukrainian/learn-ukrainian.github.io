@@ -97,11 +97,17 @@ The Python caller receives `--stream` from `launcher_selector_stream
   export-bundle --agent claude-infra --stream epic:6943 --file /tmp/rollover.tgz
 
 # Import from the API authority, or use the file after scp/rsync.
-.venv/bin/python scripts/orchestration/thread_handoff.py \
-  import-bundle --agent claude-infra --from-api epic:6943
+SESSION_HANDOFF_AGENT=claude-infra .venv/bin/python scripts/orchestration/thread_handoff.py \
+  import-bundle --from-api epic:6943
 .venv/bin/python scripts/orchestration/thread_handoff.py \
   import-bundle --agent claude-infra --stream epic:6943 --file /tmp/rollover.tgz
 ```
+
+When the successor is a different agent, the lane handoff transfers with the
+newest stream bundle and the strict packet binds only same-harness successors,
+who receive it from their own agent's bundle; a different-harness successor
+keeps the foreign lineage under its recorded agent namespace and must not treat
+that packet as its own.
 
 The API host stores at most the five newest bundles for each
 `(stream, agent, lineage)`. Re-uploading the same `bundle_sha256` is idempotent.

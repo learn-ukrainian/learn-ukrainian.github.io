@@ -428,7 +428,7 @@ launcher_import_rollover_bundle() {
   output="$("$python" "$script" \
     --repo-root "$helper_root" \
     --monitor-base-url "${LU_MONITOR_LOOPBACK:-http://127.0.0.1:8765}" \
-    import-bundle --agent "$LC_DRIVER_HANDOFF" --from-api "$stream" --stream "$stream" 2>&1)" || rc=$?
+    import-bundle --from-api "$stream" --stream "$stream" 2>&1)" || rc=$?
   if [ "$rc" -ne 0 ] || [[ "$output" == *WARNING:* ]]; then
     printf 'WARNING: rollover bundle pre-lease import refused or failed (fail-open); launcher continues.\n%s\n' "$output" >&2
   fi

@@ -22,11 +22,13 @@ def _seed_state(
     root: Path,
     *,
     thread_id: str,
+    agent: str = AGENT,
     generation: int = 3,
     rollover_id: str | None = None,
     prepared_at: str = "2026-08-24T16:00:00Z",
+    harness: str = "claude-code",
 ) -> dict:
-    lineage_id = th.lineage_id_for(AGENT, thread_id)
+    lineage_id = th.lineage_id_for(agent, thread_id)
     state = th.prepare_state(
         {
             "schema_version": th.SCHEMA_VERSION,
@@ -38,20 +40,20 @@ def _seed_state(
                 "started_at": prepared_at,
             },
         },
-        agent=AGENT,
+        agent=agent,
         now=datetime(2026, 8, 24, 16, 0, tzinfo=UTC),
         active_thread_id=thread_id,
         active_automation_id="old-auto",
         context_percent=80.0,
         force_new_replacement=False,
-        harness="claude-code",
+        harness=harness,
     )
     replacement = state["replacement"]
     del rollover_id
     assert replacement["generation"] == generation
     replacement["prepared_at"] = prepared_at
     replacement["source_checkout"] = {"full_head": "a" * 40, "clean": True}
-    state_path = root / th.default_state_path(AGENT, state["lineage_id"])
+    state_path = root / th.default_state_path(agent, state["lineage_id"])
     th.write_rollover_state(state_path, root, state)
     bootstrap = root / replacement["bootstrap_prompt_path"]
     handoff = root / replacement["handoff_path"]
@@ -67,13 +69,20 @@ def _seed_state(
     return state
 
 
-def _export_args(root: Path, state: dict, output: Path, *, upload: bool = False) -> SimpleNamespace:
+def _export_args(
+    root: Path,
+    state: dict,
+    output: Path,
+    *,
+    upload: bool = False,
+    stream: str = STREAM,
+) -> SimpleNamespace:
     return SimpleNamespace(
         repo_root=root,
-        agent=AGENT,
+        agent=state["agent"],
         lineage_id=state["lineage_id"],
         rollover_id=None,
-        stream=STREAM,
+        stream=stream,
         file=output,
         upload=upload,
         monitor_base_url="http://127.0.0.1:1",
@@ -93,12 +102,19 @@ def _mark_confirmed(root: Path, state: dict) -> None:
     th.write_json_atomic(root / th.default_state_path(AGENT, state["lineage_id"]), state)
 
 
-def _import_args(root: Path, bundle: Path, *, force: bool = False) -> SimpleNamespace:
+def _import_args(
+    root: Path,
+    bundle: Path | None,
+    *,
+    agent: str = AGENT,
+    force: bool = False,
+    from_api: str | None = None,
+) -> SimpleNamespace:
     return SimpleNamespace(
         repo_root=root,
-        agent=AGENT,
+        agent=agent,
         file=bundle,
-        from_api=None,
+        from_api=from_api,
         stream=STREAM,
         force=force,
         monitor_base_url="http://127.0.0.1:1",
@@ -323,6 +339,130 @@ def test_import_newer_lineage_supersedes_one_of_two_pending_detect_candidates(
     detected = json.loads(capsys.readouterr().out)
     assert detected["status"] == "pending_start"
     assert detected["lineage_id"] != remote["lineage_id"]
+
+
+def test_from_api_cross_agent_import_keeps_foreign_lineage_and_upload_ordered_handoff(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source_foreign = tmp_path / "source-claude"
+    source_own = tmp_path / "source-grok"
+    target = tmp_path / "target"
+    source_foreign.mkdir()
+    source_own.mkdir()
+    target.mkdir()
+
+    foreign = _seed_state(source_foreign, thread_id="foreign-thread", agent="claude-infra", generation=3)
+    own = _seed_state(
+        source_own,
+        thread_id="own-thread",
+        agent="grok-infra",
+        generation=4,
+        harness="grok-tui",
+        prepared_at="2026-08-24T17:00:00Z",
+    )
+    (source_foreign / HANDOFF_PATH).write_text("foreign lane handoff\n", encoding="utf-8")
+    (source_own / HANDOFF_PATH).write_text("own lane handoff\n", encoding="utf-8")
+
+    foreign_bundle = tmp_path / "foreign.tgz"
+    own_bundle = tmp_path / "own.tgz"
+    assert th.cmd_export_bundle(_export_args(source_foreign, foreign, foreign_bundle)) == 0
+    capsys.readouterr()
+    assert th.cmd_export_bundle(_export_args(source_own, own, own_bundle)) == 0
+    capsys.readouterr()
+    foreign_manifest, _ = th._bundle_extract(foreign_bundle.read_bytes())
+    own_manifest, _ = th._bundle_extract(own_bundle.read_bytes())
+    foreign_blob = foreign_bundle.read_bytes()
+    own_blob = own_bundle.read_bytes()
+    foreign_manifest["upload_seq"] = 10
+    own_manifest["upload_seq"] = 9
+
+    def latest(_args: SimpleNamespace, *, stream_id: str, agent: str | None = None):
+        assert stream_id == STREAM
+        return (foreign_manifest, foreign_blob) if agent is None else (own_manifest, own_blob)
+
+    monkeypatch.setattr(th, "_bundle_api_latest", latest)
+    args = _import_args(target, None, agent="grok-infra", from_api=STREAM)
+    assert th.cmd_import_bundle(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert [item["agent"] for item in result["bundles"]] == ["claude-infra", "grok-infra"]
+    assert result["handoff_source"] == "claude-infra"
+    assert result["handoff_upload_seq"] == 10
+
+    foreign_lineage = target / th.default_state_path("claude-infra", foreign["lineage_id"])
+    own_lineage = target / th.default_state_path("grok-infra", own["lineage_id"])
+    assert foreign_lineage.is_file()
+    assert own_lineage.is_file()
+    assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "foreign lane handoff\n"
+
+    detect_args = SimpleNamespace(
+        repo_root=target,
+        agent="grok-infra",
+        current_thread_id=None,
+        format=None,
+        stream=None,
+        task_family=None,
+    )
+    assert th.cmd_detect(detect_args) == 0
+    grok_detected = json.loads(capsys.readouterr().out)
+    assert grok_detected["agent"] == "grok-infra"
+    assert grok_detected["status"] == "pending_start"
+    assert grok_detected["generation"] == 4
+    detect_args.agent = "claude-infra"
+    assert th.cmd_detect(detect_args) == 0
+    detected = json.loads(capsys.readouterr().out)
+    assert detected["agent"] == "claude-infra"
+    assert detected["status"] == "pending_start"
+    assert detected["generation"] == 3
+
+
+def test_from_api_foreign_lineage_is_ignored_by_driver_detect(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    target.mkdir()
+    foreign = _seed_state(source, thread_id="foreign-only", agent="claude-infra", generation=3)
+    (source / HANDOFF_PATH).write_text("foreign lane handoff\n", encoding="utf-8")
+    bundle = tmp_path / "foreign-only.tgz"
+    assert th.cmd_export_bundle(_export_args(source, foreign, bundle)) == 0
+    capsys.readouterr()
+    manifest, _ = th._bundle_extract(bundle.read_bytes())
+    manifest["upload_seq"] = 3
+    blob = bundle.read_bytes()
+
+    def latest(_args: SimpleNamespace, *, stream_id: str, agent: str | None = None):
+        assert stream_id == STREAM
+        if agent is None:
+            return manifest, blob
+        raise th.RolloverBundleNotFound("no own-agent bundle")
+
+    monkeypatch.setattr(th, "_bundle_api_latest", latest)
+    assert th.cmd_import_bundle(_import_args(target, None, agent="grok-infra", from_api=STREAM)) == 0
+    capsys.readouterr()
+
+    detect_args = SimpleNamespace(
+        repo_root=target,
+        agent="grok-infra",
+        current_thread_id=None,
+        format=None,
+        stream=None,
+        task_family=None,
+    )
+    assert th.cmd_detect(detect_args) == 0
+    assert json.loads(capsys.readouterr().out) == {"agent": "grok-infra", "status": "none"}
+    detect_args.agent = "claude-infra"
+    assert th.cmd_detect(detect_args) == 0
+    detected = json.loads(capsys.readouterr().out)
+    assert detected["agent"] == "claude-infra"
+    assert detected["status"] == "pending_start"
+    assert detected["generation"] == 3
 
 
 def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(

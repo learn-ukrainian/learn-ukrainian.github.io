@@ -765,7 +765,7 @@ def remote_bundle_list(
 
 
 @router.get("/v1/{stream_id}/bundles/latest")
-def remote_bundle_latest(stream_id: str, agent: str, lineage_id: str | None = None) -> JSONResponse:
+def remote_bundle_latest(stream_id: str, agent: str | None = None, lineage_id: str | None = None) -> JSONResponse:
     try:
         stream_id = _epic_stream(stream_id)
         stored = _store().latest_rollover_bundle(stream_id, agent=agent, lineage_id=lineage_id)

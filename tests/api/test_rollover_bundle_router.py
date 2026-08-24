@@ -50,16 +50,17 @@ def _bundle(
     *,
     rollover_id: str,
     body: bytes,
+    agent: str = "claude-infra",
     status: str = "pending_start",
     prepared_at: str = "2026-08-24T16:00:00Z",
     lineage_id: str = "bundle-lineage",
     generation: int = 3,
 ) -> tuple[dict, bytes]:
-    name = f".agent/thread-rollovers/claude-infra/{lineage_id}/generation-{generation:04d}/{rollover_id}/handoff.md"
+    name = f".agent/thread-rollovers/{agent}/{lineage_id}/generation-{generation:04d}/{rollover_id}/handoff.md"
     members = {name: body}
     manifest = {
         "schema": "rollover-bundle.v1",
-        "agent": "claude-infra",
+        "agent": agent,
         "stream_id": "epic:7178",
         "lineage_id": lineage_id,
         "rollover_id": rollover_id,
@@ -116,6 +117,38 @@ def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path
         json={**lease, "manifest": secret_manifest, "blob": base64.b64encode(secret_blob).decode("ascii")},
     )
     assert secret_response.status_code == 400
+
+
+def test_bundle_latest_without_agent_selects_highest_order_across_agents(tmp_path: Path, monkeypatch) -> None:
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)
+
+    own_manifest, own_blob = _bundle(
+        rollover_id="rollover-grok-newer",
+        body=b"grok packet\n",
+        agent="grok-infra",
+        lineage_id="grok-lineage",
+        generation=4,
+    )
+    foreign_manifest, foreign_blob = _bundle(
+        rollover_id="rollover-claude-older",
+        body=b"claude packet\n",
+        agent="claude-infra",
+        lineage_id="claude-lineage",
+        generation=3,
+    )
+    for manifest, blob in ((own_manifest, own_blob), (foreign_manifest, foreign_blob)):
+        response = client.post(
+            "/api/epics/v1/epic:7178/bundles",
+            json={**lease, "manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")},
+        )
+        assert response.status_code == 200, response.text
+
+    latest = client.get("/api/epics/v1/epic:7178/bundles/latest")
+    assert latest.status_code == 200, latest.text
+    assert latest.json()["manifest"]["agent"] == "grok-infra"
+    assert latest.json()["manifest"]["generation"] == 4
+    assert latest.json()["manifest"]["upload_seq"] == 1
 
 
 def test_bundle_upload_allows_status_evolution_and_rejects_same_tuple_contradiction(

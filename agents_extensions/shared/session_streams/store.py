@@ -1756,22 +1756,34 @@ class SessionStreamStore:
         self,
         stream_id: str,
         *,
-        agent: str,
+        agent: str | None = None,
         lineage_id: str | None = None,
     ) -> dict[str, Any]:
         stream_id = validate_stream_id(stream_id)
-        self._validate_identity("agent", agent)
+        if agent is not None:
+            self._validate_identity("agent", agent)
         if lineage_id is not None:
             self._validate_identity("lineage_id", lineage_id)
         with self._read_snapshot() as connection:
-            clauses = ["stream_id = ?", "agent = ?"]
-            values: list[Any] = [stream_id, agent]
+            clauses = ["stream_id = ?"]
+            values: list[Any] = [stream_id]
+            if agent is not None:
+                clauses.append("agent = ?")
+                values.append(agent)
             if lineage_id is not None:
                 clauses.append("lineage_id = ?")
                 values.append(lineage_id)
             row = connection.execute(
                 "SELECT * FROM rollover_bundles WHERE " + " AND ".join(clauses) + " "
-                "ORDER BY bundle_id DESC LIMIT 1",
+                "ORDER BY generation DESC, "
+                "CASE status "
+                "WHEN 'superseded' THEN 0 "
+                "WHEN 'pending_start' THEN 1 "
+                "WHEN 'resumed' THEN 2 "
+                "WHEN 'started' THEN 3 "
+                "WHEN 'confirmed' THEN 3 "
+                "ELSE -1 END DESC, "
+                "prepared_at DESC, rollover_id DESC, bundle_id DESC LIMIT 1",
                 tuple(values),
             ).fetchone()
             if row is None:

@@ -971,6 +971,7 @@ def _bundle_commit_install(
     staged_lineage: Path,
     staged_repo: Mapping[str, Path],
     local_lineage_exists: bool,
+    install_handoff: bool = True,
 ) -> tuple[Path | None, list[str]]:
     """Commit a staged bundle with exact rollback around archive+rename."""
     agent = normalize_agent_name(str(manifest["agent"]))
@@ -988,8 +989,10 @@ def _bundle_commit_install(
     try:
         if local_lineage_exists:
             shutil.copytree(lineage_root, original_backup)
-        candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
+        handoff_candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
         for name, source in sorted(staged_repo.items()):
+            if not install_handoff and name in handoff_candidates:
+                continue
             target = (repo_root / name).resolve()
             target.relative_to(repo_root.resolve())
             if target.exists() and not target.is_file():
@@ -997,7 +1000,7 @@ def _bundle_commit_install(
             old_payload = target.read_bytes() if target.is_file() else None
             repo_backups[target] = old_payload
             installed = source.read_bytes()
-            if name in candidates and old_payload is not None and old_payload != installed:
+            if name in handoff_candidates and old_payload is not None and old_payload != installed:
                 superseded = _bundle_preserved_path(target)
                 write_bytes_atomic(superseded, old_payload)
                 created_preserved.append(superseded)
@@ -1074,6 +1077,10 @@ class RolloverBundleAPIUnavailable(RuntimeError):
     """The optional remote bundle authority cannot be reached."""
 
 
+class RolloverBundleNotFound(RuntimeError):
+    """The remote bundle authority has no matching bundle."""
+
+
 def _bundle_monitor_url(base_url: str) -> str:
     value = str(base_url or DEFAULT_MONITOR_BASE_URL).rstrip("/")
     parsed = urlparse(value)
@@ -1139,7 +1146,11 @@ def _bundle_api_request(
         with urllib.request.urlopen(request, timeout=timeout_s) as response:
             raw = response.read().decode("utf-8")
             status = int(getattr(response, "status", 200))
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
+    except urllib.error.HTTPError as exc:
+        if method == "GET" and exc.code == 404 and path.split("?", 1)[0].endswith("/bundles/latest"):
+            raise RolloverBundleNotFound("bundle API has no matching bundle") from exc
+        raise RolloverBundleAPIUnavailable(f"bundle API unavailable: HTTP {exc.code}") from exc
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
         raise RolloverBundleAPIUnavailable(f"bundle API unavailable: {type(exc).__name__}") from exc
     try:
         value = json.loads(raw)
@@ -1147,6 +1158,8 @@ def _bundle_api_request(
         raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data") from exc
     if status >= 400:
         detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
+        if status == 404:
+            raise RolloverBundleNotFound(f"bundle API has no matching bundle: {detail}")
         raise RuntimeError(f"bundle API refused request ({status}): {detail}")
     if not isinstance(value, dict):
         raise RuntimeError("bundle API returned a non-object JSON document")
@@ -1169,12 +1182,18 @@ def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Ma
     )
 
 
-def _bundle_api_latest(args: argparse.Namespace, *, stream_id: str, agent: str) -> tuple[dict[str, Any], bytes]:
-    query = urlencode({"agent": agent})
+def _bundle_api_latest(
+    args: argparse.Namespace,
+    *,
+    stream_id: str,
+    agent: str | None = None,
+) -> tuple[dict[str, Any], bytes]:
+    query = urlencode({"agent": agent}) if agent is not None else ""
+    suffix = f"?{query}" if query else ""
     payload = _bundle_api_request(
         args.monitor_base_url,
         method="GET",
-        path=f"/api/epics/v1/{stream_id}/bundles/latest?{query}",
+        path=f"/api/epics/v1/{stream_id}/bundles/latest{suffix}",
     )
     manifest = payload.get("manifest")
     encoded = payload.get("blob")
@@ -5438,124 +5457,102 @@ def _bundle_import_error(reason: str) -> int:
     return 2
 
 
-def cmd_import_bundle(args: argparse.Namespace) -> int:
-    try:
-        repo_root, state_root = resolve_roots(args.repo_root)
-        agent = normalize_agent_name(args.agent)
-    except (OSError, ValueError) as exc:
-        return _bundle_import_error(str(exc))
+def _bundle_import_candidate(
+    repo_root: Path,
+    state_root: Path,
+    *,
+    manifest: Mapping[str, Any],
+    members: Mapping[str, bytes],
+    force: bool,
+    install_handoff: bool,
+) -> dict[str, Any]:
+    """Install one bundle while keeping packet and lane precedence separate."""
+    agent = normalize_agent_name(str(manifest.get("agent") or ""))
+    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+    stream_id = str(manifest.get("stream_id") or "")
+    _bundle_validate_lease_member(
+        state_root,
+        agent=agent,
+        lineage_id=lineage_id,
+        manifest=manifest,
+        members=members,
+    )
+    remote_order = _bundle_order(manifest)
+    local_manifest, local_members, local_lineage_exists = _bundle_local_lineage_snapshot(
+        repo_root,
+        state_root,
+        agent=agent,
+        lineage_id=lineage_id,
+        stream_id=stream_id,
+    )
+    if local_manifest is not None and local_members is not None:
+        local_order = _bundle_order(local_manifest)
+        if local_order > remote_order and not force:
+            return {
+                "status": "refused",
+                "error": "local rollover copy is newer; refusing to clobber it",
+                "agent": agent,
+                "lineage_id": lineage_id,
+                "rollover_id": manifest["rollover_id"],
+                "local": {
+                    "generation": local_order[0],
+                    "status_rank": local_order[1],
+                    "prepared_at": isoformat_z(local_order[2]),
+                    "rollover_id": local_order[3],
+                },
+                "remote": {
+                    "generation": remote_order[0],
+                    "status_rank": remote_order[1],
+                    "prepared_at": isoformat_z(remote_order[2]),
+                    "rollover_id": remote_order[3],
+                },
+            }
+        if local_order == remote_order and not force:
+            handoff_names = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
+            remote_compare = {
+                name: payload
+                for name, payload in members.items()
+                if install_handoff or name not in handoff_names
+            }
+            local_compare = {
+                name: payload
+                for name, payload in local_members.items()
+                if install_handoff or name not in handoff_names
+            }
+            if local_compare == remote_compare and local_manifest.get("generation") == manifest.get("generation"):
+                return {
+                    "status": "noop",
+                    "reason": "identical bundle content",
+                    "agent": agent,
+                    "lineage_id": lineage_id,
+                    "rollover_id": manifest["rollover_id"],
+                }
+            return {
+                "status": "refused",
+                "error": "bundle order ties but content differs; refusing to choose a copy",
+                "agent": agent,
+                "lineage_id": lineage_id,
+                "rollover_id": manifest["rollover_id"],
+                "generation": manifest["generation"],
+            }
 
-    api_manifest: dict[str, Any] | None = None
-    try:
-        if args.file is not None:
-            blob = args.file.expanduser().resolve().read_bytes()
-        else:
-            stream_id = str(args.from_api)
-            api_manifest, blob = _bundle_api_latest(args, stream_id=stream_id, agent=agent)
-        manifest, members = _bundle_extract(blob, manifest_override=api_manifest)
-        if manifest.get("agent") != agent:
-            raise ValueError("bundle agent does not match --agent")
-        stream_id = str(manifest.get("stream_id") or "")
-        if args.from_api is not None and stream_id != str(args.from_api):
-            raise ValueError("bundle stream does not match --from-api")
-        if args.stream is not None and stream_id != str(args.stream):
-            raise ValueError("bundle stream does not match --stream")
-        if not stream_id:
-            raise ValueError("bundle stream_id is missing")
-    except RolloverBundleAPIUnavailable as exc:
-        print(f"WARNING: rollover bundle import skipped (fail-open): {exc}", file=sys.stderr)
-        print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, separators=(",", ":")))
-        return 0
-    except (OSError, ValueError, KeyError, TypeError) as exc:
-        return _bundle_import_error(str(exc))
-    try:
-        lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
-        _bundle_validate_lease_member(
-            state_root,
-            agent=agent,
-            lineage_id=lineage_id,
-            manifest=manifest,
-            members=members,
-        )
-        remote_order = _bundle_order(manifest)
-        local_manifest, local_members, local_lineage_exists = _bundle_local_lineage_snapshot(
-            repo_root,
-            state_root,
-            agent=agent,
-            lineage_id=lineage_id,
-            stream_id=stream_id,
-        )
-        if local_manifest is not None and local_members is not None:
-            local_order = _bundle_order(local_manifest)
-            if local_order > remote_order and not args.force:
-                print(
-                    json.dumps(
-                        {
-                            "status": "refused",
-                            "error": "local rollover copy is newer; refusing to clobber it",
-                            "local": {
-                                "generation": local_order[0],
-                                "status_rank": local_order[1],
-                                "prepared_at": isoformat_z(local_order[2]),
-                                "rollover_id": local_order[3],
-                            },
-                            "remote": {
-                                "generation": remote_order[0],
-                                "status_rank": remote_order[1],
-                                "prepared_at": isoformat_z(remote_order[2]),
-                                "rollover_id": remote_order[3],
-                            },
-                        },
-                        separators=(",", ":"),
-                    )
-                )
-                return 2
-            if local_order == remote_order and not args.force:
-                if local_members == members and local_manifest.get("generation") == manifest.get("generation"):
-                    print(
-                        json.dumps(
-                            {
-                                "status": "noop",
-                                "reason": "identical bundle content",
-                                "agent": agent,
-                                "lineage_id": lineage_id,
-                                "rollover_id": manifest["rollover_id"],
-                            },
-                            separators=(",", ":"),
-                        )
-                    )
-                    return 0
-                print(
-                    json.dumps(
-                        {
-                            "status": "refused",
-                            "error": "bundle order ties but content differs; refusing to choose a copy",
-                            "generation": manifest["generation"],
-                            "rollover_id": manifest["rollover_id"],
-                        },
-                        separators=(",", ":"),
-                    )
-                )
-                return 2
-
-        stage_root, staged_lineage, staged_repo = _bundle_stage_install(
-            repo_root,
-            state_root,
-            manifest=manifest,
-            members=members,
-        )
-        archived, preserved = _bundle_commit_install(
-            repo_root,
-            state_root,
-            manifest=manifest,
-            stage_root=stage_root,
-            staged_lineage=staged_lineage,
-            staged_repo=staged_repo,
-            local_lineage_exists=local_lineage_exists,
-        )
-    except Exception as exc:
-        return _bundle_import_error(str(exc))
-    result = {
+    stage_root, staged_lineage, staged_repo = _bundle_stage_install(
+        repo_root,
+        state_root,
+        manifest=manifest,
+        members=members,
+    )
+    archived, preserved = _bundle_commit_install(
+        repo_root,
+        state_root,
+        manifest=manifest,
+        stage_root=stage_root,
+        staged_lineage=staged_lineage,
+        staged_repo=staged_repo,
+        local_lineage_exists=local_lineage_exists,
+        install_handoff=install_handoff,
+    )
+    return {
         "status": "installed",
         "agent": agent,
         "lineage_id": lineage_id,
@@ -5565,9 +5562,91 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         "archived": str(archived.relative_to(state_root)) if archived is not None else None,
         "preserved_handoffs": preserved,
         "upload_seq": manifest.get("upload_seq", 0),
+        "install_handoff": install_handoff,
     }
+
+
+def cmd_import_bundle(args: argparse.Namespace) -> int:
+    try:
+        repo_root, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+    except (OSError, ValueError) as exc:
+        return _bundle_import_error(str(exc))
+
+    candidates: list[tuple[dict[str, Any], dict[str, bytes]]] = []
+    try:
+        if args.file is not None:
+            blob = args.file.expanduser().resolve().read_bytes()
+            manifest, members = _bundle_extract(blob)
+            if manifest.get("agent") != agent:
+                raise ValueError("bundle agent does not match --agent")
+            candidates.append((manifest, members))
+        else:
+            stream_id = str(args.from_api)
+            any_manifest, any_blob = _bundle_api_latest(args, stream_id=stream_id)
+            any_manifest, any_members = _bundle_extract(any_blob, manifest_override=any_manifest)
+            candidates.append((any_manifest, any_members))
+            try:
+                own_manifest, own_blob = _bundle_api_latest(args, stream_id=stream_id, agent=agent)
+            except RolloverBundleNotFound:
+                own_manifest = None
+            except RolloverBundleAPIUnavailable as exc:
+                own_manifest = None
+                print(f"WARNING: own-agent rollover bundle lookup skipped (fail-open): {exc}", file=sys.stderr)
+            if own_manifest is not None:
+                own_manifest, own_members = _bundle_extract(own_blob, manifest_override=own_manifest)
+                if _bundle_order(own_manifest) > _bundle_order(any_manifest):
+                    candidates.append((own_manifest, own_members))
+
+        for manifest, _ in candidates:
+            stream_id = str(manifest.get("stream_id") or "")
+            if not stream_id:
+                raise ValueError("bundle stream_id is missing")
+            if args.from_api is not None and stream_id != str(args.from_api):
+                raise ValueError("bundle stream does not match --from-api")
+            if args.stream is not None and stream_id != str(args.stream):
+                raise ValueError("bundle stream does not match --stream")
+    except RolloverBundleAPIUnavailable as exc:
+        print(f"WARNING: rollover bundle import skipped (fail-open): {exc}", file=sys.stderr)
+        print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, separators=(",", ":")))
+        return 0
+    except RolloverBundleNotFound as exc:
+        return _bundle_import_error(str(exc))
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return _bundle_import_error(str(exc))
+
+    handoff_winner = max(candidates, key=lambda item: int(item[0].get("upload_seq", 0))) if len(candidates) > 1 else None
+    results: list[dict[str, Any]] = []
+    try:
+        for candidate in candidates:
+            results.append(
+                _bundle_import_candidate(
+                    repo_root,
+                    state_root,
+                    manifest=candidate[0],
+                    members=candidate[1],
+                    force=args.force,
+                    install_handoff=handoff_winner is None or candidate is handoff_winner,
+                )
+            )
+    except Exception as exc:
+        return _bundle_import_error(str(exc))
+
+    if len(results) == 1:
+        result = results[0]
+    else:
+        statuses = {item["status"] for item in results}
+        aggregate_status = "refused" if "refused" in statuses else "installed" if "installed" in statuses else "noop"
+        result = {
+            "status": aggregate_status,
+            "agent": agent,
+            "stream_id": str(args.from_api),
+            "bundles": results,
+            "handoff_source": handoff_winner[0].get("agent") if handoff_winner is not None else None,
+            "handoff_upload_seq": handoff_winner[0].get("upload_seq", 0) if handoff_winner is not None else None,
+        }
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0
+    return 2 if any(item["status"] == "refused" for item in results) else 0
 
 
 def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> dict[str, Any]:
@@ -6346,7 +6425,11 @@ def build_parser() -> argparse.ArgumentParser:
         "import-bundle",
         help="Install a newer cross-host rollover bundle without silently clobbering local state.",
     )
-    import_bundle.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    import_bundle.add_argument(
+        "--agent",
+        type=argparse_agent_name,
+        default=os.environ.get("SESSION_HANDOFF_AGENT", DEFAULT_AGENT),
+    )
     import_source = import_bundle.add_mutually_exclusive_group(required=True)
     import_source.add_argument("--from-api", metavar="STREAM", help="Fetch the latest bundle for this stream.")
     import_source.add_argument("--file", type=Path, help="Read a local/scp/rsync .tgz bundle.")
