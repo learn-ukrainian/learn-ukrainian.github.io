@@ -20,6 +20,7 @@ from scripts.projects.open_model_data import phase3_linguistic_representation as
 UA_GEC_REPOSITORY = "https://github.com/grammarly/ua-gec"
 UA_GEC_COMMIT = "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6"
 RIGHTS = {"status": "public_qualified_human_corpus", "license": "CC BY 4.0"}
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
 def _sha256_file(path: Path) -> str:
@@ -368,8 +369,9 @@ def verify_pinned_corpus(battery: Mapping[str, Any], checkout: Path) -> dict[str
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         ).stdout.strip()
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise representation.LinguisticRepresentationError("cannot verify UA-GEC checkout commit") from exc
     if commit != UA_GEC_COMMIT:
         raise representation.LinguisticRepresentationError("UA-GEC checkout is not at the pinned commit")

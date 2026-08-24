@@ -17,6 +17,7 @@ from jsonschema.exceptions import ValidationError
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
 EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 SCHEMA_NAMES = (
     "correction_protection_coverage_contract_v1.schema.json",
     "correction_protection_evaluation_contract_v1.schema.json",
@@ -224,8 +225,9 @@ def locate_shared_batch_state(repo_root: Path) -> Path | None:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         ).stdout.strip()
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return None
     candidate = Path(common_dir).parent / "batch_state"
     if candidate.is_dir() and any((candidate / name).is_file() for name in BINDING_INPUT_NAMES):

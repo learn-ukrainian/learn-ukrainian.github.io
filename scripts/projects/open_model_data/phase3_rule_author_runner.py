@@ -524,6 +524,8 @@ def run(
                 execution_error = f"bridge_exit_{getattr(result, 'returncode', 1)}"
         except OSError as exc:
             execution_error = f"bridge_oserror:{exc.__class__.__name__}"
+        except subprocess.TimeoutExpired as exc:
+            execution_error = f"bridge_timeout:{exc.__class__.__name__}"
         if not raw_path.exists():
             _write_private(raw_path, b"")
             execution_error = execution_error or "bridge_did_not_write_output"

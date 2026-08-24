@@ -33,6 +33,7 @@ EXPECTED_COMPRESSED_SHA256 = "c07318782a8ad924902ee7f89592cfd03ec17d47c3be183ea1
 EXPECTED_PROMPT_V3_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
 EXPECTED_COUNTS = cutover.COUNTS_AFTER
 PRIVATE_FILE_MODE = 0o600
+DEFAULT_MDLS_TIMEOUT_SECONDS: float = 30.0
 
 
 class VspuPostIngestAuditError(ValueError):
@@ -99,8 +100,9 @@ def _uploaded(path: Path) -> bool:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_MDLS_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise VspuPostIngestAuditError("cannot read Google Drive upload state") from exc
     return result.stdout.strip() == "1"
 

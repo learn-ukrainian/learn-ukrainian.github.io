@@ -78,6 +78,7 @@ COUNTS_AFTER = {
 PRIVATE_FILE_MODE = 0o600
 DRIVE_IDENTITY_TIMEOUT_SECONDS = 120.0
 DRIVE_IDENTITY_POLL_SECONDS = 1.0
+DEFAULT_XATTR_TIMEOUT_SECONDS: float = 30.0
 
 
 class VspuDatabaseCutoverError(ValueError):
@@ -166,10 +167,11 @@ def _drive_item_id(path: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_XATTR_TIMEOUT_SECONDS,
         )
     except OSError as exc:
         raise VspuDatabaseCutoverError("cannot inspect Google Drive provider identity") from exc
-    except subprocess.CalledProcessError as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise DriveIdentityPendingError("private artifact lacks Google Drive provider identity") from exc
     item_id = result.stdout.strip()
     if not item_id:

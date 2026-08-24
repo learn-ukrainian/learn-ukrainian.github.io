@@ -27,6 +27,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_VERSION = "phase3_university_content_audit_freeze_v1"
 STATUS = "UNIVERSITY_CONTENT_AUDIT_FROZEN_PARTIAL_COVERAGE"
+DEFAULT_XATTR_TIMEOUT_SECONDS: float = 30.0
 SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_university_content_audit_freeze_v1.schema.json"
 DEFAULT_OUTPUT_PATH = ROOT / "data/projects/open_model_data/admission/phase3_university_content_audit_freeze_v1.json"
 DEFAULT_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_complete_source_policy_v4.json"
@@ -337,8 +338,9 @@ def _validate_drive_backup(post_backup: Mapping[str, Any]) -> None:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_XATTR_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise UniversityContentAuditFreezeError("post-live database backup lacks Drive provider metadata") from exc
     item_id = provider_probe.stdout.strip()
     require(item_id == backup.get("google_drive_item_id"), "post-live database backup Drive identity drift")

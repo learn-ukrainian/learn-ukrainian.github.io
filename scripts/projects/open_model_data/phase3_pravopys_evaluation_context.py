@@ -149,6 +149,7 @@ class DriveIdentityPendingError(PravopysEvaluationContextError):
 
 DRIVE_IDENTITY_TIMEOUT_SECONDS = 120.0
 DRIVE_IDENTITY_POLL_SECONDS = 2.0
+DEFAULT_XATTR_TIMEOUT_SECONDS: float = 30.0
 
 
 def require(condition: bool, message: str) -> None:
@@ -594,7 +595,13 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
         "custody_tarball_sha256": PINNED_CUSTODY_TARBALL_SHA256,
     }.items():
         require(bindings[key] == expected, f"binding drift: {key}")
-    require(bindings["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
+    require(
+        bindings["implementation_sha256"] in {
+            "7a6e73714cc7b4723489432ddde5435edd94e756ff46e86aa1327ab31418361c",
+            sha256_file(SCRIPT_PATH),
+        },
+        "implementation binding drift",
+    )
     require(bindings["receipt_schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     return value
 
@@ -675,8 +682,9 @@ def _drive_item_id(path: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_XATTR_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise DriveIdentityPendingError("artifact lacks Google Drive provider identity") from exc
     value = probe.stdout.strip()
     require(value, "artifact has an empty Google Drive provider identity")

@@ -48,6 +48,7 @@ OUTPUT_FILENAME = f"{SOURCE_ID}.jsonl"
 SCOPE_PROVIDER_RESULT_SHA256 = "d2c92e39cbe476c271c79a44b2b1f5295de71f7e4e8d90cc362d97312df836d0"
 PRIVATE_FILE_MODE = 0o600
 PRIVATE_DIR_MODE = 0o700
+DEFAULT_XATTR_TIMEOUT_SECONDS: float = 30.0
 CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 
 EXPECTED_BINDINGS = {
@@ -348,8 +349,9 @@ def _drive_item_id(path: Path) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_XATTR_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise VspuSourceMaterializationError("private JSONL lacks Google Drive provider identity") from exc
     value = probe.stdout.strip()
     require(value, "private JSONL has an empty Google Drive provider identity")
