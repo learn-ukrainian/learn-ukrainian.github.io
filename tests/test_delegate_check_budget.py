@@ -11,6 +11,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _allow_notebook_dispatch(monkeypatch):
+    monkeypatch.setenv("LU_ALLOW_NOTEBOOK_DISPATCH", "1")
 
 
 class _FakeBudgetResponse:
