@@ -74,6 +74,8 @@ def test_config_and_fixture_changes_trigger_repo_invariant_manifest() -> None:
         "requirements-dev.txt",
         ".github/workflows/ci.yml",
         "scripts/ci/fastlane_always_tests.txt",
+        "site/src/data/lexicon-manifest.fingerprint.json",
+        "site/src/data/lexicon-manifest.pointer.json",
         "tests/fixtures/example.json",
     ):
         assert changed_tests.select_test_modules([path], include_repo_invariants=True) == sorted(_manifest())

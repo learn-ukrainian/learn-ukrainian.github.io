@@ -351,6 +351,7 @@ jobs:
           run_tests() {
             local label="$1"
             .venv/bin/python -m pytest \
+              -n auto --dist=loadfile \
               --strict-markers --timeout=120 --timeout-method=thread --durations=10 \
               -m 'not atlas_release and not slow' \
               "${test_files[@]}" 2>&1 | tee "ci-artifacts/fastlane-pytest-${label}.log"

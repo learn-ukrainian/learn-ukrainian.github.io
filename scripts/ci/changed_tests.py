@@ -65,6 +65,10 @@ def is_repo_invariant_trigger(path: str) -> bool:
         or path == ".github/workflows/ci.yml"
         or path == "scripts/ci/fastlane_always_tests.txt"
         or path.startswith("tests/fixtures/")
+        or path in {
+            "site/src/data/lexicon-manifest.fingerprint.json",
+            "site/src/data/lexicon-manifest.pointer.json",
+        }
     )
 
 

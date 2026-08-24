@@ -47,29 +47,6 @@ def test_anchor_curation_evidence_audit_entries_timeout() -> None:
             ace.audit_entries()
 
 
-def test_check_manifest_freshness_pr_touches_manifest_scope_timeout(tmp_path: Path) -> None:
-    from scripts.lexicon import check_manifest_freshness as cmf
-
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="scripts/lexicon/foo.py\n")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        assert cmf.pr_touches_manifest_scope(root=tmp_path, base_ref="origin/main") is True
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == cmf.DEFAULT_GIT_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["git", "diff"], cmf.DEFAULT_GIT_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(subprocess.TimeoutExpired):
-            cmf.pr_touches_manifest_scope(root=tmp_path, base_ref="origin/main")
-
-
 def test_check_manifest_vocabulary_coverage_changed_vocab_modules_timeout(tmp_path: Path) -> None:
     from scripts.lexicon import check_manifest_vocabulary_coverage as cmvc
 

@@ -6,6 +6,8 @@ import pytest
 
 from scripts.ai_agent_bridge._opencode import OPENCODE_DEFAULT_MODEL, _invoke_opencode
 
+pytestmark = pytest.mark.repo_invariant
+
 
 def test_opencode_default_model_is_cheap_and_guard_allowed():
     from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
