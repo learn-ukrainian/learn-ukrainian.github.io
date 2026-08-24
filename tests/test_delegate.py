@@ -9488,19 +9488,20 @@ def test_forward_config_refusal_names_both_recovery_paths(tmp_tasks_dir, monkeyp
         "decide_dispatch_placement",
         lambda **_kwargs: ("vps", "available", "host-job"),
     )
-    args = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            "forward-refusal-7230",
-            "--initiator",
-            "codex",
-            "--prompt",
-            "test forward config refusal",
-        ]
-    )
+    raw_argv = [
+        "scripts/delegate.py",
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "forward-refusal-7230",
+        "--initiator",
+        "codex",
+        "--prompt",
+        "test forward config refusal",
+    ]
+    monkeypatch.setattr(sys, "argv", raw_argv)
+    args = delegate.build_parser().parse_args(raw_argv[1:])
 
     rc = delegate.cmd_dispatch(args)
     assert rc == 2
@@ -9530,19 +9531,20 @@ def test_forward_config_refusal_writes_terminal_task_record(tmp_tasks_dir, monke
         lambda **_kwargs: ("vps", "available", "host-job"),
     )
     task_id = "forward-record-7230"
-    args = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            task_id,
-            "--initiator",
-            "codex",
-            "--prompt",
-            "test record write on refusal",
-        ]
-    )
+    raw_argv = [
+        "scripts/delegate.py",
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        task_id,
+        "--initiator",
+        "codex",
+        "--prompt",
+        "test record write on refusal",
+    ]
+    monkeypatch.setattr(sys, "argv", raw_argv)
+    args = delegate.build_parser().parse_args(raw_argv[1:])
 
     rc = delegate.cmd_dispatch(args)
     assert rc == 2
