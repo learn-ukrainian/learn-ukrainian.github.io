@@ -66,7 +66,7 @@ def validate_host_id(host_id: str) -> None:
 
 
 def validate_report_document(document: dict[str, Any]) -> None:
-    body = {key: value for key, value in document.items() if key != "collected_at"}
+    body = {key: value for key, value in document.items() if key not in {"collected_at", "workers"}}
     if _scan_value(body):
         raise ProjectStateValidationError("forbidden token in report")
 
@@ -133,3 +133,9 @@ def validate_report_document(document: dict[str, Any]) -> None:
     collected_at = document.get("collected_at")
     if not isinstance(collected_at, str) or not _COLLECTED_AT_RE.fullmatch(collected_at):
         raise ProjectStateValidationError("invalid collected_at")
+
+    workers = document.get("workers")
+    if workers is not None:
+        from scripts.api.fleet_workers_sanitize import validate_workers_list  # noqa: PLC0415, I001  # lazy-ok: breaks cycle with project_state_sanitize
+
+        validate_workers_list(workers)

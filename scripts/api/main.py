@@ -76,6 +76,7 @@ from .docs_router import router as docs_router
 from .epics_router import router as epics_router
 from .epics_router import seed_manifest_inventory
 from .fleet_router import router as fleet_router
+from .fleet_workers_router import router as fleet_workers_router
 from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
@@ -187,6 +188,7 @@ app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
 app.include_router(project_state_router, prefix="/api/fleet", tags=["fleet"])
+app.include_router(fleet_workers_router, prefix="/api/fleet", tags=["fleet"])
 app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
 app.include_router(coordination_router, prefix="/api/coordination")
 app.include_router(consultation_router, prefix="/api/consultation")

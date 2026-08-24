@@ -31,6 +31,10 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "/api/fleet/acp/conversations" in html
     assert "/api/fleet/activity" in html
     assert "/api/occupancy" in html
+    assert "/api/fleet/workers/v1" in html
+    assert "AI workers" in html
+    assert "workers-content" in html
+    assert "renderWorkers" in html
     assert "cloud-observer" in html
     assert "host.burn_state ||" in html
     assert "Object.entries(objectValue(host.burn_sources))" in html

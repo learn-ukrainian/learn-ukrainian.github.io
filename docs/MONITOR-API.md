@@ -261,6 +261,45 @@ read freshness window (15 minutes).
 
 Operator timer install: `docs/runbooks/project-state-reporter.md`.
 
+Schema **v2** (`monitor-project-state.v2`) adds an optional `workers` list (≤200
+`WorkerRow` objects). Missing `workers` on ingest is stored as
+`workers_status: unreported`; an explicit `workers: []` means verified zero
+(`workers_status: reported`). Each row carries `kind`, `agent`, optional
+`harness`, opaque `id`, optional 8-hex `run_id` (digest of host-local
+`run_nonce`), optional `epic`, `state` (`live|starting|zombie|needs_attention`),
+`age_s`, and optional `seat_model`. The nonce itself never leaves the host.
+
+### `GET /api/fleet/workers/v1[?host_id=x]`
+
+Joins every live AI worker exactly once per source on each opaque host. Response
+schema: `monitor-fleet-workers.v1` with `hosts[]` entries containing
+`host_id`, `freshness`, `workers_status` (`reported|unreported`), sanitized
+`workers[]` (each with `source`, `related`, and `WorkerRow` fields),
+`unattributed_burn`, and optional `reason`. Hostless driver leases appear under
+`host_id: unattributed` with `reason: lease has no host claim`. Counts include
+`live`, `hosts_unknown`, `workers_total`, and `attention` items (for example
+`unreported:host-teacher`). Read path is cache-only — never probes SSH or
+occupancy load refresh.
+
+Liveness map:
+
+| Source | Input | Worker state |
+| --- | --- | --- |
+| delegate | `spawning` | `starting` |
+| delegate | `running` + live pid | `live` |
+| delegate | `running` + null/dead pid | `zombie` |
+| atlas job | `running` | `live` |
+| atlas job | `queued`, `submitted` | `starting` |
+| atlas job | `needs_finalize` | `needs_attention` |
+| driver lease | `active` + unexpired | `live` |
+| observer/marker | within TTL | `live` |
+
+```bash
+curl -s http://localhost:8765/api/fleet/workers/v1 | python3 -m json.tool
+```
+
+`fleet.html` includes an **AI workers** panel bound to this route.
+
 ## Remote epic lifecycle v1 — `/api/epics/v1`
 
 This is the M2 remote lease surface from design #7178. It is exact-stream

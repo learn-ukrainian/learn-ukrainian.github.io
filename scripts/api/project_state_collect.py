@@ -12,6 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.api.fleet_workers_collect import collect_local_workers_for_reporter
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import is_release_root
 
@@ -304,5 +305,6 @@ def collect_local_document(
         "primary": primary,
         "worktrees": {"count": collect_worktree_count(primary_root)},
         "services": services,
+        "workers": collect_local_workers_for_reporter(),
         "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     }
