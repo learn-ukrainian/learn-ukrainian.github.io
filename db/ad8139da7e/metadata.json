@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "dbad8139da7e",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s7",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/db/ad8139da7e/0/metadata.json",
+      "transcript": "/db/ad8139da7e/0/full.jsonl",
+      "compact_transcript": "/db/ad8139da7e/0/transcript.jsonl",
+      "content_hash": "/db/ad8139da7e/0/content_hash.txt",
+      "prompt": "/db/ad8139da7e/0/prompt.txt"
+    }
+  ]
+}
