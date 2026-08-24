@@ -2775,9 +2775,7 @@ def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
     parts = normalized.split("/")
     if len(parts) < 2:
         return False
-    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith(
-        "read_only_checkout_"
-    )
+    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith("read_only_checkout_")
 
 
 def _is_read_only_runtime_state_path(path: str) -> bool:
@@ -4904,7 +4902,7 @@ def _run_worker(
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
-    """Spawn a detached worker and return immediately with the task-id."""
+    """Spawn a detached worker and return immediately (stdout: `<task_id>\\n<run_nonce>`)."""
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -6565,7 +6563,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     d = sub.add_parser(
         "dispatch",
-        help="Fire a task, return immediately",
+        help="Fire a task, return immediately (stdout: `<task_id>\\n<run_nonce>`)",
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument(

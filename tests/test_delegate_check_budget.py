@@ -232,7 +232,13 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
 
     assert rc == 0
     captured = capsys.readouterr()
-    assert captured.out.strip() == "budget-check-fixture"
+    lines = captured.out.strip().splitlines()
+    assert len(lines) == 2
+    assert lines[0] == "budget-check-fixture"
+    assert len(lines[1]) == 16
+    assert int(lines[1], 16) >= 0
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert lines[1] == state["run_nonce"]
     assert "ROUTING WARNING" in captured.err
 
 
@@ -245,9 +251,7 @@ def test_check_budget_hard_sub_on_near_cap_fresh(monkeypatch, tmp_path, capsys):
         delegate.urllib.request,
         "urlopen",
         _urlopen_routing(
-            _FakeBudgetResponse(
-                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
-            )
+            _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False)
         ),
     )
 
@@ -268,9 +272,7 @@ def test_check_budget_no_hard_sub_on_stale(monkeypatch, tmp_path, capsys):
         delegate.urllib.request,
         "urlopen",
         _urlopen_routing(
-            _FakeBudgetResponse(
-                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True
-            )
+            _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True)
         ),
     )
 
@@ -354,9 +356,7 @@ def test_refuse_without_yaml_map(monkeypatch, tmp_path, capsys):
         delegate.urllib.request,
         "urlopen",
         _urlopen_routing(
-            _FakeBudgetResponse(
-                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
-            )
+            _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False)
         ),
     )
 
@@ -377,9 +377,7 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
         delegate.urllib.request,
         "urlopen",
         _urlopen_routing(
-            _FakeBudgetResponse(
-                "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
-            )
+            _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False)
         ),
     )
 
@@ -557,12 +555,16 @@ def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_p
 
     # Create a running task for codex
     state_file = tasks_dir / "busy-task.json"
-    state_file.write_text(json.dumps({
-        "task_id": "busy-task",
-        "agent": "codex",
-        "status": "running",
-        "pid": 99999,
-    }))
+    state_file.write_text(
+        json.dumps(
+            {
+                "task_id": "busy-task",
+                "agent": "codex",
+                "status": "running",
+                "pid": 99999,
+            }
+        )
+    )
 
     delegate._check_capacity_hint("codex")
     captured = capsys.readouterr()
