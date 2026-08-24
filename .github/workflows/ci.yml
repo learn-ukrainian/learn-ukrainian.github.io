@@ -953,17 +953,7 @@ jobs:
         run: .venv/bin/python scripts/audit/check_mdx_generation_drift.py --changed-vs-base origin/main
 
       - name: Check DB-free Atlas manifest freshness
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
-        run: |
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            .venv/bin/python scripts/lexicon/check_manifest_freshness.py \
-              --pr-scoped --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA"
-          else
-            .venv/bin/python scripts/lexicon/check_manifest_freshness.py
-          fi
+        run: .venv/bin/python scripts/lexicon/check_manifest_freshness.py
 
       # Root-cause guard for the #3631 empty-atlas regression: a manifest
       # committed without enrichment renders an empty Atlas while the
