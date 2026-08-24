@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "af7a30367793",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-guard-7176",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/test_subprocess_timeout_guard.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/af/7a30367793/0/metadata.json",
+      "transcript": "/af/7a30367793/0/full.jsonl",
+      "compact_transcript": "/af/7a30367793/0/transcript.jsonl",
+      "content_hash": "/af/7a30367793/0/content_hash.txt",
+      "prompt": "/af/7a30367793/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/timeout-guard-7176
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7176 stage 1 — extend the subprocess timeout guard from tests/ to scripts/ behind an allowlist (one PR)
+
+Read `gh issue view 7176 -R learn-ukrainian/learn-ukrainian.github.io` (staged proposal; you implement STAGE 1 only).
+`tests/test_subprocess_timeout_guard.py::test_no_timeout_less_subprocess_calls_under_tests` (#5740) AST-fences
+timeout-less `subprocess.run/check_output/check_call/call/Popen(...)` under `tests/`. Production code under
+`scripts/` has none: ~453 sites. A hung child in a CI helper, dispatch path, or Monitor-API handler is the silent-stall
+class the fleet keeps paying for.
+
+## Outcome (stage 1 — no big-bang)
+The same AST guard covers `scripts/`, with today's violators frozen in a checked-in allowlist so the build stays
+green, and any NEW timeout-less subprocess call under `scripts/` fails the guard from now on. The allowlist can only
+shrink (a guard asserts no entry is stale — an entry whose site no longer violates must be removed).
+
+## Do
+1. Generate the allowlist mechanically (path + line-independent key such as `path::qualname` or `path::callee`
+   with a count), commit it as data (`scripts/ci/subprocess_timeout_allowlist.txt` or similar) with a header
+   explaining the burn-down rule. Do NOT hand-edit production call sites in this PR.
+2. Extend the guard: violations under `scripts/` not in the allowlist → fail with a precise message (file, line,
+   callee, and the fix: pass `timeout=`). Allowlist entries with zero remaining violations → fail ("stale entry —
+   remove it") so the list only shrinks.
+3. Keep the `tests/` behaviour byte-identical; keep runtime < 2 s (single AST pass, no imports of the scanned files).
+4. Mutation checks: (a) add a timeout-less `subprocess.run` to a scripts/ file in a scratch copy → guard fails naming it;
+   (b) leave a stale allowlist entry → guard fails naming it. Quote both.
+
+## Acceptance (quote raw output; PRIMARY interpreter — worktrees have no .venv)
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py` green;
+  ruff clean; guard wall-clock quoted.
+- One conventional commit (`test(hardening): extend subprocess timeout guard to scripts/ behind a shrink-only allowlist (#7176)`,
+  X-Agent trailer). NO push, NO auto-merge, NO amend after reporting. Report HEAD SHA + evidence + ready PR body
+  (include the allowlist size as the stage-2 burn-down denominator).
