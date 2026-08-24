@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c9ce22e2d7e7",
+  "session_id": "fleet-cbd0059e5de3413fac2d0a4368730c4b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T22:35:43.398505Z",
+  "branch": "cursor/monitor-7182-burndown-family2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/MONITOR-API.md",
+    "scripts/api/fleet_router.py",
+    "scripts/api/route_contracts.py",
+    "scripts/fleet_comms/cli.py",
+    "scripts/fleet_comms/legacy_broker_report.py",
+    "scripts/fleet_comms/message_plane.py",
+    "scripts/fleet_comms/opsec_store.py",
+    "tests/api/opsec_sweep/known_leaks.toml",
+    "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+    "tests/test_comms_plane_status_api.py",
+    "tests/test_fleet_comms_cli.py",
+    "tests/test_fleet_comms_legacy_broker_report.py",
+    "tests/test_fleet_observer_api.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "745ae48da258",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T22:35:43.390416Z",
+    "agent_lines": 129,
+    "agent_removed": 101,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 129,
+    "total_lines_changed": 230,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
