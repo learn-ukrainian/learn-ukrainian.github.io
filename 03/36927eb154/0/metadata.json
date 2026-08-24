@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0336927eb154",
+  "session_id": "fleet-f1324a20bebd48988a862d9a184acb3f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T13:13:38.602698Z",
+  "branch": "cursor/timeout-burndown-7213-s8",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/lexicon/anchor_curation_evidence.py",
+    "scripts/lexicon/check_manifest_freshness.py",
+    "scripts/lexicon/check_manifest_vocabulary_coverage.py",
+    "scripts/lexicon/content_lexicon_reconciler.py",
+    "scripts/lexicon/extract_book_headword_inventory.py",
+    "scripts/lexicon/publish_manifest.py",
+    "scripts/lexicon/runner/atlas_job.py",
+    "scripts/lexicon/runner/durable_mirror.py",
+    "scripts/lexicon/runner/transport.py",
+    "tests/test_lexicon_timeouts.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "e5666671a4d4",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T13:13:38.595769Z",
+    "agent_lines": 515,
+    "agent_removed": 63,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 515,
+    "total_lines_changed": 578,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

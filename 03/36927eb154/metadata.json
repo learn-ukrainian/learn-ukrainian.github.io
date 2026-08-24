@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0336927eb154",
+  "strategy": "manual-commit",
+  "branch": "cursor/timeout-burndown-7213-s8",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/lexicon/anchor_curation_evidence.py",
+    "scripts/lexicon/check_manifest_freshness.py",
+    "scripts/lexicon/check_manifest_vocabulary_coverage.py",
+    "scripts/lexicon/content_lexicon_reconciler.py",
+    "scripts/lexicon/extract_book_headword_inventory.py",
+    "scripts/lexicon/publish_manifest.py",
+    "scripts/lexicon/runner/atlas_job.py",
+    "scripts/lexicon/runner/durable_mirror.py",
+    "scripts/lexicon/runner/transport.py",
+    "tests/test_lexicon_timeouts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/03/36927eb154/0/metadata.json",
+      "transcript": "/03/36927eb154/0/full.jsonl",
+      "compact_transcript": "/03/36927eb154/0/transcript.jsonl",
+      "content_hash": "/03/36927eb154/0/content_hash.txt",
+      "prompt": "/03/36927eb154/0/prompt.txt"
+    }
+  ]
+}
