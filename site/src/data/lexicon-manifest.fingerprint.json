@@ -11,7 +11,7 @@
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
-        "sha256": "8bc44dd8a1e46e287d20b32dce2bf4d185354f1db963d51008025940094c08e6"
+        "sha256": "7ce12b35ce0eaa897c003646465851b3ee347ca49d73ca380b9b26b6d47e39aa"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
@@ -55,15 +55,15 @@
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
-        "sha256": "fef080642b9a62a381ed3943d88696d31cff02f2f138edf8c4937343d3cdd93f"
+        "sha256": "002fd1fa8d0d5647de50c49358409d91ee98b66456e3a8fa83013f77c7f0fb33"
       },
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
-        "sha256": "5e77e3ec7739e086da31df0cdb491f7361a51166552655ee3f7f4b72b022948d"
+        "sha256": "2cd4f6fd734d5dc696eaa98c2376fe6cf24871429f4a975166b91d3377ff5648"
       },
       {
         "path": "scripts/lexicon/content_lexicon_reconciler.py",
-        "sha256": "b2f1b2cab47fe23d34590355ba0c5c67a008bbb4e773852ce37c65aaf3d09a39"
+        "sha256": "9ed205663fcfca8021f4e69a0b0dbe4382040397cde77ecad28a4dd4f82e1d5d"
       },
       {
         "path": "scripts/lexicon/curated_membership.py",
@@ -107,7 +107,7 @@
       },
       {
         "path": "scripts/lexicon/extract_book_headword_inventory.py",
-        "sha256": "1cfb88507ea8792d81b7ab539110cf014317ca4c5197dc15102fe32eb8a1de1d"
+        "sha256": "b04853715d680944bb9ca68d29af0fa7ecff38a34914e194230fc999b68c5ff2"
       },
       {
         "path": "scripts/lexicon/extract_grinchyshyn_paronym_candidates.py",
@@ -223,7 +223,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "9517d5fd7eeebc65bff91fd449ddffa58e8f6ec70b18d25b304be5e83d13290b"
+        "sha256": "fe55142c3cb85f87474eb7adc53c66dc34b2ddbdb380bc1ce9d883bcd3d2b971"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
