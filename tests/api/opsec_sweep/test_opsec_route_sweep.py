@@ -6,6 +6,7 @@ import asyncio
 import fnmatch
 import json
 import os
+import shutil
 import socket
 import subprocess
 import sys
@@ -387,6 +388,11 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", allowed_roots)
     monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (docs_root, audit_root))
     monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", dict(allowed_roots))
+    # Dashboard paths are imported from PROJECT_ROOT at module import time;
+    # bind both consumers to the same resolved fixture root as the docs roots.
+    dashboards_root = root / "dashboards"
+    monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
+    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", dashboards_root)
 
     # Facade/status readers retain imported references to the resolver;
     # redirect every such reference and the resolver's own global into the
@@ -411,6 +417,11 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             (dashboards_dir / filename).write_text(
                 "<html><body>synthetic artifacts</body></html>\n", encoding="utf-8"
             )
+    shutil.copytree(
+        Path(__file__).resolve().parents[3] / "dashboards",
+        dashboards_root,
+        dirs_exist_ok=True,
+    )
 
     # The source and the injected seams must both carry the planted canary
     # before any response is considered safe to scan.
@@ -617,9 +628,9 @@ def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixtur
             failures.append(f"{record.key} status={response.status_code}")
         findings.extend(_scan_response(record, response, isolated_fixture.canaries))
 
-    dashboard_root = (Path(__file__).resolve().parents[3] / "dashboards").resolve()
+    dashboard_root = isolated_fixture.root / "dashboards"
     for dashboard in sorted(path for path in dashboard_root.rglob("*") if path.is_file()):
-        relative = dashboard.resolve().relative_to(dashboard_root).as_posix()
+        relative = dashboard.relative_to(dashboard_root).as_posix()
         findings.extend(
             opsec_scan.scan_response(
                 f"dashboard:{relative}",

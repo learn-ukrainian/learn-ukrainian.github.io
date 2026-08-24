@@ -222,7 +222,7 @@ def _assert_under_root(full_path: Path, root_path: Path) -> None:
 
 def _relative_to_root(path: Path, root: Path) -> str:
     """Return a stable root-relative path across symlinked checkout roots."""
-    return path.resolve().relative_to(root.resolve()).as_posix()
+    return path.relative_to(root).as_posix()
 
 
 def _directory_listing(path: str, root_key: str, root_path: Path, remainder: str) -> dict:
@@ -307,7 +307,7 @@ def collect_artifacts(
                 continue
 
             # Skip dotfiles
-            rel_to_project = file_path.relative_to(PROJECT_ROOT)
+            rel_to_project = Path(_relative_to_root(file_path, PROJECT_ROOT))
             if any(part.startswith(".") for part in rel_to_project.parts):
                 continue
 

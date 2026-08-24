@@ -241,6 +241,52 @@ def test_docs_router_root_listing_retains_logical_symlink_path(
     assert asserted_paths[0] != logical_root.resolve()
 
 
+def test_docs_router_serves_symlinked_root_with_logical_paths(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    real_docs_root = tmp_path / "real-docs"
+    reports_root = real_docs_root / "reports"
+    logical_root = tmp_path / "runtime" / "release" / ("a" * 40)
+    dashboards_root = logical_root / "dashboards"
+    reports_root.mkdir(parents=True)
+    logical_root.mkdir(parents=True)
+    dashboards_root.mkdir()
+    (reports_root / "report.md").write_text("# Report\n", encoding="utf-8")
+    (dashboards_root / "artifacts.html").write_text(
+        "<!doctype html><title>Artifacts</title>", encoding="utf-8"
+    )
+
+    (logical_root / "docs").symlink_to(real_docs_root, target_is_directory=True)
+
+    monkeypatch.setattr(docs_router, "PROJECT_ROOT", logical_root)
+    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", logical_root / "dashboards")
+    roots = {"docs/reports": logical_root / "docs" / "reports"}
+    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", roots)
+    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", roots)
+    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (logical_root / "docs",))
+    monkeypatch.setattr(docs_router, "DISCOVERY_EXCLUDES", ())
+
+    client = TestClient(app, raise_server_exceptions=False)
+
+    root_response = client.get("/artifacts/?format=json")
+    assert root_response.status_code == 200
+    assert root_response.json()["roots"] == [
+        {"id": "docs/reports", "path": "docs/reports", "exists": True}
+    ]
+
+    listing_response = client.get("/artifacts/docs/reports?format=json")
+    assert listing_response.status_code == 200
+    listing = listing_response.json()
+    assert listing["items"][0]["path"] == "docs/reports/report.md"
+
+    artifacts_response = client.get("/api/artifacts/html")
+    assert artifacts_response.status_code == 200
+    artifact = artifacts_response.json()["artifacts"][0]
+    assert artifact["path"] == "docs/reports/report.md"
+    assert artifact["url"] == "/artifacts/docs/reports/report.md"
+
+
 @pytest.mark.parametrize(
     "path",
     [
