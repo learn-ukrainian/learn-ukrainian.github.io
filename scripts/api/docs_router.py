@@ -220,6 +220,11 @@ def _assert_under_root(full_path: Path, root_path: Path) -> None:
         raise HTTPException(status_code=403, detail="Path traversal not allowed") from e
 
 
+def _relative_to_root(path: Path, root: Path) -> str:
+    """Return a stable root-relative path across symlinked checkout roots."""
+    return path.resolve().relative_to(root.resolve()).as_posix()
+
+
 def _directory_listing(path: str, root_key: str, root_path: Path, remainder: str) -> dict:
     full_path = safe_join(root_path, remainder) if remainder else safe_join(root_path)
     _assert_under_root(full_path, root_path)
@@ -248,12 +253,12 @@ def _directory_listing(path: str, root_key: str, root_path: Path, remainder: str
 
 
 def _artifact_url_for(root_key: str, file_path: Path) -> str:
-    relative = file_path.relative_to(EFFECTIVE_ROOTS[root_key]).as_posix()
+    relative = _relative_to_root(file_path, EFFECTIVE_ROOTS[root_key])
     return f"/artifacts/{root_key}/{relative}"
 
 
 def _artifact_path_for(file_path: Path) -> str:
-    return file_path.relative_to(PROJECT_ROOT).as_posix()
+    return _relative_to_root(file_path, PROJECT_ROOT)
 
 
 def _find_artifact_root(file_path: Path) -> str | None:
@@ -261,7 +266,7 @@ def _find_artifact_root(file_path: Path) -> str | None:
 
     Returns the longest matching root_key, or None if no root covers it.
     """
-    rel = file_path.relative_to(PROJECT_ROOT).as_posix()
+    rel = _relative_to_root(file_path, PROJECT_ROOT)
     # Sort by key length descending — longest (most specific) match wins
     for root_key in sorted(EFFECTIVE_ROOTS.keys(), key=len, reverse=True):
         if rel == root_key or rel.startswith(f"{root_key}/"):
@@ -385,7 +390,7 @@ async def list_roots(request: Request, format: str | None = Query(None, pattern=
         "roots": [
             {
                 "id": k,
-                "path": str(v.relative_to(PROJECT_ROOT)),
+                "path": _relative_to_root(v, PROJECT_ROOT),
                 "exists": v.exists(),
             }
             for k, v in EFFECTIVE_ROOTS.items()

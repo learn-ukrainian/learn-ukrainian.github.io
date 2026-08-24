@@ -22,9 +22,28 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 from starlette.requests import Request
 
-from scripts.api import docs_router, opsec_scan, session_streams_router
+from scripts.api import (
+    docs_router,
+    entire_context_router,
+    fleet_router,
+    git_hygiene_router,
+    governance_router,
+    issues_router,
+    opsec_scan,
+    project_state_collect,
+    project_state_router,
+    repository_authority,
+    session_streams_router,
+    site_router,
+    state_helpers,
+    work_router,
+    worktrees_router,
+)
 from scripts.api import main as api_main
-from scripts.fleet_comms import message_plane
+from scripts.fleet_comms import cold_start_board, message_plane
+from scripts.lexicon.runner import atlas_job
+from scripts.orchestration import reap_worktrees
+from scripts.wiki import sources_db
 
 from . import registry
 
@@ -67,6 +86,26 @@ class IsolatedFixture:
     canaries: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class _FixtureDigest:
+    pinned: tuple[Any, ...] = ()
+    recent: tuple[Any, ...] = ()
+
+
+@dataclass(frozen=True)
+class _FixtureHandoff:
+    stream_id: str
+
+    def as_dict(self) -> dict[str, str]:
+        return {"stream_id": self.stream_id, "status": "fixture"}
+
+
+class _FixtureSessionStore:
+    def load_digest(self, _stream_id: str, *, limit: int) -> _FixtureDigest:
+        del limit
+        return _FixtureDigest()
+
+
 def _request_scope(path: str = "/") -> dict[str, Any]:
     return {
         "type": "http",
@@ -92,17 +131,119 @@ def _deny_network(*_args: Any, **_kwargs: Any) -> None:
     raise AssertionError("OPSEC sweep fixture forbids network execution")
 
 
+def _fixture_completed_process(
+    args: Any,
+    *,
+    returncode: int = 0,
+    stdout: str = "",
+    stderr: str = "",
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess(
+        args=args,
+        returncode=returncode,
+        stdout=stdout,
+        stderr=stderr,
+    )
+
+
+def _fixture_run_command(args: Any, **_kwargs: Any) -> subprocess.CompletedProcess[str]:
+    """Return bounded, non-sensitive results for route-local command seams."""
+    argv = [str(value) for value in args]
+    if argv[:3] == ["git", "rev-parse", "HEAD"]:
+        return _fixture_completed_process(args, stdout=("0" * 40) + "\n")
+    if argv[:2] == ["git", "rev-parse"] and any("short" in value for value in argv):
+        return _fixture_completed_process(args, stdout=("0" * 9) + "\n")
+    if argv[:3] == ["git", "branch", "--show-current"]:
+        return _fixture_completed_process(args, stdout="opsec-fixture\n")
+    if argv[:1] == ["ps"]:
+        return _fixture_completed_process(args, stdout="PID STATE COMMAND\n")
+    return _fixture_completed_process(args)
+
+
+def _fixture_authority_git(_cwd: Path, *args: str) -> str:
+    if args == ("remote", "get-url", "origin"):
+        return "https://example.invalid/opsec/repository.git"
+    if args == ("branch", "--show-current"):
+        return "opsec-fixture"
+    if args == ("rev-parse", "HEAD"):
+        return "0" * 40
+    return ""
+
+
+def _fixture_missing_sources_db() -> Any:
+    raise FileNotFoundError("isolated OPSEC fixture has no source database")
+
+
+def _fixture_reap_run(
+    args: list[str],
+    *,
+    cwd: Path,
+    timeout: int | None = None,
+) -> subprocess.CompletedProcess[str]:
+    del cwd, timeout
+    return _fixture_completed_process(args, returncode=127, stderr="fixture git unavailable")
+
+
+def _fixture_health_identity() -> dict[str, str | None]:
+    return {
+        "host": "fixture-host",
+        "git_sha": None,
+        "checkout_sha": None,
+        "serving_sha": None,
+        "serving_mode": "checkout",
+    }
+
+
+def _fixture_cold_start_board(
+    *,
+    stream_id: str | None = None,
+    agent: str | None = None,
+    needle: str | None = None,
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    return {
+        "timestamp": "2026-01-01T00:00:00Z",
+        "board_status": "ok",
+        "stream_id": stream_id,
+        "agent": agent,
+        "needle": needle,
+        "probes": {},
+    }
+
+
+def _fixture_session_inventory_unavailable(_root: Path) -> list[Any]:
+    raise FileNotFoundError("isolated OPSEC fixture has no session inventory")
+
+
 @pytest.fixture
 def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> IsolatedFixture:
     """Redirect existing API seams into a canary-planted disposable tree."""
-    root = tmp_path / PATH_CANARY
+    # pytest may expose a symlinked tmp_path on macOS and a worker-specific
+    # ``/tmp/.../popen-gwN`` path on Linux. Resolve once, then use this same
+    # canonical root for every fixture seam.
+    root = (tmp_path / PATH_CANARY).resolve()
     root.mkdir()
     for relative in ("batch_state", "stores", "curriculum", "dashboards", "data", "logs"):
         (root / relative).mkdir(parents=True, exist_ok=True)
 
+    # The API cache is process-global, while pytest-xdist gives each worker a
+    # different fixture root. Replace the mutable stores rather than allowing
+    # a prior test (or a background projection build) to replay another root's
+    # logical work ids into this sweep.
+    monkeypatch.setattr(state_helpers, "_ttl_cache", {})
+    monkeypatch.setattr(state_helpers, "_content_file_index_cache", {})
+    monkeypatch.setattr(state_helpers, "_curriculum_cache", None)
+    monkeypatch.setattr(state_helpers, "_curriculum_mtime", 0.0)
+    monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
+    monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
+    monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
+    monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
+    monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
+
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", HOST_ID_CANARY)
     monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(root / "batch_state" / "atlas-jobs"))
 
     # All imported API modules use module-level Path seams. Repoint each
     # absolute path while retaining a recognizable canary in its parent.
@@ -119,21 +260,114 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             monkeypatch.setattr(module, name, replacement)
 
         if "_run_command" in vars(module):
-            monkeypatch.setattr(module, "_run_command", _deny_subprocess)
+            monkeypatch.setattr(module, "_run_command", _fixture_run_command)
 
     monkeypatch.setattr(subprocess, "run", _deny_subprocess)
     monkeypatch.setattr(subprocess, "Popen", _deny_subprocess)
     monkeypatch.setattr(socket, "create_connection", _deny_network)
+
+    # These routes intentionally expose read-only local diagnostics, but the
+    # sweep must not execute their git/gh/process seams. Return bounded fixture
+    # values at the seam so the route exercises its normal response shaping.
+    monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(repository_authority, "_git", _fixture_authority_git)
+    monkeypatch.setattr(
+        git_hygiene_router,
+        "_run_git",
+        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
+    )
+    monkeypatch.setattr(
+        worktrees_router,
+        "_run",
+        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
+    )
+    monkeypatch.setattr(
+        issues_router,
+        "_run_gh",
+        lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
+    )
+    monkeypatch.setattr(
+        site_router,
+        "_run",
+        lambda args, **_kwargs: _fixture_completed_process(
+            args,
+            returncode=127,
+            stderr="fixture command unavailable",
+        ),
+    )
+    monkeypatch.setattr(
+        governance_router,
+        "collect_adr_governance",
+        lambda: {
+            "total": 0,
+            "stale_proposed_count": 0,
+            "error_count": 0,
+            "warning_count": 0,
+            "broken_chains": [],
+            "orphaned_refs": [],
+            "promotion_candidates": [],
+            "index": [],
+        },
+    )
+    monkeypatch.setattr(
+        entire_context_router,
+        "projection_path",
+        lambda cwd: Path(cwd) / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3",
+    )
+    monkeypatch.setattr(entire_context_router, "load_provider_status", lambda _root: {})
+    monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
+    monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
+    monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
     monkeypatch.setattr(session_streams_router, "_repo_root", lambda: root)
     monkeypatch.setattr(
         session_streams_router,
         "_db_path",
         lambda: root / "stores" / "session-streams.sqlite3",
     )
+    monkeypatch.setattr(session_streams_router, "_store", lambda: _FixtureSessionStore())
+    monkeypatch.setattr(session_streams_router, "list_handoff_candidates", _fixture_session_inventory_unavailable)
+    monkeypatch.setattr(
+        session_streams_router,
+        "diagnose_handoff",
+        lambda _store, stream_id: _FixtureHandoff(stream_id),
+    )
+    monkeypatch.setattr(session_streams_router, "list_projection_receipts", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(
+        session_streams_router,
+        "detect_projection_drift",
+        lambda *_args, **_kwargs: {"status": "fixture"},
+    )
+
+    monkeypatch.setattr(cold_start_board, "_get_local_git_info", lambda: {
+        "branch": "opsec-fixture",
+        "head": "000000000",
+    })
+    monkeypatch.setattr(
+        cold_start_board,
+        "_resolve_session_streams_db",
+        lambda _repo_root: root / "stores" / "session-streams.sqlite3",
+    )
+    monkeypatch.setattr(
+        cold_start_board,
+        "_probe_gh_pr_list",
+        lambda: cold_start_board.ProbeResult(
+            status="skipped",
+            elapsed_ms=0.0,
+            data={"gh_available": False, "reason": "isolated_fixture"},
+        ),
+    )
+
+    # RAG imports its source DB lazily outside the scripts.api namespace. A
+    # nonexistent worker-local path plus a failing loader models the documented
+    # empty-corpus response without opening a real DB or relying on FTS tables.
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", root / "stores" / "sources.db")
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setattr(sources_db, "_get_conn", _fixture_missing_sources_db)
 
     # These docs roots are derived once at import time rather than exposed as
     # individual Path globals. Rebuild the lookup tables so docs requests
     # cannot traverse back into the checkout.
+    monkeypatch.setattr(docs_router, "PROJECT_ROOT", root)
     docs_root = root / "docs"
     audit_root = root / "audit"
     allowed_roots = {
@@ -164,6 +398,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         return isolated_plane_root
 
     monkeypatch.setattr(message_plane, "default_plane_root", isolated_plane_resolver)
+    monkeypatch.setattr(cold_start_board, "default_plane_root", isolated_plane_resolver)
     for module_name, module in tuple(sys.modules.items()):
         if not module_name.startswith("scripts.api") or module is None:
             continue
@@ -382,9 +617,9 @@ def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixtur
             failures.append(f"{record.key} status={response.status_code}")
         findings.extend(_scan_response(record, response, isolated_fixture.canaries))
 
-    dashboard_root = Path(__file__).resolve().parents[3] / "dashboards"
+    dashboard_root = (Path(__file__).resolve().parents[3] / "dashboards").resolve()
     for dashboard in sorted(path for path in dashboard_root.rglob("*") if path.is_file()):
-        relative = dashboard.relative_to(dashboard_root).as_posix()
+        relative = dashboard.resolve().relative_to(dashboard_root).as_posix()
         findings.extend(
             opsec_scan.scan_response(
                 f"dashboard:{relative}",
