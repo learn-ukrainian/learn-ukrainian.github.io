@@ -11,6 +11,10 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
 from scripts.api.occupancy_local import resolve_launcher_host_id
 from scripts.api.project_state_collect import collect_local_document
 from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
@@ -43,7 +47,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT_S)
     parser.add_argument("--dry-run", action="store_true", help="Print JSON document only; do not POST")
     sub = parser.add_subparsers(dest="command")
-    sub.add_parser("collect", help="print sanitized JSON document")
+    collect = sub.add_parser("collect", help="print sanitized JSON document")
+    collect.add_argument("--dry-run", action="store_true", help="Print JSON document only; do not POST")
     sub.add_parser("report", help="collect and POST to loopback ingest")
     return parser
 

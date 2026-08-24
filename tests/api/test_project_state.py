@@ -6,6 +6,7 @@ import json
 import re
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -14,6 +15,7 @@ from fastapi.testclient import TestClient
 from scripts.api import project_state_router as router_mod
 from scripts.api.main import app
 from scripts.api.project_state_store import REPORT_TTL_SECONDS, reset_project_state_store, upsert_report
+from tests.api.test_project_state_collect import _init_repo
 
 loop_client = TestClient(
     app,
@@ -245,6 +247,29 @@ def test_in_process_self_host_is_fresh(monkeypatch: pytest.MonkeyPatch) -> None:
     host = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
     assert host["freshness"] == "fresh"
     assert host["age_s"] == 0.0
+
+
+def test_self_host_live_collection_unmocked(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture_repo = _init_repo(tmp_path)
+    monkeypatch.chdir(fixture_repo)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "mac-operator")
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+
+    response = client.get("/api/fleet/projects/v1?host_id=mac-operator")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["schema"] == "monitor-project-state.v1"
+    host = data["hosts"]["mac-operator"]
+    assert host["freshness"] == "fresh"
+    assert host["age_s"] == 0.0
+    assert host["primary"] is not None
+    assert len(host["primary"]["head_sha"]) == 40
+    assert host["worktrees"]["count"] >= 1
+    assert len(host["services"]) == 4
+    assert {service["name"] for service in host["services"]} == {"sources", "api", "astro", "work"}
 
 
 def test_projects_route_contract_registered() -> None:

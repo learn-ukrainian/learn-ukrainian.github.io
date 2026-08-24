@@ -6,8 +6,11 @@ import subprocess
 from pathlib import Path
 
 from scripts.api.project_state_collect import (
+    SERVICE_DEFINITIONS,
     classify_serving_root,
+    collect_local_document,
     collect_primary_state,
+    collect_service_row,
     collect_worktree_count,
     resolve_primary_repo_root,
 )
@@ -46,6 +49,7 @@ def _init_repo(tmp_path: Path) -> Path:
         timeout=30,
     ).stdout.strip()
     _git(repo, "update-ref", "refs/remotes/origin/main", head)
+    (repo / ".git" / "FETCH_HEAD").write_text("", encoding="utf-8")
     return repo
 
 
@@ -93,3 +97,18 @@ def test_resolve_primary_from_dispatch_worktree(tmp_path: Path) -> None:
     _git(primary, "worktree", "add", str(worktree), "-b", "feature/test")
     resolved = resolve_primary_repo_root(worktree)
     assert resolved.resolve() == primary.resolve()
+
+
+def test_collect_service_row_default_state_fn() -> None:
+    row = collect_service_row(SERVICE_DEFINITIONS[0])
+    assert row["name"] == "sources"
+    assert row["state"] in {"running", "stopped", "blocked", "unavailable"}
+
+
+def test_collect_local_document_fixture_repo(tmp_path: Path) -> None:
+    repo = _init_repo(tmp_path)
+    document = collect_local_document("mac-operator", repo_root=repo)
+    assert document is not None
+    assert document["host_id"] == "mac-operator"
+    assert document["primary"]["head_sha"]
+    assert len(document["services"]) == 4

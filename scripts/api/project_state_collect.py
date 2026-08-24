@@ -241,8 +241,6 @@ def collect_service_row(
     listener_pid: Callable[[str], int | None] | None = None,
     process_cwd: ProcessCwdFn | None = None,
 ) -> dict[str, Any]:
-    state_fn = service_state or _default_service_state
-
     def _default_pid(name: str) -> int | None:
         for item in SERVICE_DEFINITIONS:
             if item.name == name:
@@ -252,7 +250,10 @@ def collect_service_row(
     pid_fn = listener_pid or _default_pid
     cwd_fn = process_cwd or _default_process_cwd
 
-    state = state_fn(definition.name)
+    if service_state is None:
+        state = _default_service_state(definition.name, definition)
+    else:
+        state = service_state(definition.name)
     row: dict[str, Any] = {
         "name": definition.name,
         "state": state,
