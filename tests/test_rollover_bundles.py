@@ -140,6 +140,107 @@ def test_round_trip_rewrites_root_and_identical_import_is_noop(
     assert json.loads(capsys.readouterr().out)["status"] == "noop"
 
 
+def test_export_digest_is_stable_across_export_clock_and_changes_with_status(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    first_path = tmp_path / "first.tgz"
+    second_path = tmp_path / "second.tgz"
+
+    export_times = iter(
+        (
+            datetime(2026, 8, 24, 18, 0, tzinfo=UTC),
+            datetime(2026, 8, 24, 18, 1, tzinfo=UTC),
+        )
+    )
+    monkeypatch.setattr(th, "utc_now", lambda: next(export_times))
+    assert th.cmd_export_bundle(_export_args(source, state, first_path)) == 0
+    first_output = json.loads(capsys.readouterr().out)
+    assert th.cmd_export_bundle(_export_args(source, state, second_path)) == 0
+    second_output = json.loads(capsys.readouterr().out)
+
+    first_manifest, _ = th._bundle_extract(first_path.read_bytes())
+    second_manifest, _ = th._bundle_extract(second_path.read_bytes())
+    assert first_manifest["exported_at"] != second_manifest["exported_at"]
+    assert first_output["bundle_sha256"] == second_output["bundle_sha256"]
+    assert first_manifest["bundle_sha256"] == second_manifest["bundle_sha256"]
+    assert [item["sha256"] for item in first_manifest["files"]] == [
+        item["sha256"] for item in second_manifest["files"]
+    ]
+
+    monkeypatch.setattr(th, "utc_now", lambda: datetime(2026, 8, 24, 18, 2, tzinfo=UTC))
+    _mark_confirmed(source, state)
+    confirmed_path = tmp_path / "confirmed.tgz"
+    assert th.cmd_export_bundle(_export_args(source, state, confirmed_path)) == 0
+    confirmed_output = json.loads(capsys.readouterr().out)
+    assert confirmed_output["bundle_sha256"] != first_output["bundle_sha256"]
+
+
+def test_confirmed_local_copy_refuses_older_pending_remote_at_rank_level(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    target.mkdir()
+    remote = _seed_state(source, thread_id="source-thread", generation=3)
+    bundle = tmp_path / "pending.tgz"
+    assert th.cmd_export_bundle(_export_args(source, remote, bundle)) == 0
+    capsys.readouterr()
+
+    local = _seed_state(target, thread_id="source-thread", generation=3)
+    _mark_confirmed(target, local)
+    local_lease = target / th.default_state_path(AGENT, local["lineage_id"])
+    before = local_lease.read_bytes()
+
+    assert th.cmd_import_bundle(_import_args(target, bundle)) == 2
+    refused = json.loads(capsys.readouterr().out)
+    assert refused["status"] == "refused"
+    assert refused["local"]["status_rank"] > refused["remote"]["status_rank"]
+    assert local_lease.read_bytes() == before
+    archive_root = target / ".agent" / "thread-rollovers" / AGENT / "_archive"
+    assert not archive_root.exists() or not any(archive_root.iterdir())
+
+
+def test_inconsistent_local_lease_refuses_without_archive_or_lineage_mutation(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    target.mkdir()
+    remote = _seed_state(source, thread_id="source-thread", generation=4)
+    bundle = tmp_path / "remote.tgz"
+    assert th.cmd_export_bundle(_export_args(source, remote, bundle)) == 0
+    capsys.readouterr()
+
+    local = _seed_state(target, thread_id="source-thread", generation=3)
+    local_path = target / th.default_state_path(AGENT, local["lineage_id"])
+    broken = json.loads(local_path.read_bytes())
+    broken["rollover_id"] = "rollover-inconsistent"
+    th.write_json_atomic(local_path, broken)
+    broken_before_import = local_path.read_bytes()
+
+    assert th.cmd_import_bundle(_import_args(target, bundle)) == 2
+    output = capsys.readouterr()
+    reason = json.loads(output.out)
+    assert reason["action"] == "import-bundle"
+    assert "local rollover lease is invalid" in reason["error"]
+    assert "Traceback" not in output.out
+    assert local_path.read_bytes() == broken_before_import
+    archive_root = target / ".agent" / "thread-rollovers" / AGENT / "_archive"
+    assert not archive_root.exists() or not any(archive_root.iterdir())
+
+
 def test_newer_remote_archives_stale_local_and_preserves_different_handoff(
     tmp_path: Path,
     handoff_candidates: None,

@@ -1618,27 +1618,42 @@ class SessionStreamStore:
                         or existing_by_sha["agent"] != manifest_value["agent"]
                         or existing_by_sha["lineage_id"] != manifest_value["lineage_id"]
                         or existing_by_sha["rollover_id"] != manifest_value["rollover_id"]
+                        or int(existing_by_sha["generation"]) != generation
+                        or existing_by_sha["status"] != manifest_value["status"]
+                        or existing_by_sha["prepared_at"] != prepared_at
                     ):
                         raise LeaseConflictError("bundle fingerprint is already bound to another lineage")
                     return self._rollover_bundle_payload(existing_by_sha, include_blob=True)
                 existing_by_rollover = connection.execute(
                     "SELECT bundle_sha256 FROM rollover_bundles "
-                    "WHERE stream_id = ? AND agent = ? AND lineage_id = ? AND rollover_id = ?",
-                    (stream_id, manifest_value["agent"], manifest_value["lineage_id"], manifest_value["rollover_id"]),
+                    "WHERE stream_id = ? AND agent = ? AND lineage_id = ? AND rollover_id = ? "
+                    "AND status = ? AND prepared_at = ?",
+                    (
+                        stream_id,
+                        manifest_value["agent"],
+                        manifest_value["lineage_id"],
+                        manifest_value["rollover_id"],
+                        manifest_value["status"],
+                        prepared_at,
+                    ),
                 ).fetchone()
                 if existing_by_rollover is not None:
-                    raise LeaseConflictError("rollover id already binds different immutable bundle content")
+                    raise LeaseConflictError(
+                        "rollover tuple already binds different immutable bundle content"
+                    )
                 cursor = connection.execute(
                     "INSERT INTO rollover_bundles("
-                    "stream_id, agent, lineage_id, generation, rollover_id, bundle_sha256, "
-                    "manifest_json, blob, uploaded_at, uploaded_by_lease_id) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "stream_id, agent, lineage_id, generation, rollover_id, status, prepared_at, "
+                    "bundle_sha256, manifest_json, blob, uploaded_at, uploaded_by_lease_id) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         stream_id,
                         manifest_value["agent"],
                         manifest_value["lineage_id"],
                         generation,
                         manifest_value["rollover_id"],
+                        manifest_value["status"],
+                        prepared_at,
                         bundle_sha256,
                         manifest_json,
                         blob,

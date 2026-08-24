@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
-import copy
 import gzip
 import hashlib
 import io
@@ -32,7 +31,7 @@ import urllib.error
 import urllib.request
 import uuid
 from collections.abc import Callable, Mapping
-from contextlib import closing
+from contextlib import closing, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -98,6 +97,19 @@ ROLLOVER_BUNDLE_STATUS_RANK = {
     # The existing state machine calls the confirmed replacement ``started``.
     "started": 3,
 }
+# Only these manifest fields affect bundle identity.  Host paths, export
+# clocks, and server-assigned upload sequence numbers are informational or
+# transport metadata and must not turn an identical state into new content.
+ROLLOVER_BUNDLE_DIGEST_FIELDS = (
+    "agent",
+    "stream_id",
+    "lineage_id",
+    "rollover_id",
+    "generation",
+    "status",
+    "prepared_at",
+    "tokenized_members",
+)
 # Default warning threshold (percentage of window)
 DEFAULT_CONTEXT_THRESHOLD = 88.0
 THREAD_LEASE_SCHEMA_VERSION = 2
@@ -486,7 +498,28 @@ def _bundle_archive(members: Mapping[str, bytes], manifest: Mapping[str, Any]) -
 
 
 def _bundle_digest(members: Mapping[str, bytes], manifest: Mapping[str, Any]) -> str:
-    unsigned = copy.deepcopy(dict(manifest))
+    digest_manifest = {
+        field: (
+            sorted(manifest[field])
+            if field == "tokenized_members" and isinstance(manifest.get(field), list)
+            else manifest.get(field)
+        )
+        for field in ROLLOVER_BUNDLE_DIGEST_FIELDS
+    }
+    digest_members = [
+        {
+            "path": name,
+            "sha256": hashlib.sha256(members[name]).hexdigest(),
+            "bytes": len(members[name]),
+        }
+        for name in sorted(members)
+    ]
+    return hashlib.sha256(_bundle_json({"manifest": digest_manifest, "members": digest_members})).hexdigest()
+
+
+def _bundle_legacy_digest(members: Mapping[str, bytes], manifest: Mapping[str, Any]) -> str:
+    """Verify v1 archives emitted before the deterministic identity digest fix."""
+    unsigned = dict(manifest)
     unsigned["bundle_sha256"] = ""
     return hashlib.sha256(_bundle_archive(members, unsigned)).hexdigest()
 
@@ -760,7 +793,9 @@ def _bundle_extract(blob: bytes, *, manifest_override: Mapping[str, Any] | None 
         raise ValueError("rollover bundle tokenized_members does not match its file manifest")
     _bundle_order(manifest)
     expected_digest = _bundle_digest(members, manifest)
-    if manifest.get("bundle_sha256") != expected_digest:
+    if manifest.get("bundle_sha256") != expected_digest and manifest.get("bundle_sha256") != _bundle_legacy_digest(
+        members, manifest
+    ):
         raise ValueError("rollover bundle fingerprint mismatch")
     if manifest_override is not None:
         outer = dict(manifest_override)
@@ -807,50 +842,215 @@ def _bundle_archive_local_lineage(
         archive_root = state_root / ".agent" / "thread-rollovers" / agent / "_archive" / f"{lineage_id}-{timestamp}-{suffix}"
         suffix += 1
     archive_root.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(os.fspath(lineage_root), os.fspath(archive_root))
-    archived_state_path = archive_root / "lease.json"
-    archived_state = load_state(archived_state_path)
-    replacement = archived_state.get("replacement")
-    if isinstance(replacement, dict) and replacement.get("status") in {"pending_start", "resumed"}:
-        replacement["status"] = "superseded"
-        replacement["superseded_by"] = {
-            "lineage_id": remote_manifest.get("lineage_id"),
-            "generation": remote_manifest.get("generation"),
-            "rollover_id": remote_manifest.get("rollover_id"),
-        }
-        archived_state["replacement"] = replacement
-        write_rollover_state(archived_state_path, state_root, archived_state)
+    original_lease = (lineage_root / "lease.json").read_bytes()
+    try:
+        shutil.move(os.fspath(lineage_root), os.fspath(archive_root))
+        archived_state_path = archive_root / "lease.json"
+        archived_state = load_state(archived_state_path)
+        replacement = archived_state.get("replacement")
+        if isinstance(replacement, dict) and replacement.get("status") in {"pending_start", "resumed"}:
+            replacement["status"] = "superseded"
+            replacement["superseded_by"] = {
+                "lineage_id": remote_manifest.get("lineage_id"),
+                "generation": remote_manifest.get("generation"),
+                "rollover_id": remote_manifest.get("rollover_id"),
+            }
+            archived_state["replacement"] = replacement
+            # The identity receipt already describes the same lineage identity;
+            # only the archived lease projection changes here.  Keep this final
+            # archive update local so a failed import can remove the transaction's
+            # archive without leaving a second registry mutation to roll back.
+            write_json_atomic(archived_state_path, archived_state)
+    except Exception:
+        if archive_root.exists():
+            with suppress(OSError):
+                write_bytes_atomic(archive_root / "lease.json", original_lease)
+            with suppress(OSError):
+                shutil.move(os.fspath(archive_root), os.fspath(lineage_root))
+        raise
     return archive_root
 
 
-def _bundle_install(
+def _bundle_validate_lease_member(
+    state_root: Path,
+    *,
+    agent: str,
+    lineage_id: str,
+    manifest: Mapping[str, Any],
+    members: Mapping[str, bytes],
+) -> None:
+    """Validate the imported lease before staging or replacing local state."""
+    lease_name = f".agent/thread-rollovers/{agent}/{lineage_id}/lease.json"
+    payload = members.get(lease_name)
+    if payload is None:
+        raise ValueError("bundle has no lease state member")
+    try:
+        state = json.loads(payload.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("bundle lease state is not valid JSON") from exc
+    if not isinstance(state, dict):
+        raise ValueError("bundle lease state must be an object")
+    replacement, error = validate_live_lease(
+        state,
+        agent=agent,
+        state_path=state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json",
+    )
+    if error:
+        raise ValueError(f"bundle lease is invalid: {error}")
+    assert replacement is not None
+    if state.get("lineage_id") != lineage_id or state.get("rollover_id") != manifest.get("rollover_id"):
+        raise ValueError("bundle lease identity does not match its manifest")
+    try:
+        generation = int(manifest["generation"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("bundle manifest generation is malformed") from exc
+    if replacement.get("generation") != generation:
+        raise ValueError("bundle lease generation does not match its manifest")
+    if replacement.get("prepared_at") != manifest.get("prepared_at"):
+        raise ValueError("bundle lease prepared_at does not match its manifest")
+    lease_status = str(replacement.get("status") or "")
+    manifest_status = str(manifest.get("status") or "")
+    if lease_status != manifest_status and {lease_status, manifest_status} != {"started", "confirmed"}:
+        raise ValueError("bundle lease status does not match its manifest")
+
+
+def _bundle_stage_install(
     repo_root: Path,
     state_root: Path,
     *,
     manifest: Mapping[str, Any],
     members: Mapping[str, bytes],
-) -> None:
+) -> tuple[Path, Path, dict[str, Path]]:
+    """Stage every imported file beside its target lineage, without clobbering it."""
     agent = normalize_agent_name(str(manifest["agent"]))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
     lineage_prefix = f".agent/thread-rollovers/{agent}/{lineage_id}/"
     if not any(name.startswith(lineage_prefix) for name in members):
         raise ValueError("bundle has no lineage state members")
-    scratch_root = state_root / ".agent"
-    scratch_root.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="rollover-import-", dir=os.fspath(scratch_root)) as scratch:
-        staging = Path(scratch)
+    lineage_parent = state_root / ".agent" / "thread-rollovers" / agent
+    lineage_parent.mkdir(parents=True, exist_ok=True)
+    stage_root = Path(tempfile.mkdtemp(prefix=f".{lineage_id}.import-", dir=os.fspath(lineage_parent)))
+    staged_lineage = stage_root / "lineage"
+    staged_repo: dict[str, Path] = {}
+    try:
         for name, payload in members.items():
-            destination = staging / name if name.startswith(lineage_prefix) else staging / "repo" / name
+            if name.startswith(".agent/thread-rollovers/"):
+                if not name.startswith(lineage_prefix):
+                    raise ValueError("bundle contains a foreign lineage member")
+                destination = staged_lineage / name.removeprefix(lineage_prefix)
+            else:
+                destination = stage_root / "repo" / name
+                staged_repo[name] = destination
+            destination.relative_to(stage_root.resolve())
             destination.parent.mkdir(parents=True, exist_ok=True)
-            destination.write_bytes(_bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload)
-        names = sorted(members, key=lambda name: ("identity-receipt.json" not in name, name == "lease.json", name))
-        for name in names:
-            source = staging / name if name.startswith(lineage_prefix) else staging / "repo" / name
-            target_root = state_root if name.startswith(".agent/thread-rollovers/") else repo_root
-            target = (target_root / name).resolve()
-            target.relative_to(target_root.resolve())
-            target.parent.mkdir(parents=True, exist_ok=True)
-            write_bytes_atomic(target, source.read_bytes())
+            destination.write_bytes(
+                _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
+            )
+    except Exception:
+        shutil.rmtree(stage_root, ignore_errors=True)
+        raise
+    return stage_root, staged_lineage, staged_repo
+
+
+def _bundle_preserved_path(target: Path) -> Path:
+    timestamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
+    preserved = target.with_name(f"{target.stem}.{timestamp}.superseded{target.suffix}")
+    suffix = 1
+    while preserved.exists():
+        preserved = target.with_name(f"{target.stem}.{timestamp}-{suffix}.superseded{target.suffix}")
+        suffix += 1
+    return preserved
+
+
+def _bundle_commit_install(
+    repo_root: Path,
+    state_root: Path,
+    *,
+    manifest: Mapping[str, Any],
+    stage_root: Path,
+    staged_lineage: Path,
+    staged_repo: Mapping[str, Path],
+    local_lineage_exists: bool,
+) -> tuple[Path | None, list[str]]:
+    """Commit a staged bundle with exact rollback around archive+rename."""
+    agent = normalize_agent_name(str(manifest["agent"]))
+    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
+    receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
+    original_backup = stage_root / "original-lineage"
+
+    repo_backups: dict[Path, bytes | None] = {}
+    created_preserved: list[Path] = []
+    preserved: list[str] = []
+    old_receipt = receipt_path.read_bytes() if receipt_path.is_file() else None
+    archived: Path | None = None
+    lineage_replaced = False
+    try:
+        if local_lineage_exists:
+            shutil.copytree(lineage_root, original_backup)
+        candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
+        for name, source in sorted(staged_repo.items()):
+            target = (repo_root / name).resolve()
+            target.relative_to(repo_root.resolve())
+            if target.exists() and not target.is_file():
+                raise ValueError(f"bundle target is not a regular file: {name}")
+            old_payload = target.read_bytes() if target.is_file() else None
+            repo_backups[target] = old_payload
+            installed = source.read_bytes()
+            if name in candidates and old_payload is not None and old_payload != installed:
+                superseded = _bundle_preserved_path(target)
+                write_bytes_atomic(superseded, old_payload)
+                created_preserved.append(superseded)
+                preserved.append(superseded.as_posix())
+            write_bytes_atomic(target, installed)
+
+        write_json_atomic(
+            receipt_path,
+            {"schema": "rollover-bundle-receipt.v1", "upload_seq": int(manifest.get("upload_seq", 0))},
+        )
+
+        # No operation that can select a different copy occurs before all
+        # validation and staging above.  Archive and rename are the final
+        # lineage transition, and every failure below restores the original.
+        if lineage_root.exists():
+            archived = _bundle_archive_local_lineage(
+                state_root,
+                agent=agent,
+                lineage_id=lineage_id,
+                remote_manifest=manifest,
+            )
+        os.replace(staged_lineage, lineage_root)
+        lineage_replaced = True
+        return archived, preserved
+    except Exception:
+        if lineage_replaced and lineage_root.exists():
+            shutil.rmtree(lineage_root, ignore_errors=True)
+        if archived is not None and archived.exists():
+            shutil.rmtree(archived, ignore_errors=True)
+        if local_lineage_exists and original_backup.exists() and not lineage_root.exists():
+            shutil.copytree(original_backup, lineage_root)
+
+        for target, old_payload in repo_backups.items():
+            try:
+                if old_payload is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    write_bytes_atomic(target, old_payload)
+            except OSError:
+                pass
+        for path in created_preserved:
+            path.unlink(missing_ok=True)
+        try:
+            if old_receipt is None:
+                receipt_path.unlink(missing_ok=True)
+            else:
+                write_bytes_atomic(receipt_path, old_receipt)
+        except OSError:
+            pass
+        raise
+    finally:
+        if stage_root.exists():
+            shutil.rmtree(stage_root, ignore_errors=True)
 
 
 def _bundle_status_manifest(state_root: Path, *, agent: str, lineage_id: str) -> dict[str, Any] | None:
@@ -5197,33 +5397,45 @@ def _maybe_auto_upload_bundle(
         return {"status": "skipped", "reason": str(exc)}
 
 
-def _bundle_preserve_handoff_files(
+def _bundle_local_lineage_snapshot(
     repo_root: Path,
+    state_root: Path,
     *,
     agent: str,
+    lineage_id: str,
     stream_id: str,
-    members: Mapping[str, bytes],
-) -> list[str]:
-    preserved: list[str] = []
-    candidates = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
-    for name, payload in members.items():
-        if name.startswith(".agent/") or name not in candidates:
-            continue
-        target = repo_root / name
-        if not target.is_file():
-            continue
-        installed = _bundle_rewrite(payload, repo_root=repo_root) if _bundle_text_member(name) else payload
-        if target.read_bytes() == installed:
-            continue
-        timestamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
-        superseded = target.with_name(f"{target.stem}.{timestamp}.superseded{target.suffix}")
-        suffix = 1
-        while superseded.exists():
-            superseded = target.with_name(f"{target.stem}.{timestamp}-{suffix}.superseded{target.suffix}")
-            suffix += 1
-        write_bytes_atomic(superseded, target.read_bytes())
-        preserved.append(superseded.as_posix())
-    return preserved
+) -> tuple[dict[str, Any] | None, dict[str, bytes] | None, bool]:
+    """Read and validate the local copy before any import filesystem mutation."""
+    lineage_root = state_root / ".agent" / "thread-rollovers" / agent / lineage_id
+    if not lineage_root.exists():
+        return None, None, False
+    if lineage_root.is_symlink() or not lineage_root.is_dir():
+        raise ValueError("local rollover lineage is not a regular directory")
+    state_path = lineage_root / "lease.json"
+    state = load_state(state_path)
+    _, error = validate_live_lease(state, agent=agent, state_path=state_path)
+    if error:
+        raise ValueError(f"local rollover lease is invalid: {error}")
+    receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
+    receipt = load_state(receipt_path) if receipt_path.is_file() else {}
+    try:
+        upload_seq = int(receipt.get("upload_seq", 0))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("local rollover bundle receipt has a malformed upload_seq") from exc
+    local_manifest = _bundle_state_manifest(state, stream_id=stream_id, upload_seq=upload_seq)
+    local_members = _bundle_local_members(
+        repo_root,
+        state_root,
+        agent=agent,
+        lineage_id=lineage_id,
+        stream_id=stream_id,
+    )
+    return local_manifest, local_members, True
+
+
+def _bundle_import_error(reason: str) -> int:
+    print(json.dumps({"error": reason, "action": "import-bundle"}, separators=(",", ":")))
+    return 2
 
 
 def cmd_import_bundle(args: argparse.Namespace) -> int:
@@ -5231,8 +5443,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         repo_root, state_root = resolve_roots(args.repo_root)
         agent = normalize_agent_name(args.agent)
     except (OSError, ValueError) as exc:
-        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
-        return 2
+        return _bundle_import_error(str(exc))
 
     api_manifest: dict[str, Any] | None = None
     try:
@@ -5253,94 +5464,97 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             raise ValueError("bundle stream_id is missing")
     except RolloverBundleAPIUnavailable as exc:
         print(f"WARNING: rollover bundle import skipped (fail-open): {exc}", file=sys.stderr)
-        print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, indent=2))
+        print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, separators=(",", ":")))
         return 0
-    except FileNotFoundError as exc:
-        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
-        return 2
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
-        return 2
-
-    lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
-    remote_order = _bundle_order(manifest)
-    local_manifest = _bundle_status_manifest(state_root, agent=agent, lineage_id=lineage_id)
-    if local_manifest is not None:
-        local_members = _bundle_local_members(
+        return _bundle_import_error(str(exc))
+    try:
+        lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
+        _bundle_validate_lease_member(
+            state_root,
+            agent=agent,
+            lineage_id=lineage_id,
+            manifest=manifest,
+            members=members,
+        )
+        remote_order = _bundle_order(manifest)
+        local_manifest, local_members, local_lineage_exists = _bundle_local_lineage_snapshot(
             repo_root,
             state_root,
             agent=agent,
             lineage_id=lineage_id,
             stream_id=stream_id,
         )
-        if local_members == members and local_manifest.get("generation") == manifest.get("generation"):
-            print(
-                json.dumps(
-                    {
-                        "status": "noop",
-                        "reason": "identical bundle content",
-                        "agent": agent,
-                        "lineage_id": lineage_id,
-                        "rollover_id": manifest["rollover_id"],
-                    },
-                    indent=2,
-                )
-            )
-            return 0
-        local_order = _bundle_order(local_manifest)
-        if local_order > remote_order and not args.force:
-            print(
-                json.dumps(
-                    {
-                        "status": "refused",
-                        "error": "local rollover copy is newer; refusing to clobber it",
-                        "local": {
-                            "generation": local_order[0],
-                            "status_rank": local_order[1],
-                            "prepared_at": isoformat_z(local_order[2]),
-                            "rollover_id": local_order[3],
+        if local_manifest is not None and local_members is not None:
+            local_order = _bundle_order(local_manifest)
+            if local_order > remote_order and not args.force:
+                print(
+                    json.dumps(
+                        {
+                            "status": "refused",
+                            "error": "local rollover copy is newer; refusing to clobber it",
+                            "local": {
+                                "generation": local_order[0],
+                                "status_rank": local_order[1],
+                                "prepared_at": isoformat_z(local_order[2]),
+                                "rollover_id": local_order[3],
+                            },
+                            "remote": {
+                                "generation": remote_order[0],
+                                "status_rank": remote_order[1],
+                                "prepared_at": isoformat_z(remote_order[2]),
+                                "rollover_id": remote_order[3],
+                            },
                         },
-                        "remote": {
-                            "generation": remote_order[0],
-                            "status_rank": remote_order[1],
-                            "prepared_at": isoformat_z(remote_order[2]),
-                            "rollover_id": remote_order[3],
+                        separators=(",", ":"),
+                    )
+                )
+                return 2
+            if local_order == remote_order and not args.force:
+                if local_members == members and local_manifest.get("generation") == manifest.get("generation"):
+                    print(
+                        json.dumps(
+                            {
+                                "status": "noop",
+                                "reason": "identical bundle content",
+                                "agent": agent,
+                                "lineage_id": lineage_id,
+                                "rollover_id": manifest["rollover_id"],
+                            },
+                            separators=(",", ":"),
+                        )
+                    )
+                    return 0
+                print(
+                    json.dumps(
+                        {
+                            "status": "refused",
+                            "error": "bundle order ties but content differs; refusing to choose a copy",
+                            "generation": manifest["generation"],
+                            "rollover_id": manifest["rollover_id"],
                         },
-                    },
-                    indent=2,
+                        separators=(",", ":"),
+                    )
                 )
-            )
-            return 2
-        if local_order == remote_order and not args.force:
-            print(
-                json.dumps(
-                    {
-                        "status": "refused",
-                        "error": "bundle order ties but content differs; refusing to choose a copy",
-                        "generation": manifest["generation"],
-                        "rollover_id": manifest["rollover_id"],
-                    },
-                    indent=2,
-                )
-            )
-            return 2
-        archived = _bundle_archive_local_lineage(
-            state_root,
-            agent=agent,
-            lineage_id=lineage_id,
-            remote_manifest=manifest,
-        )
-    else:
-        archived = None
+                return 2
 
-    preserved = _bundle_preserve_handoff_files(repo_root, agent=agent, stream_id=stream_id, members=members)
-    try:
-        _bundle_install(repo_root, state_root, manifest=manifest, members=members)
-        receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
-        write_json_atomic(receipt_path, {"schema": "rollover-bundle-receipt.v1", "upload_seq": int(manifest.get("upload_seq", 0))})
-    except (OSError, ValueError, KeyError, TypeError) as exc:
-        print(json.dumps({"error": str(exc), "action": "import-bundle"}, indent=2))
-        return 2
+        stage_root, staged_lineage, staged_repo = _bundle_stage_install(
+            repo_root,
+            state_root,
+            manifest=manifest,
+            members=members,
+        )
+        archived, preserved = _bundle_commit_install(
+            repo_root,
+            state_root,
+            manifest=manifest,
+            stage_root=stage_root,
+            staged_lineage=staged_lineage,
+            staged_repo=staged_repo,
+            local_lineage_exists=local_lineage_exists,
+        )
+    except Exception as exc:
+        return _bundle_import_error(str(exc))
     result = {
         "status": "installed",
         "agent": agent,
