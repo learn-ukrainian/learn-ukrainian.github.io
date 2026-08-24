@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "17427743a9de",
+  "strategy": "manual-commit",
+  "branch": "cursor/services-ssh-tunnel-fix-108c",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/lint_raw_rm_rf.py",
+    "tests/test_path_safety.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/17/427743a9de/0/metadata.json",
+      "transcript": "/17/427743a9de/0/full.jsonl",
+      "compact_transcript": "/17/427743a9de/0/transcript.jsonl",
+      "content_hash": "/17/427743a9de/0/content_hash.txt",
+      "prompt": "/17/427743a9de/0/prompt.txt"
+    }
+  ]
+}

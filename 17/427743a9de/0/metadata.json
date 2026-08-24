@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "17427743a9de",
+  "session_id": "fleet-792f2dd29eea45cb958d6be938b23fe0",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T15:27:52.705353Z",
+  "branch": "cursor/services-ssh-tunnel-fix-108c",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/lint_raw_rm_rf.py",
+    "tests/test_path_safety.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "370dae7751d8",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T15:27:52.6993Z",
+    "agent_lines": 64,
+    "agent_removed": 21,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 64,
+    "total_lines_changed": 85,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
