@@ -410,7 +410,7 @@ def resolve_launcher_host_id() -> str:
         return driver_host_id
 
     try:
-        from scripts.api.occupancy import parse_host_id_map  # noqa: PLC0415 — breaks the occupancy import cycle
+        from scripts.api.occupancy import parse_host_id_map  # noqa: PLC0415 — # lazy-ok: occupancy cycle breaker
 
         claimed = self_host_opaque_ids(parse_host_id_map())
     except Exception:
