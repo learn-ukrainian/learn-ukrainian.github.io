@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "879d5c25b5ed",
+  "strategy": "manual-commit",
+  "branch": "cursor/services-ssh-tunnel-fix-108c",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "services.sh",
+    "tests/api/test_services_ops.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/87/9d5c25b5ed/0/metadata.json",
+      "transcript": "/87/9d5c25b5ed/0/full.jsonl",
+      "compact_transcript": "/87/9d5c25b5ed/0/transcript.jsonl",
+      "content_hash": "/87/9d5c25b5ed/0/content_hash.txt",
+      "prompt": "/87/9d5c25b5ed/0/prompt.txt"
+    }
+  ]
+}
