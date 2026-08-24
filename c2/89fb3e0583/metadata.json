@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c289fb3e0583",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7182-burndown-family2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/cold_start_board.py",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/test_fleet_comms_cli.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c2/89fb3e0583/0/metadata.json",
+      "transcript": "/c2/89fb3e0583/0/full.jsonl",
+      "compact_transcript": "/c2/89fb3e0583/0/transcript.jsonl",
+      "content_hash": "/c2/89fb3e0583/0/content_hash.txt",
+      "prompt": "/c2/89fb3e0583/0/prompt.txt"
+    }
+  ]
+}
