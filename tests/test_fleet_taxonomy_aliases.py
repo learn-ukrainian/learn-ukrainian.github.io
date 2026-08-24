@@ -353,6 +353,9 @@ def test_session_setup_hook_epic_validation_contract(
     scripts_lib = project_dir / "scripts" / "lib"
     scripts_lib.mkdir(parents=True)
     shutil.copy2(_HANDOFF_IDENTITY_SH, scripts_lib / "handoff_identity.sh")
+    registry = project_dir / "scripts" / "config" / "issue_streams.yaml"
+    registry.parent.mkdir(parents=True)
+    shutil.copy2(_ISSUE_STREAMS, registry)
 
     env = {
         "CLAUDE_PROJECT_DIR": str(project_dir),

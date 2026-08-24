@@ -153,6 +153,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     for relative in (
         "start-claude-driver.sh",
         "scripts/lib/handoff_identity.sh",
+        "scripts/config/issue_streams.yaml",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         # The core's deploy staleness gate sources this; without package.json
@@ -241,6 +242,7 @@ def _core_driver_exit_fixture(
     for relative in (
         "start-claude-driver.sh",
         "scripts/lib/handoff_identity.sh",
+        "scripts/config/issue_streams.yaml",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",

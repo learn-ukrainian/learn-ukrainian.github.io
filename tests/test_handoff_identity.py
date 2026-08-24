@@ -105,6 +105,50 @@ def test_monitor_resolves_to_dedicated_provider_slot(resolver: str, expected: st
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
+    ("selector", "expected"),
+    [
+        ("infra", "infra\tepic:6943\n"),
+        ("harness", "infra\tepic:6943\n"),
+        ("infra.fleet-comms", "infra\tepic:6943\n"),
+        ("devops", "devops\tepic:5703\n"),
+        ("infra.devops", "devops\tepic:5703\n"),
+        ("atlas", "atlas\tepic:4387\n"),
+        ("practice", "atlas\tepic:4387\n"),
+        ("practice-hub", "atlas\tepic:4387\n"),
+        ("atlas.practice", "atlas\tepic:4387\n"),
+        ("hramatka", "hramatka\tepic:4542\n"),
+        ("hramatka.lessons", "hramatka\tepic:4542\n"),
+        ("folk", "folk\tepic:2836\n"),
+        ("seminars-folk", "folk\tepic:2836\n"),
+        ("bio", "bio\tepic:4431\n"),
+        ("seminars-bio", "bio\tepic:4431\n"),
+        ("corpus", "corpus\tepic:4706\n"),
+        ("corpus-channels", "corpus\tepic:4706\n"),
+        ("monitor", "monitor\tepic:7177\n"),
+        ("infra.monitor", "monitor\tepic:7177\n"),
+    ],
+)
+def test_legacy_selector_outputs_remain_byte_identical(selector: str, expected: str) -> None:
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; launcher_selector_resolve "$2"',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+            selector,
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
     ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot"),
     [
         ("infra.fleet-comms", "infra", INFRA_STREAM_ID, "claude-infra", "gemini-infra", "grok-infra"),
@@ -302,6 +346,66 @@ def test_infra_stream_follows_registry_mutation(tmp_path: Path) -> None:
     expected = f"epic:{fresh_epic}"
     assert result.stdout == f"{expected}|{expected}|{expected}"
     assert expected != INFRA_STREAM_ID
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_new_registry_stream_resolves_without_shell_edit(tmp_path: Path) -> None:
+    """A new stream key and its infra.<key> form need only a registry row."""
+    fresh_key = "future-ops"
+    fresh_epic = 888002
+    fixture = tmp_path / "issue_streams.yaml"
+    fixture.write_text(
+        yaml.safe_dump(
+            {
+                "schema_version": 1,
+                "streams": {
+                    fresh_key: {
+                        "title": "Future operations fixture",
+                        "epics": [fresh_epic, 888003],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env["HANDOFF_ISSUE_STREAMS_YAML"] = str(fixture)
+
+    for selector in (fresh_key, f"infra.{fresh_key}"):
+        result = subprocess.run(
+            [
+                "bash",
+                "-c",
+                'source "$1"; launcher_selector_resolve "$2"',
+                "bash",
+                str(_HANDOFF_IDENTITY),
+                selector,
+            ],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env=env,
+        )
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == f"{fresh_key}\tepic:{fresh_epic}\n"
+
+    help_result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; launcher_selector_help',
+            "bash",
+            str(_HANDOFF_IDENTITY),
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=env,
+    )
+    assert help_result.returncode == 0, help_result.stderr
+    assert f"{fresh_key} | infra.{fresh_key}" in help_result.stdout
 
 
 def test_launch_path_does_not_literal_mint_infra_epic() -> None:
