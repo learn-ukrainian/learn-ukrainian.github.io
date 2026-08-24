@@ -136,6 +136,9 @@ RUN_CONFIG_FIELDS = frozenset(
     }
 )
 FORBIDDEN_COMMAND_EXECUTABLES = frozenset({"anthropic", "claude", "curl", "openai", "ssh", "wget"})
+# Local run configs have no timeout field (RUN_CONFIG_FIELDS is closed), so the
+# offline runner subprocess is bounded by this documented ceiling.
+LOCAL_RUNNER_TIMEOUT_SECONDS = 1800
 
 
 class SuiteError(ValueError):
@@ -745,7 +748,16 @@ def run_local(config_path: Path, requests: Path, responses: Path, receipt_path: 
             "UA_EVAL_NETWORK_ALLOWED": "0",
         }
     )
-    completed = subprocess.run(command, cwd=ROOT, env=environment, check=False)
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=environment,
+            check=False,
+            timeout=LOCAL_RUNNER_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise SuiteError(f"local runner timed out after {LOCAL_RUNNER_TIMEOUT_SECONDS}s") from exc
     _require(completed.returncode == 0, f"local runner exited {completed.returncode}")
     _require(responses.is_file(), "local runner did not create responses")
     receipt = {

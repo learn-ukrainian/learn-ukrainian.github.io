@@ -510,8 +510,9 @@ def test_transport_spawns_gpu_worker_with_available_python3(tmp_path: Path, monk
     (tmp_path / "run_config.json").write_text(json.dumps(config), encoding="utf-8")
     calls: list[list[str]] = []
 
-    def fake_run(command: list[str], *, check: bool) -> subprocess.CompletedProcess:
+    def fake_run(command: list[str], *, check: bool = False, **kwargs: object) -> subprocess.CompletedProcess:
         assert check is False
+        assert isinstance(kwargs.get("timeout"), int) and kwargs["timeout"] > 0
         calls.append(command)
         return subprocess.CompletedProcess(command, 0)
 

@@ -53,12 +53,6 @@ scripts/projects/open_model_data/phase3_rule_author_runner.py::run::subprocess.r
 scripts/projects/open_model_data/phase3_source_production_transport.py::_subprocess_invoke::subprocess.run
 scripts/projects/ua_eval_harness/build_heldout_manifest.py::_git_head::subprocess.run
 scripts/projects/ua_eval_harness/run_codex_baseline.py::_cli_version::subprocess.run
-scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py::job_command::subprocess.run
-scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py::launch_once::subprocess.run
-scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py::source_commit::subprocess.run
-scripts/projects/ua_open_weight_eval/hf_jobs_transport.py::run_worker::subprocess.run
-scripts/projects/ua_open_weight_eval/hf_jobs_transport.py::run_worker::subprocess.run
-scripts/projects/ua_open_weight_eval/suite_cli.py::run_local::subprocess.run
 scripts/review/snapshot.py::_run_git::subprocess.run
 scripts/session_canary/grok_lane.py::cmd_mint::subprocess.run
 scripts/session_canary/grok_lane.py::cmd_score::subprocess.run

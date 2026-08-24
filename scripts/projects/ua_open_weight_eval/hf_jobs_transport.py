@@ -20,6 +20,10 @@ SHA256_PATTERN = re.compile(r"[a-f0-9]{64}")
 REPO_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/[A-Za-z0-9][A-Za-z0-9_.-]{0,95}")
 SAFE_PATH_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.\-/]{0,255}")
 TRANSPORT_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_transport_receipt.v1"
+PLUGIN_INSTALL_TIMEOUT_SECONDS = 300
+# The direct transport passes no HF job timeout to the in-container worker, so its
+# subprocess is bounded by this documented ceiling instead of a job label.
+WORKER_TIMEOUT_SECONDS = 3600
 
 
 class TransportError(ValueError):
@@ -190,10 +194,14 @@ def run_preflight(args: argparse.Namespace, files: list[dict[str, Any]]) -> dict
 def run_worker(args: argparse.Namespace, root: Path) -> int:
     config = json.loads((root / "run_config.json").read_text(encoding="utf-8"))
     plugin = config["runtime"]["vllm_gguf_plugin"]["filename"]
-    install = subprocess.run(
-        ["uv", "pip", "install", "--system", str(root / plugin)],
-        check=False,
-    )
+    try:
+        install = subprocess.run(
+            ["uv", "pip", "install", "--system", str(root / plugin)],
+            check=False,
+            timeout=PLUGIN_INSTALL_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise TransportError("verified plugin installation timed out") from exc
     _require(install.returncode == 0, "verified plugin installation failed")
     output = root / "output"
     command = [
@@ -216,7 +224,14 @@ def run_worker(args: argparse.Namespace, root: Path) -> int:
     ]
     if args.mode == "canary":
         command.extend(["--selection", str(root / "canary_selection.json")])
-    return subprocess.run(command, check=False).returncode
+    try:
+        return subprocess.run(command, check=False, timeout=WORKER_TIMEOUT_SECONDS).returncode
+    except subprocess.TimeoutExpired:
+        print(
+            f"worker exceeded its {WORKER_TIMEOUT_SECONDS}s subprocess bound",
+            file=sys.stderr,
+        )
+        return 124
 
 
 def parse_args() -> argparse.Namespace:
