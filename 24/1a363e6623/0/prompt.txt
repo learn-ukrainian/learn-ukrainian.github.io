@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/split-brain-7168-delta2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta 2: agy/split-brain-7168-p2 (PR #7201) — merge-queue kick: dispatch stdout contract (same branch, on top)
+
+PR #7201 was kicked from the merge queue (run 32681501052, shard 4/4):
+`tests/test_delegate_check_budget.py::test_check_budget_dry_run_does_not_spawn` →
+`AssertionError: assert 'budget-check…9d2c05ef94bac' == 'budget-check-fixture'`. Your delta 1 (accepted review fix,
+P1 nonce reachability) made `cmd_dispatch` print the run nonce as a SECOND stdout line after the task id; this test
+compares the whole stdout to the task id.
+
+## Outcome
+The dispatch stdout contract is explicit and every in-repo consumer honours it: line 1 = task id, line 2 = run nonce
+(both dry-run and live). Tests that read the task id take the first line.
+
+## Do
+1. Document the contract where callers look: the `dispatch` subcommand help text and the `cmd_dispatch` docstring
+   ("stdout: `<task_id>\n<run_nonce>`"), one sentence each.
+2. Fix `tests/test_delegate_check_budget.py::test_check_budget_dry_run_does_not_spawn` to assert the first line is
+   the task id and the second is a 16-hex nonce (do not weaken the "does not spawn" assertion).
+3. Sweep for siblings: `grep -rn "stdout.strip() ==\|stdout ==\|\.stdout\.strip()\b" tests/ scripts/ | grep -i dispatch`
+   and any test that feeds dispatch stdout into `wait`/`status` as a task id. Fix each the same way; list them.
+4. Mutation check: revert the test fix → it fails as in CI; restore → green. Quote both.
+
+## Acceptance (quote raw output; PRIMARY interpreter — worktrees have no .venv)
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_delegate_check_budget.py
+  tests/test_delegate.py -k "dispatch or nonce or budget"` green, plus the full `tests/test_delegate_check_budget.py`;
+  ruff clean.
+- One conventional commit on top (`test(delegate): honour the two-line dispatch stdout contract (#7168)`, X-Agent
+  trailer). NO push, NO amend, NO rebase, NO auto-merge. Report new HEAD SHA + evidence.

@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "241a363e6623",
+  "strategy": "manual-commit",
+  "branch": "agy/split-brain-7168-p2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate_check_budget.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/24/1a363e6623/0/metadata.json",
+      "transcript": "/24/1a363e6623/0/full.jsonl",
+      "compact_transcript": "/24/1a363e6623/0/transcript.jsonl",
+      "content_hash": "/24/1a363e6623/0/content_hash.txt",
+      "prompt": "/24/1a363e6623/0/prompt.txt"
+    }
+  ]
+}
