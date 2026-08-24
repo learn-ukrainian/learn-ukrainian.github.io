@@ -9,6 +9,9 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
+
+import pytest
 
 from scripts.api import launchd_supervisor as supervisor
 
@@ -20,9 +23,7 @@ def test_rendered_plist_uses_throttled_abnormal_exit_restart(tmp_path: Path) -> 
     assert payload["Label"] == supervisor.LABEL
     assert payload["KeepAlive"] == {"SuccessfulExit": False}
     assert payload["ThrottleInterval"] == supervisor.THROTTLE_INTERVAL_SECONDS
-    assert payload["EnvironmentVariables"] == {
-        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-    }
+    assert payload["EnvironmentVariables"] == {"PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"}
     assert payload["RunAtLoad"] is True
     assert payload["ProgramArguments"][0] == supervisor.STABLE_PROGRAM
     assert payload["ProgramArguments"] == [
@@ -72,7 +73,8 @@ def test_api_child_disables_bytecode_writes(tmp_path: Path, monkeypatch) -> None
         env=environment,
         check=True,
         capture_output=True,
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     )
     assert json.loads(inherited.stdout) == {"env": "1", "dont_write": True}
 
@@ -315,9 +317,7 @@ def test_wrapper_execs_primary_interpreter(tmp_path: Path) -> None:
     python = primary / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
     python.write_text(
-        "#!/bin/sh\n"
-        "printf '%s\\n' \"$@\"\n"
-        "exit 0\n",
+        "#!/bin/sh\nprintf '%s\\n' \"$@\"\nexit 0\n",
         encoding="utf-8",
     )
     python.chmod(python.stat().st_mode | stat.S_IXUSR)
@@ -342,3 +342,44 @@ def test_wrapper_execs_primary_interpreter(tmp_path: Path) -> None:
     assert "scripts.api.launchd_supervisor" in proc.stdout
     assert "run" in proc.stdout
     assert str(primary) in proc.stdout
+
+
+def test_launchctl_passes_timeout() -> None:
+    fake = subprocess.CompletedProcess(["/bin/launchctl", "print", "gui/501/test"], 0, "", "")
+    with patch("subprocess.run", return_value=fake) as run_mock:
+        res = supervisor._launchctl(["print", "gui/501/test"])
+
+    assert res == fake
+    assert run_mock.call_args.kwargs.get("timeout") == supervisor.LAUNCHCTL_TIMEOUT_SECONDS
+
+
+def test_launchctl_timeout_raises_launchd_error() -> None:
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["/bin/launchctl", "print"], supervisor.LAUNCHCTL_TIMEOUT_SECONDS),
+    ):
+        with pytest.raises(supervisor.LaunchdError, match=r"/bin/launchctl print timed out after 15\.0s"):
+            supervisor._launchctl(["print"])
+
+
+def test_prepare_api_command_passes_timeout(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    fake = subprocess.CompletedProcess(["git", "rev-parse"], 0, "a" * 40 + "\n", "")
+    with (
+        patch("subprocess.run", return_value=fake) as run_mock,
+        patch.object(supervisor, "build_release", return_value=(repo / "releases" / "v1", False)),
+        patch.object(supervisor, "prune_releases", return_value=type("PruneResult", (), {"removed": []})()),
+    ):
+        supervisor._prepare_api_command(repo, live_mode=False, port=8765)
+
+    assert run_mock.call_args.kwargs.get("timeout") == supervisor.GIT_REV_PARSE_TIMEOUT_SECONDS
+
+
+def test_prepare_api_command_timeout_raises_launchd_error(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], supervisor.GIT_REV_PARSE_TIMEOUT_SECONDS),
+    ):
+        with pytest.raises(supervisor.LaunchdError, match=r"git rev-parse HEAD timed out after 15\.0s in"):
+            supervisor._prepare_api_command(repo, live_mode=False, port=8765)

@@ -35,9 +35,6 @@ scripts/ai_agent_bridge/_review_worktree.py::_changed_line_numbers_for_snapshot:
 scripts/ai_agent_bridge/_review_worktree.py::_changed_lines_between_bytes::subprocess.run
 scripts/ai_agent_bridge/_review_worktree.py::_run_command::subprocess.run
 scripts/ai_agent_bridge/_worktree_brief.py::_run_git::subprocess.run
-scripts/api/blue_router.py::get_audit_status::subprocess.run
-scripts/api/launchd_supervisor.py::_launchctl::subprocess.run
-scripts/api/launchd_supervisor.py::_prepare_api_command::subprocess.run
 scripts/audit/_judge_eval_lib.py::pull_calibration_cases::subprocess.run
 scripts/audit/atlas_source_census.py::scan_textbook_pdf_root::subprocess.run
 scripts/audit/audit_level.py::run_audit::subprocess.run
