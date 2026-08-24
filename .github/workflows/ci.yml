@@ -431,7 +431,7 @@ jobs:
           exit "$status"
 
   # ---------------------------------------------------------------------
-  # 2b. secret-scan — PR-required security checks. It has no venv/npm setup;
+  # 3. secret-scan — PR-required security checks. It has no venv/npm setup;
   #    the stdlib-only range resolver and linter stay on every event.
   # ---------------------------------------------------------------------
   secret-scan:
@@ -474,6 +474,16 @@ jobs:
           else
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
+
+      - name: Check internal IDs are not published
+        run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
+
+      - name: Reject negated closing references
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+        run: |
+          printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin
 
       # TruffleHog downloads its scanner binary on first use — retry the
       # SHA-pinned action with the existing 3-attempt / backoff cadence.
@@ -524,7 +534,7 @@ jobs:
           exit 1
 
   # ---------------------------------------------------------------------
-  # 3. python — collect and execute four unconditional test partitions.
+  # 4. python — collect and execute four unconditional test partitions.
   # ---------------------------------------------------------------------
   # The selection still never consults changed files: every collected test runs
   # exactly once. Each shard makes the same deterministic plan from one frozen
@@ -817,7 +827,7 @@ jobs:
           retention-days: 1
 
   # ---------------------------------------------------------------------
-  # 3. contracts — full-tier deterministic drift/artifact checks. Every check
+  # 5. contracts — full-tier deterministic drift/artifact checks. Every check
   #    here diffs against origin/main or a committed file itself, so an
   #    untouched input is a fast no-op on merge_group/push/dispatch events.
   # ---------------------------------------------------------------------
@@ -931,9 +941,6 @@ jobs:
 
       - name: Check source-to-site MDX forward parity
         run: .venv/bin/python scripts/audit/check_mdx_forward_parity.py --changed-vs-base origin/main
-
-      - name: Check internal IDs are not published
-        run: .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
 
       - name: Gate teacher-cloze answers
         run: .venv/bin/python scripts/audit/check_teacher_cloze_content.py
@@ -1152,14 +1159,8 @@ jobs:
           )
           PY
 
-      - name: Reject negated closing references
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: |
-          printf '%s' "$PR_BODY" | .venv/bin/python scripts/audit/lint_pr_closing_references.py --stdin
-
   # ---------------------------------------------------------------------
-  # 4. frontend — full-tier build + vitest. The job is absent from the PR
+  # 6. frontend — full-tier build + vitest. The job is absent from the PR
   #    tier; on full events the first real step cheap-exits 0 when the diff
   #    misses scripts/ci/frontend_change_denominator.json.
   # ---------------------------------------------------------------------
@@ -1424,10 +1425,10 @@ jobs:
 
   # ---------------------------------------------------------------------
   # ---------------------------------------------------------------------
-  # 4. Coverage floor + CI Gate. Secret scanning is a separate required job;
-  #    the PR-body reference guard remains in full-tier `contracts`. Every
-  #    required job above is unconditional for its tier, so `skipped` is as
-  #    much a failure as `failure`/`cancelled` when it is required.
+  # 7. Coverage floor + CI Gate. Secret scanning and the PR-body reference guard
+  #    are separate PR-required checks. Every required job above is
+  #    unconditional for its tier, so `skipped` is as much a failure as
+  #    `failure`/`cancelled` when it is required.
 
   # Duration data is intentionally published only after every matrix member of
   # a push to main succeeds. For mq_validated it republishes the proof run's

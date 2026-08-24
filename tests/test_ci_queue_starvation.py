@@ -42,7 +42,13 @@ def test_ci_keeps_secret_scan_separate_from_full_contracts() -> None:
     assert "security" not in jobs
     assert "pr-body-references" not in jobs
     secret_steps = "\n".join(
-        step.get("name", "") + "\n" + str(step.get("uses", "")) + "\n" + str(step.get("run", ""))
+        step.get("name", "")
+        + "\n"
+        + str(step.get("if", ""))
+        + "\n"
+        + str(step.get("uses", ""))
+        + "\n"
+        + str(step.get("run", ""))
         for step in jobs["secret-scan"]["steps"]
     )
     contracts_steps = "\n".join(
@@ -52,9 +58,13 @@ def test_ci_keeps_secret_scan_separate_from_full_contracts() -> None:
     assert jobs["secret-scan"].get("if") is None
     assert "trufflesecurity/trufflehog@" in secret_steps
     assert "lint_opsec_leaks.py" in secret_steps
+    assert "check_no_internal_ids.py" in secret_steps
+    assert "lint_pr_closing_references.py" in secret_steps
+    assert "github.event_name == 'pull_request'" in secret_steps
     assert "trufflesecurity/trufflehog@" not in contracts_steps
     assert "lint_opsec_leaks.py" not in contracts_steps
-    assert "lint_pr_closing_references.py" in contracts_steps
+    assert "check_no_internal_ids.py" not in contracts_steps
+    assert "lint_pr_closing_references.py" not in contracts_steps
     assert "check_teacher_cloze_content.py" in contracts_steps
     # Rule of thumb: assert an invariant, not a snapshot; if changing X
     # legitimately requires editing >1 test, the test is a snapshot.
