@@ -1,0 +1,51 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/timeout-burndown-7213-s3
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7213 slice 3 — burn down the subprocess-timeout allowlist for `scripts/ai_agent_bridge/` only (one PR)
+
+Read `gh issue view 7213 -R learn-ukrainian/learn-ukrainian.github.io`, the allowlist header in
+`scripts/ci/subprocess_timeout_allowlist.txt`, and the merged slices #7214 (`scripts/ci/`) and the `scripts/api/` slice —
+follow their pattern exactly: a named module-level constant per bound, `TimeoutExpired` mapped onto the site's EXISTING
+failure semantics, one test per site exercising the real code path with a monkeypatched `TimeoutExpired`.
+
+This slice covers ONLY entries whose path starts with `scripts/ai_agent_bridge/` (21 entries at slice-2 time). The bridge
+spawns provider CLIs and helper processes for asks/reviews; a hung child there is the silent-stall class the fleet keeps
+paying for (`--silence-timeout` exists at the delegate layer precisely because of it).
+
+## Outcome
+Every `scripts/ai_agent_bridge/` allowlist entry is either fixed (bounded, removed from the allowlist) or explicitly
+skipped with a one-line reason in the PR body. No other directories.
+
+## Rules for values
+- Reuse the module's existing convention where one exists (grep `timeout=` and the bridge's own deadline/budget
+  constants first — many asks already carry a hard timeout; a subprocess bound must be ≥ that budget + grace, never
+  below it, or you convert a legitimate long ask into a false failure).
+- Provider CLI invocations that stream for the ask's lifetime: bound at the ask's own hard deadline + a small grace, and
+  make sure the existing watchdog/`silence` handling still fires first where it exists. If a site genuinely has no
+  deadline to derive from, SKIP with reason rather than inventing one.
+- Local git/gh/helper commands: tens of seconds to a few minutes, per command class.
+- Do not change retry logic, exit codes, message formats, or inbox/reply semantics; only add the bound and the
+  `TimeoutExpired` mapping the surrounding code needs to keep its current failure semantics — say where.
+
+## Coordination
+Do NOT touch anything that is session-handoff/session-handling code (grep for `session_streams`, `rollover`,
+`thread_handoff`, `claudex` imports inside a site before editing it); if an allowlist entry lives in such a path, SKIP
+it with reason "owned by session-handling lane" and list it.
+
+## Acceptance (quote raw output; PRIMARY interpreter — worktrees have no .venv)
+1. `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py` green
+   (allowlist shrank; no stale entries) and every test file for touched modules (`grep -rl "<module>" tests/`), plus
+   `tests/ai_agent_bridge/`; ruff clean.
+2. Table in the PR body: entry → fixed (value + why, and which existing deadline it derives from) / skipped (why).
+   Counts: fixed N, skipped M; remaining `scripts/ai_agent_bridge/` entries must be exactly M.
+3. One conventional commit (`fix(bridge): bound subprocess calls in the agent bridge — allowlist burn-down slice 3 (#7213)`,
+   X-Agent trailer). NO push, NO auto-merge, NO amend after reporting. Report HEAD SHA + evidence + ready PR body.

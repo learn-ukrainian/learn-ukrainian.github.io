@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "05cd41917800",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s3",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_dispatch_wrappers.py",
+    "scripts/ai_agent_bridge/_messaging.py",
+    "scripts/ai_agent_bridge/_orphan_recovery.py",
+    "scripts/ai_agent_bridge/_review_safety.py",
+    "scripts/ai_agent_bridge/_review_worktree.py",
+    "scripts/ai_agent_bridge/_worktree_brief.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/ai_agent_bridge/test_review_safety_timeouts.py",
+    "tests/ai_agent_bridge/test_review_worktree.py",
+    "tests/test_ab_dispatch_wrappers.py",
+    "tests/test_ab_orphan_recovery.py",
+    "tests/test_coverage_bridge_audit.py",
+    "tests/test_worktree_brief.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/05/cd41917800/0/metadata.json",
+      "transcript": "/05/cd41917800/0/full.jsonl",
+      "compact_transcript": "/05/cd41917800/0/transcript.jsonl",
+      "content_hash": "/05/cd41917800/0/content_hash.txt",
+      "prompt": "/05/cd41917800/0/prompt.txt"
+    }
+  ]
+}
