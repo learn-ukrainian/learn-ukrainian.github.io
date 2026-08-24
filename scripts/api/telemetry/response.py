@@ -6,6 +6,10 @@ import os
 from typing import Any
 
 from scripts.api.config import PROJECT_ROOT
+from scripts.api.observer_presence import (
+    MAC_OPERATOR_HOST_ID,
+    fresh_notebook_presence_for_session,
+)
 from scripts.lib.session_record import SessionRecordError, validate_session_id
 
 from .footer import PREMIUM_THRESHOLD_TOKENS, render_footer
@@ -142,6 +146,26 @@ def _unavailable_session_payload(reason: str) -> dict[str, Any]:
     }
 
 
+def _notebook_presence_payload(session_id: str) -> dict[str, Any] | None:
+    match = fresh_notebook_presence_for_session(session_id)
+    if match is None:
+        return None
+    row, age = match
+    if row.host_id != MAC_OPERATOR_HOST_ID or row.ctx_tokens is None:
+        return None
+    payload: dict[str, Any] = {
+        "ctx": row.ctx_tokens,
+        "prev_ctx": None,
+        "turn": None,
+        "caller_match": True,
+        "source": "notebook-presence",
+        "age_s": round(age, 2),
+    }
+    if row.window_tokens is not None:
+        payload["window"] = row.window_tokens
+    return payload
+
+
 def build_telemetry_payload(
     session_id: str | None = None,
     *,
@@ -168,7 +192,13 @@ def build_telemetry_payload(
                     "transcript": telemetry.transcript_path.name,
                 }
         except SessionRecordError:
+            fallback = _notebook_presence_payload(session_id)
+            if fallback is not None:
+                return fallback
             return _unavailable_session_payload("session-record-error")
+        fallback = _notebook_presence_payload(session_id)
+        if fallback is not None:
+            return fallback
         return _unavailable_session_payload("session-transcript-not-found")
 
     newest = current_context_telemetry(PROJECT_ROOT)

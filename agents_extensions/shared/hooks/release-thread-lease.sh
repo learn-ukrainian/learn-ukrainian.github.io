@@ -71,6 +71,17 @@ if [ -z "$SESSION_ID" ]; then
   exit 0
 fi
 
+# SessionEnd marker cleanup is fenced by the harness-owner PID.  A delayed
+# predecessor with the same session id must not remove a successor marker;
+# the sweeper remains responsible for dead or expired markers.
+SESSION_MARKER_PID="${SESSION_PID:-$PPID}"
+if [[ "$SESSION_MARKER_PID" =~ ^[1-9][0-9]*$ ]]; then
+  PYTHONPATH="$PROJECT_DIR" "$PYTHON" -m scripts.orchestration.session_markers \
+    remove --instance-id "$SESSION_ID" --pid "$SESSION_MARKER_PID" \
+    >/dev/null 2>&1 || true
+fi
+unset SESSION_MARKER_PID
+
 HANDOFF_AGENT="${SESSION_HANDOFF_AGENT:-claude}"
 case "$HANDOFF_AGENT" in
   claude|claude-*) ;;

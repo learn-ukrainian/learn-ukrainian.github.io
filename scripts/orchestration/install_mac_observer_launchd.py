@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 LABEL = "com.learn-ukrainian.mac-observer-heartbeat"
-DEFAULT_INTERVAL_MINUTES = 8
+DEFAULT_INTERVAL_MINUTES = 5
 DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS = 30.0
 LAUNCHD_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 

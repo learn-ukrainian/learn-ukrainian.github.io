@@ -5,7 +5,8 @@ path. Canonical SSH aliases never appear as JSON keys. Map them with
 ``MONITOR_OCCUPANCY_HOST_IDS`` (``alias=opaque-id,...``). Occupants come from
 the atlas-job registry, the cached job unit, local session-stream driver
 leases, and optional occupancy markers. Observer heartbeats from
-``POST /api/observer/presence`` appear under ``cloud-observer``.
+``POST /api/observer/presence`` are partitioned by opaque host id; legacy rows
+remain under ``cloud-observer``.
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
 
 
 DEFAULT_HOST_IDS = ("host-teacher", "host-job")
+MAC_OPERATOR_HOST_ID = "mac-operator"
 _BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry")
 _BURN_SOURCE_STATES = frozenset({"active", "clear", "unknown"})
 
@@ -70,7 +72,7 @@ def _read_occupants_from_registry(
     canonical: str,
 ) -> tuple[list[dict[str, str | None]], bool]:
     occupants: list[dict[str, str | None]] = []
-    seen: set[tuple[str, str]] = set()
+    seen: set[tuple[str, str, str]] = set()
     try:
         rows = atlas_job.list_registry()
     except Exception:
@@ -92,7 +94,7 @@ def _read_occupants_from_registry(
         )
         if occupant is None:
             continue
-        key = (occupant["kind"], occupant["task_id"] or "")
+        key = (occupant["kind"], occupant["task_id"] or "", occupant.get("instance_id") or "")
         if key in seen:
             continue
         seen.add(key)
@@ -117,10 +119,14 @@ def _occupants_from_job_unit(canonical: str, load_entry: dict[str, Any]) -> list
 
 def _merge_occupants(*groups: list[dict[str, str | None]]) -> list[dict[str, str | None]]:
     merged: list[dict[str, str | None]] = []
-    seen: set[tuple[str, str]] = set()
+    seen: set[tuple[str, str, str]] = set()
     for group in groups:
         for occupant in group:
-            key = (occupant["kind"], occupant["task_id"] or "")
+            key = (
+                occupant["kind"],
+                occupant["task_id"] or "",
+                occupant.get("instance_id") or "",
+            )
             if key in seen:
                 continue
             seen.add(key)
@@ -262,15 +268,18 @@ def _shape_host(
     return shaped
 
 
-def _occupants_from_observers() -> list[dict[str, str | None]]:
+def _occupants_from_observers(host_id: str) -> list[dict[str, str | None]]:
     occupants: list[dict[str, str | None]] = []
     for row in list_live():
+        if row.host_id != host_id:
+            continue
         occupant = _occupant(
             kind="observer",
             agent=row.agent,
             task_id=row.task_id,
             epic=row.epic,
             status=row.status,
+            instance_id=row.instance_id,
         )
         if occupant is not None:
             occupants.append(occupant)
@@ -299,7 +308,7 @@ def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, A
 def _attach_cloud_observer(payload: dict[str, Any], host_id: str | None) -> dict[str, Any]:
     if host_id is not None and host_id != CLOUD_OBSERVER_HOST_ID:
         return payload
-    occupants = _occupants_from_observers()
+    occupants = _occupants_from_observers(CLOUD_OBSERVER_HOST_ID)
     if not occupants and host_id is None:
         return payload
     payload["hosts"][CLOUD_OBSERVER_HOST_ID] = _shape_cloud_observer(occupants)
@@ -313,6 +322,8 @@ def _selected_hosts(host_id: str | None) -> dict[str, str | None]:
     mapping = parse_host_id_map()
     reverse = {opaque: canonical for canonical, opaque in mapping.items()}
     if host_id is not None:
+        if host_id == MAC_OPERATOR_HOST_ID:
+            return {host_id: None}
         if host_id in reverse:
             return {host_id: reverse[host_id]}
         if host_id in DEFAULT_HOST_IDS:
@@ -325,6 +336,8 @@ def _selected_hosts(host_id: str | None) -> dict[str, str | None]:
     for opaque, canonical in reverse.items():
         if opaque not in selected:
             selected[opaque] = canonical
+    if any(row.host_id == MAC_OPERATOR_HOST_ID for row in list_live()):
+        selected[MAC_OPERATOR_HOST_ID] = None
     return selected
 
 
@@ -351,7 +364,8 @@ def _payload_from_entries(
             selected=selected,
         )
         foundry_read = read_markers(host_id=opaque)
-        groups = [atlas_occupants, driver_read.occupants, foundry_read.occupants]
+        observer_occupants = _occupants_from_observers(opaque)
+        groups = [atlas_occupants, driver_read.occupants, foundry_read.occupants, observer_occupants]
         occupants = _merge_occupants(*groups)
         burn_sources = dict(
             zip(
@@ -360,11 +374,14 @@ def _payload_from_entries(
                 strict=True,
             )
         )
+        burn_state = _burn_state(burn_sources)
+        if any(o.get("status") != "idle" for o in observer_occupants):
+            burn_state = "active"
         hosts[opaque] = _shape_host(
             opaque,
             load_entry,
             occupants,
-            _burn_state(burn_sources),
+            burn_state,
             burn_sources,
         )
 

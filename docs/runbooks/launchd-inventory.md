@@ -100,16 +100,20 @@ dispatch worktree.
 
 - Purpose: Heartbeats live Mac GUI sessions (Cursor IDE and Codex UI) to
   `POST /api/observer/presence` over the loopback Monitor tunnel so
-  occupancy shows supervision seats under `cloud-observer` without claiming
-  stream leases (#7104).
+  occupancy shows supervision seats under opaque `mac-operator` without
+  claiming stream leases (#7104). The same bounded heartbeat sweeps local
+  SessionStart markers for Claude/Codex/Cursor sessions and carries local
+  context counters when available (#7189).
 - Program: `/bin/bash --noprofile --norc
   scripts/orchestration/run_mac_observer_heartbeat.sh --repo-root <primary
   checkout>`. The wrapper execs the primary `.venv/bin/python` with
   `scripts/orchestration/observer_heartbeat.py --mac-gui`. `Program` must stay
   `/bin/bash` so a venv rebuild cannot invalidate launchd LWCR (exit 78; #6937, #6941).
-- Schedule: at load and every 8 minutes (`StartInterval=480`), well within
+- Schedule: at load and every 5 minutes (`StartInterval=300`), well within
   the 15-minute presence TTL.
-- Delete authority: none. It posts loopback presence only.
+- Delete authority: only malformed, dead-PID, or older-than-24-hour marker
+  files in the observer's own runtime marker directory; it has no repository
+  or checkout deletion authority.
 - Logs: `~/.codex/mac-observer/logs/` — outside the repository.
 - Manage: `.venv/bin/python
   scripts/orchestration/install_mac_observer_launchd.py

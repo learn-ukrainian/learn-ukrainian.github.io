@@ -99,6 +99,18 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/release-thread-lease.sh\"",
+            "timeout": 5,
+            "statusMessage": "Releasing learn-ukrainian session state"
+          }
+        ]
+      }
     ]
   }
 }
