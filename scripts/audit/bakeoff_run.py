@@ -174,10 +174,15 @@ def run_command(
             timeout=timeout,
         )
     except subprocess.TimeoutExpired as exc:
+        stdout = (
+            exc.stdout.decode("utf-8", errors="replace")
+            if isinstance(exc.stdout, bytes)
+            else (exc.stdout or "")
+        )
         return subprocess.CompletedProcess(
             args=list(argv),
             returncode=124,
-            stdout=exc.stdout or "" if isinstance(exc.stdout, str) else "",
+            stdout=stdout,
             stderr=f"command timed out after {timeout}s",
         )
 

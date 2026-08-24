@@ -178,19 +178,27 @@ def _run_generator(target: ModuleTarget) -> None:
             "Create it before running the MDX generation drift check."
         )
 
-    subprocess.run(
-        [
-            str(VENV_PYTHON),
-            "scripts/generate_mdx.py",
-            "l2-uk-en",
-            target.level,
-            str(target.local_num),
-            "--validate",
-        ],
-        cwd=PROJECT_ROOT,
-        check=True,
-        timeout=DEFAULT_GENERATE_TIMEOUT_SECONDS,
-    )
+    try:
+        subprocess.run(
+            [
+                str(VENV_PYTHON),
+                "scripts/generate_mdx.py",
+                "l2-uk-en",
+                target.level,
+                str(target.local_num),
+                "--validate",
+            ],
+            cwd=PROJECT_ROOT,
+            check=True,
+            timeout=DEFAULT_GENERATE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise subprocess.CalledProcessError(
+            returncode=124,
+            cmd=exc.cmd,
+            output=exc.stdout,
+            stderr=exc.stderr,
+        ) from exc
 
 
 def check_targets(targets: list[ModuleTarget]) -> int:

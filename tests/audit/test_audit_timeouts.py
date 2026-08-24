@@ -144,6 +144,20 @@ def test_bakeoff_run_run_command_timeout() -> None:
         proc = br.run_command(["sleep", "10"])
         assert proc.returncode == 124
         assert "timed out after 300.0s" in proc.stderr
+        assert proc.stdout == ""
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(
+            ["sleep", "10"],
+            br.DEFAULT_COMMAND_TIMEOUT_SECONDS,
+            output=b"raw timeout bytes",
+        ),
+    ):
+        proc = br.run_command(["sleep", "10"])
+        assert proc.returncode == 124
+        assert isinstance(proc.stdout, str)
+        assert proc.stdout == "raw timeout bytes"
 
 
 # ---------------------------------------------------------------------------
@@ -374,6 +388,14 @@ def test_check_mdx_generation_drift_timeouts() -> None:
     assert len(run_calls) == 1
     assert run_calls[0]["timeout"] == cmgd.DEFAULT_GENERATE_TIMEOUT_SECONDS
 
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["generate_mdx.py"], cmgd.DEFAULT_GENERATE_TIMEOUT_SECONDS),
+    ), patch.object(Path, "exists", return_value=True):
+        with pytest.raises(subprocess.CalledProcessError) as exc_info:
+            cmgd._run_generator(target)
+        assert exc_info.value.returncode == 124
+
 
 # ---------------------------------------------------------------------------
 # 12. check_mdx_source_parity.py
@@ -589,6 +611,7 @@ def test_hermes_nightly_audit_timeouts() -> None:
         res = hna.run_track_audit("a1")
         assert res["summary"]["findings_total"] == 1
         assert "timed out after 300.0s" in res["findings"][0]["message"]
+        assert res["findings"][0]["judgement_required"] is False
 
     with patch(
         "subprocess.run",

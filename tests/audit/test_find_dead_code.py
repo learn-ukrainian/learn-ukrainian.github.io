@@ -1,7 +1,9 @@
 from pathlib import Path
 
 from scripts.audit.find_dead_code import (
+    EXCLUDE_DIR_NAMES,
     _is_excluded,
+    _vulture_exclude_glob,
     category_a,
     category_b,
     category_c,
@@ -180,3 +182,46 @@ def test_category_f_scan_error(tmp_path, monkeypatch):
     hits = category_f(tmp_path)
     assert len(hits) == 2
     assert "NEEDS-MANUAL-REVIEW: category F scan error: Read error" in hits[1]
+
+
+def test_vulture_exclude_glob():
+    glob_str = _vulture_exclude_glob()
+    assert isinstance(glob_str, str)
+    assert glob_str != ""
+    for name in EXCLUDE_DIR_NAMES:
+        assert f"*/{name}/*" in glob_str
+
+
+def test_category_b_subprocess_argv_types(tmp_path, monkeypatch):
+    recorded_argv: list[list[str]] = []
+
+    def fake_subprocess_run(cmd, *args, **kwargs):
+        # Emulate real subprocess.run argument validation
+        for arg in cmd:
+            if not isinstance(arg, (str, bytes, Path)):
+                raise TypeError(
+                    f"expected str, bytes or os.PathLike object, not {type(arg).__name__}"
+                )
+        recorded_argv.append(list(cmd))
+
+        class FakeRes:
+            stdout = "foo.py:1: unused import 'os'\n"
+            returncode = 1
+
+        return FakeRes()
+
+    monkeypatch.setattr("subprocess.run", fake_subprocess_run)
+
+    vulture_bin = tmp_path / ".venv" / "bin" / "vulture"
+    vulture_bin.parent.mkdir(parents=True, exist_ok=True)
+    vulture_bin.touch()
+
+    hits = category_b(tmp_path)
+    assert len(hits) == 1
+    assert "foo.py:1: unused import 'os'" in hits[0]
+    assert len(recorded_argv) == 1
+    exclude_idx = recorded_argv[0].index("--exclude")
+    exclude_val = recorded_argv[0][exclude_idx + 1]
+    assert isinstance(exclude_val, str)
+    assert len(exclude_val) > 0
+

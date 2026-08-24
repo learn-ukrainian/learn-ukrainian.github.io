@@ -69,6 +69,7 @@ def run_track_audit(track: str) -> dict:
                     "evidence": f"cmd: {' '.join(cmd)}",
                     "auto_fixable": False,
                     "recommended_remediation_batch": "infrastructure",
+                    "judgement_required": False,
                 }
             ],
         }
@@ -106,6 +107,7 @@ def run_track_audit(track: str) -> dict:
                         "evidence": f"stdout: {e.stdout}\nstderr: {e.stderr}",
                         "auto_fixable": False,
                         "recommended_remediation_batch": "infrastructure",
+                        "judgement_required": False,
                     }
                 ],
             }
@@ -139,6 +141,7 @@ def run_track_audit(track: str) -> dict:
                     "evidence": str(e),
                     "auto_fixable": False,
                     "recommended_remediation_batch": "infrastructure",
+                    "judgement_required": False,
                 }
             ],
         }
