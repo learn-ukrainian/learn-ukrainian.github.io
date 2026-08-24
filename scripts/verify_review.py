@@ -70,9 +70,18 @@ FORBIDDEN_RECEIPT_MARKERS = (
 )
 
 
+# Timeout bounds for synchronous subprocess invocations (#7213).
+DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
+
+
 def _run(cmd: list[str], input_text: str | None = None) -> str:
     return subprocess.run(
-        cmd, check=True, capture_output=True, text=True, input=input_text
+        cmd,
+        check=True,
+        capture_output=True,
+        text=True,
+        input=input_text,
+        timeout=DEFAULT_GH_TIMEOUT_SECONDS,
     ).stdout
 
 

@@ -303,6 +303,10 @@ DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
 # only at spawn, so a worker still running past that point can start failing
 # auth.
 _KIMICC_OAUTH_SESSION_LIFE_S = 840
+# Timeout bounds for synchronous subprocess invocations (#7213).
+DEFAULT_GIT_TIMEOUT_S: float = 30.0
+DEFAULT_NETWORK_GIT_TIMEOUT_S: float = 180.0
+DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
 # ---------------------------------------------------------------------------
@@ -1990,24 +1994,32 @@ def _fetch_base(base: str) -> bool:
     """
     branch = _base_branch_name(base)
     refspec = f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
-    proc = subprocess.run(
-        ["git", "fetch", "origin", refspec],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "fetch", "origin", refspec],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
     if proc.returncode != 0:
         return False
-    verify = subprocess.run(
-        ["git", "rev-parse", "--verify", f"origin/{branch}"],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        verify = subprocess.run(
+            ["git", "rev-parse", "--verify", f"origin/{branch}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
     return verify.returncode == 0
 
 
@@ -2034,24 +2046,36 @@ def _fetch_existing_branch(branch: str) -> None:
     so the remote-tracking ref exists regardless of host git fetch refspec config (#7168).
     """
     refspec = f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
-    proc = subprocess.run(
-        ["git", "fetch", "origin", refspec],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "fetch", "origin", refspec],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"could not fetch existing branch {branch!r}: fetch timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s"
+        ) from exc
     if proc.returncode != 0:
         raise RuntimeError(f"could not fetch existing branch {branch!r}: {_format_process_failure(proc)}")
-    verify = subprocess.run(
-        ["git", "rev-parse", "--verify", f"origin/{branch}"],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        verify = subprocess.run(
+            ["git", "rev-parse", "--verify", f"origin/{branch}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"origin/{branch} was not found after fetch; rev-parse timed out after {DEFAULT_GIT_TIMEOUT_S}s"
+        ) from exc
     if verify.returncode != 0:
         raise RuntimeError(f"origin/{branch} was not found after fetch; --branch requires an existing remote branch")
 
@@ -2067,14 +2091,20 @@ def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
     if local_sha is None or local_sha == origin_sha:
         return origin_sha
 
-    ancestry = subprocess.run(
-        ["git", "merge-base", "--is-ancestor", local_ref, origin_ref],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        ancestry = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", local_ref, origin_ref],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"could not compare local {branch!r} against {origin_ref}: merge-base timed out after {DEFAULT_GIT_TIMEOUT_S}s"
+        ) from exc
     if ancestry.returncode == 0:
         return origin_sha
     if ancestry.returncode != 1:
@@ -2094,14 +2124,18 @@ def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
 
 def _branch_worktree_paths(branch: str) -> list[Path]:
     """Return registered worktree roots currently attached to ``branch``."""
-    proc = subprocess.run(
-        ["git", "worktree", "list", "--porcelain"],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"could not list git worktrees: timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"could not list git worktrees: {_format_process_failure(proc)}")
 
@@ -2222,14 +2256,18 @@ def _task_status_for_worktree(path: Path) -> str | None:
 
 
 def _worktree_is_clean(path: Path) -> bool:
-    proc = subprocess.run(
-        ["git", "status", "--porcelain"],
-        cwd=path,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
     if proc.returncode != 0:
         return False
     return not bool((proc.stdout or "").strip())
@@ -2370,14 +2408,22 @@ def _release_stale_branch_holders(
             continue
         # No --force: if the tree went dirty after the cleanliness check
         # (TOCTOU), git refuses removal and we leave the holder mounted (#5708 CF).
-        proc = subprocess.run(
-            ["git", "worktree", "remove", str(path)],
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-        )
+        try:
+            proc = subprocess.run(
+                ["git", "worktree", "remove", str(path)],
+                cwd=_REPO_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            print(
+                f"⚠️  failed to release stale branch holder {path}: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            continue
         if proc.returncode != 0:
             print(
                 f"⚠️  failed to release stale branch holder {path}: {_format_process_failure(proc)}",
@@ -2394,14 +2440,18 @@ def _release_stale_branch_holders(
 
 def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     """Return the commit SHA at ``ref`` in ``path``, or None if unresolvable."""
-    proc = subprocess.run(
-        ["git", "rev-parse", ref],
-        cwd=path,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", ref],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
     if proc.returncode != 0:
         return None
     sha = (proc.stdout or "").strip()
@@ -2430,8 +2480,9 @@ def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
             text=True,
             check=False,
             env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if proc.returncode != 0:
         return None
@@ -2484,8 +2535,9 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
                 text=True,
                 check=False,
                 env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
             )
-        except OSError:
+        except (OSError, subprocess.TimeoutExpired):
             return None
         if proc.returncode != 0:
             continue
@@ -2598,8 +2650,9 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
             text=True,
             check=False,
             env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if status_proc.returncode != 0:
         return None
@@ -2652,8 +2705,9 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
                 text=True,
                 check=False,
                 env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
             )
-        except OSError as exc:
+        except (OSError, subprocess.TimeoutExpired) as exc:
             return None, f"{label} snapshot could not start: {type(exc).__name__}: {exc}"
         if proc.returncode != 0:
             return None, f"{label} snapshot failed: {_format_process_failure(proc)}"
@@ -2880,22 +2934,27 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
 
 
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
-    tracked = subprocess.run(
-        ["git", "diff", "--name-only", "HEAD", "--"],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
-    untracked = subprocess.run(
-        ["git", "ls-files", "--others", "--exclude-standard"],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        tracked = subprocess.run(
+            ["git", "diff", "--name-only", "HEAD", "--"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+        untracked = subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ()
     if tracked.returncode != 0 or untracked.returncode != 0:
         return ()
     changed = {path.strip() for path in (*tracked.stdout.splitlines(), *untracked.stdout.splitlines()) if path.strip()}
@@ -2924,14 +2983,18 @@ def _auto_finalize_is_junk_only(changed_files: tuple[str, ...]) -> bool:
 
 
 def _current_branch(worktree: Path) -> str | None:
-    proc = subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
     if proc.returncode != 0:
         return None
     branch = (proc.stdout or "").strip()
@@ -2945,14 +3008,18 @@ def _x_agent_task_id(agent: str, task_id: str) -> str:
 
 
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
-    proc = subprocess.run(
-        ["git", "push", "-u", "origin", branch],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "push", "-u", "origin", branch],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git push timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"git push failed: {_format_process_failure(proc)}")
 
@@ -2965,27 +3032,31 @@ def _create_auto_finalize_pr(
     title: str,
     body: str,
 ) -> str | None:
-    proc = subprocess.run(
-        [
-            "gh",
-            "pr",
-            "create",
-            "--draft",
-            "--base",
-            base_branch,
-            "--head",
-            branch,
-            "--title",
-            title,
-            "--body",
-            body,
-        ],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            [
+                "gh",
+                "pr",
+                "create",
+                "--draft",
+                "--base",
+                base_branch,
+                "--head",
+                branch,
+                "--title",
+                title,
+                "--body",
+                body,
+            ],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GH_CLI_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"gh pr create timed out after {DEFAULT_GH_CLI_TIMEOUT_S}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"gh pr create failed: {_format_process_failure(proc)}")
     lines = [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
@@ -3010,8 +3081,9 @@ def _auto_finalize_dirty_worktree(
             text=True,
             check=False,
             env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return AutoFinalizeResult(
             ok=False,
             error="not a git worktree",
@@ -3059,6 +3131,7 @@ def _auto_finalize_dirty_worktree(
             text=True,
             check=False,
             env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if add_proc.returncode != 0:
             return AutoFinalizeResult(
@@ -3083,16 +3156,19 @@ def _auto_finalize_dirty_worktree(
             text=True,
             check=False,
             env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if commit_proc.returncode != 0:
-            subprocess.run(
-                ["git", "restore", "--staged", "--", *changed_files],
-                cwd=worktree,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-            )
+            with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+                subprocess.run(
+                    ["git", "restore", "--staged", "--", *changed_files],
+                    cwd=worktree,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    env=_sanitized_git_env(),
+                    timeout=DEFAULT_GIT_TIMEOUT_S,
+                )
             return AutoFinalizeResult(
                 ok=False,
                 error=f"git commit failed: {_format_process_failure(commit_proc)}",
@@ -3113,7 +3189,7 @@ def _auto_finalize_dirty_worktree(
                 "created the commit, pushed the branch, and opened this draft PR."
             ),
         )
-    except (OSError, RuntimeError) as exc:
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         error = str(exc)
         if commit_sha is not None:
             try:
@@ -3124,8 +3200,9 @@ def _auto_finalize_dirty_worktree(
                     text=True,
                     check=False,
                     env=_sanitized_git_env(),
+                    timeout=DEFAULT_GIT_TIMEOUT_S,
                 )
-            except OSError as reset_exc:
+            except (OSError, subprocess.TimeoutExpired) as reset_exc:
                 error = f"{error}; git reset failed: {reset_exc}"
             else:
                 if reset_proc.returncode != 0:
@@ -3206,13 +3283,17 @@ def _validate_existing_worktree(
     operation later or were never on the dispatch path to begin with.
     """
     # 1. Branch check.
-    branch_proc = subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-        cwd=path,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        branch_proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
     if branch_proc.returncode != 0:
         # Not a git worktree (e.g. test tmp dir). Don't treat as an error —
         # the caller may be a test fixture, and real dispatch paths will
@@ -3227,13 +3308,17 @@ def _validate_existing_worktree(
         )
 
     # 2. Dirty check.
-    status_proc = subprocess.run(
-        ["git", "status", "--porcelain"],
-        cwd=path,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        status_proc = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git status timed out after {DEFAULT_GIT_TIMEOUT_S}s checking {path}") from exc
     dirty_output = (status_proc.stdout or "").strip()
     if dirty_output:
         first_files = [line[3:] for line in dirty_output.splitlines()[:3]]
@@ -3250,13 +3335,17 @@ def _validate_existing_worktree(
     # that unresolvable ref made this whole check a silent no-op.
     origin_ref = _origin_base_ref(base)
     _fetch_base(base)
-    count_proc = subprocess.run(
-        ["git", "rev-list", "--count", f"HEAD..{origin_ref}"],
-        cwd=path,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        count_proc = subprocess.run(
+            ["git", "rev-list", "--count", f"HEAD..{origin_ref}"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
     if count_proc.returncode != 0:
         # origin/{base} unresolvable (offline / no remote). Nothing to do.
         return False
@@ -3279,22 +3368,40 @@ def _validate_existing_worktree(
         f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; attempting fast-forward rebase",
         file=sys.stderr,
     )
-    rebase_proc = subprocess.run(
-        ["git", "rebase", origin_ref],
-        cwd=path,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if rebase_proc.returncode != 0:
-        # Clean up so the worktree isn't left mid-rebase.
-        subprocess.run(
-            ["git", "rebase", "--abort"],
+    try:
+        rebase_proc = subprocess.run(
+            ["git", "rebase", origin_ref],
             cwd=path,
             capture_output=True,
             text=True,
             check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
         )
+    except subprocess.TimeoutExpired as exc:
+        with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+            subprocess.run(
+                ["git", "rebase", "--abort"],
+                cwd=path,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        raise WorktreeStaleBase(
+            f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
+            f"and rebase timed out after {DEFAULT_GIT_TIMEOUT_S}s."
+        ) from exc
+    if rebase_proc.returncode != 0:
+        # Clean up so the worktree isn't left mid-rebase.
+        with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+            subprocess.run(
+                ["git", "rebase", "--abort"],
+                cwd=path,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
         raise WorktreeStaleBase(
             f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
             f"and rebase failed. Resolve manually or remove:\n"
@@ -3447,14 +3554,18 @@ def _infer_sparse_include(
 
 def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> list[str]:
     """Return top-level directory names at ``at_ref`` inside a worktree."""
-    proc = subprocess.run(
-        ["git", "ls-tree", "-d", "--name-only", at_ref],
-        cwd=worktree_path,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "ls-tree", "-d", "--name-only", at_ref],
+            cwd=worktree_path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"could not list top-level dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
         raise RuntimeError(f"could not list top-level dirs in {worktree_path}: {detail}")
@@ -3487,14 +3598,23 @@ def _apply_dispatch_sparse_checkout(
     def _run_git(args: list[str]) -> subprocess.CompletedProcess[str]:
         # Must sanitize GIT_* so sparse-checkout applies to *this* worktree
         # when a parent harness injects GIT_DIR/GIT_WORK_TREE (pre-commit, etc.).
-        return subprocess.run(
-            args,
-            cwd=worktree_path,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-        )
+        try:
+            return subprocess.run(
+                args,
+                cwd=worktree_path,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except subprocess.TimeoutExpired:
+            return subprocess.CompletedProcess(
+                args=args,
+                returncode=124,
+                stdout="",
+                stderr=f"sparse-checkout command timed out after {DEFAULT_GIT_TIMEOUT_S}s",
+            )
 
     if full_checkout:
         proc = _run_git(["git", "sparse-checkout", "disable"])
@@ -3836,13 +3956,17 @@ def _ensure_worktree(
         add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
-    proc = subprocess.run(
-        add_command,
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            add_command,
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
     if proc.returncode != 0:
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
@@ -3860,13 +3984,19 @@ def _ensure_worktree(
         # upstream. Restore the tracking contract the non-SHA branch path
         # gets from `--track`, after verifying the immutable checkout and
         # before any provisioning or worker side effect.
-        upstream_proc = subprocess.run(
-            ["git", "branch", "--set-upstream-to", f"origin/{requested_branch}", requested_branch],
-            cwd=worktree_path,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        try:
+            upstream_proc = subprocess.run(
+                ["git", "branch", "--set-upstream-to", f"origin/{requested_branch}", requested_branch],
+                cwd=worktree_path,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                f"could not configure upstream origin/{requested_branch} for {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s"
+            ) from exc
         if upstream_proc.returncode != 0:
             detail = (upstream_proc.stderr or upstream_proc.stdout or "git branch failed").strip()
             raise RuntimeError(f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}")

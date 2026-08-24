@@ -58,6 +58,7 @@ from scripts.review.target_resolution import (
     resolve_local_target,
     resolve_pr_target,
 )
+from tests.project_python import project_python
 
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -1882,7 +1883,7 @@ def test_cli_subprocess_malformed_scope_exits_2(tmp_path):
     root = Path(__file__).resolve().parent.parent
     proc = subprocess.run(
         [
-            str(root / ".venv" / "bin" / "python"),
+            str(project_python()),
             str(root / "scripts" / "verify_review.py"),
             "--review-file",
             str(review),
@@ -1904,3 +1905,30 @@ def test_cli_subprocess_malformed_scope_exits_2(tmp_path):
     err = json.loads(proc.stderr)
     assert err["exit_code"] == EXIT_INVALID
     assert "invalid_json" in err["error"]
+
+
+def test_verify_review_run_passes_default_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(kwargs)
+        mock_proc = subprocess.CompletedProcess(args=cmd, returncode=0, stdout="{}", stderr="")
+        return mock_proc
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    verify_review_cli._run(["gh", "version"])
+    assert len(calls) == 1
+    assert calls[0].get("timeout") == verify_review_cli.DEFAULT_GH_TIMEOUT_SECONDS
+
+
+def test_verify_review_read_review_timeout_exits_invalid(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    def timeout_run(*_args, **_kwargs):
+        raise subprocess.TimeoutExpired(["gh", "issue", "view"], 60.0)
+
+    monkeypatch.setattr(verify_review_cli, "_run", timeout_run)
+    code = verify_review_cli.main(["--issue", "123", "--mode", "local", "--repo-root", "."])
+    assert code == EXIT_INVALID
+    err = capsys.readouterr().err
+    assert "read_review_failed" in err
+    assert "timed out after 60.0" in err
+
