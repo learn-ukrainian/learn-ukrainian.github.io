@@ -36,6 +36,8 @@ WRAPPER_NAME = "run_monitor_api_supervisor.sh"
 _LOG_ROTATE_BYTES = 10 * 1024 * 1024
 _STOP_UNLOAD_TIMEOUT_SECONDS = 12.0
 _STOP_UNLOAD_POLL_SECONDS = 0.1
+LAUNCHCTL_TIMEOUT_SECONDS: float = 15.0
+GIT_REV_PARSE_TIMEOUT_SECONDS: float = 15.0
 
 
 class LaunchdError(RuntimeError):
@@ -204,7 +206,10 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
             check=False,
             capture_output=True,
             text=True,
+            timeout=LAUNCHCTL_TIMEOUT_SECONDS,
         )
+    except subprocess.TimeoutExpired as exc:
+        raise LaunchdError(f"/bin/launchctl {' '.join(command)} timed out after {exc.timeout}s") from exc
     except FileNotFoundError as exc:
         raise LaunchdError("/bin/launchctl is unavailable; Monitor API supervision requires macOS") from exc
 
@@ -423,19 +428,20 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
         launch_dir = repo_root
         release_line = "WARNING: API live mode enabled; serving mutable checkout code"
     else:
-        head_sha = subprocess.run(
-            ["git", "-C", str(repo_root), "rev-parse", "--verify", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
+        try:
+            head_sha = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-parse", "--verify", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=GIT_REV_PARSE_TIMEOUT_SECONDS,
+            ).stdout.strip()
+        except subprocess.TimeoutExpired as exc:
+            raise LaunchdError(f"git rev-parse HEAD timed out after {exc.timeout}s in {repo_root}") from exc
         release_dir, reused = build_release(repo_root, head_sha)
         prune_result = prune_releases(repo_root, keep=3)
         launch_dir = release_dir
-        release_line = (
-            f"release: {head_sha} reused: {reused} "
-            f"pruned: {','.join(prune_result.removed) or 'none'}"
-        )
+        release_line = f"release: {head_sha} reused: {reused} pruned: {','.join(prune_result.removed) or 'none'}"
 
     environment = os.environ.copy()
     for key in (
@@ -617,7 +623,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "start":
             print(
                 json.dumps(
-                    start(repo_root=args.repo_root.expanduser().resolve(), home=home, live_mode=args.live, port=args.port),
+                    start(
+                        repo_root=args.repo_root.expanduser().resolve(), home=home, live_mode=args.live, port=args.port
+                    ),
                     sort_keys=True,
                 )
             )

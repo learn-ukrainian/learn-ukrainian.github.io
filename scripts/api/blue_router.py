@@ -35,6 +35,8 @@ from audit.status_cache import get_source_paths, read_status
 from slug_utils import to_bare_slug
 from yaml_activities import ActivityParser
 
+AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
+
 router = APIRouter(tags=["blue"])
 
 
@@ -65,9 +67,7 @@ async def live_status(response: Response):
     """
     response.headers["X-Deprecated"] = "true"
     response.headers["X-Deprecated-Use"] = "/api/state/build-status"
-    response.headers["Warning"] = (
-        '299 - "This endpoint is deprecated; migrate to /api/state/build-status (#1309)"'
-    )
+    response.headers["Warning"] = '299 - "This endpoint is deprecated; migrate to /api/state/build-status (#1309)"'
 
     results = {}
     for level_cfg in LEVELS:
@@ -108,8 +108,10 @@ async def live_status(response: Response):
                     "slug": slug,
                     "state": state,
                     "files": {
-                        "meta": has_meta, "lesson": has_lesson,
-                        "activities": has_activities, "vocabulary": has_vocab,
+                        "meta": has_meta,
+                        "lesson": has_lesson,
+                        "activities": has_activities,
+                        "vocabulary": has_vocab,
                     },
                 }
                 if result:
@@ -196,10 +198,19 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
         if not md_path.exists():
             raise HTTPException(status_code=404, detail=f"Module file not found: {md_path}")
         audit_script = PROJECT_ROOT / "scripts" / "audit_module.sh"
-        subprocess.run(
-            [str(audit_script), str(md_path)],
-            capture_output=True, text=True, cwd=PROJECT_ROOT
-        )
+        try:
+            subprocess.run(
+                [str(audit_script), str(md_path)],
+                capture_output=True,
+                text=True,
+                cwd=PROJECT_ROOT,
+                timeout=AUDIT_MODULE_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired:
+            raise HTTPException(
+                status_code=504,
+                detail=f"Audit execution timed out after {AUDIT_MODULE_TIMEOUT_SECONDS}s",
+            ) from None
         # Script writes status JSON as a side effect — re-read below
 
     if not status_file.exists():
@@ -386,8 +397,7 @@ async def get_final_review_summary(track_id: str, slug: str):
     review_ok = review_status["exists"] and not review_status["warnings"]
     stale = audit_age_seconds is not None and audit_age_seconds > 3600
 
-    verdict = "READY_TO_APPROVE" if (audit_ok and activities_ok and review_ok and not stale) \
-        else "NEEDS_REVIEW"
+    verdict = "READY_TO_APPROVE" if (audit_ok and activities_ok and review_ok and not stale) else "NEEDS_REVIEW"
 
     return {
         "track": track_id,
