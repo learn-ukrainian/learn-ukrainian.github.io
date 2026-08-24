@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a8c59cd30dae",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7139-empty-host-alarm",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/api/test_empty_host_alarm.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a8/c59cd30dae/0/metadata.json",
+      "transcript": "/a8/c59cd30dae/0/full.jsonl",
+      "compact_transcript": "/a8/c59cd30dae/0/transcript.jsonl",
+      "content_hash": "/a8/c59cd30dae/0/content_hash.txt",
+      "prompt": "/a8/c59cd30dae/0/prompt.txt"
+    }
+  ]
+}

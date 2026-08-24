@@ -1,0 +1,43 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/monitor-7139-alarm-observer-test
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: PR #7271 (#7139 empty-host alarm) — add the cross-feature regression test the merge with #7270 created (epic #7177, M4).
+
+Evidence rule (#M-4): back every claim with a command you ran. Commit on the attached branch `cursor/monitor-7139-empty-host-alarm`
+(no push credentials — main pushes). Ruff on every changed .py (tests included). Run the repo-wide guards before finishing:
+tests/test_lint_test_assertions.py tests/api/test_import_pinning.py tests/test_subprocess_timeout_guard.py.
+
+## Why
+After merging #7270 (observer presence seats, `instance_id`, mac-operator host) into this branch, `/api/occupancy` now has an
+interaction no test covers (cross-family review MAJOR): an observer seat whose `status != "idle"` forces `burn_state: "active"` →
+`idle_or_empty: False` → the empty-host alarm is suppressed / idle-since resets; an IDLE observer seat leaves `burn_state: idle` →
+`idle_or_empty: True` → `empty_host_underused:<host>` (or `empty_host_unknown_capacity:<host>`) may still fire. Read
+`scripts/api/occupancy.py` (`_evaluate_attention`, `_empty_host_attention_item`, the burn_state derivation around the observer-seat
+branch) and the existing `tests/api/test_empty_host_alarm.py` + `tests/api/test_notebook_presence.py` fixtures before writing.
+
+## Outcome
+One new test module or two new tests in `tests/api/test_empty_host_alarm.py` using the existing fixtures/seams (no real subprocess,
+no network): (a) idle observer seat on a host with a lane under pace → `attention` contains `empty_host_underused:<host>`;
+(b) the same host with a non-idle observer seat → that item is ABSENT and `burn_state == "active"`. Use the real request path
+(unmocked `TestClient` GET after seeding presence + lane usage through the same entry points the reporters use).
+
+## Mutation check (report the evidence)
+Temporarily make the observer-seat branch ignore `status` (treat every seat as idle) → test (b) must FAIL; restore → both pass.
+
+## Constraints
+Tests only; do not change `scripts/api/`. Do not touch other files. No new fixtures that duplicate existing ones.
+
+## Report
+Commit SHA, test names, passing lines, and the mutation-check output.
+
+## Research registry classification
+Test addition for a monitor API interaction — no research dimension; pointer-free by deliberate classification.
