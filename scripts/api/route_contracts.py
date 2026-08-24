@@ -1099,6 +1099,17 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "keep as a pre-flip observer; file handoffs remain authoritative until an operator/advisor-approved default change",
     ),
     PageContract(
+        "epics.html",
+        "/epics.html",
+        "Read-only operator dashboard for remote TTL-fenced epic claims, heartbeats, handoffs, and bounded digests.",
+        "GET /api/epics/v1 and /api/epics/v1/{stream} over API-host SessionStreamStore.",
+        "Client fetches live epic streams with 5s timeout and auto-refreshes every 15s; no client mutation controls.",
+        ("humans", "operators", "orchestrators"),
+        "Complements work and fleet dashboards with authoritative remote lease and handoff state.",
+        "low — lease health is determined by transactional TTL and heartbeat timestamps",
+        "keep as the canonical remote epic lifecycle observer",
+    ),
+    PageContract(
         "channels.html",
         "/channels.html",
         "Compatibility redirect to the consolidated read-only Fleet Observer.",

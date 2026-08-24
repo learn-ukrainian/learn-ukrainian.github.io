@@ -131,7 +131,8 @@ def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     assert contract_for_page("fleet.html") is not None
 
 
-def test_fleet_page_and_retired_entrypoints_coexist_during_cutover() -> None:
+def test_fleet_page_and_retired_entrypoints_coexist_during_cutover(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
     client = TestClient(app, raise_server_exceptions=False)
 
     for path in [

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epics - ukraine-ops</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/monitor.css">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+button, input, select { font: inherit; }
+.topbar { display: flex; align-items: center; gap: 16px; padding: 15px 24px; position: sticky; top: 0; z-index: 10; }
+.brand { min-width: 200px; }
+.brand h1 { margin: 0; font-family: Charter, Georgia, serif; font-size: 25px; letter-spacing: -.02em; }
+.brand p { margin: 3px 0 0; color: var(--text3); font-size: 12px; }
+.spacer { flex: 1; }
+.meta-status { color: var(--text3); font-size: 12px; margin-right: 4px; }
+.refresh { appearance: none; background: var(--text); border: 1px solid var(--text); border-radius: 4px; color: var(--bg); cursor: pointer; font-weight: 700; padding: 8px 11px; }
+.refresh:hover, .refresh:focus-visible { background: var(--accent); border-color: var(--accent); }
+.refresh:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, .epic-row:focus-visible {
+  outline: 3px solid rgba(122, 28, 32, .28); outline-offset: 2px;
+}
+.wrap { max-width: 1480px; margin: 0 auto; padding: 24px 24px 64px; }
+.hero { border-bottom: 1px solid var(--text); display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .42fr); gap: 24px; padding: 4px 0 18px; }
+.eyebrow { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.hero h2 { font-family: Charter, Georgia, serif; font-size: clamp(28px, 4vw, 42px); font-weight: 700; letter-spacing: -.04em; line-height: 1.05; margin: 8px 0 10px; }
+.hero p { color: var(--text2); line-height: 1.5; margin: 0; max-width: 720px; font-size: 14px; }
+.signal-card { align-self: end; background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 14px 16px; }
+.signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 18px; margin-bottom: 4px; }
+.signal-card p { color: var(--text3); font-size: 12px; margin: 0; line-height: 1.4; }
+
+.summary-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+.metric { background: var(--bg2); border: 1px solid var(--border); padding: 12px 14px; position: relative; }
+.metric::before { background: var(--accent); content: ''; height: 3px; left: 0; position: absolute; right: 0; top: 0; }
+.metric:nth-child(2)::before { background: var(--green); }
+.metric:nth-child(3)::before { background: var(--gray); }
+.metric:nth-child(4)::before { background: var(--red); }
+.metric .number { font-family: Charter, Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1; margin-top: 6px; }
+.metric .label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; margin-top: 5px; text-transform: uppercase; }
+
+.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: minmax(180px, 1.2fr) minmax(130px, .8fr) auto; margin: 16px 0; padding: 12px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.field select, .field input { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; background: var(--bg); color: var(--text); }
+.filter-actions { align-self: end; display: flex; gap: 8px; }
+
+.layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.2fr) minmax(360px, .8fr); }
+.panel { background: var(--bg2); border: 1px solid var(--border); min-width: 0; }
+.panel-head { align-items: baseline; border-bottom: 1px solid var(--border); display: flex; gap: 12px; justify-content: space-between; padding: 12px 14px; }
+.panel-head h3 { font-family: Charter, Georgia, serif; font-size: 18px; margin: 0; }
+.panel-head p { color: var(--text3); font-size: 11px; margin: 0; text-align: right; }
+
+.table-wrap { max-height: min(72vh, 780px); overflow: auto; }
+.table { border-collapse: collapse; font-size: 12px; width: 100%; }
+.table th { background: var(--bg2); border-bottom: 1px solid var(--border); color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; padding: 9px 10px; position: sticky; text-align: left; text-transform: uppercase; top: 0; z-index: 2; }
+.table td { border-bottom: 1px solid rgba(212, 205, 184, .68); padding: 9px 10px; vertical-align: top; }
+.table tr.epic-row { cursor: pointer; }
+.table tr.epic-row:hover { background: rgba(122, 28, 32, .035); }
+.table tr.epic-row[aria-selected="true"] { background: rgba(122, 28, 32, .06); box-shadow: inset 3px 0 0 var(--accent); }
+
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; overflow-wrap: anywhere; }
+.muted { color: var(--text3); }
+.pill { border: 1px solid var(--border); border-radius: 999px; color: var(--text2); display: inline-block; font-size: 10px; font-weight: 750; padding: 2px 6px; white-space: nowrap; }
+.pill.active { background: rgba(61, 107, 74, .12); border-color: rgba(61, 107, 74, .3); color: var(--green); }
+.pill.released { background: rgba(138, 131, 119, .12); border-color: rgba(138, 131, 119, .3); color: var(--gray); }
+.pill.expired { background: rgba(156, 40, 40, .11); border-color: rgba(156, 40, 40, .3); color: var(--red); }
+.pill.none { background: rgba(138, 131, 119, .08); border-color: rgba(138, 131, 119, .25); color: var(--text3); }
+
+.snippet-cell { max-width: 280px; }
+.entry-snippet { font-size: 11px; line-height: 1.35; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entry-snippet strong { font-weight: 700; }
+
+.detail-pane { max-height: min(72vh, 780px); overflow: auto; padding: 14px 16px 20px; }
+.detail-pane h4 { font-family: Charter, Georgia, serif; font-size: 20px; margin: 0 0 6px; overflow-wrap: anywhere; }
+.detail-section { border-top: 1px solid var(--border); margin-top: 14px; padding-top: 12px; }
+.detail-section:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+.detail-section h5 { font-family: Charter, Georgia, serif; font-size: 15px; margin: 0 0 8px; }
+.detail-grid { display: grid; gap: 8px 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 8px; }
+.detail-field { min-width: 0; }
+.detail-field dt { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.detail-field dd { margin: 2px 0 0; font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; word-break: break-word; }
+
+.digest-list { display: grid; gap: 8px; margin-top: 8px; }
+.digest-card { background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--blue); padding: 10px 12px; font-size: 12px; }
+.digest-card.pinned { border-left-color: var(--purple); }
+.digest-card.state { border-left-color: var(--cyan); }
+.digest-card.decision { border-left-color: var(--accent); }
+.digest-card.next_action { border-left-color: var(--green); }
+.digest-head { align-items: center; display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; margin-bottom: 6px; }
+.digest-body { color: var(--text); font-size: 12px; line-height: 1.45; margin: 6px 0 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.digest-meta { color: var(--text3); font-size: 11px; }
+
+.empty, .error { color: var(--text3); font-size: 13px; line-height: 1.5; padding: 18px 14px; }
+.error { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); margin: 0 0 14px; }
+.hidden { display: none !important; }
+.footnote { color: var(--text3); font-size: 11px; line-height: 1.5; margin-top: 18px; }
+
+@media (max-width: 960px) {
+  .layout, .hero, .summary-strip, .filter-strip { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .wrap { padding: 16px 12px 48px; }
+  .topbar { flex-wrap: wrap; padding: 12px; }
+  .brand { min-width: 0; }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <h1>Epics</h1>
+    <p>Remote epic lifecycle · read-only</p>
+  </div>
+  <div class="spacer"></div>
+  <span id="last-updated-text" class="meta-status">Loading…</span>
+  <button class="refresh" type="button" id="btn-refresh">Refresh</button>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/fleet.html">Fleet</a>
+    <a class="active" href="/epics.html">Epics</a>
+    <a href="/work.html">Work</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+    <a href="/docs">API</a>
+  </nav>
+</header>
+
+<main class="wrap" data-read-only="true">
+  <section class="hero" aria-labelledby="epics-title">
+    <div>
+      <div class="eyebrow">Remote lifecycle · TTL-fenced</div>
+      <h2 id="epics-title">Registered epics and active drivers.</h2>
+      <p>Multi-agent coordination across remote and local seats. Answers in one glance who drives each epic, from where, lease health, and the latest handoff state. Sourced from the live <code>/api/epics/v1</code> lifecycle registry.</p>
+    </div>
+    <aside class="signal-card" aria-label="Lifecycle posture">
+      <strong>Remote authority</strong>
+      <p id="posture-copy">Read-only operator dashboard. Mutations are launcher/loopback-only by design.</p>
+    </aside>
+  </section>
+
+  <div id="error-banner" class="error hidden" role="status"></div>
+
+  <section class="summary-strip" aria-label="Epic metrics">
+    <article class="metric"><div class="number" id="metric-total">—</div><div class="label">Total epics</div></article>
+    <article class="metric"><div class="number" id="metric-active" style="color:var(--green)">—</div><div class="label">Active leases</div></article>
+    <article class="metric"><div class="number" id="metric-released" style="color:var(--gray)">—</div><div class="label">Released</div></article>
+    <article class="metric"><div class="number" id="metric-expired" style="color:var(--red)">—</div><div class="label">Expired / None</div></article>
+  </section>
+
+  <section class="filter-strip" aria-label="Epic filters">
+    <div class="field">
+      <label for="filter-search">Search</label>
+      <input id="filter-search" type="text" placeholder="Filter by epic (e.g. 6943) or agent/host…" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="filter-state">Lease State</label>
+      <select id="filter-state">
+        <option value="">All states</option>
+        <option value="active">active</option>
+        <option value="released">released</option>
+        <option value="expired">expired</option>
+        <option value="none">none</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="refresh" type="button" id="btn-reset" style="background:var(--bg2);color:var(--text);border-color:var(--border)">Reset</button>
+    </div>
+  </section>
+
+  <section class="layout">
+    <article class="panel" aria-labelledby="epics-list-heading">
+      <div class="panel-head">
+        <h3 id="epics-list-heading">Registered Epics</h3>
+        <p id="list-count-meta">Loading…</p>
+      </div>
+      <div class="table-wrap">
+        <table class="table" id="epics-table" aria-label="Registered epics table">
+          <thead>
+            <tr>
+              <th>Epic</th>
+              <th>Holder</th>
+              <th>Lease State</th>
+              <th>Age</th>
+              <th>Expiry</th>
+              <th>Latest Handoff</th>
+            </tr>
+          </thead>
+          <tbody id="epics-tbody">
+            <tr><td colspan="6" class="empty">Loading epic streams…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel" aria-labelledby="detail-heading">
+      <div class="panel-head">
+        <h3 id="detail-heading">Epic Detail</h3>
+        <p id="detail-meta">Select an epic to inspect</p>
+      </div>
+      <div id="detail-pane" class="detail-pane empty">Select an epic from the list to view its lease parameters and recent handoff digest.</div>
+    </article>
+  </section>
+
+  <p class="footnote"><strong>Read-only operator dashboard:</strong> Sourced strictly from <code>GET /api/epics/v1</code> and <code>GET /api/epics/v1/{stream}</code>. Auto-refreshes every 15s. No claim or release mutations are possible from the browser.</p>
+</main>
+
+<script>
+(function () {
+  const API_TIMEOUT_MS = 5000;
+  const AUTO_REFRESH_INTERVAL_MS = 15000;
+
+  const state = {
+    streams: [],
+    selectedStreamId: null,
+    selectedDetail: null,
+    detailLoading: false,
+    fetchError: null,
+    lastUpdated: null,
+  };
+
+  const els = {
+    errorBanner: document.getElementById('error-banner'),
+    lastUpdatedText: document.getElementById('last-updated-text'),
+    btnRefresh: document.getElementById('btn-refresh'),
+    btnReset: document.getElementById('btn-reset'),
+    filterSearch: document.getElementById('filter-search'),
+    filterState: document.getElementById('filter-state'),
+    epicsTbody: document.getElementById('epics-tbody'),
+    listCountMeta: document.getElementById('list-count-meta'),
+    detailPane: document.getElementById('detail-pane'),
+    detailMeta: document.getElementById('detail-meta'),
+    metricTotal: document.getElementById('metric-total'),
+    metricActive: document.getElementById('metric-active'),
+    metricReleased: document.getElementById('metric-released'),
+    metricExpired: document.getElementById('metric-expired'),
+  };
+
+  function escapeHtml(value) {
+    if (value == null) return '';
+    const node = document.createElement('span');
+    node.textContent = String(value);
+    return node.innerHTML;
+  }
+
+  function short(value, fallback = '—') {
+    return value == null || value === '' ? fallback : String(value);
+  }
+
+  function githubIssueUrl(streamId) {
+    if (!streamId || typeof streamId !== 'string') return null;
+    const match = streamId.match(/^epic:(\d+)$/);
+    if (!match) return null;
+    return `https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/${match[1]}`;
+  }
+
+  function formatHolder(holder) {
+    if (!holder || typeof holder !== 'object') return '—';
+    const agent = holder.agent;
+    const harness = holder.harness;
+    const hostId = holder.host_id;
+    if (!agent && !harness && !hostId) return '—';
+    return `${short(agent)} · ${short(harness)} · ${short(hostId)}`;
+  }
+
+  function getLeaseState(stream) {
+    if (!stream || !stream.lease) return 'none';
+    const rawState = stream.lease.state || 'none';
+    if (rawState === 'active' && stream.lease.expires_at) {
+      const expiresAtMs = new Date(stream.lease.expires_at).getTime();
+      if (!Number.isNaN(expiresAtMs) && Date.now() >= expiresAtMs) {
+        return 'expired';
+      }
+    }
+    return rawState;
+  }
+
+  function formatAge(ageSeconds) {
+    if (ageSeconds == null || typeof ageSeconds !== 'number' || Number.isNaN(ageSeconds) || ageSeconds < 0) {
+      return '—';
+    }
+    if (ageSeconds < 60) {
+      return `${ageSeconds}s ago`;
+    }
+    const mins = Math.floor(ageSeconds / 60);
+    const secs = ageSeconds % 60;
+    return `${mins}m ${secs}s ago`;
+  }
+
+  function formatExpiry(lease) {
+    if (!lease || !lease.expires_at) return '—';
+    const state = lease.state;
+    if (state === 'released') return '—';
+    if (state === 'none') return '—';
+    const expiresAtMs = new Date(lease.expires_at).getTime();
+    if (Number.isNaN(expiresAtMs)) return '—';
+    const remainingSecs = Math.floor((expiresAtMs - Date.now()) / 1000);
+    if (remainingSecs <= 0 || state === 'expired') {
+      return 'expired';
+    }
+    if (remainingSecs < 60) {
+      return `in ${remainingSecs}s`;
+    }
+    const mins = Math.floor(remainingSecs / 60);
+    const secs = remainingSecs % 60;
+    return `in ${mins}m ${secs}s`;
+  }
+
+  function formatTime(isoString) {
+    if (!isoString) return '—';
+    const d = new Date(isoString);
+    return Number.isNaN(d.getTime()) ? String(isoString) : d.toLocaleString();
+  }
+
+  function renderPill(leaseState) {
+    const s = String(leaseState || 'none').toLowerCase();
+    const label = s.toUpperCase();
+    return `<span class="pill ${escapeHtml(s)}">${escapeHtml(label)}</span>`;
+  }
+
+  async function fetchJson(path) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+    try {
+      const response = await fetch(path, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      });
+      const text = await response.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        data = { detail: text };
+      }
+      if (!response.ok) {
+        throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+      }
+      return data;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function showError(msg) {
+    state.fetchError = msg;
+    if (!msg) {
+      els.errorBanner.classList.add('hidden');
+      els.errorBanner.textContent = '';
+      return;
+    }
+    els.errorBanner.classList.remove('hidden');
+    els.errorBanner.textContent = msg;
+  }
+
+  function filteredStreams() {
+    const query = (els.filterSearch.value || '').trim().toLowerCase();
+    const stateFilter = (els.filterState.value || '').trim().toLowerCase();
+
+    return state.streams.filter((item) => {
+      const streamId = (item.stream_id || '').toLowerCase();
+      const leaseState = getLeaseState(item).toLowerCase();
+
+      if (stateFilter && leaseState !== stateFilter) return false;
+
+      if (query) {
+        const holder = item.lease && item.lease.holder;
+        const holderText = holder ? `${holder.agent || ''} ${holder.harness || ''} ${holder.host_id || ''}`.toLowerCase() : '';
+        const stateBody = (item.last_state && item.last_state.body || '').toLowerCase();
+        const actionBody = (item.last_next_action && item.last_next_action.body || '').toLowerCase();
+        const matchesQuery = streamId.includes(query) || holderText.includes(query) || stateBody.includes(query) || actionBody.includes(query);
+        if (!matchesQuery) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderMetrics() {
+    const total = state.streams.length;
+    let active = 0;
+    let released = 0;
+    let expiredOrNone = 0;
+
+    state.streams.forEach((item) => {
+      const s = getLeaseState(item);
+      if (s === 'active') active += 1;
+      else if (s === 'released') released += 1;
+      else expiredOrNone += 1;
+    });
+
+    els.metricTotal.textContent = String(total);
+    els.metricActive.textContent = String(active);
+    els.metricReleased.textContent = String(released);
+    els.metricExpired.textContent = String(expiredOrNone);
+  }
+
+  function renderTable() {
+    if (state.fetchError && !state.streams.length) {
+      els.epicsTbody.innerHTML = `<tr><td colspan="6" class="error">API unreachable: ${escapeHtml(state.fetchError)}. Epic state is unknown.</td></tr>`;
+      els.listCountMeta.textContent = 'API unreachable';
+      return;
+    }
+
+    const visible = filteredStreams();
+    els.listCountMeta.textContent = `${visible.length} of ${state.streams.length} epics`;
+
+    if (!state.streams.length) {
+      els.epicsTbody.innerHTML = `<tr><td colspan="6" class="empty">No registered epics found in session-stream store.</td></tr>`;
+      return;
+    }
+
+    if (!visible.length) {
+      els.epicsTbody.innerHTML = `<tr><td colspan="6" class="empty">No epics match the current search filters.</td></tr>`;
+      return;
+    }
+
+    const rowsHtml = visible.map((stream) => {
+      const streamId = stream.stream_id || '—';
+      const ghUrl = githubIssueUrl(streamId);
+      const epicLink = ghUrl
+        ? `<a href="${escapeHtml(ghUrl)}" target="_blank" rel="noopener noreferrer" class="mono" onclick="event.stopPropagation()">${escapeHtml(streamId)}</a>`
+        : `<span class="mono">${escapeHtml(streamId)}</span>`;
+
+      const lease = stream.lease;
+      const holderFormatted = lease ? formatHolder(lease.holder) : '—';
+      const leaseState = getLeaseState(stream);
+      const ageFormatted = lease ? formatAge(lease.age_seconds) : '—';
+      const expiryFormatted = formatExpiry(lease);
+
+      const snippets = [];
+      if (stream.last_state && stream.last_state.body) {
+        const bodyText = stream.last_state.body;
+        const agentText = stream.last_state.agent ? ` (${stream.last_state.agent})` : '';
+        snippets.push(`<div class="entry-snippet" title="${escapeHtml(bodyText)}"><strong>State${escapeHtml(agentText)}:</strong> ${escapeHtml(bodyText)}</div>`);
+      }
+      if (stream.last_next_action && stream.last_next_action.body) {
+        const bodyText = stream.last_next_action.body;
+        const agentText = stream.last_next_action.agent ? ` (${stream.last_next_action.agent})` : '';
+        snippets.push(`<div class="entry-snippet" title="${escapeHtml(bodyText)}"><strong>Next${escapeHtml(agentText)}:</strong> ${escapeHtml(bodyText)}</div>`);
+      }
+      if (stream.last_decision && stream.last_decision.body) {
+        const bodyText = stream.last_decision.body;
+        const agentText = stream.last_decision.agent ? ` (${stream.last_decision.agent})` : '';
+        snippets.push(`<div class="entry-snippet" title="${escapeHtml(bodyText)}"><strong>Decision${escapeHtml(agentText)}:</strong> ${escapeHtml(bodyText)}</div>`);
+      }
+
+      const handoffHtml = snippets.length
+        ? snippets.join('')
+        : '<span class="muted">—</span>';
+
+      const isSelected = state.selectedStreamId === streamId;
+
+      return `<tr class="epic-row" data-stream-id="${escapeHtml(streamId)}" aria-selected="${isSelected ? 'true' : 'false'}" tabindex="0">
+        <td>${epicLink}</td>
+        <td class="mono">${escapeHtml(holderFormatted)}</td>
+        <td>${renderPill(leaseState)}</td>
+        <td>${escapeHtml(ageFormatted)}</td>
+        <td class="countdown-cell" data-expires-at="${lease && lease.expires_at ? escapeHtml(lease.expires_at) : ''}" data-state="${escapeHtml(leaseState)}">${escapeHtml(expiryFormatted)}</td>
+        <td class="snippet-cell">${handoffHtml}</td>
+      </tr>`;
+    }).join('');
+
+    els.epicsTbody.innerHTML = rowsHtml;
+
+    // Attach click listeners to rows
+    const rowElements = els.epicsTbody.querySelectorAll('.epic-row');
+    rowElements.forEach((row) => {
+      row.addEventListener('click', () => {
+        const streamId = row.getAttribute('data-stream-id');
+        selectEpic(streamId);
+      });
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const streamId = row.getAttribute('data-stream-id');
+          selectEpic(streamId);
+        }
+      });
+    });
+  }
+
+  function updateLiveCountdowns() {
+    const cells = document.querySelectorAll('.countdown-cell');
+    cells.forEach((cell) => {
+      const expiresAt = cell.getAttribute('data-expires-at');
+      const leaseState = cell.getAttribute('data-state');
+      if (!expiresAt || leaseState === 'released' || leaseState === 'none') return;
+      const formatted = formatExpiry({ expires_at: expiresAt, state: leaseState });
+      cell.textContent = formatted;
+    });
+  }
+
+  async function selectEpic(streamId) {
+    if (!streamId) return;
+    state.selectedStreamId = streamId;
+    renderTable(); // Update selected highlight in table
+
+    els.detailMeta.textContent = `Loading ${streamId}…`;
+    els.detailPane.innerHTML = `<div class="empty">Loading details for ${escapeHtml(streamId)}…</div>`;
+
+    try {
+      const data = await fetchJson(`/api/epics/v1/${encodeURIComponent(streamId)}`);
+      state.selectedDetail = data;
+      renderDetail(data);
+    } catch (err) {
+      els.detailMeta.textContent = 'Fetch failed';
+      els.detailPane.innerHTML = `<div class="error">Failed to load epic detail for ${escapeHtml(streamId)}: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function renderDetail(detail) {
+    if (!detail) {
+      els.detailMeta.textContent = 'No epic selected';
+      els.detailPane.innerHTML = '<div class="empty">Select an epic from the list to view its lease parameters and recent handoff digest.</div>';
+      return;
+    }
+
+    const streamId = detail.stream_id || state.selectedStreamId || '—';
+    const ghUrl = githubIssueUrl(streamId);
+    const ghLink = ghUrl
+      ? `<a href="${escapeHtml(ghUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(streamId)} on GitHub</a>`
+      : escapeHtml(streamId);
+
+    els.detailMeta.textContent = streamId;
+
+    const lease = detail.lease;
+    let leaseSectionHtml = '';
+
+    if (!lease) {
+      leaseSectionHtml = `
+        <section class="detail-section">
+          <h5>Lease Status</h5>
+          <div class="empty" style="padding:10px 0;">No active or recorded lease for this epic (session state: ${escapeHtml(short(detail.session_state, 'none'))}).</div>
+        </section>
+      `;
+    } else {
+      const holder = lease.holder || {};
+      const leaseState = getLeaseState({ lease });
+
+      leaseSectionHtml = `
+        <section class="detail-section">
+          <h5>Lease Parameters</h5>
+          <div class="detail-grid">
+            <div class="detail-field"><dt>State</dt><dd>${renderPill(leaseState)}</dd></div>
+            <div class="detail-field"><dt>Session State</dt><dd class="mono">${escapeHtml(short(lease.session_state || detail.session_state))}</dd></div>
+            <div class="detail-field"><dt>Session ID</dt><dd class="mono">${escapeHtml(short(lease.session_id))}</dd></div>
+            <div class="detail-field"><dt>Lease ID</dt><dd class="mono">${escapeHtml(short(lease.lease_id))}</dd></div>
+            <div class="detail-field"><dt>Generation</dt><dd class="mono">${escapeHtml(short(lease.generation))}</dd></div>
+            <div class="detail-field"><dt>Fencing Token</dt><dd class="mono">${escapeHtml(short(lease.fencing_token))}</dd></div>
+            <div class="detail-field"><dt>Version</dt><dd class="mono">${escapeHtml(short(lease.version))}</dd></div>
+            <div class="detail-field"><dt>TTL</dt><dd>${escapeHtml(short(lease.ttl_seconds))}s</dd></div>
+            <div class="detail-field"><dt>Heartbeat At</dt><dd>${escapeHtml(formatTime(lease.heartbeat_at))} (${escapeHtml(formatAge(lease.age_seconds))})</dd></div>
+            <div class="detail-field"><dt>Expires At</dt><dd>${escapeHtml(formatTime(lease.expires_at))} (${escapeHtml(formatExpiry(lease))})</dd></div>
+          </div>
+        </section>
+        <section class="detail-section">
+          <h5>Driver & Host Identity</h5>
+          <div class="detail-grid">
+            <div class="detail-field"><dt>Agent</dt><dd class="mono">${escapeHtml(short(holder.agent))}</dd></div>
+            <div class="detail-field"><dt>Harness</dt><dd class="mono">${escapeHtml(short(holder.harness))}</dd></div>
+            <div class="detail-field"><dt>Host ID</dt><dd class="mono">${escapeHtml(short(holder.host_id))}</dd></div>
+            <div class="detail-field"><dt>Instance ID</dt><dd class="mono">${escapeHtml(short(holder.instance_id))}</dd></div>
+            <div class="detail-field"><dt>Task ID</dt><dd class="mono">${escapeHtml(short(holder.task_id))}</dd></div>
+            <div class="detail-field"><dt>Holder Kind</dt><dd class="mono">${escapeHtml(short(holder.holder_kind))} (PID ${escapeHtml(short(holder.process_id))})</dd></div>
+          </div>
+        </section>
+      `;
+    }
+
+    const digest = detail.digest || {};
+    const pinned = Array.isArray(digest.pinned) ? digest.pinned : [];
+    const recent = Array.isArray(digest.recent) ? digest.recent : [];
+
+    function renderDigestCard(entry, isPinned) {
+      const type = entry.type || 'entry';
+      const agent = entry.agent ? `${entry.agent}` : '';
+      const harness = entry.harness ? `/${entry.harness}` : '';
+      const ts = formatTime(entry.ts);
+      const body = entry.body || '';
+
+      return `<div class="digest-card ${isPinned ? 'pinned' : escapeHtml(type)}">
+        <div class="digest-head">
+          <span><strong>#${escapeHtml(short(entry.entry_id))}</strong> <span class="pill ${escapeHtml(type)}">${escapeHtml(type)}</span> ${escapeHtml(agent)}${escapeHtml(harness)}</span>
+          <span class="digest-meta">${escapeHtml(ts)}</span>
+        </div>
+        <div class="digest-body">${escapeHtml(body)}</div>
+      </div>`;
+    }
+
+    const pinnedHtml = pinned.length
+      ? pinned.map(e => renderDigestCard(e, true)).join('')
+      : '<div class="empty" style="padding:8px 0;">No pinned entries in digest.</div>';
+
+    const recentHtml = recent.length
+      ? recent.map(e => renderDigestCard(e, false)).join('')
+      : '<div class="empty" style="padding:8px 0;">No recent handoff entries in digest.</div>';
+
+    els.detailPane.innerHTML = `
+      <h4>${escapeHtml(streamId)}</h4>
+      <div style="font-size:12px;margin-bottom:12px;">${ghLink}</div>
+      ${leaseSectionHtml}
+      <section class="detail-section">
+        <h5>Pinned Entries (${pinned.length})</h5>
+        <div class="digest-list">${pinnedHtml}</div>
+      </section>
+      <section class="detail-section">
+        <h5>Recent Handoff Digest (${recent.length})</h5>
+        <div class="digest-list">${recentHtml}</div>
+      </section>
+    `;
+  }
+
+  async function loadStreams() {
+    try {
+      const data = await fetchJson('/api/epics/v1');
+      showError('');
+      state.streams = Array.isArray(data.streams) ? data.streams : [];
+      state.lastUpdated = new Date();
+      els.lastUpdatedText.textContent = `Updated ${state.lastUpdated.toLocaleTimeString()}`;
+      renderMetrics();
+      renderTable();
+
+      // If an epic was already selected, refresh its details in the background
+      if (state.selectedStreamId) {
+        const stillExists = state.streams.some(s => s.stream_id === state.selectedStreamId);
+        if (stillExists) {
+          fetchJson(`/api/epics/v1/${encodeURIComponent(state.selectedStreamId)}`)
+            .then((detail) => { renderDetail(detail); })
+            .catch(() => {});
+        }
+      }
+    } catch (err) {
+      showError(`Failed to fetch /api/epics/v1: ${err.message}`);
+      els.lastUpdatedText.textContent = 'Update failed';
+      renderMetrics();
+      renderTable();
+    }
+  }
+
+  // Event Listeners
+  els.btnRefresh.addEventListener('click', () => { loadStreams(); });
+  els.filterSearch.addEventListener('input', () => { renderTable(); });
+  els.filterState.addEventListener('change', () => { renderTable(); });
+  els.btnReset.addEventListener('click', () => {
+    els.filterSearch.value = '';
+    els.filterState.value = '';
+    renderTable();
+  });
+
+  // Initial load and periodic timers
+  loadStreams();
+  setInterval(loadStreams, AUTO_REFRESH_INTERVAL_MS);
+  setInterval(updateLiveCountdowns, 1000);
+})();
+</script>
+</body>
+</html>
