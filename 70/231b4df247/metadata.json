@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "70231b4df247",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s6",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/_judge_eval_lib.py",
+    "scripts/audit/atlas_source_census.py",
+    "scripts/audit/audit_level.py",
+    "scripts/audit/bakeoff_run.py",
+    "scripts/audit/certify_module.py",
+    "scripts/audit/check_core_bare.py",
+    "scripts/audit/check_dossier_wordcount.py",
+    "scripts/audit/check_framing_compliance_changed.py",
+    "scripts/audit/check_locked_module_not_published.py",
+    "scripts/audit/check_mdx_forward_parity.py",
+    "scripts/audit/check_mdx_generation_drift.py",
+    "scripts/audit/check_mdx_source_parity.py",
+    "scripts/audit/check_no_internal_ids.py",
+    "scripts/audit/check_no_private_source_review_exports.py",
+    "scripts/audit/check_promote_quality_changed.py",
+    "scripts/audit/check_review_issues.py",
+    "scripts/audit/find_dead_code.py",
+    "scripts/audit/freeze_benchmark.py",
+    "scripts/audit/hermes_nightly_audit.py",
+    "scripts/audit/ingest_ua_gec_gold.py",
+    "scripts/audit/layerb_differential_replay.py",
+    "scripts/audit/lint_agent_trailer.py",
+    "scripts/audit/lint_opsec_leaks.py",
+    "scripts/audit/lint_word_atlas.py",
+    "scripts/audit/post_build_review.py",
+    "scripts/audit/run_gemini_1x17_sweep.py",
+    "scripts/audit/run_subscription_1x17_sweep.py",
+    "scripts/audit/russianism_eval.py",
+    "scripts/audit/track_deterministic_audit.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/audit/test_audit_timeouts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/70/231b4df247/0/metadata.json",
+      "transcript": "/70/231b4df247/0/full.jsonl",
+      "compact_transcript": "/70/231b4df247/0/transcript.jsonl",
+      "content_hash": "/70/231b4df247/0/content_hash.txt",
+      "prompt": "/70/231b4df247/0/prompt.txt"
+    }
+  ]
+}
