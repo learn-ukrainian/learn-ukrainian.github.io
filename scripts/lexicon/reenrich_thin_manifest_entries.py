@@ -429,7 +429,11 @@ def _translation_for_entry(
     lemma = str(entry.get("lemma") or "")
     entry_pos = entry.get("pos")
     gloss_hints = enrich_manifest._surface_gloss_hints(entry)
-    slovnyk_cache = enrich_manifest._slovnyk_cache(lemma)
+    slovnyk_cache = (
+        enrich_manifest._load_current_slovnyk_cache_file(enrich_manifest._slovnyk_cache_path(lemma))
+        if cached_slovnyk_only
+        else enrich_manifest._slovnyk_cache(lemma)
+    )
     if cached_slovnyk_only and not enrich_manifest._cache_has_lookup(
         slovnyk_cache,
         enrich_manifest._SLOVNYK_UKRENG_SLUG,
@@ -447,7 +451,11 @@ def _translation_for_entry(
         return translation
     fallback_base = enrich_manifest._base_lookup_for_entry(lemma, entry_pos)
     if fallback_base:
-        fallback_cache = enrich_manifest._slovnyk_cache(fallback_base)
+        fallback_cache = (
+            enrich_manifest._load_current_slovnyk_cache_file(enrich_manifest._slovnyk_cache_path(fallback_base))
+            if cached_slovnyk_only
+            else enrich_manifest._slovnyk_cache(fallback_base)
+        )
         if cached_slovnyk_only and not enrich_manifest._cache_has_lookup(
             fallback_cache,
             enrich_manifest._SLOVNYK_UKRENG_SLUG,
@@ -751,6 +759,11 @@ def main() -> int:
         action="store_true",
         help="Write only an initial pointer when no canonical release asset exists; records bootstrap=true.",
     )
+    parser.add_argument(
+        "--no-pointer",
+        action="store_true",
+        help="Do not update the release pointer when writing the manifest.",
+    )
     args = parser.parse_args()
 
     manifest_path = args.manifest if args.manifest.is_absolute() else ROOT / args.manifest
@@ -821,13 +834,14 @@ def main() -> int:
     if args.write:
         _refresh_manifest_fingerprint(manifest)
         _write_manifest(manifest_path, manifest)
-        pointer = _write_default_release_pointer(
-            manifest_path,
-            bootstrap_no_baseline=args.bootstrap_no_baseline,
-            allow_richness_regression_reason=args.allow_richness_regression,
-        )
-        if pointer:
-            print(f"Updated local atlas-manifest pointer {pointer['manifest_fingerprint']} {pointer['json_sha256']}")
+        if not args.no_pointer:
+            pointer = _write_default_release_pointer(
+                manifest_path,
+                bootstrap_no_baseline=args.bootstrap_no_baseline,
+                allow_richness_regression_reason=args.allow_richness_regression,
+            )
+            if pointer:
+                print(f"Updated local atlas-manifest pointer {pointer['manifest_fingerprint']} {pointer['json_sha256']}")
     else:
         print("Dry run only; pass --write to update the manifest.")
     return 0

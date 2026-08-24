@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -190,16 +191,20 @@ def test_load_slug_filter_rejects_unknown_shape(tmp_path) -> None:
         _load_slug_filter(path)
 
 
-def test_cached_slovnyk_only_skips_uncached_slovnyk_lookup(monkeypatch) -> None:
+def test_cached_slovnyk_only_skips_uncached_slovnyk_lookup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     entry = {"lemma": "невідоме", "enrichment": {}}
 
     def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None, slovnyk_cache=None):
         assert slovnyk_cache is None
         return None
 
+    def fail_live_slovnyk(*args, **kwargs):
+        raise AssertionError("_slovnyk_cache must not be called when cached_slovnyk_only=True")
+
+    monkeypatch.setattr(enrich_manifest, "SLOVNYK_CACHE", tmp_path)
     monkeypatch.setattr(enrich_manifest, "_translation", fake_translation)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", fail_live_slovnyk)
 
     with sqlite3.connect(":memory:") as conn:
         _reenrich_translation_only(conn, entry, {}, cached_slovnyk_only=True)
@@ -207,18 +212,36 @@ def test_cached_slovnyk_only_skips_uncached_slovnyk_lookup(monkeypatch) -> None:
     assert "translation" not in entry["enrichment"]
 
 
-def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> None:
+def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     entry = {"lemma": "бризки", "gloss": "splashes", "enrichment": {}}
 
     def fail_fetch(*args, **kwargs):
         raise AssertionError("cached-only mode must not live-fetch Slovnyk")
 
+    def fail_live_slovnyk(*args, **kwargs):
+        raise AssertionError("_slovnyk_cache must not be called when cached_slovnyk_only=True")
+
+    monkeypatch.setattr(enrich_manifest, "SLOVNYK_CACHE", tmp_path)
     monkeypatch.setattr(enrich_manifest, "_DMKLINGER_INDEX", None)
     monkeypatch.setattr(enrich_manifest, "_BALLA_REVERSE_INDEX", {})
     monkeypatch.setattr(enrich_manifest, "query_goroh_translate", lambda lemma: [])
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {"lookups": {}})
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", fail_live_slovnyk)
     monkeypatch.setattr(enrich_manifest, "_fetch_slovnyk_entry", fail_fetch)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+
+    cache_path = tmp_path / "бризки.json"
+    cache_path.write_text(
+        json.dumps(
+            {
+                "schema_version": enrich_manifest._SLOVNYK_CACHE_SCHEMA_VERSION,
+                "lemma": "бризки",
+                "lookup_word": "бризки",
+                "lookups": {},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
 
     with sqlite3.connect(":memory:") as conn:
         conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
@@ -284,6 +307,40 @@ def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path,
         reenrich._write_default_release_pointer(manifest_path)
 
     assert gzip_calls == []
+
+
+def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    manifest_path.write_text('{"entries": [{"lemma": "тест", "url_slug": "тест"}]}\n', encoding="utf-8")
+    pointer_called = []
+
+    monkeypatch.setattr(
+        reenrich,
+        "_write_default_release_pointer",
+        lambda *args, **kwargs: pointer_called.append(True),
+    )
+    monkeypatch.setattr(
+        reenrich,
+        "reenrich_thin_entries",
+        lambda *args, **kwargs: {"target": "missing-translation", "targets": 1},
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "reenrich_thin_manifest_entries.py",
+            "--manifest",
+            str(manifest_path),
+            "--local",
+            "--write",
+            "--no-pointer",
+        ],
+    )
+    res = reenrich.main()
+    assert res == 0
+    assert pointer_called == []
+
 
 
 def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
