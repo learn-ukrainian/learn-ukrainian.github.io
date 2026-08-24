@@ -180,3 +180,134 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     assert "def broken()" not in text
     assert "missing_name" not in text
     assert not Path(captured_prompt["path"]).exists()
+
+
+def test_run_json_command_passes_default_timeout(monkeypatch):
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        return subprocess.CompletedProcess(cmd, 0, stdout='{"ok": true}')
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    res = wrappers._run_json_command(["echo", "hi"])
+    assert res == {"ok": True}
+    assert calls[0][1].get("timeout") == wrappers.DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS
+
+
+def test_run_json_command_timeout_raises_timeout_expired(monkeypatch):
+    def timeout_run(cmd, **kwargs):
+        raise subprocess.TimeoutExpired(cmd, wrappers.DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS)
+
+    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
+    import pytest
+
+    with pytest.raises(subprocess.TimeoutExpired):
+        wrappers._run_json_command(["echo", "hi"])
+
+
+def test_run_text_command_passes_default_timeout(monkeypatch):
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        return subprocess.CompletedProcess(cmd, 0, stdout="hello\n")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    res = wrappers._run_text_command(["echo", "hello"])
+    assert res == "hello\n"
+    assert calls[0][1].get("timeout") == wrappers.DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS
+
+
+def test_run_text_command_timeout_raises_timeout_expired(monkeypatch):
+    def timeout_run(cmd, **kwargs):
+        raise subprocess.TimeoutExpired(cmd, wrappers.DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS)
+
+    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
+    import pytest
+
+    with pytest.raises(subprocess.TimeoutExpired):
+        wrappers._run_text_command(["echo", "hi"])
+
+
+def test_run_dispatch_passes_timeout(monkeypatch, tmp_path):
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("test", encoding="utf-8")
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        return subprocess.CompletedProcess(cmd, 0)
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    rc = wrappers._run_dispatch(["python", "--task-id", "123"], False, prompt_file)
+    assert rc == 0
+    assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
+
+
+def test_run_dispatch_timeout_returns_1(monkeypatch, tmp_path, capsys):
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("test", encoding="utf-8")
+
+    def timeout_run(cmd, **kwargs):
+        raise subprocess.TimeoutExpired(cmd, wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS)
+
+    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
+    rc = wrappers._run_dispatch(["python", "--task-id", "123"], False, prompt_file)
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert f"dispatch command timed out after {wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS}s" in err
+
+
+def test_run_ask_review_dispatch_dispatch_timeout_raises_runtime_error(monkeypatch):
+    import pytest
+
+    def timeout_run(cmd, **kwargs):
+        raise subprocess.TimeoutExpired(cmd, wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS)
+
+    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
+    with pytest.raises(RuntimeError, match=r"delegate\.py dispatch timed out"):
+        wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
+
+
+def test_run_ask_review_dispatch_wait_timeout_raises_runtime_error(monkeypatch):
+    import pytest
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            raise subprocess.TimeoutExpired(cmd, 1860)
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    with pytest.raises(RuntimeError, match=r"delegate\.py wait timed out at process level"):
+        wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
+
+
+def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
+    result_file = tmp_path / "result.md"
+    result_file.write_text("LGTM", encoding="utf-8")
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "completed", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    state = wrappers.run_ask_review_dispatch(
+        "claude", "review this", task_id="task-123", hard_timeout=600
+    )
+    assert state["ok"] is True
+    assert state["response"] == "LGTM"
+    assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
+    assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
+

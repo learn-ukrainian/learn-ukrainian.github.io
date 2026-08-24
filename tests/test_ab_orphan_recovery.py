@@ -183,3 +183,77 @@ def test_run_inbox_timeout_recovery_marks_delivery_delivered(
         conn.close()
     assert row["status"] == "delivered"
     assert row["error"] == "timeout-recovered:abc123"
+
+
+def test_run_passes_default_timeout():
+    from scripts.ai_agent_bridge import _orphan_recovery
+
+    with patch("subprocess.run") as mock_run:
+        mock_run.return_value = subprocess.CompletedProcess(["git"], 0, stdout="main\n")
+        res = _orphan_recovery._run(Path("/fake/repo"), "rev-parse", "HEAD")
+        assert res.stdout == "main\n"
+        assert mock_run.call_args.kwargs.get("timeout") == _orphan_recovery.DEFAULT_GIT_TIMEOUT_SECONDS
+
+
+def test_run_ruff_timeout_returns_false(tmp_path: Path):
+    from scripts.ai_agent_bridge import _orphan_recovery
+
+    repo = _init_repo(tmp_path)
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["ruff"], _orphan_recovery.DEFAULT_RUFF_TIMEOUT_SECONDS),
+    ):
+        assert _orphan_recovery._run_ruff(repo, ("scripts/task.py",)) is False
+
+
+def test_recover_orphan_commit_handles_git_add_timeout(tmp_path: Path):
+    from scripts.ai_agent_bridge import _orphan_recovery
+
+    repo = _init_repo(tmp_path)
+    target = repo / "scripts" / "ai_agent_bridge"
+    target.mkdir()
+    changed = target / "_inbox.py"
+    changed.write_text("print('ok')\n", encoding="utf-8")
+
+    orig_run = subprocess.run
+
+    def fake_subprocess_run(cmd, *args, **kwargs):
+        if "add" in cmd:
+            raise subprocess.TimeoutExpired(cmd, _orphan_recovery.DEFAULT_GIT_TIMEOUT_SECONDS)
+        return orig_run(cmd, *args, **kwargs)
+
+    with patch("subprocess.run", side_effect=fake_subprocess_run):
+        result = recover_orphan_commit(
+            _candidate("Hook into scripts/ai_agent_bridge/_inbox.py"),
+            repo_root=repo,
+        )
+
+    assert result.commit_sha is None
+    assert result.reason == "pre-commit-failed"
+
+
+def test_recover_orphan_commit_handles_git_commit_timeout(tmp_path: Path):
+    from scripts.ai_agent_bridge import _orphan_recovery
+
+    repo = _init_repo(tmp_path)
+    target = repo / "scripts" / "ai_agent_bridge"
+    target.mkdir()
+    changed = target / "_inbox.py"
+    changed.write_text("print('ok')\n", encoding="utf-8")
+
+    orig_run = subprocess.run
+
+    def fake_subprocess_run(cmd, *args, **kwargs):
+        if "commit" in cmd:
+            raise subprocess.TimeoutExpired(cmd, _orphan_recovery.GIT_COMMIT_TIMEOUT_SECONDS)
+        return orig_run(cmd, *args, **kwargs)
+
+    with patch("subprocess.run", side_effect=fake_subprocess_run):
+        result = recover_orphan_commit(
+            _candidate("Hook into scripts/ai_agent_bridge/_inbox.py"),
+            repo_root=repo,
+        )
+
+    assert result.commit_sha is None
+    assert result.reason == "pre-commit-failed"
+

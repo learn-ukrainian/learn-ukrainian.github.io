@@ -111,6 +111,9 @@ def read_message(message_id: int, quiet: bool = False):
     return msg
 
 
+OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS: float = 10.0
+
+
 def send_message(content: str, task_id: str | None = None, msg_type: str = "response",
                  data: str | None = None, from_llm: str = "gemini", to_llm: str = "claude",
                  from_model: str | None = None, to_model: str | None = None,
@@ -191,7 +194,12 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
     try:
         preview = (redact_text(content[:80]) or "").replace('"', '\\"').replace('\n', ' ')
         notification = f'display notification "{preview}..." with title "{from_llm.title()} → {to_llm.title()}" subtitle "Check inbox"'
-        subprocess.run(["osascript", "-e", notification], check=False, capture_output=True)
+        subprocess.run(
+            ["osascript", "-e", notification],
+            check=False,
+            capture_output=True,
+            timeout=OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS,
+        )
     except Exception:
         pass  # Notification is nice-to-have, don't fail if it doesn't work
 
