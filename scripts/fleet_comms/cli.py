@@ -51,6 +51,7 @@ from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.opsec_store import (
     COMMS_RESPONSE_SCHEMA_VERSION,
+    batch_tasks_store,
     comms_plane_store,
     legacy_broker_store,
 )
@@ -275,8 +276,9 @@ def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
         tasks_dir=tasks_dir,
         plane_db=plane_db,
     )
-    payload["tasks_dir"] = str(tasks_dir)
-    payload["plane_db"] = str(plane_db)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["tasks_store"] = batch_tasks_store(reachable=tasks_dir.is_dir())
+    payload["plane_store"] = comms_plane_store(reachable=plane_db.is_file())
     if not plane_db.is_file():
         payload["db_missing"] = True
     sys.stdout.write(_json_dump(payload))

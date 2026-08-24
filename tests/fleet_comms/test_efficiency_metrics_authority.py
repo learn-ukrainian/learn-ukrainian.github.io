@@ -16,6 +16,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_efficiency_metrics,
     resolve_metrics_source,
 )
+from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
 
 
 def _seed_broker(db: Path) -> None:
@@ -149,7 +150,9 @@ def test_backlog_defaults_authority_when_plane_authority(
         capsys,
     )
     assert payload["source"] == "authority"
-    assert payload["db_path"] == str(plane_db)
+    assert payload["response_schema_version"] == COMMS_RESPONSE_SCHEMA_VERSION
+    assert payload["store"] == {"kind": "comms-plane", "reachable": True}
+    assert "db_path" not in payload
     assert payload["total"] == 2
     assert payload["by_agent"] == {"claude": 1, "codex": 1}
     assert payload["by_status"] == {"queued": 1, "running": 1}
@@ -163,6 +166,9 @@ def test_backlog_defaults_authority_when_plane_authority(
         capsys,
     )
     assert metrics["source"] == "authority"
+    assert metrics["store"]["kind"] == "comms-plane"
+    assert metrics["response_schema_version"] == COMMS_RESPONSE_SCHEMA_VERSION
+    assert "db_path" not in metrics
     assert metrics["deliveries"]["queued"] == 2
     assert metrics["dead_letters"] == 1
     assert metrics["jobs"]["queued"] == 1
@@ -172,6 +178,8 @@ def test_backlog_defaults_authority_when_plane_authority(
         capsys,
     )
     assert dead["source"] == "authority"
+    assert dead["store"]["kind"] == "comms-plane"
+    assert "db_path" not in dead
     assert dead["total"] == 1
     assert dead["by_reason"]["attempts_exhausted"] == 1
 
@@ -188,7 +196,8 @@ def test_backlog_legacy_flag_forces_broker(tmp_path: Path, capsys, monkeypatch) 
         capsys,
     )
     assert payload["source"] == "legacy_forced"
-    assert payload["db_path"] == str(broker)
+    assert payload["store"] == {"kind": "legacy-broker", "reachable": True}
+    assert "db_path" not in payload
     assert payload["total"] == 2
     assert payload["by_agent"] == {"claude": 1, "codex": 1}
     assert payload["by_status"]["pending"] == 1
@@ -199,6 +208,8 @@ def test_backlog_legacy_flag_forces_broker(tmp_path: Path, capsys, monkeypatch) 
         capsys,
     )
     assert dead["source"] == "legacy_forced"
+    assert dead["store"]["kind"] == "legacy-broker"
+    assert "db_path" not in dead
     assert dead["by_reason"]["recipient_retired"] == 1
 
 
@@ -216,7 +227,11 @@ def test_backlog_unchanged_when_mode_off(tmp_path: Path, capsys, monkeypatch) ->
         capsys,
     )
     assert payload["source"] == "legacy"
-    stripped = {k: v for k, v in payload.items() if k not in {"source", "db_path", "content_included"}}
+    stripped = {
+        k: v
+        for k, v in payload.items()
+        if k not in {"source", "store", "response_schema_version", "content_included"}
+    }
     # CLI adds db_path/content_included/source; collector keys must match baseline.
     for key, value in baseline.items():
         assert stripped[key] == value
@@ -224,12 +239,16 @@ def test_backlog_unchanged_when_mode_off(tmp_path: Path, capsys, monkeypatch) ->
     metrics_baseline = collect_efficiency_metrics(broker)
     metrics = _run_cli(["metrics", "--db", str(broker)], capsys)
     assert metrics["source"] == "legacy"
+    assert metrics["store"]["kind"] == "legacy-broker"
+    assert "db_path" not in metrics
     for key, value in metrics_baseline.items():
         assert metrics[key] == value
 
     dead_baseline = collect_dead_letters(broker)
     dead = _run_cli(["dead-letters", "--db", str(broker)], capsys)
     assert dead["source"] == "legacy"
+    assert dead["store"]["kind"] == "legacy-broker"
+    assert "db_path" not in dead
     for key, value in dead_baseline.items():
         assert dead[key] == value
 

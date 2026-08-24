@@ -401,3 +401,56 @@ def test_cli_authority_collectors_emit_store_not_db_path(
         assert payload["store"]["kind"] == "comms-plane"
         assert payload["store"]["reachable"] is False
         assert "db_path" not in payload
+
+
+def test_cli_bottleneck_metrics_emit_stores_not_paths(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    root = tmp_path / "plane"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    rc = main(["bottleneck-metrics", "--tasks-dir", str(tasks_dir), "--root", str(root)])
+    assert rc == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["response_schema_version"] == "comms.v2"
+    assert payload["tasks_store"] == {"kind": "batch-tasks", "reachable": True}
+    assert payload["plane_store"] == {"kind": "comms-plane", "reachable": False}
+    assert payload["db_missing"] is True
+    assert "tasks_dir" not in payload
+    assert "plane_db" not in payload
+    blob = json.dumps(payload)
+    assert str(tasks_dir) not in blob
+    assert str(root / "comms.sqlite3") not in blob
+
+
+def test_cli_bottleneck_metrics_tasks_dir_mutation_is_caught(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    root = tmp_path / "plane"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    import scripts.fleet_comms.cli as cli_module
+
+    original_dump = cli_module._json_dump
+
+    def leaky_dump(payload, **kwargs):
+        if isinstance(payload, dict):
+            payload = dict(payload)
+            payload["tasks_dir"] = "/secret/batch_state/tasks"
+        return original_dump(payload, **kwargs)
+
+    monkeypatch.setattr(cli_module, "_json_dump", leaky_dump)
+
+    rc = main(["bottleneck-metrics", "--tasks-dir", str(tasks_dir), "--root", str(root)])
+    assert rc == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    with pytest.raises(AssertionError):
+        assert "tasks_dir" not in payload

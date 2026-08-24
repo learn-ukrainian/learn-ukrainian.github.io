@@ -919,11 +919,20 @@ def build_cold_start_board(
         "probes": capped_probes,
     }
 
-    json_bytes = json.dumps(board, indent=2).encode("utf-8")
-    if len(json_bytes) > MAX_BOARD_BYTES:
-        stricter_probes = cap_data(probes, max_str=100, max_list=3)
-        board["probes"] = stricter_probes
-        board["_board_truncated"] = True
+    cap_steps = (
+        (MAX_STRING_LEN, MAX_LIST_LEN),
+        (100, 3),
+        (80, 2),
+        (50, 1),
+    )
+    for step_index, (max_str, max_list) in enumerate(cap_steps):
+        board["probes"] = cap_data(probes, max_str=max_str, max_list=max_list)
+        if step_index > 0:
+            board["_board_truncated"] = True
+        else:
+            board.pop("_board_truncated", None)
+        if len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES:
+            break
 
     return board
 

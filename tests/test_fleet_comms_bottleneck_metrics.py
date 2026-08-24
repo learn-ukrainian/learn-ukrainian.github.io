@@ -181,7 +181,11 @@ def test_broken_source_is_visible_while_other_source_reports(tmp_path: Path) -> 
     )
 
     assert payload["source_errors"]
-    assert payload["source_errors"][0]["source"] == "dispatch"
+    error = payload["source_errors"][0]
+    assert error["source"] == "dispatch"
+    assert error["error_kind"] == "tasks_dir_missing"
+    assert error["store"] == {"kind": "batch-tasks", "reachable": False}
+    assert "error" not in error
     assert payload["by_stream_epic"]["4707"]["formal_cf_publication"]["n"] == 1
 
 
