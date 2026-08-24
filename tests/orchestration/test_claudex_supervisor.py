@@ -162,7 +162,7 @@ def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
         else "\nsys.exit(7)\n"
     )
     path.write_text(
-        "#!/usr/bin/env python3\n"
+        "#!/usr/bin/env python\n"
         "import json\n"
         "import os\n"
         "import sys\n"
@@ -171,6 +171,7 @@ def _write_child(path: Path, *, wait_on_first_launch: bool) -> None:
         "generation = int(os.environ['LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION'])\n"
         "record = {\n"
         "    'argv': sys.argv[1:],\n"
+        "    'executable': sys.executable,\n"
         "    'generation': generation,\n"
         "    'profile': os.environ['LEARN_UKRAINIAN_PROFILE_ID'],\n"
         "    'lead': os.environ['LEARN_UKRAINIAN_MAIN_MODEL_ID'],\n"
@@ -532,7 +533,13 @@ def test_relaunch_failure_leaves_handoff_lease_for_manual_recovery(tmp_path: Pat
     assert preserved["replacement"]["status"] == "pending_start"
 
 
-def test_resolve_relaunch_python_priorities(tmp_path: Path) -> None:
+def test_resolve_relaunch_python_priorities(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    sentinel_python = tmp_path / "sentinel_python"
+    sentinel_python.touch(mode=0o755)
+    monkeypatch.setattr(sys, "executable", os.fspath(sentinel_python))
+
     # 1. Local checkout with .venv/bin/python
     mock_local = tmp_path / "local"
     local_python = mock_local / ".venv/bin/python"
@@ -541,12 +548,27 @@ def test_resolve_relaunch_python_priorities(tmp_path: Path) -> None:
     assert resolve_relaunch_python(mock_local) == local_python
 
     # 2. Venv-less checkout in git repository finds canonical venv
-    assert resolve_relaunch_python(_REPO_ROOT) == _repo_python()
+    worktree = tmp_path / "venv_less_wt"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", os.fspath(worktree), "HEAD"],
+        cwd=_REPO_ROOT,
+        check=True,
+        capture_output=True,
+    )
+    try:
+        assert resolve_relaunch_python(worktree) == _repo_python()
+    finally:
+        subprocess.run(
+            ["git", "worktree", "remove", "--force", os.fspath(worktree)],
+            cwd=_REPO_ROOT,
+            check=False,
+            capture_output=True,
+        )
 
     # 3. Non-git directory falls back to sys.executable
     non_git = tmp_path / "non_git"
     non_git.mkdir()
-    assert resolve_relaunch_python(non_git) == Path(sys.executable).resolve()
+    assert resolve_relaunch_python(non_git) == sentinel_python
 
 
 def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
@@ -580,6 +602,7 @@ def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
         assert completed.returncode == 7, completed.stderr
         rows = _wait_for_log(child_log, 1)
         assert len(rows) == 1
+        assert Path(rows[0]["executable"]) == _repo_python()
     finally:
         subprocess.run(
             ["git", "worktree", "remove", "--force", os.fspath(worktree)],

@@ -47,11 +47,14 @@ def resolve_relaunch_python(project_root: Path = PROJECT_ROOT) -> Path:
         canonical = canonical_root / ".venv" / "bin" / "python"
         if canonical.is_file() and os.access(canonical, os.X_OK):
             return canonical
-    except Exception:
-        pass
+    except Exception as exc:
+        print(
+            f"[supervisor] warning: failed to resolve canonical state root ({type(exc).__name__}): {exc}",
+            file=sys.stderr,
+        )
 
     if sys.executable:
-        current = Path(sys.executable).resolve()
+        current = Path(sys.executable)
         if current.is_file() and os.access(current, os.X_OK):
             return current
 
