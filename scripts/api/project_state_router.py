@@ -18,12 +18,16 @@ from scripts.api.project_state_collect import collect_local_document
 from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
 from scripts.api.project_state_store import (
     PROJECT_STATE_SCHEMA,
+    PROJECT_STATE_SCHEMA_V2,
     REPORT_TTL_SECONDS,
+    CollectedAtError,
+    StaleReportError,
     freshness_from_age,
     get_live_report,
     shape_host_payload,
     unknown_host_payload,
     upsert_report,
+    workers_status_from_document,
 )
 
 router = APIRouter(prefix="/projects/v1", tags=["fleet-projects"])
@@ -111,6 +115,7 @@ class ProjectStateReport(BaseModel):
     worktrees: dict[str, Any]
     services: list[dict[str, Any]]
     collected_at: str
+    workers: list[dict[str, Any]] | None = None
 
 
 @router.get("")
@@ -129,18 +134,27 @@ async def post_project_report(request: Request, body: ProjectStateReport) -> JSO
     if body.host_id not in allowed:
         return JSONResponse(status_code=400, content={"detail": "unknown host_id"}, headers=no_store)
 
-    document = body.model_dump()
+    document = body.model_dump(exclude_none=True)
     try:
         validate_report_document(document)
     except ProjectStateValidationError:
         return JSONResponse(status_code=400, content={"detail": "invalid project state report"}, headers=no_store)
 
-    row = upsert_report(document)
+    try:
+        row = upsert_report(document)
+    except CollectedAtError:
+        return JSONResponse(status_code=400, content={"detail": "invalid collected_at"}, headers=no_store)
+    except StaleReportError:
+        return JSONResponse(status_code=409, content={"detail": "stale_report"}, headers=no_store)
+
+    schema = PROJECT_STATE_SCHEMA_V2 if "workers" in document else PROJECT_STATE_SCHEMA
     return JSONResponse(
         content={
             "host_id": row.host_id,
             "received": True,
             "ttl_seconds": REPORT_TTL_SECONDS,
+            "schema": schema,
+            "workers_status": workers_status_from_document(document),
         },
         headers=no_store,
     )

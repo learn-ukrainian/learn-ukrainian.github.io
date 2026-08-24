@@ -72,11 +72,17 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     status, body = _post_json(args.post_url, document, timeout_s=args.timeout)
-    if status != 200:
-        print(f"project-state: POST failed ({status}): {body}", file=sys.stderr)
+    if status == 200:
+        print(body)
+        return 0
+    if status == 409:
+        print("project-state: stale, skipped", file=sys.stderr)
+        return 0
+    if status == 400:
+        print(f"project-state: invalid report ({status}): {body}", file=sys.stderr)
         return 1
-    print(body)
-    return 0
+    print(f"project-state: POST failed ({status}): {body}", file=sys.stderr)
+    return 1
 
 
 if __name__ == "__main__":

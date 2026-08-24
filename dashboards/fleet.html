@@ -184,6 +184,10 @@ button, input, select { font: inherit; }
       <div class="panel-head"><h3 id="dead-heading">Dead letters</h3><p>Metadata, reason, and successor only</p></div>
       <div id="dead-content" class="empty">Loading dead letters…</div>
     </article>
+    <article class="panel wide ledger orange" aria-labelledby="workers-heading">
+      <div class="panel-head"><h3 id="workers-heading">AI workers</h3><p>One row per source · opaque ids · unknown hosts shown honestly</p></div>
+      <div id="workers-content" class="empty">Loading AI workers…</div>
+    </article>
     <article class="panel wide ledger cyan" aria-labelledby="occupancy-heading">
       <div class="panel-head"><h3 id="occupancy-heading">Host occupancy</h3><p>Opaque host_id only · observers under cloud-observer · no RAM lease</p></div>
       <div id="occupancy-content" class="empty">Loading occupancy…</div>
@@ -577,6 +581,38 @@ function renderProjects(data) {
   );
 }
 
+function renderWorkers(data) {
+  const hosts = listValue(data.hosts);
+  const rows = [];
+  const banners = [];
+  for (const host of hosts) {
+    if (!host || typeof host !== 'object') continue;
+    const hostId = short(host.host_id);
+    const freshness = short(host.freshness);
+    const workersStatus = short(host.workers_status);
+    if (workersStatus === 'unreported') {
+      banners.push(`<div class="context-muted">Workers unknown for ${escapeHtml(hostId)} — reporter has not published a v2 workers block.</div>`);
+    }
+    const workers = listValue(host.workers);
+    if (!workers.length) {
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      continue;
+    }
+    workers.forEach(worker => {
+      const related = Array.isArray(worker.related) && worker.related.length
+        ? worker.related.map(item => `${short(item.source)}:${short(item.id)}`).join(', ')
+        : '—';
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="mono">${escapeHtml(short(worker.source))}</td><td>${pill(worker.state)}</td><td class="mono">${escapeHtml(short(worker.kind))}</td><td class="mono">${escapeHtml(short(worker.agent))}</td><td class="mono">${escapeHtml(short(worker.id))}</td><td class="muted">${escapeHtml(related)}</td></tr>`);
+    });
+  }
+  const bannerHtml = banners.join('');
+  document.getElementById('workers-content').innerHTML = bannerHtml + table(
+    ['Host', 'Freshness', 'Workers', 'Source', 'State', 'Kind', 'Agent', 'Id', 'Related'],
+    rows,
+    'No AI workers observed. Remote hosts must publish schema v2 workers through the project-state reporter.',
+  );
+}
+
 function renderOccupancy(data) {
   const hosts = objectValue(data.hosts);
   const rows = [];
@@ -633,13 +669,14 @@ async function refreshFleet() {
       recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
       use: {},
     }));
-    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, occupancy, projects, activity, messages, contextStatus] = await Promise.all([
+    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, workers, occupancy, projects, activity, messages, contextStatus] = await Promise.all([
       fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
       fetchJson(query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' })),
       fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
       fetchJson(query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr'])),
       fetchJson(query('/api/fleet/acp/conversations', common)),
       fetchJson(query('/api/fleet/dead-letters', ['state', 'agent', 'source'])),
+      fetchJson('/api/fleet/workers/v1'),
       fetchJson('/api/occupancy'),
       fetchJson('/api/fleet/projects/v1'),
       fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
@@ -647,7 +684,7 @@ async function refreshFleet() {
       contextStatusRequest,
     ]);
     renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
-    renderAcp(acp); renderDeadLetters(deadLetters); renderOccupancy(occupancy); renderProjects(projects); renderActivity(activity); renderMessages(messages);
+    renderAcp(acp); renderDeadLetters(deadLetters); renderWorkers(workers); renderOccupancy(occupancy); renderProjects(projects); renderActivity(activity); renderMessages(messages);
     await refreshConversationContext(contextStatus);
   } catch (error) {
     setError(`Observer data could not be read: ${error.message}`);

@@ -2,17 +2,30 @@
 
 from __future__ import annotations
 
+import re
 import threading
 import time
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 REPORT_TTL_SECONDS = 15 * 60
 STALE_UPSTREAM_THRESHOLD_S = 3600
 PROJECT_STATE_SCHEMA = "monitor-project-state.v1"
+PROJECT_STATE_SCHEMA_V2 = "monitor-project-state.v2"
+_COLLECTED_AT_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
+_FUTURE_SKEW_SECONDS = 60
 
 _STORE_LOCK = threading.Lock()
 _STORE: dict[str, StoredReport] = {}
+
+
+class CollectedAtError(ValueError):
+    """collected_at failed parse or bounds validation."""
+
+
+class StaleReportError(ValueError):
+    """Incoming report is older than or equal to the stored report."""
 
 
 @dataclass(frozen=True)
@@ -21,6 +34,8 @@ class StoredReport:
     document: dict[str, Any]
     received_at_mono: float
     expires_at_mono: float
+    collected_at: datetime
+    workers_status: str
 
 
 def reset_project_state_store() -> None:
@@ -28,23 +43,64 @@ def reset_project_state_store() -> None:
         _STORE.clear()
 
 
+def parse_collected_at(
+    value: str,
+    *,
+    now: datetime | None = None,
+    ttl_seconds: int = REPORT_TTL_SECONDS,
+) -> datetime:
+    if not isinstance(value, str) or not _COLLECTED_AT_RE.fullmatch(value):
+        raise CollectedAtError("invalid collected_at")
+    text = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError as exc:
+        raise CollectedAtError("invalid collected_at") from exc
+    parsed = parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed.astimezone(UTC)
+    clock = now or datetime.now(UTC)
+    if parsed > clock + timedelta(seconds=_FUTURE_SKEW_SECONDS):
+        raise CollectedAtError("collected_at in the future")
+    if parsed < clock - timedelta(seconds=ttl_seconds):
+        raise CollectedAtError("collected_at older than ttl")
+    return parsed
+
+
+def workers_status_from_document(document: dict[str, Any]) -> str:
+    if document.get("workers") is None:
+        return "unreported"
+    return "reported"
+
+
 def upsert_report(
     document: dict[str, Any],
     *,
     now_mono: float | None = None,
+    now: datetime | None = None,
     ttl_seconds: int = REPORT_TTL_SECONDS,
 ) -> StoredReport:
     stamp = time.monotonic() if now_mono is None else now_mono
     host_id = str(document["host_id"])
+    collected_at = parse_collected_at(str(document["collected_at"]), now=now, ttl_seconds=ttl_seconds)
+    workers_status = workers_status_from_document(document)
     row = StoredReport(
         host_id=host_id,
         document=document,
         received_at_mono=stamp,
         expires_at_mono=stamp + ttl_seconds,
+        collected_at=collected_at,
+        workers_status=workers_status,
     )
     with _STORE_LOCK:
+        existing = _STORE.get(host_id)
+        if existing is not None and collected_at <= existing.collected_at:
+            raise StaleReportError("stale_report")
         _STORE[host_id] = row
     return row
+
+
+def get_stored_report(host_id: str) -> StoredReport | None:
+    with _STORE_LOCK:
+        return _STORE.get(host_id)
 
 
 def get_live_report(host_id: str, *, now_mono: float | None = None) -> StoredReport | None:

@@ -186,7 +186,7 @@ def _marker_fresh(payload: dict[str, Any], *, now: datetime) -> bool:
         return expires > now
     updated = _parse_when(payload.get("updated_at"))
     if updated is None:
-        return True
+        return False
     return (now - updated).total_seconds() <= DEFAULT_MARKER_TTL_S
 
 
@@ -202,12 +202,24 @@ def _occupant_from_marker(
     if marker_host != host_id or not _opaque_host_id(marker_host):
         return None
     kind = str(payload.get("kind") or "").strip()
-    if kind not in MARKER_KINDS:
+    if kind not in MARKER_KINDS and kind not in {
+        "foundry",
+        "evidence-compiler",
+        "other",
+    }:
         return None
     if not _marker_fresh(payload, now=now):
         return None
+    mapped = {
+        "worker": "service",
+        "foundry": "service",
+        "evidence-compiler": "service",
+        "other": "service",
+    }.get(kind, kind)
+    if mapped not in MARKER_KINDS:
+        return None
     return _occupant(
-        kind=kind,
+        kind=mapped,
         agent=payload.get("agent"),
         task_id=payload.get("task_id"),
         epic=payload.get("epic"),

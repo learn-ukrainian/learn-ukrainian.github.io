@@ -223,7 +223,8 @@ def test_marker_rejects_leaks_and_observer_kind(tmp_path: Path) -> None:
     leaked = markers / "leaked.json"
     leaked.parent.mkdir(parents=True)
     leaked.write_text(
-        '{"kind":"service","agent":"foundry","task_id":"ok","host_id":"host-teacher","epic":"not/a-token"}',
+        '{"kind":"service","agent":"foundry","task_id":"ok","host_id":"host-teacher","epic":"not/a-token",'
+        '"updated_at":"' + datetime.now(UTC).isoformat().replace("+00:00", "Z") + '"}',
         encoding="utf-8",
     )
     assert occupants_from_markers(host_id="host-teacher", root=markers) == [
