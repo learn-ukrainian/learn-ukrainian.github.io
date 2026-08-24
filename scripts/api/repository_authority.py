@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import MANIFEST_NAME, is_release_root
+from scripts.guardrails.worktree_containment import classify_repo_path
 
 _FULL_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _HASH_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -32,10 +33,17 @@ def preparation_data_root(*, project_root: Path, live_repo_root: Path) -> Path:
 
 
 def _checkout_role(root: Path) -> str:
-    git_entry = root / ".git"
-    if git_entry.is_file():
-        return "dispatch_worktree" if ".worktrees/dispatch" in root.as_posix() else "linked_worktree"
-    return "live_primary"
+    """Return the stable public role for a real checkout's structural class."""
+    path_class = classify_repo_path(root, cwd=root)
+    return {
+        "primary_checkout": "live_primary",
+        "dispatch_worktree": "dispatch_worktree",
+        "other_worktree": "linked_worktree",
+        # ``build_repository_authority`` has already proved that this is a Git
+        # checkout. Preserve the historical fallback for unusual Git layouts
+        # that the containment classifier cannot anchor to a primary root.
+        "outside_repo": "live_primary",
+    }[path_class]
 
 
 def cwd_role(root: Path) -> str:

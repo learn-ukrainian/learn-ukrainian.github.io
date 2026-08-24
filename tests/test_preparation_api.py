@@ -14,7 +14,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.api import preparation_state, state_router
 from scripts.api.main import app
-from scripts.api.repository_authority import build_repository_authority, preparation_data_root
+from scripts.api.repository_authority import build_repository_authority, cwd_role, preparation_data_root
 from scripts.orchestration import curriculum_readiness
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +67,19 @@ def _repo(path: Path, *, remote: str) -> Path:
     (path / "tracked.txt").write_text(path.name, encoding="utf-8")
     _git(path, "add", "tracked.txt")
     _git(path, "commit", "-q", "-m", "init")
+    return path
+
+
+def _clone_repo(source: Path, path: Path) -> Path:
+    subprocess.run(
+        ["git", "clone", "-q", "--no-hardlinks", str(source), str(path)],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_git_env(),
+        timeout=120,
+    )
+    _git(path, "remote", "set-url", "origin", "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git")
     return path
 
 
@@ -474,10 +487,41 @@ def test_repository_authority_reads_immutable_release_manifest(tmp_path: Path) -
     }
 
 
+def test_repository_authority_classifies_checkout_roles_by_structure(tmp_path: Path) -> None:
+    primary = _repo(
+        tmp_path / "repo",
+        remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+    )
+    dispatch = primary / ".worktrees" / "dispatch" / "codex" / "task"
+    linked = tmp_path / "linked"
+    other = primary / ".worktrees" / "legacy"
+    _git(primary, "worktree", "add", "-q", "-b", "codex/task", str(dispatch))
+    _git(primary, "worktree", "add", "-q", "-b", "linked", str(linked))
+    _git(primary, "worktree", "add", "-q", "-b", "legacy", str(other))
+
+    cases = (
+        (primary, "live_primary", "primary"),
+        (dispatch, "dispatch_worktree", "worktree"),
+        (linked, "linked_worktree", "worktree"),
+        # The guardrail calls every registered non-dispatch worktree
+        # ``other_worktree``; the public authority vocabulary stays
+        # ``linked_worktree`` for compatibility.
+        (other, "linked_worktree", "worktree"),
+    )
+    for checkout, expected_role, expected_cwd_role in cases:
+        authority = build_repository_authority(project_root=checkout, live_repo_root=checkout)
+        assert authority["primary_checkout"]["role"] == expected_role
+        assert authority["cwd_role"] == expected_cwd_role
+    assert cwd_role(tmp_path / "other") == "other"
+
+
 def test_release_route_reads_from_the_reported_primary_checkout(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
+    primary = _clone_repo(ROOT, tmp_path / "repo")
+    dispatch = primary / ".worktrees" / "dispatch" / "codex" / "release-test"
+    _git(primary, "worktree", "add", "-q", "-b", "codex/release-test", str(dispatch))
     release_sha = "e" * 40
     release = tmp_path / ".runtime/api/releases" / release_sha
     release.mkdir(parents=True)
@@ -486,7 +530,7 @@ def test_release_route_reads_from_the_reported_primary_checkout(
         encoding="utf-8",
     )
     monkeypatch.setattr(state_router, "PROJECT_ROOT", release)
-    monkeypatch.setattr(state_router, "LIVE_REPO_ROOT", ROOT)
+    monkeypatch.setattr(state_router, "LIVE_REPO_ROOT", dispatch)
 
     response = CLIENT.get("/api/state/preparation?track=a1")
 
@@ -495,7 +539,7 @@ def test_release_route_reads_from_the_reported_primary_checkout(
     VALIDATOR.validate(data)
     assert "data_checkout" not in data["authority"]
     assert data["authority"]["primary_checkout"]["role"] == "dispatch_worktree"
-    assert data["authority"]["primary_checkout"]["head_sha"] == _git(ROOT, "rev-parse", "HEAD")
+    assert data["authority"]["primary_checkout"]["head_sha"] == _git(dispatch, "rev-parse", "HEAD")
     assert data["authority"]["cwd_role"] == "other"
     assert data["authority"]["service_code"] == {
         "mode": "release",
@@ -507,10 +551,10 @@ def test_release_route_reads_from_the_reported_primary_checkout(
 
 def test_development_dispatch_worktree_is_reported_as_the_primary_checkout(tmp_path: Path) -> None:
     primary = _repo(
-        tmp_path / "primary",
+        tmp_path / "repo",
         remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
     )
-    dispatch = tmp_path / ".worktrees/dispatch/codex/example"
+    dispatch = primary / ".worktrees/dispatch/codex/example"
     dispatch.parent.mkdir(parents=True)
     _git(primary, "worktree", "add", "-q", "-b", "codex/example", str(dispatch))
 

@@ -279,6 +279,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # values at the seam so the route exercises its normal response shaping.
     monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(repository_authority, "_git", _fixture_authority_git)
+    monkeypatch.setattr(repository_authority, "classify_repo_path", lambda *_args, **_kwargs: "primary_checkout")
     monkeypatch.setattr(
         git_hygiene_router,
         "_run_git",
