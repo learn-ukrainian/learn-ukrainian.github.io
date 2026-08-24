@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1048821acbd2",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7187-worker-map",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/fleet_workers_collect.py",
+    "tests/api/test_fleet_workers.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/10/48821acbd2/0/metadata.json",
+      "transcript": "/10/48821acbd2/0/full.jsonl",
+      "compact_transcript": "/10/48821acbd2/0/transcript.jsonl",
+      "content_hash": "/10/48821acbd2/0/content_hash.txt",
+      "prompt": "/10/48821acbd2/0/prompt.txt"
+    }
+  ]
+}
