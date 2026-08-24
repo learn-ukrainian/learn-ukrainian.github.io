@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -284,6 +285,40 @@ def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path,
         reenrich._write_default_release_pointer(manifest_path)
 
     assert gzip_calls == []
+
+
+def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    manifest_path.write_text('{"entries": [{"lemma": "тест", "url_slug": "тест"}]}\n', encoding="utf-8")
+    pointer_called = []
+
+    monkeypatch.setattr(
+        reenrich,
+        "_write_default_release_pointer",
+        lambda *args, **kwargs: pointer_called.append(True),
+    )
+    monkeypatch.setattr(
+        reenrich,
+        "reenrich_thin_entries",
+        lambda *args, **kwargs: {"target": "missing-translation", "targets": 1},
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "reenrich_thin_manifest_entries.py",
+            "--manifest",
+            str(manifest_path),
+            "--local",
+            "--write",
+            "--no-pointer",
+        ],
+    )
+    res = reenrich.main()
+    assert res == 0
+    assert pointer_called == []
+
 
 
 def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
