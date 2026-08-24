@@ -72,6 +72,11 @@ the long-lived Monitor daemon. Pass `?session=<uuid>` or header `X-Session-Id`
 
 - Session hit → `_telemetry.ctx` reflects that session's transcript;
   `caller_match: true`.
+- A fresh notebook observer heartbeat may supply the session-bound fallback
+  when the API host cannot read the notebook transcript: `_telemetry.source`
+  is `notebook-presence`, with `age_s` and the reported `ctx` (and optional
+  `window`). The fallback requires an exact matching session id and expires
+  after one heartbeat interval plus grace; it never selects another session.
 - No session param → `_telemetry.ctx` is `null`; `_telemetry.newest_transcript`
   is a compatibility diagnostic only and must never be treated as the caller's
   context state.
@@ -415,7 +420,7 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 ### `GET /api/occupancy[?host_id=x][&fresh=true]`
 
-Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The payload always enumerates both opaque hosts `host-teacher` and `host-job` (and any additional mapped hosts). Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped default hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
+Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The payload always enumerates both opaque hosts `host-teacher` and `host-job` (and any additional mapped hosts). A live notebook observer adds the observer-only `mac-operator` host dynamically; it has unknown/unavailable load and is never rendered idle by omission. Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped default hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
 Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), `burn_state` in `active | idle | unknown`, `burn_sources` with exactly `atlas_job`, `driver`, and `foundry` entries (each `state` is `active | clear | unknown` and `observation_age_s` is non-negative), and the compatibility boolean `idle_or_empty`, which is true only when `burn_state` is `idle`. An active source makes the host active; a source read failure is unknown and never permits idle. Sources, in order:
 
@@ -424,7 +429,7 @@ Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | j
 - local session-stream epic-driver leases (active, unexpired). Attached to `MONITOR_OCCUPANCY_DRIVER_HOST_ID` when that value is an enumerated opaque host, otherwise to the opaque id of `ATLAS_JOB_SELF_HOST` when that token is mapped. Remote tmux seats are not scraped.
 - optional occupancy markers (`MONITOR_OCCUPANCY_MARKERS` file or directory, else `.agent/occupancy/markers` on the live checkout). Foundry / evidence-compiler (or any service) can publish `{kind, agent, task_id, epic, host_id}` with an `expires_at`. `idle_or_empty` stays false while those occupants are active.
 
-Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics. Unavailable hosts still report `idle_or_empty: false` (burn unknown). The load freshness and stale bounds are the existing `HOST_LOAD_FRESH_S` and `HOST_LOAD_MAX_STALE_S` constants in `scripts/api/atlas_jobs_router.py`; this route does not redeclare them.
+Observer heartbeats (`POST /api/observer/presence`) appear under their explicit opaque `host_id` (or legacy `cloud-observer`; no CPU/RAM metrics, no SSH identity). Notebook session rows carry an `instance_id` and may carry `ctx_tokens`/`window_tokens`; GUI rows use `instance_id: "gui"` and remain idle. Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics. Unavailable hosts still report `idle_or_empty: false` (burn unknown). The load freshness and stale bounds are the existing `HOST_LOAD_FRESH_S` and `HOST_LOAD_MAX_STALE_S` constants in `scripts/api/atlas_jobs_router.py`; this route does not redeclare them.
 
 Top-level `attention` may include empty-host alarms when a mapped host stays `idle_or_empty` for at least **15 minutes** (`EMPTY_HOST_IDLE_THRESHOLD_S`):
 
@@ -502,9 +507,9 @@ curl -s http://localhost:8765/api/occupancy | python3 -m json.tool
 
 ### `POST /api/observer/presence`
 
-Loopback-only heartbeat for Grok Bot, QA Engineer, the Cursor driver seat, and Codex UI. This is **not** a RAM lease (`POST /api/agent-monitor/register`), not evidence of a live fleet registry row, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`, `cursor`, `codex`. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an issue/PR token. Optional `epic` and `summary`. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show `status` plus `task_id`). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
+Loopback-only heartbeat for Grok Bot, QA Engineer, Cursor, Codex UI, and notebook Claude sessions. This is **not** a RAM lease (`POST /api/agent-monitor/register`), not evidence of a live fleet registry row, and it does not write fleet-comms. Allowed `agent` values: `grok-bot`, `qa-engineer`, `cursor`, `codex`, `claude`; Claude requires an explicit notebook host. `kind` must be `observer`. `status` is `working | blocked | idle`. `task_id` is an optional issue/PR token for GUI/session rows. Optional `epic`, `summary`, opaque `host_id`, `instance_id`, non-negative bounded `ctx_tokens`, and `window_tokens` are validated. The store key is `(host_id or cloud-observer, agent, instance_id or default)`, so notebook sessions do not clobber one another or legacy cloud rows. `summary` is ack-only on the loopback POST: occupancy never echoes free text (observers show sanitized status, task, and optional instance). `summary` rejects paths, addresses, SSH aliases, assignment-shaped secrets, and credential keywords. Extra fields such as `pid` or `reserved_ram_mb` are rejected.
 
-Rows live 15 minutes and drop when stale or when Monitor restarts. Occupancy then shows them under `cloud-observer`.
+Rows live 15 minutes and drop when stale or when Monitor restarts. Occupancy partitions them by opaque host, including the dynamic observer-only `mac-operator` block. A SessionStart marker heartbeat is the only source of `working` for notebook sessions; the Mac GUI sweep reports `idle` while a process exists. The SessionStart/SessionEnd hooks manage local markers under the observer runtime directory, and the sweeper removes dead-PID or older-than-24-hour ghosts.
 
 ```bash
 curl -s -X POST http://127.0.0.1:8765/api/observer/presence \

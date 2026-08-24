@@ -757,7 +757,37 @@ else
       ;;
   esac
 fi
-unset GATE_JSON GATE_FIELDS GATE_RC
+unset GATE_JSON GATE_FIELDS
+
+# Notebook observer marker: this is local discovery state only.  Use the
+# harness owner (the hook's parent), never this short-lived hook process, so a
+# live session is not swept as a dead PID.  Marker writes are bounded and
+# fail-open; the existing SessionStart gate remains authoritative.
+SESSION_MARKER_AGENT=""
+case "$HANDOFF_AGENT" in
+  claude|claude-*) SESSION_MARKER_AGENT="claude" ;;
+  codex|codex-*) SESSION_MARKER_AGENT="codex" ;;
+  cursor|cursor-*) SESSION_MARKER_AGENT="cursor" ;;
+esac
+SESSION_MARKER_PID="${SESSION_PID:-$PPID}"
+if [ "$GATE_RC" -eq 0 ] && [ -n "$SESSION_MARKER_AGENT" ] && [ -n "$SESSION_ID" ] \
+  && [[ "$SESSION_MARKER_PID" =~ ^[1-9][0-9]*$ ]]; then
+  SESSION_MARKER_ARGS=(
+    write --agent "$SESSION_MARKER_AGENT"
+    --harness "${SOURCE:-$HANDOFF_AGENT}"
+    --instance-id "$SESSION_ID"
+    --pid "$SESSION_MARKER_PID"
+  )
+  [ -n "${SESSION_EPIC:-}" ] && SESSION_MARKER_ARGS+=(--epic "$SESSION_EPIC")
+  [ -n "${SESSION_TASK_ID:-${SESSION_STREAM_TASK_ID:-}}" ] \
+    && SESSION_MARKER_ARGS+=(--task-id "${SESSION_TASK_ID:-${SESSION_STREAM_TASK_ID:-}}")
+  run_bounded 2 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
+    -m scripts.orchestration.session_markers "${SESSION_MARKER_ARGS[@]}" \
+    >/dev/null 2>&1 || true
+  unset SESSION_MARKER_ARGS
+fi
+unset SESSION_MARKER_AGENT SESSION_MARKER_PID
+unset GATE_RC
 
 if [ -z "$HANDOFF_CONTEXT" ] && [ "$GATE_DETECT_STATUS" = "none" ]; then
   HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
