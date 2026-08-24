@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "04cec901f5c0",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7139-empty-host-alarm",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/fleet.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/codexbar_usage.py",
+    "scripts/api/occupancy.py",
+    "scripts/api/project_state_collect.py",
+    "scripts/api/project_state_local.py",
+    "scripts/api/project_state_router.py",
+    "scripts/api/project_state_sanitize.py",
+    "scripts/api/project_state_store.py",
+    "scripts/api/route_contracts.py",
+    "scripts/api/state_router.py",
+    "tests/api/test_empty_host_alarm.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/04/cec901f5c0/0/metadata.json",
+      "transcript": "/04/cec901f5c0/0/full.jsonl",
+      "compact_transcript": "/04/cec901f5c0/0/transcript.jsonl",
+      "content_hash": "/04/cec901f5c0/0/content_hash.txt",
+      "prompt": "/04/cec901f5c0/0/prompt.txt"
+    }
+  ]
+}
