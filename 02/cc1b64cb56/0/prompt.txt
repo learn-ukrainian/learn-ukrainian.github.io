@@ -1,0 +1,45 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/ci-7263-starvation-reconcile
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: PR #7272 (#7263 secret-scan timeout) — reconcile with the #4811 queue-starvation guard so the PR lands (CI lane).
+
+Evidence rule (#M-4): back every claim with a command you ran. Commit on the attached branch `agy/ci-7263-secret-scan-timeout`
+(you may have no push credentials — main pushes if so). Ruff on every changed .py. Before finishing run the repo-wide guards:
+tests/test_lint_test_assertions.py tests/api/test_import_pinning.py tests/test_subprocess_timeout_guard.py AND
+tests/test_ci_queue_starvation.py.
+
+## What broke
+Your PR raised `jobs.secret-scan.timeout-minutes` 2 → 7. The PR-tier CI was green, but the merge-group full run failed:
+`tests/test_ci_queue_starvation.py::test_secret_scan_bounds_landing_secret_and_opsec_scans` asserts `timeout-minutes <= 2`
+(`assert 7 <= 2`). That guard exists for #4811 (runner-queue starvation: landing-time scans must stay short so merge-queue
+entries do not sit behind a slow job). Your #7263 analysis says the 3-attempt TruffleHog cadence (75 s checkout +
+3×(10 s pull + 50 s scan) + 10 s + 30 s sleeps ≈ 295 s) cannot fit in 2 minutes — which is why the job timed out 4× today.
+Both invariants cannot hold as written. Read the guard test's module (#4811 rationale), the secret-scan job steps in
+`.github/workflows/ci.yml`, and issues #4811 and #7263 before deciding.
+
+## Outcome
+A coherent design where the guard and the job agree, stated in the PR description in 3–6 sentences, then implemented on this
+branch. Acceptable shapes (choose with reasoning, or propose a better one): shorten the cadence so it genuinely fits the
+2-minute starvation bound (e.g. fewer/shorter attempts, shallow pulls, no sleeps) — or raise the bound in the guard WITH the
+#4811 budget re-derived (why a longer secret-scan does not starve the queue, e.g. because it is not on the merge-group critical
+path / parallel-slot budget still holds) and the guard's constant/comment updated to the new invariant. Do not simply delete
+or weaken the assertion; do not leave a value the cadence cannot meet.
+
+## Verify
+`.venv/bin/pytest -q tests/test_ci_queue_starvation.py` passes; the workflow still parses; the timeout arithmetic in the
+job comment matches the steps that exist; the four guards above pass.
+
+## Report
+Chosen shape + why, commit SHA, passing lines, and anything in #4811's budget you had to reinterpret.
+
+## Research registry classification
+CI/infra invariant reconciliation — no research dimension; dispatched pointer-free by deliberate classification.
