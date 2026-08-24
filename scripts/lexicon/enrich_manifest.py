@@ -6344,6 +6344,7 @@ _E2U_REVERSE_POS_MAP: dict[str, str] = {
     "n": "noun",
     "noun": "noun",
     "імен": "noun",
+    "іменник": "noun",
     "ім": "noun",
     "ч": "noun",
     "ж": "noun",
@@ -6418,17 +6419,26 @@ def _extract_e2u_uk_glosses(raw_translation: str, *, limit: int = 6) -> list[str
     return out
 
 
+_E2U_POS_TAG_RE = re.compile(
+    r"(?:"
+    r"\b(n|v|vb|a|ч|ж|с|ім|імен|дієсл|прикм|присл|чол|жін|сер|adj|adv)\."
+    r"|"
+    r"\b(noun|verb|adjective|adverb|infinitive|дієслово|прикметник|прислівник|іменник)\b"
+    r"|"
+    r"\b(adj|adv|дієсл|прикм|присл|імен|чол|жін|сер)\b"
+    r")",
+    flags=re.IGNORECASE,
+)
+
+
 def _e2u_extract_row_pos(text: str) -> str | None:
     """Extract and normalize POS tag from an e2u translation string or None if unmapped."""
     cleaned = clean_html_entities(text)
-    match = re.search(
-        r"\b(n|noun|імен|ім|ч|ж|с|чол|жін|сер|v|vb|verb|дієсл|дієслово|adj|a|adjective|прикм|прикметник|adv|adverb|присл|прислівник)\b\.?",
-        cleaned,
-        flags=re.IGNORECASE,
-    )
+    match = _E2U_POS_TAG_RE.search(cleaned)
     if match:
-        tag = match.group(1).lower()
-        return _E2U_REVERSE_POS_MAP.get(tag)
+        tag = next((g.lower() for g in match.groups() if g is not None), None)
+        if tag:
+            return _E2U_REVERSE_POS_MAP.get(tag)
     return None
 
 

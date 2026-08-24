@@ -3320,6 +3320,24 @@ def test_e2u_translation_pos_filtering(monkeypatch) -> None:
     assert res_untagged["en"] == ["untaggedword"]
 
 
+def test_e2u_translation_article_a_in_translation_not_treated_as_adjective(monkeypatch) -> None:
+    # Unique EN reverse whose translation contains ordinary article "a " (e.g. "a piece of furniture")
+    # with entry_pos="noun" still returns that unique headword, never treated as adj.
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "furniturepiece", "translation": "a piece of furniture: перевіркамеблі"},
+        ]
+        if lemma == "перевіркамеблі"
+        else [],
+    )
+    res = enrich_manifest_module._e2u_translation("перевіркамеблі", entry_pos="noun")
+    assert res is not None
+    assert res["en"] == ["furniturepiece"]
+    assert res["source"] == E2U_LABEL
+
+
 def test_e2u_translation_decode_html_entities(monkeypatch) -> None:
     monkeypatch.setattr(
         enrich_manifest_module,

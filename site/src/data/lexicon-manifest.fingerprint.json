@@ -95,7 +95,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "01aada2efd85d9768050a6a56120df49c747cb0cae42560b22c594fc7cfcd3af"
+        "sha256": "452c1b6cfa734f4cca9493ace9f6918f53d83694474c88f64fd759a24fdc6cb5"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -247,7 +247,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "4252dbeec41754d296fc848196b1621453946b1326a227e7a5a87286e3bc469e"
+        "sha256": "cd3b50ea237554ffe1d3df1d2ab34a93abfa257fd4f4ca50005ac5a15e9e9bba"
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
