@@ -20,6 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
+import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_session_setup_hook.sh"
@@ -34,6 +35,14 @@ def _canonical_python() -> Path:
         text=True, timeout=30,
     )
     return Path(result.stdout.strip()).parent / ".venv" / "bin" / "python"
+
+
+def _stream_id_from_registry(stream_key: str) -> str:
+    registry = yaml.safe_load(
+        (_REPO_ROOT / "scripts/config/issue_streams.yaml").read_text(encoding="utf-8")
+    )
+    epic = registry["streams"][stream_key]["epics"][0]
+    return f"epic:{epic}"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -69,6 +78,8 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
     project_dir.mkdir()
     subprocess.run(["git", "init", "-q", str(project_dir)], check=True, timeout=30)
 
+    monitor_stream_id = _stream_id_from_registry("monitor")
+
     fake_python = project_dir / ".venv" / "bin" / "python"
     fake_python.parent.mkdir(parents=True)
     fake_python.write_text("#!/bin/sh\nprintf 'Python 3.12.8\\n'\n", encoding="utf-8")
@@ -77,7 +88,7 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
 
     remote_payload = {
         "schema": "remote-epic-lifecycle.v1",
-        "stream_id": "epic:7177",
+        "stream_id": monitor_stream_id,
         "lease": {
             "state": "active",
             "holder": {
@@ -113,7 +124,7 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
                 self.send_response(503)
                 self.end_headers()
                 return
-            if self.path != "/api/epics/v1/epic:7177":
+            if self.path != f"/api/epics/v1/{monitor_stream_id}":
                 self.send_response(404)
                 self.end_headers()
                 return
@@ -178,9 +189,9 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
     try:
         result, context = run_hook(env["LU_MONITOR_LOOPBACK"])
         assert result.returncode == 0, result.stderr
-        assert "/api/epics/v1/epic:7177" in requested_paths
+        assert f"/api/epics/v1/{monitor_stream_id}" in requested_paths
         assert "REMOTE EPIC STATE (Monitor API)" in context
-        assert "Stream: epic:7177" in context
+        assert f"Stream: {monitor_stream_id}" in context
         assert "Holder: remote-agent · remote-harness · host-job" in context
         assert "Lease: active" in context
         assert "Latest state: remote state from handoff" in context

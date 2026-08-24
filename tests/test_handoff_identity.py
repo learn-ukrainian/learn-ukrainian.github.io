@@ -352,7 +352,7 @@ def test_infra_stream_follows_registry_mutation(tmp_path: Path) -> None:
 def test_new_registry_stream_resolves_without_shell_edit(tmp_path: Path) -> None:
     """A new stream key and its infra.<key> form need only a registry row."""
     fresh_key = "future-ops"
-    fresh_epic = 888002
+    fresh_epic = 888001
     fixture = tmp_path / "issue_streams.yaml"
     fixture.write_text(
         yaml.safe_dump(
