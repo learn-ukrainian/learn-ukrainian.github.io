@@ -134,9 +134,14 @@ def test_package_and_backing_on_same_device_are_rejected(guardian: ModuleType, t
 def test_lock_path_collision_is_rejected(
     guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    shared = tmp_path / "locks/shared.lock"
-    shared.parent.mkdir(mode=0o700)
-    config = _config(guardian, tmp_path, guardian_lock=shared, controller_lock=shared)
+    case = tmp_path / "overlap-case"
+    case.mkdir()
+    config = _config(
+        guardian,
+        case,
+        guardian_lock=(case / "package/guardian.lock"),
+    )
+    config.controller_lock.parent.mkdir(mode=0o700)
     real_stat = guardian.Path.stat
 
     def fake_stat(path: Path, *args: Any, **kwargs: Any) -> Any:
