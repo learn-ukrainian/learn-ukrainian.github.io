@@ -1,0 +1,36 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/ci-7263-secret-scan-timeout
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7263 — Secret-scan job budget is smaller than checkout + TruffleHog attempts; raise it (CI program #7141; lane: infra — PR for CI-lane review).
+
+Evidence rule (#M-4): back every claim with a command you ran. Push and open the PR yourself if `gh` works; else push and report title/body.
+Ruff/guards not affected (workflow-only change); run `actionlint` locally if available (`actionlint .github/workflows/ci.yml`) and
+`.venv/bin/pytest -q tests/test_ci_changed_tests.py tests/test_repo_invariant_fastlane.py` to be safe.
+
+## Root cause (tool-read, three PRs on 2026-08-24: #7228, #7261, #7270)
+`.github/workflows/ci.yml` line ~441: the `Secret scan` job has `timeout-minutes: 2`. On slow runners `actions/checkout` alone took
+73 s and the TruffleHog attempt 1 took 50 s and SUCCEEDED exactly as the job timeout fired (run 32759202483 attempt 2, job
+97536612806: `outcome=success` at 18:04:26, job cancelled at 18:04:26). The job's own 3-attempt retry cadence (attempt 1 → sleep →
+attempt 2 → sleep → attempt 3) can never run within 2 minutes. Result: `Secret scan: cancelled` → `CI Gate` fail-closed
+(`secret-scan: cancelled (required for pull_request)`) on the PR tier AND in the merge group (PR dequeued).
+
+## Outcome
+The job budget covers checkout (~75 s worst case seen) + image pull + 3 attempts + the two backoff sleeps with margin; a genuine
+TruffleHog failure still fails the job; nothing else in the workflow changes. Document the arithmetic in a one-line comment next to the
+value (read the sleep durations in the job to compute it — do not guess). Keep the change to the `Secret scan` job.
+
+## Steps
+1. Worktree from origin/main. Compute: 75 s checkout + 3 × (pull ~10 s + scan ~50 s) + sleeps; round up to whole minutes with ≥ 2 min margin.
+2. Edit only `timeout-minutes` of the `Secret scan` job (+ comment). `actionlint` if available.
+3. Conventional commit `ci(secret-scan): size the job timeout to the 3-attempt TruffleHog cadence (#7263)` with the `X-Agent` trailer;
+   push; PR vs main, body `Refs #7263, #7141. Parent CI program: #7141.` + the arithmetic + the three run ids. NO auto-merge.
+4. Report: branch, SHA, PR URL (or title/body), the computed budget.

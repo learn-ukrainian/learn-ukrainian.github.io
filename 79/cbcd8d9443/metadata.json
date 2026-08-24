@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "79cbcd8d9443",
+  "strategy": "manual-commit",
+  "branch": "agy/ci-7263-secret-scan-timeout",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/79/cbcd8d9443/0/metadata.json",
+      "transcript": "/79/cbcd8d9443/0/full.jsonl",
+      "compact_transcript": "/79/cbcd8d9443/0/transcript.jsonl",
+      "content_hash": "/79/cbcd8d9443/0/content_hash.txt",
+      "prompt": "/79/cbcd8d9443/0/prompt.txt"
+    }
+  ]
+}
