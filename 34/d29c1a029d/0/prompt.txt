@@ -1,0 +1,82 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/monitor-7188-project-state
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7188 — per-host project state + serving-SHA drift (M4 of epic #7177). Implementation.
+
+Evidence rule (#M-4): back every claim with a command you ran (test output, commit SHA, PR URL). If `gh` is unauthenticated,
+push the branch and put the PR title/body in your final report; main opens the PR.
+
+## Outcome (user-level)
+From any machine through the tunnel, `GET /api/fleet/projects/v1` answers, per opaque host: which checkouts exist, the primary's
+HEAD vs `origin/main` (ahead/behind/dirty/worktrees), which services are up and what SHA each is serving, and a drift flag when a
+service is behind — with honest `unknown` when the report is stale, the upstream ref is stale, or a host never reported.
+`fleet.html` shows it beside occupancy. `/api/health` reports the api's real serving release. No hostname, IP, SSH alias,
+tunnel map, port, or absolute path anywhere in responses, dashboards, docs, or fixtures.
+
+## Design of record (reviewed cross-family; follow it — deviations need a reason in the PR body)
+### r1
+## Design note — per-host project state + serving-SHA drift (M4, for cross-family critique)
+
+**Facts (tool-read).** The API runs from an immutable release `.runtime/api/releases/<sha>` (`scripts/api/release_snapshot.py`), while `LIVE_REPO_ROOT` is the mutable checkout on the same host (`scripts/api/config.py`). `/api/health.instance` today reports `git_sha = git rev-parse HEAD` of the process cwd and `host = MONITOR_INSTANCE_ID or socket.gethostname()` (`scripts/api/main.py` `_health_instance_identity`). So (a) `git_sha` is the *checkout* head, not the *serving* release — the merged-but-not-redeployed class (#M-19) is invisible by construction; (b) with the env unset the route leaks a hostname (M5 #7182 class). Cross-host facts reach the API two ways today: pull (atlas-job load via `job_host_exec`, SSH from the API host) and push (`POST /api/observer/presence`, allowlisted agents, TTL). Nothing reports checkouts, worktrees, dirty state, or services with their serving SHA, on any host.
+
+**Proposal.**
+1. **Serving identity, per process.** Derive `serving_sha` from the release directory name (`RELEASE_SHA_RE`), else `null` with `serving_mode: "checkout"` (dev). `/api/health.instance` gains `serving_sha`, `serving_mode`, `checkout_sha`; `git_sha` stays as a documented alias of `checkout_sha`; `host` becomes the opaque self host id (the #7246 resolver; `local` if unresolvable) — no hostname fallback anywhere.
+2. **Per-host reporter (push, like observer presence).** A read-only collector `scripts/api/project_state_local.py` runs on each host on a timer (systemd timer on the Linux hosts, LaunchAgent on the notebook — same cadence class as presence, 5 min) and POSTs one sanitized document to a loopback-only `POST /api/fleet/projects/v1/report` (allowlisted reporter identity, TTL 15 min): `host_id` (opaque), `primary: {head_sha, origin_main_sha, origin_main_age_s, ahead, behind, dirty_count}`, `worktrees: {count}`, `services: [{name, state, serving_sha}]` (from the existing `services.sh status` semantics plus each service's release dir), `collected_at`. The API host reports itself in-process (no timer needed). No absolute paths, hostnames, ports, or SSH aliases in the document; the collector strips them at the source and the API rejects any that slip.
+3. **Read route + panel.** `GET /api/fleet/projects/v1` → per opaque host: the last report, `age_s`, `freshness: fresh|stale|unknown` (stale > 15 min, unknown when never/expired — never rendered as "in sync"), and per service `drift: true|false|unknown` where drift = `serving_sha != origin_main_sha` of the reporting host, plus an `attention` list (drift, dirty primary, stale report). `fleet.html` gains a "Projects" panel (one row per host, services inline, drift badge); `/api/occupancy` is untouched.
+4. **Contracts/docs/OPSEC.** Route + page registered in `route_contracts`; `docs/MONITOR-API.md` documents freshness window and drift semantics; the M5 sanitizer test covers the new route and the changed health field; unit tests per collector field with fixtures (no live git/SSH), drift matrix (equal / behind / unknown), TTL expiry ⇒ `unknown`.
+
+**Rejected.** *Pull via SSH from the API process* (job_host_exec) — puts SSH aliases and a network dependency inside request handling; the atlas-load pull is a legacy exception, not the pattern. *Extending `/api/occupancy`* — different cadence and contract (load/seats); keep one glance by placing the panel beside it in `fleet.html`.
+
+**Open for critique.** (i) push vs pull; (ii) `origin_main_sha` source — local `origin/main` ref + FETCH_HEAD age (no network in the collector) vs an explicit `git ls-remote` (network + creds on a timer); (iii) whether `services.sh` can expose each service's serving release dir without a second source of truth; (iv) reporter identity/allowlist shape vs reusing the observer-presence allowlist.
+
+**Acceptance (issue).** Merge a trivial PR without redeploying → `drift: true` on the api service within the freshness window; restart → clears; no absolute paths or hostnames in the output.
+
+### r2 (binding)
+## Design r2 — with the cross-family critique folded in (Gemini seat, task `critique-7188-design-agy`: PASS-WITH-CHANGES, 5 findings; push + local-ref + cwd-inspection + host-id allowlist all confirmed). Design of record for implementation.
+
+Binding changes on top of r1:
+1. **Conditional drift.** Per service: `state != running` ⇒ `drift: "unknown"`; `serving_mode: "release"` ⇒ compare `serving_sha` with the host's `origin_main_sha`; `serving_mode: "checkout"` (dev/`--live`; today `sources` and `astro` always run from the checkout) ⇒ compare `checkout_sha`, badged "checkout" in the UI. Never `null != sha ⇒ true`.
+2. **Sibling repositories.** `work` runs from a separate private checkout; its SHA is never compared with this repo's `origin/main`. Each service reports `repo: "learn-ukrainian" | "sibling"`; sibling services get `drift: "not_applicable"` (their own checkout state may be reported later under their own repo key).
+3. **Upstream staleness guard.** `origin_main_sha` comes from the local `refs/remotes/origin/main` (offline); `origin_main_age_s` from `.git/FETCH_HEAD` mtime. `origin_main_age_s > 3600` ⇒ every drift on that host degrades to `"unknown"` with a `stale_upstream` attention item — never a green "in sync" from a stale ref.
+4. **Serving dir from the process, not from `services.sh`.** `services.sh` has no notion of release dirs; the collector takes each verified listener PID's cwd (`/proc/<pid>/cwd` on Linux, `lsof -p <pid> -d cwd` on macOS) and classifies it with `scripts/common/release_layout.is_release_root()`; the api service additionally exposes `serving_sha` on `/api/health`.
+5. **Reporter identity = opaque host id, not the observer agent allowlist.** `POST /api/fleet/projects/v1/report` accepts only `host_id` values that pass `occupancy_sanitize.opaque_host_id()` and appear in `MONITOR_OCCUPANCY_HOST_IDS` (plus `mac-operator`); loopback-only; TTL 15 min. `observer_presence.ALLOWED_AGENTS` stays for seats.
+6. **Transport stated.** The API host evaluates itself in-process (no network). Other hosts report over the existing loopback tunnel; a host without an active tunnel simply never reports and shows `freshness: "unknown"` — fail-closed, no SSH from the API process. Deliverable includes the collector CLI, unit/LaunchAgent templates, and a runbook section; deploying the timers is an operator/infra step, not part of the PR.
+
+Unchanged from r1: `/api/health.instance` gains `serving_sha`/`serving_mode`/`checkout_sha`, `git_sha` kept as alias, `host` = opaque self id (no hostname fallback); `GET /api/fleet/projects/v1` per-host document + `attention`; `fleet.html` Projects panel; `/api/occupancy` untouched; route + page contracts; M5 sanitizer test over the new route and the changed health field; fixture-only tests (no live git/SSH) including the drift matrix (release-equal / release-behind / checkout / stopped / sibling / stale-upstream / never-reported).
+
+## Hard constraints
+- No SSH or network calls from the API process; collector is offline (local refs, FETCH_HEAD mtime, process cwd).
+- Loopback-only POST; reporter authenticated by opaque host id only (see r2 §5). No new auth layer.
+- Sanitize at the source AND reject at the API: any absolute path / hostname / IP / alias / port in a report ⇒ 400, nothing stored.
+- Timer/LaunchAgent templates + runbook are deliverables; do NOT deploy or touch live hosts.
+- Do not modify `scripts/api/epics_router.py`, `agents_extensions/shared/session_streams/**`, or `dashboards/epics.html`
+  (another lane task, `monitor-7185-seed-registry`, owns them now). In `scripts/api/main.py` change only the health identity;
+  in `route_contracts.py` and `docs/MONITOR-API.md` add new sections. `git fetch && git rebase origin/main` before the PR and
+  resolve any overlap conservatively (keep both changes).
+- Also fenced (infra lane `ci-pr-tier-guards`): `.github/workflows/ci.yml`, `scripts/ci/*`, `scripts/lexicon/*`, and the tests it
+  edits — put your tests in NEW files.
+
+## Tests (mutation-checked: revert each behaviour → its test must fail)
+Drift matrix (release-equal / release-behind / checkout-mode / stopped / sibling repo / stale upstream / never reported / expired
+report) · health `serving_sha` from a release-dir fixture and `null` + `serving_mode: checkout` otherwise · host `host` field is the
+opaque id, never a hostname · report validation rejects each forbidden token class and unknown host ids · TTL expiry ⇒
+`freshness: unknown` · collector unit tests with fixture repos (no live git network) · route + page contract tests · the M5
+sanitizer test extended to the new route and `/api/health` · existing `tests/api` suites pass (`tests/api/test_import_pinning.py` included).
+
+## Steps
+1. Dispatch worktree (created for you); `git fetch && git rebase origin/main`.
+2. Implement per the design; conventional commits (`feat(fleet): …`) with the `X-Agent` trailer.
+3. Run: new tests + `.venv/bin/pytest -q tests/api` + `.venv/bin/ruff check` on changed files + `bash -n services.sh` if touched.
+4. Docs: `docs/MONITOR-API.md` (new route, freshness/drift semantics, health fields), runbook section for the reporter timers.
+5. Push; PR vs main titled `feat(fleet): per-host project state + serving-SHA drift (#7188)`, body `Parent: #7177. Closes #7188.`,
+   evidence, and a checklist mapping r2 items 1–6 to code/tests. NO auto-merge.
+6. Final report: branch, commit SHAs, PR URL (or title/body), passing pytest lines, the r2 1–6 checklist.
