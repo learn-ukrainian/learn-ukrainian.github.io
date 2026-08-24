@@ -24,6 +24,7 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.dual_write import HandoffCandidate
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     docs_router,
@@ -37,6 +38,7 @@ from scripts.api import (
     project_state_collect,
     project_state_router,
     repository_authority,
+    route_contracts,
     session_streams_router,
     site_router,
     state_helpers,
@@ -45,6 +47,7 @@ from scripts.api import (
 )
 from scripts.api import main as api_main
 from scripts.fleet_comms import cold_start_board, message_plane
+from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
@@ -71,8 +74,6 @@ FROZEN_IDS = frozenset(
         "retention-plan-dir",
         "retention-archive-root",
         "session-digest-detail",
-        "session-health-repo-root",
-        "session-health-db-path",
         "session-status-detail",
         "dashboard-index-localhost",
         "dashboard-work-loopback",
@@ -215,10 +216,6 @@ def _fixture_cold_start_board(
     }
 
 
-def _fixture_session_inventory_unavailable(_root: Path) -> list[Any]:
-    raise FileNotFoundError("isolated OPSEC fixture has no session inventory")
-
-
 @pytest.fixture
 def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> IsolatedFixture:
     """Redirect existing API seams into a canary-planted disposable tree."""
@@ -241,6 +238,11 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
     monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
+    session_database = SessionStreamDatabase(root / "stores" / "session-streams.sqlite3")
+    session_connection = session_database.connect()
+    session_connection.close()
+    handoff_path = root / "batch_state" / "session-handoff.md"
+    handoff_path.write_text("fixture handoff\n", encoding="utf-8")
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
     monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
     monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
@@ -331,7 +333,19 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         lambda: root / "stores" / "session-streams.sqlite3",
     )
     monkeypatch.setattr(session_streams_router, "_store", lambda: _FixtureSessionStore())
-    monkeypatch.setattr(session_streams_router, "list_handoff_candidates", _fixture_session_inventory_unavailable)
+    monkeypatch.setattr(
+        session_streams_router,
+        "list_handoff_candidates",
+        lambda _root: [
+            HandoffCandidate(
+                stream_id="epic:4707",
+                path=handoff_path,
+                exists=True,
+                stream_name="fixture",
+                title="fixture handoff",
+            )
+        ],
+    )
     monkeypatch.setattr(
         session_streams_router,
         "diagnose_handoff",
@@ -342,6 +356,25 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         session_streams_router,
         "detect_projection_drift",
         lambda *_args, **_kwargs: {"status": "fixture"},
+    )
+    monkeypatch.setattr(
+        worktree_containment,
+        "primary_checkout_dirty_status",
+        lambda _start: {
+            "role": "primary",
+            "head_sha": "0" * 40,
+            "branch": "opsec-fixture",
+            "protected_branch": False,
+            "dirty": False,
+            "dirty_count": 0,
+            "tracked_dirty_count": 0,
+            "untracked_dirty_count": 0,
+            "entries": [],
+            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
+            "bare_primary": False,
+            "bare_healed": False,
+            "bare_heal_message": None,
+        },
     )
 
     monkeypatch.setattr(cold_start_board, "_get_local_git_info", lambda: {
@@ -540,9 +573,55 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
+    assert route_contracts.contract_for_route("/api/session-streams/v1/health").response_schema_version == "session-streams.v2"
+    assert route_contracts.contract_for_route("/api/state/preparation").response_schema_version == "authority.v2"
+    assert route_contracts.contract_for_route("/api/orient").response_schema_version == "orient.v2"
     for record in records:
         if record.fixture == "skip":
             assert record.owner and record.reason and record.expiry
+
+
+def test_exercised_read_registry_refuses_unexplained_5xx() -> None:
+    records = registry.build_registry(api_main.app)
+    unexplained = [
+        record.key
+        for record in records
+        if record.fixture != "skip"
+        and record.classification in {"read", "read-side-effect"}
+        and any(500 <= status < 600 for status in record.expected_statuses)
+        and not record.reason
+    ]
+    assert unexplained == []
+
+
+def test_family_one_fixture_reaches_dual_write_and_orient_git_happy_paths(
+    isolated_fixture: IsolatedFixture,
+) -> None:
+    client = TestClient(api_main.app, raise_server_exceptions=False)
+
+    dual = client.get("/api/session-streams/v1/dual-write-status")
+    assert dual.status_code == 200
+    dual_payload = dual.json()
+    assert dual_payload["total"] == 1
+    assert dual_payload["candidates"][0]["exists"] is True
+    assert "path" not in dual_payload["candidates"][0]
+    assert "repo_root" not in json.dumps(dual_payload)
+    assert "db_path" not in json.dumps(dual_payload)
+
+    orient = client.get("/api/orient", params={"sections": "git"})
+    assert orient.status_code == 200
+    git_payload = orient.json()["git"]
+    assert git_payload["primary_checkout"] == {
+        "role": "primary",
+        "head_sha": "0" * 40,
+        "dirty_count": 0,
+    }
+    assert git_payload["cwd_role"] in {"primary", "worktree", "other"}
+    encoded = json.dumps(git_payload)
+    assert "main_root" not in encoded
+    assert "checked_cwd" not in encoded
+    assert "data_checkout" not in encoded
+    assert isolated_fixture.root.name == PATH_CANARY
 
 
 def test_registry_reports_a_removed_operation() -> None:

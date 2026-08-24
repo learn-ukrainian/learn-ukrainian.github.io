@@ -204,12 +204,20 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     assert response.status_code == 200
     git_info = response.json()["git"]
     assert git_info["primary_checkout_dirty"] is True
-    assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
-    assert git_info["primary_checkout"]["tracked_dirty_count"] == 1
-    assert git_info["primary_checkout"]["entries"] == [{"xy": " M", "path": "tracked.txt", "kind": "tracked"}]
+    assert git_info["primary_checkout"] == {
+        "role": "primary",
+        "head_sha": _git(repo, "rev-parse", "HEAD").stdout.strip(),
+        "dirty_count": 1,
+    }
+    assert git_info["cwd_role"] == "primary"
     assert git_info["authority"]["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
-    assert git_info["authority"]["data_checkout"]["root"] == str(repo)
-    assert git_info["authority"]["data_checkout"]["head_sha"] == _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert "data_checkout" not in git_info["authority"]
+    assert git_info["authority"]["primary_checkout"] == {
+        "role": "live_primary",
+        "head_sha": _git(repo, "rev-parse", "HEAD").stdout.strip(),
+        "dirty_count": 1,
+    }
+    assert git_info["authority"]["cwd_role"] == "primary"
     assert git_info["authority"]["service_code"]["mode"] == "development"
 
 
@@ -240,8 +248,14 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
     assert git_info["branch"]
     assert git_info["head"]
     assert git_info["primary_checkout_dirty"] is False
-    assert git_info["primary_checkout"]["error"] == "git status failed"
-    assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
+    assert git_info["primary_checkout"] == {
+        "role": "primary",
+        "head_sha": _git(repo, "rev-parse", "HEAD").stdout.strip(),
+        "dirty_count": 0,
+    }
+    assert git_info["cwd_role"] == "primary"
+    assert "error" not in git_info["primary_checkout"]
+    assert "data_checkout" not in git_info["authority"]
 
 
 def test_health_includes_core_bare_canary(monkeypatch):

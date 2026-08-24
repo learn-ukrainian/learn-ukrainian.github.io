@@ -23,12 +23,12 @@ VALIDATOR = Draft202012Validator(SCHEMA)
 CLIENT = TestClient(app, raise_server_exceptions=False)
 AUTHORITY = {
     "repository": "learn-ukrainian/learn-ukrainian.github.io",
-    "data_checkout": {
+    "primary_checkout": {
         "role": "live_primary",
-        "root": "/fixed/repository",
-        "branch": "main",
         "head_sha": "a" * 40,
+        "dirty_count": 0,
     },
+    "cwd_role": "primary",
     "service_code": {
         "mode": "release",
         "commit_sha": "b" * 40,
@@ -427,7 +427,7 @@ def test_ready_to_build_is_additively_deprecated_and_session_start_migrated() ->
     assert "/api/state/preparation" in script
 
 
-def test_repository_authority_distinguishes_data_checkout_from_development_code(tmp_path: Path) -> None:
+def test_repository_authority_distinguishes_primary_checkout_from_development_code(tmp_path: Path) -> None:
     data = _repo(
         tmp_path / "data",
         remote="https://secret-token@github.com/learn-ukrainian/learn-ukrainian.github.io.git",
@@ -441,12 +441,13 @@ def test_repository_authority_distinguishes_data_checkout_from_development_code(
 
     assert authority["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
     assert "secret-token" not in json.dumps(authority)
-    assert authority["data_checkout"] == {
+    assert authority["primary_checkout"] == {
         "role": "live_primary",
-        "root": str(data),
-        "branch": "main",
         "head_sha": _git(data, "rev-parse", "HEAD"),
+        "dirty_count": 0,
     }
+    assert authority["cwd_role"] == "primary"
+    assert "data_checkout" not in authority
     assert authority["service_code"]["mode"] == "development"
     assert authority["service_code"]["commit_sha"] == _git(code, "rev-parse", "HEAD")
 
@@ -473,7 +474,7 @@ def test_repository_authority_reads_immutable_release_manifest(tmp_path: Path) -
     }
 
 
-def test_release_route_reads_from_the_reported_live_data_checkout(
+def test_release_route_reads_from_the_reported_primary_checkout(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -492,7 +493,10 @@ def test_release_route_reads_from_the_reported_live_data_checkout(
     assert response.status_code == 200
     data = response.json()
     VALIDATOR.validate(data)
-    assert data["authority"]["data_checkout"]["root"] == str(ROOT)
+    assert "data_checkout" not in data["authority"]
+    assert data["authority"]["primary_checkout"]["role"] == "dispatch_worktree"
+    assert data["authority"]["primary_checkout"]["head_sha"] == _git(ROOT, "rev-parse", "HEAD")
+    assert data["authority"]["cwd_role"] == "other"
     assert data["authority"]["service_code"] == {
         "mode": "release",
         "commit_sha": release_sha,
@@ -501,7 +505,7 @@ def test_release_route_reads_from_the_reported_live_data_checkout(
     assert data["tracks"][0]["module_state_counts"]["built"] == 55
 
 
-def test_development_dispatch_worktree_is_reported_as_the_data_checkout(tmp_path: Path) -> None:
+def test_development_dispatch_worktree_is_reported_as_the_primary_checkout(tmp_path: Path) -> None:
     primary = _repo(
         tmp_path / "primary",
         remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
@@ -514,5 +518,10 @@ def test_development_dispatch_worktree_is_reported_as_the_data_checkout(tmp_path
     authority = build_repository_authority(project_root=dispatch, live_repo_root=data_root)
 
     assert data_root == dispatch
-    assert authority["data_checkout"]["role"] == "dispatch_worktree"
-    assert authority["data_checkout"]["root"] == str(dispatch)
+    assert authority["primary_checkout"] == {
+        "role": "dispatch_worktree",
+        "head_sha": _git(dispatch, "rev-parse", "HEAD"),
+        "dirty_count": 0,
+    }
+    assert authority["cwd_role"] == "worktree"
+    assert "data_checkout" not in authority

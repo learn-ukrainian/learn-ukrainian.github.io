@@ -34,13 +34,29 @@ FROZEN_WEBSOCKET_ROUTE_COUNT = 1
 FROZEN_DENOMINATOR_SHA256 = "4876620305f8035f30103fc6f2d0f0d4f22e43dfb00247f1a7aa32604cbccd20"
 
 # The OpenAPI document records the successful response for most operations,
-# while the isolated PR-A fixture deliberately exercises empty stores,
-# denied subprocess seams, and invalid synthetic identifiers. These are the
-# documented framework/domain error outcomes accepted by every exercised
-# record; the route test still fails on any status outside this contract.
+# while the isolated fixture deliberately exercises empty stores, denied
+# subprocess seams, and invalid synthetic identifiers. Read records must not
+# silently bless a server error: an exercised 5xx needs a route-specific
+# record reason and explicit expected status.
 DOCUMENTED_EXERCISE_STATUSES = frozenset(
     {200, 400, 401, 403, 404, 409, 410, 422, 500, 503}
 )
+
+EXERCISED_READ_5XX_REASONS: dict[str, str] = {
+    "GET /api/comms/by-module/{track}/{slug}": "isolated fixture has no broker module rows",
+    "GET /api/comms/channels/{name}": "isolated fixture has no broker channel store",
+    "GET /api/comms/channels/{name}/deliveries": "isolated fixture has no broker delivery store",
+    "GET /api/comms/channels/{name}/messages": "isolated fixture has no broker message store",
+    "GET /api/comms/channels/{name}/threads/{thread_id}": "isolated fixture has no broker thread store",
+    "GET /api/dashboard/comms/conversation/{task_id}": "isolated fixture has no dashboard comms store",
+    "GET /api/dashboard/comms/message/{message_id}": "isolated fixture has no dashboard comms store",
+    "GET /api/dashboard/comms/messages": "isolated fixture has no dashboard comms store",
+    "GET /api/epics/v1": "isolated fixture has no seeded epic registry snapshot",
+    "GET /api/rules": "isolated fixture has no deployed rule files",
+    "GET /api/state/preparation": "sparse isolated fixture omits the curriculum tree",
+    "GET /api/state/preparation/{track}/{slug}": "sparse isolated fixture omits the curriculum tree",
+    "GET /api/work/v1/next": "isolated fixture has no warm work projection",
+}
 
 _CONVERTER_RE = re.compile(r"\{(?P<name>[A-Za-z_][A-Za-z0-9_]*)(?::[^}]+)?\}")
 _PATH_PARAM_RE = re.compile(r"\{(?P<name>[A-Za-z_][A-Za-z0-9_]*)(?::[^}]+)?\}")
@@ -359,6 +375,9 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
         if str(status).isdigit()
     )
     statuses = tuple(sorted(set(statuses) | DOCUMENTED_EXERCISE_STATUSES))
+    explicit_5xx_reason = EXERCISED_READ_5XX_REASONS.get(operation.key)
+    if explicit_5xx_reason is None:
+        statuses = tuple(status for status in statuses if not 500 <= status < 600)
 
     if operation.path_template in {
         "/api/epics/v1/{stream_id}/bundles",
@@ -419,6 +438,7 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
         path_values=path_values,
         query=_query_for(operation.path_template),
         body_factory=_body_factory(operation.path_template),
+        reason=explicit_5xx_reason,
         expected_statuses=statuses,
     )
 
