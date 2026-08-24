@@ -201,22 +201,65 @@ Redirects (`307`) to the interactive API docs explorer at `/docs` (#7090). The b
 
 ### `GET /api/health`
 
-Server health check — returns status, version, uptime. Use for monitoring scripts and load balancers.
+Server health check — returns status, version, uptime, and loopback-safe
+instance identity. `instance.host` is the opaque occupancy host id (from
+`LU_MONITOR_HOST_ID` or the canonical `MONITOR_OCCUPANCY_HOST_IDS` self mapping),
+never a hostname. `checkout_sha` is the live checkout `HEAD`; `git_sha` is a
+documented alias. `serving_sha` and `serving_mode` describe the immutable API
+release directory when the process runs from `.runtime/api/releases/<sha>`;
+otherwise `serving_mode` is `checkout` and `serving_sha` is `null`.
 
 ```bash
 curl -s http://localhost:8765/api/health | python3 -m json.tool
 ```
 
-Response:
+Response (fields abbreviated):
 ```json
 {
   "status": "ok",
   "version": "2.0.0",
   "uptime_seconds": 3600,
-  "started_at": "2026-02-21T10:00:00+00:00",
-  "checked_at": "2026-02-21T11:00:00+00:00"
+  "instance": {
+    "host": "host-job",
+    "git_sha": "cccccccccccccccccccccccccccccccccccccccc",
+    "checkout_sha": "cccccccccccccccccccccccccccccccccccccccc",
+    "serving_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "serving_mode": "release"
+  }
 }
 ```
+
+### `GET /api/fleet/projects/v1[?host_id=x]`
+
+Per opaque host project posture: primary checkout vs `origin/main`, worktree
+count, service serving SHA drift, and attention items. Reuses host ids from
+`MONITOR_OCCUPANCY_HOST_IDS` plus `mac-operator`. The API host is collected
+in-process on every read (`freshness: fresh`). Remote hosts push reports through
+the loopback tunnel; hosts without an active tunnel show `freshness: unknown`.
+
+Freshness window: **15 minutes** (`stale` after TTL, `unknown` when never
+reported or expired). Drift compares each running service's serving SHA against
+the host's `origin_main_sha` for release mode, or `checkout_sha` for checkout
+mode (`sources` and `astro` today). `origin_main_age_s > 3600` degrades all
+drift to `unknown` with a `stale_upstream` attention item. Sibling `work`
+services return `drift: not_applicable`.
+
+```bash
+curl -s http://localhost:8765/api/fleet/projects/v1 | python3 -m json.tool
+```
+
+### `POST /api/fleet/projects/v1/report`
+
+Loopback-only ingest for remote reporters. Identity is the opaque `host_id` in
+the JSON body; it must be allowlisted. Forbidden absolute paths, hostnames,
+IPs, SSH aliases, and ports return `400` with nothing stored. TTL matches the
+read freshness window (15 minutes).
+
+```bash
+.venv/bin/python scripts/api/project_state_local.py report
+```
+
+Operator timer install: `docs/runbooks/project-state-reporter.md`.
 
 ## Remote epic lifecycle v1 — `/api/epics/v1`
 

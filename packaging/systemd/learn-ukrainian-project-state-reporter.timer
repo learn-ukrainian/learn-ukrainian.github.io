@@ -1,0 +1,10 @@
+[Unit]
+Description=Learn Ukrainian project-state reporter timer (5 minutes)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=learn-ukrainian-project-state-reporter.service
+
+[Install]
+WantedBy=timers.target
