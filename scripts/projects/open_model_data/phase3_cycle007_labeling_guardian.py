@@ -36,6 +36,9 @@ EXECUTION_LOCK_FD_ENV = "PHASE3_CYCLE007_EXECUTION_LOCK_FD"
 RECEIPT_SCHEMA = "phase3_cycle007_labeling_guardian_v1"
 MAX_RECOVERY_FILES = 64
 MAX_RECOVERY_BYTES = 16 * 1024 * 1024
+MOUNT_TIMEOUT_SECONDS = 30
+STATUS_TIMEOUT_SECONDS = 300
+STAGE_TIMEOUT_SECONDS = 72 * 60 * 60
 
 
 class GuardianError(ValueError):
@@ -204,14 +207,18 @@ def _available_bytes(path: Path) -> int:
 
 
 def _bind_mount(source: Path, target: Path, mount_command: str) -> None:
-    completed = subprocess.run(
-        [mount_command, "--bind", str(source), str(target)],
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        check=False,
-        shell=False,
-    )
+    try:
+        completed = subprocess.run(
+            [mount_command, "--bind", str(source), str(target)],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            shell=False,
+            timeout=MOUNT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        raise GuardianError("bind_mount_timeout") from None
     if completed.returncode != 0:
         raise GuardianError("bind_mount_failed")
 
@@ -417,16 +424,20 @@ def _invoke_controller(config: Config, action: str, *, execution_fd: int | None 
     if execution_fd is not None:
         environment[EXECUTION_LOCK_FD_ENV] = str(execution_fd)
         pass_fds = (execution_fd,)
-    completed = subprocess.run(
-        _controller_command(config, action, stage),
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        check=False,
-        shell=False,
-        env=environment,
-        pass_fds=pass_fds,
-    )
+    try:
+        completed = subprocess.run(
+            _controller_command(config, action, stage),
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            shell=False,
+            env=environment,
+            pass_fds=pass_fds,
+            timeout=STATUS_TIMEOUT_SECONDS if action == "status" else STAGE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        raise GuardianError("controller_timeout") from None
     return _parse_controller_output(completed)
 
 

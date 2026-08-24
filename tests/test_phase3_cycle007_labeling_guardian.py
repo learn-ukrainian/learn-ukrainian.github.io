@@ -265,6 +265,18 @@ def test_wrong_existing_mount_is_refused_without_mount_command(
     assert not called
 
 
+def test_bind_mount_timeout_has_fixed_failure_code(
+    guardian: ModuleType, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        guardian.subprocess,
+        "run",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(subprocess.TimeoutExpired("mount", 30)),
+    )
+    with pytest.raises(guardian.GuardianError, match="bind_mount_timeout"):
+        guardian._bind_mount(Path("/source"), Path("/target"), "mount")
+
+
 def test_duplicate_guardian_lock_is_nonblocking(guardian: ModuleType, tmp_path: Path) -> None:
     path = tmp_path / "locks/guardian.lock"
     first = guardian._lock(path, "guardian_already_running")
@@ -427,6 +439,19 @@ def test_controller_status_drops_ambient_execution_descriptor(
     assert guardian.EXECUTION_LOCK_FD_ENV not in captured_environment
 
 
+def test_controller_timeout_has_fixed_failure_code(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="status")
+    monkeypatch.setattr(
+        guardian.subprocess,
+        "run",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(subprocess.TimeoutExpired("controller", 300)),
+    )
+    with pytest.raises(guardian.GuardianError, match="controller_timeout"):
+        guardian._invoke_controller(config, "status")
+
+
 def test_resume_stops_at_requested_boundary(
     guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -527,6 +552,7 @@ def test_cli_help_is_available() -> None:
         [os.sys.executable, str(GUARDIAN_PATH), "--help"],
         capture_output=True,
         check=False,
+        timeout=30,
     )
     assert completed.returncode == 0
     assert b"--execution-lock" in completed.stdout
