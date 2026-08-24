@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
+from scripts.ci import secret_scan_scope
 from scripts.ci.secret_scan_scope import resolve_scan_scope
 
 
 def _git(root: Path, *args: str) -> str:
-    return subprocess.check_output(
-        ["git", *args], cwd=root, text=True, timeout=30
-    ).strip()
+    return subprocess.check_output(["git", *args], cwd=root, text=True, timeout=30).strip()
 
 
 def _repo_with_range(root: Path) -> tuple[str, str, str]:
@@ -29,9 +29,7 @@ def _repo_with_range(root: Path) -> tuple[str, str, str]:
     _git(root, "commit", "-am", "head")
     head = _git(root, "rev-parse", "HEAD")
 
-    empty_tree = subprocess.check_output(
-        ["git", "mktree"], cwd=root, input="", text=True, timeout=30
-    ).strip()
+    empty_tree = subprocess.check_output(["git", "mktree"], cwd=root, input="", text=True, timeout=30).strip()
     unrelated = subprocess.check_output(
         ["git", "commit-tree", empty_tree],
         cwd=root,
@@ -164,3 +162,27 @@ def test_pull_request_keeps_action_defaults_untouched(tmp_path: Path) -> None:
     assert scope.trufflehog_base == ""
     assert scope.trufflehog_head == ""
     assert scope.opsec_range == ""
+
+
+def test_commit_exists_passes_timeout_and_handles_timeout(tmp_path: Path) -> None:
+    fake = MagicMock()
+    fake.returncode = 0
+    with patch("subprocess.run", return_value=fake) as run_mock:
+        assert secret_scan_scope._commit_exists(tmp_path, "a" * 40) is True
+
+    assert run_mock.call_args.kwargs.get("timeout") == secret_scan_scope.GIT_CAT_FILE_TIMEOUT_SECONDS
+
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "cat-file"], 10)):
+        assert secret_scan_scope._commit_exists(tmp_path, "a" * 40) is False
+
+
+def test_is_ancestor_passes_timeout_and_handles_timeout(tmp_path: Path) -> None:
+    fake = MagicMock()
+    fake.returncode = 0
+    with patch("subprocess.run", return_value=fake) as run_mock:
+        assert secret_scan_scope._is_ancestor(tmp_path, "a" * 40, "b" * 40) is True
+
+    assert run_mock.call_args.kwargs.get("timeout") == secret_scan_scope.GIT_IS_ANCESTOR_TIMEOUT_SECONDS
+
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "merge-base"], 30)):
+        assert secret_scan_scope._is_ancestor(tmp_path, "a" * 40, "b" * 40) is False

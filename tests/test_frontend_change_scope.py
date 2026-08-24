@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -22,7 +23,8 @@ _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
 
 
 def _git(cwd: Path, *args: str) -> str:
-    return subprocess.check_output(["git", *args], cwd=cwd, text=True, timeout=30).strip()
+    env = os.environ | {"AGENT_NO_MERGE": "0"}
+    return subprocess.check_output(["git", *args], cwd=cwd, text=True, timeout=30, env=env).strip()
 
 
 def _init_fixture_repo(root: Path) -> dict[str, str]:
@@ -182,8 +184,33 @@ def test_git_diff_failed_writes_step_summary(tmp_path: Path, monkeypatch: pytest
         assert scope.main(["--base", "abc123", "--event", "pull_request"]) == 0
 
     text = summary.read_text(encoding="utf-8")
-    assert "reason=git_diff_failed" in text
+    assert "reason=git_diff_failed exit=128" in text
     assert "decision=run" in text
+
+
+def test_git_diff_timeout_writes_step_summary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    summary = tmp_path / "summary.md"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+
+    def timeout_boom(*_args: object, **_kwargs: object) -> None:
+        raise subprocess.TimeoutExpired(["git", "diff"], 30)
+
+    with (
+        patch.object(scope, "resolve_git_range", return_value="abc...HEAD"),
+        patch.object(scope, "changed_files", side_effect=timeout_boom),
+    ):
+        assert scope.main(["--base", "abc123", "--event", "pull_request"]) == 0
+
+    text = summary.read_text(encoding="utf-8")
+    assert "reason=git_diff_failed timeout=30s" in text
+    assert "decision=run" in text
+
+
+def test_git_merge_base_timeout_raises_merge_base_error() -> None:
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "merge-base"], 30)):
+        with pytest.raises(scope.MergeBaseError, match=r"timed out after 30s"):
+            scope.git_merge_base("base_sha", "head_sha")
 
 
 def test_range_mode_for_event() -> None:

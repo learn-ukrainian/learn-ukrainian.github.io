@@ -2,15 +2,22 @@
 
 from __future__ import annotations
 
+import subprocess
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
 
 from scripts.ci import gate_required_results as gate
 from scripts.ci.queue_starvation_recovery import (
+    DEFAULT_GH_API_TIMEOUT,
     TAIL_JOB_NAMES,
+    _fetch_run_jobs,
+    _gh_api,
+    _list_workflow_runs,
+    _rerun_job,
     decide_queue_starvation_rerun,
     scan_and_recover,
     select_candidate_runs,
@@ -77,9 +84,7 @@ def test_ci_keeps_secret_scan_separate_from_full_contracts() -> None:
     assert jobs["coverage-floor"].get("if") == "github.event_name != 'pull_request'"
     assert "pytest-plans" not in _CI.read_text(encoding="utf-8")
     assert "ruff" in jobs
-    gate_steps = "\n".join(
-        step.get("name", "") + "\n" + str(step.get("run", "")) for step in jobs["ci-gate"]["steps"]
-    )
+    gate_steps = "\n".join(step.get("name", "") + "\n" + str(step.get("run", "")) for step in jobs["ci-gate"]["steps"])
     assert "gate_required_results.py" in gate_steps
     assert "contains(needs.*.result, 'skipped')" not in gate_steps
 
@@ -100,6 +105,7 @@ def test_secret_scan_bounds_landing_secret_and_opsec_scans() -> None:
     scope_index = workflow.index("Resolve secret scan commit scope (#7141)")
     assert scope_index < workflow.index("Gate scrubbed public identifiers")
     assert scope_index < workflow.index("TruffleHog secret scan (attempt 1)")
+
 
 def test_frontend_e2e_waits_for_ci_gate_success() -> None:
     e2e = _load(_CI)["jobs"]["frontend-e2e"]
@@ -160,6 +166,7 @@ def test_security_and_ui_policy_left_pull_request_fanout() -> None:
     assert "workflow_dispatch" in ui_triggers
     # paths: is invalid on merge_group (actionlint); UI policy stays schedule-only.
 
+
 def test_recovery_workflow_is_schedule_dispatch_default_branch_and_write_scoped() -> None:
     workflow = _load(_RECOVERY)
     triggers = _triggers(workflow)
@@ -171,9 +178,7 @@ def test_recovery_workflow_is_schedule_dispatch_default_branch_and_write_scoped(
     assert "cron" in triggers["schedule"][0]
     recover = workflow["jobs"]["recover"]
     assert recover["permissions"] == {"contents": "read", "actions": "write"}
-    checkout = next(
-        step for step in recover["steps"] if str(step.get("uses", "")).startswith("actions/checkout@")
-    )
+    checkout = next(step for step in recover["steps"] if str(step.get("uses", "")).startswith("actions/checkout@"))
     assert "ref" not in checkout.get("with", {}), (
         "recovery must not checkout a subject run's head SHA while holding actions:write"
     )
@@ -383,3 +388,38 @@ def test_scan_and_recover_applies_only_matching_cancelled_tails() -> None:
     assert actions[1].decision.should_rerun is False
     assert actions[1].applied is False
     assert reran == [99]
+
+
+def test_gh_api_passes_default_timeout() -> None:
+    fake = MagicMock()
+    with patch("subprocess.run", return_value=fake) as run_mock:
+        _gh_api(["version"], token="token123")
+
+    assert run_mock.call_args.kwargs.get("timeout") == DEFAULT_GH_API_TIMEOUT
+
+
+def test_list_workflow_runs_timeout_raises_runtime_error() -> None:
+    with patch(
+        "scripts.ci.queue_starvation_recovery._gh_api",
+        side_effect=subprocess.TimeoutExpired(["gh", "api"], 60),
+    ):
+        with pytest.raises(RuntimeError, match=r"gh api timed out after 60s listing runs"):
+            _list_workflow_runs("owner/repo", token="token123", per_page=30)
+
+
+def test_fetch_run_jobs_timeout_raises_runtime_error() -> None:
+    with patch(
+        "scripts.ci.queue_starvation_recovery._gh_api",
+        side_effect=subprocess.TimeoutExpired(["gh", "api"], 60),
+    ):
+        with pytest.raises(RuntimeError, match=r"gh api timed out after 60s listing jobs for run 101"):
+            _fetch_run_jobs("owner/repo", 101, token="token123")
+
+
+def test_rerun_job_timeout_raises_runtime_error() -> None:
+    with patch(
+        "scripts.ci.queue_starvation_recovery._gh_api",
+        side_effect=subprocess.TimeoutExpired(["gh", "api"], 60),
+    ):
+        with pytest.raises(RuntimeError, match=r"gh api timed out after 60s re-running job 99"):
+            _rerun_job("owner/repo", 99, token="token123")

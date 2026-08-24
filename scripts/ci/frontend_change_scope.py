@@ -33,6 +33,9 @@ HYDRATE_ROOT_SCRIPT = "hydrate"
 # push: linear before..after two-dot (three-dot would be wrong on non-ancestry).
 _MERGE_BASE_EVENTS = frozenset({"pull_request", "merge_group"})
 
+GIT_DIFF_TIMEOUT_SECONDS = 30
+GIT_MERGE_BASE_TIMEOUT_SECONDS = 30
+
 _NPM_RUN_RE = re.compile(r"\bnpm\s+run\s+([A-Za-z0-9:_-]+)")
 _NODE_SCRIPT_RE = re.compile(r"\bnode(?:\s+--experimental-strip-types)?\s+(\./scripts/[^\s]+|scripts/[^\s]+)")
 _PYTHON_MODULE_RE = re.compile(r"(?:^|[\s\"'])-m\s+(scripts(?:\.[A-Za-z0-9_]+)+)")
@@ -109,10 +112,13 @@ def git_merge_base(base: str, head: str, *, cwd: Path | None = None) -> str:
             text=True,
             # Prefer process cwd (CI checkout / test fixture) over this file's tree.
             cwd=cwd or Path.cwd(),
+            timeout=GIT_MERGE_BASE_TIMEOUT_SECONDS,
         )
     except subprocess.CalledProcessError as exc:
         detail = (exc.stderr or "").strip() or f"exit={exc.returncode}"
         raise MergeBaseError(detail) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise MergeBaseError(f"timed out after {exc.timeout}s") from exc
     mb = (result.stdout or "").strip()
     if not mb:
         raise MergeBaseError("empty merge-base")
@@ -161,6 +167,7 @@ def changed_files(git_range: str, *, cwd: Path | None = None) -> list[str]:
         check=True,
         capture_output=True,
         cwd=cwd or Path.cwd(),
+        timeout=GIT_DIFF_TIMEOUT_SECONDS,
     )
     return _parse_nul_delimited_paths(result.stdout)
 
@@ -342,6 +349,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         line = (
             f"frontend-scope: decision=run denominator_version={denominator['version']} "
             f"changed_files=-1 matched=-1 reason=git_diff_failed exit={exc.returncode}"
+        )
+        print(line, file=sys.stderr)
+        write_step_summary(line)
+        write_github_output(True)
+        return 0
+    except subprocess.TimeoutExpired as exc:
+        line = (
+            f"frontend-scope: decision=run denominator_version={denominator['version']} "
+            f"changed_files=-1 matched=-1 reason=git_diff_failed timeout={exc.timeout}s"
         )
         print(line, file=sys.stderr)
         write_step_summary(line)

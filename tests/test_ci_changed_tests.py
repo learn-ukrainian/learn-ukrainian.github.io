@@ -10,7 +10,9 @@ dupes, marker parity, slim-deps satisfiable, work-privacy excluded) live in
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -57,9 +59,7 @@ def test_write_plan_is_newline_delimited_and_empty_for_docs_only_change(tmp_path
 
 
 def test_code_only_change_can_opt_into_repo_invariant_manifest() -> None:
-    selected = changed_tests.select_test_modules(
-        ["scripts/ci/changed_tests.py"], include_repo_invariants=True
-    )
+    selected = changed_tests.select_test_modules(["scripts/ci/changed_tests.py"], include_repo_invariants=True)
 
     assert selected == sorted(_manifest())
 
@@ -89,3 +89,25 @@ def test_repo_invariant_manifest_entries_are_not_duplicated() -> None:
 
     assert selected == sorted(manifest)
     assert len(selected) == len(set(selected))
+
+
+def test_changed_files_passes_timeout() -> None:
+    fake = MagicMock()
+    fake.stdout = "tests/test_a.py\n"
+    with patch("subprocess.run", return_value=fake) as run_mock:
+        files = changed_tests.changed_files("origin/main...HEAD")
+
+    assert files == ["tests/test_a.py"]
+    assert run_mock.call_args.kwargs.get("timeout") == changed_tests.GIT_DIFF_TIMEOUT_SECONDS
+
+
+def test_main_handles_git_timeout(capsys: pytest.CaptureFixture[str]) -> None:
+    with patch(
+        "scripts.ci.changed_tests.changed_files",
+        side_effect=subprocess.TimeoutExpired(["git", "diff"], 30),
+    ):
+        code = changed_tests.main(["--base", "origin/main"])
+
+    assert code == 1
+    err = capsys.readouterr().err
+    assert "changed-test selection failed: git timed out after 30s" in err
