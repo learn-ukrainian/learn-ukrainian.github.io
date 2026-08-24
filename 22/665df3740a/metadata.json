@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "22665df3740a",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s4",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/delegate.py",
+    "scripts/verify_review.py",
+    "tests/test_delegate_timeouts.py",
+    "tests/test_verify_review.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/22/665df3740a/0/metadata.json",
+      "transcript": "/22/665df3740a/0/full.jsonl",
+      "compact_transcript": "/22/665df3740a/0/transcript.jsonl",
+      "content_hash": "/22/665df3740a/0/content_hash.txt",
+      "prompt": "/22/665df3740a/0/prompt.txt"
+    }
+  ]
+}

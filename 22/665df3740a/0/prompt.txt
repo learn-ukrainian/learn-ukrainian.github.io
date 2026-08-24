@@ -1,0 +1,66 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/timeout-burndown-7213-s4
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7213 slice 4 — burn down the subprocess-timeout allowlist for the DISPATCH layer (`scripts/delegate.py` + `scripts/verify_review.py`) only (one PR)
+
+<!-- ROUTING_CARD_V1
+tier: practical
+model_x_harness: agy / gemini-3.7-flash-high native CLI
+why_this_tier: mechanical hardening with an exact merged pattern to follow (slices #7214/#7215/#7217); judgment stays with the driver at CF+merge
+advisor_packet: n/a (tier=practical)
+owned_paths: scripts/delegate.py, scripts/verify_review.py, scripts/ci/subprocess_timeout_allowlist.txt, tests/test_delegate*.py, tests/test_subprocess_timeout_guard.py, tests/test_verify_review*.py
+acceptance_cmd: /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py tests/test_delegate.py tests/test_delegate_readonly_guard.py tests/test_delegate_runtime_tmp_sweep.py tests/test_delegate_ownership.py
+alternatives_considered: codex (pick-order last, 1 in flight), cursor (Mac-lane fine but agy owns the slice pattern 3/3 merged), claude (conserve Max-5x quota for judgment)
+parallel_free_seats: kimi (reserved as CF seat for this slice), cursor (next queue item #7209 candidate)
+-->
+
+Read `gh issue view 7213 -R learn-ukrainian/learn-ukrainian.github.io` — if `gh` is unavailable in the worktree, the
+issue context is: burn down `scripts/ci/subprocess_timeout_allowlist.txt` by directory slice, following the merged
+pattern of slices 1–3 (#7214 `scripts/ci/`, #7215 `scripts/api/`, #7217 `scripts/ai_agent_bridge/`): a named
+module-level constant per bound class, `TimeoutExpired` mapped onto the site's EXISTING failure semantics, one test per
+site exercising the real code path with a monkeypatched `TimeoutExpired`.
+
+This slice covers ONLY allowlist entries whose path is `scripts/delegate.py` (32 entries) or
+`scripts/verify_review.py` (1 entry). This is the dispatch layer — the silent-stall class the burn-down was
+prioritized for: a hung git/gh child inside `delegate.py` stalls a fleet dispatch invisibly.
+
+## Outcome
+Every `scripts/delegate.py` and `scripts/verify_review.py` allowlist entry is either fixed (bounded, removed from the
+allowlist) or explicitly skipped with a one-line reason in the PR body. No other directories, no other files.
+
+## Rules for values
+- Grep `timeout=` in `scripts/delegate.py` FIRST and reuse its existing timeout constants/conventions where present
+  (the module already has silence/hard-timeout machinery — do not invent a parallel convention).
+- The 32 delegate.py sites are almost all LOCAL git plumbing (`status`, `rev-parse`, `worktree list`, `branch`,
+  `fetch`, `push`, PR creation): local-only git commands get tens of seconds; anything that can touch the network
+  (`fetch`, `push`, `gh pr create` in the auto-finalize path) gets minutes — one constant per class, not per site.
+- Map `TimeoutExpired` onto each site's existing failure semantics (many helpers return None/False or raise a typed
+  dispatch error — keep exactly that shape; say in the PR table which shape each site keeps).
+- DO NOT change: dispatch stdout contract (`<task_id>\n<run_nonce>`), run-nonce logic, sweep behavior, retry logic,
+  exit codes, message formats, read-only guard semantics, ownership/path-overlap admission. Only add bounds + the
+  `TimeoutExpired` mapping.
+
+## Coordination
+No entry in this slice is session-handoff/session-handling code, but if you find an edit would touch
+`session_streams`, `rollover`, `thread_handoff`, or `claudex` imports, SKIP that site with reason
+"owned by session-handling lane" and list it.
+
+## Acceptance (quote raw output; PRIMARY interpreter — worktrees have no .venv)
+1. `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_subprocess_timeout_guard.py` green
+   (allowlist shrank; no stale entries).
+2. FULL delegate re-probe (delegate.py changes have bitten before — run every suite):
+   `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_delegate.py tests/test_delegate_readonly_guard.py tests/test_delegate_runtime_tmp_sweep.py tests/test_delegate_ownership.py tests/test_delegate_primary_integrity.py tests/test_delegate_check_budget.py` green; ruff clean on changed files.
+3. Table in the PR body: entry → fixed (constant + value + why) / skipped (why). Counts: fixed N, skipped M;
+   remaining `scripts/delegate.py` + `scripts/verify_review.py` entries must be exactly M.
+4. One conventional commit (`fix(dispatch): bound subprocess calls in delegate.py — allowlist burn-down slice 4 (#7213)`,
+   X-Agent trailer). NO push, NO auto-merge, NO amend after reporting. Report HEAD SHA + evidence + ready PR body in
+   your final response text (you have no gh auth — RETURN the text; the driver posts).

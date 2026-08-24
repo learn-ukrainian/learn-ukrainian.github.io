@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "22665df3740a",
+  "session_id": "fleet-b2165184c6454fc4811d4968edd59afd",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T07:18:02.092225Z",
+  "branch": "agy/timeout-burndown-7213-s4",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/delegate.py",
+    "scripts/verify_review.py",
+    "tests/test_delegate_timeouts.py",
+    "tests/test_verify_review.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "749ef16a0749",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T07:18:02.084509Z",
+    "agent_lines": 823,
+    "agent_removed": 237,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 823,
+    "total_lines_changed": 1060,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
