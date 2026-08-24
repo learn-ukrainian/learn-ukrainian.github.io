@@ -25,6 +25,14 @@
 #   start/stop/restart auto-delegate to the writer host when any requested
 #   service port is owned by an ssh listener, or when LU_SERVICES_SSH_HOST
 #   is set. They never spawn or signal local processes in that case.
+#   ``start`` with no service args requests ALL services; when any one of
+#   those ports is tunneled (or LU_SERVICES_SSH_HOST is set), the whole
+#   batch is delegated remotely — not just the tunneled service.
+#   ``--live`` and ``--force`` are local API recovery flags; delegated
+#   start/stop/restart never forwards them to the remote services.sh.
+#   When lsof is absent (or SVC_LSOF_BIN is not executable), port-owner
+#   lookup is a no-op: tunnel auto-delegation and foreign-listener checks
+#   are skipped until a working lsof is available.
 #   fix curls each health URL; unhealthy tunneled ports get a remote
 #   restart. Overrides: LU_SERVICES_SSH_HOST (default host alias hramatka),
 #   LU_SERVICES_REMOTE_ROOT (default /home/ops/learn-ukrainian).
@@ -320,17 +328,28 @@ _should_delegate_remote() {
 _delegate_remote() {
     local remote_action="$1"
     shift
-    local host root
+    local host root remote_cmd arg
     host="$(_ssh_delegate_host)"
     root="${LU_SERVICES_REMOTE_ROOT:-/home/ops/learn-ukrainian}"
+    remote_cmd="./services.sh $(printf '%q' "$remote_action")"
+    for arg in "$@"; do
+        remote_cmd+=" $(printf '%q' "$arg")"
+    done
     echo "Delegating ${remote_action}${*:+ $*} to ${host} (ssh LocalForward or LU_SERVICES_SSH_HOST); not starting or stopping local processes."
-    command ssh -o BatchMode=yes "$host" "cd \"$root\" && ./services.sh ${remote_action}${*:+ $*}"
+    command ssh -o BatchMode=yes "$host" "cd $(printf '%q' "$root") && ${remote_cmd}"
 }
 
 _maybe_delegate_and_exit() {
     local remote_action="$1"
     shift
+    local name
     if _should_delegate_remote "$@"; then
+        for name in "$@"; do
+            if [[ -z "${SVC_CMD[$name]+x}" ]]; then
+                echo "  Unknown service: $name (available: $ALL_SERVICES)"
+                exit 1
+            fi
+        done
         _delegate_remote "$remote_action" "$@"
         exit $?
     fi

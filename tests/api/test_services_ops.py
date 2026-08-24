@@ -185,11 +185,24 @@ def cleanup_pids_and_logs():
     elif api_start_file.exists():
         api_start_file.unlink()
 
-def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
+def _patch_script_pids_dir(script_path: Path, pids_dir: Path) -> None:
+    """Point a patched services.sh copy at an isolated pid directory."""
+    content = script_path.read_text(encoding="utf-8")
+    content = content.replace(
+        'PIDS_DIR="$PROJECT_ROOT/.pids"',
+        f'PIDS_DIR="{pids_dir}"',
+    )
+    script_path.write_text(content, encoding="utf-8")
+
+
+def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
     """Test stale pid file / listener interactions hermetically."""
     script_path, port = temp_services_sh
+    pids_dir = tmp_path / "pids"
+    pids_dir.mkdir()
+    _patch_script_pids_dir(script_path, pids_dir)
     set_pids, clear_pids, env = mock_lsof_env
-    api_pid_file = PIDS_DIR / "api.pid"
+    api_pid_file = pids_dir / "api.pid"
 
     # Start a dummy sleep process to act as the listener process.
     proc = subprocess.Popen([
@@ -329,10 +342,13 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
     shutil.which("lsof") is None or sys.platform != "darwin",
     reason="macOS local-ops integration; logic covered hermetically above"
 )
-def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env):
+def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env, tmp_path):
     """Integration test using real sockets and real lsof on macOS."""
     script_path, port = temp_services_sh_real
-    api_pid_file = PIDS_DIR / "api.pid"
+    pids_dir = tmp_path / "pids"
+    pids_dir.mkdir()
+    _patch_script_pids_dir(script_path, pids_dir)
+    api_pid_file = pids_dir / "api.pid"
     set_pids, _, env = mock_lsof_env
 
     # Start a dummy listener process with the API signature configured for our dynamic port
@@ -833,6 +849,64 @@ def _start_named_ssh_process(tmp_path: Path) -> subprocess.Popen[object]:
     return proc
 
 
+def test_is_ssh_tunnel_pid_detects_ssh_and_rejects_non_ssh(tmp_path) -> None:
+    """``_is_ssh_tunnel_pid`` matches ssh comm/argv and rejects other owners."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    tunnel = _start_named_ssh_process(tmp_path)
+    non_ssh = subprocess.Popen([str(VENV_PYTHON), "-c", "import time; time.sleep(30)"])
+    reap_process_on_exit(non_ssh)
+    helper = "\n".join(
+        [
+            _extract_bash_function(source, "_cmdline_for_pid"),
+            _extract_bash_function(source, "_is_ssh_tunnel_pid"),
+            f"if _is_ssh_tunnel_pid {tunnel.pid}; then echo SSH_TUNNEL; else echo NOT_SSH; fi",
+            f"if _is_ssh_tunnel_pid {non_ssh.pid}; then echo NON_SSH_MATCH; else echo NON_SSH_OK; fi",
+        ]
+    )
+    try:
+        result = subprocess.run(
+            ["bash", "-c", helper],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert "SSH_TUNNEL" in result.stdout
+        assert "NON_SSH_OK" in result.stdout
+        assert "NON_SSH_MATCH" not in result.stdout
+    finally:
+        tunnel.terminate()
+        non_ssh.terminate()
+        tunnel.wait(timeout=5)
+        non_ssh.wait(timeout=5)
+
+
+def test_delegate_rejects_injection_payload(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """Shell metacharacters in service args must never reach the ssh delegate."""
+    script_path, _port = temp_services_sh
+    _, _, env = mock_lsof_env
+    shim_dir, capture = _ssh_recorder(tmp_path)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env["LU_SERVICES_SSH_HOST"] = "fakehost"
+
+    payload = "api;touch /tmp/ssh_inject_test/PWNED"
+    result = subprocess.run(
+        [str(script_path), "start", payload],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    combined = f"{result.stdout}\n{result.stderr}"
+    assert "Unknown service" in combined, combined
+    assert result.returncode != 0
+    assert not capture.exists() or capture.read_text(encoding="utf-8") == ""
+
+
 def test_should_delegate_remote_env_or_tunnel() -> None:
     """Delegation triggers on LU_SERVICES_SSH_HOST or an ssh-owned port, not the default alias."""
     source = SERVICES_SH.read_text(encoding="utf-8")
@@ -938,7 +1012,8 @@ def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_
     args = capture.read_text(encoding="utf-8")
     assert "BatchMode=yes" in args
     assert "hramatka" in args
-    assert 'cd "/home/ops/learn-ukrainian" && ./services.sh start api' in args
+    assert "/home/ops/learn-ukrainian" in args
+    assert "./services.sh start api" in args
     assert "Delegating start api" in result.stdout
     assert _supervisor_was_not_called(env)
 
