@@ -116,6 +116,120 @@ def test_actual_free_uses_bavail_not_bfree(guardian: ModuleType, monkeypatch: py
     assert guardian._available_bytes(Path("/unused")) == 7 * 4096
 
 
+def test_permission_drift_is_rejected(guardian: ModuleType, tmp_path: Path) -> None:
+    directory = tmp_path / "output"
+    directory.mkdir(mode=0o755)
+    os.chmod(directory, 0o755)
+    with pytest.raises(guardian.GuardianError, match="runtime_permission_drift"):
+        guardian._private_directory(directory, os.getuid(), os.getgid(), create=False)
+
+
+def test_package_and_backing_on_same_device_are_rejected(guardian: ModuleType, tmp_path: Path) -> None:
+    config = _config(guardian, tmp_path)
+    config.guardian_lock.parent.mkdir(mode=0o700)
+    with pytest.raises(guardian.GuardianError, match="backing_device_drift"):
+        guardian._validate_roots(config, create=False)
+
+
+def test_lock_path_collision_is_rejected(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    shared = tmp_path / "locks/shared.lock"
+    shared.parent.mkdir(mode=0o700)
+    config = _config(guardian, tmp_path, guardian_lock=shared, controller_lock=shared)
+    real_stat = guardian.Path.stat
+
+    def fake_stat(path: Path, *args: Any, **kwargs: Any) -> Any:
+        value = real_stat(path, *args, **kwargs)
+        if path == config.package:
+            fields = list(value)
+            fields[2] = 1
+            return os.stat_result(fields)
+        if path == config.backing_root:
+            fields = list(value)
+            fields[2] = 2
+            return os.stat_result(fields)
+        return value
+
+    monkeypatch.setattr(guardian.Path, "stat", fake_stat)
+    with pytest.raises(guardian.GuardianError, match="lock_path_collision"):
+        guardian._validate_roots(config, create=False)
+
+
+def test_actual_free_floor_is_enforced(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, min_free_bytes=101)
+    monkeypatch.setattr(guardian, "_available_bytes", lambda _path: 100)
+    with pytest.raises(guardian.GuardianError, match="actual_disk_floor"):
+        guardian._require_free_space(config)
+
+
+def test_nonempty_unmounted_target_is_rejected_before_mount(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path)
+    for name in guardian.OUTPUT_ROOTS:
+        (config.backing_root / name).mkdir(mode=0o700)
+        (config.package / name).mkdir(mode=0o700)
+    (config.package / guardian.OUTPUT_ROOTS[0] / "existing").write_text("", encoding="utf-8")
+    monkeypatch.setattr(guardian, "_validate_roots", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(guardian, "_mount_entries", lambda _path: [])
+    monkeypatch.setattr(guardian, "_bind_mount", lambda *_args: pytest.fail("mount command invoked"))
+    with pytest.raises(guardian.GuardianError, match="mount_target_not_empty"):
+        guardian._ensure_mounts(config, mutate=True)
+
+
+def test_correct_existing_mounts_are_idempotent(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path)
+    for name in guardian.OUTPUT_ROOTS:
+        (config.backing_root / name).mkdir(mode=0o700)
+        (config.package / name).mkdir(mode=0o700)
+    entries = [
+        guardian.MountEntry(config.package / name, f"/{name}", "/dev/test", "8:2")
+        for name in guardian.OUTPUT_ROOTS
+    ]
+    real_stat = guardian.Path.stat
+
+    def fake_stat(path: Path, *args: Any, **kwargs: Any) -> Any:
+        value = real_stat(path, *args, **kwargs)
+        if path == config.package:
+            fields = list(value)
+            fields[2] = 1
+            return os.stat_result(fields)
+        if path.parent == config.backing_root or path.parent == config.package:
+            fields = list(value)
+            fields[1] = hash(path.name) & 0xFFFF
+            fields[2] = 2
+            return os.stat_result(fields)
+        return value
+
+    monkeypatch.setattr(guardian, "_validate_roots", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(guardian, "_mount_entries", lambda _path: entries)
+    monkeypatch.setattr(guardian, "_same_identity", lambda _source, _target: True)
+    monkeypatch.setattr(guardian.Path, "stat", fake_stat)
+    monkeypatch.setattr(guardian, "_private_directory", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(guardian, "_bind_mount", lambda *_args: pytest.fail("mount command invoked"))
+    mounts = guardian._ensure_mounts(config, mutate=True)
+    assert len(mounts) == len(guardian.OUTPUT_ROOTS)
+
+
+def test_orphan_guardian_temporary_is_quarantined_without_reading(
+    guardian: ModuleType, tmp_path: Path
+) -> None:
+    config = _config(guardian, tmp_path)
+    for name in guardian.OUTPUT_ROOTS:
+        (config.backing_root / name).mkdir(mode=0o700)
+    orphan = config.backing_root / guardian.OUTPUT_ROOTS[0] / ".cycle007-guardian-tmp-receipt.dead"
+    orphan.write_bytes(b"opaque")
+    assert guardian._recover_guardian_temporaries(config) == 1
+    assert not orphan.exists()
+    recovery = config.backing_root / ".cycle007-guardian-recovery"
+    assert len(list(recovery.iterdir())) == 1
+
+
 def test_wrong_existing_mount_is_refused_without_mount_command(
     guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -153,6 +267,17 @@ def test_duplicate_guardian_lock_is_nonblocking(guardian: ModuleType, tmp_path: 
             guardian._lock(path, "guardian_already_running")
     finally:
         first.close()
+
+
+def test_lock_refuses_symlink_leaf(guardian: ModuleType, tmp_path: Path) -> None:
+    lock_directory = tmp_path / "locks"
+    lock_directory.mkdir(mode=0o700)
+    target = tmp_path / "target"
+    target.write_text("", encoding="utf-8")
+    link = lock_directory / "execution.lock"
+    link.symlink_to(target)
+    with pytest.raises(guardian.GuardianError, match="lock_path_drift"):
+        guardian._lock(link, "active_worker")
 
 
 def test_execution_lock_survives_in_inherited_child(guardian: ModuleType, tmp_path: Path) -> None:
@@ -285,7 +410,7 @@ def test_resume_stops_at_requested_boundary(
 
     monkeypatch.setattr(guardian, "_lock", lambda *_args: handle)
     monkeypatch.setattr(guardian, "_recover_guardian_temporaries", lambda *_args: 0)
-    monkeypatch.setattr(guardian, "_reconcile_markers", lambda *_args: None)
+    monkeypatch.setattr(guardian, "_reconcile_markers", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(guardian, "_require_free_space", lambda *_args: 100)
 
     def invoke(_config: Any, action: str, **kwargs: Any) -> dict[str, Any]:
@@ -316,7 +441,7 @@ def test_terminal_resume_is_noop(guardian: ModuleType, tmp_path: Path, monkeypat
     run_calls = 0
     monkeypatch.setattr(guardian, "_lock", lambda *_args: handle)
     monkeypatch.setattr(guardian, "_recover_guardian_temporaries", lambda *_args: 0)
-    monkeypatch.setattr(guardian, "_reconcile_markers", lambda *_args: None)
+    monkeypatch.setattr(guardian, "_reconcile_markers", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(guardian, "_require_free_space", lambda *_args: 100)
 
     def invoke(_config: Any, action: str, **_kwargs: Any) -> dict[str, Any]:
@@ -344,7 +469,7 @@ def test_active_audit_marker_without_seal_stops_before_provider(
     marker = guardian._marker(config, "audit")
     marker.write_text(json.dumps({"text_free": True}), encoding="utf-8")
     with pytest.raises(guardian.GuardianError, match="ambiguous_provider_attempt"):
-        guardian._reconcile_markers(config)
+        guardian._reconcile_markers(config, mutate=False)
 
 
 def test_stale_marker_after_stage_seal_is_removed_durably(
@@ -359,7 +484,7 @@ def test_stale_marker_after_stage_seal_is_removed_durably(
     seal.write_text("{}", encoding="utf-8")
     synced: list[Path] = []
     monkeypatch.setattr(guardian, "_fsync_directory", lambda path: synced.append(path))
-    guardian._reconcile_markers(config)
+    guardian._reconcile_markers(config, mutate=True)
     assert not marker.exists()
     assert synced == [control]
 

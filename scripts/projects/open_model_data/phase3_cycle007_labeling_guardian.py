@@ -238,6 +238,20 @@ def _validate_roots(config: Config, *, create: bool) -> None:
     lock_paths = (config.guardian_lock, config.controller_lock, config.execution_lock)
     if len(set(lock_paths)) != len(lock_paths):
         raise GuardianError("lock_path_collision")
+    for lock_path in lock_paths:
+        if not _non_overlapping(lock_path, config.package) or not _non_overlapping(
+            lock_path, config.backing_root
+        ):
+            raise GuardianError("lock_path_collision")
+        if create and not lock_path.parent.exists():
+            _assert_no_symlink_components(lock_path.parent, allow_missing_leaf=True)
+            lock_path.parent.mkdir(mode=0o700)
+            os.chown(lock_path.parent, config.owner_uid, config.owner_gid)
+        _assert_no_symlink_components(lock_path.parent)
+        if lock_path.exists() or lock_path.is_symlink():
+            info = lock_path.lstat()
+            if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+                raise GuardianError("lock_path_drift")
     for root_name in OUTPUT_ROOTS:
         source = config.backing_root / root_name
         target = config.package / root_name
@@ -424,7 +438,7 @@ def _stage_seal(config: Config, stage: str) -> Path:
     return config.package / "control" / f"stage-{stage}.complete.json"
 
 
-def _reconcile_markers(config: Config) -> None:
+def _reconcile_markers(config: Config, *, mutate: bool) -> None:
     for stage in MARKED_STAGES:
         marker = _marker(config, stage)
         if not marker.exists() and not marker.is_symlink():
@@ -432,7 +446,8 @@ def _reconcile_markers(config: Config) -> None:
         if marker.is_symlink() or not marker.is_file():
             raise GuardianError("ambiguous_provider_attempt")
         if _stage_seal(config, stage).is_file() and not _stage_seal(config, stage).is_symlink():
-            _remove_durable(marker)
+            if mutate:
+                _remove_durable(marker)
             continue
         raise GuardianError("ambiguous_provider_attempt")
 
@@ -481,7 +496,7 @@ def _resume(config: Config, mounts: list[dict[str, Any]]) -> dict[str, Any]:
     try:
         execution_fd = execution.fileno()
         recovered = _recover_guardian_temporaries(config)
-        _reconcile_markers(config)
+        _reconcile_markers(config, mutate=True)
         status = _invoke_controller(config, "status", execution_fd=execution_fd)
         completed = _completed_stages(status)
         boundary = STAGES.index(config.through)
@@ -606,7 +621,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "text_free": True,
             }
         elif config.action in {"status", "plan"}:
-            _reconcile_markers(config)
+            _reconcile_markers(config, mutate=False)
             result = _safe_status(config, mounts=mounts)
         else:
             result = _resume(config, mounts)
