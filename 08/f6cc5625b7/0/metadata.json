@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "08f6cc5625b7",
+  "session_id": "fleet-4a20588adefc4c5c9ec64ece07c08526",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T10:48:47.35379Z",
+  "branch": "agy/timeout-burndown-7213-s6",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/bakeoff_run.py",
+    "scripts/audit/check_mdx_generation_drift.py",
+    "scripts/audit/find_dead_code.py",
+    "scripts/audit/hermes_nightly_audit.py",
+    "tests/audit/test_audit_timeouts.py",
+    "tests/audit/test_find_dead_code.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "9202ca7f9390",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T10:48:47.348714Z",
+    "agent_lines": 101,
+    "agent_removed": 14,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 101,
+    "total_lines_changed": 115,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

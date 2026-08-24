@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "08f6cc5625b7",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s6",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/bakeoff_run.py",
+    "scripts/audit/check_mdx_generation_drift.py",
+    "scripts/audit/find_dead_code.py",
+    "scripts/audit/hermes_nightly_audit.py",
+    "tests/audit/test_audit_timeouts.py",
+    "tests/audit/test_find_dead_code.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/08/f6cc5625b7/0/metadata.json",
+      "transcript": "/08/f6cc5625b7/0/full.jsonl",
+      "compact_transcript": "/08/f6cc5625b7/0/transcript.jsonl",
+      "content_hash": "/08/f6cc5625b7/0/content_hash.txt",
+      "prompt": "/08/f6cc5625b7/0/prompt.txt"
+    }
+  ]
+}
