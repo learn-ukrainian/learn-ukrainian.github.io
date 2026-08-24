@@ -93,6 +93,20 @@ represent ordinary merged-PR dispatch cleanup:
   its executor repeats frozen-plan, merged-PR, bundle, and candidate checks
   immediately before deletion. Do not replace or remove that path here.
 
+## Before re-firing a task id
+
+A detached `delegate.py dispatch` launcher that is still grinding from a prior
+attempt can finish after you re-fire the same task id, leaving two workers on
+one worktree (the task record points at the newer pid; the older process is an
+orphan). Before re-using a task id, kill any stale detached launcher for it:
+
+```bash
+/bin/ps -axo pid,etime,command | grep 'delegate.py dispatch .*--task-id <id>'
+```
+
+Confirm the match is the stale launcher, then terminate that pid before the
+new dispatch.
+
 ## Immediate cleanup after merge
 
 The merge owner removes the exact worktree as soon as GitHub reports the PR
