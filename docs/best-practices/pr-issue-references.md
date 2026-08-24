@@ -12,8 +12,8 @@ Use `Closes #123`, `Fixes #123`, or `Resolves #123` only when the pull request
 owns the issue's complete closeout. Do not put a negative expression beside a
 closing action and an issue reference.
 
-The required CI job runs this deterministic check on PR creation, updates, and
-body edits. To exercise it locally with a disposable body, run:
+The PR-required `secret-scan` job runs this deterministic check on PR creation,
+updates, and body edits. To exercise it locally with a disposable body, run:
 
 ```bash
 printf '%s' 'Refs #123' | .venv/bin/python scripts/audit/lint_pr_closing_references.py --stdin

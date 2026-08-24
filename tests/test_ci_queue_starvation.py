@@ -37,16 +37,35 @@ def _triggers(workflow: dict) -> dict:
     return raw
 
 
-def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
+def test_ci_keeps_secret_scan_separate_from_full_contracts() -> None:
     jobs = _load(_CI)["jobs"]
     assert "security" not in jobs
     assert "pr-body-references" not in jobs
+    secret_steps = "\n".join(
+        step.get("name", "")
+        + "\n"
+        + str(step.get("if", ""))
+        + "\n"
+        + str(step.get("uses", ""))
+        + "\n"
+        + str(step.get("run", ""))
+        for step in jobs["secret-scan"]["steps"]
+    )
     contracts_steps = "\n".join(
         step.get("name", "") + "\n" + str(step.get("uses", "")) + "\n" + str(step.get("run", ""))
         for step in jobs["contracts"]["steps"]
     )
-    assert "trufflesecurity/trufflehog@" in contracts_steps
-    assert "lint_pr_closing_references.py" in contracts_steps
+    assert jobs["secret-scan"].get("if") is None
+    assert "trufflesecurity/trufflehog@" in secret_steps
+    assert "lint_opsec_leaks.py" in secret_steps
+    assert "check_no_internal_ids.py" in secret_steps
+    assert "lint_pr_closing_references.py" in secret_steps
+    assert "github.event_name == 'pull_request'" in secret_steps
+    assert "trufflesecurity/trufflehog@" not in contracts_steps
+    assert "lint_opsec_leaks.py" not in contracts_steps
+    assert "check_no_internal_ids.py" not in contracts_steps
+    assert "lint_pr_closing_references.py" not in contracts_steps
+    assert "check_teacher_cloze_content.py" in contracts_steps
     # Rule of thumb: assert an invariant, not a snapshot; if changing X
     # legitimately requires editing >1 test, the test is a snapshot.
     # ci-gate.needs is pinned exactly once — by the canonical set the gate
@@ -65,8 +84,10 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     assert "contains(needs.*.result, 'skipped')" not in gate_steps
 
 
-def test_contracts_bounds_landing_secret_and_opsec_scans() -> None:
+def test_secret_scan_bounds_landing_secret_and_opsec_scans() -> None:
     workflow = _CI.read_text(encoding="utf-8")
+    secret_scan = _load(_CI)["jobs"]["secret-scan"]
+    assert secret_scan["timeout-minutes"] <= 2
     assert "Resolve secret scan commit scope (#7141)" in workflow
     assert "MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha || '' }}" in workflow
     assert "MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}" in workflow

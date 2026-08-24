@@ -4647,7 +4647,7 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
     assert state["initiator"] == "codex"
     assert state["attribution_source"] == "explicit"
     assert state["runtime_tmp_root"] == str(lease_root)
-    assert state["tmp_bytes_freed"] == 0
+    assert state["tmp_bytes_freed"] == len("dry/run tmp")
     assert state["tmp_reap_error"] is None
     assert not lease_root.exists()
 

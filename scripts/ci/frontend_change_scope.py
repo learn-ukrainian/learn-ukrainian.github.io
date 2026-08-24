@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Frontend / frontend-e2e changed-path scope for CI cheap-exit (#6917 / #6930).
 
-Required jobs stay unconditionally scheduled. After checkout, this helper
-decides whether the diff touches the single-source denominator. Out of scope
-→ exit 0 with a loud auditable decision (job stays ``success``). In scope →
-continue the remaining job steps.
+Full-tier jobs use this helper after checkout to decide whether the diff
+touches the single-source denominator. Out of scope → exit 0 with a loud
+auditable decision (job stays ``success``). In scope → continue the remaining
+job steps.
 
 PR / merge_group events use merge-base range semantics against the *event*
 head SHA (not the synthetic merge-commit checkout). Push keeps linear

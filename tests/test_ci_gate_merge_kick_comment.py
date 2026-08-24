@@ -90,6 +90,5 @@ def test_no_new_job_was_added_to_ci_workflow() -> None:
     # the gate itself).
     expected_jobs = set(gate.GATE_NEEDS_JOBS) | {"frontend-e2e", "ci-gate"}
     assert set(workflow["jobs"]) == expected_jobs, (
-        "the merge-group kick comment must be a step on ci-gate, not a new job "
-        "(brief: no new workflow, no new required check)"
+        "the merge-group kick comment must be a step on ci-gate, not an unrelated job"
     )

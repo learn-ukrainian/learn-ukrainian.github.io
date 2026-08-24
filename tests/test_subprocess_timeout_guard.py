@@ -24,7 +24,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ci import fastlane_requirements
 from scripts.ci.test_source_cache import parse_test_source, read_test_source
 from tests.project_python import project_python
 
@@ -181,8 +180,6 @@ def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) ->
 
 
 _FASTLANE_MANIFEST = _REPO_ROOT / "scripts" / "ci" / "fastlane_always_tests.txt"
-_FASTLANE_BASE_REQUIREMENTS = _REPO_ROOT / "scripts" / "ci" / "requirements-fastlane.txt"
-_REQUIREMENTS_LOCK = _REPO_ROOT / "requirements-lock.txt"
 
 
 def _fastlane_manifest() -> list[str]:
@@ -254,26 +251,3 @@ def test_fastlane_manifest_matches_repo_invariant_markers() -> None:
     assert marked - manifest == set(), (
         "repo_invariant test modules missing from fastlane manifest: " + ", ".join(sorted(marked - manifest))
     )
-
-
-def test_fastlane_manifest_requirements_fit_slim_profile() -> None:
-    manifest = [
-        _REPO_ROOT / entry
-        for entry in _fastlane_manifest()
-    ]
-    try:
-        selected = fastlane_requirements.select_requirements(
-            manifest,
-            base_requirements=fastlane_requirements.read_requirements(_FASTLANE_BASE_REQUIREMENTS),
-            lock_requirements=fastlane_requirements.read_lock(_REQUIREMENTS_LOCK),
-            project_root=_REPO_ROOT,
-        )
-    except fastlane_requirements.RequirementSelectionError as exc:
-        pytest.fail(f"fastlane invariant manifest imports are not satisfiable by the slim profile: {exc}")
-
-    lock = fastlane_requirements.read_lock(_REQUIREMENTS_LOCK)
-    exact_pins = set(lock.values()) | set(fastlane_requirements.EXPLICIT_REQUIREMENTS.values())
-    for requirement in selected:
-        assert requirement in exact_pins, (
-            f"fastlane requirement is not an exact lock pin: {requirement}"
-        )

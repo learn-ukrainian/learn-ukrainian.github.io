@@ -371,10 +371,12 @@ class CodexAdapter:
           Used by ``linear_pipeline._runtime_tool_config`` to enforce
           writer tool-isolation: V7 writers may only call ``mcp__sources__*``
           tools, so feature flags such as ``shell_tool``, ``goals``,
-          ``apps``, ``plugins``, ``browser_use``, ``in_app_browser``,
+          ``plugins``, ``browser_use``, ``in_app_browser``,
           ``image_generation``, and ``multi_agent`` must be disabled
           before invocation so the model can't reach for them and trip
-          the ``writer_trace_isolation`` gate with ``wrong_tool_family``.
+          the ``writer_trace_isolation`` gate with ``wrong_tool_family``
+          (``apps`` is filtered here because it is emitted unconditionally
+          in ``build_invocation``).
           See ``codex_home_override`` for the companion MCP-scoping fix.
         - ``codex_home_override``: NOT translated to flags here — it's a
           companion ``env_overrides`` key handled in

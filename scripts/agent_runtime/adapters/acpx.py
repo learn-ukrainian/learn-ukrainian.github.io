@@ -87,6 +87,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from ..binary_resolve import resolve_agent_binary
 from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
@@ -1493,7 +1494,7 @@ def _resolve_grok_binary() -> str:
     Uses PATH lookup then ``Path.resolve()`` so the shell-safe ``--agent``
     command embeds an absolute binary. Does not fall back to inventing paths.
     """
-    found = shutil.which("grok")
+    found = resolve_agent_binary("grok")
     if not found:
         raise AcpxShadowRefusalError(
             "AcpxGrokShadowAdapter: grok binary not found on PATH; install the "
@@ -1684,7 +1685,7 @@ def probe_participant_reachability(participant: str) -> str | None:
     failure earlier with the remediation and documented fallback attached.
     """
     executable = _PARTICIPANT_PROVIDER_BINARIES.get(participant)
-    if executable is None or shutil.which(executable):
+    if executable is None or resolve_agent_binary(executable):
         return None
     return _missing_binary_message(executable, adapter_label=f"ACP participant {participant!r}")
 
@@ -1696,7 +1697,7 @@ def _resolve_participant_binary(
 ) -> tuple[str, str]:
     """Resolve and capability-check one provider CLI before constructing argv."""
     contract = _PARTICIPANT_COMPATIBILITY_CONTRACTS[executable]
-    found = shutil.which(executable)
+    found = resolve_agent_binary(executable)
     if not found:
         raise AcpxShadowRefusalError(_missing_binary_message(executable, adapter_label=adapter_label))
     resolved = Path(found).resolve()
