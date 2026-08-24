@@ -17,6 +17,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
+from tests.epics_monitor_stub import epics_monitor_stub
 
 REPO = Path(__file__).resolve().parents[1]
 PUBLIC = (
@@ -167,20 +168,20 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     python_stub = root / ".venv" / "bin" / "python"
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
-        f'''#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+        f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   touch {os.fspath(claim_marker)!r}
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_streams" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "close" ]]; then
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
 exec {sys.executable!r} "$@"
-''',
+""",
         encoding="utf-8",
     )
     python_stub.chmod(0o755)
@@ -254,14 +255,14 @@ def _core_driver_exit_fixture(
     python_stub = root / ".venv" / "bin" / "python"
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
-        f'''#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+        f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_streams" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "close" ]]; then
   count=0
   if [[ -f {os.fspath(close_attempts)!r} ]]; then count="$(< {os.fspath(close_attempts)!r})"; fi
   count=$((count + 1))
@@ -271,7 +272,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_stre
   exit 0
 fi
 exec {sys.executable!r} "$@"
-''',
+""",
         encoding="utf-8",
     )
     python_stub.chmod(0o755)
@@ -361,9 +362,7 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
     if not child_started.is_file():
         process.kill()
         stdout, stderr = process.communicate(timeout=10)
-        pytest.fail(
-            f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}"
-        )
+        pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
 
     process.send_signal(termination_signal)
     stdout, stderr = process.communicate(timeout=10)
@@ -416,20 +415,21 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["PYTHONPATH"] = os.fspath(REPO)
-
-    result = subprocess.run(
-        ["bash", os.fspath(root / "start-claude-driver.sh"), "--epic", "devops"],
-        cwd=root,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
+    env["LEARN_UK_REPO_ROOT"] = os.fspath(root)
+    store = SessionStreamStore(SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3"))
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        result = subprocess.run(
+            ["bash", os.fspath(root / "start-claude-driver.sh"), "--epic", "devops"],
+            cwd=root,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
     assert result.returncode == 0, result.stderr + result.stdout
 
-    database = SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3")
-    store = SessionStreamStore(database)
     history = store.dump_stream("epic:5703")
     assert history["sessions"][0]["state"] == "closed"
     assert history["lease"]["state"] == "released"

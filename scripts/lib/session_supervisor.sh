@@ -123,7 +123,11 @@ claim_session_supervisor_env() {
 
   local stream_normalized="${stream//:/-}"
   local lineage_id="lineage-${stream_normalized}-${agent}-${$}"
-  local ttl_seconds=21600
+  # Remote v1 uses the design-note TTL; liveness is carried by the independent
+  # launcher renew loop, never by a server-side PID probe.
+  local ttl_seconds=900
+  local host_id="${LU_MONITOR_HOST_ID:-local}"
+  export LU_MONITOR_HOST_ID="$host_id"
   local heartbeat_at
   heartbeat_at="$(_iso_timestamp)"
 
@@ -138,6 +142,7 @@ claim_session_supervisor_env() {
     "--process-id" "$$"
     "--lineage-id" "$lineage_id"
     "--ttl-seconds" "$ttl_seconds"
+    "--host-id" "$host_id"
   )
   if [ -n "$task_id" ]; then
     supervisor_args+=("--task-id" "$task_id")
@@ -146,13 +151,13 @@ claim_session_supervisor_env() {
   if ! "$python_bin" "${supervisor_args[@]}" > "$supervisor_tmp" 2>&1; then
     echo "Error: session supervisor failed to claim ${stream}" >&2
     sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
-    # Dead-holder leases (expired or not) auto-recover on open. Remaining
-    # failures are almost always a *live* holder — diagnose, do not invent a
-    # force-close against a running process.
+    # Remote v1 is TTL-only: an unexpired lease is live regardless of PID.
+    # Local --local callers retain proof-gated dead-process recovery; launchers
+    # must not silently switch to that local path when Monitor refuses a claim.
     if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
       echo "  hint: another process still holds this epic stream." >&2
       echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
-      echo "  if that holder PID is dead (alive=False), relaunch — open recovers automatically even before TTL expiry." >&2
+      echo "  remote leases remain live until expires_at; wait for TTL expiry or obtain an attributed operator release." >&2
     fi
     return 1
   fi

@@ -218,6 +218,43 @@ Response:
 }
 ```
 
+## Remote epic lifecycle v1 — `/api/epics/v1`
+
+This is the M1 remote lease surface from design #7178. It is exact-stream
+only (`epic:<positive-number>`), uses the API-host session-stream store, and
+uses TTL plus client heartbeats for liveness. The server never probes a client
+PID. Mutation requests must arrive through a direct loopback connection; a
+loopback tunnel is therefore the client boundary for another machine.
+
+| Method | Path | Notes |
+| --- | --- | --- |
+| GET | `/api/epics/v1/health` | Store reachability, integrity, and schema versions; no filesystem paths |
+| GET | `/api/epics/v1` | One bounded row per epic stream; no GitHub enrichment |
+| GET | `/api/epics/v1/epic:<N>` | Lease status plus pinned/latest bounded handoff digest |
+| POST | `/api/epics/v1/epic:<N>/claim` | Client-supplied IDs; same IDs plus same holder replay; expired recovery increments generation and fence atomically |
+| POST | `/api/epics/v1/epic:<N>/heartbeat` | Exact fenced lease heartbeat; `409 LEASE LOST` fences the client |
+| POST | `/api/epics/v1/epic:<N>/handoff` | Appends one existing entry type with an idempotency key |
+| POST | `/api/epics/v1/epic:<N>/release` | Exact release is idempotent; `force` requires actor host and reason |
+
+The client is `scripts.session_supervisor` and uses stdlib `urllib` with a
+10-second request timeout. Its default is remote Monitor mode. The explicit
+`--local` mode prints `LOCAL-ONLY LEASE — not visible to the fleet`; launchers
+do not select that mode; launcher normal exit and signal teardown use the
+remote `release` path. Claim preflight requires a healthy (`ok: true`) Monitor
+response before it sends a mutation. API responses contain opaque validated holder IDs but
+no paths, hostnames, IP addresses, SSH aliases, or home paths. Handoff bodies
+containing those tokens are rejected.
+
+Example remote lifecycle probe (the client emits one JSON document per call):
+
+```bash
+LU_MONITOR_LOOPBACK=http://127.0.0.1:8765 \
+  /path/to/project/.venv/bin/python -m scripts.session_supervisor claim \
+  --role driver --stream epic:7178 --agent codex --harness codex-cli \
+  --instance-id example-driver --process-id 1234 --host-id example-host \
+  --lineage-id example-lineage
+```
+
 ### `GET /api/config`
 
 Returns level configuration and API version.

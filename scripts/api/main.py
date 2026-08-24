@@ -72,6 +72,7 @@ from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
 from .discussions_router import router as discussions_router
 from .docs_router import router as docs_router
+from .epics_router import router as epics_router
 from .fleet_router import router as fleet_router
 from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
@@ -173,6 +174,7 @@ app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"]
 app.include_router(atlas_jobs_router, prefix="/api/atlas-jobs", tags=["atlas-jobs"])
 app.include_router(occupancy_router, prefix="/api/occupancy", tags=["occupancy"])
 app.include_router(observer_presence_router, prefix="/api/observer", tags=["observer"])
+app.include_router(epics_router, prefix="/api/epics", tags=["epics"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
@@ -660,12 +662,7 @@ def _collect_idle_prs_orient_data() -> dict[str, Any]:
         raise RuntimeError("gh pr list returned a non-list payload")
 
     now = datetime.now(UTC)
-    rows = [
-        row
-        for item in payload
-        if isinstance(item, dict)
-        if (row := _eligible_idle_pr(item, now=now)) is not None
-    ]
+    rows = [row for item in payload if isinstance(item, dict) if (row := _eligible_idle_pr(item, now=now)) is not None]
     rows.sort(key=lambda row: (-row["minutes_idle"], row["number"]))
     return {"idle_prs": rows}
 

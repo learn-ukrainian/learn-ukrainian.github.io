@@ -45,6 +45,16 @@ SECRET_PATTERNS = (
 )
 EMAIL_RE = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 PHONE_RE = re.compile(r"(?<!\w)\+[0-9][0-9 ()-]{7,}[0-9](?!\w)")
+IPV4_RE = re.compile(r"(?<![A-Za-z0-9])(?:\d{1,3}\.){3}\d{1,3}(?![A-Za-z0-9])")
+IPV6_RE = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:]{0,4}(?![A-Za-z0-9])")
+HOSTNAME_RE = re.compile(
+    r"(?i)(?<![A-Za-z0-9_-])(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}(?![A-Za-z0-9_-])"
+)
+HOME_PATH_RE = re.compile(r"(?<![A-Za-z0-9])(?:~|/home|/Users|/private/var|[A-Za-z]:\\Users)(?:[/\\]|$)")
+SSH_ALIAS_RE = re.compile(
+    r"(?i)(?:\b(?:ssh|scp|rsync)\s+[^\s]+|\b(?:git|[A-Za-z0-9._-]+)@[^\s:/]+:|"
+    r"(?<![A-Za-z0-9])(atlas-runner|hramatka|vps)(?![A-Za-z0-9]))"
+)
 
 
 class SessionStreamError(RuntimeError):
@@ -95,6 +105,15 @@ def validate_entry_body(body: str) -> None:
         raise ContentRejectedError("entry body rejected by email-address rule")
     if PHONE_RE.search(body):
         raise ContentRejectedError("entry body rejected by phone-number rule")
+    for rule, pattern in (
+        ("ipv4-address", IPV4_RE),
+        ("ipv6-address", IPV6_RE),
+        ("hostname", HOSTNAME_RE),
+        ("home-path", HOME_PATH_RE),
+        ("ssh-alias", SSH_ALIAS_RE),
+    ):
+        if pattern.search(body):
+            raise ContentRejectedError(f"entry body rejected by {rule} rule")
 
 
 class SessionStreamStore:
@@ -279,9 +298,9 @@ class SessionStreamStore:
                 connection.execute(
                     "INSERT INTO stream_leases("
                     "stream_id, session_id, lease_id, generation, fencing_token, state, "
-                    "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, "
+                    "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, holder_host_id, "
                     "heartbeat_at, expires_at, ttl_seconds, version, last_event_id"
-                    ") VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
+                    ") VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
                     (
                         stream_id,
                         session_id,
@@ -294,6 +313,7 @@ class SessionStreamStore:
                         holder.instance_id,
                         holder.task_id,
                         holder.process_id,
+                        holder.host_id,
                         timestamp,
                         expires_at,
                         ttl_seconds,
@@ -307,7 +327,7 @@ class SessionStreamStore:
                     "UPDATE stream_leases SET "
                     "session_id = ?, lease_id = ?, generation = ?, fencing_token = ?, state = 'active', "
                     "holder_kind = ?, holder_agent = ?, holder_harness = ?, holder_instance_id = ?, holder_task_id = ?, "
-                    "holder_process_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, "
+                    "holder_process_id = ?, holder_host_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, "
                     "version = ?, last_event_id = ? WHERE stream_id = ?",
                     (
                         session_id,
@@ -320,6 +340,7 @@ class SessionStreamStore:
                         holder.instance_id,
                         holder.task_id,
                         holder.process_id,
+                        holder.host_id,
                         timestamp,
                         expires_at,
                         ttl_seconds,
@@ -340,6 +361,400 @@ class SessionStreamStore:
             ttl_seconds=ttl_seconds,
             version=version,
         )
+
+    def claim_remote_session(
+        self,
+        *,
+        stream_id: str,
+        holder: LeaseHolder,
+        lineage_id: str,
+        ttl_seconds: int,
+        session_id: str,
+        lease_id: str,
+        now: datetime | None = None,
+    ) -> tuple[Lease, str]:
+        """Claim an epic lease using TTL fencing, without probing a client PID.
+
+        The transaction deliberately treats an exact replay as authoritative
+        even after its TTL elapsed.  That is what lets a late heartbeat revive
+        the original lease until a successor has committed the recovery CAS.
+        """
+        stream_id = validate_stream_id(stream_id)
+        if not stream_id.startswith("epic:"):
+            raise ValueError("remote claims require an epic:<positive-number> stream")
+        holder.validate()
+        self._validate_identity("lineage_id", lineage_id)
+        self._validate_identity("session_id", session_id)
+        self._validate_identity("lease_id", lease_id)
+        self._validate_ttl(ttl_seconds)
+        current_time = now or utc_now()
+        timestamp = isoformat_z(current_time)
+        expires_at = isoformat_z(current_time + timedelta(seconds=ttl_seconds))
+
+        with self._transaction(now=current_time) as connection:
+            self._ensure_stream(connection, stream_id=stream_id, created_at=timestamp)
+            projection = connection.execute(
+                "SELECT lease.*, session.state AS session_state, session.expired_at AS session_expired_at "
+                "FROM stream_leases AS lease JOIN sessions AS session "
+                "ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+                "WHERE lease.stream_id = ?",
+                (stream_id,),
+            ).fetchone()
+            if projection is not None:
+                current = self._lease_from_row(projection)
+                same_identity = (
+                    current.session_id == session_id and current.lease_id == lease_id and current.holder == holder
+                )
+                if same_identity and projection["state"] == "active":
+                    return current, "replayed"
+                if projection["state"] == "active":
+                    expires = parse_timestamp(str(projection["expires_at"]))
+                    if current_time < expires:
+                        raise LeaseConflictError("epic stream has a live holder")
+                if same_identity and projection["state"] != "active":
+                    raise LeaseConflictError("supplied claim no longer owns the released lease")
+
+            generation = 1 if projection is None else int(projection["generation"]) + 1
+            fencing_token = 1 if projection is None else int(projection["fencing_token"]) + 1
+            recovery_proof: dict[str, Any] = {
+                "kind": "remote_epic_claim.v1",
+                "cas": "sqlite-begin-immediate",
+                "successor_session_id": session_id,
+                "successor_lease_id": lease_id,
+                "successor_generation": generation,
+                "successor_fencing_token": fencing_token,
+            }
+
+            if projection is None:
+                connection.execute(
+                    "INSERT INTO sessions(session_id, stream_id, state, lineage_id, opened_at, updated_at, closed_at, state_version) "
+                    "VALUES (?, ?, 'open', ?, ?, ?, NULL, 1)",
+                    (session_id, stream_id, lineage_id, timestamp, timestamp),
+                )
+                connection.execute(
+                    "INSERT INTO session_events(stream_id, session_id, from_state, to_state, ts, agent, harness, reason, proof_json) "
+                    "VALUES (?, ?, NULL, 'open', ?, ?, ?, ?, ?)",
+                    (
+                        stream_id,
+                        session_id,
+                        timestamp,
+                        holder.agent,
+                        holder.harness,
+                        "remote epic claim",
+                        canonical_json(recovery_proof),
+                    ),
+                )
+                event_id = self._insert_lease_event(
+                    connection,
+                    stream_id=stream_id,
+                    session_id=session_id,
+                    lease_id=lease_id,
+                    generation=generation,
+                    fencing_token=fencing_token,
+                    event_type="acquired",
+                    holder=holder,
+                    ttl_seconds=ttl_seconds,
+                    timestamp=timestamp,
+                    proof=recovery_proof,
+                    reason="remote epic claim",
+                )
+                connection.execute(
+                    "INSERT INTO stream_leases("
+                    "stream_id, session_id, lease_id, generation, fencing_token, state, "
+                    "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, holder_host_id, "
+                    "heartbeat_at, expires_at, ttl_seconds, version, last_event_id) "
+                    "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
+                    (
+                        stream_id,
+                        session_id,
+                        lease_id,
+                        generation,
+                        fencing_token,
+                        holder.holder_kind.value,
+                        holder.agent,
+                        holder.harness,
+                        holder.instance_id,
+                        holder.task_id,
+                        holder.process_id,
+                        holder.host_id,
+                        timestamp,
+                        expires_at,
+                        ttl_seconds,
+                        event_id,
+                    ),
+                )
+                version = 1
+                outcome = "claimed"
+            else:
+                predecessor = self._lease_from_row(projection)
+                recovery_proof.update(
+                    {
+                        "predecessor_session_id": predecessor.session_id,
+                        "predecessor_lease_id": predecessor.lease_id,
+                        "predecessor_generation": predecessor.generation,
+                        "predecessor_fencing_token": predecessor.fencing_token,
+                        "predecessor_expires_at": predecessor.expires_at,
+                    }
+                )
+                if projection["state"] == "active":
+                    release_event = self._insert_lease_event_from_row(
+                        connection,
+                        row=projection,
+                        event_type="released",
+                        timestamp=timestamp,
+                        proof={**recovery_proof, "phase": "predecessor-release"},
+                        reason="remote TTL claim recovered expired lease",
+                    )
+                    connection.execute(
+                        "UPDATE stream_leases SET state = 'released', version = version + 1, last_event_id = ? "
+                        "WHERE stream_id = ?",
+                        (release_event, stream_id),
+                    )
+                    old_state = str(projection["session_state"])
+                    connection.execute(
+                        "INSERT INTO session_events(stream_id, session_id, from_state, to_state, ts, agent, harness, reason, proof_json) "
+                        "VALUES (?, ?, ?, 'closed', ?, ?, ?, ?, ?)",
+                        (
+                            stream_id,
+                            predecessor.session_id,
+                            old_state,
+                            timestamp,
+                            holder.agent,
+                            holder.harness,
+                            "remote TTL claim recovered expired lease",
+                            canonical_json(recovery_proof),
+                        ),
+                    )
+                    connection.execute(
+                        "UPDATE sessions SET state = 'closed', expired_at = ?, closed_at = ?, updated_at = ?, "
+                        "state_version = state_version + 1 WHERE stream_id = ? AND session_id = ?",
+                        (timestamp, timestamp, timestamp, stream_id, predecessor.session_id),
+                    )
+                elif projection["session_state"] not in {SessionState.CLOSED.value}:
+                    raise LifecycleError("stream has an unreleased non-active lease")
+
+                connection.execute(
+                    "INSERT INTO sessions(session_id, stream_id, state, lineage_id, opened_at, updated_at, closed_at, state_version) "
+                    "VALUES (?, ?, 'open', ?, ?, ?, NULL, 1)",
+                    (session_id, stream_id, lineage_id, timestamp, timestamp),
+                )
+                connection.execute(
+                    "INSERT INTO session_events(stream_id, session_id, from_state, to_state, ts, agent, harness, reason, proof_json) "
+                    "VALUES (?, ?, NULL, 'open', ?, ?, ?, ?, ?)",
+                    (
+                        stream_id,
+                        session_id,
+                        timestamp,
+                        holder.agent,
+                        holder.harness,
+                        "remote epic claim recovery",
+                        canonical_json(recovery_proof),
+                    ),
+                )
+                successor_event_type = "recovered" if projection["state"] == "active" else "acquired"
+                event_id = self._insert_lease_event(
+                    connection,
+                    stream_id=stream_id,
+                    session_id=session_id,
+                    lease_id=lease_id,
+                    generation=generation,
+                    fencing_token=fencing_token,
+                    event_type=successor_event_type,
+                    holder=holder,
+                    ttl_seconds=ttl_seconds,
+                    timestamp=timestamp,
+                    proof=recovery_proof,
+                    reason="remote TTL claim recovery",
+                )
+                version = int(projection["version"]) + 2
+                connection.execute(
+                    "UPDATE stream_leases SET session_id = ?, lease_id = ?, generation = ?, fencing_token = ?, state = 'active', "
+                    "holder_kind = ?, holder_agent = ?, holder_harness = ?, holder_instance_id = ?, holder_task_id = ?, "
+                    "holder_process_id = ?, holder_host_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, "
+                    "version = ?, last_event_id = ? WHERE stream_id = ?",
+                    (
+                        session_id,
+                        lease_id,
+                        generation,
+                        fencing_token,
+                        holder.holder_kind.value,
+                        holder.agent,
+                        holder.harness,
+                        holder.instance_id,
+                        holder.task_id,
+                        holder.process_id,
+                        holder.host_id,
+                        timestamp,
+                        expires_at,
+                        ttl_seconds,
+                        version,
+                        event_id,
+                        stream_id,
+                    ),
+                )
+                outcome = "recovered" if projection["state"] == "active" else "claimed"
+        return (
+            Lease(
+                stream_id=stream_id,
+                session_id=session_id,
+                lease_id=lease_id,
+                generation=generation,
+                fencing_token=fencing_token,
+                holder=holder,
+                heartbeat_at=timestamp,
+                expires_at=expires_at,
+                ttl_seconds=ttl_seconds,
+                version=version,
+            ),
+            outcome,
+        )
+
+    def force_release_remote_session(
+        self,
+        *,
+        stream_id: str,
+        actor_agent: str,
+        actor_host_id: str,
+        reason: str,
+        now: datetime | None = None,
+    ) -> Lease:
+        """Release the current remote lease with an explicit operator receipt."""
+        stream_id = validate_stream_id(stream_id)
+        actor = LeaseHolder(
+            agent=actor_agent,
+            harness="monitor-operator",
+            instance_id=f"force-release-{actor_host_id}",
+            process_id=1,
+            host_id=actor_host_id,
+        )
+        actor.validate()
+        validate_entry_body(reason)
+        current_time = now or utc_now()
+        timestamp = isoformat_z(current_time)
+        with self._transaction(now=current_time) as connection:
+            row = connection.execute(
+                "SELECT lease.*, session.state AS session_state FROM stream_leases AS lease "
+                "JOIN sessions AS session ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+                "WHERE lease.stream_id = ?",
+                (stream_id,),
+            ).fetchone()
+            if row is None or row["state"] != "active":
+                raise LeaseConflictError("stream has no active lease to force-release")
+            lease = self._lease_from_row(row)
+            proof = {
+                "kind": "remote_epic_force_release.v1",
+                "actor": {
+                    "agent": actor.agent,
+                    "host_id": actor.host_id,
+                },
+                "reason": reason,
+            }
+            event_id = self._insert_lease_event_from_row(
+                connection,
+                row=row,
+                event_type="force_closed",
+                timestamp=timestamp,
+                proof=proof,
+                reason=reason,
+            )
+            connection.execute(
+                "UPDATE stream_leases SET state = 'released', version = version + 1, last_event_id = ? WHERE stream_id = ?",
+                (event_id, stream_id),
+            )
+            connection.execute(
+                "INSERT INTO session_events(stream_id, session_id, from_state, to_state, ts, agent, harness, reason, proof_json) "
+                "VALUES (?, ?, ?, 'closed', ?, ?, ?, ?, ?)",
+                (
+                    stream_id,
+                    lease.session_id,
+                    row["session_state"],
+                    timestamp,
+                    actor.agent,
+                    actor.harness,
+                    reason,
+                    canonical_json(proof),
+                ),
+            )
+            connection.execute(
+                "UPDATE sessions SET state = 'closed', closed_at = ?, updated_at = ?, state_version = state_version + 1 "
+                "WHERE stream_id = ? AND session_id = ?",
+                (timestamp, timestamp, stream_id, lease.session_id),
+            )
+        return lease
+
+    def release_remote_session(
+        self,
+        lease: Lease,
+        *,
+        now: datetime | None = None,
+    ) -> SessionState:
+        """Release an exact remote lease, fencing historical predecessors."""
+        lease.holder.validate()
+        current_time = now or utc_now()
+        timestamp = isoformat_z(current_time)
+        with self._transaction(now=current_time) as connection:
+            row = connection.execute(
+                "SELECT lease.*, session.state AS session_state FROM stream_leases AS lease "
+                "JOIN sessions AS session ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+                "WHERE lease.stream_id = ?",
+                (lease.stream_id,),
+            ).fetchone()
+            if row is None:
+                raise NotFoundError("remote lease not found")
+            matches = (
+                row["session_id"] == lease.session_id
+                and row["lease_id"] == lease.lease_id
+                and int(row["generation"]) == lease.generation
+                and int(row["fencing_token"]) == lease.fencing_token
+                and row["holder_agent"] == lease.holder.agent
+                and row["holder_harness"] == lease.holder.harness
+                and row["holder_instance_id"] == lease.holder.instance_id
+                and row["holder_kind"] == lease.holder.holder_kind.value
+                and row["holder_task_id"] == lease.holder.task_id
+                and row["holder_process_id"] == lease.holder.process_id
+                and row["holder_host_id"] == lease.holder.host_id
+            )
+            if not matches:
+                raise LeaseConflictError("supplied remote lease is not the current fenced lease")
+            if row["state"] == "released":
+                return SessionState.CLOSED
+            release_proof = {
+                "kind": "remote_epic_release.v1",
+                "session_id": lease.session_id,
+                "lease_id": lease.lease_id,
+            }
+            event_id = self._insert_lease_event_from_row(
+                connection,
+                row=row,
+                event_type="released",
+                timestamp=timestamp,
+                proof=release_proof,
+                reason="remote epic release",
+            )
+            connection.execute(
+                "UPDATE stream_leases SET state = 'released', version = version + 1, last_event_id = ? WHERE stream_id = ?",
+                (event_id, lease.stream_id),
+            )
+            connection.execute(
+                "INSERT INTO session_events(stream_id, session_id, from_state, to_state, ts, agent, harness, reason, proof_json) "
+                "VALUES (?, ?, ?, 'closed', ?, ?, ?, ?, ?)",
+                (
+                    lease.stream_id,
+                    lease.session_id,
+                    row["session_state"],
+                    timestamp,
+                    lease.holder.agent,
+                    lease.holder.harness,
+                    "remote epic release",
+                    canonical_json(release_proof),
+                ),
+            )
+            connection.execute(
+                "UPDATE sessions SET state = 'closed', closed_at = ?, updated_at = ?, state_version = state_version + 1 "
+                "WHERE stream_id = ? AND session_id = ?",
+                (timestamp, timestamp, lease.stream_id, lease.session_id),
+            )
+        return SessionState.CLOSED
 
     def heartbeat(
         self,
@@ -513,7 +928,7 @@ class SessionStreamStore:
                         "stream_id = ? AND session_id = ? AND lease_id = ? "
                         "AND generation = ? AND fencing_token = ? "
                         "AND holder_agent = ? AND holder_harness = ? AND holder_instance_id = ? "
-                        "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? "
+                        "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? AND holder_host_id IS ? "
                         "AND json_extract(proof_json, '$.receipt_digest') IS NULL LIMIT 1",
                         (
                             lease.stream_id,
@@ -527,6 +942,7 @@ class SessionStreamStore:
                             lease.holder.holder_kind.value,
                             lease.holder.task_id,
                             lease.holder.process_id,
+                            lease.holder.host_id,
                         ),
                     ).fetchone()
                 else:
@@ -535,7 +951,7 @@ class SessionStreamStore:
                         "stream_id = ? AND session_id = ? AND lease_id = ? "
                         "AND generation = ? AND fencing_token = ? AND event_type = 'released' "
                         "AND holder_agent = ? AND holder_harness = ? AND holder_instance_id = ? "
-                        "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? "
+                        "AND holder_kind = ? AND holder_task_id IS ? AND holder_process_id IS ? AND holder_host_id IS ? "
                         "AND json_extract(proof_json, '$.receipt.operation') = 'close' "
                         "AND json_extract(proof_json, '$.receipt.session_id') = ? "
                         "AND json_extract(proof_json, '$.receipt.lease_id') = ? "
@@ -556,6 +972,7 @@ class SessionStreamStore:
                             lease.holder.holder_kind.value,
                             lease.holder.task_id,
                             lease.holder.process_id,
+                            lease.holder.host_id,
                             lease.session_id,
                             lease.lease_id,
                             lease.generation,
@@ -945,7 +1362,7 @@ class SessionStreamStore:
             connection.execute(
                 "UPDATE stream_leases SET session_id = ?, lease_id = ?, generation = ?, fencing_token = ?, state = 'active', "
                 "holder_kind = ?, holder_agent = ?, holder_harness = ?, holder_instance_id = ?, holder_task_id = ?, "
-                "holder_process_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, version = ?, last_event_id = ? "
+                "holder_process_id = ?, holder_host_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, version = ?, last_event_id = ? "
                 "WHERE stream_id = ?",
                 (
                     session_id,
@@ -958,6 +1375,7 @@ class SessionStreamStore:
                     successor.instance_id,
                     successor.task_id,
                     successor.process_id,
+                    successor.host_id,
                     timestamp,
                     expires_at,
                     ttl_seconds,
@@ -1153,6 +1571,94 @@ class SessionStreamStore:
                 high_water_entry_id=high_water,
             )
 
+    def load_remote_digest(self, stream_id: str, *, limit: int) -> StreamDigest:
+        """Load a bounded remote digest with latest state/decision/action entries."""
+        stream_id = validate_stream_id(stream_id)
+        if limit < 0 or limit > 10_000:
+            raise ValueError("limit must be between 0 and 10000")
+        with self._read_snapshot() as connection:
+            if connection.execute("SELECT 1 FROM streams WHERE stream_id = ?", (stream_id,)).fetchone() is None:
+                raise NotFoundError(f"stream not found: {stream_id}")
+            pinned_values = tuple(entry_type.value for entry_type in PINNED_ENTRY_TYPES)
+            placeholders = ",".join("?" for _ in pinned_values)
+            pinned_rows = connection.execute(
+                f"SELECT * FROM entries WHERE stream_id = ? AND type IN ({placeholders}) ORDER BY entry_id",
+                (stream_id, *pinned_values),
+            ).fetchall()
+            required_values = (
+                EntryType.STATE.value,
+                EntryType.DECISION.value,
+                EntryType.NEXT_ACTION.value,
+            )
+            required_rows: list[sqlite3.Row] = []
+            for entry_type in required_values:
+                row = connection.execute(
+                    "SELECT * FROM entries WHERE stream_id = ? AND type = ? ORDER BY entry_id DESC LIMIT 1",
+                    (stream_id, entry_type),
+                ).fetchone()
+                if row is not None:
+                    required_rows.append(row)
+            recent_rows = connection.execute(
+                f"SELECT * FROM entries WHERE stream_id = ? AND type NOT IN ({placeholders}) "
+                "ORDER BY entry_id DESC LIMIT ?",
+                (stream_id, *pinned_values, limit),
+            ).fetchall()
+            selected = {int(row["entry_id"]): row for row in (*required_rows, *recent_rows)}
+            recent = [
+                selected[key] for key in sorted(selected) if key not in {int(row["entry_id"]) for row in pinned_rows}
+            ]
+            high_water = int(
+                connection.execute(
+                    "SELECT COALESCE(MAX(entry_id), 0) FROM entries WHERE stream_id = ?",
+                    (stream_id,),
+                ).fetchone()[0]
+            )
+            return StreamDigest(
+                stream_id=stream_id,
+                limit=limit,
+                pinned=tuple(self._entry_from_row(connection, row) for row in pinned_rows),
+                recent=tuple(self._entry_from_row(connection, row) for row in recent),
+                high_water_entry_id=high_water,
+            )
+
+    def remote_stream_projection(self, stream_id: str) -> dict[str, Any]:
+        """Return one API-safe source projection without reading filesystem state."""
+        stream_id = validate_stream_id(stream_id)
+        if not stream_id.startswith("epic:"):
+            raise ValueError("remote projections require an epic:<positive-number> stream")
+        with self._read_snapshot() as connection:
+            stream = connection.execute(
+                "SELECT stream_id, kind, epic_number FROM streams WHERE stream_id = ?",
+                (stream_id,),
+            ).fetchone()
+            if stream is None:
+                raise NotFoundError(f"stream not found: {stream_id}")
+            row = connection.execute(
+                "SELECT lease.*, session.state AS session_state, session.expired_at AS session_expired_at "
+                "FROM stream_leases AS lease JOIN sessions AS session "
+                "ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+                "WHERE lease.stream_id = ?",
+                (stream_id,),
+            ).fetchone()
+            return {
+                "stream_id": stream_id,
+                "kind": str(stream["kind"]),
+                "epic_number": int(stream["epic_number"]),
+                "lease": self._row_as_dict(row),
+            }
+
+    def list_remote_projections(self) -> list[dict[str, Any]]:
+        """Return all epic lease projections from the API-host store."""
+        with self._read_snapshot() as connection:
+            rows = connection.execute(
+                "SELECT stream.stream_id, stream.epic_number, lease.*, session.state AS session_state, "
+                "session.expired_at AS session_expired_at "
+                "FROM streams AS stream LEFT JOIN stream_leases AS lease ON lease.stream_id = stream.stream_id "
+                "LEFT JOIN sessions AS session ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+                "WHERE stream.kind = 'epic' ORDER BY stream.epic_number"
+            ).fetchall()
+            return [self._row_as_dict(row) or {} for row in rows]
+
     def dump_stream(self, stream_id: str) -> dict[str, Any]:
         """Return complete ordered stream history for the operator dump surface."""
         stream_id = validate_stream_id(stream_id)
@@ -1286,6 +1792,8 @@ class SessionStreamStore:
         stream_id = validate_stream_id(stream_id)
         with self._read_snapshot() as connection:
             row = self._session_row(connection, stream_id, session_id)
+            if row["expired_at"] is not None:
+                return SessionState.EXPIRED
             return SessionState(str(row["state"]))
 
     def lease_projection(self, stream_id: str) -> tuple[Lease, str] | None:
@@ -1383,6 +1891,7 @@ class SessionStreamStore:
             and row["holder_kind"] == lease.holder.holder_kind.value
             and row["holder_task_id"] == lease.holder.task_id
             and row["holder_process_id"] == lease.holder.process_id
+            and row["holder_host_id"] == lease.holder.host_id
         )
         if not matches or row["state"] != "active" or row["session_state"] == SessionState.CLOSED.value:
             raise LeaseConflictError("supplied lease is not the exact current active fenced lease")
@@ -1409,9 +1918,9 @@ class SessionStreamStore:
         cursor = connection.execute(
             "INSERT INTO lease_events("
             "stream_id, session_id, lease_id, generation, fencing_token, event_type, "
-            "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, "
+            "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, holder_host_id, "
             "ttl_seconds, ts, proof_json, reason"
-            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 stream_id,
                 session_id,
@@ -1425,6 +1934,7 @@ class SessionStreamStore:
                 holder.instance_id,
                 holder.task_id,
                 holder.process_id,
+                holder.host_id,
                 ttl_seconds,
                 timestamp,
                 canonical_json(proof),
@@ -1450,6 +1960,7 @@ class SessionStreamStore:
             task_id=str(row["holder_task_id"]) if row["holder_task_id"] is not None else None,
             process_id=int(row["holder_process_id"]) if row["holder_process_id"] is not None else None,
             holder_kind=HolderKind(str(row["holder_kind"])),
+            host_id=str(row["holder_host_id"]) if row["holder_host_id"] is not None else None,
         )
         return self._insert_lease_event(
             connection,
@@ -1481,6 +1992,7 @@ class SessionStreamStore:
                 task_id=str(row["holder_task_id"]) if row["holder_task_id"] is not None else None,
                 process_id=int(row["holder_process_id"]) if row["holder_process_id"] is not None else None,
                 holder_kind=HolderKind(str(row["holder_kind"])),
+                host_id=str(row["holder_host_id"]) if row["holder_host_id"] is not None else None,
             ),
             heartbeat_at=str(row["heartbeat_at"]),
             expires_at=str(row["expires_at"]),

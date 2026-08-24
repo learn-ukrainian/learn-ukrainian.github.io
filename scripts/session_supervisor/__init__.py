@@ -24,6 +24,7 @@ from agents_extensions.shared.session_streams.handoff import diagnose_handoff
 from agents_extensions.shared.session_streams.hooks import clean_exit_hook, lease_from_environment
 from agents_extensions.shared.session_streams.inventory import epic_handoff_map
 from agents_extensions.shared.session_streams.model import (
+    EntryType,
     Lease,
     LeaseHolder,
     StreamDigest,
@@ -37,6 +38,8 @@ from agents_extensions.shared.session_streams.store import (
     SessionStreamError,
     SessionStreamStore,
 )
+
+from .remote import RemoteEpicClient, RemoteSupervisorError
 
 CAPSULE_SCHEMA = "session-supervisor-bootstrap.v1"
 LEASE_ENV_PREFIX = "SESSION_STREAM_"
@@ -65,6 +68,7 @@ class BootstrapCapsule:
     active_handoff_path: str | None
     dual_write_mode: str
     dual_write_drift: bool
+    digest_source: str = "supervisor-local-fallback"
 
     def as_dict(self) -> dict[str, Any]:
         """Return the stable JSON-ready capsule without executable lease actions."""
@@ -91,7 +95,7 @@ class BootstrapCapsule:
                 "drift": self.dual_write_drift,
             },
             "diagnostics": {
-                "digest_source": "supervisor-local-fallback",
+                "digest_source": self.digest_source,
                 "lease_actions": "supervisor-only",
             },
         }
@@ -107,9 +111,21 @@ def strip_lease_credentials(environment: Mapping[str, str]) -> dict[str, str]:
 class SessionSupervisor:
     """Compose the session-stream store into a launcher-owned lifecycle surface."""
 
-    def __init__(self, store: SessionStreamStore, *, repo_root: Path) -> None:
+    def __init__(
+        self,
+        store: SessionStreamStore | None,
+        *,
+        repo_root: Path,
+        remote: RemoteEpicClient | None = None,
+    ) -> None:
         self.store = store
         self.repo_root = repo_root.resolve()
+        self.remote = remote
+
+    def _require_store(self) -> SessionStreamStore:
+        if self.store is None:
+            raise SupervisorError("local session-stream store is unavailable in remote mode")
+        return self.store
 
     @staticmethod
     def _require_driver(role: LaunchRole | str) -> None:
@@ -128,22 +144,36 @@ class SessionSupervisor:
         holder: LeaseHolder,
         lineage_id: str,
         ttl_seconds: int,
+        session_id: str | None = None,
+        lease_id: str | None = None,
     ) -> Lease:
         """Open one exact fenced driver lease before a harness is started.
 
-        If the stream has an active lease whose holder PID is dead, proof-gated
-        force-close runs automatically (even when wall-clock TTL has not expired)
-        so launchers do not need a manual recovery step or multi-hour wait.
-        Same safety gates as handoff-claim / #5530, plus dead-unexpired reclaim.
-        Live holder processes still refuse.
+        Remote mode delegates claim authority to Monitor, where an unexpired lease
+        is live regardless of the holder PID. Local mode retains the historical
+        proof-gated dead-process recovery for ``--local`` callers. Live holders
+        still refuse in both modes.
         """
         self._require_driver(role)
-        try:
-            return self.store.open_session(
+        if self.remote is not None:
+            lease, _response = self.remote.claim(
                 stream_id=stream_id,
                 holder=holder,
                 lineage_id=lineage_id,
                 ttl_seconds=ttl_seconds,
+                session_id=session_id,
+                lease_id=lease_id,
+            )
+            return lease
+        store = self._require_store()
+        try:
+            return store.open_session(
+                stream_id=stream_id,
+                holder=holder,
+                lineage_id=lineage_id,
+                ttl_seconds=ttl_seconds,
+                session_id=session_id,
+                lease_id=lease_id,
                 reason="common session supervisor driver open",
             )
         except LifecycleError as exc:
@@ -154,28 +184,82 @@ class SessionSupervisor:
             )
             if not recovered:
                 raise
-            return self.store.open_session(
+            return store.open_session(
                 stream_id=stream_id,
                 holder=holder,
                 lineage_id=lineage_id,
                 ttl_seconds=ttl_seconds,
+                session_id=session_id,
+                lease_id=lease_id,
                 reason="common session supervisor driver open after proof-gated recover",
             )
 
     def resume_driver(self, *, role: LaunchRole | str, lease: Lease) -> Lease:
         """Resume only the exact pre-existing lease envelope by heartbeating it."""
         self._require_driver(role)
-        return self.store.heartbeat(lease)
+        return self.remote.heartbeat(lease) if self.remote is not None else self._require_store().heartbeat(lease)
 
     def heartbeat_driver(self, *, role: LaunchRole | str, lease: Lease) -> Lease:
         """Heartbeat only the exact fenced driver lease."""
         self._require_driver(role)
-        return self.store.heartbeat(lease)
+        return self.remote.heartbeat(lease) if self.remote is not None else self._require_store().heartbeat(lease)
 
     def close_driver(self, *, role: LaunchRole | str, lease: Lease) -> str:
         """Cleanly close only the exact driver session."""
         self._require_driver(role)
-        return clean_exit_hook(self.store, lease).state
+        if self.remote is not None:
+            response = self.remote.release(lease)
+            return str((response.get("lease") or {}).get("session_state", "closed"))
+        return clean_exit_hook(self._require_store(), lease).state
+
+    def handoff_driver(
+        self,
+        *,
+        role: LaunchRole | str,
+        lease: Lease,
+        entry_type: str,
+        body: str,
+        idempotency_key: str,
+        digest_limit: int = 20,
+    ) -> dict[str, Any]:
+        self._require_driver(role)
+        if self.remote is None:
+            raise SupervisorError("handoff requires the remote Monitor API")
+        return self.remote.handoff(
+            lease,
+            entry_type=entry_type,
+            body=body,
+            idempotency_key=idempotency_key,
+            digest_limit=digest_limit,
+        )
+
+    def release_driver(
+        self,
+        *,
+        role: LaunchRole | str,
+        lease: Lease | None = None,
+        stream_id: str | None = None,
+        force: bool = False,
+        actor_agent: str | None = None,
+        actor_host_id: str | None = None,
+        reason: str | None = None,
+    ) -> dict[str, Any]:
+        self._require_driver(role)
+        if self.remote is None:
+            if force:
+                raise SupervisorError("--force release requires the remote Monitor API")
+            if lease is None:
+                raise SupervisorError("release requires the exact lease")
+            state = self.close_driver(role=role, lease=lease)
+            return {"action": "release", "state": state, "stream_id": lease.stream_id}
+        return self.remote.release(
+            lease,
+            stream_id=stream_id,
+            force=force,
+            actor_agent=actor_agent,
+            actor_host_id=actor_host_id,
+            reason=reason,
+        )
 
     def recover_expired_driver(
         self,
@@ -195,9 +279,7 @@ class SessionSupervisor:
         if not status.session_id or status.session_state not in {"open", "rolling"}:
             return False
         if not status.claimable_force_close:
-            raise SupervisorError(
-                f"stream {stream_id} is not claimable for recovery: {status.reason}"
-            )
+            raise SupervisorError(f"stream {stream_id} is not claimable for recovery: {status.reason}")
         if status.holder_instance_id and status.holder_instance_id == holder.instance_id:
             raise SupervisorError(
                 f"stream {stream_id}: recovery candidate instance_id must differ from "
@@ -207,10 +289,7 @@ class SessionSupervisor:
             stream_id=stream_id,
             session_id=status.session_id,
             candidate=holder,
-            reason=(
-                f"session supervisor proof-gated recover by "
-                f"{holder.agent}/{holder.harness}"
-            ),
+            reason=(f"session supervisor proof-gated recover by {holder.agent}/{holder.harness}"),
         )
         return True
 
@@ -273,10 +352,20 @@ class SessionSupervisor:
         if lease is not None and lease.stream_id != stream_id:
             raise SupervisorError("capsule stream_id must exactly match the lease stream_id")
 
-        digest = self.store.load_digest(stream_id, limit=digest_limit)
-        handoff_paths = tuple(epic_handoff_map(self.repo_root).get(stream_id, ()))
-        active = resolve_handoff_path(stream_id, self.repo_root)
-        mode, drift = self._dual_write_status(stream_id)
+        if self.remote is not None:
+            response = self.remote.stream(stream_id, digest_limit=digest_limit)
+            digest = self.remote.digest_from_response(response)
+            handoff_paths = ()
+            active = None
+            mode, drift = "remote-api", False
+            digest_source = "monitor-api"
+        else:
+            store = self._require_store()
+            digest = store.load_digest(stream_id, limit=digest_limit)
+            handoff_paths = tuple(epic_handoff_map(self.repo_root).get(stream_id, ()))
+            active = resolve_handoff_path(stream_id, self.repo_root)
+            mode, drift = self._dual_write_status(stream_id)
+            digest_source = "supervisor-local-fallback"
         lease_summary = self._lease_summary(lease) if resolved_role is LaunchRole.DRIVER and lease else None
         return BootstrapCapsule(
             role=resolved_role,
@@ -287,15 +376,16 @@ class SessionSupervisor:
             active_handoff_path=self._relative_path(active),
             dual_write_mode=mode,
             dual_write_drift=drift,
+            digest_source=digest_source,
         )
 
     def _dual_write_status(self, stream_id: str) -> tuple[str, bool]:
-        rows = list_migration_state(self.store)
+        store = self._require_store()
+        rows = list_migration_state(store)
         mode = next((str(row["mode"]) for row in rows if row["stream_id"] == stream_id), "unregistered")
-        with self.store._read_snapshot() as connection:
+        with store._read_snapshot() as connection:
             row = connection.execute(
-                "SELECT status FROM legacy_projection_receipts WHERE stream_id = ? "
-                "ORDER BY projection_id DESC LIMIT 1",
+                "SELECT status FROM legacy_projection_receipts WHERE stream_id = ? ORDER BY projection_id DESC LIMIT 1",
                 (stream_id,),
             ).fetchone()
         return mode, bool(row and str(row["status"]) in {"drift", "failed"})
@@ -325,15 +415,26 @@ def build_parser() -> argparse.ArgumentParser:
         prog="session-supervisor",
         description="Open and supervise fenced driver leases; workers only receive read-only capsules.",
     )
-    parser.add_argument("--db", type=Path, default=None, help="Session-stream SQLite path.")
+    parser.add_argument("--db", type=Path, default=None, help="Session-stream SQLite path (only with --local).")
+    parser.add_argument(
+        "--local",
+        action="store_true",
+        help="Use the local SQLite store and warn that the lease is not visible to the fleet.",
+    )
     parser.add_argument("--repo-root", type=Path, default=Path.cwd(), help="Repository root for handoff status.")
     commands = parser.add_subparsers(dest="command", required=True)
 
-    open_driver = commands.add_parser("open", help="Open a driver lease and emit its bootstrap capsule.")
-    _add_driver_identity(open_driver)
-    open_driver.add_argument("--lineage-id", required=True)
-    open_driver.add_argument("--ttl-seconds", type=int, default=300)
-    open_driver.add_argument("--digest-limit", type=int, default=20)
+    for name, help_text in (
+        ("open", "Open a driver lease and emit its bootstrap capsule."),
+        ("claim", "Claim a remote driver lease and emit its bootstrap capsule."),
+    ):
+        open_driver = commands.add_parser(name, help=help_text)
+        _add_driver_identity(open_driver)
+        open_driver.add_argument("--lineage-id", required=True)
+        open_driver.add_argument("--ttl-seconds", type=int, default=900)
+        open_driver.add_argument("--session-id", default=None)
+        open_driver.add_argument("--lease-id", default=None)
+        open_driver.add_argument("--digest-limit", type=int, default=20)
 
     for name, help_text in (
         ("resume", "Heartbeat an exact inherited driver lease and emit a capsule."),
@@ -344,6 +445,21 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument("--role", required=True, choices=tuple(LaunchRole))
         if name == "resume":
             command.add_argument("--digest-limit", type=int, default=20)
+
+    handoff = commands.add_parser("handoff", help="Append one typed remote handoff entry.")
+    handoff.add_argument("--role", required=True, choices=tuple(LaunchRole))
+    handoff.add_argument("--type", required=True, choices=tuple(entry.value for entry in EntryType))
+    handoff.add_argument("--body", required=True)
+    handoff.add_argument("--idempotency-key", required=True)
+    handoff.add_argument("--digest-limit", type=int, default=20)
+
+    release = commands.add_parser("release", help="Release an exact lease or an explicitly attributed force lease.")
+    release.add_argument("--role", required=True, choices=tuple(LaunchRole))
+    release.add_argument("--force", action="store_true")
+    release.add_argument("--stream", default=None)
+    release.add_argument("--actor-agent", default=None)
+    release.add_argument("--actor-host-id", default=None)
+    release.add_argument("--reason", default=None)
 
     capsule = commands.add_parser("capsule", help="Render a read-only bootstrap capsule.")
     capsule.add_argument("--role", required=True, choices=tuple(LaunchRole))
@@ -362,6 +478,7 @@ def _add_driver_identity(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--instance-id", required=True)
     parser.add_argument("--process-id", required=True, type=int)
     parser.add_argument("--task-id", default=None)
+    parser.add_argument("--host-id", default=None)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -371,17 +488,20 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(strip_lease_credentials(os.environ), ensure_ascii=False, sort_keys=True))
         return 0
 
-    supervisor = SessionSupervisor(
-        SessionStreamStore(SessionStreamDatabase(args.db)), repo_root=args.repo_root
-    )
+    if args.local:
+        print("LOCAL-ONLY LEASE — not visible to the fleet", file=sys.stderr)
+        supervisor = SessionSupervisor(SessionStreamStore(SessionStreamDatabase(args.db)), repo_root=args.repo_root)
+    else:
+        supervisor = SessionSupervisor(None, repo_root=args.repo_root, remote=RemoteEpicClient())
     try:
-        if args.command == "open":
+        if args.command in {"open", "claim"}:
             holder = LeaseHolder(
                 agent=args.agent,
                 harness=args.harness,
                 instance_id=args.instance_id,
                 process_id=args.process_id,
                 task_id=args.task_id,
+                host_id=None if args.local else (args.host_id or os.environ.get("LU_MONITOR_HOST_ID", "local")),
             )
             lease = supervisor.open_driver(
                 role=args.role,
@@ -389,6 +509,8 @@ def main(argv: list[str] | None = None) -> int:
                 holder=holder,
                 lineage_id=args.lineage_id,
                 ttl_seconds=args.ttl_seconds,
+                session_id=args.session_id,
+                lease_id=args.lease_id,
             )
             payload = supervisor.build_capsule(
                 role=args.role, stream_id=args.stream, lease=lease, digest_limit=args.digest_limit
@@ -407,12 +529,37 @@ def main(argv: list[str] | None = None) -> int:
                 renewed = supervisor.heartbeat_driver(role=args.role, lease=lease)
                 payload = {"action": "heartbeat", "stream_id": renewed.stream_id, "expires_at": renewed.expires_at}
             else:
-                payload = {"action": "close", "stream_id": lease.stream_id, "state": supervisor.close_driver(role=args.role, lease=lease)}
+                payload = {
+                    "action": "close",
+                    "stream_id": lease.stream_id,
+                    "state": supervisor.close_driver(role=args.role, lease=lease),
+                }
+        elif args.command == "handoff":
+            payload = supervisor.handoff_driver(
+                role=args.role,
+                lease=lease_from_environment(),
+                entry_type=args.type,
+                body=args.body,
+                idempotency_key=args.idempotency_key,
+                digest_limit=args.digest_limit,
+            )
+        elif args.command == "release":
+            if args.force:
+                payload = supervisor.release_driver(
+                    role=args.role,
+                    stream_id=args.stream,
+                    force=True,
+                    actor_agent=args.actor_agent,
+                    actor_host_id=args.actor_host_id,
+                    reason=args.reason,
+                )
+            else:
+                payload = supervisor.release_driver(role=args.role, lease=lease_from_environment())
         else:
             payload = supervisor.build_capsule(
                 role=args.role, stream_id=args.stream, digest_limit=args.digest_limit
             ).as_dict()
-    except (SessionStreamError, SupervisorError, ValueError) as exc:
+    except (SessionStreamError, SupervisorError, RemoteSupervisorError, ValueError) as exc:
         print(f"session-supervisor: {exc}", file=sys.stderr)
         return 4
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
