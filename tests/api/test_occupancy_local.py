@@ -16,6 +16,7 @@ from scripts.api.occupancy_local import (
     occupancy_marker_scope,
     occupants_from_markers,
     occupants_from_session_streams,
+    resolve_launcher_host_id,
     write_marker,
 )
 
@@ -60,6 +61,25 @@ def test_driver_seat_host_id_uses_explicit_opaque_then_self_host(monkeypatch: py
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "atlas-runner")
     assert driver_seat_host_id(mapping, selected) is None
+
+
+def test_resolve_launcher_host_id_uses_occupancy_mapping_and_fallbacks(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,job-box=host-job")
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "job-box")
+    assert resolve_launcher_host_id() == "host-job"
+
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-driver")
+    assert resolve_launcher_host_id() == "host-driver"
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "unknown-box")
+    assert resolve_launcher_host_id() == "local"
+
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")
+    assert resolve_launcher_host_id() == "host-explicit"
 
 
 def test_occupants_from_session_streams_reads_active_lease_only(
