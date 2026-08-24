@@ -2767,15 +2767,26 @@ def _is_read_only_runtime_telemetry_path(path: str) -> bool:
     )
 
 
+def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
+    """Return whether *path* is a delegate-owned read-only snapshot sidecar."""
+    normalized = _normalize_read_only_relpath(path)
+    if not normalized.endswith(".json"):
+        return False
+    parts = normalized.split("/")
+    if len(parts) < 2:
+        return False
+    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith("read_only_checkout_")
+
+
 def _is_read_only_runtime_state_path(path: str) -> bool:
     """Return whether a path is harness/tooling runtime state, not repo content.
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
     sidecars that false-failed successful read-only tasks (#6860). Task-authored
     ignored leaks such as ``.cache/`` stay visible to the guard (#4840).
-    Delegate read-only snapshot sidecars live under ``batch_state/tasks/``
-    (#7203), so the ``batch_state`` dir-name check already exempts them (#7208).
     """
+    if _is_read_only_delegate_snapshot_sidecar_path(path):
+        return True
     if _is_read_only_runtime_telemetry_path(path):
         return True
     normalized = _normalize_read_only_relpath(path)
