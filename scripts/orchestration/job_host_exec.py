@@ -16,6 +16,7 @@ SSH aliases and remote checkout paths stay in operator env (not git):
 - ``LU_JOB_DISPATCH_HOST`` / ``ATLAS_RUNNER_HOST`` — job-host (required)
 - ``LU_TEACHER_DISPATCH_HOST`` — teacher-host (required for teacher host_id)
 - ``LU_JOB_REPO`` / ``LU_TEACHER_REPO`` — absolute remote checkouts (required)
+- ``LU_ALLOW_NOTEBOOK_DISPATCH`` — set to 1 to bypass VPS forwarding and force local spawn
 
 Remote PATH always includes ``$HOME/.local/bin`` and ``$HOME/.opencode/bin``.
 """
@@ -83,22 +84,40 @@ class SshTransportError(OSError):
     """Raised when the local ssh client cannot be started."""
 
 
+class ForwardConfigError(ValueError):
+    """Raised when host/repo configuration for VPS forwarding is missing or invalid."""
+
+
+def format_forward_config_refusal(error: BaseException | str, *, host_id: str | None = None) -> str:
+    """Format a refusal message naming both recovery paths and explaining fail-closed policy."""
+    target_host = f" for {host_id}" if host_id else ""
+    lines = [
+        f"❌ VPS forward configuration refusal{target_host}: {error}",
+        "   Configuration errors deliberately do not fall back to notebook dispatch (fail-closed policy).",
+        "   To recover, choose one of two paths:",
+        f"     1) Remote forward: export {ENV_HOST} (or {ENV_HOST_FALLBACK}) and {ENV_REPO}",
+        f"        (or {ENV_DISPATCH_SSH} / {ENV_TEACHER_HOST}, {ENV_TEACHER_REPO})",
+        f"     2) Local execution: export {ENV_ALLOW_NOTEBOOK}=1 to explicitly allow local notebook dispatch",
+    ]
+    return "\n".join(lines)
+
+
 def job_dispatch_host() -> str:
     host = (
         os.environ.get(ENV_HOST, "").strip()
         or os.environ.get(ENV_HOST_FALLBACK, "").strip()
     )
     if not host:
-        raise ValueError(f"{ENV_HOST} or {ENV_HOST_FALLBACK} is required")
+        raise ForwardConfigError(f"{ENV_HOST} or {ENV_HOST_FALLBACK} is required")
     return host
 
 
 def job_dispatch_repo() -> str:
     repo = os.environ.get(ENV_REPO, "").strip()
     if not repo:
-        raise ValueError(f"{ENV_REPO} is required")
+        raise ForwardConfigError(f"{ENV_REPO} is required")
     if not repo.startswith("/"):
-        raise ValueError(f"{ENV_REPO} must be an absolute remote path")
+        raise ForwardConfigError(f"{ENV_REPO} must be an absolute remote path")
     return repo
 
 
@@ -123,20 +142,20 @@ def ssh_alias_for_host_id(host_id: str) -> str:
     if host_id == TEACHER_HOST_ID:
         alias = os.environ.get(ENV_TEACHER_HOST, "").strip()
         if not alias:
-            raise ValueError(f"{ENV_TEACHER_HOST} or {ENV_DISPATCH_SSH} is required")
+            raise ForwardConfigError(f"{ENV_TEACHER_HOST} or {ENV_DISPATCH_SSH} is required")
         return alias
     if host_id == JOB_HOST_ID:
         return job_dispatch_host()
-    raise ValueError(f"no SSH alias configured for occupancy host {host_id}")
+    raise ForwardConfigError(f"no SSH alias configured for occupancy host {host_id}")
 
 
 def repo_for_host_id(host_id: str) -> str:
     if host_id == TEACHER_HOST_ID:
         teacher_repo = os.environ.get(ENV_TEACHER_REPO, "").strip()
         if not teacher_repo:
-            raise ValueError(f"{ENV_TEACHER_REPO} is required")
+            raise ForwardConfigError(f"{ENV_TEACHER_REPO} is required")
         if not teacher_repo.startswith("/"):
-            raise ValueError(f"{ENV_TEACHER_REPO} must be an absolute remote path")
+            raise ForwardConfigError(f"{ENV_TEACHER_REPO} must be an absolute remote path")
         return teacher_repo
     return job_dispatch_repo()
 
@@ -594,6 +613,12 @@ def build_parser() -> argparse.ArgumentParser:
             "is rewritten so notebook --prompt-file/--lifecycle-file/--output-schema "
             "bodies land in remote /tmp and LU_ALLOW_NOTEBOOK_DISPATCH=1 prevents "
             "a second forward hop.\n\n"
+            "Environment Variables & Precedence:\n"
+            "  LU_JOB_DISPATCH_HOST / ATLAS_RUNNER_HOST — SSH alias for host-job (required for job-host forward)\n"
+            "  LU_JOB_REPO — absolute remote checkout path for host-job\n"
+            "  LU_TEACHER_DISPATCH_HOST / LU_DISPATCH_SSH — SSH alias for host-teacher / opaque host map\n"
+            "  LU_TEACHER_REPO — absolute remote checkout path for host-teacher\n"
+            "  LU_ALLOW_NOTEBOOK_DISPATCH — set to 1 to bypass VPS forward and force local notebook spawn\n\n"
             "Exit codes:\n"
             "  0 on successful remote completion; 2 on CLI misuse, missing host, "
             "or notebook payload errors; 255 on SSH transport failure "
@@ -602,7 +627,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Related:\n"
             "  Occupancy: GET /api/occupancy\n"
             "  Dispatch: scripts/delegate.py\n"
-            "  Issue: #7062\n"
+            "  Issue: #7062, #7230\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -673,13 +698,15 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"error: {exc}", file=sys.stderr)
                 return 255
             except (ValueError, FileNotFoundError, PermissionError) as exc:
-                print(f"error: {exc}", file=sys.stderr)
+                refusal_msg = format_forward_config_refusal(exc, host_id=host_id)
+                print(refusal_msg, file=sys.stderr)
                 return 2
         alias = ssh_alias_for_host_id(host_id)
         repo = repo_for_host_id(host_id)
         ssh_argv = build_ssh_argv(alias, build_remote_command(remote_argv, remote_repo=repo))
     except ValueError as exc:
-        print(f"error: {exc}", file=sys.stderr)
+        refusal_msg = format_forward_config_refusal(exc, host_id=host_id)
+        print(refusal_msg, file=sys.stderr)
         return 2
     try:
         completed = subprocess.run(

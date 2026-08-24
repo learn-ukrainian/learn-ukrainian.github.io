@@ -87,7 +87,16 @@ Design notes:
   you can't stampede the provider by firing many delegate tasks in a
   row if the last one got rate-limited.
 
-Issue: #1184.
+* Dual-host VPS placement. When healthy VPS occupancy hosts are available
+  and the local retired marker exists, ``dispatch`` forwards execution
+  over BatchMode SSH to the remote host.
+  Host environment contract:
+  - ``LU_JOB_DISPATCH_HOST`` (or ``ATLAS_RUNNER_HOST``) and ``LU_JOB_REPO``
+  - ``LU_TEACHER_DISPATCH_HOST`` (or ``LU_DISPATCH_SSH``) and ``LU_TEACHER_REPO``
+  - ``LU_ALLOW_NOTEBOOK_DISPATCH=1`` bypasses VPS forwarding to force local spawn.
+  Configuration errors fail closed without fallback to preserve visibility.
+
+Issue: #1184, #7230.
 """
 
 from __future__ import annotations
@@ -5086,6 +5095,7 @@ def _record_worktree_prep_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    returncode_reason: str = "worktree preparation failed",
 ) -> bool:
     """Persist a terminal failed task record when worktree provisioning is refused.
 
@@ -5147,9 +5157,9 @@ def _record_worktree_prep_failure(
         "prompt_chars": len(prompt) if prompt else 0,
         "response_chars": None,
         "result_file": None,
-        "stderr_excerpt": f"worktree preparation failed: {error_str}"[:500],
+        "stderr_excerpt": f"{returncode_reason}: {error_str}"[:500],
         "returncode": None,
-        "returncode_reason": "worktree preparation failed",
+        "returncode_reason": returncode_reason,
         "last_error": _first_error_line(error_str) or error_str,
         "exit_code": None,
         "substitution": None,
@@ -5167,17 +5177,73 @@ def _record_worktree_prep_failure(
     return True
 
 
+def _record_forward_failure(
+    *,
+    task_id: str,
+    run_nonce: str,
+    attribution: Any,
+    agent: str,
+    mode: str,
+    prompt: str,
+    error: Exception | str,
+    requested_model: str | None = None,
+    requested_effort: str | None = None,
+    requested_harness: str | None = None,
+    lifecycle_carrier: Any = None,
+    worktree_path: str | Path | None = None,
+    worktree_branch: str | None = None,
+    worktree_base_sha: str | None = None,
+    worktree_base: str | None = None,
+    agent_alias_note: str | None = None,
+    output_schema_path: str | None = None,
+    output_schema_sha256: str | None = None,
+    keep_worktree: bool = False,
+    hard_timeout: float | None = None,
+    silence_timeout: float | None = None,
+    initial_response_timeout: float | None = None,
+    max_budget_usd: float | None = None,
+) -> bool:
+    """Persist a terminal failed task record when VPS forward dispatch is refused."""
+    return _record_worktree_prep_failure(
+        task_id=task_id,
+        run_nonce=run_nonce,
+        attribution=attribution,
+        agent=agent,
+        mode=mode,
+        prompt=prompt,
+        error=error,
+        requested_model=requested_model,
+        requested_effort=requested_effort,
+        requested_harness=requested_harness,
+        lifecycle_carrier=lifecycle_carrier,
+        worktree_path=worktree_path,
+        worktree_branch=worktree_branch,
+        worktree_base_sha=worktree_base_sha,
+        worktree_base=worktree_base,
+        agent_alias_note=agent_alias_note,
+        output_schema_path=output_schema_path,
+        output_schema_sha256=output_schema_sha256,
+        keep_worktree=keep_worktree,
+        hard_timeout=hard_timeout,
+        silence_timeout=silence_timeout,
+        initial_response_timeout=initial_response_timeout,
+        max_budget_usd=max_budget_usd,
+        returncode_reason="forward configuration failed",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Dispatch command — spawn detached worker
 # ---------------------------------------------------------------------------
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
-    """Spawn a detached worker and return immediately (stdout: `<task_id>\\n<run_nonce>`)."""
+    """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
         decide_dispatch_placement,
+        format_forward_config_refusal,
         forward_dispatch,
         notebook_fallback_after_forward,
     )
@@ -5193,6 +5259,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(f"❌ invalid --initiator: {exc}", file=sys.stderr)
         return 2
+
+    # Prompt is resolved early so forward failure records and sparse inference
+    # have access to the raw prompt text.
+    early_prompt: str | None = None
+    if getattr(args, "prompt", None):
+        early_prompt = str(args.prompt)
+    elif getattr(args, "prompt_file", None):
+        try:
+            early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+        except OSError:
+            early_prompt = None
 
     if not bool(getattr(args, "dry_run", False)):
         placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
@@ -5214,7 +5291,31 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 forward_error = exc
             if not notebook_fallback_after_forward(forward_rc, error=forward_error):
                 if forward_error is not None:
-                    print(f"❌ VPS forward failed: {forward_error}", file=sys.stderr)
+                    _record_forward_failure(
+                        task_id=task_id,
+                        run_nonce=run_nonce,
+                        attribution=attribution,
+                        agent=getattr(args, "agent", "unknown"),
+                        mode=getattr(args, "mode", "read-only"),
+                        prompt=early_prompt or "",
+                        error=forward_error,
+                        requested_model=getattr(args, "model", None),
+                        requested_effort=getattr(args, "effort", None),
+                        requested_harness=getattr(args, "harness", None),
+                        worktree_path=getattr(args, "worktree", None),
+                        worktree_branch=getattr(args, "branch", None),
+                        worktree_base=getattr(args, "base", None) or "main",
+                        keep_worktree=bool(getattr(args, "keep_worktree", False)),
+                        hard_timeout=getattr(args, "hard_timeout", DEFAULT_HARD_TIMEOUT_S),
+                        silence_timeout=getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
+                        initial_response_timeout=getattr(
+                            args, "initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S
+                        ),
+                        max_budget_usd=getattr(args, "max_budget_usd", None),
+                        output_schema_path=getattr(args, "output_schema", None),
+                    )
+                    refusal_msg = format_forward_config_refusal(forward_error, host_id=host_id)
+                    print(refusal_msg, file=sys.stderr)
                     return 2
                 return int(forward_rc or 0)
             why = str(forward_error) if forward_error is not None else f"ssh rc {forward_rc}"
@@ -5242,16 +5343,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
-    # Prompt is resolved later for the worker; for sparse inference we only
-    # need the raw text when available so content briefs auto-include trees.
-    early_prompt: str | None = None
-    if getattr(args, "prompt", None):
-        early_prompt = str(args.prompt)
-    elif getattr(args, "prompt_file", None):
-        try:
-            early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
-        except OSError:
-            early_prompt = None
     try:
         sparse_include = _infer_sparse_include(
             getattr(args, "sparse_include", None),
@@ -6894,12 +6985,19 @@ def build_parser() -> argparse.ArgumentParser:
             "  --silence-timeout kills the agent CLI earlier when no watchdog activity arrives within the window.\n"
             f"    Default is {DEFAULT_SILENCE_TIMEOUT_S}s to tolerate quiet build/test phases; 0 disables it.\n\n"
             "  --max-budget-usd caps Claude Code API spend for this dispatch when set; omitted means no dollar cap.\n\n"
+            "Placement & VPS Forwarding:\n"
+            "  Dual-host occupancy routes dispatches to healthy VPS worker hosts when available.\n"
+            "  Forwarding requires host environment variables in the launcher environment:\n"
+            "    LU_JOB_DISPATCH_HOST (or ATLAS_RUNNER_HOST) and LU_JOB_REPO for host-job\n"
+            "    LU_TEACHER_DISPATCH_HOST (or LU_DISPATCH_SSH) and LU_TEACHER_REPO for host-teacher\n"
+            "  To bypass VPS forwarding and force local spawn: export LU_ALLOW_NOTEBOOK_DISPATCH=1\n"
+            "  Configuration errors fail closed without fallback to prevent silent local drift.\n\n"
             "Exit codes:\n"
             "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
             "Related:\n"
             "  Runtime: scripts/agent_runtime/\n"
             "  Rule: agents_extensions/shared/rules/delegate-must-use-worktree.md\n"
-            "  Issue: #1379\n"
+            "  Issue: #1379, #7230\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -6912,6 +7010,11 @@ def build_parser() -> argparse.ArgumentParser:
     d = sub.add_parser(
         "dispatch",
         help="Fire a task, return immediately (stdout: `<task_id>\\n<run_nonce>`)",
+        description=(
+            "Fire an async agent task and return immediately with the task ID and run nonce.\n"
+            "Routes to available VPS worker hosts unless LU_ALLOW_NOTEBOOK_DISPATCH=1 is set.\n"
+            "Forward configuration requires LU_JOB_DISPATCH_HOST (or ATLAS_RUNNER_HOST) and LU_JOB_REPO."
+        ),
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument(
