@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "99e819b44d0c",
+  "strategy": "manual-commit",
+  "branch": "cursor/release-hardening-7242",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/99/e819b44d0c/0/metadata.json",
+      "transcript": "/99/e819b44d0c/0/full.jsonl",
+      "compact_transcript": "/99/e819b44d0c/0/transcript.jsonl",
+      "content_hash": "/99/e819b44d0c/0/content_hash.txt",
+      "prompt": "/99/e819b44d0c/0/prompt.txt"
+    }
+  ]
+}
