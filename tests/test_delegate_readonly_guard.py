@@ -124,10 +124,18 @@ def test_read_only_snapshot_excluded_path_classification():
     assert not delegate._is_read_only_snapshot_excluded_path(".worktreesish/file")
 
 
-def test_read_only_delegate_snapshot_sidecar_path_is_runtime_state():
-    """#7203: task snapshot sidecars live under ``tasks/``, not ``batch_state/``."""
-    sidecar = "tasks/read-only-task.snapshots/read_only_checkout_pre.json"
-    assert delegate._is_read_only_delegate_snapshot_sidecar_path(sidecar)
+def test_real_delegate_snapshot_sidecar_is_runtime_state_via_batch_state():
+    """#7208: real sidecars under batch_state/tasks/<task>.snapshots/ are exempt.
+
+    Sidecars are built from ``_TASKS_DIR`` (``batch_state/tasks``), so the
+    existing ``batch_state`` runtime-state dir-name check covers them. A
+    synthetic ``tasks/…`` path without that prefix is not a production shape.
+    """
+    abs_path = delegate._read_only_snapshot_sidecar_path("read-only-task", "pre")
+    sidecar = str(abs_path.relative_to(delegate._REPO_ROOT)).replace("\\", "/")
+    assert sidecar == (
+        "batch_state/tasks/read-only-task.snapshots/read_only_checkout_pre.json"
+    )
     assert delegate._is_read_only_runtime_state_path(sidecar)
     assert not delegate._is_read_only_runtime_telemetry_path(sidecar)
 
