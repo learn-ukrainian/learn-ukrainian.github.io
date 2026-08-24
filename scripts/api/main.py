@@ -18,6 +18,7 @@ import socket
 import subprocess
 import threading
 import time
+import uuid
 from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -26,8 +27,10 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from scripts.common.release_layout import is_release_root
 from scripts.guardrails import worktree_containment
@@ -166,12 +169,100 @@ app.add_middleware(
 app.middleware("http")(resilience_middleware)
 
 
+def _error_envelope(error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None) -> JSONResponse:
+    """Build the public error shape without serializing exception text.
+
+    Route-specific ``HTTPException`` details remain available when they are
+    already structured or short, stable API messages. Unhandled exceptions
+    never pass their ``str(exc)`` representation to a client; the correlation
+    id is the only diagnostic handle exposed on the wire.
+    """
+    return JSONResponse(
+        status_code=status_code,
+        headers=headers,
+        content={
+            "error": error,
+            "error_id": uuid.uuid4().hex,
+            "detail": detail,
+        },
+    )
+
+
+def _sanitize_public_detail(detail: Any) -> Any:
+    """Retain stable API details while dropping raw exception-shaped values."""
+    if isinstance(detail, dict):
+        return {
+            str(key): _sanitize_public_detail(value)
+            for key, value in detail.items()
+            if key != "input"
+        }
+    if isinstance(detail, list):
+        return [_sanitize_public_detail(value) for value in detail]
+    if not isinstance(detail, str):
+        return detail
+
+    suspicious = (
+        "Traceback (most recent call last)",
+        "No such file or directory",
+        "OperationalError:",
+        "FileNotFoundError:",
+        "PermissionError:",
+        "ValueError:",
+        "RuntimeError:",
+        "status_failed:",
+        "digest_failed:",
+        "drift_failed:",
+    )
+    if any(marker in detail for marker in suspicious):
+        return "request rejected"
+    if re.search(
+        r"(?<![A-Za-z0-9/])/(?:home|Users|Volumes|private|opt|srv|tmp|var)(?:/[^\s\"'<>]*)?",
+        detail,
+    ):
+        return "request rejected"
+    return detail
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """Normalize handled HTTP errors without changing their status codes."""
+    del request
+    return _error_envelope(
+        "http_error",
+        _sanitize_public_detail(exc.detail),
+        status_code=exc.status_code,
+        headers=exc.headers,
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def request_validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Return validation shape without echoing submitted values."""
+    del request
+    sanitized_errors = []
+    for error in exc.errors():
+        sanitized = {
+            key: _sanitize_public_detail(value)
+            for key, value in error.items()
+            if key not in {"ctx", "input"}
+        }
+        sanitized_errors.append(sanitized)
+    return _error_envelope("validation_error", sanitized_errors, status_code=422)
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Consistent JSON error format for unhandled exceptions."""
+    error_id = uuid.uuid4().hex
+    logger.error("Unhandled Monitor API exception [%s]", error_id, exc_info=exc)
+    del request
     return JSONResponse(
         status_code=500,
-        content={"error": "internal_server_error", "detail": str(exc)},
+        content={
+            "error": "internal_server_error",
+            "error_id": error_id,
+            "detail": "internal server error",
+        },
     )
 
 

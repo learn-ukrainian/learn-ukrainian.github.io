@@ -58,6 +58,12 @@ def is_test_module(path: str) -> bool:
 def is_repo_invariant_trigger(path: str) -> bool:
     """Whether a PR-tier change can affect a repo-wide invariant."""
     candidate = PurePosixPath(path)
+    if (
+        path.startswith("scripts/api/")
+        or path.startswith("dashboards/")
+        or path.startswith("tests/api/opsec_sweep/")
+    ):
+        return True
     return (
         candidate.suffix == ".py"
         or path == "pyproject.toml"

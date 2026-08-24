@@ -116,6 +116,58 @@ stable markdown, but dynamic telemetry responses do not use `304 Not
 Modified` or strong `ETag` headers. With telemetry disabled, existing
 ETag and cache semantics are unchanged.
 
+## OPSEC route-wide sanitizer sweep (M5 / PR-A)
+
+The PR-tier invariant in
+[`tests/api/opsec_sweep/test_opsec_route_sweep.py`](../tests/api/opsec_sweep/test_opsec_route_sweep.py)
+enumerates the public FastAPI route tree at test time. Its denominator is the
+OpenAPI method/template set (276 operations in the reviewed snapshot) plus the
+WebSocket route set, cross-checked against a frozen route-tree digest. Every
+dashboard file under `dashboards/` is scanned as a static consumer as well.
+
+The test uses `TestClient(app)` without entering the lifespan context. Existing
+module seams are redirected to an isolated temporary store whose absolute path
+contains a planted canary; `MONITOR_OCCUPANCY_HOST_IDS` and
+`LU_MONITOR_HOST_ID` receive separate canaries. The fixture proves those seams
+are wired before scanning. Socket and subprocess seams are denied, so a new
+route cannot quietly make a live network, SSH, Git, or child-process call.
+
+[`scripts/api/opsec_scan.py`](../scripts/api/opsec_scan.py) is the shared
+scanner. It reports operation and field-path provenance while scanning JSON or
+text bodies, every response-header value, and `_telemetry` independently. It
+recognizes IPv4/IPv6 (including ports), bounded absolute filesystem roots,
+`user@host`, `ssh <alias>`, host/port values, transcript filenames, and planted
+canaries. It exempts SHA values, RFC3339 timestamps, `epic:<N>` identifiers,
+`/api/...` route strings, and ISO durations. The committed positive/negative
+corpus protects those boundaries.
+
+Each exercised record derives success and redirect statuses from OpenAPI and
+also permits the explicit isolated-fixture error contract: 200, 400, 401,
+403, 404, 409, 410, 422, 500, and 503. Any other returned status fails the
+invariant.
+
+PR-A is intentionally green with a shrinking exception table at
+[`tests/api/opsec_sweep/known_leaks.toml`](../tests/api/opsec_sweep/known_leaks.toml).
+Rows require an owner and an expiry no more than 30 days from the PR date;
+expired rows and rows that no longer match a finding fail the test. Adding a
+row requires changing the frozen id set in the test in the same review. PR-B
+burn-downs remove rows by changing the emitter and its direct consumers
+atomically; the following manifest is the record of those boundaries:
+
+| Emitter family | Current path-bearing fields | Known consumers | PR-B shape | Schema version |
+| --- | --- | --- | --- | --- |
+| `session_streams_router.py` | `repo_root`, `db_path` | `tests/test_session_streams_api.py` | `repo: {role, sha}`, `store: {reachable, schema_versions}` | `session-streams.v2` |
+| `repository_authority.py`, `preparation_state.py`, `state_router.py` | checkout and authority roots | `tests/test_orient_api.py` and preparation/state clients | `primary_checkout: {role, head_sha, dirty_count}`, `cwd_role` | `authority.v2` |
+| `worktrees_router.py` | worktree filesystem paths | worktree dashboards and guardrail consumers | opaque worktree id, branch, role | `worktrees.v2` |
+| `comms_router.py`, fleet facade collectors | broker/fleet database paths | comms and fleet dashboards | `store: {reachable, kind}` | `comms.v2` |
+| `main.py` orient collectors | Git roots and diagnostic paths | orient clients and `tests/test_orient_api.py` | role/head metadata only | `orient.v2` |
+| `telemetry.response` | transcript filenames | Monitor telemetry consumers | retain context/window/source; drop filename | `telemetry.v2` |
+
+The global error handlers preserve status codes and return
+`{error, error_id, detail}`. Unhandled exceptions use a generic detail and log
+the raw exception only server-side; submitted values are removed from
+validation details. This keeps error responses inside the same sweep boundary.
+
 ---
 
 ## Agent Quick Start
@@ -437,11 +489,16 @@ All endpoints return errors in consistent JSON format:
 ```json
 {
   "error": "internal_server_error",
-  "detail": "Description of what went wrong"
+  "error_id": "opaque-correlation-id",
+  "detail": "internal server error"
 }
 ```
 
-Standard HTTP status codes: `404` for missing resources, `500` for server errors.
+Handled HTTP errors retain their status code and stable public detail where
+safe. Unhandled exceptions use the generic detail above; raw exception text is
+available only in server logs keyed by `error_id`. Standard HTTP status codes:
+`404` for missing resources, `422` for validation errors, and `500` for server
+errors.
 
 ### `GET /api/occupancy[?host_id=x][&fresh=true]`
 
