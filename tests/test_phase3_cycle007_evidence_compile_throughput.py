@@ -74,6 +74,46 @@ def _private_parent(tmp_path: Path, name: str) -> Path:
     return parent
 
 
+def _append_legacy_identity_calls(
+    output: Path,
+    *,
+    count: int,
+    response_sha256: str | None = None,
+) -> None:
+    root = throughput.resume_root_for(output)
+    receipt = throughput.read_progress(root / throughput.PROGRESS_NAME)
+    records = list(receipt["mcp_call_records"])
+    identity = next(record for record in records if record["tool"] == "mcp_server_identity")
+    for _ in range(count):
+        records.append(
+            {
+                "ordinal": len(records) + 1,
+                "tool": identity["tool"],
+                "arguments_sha256": identity["arguments_sha256"],
+                "response_sha256": response_sha256 or identity["response_sha256"],
+            }
+        )
+    commitment, next_ordinal = throughput.extend_serial_call_commitment(
+        throughput.initial_call_commitment(),
+        records,
+        starting_ordinal=1,
+    )
+    assert next_ordinal == len(records) + 1
+    attestation = dict(receipt["mcp_transport_attestation"])
+    attestation["tool_call_count"] = len(records)
+    counts_by_tool = dict(attestation["counts_by_tool"])
+    counts_by_tool["mcp_server_identity"] += count
+    attestation["counts_by_tool"] = dict(sorted(counts_by_tool.items()))
+    attestation["server_identity_call_count"] += count
+    attestation["ordered_call_commitment_sha256"] = commitment
+    receipt["mcp_call_records"] = records
+    receipt["mcp_transport_attestation"] = attestation
+    receipt["progress_sha256"] = contract.sha256_value(
+        {key: value for key, value in receipt.items() if key != "progress_sha256"}
+    )
+    throughput.write_progress(root, receipt)
+
+
 def test_runner_temporarily_admits_only_reviewed_resume_root(tmp_path: Path) -> None:
     package = _private_parent(tmp_path, "package")
     output = package / "evidence"
@@ -111,6 +151,106 @@ def test_runner_admission_preserves_strict_compiler_and_allows_actual_compile(tm
         )
     assert manifest["packet_count"] == 2
     assert manifest["row_count"] == 4
+
+
+def test_runner_normalizes_legacy_identity_calls_without_changing_frozen_modules(tmp_path: Path) -> None:
+    straight_parent = _private_parent(tmp_path, "straight-normalized")
+    resumed_parent = _private_parent(tmp_path, "resumed-normalized")
+    straight = straight_parent / "evidence"
+    resumed = resumed_parent / "evidence"
+    _run(tmp_path / "client-straight-normalized", straight)
+    with pytest.raises(RuntimeError):
+        _run(tmp_path / "client-first-normalized", resumed, interrupt_after_packet=1)
+    _append_legacy_identity_calls(resumed, count=2)
+
+    client = _client(tmp_path / "client-second-normalized")
+    try:
+        _RUNNER._normalize_resume_identity_ledger(resumed, client)
+        progress = throughput.read_progress(
+            throughput.resume_root_for(resumed) / throughput.PROGRESS_NAME
+        )
+        assert progress["mcp_transport_attestation"]["server_identity_call_count"] == 0
+        assert all(record["tool"] != "mcp_server_identity" for record in progress["mcp_call_records"])
+        packets, flags, bindings = _inputs()
+        compiler.compile_sidecar_bundle_resumable(
+            packets,
+            client,
+            resumed,
+            residual_lane_packets=flags,
+            packet_bindings=bindings,
+            source_package_binding=None,
+        )
+    finally:
+        client.close()
+
+    for packet_index in (1, 2):
+        name = throughput.sidecar_filename(packet_index)
+        assert (straight / name).read_bytes() == (resumed / name).read_bytes()
+    resumed_manifest = json.loads((resumed / "manifest.json").read_text())
+    assert resumed_manifest["packet_count"] == 2
+    assert resumed_manifest["row_count"] == 2
+    assert resumed_manifest["mcp_transport_attestation"]["server_identity_call_count"] == 1
+
+
+def test_runner_leaves_missing_progress_window_for_frozen_compiler_to_self_heal(tmp_path: Path) -> None:
+    parent = _private_parent(tmp_path, "missing-progress")
+    output = parent / "evidence"
+    throughput.resume_root_for(output).mkdir(mode=0o700)
+    client = _client(tmp_path / "client-missing-progress")
+    try:
+        _RUNNER._normalize_resume_identity_ledger(output, client)
+        packets, flags, bindings = _inputs()
+        manifest = compiler.compile_sidecar_bundle_resumable(
+            packets,
+            client,
+            output,
+            residual_lane_packets=flags,
+            packet_bindings=bindings,
+            source_package_binding=None,
+        )
+    finally:
+        client.close()
+
+    assert manifest["packet_count"] == 2
+    assert manifest["row_count"] == 2
+    assert output.is_dir()
+    assert not throughput.resume_root_for(output).exists()
+
+
+def test_runner_normalization_rejects_concurrent_owner_before_rewriting_progress(tmp_path: Path) -> None:
+    parent = _private_parent(tmp_path, "normalizer-lock")
+    output = parent / "evidence"
+    with pytest.raises(RuntimeError):
+        _run(tmp_path / "client-first-lock", output, interrupt_after_packet=1)
+    progress_path = throughput.resume_root_for(output) / throughput.PROGRESS_NAME
+    before = progress_path.read_bytes()
+
+    client = _client(tmp_path / "client-second-lock")
+    try:
+        with throughput.exclusive_resume_lock(throughput.resume_root_for(output)):
+            with pytest.raises(throughput.ThroughputResumeError, match="compiler_lock_held"):
+                _RUNNER._normalize_resume_identity_ledger(output, client)
+    finally:
+        client.close()
+    assert progress_path.read_bytes() == before
+
+
+def test_runner_rejects_legacy_identity_drift_before_rewriting_progress(tmp_path: Path) -> None:
+    parent = _private_parent(tmp_path, "identity-drift")
+    output = parent / "evidence"
+    with pytest.raises(RuntimeError):
+        _run(tmp_path / "client-first-drift", output, interrupt_after_packet=1)
+    _append_legacy_identity_calls(output, count=1, response_sha256="d" * 64)
+    progress_path = throughput.resume_root_for(output) / throughput.PROGRESS_NAME
+    before = progress_path.read_bytes()
+
+    client = _client(tmp_path / "client-second-drift")
+    try:
+        with pytest.raises(_RUNNER.RunnerError, match="resume_identity_drift"):
+            _RUNNER._normalize_resume_identity_ledger(output, client)
+    finally:
+        client.close()
+    assert progress_path.read_bytes() == before
 
 
 @pytest.mark.parametrize("entry_type", ("file", "symlink"))

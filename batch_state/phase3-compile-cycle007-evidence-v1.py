@@ -18,7 +18,8 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from collections.abc import Sequence
+from collections import Counter
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -26,6 +27,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 SERVER_PATH = ROOT / ".mcp" / "servers" / "sources" / "server.py"
 MCP_START_TIMEOUT_SECONDS = 15.0
+_SERVER_IDENTITY_TOOL = "mcp_server_identity"
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -266,6 +268,119 @@ def _admit_reviewed_resume_root(package: Path, output: Path):
         materializer.OUTPUT_TOP_LEVEL = original_top_level
 
 
+def _normalize_resume_identity_ledger(
+    output: Path,
+    client: compiler.LocalMcpSourcesClient,
+) -> None:
+    """Normalize a live receipt while holding the compiler's exclusive lock."""
+    root = throughput.resume_root_for(output)
+    if not os.path.lexists(root):
+        return
+    with throughput.exclusive_resume_lock(root):
+        _normalize_resume_identity_ledger_locked(output, client)
+
+
+def _normalize_resume_identity_ledger_locked(
+    output: Path,
+    client: compiler.LocalMcpSourcesClient,
+) -> None:
+    """Remove validation-only identity calls before the frozen compiler resumes.
+
+    The compiler attests the endpoint once when each process starts and appends
+    that call while restoring the prior ledger. Earlier resumptions therefore
+    accumulated identical identity calls even though the final evidence
+    contract requires exactly one. The outer runner owns this checkpoint-safe
+    normalization because changing either hashed resume module would invalidate
+    the existing durable prefix.
+    """
+    root = throughput.resume_root_for(output)
+    progress_path = root / throughput.PROGRESS_NAME
+    if not os.path.lexists(progress_path):
+        return
+    receipt = throughput.read_progress(progress_path)
+    if set(receipt) != throughput.PROGRESS_REQUIRED_KEYS:
+        raise RunnerError("resume_progress_invalid")
+    unsigned_receipt = {key: value for key, value in receipt.items() if key != "progress_sha256"}
+    if receipt.get("progress_sha256") != evidence_contract.sha256_value(unsigned_receipt):
+        raise RunnerError("resume_progress_invalid")
+
+    prior_attestation = receipt.get("mcp_transport_attestation")
+    prior_records = receipt.get("mcp_call_records")
+    current_attestation = client.transport_attestation()
+    current_records = client.transport_call_records()
+    if not isinstance(prior_attestation, Mapping) or not isinstance(prior_records, list):
+        raise RunnerError("resume_transport_invalid")
+    if len(current_records) != 1 or current_records[0].get("tool") != _SERVER_IDENTITY_TOOL:
+        raise RunnerError("resume_identity_invalid")
+    throughput.validate_transport_state(
+        prior_attestation,
+        prior_records,
+        expected_transport=str(current_attestation["transport"]),
+        expected_endpoint_sha256=str(current_attestation["endpoint_sha256"]),
+        expected_tool_set_sha256=str(current_attestation["required_tool_set_sha256"]),
+    )
+
+    current_identity = current_records[0]
+    current_fingerprint = (
+        current_identity["tool"],
+        current_identity["arguments_sha256"],
+        current_identity["response_sha256"],
+    )
+    for record in prior_records:
+        if record.get("tool") != _SERVER_IDENTITY_TOOL:
+            continue
+        if (
+            record["tool"],
+            record["arguments_sha256"],
+            record["response_sha256"],
+        ) != current_fingerprint:
+            raise RunnerError("resume_identity_drift")
+
+    normalized_records = [
+        {
+            "ordinal": ordinal,
+            "tool": record["tool"],
+            "arguments_sha256": record["arguments_sha256"],
+            "response_sha256": record["response_sha256"],
+        }
+        for ordinal, record in enumerate(
+            (record for record in prior_records if record.get("tool") != _SERVER_IDENTITY_TOOL),
+            start=1,
+        )
+    ]
+    commitment, next_ordinal = throughput.extend_serial_call_commitment(
+        throughput.initial_call_commitment(),
+        normalized_records,
+        starting_ordinal=1,
+    )
+    if next_ordinal != len(normalized_records) + 1:
+        raise RunnerError("resume_transport_invalid")
+    counts_by_tool = Counter(str(record["tool"]) for record in normalized_records)
+    normalized_attestation = dict(prior_attestation)
+    normalized_attestation.update(
+        {
+            "tool_call_count": len(normalized_records),
+            "counts_by_tool": dict(sorted(counts_by_tool.items())),
+            "server_identity_call_count": 0,
+            "ordered_call_commitment_sha256": commitment,
+        }
+    )
+    throughput.validate_transport_state(
+        normalized_attestation,
+        normalized_records,
+        expected_transport=str(current_attestation["transport"]),
+        expected_endpoint_sha256=str(current_attestation["endpoint_sha256"]),
+        expected_tool_set_sha256=str(current_attestation["required_tool_set_sha256"]),
+    )
+    normalized_receipt = dict(receipt)
+    normalized_receipt["mcp_transport_attestation"] = normalized_attestation
+    normalized_receipt["mcp_call_records"] = normalized_records
+    normalized_receipt["progress_sha256"] = evidence_contract.sha256_value(
+        {key: value for key, value in normalized_receipt.items() if key != "progress_sha256"}
+    )
+    throughput.write_progress(root, normalized_receipt)
+
+
 def _compile(package: Path, source_manifest: Path, output: Path, endpoint: str) -> dict[str, Any]:
     process: subprocess.Popen[bytes] | None = None
     try:
@@ -274,6 +389,7 @@ def _compile(package: Path, source_manifest: Path, output: Path, endpoint: str) 
             compiler.LocalMcpSourcesClient(endpoint_url=endpoint) as client,
             _admit_reviewed_resume_root(package, output),
         ):
+            _normalize_resume_identity_ledger(output, client)
             manifest = compiler.compile_cycle007_package(
                 package,
                 source_manifest,
