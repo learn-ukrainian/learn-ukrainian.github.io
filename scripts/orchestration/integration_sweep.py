@@ -256,6 +256,9 @@ def decide(
     return Decision(number, True, f"stream_epic_{epic}")
 
 
+DEFAULT_GH_TIMEOUT_SECONDS = 60.0
+
+
 class GitHubAdapter:
     """Thin GitHub CLI adapter; mutations remain explicit in ``arm_auto_merge``."""
 
@@ -264,11 +267,24 @@ class GitHubAdapter:
         self._runner = runner or self._default_runner
 
     def _default_runner(self, args: list[str]) -> str:
-        completed = subprocess.run(args, cwd=self.repo_root, text=True, capture_output=True, check=False)
+        try:
+            completed = subprocess.run(
+                args,
+                cwd=self.repo_root,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=DEFAULT_GH_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise SweepError(
+                f"{' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s"
+            ) from exc
         if completed.returncode != 0:
             message = (completed.stderr or completed.stdout or "GitHub command failed").strip()
             raise SweepError(message[:1000])
         return completed.stdout
+
 
     def _json(self, args: list[str]) -> Any:
         try:

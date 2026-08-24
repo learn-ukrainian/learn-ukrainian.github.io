@@ -47,19 +47,37 @@ def _pid_alive(pid: int | None) -> bool:
     return True
 
 
+DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
+
+
 def _run(
     args: list[str],
     *,
     cwd: Path | None = None,
     check: bool = False,
+    timeout: float = DEFAULT_COMMAND_TIMEOUT_SECONDS,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        args,
-        cwd=str(cwd) if cwd is not None else None,
-        capture_output=True,
-        text=True,
-        check=check,
-    )
+    try:
+        return subprocess.run(
+            args,
+            cwd=str(cwd) if cwd is not None else None,
+            capture_output=True,
+            text=True,
+            check=check,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired as exc:
+        if check:
+            raise
+        return subprocess.CompletedProcess(
+            args=args,
+            returncode=124,
+            stdout=(exc.stdout or "") if isinstance(exc.stdout, str) else "",
+            stderr=(exc.stderr or f"command timed out after {timeout}s")
+            if isinstance(exc.stderr, str)
+            else f"command timed out after {timeout}s",
+        )
+
 
 
 def _load_task(task_dir: Path, task_id: str) -> dict[str, Any]:

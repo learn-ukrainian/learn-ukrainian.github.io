@@ -35,25 +35,41 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DELEGATE_ACTIVE_URL = "http://127.0.0.1:8765/api/delegate/active"
 
 OK, RED, UNKNOWN = "ok", "red", "unknown"
+DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
+DEFAULT_GH_TIMEOUT_SECONDS = 60.0
 
 
 def _git(*args: str) -> tuple[int, str]:
-    proc = subprocess.run(
-        ["git", "-C", str(PROJECT_ROOT), *args],
-        capture_output=True,
-        text=True,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(PROJECT_ROOT), *args],
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return 124, f"git {' '.join(args)} timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s: {exc}"
     return proc.returncode, (proc.stdout + proc.stderr).strip()
 
 
 def _gh_json(*args: str) -> tuple[int, object]:
-    proc = subprocess.run(["gh", *args], capture_output=True, text=True, cwd=PROJECT_ROOT)
+    try:
+        proc = subprocess.run(
+            ["gh", *args],
+            capture_output=True,
+            text=True,
+            cwd=PROJECT_ROOT,
+            timeout=DEFAULT_GH_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return 124, f"gh {' '.join(args)} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s: {exc}"
     if proc.returncode != 0:
         return proc.returncode, proc.stderr.strip()
     try:
         return 0, json.loads(proc.stdout or "null")
     except json.JSONDecodeError:
         return 1, proc.stdout.strip()
+
 
 
 def check_tree_clean() -> tuple[str, str]:
