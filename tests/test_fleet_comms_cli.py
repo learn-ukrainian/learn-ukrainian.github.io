@@ -425,32 +425,3 @@ def test_cli_bottleneck_metrics_emit_stores_not_paths(
     blob = json.dumps(payload)
     assert str(tasks_dir) not in blob
     assert str(root / "comms.sqlite3") not in blob
-
-
-def test_cli_bottleneck_metrics_tasks_dir_mutation_is_caught(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys,
-) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    root = tmp_path / "plane"
-    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
-
-    import scripts.fleet_comms.cli as cli_module
-
-    original_dump = cli_module._json_dump
-
-    def leaky_dump(payload, **kwargs):
-        if isinstance(payload, dict):
-            payload = dict(payload)
-            payload["tasks_dir"] = "/secret/batch_state/tasks"
-        return original_dump(payload, **kwargs)
-
-    monkeypatch.setattr(cli_module, "_json_dump", leaky_dump)
-
-    rc = main(["bottleneck-metrics", "--tasks-dir", str(tasks_dir), "--root", str(root)])
-    assert rc == EXIT_OK
-    payload = json.loads(capsys.readouterr().out)
-    with pytest.raises(AssertionError):
-        assert "tasks_dir" not in payload

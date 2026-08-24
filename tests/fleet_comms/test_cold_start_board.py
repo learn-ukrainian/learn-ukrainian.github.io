@@ -478,6 +478,53 @@ def test_probe_backlog_labels_legacy_source(tmp_path: Path, monkeypatch) -> None
     assert data["backlog_by_agent"].get("claude") == 2
 
 
+def test_board_oversized_probe_applies_final_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Oversized probe data and needle must fit 16 KiB via deterministic fallback."""
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    long_needle = "n" * 5000
+    huge_payload = {
+        "store": {"kind": "comms-plane", "reachable": False},
+        "nested": {f"k{i}": "z" * 1000 for i in range(500)},
+    }
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board._probe_plane_status",
+        return_value=huge_payload,
+    ):
+        board = build_cold_start_board(
+            repo_root=tmp_path,
+            agent="claude",
+            needle=long_needle,
+        )
+
+    serialized = json.dumps(board, indent=2)
+    assert len(serialized.encode("utf-8")) <= MAX_BOARD_BYTES
+    assert board["_board_truncated"] is True
+    assert board["_board_oversized_fallback"] is True
+    assert "...[truncated" in board["needle"]
+    for probe in board["probes"].values():
+        assert "data" not in probe
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board._probe_plane_status",
+        return_value=huge_payload,
+    ):
+        with patch(
+            "scripts.fleet_comms.cold_start_board._apply_oversized_fallback",
+            lambda board, probes: board,
+        ):
+            with pytest.raises(ValueError, match="after oversized fallback"):
+                build_cold_start_board(
+                    repo_root=tmp_path,
+                    agent="claude",
+                    needle=long_needle,
+                )
+
+
 def test_board_payload_has_no_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Mutation guard: board JSON must never expose filesystem db_path fields."""
     (tmp_path / ".git").mkdir()
