@@ -27,6 +27,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime import binary_resolve as binary_resolve_module
 from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_EXIT_PERMISSION_DENIED,
@@ -235,6 +236,17 @@ def _stub_binary(
         },
     )
     return binary
+
+
+def _patch_provider_binary_lookup(monkeypatch, lookup) -> None:
+    """Patch the resolver seam used by acpx provider binary lookups (#7161)."""
+    monkeypatch.setattr(binary_resolve_module, "_which", lookup)
+
+
+def _patch_path_binary_lookup(monkeypatch, lookup) -> None:
+    """Patch node PATH lookup and the provider resolver seam (#7161)."""
+    monkeypatch.setattr(acpx_module.shutil, "which", lookup)
+    monkeypatch.setattr(binary_resolve_module, "_which", lookup)
 
 
 def _assert_acpx_env_overrides(env: dict, *, expected: dict[str, str]) -> None:
@@ -2384,7 +2396,9 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
             path.write_text("#!/bin/sh\n", encoding="utf-8")
             path.chmod(0o755)
         binaries[name] = str(path)
-    monkeypatch.setattr(acpx_module.shutil, "which", lambda name: binaries.get(name))
+    _patch_path_binary_lookup(
+        monkeypatch, lambda name, *_a, **_k: binaries.get(name)
+    )
     _isolate_node_fallbacks(monkeypatch)
     monkeypatch.setattr(
         acpx_module,
@@ -2463,8 +2477,9 @@ def test_gemma_shadow_seat_uses_a_confined_opencode_command(tmp_path, monkeypatc
     opencode = tmp_path / "opencode"
     opencode.write_text("#!/bin/sh\n", encoding="utf-8")
     opencode.chmod(0o755)
-    monkeypatch.setattr(
-        acpx_module.shutil, "which", lambda name: {"opencode": str(opencode)}.get(name)
+    _patch_provider_binary_lookup(
+        monkeypatch,
+        lambda name, *_a, **_k: {"opencode": str(opencode)}.get(name),
     )
     monkeypatch.setattr(
         acpx_module,
@@ -2592,7 +2607,7 @@ def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatc
     never a bare not-found. Hermes is permanently removed (operator order
     2026-08-16), so the message points at the opencode standing path, never
     at a reinstall."""
-    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    _patch_provider_binary_lookup(monkeypatch, lambda _name, *_a, **_k: None)
 
     with pytest.raises(AcpxShadowRefusalError) as exc_info:
         acpx_module._resolve_participant_binary(
@@ -2612,10 +2627,9 @@ def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatc
 
 
 def test_probe_participant_reachability_reports_only_missing_provider_binaries(monkeypatch):
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: {"opencode": "/usr/local/bin/opencode"}.get(name),
+    _patch_provider_binary_lookup(
+        monkeypatch,
+        lambda name, *_a, **_k: {"opencode": "/usr/local/bin/opencode"}.get(name),
     )
 
     assert acpx_module.probe_participant_reachability("gemma") is None
@@ -2630,7 +2644,7 @@ def test_probe_participant_reachability_reports_only_missing_provider_binaries(m
 def test_probe_participant_reachability_flags_deepseek_when_opencode_is_missing(monkeypatch):
     """#6805: the DeepSeek seat now degrades on the opencode binary, with the
     opencode remediation — never on the permanently removed hermes binary."""
-    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    _patch_provider_binary_lookup(monkeypatch, lambda _name, *_a, **_k: None)
 
     error = acpx_module.probe_participant_reachability("deepseek")
 
@@ -2647,10 +2661,9 @@ def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, 
     agy.write_text("#!/bin/sh\n", encoding="utf-8")
     agy.chmod(0o755)
     node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str({"agy": agy, "node": node}[name]),
+    _patch_path_binary_lookup(
+        monkeypatch,
+        lambda name, *_a, **_k: str({"agy": agy, "node": node}[name]),
     )
     _isolate_node_fallbacks(monkeypatch)
     monkeypatch.setattr(
@@ -2686,10 +2699,9 @@ def test_new_fleet_discussion_seat_rejects_missing_provider_capability(tmp_path,
     agy.write_text("#!/bin/sh\n", encoding="utf-8")
     agy.chmod(0o755)
     node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str({"agy": agy, "node": node}[name]),
+    _patch_path_binary_lookup(
+        monkeypatch,
+        lambda name, *_a, **_k: str({"agy": agy, "node": node}[name]),
     )
     _isolate_node_fallbacks(monkeypatch)
     monkeypatch.setattr(

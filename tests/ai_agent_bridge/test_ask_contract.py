@@ -568,10 +568,10 @@ def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_mis
     actionable remediation and documented route — not mid-review at spawn.
     The authority job is enqueued and claimed first: terminal-replay paths
     must stay reachable even when the provider CLI is absent."""
-    from scripts.agent_runtime.adapters import acpx as acpx_module
+    from scripts.agent_runtime import binary_resolve as binary_resolve_module
 
     invoke = Mock(side_effect=AssertionError("dead seat invoked the provider"))
-    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(binary_resolve_module, "_which", lambda _name, *_a, **_k: None)
     monkeypatch.setattr(
         "scripts.fleet_comms.authority.AuthorityService", _RecordingAuthority
     )
@@ -594,9 +594,9 @@ def test_ask_hermes_cli_surfaces_remediation_when_binary_is_missing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """#6805: the CLI exits nonzero with the remediation the caller reroutes on."""
-    from scripts.agent_runtime.adapters import acpx as acpx_module
+    from scripts.agent_runtime import binary_resolve as binary_resolve_module
 
-    monkeypatch.setattr(acpx_module.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(binary_resolve_module, "_which", lambda _name, *_a, **_k: None)
     monkeypatch.setattr(
         "scripts.fleet_comms.authority.AuthorityService", _RecordingAuthority
     )

@@ -14,6 +14,10 @@ import os
 import shutil
 from pathlib import Path
 
+# Patchable lookup seam for tests — ``resolve_agent_binary`` routes here instead
+# of calling ``shutil.which`` directly so fakes can target one module attribute.
+_which = shutil.which
+
 _LOGIN_BIN_SUFFIXES: tuple[str, ...] = (
     ".local/bin",
     ".opencode/bin",
@@ -53,7 +57,7 @@ def resolve_agent_binary(binary: str, *, path: str | None = None) -> str | None:
             return str(candidate.resolve())
 
     search_path = augment_path_for_login_bins(path)
-    found = shutil.which(binary, path=search_path)
+    found = _which(binary, path=search_path)
     if found:
         return str(Path(found).resolve())
     return None
