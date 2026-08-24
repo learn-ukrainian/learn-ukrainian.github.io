@@ -31,6 +31,7 @@ class RouteContract:
     recommendation: str
     mutates: bool = False
     replacement: str | None = None
+    response_schema_version: str | None = None
 
     def matches(self, path: str, kind: ContractKind) -> bool:
         if self.kind != kind:
@@ -289,6 +290,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Consolidates observation previously spread across comms, runtime, ACP, and session-stream pages; legacy pages remain during the pre-flip soak.",
         "medium if a consumer mistakes the observer for plane authority or relies on an absent optional table as evidence of no historical work",
         "keep as the pre-flip consolidated observer; file handoffs remain authoritative and all fleet routes are read-only",
+        response_schema_version="comms.v2",
     ),
     RouteContract(
         "/api/comms/messages",
@@ -366,6 +368,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Canonical channels replace legacy direct-message routes; status overlaps delegate/build events.",
         "low/medium",
         "keep",
+        response_schema_version="comms.v2",
     ),
     RouteContract(
         "/api/delegate",

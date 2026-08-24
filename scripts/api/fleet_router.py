@@ -35,6 +35,7 @@ from scripts.fleet_comms.endpoints import load_endpoint_registry
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
+from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
 from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
@@ -359,6 +360,8 @@ def _safe_plane_status() -> dict[str, Any]:
         "mode": mode,
         "enabled": bool(status.get("enabled")),
         "read_only": True,
+        "response_schema_version": status.get("response_schema_version"),
+        "store": status.get("store"),
         "authority": (
             "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative"
         ),
@@ -369,14 +372,20 @@ def _safe_plane_status() -> dict[str, Any]:
             "applied_name": schema.get("applied_name"),
             "db_exists": bool(schema.get("db_exists")),
             "db_error": schema.get("db_error"),
+            "store": schema.get("store"),
         },
         "parity_telemetry": {
+            "store": telemetry.get("store"),
             "exists": bool(telemetry.get("exists")),
             "event_count": int(telemetry.get("event_count") or 0),
             "parity_ok_count": int(telemetry.get("parity_ok_count") or 0),
             "parity_fail_count": int(telemetry.get("parity_fail_count") or 0),
         },
     }
+
+
+def _authority_store_descriptor(db_path: Path) -> dict[str, Any]:
+    return store_descriptor(kind="comms-plane", reachable=db_path.is_file())
 
 
 def _facade_authority_payload(
@@ -386,9 +395,10 @@ def _facade_authority_payload(
     db_path = _plane_db_path()
     if not db_path.is_file():
         return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "content_included": False,
             "db_missing": True,
-            "db_path": str(db_path),
+            "store": _authority_store_descriptor(db_path),
             "read_only": True,
             "source": "authority",
         }
@@ -397,13 +407,15 @@ def _facade_authority_payload(
     except (OSError, sqlite3.Error, ValueError) as exc:
         logger.warning("Fleet facade authority collector unavailable: %s", type(exc).__name__)
         return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "content_included": False,
             "db_error": type(exc).__name__,
-            "db_path": str(db_path),
+            "store": _authority_store_descriptor(db_path),
             "read_only": True,
             "source": "authority",
         }
-    payload["db_path"] = str(db_path)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = _authority_store_descriptor(db_path)
     payload["read_only"] = True
     payload["source"] = "authority"
     return payload
@@ -414,13 +426,14 @@ def _facade_backlog_payload(limit: int) -> dict[str, Any]:
     db_path = _plane_db_path()
     if not db_path.is_file():
         return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "total": 0,
             "by_agent": {},
             "by_status": {},
             "rows": [],
             "content_included": False,
             "db_missing": True,
-            "db_path": str(db_path),
+            "store": _authority_store_descriptor(db_path),
             "read_only": True,
             "source": "authority",
         }
@@ -431,18 +444,20 @@ def _facade_backlog_payload(limit: int) -> dict[str, Any]:
     except (OSError, sqlite3.Error, ValueError) as exc:
         logger.warning("Fleet facade authority backlog unavailable: %s", type(exc).__name__)
         return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "total": 0,
             "by_agent": {},
             "by_status": {},
             "rows": [],
             "content_included": False,
             "db_error": type(exc).__name__,
-            "db_path": str(db_path),
+            "store": _authority_store_descriptor(db_path),
             "read_only": True,
             "source": "authority",
         }
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["content_included"] = False
-    payload["db_path"] = str(db_path)
+    payload["store"] = _authority_store_descriptor(db_path)
     payload["read_only"] = True
     payload["source"] = "authority"
     return payload
@@ -453,12 +468,13 @@ def _facade_dead_letters_payload(limit: int) -> dict[str, Any]:
     db_path = _plane_db_path()
     if not db_path.is_file():
         return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "total": 0,
             "by_reason": {},
             "rows": [],
             "content_included": False,
             "db_missing": True,
-            "db_path": str(db_path),
+            "store": _authority_store_descriptor(db_path),
             "read_only": True,
             "source": "authority",
         }
@@ -467,17 +483,19 @@ def _facade_dead_letters_payload(limit: int) -> dict[str, Any]:
     except (OSError, sqlite3.Error, ValueError) as exc:
         logger.warning("Fleet facade authority dead letters unavailable: %s", type(exc).__name__)
         return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "total": 0,
             "by_reason": {},
             "rows": [],
             "content_included": False,
             "db_error": type(exc).__name__,
-            "db_path": str(db_path),
+            "store": _authority_store_descriptor(db_path),
             "read_only": True,
             "source": "authority",
         }
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["content_included"] = False
-    payload["db_path"] = str(db_path)
+    payload["store"] = _authority_store_descriptor(db_path)
     payload["read_only"] = True
     payload["source"] = "authority"
     return payload
@@ -577,7 +595,9 @@ def fleet_facade_dead(limit: int = Query(default=100, ge=1, le=500)) -> dict[str
 @router.get("/facade/broker-report")
 def fleet_facade_broker_report(days: int = Query(default=7, ge=1, le=90)) -> dict[str, Any]:
     """Expose the legacy Broker Ops retirement report through its shared builder."""
-    return build_legacy_broker_report(days)
+    payload = build_legacy_broker_report(days)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    return payload
 
 
 @router.get("/facade/reap-report")

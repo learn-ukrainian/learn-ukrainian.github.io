@@ -81,7 +81,10 @@ def test_plane_status_cli_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, 
     assert data["mode"] == "shadow"
     assert data["enabled"] is True
     assert data["read_only"] is True
-    assert data["plane_root"] == str(tmp_path / "plane")
+    assert data["response_schema_version"] == "comms.v2"
+    assert data["store"]["kind"] == "comms-plane"
+    assert data["store"]["reachable"] is False
+    assert "plane_root" not in data
     assert data["parity_telemetry"]["event_count"] == 1
 
 
@@ -95,7 +98,9 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     data = json.loads(capsys.readouterr().out)
     # Config default is authority; --root only redirects storage, not mode.
     assert data["mode"] == "authority"
-    assert data["plane_root"] == str(root)
+    assert data["response_schema_version"] == "comms.v2"
+    assert data["store"]["kind"] == "comms-plane"
+    assert "plane_root" not in data
 
 
 def test_get_formal_review_job_helper(tmp_path: Path) -> None:

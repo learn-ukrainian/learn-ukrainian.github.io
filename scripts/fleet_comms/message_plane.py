@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from scripts.fleet_comms.contracts import CompletionState
+from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
 from scripts.fleet_comms.paths import (
     DEFAULT_ROOT_REL,  # noqa: F401  # re-exported for compatibility
     ENV_ROOT,  # noqa: F401  # re-exported for compatibility
@@ -511,14 +512,19 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
     from scripts.fleet_comms.migrations import MIGRATIONS
 
     known = MIGRATIONS[-1].version if MIGRATIONS else 0
+    db_exists = db_path.is_file()
     payload: dict[str, Any] = {
         "known_version": known,
         "applied_version": None,
         "applied_name": None,
-        "db_path": str(db_path),
-        "db_exists": db_path.is_file(),
+        "db_exists": db_exists,
+        "store": store_descriptor(
+            kind="comms-plane",
+            reachable=db_exists,
+            schema_versions={"known": known, "applied": None},
+        ),
     }
-    if not db_path.is_file():
+    if not db_exists:
         return payload
     try:
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
@@ -529,6 +535,7 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
             if row is not None:
                 payload["applied_version"] = int(row[0])
                 payload["applied_name"] = str(row[1]) if row[1] is not None else None
+                payload["store"]["schema_versions"]["applied"] = payload["applied_version"]
         finally:
             conn.close()
     except sqlite3.Error:
@@ -545,9 +552,10 @@ def _summarize_parity_telemetry(
     limit: int = _TELEMETRY_SUMMARY_LIMIT,
 ) -> dict[str, Any]:
     """Read-only tail summary of plane parity JSONL (missing file is fine)."""
+    telemetry_exists = path.is_file()
     summary: dict[str, Any] = {
-        "path": str(path),
-        "exists": path.is_file(),
+        "store": store_descriptor(kind="parity-telemetry", reachable=telemetry_exists),
+        "exists": telemetry_exists,
         "event_count": 0,
         "parity_ok_count": 0,
         "parity_fail_count": 0,
@@ -620,12 +628,21 @@ def read_plane_status(
         else default_parity_telemetry_path(plane_root)
     )
 
+    schema = _read_applied_schema_version(db_path)
     payload: dict[str, Any] = {
+        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
         "mode": mode,
         "enabled": mode not in {"off", "invalid"},
         "read_only": True,
-        "plane_root": str(plane_root),
-        "schema": _read_applied_schema_version(db_path),
+        "store": store_descriptor(
+            kind="comms-plane",
+            reachable=bool(schema.get("db_exists")),
+            schema_versions={
+                "known": schema.get("known_version"),
+                "applied": schema.get("applied_version"),
+            },
+        ),
+        "schema": schema,
         "parity_telemetry": _summarize_parity_telemetry(tele_path, limit=recent_limit),
     }
     if mode_error is not None:

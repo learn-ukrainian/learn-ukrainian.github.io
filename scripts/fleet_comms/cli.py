@@ -49,6 +49,7 @@ from scripts.fleet_comms.efficiency_metrics import (
 from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
+from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
 EXIT_OK = 0
@@ -97,7 +98,11 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
 
 def fleet_status_payload(status: dict[str, Any]) -> dict[str, Any]:
     """Return the shared facade status payload for CLI and Monitor callers."""
-    return {"plane_status": status, "health": _short_plane_health(status)}
+    return {
+        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+        "plane_status": status,
+        "health": _short_plane_health(status),
+    }
 
 
 def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:

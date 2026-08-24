@@ -57,15 +57,6 @@ KNOWN_LEAKS_PATH = Path(__file__).with_name("known_leaks.toml")
 FROZEN_IDS = frozenset(
     {
         "admin-backup-dir",
-        "comms-plane-status",
-        "comms-plane-schema-db-path",
-        "comms-plane-telemetry-path",
-        "fleet-facade-db-paths",
-        "fleet-facade-status",
-        "fleet-facade-status-schema-db-path",
-        "fleet-facade-status-telemetry-path",
-        "fleet-broker-report-store-0",
-        "fleet-broker-report-store-1",
         "fleet-workers-host-id",
         "occupancy-host-id",
         "retention-plan-dir",

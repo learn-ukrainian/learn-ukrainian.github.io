@@ -159,7 +159,7 @@ atomically; the following manifest is the record of those boundaries:
 | `session_streams_router.py` | `repo_root`, `db_path` | `tests/test_session_streams_api.py` | `repo: {role, sha}`, `store: {reachable, schema_versions}` | `session-streams.v2` |
 | `repository_authority.py`, `preparation_state.py`, `state_router.py` | checkout and authority roots | `tests/test_orient_api.py` and preparation/state clients | `primary_checkout: {role, head_sha, dirty_count}`, `cwd_role` | `authority.v2` |
 | `worktrees_router.py` | worktree filesystem paths | worktree dashboards and guardrail consumers | opaque worktree id, branch, role | `worktrees.v2` |
-| `comms_router.py`, fleet facade collectors | broker/fleet database paths | comms and fleet dashboards | `store: {reachable, kind}` | `comms.v2` |
+| `comms_router.py`, fleet facade collectors | broker/fleet database paths | comms and fleet dashboards | `store: {reachable, kind}` | `comms.v2` (done #7182 PR-B) |
 | `main.py` orient collectors | Git roots and diagnostic paths | orient clients and `tests/test_orient_api.py` | role/head metadata only | `orient.v2` |
 | `telemetry.response` | transcript filenames | Monitor telemetry consumers | retain context/window/source; drop filename | `telemetry.v2` |
 

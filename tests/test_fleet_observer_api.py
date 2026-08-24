@@ -246,12 +246,22 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert help_response.json()["endpoints"]["reap_report"].endswith("/reap-report")
     assert help_alias.json()["truth"] == help_response.json()["truth"]
     assert status.json()["health"]["mode"] == "shadow"
+    assert status.json()["response_schema_version"] == "comms.v2"
+    assert "plane_root" not in status.json()["plane_status"]
+    assert "db_path" not in status.json()["plane_status"]["schema"]
+    assert "path" not in status.json()["plane_status"]["parity_telemetry"]
     assert board.json() == {"board_status": "ok", "probes": {}}
     assert metrics.json()["source"] == "authority"
     assert metrics.json()["read_only"] is True
+    assert "db_path" not in metrics.json()
+    assert metrics.json()["store"]["kind"] == "comms-plane"
     assert backlog.json()["content_included"] is False
+    assert "db_path" not in backlog.json()
     assert dead.json()["content_included"] is False
+    assert "db_path" not in dead.json()
     assert broker.json()["schema"] == "fleet-broker-report.v1"
+    assert broker.json()["response_schema_version"] == "comms.v2"
+    assert all("path" not in store for store in broker.json()["stores"])
     assert broker.json()["read_only"] is True
     assert reap.json() == {"read_only": True, "apply": False, "report": []}
 
@@ -270,6 +280,9 @@ def test_facade_missing_plane_db_is_fail_open(
     for payload in (metrics, backlog, dead):
         assert payload["db_missing"] is True
         assert payload["read_only"] is True
+        assert "db_path" not in payload
+        assert payload["store"]["kind"] == "comms-plane"
+        assert payload["store"]["reachable"] is False
 
 
 def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> None:
