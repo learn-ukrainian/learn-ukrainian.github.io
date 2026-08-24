@@ -58,7 +58,7 @@ ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}
 mcp>=2,<3
 
 # Web scraping (for resource discovery)
-beautifulsoup4>=4.14
+beautifulsoup4>=4.15.0
 requests>=2.34.2
 
 # YouTube ingestion
