@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f4c4d466db3d",
+  "strategy": "manual-commit",
+  "branch": "agy/claudex-repo-python-7210",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/claudex_supervisor.py",
+    "tests/orchestration/test_claudex_supervisor.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f4/c4d466db3d/0/metadata.json",
+      "transcript": "/f4/c4d466db3d/0/full.jsonl",
+      "compact_transcript": "/f4/c4d466db3d/0/transcript.jsonl",
+      "content_hash": "/f4/c4d466db3d/0/content_hash.txt",
+      "prompt": "/f4/c4d466db3d/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f4c4d466db3d",
+  "session_id": "fleet-862e0654d3254c8bb31c9bca09dd540b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T07:57:28.651418Z",
+  "branch": "agy/claudex-repo-python-7210",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/claudex_supervisor.py",
+    "tests/orchestration/test_claudex_supervisor.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "dbd2c5a157e5",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T07:57:28.647794Z",
+    "agent_lines": 33,
+    "agent_removed": 7,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 33,
+    "total_lines_changed": 40,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
