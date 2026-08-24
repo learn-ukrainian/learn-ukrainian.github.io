@@ -73,6 +73,7 @@ from .delegate_router import router as delegate_router
 from .discussions_router import router as discussions_router
 from .docs_router import router as docs_router
 from .epics_router import router as epics_router
+from .epics_router import seed_manifest_inventory
 from .fleet_router import router as fleet_router
 from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
@@ -118,6 +119,10 @@ async def _lifespan(_app: FastAPI):
     preload_all()
     install_signal_logging()
     ensure_broker_db_ready()
+    seed_manifest_inventory(
+        PROJECT_ROOT,
+        handoff_root=LIVE_REPO_ROOT,
+    )
     try:
         isa.schedule_refresh(force=False)
     except Exception as exc:

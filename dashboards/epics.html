@@ -30,7 +30,7 @@ button, input, select { font: inherit; }
 .signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 18px; margin-bottom: 4px; }
 .signal-card p { color: var(--text3); font-size: 12px; margin: 0; line-height: 1.4; }
 
-.summary-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+.summary-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
 .metric { background: var(--bg2); border: 1px solid var(--border); padding: 12px 14px; position: relative; }
 .metric::before { background: var(--accent); content: ''; height: 3px; left: 0; position: absolute; right: 0; top: 0; }
 .metric:nth-child(2)::before { background: var(--green); }
@@ -63,9 +63,16 @@ button, input, select { font: inherit; }
 .muted { color: var(--text3); }
 .pill { border: 1px solid var(--border); border-radius: 999px; color: var(--text2); display: inline-block; font-size: 10px; font-weight: 750; padding: 2px 6px; white-space: nowrap; }
 .pill.active { background: rgba(61, 107, 74, .12); border-color: rgba(61, 107, 74, .3); color: var(--green); }
+.pill.registered { background: rgba(61, 107, 74, .08); border-color: rgba(61, 107, 74, .25); color: var(--green); }
 .pill.released { background: rgba(138, 131, 119, .12); border-color: rgba(138, 131, 119, .3); color: var(--gray); }
 .pill.expired { background: rgba(156, 40, 40, .11); border-color: rgba(156, 40, 40, .3); color: var(--red); }
 .pill.none { background: rgba(138, 131, 119, .08); border-color: rgba(138, 131, 119, .25); color: var(--text3); }
+.pill.stale { background: rgba(168, 132, 43, .12); border-color: rgba(168, 132, 43, .3); color: var(--yellow); }
+.pill.store-only { background: rgba(138, 131, 119, .08); border-color: rgba(138, 131, 119, .25); color: var(--text3); }
+
+.registry-identity { display: grid; gap: 2px; min-width: 180px; }
+.registry-name { font-weight: 700; }
+.registry-title { color: var(--text3); font-size: 11px; line-height: 1.3; }
 
 .snippet-cell { max-width: 280px; }
 .entry-snippet { font-size: 11px; line-height: 1.35; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -136,7 +143,7 @@ button, input, select { font: inherit; }
     <div>
       <div class="eyebrow">Remote lifecycle · TTL-fenced</div>
       <h2 id="epics-title">Registered epics and active drivers.</h2>
-      <p>Multi-agent coordination across remote and local seats. Answers in one glance who drives each epic, from where, lease health, and the latest handoff state. Sourced from the live <code>/api/epics/v1</code> lifecycle registry.</p>
+      <p>Multi-agent coordination across remote and local seats. Answers in one glance which registry epics exist, who drives each one, lease health, and the latest handoff state. Sourced from the live <code>/api/epics/v1</code> lifecycle registry.</p>
     </div>
     <aside class="signal-card" aria-label="Lifecycle posture">
       <strong>Remote authority</strong>
@@ -150,7 +157,8 @@ button, input, select { font: inherit; }
     <article class="metric"><div class="number" id="metric-total">—</div><div class="label">Total epics</div></article>
     <article class="metric"><div class="number" id="metric-active" style="color:var(--green)">—</div><div class="label">Active leases</div></article>
     <article class="metric"><div class="number" id="metric-released" style="color:var(--gray)">—</div><div class="label">Released</div></article>
-    <article class="metric"><div class="number" id="metric-expired" style="color:var(--red)">—</div><div class="label">Expired / None</div></article>
+    <article class="metric"><div class="number" id="metric-expired" style="color:var(--red)">—</div><div class="label">Expired</div></article>
+    <article class="metric"><div class="number" id="metric-no-lease" style="color:var(--gray)">—</div><div class="label">No lease</div></article>
   </section>
 
   <section class="filter-strip" aria-label="Epic filters">
@@ -184,6 +192,7 @@ button, input, select { font: inherit; }
           <thead>
             <tr>
               <th>Epic</th>
+              <th>Name / title</th>
               <th>Holder</th>
               <th>Lease State</th>
               <th>Age</th>
@@ -192,7 +201,7 @@ button, input, select { font: inherit; }
             </tr>
           </thead>
           <tbody id="epics-tbody">
-            <tr><td colspan="6" class="empty">Loading epic streams…</td></tr>
+            <tr><td colspan="7" class="empty">Loading epic streams…</td></tr>
           </tbody>
         </table>
       </div>
@@ -207,7 +216,7 @@ button, input, select { font: inherit; }
     </article>
   </section>
 
-  <p class="footnote"><strong>Read-only operator dashboard:</strong> Sourced strictly from <code>GET /api/epics/v1</code> and <code>GET /api/epics/v1/{stream}</code>. Auto-refreshes every 15s. No claim or release mutations are possible from the browser.</p>
+  <p class="footnote"><strong>Read-only operator dashboard:</strong> Registry identity is the release snapshot recorded at the last successful API restart. Sourced strictly from <code>GET /api/epics/v1</code> and <code>GET /api/epics/v1/{stream}</code>. Auto-refreshes every 15s. No claim or release mutations are possible from the browser.</p>
 </main>
 
 <script>
@@ -239,6 +248,7 @@ button, input, select { font: inherit; }
     metricActive: document.getElementById('metric-active'),
     metricReleased: document.getElementById('metric-released'),
     metricExpired: document.getElementById('metric-expired'),
+    metricNoLease: document.getElementById('metric-no-lease'),
   };
 
   function escapeHtml(value) {
@@ -311,16 +321,27 @@ button, input, select { font: inherit; }
     return `in ${mins}m ${secs}s`;
   }
 
+  function displayLeaseState(stream) {
+    const state = getLeaseState(stream);
+    if (state === 'none') return stream && stream.registered ? 'Never claimed' : 'No lease';
+    return state;
+  }
+
+  function registryState(stream) {
+    if (stream && stream.registered) return 'registered';
+    if (stream && (stream.stream_name || stream.title)) return 'stale';
+    return 'store-only';
+  }
+
   function formatTime(isoString) {
     if (!isoString) return '—';
     const d = new Date(isoString);
     return Number.isNaN(d.getTime()) ? String(isoString) : d.toLocaleString();
   }
 
-  function renderPill(leaseState) {
+  function renderPill(leaseState, label = null) {
     const s = String(leaseState || 'none').toLowerCase();
-    const label = s.toUpperCase();
-    return `<span class="pill ${escapeHtml(s)}">${escapeHtml(label)}</span>`;
+    return `<span class="pill ${escapeHtml(s)}">${escapeHtml(label || s.toUpperCase())}</span>`;
   }
 
   async function fetchJson(path) {
@@ -374,7 +395,8 @@ button, input, select { font: inherit; }
         const holderText = holder ? `${holder.agent || ''} ${holder.harness || ''} ${holder.host_id || ''}`.toLowerCase() : '';
         const stateBody = (item.last_state && item.last_state.body || '').toLowerCase();
         const actionBody = (item.last_next_action && item.last_next_action.body || '').toLowerCase();
-        const matchesQuery = streamId.includes(query) || holderText.includes(query) || stateBody.includes(query) || actionBody.includes(query);
+        const identityText = `${item.stream_name || ''} ${item.title || ''}`.toLowerCase();
+        const matchesQuery = streamId.includes(query) || identityText.includes(query) || holderText.includes(query) || stateBody.includes(query) || actionBody.includes(query);
         if (!matchesQuery) return false;
       }
       return true;
@@ -385,24 +407,27 @@ button, input, select { font: inherit; }
     const total = state.streams.length;
     let active = 0;
     let released = 0;
-    let expiredOrNone = 0;
+    let expired = 0;
+    let noLease = 0;
 
     state.streams.forEach((item) => {
       const s = getLeaseState(item);
       if (s === 'active') active += 1;
       else if (s === 'released') released += 1;
-      else expiredOrNone += 1;
+      else if (s === 'expired') expired += 1;
+      else noLease += 1;
     });
 
     els.metricTotal.textContent = String(total);
     els.metricActive.textContent = String(active);
     els.metricReleased.textContent = String(released);
-    els.metricExpired.textContent = String(expiredOrNone);
+    els.metricExpired.textContent = String(expired);
+    els.metricNoLease.textContent = String(noLease);
   }
 
   function renderTable() {
     if (state.fetchError && !state.streams.length) {
-      els.epicsTbody.innerHTML = `<tr><td colspan="6" class="error">API unreachable: ${escapeHtml(state.fetchError)}. Epic state is unknown.</td></tr>`;
+      els.epicsTbody.innerHTML = `<tr><td colspan="7" class="error">API unreachable: ${escapeHtml(state.fetchError)}. Epic state is unknown.</td></tr>`;
       els.listCountMeta.textContent = 'API unreachable';
       return;
     }
@@ -411,12 +436,12 @@ button, input, select { font: inherit; }
     els.listCountMeta.textContent = `${visible.length} of ${state.streams.length} epics`;
 
     if (!state.streams.length) {
-      els.epicsTbody.innerHTML = `<tr><td colspan="6" class="empty">No registered epics found in session-stream store.</td></tr>`;
+      els.epicsTbody.innerHTML = `<tr><td colspan="7" class="empty">No registered epics found in session-stream store.</td></tr>`;
       return;
     }
 
     if (!visible.length) {
-      els.epicsTbody.innerHTML = `<tr><td colspan="6" class="empty">No epics match the current search filters.</td></tr>`;
+      els.epicsTbody.innerHTML = `<tr><td colspan="7" class="empty">No epics match the current search filters.</td></tr>`;
       return;
     }
 
@@ -430,8 +455,12 @@ button, input, select { font: inherit; }
       const lease = stream.lease;
       const holderFormatted = lease ? formatHolder(lease.holder) : '—';
       const leaseState = getLeaseState(stream);
+      const leaseLabel = displayLeaseState(stream);
       const ageFormatted = lease ? formatAge(lease.age_seconds) : '—';
       const expiryFormatted = formatExpiry(lease);
+      const identityState = registryState(stream);
+      const identityStateLabel = identityState === 'registered' ? 'Registered' : identityState === 'stale' ? 'Stale registry' : 'Store-only';
+      const identityHtml = `<div class="registry-identity"><span class="registry-name">${escapeHtml(short(stream.stream_name, streamId))}</span><span class="registry-title">${escapeHtml(short(stream.title, 'Title unavailable'))}</span><span class="pill ${escapeHtml(identityState)}">${escapeHtml(identityStateLabel)}</span></div>`;
 
       const snippets = [];
       if (stream.last_state && stream.last_state.body) {
@@ -458,8 +487,9 @@ button, input, select { font: inherit; }
 
       return `<tr class="epic-row" data-stream-id="${escapeHtml(streamId)}" aria-selected="${isSelected ? 'true' : 'false'}" tabindex="0">
         <td>${epicLink}</td>
+        <td>${identityHtml}</td>
         <td class="mono">${escapeHtml(holderFormatted)}</td>
-        <td>${renderPill(leaseState)}</td>
+        <td>${renderPill(leaseState, leaseLabel)}</td>
         <td>${escapeHtml(ageFormatted)}</td>
         <td class="countdown-cell" data-expires-at="${lease && lease.expires_at ? escapeHtml(lease.expires_at) : ''}" data-state="${escapeHtml(leaseState)}">${escapeHtml(expiryFormatted)}</td>
         <td class="snippet-cell">${handoffHtml}</td>
@@ -527,16 +557,35 @@ button, input, select { font: inherit; }
       ? `<a href="${escapeHtml(ghUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(streamId)} on GitHub</a>`
       : escapeHtml(streamId);
 
+    const identityState = registryState(detail);
+    const identityStateLabel = identityState === 'registered' ? 'Registered' : identityState === 'stale' ? 'Stale registry' : 'Store-only';
+    const registrySectionHtml = `
+      <section class="detail-section">
+        <h5>Registry Identity</h5>
+        <div class="detail-grid">
+          <div class="detail-field"><dt>Registration</dt><dd>${renderPill(identityState, identityStateLabel)}</dd></div>
+          <div class="detail-field"><dt>Registry status</dt><dd class="mono">${escapeHtml(short(detail.registry_status))}</dd></div>
+          <div class="detail-field"><dt>Stream name</dt><dd>${escapeHtml(short(detail.stream_name))}</dd></div>
+          <div class="detail-field"><dt>Title</dt><dd>${escapeHtml(short(detail.title))}</dd></div>
+        </div>
+      </section>
+    `;
+
     els.detailMeta.textContent = streamId;
 
     const lease = detail.lease;
     let leaseSectionHtml = '';
 
     if (!lease) {
+      const noLeaseMessage = detail.registered
+        ? 'Never claimed: this registered epic has no lease projection.'
+        : detail.stream_name || detail.title
+          ? 'No lease: this row is from an older registry snapshot.'
+          : 'No lease: this store-only row has never had registry metadata.';
       leaseSectionHtml = `
         <section class="detail-section">
           <h5>Lease Status</h5>
-          <div class="empty" style="padding:10px 0;">No active or recorded lease for this epic (session state: ${escapeHtml(short(detail.session_state, 'none'))}).</div>
+          <div class="empty" style="padding:10px 0;">${escapeHtml(noLeaseMessage)} (session state: ${escapeHtml(short(detail.session_state, 'none'))}).</div>
         </section>
       `;
     } else {
@@ -604,6 +653,7 @@ button, input, select { font: inherit; }
     els.detailPane.innerHTML = `
       <h4>${escapeHtml(streamId)}</h4>
       <div style="font-size:12px;margin-bottom:12px;">${ghLink}</div>
+      ${registrySectionHtml}
       ${leaseSectionHtml}
       <section class="detail-section">
         <h5>Pinned Entries (${pinned.length})</h5>
