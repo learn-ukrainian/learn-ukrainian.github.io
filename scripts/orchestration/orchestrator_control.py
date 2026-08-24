@@ -22,7 +22,9 @@ from typing import Any
 
 SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
+DEFAULT_DELEGATE_TIMEOUT_SECONDS = 180.0
 TASK_STATUS_ATTENTION = {
+
     "cancelled",
     "crashed",
     "failed",
@@ -598,14 +600,36 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         return 0
 
-    proc = subprocess.run(
-        command,
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_DELEGATE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        print(
+            json.dumps(
+                {
+                    "error": "delegate dispatch timed out",
+                    "returncode": 124,
+                    "stdout": (exc.stdout or "") if isinstance(exc.stdout, str) else "",
+                    "stderr": (
+                        exc.stderr
+                        or f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s"
+                    )
+                    if isinstance(exc.stderr, str)
+                    else f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s",
+                    "command": command,
+                },
+                indent=2,
+            )
+        )
+        return 124
     if proc.returncode != 0:
+
         print(
             json.dumps(
                 {

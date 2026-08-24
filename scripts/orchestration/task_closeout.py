@@ -41,22 +41,32 @@ def _json_file(path: Path) -> dict[str, Any]:
     return value
 
 
+DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
+
+
 def _default_runner(repo_root: Path) -> Runner:
     def run(args: list[str], stdin: str | None = None) -> str:
-        completed = subprocess.run(
-            args,
-            cwd=repo_root,
-            input=stdin,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        try:
+            completed = subprocess.run(
+                args,
+                cwd=repo_root,
+                input=stdin,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=DEFAULT_COMMAND_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise task_lifecycle.LifecycleError(
+                f"{' '.join(args[:4])} timed out after {DEFAULT_COMMAND_TIMEOUT_SECONDS}s"
+            ) from exc
         if completed.returncode != 0:
             detail = (completed.stderr or completed.stdout or "command failed").strip()
             raise task_lifecycle.LifecycleError(f"{' '.join(args[:4])} failed: {detail[:1000]}")
         return completed.stdout
 
     return run
+
 
 
 class GhGitHubAdapter:

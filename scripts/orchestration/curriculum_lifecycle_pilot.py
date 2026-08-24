@@ -32,6 +32,7 @@ AUTHORIZATION_SCHEMA_PATH = CONTRACT_ROOT / "schema/pilot-authorization.v1.schem
 CERTIFICATION_PROFILES_PATH = CONTRACT_ROOT / "config/certification-profiles.v1.yaml"
 TRACK_COMPLETION_CONFIG_PATH = Path("agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml")
 LEARNER_BUNDLE_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml")
+DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
 
 REQUIRED_SCENARIOS = frozenset(
     {
@@ -212,12 +213,16 @@ def _validate(value: Mapping[str, Any], schema_path: Path, label: str) -> None:
 
 
 def _git(repo_root: Path, *args: str, text: bool = True) -> str | bytes:
-    result = subprocess.run(
-        ["git", "-C", str(repo_root), *args],
-        check=False,
-        capture_output=True,
-        text=text,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(repo_root), *args],
+            check=False,
+            capture_output=True,
+            text=text,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise PilotError(f"git {' '.join(args)} timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
     if result.returncode:
         stderr = result.stderr.strip() if text else result.stderr.decode(errors="replace").strip()
         raise PilotError(f"git {' '.join(args)} failed: {stderr}")
@@ -225,15 +230,22 @@ def _git(repo_root: Path, *args: str, text: bool = True) -> str | bytes:
 
 
 def _commit_is_ancestor(repo_root: Path, commit: str) -> bool:
-    result = subprocess.run(
-        ["git", "-C", str(repo_root), "merge-base", "--is-ancestor", commit, "HEAD"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(repo_root), "merge-base", "--is-ancestor", commit, "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise PilotError(
+            f"cannot verify historical commit {commit}: git merge-base timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s"
+        ) from exc
     if result.returncode not in {0, 1}:
         raise PilotError(f"cannot verify historical commit {commit}: {result.stderr.strip()}")
     return result.returncode == 0
+
 
 
 def _resume_evidence_exists(repo_root: Path, evidence: str) -> bool:

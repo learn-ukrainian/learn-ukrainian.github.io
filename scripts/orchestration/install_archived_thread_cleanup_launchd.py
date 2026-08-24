@@ -16,6 +16,8 @@ from pathlib import Path
 LABEL = "com.learn-ukrainian.codex-archived-thread-cleanup"
 DEFAULT_WEEKDAY = "sunday"
 DEFAULT_HOUR = 3
+DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS = 30.0
+
 # launchd binds LWCR to ProgramArguments[0]. /bin/bash is Apple-signed and
 # survives a primary .venv rebuild; pointing Program at .venv/bin/python
 # is what produced exit 78 after the 2026-08-15 uv rewrite (#6937, #6941).
@@ -178,9 +180,15 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
             check=False,
             capture_output=True,
             text=True,
+            timeout=DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS,
         )
     except FileNotFoundError as exc:
         raise LaunchdError("/bin/launchctl is unavailable; this installer requires macOS") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise LaunchdError(
+            f"/bin/launchctl {' '.join(command)} timed out after {DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS}s"
+        ) from exc
+
 
 
 def _domain() -> str:

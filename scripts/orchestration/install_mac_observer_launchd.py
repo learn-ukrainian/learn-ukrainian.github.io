@@ -15,7 +15,9 @@ from typing import Any
 
 LABEL = "com.learn-ukrainian.mac-observer-heartbeat"
 DEFAULT_INTERVAL_MINUTES = 8
+DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS = 30.0
 LAUNCHD_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
 # launchd binds LWCR to ProgramArguments[0]. /bin/bash is Apple-signed and
 # survives a primary .venv rebuild; pointing Program at .venv/bin/python
 # is what produced exit 78 after the 2026-08-15 uv rewrite (#6937, #6941).
@@ -141,9 +143,15 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
             capture_output=True,
             text=True,
             check=False,
+            timeout=DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS,
         )
     except FileNotFoundError as exc:
         raise LaunchdError("/bin/launchctl is unavailable; macOS is required") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise LaunchdError(
+            f"/bin/launchctl {' '.join(command)} timed out after {DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS}s"
+        ) from exc
+
 
 
 def _domain() -> str:

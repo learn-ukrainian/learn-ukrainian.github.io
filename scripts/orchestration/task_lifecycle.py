@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
@@ -28,6 +29,8 @@ SCHEMA_VERSION = "task-lifecycle.v1"
 AC_SCHEMA_VERSION = "acceptance-criteria.v1"
 OBSERVATION_SCHEMA_VERSION = "task-closeout-observation.v1"
 TERMINAL_GOALS = frozenset({"merge", "deploy", "certify"})
+DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
+
 STATES = (
     "ISSUE_LINKED",
     "ACS_FINALIZED",
@@ -703,15 +706,22 @@ def render_carrier_prompt(carrier: Mapping[str, Any]) -> str:
 
 
 def _run_git(repo_root: Path, args: list[str]) -> str:
-    import subprocess
-
-    completed = subprocess.run(
-        ["git", *args], cwd=repo_root, capture_output=True, text=True, check=False
-    )
+    try:
+        completed = subprocess.run(
+            ["git", *args],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise LifecycleError(f"git {' '.join(args)} timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "git command failed").strip()
         raise LifecycleError(f"git {' '.join(args)} failed: {detail}")
     return completed.stdout.strip()
+
 
 
 def protected_paths(paths: list[str]) -> list[str]:

@@ -62,6 +62,7 @@ _MONITOR_DEFAULT = "http://127.0.0.1:8765"
 _MISSING = object()
 TEACHER_HOST_ID = "host-teacher"
 JOB_HOST_ID = "host-job"
+DEFAULT_SSH_TIMEOUT_SECONDS = 300.0
 
 Placement = Literal["notebook", "vps"]
 PlacementReason = Literal[
@@ -538,9 +539,14 @@ def forward_dispatch(
             build_ssh_argv(alias, "bash -s"),
             check=False,
             input=remote_script,
+            timeout=DEFAULT_SSH_TIMEOUT_SECONDS,
         )
     except (FileNotFoundError, PermissionError) as exc:
         raise SshTransportError(str(exc)) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise SshTransportError(
+            f"SSH transport timed out after {DEFAULT_SSH_TIMEOUT_SECONDS}s: {exc}"
+        ) from exc
     return int(completed.returncode)
 
 
@@ -676,9 +682,19 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     try:
-        completed = subprocess.run(ssh_argv, check=False)
+        completed = subprocess.run(
+            ssh_argv,
+            check=False,
+            timeout=DEFAULT_SSH_TIMEOUT_SECONDS,
+        )
     except (FileNotFoundError, PermissionError) as exc:
         print(f"error: {exc}", file=sys.stderr)
+        return 255
+    except subprocess.TimeoutExpired as exc:
+        print(
+            f"error: SSH command timed out after {DEFAULT_SSH_TIMEOUT_SECONDS}s: {exc}",
+            file=sys.stderr,
+        )
         return 255
     return int(completed.returncode)
 

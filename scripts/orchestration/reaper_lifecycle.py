@@ -26,6 +26,7 @@ _DEFAULT_MAX_REAPS_PER_DAY = 25
 # this multiple of the configured base, no matter how large the backlog is.
 # Deliberately NOT env-configurable so a runaway is always stopped.
 _CAP_EXPANSION_MULTIPLIER = 2
+DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
 
 
 def utc_now() -> datetime:
@@ -241,13 +242,17 @@ def create_recovery_ref(
     label = label or "detached"
     stamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
     ref = f"refs/reaper-rescue/{stamp}/{label}-{head[:12]}"
-    proc = subprocess.run(
-        ["git", "update-ref", ref, head],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "update-ref", ref, head],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return None, f"git update-ref timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s: {exc}"
     if proc.returncode != 0:
         return None, (proc.stderr or proc.stdout or "git update-ref failed").strip()
     return ref, None
@@ -272,23 +277,31 @@ def restore_worktree(
         return False, "restore target is outside repo .worktrees/"
     if target.exists():
         return False, "restore target already exists"
-    resolved = subprocess.run(
-        ["git", "rev-parse", "--verify", recovery_ref],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        resolved = subprocess.run(
+            ["git", "rev-parse", "--verify", recovery_ref],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return False, "recovery ref is unavailable (git rev-parse timed out)"
     if resolved.returncode != 0:
         return False, "recovery ref is unavailable"
     sha = (resolved.stdout or "").strip()
-    branch_ref = subprocess.run(
-        ["git", "rev-parse", "--verify", f"refs/heads/{branch}"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        branch_ref = subprocess.run(
+            ["git", "rev-parse", "--verify", f"refs/heads/{branch}"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return False, f"git rev-parse branch timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s"
     if branch_ref.returncode == 0 and (branch_ref.stdout or "").strip() != sha:
         return False, "branch no longer matches recovery ref"
     command = ["git", "worktree", "add"]
@@ -296,7 +309,18 @@ def restore_worktree(
         command.extend([str(target), branch])
     else:
         command.extend(["-b", branch, str(target), sha])
-    proc = subprocess.run(command, cwd=repo_root, capture_output=True, text=True, check=False)
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return False, f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s: {exc}"
     if proc.returncode != 0:
         return False, (proc.stderr or proc.stdout or "git worktree add failed").strip()
     return True, None
+
