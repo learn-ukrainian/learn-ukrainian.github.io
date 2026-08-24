@@ -8,6 +8,8 @@
 #   ./services.sh stop sources       # Stop specific service
 #   ./services.sh restart            # Restart all
 #   ./services.sh restart api        # Restart specific service
+#   ./services.sh fix                # Health-check all; restart only unhealthy
+#   ./services.sh fix api            # Health-check and repair one service
 #   ./services.sh start api --live   # Emergency mutable-checkout API mode
 #   ./services.sh status             # Show what's running
 #   ./services.sh status work        # Show one service
@@ -18,6 +20,22 @@
 #   ./services.sh rebuild astro      # Run Astro clean then build
 #
 # Services: sources, api, astro, work
+#
+# SSH LocalForward (Mac notebook + Host alias hramatka-tunnel):
+#   start/stop/restart auto-delegate to the writer host when any requested
+#   service port is owned by an ssh listener, or when LU_SERVICES_SSH_HOST
+#   is set. They never spawn or signal local processes in that case.
+#   ``start`` with no service args requests ALL services; when any one of
+#   those ports is tunneled (or LU_SERVICES_SSH_HOST is set), the whole
+#   batch is delegated remotely — not just the tunneled service.
+#   ``--live`` and ``--force`` are local API recovery flags; delegated
+#   start/stop/restart never forwards them to the remote services.sh.
+#   When lsof is absent (or SVC_LSOF_BIN is not executable), port-owner
+#   lookup is a no-op: tunnel auto-delegation and foreign-listener checks
+#   are skipped until a working lsof is available.
+#   fix curls each health URL; unhealthy tunneled ports get a remote
+#   restart. Overrides: LU_SERVICES_SSH_HOST (default host alias hramatka),
+#   LU_SERVICES_REMOTE_ROOT (default /home/ops/learn-ukrainian).
 #
 # Note: the `sources` service was historically called `rag`. It serves
 # SQLite FTS5 indices over textbook chunks, dictionaries, VESUM, literary
@@ -91,6 +109,12 @@ SVC_HEALTH_ALT[astro]="http://localhost:4321/"
 SVC_MATCH[astro]=".bin/astro dev|astro.mjs dev"
 
 ALL_SERVICES="sources api astro work"
+
+# Remote writer host for tunneled Mac notebooks. LU_SERVICES_SSH_HOST is
+# an SSH config Host alias only; leave it unset for local-process mode.
+# The default target is used only after a tunnel (or an explicit host) is
+# detected — it does not by itself force delegation.
+LU_SERVICES_REMOTE_ROOT="${LU_SERVICES_REMOTE_ROOT:-/home/ops/learn-ukrainian}"
 
 # Legacy aliases: rewrite old service names when passed as CLI args.
 # Accept shell history + scripts that still say `./services.sh start rag`
@@ -274,6 +298,70 @@ _ssh_tunnel_port_pid() {
     done
 
     return 1
+}
+
+_ssh_delegate_host() {
+    printf '%s\n' "${LU_SERVICES_SSH_HOST:-hramatka}"
+}
+
+_requested_has_ssh_tunnel() {
+    local name
+    for name in "$@"; do
+        [[ -z "${SVC_CMD[$name]+x}" ]] && continue
+        if _ssh_tunnel_port_pid "$name" >/dev/null; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Delegate when the operator set LU_SERVICES_SSH_HOST, or when any requested
+# service port is an ssh LocalForward listener. The default host alias is
+# applied only at ssh time — it is not a trigger.
+_should_delegate_remote() {
+    if [[ -n "${LU_SERVICES_SSH_HOST:-}" ]]; then
+        return 0
+    fi
+    _requested_has_ssh_tunnel "$@"
+}
+
+_delegate_remote() {
+    local remote_action="$1"
+    shift
+    local host root remote_cmd arg
+    host="$(_ssh_delegate_host)"
+    root="${LU_SERVICES_REMOTE_ROOT:-/home/ops/learn-ukrainian}"
+    remote_cmd="./services.sh $(printf '%q' "$remote_action")"
+    for arg in "$@"; do
+        remote_cmd+=" $(printf '%q' "$arg")"
+    done
+    echo "Delegating ${remote_action}${*:+ $*} to ${host} (ssh LocalForward or LU_SERVICES_SSH_HOST); not starting or stopping local processes."
+    command ssh -o BatchMode=yes "$host" "cd $(printf '%q' "$root") && ${remote_cmd}"
+}
+
+_maybe_delegate_and_exit() {
+    local remote_action="$1"
+    shift
+    local name
+    if _should_delegate_remote "$@"; then
+        for name in "$@"; do
+            if [[ -z "${SVC_CMD[$name]+x}" ]]; then
+                echo "  Unknown service: $name (available: $ALL_SERVICES)"
+                exit 1
+            fi
+        done
+        _delegate_remote "$remote_action" "$@"
+        exit $?
+    fi
+}
+
+_abort_if_ssh_owned_port() {
+    local name="$1"
+    if _ssh_tunnel_port_pid "$name" >/dev/null; then
+        echo "ERROR: $name port $(_port_owner_label "$name") is owned by an ssh LocalForward; refusing to spawn locally. Use '$0 fix $name' or '$0 restart $name' to restart the remote service." >&2
+        return 1
+    fi
+    return 0
 }
 
 _foreign_port_pid() {
@@ -566,6 +654,10 @@ _start_service() {
         return 0
     fi
 
+    if ! _abort_if_ssh_owned_port "$name"; then
+        return 1
+    fi
+
     # Self-heal astro deps before spawning the dev server (node_modules can be wiped).
     if [[ "$name" == "astro" ]]; then
         _ensure_astro_deps || return 1
@@ -806,6 +898,46 @@ _ensure_astro_deps() {
     echo "  site deps restored."
 }
 
+_fix_service() {
+    local name="$1"
+
+    if _health_check "$name"; then
+        echo "  $name ok"
+        return 0
+    fi
+
+    echo "  $name unhealthy"
+
+    if [[ -n "${LU_SERVICES_SSH_HOST:-}" ]] || _ssh_tunnel_port_pid "$name" >/dev/null; then
+        echo "  $name is ssh-forwarded (or LU_SERVICES_SSH_HOST is set); restarting remotely."
+        if ! _delegate_remote restart "$name"; then
+            echo "  ERROR: remote restart of $name failed." >&2
+            return 1
+        fi
+        if _health_check "$name"; then
+            echo "  $name ok"
+            return 0
+        fi
+        echo "  ERROR: $name still unhealthy after remote restart." >&2
+        return 1
+    fi
+
+    echo "  Restarting $name locally..."
+    if [[ "$name" == "api" ]]; then
+        _reconcile_api_pid
+    fi
+    _stop_service "$name"
+    if ! _start_service "$name"; then
+        return 1
+    fi
+    if _health_check "$name"; then
+        echo "  $name ok"
+        return 0
+    fi
+    echo "  ERROR: $name still unhealthy after local restart." >&2
+    return 1
+}
+
 _build_astro() {
     echo "  Building astro..."
     cd "$PROJECT_ROOT"
@@ -921,6 +1053,8 @@ fi
 
 case "$action" in
     start)
+        # shellcheck disable=SC2086
+        _maybe_delegate_and_exit start $services
         echo "Starting services..."
         start_failed=0
         for svc in $services; do
@@ -939,6 +1073,8 @@ case "$action" in
         fi
         ;;
     stop)
+        # shellcheck disable=SC2086
+        _maybe_delegate_and_exit stop $services
         echo "Stopping services..."
         for svc in $services; do
             if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
@@ -954,6 +1090,8 @@ case "$action" in
         _status
         ;;
     restart)
+        # shellcheck disable=SC2086
+        _maybe_delegate_and_exit restart $services
         # Serialize across all callers — see _acquire_restart_lock comment.
         if ! _acquire_restart_lock; then
             exit 1
@@ -978,6 +1116,30 @@ case "$action" in
         echo ""
         _status
         if [[ "$restart_failed" -ne 0 ]]; then
+            exit 1
+        fi
+        ;;
+    fix)
+        # Serialize local restarts with restart; remote repair skips spawn.
+        if ! _acquire_restart_lock; then
+            exit 1
+        fi
+        trap _release_restart_lock EXIT INT TERM
+
+        echo "Fixing services..."
+        fix_failed=0
+        for svc in $services; do
+            if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
+                echo "  Unknown service: $svc (available: $ALL_SERVICES)"
+                continue
+            fi
+            if ! _fix_service "$svc"; then
+                fix_failed=1
+            fi
+        done
+        echo ""
+        _status
+        if [[ "$fix_failed" -ne 0 ]]; then
             exit 1
         fi
         ;;
@@ -1080,7 +1242,7 @@ case "$action" in
         _logs "$log_service"
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status|logs|supervise|build|clean|rebuild} [service ...]"
+        echo "Usage: $0 {start|stop|restart|fix|status|logs|supervise|build|clean|rebuild} [service ...]"
         echo ""
         echo "Services:"
         for name in $ALL_SERVICES; do
@@ -1094,6 +1256,8 @@ case "$action" in
         echo "  $0 start api --live       # Emergency API fallback (mutable checkout)"
         echo "  $0 stop sources           # Stop one"
         echo "  $0 restart                # Restart all"
+        echo "  $0 fix                    # Health-check all; restart only unhealthy"
+        echo "  $0 fix api                # Health-check and repair one service"
         echo "  $0 supervise api install  # Write the launchd supervisor plist"
         echo "  $0 supervise api uninstall # Disable and remove the supervisor plist"
         echo "  $0 build astro            # Build Astro"
@@ -1102,6 +1266,12 @@ case "$action" in
         echo "  $0 status                 # Show status"
         echo "  $0 status work            # Show adapter status and typed failure reason"
         echo "  $0 logs work              # Show the latest adapter log"
+        echo ""
+        echo "SSH LocalForward: start/stop/restart auto-delegate when a requested"
+        echo "port is owned by ssh (e.g. Host alias hramatka-tunnel), or when"
+        echo "LU_SERVICES_SSH_HOST is set. They do not spawn local processes then."
+        echo "  LU_SERVICES_SSH_HOST      SSH Host alias (default: hramatka)"
+        echo "  LU_SERVICES_REMOTE_ROOT   Remote repo root (default: /home/ops/learn-ukrainian)"
         echo ""
         echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'site' is accepted as a legacy alias for 'astro'."
         ;;
