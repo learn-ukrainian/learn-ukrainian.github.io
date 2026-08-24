@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6929f255cc2f",
+  "strategy": "manual-commit",
+  "branch": "cursor/timeout-burndown-7213-s8",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/69/29f255cc2f/0/metadata.json",
+      "transcript": "/69/29f255cc2f/0/full.jsonl",
+      "compact_transcript": "/69/29f255cc2f/0/transcript.jsonl",
+      "content_hash": "/69/29f255cc2f/0/content_hash.txt",
+      "prompt": "/69/29f255cc2f/0/prompt.txt"
+    }
+  ]
+}
