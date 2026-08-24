@@ -90,11 +90,12 @@ def occupant(
     task_id: Any = None,
     epic: Any = None,
     status: Any = None,
+    instance_id: Any = None,
 ) -> dict[str, str | None] | None:
     if kind not in OCCUPANT_KINDS:
         return None
     task = safe_field(task_id, role="task_id")
-    if task is None:
+    if task is None and kind != "observer":
         return None
     row: dict[str, str | None] = {
         "kind": kind,
@@ -102,6 +103,11 @@ def occupant(
         "task_id": task,
         "epic": safe_field(epic, role="epic"),
     }
+    if instance_id is not None:
+        instance = safe_field(instance_id, role="task_id")
+        if instance is None:
+            return None
+        row["instance_id"] = instance
     if kind == "observer":
         status_text = str(status or "").strip()
         if status_text not in OBSERVER_STATUSES:

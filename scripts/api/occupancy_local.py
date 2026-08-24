@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -30,6 +31,7 @@ from scripts.lexicon.runner import atlas_job
 ENV_DRIVER_HOST_ID = "MONITOR_OCCUPANCY_DRIVER_HOST_ID"
 ENV_MARKERS = "MONITOR_OCCUPANCY_MARKERS"
 ENV_FOUNDRY_HOST_ID = "MONITOR_OCCUPANCY_FOUNDRY_HOST_ID"
+MAC_OPERATOR_HOST_ID = "mac-operator"
 MARKERS_SCHEMA = "monitor-occupancy-markers.v1"
 MARKER_KINDS = frozenset({"driver", "worker", "job", "service"})
 DEFAULT_MARKER_TTL_S = 15 * 60
@@ -424,12 +426,13 @@ def resolve_launcher_host_id() -> str:
     try:
         from scripts.api.occupancy import parse_host_id_map  # noqa: PLC0415 — # lazy-ok: occupancy cycle breaker
 
-        claimed = self_host_opaque_ids(parse_host_id_map())
+        mapping = parse_host_id_map()
+        claimed = self_host_opaque_ids(mapping)
     except Exception:
-        return "local"
+        return MAC_OPERATOR_HOST_ID if sys.platform == "darwin" else "local"
     if len(claimed) == 1:
         return next(iter(claimed))
-    return "local"
+    return MAC_OPERATOR_HOST_ID if sys.platform == "darwin" and not mapping else "local"
 
 
 def _build_parser() -> argparse.ArgumentParser:
