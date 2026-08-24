@@ -75,11 +75,13 @@ _TRAILER_RE = re.compile(
     re.MULTILINE,
 )
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 
 def _git(*args: str) -> str:
     """Run a git command and return stdout, raising on non-zero exit."""
     return subprocess.check_output(
-        ["git", *args], text=True, stderr=subprocess.PIPE
+        ["git", *args], text=True, stderr=subprocess.PIPE, timeout=DEFAULT_GIT_TIMEOUT_SECONDS
     ).strip()
 
 

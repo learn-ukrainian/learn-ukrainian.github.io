@@ -21,6 +21,8 @@ PY = REPO / ".venv" / "bin" / "python"
 OUT = REPO / "audit" / "2026-07-08-gemini-multirun-1x"
 PROBE = REPO / "audit" / "2026-07-08-gemini-strict-probe"
 MODEL = "gemini-3.1-pro-high"
+DEFAULT_CODEXBAR_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS: float = 600.0
 
 DONE_FIXTURES = frozenset(
     {"vesnianky", "koliadky", "khreshchennia-rusi", "skovoroda-hryhorii"}
@@ -52,12 +54,16 @@ def _log(msg: str) -> None:
 
 
 def _throttle_quota() -> tuple[float, float]:
-    proc = subprocess.run(
-        ["codexbar", "usage", "--provider", "antigravity", "--format", "json"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            ["codexbar", "usage", "--provider", "antigravity", "--format", "json"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_CODEXBAR_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"codexbar timed out after {DEFAULT_CODEXBAR_TIMEOUT_SECONDS}s") from exc
     data = json.loads(proc.stdout)
 
     def find(o: object) -> dict | None:
@@ -170,29 +176,35 @@ def _run_cell(slug: str, arm: str) -> int:
         return 0
     _throttle_wait(f"{slug}/{arm}")
     _log(f"run {slug}/{arm}")
-    proc = subprocess.run(
-        [
-            str(PY),
-            "-m",
-            "scripts.audit.qg_bakeoff",
-            "--models",
-            MODEL,
-            "--arm",
-            arm,
-            "--fixture",
-            slug,
-            "--out-dir",
-            str(OUT),
-        ],
-        cwd=str(REPO),
-        env={**os.environ, "QG_BAKEOFF": "1"},
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            [
+                str(PY),
+                "-m",
+                "scripts.audit.qg_bakeoff",
+                "--models",
+                MODEL,
+                "--arm",
+                arm,
+                "--fixture",
+                slug,
+                "--out-dir",
+                str(OUT),
+            ],
+            cwd=str(REPO),
+            env={**os.environ, "QG_BAKEOFF": "1"},
+            check=False,
+            timeout=DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS,
+        )
+        rc = proc.returncode
+    except subprocess.TimeoutExpired:
+        _log(f"ERROR: {slug}/{arm} timed out after {DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS}s")
+        rc = 124
     _record(slug, arm)
     pause = 90 if arm == "tooled" else 60
     _log(f"pause {pause}s after {slug}/{arm}")
     time.sleep(pause)
-    return proc.returncode
+    return rc
 
 
 def main() -> int:

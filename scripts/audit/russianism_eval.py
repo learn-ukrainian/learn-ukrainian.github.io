@@ -28,6 +28,7 @@ from scripts.ai_agent_bridge._db import get_db
 from scripts.audit.checks.russicism_detection import check_russicisms
 
 PYTHON, BRIDGE = Path(".venv/bin/python"), Path("scripts/ai_agent_bridge/__main__.py")
+DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 DEFAULT_MODELS = (
     "claude-opus-4-7,claude-sonnet-4-5,claude-haiku-4-5,"
     "gpt-5.5,gpt-5.5-mini,gemini-3.1-pro-high,"
@@ -157,7 +158,20 @@ class BridgeCaller:
 
     def __call__(self, prompt: PromptCase, model: str) -> tuple[BridgeCall, str]:
         call = self.plan(prompt, model)
-        result = subprocess.run(call.argv, cwd=PROJECT_ROOT, input=call.stdin, text=True, capture_output=True, check=False)
+        try:
+            result = subprocess.run(
+                call.argv,
+                cwd=PROJECT_ROOT,
+                input=call.stdin,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=DEFAULT_BRIDGE_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                f"bridge call timed out after {DEFAULT_BRIDGE_TIMEOUT_SECONDS}s for task_id={call.task_id}"
+            ) from exc
         if result.returncode != 0:
             raise RuntimeError((result.stderr or result.stdout or f"exit {result.returncode}").strip())
         if call.family == "gemini" and result.stdout.strip():

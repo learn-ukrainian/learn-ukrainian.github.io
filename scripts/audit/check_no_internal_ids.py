@@ -38,6 +38,8 @@ SEMINAR_DOC_TRACKS = {
 # it is clean, or the gate will block unrelated commits touching that level.
 GUARDED_CORE_LEVELS = {"a1", "a2", "b1"}
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 FOLK_LEARNER_SOURCE_FILES = {
     "module.md",
     "activities.yaml",
@@ -300,7 +302,7 @@ def scan_files(paths: list[Path]) -> list[Finding]:
 
 
 def _git_output(args: list[str]) -> str:
-    return subprocess.check_output(["git", *args], cwd=PROJECT_ROOT, text=True)
+    return subprocess.check_output(["git", *args], cwd=PROJECT_ROOT, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
 
 
 def get_changed_files(base: str) -> list[Path]:

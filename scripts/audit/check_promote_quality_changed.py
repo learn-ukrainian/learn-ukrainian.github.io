@@ -43,6 +43,8 @@ def _load_wiki_completeness_gate() -> None:
 _load_wiki_completeness_gate()
 from scripts.build.promote_quality_gate import verify
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 LESSON_SOURCE_FILES = frozenset(
     {
         "module.md",
@@ -118,19 +120,24 @@ def target_from_changed_path(raw_path: str, repo_root: Path) -> ModuleTarget | N
 
 
 def changed_paths_from_git(repo_root: Path, base: str) -> list[str]:
-    proc = subprocess.run(
-        [
-            "git",
-            "diff",
-            "--diff-filter=AMR",
-            "--name-only",
-            f"{base}...HEAD",
-        ],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        proc = subprocess.run(
+            [
+                "git",
+                "diff",
+                "--diff-filter=AMR",
+                "--name-only",
+                f"{base}...HEAD",
+            ],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        print(f"git diff timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s", file=sys.stderr)
+        raise SystemExit(124) from exc
     if proc.returncode != 0:
         if proc.stderr:
             print(proc.stderr.strip(), file=sys.stderr)

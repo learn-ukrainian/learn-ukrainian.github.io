@@ -40,6 +40,9 @@ QG_ARTIFACT_GLOBS = (
 PROTECTED_CONFIG_FILES = frozenset({".python-version", ".yamllint", ".markdownlint.json"})
 MAX_CHANGED_FILES_DEFAULT = 20
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_CHECK_TIMEOUT_SECONDS: float = 300.0
+
 
 @dataclass(frozen=True)
 class ModuleTarget:
@@ -217,13 +220,17 @@ def tracked_paths(repo_root: Path, paths: tuple[Path, ...]) -> set[Path]:
     if not paths:
         return set()
     rels = [_rel_to(path, repo_root) for path in paths]
-    proc = subprocess.run(
-        ["git", "-C", str(repo_root), "ls-files", "--", *rels],
-        check=False,
-        capture_output=True,
-        env=_sanitized_git_env(),
-        text=True,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(repo_root), "ls-files", "--", *rels],
+            check=False,
+            capture_output=True,
+            env=_sanitized_git_env(),
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return set()
     if proc.returncode != 0:
         return set()
     by_rel = {_rel_to(path, repo_root): path for path in paths}
@@ -288,13 +295,17 @@ def run_qg_guard(target: ModuleTarget, *, clean: bool, dry_run: bool) -> int:
 
 
 def _git_lines(args: tuple[str, ...], repo_root: Path = PROJECT_ROOT, *, nul: bool = False) -> list[str]:
-    proc = subprocess.run(
-        ["git", "-C", str(repo_root), *args],
-        check=False,
-        capture_output=True,
-        env=_sanitized_git_env(),
-        text=True,
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(repo_root), *args],
+            check=False,
+            capture_output=True,
+            env=_sanitized_git_env(),
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git {' '.join(args)} timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(proc.stderr.strip() or f"git {' '.join(args)} failed")
     parts = proc.stdout.split("\0") if nul else proc.stdout.splitlines()
@@ -472,12 +483,17 @@ def build_checks(
 def run_check(check: CommandCheck) -> int:
     print(f"\n== {check.name} ==")
     print("$ " + shlex.join(check.command))
-    proc = subprocess.run(list(check.command), cwd=check.cwd)
-    if proc.returncode == 0:
+    try:
+        proc = subprocess.run(list(check.command), cwd=check.cwd, timeout=DEFAULT_CHECK_TIMEOUT_SECONDS)
+        rc = proc.returncode
+    except subprocess.TimeoutExpired:
+        print(f"[FAIL] {check.name} timed out after {DEFAULT_CHECK_TIMEOUT_SECONDS}s")
+        return 124
+    if rc == 0:
         print(f"[OK] {check.name}")
     else:
-        print(f"[FAIL] {check.name} exited {proc.returncode}")
-    return proc.returncode
+        print(f"[FAIL] {check.name} exited {rc}")
+    return rc
 
 
 def run_mdx_source_parity(target: ModuleTarget) -> int:

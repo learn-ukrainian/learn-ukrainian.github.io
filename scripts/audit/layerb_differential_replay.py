@@ -31,6 +31,8 @@ for import_root in (REPOSITORY_ROOT / "scripts", REPOSITORY_ROOT):
 
 from scripts.audit import anchor_primitives, grounding_gate_v2
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 ANCHOR_RESULT_FIELDS = (
     "anchored",
     "abstained",
@@ -150,6 +152,7 @@ def _load_gate_revision(revision: str) -> ModuleType:
         check=True,
         capture_output=True,
         text=True,
+        timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
     ).stdout
     module_name = f"_layerb_gate_{revision.replace('/', '_').replace('-', '_')}"
     spec = importlib.util.spec_from_loader(module_name, loader=None)
@@ -170,6 +173,7 @@ def _helper_hashes(revision: str | None) -> dict[str, str]:
         ["git", "show", f"{revision}:scripts/audit/grounding_gate_v2.py"],
         check=True,
         capture_output=True,
+        timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
     ).stdout
     return {"grounding_gate_v2.py": _sha256_bytes(source)}
 

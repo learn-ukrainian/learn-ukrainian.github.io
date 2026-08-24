@@ -22,6 +22,7 @@ GENERATOR_DEPENDENCIES = {
     PROJECT_ROOT / "scripts/yaml_activities.py",
 }
 NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 def get_legacy_levels() -> set[str]:
     if not LEGACY_TRACKS_FILE.exists():
@@ -39,15 +40,17 @@ def get_changed_files(base: str | None = None, cached: bool = False) -> list[Pat
         cmd.append("--cached")
     elif base:
         try:
-            merge_base = subprocess.check_output(["git", "merge-base", base, "HEAD"], text=True).strip()
+            merge_base = subprocess.check_output(
+                ["git", "merge-base", base, "HEAD"], text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS
+            ).strip()
             cmd.append(f"{merge_base}...HEAD")
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             cmd.append(f"{base}...HEAD")
 
     try:
-        output = subprocess.check_output(cmd, text=True)
+        output = subprocess.check_output(cmd, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
         return [PROJECT_ROOT / f for f in output.splitlines() if f]
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return []
 
 def get_deleted_files(base: str | None = None, cached: bool = False) -> set[Path]:
@@ -56,15 +59,17 @@ def get_deleted_files(base: str | None = None, cached: bool = False) -> set[Path
         cmd.append("--cached")
     elif base:
         try:
-            merge_base = subprocess.check_output(["git", "merge-base", base, "HEAD"], text=True).strip()
+            merge_base = subprocess.check_output(
+                ["git", "merge-base", base, "HEAD"], text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS
+            ).strip()
             cmd.append(f"{merge_base}...HEAD")
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             cmd.append(f"{base}...HEAD")
 
     deleted = set()
     try:
-        output = subprocess.check_output(cmd, text=True)
-    except subprocess.CalledProcessError:
+        output = subprocess.check_output(cmd, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return deleted
 
     for line in output.splitlines():
@@ -80,17 +85,19 @@ def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = 
         cmd.append("--cached")
     elif base:
         try:
-            merge_base = subprocess.check_output(["git", "merge-base", base, "HEAD"], text=True).strip()
+            merge_base = subprocess.check_output(
+                ["git", "merge-base", base, "HEAD"], text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS
+            ).strip()
             cmd.append(f"{merge_base}...HEAD")
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             cmd.append(f"{base}...HEAD")
     cmd.extend(["--", str(file_path)])
 
     try:
-        output = subprocess.check_output(cmd, text=True).strip()
+        output = subprocess.check_output(cmd, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS).strip()
         # Empty output from shortstat means no non-whitespace changes
         return output == ""
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return False
 
 def has_generator_change(changed_files: set[Path]) -> bool:
@@ -112,15 +119,17 @@ def is_nav_only_mdx_change(file_path: Path, base: str | None = None, cached: boo
         cmd.append("--cached")
     elif base:
         try:
-            merge_base = subprocess.check_output(["git", "merge-base", base, "HEAD"], text=True).strip()
+            merge_base = subprocess.check_output(
+                ["git", "merge-base", base, "HEAD"], text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS
+            ).strip()
             cmd.append(f"{merge_base}...HEAD")
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             cmd.append(f"{base}...HEAD")
     cmd.extend(["--", str(file_path)])
 
     try:
-        output = subprocess.check_output(cmd, text=True)
-    except subprocess.CalledProcessError:
+        output = subprocess.check_output(cmd, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return False
 
     changed_lines = []

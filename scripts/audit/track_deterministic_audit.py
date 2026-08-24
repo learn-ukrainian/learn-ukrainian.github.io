@@ -43,6 +43,9 @@ SITE_READINGS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "readings"
 DEFAULT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
 VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_GENERATE_TIMEOUT_SECONDS: float = 60.0
+
 VALID_POS = {
     "noun",
     "verb",
@@ -752,7 +755,7 @@ def check_mdx_routes(paths: ModulePaths) -> list[Finding]:
 
 
 def git_output(args: list[str]) -> str:
-    return subprocess.check_output(["git", *args], cwd=PROJECT_ROOT, text=True)
+    return subprocess.check_output(["git", *args], cwd=PROJECT_ROOT, text=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS)
 
 
 def changed_files_for_diff_gate() -> list[str]:
@@ -766,17 +769,27 @@ def changed_files_for_diff_gate() -> list[str]:
 def protected_config_changed() -> list[str]:
     changed: list[str] = []
     for path in sorted(PROTECTED_CONFIGS):
-        result = subprocess.run(
-            ["git", "diff", "--quiet", "--", path],
-            cwd=PROJECT_ROOT,
-            check=False,
-        )
-        staged = subprocess.run(
-            ["git", "diff", "--cached", "--quiet", "--", path],
-            cwd=PROJECT_ROOT,
-            check=False,
-        )
-        if result.returncode != 0 or staged.returncode != 0:
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--quiet", "--", path],
+                cwd=PROJECT_ROOT,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+            rc_result = result.returncode
+        except subprocess.TimeoutExpired:
+            rc_result = 124
+        try:
+            staged = subprocess.run(
+                ["git", "diff", "--cached", "--quiet", "--", path],
+                cwd=PROJECT_ROOT,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+            rc_staged = staged.returncode
+        except subprocess.TimeoutExpired:
+            rc_staged = 124
+        if rc_result != 0 or rc_staged != 0:
             changed.append(path)
     return changed
 
@@ -819,25 +832,30 @@ def check_protected_diff(track: str) -> list[Finding]:
 
 def run_mdx_validate(paths: ModulePaths) -> list[Finding]:
     before = paths.site_mdx.read_bytes() if paths.site_mdx.exists() else None
-    result = subprocess.run(
-        [
-            str(VENV_PYTHON),
-            "scripts/generate_mdx.py",
-            "l2-uk-en",
-            paths.track,
-            str(paths.module_num),
-            "--validate",
-        ],
-        cwd=PROJECT_ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            [
+                str(VENV_PYTHON),
+                "scripts/generate_mdx.py",
+                "l2-uk-en",
+                paths.track,
+                str(paths.module_num),
+                "--validate",
+            ],
+            cwd=PROJECT_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=DEFAULT_GENERATE_TIMEOUT_SECONDS,
+        )
+        rc = result.returncode
+    except subprocess.TimeoutExpired:
+        rc = 124
     after = paths.site_mdx.read_bytes() if paths.site_mdx.exists() else None
     drifted = before != after
     if drifted and before is not None:
         paths.site_mdx.write_bytes(before)
-    if result.returncode == 0 and not drifted:
+    if rc == 0 and not drifted:
         return []
     return [
         finding(

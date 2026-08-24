@@ -15,6 +15,7 @@ PRIVATE_EXPORT_MARKERS = (
     "Local review-only candidate payload",
 )
 REVIEW_EXPORT_SUFFIXES = {".json", ".md"}
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
 def staged_paths() -> list[Path]:
@@ -23,6 +24,7 @@ def staged_paths() -> list[Path]:
         check=True,
         capture_output=True,
         text=True,
+        timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
     )
     return [Path(line) for line in result.stdout.splitlines() if line.strip()]
 

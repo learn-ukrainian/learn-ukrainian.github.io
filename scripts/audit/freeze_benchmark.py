@@ -24,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.audit import llm_reviewer, qg_bakeoff, qg_factcheck_scoring, qg_schema, qg_workflow
 
 BENCHMARK_VERSION = "1.0.0"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 DEFAULT_MANIFEST_PATH = PROJECT_ROOT / "benchmarks" / "v1" / "MANIFEST.json"
 PUBLIC_FIXTURE_DIR = PROJECT_ROOT / "tests" / "fixtures" / "qg_bakeoff"
 SCORER_PATHS = (
@@ -213,8 +214,9 @@ def _git_head() -> str:
             cwd=PROJECT_ROOT,
             text=True,
             stderr=subprocess.PIPE,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         ).strip()
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise ManifestConfigError(f"could not resolve git HEAD: {exc}") from exc
 
 

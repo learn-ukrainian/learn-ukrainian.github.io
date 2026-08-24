@@ -63,6 +63,8 @@ DEFAULT_TEXTBOOK_INVENTORIES = (
     PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "vashulenko-grade3-family-numerals.yaml",
 )
 
+DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS: float = 30.0
+
 MODULE_CONTENT = "module_content"
 MODULE_ACTIVITY = "module_activity"
 MODULE_VOCABULARY = "module_vocabulary"
@@ -340,8 +342,9 @@ def scan_textbook_pdf_root(root: Path, census: AtlasSourceCensus, pdf_root: Path
                     check=True,
                     capture_output=True,
                     text=True,
+                    timeout=DEFAULT_PDFTOTEXT_TIMEOUT_SECONDS,
                 )
-            except (OSError, subprocess.CalledProcessError):
+            except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
                 continue
             text = out_path.read_text(encoding="utf-8", errors="replace")
             grade = _textbook_grade(path)

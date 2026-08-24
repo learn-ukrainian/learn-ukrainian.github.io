@@ -53,6 +53,7 @@ SCHEMA_PATHS = {
 CURRENT_PACKET_VERSION = "post-build-review.packet.v6"
 CURRENT_RESULT_SCHEMA_VERSION = "post-build-review.result.v6"
 TRACK_AUDIT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 CANONICAL_SEVERITIES = ("blocker", "high", "medium", "low", "info")
 QUALITY_DIMENSIONS = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
@@ -349,12 +350,18 @@ def resolve_venv_python(repo_root: Path = PROJECT_ROOT) -> Path:
         # Preserve the venv entrypoint path. Resolving its interpreter symlink
         # bypasses pyvenv.cfg on symlink-based Linux environments.
         return direct
-    result = subprocess.run(
-        ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
-        capture_output=True,
-        check=False,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            capture_output=True,
+            check=False,
+            text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ReviewProtocolError(
+            f"Repository .venv/bin/python is unavailable (git rev-parse timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s)"
+        ) from exc
     if result.returncode == 0:
         common_dir = Path(result.stdout.strip()).resolve()
         shared = common_dir.parent / ".venv" / "bin" / "python"
