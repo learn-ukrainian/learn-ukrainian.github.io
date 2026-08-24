@@ -22,6 +22,11 @@ _SERVICE_STATES = frozenset(
 _REPO_KEYS = frozenset({"learn-ukrainian", "sibling"})
 _SERVING_MODES = frozenset({"release", "checkout"})
 _PORT_HINT = re.compile(r"(?i)(?:^|[^0-9])(?:port|:[0-9]{2,5})(?:[^0-9]|$)")
+_LANE_USAGE_ALLOWED_KEYS = frozenset({"lane", "window", "used_pct", "resets_at"})
+_LANE_USAGE_WINDOWS = frozenset({"weekly"})
+_LANE_TOKENS = frozenset({"claude", "codex", "cursor", "gemini", "grok", "kimi"})
+_RESETS_AT_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
+_FORBIDDEN_LANE_USAGE_SUBSTRINGS = ("@", "$", "€", "£", "organization", "account", "plan")
 
 
 class ProjectStateValidationError(ValueError):
@@ -65,8 +70,63 @@ def validate_host_id(host_id: str) -> None:
         raise ProjectStateValidationError("invalid host_id")
 
 
+def _lane_usage_string_forbidden(text: str) -> bool:
+    lowered = text.lower()
+    return any(token in lowered for token in _FORBIDDEN_LANE_USAGE_SUBSTRINGS)
+
+
+def sanitize_lane_usage_entry(raw: dict[str, Any]) -> dict[str, Any] | None:
+    """Return an allowlisted weekly lane row or None when the source row is unusable."""
+    if not isinstance(raw, dict):
+        return None
+    extra = set(raw) - _LANE_USAGE_ALLOWED_KEYS
+    if extra:
+        return None
+    lane = raw.get("lane")
+    window = raw.get("window")
+    used_pct = raw.get("used_pct")
+    resets_at = raw.get("resets_at")
+    if not isinstance(lane, str) or lane not in _LANE_TOKENS:
+        return None
+    if window != "weekly":
+        return None
+    if not isinstance(used_pct, (int, float)) or isinstance(used_pct, bool):
+        return None
+    if used_pct < 0 or used_pct > 100:
+        return None
+    if not isinstance(resets_at, str) or not _RESETS_AT_RE.fullmatch(resets_at):
+        return None
+    if _lane_usage_string_forbidden(lane) or _lane_usage_string_forbidden(resets_at):
+        return None
+    return {
+        "lane": lane,
+        "window": "weekly",
+        "used_pct": float(used_pct),
+        "resets_at": resets_at,
+    }
+
+
+def validate_lane_usage_block(lane_usage: Any) -> None:
+    if lane_usage is None:
+        return
+    if not isinstance(lane_usage, list):
+        raise ProjectStateValidationError("invalid lane_usage")
+    for row in lane_usage:
+        if not isinstance(row, dict):
+            raise ProjectStateValidationError("invalid lane_usage row")
+        if set(row) - _LANE_USAGE_ALLOWED_KEYS:
+            raise ProjectStateValidationError("foreign field in lane_usage")
+        sanitized = sanitize_lane_usage_entry(row)
+        if sanitized is None:
+            raise ProjectStateValidationError("invalid lane_usage row")
+
+
 def validate_report_document(document: dict[str, Any]) -> None:
-    body = {key: value for key, value in document.items() if key not in {"collected_at", "workers"}}
+    body = {
+        key: value
+        for key, value in document.items()
+        if key not in {"collected_at", "workers", "lane_usage"}
+    }
     if _scan_value(body):
         raise ProjectStateValidationError("forbidden token in report")
 
@@ -133,6 +193,8 @@ def validate_report_document(document: dict[str, Any]) -> None:
     collected_at = document.get("collected_at")
     if not isinstance(collected_at, str) or not _COLLECTED_AT_RE.fullmatch(collected_at):
         raise ProjectStateValidationError("invalid collected_at")
+
+    validate_lane_usage_block(document.get("lane_usage"))
 
     workers = document.get("workers")
     if workers is not None:

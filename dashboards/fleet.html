@@ -114,6 +114,7 @@ button, input, select { font: inherit; }
   </section>
 
   <div id="error-banner" class="error hidden" role="status"></div>
+  <div id="occupancy-attention-banner" class="error hidden" role="alert" aria-live="polite"></div>
 
   <section class="summary" aria-label="Fleet summary">
     <article class="metric"><div class="number" id="requests-total">—</div><div class="label">Requests</div><div class="detail" id="requests-detail">Loading lifecycle counts</div></article>
@@ -616,6 +617,30 @@ function renderWorkers(data) {
   );
 }
 
+function renderOccupancyAttention(attention) {
+  const banner = document.getElementById('occupancy-attention-banner');
+  const items = Array.isArray(attention) ? attention.filter(Boolean) : [];
+  const emptyHost = items.filter(item => typeof item === 'string' && item.startsWith('empty_host_'));
+  if (!emptyHost.length) {
+    banner.classList.add('hidden');
+    banner.textContent = '';
+    return;
+  }
+  const messages = emptyHost.map(item => {
+    if (item.startsWith('empty_host_underused:')) {
+      const host = item.split(':', 2)[1] || 'host';
+      return `Host ${host} has been idle for at least 15 minutes while at least one paid lane is under weekly pace.`;
+    }
+    if (item.startsWith('empty_host_unknown_capacity:')) {
+      const host = item.split(':', 2)[1] || 'host';
+      return `Host ${host} is idle; lane headroom unknown — install the notebook project-state reporter with lane_usage.`;
+    }
+    return item;
+  });
+  banner.textContent = messages.join(' ');
+  banner.classList.remove('hidden');
+}
+
 function renderOccupancy(data) {
   const hosts = objectValue(data.hosts);
   const rows = [];
@@ -687,7 +712,7 @@ async function refreshFleet() {
       contextStatusRequest,
     ]);
     renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
-    renderAcp(acp); renderDeadLetters(deadLetters); renderWorkers(workers); renderOccupancy(occupancy); renderProjects(projects); renderActivity(activity); renderMessages(messages);
+    renderAcp(acp); renderDeadLetters(deadLetters); renderWorkers(workers); renderOccupancy(occupancy); renderOccupancyAttention(occupancy.attention); renderProjects(projects); renderActivity(activity); renderMessages(messages);
     await refreshConversationContext(contextStatus);
   } catch (error) {
     setError(`Observer data could not be read: ${error.message}`);

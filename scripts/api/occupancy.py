@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import math
 import os
+import time
 from datetime import UTC, datetime
 from typing import Any
 
@@ -26,6 +27,12 @@ from scripts.api.occupancy_local import OccupancyRead, read_markers, read_sessio
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
+from scripts.api.project_state_store import (
+    REPORT_TTL_SECONDS,
+    all_weekly_lanes_at_or_over_pace,
+    any_lane_under_weekly_pace,
+    get_freshest_lane_usage,
+)
 from scripts.lexicon.runner import atlas_job
 
 router = APIRouter(tags=["occupancy"])
@@ -38,6 +45,63 @@ DEFAULT_HOST_IDS = ("host-teacher", "host-job")
 MAC_OPERATOR_HOST_ID = "mac-operator"
 _BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry")
 _BURN_SOURCE_STATES = frozenset({"active", "clear", "unknown"})
+EMPTY_HOST_IDLE_THRESHOLD_S = 15 * 60
+_BOOT_MONO = time.monotonic()
+_idle_since_mono: dict[str, float] = {}
+_ever_had_activity: dict[str, bool] = {}
+
+
+def reset_empty_host_tracking() -> None:
+    """Test helper: clear idle-since memo state."""
+    _idle_since_mono.clear()
+    _ever_had_activity.clear()
+
+
+def _idle_duration_s(host_id: str, idle_or_empty: bool, *, now_mono: float) -> float:
+    if not idle_or_empty:
+        _idle_since_mono.pop(host_id, None)
+        _ever_had_activity[host_id] = True
+        return 0.0
+    if host_id not in _idle_since_mono:
+        _idle_since_mono[host_id] = now_mono if _ever_had_activity.get(host_id) else _BOOT_MONO
+    return max(0.0, now_mono - _idle_since_mono[host_id])
+
+
+def _empty_host_attention_item(host_id: str, *, now_mono: float, now: datetime | None = None) -> str | None:
+    freshest = get_freshest_lane_usage(now_mono=now_mono)
+    if freshest is None or freshest.age_s > REPORT_TTL_SECONDS:
+        return f"empty_host_unknown_capacity:{host_id}"
+    if any_lane_under_weekly_pace(freshest.lanes, now=now):
+        return f"empty_host_underused:{host_id}"
+    if all_weekly_lanes_at_or_over_pace(freshest.lanes, now=now):
+        return None
+    return f"empty_host_unknown_capacity:{host_id}"
+
+
+def _evaluate_attention(
+    hosts: dict[str, Any],
+    *,
+    now_mono: float | None = None,
+    now: datetime | None = None,
+) -> list[str]:
+    stamp = time.monotonic() if now_mono is None else now_mono
+    clock = now or datetime.now(UTC)
+    attention: list[str] = []
+    for host_id, host in hosts.items():
+        if host_id == CLOUD_OBSERVER_HOST_ID:
+            continue
+        if host.get("status") == "unavailable":
+            continue
+        if not host.get("idle_or_empty"):
+            _idle_duration_s(host_id, False, now_mono=stamp)
+            continue
+        idle_s = _idle_duration_s(host_id, True, now_mono=stamp)
+        if idle_s < EMPTY_HOST_IDLE_THRESHOLD_S:
+            continue
+        item = _empty_host_attention_item(host_id, now_mono=stamp, now=clock)
+        if item is not None:
+            attention.append(item)
+    return attention
 
 
 def _unavailable_load_entry() -> dict[str, Any]:
@@ -307,11 +371,14 @@ def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, A
 
 def _attach_cloud_observer(payload: dict[str, Any], host_id: str | None) -> dict[str, Any]:
     if host_id is not None and host_id != CLOUD_OBSERVER_HOST_ID:
+        payload["attention"] = _evaluate_attention(payload.get("hosts", {}))
         return payload
     occupants = _occupants_from_observers(CLOUD_OBSERVER_HOST_ID)
     if not occupants and host_id is None:
+        payload["attention"] = _evaluate_attention(payload.get("hosts", {}))
         return payload
     payload["hosts"][CLOUD_OBSERVER_HOST_ID] = _shape_cloud_observer(occupants)
+    payload["attention"] = _evaluate_attention(payload.get("hosts", {}))
     return payload
 
 
@@ -346,6 +413,7 @@ def _empty_payload() -> dict[str, Any]:
         "schema": OCCUPANCY_SCHEMA,
         "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "hosts": {},
+        "attention": [],
     }
 
 
@@ -385,11 +453,13 @@ def _payload_from_entries(
             burn_sources,
         )
 
-    return {
+    payload = {
         "schema": OCCUPANCY_SCHEMA,
         "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "hosts": hosts,
     }
+    payload["attention"] = _evaluate_attention(hosts)
+    return payload
 
 
 def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:

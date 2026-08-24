@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
+from scripts.api.codexbar_usage import lane_is_under_weekly_pace
+
 REPORT_TTL_SECONDS = 15 * 60
 STALE_UPSTREAM_THRESHOLD_S = 3600
 PROJECT_STATE_SCHEMA = "monitor-project-state.v1"
@@ -29,6 +31,19 @@ class StaleReportError(ValueError):
 
 
 @dataclass(frozen=True)
+class FreshestLaneUsage:
+    lanes: list[dict[str, Any]]
+    collected_at: datetime
+    age_s: float
+    host_id: str
+
+
+def reset_project_state_store() -> None:
+    with _STORE_LOCK:
+        _STORE.clear()
+
+
+@dataclass(frozen=True)
 class StoredReport:
     host_id: str
     document: dict[str, Any]
@@ -38,9 +53,71 @@ class StoredReport:
     workers_status: str
 
 
-def reset_project_state_store() -> None:
+def lane_usage_status_from_document(document: dict[str, Any]) -> str:
+    if document.get("lane_usage") is None:
+        return "unreported"
+    return "reported"
+
+
+def get_freshest_lane_usage(*, now_mono: float | None = None) -> FreshestLaneUsage | None:
+    deadline = time.monotonic() if now_mono is None else now_mono
     with _STORE_LOCK:
-        _STORE.clear()
+        stale = [host_id for host_id, row in _STORE.items() if row.expires_at_mono <= deadline]
+        for host_id in stale:
+            del _STORE[host_id]
+        candidates = [
+            row
+            for row in _STORE.values()
+            if isinstance(row.document.get("lane_usage"), list) and row.document["lane_usage"]
+        ]
+    if not candidates:
+        return None
+    best = max(candidates, key=lambda row: row.collected_at)
+    age_s = max(0.0, deadline - best.received_at_mono)
+    lanes = [row for row in best.document["lane_usage"] if row.get("window") == "weekly"]
+    if not lanes:
+        return None
+    return FreshestLaneUsage(
+        lanes=lanes,
+        collected_at=best.collected_at,
+        age_s=round(age_s, 2),
+        host_id=best.host_id,
+    )
+
+
+def any_lane_under_weekly_pace(
+    lanes: list[dict[str, Any]],
+    *,
+    now: datetime | None = None,
+) -> bool:
+    for row in lanes:
+        if row.get("window") != "weekly":
+            continue
+        used_pct = row.get("used_pct")
+        resets_at = row.get("resets_at")
+        if not isinstance(used_pct, (int, float)) or not isinstance(resets_at, str):
+            continue
+        if lane_is_under_weekly_pace(float(used_pct), resets_at, now=now):
+            return True
+    return False
+
+
+def all_weekly_lanes_at_or_over_pace(
+    lanes: list[dict[str, Any]],
+    *,
+    now: datetime | None = None,
+) -> bool:
+    weekly_rows = [row for row in lanes if row.get("window") == "weekly"]
+    if not weekly_rows:
+        return False
+    for row in weekly_rows:
+        used_pct = row.get("used_pct")
+        resets_at = row.get("resets_at")
+        if not isinstance(used_pct, (int, float)) or not isinstance(resets_at, str):
+            return False
+        if lane_is_under_weekly_pace(float(used_pct), resets_at, now=now):
+            return False
+    return True
 
 
 def parse_collected_at(

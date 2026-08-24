@@ -20,6 +20,7 @@ from scripts.api.state_helpers import cache_get_with_age, cache_set
 WEEKLY_WINDOW_MINUTES = 10080
 # Reject monthly/long windows when no exact weekly window exists (e.g. 43200 min).
 WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
+PACE_TOLERANCE_PCT = 10.0
 
 # Live-measured 2026-08-04: `codexbar usage --json --provider claude` took
 # ~17s end-to-end twice in a row (its own dashboard-fetch latency, not a
@@ -348,6 +349,52 @@ def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any]:
             provider,
             {"message": f"CodexBar CLI fetch error: {exc}", "kind": "fetch_error", "code": "FETCH_ERROR"},
         )
+
+
+def compute_weekly_pace_delta_pct(
+    used_pct: float,
+    resets_at: str,
+    *,
+    window_minutes: int | None = None,
+    now: datetime | None = None,
+) -> float | None:
+    """Reuse the weekly pace formula from CodexBar normalization (r2 #7139)."""
+    try:
+        dt_str = resets_at.replace("Z", "+00:00")
+        resets_at_dt = datetime.fromisoformat(dt_str)
+        resets_at_dt = resets_at_dt.replace(tzinfo=UTC) if resets_at_dt.tzinfo is None else resets_at_dt.astimezone(UTC)
+    except (TypeError, ValueError):
+        return None
+    current_time = (now or datetime.now(UTC)).astimezone(UTC)
+    win_mins = WEEKLY_WINDOW_MINUTES if window_minutes is None else int(window_minutes)
+    if win_mins <= 0:
+        return None
+    window_duration_seconds = win_mins * 60
+    window_start_dt = resets_at_dt - timedelta(seconds=window_duration_seconds)
+    elapsed_seconds = (current_time - window_start_dt).total_seconds()
+    if window_duration_seconds <= 0:
+        return None
+    elapsed_fraction = elapsed_seconds / window_duration_seconds
+    elapsed_fraction = max(0.0, min(1.0, elapsed_fraction))
+    expected_pct = elapsed_fraction * 100.0
+    return float(used_pct) - expected_pct
+
+
+def lane_is_under_weekly_pace(
+    used_pct: float,
+    resets_at: str,
+    *,
+    window_minutes: int | None = None,
+    now: datetime | None = None,
+    tolerance_pct: float = PACE_TOLERANCE_PCT,
+) -> bool:
+    delta = compute_weekly_pace_delta_pct(
+        used_pct,
+        resets_at,
+        window_minutes=window_minutes,
+        now=now,
+    )
+    return delta is not None and delta < -tolerance_pct
 
 
 def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, Any]:
