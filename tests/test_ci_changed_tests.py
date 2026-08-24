@@ -80,12 +80,26 @@ def test_config_and_fixture_changes_trigger_repo_invariant_manifest() -> None:
         "pyproject.toml",
         "requirements-dev.txt",
         ".github/workflows/ci.yml",
+        ".github/workflows/hygiene.yml",
         "scripts/ci/fastlane_always_tests.txt",
         "site/src/data/lexicon-manifest.fingerprint.json",
         "site/src/data/lexicon-manifest.pointer.json",
         "tests/fixtures/example.json",
     ):
         assert changed_tests.select_test_modules([path], include_repo_invariants=True) == sorted(_manifest())
+
+
+def test_workflow_changes_trigger_repo_invariant_manifest_and_select_queue_starvation() -> None:
+    for path in (
+        ".github/workflows/ci.yml",
+        ".github/workflows/hygiene.yml",
+        ".github/workflows/ci-gate-queue-recovery.yml",
+        ".github/workflows/security-audit.yml",
+        ".github/workflows/ui-policy-gate.yml",
+    ):
+        selected = changed_tests.select_test_modules([path], include_repo_invariants=True)
+        assert selected == sorted(_manifest())
+        assert "tests/test_ci_queue_starvation.py" in selected
 
 
 def test_repo_invariant_manifest_entries_are_not_duplicated() -> None:

@@ -3,6 +3,7 @@ tests/api/test_import_pinning.py
 tests/test_ask_opencode.py
 tests/test_bio_preparation_ci_routing.py
 tests/test_ci_changed_tests.py
+tests/test_ci_queue_starvation.py
 tests/test_cyrillic_roundtrip_invariant.py
 tests/test_fleet_routing_open_model_data_import_guard.py
 tests/test_frontend_change_scope.py
