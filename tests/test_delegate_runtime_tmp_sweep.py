@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
 import subprocess
+import time
 from pathlib import Path
 from unittest.mock import patch
 
@@ -331,3 +334,275 @@ def test_read_only_dispatch_inline_snapshot_mutation_check(tmp_tasks_dir):
         },
     )
     assert state_path.stat().st_size >= delegate._READ_ONLY_CHECKOUT_RECORD_BYTE_BUDGET
+
+
+def _seed_legacy_running_lease(
+    tmp_path: Path,
+    tasks_dir: Path,
+    *,
+    task_id: str = "legacy-running-task",
+) -> Path:
+    namespace = tmp_path / "learn-ukrainian"
+    lease = namespace / delegate._runtime_tmp_lease_name(task_id)
+    lease.mkdir(parents=True)
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "status": "running", "pid": None},
+    )
+    return lease
+
+
+def test_runtime_tmp_orphan_sweep_backfill_write_failure_is_non_fatal(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Lease gone between resolution and backfill must not abort the sweep."""
+    _seed_legacy_running_lease(tmp_path, tmp_tasks_dir)
+    original_write = delegate._write_runtime_tmp_task_id_marker
+
+    def fail_backfill_write(lease_root: Path, task_id: str, *, no_clobber: bool = False) -> None:
+        if no_clobber:
+            raise FileNotFoundError(lease_root)
+        original_write(lease_root, task_id, no_clobber=no_clobber)
+
+    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", fail_backfill_write)
+
+    result = delegate._sweep_runtime_tmp_orphans()
+
+    assert result["errors"] == 0
+    assert result["leases_reaped"] == 0
+
+
+def test_dispatch_survives_runtime_tmp_backfill_write_failure(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Dispatch must proceed when orphan-sweep marker backfill is best-effort."""
+    _seed_legacy_running_lease(tmp_path, tmp_tasks_dir)
+    original_write = delegate._write_runtime_tmp_task_id_marker
+
+    def fail_backfill_write(lease_root: Path, task_id: str, *, no_clobber: bool = False) -> None:
+        if no_clobber:
+            raise FileNotFoundError(lease_root)
+        original_write(lease_root, task_id, no_clobber=no_clobber)
+
+    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", fail_backfill_write)
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24680
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *args, **kwargs: _FakeProc())
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="backfill-survives-dispatch",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+        dry_run=False,
+        force_new=False,
+        initiator="codex",
+        output_schema=None,
+        output_schema_sha256=None,
+        sparse_include=None,
+        full_checkout=False,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+
+def test_runtime_tmp_orphan_sweep_corrupt_marker_falls_back_to_legacy(
+    tmp_tasks_dir,
+    tmp_path,
+):
+    """Non-UTF-8 markers must not crash the sweep; legacy resolution still works."""
+    task_id = "legacy-task-0000"
+    namespace = tmp_path / "learn-ukrainian"
+    lease = namespace / delegate._runtime_tmp_lease_name(task_id)
+    lease.mkdir(parents=True)
+    delegate._runtime_tmp_task_id_marker_path(lease).write_bytes(b"\xff\xfe\xfd")
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "status": "done", "pid": None},
+    )
+
+    result = delegate._sweep_runtime_tmp_orphans()
+
+    assert result["errors"] == 0
+    assert result["leases_reaped"] == 1
+    assert not lease.exists()
+
+
+def test_runtime_tmp_orphan_sweep_marker_without_record_uses_orphan_age(
+    tmp_tasks_dir,
+    tmp_path,
+):
+    """A marker with no task record reaps only after the seven-day orphan window."""
+    task_id = "missing-record-task"
+    namespace = tmp_path / "learn-ukrainian"
+    lease = namespace / delegate._runtime_tmp_lease_name(task_id)
+    lease.mkdir(parents=True)
+    delegate._write_runtime_tmp_task_id_marker(lease, task_id)
+    now = time.time()
+    os.utime(lease, (now, now))
+
+    young_result = delegate._sweep_runtime_tmp_orphans(now=now)
+    assert young_result["leases_reaped"] == 0
+    assert lease.is_dir()
+
+    old_mtime = now - delegate._RUNTIME_TMP_ORPHAN_MAX_AGE_S - 1
+    os.utime(lease, (old_mtime, old_mtime))
+    old_result = delegate._sweep_runtime_tmp_orphans(now=now)
+    assert old_result["leases_reaped"] == 1
+    assert not lease.exists()
+
+
+def test_runtime_tmp_orphan_sweep_marker_backfill_does_not_clobber(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Backfill must not replace an existing marker owned by another task id."""
+    lease_name = "shared-lease"
+    namespace = tmp_path / "learn-ukrainian"
+    lease = namespace / lease_name
+    lease.mkdir(parents=True)
+    fresh_task_id = "fresh/live-task"
+    stale_task_id = "stale/resolved-task"
+    delegate._write_state_atomic(
+        delegate._state_path(stale_task_id),
+        {"task_id": stale_task_id, "status": "running", "pid": None},
+    )
+
+    def legacy_only_for_stale(
+        lease_name_arg: str,
+        lease_root: Path,
+        *,
+        legacy_stem_index: dict[str, str] | None,
+    ):
+        if lease_name_arg != lease_name:
+            return None
+        return delegate._read_state_json(delegate._state_path(stale_task_id))
+
+    original_write = delegate._write_runtime_tmp_task_id_marker
+
+    def backfill_after_concurrent_marker(
+        lease_root: Path,
+        task_id: str,
+        *,
+        no_clobber: bool = False,
+    ) -> None:
+        if no_clobber:
+            original_write(lease_root, fresh_task_id)
+        original_write(lease_root, task_id, no_clobber=no_clobber)
+
+    monkeypatch.setattr(delegate, "_runtime_tmp_state_for_lease", legacy_only_for_stale)
+    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", backfill_after_concurrent_marker)
+
+    result = delegate._sweep_runtime_tmp_orphans()
+
+    assert result["leases_reaped"] == 0
+    assert delegate._read_runtime_tmp_task_id_marker(lease) == fresh_task_id
+
+
+def test_runtime_tmp_orphan_sweep_backfill_best_effort_mutation_check(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Reverting the OSError guard around backfill must raise during sweep."""
+    lease = _seed_legacy_running_lease(tmp_path, tmp_tasks_dir)
+
+    def fail_backfill_write(lease_root: Path, task_id: str, *, no_clobber: bool = False) -> None:
+        if no_clobber:
+            raise FileNotFoundError(lease_root)
+
+    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", fail_backfill_write)
+
+    result = delegate._sweep_runtime_tmp_orphans()
+    assert result["errors"] == 0
+
+    with pytest.raises(FileNotFoundError):
+        delegate._write_runtime_tmp_task_id_marker(
+            lease,
+            "legacy-running-task",
+            no_clobber=True,
+        )
+
+
+def test_runtime_tmp_orphan_sweep_marker_backfill_no_clobber_mutation_check(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Reverting no-clobber must let a stale backfill clobber a live marker."""
+    lease_name = "shared-lease"
+    namespace = tmp_path / "learn-ukrainian"
+    lease = namespace / lease_name
+    lease.mkdir(parents=True)
+    fresh_task_id = "fresh/live-task"
+    stale_task_id = "stale/resolved-task"
+    delegate._write_state_atomic(
+        delegate._state_path(stale_task_id),
+        {"task_id": stale_task_id, "status": "running", "pid": None},
+    )
+    delegate._write_state_atomic(
+        delegate._state_path(fresh_task_id),
+        {"task_id": fresh_task_id, "status": "running", "pid": None},
+    )
+
+    def legacy_only_for_stale(
+        lease_name_arg: str,
+        lease_root: Path,
+        *,
+        legacy_stem_index: dict[str, str] | None,
+    ):
+        if lease_name_arg != lease_name:
+            return None
+        return delegate._read_state_json(delegate._state_path(stale_task_id))
+
+    original_write = delegate._write_runtime_tmp_task_id_marker
+
+    def clobbering_backfill(
+        lease_root: Path,
+        task_id: str,
+        *,
+        no_clobber: bool = False,
+    ) -> None:
+        if no_clobber:
+            original_write(lease_root, fresh_task_id)
+            marker = delegate._runtime_tmp_task_id_marker_path(lease_root)
+            tmp = marker.with_suffix(f".tmp.{os.getpid()}")
+            tmp.write_text(task_id, encoding="utf-8")
+            os.replace(tmp, marker)
+            return
+        original_write(lease_root, task_id, no_clobber=no_clobber)
+
+    monkeypatch.setattr(delegate, "_runtime_tmp_state_for_lease", legacy_only_for_stale)
+    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", clobbering_backfill)
+
+    delegate._sweep_runtime_tmp_orphans()
+    assert delegate._read_runtime_tmp_task_id_marker(lease) == stale_task_id
+
+    delegate._write_state_atomic(
+        delegate._state_path(stale_task_id),
+        {"task_id": stale_task_id, "status": "done", "pid": None},
+    )
+    second_result = delegate._sweep_runtime_tmp_orphans()
+    assert second_result["leases_reaped"] == 1
+    assert not lease.exists()

@@ -732,9 +732,22 @@ def _runtime_tmp_task_id_marker_path(lease_root: Path) -> Path:
     return lease_root / _RUNTIME_TMP_TASK_ID_MARKER
 
 
-def _write_runtime_tmp_task_id_marker(lease_root: Path, task_id: str) -> None:
+def _write_runtime_tmp_task_id_marker(
+    lease_root: Path,
+    task_id: str,
+    *,
+    no_clobber: bool = False,
+) -> None:
     """Persist the owning task id so orphan sweeps never scan task records."""
     marker = _runtime_tmp_task_id_marker_path(lease_root)
+    if no_clobber:
+        try:
+            fd = os.open(marker, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        except FileExistsError:
+            return
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(task_id)
+        return
     tmp = marker.with_suffix(f".tmp.{os.getpid()}")
     tmp.write_text(task_id, encoding="utf-8")
     os.replace(tmp, marker)
@@ -744,7 +757,7 @@ def _read_runtime_tmp_task_id_marker(lease_root: Path) -> str | None:
     marker = _runtime_tmp_task_id_marker_path(lease_root)
     try:
         task_id = marker.read_text(encoding="utf-8").strip()
-    except OSError:
+    except (OSError, ValueError):
         return None
     return task_id or None
 
@@ -1012,7 +1025,12 @@ def _sweep_runtime_tmp_orphans(
                     if not had_marker:
                         resolved_task_id = state.get("task_id")
                         if isinstance(resolved_task_id, str):
-                            _write_runtime_tmp_task_id_marker(lease, resolved_task_id)
+                            with contextlib.suppress(OSError):
+                                _write_runtime_tmp_task_id_marker(
+                                    lease,
+                                    resolved_task_id,
+                                    no_clobber=True,
+                                )
                     continue
             elif lease_stat.st_mtime >= cutoff:
                 continue
