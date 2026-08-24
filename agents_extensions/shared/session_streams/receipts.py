@@ -16,8 +16,8 @@ from typing import Any
 
 from .inventory import (
     DEFAULT_STREAMS_YAML,
-    load_stream_epic_inventory,
     resolve_streams_yaml,
+    scan_stream_epic_inventory,
     streams_yaml_sha256,
 )
 from .model import isoformat_z, sha256_text, utc_now
@@ -35,6 +35,66 @@ class InventoryRegistrationResult:
     new_inventory_receipts: int
     import_receipts_written: int
     modes: dict[str, str]
+    records: int = 0
+    skipped: int = 0
+    no_op: bool = False
+
+
+MAX_HANDOFF_BYTES = 1_048_576
+
+
+def _source_label(root: Path, path: Path) -> str:
+    """Return a stable non-absolute source label for receipts and CLI output."""
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.name or str(DEFAULT_STREAMS_YAML)
+
+
+def _prepare_handoff_imports(
+    records: tuple[Any, ...],
+    handoff_root: Path,
+) -> list[tuple[str, str, str, int, str]]:
+    """Read bounded handoff candidates before the lease-critical transaction."""
+    prepared: list[tuple[str, str, str, int, str]] = []
+    root = handoff_root.resolve()
+    for record in records:
+        for relative in record.handoff_candidates:
+            candidate = Path(relative)
+            try:
+                resolved = (root / candidate).resolve()
+                resolved.relative_to(root)
+            except (OSError, ValueError):
+                continue
+            try:
+                if not resolved.is_file():
+                    prepared.append((record.stream_id, relative, "", 0, "missing"))
+                    continue
+                size = resolved.stat().st_size
+                if size > MAX_HANDOFF_BYTES:
+                    prepared.append((record.stream_id, relative, "", 0, "review_required"))
+                    continue
+                raw = resolved.read_bytes()
+            except OSError:
+                prepared.append((record.stream_id, relative, "", 0, "review_required"))
+                continue
+            prepared.append(
+                (
+                    record.stream_id,
+                    relative,
+                    hashlib.sha256(raw).hexdigest(),
+                    len(raw),
+                    "inventoried",
+                )
+            )
+    return prepared
+
+
+def _modes_for(store: SessionStreamStore, stream_ids: set[str]) -> dict[str, str]:
+    try:
+        return store.inventory_modes(stream_ids)
+    except Exception:
+        return {}
 
 
 def register_manifest_inventory(
@@ -44,21 +104,49 @@ def register_manifest_inventory(
     streams_yaml: Path | None = None,
     agent: str = "system",
     now: datetime | None = None,
+    handoff_root: Path | None = None,
+    read_handoff_files: bool = True,
 ) -> InventoryRegistrationResult:
     """Ensure every manifest epic is registered with inventory receipts.
 
-    Idempotent for the same manifest content hash. Never advances mode past
-    ``inventory`` (cutover remains blocked).
+    ``repo_root`` is the immutable registry root. ``handoff_root`` is the
+    optional live-data root used only by the manual CLI path. Startup passes
+    ``read_handoff_files=False`` so no filesystem-heavy work occurs while the
+    store's write transaction is held. Never advances mode past ``inventory``.
     """
     root = repo_root.resolve()
     path = resolve_streams_yaml(root, streams_yaml)
     source_sha = streams_yaml_sha256(root, streams_yaml=path)
-    try:
-        source_rel = path.resolve().relative_to(root).as_posix()
-    except ValueError:
-        source_rel = str(path)
-    records = load_stream_epic_inventory(root, streams_yaml=path)
+    source_rel = _source_label(root, path)
+    handoff_base = (handoff_root or root).resolve()
+    scan = scan_stream_epic_inventory(root, streams_yaml=path, handoff_root=handoff_base)
+    records = scan.records
     timestamp = isoformat_z(now or utc_now())
+
+    # This read-only comparison is deliberately before BEGIN IMMEDIATE. A
+    # repeat startup against the same snapshot is a true database no-op.
+    try:
+        previous_source_sha = store.latest_inventory_source_sha()
+    except Exception:
+        previous_source_sha = None
+    if previous_source_sha == source_sha and not read_handoff_files:
+        stream_ids = {record.stream_id for record in records}
+        return InventoryRegistrationResult(
+            source=source_rel,
+            source_sha256=source_sha,
+            epic_count=len(records),
+            registered_stream_ids=tuple(record.stream_id for record in records),
+            new_inventory_receipts=0,
+            import_receipts_written=0,
+            modes=_modes_for(store, stream_ids),
+            records=len(records),
+            skipped=scan.skipped,
+            no_op=True,
+        )
+
+    prepared_imports = (
+        _prepare_handoff_imports(records, handoff_base) if read_handoff_files else []
+    )
     new_inventory = 0
     import_written = 0
     modes: dict[str, str] = {}
@@ -141,26 +229,16 @@ def register_manifest_inventory(
                     (rec.stream_name, rec.title, timestamp, source_rel, rec.stream_id),
                 )
 
-            for rel in rec.handoff_candidates:
-                file_path = root / rel
-                if file_path.is_file():
-                    raw = file_path.read_bytes()
-                    status = "inventoried"
-                    file_sha = hashlib.sha256(raw).hexdigest()
-                    source_bytes = len(raw)
-                else:
-                    status = "missing"
-                    file_sha = ""
-                    source_bytes = 0
-                cursor = connection.execute(
-                    "INSERT OR IGNORE INTO legacy_import_receipts("
-                    "stream_id, source_path, source_sha256, source_bytes, status, "
-                    "recorded_at, entry_id"
-                    ") VALUES (?, ?, ?, ?, ?, ?, NULL)",
-                    (rec.stream_id, rel, file_sha, source_bytes, status, timestamp),
-                )
-                if cursor.rowcount:
-                    import_written += 1
+        for stream_id, rel, file_sha, source_bytes, status in prepared_imports:
+            cursor = connection.execute(
+                "INSERT OR IGNORE INTO legacy_import_receipts("
+                "stream_id, source_path, source_sha256, source_bytes, status, "
+                "recorded_at, entry_id"
+                ") VALUES (?, ?, ?, ?, ?, ?, NULL)",
+                (stream_id, rel, file_sha, source_bytes, status, timestamp),
+            )
+            if cursor.rowcount:
+                import_written += 1
 
     return InventoryRegistrationResult(
         source=source_rel,
@@ -170,6 +248,9 @@ def register_manifest_inventory(
         new_inventory_receipts=new_inventory,
         import_receipts_written=import_written,
         modes=modes,
+        records=len(records),
+        skipped=scan.skipped,
+        no_op=False,
     )
 
 

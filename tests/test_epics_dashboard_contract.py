@@ -31,6 +31,12 @@ def test_epics_page_is_a_read_only_observer() -> None:
     assert "githubIssueUrl" in html
     assert "formatHolder" in html
     assert "getLeaseState" in html
+    assert "registered" in html
+    assert "stream_name" in html
+    assert "title" in html
+    assert "registry_status" in html
+    assert "Never claimed" in html
+    assert "No lease" in html
     assert "formatAge" in html
     assert "formatExpiry" in html
     assert 'class="monitor-nav"' in html
@@ -124,6 +130,11 @@ def test_epics_page_js_behavioral_logic() -> None:
       stateExpiredByTime: getLeaseState({{ lease: {{ state: 'active', expires_at: pastExpiry }} }}),
       stateReleased: getLeaseState({{ lease: {{ state: 'released', expires_at: futureExpiry }} }}),
       stateNone: getLeaseState({{ lease: null }}),
+      neverClaimed: displayLeaseState({{ registered: true, lease: null }}),
+      noLease: displayLeaseState({{ registered: false, lease: null }}),
+      registryRegistered: registryState({{ registered: true }}),
+      registryStale: registryState({{ registered: false, stream_name: 'legacy' }}),
+      registryStoreOnly: registryState({{ registered: false }}),
       ageSecs: formatAge(184),
       ageMins: formatAge(45),
       ageNull: formatAge(null),
@@ -150,6 +161,11 @@ def test_epics_page_js_behavioral_logic() -> None:
     assert out["stateExpiredByTime"] == "expired"
     assert out["stateReleased"] == "released"
     assert out["stateNone"] == "none"
+    assert out["neverClaimed"] == "Never claimed"
+    assert out["noLease"] == "No lease"
+    assert out["registryRegistered"] == "registered"
+    assert out["registryStale"] == "stale"
+    assert out["registryStoreOnly"] == "store-only"
 
     assert out["ageSecs"] == "3m 4s ago"
     assert out["ageMins"] == "45s ago"

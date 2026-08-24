@@ -8,13 +8,18 @@ participate in dual-write / cutover tracking without code edits per epic.
 from __future__ import annotations
 
 import hashlib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from .model import validate_stream_id
+
 DEFAULT_STREAMS_YAML = Path("scripts/config/issue_streams.yaml")
+REGISTRY_STREAM_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+MAX_EPIC_NUMBER = 9_999_999_999
 
 # Optional explicit handoff path overrides (relative to repo root).
 # First existing path wins when resolving a live mirror source.
@@ -78,14 +83,39 @@ class StreamEpicRecord:
     handoff_candidates: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class InventoryScan:
+    """Strict registry scan result used by startup seeding and the CLI."""
+
+    records: tuple[StreamEpicRecord, ...]
+    skipped: int
+
+
 def _load_streams_doc(path: Path) -> dict[str, Any]:
-    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as exc:
+        raise ValueError("issue-stream registry could not be parsed") from exc
     if not isinstance(raw, dict):
-        raise ValueError(f"issue_streams.yaml must be a mapping: {path}")
+        raise ValueError("issue-stream registry must be a mapping")
     streams = raw.get("streams")
     if not isinstance(streams, dict):
-        raise ValueError(f"issue_streams.yaml missing streams map: {path}")
+        raise ValueError("issue-stream registry is missing its streams map")
     return streams
+
+
+def _candidate_is_contained(root: Path, candidate: Any) -> bool:
+    """Return whether a candidate resolves below ``root`` without reading it."""
+    if not isinstance(candidate, str) or not candidate.strip():
+        return False
+    relative = Path(candidate)
+    if relative.is_absolute() or "\\" in candidate or ".." in relative.parts:
+        return False
+    try:
+        (root / relative).resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    return True
 
 
 def stream_anchor_id(
@@ -157,35 +187,77 @@ def load_stream_epic_inventory(
     Deduplicates epic numbers (an epic listed under multiple stream names keeps
     the first registration order from the YAML file).
     """
-    path = resolve_streams_yaml(repo_root, streams_yaml)
+    return scan_stream_epic_inventory(repo_root, streams_yaml=streams_yaml).records
+
+
+def scan_stream_epic_inventory(
+    repo_root: Path,
+    *,
+    streams_yaml: Path | None = None,
+    handoff_root: Path | None = None,
+) -> InventoryScan:
+    """Strictly scan the registry, counting malformed records instead of hiding them.
+
+    The file is read before any caller opens a write transaction. Candidate paths are
+    validated lexically and after resolution, but are never read by this function.
+    ``handoff_root`` is explicit so a release-snapshot registry cannot accidentally
+    read from the live-data root.
+    """
+    root = repo_root.resolve()
+    candidate_root = (handoff_root or root).resolve()
+    path = resolve_streams_yaml(root, streams_yaml)
     streams = _load_streams_doc(path)
     seen: set[int] = set()
     out: list[StreamEpicRecord] = []
+    skipped = 0
     for stream_name, body in streams.items():
+        if not isinstance(stream_name, str) or not REGISTRY_STREAM_NAME_RE.fullmatch(stream_name):
+            skipped += 1
+            continue
         if not isinstance(body, dict):
+            skipped += 1
             continue
-        title = str(body.get("title") or stream_name)
-        epics = body.get("epics") or []
-        if not isinstance(epics, list):
+        raw_title = body.get("title")
+        if raw_title is not None and not isinstance(raw_title, str):
+            skipped += 1
             continue
+        title = raw_title or stream_name
+        raw_epics = body.get("epics")
+        if not isinstance(raw_epics, list):
+            skipped += 1
+            continue
+        epics = raw_epics
         for raw in epics:
+            if isinstance(raw, bool) or not isinstance(raw, int):
+                skipped += 1
+                continue
+            num = raw
+            if not 0 < num <= MAX_EPIC_NUMBER:
+                skipped += 1
+                continue
+            stream_id = f"epic:{num}"
             try:
-                num = int(raw)
-            except (TypeError, ValueError):
+                validate_stream_id(stream_id)
+                candidates = _handoff_candidates_for(stream_name, num)
+            except Exception:
+                skipped += 1
+                continue
+            if not all(_candidate_is_contained(candidate_root, candidate) for candidate in candidates):
+                skipped += 1
                 continue
             if num in seen:
                 continue
             seen.add(num)
             out.append(
                 StreamEpicRecord(
-                    stream_id=f"epic:{num}",
+                    stream_id=stream_id,
                     epic_number=num,
-                    stream_name=str(stream_name),
+                    stream_name=stream_name,
                     title=title,
-                    handoff_candidates=_handoff_candidates_for(str(stream_name), num),
+                    handoff_candidates=tuple(candidates),
                 )
             )
-    return tuple(out)
+    return InventoryScan(records=tuple(out), skipped=skipped)
 
 
 def sorted_epic_numbers(
@@ -233,7 +305,8 @@ def inventory_snapshot(
 ) -> dict[str, Any]:
     """Machine-readable inventory: sorted epics, stream map, source hash."""
     path = resolve_streams_yaml(repo_root, streams_yaml)
-    records = load_stream_epic_inventory(repo_root, streams_yaml=path)
+    scan = scan_stream_epic_inventory(repo_root, streams_yaml=path)
+    records = scan.records
     mapping = stream_map(repo_root, streams_yaml=path)
     epics = sorted({r.epic_number for r in records})
     try:
@@ -244,6 +317,7 @@ def inventory_snapshot(
         "source": source_rel,
         "source_sha256": streams_yaml_sha256(repo_root, streams_yaml=path),
         "epic_count": len(epics),
+        "skipped": scan.skipped,
         "epics": epics,
         "stream_ids": [f"epic:{n}" for n in epics],
         "stream_map": mapping,

@@ -1,15 +1,19 @@
-"""Remote TTL-fenced epic lifecycle API (design #7178, M1 of #7177)."""
+"""Remote TTL-fenced epic lifecycle API (design #7178, M2 of #7177)."""
 
 from __future__ import annotations
 
+import logging
 import re
 from datetime import datetime
+from pathlib import Path
+from threading import Lock
 from typing import Any
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase, default_database_path
+from agents_extensions.shared.session_streams.inventory import resolve_streams_yaml, streams_yaml_sha256
 from agents_extensions.shared.session_streams.model import (
     EntryRef,
     EntryType,
@@ -18,10 +22,12 @@ from agents_extensions.shared.session_streams.model import (
     LeaseHolder,
     SessionState,
     entry_as_dict,
+    isoformat_z,
     parse_timestamp,
     utc_now,
     validate_stream_id,
 )
+from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
 from agents_extensions.shared.session_streams.store import (
     ContentRejectedError,
     LeaseConflictError,
@@ -34,16 +40,223 @@ from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 SCHEMA = "remote-epic-lifecycle.v1"
 DEFAULT_TTL_SECONDS = 15 * 60
 MAX_DIGEST_LIMIT = 100
 TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+REGISTRY_TEXT_MAX = 160
+_REGISTRY_IPV4_RE = re.compile(r"(?<![A-Za-z0-9])(?:\d{1,3}\.){3}\d{1,3}(?![A-Za-z0-9])")
+_REGISTRY_IPV6_RE = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:]{0,4}(?![A-Za-z0-9])")
+_REGISTRY_HOSTNAME_RE = re.compile(
+    r"(?i)(?<![A-Za-z0-9_-])(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}(?![A-Za-z0-9_-])"
+)
+_REGISTRY_ABSOLUTE_PATH_RE = re.compile(r"(?<![A-Za-z0-9])(?:/|~[/\\]|[A-Za-z]:[\\/])")
+_REGISTRY_SSH_ALIAS_RE = re.compile(
+    r"(?i)(?:\b(?:ssh|scp|rsync)\s+[^\s]+|\b(?:git|[A-Za-z0-9._-]+)@[^\s:/]+:|"
+    r"(?<![A-Za-z0-9])(atlas-runner|hramatka|vps)(?![A-Za-z0-9]))"
+)
+_REGISTRY_PRIVATE_TOKEN_RE = re.compile(
+    r"(?ix)(?:\b(?:token|secret|password|passwd|api[_-]?key|bearer)\s*[:=]\s*\S+|"
+    r"\b(?:sk|gh[pous]|xox[baprs]-)[A-Za-z0-9_-]{8,}|"
+    r"-----BEGIN [^-]{0,40}PRIVATE KEY-----|"
+    r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,})"
+)
+
+_REGISTRY_HEALTH_LOCK = Lock()
+_REGISTRY_SNAPSHOT_SHA256: str | None = None
+_REGISTRY_HEALTH: dict[str, Any] = {
+    "status": "unavailable",
+    "records": 0,
+    "registered": 0,
+    "skipped": 0,
+    "source_sha256": None,
+    "seeded_at": None,
+}
 
 
 def _store() -> SessionStreamStore:
     """Open the API-host store; the path never crosses the HTTP boundary."""
     return SessionStreamStore(SessionStreamDatabase(default_database_path(LIVE_REPO_ROOT)))
+
+
+def _response_registry_text(value: Any) -> str | None:
+    """Bound registry labels before they cross the API boundary."""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        return "[redacted]"
+    text = " ".join(value.split())
+    if not text:
+        return None
+    if len(text) > REGISTRY_TEXT_MAX:
+        return "[redacted]"
+    if any(
+        pattern.search(text)
+        for pattern in (
+            _REGISTRY_IPV4_RE,
+            _REGISTRY_IPV6_RE,
+            _REGISTRY_HOSTNAME_RE,
+            _REGISTRY_ABSOLUTE_PATH_RE,
+            _REGISTRY_SSH_ALIAS_RE,
+            _REGISTRY_PRIVATE_TOKEN_RE,
+        )
+    ):
+        return "[redacted]"
+    return text
+
+
+def registry_health_snapshot() -> dict[str, Any]:
+    """Return the last startup seed outcome without exposing failure details."""
+    with _REGISTRY_HEALTH_LOCK:
+        return dict(_REGISTRY_HEALTH)
+
+
+def _set_registry_health(
+    *,
+    status: str,
+    records: int,
+    registered: int,
+    skipped: int,
+    source_sha256: str | None,
+    seeded_at: str | None,
+    snapshot_sha256: str | None = None,
+) -> dict[str, Any]:
+    global _REGISTRY_SNAPSHOT_SHA256
+    if status not in {"ok", "unavailable", "invalid"}:
+        raise ValueError("invalid registry status")
+    with _REGISTRY_HEALTH_LOCK:
+        if snapshot_sha256 is not None:
+            _REGISTRY_SNAPSHOT_SHA256 = snapshot_sha256
+        _REGISTRY_HEALTH.update(
+            {
+                "status": status,
+                "records": records,
+                "registered": registered,
+                "skipped": skipped,
+                "source_sha256": source_sha256,
+                "seeded_at": seeded_at,
+            }
+        )
+        return dict(_REGISTRY_HEALTH)
+
+
+def seed_manifest_inventory(
+    registry_root: Path,
+    *,
+    store: SessionStreamStore | None = None,
+    handoff_root: Path | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Fail-open startup seed from the release registry into the live store."""
+    registry_path: Path | None = None
+    source_sha256: str | None = None
+    try:
+        registry_path = resolve_streams_yaml(registry_root)
+        source_sha256 = streams_yaml_sha256(registry_root, streams_yaml=registry_path)
+    except (FileNotFoundError, OSError):
+        logger.warning("Epic registry startup seed unavailable; existing rows remain served")
+        return _set_registry_health(
+            status="unavailable",
+            records=0,
+            registered=0,
+            skipped=0,
+            source_sha256=None,
+            seeded_at=None,
+        )
+    except Exception:
+        logger.warning("Epic registry startup seed invalid; existing rows remain served")
+        return _set_registry_health(
+            status="invalid",
+            records=0,
+            registered=0,
+            skipped=1,
+            source_sha256=source_sha256,
+            seeded_at=None,
+        )
+
+    try:
+        result = register_manifest_inventory(
+            store or _store(),
+            registry_root,
+            streams_yaml=registry_path,
+            handoff_root=handoff_root or LIVE_REPO_ROOT,
+            read_handoff_files=False,
+            now=now,
+        )
+    except (FileNotFoundError, PermissionError, OSError):
+        logger.warning("Epic registry startup seed unavailable; existing rows remain served")
+        return _set_registry_health(
+            status="unavailable",
+            records=0,
+            registered=0,
+            skipped=0,
+            source_sha256=source_sha256,
+            seeded_at=None,
+        )
+    except (TypeError, ValueError):
+        logger.warning("Epic registry startup seed invalid; existing rows remain served")
+        return _set_registry_health(
+            status="invalid",
+            records=0,
+            registered=0,
+            skipped=1,
+            source_sha256=source_sha256,
+            seeded_at=None,
+        )
+    except Exception:
+        logger.warning("Epic registry startup seed unavailable; existing rows remain served")
+        return _set_registry_health(
+            status="unavailable",
+            records=0,
+            registered=0,
+            skipped=0,
+            source_sha256=source_sha256,
+            seeded_at=None,
+        )
+
+    status = "invalid" if result.skipped else "ok"
+    seeded_at = isoformat_z(now or utc_now())
+    logger.info(
+        "Epic registry startup seed status=%s records=%d registered=%d skipped=%d",
+        status,
+        result.records,
+        len(result.registered_stream_ids),
+        result.skipped,
+    )
+    return _set_registry_health(
+        status=status,
+        records=result.records,
+        registered=len(result.registered_stream_ids),
+        skipped=result.skipped,
+        source_sha256=result.source_sha256,
+        seeded_at=seeded_at,
+        snapshot_sha256=result.source_sha256,
+    )
+
+
+def _registry_snapshot_for_response(store: SessionStreamStore) -> str | None:
+    with _REGISTRY_HEALTH_LOCK:
+        marker = _REGISTRY_SNAPSHOT_SHA256
+    if marker is not None:
+        return marker
+    try:
+        return store.latest_inventory_source_sha()
+    except Exception:
+        return None
+
+
+def _registry_fields(store: SessionStreamStore, stream_id: str) -> dict[str, Any]:
+    metadata = store.remote_registry_projection(
+        stream_id,
+        snapshot_sha256=_registry_snapshot_for_response(store),
+    )
+    return {
+        "registered": bool(metadata["registered"]),
+        "stream_name": _response_registry_text(metadata["stream_name"]),
+        "title": _response_registry_text(metadata["title"]),
+    }
 
 
 def _error(status: int, detail: str) -> JSONResponse:
@@ -234,6 +447,8 @@ def _stream_response(store: SessionStreamStore, stream_id: str, limit: int) -> d
     return {
         "schema": SCHEMA,
         "stream_id": stream_id,
+        **_registry_fields(store, stream_id),
+        "registry_status": registry_health_snapshot()["status"],
         "lease": lease_payload,
         "session_state": session_state,
         "digest": _digest_payload(store, stream_id, limit),
@@ -273,6 +488,7 @@ def remote_health() -> JSONResponse:
             "ok": audit["integrity_check"] == "ok" and not audit["foreign_key_violations"],
             "store_reachable": True,
             "schema_versions": audit["schema_versions"],
+            "registry": registry_health_snapshot(),
         },
         headers={"Cache-Control": "no-store"},
     )
@@ -282,6 +498,7 @@ def remote_health() -> JSONResponse:
 def remote_epic_list() -> JSONResponse:
     try:
         store = _store()
+        registry_status = registry_health_snapshot()["status"]
         rows = []
         for row in store.list_remote_projections():
             stream_id = str(row["stream_id"])
@@ -303,6 +520,8 @@ def remote_epic_list() -> JSONResponse:
             rows.append(
                 {
                     "stream_id": stream_id,
+                    **_registry_fields(store, stream_id),
+                    "registry_status": registry_status,
                     "lease": lease_payload,
                     "session_state": session_state,
                     "last_state": latest.get(EntryType.STATE.value),
@@ -312,7 +531,10 @@ def remote_epic_list() -> JSONResponse:
             )
     except Exception:
         return _server_error()
-    return JSONResponse(content={"schema": SCHEMA, "streams": rows}, headers={"Cache-Control": "no-store"})
+    return JSONResponse(
+        content={"schema": SCHEMA, "registry_status": registry_status, "streams": rows},
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @router.get("/v1/{stream_id}")

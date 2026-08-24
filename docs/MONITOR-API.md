@@ -263,17 +263,19 @@ Operator timer install: `docs/runbooks/project-state-reporter.md`.
 
 ## Remote epic lifecycle v1 — `/api/epics/v1`
 
-This is the M1 remote lease surface from design #7178. It is exact-stream
+This is the M2 remote lease surface from design #7178. It is exact-stream
 only (`epic:<positive-number>`), uses the API-host session-stream store, and
-uses TTL plus client heartbeats for liveness. The server never probes a client
-PID. Mutation requests must arrive through a direct loopback connection; a
-loopback tunnel is therefore the client boundary for another machine.
+seeds one store row for each canonical `epic:<N>` record in the release
+snapshot's `scripts/config/issue_streams.yaml` at API process startup. The
+server never probes a client PID. Mutation requests must arrive through a
+direct loopback connection; a loopback tunnel is therefore the client
+boundary for another machine.
 
 | Method | Path | Notes |
 | --- | --- | --- |
-| GET | `/api/epics/v1/health` | Store reachability, integrity, and schema versions; no filesystem paths |
-| GET | `/api/epics/v1` | One bounded row per epic stream; no GitHub enrichment |
-| GET | `/api/epics/v1/epic:<N>` | Lease status plus pinned/latest bounded handoff digest |
+| GET | `/api/epics/v1/health` | Store reachability, integrity, schema versions, and the last registry-seed outcome; no filesystem paths |
+| GET | `/api/epics/v1` | One bounded row per store epic stream, including registry identity; no GitHub enrichment |
+| GET | `/api/epics/v1/epic:<N>` | Registry identity, lease status, and pinned/latest bounded handoff digest |
 | POST | `/api/epics/v1/epic:<N>/claim` | Client-supplied IDs; same IDs plus same holder replay; expired recovery increments generation and fence atomically |
 | POST | `/api/epics/v1/epic:<N>/heartbeat` | Exact fenced lease heartbeat; `409 LEASE LOST` fences the client |
 | POST | `/api/epics/v1/epic:<N>/handoff` | Appends one existing entry type with an idempotency key |
@@ -284,6 +286,49 @@ the default; `--local` is an offline-only fallback that prints a warning and
 does not create a fleet-visible lease. A driver on any machine resumes by
 claiming the same stream, and a typed handoff is appended with
 `POST /api/epics/v1/epic:<N>/handoff`.
+
+### Registry and lease fields
+
+List and detail rows include these fields:
+
+```json
+{
+  "stream_id": "epic:7177",
+  "registered": true,
+  "stream_name": "monitor",
+  "title": "Monitor epic",
+  "registry_status": "ok",
+  "lease": null
+}
+```
+
+`registered` is true only when the row has an inventory receipt for the
+snapshot recorded by the last successful startup seed. `stream_name` and
+`title` are taken from that receipt. If an epic was removed from a later
+snapshot, its existing row remains available but is returned with
+`registered: false` and the newest known name/title as stale metadata. A
+store-only row has `registered: false`, `stream_name: null`, and `title: null`.
+The response sanitizes registry text before returning it.
+
+`lease: null` means that there is no lease projection. It does not mean that
+the stream was never claimed. The dashboard distinguishes a registered row
+with no lease (`Never claimed`) from an unregistered store row (`No lease`).
+Active and expired lease states continue to use the existing TTL and heartbeat
+semantics.
+
+The health response adds a `registry` object with `status` (`ok`,
+`unavailable`, or `invalid`), `records`, `registered`, `skipped`,
+`source_sha256`, and `seeded_at`. A missing, unreadable, or malformed registry
+is fail-open: the API still boots and serves existing store rows, and list and
+detail responses carry the same `registry_status`. Registry identity is fresh
+at the last successful API restart; lease state and bounded digests are read
+per request. Startup seeding is idempotent for an unchanged source hash and
+does not add an HTTP mutation route.
+
+The existing `session_streams inventory` CLI remains the manual registration
+path. Duplicate epic membership uses first-wins order from the registry; any
+malformed record is counted in `skipped` rather than silently treated as a
+valid registration.
 
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before claiming. The
 value comes from the canonical `MONITOR_OCCUPANCY_HOST_IDS` mapping and is an

@@ -1659,6 +1659,58 @@ class SessionStreamStore:
             ).fetchall()
             return [self._row_as_dict(row) or {} for row in rows]
 
+    def latest_inventory_source_sha(self) -> str | None:
+        """Return the source hash from the newest append-only inventory receipt."""
+        with self._read_snapshot() as connection:
+            row = connection.execute(
+                "SELECT source_sha256 FROM stream_inventory_receipts "
+                "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1"
+            ).fetchone()
+            return None if row is None else str(row["source_sha256"])
+
+    def inventory_modes(self, stream_ids: set[str]) -> dict[str, str]:
+        """Read migration modes without opening a write transaction."""
+        if not stream_ids:
+            return {}
+        placeholders = ", ".join("?" for _ in stream_ids)
+        with self._read_snapshot() as connection:
+            rows = connection.execute(
+                f"SELECT stream_id, mode FROM stream_migration_state WHERE stream_id IN ({placeholders})",
+                tuple(sorted(stream_ids)),
+            ).fetchall()
+            return {str(row["stream_id"]): str(row["mode"]) for row in rows}
+
+    def remote_registry_projection(
+        self,
+        stream_id: str,
+        *,
+        snapshot_sha256: str | None,
+    ) -> dict[str, Any]:
+        """Return latest registry identity and whether it belongs to ``snapshot_sha256``."""
+        stream_id = validate_stream_id(stream_id)
+        with self._read_snapshot() as connection:
+            latest = connection.execute(
+                "SELECT stream_name, title, source_sha256, receipt_id "
+                "FROM stream_inventory_receipts WHERE stream_id = ? "
+                "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1",
+                (stream_id,),
+            ).fetchone()
+            current = None
+            if snapshot_sha256:
+                current = connection.execute(
+                    "SELECT stream_name, title, source_sha256, receipt_id "
+                    "FROM stream_inventory_receipts WHERE stream_id = ? AND source_sha256 = ? "
+                    "ORDER BY recorded_at DESC, receipt_id DESC LIMIT 1",
+                    (stream_id, snapshot_sha256),
+                ).fetchone()
+            chosen = current or latest
+            return {
+                "registered": current is not None,
+                "stream_name": None if chosen is None else str(chosen["stream_name"]),
+                "title": None if chosen is None else str(chosen["title"]),
+                "source_sha256": None if chosen is None else str(chosen["source_sha256"]),
+            }
+
     def dump_stream(self, stream_id: str) -> dict[str, Any]:
         """Return complete ordered stream history for the operator dump surface."""
         stream_id = validate_stream_id(stream_id)
