@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "45b28a73a9c4",
+  "session_id": "fleet-2d3327025f4144e6be39133a453f5784",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T02:41:39.746148Z",
+  "branch": "cursor/sidecar-helper-7208",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/worktree-cleanup.md",
+    "scripts/delegate.py",
+    "tests/test_delegate_readonly_guard.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "9557ccdc3959",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T02:41:39.739418Z",
+    "agent_lines": 28,
+    "agent_removed": 17,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 28,
+    "total_lines_changed": 45,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
