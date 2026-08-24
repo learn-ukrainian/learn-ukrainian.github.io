@@ -192,6 +192,7 @@ def extract_interfaces(paths: list[Path]) -> dict[str, dict[str, Any]]:
         check=True,
         capture_output=True,
         text=True,
+        timeout=120,
     )
     return {item["component"]: item for item in json.loads(result.stdout)}
 

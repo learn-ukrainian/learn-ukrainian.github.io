@@ -38,6 +38,8 @@ from scripts.orchestration import reap_worktrees
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 FETCH_TIMEOUT_S = 30
+GIT_ARTIFACT_TIMEOUT_S = 30
+WORKTREE_CHILD_TIMEOUT_S = 600
 WORKTREE_AUTO = "auto"
 WRITER_ALIASES = {
     "claude": "claude-tools",
@@ -649,6 +651,7 @@ def _persist_build_artifacts(
                 check=True,
                 capture_output=True,
                 text=True,
+                timeout=GIT_ARTIFACT_TIMEOUT_S,
                 env=reap_worktrees.sanitized_git_env(),
             )
         # --allow-empty so empty builds (rare, e.g. dry-run paths or
@@ -668,10 +671,11 @@ def _persist_build_artifacts(
             check=True,
             capture_output=True,
             text=True,
+            timeout=GIT_ARTIFACT_TIMEOUT_S,
             env=reap_worktrees.sanitized_git_env(),
         )
         return True
-    except (subprocess.CalledProcessError, OSError) as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as exc:
         stderr_tail = ""
         if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
             stderr_tail = exc.stderr.strip().splitlines()[-1] if exc.stderr.strip() else ""
@@ -716,10 +720,22 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
     child_env = os.environ.copy()
     child_env.update(archive.env())
     try:
-        proc = subprocess.run(command, cwd=worktree.path, check=False, env=child_env)
+        proc = subprocess.run(
+            command,
+            cwd=worktree.path,
+            check=False,
+            env=child_env,
+            timeout=WORKTREE_CHILD_TIMEOUT_S,
+        )
         exit_code = proc.returncode
         if exit_code == 0:
             result = "success"
+    except subprocess.TimeoutExpired as exc:
+        print(
+            f"v7_build worktree child exceeded {WORKTREE_CHILD_TIMEOUT_S}s and was terminated: {exc}",
+            file=sys.stderr,
+        )
+        exit_code = 1
     except OSError as exc:
         print(f"v7_build worktree child failed to start: {exc}", file=sys.stderr)
         exit_code = 1

@@ -16,14 +16,6 @@ scripts/agent_runtime/agent_github_identity.py::_repository_name::subprocess.run
 scripts/agent_runtime/env_sanitize.py::_isolated_git_env::subprocess.run
 scripts/ai_agent_bridge/_channels_cli.py::_handle_channel_context::subprocess.run
 scripts/bench/writer_matrix.py::_run_one_cell::subprocess.run
-scripts/build/build_module_direct.py::phase_mdx::subprocess.run
-scripts/build/generate_lesson_schema.py::extract_interfaces::subprocess.run
-scripts/build/pipeline.py::run_command::subprocess.run
-scripts/build/run_archive.py::RunArchive.write_commit_diff_summary::subprocess.run
-scripts/build/run_archive.py::RunArchive.write_commit_diff_summary::subprocess.run
-scripts/build/v7_build.py::_persist_build_artifacts::subprocess.run
-scripts/build/v7_build.py::_persist_build_artifacts::subprocess.run
-scripts/build/v7_build.py::_run_in_worktree::subprocess.run
 scripts/etymology/bulk_ocr_gemini.py::decode_pages::subprocess.run
 scripts/fleet_comms/github_pr_metrics.py::collect_github_pr_metrics::subprocess.run
 scripts/generate_mdx/core.py::main::subprocess.run

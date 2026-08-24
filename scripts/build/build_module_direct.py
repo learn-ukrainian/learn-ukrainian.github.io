@@ -526,7 +526,16 @@ def phase_mdx(ctx: DirectModuleContext) -> bool:
         "--module", str(ctx.yaml_path),
     ]
 
-    result = subprocess.run(args, capture_output=True, text=True, cwd=str(PROJECT_ROOT))
+    try:
+        result = subprocess.run(
+            args, capture_output=True, text=True,
+            timeout=300, cwd=str(PROJECT_ROOT),
+        )
+    except subprocess.TimeoutExpired:
+        log("  [mdx] TIMEOUT: MDX generation exceeded 300s")
+        mark_phase(ctx, "mdx", "failed", error="timeout")
+        return False
+
     if result.returncode != 0:
         log(f"  [mdx] FAILED (rc={result.returncode})")
         if result.stderr:
