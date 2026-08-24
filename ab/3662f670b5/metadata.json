@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ab3662f670b5",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-workers-local-lease",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/fleet.html",
+    "docs/MONITOR-API.md",
+    "scripts/api/fleet_workers_collect.py",
+    "tests/api/test_fleet_workers.py",
+    "tests/api/test_fleet_workers_unmocked.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ab/3662f670b5/0/metadata.json",
+      "transcript": "/ab/3662f670b5/0/full.jsonl",
+      "compact_transcript": "/ab/3662f670b5/0/transcript.jsonl",
+      "content_hash": "/ab/3662f670b5/0/content_hash.txt",
+      "prompt": "/ab/3662f670b5/0/prompt.txt"
+    }
+  ]
+}
