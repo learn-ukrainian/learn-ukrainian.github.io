@@ -5,6 +5,7 @@ from __future__ import annotations
 from scripts.lexicon.enrich_manifest import _merge_homonym_relations, _relation_source_label
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
+    E2U_LABEL,
     GOROH_LABEL,
     GRAC_LABEL,
     GRINCHENKO_LABEL,
@@ -222,3 +223,34 @@ def test_normalize_academic_label_maps_goroh() -> None:
     assert normalize_academic_label("goroh.pp.ua: Переклад") == GOROH_LABEL
     assert normalize_academic_label("Горох") == GOROH_LABEL
     assert normalize_academic_label("Горох (переклад)") == GOROH_LABEL
+
+
+def test_apply_entry_attribution_handles_e2u_translation() -> None:
+    entry = {
+        "lemma": "ампір",
+        "enrichment": {
+            "translation": {
+                "en": ["Empire style"],
+                "source": "e2u.org.ua",
+                "source_url": "https://e2u.org.ua/s?w=%D0%B0%D0%BC%D0%BF%D1%96%D1%80&dicts=all",
+            },
+            "sources": ["e2u.org.ua"],
+        },
+    }
+    assert apply_entry_attribution(entry) is True
+    assert entry["enrichment"]["translation"]["source"] == E2U_LABEL
+    assert (
+        entry["enrichment"]["translation"]["source_url"]
+        == "https://e2u.org.ua/s?w=%D0%B0%D0%BC%D0%BF%D1%96%D1%80&dicts=all"
+    )
+    assert entry["enrichment"]["sources"] == [E2U_LABEL]
+    assert learner_facing_mirror_violations(entry) == []
+    assert learner_facing_unmapped_source_violations(entry) == []
+
+
+def test_normalize_academic_label_maps_e2u() -> None:
+    assert normalize_academic_label("e2u") == E2U_LABEL
+    assert normalize_academic_label("e2u.org.ua") == E2U_LABEL
+    assert normalize_academic_label("e2u: Переклад") == E2U_LABEL
+    assert normalize_academic_label("e2u (переклад)") == E2U_LABEL
+    assert normalize_academic_label(E2U_LABEL) == E2U_LABEL

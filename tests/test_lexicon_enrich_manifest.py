@@ -84,6 +84,7 @@ from scripts.lexicon.enrich_manifest import (
 )
 from scripts.lexicon.source_attribution import (
     DAVYDOV_LABEL,
+    E2U_LABEL,
     GOROH_LABEL,
     HOLOSKEVYCH_LABEL,
     MIYKLAS_LABEL,
@@ -3029,7 +3030,7 @@ def test_translation_uses_goroh_after_source_misses(monkeypatch) -> None:
     assert translation["source"] == "Горох (переклад)"
 
 
-def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh(monkeypatch) -> None:
+def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
@@ -3041,12 +3042,18 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh(monke
     monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
 
     goroh_calls: list[str] = []
+    e2u_calls: list[str] = []
 
     def mock_goroh(lemma: str) -> list[str]:
         goroh_calls.append(lemma)
         return ["basilica", "basilicas"]
 
+    def mock_e2u(lemma: str) -> list[dict[str, str]]:
+        e2u_calls.append(lemma)
+        return [{"headword": "базиліка", "translation": "arch. basilica"}]
+
     monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", mock_goroh)
+    monkeypatch.setattr(enrich_manifest_module, "query_e2u_uk_en", mock_e2u)
 
     # 1. dmklinger wins over everything
     conn.execute(
@@ -3058,6 +3065,7 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh(monke
     assert res_dmklinger is not None
     assert res_dmklinger["source"] == enrich_manifest_module._TRANSLATION_SOURCE
     assert not goroh_calls
+    assert not e2u_calls
 
     # 2. Kaikki wins when dmklinger misses
     conn.execute("DELETE FROM dmklinger_uk_en")
@@ -3066,12 +3074,14 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh(monke
     assert res_kaikki is not None
     assert res_kaikki["source"] == KAIKKI_SOURCE
     assert not goroh_calls
+    assert not e2u_calls
 
     # 3. Balla reverse wins when dmklinger and Kaikki miss
     res_balla = _translation(conn, "базиліка", {}, entry_pos="noun", gloss_hints={"basilica"})
     assert res_balla is not None
     assert res_balla["source"] == _BALLA_REVERSE_SOURCE
     assert not goroh_calls
+    assert not e2u_calls
 
     # 4. Slovnyk ukreng wins when Balla reverse misses
     slovnyk_cache = {
@@ -3087,14 +3097,26 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh(monke
     assert res_slovnyk is not None
     assert res_slovnyk["source"] == _SLOVNYK_UKRENG_SOURCE
     assert not goroh_calls
+    assert not e2u_calls
 
-    # 5. Goroh wins when all previous miss
+    # 5. Goroh wins when all previous miss (e2u is not called)
     empty_cache = {"lookups": {"ukreng": None}}
     res_goroh = _translation(conn, "базиліка", {}, slovnyk_cache=empty_cache)
     assert res_goroh is not None
     assert res_goroh["source"] == GOROH_LABEL
     assert res_goroh["en"] == ["basilica", "basilicas"]
     assert goroh_calls == ["базиліка"]
+    assert not e2u_calls
+
+    # 6. e2u wins when Goroh misses
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
+    res_e2u = _translation(conn, "базиліка", {}, slovnyk_cache=empty_cache)
+    assert res_e2u is not None
+    assert res_e2u["source"] == E2U_LABEL
+    assert res_e2u["en"] == ["basilica"]
+    assert "source_url" in res_e2u
+    assert "e2u.org.ua" in res_e2u["source_url"]
+    assert e2u_calls == ["базиліка"]
 
 
 def test_goroh_translation_filters_non_english_and_caps_at_6(monkeypatch) -> None:
@@ -3120,6 +3142,229 @@ def test_goroh_translation_filters_non_english_and_caps_at_6(monkeypatch) -> Non
     assert translation is not None
     assert translation["en"] == ["one", "two", "three", "four", "five", "six"]
     assert translation["source"] == GOROH_LABEL
+
+
+def test_e2u_translation_ampir_uk_headword_exact(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "стил||ь", "translation": "style"},
+            {"headword": "ампір", "translation": "мист. ( стиль ) Empire style."},
+        ]
+        if lemma == "ампір"
+        else [],
+    )
+
+    translation = _translation(conn, "ампір", {})
+    assert translation is not None
+    assert translation["en"] == ["Empire style"]
+    assert translation["source"] == E2U_LABEL
+    assert translation["source_url"] == "https://e2u.org.ua/s?w=%D0%B0%D0%BC%D0%BF%D1%96%D1%80&dicts=all"
+
+
+def test_e2u_translation_shkola_expands_stem_ending_never_council(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "council", "translation": "рада (при міській школі)"},
+            {"headword": "школ||а", "translation": "ж. school, schoolhouse."},
+        ]
+        if lemma == "школа"
+        else [],
+    )
+
+    translation = _translation(conn, "школа", {})
+    assert translation is not None
+    assert "school" in translation["en"]
+    assert "council" not in translation["en"]
+    assert translation["source"] == E2U_LABEL
+
+
+def test_e2u_translation_stil_uk_headword_never_bench(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "bench", "translation": "лавка, лава, стіл суддів"},
+            {"headword": "стіл", "translation": "ч. table, desk."},
+        ]
+        if lemma == "стіл"
+        else [],
+    )
+
+    translation = _translation(conn, "стіл", {})
+    assert translation is not None
+    assert "table" in translation["en"]
+    assert "bench" not in translation["en"]
+    assert translation["source"] == E2U_LABEL
+
+
+def test_e2u_translation_vikno_expands_stem_ending_never_grille(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "grille", "translation": "грати, вікно каси"},
+            {"headword": "вікн||о", "translation": "с. window, casement."},
+        ]
+        if lemma == "вікно"
+        else [],
+    )
+
+    translation = _translation(conn, "вікно", {})
+    assert translation is not None
+    assert "window" in translation["en"]
+    assert "grille" not in translation["en"]
+    assert translation["source"] == E2U_LABEL
+
+
+def test_e2u_translation_knyha_multiple_en_reverse_returns_none(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "bankbook", "translation": "банківська книга"},
+            {"headword": "codebook", "translation": "шифрувальна книга"},
+        ]
+        if lemma == "книга"
+        else [],
+    )
+
+    translation = _translation(conn, "книга", {})
+    # Should fall back to None or curated if not present in curated
+    # 'книга' might be in curated translations or None
+    # Let's test _e2u_translation directly as well
+    e2u_res = enrich_manifest_module._e2u_translation("книга")
+    assert e2u_res is None
+
+
+def test_e2u_translation_ambiguous_reverse_returns_none(monkeypatch) -> None:
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "headword1", "translation": "приклад термін"},
+            {"headword": "headword2", "translation": "інший термін"},
+        ],
+    )
+    assert enrich_manifest_module._e2u_translation("термін") is None
+
+
+def test_e2u_translation_unique_reverse_returns_single_headword(monkeypatch) -> None:
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "uniqueheadword", "translation": "опис рідкіснийтермін у словнику"},
+        ],
+    )
+    res = enrich_manifest_module._e2u_translation("рідкіснийтермін")
+    assert res is not None
+    assert res["en"] == ["uniqueheadword"]
+    assert res["source"] == E2U_LABEL
+    assert res["source_url"] == "https://e2u.org.ua/s?w=%D1%80%D1%96%D0%B4%D0%BA%D1%96%D1%81%D0%BD%D0%B8%D0%B9%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD&dicts=all"
+
+
+def test_e2u_translation_pos_filtering(monkeypatch) -> None:
+    # Test POS filter on reverse: drops noun when looking for verb, keeps verb
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "nounword", "translation": "n. перевіркадія"},
+            {"headword": "verbword", "translation": "v. перевіркадія"},
+        ],
+    )
+    # With entry_pos="verb", nounword is filtered out, verbword remains as unique match
+    res = enrich_manifest_module._e2u_translation("перевіркадія", entry_pos="verb")
+    assert res is not None
+    assert res["en"] == ["verbword"]
+
+    # Fails open when row has no POS tag
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "untaggedword", "translation": "перевіркадія без мітки"},
+        ],
+    )
+    res_untagged = enrich_manifest_module._e2u_translation("перевіркадія", entry_pos="verb")
+    assert res_untagged is not None
+    assert res_untagged["en"] == ["untaggedword"]
+
+
+def test_e2u_translation_article_a_in_translation_not_treated_as_adjective(monkeypatch) -> None:
+    # Unique EN reverse whose translation contains ordinary article "a " (e.g. "a piece of furniture")
+    # with entry_pos="noun" still returns that unique headword, never treated as adj.
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "furniturepiece", "translation": "a piece of furniture: перевіркамеблі"},
+        ]
+        if lemma == "перевіркамеблі"
+        else [],
+    )
+    res = enrich_manifest_module._e2u_translation("перевіркамеблі", entry_pos="noun")
+    assert res is not None
+    assert res["en"] == ["furniturepiece"]
+    assert res["source"] == E2U_LABEL
+
+
+def test_e2u_translation_decode_html_entities(monkeypatch) -> None:
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_e2u_uk_en",
+        lambda lemma: [
+            {"headword": "тест", "translation": "<i>n.</i>&nbsp;first&amp;second,&nbsp;third"},
+        ],
+    )
+    res = enrich_manifest_module._e2u_translation("тест")
+    assert res is not None
+    assert res["en"] == ["first&second", "third"]
+
+
+def test_e2u_translation_offline_mode(monkeypatch) -> None:
+    called = False
+
+    def fake_e2u(lemma: str, **kwargs) -> list[dict[str, str]]:
+        nonlocal called
+        called = True
+        return [{"headword": "тест", "translation": "test"}]
+
+    monkeypatch.setattr("scripts.rag.source_query.e2u_translate", fake_e2u)
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
+    enrich_manifest_module.query_e2u_uk_en.cache_clear()
+    res = enrich_manifest_module.query_e2u_uk_en("тест_offline_unique")
+    assert res == []
+    assert not called
 
 
 def test_goroh_translate_mock_html_parsing(monkeypatch) -> None:
