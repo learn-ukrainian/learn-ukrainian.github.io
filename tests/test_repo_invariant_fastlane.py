@@ -36,6 +36,10 @@ _ROOT_IDENTIFIERS = frozenset(
 _ROOTISH_PARAMETERS = frozenset({"root", "repo_root", "project_root", "tests_root", "scripts_root"})
 _TREE_SEGMENTS = frozenset({"scripts", "tests", ".github"})
 _DISCOVERY_METHODS = frozenset({"glob", "rglob", "walk"})
+_SCANNER_PACKAGES = ("scripts.hygiene", "scripts.lint", "scripts.ci", "scripts.audit")
+_SCANNER_NAME_PREFIXES = ("find_", "lint_")
+_SCANNER_ROOT_PARAMETERS = _ROOTISH_PARAMETERS | {"primary_root", "repo"}
+_SCANNER_DISCOVERY_METHODS = _DISCOVERY_METHODS | {"iterdir"}
 
 # Every named adjudication from the #7250 critique is recorded here, including
 # positive decisions, so adding a candidate cannot silently become an omission.
@@ -264,11 +268,144 @@ def _is_discovered_path(node: ast.AST | None, root_aliases: set[str], tree_alias
     return _contains_tree_path(node, root_aliases, tree_aliases) or _has_tree_segment(node)
 
 
+def _dotted_name(node: ast.AST | None) -> str | None:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        prefix = _dotted_name(node.value)
+        return f"{prefix}.{node.attr}" if prefix else None
+    return None
+
+
+def _is_scanner_package(module: str) -> bool:
+    return any(module == package or module.startswith(f"{package}.") for package in _SCANNER_PACKAGES)
+
+
+def _module_source_path(module: str) -> Path | None:
+    candidate = REPO_ROOT / f"{module.replace('.', '/')}.py"
+    return candidate if candidate.is_file() else None
+
+
+def _function_parameters(node: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+    arguments = node.args
+    return {
+        argument.arg
+        for argument in (*arguments.posonlyargs, *arguments.args, *arguments.kwonlyargs)
+    }
+
+
+def _function_calls(node: ast.AST) -> set[str]:
+    called: set[str] = set()
+    for descendant in ast.walk(node):
+        if not isinstance(descendant, ast.Call):
+            continue
+        if isinstance(descendant.func, ast.Name):
+            called.add(descendant.func.id)
+    return called
+
+
+def _function_reaches_directory_discovery(
+    function_name: str,
+    functions: dict[str, ast.FunctionDef | ast.AsyncFunctionDef],
+    visiting: set[str] | None = None,
+) -> bool:
+    """Follow local helper calls to recognize imported directory scanners."""
+    function = functions.get(function_name)
+    if function is None:
+        return False
+    active = set() if visiting is None else set(visiting)
+    if function_name in active:
+        return False
+    active.add(function_name)
+
+    for node in ast.walk(function):
+        if not isinstance(node, ast.Call):
+            continue
+        if isinstance(node.func, ast.Attribute) and node.func.attr in _SCANNER_DISCOVERY_METHODS:
+            return True
+        if isinstance(node.func, ast.Name) and node.func.id == "glob":
+            return True
+
+    return any(
+        _function_reaches_directory_discovery(callee, functions, active)
+        for callee in _function_calls(function)
+        if callee in functions
+    )
+
+
+def _module_exposes_repo_scanner(module: str, helper_name: str) -> bool:
+    if not helper_name.startswith(_SCANNER_NAME_PREFIXES):
+        return False
+    source_path = _module_source_path(module)
+    if source_path is None:
+        return False
+    try:
+        tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+    except SyntaxError:
+        return False
+    if not _has_tree_segment(tree):
+        return False
+    functions = {
+        node.name: node
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    function = functions.get(helper_name)
+    return bool(
+        function
+        and _function_parameters(function) & _SCANNER_ROOT_PARAMETERS
+        and _function_reaches_directory_discovery(helper_name, functions)
+    )
+
+
+def _imported_scanner_bindings(tree: ast.AST) -> dict[str, tuple[str, str | None]]:
+    bindings: dict[str, tuple[str, str | None]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module and _is_scanner_package(node.module):
+            for alias in node.names:
+                if alias.name != "*":
+                    bindings[alias.asname or alias.name] = (node.module, alias.name)
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                if _is_scanner_package(alias.name) and alias.asname:
+                    bindings[alias.asname] = (alias.name, None)
+    return bindings
+
+
+def _references_imported_repo_scanner(tree: ast.AST) -> bool:
+    bindings = _imported_scanner_bindings(tree)
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        if isinstance(node.func, ast.Name):
+            binding = bindings.get(node.func.id)
+            if binding:
+                module, imported_name = binding
+                if imported_name and _module_exposes_repo_scanner(module, imported_name):
+                    return True
+            continue
+
+        if not isinstance(node.func, ast.Attribute):
+            continue
+        receiver = _dotted_name(node.func.value)
+        binding = bindings.get(receiver or "")
+        if not binding:
+            continue
+        module, imported_name = binding
+        imported_module = module if imported_name is None else f"{module}.{imported_name}"
+        if _module_exposes_repo_scanner(imported_module, node.func.attr):
+            return True
+    return False
+
+
 def _references_repo_tree(path: Path) -> bool:
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     except SyntaxError:
         return False
+
+    if _references_imported_repo_scanner(tree):
+        return True
 
     root_aliases, tree_aliases = _repo_tree_aliases(tree)
     for node in ast.walk(tree):
@@ -352,6 +489,10 @@ def test_repo_tree_invariants_are_listed_or_explicitly_exempted() -> None:
         "repo-tree test modules are absent from fastlane_always_tests.txt and the exemption table: "
         + ", ".join(uncovered)
     )
+
+
+def test_imported_repo_scanner_is_a_repo_tree_candidate() -> None:
+    assert _references_repo_tree(REPO_ROOT / "tests" / "test_path_safety.py")
 
 
 def test_fastlane_manifest_entries_are_fast_and_marked() -> None:
