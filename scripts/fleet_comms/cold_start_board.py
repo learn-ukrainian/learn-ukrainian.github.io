@@ -35,6 +35,13 @@ from scripts.fleet_comms.message_plane import (
     read_plane_status,
     resolve_plane_mode,
 )
+from scripts.fleet_comms.opsec_store import (
+    COMMS_RESPONSE_SCHEMA_VERSION,
+    batch_tasks_store,
+    comms_plane_store,
+    legacy_broker_store,
+    session_streams_store,
+)
 
 try:
     from agents_extensions.shared.session_streams.db import (
@@ -181,11 +188,12 @@ def _probe_backlog_and_dead_letters(
 
     if source == "authority":
         db_path = plane_root / "comms.sqlite3"
+        store = comms_plane_store(reachable=db_path.is_file())
         if not db_path.is_file():
             return {
                 "source": source,
                 "db_missing": True,
-                "db_path": str(db_path),
+                "store": store,
                 "backlog_total": 0,
                 "dead_letters_total": 0,
             }
@@ -196,11 +204,12 @@ def _probe_backlog_and_dead_letters(
         label = "authority"
     else:
         db_path = _resolve_broker_db_ro(root, repo_root)
+        store = legacy_broker_store(reachable=db_path.is_file())
         if not db_path.is_file():
             return {
                 "source": "legacy",
                 "db_missing": True,
-                "db_path": str(db_path),
+                "store": store,
                 "backlog_total": 0,
                 "dead_letters_total": 0,
             }
@@ -210,7 +219,7 @@ def _probe_backlog_and_dead_letters(
 
     return {
         "source": label,
-        "db_path": str(db_path),
+        "store": store,
         "db_exists": True,
         "backlog_total": backlog.get("total", 0),
         "backlog_by_agent": backlog.get("by_agent", {}),
@@ -246,8 +255,8 @@ def _probe_bottleneck_slice(
     return {
         "total_streams": len(streams),
         "slice": selected,
-        "tasks_dir": str(tasks_dir),
-        "plane_db": str(plane_db),
+        "tasks_store": batch_tasks_store(reachable=tasks_dir.is_dir()),
+        "plane_store": comms_plane_store(reachable=plane_db.is_file()),
         "db_missing": not plane_db.is_file(),
     }
 
@@ -385,7 +394,7 @@ def _probe_session_streams_and_handoff(
             data={
                 "stream_id": stream_id,
                 "db_exists": False,
-                "db_path": str(db_path),
+                "store": session_streams_store(reachable=False),
                 "reason": "session_streams_db_missing",
             },
         )
@@ -407,7 +416,7 @@ def _probe_session_streams_and_handoff(
             data={
                 "stream_id": stream_id,
                 "db_exists": True,
-                "db_path": str(db_path),
+                "store": session_streams_store(reachable=True),
                 "handoff": handoff_data,
                 "digest": digest_data,
             },
@@ -418,7 +427,11 @@ def _probe_session_streams_and_handoff(
             status="degraded",
             elapsed_ms=elapsed,
             error=str(exc),
-            data={"stream_id": stream_id, "db_exists": True, "db_path": str(db_path)},
+            data={
+                "stream_id": stream_id,
+                "db_exists": True,
+                "store": session_streams_store(reachable=True),
+            },
         )
 
 
@@ -449,7 +462,7 @@ def _probe_inbox_authority(
             "agent": agent,
             "inbox_pending_count": 0,
             "db_missing": True,
-            "db_path": str(plane_db),
+            "store": comms_plane_store(reachable=False),
             "recent_deliveries": [],
         }
 
@@ -466,7 +479,7 @@ def _probe_inbox_authority(
                 "source": "authority",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(plane_db),
+                "store": comms_plane_store(reachable=True),
                 "table_missing": True,
                 "recent_deliveries": [],
             }
@@ -517,7 +530,7 @@ def _probe_inbox_authority(
         "agent": agent,
         "matched_agent": matched_agent,
         "inbox_pending_count": total,
-        "db_path": str(plane_db),
+        "store": comms_plane_store(reachable=True),
         "recent_deliveries": deliveries,
     }
 
@@ -532,7 +545,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
             "agent": agent,
             "inbox_pending_count": 0,
             "db_missing": True,
-            "db_path": str(db_path),
+            "store": legacy_broker_store(reachable=False),
             "recent_deliveries": [],
         }
 
@@ -550,7 +563,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
                 "source": "legacy",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(db_path),
+                "store": legacy_broker_store(reachable=True),
                 "table_missing": True,
                 "recent_deliveries": [],
             }
@@ -563,7 +576,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
                 "source": "legacy",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(db_path),
+                "store": legacy_broker_store(reachable=True),
                 "schema_unsupported": True,
                 "recent_deliveries": [],
             }
@@ -572,7 +585,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
                 "source": "legacy",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(db_path),
+                "store": legacy_broker_store(reachable=True),
                 "schema_unsupported": True,
                 "recent_deliveries": [],
             }
@@ -659,7 +672,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
         "agent": agent,
         "matched_agent": matched_agent,
         "inbox_pending_count": total,
-        "db_path": str(db_path),
+        "store": legacy_broker_store(reachable=True),
         "recent_deliveries": deliveries,
     }
 
@@ -897,6 +910,7 @@ def build_cold_start_board(
     capped_probes = cap_data(probes, max_str=MAX_STRING_LEN, max_list=MAX_LIST_LEN)
 
     board: dict[str, Any] = {
+        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
         "timestamp": datetime.now(UTC).isoformat(),
         "board_status": board_status,
         "stream_id": eff_stream_id,

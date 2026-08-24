@@ -189,6 +189,34 @@ def _fixture_health_identity() -> dict[str, str | None]:
     }
 
 
+REAL_BOARD_PROBE_KEYS = frozenset(
+    {
+        "capsule_session_env",
+        "plane_status",
+        "backlog_and_dead_letters",
+        "bottleneck_slice",
+        "orient_lean",
+        "issues_streams_membership",
+        "session_streams_and_handoff",
+        "inbox_check",
+        "gh_pr_list",
+        "needle_search",
+    }
+)
+
+
+def _assert_real_cold_start_board_producer() -> None:
+    from scripts.fleet_comms.cold_start_board import build_cold_start_board as real_build
+
+    assert fleet_router.build_cold_start_board is real_build
+
+
+def _assert_board_payload_is_real_shape(payload: dict[str, Any]) -> None:
+    probes = payload.get("probes") or {}
+    assert REAL_BOARD_PROBE_KEYS.issubset(probes.keys())
+    assert "db_path" not in json.dumps(payload)
+
+
 def _fixture_cold_start_board(
     *,
     stream_id: str | None = None,
@@ -234,7 +262,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
     monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
-    monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
     monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
@@ -579,6 +606,27 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
     )
     with pytest.raises(AssertionError, match="expired"):
         _validate_known_leaks([expired], [matching])
+
+
+def test_sweep_seam_honesty_requires_real_cold_start_board_producer(
+    isolated_fixture: IsolatedFixture,
+) -> None:
+    del isolated_fixture
+    _assert_real_cold_start_board_producer()
+    client = TestClient(api_main.app, raise_server_exceptions=False)
+    response = client.get("/api/fleet/facade/board")
+    assert response.status_code == 200
+    _assert_board_payload_is_real_shape(response.json())
+
+
+def test_sweep_cold_start_board_stub_restoration_fails_seam_honesty(
+    isolated_fixture: IsolatedFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    del isolated_fixture
+    monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
+    with pytest.raises(AssertionError):
+        _assert_real_cold_start_board_producer()
 
 
 def test_isolated_fixture_denies_network_and_subprocess(isolated_fixture: IsolatedFixture) -> None:

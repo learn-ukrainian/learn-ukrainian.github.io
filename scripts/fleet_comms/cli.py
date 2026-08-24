@@ -49,7 +49,11 @@ from scripts.fleet_comms.efficiency_metrics import (
 from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
-from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
+from scripts.fleet_comms.opsec_store import (
+    COMMS_RESPONSE_SCHEMA_VERSION,
+    comms_plane_store,
+    legacy_broker_store,
+)
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
 EXIT_OK = 0
@@ -220,13 +224,15 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     if source == "authority":
         db = _resolve_plane_db(args)
+        store = comms_plane_store(reachable=db.is_file())
         if not db.is_file():
             sys.stdout.write(
                 _json_dump(
                     {
+                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
                         "content_included": False,
                         "db_missing": True,
-                        "db_path": str(db),
+                        "store": store,
                         "source": source,
                     }
                 )
@@ -235,20 +241,23 @@ def cmd_metrics(args: argparse.Namespace) -> int:
         payload = collect_efficiency_metrics_authority(db)
     else:
         db = _resolve_message_db(args)
+        store = legacy_broker_store(reachable=db.is_file())
         if not db.is_file():
             sys.stdout.write(
                 _json_dump(
                     {
+                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
                         "content_included": False,
                         "db_missing": True,
-                        "db_path": str(db),
+                        "store": store,
                         "source": source,
                     }
                 )
             )
             return EXIT_OK
         payload = collect_efficiency_metrics(db)
-    payload["db_path"] = str(db)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = store
     payload["source"] = source
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
@@ -280,16 +289,18 @@ def cmd_backlog(args: argparse.Namespace) -> int:
     exclude_retired = not args.include_retired
     if source == "authority":
         db = _resolve_plane_db(args)
+        store = comms_plane_store(reachable=db.is_file())
         if not db.is_file():
             sys.stdout.write(
                 _json_dump(
                     {
+                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
                         "total": 0,
                         "by_agent": {},
                         "by_status": {},
                         "rows": [],
                         "db_missing": True,
-                        "db_path": str(db),
+                        "store": store,
                         "source": source,
                     }
                 )
@@ -302,16 +313,18 @@ def cmd_backlog(args: argparse.Namespace) -> int:
         )
     else:
         db = _resolve_message_db(args)
+        store = legacy_broker_store(reachable=db.is_file())
         if not db.is_file():
             sys.stdout.write(
                 _json_dump(
                     {
+                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
                         "total": 0,
                         "by_agent": {},
                         "by_status": {},
                         "rows": [],
                         "db_missing": True,
-                        "db_path": str(db),
+                        "store": store,
                         "source": source,
                     }
                 )
@@ -322,7 +335,8 @@ def cmd_backlog(args: argparse.Namespace) -> int:
             limit=args.limit,
             exclude_retired=exclude_retired,
         )
-    payload["db_path"] = str(db)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = store
     payload["content_included"] = False
     payload["source"] = source
     sys.stdout.write(_json_dump(payload))
@@ -334,15 +348,17 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     if source == "authority":
         db = _resolve_plane_db(args)
+        store = comms_plane_store(reachable=db.is_file())
         if not db.is_file():
             sys.stdout.write(
                 _json_dump(
                     {
+                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
                         "total": 0,
                         "by_reason": {},
                         "rows": [],
                         "db_missing": True,
-                        "db_path": str(db),
+                        "store": store,
                         "source": source,
                     }
                 )
@@ -351,22 +367,25 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
         payload = collect_dead_letters_authority(db, limit=args.limit)
     else:
         db = _resolve_message_db(args)
+        store = legacy_broker_store(reachable=db.is_file())
         if not db.is_file():
             sys.stdout.write(
                 _json_dump(
                     {
+                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
                         "total": 0,
                         "by_reason": {},
                         "rows": [],
                         "db_missing": True,
-                        "db_path": str(db),
+                        "store": store,
                         "source": source,
                     }
                 )
             )
             return EXIT_OK
         payload = collect_dead_letters(db, limit=args.limit)
-    payload["db_path"] = str(db)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = store
     payload["content_included"] = False
     payload["source"] = source
     sys.stdout.write(_json_dump(payload))

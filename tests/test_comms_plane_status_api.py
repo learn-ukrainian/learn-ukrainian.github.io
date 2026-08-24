@@ -6,6 +6,7 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -123,3 +124,60 @@ def test_api_plane_status_invalid_mode(monkeypatch, tmp_path: Path) -> None:
     assert data["mode"] == "invalid"
     assert data["enabled"] is False
     assert data["mode_error"] == "invalid_mode"
+
+
+def test_comms_v1_collectors_emit_store_not_db_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("scripts.api.comms_router.MESSAGE_DB", tmp_path / "missing.db")
+    client = _client()
+    for path in ("/api/comms/v1/backlog", "/api/comms/v1/dead-letters", "/api/comms/v1/metrics"):
+        response = client.get(path)
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["response_schema_version"] == "comms.v2"
+        assert "store" in payload
+        assert payload["store"]["kind"] == "legacy-broker"
+        assert "db_path" not in payload
+
+
+def test_comms_v1_collectors_with_seeded_broker(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    broker = tmp_path / "messages.db"
+    conn = sqlite3.connect(broker)
+    conn.executescript(
+        """
+        CREATE TABLE channel_messages (
+          message_id TEXT PRIMARY KEY,
+          channel TEXT,
+          from_agent TEXT,
+          kind TEXT,
+          body TEXT,
+          created_at TEXT
+        );
+        CREATE TABLE deliveries (
+          delivery_id TEXT PRIMARY KEY,
+          message_id TEXT,
+          to_agent TEXT,
+          to_model TEXT,
+          status TEXT,
+          dispatched_at TEXT,
+          delivered_at TEXT,
+          attempt_count INTEGER DEFAULT 0
+        );
+        """
+    )
+    conn.close()
+    monkeypatch.setattr("scripts.api.comms_router.MESSAGE_DB", broker)
+    client = _client()
+    backlog = client.get("/api/comms/v1/backlog").json()
+    dead = client.get("/api/comms/v1/dead-letters").json()
+    metrics = client.get("/api/comms/v1/metrics").json()
+    for payload in (backlog, dead, metrics):
+        assert payload["response_schema_version"] == "comms.v2"
+        assert payload["store"]["kind"] == "legacy-broker"
+        assert payload["store"]["reachable"] is True
+        assert "db_path" not in payload

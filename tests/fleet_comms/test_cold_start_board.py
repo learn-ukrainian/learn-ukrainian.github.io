@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -475,6 +476,38 @@ def test_probe_backlog_labels_legacy_source(tmp_path: Path, monkeypatch) -> None
     assert data["source"] == "legacy"
     assert data["backlog_total"] == 2
     assert data["backlog_by_agent"].get("claude") == 2
+
+
+def test_board_payload_has_no_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Mutation guard: board JSON must never expose filesystem db_path fields."""
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    board = build_cold_start_board(repo_root=tmp_path, agent="claude")
+    blob = json.dumps(board)
+    assert "db_path" not in blob
+    assert board["response_schema_version"] == "comms.v2"
+
+
+def test_board_db_path_mutation_is_caught(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    original = _probe_backlog_and_dead_letters
+
+    def leaky_backlog(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        data = original(*args, **kwargs)
+        data["db_path"] = "/secret/comms.sqlite3"
+        return data
+
+    monkeypatch.setattr(
+        "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
+        leaky_backlog,
+    )
+    board = build_cold_start_board(repo_root=tmp_path, agent="claude")
+    with pytest.raises(AssertionError):
+        assert "db_path" not in json.dumps(board)
 
 
 def test_orient_lean_requests_lean_true():

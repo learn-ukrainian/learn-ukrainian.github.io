@@ -18,3 +18,23 @@ def store_descriptor(
     if schema_versions is not None:
         payload["schema_versions"] = schema_versions
     return payload
+
+
+def comms_plane_store(*, reachable: bool, schema_versions: dict[str, Any] | None = None) -> dict[str, Any]:
+    return store_descriptor(
+        kind="comms-plane",
+        reachable=reachable,
+        schema_versions=schema_versions,
+    )
+
+
+def legacy_broker_store(*, reachable: bool) -> dict[str, Any]:
+    return store_descriptor(kind="legacy-broker", reachable=reachable)
+
+
+def session_streams_store(*, reachable: bool) -> dict[str, Any]:
+    return store_descriptor(kind="session-streams", reachable=reachable)
+
+
+def batch_tasks_store(*, reachable: bool) -> dict[str, Any]:
+    return store_descriptor(kind="batch-tasks", reachable=reachable)

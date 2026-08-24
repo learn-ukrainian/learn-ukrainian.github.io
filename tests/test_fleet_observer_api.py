@@ -211,11 +211,6 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     _seed_plane(fleet_root)
     monkeypatch.setattr(
         fleet_router,
-        "build_cold_start_board",
-        lambda **_kwargs: {"board_status": "ok", "probes": {}},
-    )
-    monkeypatch.setattr(
-        fleet_router,
         "_facade_reap_report",
         lambda: {"read_only": True, "apply": False, "report": []},
     )
@@ -250,7 +245,11 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert "plane_root" not in status.json()["plane_status"]
     assert "db_path" not in status.json()["plane_status"]["schema"]
     assert "path" not in status.json()["plane_status"]["parity_telemetry"]
-    assert board.json() == {"board_status": "ok", "probes": {}}
+    board_payload = board.json()
+    assert board_payload["response_schema_version"] == "comms.v2"
+    assert board_payload["board_status"] in {"ok", "degraded"}
+    assert "backlog_and_dead_letters" in board_payload["probes"]
+    assert "db_path" not in json.dumps(board_payload)
     assert metrics.json()["source"] == "authority"
     assert metrics.json()["read_only"] is True
     assert "db_path" not in metrics.json()
@@ -264,6 +263,22 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert all("path" not in store for store in broker.json()["stores"])
     assert broker.json()["read_only"] is True
     assert reap.json() == {"read_only": True, "apply": False, "report": []}
+
+
+def test_facade_board_real_producer_emits_no_db_path(
+    client: TestClient,
+    fleet_root: Path,
+) -> None:
+    _seed_plane(fleet_root)
+    response = client.get("/api/fleet/facade/board", params={"stream_id": "core", "agent": "claude"})
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["response_schema_version"] == "comms.v2"
+    assert "db_path" not in json.dumps(payload)
+    backlog_probe = payload["probes"]["backlog_and_dead_letters"]["data"]
+    assert backlog_probe is not None
+    assert "store" in backlog_probe
+    assert backlog_probe["store"]["kind"] in {"comms-plane", "legacy-broker"}
 
 
 def test_facade_missing_plane_db_is_fail_open(

@@ -363,3 +363,41 @@ def test_acp_verify_cli_maps_missing_receipt_to_not_found(
 
     assert rc == EXIT_NOT_FOUND
     assert "receipt missing" in capsys.readouterr().err
+
+
+def test_cli_collectors_emit_store_not_db_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    missing_broker = tmp_path / "missing.db"
+    monkeypatch.setenv("AB_DB_PATH", str(missing_broker))
+
+    for command in ("metrics", "backlog", "dead-letters"):
+        rc = main([command, "--legacy"])
+        assert rc == EXIT_OK
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["response_schema_version"] == "comms.v2"
+        assert payload["store"]["kind"] == "legacy-broker"
+        assert payload["store"]["reachable"] is False
+        assert "db_path" not in payload
+
+
+def test_cli_authority_collectors_emit_store_not_db_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+) -> None:
+    root = tmp_path / "plane"
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+
+    for command in ("metrics", "backlog", "dead-letters"):
+        rc = main([command, "--root", str(root)])
+        assert rc == EXIT_OK
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["response_schema_version"] == "comms.v2"
+        assert payload["store"]["kind"] == "comms-plane"
+        assert payload["store"]["reachable"] is False
+        assert "db_path" not in payload
