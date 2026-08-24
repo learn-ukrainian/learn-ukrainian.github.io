@@ -5,8 +5,6 @@ from contextlib import contextmanager
 from types import SimpleNamespace
 from unittest.mock import patch
 
-import pytest
-
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.ai_agent_bridge import _cli, _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
@@ -30,9 +28,7 @@ def _run_grok_turn_with_events(monkeypatch, tmp_path, events: list[dict] | None)
     session_dir = tmp_path / "session"
     if events is not None:
         session_dir.mkdir()
-        (session_dir / "events.jsonl").write_text(
-            "\n".join(json.dumps(event) for event in events), encoding="utf-8"
-        )
+        (session_dir / "events.jsonl").write_text("\n".join(json.dumps(event) for event in events), encoding="utf-8")
     monkeypatch.setattr(_grok_build, "_fetch_grok_build_message", lambda _message_id: _grok_bridge_message())
     monkeypatch.setattr(_grok_build, "grok_session_dir", lambda *_args: session_dir)
     monkeypatch.setattr(_grok_build, "acknowledge", lambda *_args: None)
@@ -83,9 +79,7 @@ def test_grok_cancelled_turn_is_typed_error_with_banner(monkeypatch, tmp_path):
 
     reply = sent[-1]
     assert reply["msg_type"] == "error"
-    assert reply["content"].startswith(
-        "⚠️ TURN NOT COMPLETED (cancelled/permission_cancelled)"
-    )
+    assert reply["content"].startswith("⚠️ TURN NOT COMPLETED (cancelled/permission_cancelled)")
     metadata = json.loads(reply["data"])
     assert metadata["turn_outcome"] == "cancelled"
     assert metadata["cancellation_category"] == "permission_cancelled"
@@ -146,9 +140,7 @@ def test_ask_grok_build_review_flag_runs_as_normal_ask(monkeypatch):
 
     sentinel = object()
     monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", lambda *a, **k: sentinel)
-    result = _acp_compat.run_compat_ask(
-        "grok-build", "hello", task_id="task-1", review=True
-    )
+    result = _acp_compat.run_compat_ask("grok-build", "hello", task_id="task-1", review=True)
     assert result is sentinel
 
 
@@ -237,8 +229,10 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
     monkeypatch.setattr(
         _grok_build.agent_runner,
         "invoke",
-        lambda *args, **kwargs: captured.update({"prompt": args[1], **kwargs})
-        or SimpleNamespace(ok=True, response="reply", session_id=None, model="grok-4.6"),
+        lambda *args, **kwargs: (
+            captured.update({"prompt": args[1], **kwargs})
+            or SimpleNamespace(ok=True, response="reply", session_id=None, model="grok-4.6")
+        ),
     )
 
     _grok_build.process_for_grok_build(9, review=True)

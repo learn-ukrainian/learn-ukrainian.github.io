@@ -79,9 +79,7 @@ def test_ask_branch_routes_to_headless_dispatch_not_acp(
 
 def test_ask_pr_and_branch_remain_mutually_exclusive() -> None:
     with pytest.raises(SystemExit):
-        _cli._build_parser().parse_args(
-            ["ask-claude", "body", "--task-id", "t", "--pr", "1", "--branch", "b"]
-        )
+        _cli._build_parser().parse_args(["ask-claude", "body", "--task-id", "t", "--pr", "1", "--branch", "b"])
 
 
 def test_ask_pr_no_longer_refuses_with_review_pr_circle(
@@ -98,9 +96,7 @@ def test_ask_pr_no_longer_refuses_with_review_pr_circle(
     assert captured_dispatch["agent"] == "codex"
 
 
-def test_ask_pr_type_review_does_not_reach_acp(
-    acp_guard: dict[str, int], captured_dispatch: dict[str, object]
-) -> None:
+def test_ask_pr_type_review_does_not_reach_acp(acp_guard: dict[str, int], captured_dispatch: dict[str, object]) -> None:
     """Exact #7155 acceptance scenario: ask-codex --pr <N> --type review."""
     args = _cli._build_parser().parse_args(
         [
@@ -150,7 +146,7 @@ def test_ordinary_ask_without_review_intent_still_uses_acp(
 def test_ask_help_no_longer_requires_review_pr() -> None:
     parser = _cli._build_parser()
     help_text = parser.format_help()
-    for sub in parser._subparsers._group_actions:  # noqa: SLF001
+    for sub in parser._subparsers._group_actions:
         for action in getattr(sub, "choices", {}).values():
             help_text += "\n" + action.format_help()
     assert "formal review targets require the review-pr command" not in help_text

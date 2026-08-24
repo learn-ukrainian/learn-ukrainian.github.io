@@ -92,17 +92,13 @@ def test_rb6_references_estate_registry_entries() -> None:
 
 def _assert_registry_decoupled_from_commands(estate_data: dict, rb6_data: dict) -> None:
     surfaces = estate_data["surfaces"]
-    step_commands = " ".join(
-        s["command"]["argv"][-1] for s in rb6_data["steps"] if s["command"]["argv"]
-    )
+    step_commands = " ".join(s["command"]["argv"][-1] for s in rb6_data["steps"] if s["command"]["argv"])
     ssh_aliases = {v["ssh_alias"] for v in surfaces["vps_hosts"]}
     for vps in surfaces["vps_hosts"]:
         assert vps["ssh_alias"] not in step_commands, (
             f"registry ssh alias '{vps['ssh_alias']}' must not appear in RB-6 probe commands"
         )
-        assert vps["role"] not in step_commands, (
-            f"registry role '{vps['role']}' must not appear in RB-6 probe commands"
-        )
+        assert vps["role"] not in step_commands, f"registry role '{vps['role']}' must not appear in RB-6 probe commands"
     for service in surfaces["services"]:
         assert service["host_alias"] not in step_commands, (
             f"registry host alias '{service['host_alias']}' must not appear in RB-6 probe commands"
@@ -124,18 +120,14 @@ def _assert_registry_decoupled_from_commands(estate_data: dict, rb6_data: dict) 
         )
 
     for env_key in ("RB6_PROBE_SSH", "RB6_PROBE_UNIT", "RB6_PROBE_REPO", "RB6_PROBE_SITE"):
-        assert env_key in step_commands, (
-            f"RB-6 probe commands must use runtime env placeholder {env_key}"
-        )
+        assert env_key in step_commands, f"RB-6 probe commands must use runtime env placeholder {env_key}"
 
 
 def test_negative_rb6_cross_linked_host_alias_fails_decoupling() -> None:
     """Mutation negative: cross-linking host_alias to ssh_alias FAILS the decoupling pin."""
     estate_data = _load_yaml(ESTATE_PATH)
     rb6_data = _load_yaml(RB6_TRAIL_PATH)
-    estate_data["surfaces"]["services"][0]["host_alias"] = estate_data["surfaces"]["vps_hosts"][0][
-        "ssh_alias"
-    ]
+    estate_data["surfaces"]["services"][0]["host_alias"] = estate_data["surfaces"]["vps_hosts"][0]["ssh_alias"]
     with pytest.raises(AssertionError, match="cross-link"):
         _assert_registry_decoupled_from_commands(estate_data, rb6_data)
 
@@ -219,13 +211,13 @@ def _verify_step_reachability(spec: dict[str, Any]) -> None:
         sh_prog = cmd_argv[2] if len(cmd_argv) > 2 else " ".join(cmd_argv)
         passthrough = KNOWN_PASSTHROUGH_VOCABULARY.get((trail_id, step_id), set())
 
-        for trans_key in step["transitions"].keys():
-            is_literal = trans_key in sh_prog
-            is_passthrough = trans_key in passthrough
-            assert is_literal or is_passthrough, (
-                f"Dead transition key '{trans_key}' in step '{step_id}' of trail '{trail_id}'. "
-                f"Transition key does not appear in sh -c program nor in documented pass-through vocabulary."
-            )
+    for trans_key in step["transitions"]:
+        is_literal = trans_key in sh_prog
+        is_passthrough = trans_key in passthrough
+        assert is_literal or is_passthrough, (
+            f"Dead transition key '{trans_key}' in step '{step_id}' of trail '{trail_id}'. "
+            f"Transition key does not appear in sh -c program nor in documented pass-through vocabulary."
+        )
 
 
 def test_rb1_rb6_transition_reachability() -> None:

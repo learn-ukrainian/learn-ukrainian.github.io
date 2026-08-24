@@ -36,7 +36,6 @@ IMPORT_DISTRIBUTIONS = {
     "PIL": "pillow",
     "pymorphy3": "pymorphy3",
     "pymorphy3_dicts_uk": "pymorphy3-dicts-uk",
-    "pydantic": "pydantic",
     "pypdf": "pypdf",
     "psutil": "psutil",
     "pydantic": "pydantic",
