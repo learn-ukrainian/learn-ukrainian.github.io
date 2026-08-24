@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 91826,
-      "output": 14782,
+      "input": 94089,
+      "output": 16265,
       "reasoning": 0,
       "cache": {
-        "read": 2384256,
+        "read": 2762752,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1787615256635,
-      "updated": 1787615878025
+      "updated": 1787615969319
     }
   },
   "messages": [
@@ -4262,19 +4262,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 94955,
+          "input": 588,
+          "output": 607,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 93760
           }
         },
         "modelID": "stealth/ox-alpha",
         "providerID": "openrouter",
         "time": {
-          "created": 1787615878023
+          "created": 1787615878023,
+          "completed": 1787615909444
         },
+        "finish": "tool-calls",
         "id": "msg_036359b870012DeuufLv2645lO",
         "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG"
       },
@@ -4291,16 +4294,21 @@
           "tool": "bash",
           "callID": "8e0362ae-af7d-4861-92cd-13b5740c1504",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git commit -m \"$(cat <<'EOF'\nfix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\n\nSlice 11 of the #7176 timeout burn-down: all six timeout-less\nsubprocess.run calls under scripts/projects/ua_open_weight_eval/ now\npass explicit timeout= and map subprocess.TimeoutExpired onto the\nexisting failure shapes (no new crash path):\n\n- hf_jobs_baseline.source_commit: git probe bounded at 30s ->\n  BaselineError\n- hf_jobs_baseline.job_command: `hf --version` probe bounded at 30s ->\n  BaselineError\n- hf_jobs_baseline.launch_once: local `hf jobs run --detach`\n  handshake (job ID, not the GPU job) bounded at 120s -> state marked\n  launch_response_failed_reconcile_required + BaselineError\n- hf_jobs_transport.run_worker: uv plugin install bounded at 300s ->\n  TransportError; inner python worker bounded by documented constant\n  WORKER_TIMEOUT_SECONDS=3600 (no job-timeout label reaches this\n  in-container call) -> non-zero return 124\n- suite_cli.run_local: offline runner bounded by documented constant\n  LOCAL_RUNNER_TIMEOUT_SECONDS=1800 (RUN_CONFIG_FIELDS has no timeout\n  field and is closed) -> SuiteError\n\nClobber self-audit: the six deleted allowlist lines are exactly the\nsix intended call sites (verified against the full diff); no adjacent\nallowlist entries were touched. Remaining ua_open_weight_eval\nallowlist keys: 0.\n\nrelease_receipt.json artifacts.suite_cli is updated to the new hash of\nsuite_cli.py, following the established precedent from #6277 where a\nsuite_cli.py change shipped with its receipt-hash update; without it\nverify_release() (and tests/test_ua_open_weight_eval.py) fail closed.\n\nStanding items: test_transport_spawns_gpu_worker_with_available_python3\nnow accepts **kwargs and asserts an int > 0 timeout on both calls;\nnew tests/test_ua_open_weight_eval_timeouts.py mocks subprocess.run to\nassert each timeout value plus TimeoutExpired mapping for every site,\nand smoke-covers module imports and --help entry points.\n\nAcceptance:\n- pytest tests/test_subprocess_timeout_guard.py\n  tests/test_ua_open_weight_eval_timeouts.py\n  tests/test_ua_open_weight_eval_hf_jobs.py\n  tests/test_ua_open_weight_eval.py -q  => 52 passed\n- ruff check on all touched py files => clean\n\nX-Agent: ox-alpha/timeout-burndown-7213-s11\nEOF\n)\" && git log --oneline -1 && git log -1 --format='%B' | tail -3",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11"
             },
+            "output": "[ox-alpha/timeout-burndown-7213-s11 9a923d3f20] fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\n 7 files changed, 326 insertions(+), 23 deletions(-)\n create mode 100644 tests/test_ua_open_weight_eval_timeouts.py\n9a923d3f20 fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\nX-Agent: ox-alpha/timeout-burndown-7213-s11\nEntire-Checkpoint: 069c73d6ab81\n\n",
+            "metadata": {
+              "output": "[ox-alpha/timeout-burndown-7213-s11 9a923d3f20] fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\n 7 files changed, 326 insertions(+), 23 deletions(-)\n create mode 100644 tests/test_ua_open_weight_eval_timeouts.py\n9a923d3f20 fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\nX-Agent: ox-alpha/timeout-burndown-7213-s11\nEntire-Checkpoint: 069c73d6ab81\n\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git commit -m \"$(cat <<'EOF'\nfix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\n\nSlice 11 of the #7176 timeout burn-down: all six timeout-less\nsubprocess.run calls under scripts/projects/ua_open_weight_eval/ now\npass explicit timeout= and map subprocess.TimeoutExpired onto the\nexisting failure shapes (no new crash path):\n\n- hf_jobs_baseline.source_commit: git probe bounded at 30s ->\n  BaselineError\n- hf_jobs_baseline.job_command: `hf --version` probe bounded at 30s ->\n  BaselineError\n- hf_jobs_baseline.launch_once: local `hf jobs run --detach`\n  handshake (job ID, not the GPU job) bounded at 120s -> state marked\n  launch_response_failed_reconcile_required + BaselineError\n- hf_jobs_transport.run_worker: uv plugin install bounded at 300s ->\n  TransportError; inner python worker bounded by documented constant\n  WORKER_TIMEOUT_SECONDS=3600 (no job-timeout label reaches this\n  in-container call) -> non-zero return 124\n- suite_cli.run_local: offline runner bounded by documented constant\n  LOCAL_RUNNER_TIMEOUT_SECONDS=1800 (RUN_CONFIG_FIELDS has no timeout\n  field and is closed) -> SuiteError\n\nClobber self-audit: the six deleted allowlist lines are exactly the\nsix intended call sites (verified against the full diff); no adjacent\nallowlist entries were touched. Remaining ua_open_weight_eval\nallowlist keys: 0.\n\nrelease_receipt.json artifacts.suite_cli is updated to the new hash of\nsuite_cli.py, following the established precedent from #6277 where a\nsuite_cli.py change shipped with its receipt-hash update; without it\nverify_release() (and tests/test_ua_open_weight_eval.py) fail closed.\n\nStanding items: test_transport_spawns_gpu_worker_with_available_python3\nnow accepts **kwargs and asserts an int > 0 timeout on both calls;\nnew tests/test_ua_open_weight_eval_timeouts.py mocks subprocess.run to\nassert each timeout value plus TimeoutExpired mapping for every site,\nand smoke-covers module imports and --help entry points.\n\nAcceptance:\n- pytest tests/test_subprocess_timeout_guard.py\n  tests/test_ua_open_weight_eval_timeouts.py\n  tests/test_ua_open_weight_eval_hf_jobs.py\n  tests/test_ua_open_weight_eval.py -q  => 52 passed\n- ruff check on all touched py files => clean\n\nX-Agent: ox-alpha/timeout-burndown-7213-s11\nEOF\n)\" && git log --oneline -1 && git log -1 --format='%B' | tail -3",
             "time": {
-              "start": 1787615901723
+              "start": 1787615909256,
+              "end": 1787615909264
             }
           },
           "metadata": {
@@ -4311,6 +4319,390 @@
           "id": "prt_03635bf5e001xLAKOColpWqkiW",
           "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
           "messageID": "msg_036359b870012DeuufLv2645lO"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-finish",
+          "tokens": {
+            "total": 94955,
+            "input": 588,
+            "output": 607,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 93760
+            }
+          },
+          "cost": 0,
+          "id": "prt_0363615fc001EkXs7RXDnXitWY",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036359b870012DeuufLv2645lO"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0362c20830011qmak3myTb9T8e",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 95343,
+          "input": 760,
+          "output": 247,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 94336
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787615909456,
+          "completed": 1787615959997
+        },
+        "finish": "tool-calls",
+        "id": "msg_036361650001NidAOUshi7t5lJ",
+        "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG"
+      },
+      "parts": [
+        {
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-start",
+          "id": "prt_036362c44001MpXeYmLrEXYtUe",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036361650001NidAOUshi7t5lJ"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed. Final verification of acceptance commands on the committed state (already run, but let me re-run the exact acceptance quote one final time to report raw output).",
+          "time": {
+            "start": 1787615915082,
+            "end": 1787615916136
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "Committed. Final verification of acceptance commands on the committed state (already run, but let me re-run the exact acceptance quote one final time to report raw output).",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "id": "prt_036362c4a001cOaKvQ8JdXT0oL",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036361650001NidAOUshi7t5lJ"
+        },
+        {
+          "type": "text",
+          "text": "Final acceptance run on the committed state:",
+          "time": {
+            "start": 1787615916140,
+            "end": 1787615918727
+          },
+          "id": "prt_03636306b001Ltwl4ijl7GHGdX",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036361650001NidAOUshi7t5lJ"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "1c011bb2-947d-4a1c-a2d4-f549877b3989",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_subprocess_timeout_guard.py tests/test_ua_open_weight_eval_timeouts.py tests/test_ua_open_weight_eval_hf_jobs.py tests/test_ua_open_weight_eval.py -q 2>&1 | tail -3 && /home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py scripts/projects/ua_open_weight_eval/hf_jobs_transport.py scripts/projects/ua_open_weight_eval/suite_cli.py tests/test_ua_open_weight_eval_timeouts.py tests/test_ua_open_weight_eval_hf_jobs.py && git status --porcelain; git log --oneline -1",
+              "timeout": 600000,
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11"
+            },
+            "output": "tests/test_ua_open_weight_eval.py .............                          [100%]\n\n============================= 52 passed in 24.52s ==============================\n\u001b[1;32mAll checks passed!\u001b[0m\n9a923d3f20 fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\n",
+            "metadata": {
+              "output": "tests/test_ua_open_weight_eval.py .............                          [100%]\n\n============================= 52 passed in 24.52s ==============================\n\u001b[1;32mAll checks passed!\u001b[0m\n9a923d3f20 fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_subprocess_timeout_guard.py tests/test_ua_open_weight_eval_timeouts.py tests/test_ua_open_weight_eval_hf_jobs.py tests/test_ua_open_weight_eval.py -q 2>&1 | tail -3 && /home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py scripts/projects/ua_open_weight_eval/hf_jobs_transport.py scripts/projects/ua_open_weight_eval/suite_cli.py tests/test_ua_open_weight_eval_timeouts.py tests/test_ua_open_weight_eval_hf_jobs.py && git status --porcelain; git log --oneline -1",
+            "time": {
+              "start": 1787615959811,
+              "end": 1787615959819
+            }
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "Committed. Final verification of acceptance commands on the committed state (already run, but let me re-run the exact acceptance quote one final time to report raw output).",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "id": "prt_03636312d0017U2WDVvilq3CfD",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036361650001NidAOUshi7t5lJ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-finish",
+          "tokens": {
+            "total": 95343,
+            "input": 760,
+            "output": 247,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 94336
+            }
+          },
+          "cost": 0,
+          "id": "prt_03636db64001w1Gci72BzVyPn9",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036361650001NidAOUshi7t5lJ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0362c20830011qmak3myTb9T8e",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 95637,
+          "input": 374,
+          "output": 223,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 95040
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787615960009,
+          "completed": 1787615969307
+        },
+        "finish": "tool-calls",
+        "id": "msg_03636dbc9001BEKdM268TNdWCv",
+        "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG"
+      },
+      "parts": [
+        {
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-start",
+          "id": "prt_03636f4a9001U77r45PohwneC5",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_03636dbc9001BEKdM268TNdWCv"
+        },
+        {
+          "type": "tool",
+          "tool": "todowrite",
+          "callID": "794fc9f2-9a3e-46cf-958b-eaafc1a4ab77",
+          "state": {
+            "status": "completed",
+            "input": {
+              "todos": [
+                {
+                  "content": "Read the three target modules and allowlist",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Add timeout= to 6 subprocess.run call sites + map TimeoutExpired to failure shapes",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Update test_transport_spawns_gpu_worker_with_available_python3 for **kwargs",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Create tests/test_ua_open_weight_eval_timeouts.py (mock subprocess.run, assert timeout, TimeoutExpired mapping)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Remove 6 allowlist lines; verify remaining ua_open_weight_eval keys = 0",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Run pytest + ruff acceptance",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Commit locally with X-Agent trailer",
+                  "priority": "medium",
+                  "status": "completed"
+                }
+              ]
+            },
+            "output": "[\n  {\n    \"content\": \"Read the three target modules and allowlist\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Add timeout= to 6 subprocess.run call sites + map TimeoutExpired to failure shapes\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Update test_transport_spawns_gpu_worker_with_available_python3 for **kwargs\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Create tests/test_ua_open_weight_eval_timeouts.py (mock subprocess.run, assert timeout, TimeoutExpired mapping)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Remove 6 allowlist lines; verify remaining ua_open_weight_eval keys = 0\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run pytest + ruff acceptance\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Commit locally with X-Agent trailer\",\n    \"status\": \"completed\",\n    \"priority\": \"medium\"\n  }\n]",
+            "metadata": {
+              "todos": [
+                {
+                  "content": "Read the three target modules and allowlist",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Add timeout= to 6 subprocess.run call sites + map TimeoutExpired to failure shapes",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Update test_transport_spawns_gpu_worker_with_available_python3 for **kwargs",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Create tests/test_ua_open_weight_eval_timeouts.py (mock subprocess.run, assert timeout, TimeoutExpired mapping)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Remove 6 allowlist lines; verify remaining ua_open_weight_eval keys = 0",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Run pytest + ruff acceptance",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Commit locally with X-Agent trailer",
+                  "status": "completed",
+                  "priority": "medium"
+                }
+              ],
+              "truncated": false
+            },
+            "title": "0 todos",
+            "time": {
+              "start": 1787615969147,
+              "end": 1787615969152
+            }
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": []
+            }
+          },
+          "id": "prt_03636f4ae001p4fr0of5Pava3i",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_03636dbc9001BEKdM268TNdWCv"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-finish",
+          "tokens": {
+            "total": 95637,
+            "input": 374,
+            "output": 223,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 95040
+            }
+          },
+          "cost": 0,
+          "id": "prt_03636ffcf001S9JwoMMXd0dlgy",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_03636dbc9001BEKdM268TNdWCv"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0362c20830011qmak3myTb9T8e",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s11"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 96307,
+          "input": 541,
+          "output": 406,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 95360
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787615969316,
+          "completed": 1787615988987
+        },
+        "finish": "stop",
+        "id": "msg_036370024001csWYGdpugGdaQt",
+        "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG"
+      },
+      "parts": [
+        {
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-start",
+          "id": "prt_03637326e001Be69iQaAX9c7s4",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036370024001csWYGdpugGdaQt"
+        },
+        {
+          "type": "text",
+          "text": "Slice 11 complete on branch `ox-alpha/timeout-burndown-7213-s11` (not pushed).\n\n**What changed**\n- `hf_jobs_baseline.py`: `source_commit` git 30s→`BaselineError`; `job_command` `hf --version` 30s→`BaselineError`; `launch_once` detach handshake 120s→state `launch_response_failed_reconcile_required` + `BaselineError`.\n- `hf_jobs_transport.py`: uv install 300s→`TransportError`; inner python worker bounded by documented `WORKER_TIMEOUT_SECONDS=3600` (no job-timeout label reaches that in-container call) → non-zero return 124.\n- `suite_cli.py`: `run_local` bounded by documented `LOCAL_RUNNER_TIMEOUT_SECONDS=1800` (`RUN_CONFIG_FIELDS` is closed, no timeout field) → `SuiteError`.\n- Allowlist: the 6 intended lines deleted; clobber self-audit done against full diff; remaining `ua_open_weight_eval` keys = 0.\n- Tests: new `tests/test_ua_open_weight_eval_timeouts.py` (mocked `subprocess.run`, asserts each timeout + TimeoutExpired mapping + entry-point smoke); `test_transport_spawns_gpu_worker_with_available_python3` now takes `**kwargs` and asserts int>0 timeout on both calls.\n\n**Deviation to flag for review:** one line outside the slice paths — `data/projects/ua_open_weight_eval/v0.1.0/release_receipt.json` `artifacts.suite_cli` hash updated, because verify_release() pins suite_cli.py's own SHA-256 and acceptance requires `tests/test_ua_open_weight_eval.py` green. This follows the repo's own precedent from PR #6277 (same commit updated both). Documented in the commit body.\n\nCOMMIT=9a923d3f20 ALLOWLIST_UA_OPEN_WEIGHT_EVAL_REMAINING=0 TESTS=pass",
+          "time": {
+            "start": 1787615982195,
+            "end": 1787615988805
+          },
+          "id": "prt_036373273001uAQqlYyL6rlD59",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036370024001csWYGdpugGdaQt"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "c1f2c63c1587336a6b41d7939ebb5902d1b2dbd1",
+          "type": "step-finish",
+          "tokens": {
+            "total": 96307,
+            "input": 541,
+            "output": 406,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 95360
+            }
+          },
+          "cost": 0,
+          "id": "prt_036374caa001A0HM3uiAaiGNLu",
+          "sessionID": "ses_fc9d3dfc4ffe5WQusq0lhE4itG",
+          "messageID": "msg_036370024001csWYGdpugGdaQt"
         }
       ]
     }
