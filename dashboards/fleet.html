@@ -188,6 +188,10 @@ button, input, select { font: inherit; }
       <div class="panel-head"><h3 id="occupancy-heading">Host occupancy</h3><p>Opaque host_id only · observers under cloud-observer · no RAM lease</p></div>
       <div id="occupancy-content" class="empty">Loading occupancy…</div>
     </article>
+    <article class="panel wide ledger purple" aria-labelledby="projects-heading">
+      <div class="panel-head"><h3 id="projects-heading">Projects</h3><p>Checkout head vs origin/main · serving SHA drift · stale upstream degrades drift</p></div>
+      <div id="projects-content" class="empty">Loading project state…</div>
+    </article>
     <article class="panel wide ledger cyan" aria-labelledby="activity-heading">
       <div class="panel-head"><h3 id="activity-heading">Recent provenance</h3><p>Source is the caller; Agent is the executed seat; Via is the transport</p></div>
       <div id="activity-content" class="empty">Loading provenance records…</div>
@@ -536,6 +540,43 @@ function renderDeadLetters(data) {
   document.getElementById('dead-content').innerHTML = table(['Dead letter', 'Agent', 'Reason', 'Successor', 'Created'], rows, 'No dead letters match the current observer filters.');
 }
 
+function renderProjects(data) {
+  const hosts = objectValue(data.hosts);
+  const rows = [];
+  for (const host of Object.values(hosts)) {
+    if (!host || typeof host !== 'object') continue;
+    const hostId = short(host.host_id);
+    const freshness = short(host.freshness);
+    const ageText = host.age_s == null ? '—' : `${Math.round(Number(host.age_s) * 100) / 100}s`;
+    const primary = objectValue(host.primary);
+    const head = short(primary.head_sha, '—');
+    const origin = short(primary.origin_main_sha, '—');
+    const dirty = primary.dirty_count != null ? String(primary.dirty_count) : '—';
+    const services = listValue(host.services);
+    if (!services.length) {
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td class="mono">${escapeHtml(ageText)}</td><td class="mono">${escapeHtml(head)}</td><td class="mono">${escapeHtml(origin)}</td><td>${escapeHtml(dirty)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      continue;
+    }
+    services.forEach((service, index) => {
+      const drift = service.drift;
+      const driftLabel = drift === true ? 'drift' : drift === false ? 'sync' : String(drift || 'unknown');
+      const modeBadge = service.serving_mode === 'checkout' ? 'checkout' : 'release';
+      const sha = service.serving_mode === 'checkout'
+        ? short(service.checkout_sha, '—')
+        : short(service.serving_sha, '—');
+      const attention = index === 0 && Array.isArray(host.attention) && host.attention.length
+        ? host.attention.join(', ')
+        : '—';
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td class="mono">${escapeHtml(ageText)}</td><td class="mono">${escapeHtml(head)}</td><td class="mono">${escapeHtml(origin)}</td><td>${escapeHtml(dirty)}</td><td>${escapeHtml(short(service.name))}</td><td>${pill(service.state)}</td><td>${pill(modeBadge)} <span class="mono">${escapeHtml(sha)}</span></td><td>${pill(driftLabel)}</td><td class="muted">${escapeHtml(attention)}</td></tr>`);
+    });
+  }
+  document.getElementById('projects-content').innerHTML = table(
+    ['Host', 'Freshness', 'Age', 'HEAD', 'origin/main', 'Dirty', 'Service', 'State', 'Serving', 'Drift', 'Attention'],
+    rows,
+    'No project-state reports. Remote hosts report through the loopback tunnel timer.',
+  );
+}
+
 function renderOccupancy(data) {
   const hosts = objectValue(data.hosts);
   const rows = [];
@@ -592,7 +633,7 @@ async function refreshFleet() {
       recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
       use: {},
     }));
-    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, occupancy, activity, messages, contextStatus] = await Promise.all([
+    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, occupancy, projects, activity, messages, contextStatus] = await Promise.all([
       fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
       fetchJson(query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' })),
       fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
@@ -600,12 +641,13 @@ async function refreshFleet() {
       fetchJson(query('/api/fleet/acp/conversations', common)),
       fetchJson(query('/api/fleet/dead-letters', ['state', 'agent', 'source'])),
       fetchJson('/api/occupancy'),
+      fetchJson('/api/fleet/projects/v1'),
       fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
       fetchJson(query('/api/fleet/messages', ['kind', ...common])),
       contextStatusRequest,
     ]);
     renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
-    renderAcp(acp); renderDeadLetters(deadLetters); renderOccupancy(occupancy); renderActivity(activity); renderMessages(messages);
+    renderAcp(acp); renderDeadLetters(deadLetters); renderOccupancy(occupancy); renderProjects(projects); renderActivity(activity); renderMessages(messages);
     await refreshConversationContext(contextStatus);
   } catch (error) {
     setError(`Observer data could not be read: ${error.message}`);

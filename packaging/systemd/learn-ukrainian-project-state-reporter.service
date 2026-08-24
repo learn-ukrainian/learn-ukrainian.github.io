@@ -1,0 +1,12 @@
+[Unit]
+Description=Learn Ukrainian per-host project-state reporter (oneshot)
+After=network.target
+
+[Service]
+Type=oneshot
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/env bash --noprofile --norc %h/projects/learn-ukrainian/scripts/orchestration/run_project_state_reporter.sh
+WorkingDirectory=%h/projects/learn-ukrainian
+
+[Install]
+WantedBy=multi-user.target

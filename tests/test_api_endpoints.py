@@ -53,14 +53,19 @@ class TestHealthEndpoint:
         assert instance["host"]
         assert isinstance(instance["git_sha"], str)
         assert len(instance["git_sha"]) == 40
+        assert instance["checkout_sha"] == instance["git_sha"]
+        assert "serving_mode" in instance
+        assert "serving_sha" in instance
         assert "codexbar" in data
         assert "scheduler_running" in data["codexbar"]
         assert data["codexbar"]["cache_ttl_s"] == 720.0
 
-    def test_health_respects_monitor_instance_id(self, monkeypatch):
-        monkeypatch.setenv("MONITOR_INSTANCE_ID", "vps-atlas-test")
+    def test_health_respects_lu_monitor_host_id(self, monkeypatch):
+        monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
         data = client.get("/api/health").json()
-        assert data["instance"]["host"] == "vps-atlas-test"
+        assert data["instance"]["host"] == "host-job"
+        assert "serving_mode" in data["instance"]
+        assert "checkout_sha" in data["instance"]
 
     def test_version_matches_app(self):
         data = client.get("/api/health").json()

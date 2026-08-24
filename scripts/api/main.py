@@ -29,6 +29,7 @@ from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 
+from scripts.common.release_layout import is_release_root
 from scripts.guardrails import worktree_containment
 from scripts.research import registry as reg
 
@@ -84,8 +85,10 @@ from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
 from .observer_presence import router as observer_presence_router
 from .occupancy import router as occupancy_router
+from .occupancy_local import resolve_launcher_host_id
 from .ops_router import router as ops_router
 from .preload import preload_all
+from .project_state_router import router as project_state_router
 from .rag_router import router as sources_router
 from .repository_authority import build_repository_authority
 from .resilience import get_resilience_snapshot, resilience_middleware
@@ -178,6 +181,7 @@ app.include_router(epics_router, prefix="/api/epics", tags=["epics"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
+app.include_router(project_state_router, prefix="/api/fleet", tags=["fleet"])
 app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
 app.include_router(coordination_router, prefix="/api/coordination")
 app.include_router(consultation_router, prefix="/api/consultation")
@@ -1306,12 +1310,24 @@ def _collect_session_hints_orient_data() -> list[dict]:
 
 
 def _health_instance_identity() -> dict[str, str | None]:
-    """Return loopback-safe host identity and exact git HEAD for /api/health."""
-    configured = os.environ.get("MONITOR_INSTANCE_ID", "").strip()
-    host_label = configured or socket.gethostname()
+    """Return loopback-safe opaque host id and serving vs checkout SHAs for /api/health."""
+    host_label = resolve_launcher_host_id()
     head_proc = _run_command(["git", "rev-parse", "HEAD"])
-    git_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
-    return {"host": host_label, "git_sha": git_sha}
+    checkout_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
+    project_root = PROJECT_ROOT.resolve()
+    if is_release_root(project_root):
+        serving_sha = project_root.name
+        serving_mode = "release"
+    else:
+        serving_sha = None
+        serving_mode = "checkout"
+    return {
+        "host": host_label,
+        "git_sha": checkout_sha,
+        "checkout_sha": checkout_sha,
+        "serving_sha": serving_sha,
+        "serving_mode": serving_mode,
+    }
 
 
 @app.get("/api", status_code=307)
