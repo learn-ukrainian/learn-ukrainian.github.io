@@ -118,8 +118,8 @@ def test_actual_free_uses_bavail_not_bfree(guardian: ModuleType, monkeypatch: py
 
 def test_permission_drift_is_rejected(guardian: ModuleType, tmp_path: Path) -> None:
     directory = tmp_path / "output"
-    directory.mkdir(mode=0o710)
-    os.chmod(directory, 0o710)
+    directory.mkdir(mode=0o600)
+    os.chmod(directory, 0o600)
     with pytest.raises(guardian.GuardianError, match="runtime_permission_drift"):
         guardian._private_directory(directory, os.getuid(), os.getgid(), create=False)
 
