@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/branch-holder-7236
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7236 — `--branch` attach must auto-release a terminal-task branch-holder worktree (one PR)
+
+Read `gh issue view 7236 -R learn-ukrainian/learn-ukrainian.github.io` FIRST (if gh is unavailable in your worktree,
+the issue essentials are in the body below) — it is the spec; this brief only adds boundaries and acceptance.
+
+## Problem (from the issue, 3 occurrences in one driver session)
+`delegate.py dispatch --branch <lane-branch>` fails at worktree prep when an EARLIER dispatch worktree still holds the
+branch, even though that holder's bound task is terminal (`done`), the worktree is clean, and its commits are pushed.
+The existing stale-branch-holder auto-release did not fire in any occurrence. Additionally, on this refusal the
+launcher exits with only a launcher-log line — no task record — so settle-loops watching the task file see nothing.
+
+## Outcome (two halves, both required)
+1. At `--branch` attach time, a branch-holder dispatch worktree whose bound task is in a TERMINAL status, whose tree
+   is clean, and with no live process cwd inside it, is released automatically (the same safety predicate the existing
+   stale-holder release path uses — extend that mechanism, do not build a parallel one) and the attach proceeds.
+   An unsafe holder (running task / dirty tree / live process) must still refuse with the current message.
+2. Any worktree-prep refusal writes a terminal task record (status `failed`, with the refusal reason in the record)
+   so a settle-loop watching `batch_state/tasks/<id>.json` fires instead of hanging on a file that never appears.
+
+## Hard boundaries
+- `scripts/delegate.py` (+ its tests) only. Do not weaken the safety predicate: never release a holder with a RUNNING
+  task (grep `batch_state/tasks/*.json` binding is the truth), a dirty tree, or a live-process cwd (the P0-reaper
+  posture: a timeout/uncertainty reads as UNSAFE, never as releasable).
+- Preserve dispatch stdout contract and all existing refusal messages for the unsafe cases.
+
+## Acceptance (quote raw output; PRIMARY interpreter; run from YOUR worktree root)
+1. New tests covering: terminal+clean holder → released, attach proceeds · running-task holder → refused ·
+   dirty holder → refused · refusal writes a terminal task record with the reason. Mutation-check the release
+   predicate: make the task-status check lie (non-terminal reads as terminal) → the running-task refusal test must
+   FAIL; restore; quote output.
+2. FULL delegate re-probe: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_delegate.py
+   tests/test_delegate_readonly_guard.py tests/test_delegate_runtime_tmp_sweep.py tests/test_delegate_ownership.py
+   tests/test_delegate_primary_integrity.py tests/test_delegate_check_budget.py tests/test_delegate_timeouts.py
+   tests/test_subprocess_timeout_guard.py` green; ruff clean.
+3. One conventional commit (`fix(dispatch): auto-release terminal-task branch holders on --branch attach; terminal
+   task record on prep refusal (#7236)`, X-Agent trailer). NO push, NO auto-merge, NO amend after reporting.
+   Report HEAD SHA + evidence + ready PR body (no gh auth — RETURN text; driver posts).
