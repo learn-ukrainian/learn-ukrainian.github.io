@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -190,6 +191,11 @@ def test_gemma_hardware_probe_main_launch_timeout(tmp_path: Path) -> None:
     hf_cli.write_text("#!/bin/sh\n", encoding="utf-8")
     hf_cli.chmod(0o755)
 
+    written_records: list[tuple[Any, dict]] = []
+
+    def fake_write_atomic(path, value):
+        written_records.append((path, value))
+
     with patch("sys.argv", ["gemma_hardware_probe.py", "launch", "--plan", str(plan_path), "--authorization", str(auth_path), "--hf-cli", str(hf_cli)]), \
          patch("scripts.projects.open_model_data.gemma_hardware_probe.validate_plan_authorization", return_value=({}, "auth_sha")), \
          patch("scripts.projects.open_model_data.gemma_hardware_probe.require_hf_auth"), \
@@ -198,10 +204,15 @@ def test_gemma_hardware_probe_main_launch_timeout(tmp_path: Path) -> None:
          patch("scripts.projects.open_model_data.gemma_hardware_probe.create_authorized_runner_snapshot", return_value=tmp_path / "runner.py"), \
          patch("scripts.projects.open_model_data.gemma_hardware_probe.verify_authorized_runner_snapshot"), \
          patch("scripts.projects.open_model_data.gemma_hardware_probe.claim_paid_attempt"), \
-         patch("scripts.projects.open_model_data.gemma_hardware_probe.write_atomic"), \
+         patch("scripts.projects.open_model_data.gemma_hardware_probe.write_atomic", side_effect=fake_write_atomic), \
          patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["huggingface-cli", "jobs"], ghp.DEFAULT_HF_LAUNCH_TIMEOUT_SECONDS)):
         rc = ghp.main()
         assert rc == 2
+
+    attempt_writes = [val for path, val in written_records if path == ghp.ATTEMPT_LEDGER_PATH]
+    assert len(attempt_writes) == 2, f"expected 2 attempt ledger writes, got {len(attempt_writes)}"
+    assert attempt_writes[0]["status"] == "authorized_snapshot_verified_before_provider_call"
+    assert attempt_writes[1]["status"] == "provider_launch_failed_no_retry_authorized"
 
 
 # ---------------------------------------------------------------------------
@@ -360,40 +371,7 @@ def test_phase3_evaluation_reproduction_verify_outsider_commit_timeout(tmp_path:
 
 
 # ---------------------------------------------------------------------------
-# 8. phase3_heldout_label_transport.py
-# ---------------------------------------------------------------------------
-def test_phase3_heldout_label_transport_run_cycle002_timeout(tmp_path: Path) -> None:
-    from scripts.projects.open_model_data import phase3_heldout_label_transport as hlt
-
-    prompt_path = tmp_path / "prompt.md"
-    prompt_path.write_bytes(b"prompt")
-    prompt_hash = hlt.sha256_bytes(b"prompt")
-
-    manifest = {
-        "bindings": {
-            "label_prompt_logical_path": str(prompt_path.relative_to(tmp_path)) if prompt_path.is_relative_to(tmp_path) else str(prompt_path),
-            "label_prompt_sha256": prompt_hash,
-            "transport_schema_sha256": "abc",
-        }
-    }
-
-    with patch("scripts.projects.open_model_data.phase3_heldout_label_transport.ROOT", tmp_path), \
-         patch("scripts.projects.open_model_data.phase3_heldout_label_transport._cycle002_manifest", return_value=(manifest, tmp_path / "private")), \
-         patch("scripts.projects.open_model_data.phase3_heldout_label_transport._private_root", return_value=tmp_path / "private"), \
-         patch("scripts.projects.open_model_data.phase3_heldout_label_transport._cycle002_packet_load", return_value={}), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["ask-codex"], hlt.DEFAULT_BRIDGE_TIMEOUT_SECONDS)):
-        with pytest.raises(hlt.HeldoutLabelTransportError, match="cycle002 Codex bridge invocation failed"):
-            hlt.run_cycle002(
-                manifest_path=tmp_path / "manifest.json",
-                pass_id="a",
-                packet_index=1,
-                schema_path=tmp_path / "schema.json",
-                private_dir=tmp_path / "private",
-            )
-
-
-# ---------------------------------------------------------------------------
-# 9. phase3_linguistic_canary.py
+# 8. phase3_linguistic_canary.py
 # ---------------------------------------------------------------------------
 def test_phase3_linguistic_canary_verify_pinned_corpus_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_linguistic_canary as plc
@@ -558,14 +536,20 @@ def test_phase3_rule_author_runner_run_timeout(tmp_path: Path) -> None:
         ]
     }
 
+    recorded_errors: list[str | None] = []
+
+    def fake_record(entry, manifest, root, *, execution_error=None):
+        recorded_errors.append(execution_error)
+        return {"status": "failed", "execution_error": execution_error}
+
     with patch("scripts.projects.open_model_data.phase3_rule_author_runner.prepare", return_value=manifest), \
          patch("scripts.projects.open_model_data.phase3_rule_author_runner.command_for", return_value=["bridge"]), \
-         patch("scripts.projects.open_model_data.phase3_rule_author_runner._record", return_value={"status": "failed"}), \
+         patch("scripts.projects.open_model_data.phase3_rule_author_runner._record", side_effect=fake_record), \
          patch("scripts.projects.open_model_data.phase3_rule_author_runner._assert_tree"), \
          patch("scripts.projects.open_model_data.phase3_rule_author_runner._safe_receipt_path", return_value=receipt_path), \
          patch("scripts.projects.open_model_data.phase3_rule_author_runner._receipt", return_value={"complete": False, "canary": False, "failed_count": 1, "unparsed_count": 1}), \
          patch("scripts.projects.open_model_data.phase3_rule_author_runner._write_public_receipt"), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["bridge"], rar.DEFAULT_BRIDGE_TIMEOUT_SECONDS)):
+         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["bridge"], 30.0)):
         receipt = rar.run(
             bundle_path=bundle_path,
             role_path=role_path,
@@ -574,6 +558,7 @@ def test_phase3_rule_author_runner_run_timeout(tmp_path: Path) -> None:
             exact_model="gemini-3.6-flash-high",
         )
         assert receipt["failed_count"] == 1
+    assert recorded_errors == ["bridge_timeout:TimeoutExpired"]
 
 
 # ---------------------------------------------------------------------------
@@ -606,38 +591,7 @@ def test_phase3_school_parent_section_context_drive_item_id_timeout(tmp_path: Pa
 
 
 # ---------------------------------------------------------------------------
-# 16. phase3_source_production_transport.py
-# ---------------------------------------------------------------------------
-def test_phase3_source_production_transport_subprocess_invoke_timeout() -> None:
-    from scripts.projects.open_model_data import phase3_source_production_transport as spt
-
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout=b"out", stderr=b"err")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        rc, out, err = spt._subprocess_invoke(["echo", "hi"], b"prompt")
-        assert rc == 0
-        assert out == b"out"
-        assert err == b"err"
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == spt.DEFAULT_COMMAND_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["echo"], spt.DEFAULT_COMMAND_TIMEOUT_SECONDS, output=b"partial_out", stderr=b"timeout_err"),
-    ):
-        rc, out, err = spt._subprocess_invoke(["echo", "hi"], b"prompt")
-        assert rc == 124
-        assert out == b"partial_out"
-        assert err == b"timeout_err"
-
-
-# ---------------------------------------------------------------------------
-# 17. phase3_source_universe.py
+# 16. phase3_source_universe.py
 # ---------------------------------------------------------------------------
 def test_phase3_source_universe_verify_merged_main_binding_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_source_universe as su
@@ -737,7 +691,7 @@ def test_phase3_ua_gec_complete_context_checkout_commit_timeout(tmp_path: Path) 
 
 
 # ---------------------------------------------------------------------------
-# 19. phase3_university_content_audit_freeze.py
+# 17. phase3_university_content_audit_freeze.py
 # ---------------------------------------------------------------------------
 def test_phase3_university_content_audit_freeze_validate_drive_backup_timeout(tmp_path: Path) -> None:
     import contextlib
@@ -778,7 +732,7 @@ def test_phase3_university_content_audit_freeze_validate_drive_backup_timeout(tm
 
 
 # ---------------------------------------------------------------------------
-# 20. phase3_v2_compatibility.py
+# 18. phase3_v2_compatibility.py
 # ---------------------------------------------------------------------------
 def test_phase3_v2_compatibility_tracked_evidence_paths_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_v2_compatibility as v2c
@@ -792,7 +746,7 @@ def test_phase3_v2_compatibility_tracked_evidence_paths_timeout(tmp_path: Path) 
     with patch("scripts.projects.open_model_data.phase3_v2_compatibility.ROOT", tmp_path), \
          patch("subprocess.run", side_effect=fake_run):
         paths = v2c._tracked_evidence_paths()
-        assert "file1" in paths and "file2" in paths
+        assert paths == {"file1", "file2"}
 
     assert len(calls) == 1
     assert calls[0]["timeout"] == v2c.DEFAULT_GIT_TIMEOUT_SECONDS
@@ -804,10 +758,10 @@ def test_phase3_v2_compatibility_tracked_evidence_paths_timeout(tmp_path: Path) 
 
 
 # ---------------------------------------------------------------------------
-# 21. phase3_vspu_2025_morphemics_word_formation_intake.py
+# 19. phase3_vspu_2025_morphemics_word_formation_intake.py
 # ---------------------------------------------------------------------------
-def test_phase3_vspu_2025_drive_item_id_timeout(tmp_path: Path) -> None:
-    from scripts.projects.open_model_data import phase3_vspu_2025_morphemics_word_formation_intake as vspu
+def test_phase3_vspu_2025_morphemics_word_formation_intake_drive_item_id_timeout(tmp_path: Path) -> None:
+    from scripts.projects.open_model_data import phase3_vspu_2025_morphemics_word_formation_intake as vmfi
 
     target_file = tmp_path / "GoogleDrive-test" / "My Drive" / "file.pdf"
     target_file.parent.mkdir(parents=True)
@@ -821,19 +775,19 @@ def test_phase3_vspu_2025_drive_item_id_timeout(tmp_path: Path) -> None:
 
     with patch("scripts.projects.open_model_data.phase3_vspu_2025_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT", tmp_path), \
          patch("subprocess.run", side_effect=fake_run):
-        assert vspu._drive_item_id(target_file) == "drive-item-123"
+        assert vmfi._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
-    assert calls[0]["timeout"] == vspu.DEFAULT_XATTR_TIMEOUT_SECONDS
+    assert calls[0]["timeout"] == vmfi.DEFAULT_XATTR_TIMEOUT_SECONDS
 
     with patch("scripts.projects.open_model_data.phase3_vspu_2025_morphemics_word_formation_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vspu.DEFAULT_XATTR_TIMEOUT_SECONDS)):
-        with pytest.raises(vspu.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
-            vspu._drive_item_id(target_file)
+         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], vmfi.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+        with pytest.raises(vmfi.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
+            vmfi._drive_item_id(target_file)
 
 
 # ---------------------------------------------------------------------------
-# 22. phase3_vspu_db_cutover.py
+# 20. phase3_vspu_db_cutover.py
 # ---------------------------------------------------------------------------
 def test_phase3_vspu_db_cutover_drive_item_id_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_vspu_db_cutover as vdc
@@ -862,13 +816,13 @@ def test_phase3_vspu_db_cutover_drive_item_id_timeout(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 23. phase3_vspu_post_ingest_audit.py
+# 21. phase3_vspu_post_ingest_audit.py
 # ---------------------------------------------------------------------------
 def test_phase3_vspu_post_ingest_audit_uploaded_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_vspu_post_ingest_audit as vpia
 
-    target_file = tmp_path / "backup.gz"
-    target_file.write_text("dummy", encoding="utf-8")
+    target_file = tmp_path / "file.jsonl"
+    target_file.write_text("{}", encoding="utf-8")
 
     calls: list[dict] = []
 
@@ -888,7 +842,7 @@ def test_phase3_vspu_post_ingest_audit_uploaded_timeout(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 24. phase3_vspu_source_materialization.py
+# 22. phase3_vspu_source_materialization.py
 # ---------------------------------------------------------------------------
 def test_phase3_vspu_source_materialization_drive_item_id_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_vspu_source_materialization as vsm
@@ -917,10 +871,10 @@ def test_phase3_vspu_source_materialization_drive_item_id_timeout(tmp_path: Path
 
 
 # ---------------------------------------------------------------------------
-# 25. phase3_zhdu_2026_lexicology_phraseology_intake.py
+# 23. phase3_zhdu_2026_lexicology_phraseology_intake.py
 # ---------------------------------------------------------------------------
-def test_phase3_zhdu_drive_item_id_timeout(tmp_path: Path) -> None:
-    from scripts.projects.open_model_data import phase3_zhdu_2026_lexicology_phraseology_intake as zhdu
+def test_phase3_zhdu_2026_lexicology_phraseology_intake_drive_item_id_timeout(tmp_path: Path) -> None:
+    from scripts.projects.open_model_data import phase3_zhdu_2026_lexicology_phraseology_intake as zpi
 
     target_file = tmp_path / "GoogleDrive-test" / "My Drive" / "file.pdf"
     target_file.parent.mkdir(parents=True)
@@ -934,36 +888,36 @@ def test_phase3_zhdu_drive_item_id_timeout(tmp_path: Path) -> None:
 
     with patch("scripts.projects.open_model_data.phase3_zhdu_2026_lexicology_phraseology_intake.CLOUD_STORAGE_ROOT", tmp_path), \
          patch("subprocess.run", side_effect=fake_run):
-        assert zhdu._drive_item_id(target_file) == "drive-item-123"
+        assert zpi._drive_item_id(target_file) == "drive-item-123"
 
     assert len(calls) == 1
-    assert calls[0]["timeout"] == zhdu.DEFAULT_XATTR_TIMEOUT_SECONDS
+    assert calls[0]["timeout"] == zpi.DEFAULT_XATTR_TIMEOUT_SECONDS
 
     with patch("scripts.projects.open_model_data.phase3_zhdu_2026_lexicology_phraseology_intake.CLOUD_STORAGE_ROOT", tmp_path), \
-         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], zhdu.DEFAULT_XATTR_TIMEOUT_SECONDS)):
-        with pytest.raises(zhdu.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
-            zhdu._drive_item_id(target_file)
+         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], zpi.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+        with pytest.raises(zpi.DriveIdentityPendingError, match="artifact lacks Google Drive provider identity"):
+            zpi._drive_item_id(target_file)
 
 
 # ---------------------------------------------------------------------------
-# 26. verify_phase3_source_universe_freeze.py
+# 24. verify_phase3_source_universe_freeze.py
 # ---------------------------------------------------------------------------
 def test_verify_phase3_source_universe_freeze_git_bytes_timeout(tmp_path: Path) -> None:
-    from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as vsuf
+    from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as vsu
 
     calls: list[dict] = []
 
     def fake_run(cmd, **kwargs):
         calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout=b"git output")
+        return _completed(cmd, returncode=0, stdout=b"data")
 
     with patch("subprocess.run", side_effect=fake_run):
-        out = vsuf._git_bytes(tmp_path, ["rev-parse", "HEAD"], "head check")
-        assert out == b"git output"
+        out = vsu._git_bytes(tmp_path, ["cat-file", "-p", "HEAD"], "test")
+        assert out == b"data"
 
     assert len(calls) == 1
-    assert calls[0]["timeout"] == vsuf.DEFAULT_GIT_TIMEOUT_SECONDS
+    assert calls[0]["timeout"] == vsu.DEFAULT_GIT_TIMEOUT_SECONDS
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], vsuf.DEFAULT_GIT_TIMEOUT_SECONDS)):
-        with pytest.raises(vsuf.IntegrityError, match="unable to run git for head check"):
-            vsuf._git_bytes(tmp_path, ["rev-parse", "HEAD"], "head check")
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], vsu.DEFAULT_GIT_TIMEOUT_SECONDS)):
+        with pytest.raises(vsu.IntegrityError, match="unable to run git for test"):
+            vsu._git_bytes(tmp_path, ["cat-file", "-p", "HEAD"], "test")

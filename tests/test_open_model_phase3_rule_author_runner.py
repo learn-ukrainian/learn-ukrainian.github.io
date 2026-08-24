@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -369,6 +370,28 @@ def test_execution_error_and_bundle_alias_fail_closed(tmp_path: Path) -> None:
     os.symlink(bundle, alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
         runner.prepare(bundle_path=alias, role_path=role, private_dir=tmp_path / "other-private", exact_model="gemini-3.6-flash-high")
+
+
+def test_timeout_expired_execution_error_is_labeled_accurately(tmp_path: Path) -> None:
+    bundle, role, private, receipt = _paths(tmp_path)
+
+    def timed_out(command: list[str], stdin: bytes) -> None:
+        del command, stdin
+        raise subprocess.TimeoutExpired(cmd=["bridge"], timeout=30.0)
+
+    result = runner.run(
+        bundle_path=bundle,
+        role_path=role,
+        private_dir=private,
+        receipt_path=receipt,
+        exact_model="gemini-3.6-flash-high",
+        executor=timed_out,
+    )
+    assert result["failed_count"] == 2 and result["unparsed_count"] == 2
+    assert result["complete"] is False and result["canary"] is False
+    record_path = private / "records/1.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    assert record["execution_error"] == "bridge_timeout:TimeoutExpired"
 
 
 def test_valid_json_before_nonzero_exit_cannot_complete_or_succeed_canary(tmp_path: Path) -> None:

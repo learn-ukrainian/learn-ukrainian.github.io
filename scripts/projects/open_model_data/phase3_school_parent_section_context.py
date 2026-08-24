@@ -657,6 +657,7 @@ def _build_receipt(
         "started_at": started_at,
         "completed_at": completed_at,
         "bindings": {
+            # Deliberately hardcoded receipt sha (verified frozen-receipt match).
             "implementation_sha256": "dd463dfe333d3bab06514653b9e02b7dace78657f10e0d7396265b9bc822ab48",
             "receipt_schema_sha256": sha256_file(SCHEMA_PATH),
             "source_units_jsonl_sha256": PINNED_SOURCE_UNITS_JSONL_SHA256,

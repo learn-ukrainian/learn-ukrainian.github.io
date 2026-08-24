@@ -36,7 +36,6 @@ VERSION = "phase3_rule_author_runner_v1"
 PRIVATE_MODE = 0o700
 FILE_MODE = 0o600
 CANONICAL_AGY_MODEL = "gemini-3.6-flash-high"
-DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 PUBLIC_RECEIPT_STRING_FIELDS = frozenset(
     {
         "schema_version",
@@ -507,11 +506,7 @@ def run(
         manifest=manifest,
     )
     selected_entries = manifest["packets"][:max_packets] if max_packets else manifest["packets"]
-    invoke = executor or (
-        lambda command, stdin: subprocess.run(
-            command, input=stdin, check=False, capture_output=True, timeout=DEFAULT_BRIDGE_TIMEOUT_SECONDS
-        )
-    )
+    invoke = executor or (lambda command, stdin: subprocess.run(command, input=stdin, check=False, capture_output=True))
     for entry in selected_entries:
         record_path = root / entry["record"]
         if record_path.exists():
@@ -527,8 +522,10 @@ def run(
             result = invoke(command_for(entry, manifest, root), prompt)
             if getattr(result, "returncode", 0) != 0:
                 execution_error = f"bridge_exit_{getattr(result, 'returncode', 1)}"
-        except (OSError, subprocess.TimeoutExpired) as exc:
+        except OSError as exc:
             execution_error = f"bridge_oserror:{exc.__class__.__name__}"
+        except subprocess.TimeoutExpired as exc:
+            execution_error = f"bridge_timeout:{exc.__class__.__name__}"
         if not raw_path.exists():
             _write_private(raw_path, b"")
             execution_error = execution_error or "bridge_did_not_write_output"

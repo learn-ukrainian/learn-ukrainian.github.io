@@ -49,9 +49,9 @@ def _authorization() -> dict:
         },
         "probe_id": probe.PROBE_ID,
         "runner": {
-            "bytes": 60839,
+            "bytes": 60894,
             "logical_path": "scripts/projects/open_model_data/gemma_hardware_probe.py",
-            "sha256": "0a62badd81177f9fc247fdd94bc8005538ae52371dd91ffa3345378867868853",
+            "sha256": "be0f6076669c8a0d9b84d7bb840c525b43d9f7982ab83526b20f2fd0e3e5ed56",
         },
         "schema_version": "gemma_hardware_probe_authorization_v1",
     }
@@ -165,6 +165,7 @@ def test_launch_executes_and_ledgers_the_authorized_snapshot_command(
     ledger = tmp_path / "batch/launch.json"
     global_claim = tmp_path / "global/claim.json"
     calls: list[list[str]] = []
+    atomic_writes: list[tuple[Path, dict]] = []
 
     def fake_run(command: list[str], **_: object) -> SimpleNamespace:
         calls.append(command)
@@ -174,10 +175,17 @@ def test_launch_executes_and_ledgers_the_authorized_snapshot_command(
             stderr="",
         )
 
+    real_write_atomic = probe.write_atomic
+
+    def spy_write_atomic(path: Path, value: dict) -> None:
+        atomic_writes.append((path, value))
+        real_write_atomic(path, value)
+
     monkeypatch.setattr(probe, "ATTEMPT_LEDGER_PATH", ledger)
     monkeypatch.setattr(probe, "host_global_attempt_claim_path", lambda _: global_claim)
     monkeypatch.setattr(probe, "require_hf_auth", lambda _: None)
     monkeypatch.setattr(probe, "require_no_provider_attempt", lambda **_: None)
+    monkeypatch.setattr(probe, "write_atomic", spy_write_atomic)
     monkeypatch.setattr(probe.subprocess, "run", fake_run)
     assert (
         probe.main(
@@ -200,6 +208,16 @@ def test_launch_executes_and_ledgers_the_authorized_snapshot_command(
     assert "<AUTHORIZED_RUNNER_SNAPSHOT>" in local_receipt["command"]
     assert host_receipt["command"] == local_receipt["command"]
     assert host_receipt["job_id"] == "6a2bd1f1871c005b5352ad31"
+
+    attempt_ledger_writes = [val for p, val in atomic_writes if p == ledger]
+    assert len(attempt_ledger_writes) == 2, f"expected 2 attempt ledger writes, got {len(attempt_ledger_writes)}"
+    assert attempt_ledger_writes[0]["status"] == "authorized_snapshot_verified_before_provider_call"
+    assert attempt_ledger_writes[1]["status"] == "provider_job_created"
+
+    host_global_writes = [val for p, val in atomic_writes if p == global_claim]
+    assert len(host_global_writes) == 2, f"expected 2 host global claim writes, got {len(host_global_writes)}"
+    assert host_global_writes[0]["status"] == "authorized_snapshot_verified_before_provider_call"
+    assert host_global_writes[1]["status"] == "provider_job_created"
 
 
 def test_plan_or_authorization_drift_fails_before_provider_call(tmp_path: Path) -> None:

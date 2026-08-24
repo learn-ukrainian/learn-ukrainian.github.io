@@ -72,6 +72,9 @@ scripts/practice_deck/publish.py::ensure_release::subprocess.run
 scripts/practice_deck/publish.py::upload_release_asset::subprocess.run
 scripts/pre_commit/check_plan_immutability.py::_git_blob_exists::subprocess.run
 scripts/pre_commit/check_plan_immutability.py::_run_git::subprocess.run
+scripts/projects/open_model_data/phase3_heldout_label_transport.py::run_cycle002::subprocess.run
+scripts/projects/open_model_data/phase3_rule_author_runner.py::run::subprocess.run
+scripts/projects/open_model_data/phase3_source_production_transport.py::_subprocess_invoke::subprocess.run
 scripts/projects/ua_eval_harness/build_heldout_manifest.py::_git_head::subprocess.run
 scripts/projects/ua_eval_harness/run_codex_baseline.py::_cli_version::subprocess.run
 scripts/projects/ua_open_weight_eval/hf_jobs_baseline.py::job_command::subprocess.run

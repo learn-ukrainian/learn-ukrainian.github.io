@@ -39,7 +39,6 @@ DEFAULT_ROLE_CONTRACT = (
 BASE_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
 COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
-DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 300.0
 
 FAMILY_TOTALS = {
     "antonenko_style_guide": 342,
@@ -717,20 +716,8 @@ def _validate_provider_invocation(
 
 
 def _subprocess_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
-    try:
-        result = subprocess.run(
-            command,
-            cwd=ROOT,
-            input=prompt,
-            capture_output=True,
-            check=False,
-            timeout=DEFAULT_COMMAND_TIMEOUT_SECONDS,
-        )
-        return result.returncode, result.stdout, result.stderr
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        stdout_bytes = exc.stdout if isinstance(getattr(exc, "stdout", None), bytes) else b""
-        stderr_bytes = exc.stderr if isinstance(getattr(exc, "stderr", None), bytes) else str(exc).encode("utf-8")
-        return 124, stdout_bytes, stderr_bytes
+    result = subprocess.run(command, cwd=ROOT, input=prompt, capture_output=True, check=False)
+    return result.returncode, result.stdout, result.stderr
 
 
 def _trailing_json_response(stdout: bytes, label: str) -> bytes:

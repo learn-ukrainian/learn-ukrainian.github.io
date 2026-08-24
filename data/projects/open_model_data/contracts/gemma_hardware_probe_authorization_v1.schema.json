@@ -24,8 +24,8 @@
       "required": ["logical_path", "bytes", "sha256"],
       "properties": {
         "logical_path": {"const": "scripts/projects/open_model_data/gemma_hardware_probe.py"},
-        "bytes": {"const": 60839},
-        "sha256": {"const": "0a62badd81177f9fc247fdd94bc8005538ae52371dd91ffa3345378867868853"}
+        "bytes": {"const": 60894},
+        "sha256": {"const": "be0f6076669c8a0d9b84d7bb840c525b43d9f7982ab83526b20f2fd0e3e5ed56"}
       }
     },
     "operator_decision": {

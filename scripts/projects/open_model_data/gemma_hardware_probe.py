@@ -1424,6 +1424,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "status": "authorized_snapshot_verified_before_provider_call",
         }
         write_atomic(global_claim_path, {**ready_claim, "claim_scope": "host_global_all_worktrees"})
+        write_atomic(ATTEMPT_LEDGER_PATH, ready_claim)
         try:
             result = subprocess.run(
                 command,
