@@ -26,6 +26,7 @@ from scripts.lexicon.manifest_io import load_manifest
 
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 CURRICULUM_REL = Path("curriculum") / "l2-uk-en"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
 @dataclass(frozen=True)
@@ -107,8 +108,9 @@ def changed_vocab_modules(root: Path, base: str) -> set[tuple[str, str]] | None:
             capture_output=True,
             text=True,
             check=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         ).stdout
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return None
 
     changed: set[tuple[str, str]] = set()

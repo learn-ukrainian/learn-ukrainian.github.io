@@ -55,6 +55,7 @@ SOURCES_DB = ROOT / "data" / "sources.db"
 UKRAINIAN_LETTERS = "А-Яа-яЄєІіЇїҐґ"
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 WORKSHEET = ROOT / "data" / "lexicon" / "anchor_curation_worksheet.yaml"
+DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS: float = 300.0
 
 
 @dataclass(frozen=True)
@@ -213,13 +214,19 @@ def audit_entries() -> list[AtlasEntry]:
     resulting manifest through the same audit implementation. No cache or
     manifest file is written.
     """
-    result = subprocess.run(
-        AUDIT_COMMAND,
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            AUDIT_COMMAND,
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"Atlas richness audit timed out after {DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS}s"
+        ) from exc
     if result.returncode not in {0, 1}:
         raise RuntimeError(result.stderr.strip() or "Atlas richness audit did not run")
     rows = csv.DictReader(result.stdout.splitlines(), delimiter="\t")

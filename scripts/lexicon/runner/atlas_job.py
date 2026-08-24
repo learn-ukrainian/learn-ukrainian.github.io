@@ -78,6 +78,11 @@ _HOSTNAME_HINT = re.compile(
 )
 DEFAULT_TIMEOUT_SECONDS = 86400
 DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_SSH_TIMEOUT_SECONDS: float = 300.0
+DEFAULT_SYSTEMCTL_TIMEOUT_SECONDS: float = 30.0
+# ``launch_reenrich_class_b_remote.sh`` documents ATLAS_RE_ENRICH_POLL_TIMEOUT_S default 900.
+DEFAULT_LAUNCHER_SUBPROCESS_TIMEOUT_SECONDS: float = 900.0
 # Same operator env file as ~/.local/bin/learn-ukrainian-backup (launchd wrapper).
 DEFAULT_BACKUP_ENV_FILE = Path.home() / ".secrets" / "learn-ukrainian-backup.env"
 _ENV_ASSIGNMENT = re.compile(
@@ -318,6 +323,7 @@ def collect_host_load(*, run_root: Path) -> dict[str, Any]:
             capture_output=True,
             text=True,
             check=False,
+            timeout=DEFAULT_SYSTEMCTL_TIMEOUT_SECONDS,
         )
         for line in (result.stdout or "").splitlines():
             parts = line.split()
@@ -332,7 +338,7 @@ def collect_host_load(*, run_root: Path) -> dict[str, Any]:
             if active_job_id is None:
                 active_job_id = name[len("atlas-job-") : -len(".service")]
                 active_state = sub or active
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         pass
 
     return {
@@ -560,12 +566,18 @@ class SshHostAdapter:
 
 
 def _ssh(host: str, remote: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=12", host, remote],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        return subprocess.run(
+            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=12", host, remote],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_SSH_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ConnectionError(
+            f"ssh timed out after {DEFAULT_SSH_TIMEOUT_SECONDS}s on {host}: {exc}"
+        ) from exc
 
 
 def get_host_adapter() -> HostAdapter:
@@ -592,6 +604,7 @@ def primary_checkout_root() -> Path:
             ["git", "rev-parse", "--git-common-dir"],
             cwd=str(repo_root()),
             text=True,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         ).strip()
         common_path = Path(common)
         common_path = (
@@ -602,7 +615,7 @@ def primary_checkout_root() -> Path:
         primary = common_path.parent
         if primary.is_dir():
             return primary
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         pass
     return repo_root()
 
@@ -1329,7 +1342,18 @@ def submit(plan: dict[str, Any], *, dry_run: bool = False, host_adapter: HostAda
             print("slugs_file", slugs)
         return 0
     save_registry(row)
-    rc = subprocess.call(cmd, cwd=str(repo_root()), env=env)
+    try:
+        rc = subprocess.call(
+            cmd,
+            cwd=str(repo_root()),
+            env=env,
+            timeout=DEFAULT_LAUNCHER_SUBPROCESS_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        row["state"] = "rejected"
+        row["submit_exit"] = 124
+        save_registry(row)
+        return 124
     if rc != 0:
         row["state"] = "rejected"
         row["submit_exit"] = rc
@@ -1648,11 +1672,15 @@ def pull(
         env["ATLAS_RE_ENRICH_OUT_DIR"] = str(local_pull_dir(job_id))
         unit = unit_name(job_id)
         env["ATLAS_RE_ENRICH_UNIT"] = unit
-    return subprocess.call(
-        ["bash", str(_launcher()), "--pull-only"],
-        cwd=str(repo_root()),
-        env=env,
-    )
+    try:
+        return subprocess.call(
+            ["bash", str(_launcher()), "--pull-only"],
+            cwd=str(repo_root()),
+            env=env,
+            timeout=DEFAULT_LAUNCHER_SUBPROCESS_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return 124
 
 
 def main(argv: list[str] | None = None) -> int:
