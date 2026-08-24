@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fb20e582ccf3",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7188-project-state",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/project_state_collect.py",
+    "scripts/api/project_state_local.py",
+    "scripts/orchestration/run_project_state_reporter.sh",
+    "tests/api/test_project_state.py",
+    "tests/api/test_project_state_collect.py",
+    "tests/api/test_project_state_local_cli.py",
+    "tests/orchestration/test_project_state_reporter.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/fb/20e582ccf3/0/metadata.json",
+      "transcript": "/fb/20e582ccf3/0/full.jsonl",
+      "compact_transcript": "/fb/20e582ccf3/0/transcript.jsonl",
+      "content_hash": "/fb/20e582ccf3/0/content_hash.txt",
+      "prompt": "/fb/20e582ccf3/0/prompt.txt"
+    }
+  ]
+}

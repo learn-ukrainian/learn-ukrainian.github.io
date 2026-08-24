@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fb20e582ccf3",
+  "session_id": "fleet-0976c46a09584aef9fc47a32d0e9db24",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T15:57:49.41565Z",
+  "branch": "cursor/monitor-7188-project-state",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/project_state_collect.py",
+    "scripts/api/project_state_local.py",
+    "scripts/orchestration/run_project_state_reporter.sh",
+    "tests/api/test_project_state.py",
+    "tests/api/test_project_state_collect.py",
+    "tests/api/test_project_state_local_cli.py",
+    "tests/orchestration/test_project_state_reporter.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "3115d12213b8",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T15:57:49.399763Z",
+    "agent_lines": 212,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 212,
+    "total_lines_changed": 217,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
