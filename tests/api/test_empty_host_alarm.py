@@ -16,6 +16,7 @@ from scripts.api import occupancy as occupancy_mod
 from scripts.api import state_router
 from scripts.api.codexbar_usage import compute_weekly_pace_delta_pct, lane_is_under_weekly_pace
 from scripts.api.main import app
+from scripts.api.observer_presence import reset_observer_presence
 from scripts.api.project_state_sanitize import (
     ProjectStateValidationError,
     sanitize_lane_usage_entry,
@@ -107,10 +108,51 @@ def _document_with_lane_usage(**overrides: Any) -> dict[str, Any]:
 @pytest.fixture(autouse=True)
 def _clear_store() -> None:
     reset_project_state_store()
+    reset_observer_presence()
     occupancy_mod.reset_empty_host_tracking()
     yield
     reset_project_state_store()
+    reset_observer_presence()
     occupancy_mod.reset_empty_host_tracking()
+
+
+def _mac_operator_report() -> dict[str, Any]:
+    return {
+        "host_id": "mac-operator",
+        "primary": _primary(head_sha=SHA_HEAD, origin_main_sha=SHA_MAIN),
+        "worktrees": {"count": 1},
+        "services": [_service("api")],
+        "workers": [],
+        "lane_usage": [_under_pace_lane_usage()],
+        "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }
+
+
+def _observer_presence_body(*, status: str, host_id: str = "host-job") -> dict[str, Any]:
+    return {
+        "agent": "claude",
+        "kind": "observer",
+        "task_id": "7139",
+        "status": status,
+        "host_id": host_id,
+        "instance_id": "123e4567-e89b-12d3-a456-426614174000",
+    }
+
+
+def _seed_host_job_empty_host_alarm(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _freeze_attention_now(monkeypatch)
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    load_mod.clear_host_load_cache()
+    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    posted = loop_client.post("/api/fleet/projects/v1/report", json=_mac_operator_report())
+    assert posted.status_code == 200
+    occupancy_mod._idle_since_mono["host-job"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
 
 
 def test_collector_allowlist_strips_pii_from_codexbar_fixture(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -330,18 +372,69 @@ def test_unmocked_post_lane_usage_then_occupancy_attention(
 
 
 def test_sanitize_lane_usage_rejects_email_like_lane_token() -> None:
-    assert sanitize_lane_usage_entry(
-        {
-            "lane": "claude",
-            "window": "weekly",
-            "used_pct": 5.0,
-            "resets_at": "operator@example.com",
-        }
-    ) is None
+    assert (
+        sanitize_lane_usage_entry(
+            {
+                "lane": "claude",
+                "window": "weekly",
+                "used_pct": 5.0,
+                "resets_at": "operator@example.com",
+            }
+        )
+        is None
+    )
 
 
 def test_validate_report_document_accepts_lane_usage() -> None:
     validate_report_document(_document_with_lane_usage())
+
+
+def test_empty_host_alarm_fires_with_idle_observer_seat(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _seed_host_job_empty_host_alarm(monkeypatch, tmp_path)
+    try:
+        presence = loop_client.post(
+            "/api/observer/presence",
+            json=_observer_presence_body(status="idle"),
+        )
+        assert presence.status_code == 200
+
+        response = client.get("/api/occupancy")
+        assert response.status_code == 200
+        data = response.json()
+        host = data["hosts"]["host-job"]
+        assert host["burn_state"] == "idle"
+        assert host["idle_or_empty"] is True
+        assert "empty_host_underused:host-job" in data["attention"]
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_empty_host_alarm_suppressed_by_active_observer_seat(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _seed_host_job_empty_host_alarm(monkeypatch, tmp_path)
+    try:
+        presence = loop_client.post(
+            "/api/observer/presence",
+            json=_observer_presence_body(status="working"),
+        )
+        assert presence.status_code == 200
+
+        response = client.get("/api/occupancy")
+        assert response.status_code == 200
+        data = response.json()
+        host = data["hosts"]["host-job"]
+        assert host["burn_state"] == "active"
+        assert host["idle_or_empty"] is False
+        assert "empty_host_underused:host-job" not in data["attention"]
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
 
 
 def test_post_report_rejects_foreign_lane_usage_field() -> None:
