@@ -116,8 +116,15 @@ def _task_token(value: Any) -> str | None:
 
 
 def _worker_id_token(value: Any, *, tally: SkipTally | None = None) -> str | None:
+    if value is None:
+        return None
+    raw = str(value).strip()
+    if not raw:
+        return None
     text = safe_field(value, role="task_id")
     if text is None:
+        if tally is not None:
+            tally.bump()
         return None
     if _ID_RE.fullmatch(text):
         return text

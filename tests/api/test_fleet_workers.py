@@ -236,15 +236,26 @@ def test_no_occupancy_probe_on_read_path(monkeypatch: pytest.MonkeyPatch) -> Non
     assert response.status_code == 200
 
 
-def test_oversized_task_id_dropped_not_500(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize(
+    "task_id",
+    [
+        "a" * 65,
+        "a" * 129,
+        "bad/id",
+    ],
+)
+def test_oversized_task_id_dropped_not_500(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    task_id: str,
+) -> None:
     tasks = tmp_path / "tasks"
     tasks.mkdir()
-    long_id = "a" * 65
     now = datetime.now(UTC)
     (tasks / "long.json").write_text(
         json.dumps(
             {
-                "task_id": long_id,
+                "task_id": task_id,
                 "agent": "cursor",
                 "status": "running",
                 "pid": os.getpid(),
@@ -261,8 +272,8 @@ def test_oversized_task_id_dropped_not_500(tmp_path: Path, monkeypatch: pytest.M
     assert response.status_code == 200
     data = response.json()
     host = _host_by_id(data, "host-job")
-    assert not any(worker["id"] == long_id for worker in host["workers"])
-    assert data["counts"]["skipped"] >= 1
+    assert not any(worker["id"] == task_id for worker in host["workers"])
+    assert data["counts"]["skipped"] == 1
 
 
 def test_validate_workers_list_rejects_none() -> None:
