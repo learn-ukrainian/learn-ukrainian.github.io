@@ -1147,7 +1147,10 @@ def _bundle_api_request(
             raw = response.read().decode("utf-8")
             status = int(getattr(response, "status", 200))
     except urllib.error.HTTPError as exc:
-        if method == "GET" and exc.code == 404 and path.split("?", 1)[0].endswith("/bundles/latest"):
+        if method == "GET" and exc.code == 404 and (
+            path.split("?", 1)[0].endswith("/bundles/latest")
+            or "/bundles/" in path.split("?", 1)[0]
+        ):
             raise RolloverBundleNotFound("bundle API has no matching bundle") from exc
         raise RolloverBundleAPIUnavailable(f"bundle API unavailable: HTTP {exc.code}") from exc
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
@@ -1203,6 +1206,51 @@ def _bundle_api_latest(
         blob = base64.b64decode(encoded.encode("ascii"), validate=True)
     except (ValueError, binascii.Error) as exc:
         raise ValueError("bundle API latest blob is not valid base64") from exc
+    return manifest, blob
+
+
+def _bundle_api_list(
+    args: argparse.Namespace,
+    *,
+    stream_id: str,
+    limit: int = 20,
+) -> list[dict[str, Any]]:
+    """List bundle metadata in upload-sequence order without downloading blobs."""
+    if limit < 1 or limit > 100:
+        raise ValueError("bundle API list limit must be between 1 and 100")
+    payload = _bundle_api_request(
+        args.monitor_base_url,
+        method="GET",
+        path=f"/api/epics/v1/{stream_id}/bundles?{urlencode({'limit': limit})}",
+    )
+    bundles = payload.get("bundles")
+    if not isinstance(bundles, list) or not all(isinstance(bundle, dict) for bundle in bundles):
+        raise ValueError("bundle API list response omitted valid bundle metadata")
+    return bundles
+
+
+def _bundle_api_by_seq(
+    args: argparse.Namespace,
+    *,
+    stream_id: str,
+    upload_seq: int,
+) -> tuple[dict[str, Any], bytes]:
+    """Fetch one bundle's manifest and blob by its immutable upload sequence."""
+    if upload_seq < 1:
+        raise ValueError("bundle API upload sequence must be positive")
+    payload = _bundle_api_request(
+        args.monitor_base_url,
+        method="GET",
+        path=f"/api/epics/v1/{stream_id}/bundles/{upload_seq}",
+    )
+    manifest = payload.get("manifest")
+    encoded = payload.get("blob")
+    if not isinstance(manifest, dict) or not isinstance(encoded, str):
+        raise ValueError("bundle API sequence response omitted its manifest or blob")
+    try:
+        blob = base64.b64decode(encoded.encode("ascii"), validate=True)
+    except (ValueError, binascii.Error) as exc:
+        raise ValueError("bundle API sequence blob is not valid base64") from exc
     return manifest, blob
 
 
@@ -5329,9 +5377,9 @@ def cmd_export_bundle(args: argparse.Namespace) -> int:
         "source_state": rel(state_path, state_root),
         "upload": "not-requested",
     }
-    for member, rule in secret_hits:
+    for _member, rule in secret_hits:
         print(
-            f"WARNING: rollover bundle secret scan hit member={member} rule={rule}; "
+            f"WARNING: rollover bundle secret scan hit rule={rule}; "
             "local bundle was written but upload was skipped.",
             file=sys.stderr,
         )
@@ -5378,9 +5426,9 @@ def _maybe_auto_upload_bundle(
             supplied=None,
         )
         write_bytes_atomic(output_path, blob)
-        for member, rule in secret_hits:
+        for _member, rule in secret_hits:
             print(
-                f"WARNING: rollover bundle secret scan hit member={member} rule={rule}; "
+                f"WARNING: rollover bundle secret scan hit rule={rule}; "
                 "local bundle was written but upload was skipped.",
                 file=sys.stderr,
             )
@@ -5583,20 +5631,38 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             candidates.append((manifest, members))
         else:
             stream_id = str(args.from_api)
-            any_manifest, any_blob = _bundle_api_latest(args, stream_id=stream_id)
-            any_manifest, any_members = _bundle_extract(any_blob, manifest_override=any_manifest)
-            candidates.append((any_manifest, any_members))
-            try:
-                own_manifest, own_blob = _bundle_api_latest(args, stream_id=stream_id, agent=agent)
-            except RolloverBundleNotFound:
-                own_manifest = None
-            except RolloverBundleAPIUnavailable as exc:
-                own_manifest = None
-                print(f"WARNING: own-agent rollover bundle lookup skipped (fail-open): {exc}", file=sys.stderr)
-            if own_manifest is not None:
-                own_manifest, own_members = _bundle_extract(own_blob, manifest_override=own_manifest)
-                if _bundle_order(own_manifest) > _bundle_order(any_manifest):
-                    candidates.append((own_manifest, own_members))
+            listed = _bundle_api_list(args, stream_id=stream_id)
+            if not listed:
+                raise RolloverBundleNotFound("bundle API has no matching bundle")
+
+            def upload_seq(row: Mapping[str, Any]) -> int:
+                try:
+                    return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
+                except (TypeError, ValueError) as exc:
+                    raise ValueError("bundle API list upload sequence is malformed") from exc
+
+            def row_agent(row: Mapping[str, Any]) -> str:
+                if row.get("agent") is not None:
+                    return str(row["agent"])
+                manifest = row.get("manifest")
+                if not isinstance(manifest, Mapping):
+                    raise ValueError("bundle API list manifest is malformed")
+                return str(manifest.get("agent") or "")
+
+            own_row = next((row for row in listed if row_agent(row) == agent), None)
+            handoff_row = max(listed, key=upload_seq)
+            selected_sequences = {
+                upload_seq(row)
+                for row in (own_row, handoff_row)
+                if row is not None
+            }
+            for row in listed:
+                sequence = upload_seq(row)
+                if sequence not in selected_sequences:
+                    continue
+                manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
+                manifest, members = _bundle_extract(blob, manifest_override=manifest)
+                candidates.append((manifest, members))
 
         for manifest, _ in candidates:
             stream_id = str(manifest.get("stream_id") or "")

@@ -103,11 +103,12 @@ SESSION_HANDOFF_AGENT=claude-infra .venv/bin/python scripts/orchestration/thread
   import-bundle --agent claude-infra --stream epic:6943 --file /tmp/rollover.tgz
 ```
 
-When the successor is a different agent, the lane handoff transfers with the
-newest stream bundle and the strict packet binds only same-harness successors,
-who receive it from their own agent's bundle; a different-harness successor
-keeps the foreign lineage under its recorded agent namespace and must not treat
-that packet as its own.
+When the successor is a different agent, the lane handoff follows the newest
+**upload** across agents, while the successor's own packet is selected separately
+from the newest upload in its own agent namespace; the strict packet binds only
+same-harness successors, who receive it from that own namespace. A
+different-harness successor keeps any foreign lineage under its recorded agent
+namespace and must not treat that packet as its own.
 
 The API host stores at most the five newest bundles for each
 `(stream, agent, lineage)`. Re-uploading the same `bundle_sha256` is idempotent.
@@ -116,8 +117,8 @@ The manifest fingerprints the tokenised member bytes and records
 `{{REPO_ROOT}}`, while JSON members are copied byte-for-byte. The bundle tar
 hash is deterministic, `.native-intent.lock` is excluded, and present semantic
 snapshot templates, strict JSON artifacts, identity receipts, and canary
-receipts are included. Secret-pattern hits name the member and rule, write the
-local file, and skip upload.
+receipts are included. Secret-pattern hits log only the rule id, write the local
+file, and skip upload.
 
 Import compares `(generation, status rank, prepared_at, rollover_id,
 upload_seq)`, where confirmed/started outranks resumed, which outranks

@@ -598,14 +598,14 @@ def remote_claim(stream_id: str, request: Request, body: dict[str, Any]) -> JSON
         response = _stream_response(store, stream_id, limit)
         response["outcome"] = outcome
         return JSONResponse(content=response, headers={"Cache-Control": "no-store"})
-    except LeaseConflictError as exc:
+    except LeaseConflictError:
         try:
             projection = _stream_response(store, stream_id, limit)
         except Exception:
-            return _error(409, str(exc))
+            return _error(409, "lease conflict")
         lease = projection.get("lease")
         if not isinstance(lease, dict) or lease.get("state") != "active":
-            return _error(409, str(exc))
+            return _error(409, "lease conflict")
         holder = lease.get("holder") or {}
         return _error(
             409,
@@ -729,8 +729,8 @@ def remote_bundle_upload(stream_id: str, request: Request, body: dict[str, Any])
             content={"schema": SCHEMA, **_bundle_api_payload(stored, include_blob=False)},
             headers={"Cache-Control": "no-store"},
         )
-    except LeaseConflictError as exc:
-        return _error(409, str(exc))
+    except LeaseConflictError:
+        return _error(409, "lease conflict")
     except (ValueError, ContentRejectedError, binascii.Error):
         return _error(400, "invalid rollover bundle upload request")
     except Exception:
@@ -777,6 +777,23 @@ def remote_bundle_latest(stream_id: str, agent: str | None = None, lineage_id: s
         return _error(404, "rollover bundle not found")
     except (ValueError, ContentRejectedError):
         return _error(400, "invalid latest rollover bundle request")
+    except Exception:
+        return _server_error()
+
+
+@router.get("/v1/{stream_id}/bundles/{upload_seq}")
+def remote_bundle_by_upload_seq(stream_id: str, upload_seq: int) -> JSONResponse:
+    try:
+        stream_id = _epic_stream(stream_id)
+        stored = _store().rollover_bundle_by_upload_seq(stream_id, upload_seq)
+        return JSONResponse(
+            content={"schema": SCHEMA, "stream_id": stream_id, **_bundle_api_payload(stored, include_blob=True)},
+            headers={"Cache-Control": "no-store"},
+        )
+    except NotFoundError:
+        return _error(404, "rollover bundle not found")
+    except (ValueError, ContentRejectedError):
+        return _error(400, "invalid rollover bundle sequence request")
     except Exception:
         return _server_error()
 

@@ -341,20 +341,27 @@ def test_import_newer_lineage_supersedes_one_of_two_pending_detect_candidates(
     assert detected["lineage_id"] != remote["lineage_id"]
 
 
-def test_from_api_cross_agent_import_keeps_foreign_lineage_and_upload_ordered_handoff(
+def test_from_api_cross_agent_import_uses_max_upload_seq_for_handoff(
     tmp_path: Path,
     handoff_candidates: None,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    source_foreign = tmp_path / "source-claude"
+    source_foreign_old = tmp_path / "source-claude-old"
     source_own = tmp_path / "source-grok"
+    source_foreign_new = tmp_path / "source-claude-new"
     target = tmp_path / "target"
-    source_foreign.mkdir()
+    source_foreign_old.mkdir()
     source_own.mkdir()
+    source_foreign_new.mkdir()
     target.mkdir()
 
-    foreign = _seed_state(source_foreign, thread_id="foreign-thread", agent="claude-infra", generation=3)
+    foreign_old = _seed_state(
+        source_foreign_old,
+        thread_id="foreign-old-thread",
+        agent="claude-infra",
+        generation=3,
+    )
     own = _seed_state(
         source_own,
         thread_id="own-thread",
@@ -363,39 +370,69 @@ def test_from_api_cross_agent_import_keeps_foreign_lineage_and_upload_ordered_ha
         harness="grok-tui",
         prepared_at="2026-08-24T17:00:00Z",
     )
-    (source_foreign / HANDOFF_PATH).write_text("foreign lane handoff\n", encoding="utf-8")
+    foreign_new = _seed_state(
+        source_foreign_new,
+        thread_id="foreign-new-thread",
+        agent="claude-infra",
+        generation=3,
+        prepared_at="2026-08-24T18:00:00Z",
+    )
+    (source_foreign_old / HANDOFF_PATH).write_text("stale foreign lane handoff\n", encoding="utf-8")
     (source_own / HANDOFF_PATH).write_text("own lane handoff\n", encoding="utf-8")
+    (source_foreign_new / HANDOFF_PATH).write_text("fresh foreign lane handoff\n", encoding="utf-8")
 
-    foreign_bundle = tmp_path / "foreign.tgz"
+    foreign_old_bundle = tmp_path / "foreign-old.tgz"
     own_bundle = tmp_path / "own.tgz"
-    assert th.cmd_export_bundle(_export_args(source_foreign, foreign, foreign_bundle)) == 0
+    foreign_new_bundle = tmp_path / "foreign-new.tgz"
+    assert th.cmd_export_bundle(_export_args(source_foreign_old, foreign_old, foreign_old_bundle)) == 0
     capsys.readouterr()
     assert th.cmd_export_bundle(_export_args(source_own, own, own_bundle)) == 0
     capsys.readouterr()
-    foreign_manifest, _ = th._bundle_extract(foreign_bundle.read_bytes())
+    assert th.cmd_export_bundle(_export_args(source_foreign_new, foreign_new, foreign_new_bundle)) == 0
+    capsys.readouterr()
+    foreign_old_manifest, _ = th._bundle_extract(foreign_old_bundle.read_bytes())
     own_manifest, _ = th._bundle_extract(own_bundle.read_bytes())
-    foreign_blob = foreign_bundle.read_bytes()
+    foreign_new_manifest, _ = th._bundle_extract(foreign_new_bundle.read_bytes())
+    foreign_old_blob = foreign_old_bundle.read_bytes()
     own_blob = own_bundle.read_bytes()
-    foreign_manifest["upload_seq"] = 10
-    own_manifest["upload_seq"] = 9
+    foreign_new_blob = foreign_new_bundle.read_bytes()
+    foreign_old_manifest["upload_seq"] = 1
+    own_manifest["upload_seq"] = 2
+    foreign_new_manifest["upload_seq"] = 3
 
-    def latest(_args: SimpleNamespace, *, stream_id: str, agent: str | None = None):
+    bundles = {
+        1: (foreign_old_manifest, foreign_old_blob),
+        2: (own_manifest, own_blob),
+        3: (foreign_new_manifest, foreign_new_blob),
+    }
+
+    def bundle_list(_args: SimpleNamespace, *, stream_id: str, limit: int = 20):
         assert stream_id == STREAM
-        return (foreign_manifest, foreign_blob) if agent is None else (own_manifest, own_blob)
+        assert limit == 20
+        return [
+            {"manifest": manifest, "upload_seq": sequence}
+            for sequence, (manifest, _blob) in sorted(bundles.items(), reverse=True)
+        ]
 
-    monkeypatch.setattr(th, "_bundle_api_latest", latest)
+    def bundle_by_seq(_args: SimpleNamespace, *, stream_id: str, upload_seq: int):
+        assert stream_id == STREAM
+        return bundles[upload_seq]
+
+    monkeypatch.setattr(th, "_bundle_api_list", bundle_list)
+    monkeypatch.setattr(th, "_bundle_api_by_seq", bundle_by_seq)
     args = _import_args(target, None, agent="grok-infra", from_api=STREAM)
     assert th.cmd_import_bundle(args) == 0
     result = json.loads(capsys.readouterr().out)
     assert [item["agent"] for item in result["bundles"]] == ["claude-infra", "grok-infra"]
     assert result["handoff_source"] == "claude-infra"
-    assert result["handoff_upload_seq"] == 10
+    assert result["handoff_upload_seq"] == 3
 
-    foreign_lineage = target / th.default_state_path("claude-infra", foreign["lineage_id"])
+    foreign_lineage = target / th.default_state_path("claude-infra", foreign_new["lineage_id"])
     own_lineage = target / th.default_state_path("grok-infra", own["lineage_id"])
     assert foreign_lineage.is_file()
     assert own_lineage.is_file()
-    assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "foreign lane handoff\n"
+    handoff_text = (target / HANDOFF_PATH).read_text(encoding="utf-8")
+    assert handoff_text == "fresh foreign lane handoff\n"
 
     detect_args = SimpleNamespace(
         repo_root=target,
@@ -416,6 +453,8 @@ def test_from_api_cross_agent_import_keeps_foreign_lineage_and_upload_ordered_ha
     assert detected["agent"] == "claude-infra"
     assert detected["status"] == "pending_start"
     assert detected["generation"] == 3
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    print(handoff_text, end="")
 
 
 def test_from_api_foreign_lineage_is_ignored_by_driver_detect(
@@ -437,13 +476,13 @@ def test_from_api_foreign_lineage_is_ignored_by_driver_detect(
     manifest["upload_seq"] = 3
     blob = bundle.read_bytes()
 
-    def latest(_args: SimpleNamespace, *, stream_id: str, agent: str | None = None):
+    def bundle_list(_args: SimpleNamespace, *, stream_id: str, limit: int = 20):
         assert stream_id == STREAM
-        if agent is None:
-            return manifest, blob
-        raise th.RolloverBundleNotFound("no own-agent bundle")
+        assert limit == 20
+        return [{"manifest": manifest, "upload_seq": 3}]
 
-    monkeypatch.setattr(th, "_bundle_api_latest", latest)
+    monkeypatch.setattr(th, "_bundle_api_list", bundle_list)
+    monkeypatch.setattr(th, "_bundle_api_by_seq", lambda _args, *, stream_id, upload_seq: (manifest, blob))
     assert th.cmd_import_bundle(_import_args(target, None, agent="grok-infra", from_api=STREAM)) == 0
     capsys.readouterr()
 
@@ -506,7 +545,21 @@ def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(
     assert th.cmd_export_bundle(_export_args(source, state, bundle, upload=True)) == 0
     assert not called
     assert bundle.is_file()
-    assert "member=" in capsys.readouterr().err
+    warning = capsys.readouterr().err
+    assert "rule=credential-assignment" in warning
+    assert "supersecret-value" not in warning
+
+    auto_result = th._maybe_auto_upload_bundle(
+        _export_args(source, state, bundle),
+        repo_root=source,
+        state_root=source,
+        agent=state["agent"],
+        state=state,
+    )
+    assert auto_result["status"] == "skipped-secret-scan"
+    auto_warning = capsys.readouterr().err
+    assert "rule=credential-assignment" in auto_warning
+    assert "supersecret-value" not in auto_warning
 
 
 def test_retention_keeps_latest_five_and_store_false_positive_contract(tmp_path: Path) -> None:

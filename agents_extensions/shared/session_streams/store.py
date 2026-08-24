@@ -1790,6 +1790,20 @@ class SessionStreamStore:
                 raise NotFoundError("no rollover bundle exists for the requested lineage")
             return self._rollover_bundle_payload(row, include_blob=True)
 
+    def rollover_bundle_by_upload_seq(self, stream_id: str, upload_seq: int) -> dict[str, Any]:
+        """Load one immutable rollover bundle by its stream upload sequence."""
+        stream_id = validate_stream_id(stream_id)
+        if upload_seq < 1:
+            raise ValueError("rollover bundle upload sequence must be positive")
+        with self._read_snapshot() as connection:
+            row = connection.execute(
+                "SELECT * FROM rollover_bundles WHERE stream_id = ? AND bundle_id = ?",
+                (stream_id, upload_seq),
+            ).fetchone()
+            if row is None:
+                raise NotFoundError("rollover bundle not found")
+            return self._rollover_bundle_payload(row, include_blob=True)
+
     @staticmethod
     def _identity_is_safe(value: str) -> bool:
         return bool(value) and len(value) <= 256 and all(char.isalnum() or char in "._:/-" for char in value)

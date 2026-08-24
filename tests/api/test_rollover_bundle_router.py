@@ -108,6 +108,13 @@ def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path
     assert latest.json()["manifest"]["upload_seq"] == 1
     assert base64.b64decode(latest.json()["blob"]) == blob
 
+    by_sequence = client.get("/api/epics/v1/epic:7178/bundles/1")
+    assert by_sequence.status_code == 200
+    assert by_sequence.json()["manifest"]["upload_seq"] == 1
+    assert base64.b64decode(by_sequence.json()["blob"]) == blob
+    missing_sequence = client.get("/api/epics/v1/epic:7178/bundles/99")
+    assert missing_sequence.status_code == 404
+
     secret_manifest, secret_blob = _bundle(
         rollover_id="rollover-api2",
         body=b"api-key: secret-value\n",
