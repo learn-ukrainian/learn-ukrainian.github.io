@@ -24,6 +24,7 @@ from scripts.api.project_state_store import (
     StaleReportError,
     freshness_from_age,
     get_live_report,
+    lane_usage_status_from_document,
     shape_host_payload,
     unknown_host_payload,
     upsert_report,
@@ -116,6 +117,7 @@ class ProjectStateReport(BaseModel):
     services: list[dict[str, Any]]
     collected_at: str
     workers: list[dict[str, Any]] | None = None
+    lane_usage: list[dict[str, Any]] | None = None
 
 
 @router.get("")
@@ -155,6 +157,7 @@ async def post_project_report(request: Request, body: ProjectStateReport) -> JSO
             "ttl_seconds": REPORT_TTL_SECONDS,
             "schema": schema,
             "workers_status": workers_status_from_document(document),
+            "lane_usage_status": lane_usage_status_from_document(document),
         },
         headers=no_store,
     )

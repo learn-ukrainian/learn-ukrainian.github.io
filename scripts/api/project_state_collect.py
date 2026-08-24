@@ -12,7 +12,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.api.codexbar_usage import SUBSCRIPTION_PROVIDERS, fetch_codexbar_usage
 from scripts.api.fleet_workers_collect import collect_local_workers_for_reporter
+from scripts.api.project_state_sanitize import sanitize_lane_usage_entry
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import is_release_root
 
@@ -277,6 +279,33 @@ def collect_service_row(
     return row
 
 
+def _lane_usage_row_from_provider(provider: str) -> dict[str, Any] | None:
+    data = fetch_codexbar_usage(provider)
+    if not isinstance(data, dict) or data.get("status") != "healthy":
+        return None
+    weekly_used = data.get("weekly_used_pct")
+    resets_at = data.get("weekly_resets_at")
+    if weekly_used is None or not isinstance(resets_at, str):
+        return None
+    return sanitize_lane_usage_entry(
+        {
+            "lane": data.get("lane") or provider,
+            "window": "weekly",
+            "used_pct": weekly_used,
+            "resets_at": resets_at,
+        }
+    )
+
+
+def collect_lane_usage() -> list[dict[str, Any]] | None:
+    rows: list[dict[str, Any]] = []
+    for provider in SUBSCRIPTION_PROVIDERS:
+        row = _lane_usage_row_from_provider(provider)
+        if row is not None:
+            rows.append(row)
+    return rows or None
+
+
 def collect_local_document(
     host_id: str,
     *,
@@ -284,6 +313,7 @@ def collect_local_document(
     service_state: ServiceStateFn | None = None,
     listener_pid: Callable[[str], int | None] | None = None,
     process_cwd: ProcessCwdFn | None = None,
+    include_lane_usage: bool = False,
 ) -> dict[str, Any] | None:
     start = (repo_root or Path.cwd()).resolve()
     primary_root = resolve_primary_repo_root(start)
@@ -300,7 +330,7 @@ def collect_local_document(
         )
         for definition in SERVICE_DEFINITIONS
     ]
-    return {
+    document: dict[str, Any] = {
         "host_id": host_id,
         "primary": primary,
         "worktrees": {"count": collect_worktree_count(primary_root)},
@@ -308,3 +338,8 @@ def collect_local_document(
         "workers": collect_local_workers_for_reporter(),
         "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     }
+    if include_lane_usage:
+        lane_usage = collect_lane_usage()
+        if lane_usage is not None:
+            document["lane_usage"] = lane_usage
+    return document

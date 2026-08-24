@@ -60,9 +60,15 @@ from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
 from . import preparation_state
-from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data, trigger_background_refresh
+from .codexbar_usage import (
+    compute_weekly_pace_delta_pct,
+    get_provider_usage_data,
+    refresh_provider_usage_data,
+    trigger_background_refresh,
+)
 from .config import CURRICULUM_ROOT, LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .lane_health import compute_lane_health
+from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
 
 try:
@@ -605,6 +611,88 @@ def _runtime_usage_records_7d() -> int | None:
         return None
 
 
+def _status_from_weekly_used(weekly_used: float, weekly_pace_delta_pct: float | None) -> str:
+    is_in_deficit = (
+        weekly_pace_delta_pct is not None and weekly_pace_delta_pct > 0
+    ) or weekly_used >= 90.0
+    if weekly_used >= 90.0:
+        return "near_cap"
+    if is_in_deficit:
+        return "hot"
+    if weekly_used < 50.0:
+        return "cool"
+    return "warm"
+
+
+def _overlay_notebook_lane_usage(
+    agents: dict[str, Any],
+    *,
+    current_time: datetime,
+    budgets: dict[str, Any],
+) -> tuple[bool, float | None]:
+    freshest = get_freshest_lane_usage()
+    if freshest is None or freshest.age_s > REPORT_TTL_SECONDS:
+        return False, None
+    sourced = False
+    for row in freshest.lanes:
+        if row.get("window") != "weekly":
+            continue
+        lane = row.get("lane")
+        used_pct = row.get("used_pct")
+        resets_at = row.get("resets_at")
+        if lane not in agents or not isinstance(used_pct, (int, float)) or not isinstance(resets_at, str):
+            continue
+        cb = agents[lane].get("codexbar") or {}
+        if cb.get("weekly_used_pct") is not None:
+            continue
+        weekly_used = float(used_pct)
+        weekly_pace_delta_pct = compute_weekly_pace_delta_pct(
+            weekly_used,
+            resets_at,
+            now=current_time,
+        )
+        cb_status = _status_from_weekly_used(weekly_used, weekly_pace_delta_pct)
+        agents[lane]["notebook_report"] = {
+            "source": "notebook-report",
+            "age_s": freshest.age_s,
+            "weekly_used_pct": weekly_used,
+            "weekly_remaining_pct": max(0.0, min(100.0, 100.0 - weekly_used)),
+            "weekly_resets_at": resets_at,
+            "weekly_pace_delta_pct": weekly_pace_delta_pct,
+            "freshness": "fresh",
+        }
+        sourced = True
+        if lane == "claude":
+            agent_config = budgets.get("claude") if isinstance(budgets.get("claude"), dict) else {}
+            interactive_config = (
+                agent_config.get("interactive") if isinstance(agent_config.get("interactive"), dict) else {}
+            )
+            promo_through = _parse_iso_date(interactive_config.get("promo_through"))
+            promo_active = bool(promo_through and current_time.date() <= promo_through)
+            claude_cap = float(
+                interactive_config.get("promo_weekly_cap_usd" if promo_active else "weekly_cap_usd") or 0.0
+            )
+            agents[lane]["interactive"]["burn_pct_7d"] = weekly_used
+            agents[lane]["interactive"]["status"] = cb_status
+            agents[lane]["interactive"]["spent_7d_usd"] = (
+                _round_money((weekly_used / 100.0) * claude_cap) if claude_cap else None
+            )
+            agents[lane]["burn_pct_7d"] = weekly_used
+            agents[lane]["status"] = cb_status
+            agents[lane]["spent_7d_usd"] = agents[lane]["interactive"]["spent_7d_usd"]
+            agents[lane]["remaining_pct"] = 100.0 - weekly_used
+            agents[lane]["resets_at"] = resets_at
+        else:
+            agent_config = budgets.get(lane) if isinstance(budgets.get(lane), dict) else {}
+            cap = float(agent_config.get("weekly_cap_usd") or 0.0) if agent_config else 0.0
+            agents[lane]["burn_pct_7d"] = weekly_used
+            agents[lane]["status"] = cb_status
+            agents[lane]["spent_7d_usd"] = _round_money((weekly_used / 100.0) * cap) if cap else None
+            agents[lane]["remaining_pct"] = 100.0 - weekly_used
+            agents[lane]["resets_at"] = resets_at
+    return sourced, freshest.age_s
+
+
 def compute_routing_budget(
     now: datetime | None = None,
     *,
@@ -619,6 +707,8 @@ def compute_routing_budget(
     extras = _load_budget_extras(budgets)
     reset_hours = extras["reset_imminent_hours"]
     resets_at = _next_weekly_reset(current_time)
+    nb_sourced_any = False
+    nb_max_age_s: float | None = None
 
     health_records = {}
     try:
@@ -703,6 +793,38 @@ def compute_routing_budget(
         unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
         ranked = healthy_lanes + unhealthy_lanes
 
+        nb_sourced_any, nb_max_age_s = _overlay_notebook_lane_usage(
+            agents,
+            current_time=current_time,
+            budgets={},
+        )
+        if nb_sourced_any:
+            ranked_subs = [
+                {
+                    "lane": lane,
+                    "type": "subscription",
+                    "status": agents[lane].get("status", "unknown"),
+                    "burn_pct_7d": agents[lane].get("burn_pct_7d"),
+                    "remaining_pct": agents[lane].get("remaining_pct"),
+                    "resets_at": agents[lane].get("resets_at", resets_at),
+                    "health": agents[lane]["health"],
+                }
+                for lane in SUBSCRIPTION_LANES
+            ]
+            ranked = ranked_subs + ranked_apis
+            healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
+            unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
+            ranked = healthy_lanes + unhealthy_lanes
+            rec = _recommend_agent(
+                agents,
+                warnings,
+                current_time=current_time,
+                reset_imminent_hours=reset_hours,
+                is_stale=False,
+                records_loaded=0,
+                authoritative_data_available=True,
+            )
+
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
@@ -718,6 +840,12 @@ def compute_routing_budget(
                 "budget_ledger_empty": True,
                 "runtime_data_available": bool(runtime_records_7d),
                 "runtime_usage_records_7d": runtime_records_7d,
+                "notebook_report_available": nb_sourced_any,
+                "notebook_report_max_age_s": nb_max_age_s,
+                "usage_sources": {
+                    "allotment": "notebook-report" if nb_sourced_any else "codexbar",
+                    "burn_rate_limit": "agent_runtime_jsonl",
+                },
             },
             "ranked_by_headroom": ranked,
         }
@@ -811,6 +939,7 @@ def compute_routing_budget(
     cb_stale = False
     cb_max_age_s = None
     cb_freshness: dict[str, str] = {}
+    cb_had_any_before_notebook = False
     refreshed_codexbar = refresh_provider_usage_data(SUBSCRIPTION_LANES) if fresh_codexbar else {}
 
     for lane in SUBSCRIPTION_LANES:
@@ -943,6 +1072,17 @@ def compute_routing_budget(
                 "last_failure_at": cb_data.get("last_failure_at") if isinstance(cb_data, dict) else None,
                 "last_failure_code": cb_data.get("last_failure_code", err_code) if isinstance(cb_data, dict) else err_code,
             }
+
+    cb_had_any_before_notebook = cb_sourced_any
+    nb_sourced_any, nb_max_age_s = _overlay_notebook_lane_usage(
+        agents,
+        current_time=current_time,
+        budgets=budgets,
+    )
+    if nb_sourced_any:
+        cb_sourced_any = True
+        if nb_max_age_s is not None and (cb_max_age_s is None or nb_max_age_s > cb_max_age_s):
+            cb_max_age_s = nb_max_age_s
 
     # Hybrid overlay: agent-runtime JSONL burn (rate-limits / outcomes).
     # CodexBar remains authoritative for subscription allotment %; this layer
@@ -1205,9 +1345,17 @@ def compute_routing_budget(
             "runtime_usage_records_7d": runtime_records_7d,
             "budget_ledger_empty": len(records) == 0,
             "usage_sources": {
-                "allotment": "codexbar",
+                "allotment": (
+                    "codexbar+notebook-report"
+                    if nb_sourced_any and cb_had_any_before_notebook
+                    else "notebook-report"
+                    if nb_sourced_any
+                    else "codexbar"
+                ),
                 "burn_rate_limit": "agent_runtime_jsonl",
             },
+            "notebook_report_available": nb_sourced_any,
+            "notebook_report_max_age_s": nb_max_age_s,
         },
         "ranked_by_headroom": ranked,
     }

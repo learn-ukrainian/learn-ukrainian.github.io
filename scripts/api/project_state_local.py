@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     command = args.command or "report"
     host_id = (args.host_id or resolve_launcher_host_id()).strip().lower()
-    document = collect_local_document(host_id, repo_root=args.repo_root)
+    document = collect_local_document(host_id, repo_root=args.repo_root, include_lane_usage=True)
     if document is None:
         print("project-state: collection failed", file=sys.stderr)
         return 2

@@ -426,6 +426,19 @@ Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | j
 
 Observer heartbeats (`POST /api/observer/presence`) appear under `host_id` `cloud-observer` (no CPU/RAM metrics, no SSH identity). Unreachable probes return `"status": "unavailable"` and `"error": "unreachable"` with no SSH/error text and no load metrics. Unavailable hosts still report `idle_or_empty: false` (burn unknown). The load freshness and stale bounds are the existing `HOST_LOAD_FRESH_S` and `HOST_LOAD_MAX_STALE_S` constants in `scripts/api/atlas_jobs_router.py`; this route does not redeclare them.
 
+Top-level `attention` may include empty-host alarms when a mapped host stays `idle_or_empty` for at least **15 minutes** (`EMPTY_HOST_IDLE_THRESHOLD_S`):
+
+- `empty_host_underused:<host_id>` when estate-wide weekly `lane_usage` (freshest notebook report across all hosts) shows at least one paid lane under weekly pace (`weekly_pace_delta_pct < -10`, same formula as CodexBar).
+- `empty_host_unknown_capacity:<host_id>` when no fresh `lane_usage` exists within the project-state TTL (reporter missing or stale).
+
+Idle-since tracking starts at API process boot; a host that is idle immediately after restart cannot alarm until 15 minutes of observed idleness. Activity resets the timer.
+
+### `lane_usage` in project-state reports
+
+Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/projects/v1/report`. Each row is strictly allowlisted to `{lane, window: "weekly", used_pct, resets_at}` — no emails, org names, plan names, or currency. The collector on the notebook reads CodexBar locally and emits only weekly windows (5-hour burst windows are ignored for pace). The server sanitizer rejects foreign fields with HTTP 400. Estate-wide evaluation always reads the freshest live report by `collected_at`, not the idle host's own block.
+
+`GET /api/state/routing-budget` consumes the same weekly rows as `source: notebook-report` with `age_s` when CodexBar on the API host has no authoritative weekly sample; the pinned `records_loaded=0` suppression lifts only when such data exists.
+
 On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
 
 Refresh is armed autonomously, not only by readers: every successful sample schedules a one-shot loop timer for `max(0, 15s - age)`, so a poller that only reads at ~30s still gets a fresh collect without sending a GET. The timer is cancelled when a probe starts or the cache is cleared, and re-arms after each probe — success or failure — while a cache entry remains (a failed probe restarts the full 15s interval, so an unreachable host is not hot-looped). Ordinary reads do not start a new collect during that failure backoff; `fresh=true` still forces a probe.
