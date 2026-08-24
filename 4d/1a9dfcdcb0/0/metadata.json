@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4d1a9dfcdcb0",
+  "session_id": "fleet-e9736cf6c290413089f25ac4b39c7483",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T09:52:11.75036Z",
+  "branch": "agy/branch-holder-7236",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_delegate_check_budget.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "ff6b198e4927",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T09:52:11.742106Z",
+    "agent_lines": 6,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 6,
+    "total_lines_changed": 6,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
