@@ -279,7 +279,7 @@ exec {sys.executable!r} "$@"
 
     provider = root / "provider.sh"
     provider.write_text(
-        f"#!/usr/bin/env bash\ntouch {os.fspath(child_started)!r}\n{provider_body}\n",
+        f"#!/usr/bin/env bash\n{provider_body}\n",
         encoding="utf-8",
     )
     provider.chmod(0o755)
@@ -310,7 +310,7 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
 def test_driver_normal_exit_closes_with_bounded_idempotent_retry(tmp_path: Path) -> None:
     launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
         tmp_path,
-        provider_body="exit 7",
+        provider_body=f"touch {os.fspath(tmp_path / 'child-started')!r}\nexit 7",
         failed_close_attempts=1,
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
@@ -339,36 +339,52 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
     termination_signal: signal.Signals,
     expected_exit: int,
 ) -> None:
+    signal_marker = tmp_path / "signal-received"
+    child_started = tmp_path / "child-started"
     launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
         tmp_path,
-        provider_body="trap 'exit 0' INT TERM HUP\nwhile :; do sleep 0.1; done",
+        provider_body=(
+            f"trap 'touch {os.fspath(signal_marker)!r}; exit 0' INT TERM HUP\n"
+            f"touch {os.fspath(child_started)!r}\n"
+            "for _ in {1..20}; do\n"
+            "  sleep 0.1\n"
+            "done\n"
+            "exit 88\n"
+        ),
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    process = subprocess.Popen(
-        ["bash", os.fspath(launcher), "--epic", "devops"],
-        cwd=launcher.parent,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    deadline = time.monotonic() + 10
-    while time.monotonic() < deadline:
-        if child_started.is_file():
-            break
-        if process.poll() is not None:
-            break
-        time.sleep(0.02)
-    if not child_started.is_file():
-        process.kill()
-        stdout, stderr = process.communicate(timeout=10)
-        pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
+    original_handler = signal.signal(termination_signal, signal.SIG_DFL)
+    try:
+        process = subprocess.Popen(
+            ["bash", os.fspath(launcher), "--epic", "devops"],
+            cwd=launcher.parent,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            if child_started.is_file():
+                break
+            if process.poll() is not None:
+                break
+            time.sleep(0.01)
+        if not child_started.is_file():
+            process.kill()
+            stdout, stderr = process.communicate(timeout=10)
+            pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
 
-    process.send_signal(termination_signal)
-    stdout, stderr = process.communicate(timeout=10)
-    assert process.returncode == expected_exit, stdout + stderr
-    assert close_marker.is_file()
-    assert close_attempts.read_text(encoding="utf-8").strip() == "1"
+        process.send_signal(termination_signal)
+        stdout, stderr = process.communicate(timeout=30)
+        assert signal_marker.is_file(), (
+            f"provider child never received forwarded signal (rc={process.returncode}):\n{stdout}{stderr}"
+        )
+        assert process.returncode == expected_exit, stdout + stderr
+        assert close_marker.is_file()
+        assert close_attempts.read_text(encoding="utf-8").strip() == "1"
+    finally:
+        signal.signal(termination_signal, original_handler)
 
 
 def test_all_driver_adapters_use_common_closure_wrapper() -> None:
