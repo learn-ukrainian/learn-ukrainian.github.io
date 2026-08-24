@@ -29,11 +29,30 @@ driver (e.g. Codex on hramatka) leaves, content dual-write alone is not enough:
 6. **Launcher:** `--epic <name>` must set stream id + handoff slot. Note the
    slot trap: a packet under `claude/` may not appear under `claude-hramatka`.
 
+## Remote lease and handoff authority
+
+Driver leases are claimed on the API host through `/api/epics/v1`; remote mode
+is the default. `--local` is offline-only, prints a warning, and does not make
+the lease visible to other machines. Handoffs are appended with
+`POST /api/epics/v1/epic:<N>/handoff`.
+
+A driver on any machine resumes by launching with `--epic <name>` and claiming
+the same remote stream. It then reads the current holder, lease state, and
+latest digest at SessionStart, and writes the next typed handoff through the
+API. The remote API host is the lease authority; local files remain the
+thread-rollover and lane handoff context, not a competing lease store.
+
+Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before claiming. The
+value must be one of the opaque IDs in the canonical `MONITOR_OCCUPANCY_HOST_IDS`
+mapping (for example, `host-teacher`, `host-job`, or `mac-operator`) so the
+holder is not reported as `local`. Do not use a hostname, alias, or IP address
+as the host ID.
+
 ### Codex DevOps zero-touch boundary
 
 `./start-codex-driver.sh --epic devops` scans only its assigned `codex-devops` rollover
 namespace before acquiring `epic:5703`. Infra keeps the separate `codex-infra`
-namespace and `epic:4707` lease, so a live Infra driver does not block DevOps.
+namespace and `epic:6943` lease, so a live Infra driver does not block DevOps.
 The launcher starts a fresh task when no packet
 exists, or exports one exact fresh unbound `codex-cli` packet for SessionStart
 to bind to the newly created task ID. Multiple packets, an already-resumed
@@ -44,31 +63,29 @@ or selects a packet by title, age, or filesystem order.
 ## CLI
 
 ```bash
-# Read-only diagnosis
-.venv/bin/python -m agents_extensions.shared.session_streams handoff-status \
-  --stream epic:4542
+# Remote claim (the API host owns the lease; set the opaque host identity first)
+LU_MONITOR_HOST_ID="<opaque id>" \
+  .venv/bin/python -m scripts.session_supervisor claim \
+  --role driver --stream epic:4542 \
+  --agent claude --harness claude-code \
+  --instance-id example-driver --process-id 1234 \
+  --lineage-id example-lineage
 
-# Claim as Claude (force-closes expired dead holder if needed, opens session, pins)
-.venv/bin/python -m agents_extensions.shared.session_streams handoff-claim \
-  --stream epic:4542 \
-  --agent claude \
-  --harness claude-code \
-  --instance-id "claude-hramatka-$(uuidgen | tr '[:upper:]' '[:lower:]')" \
-  --lineage-id "lineage-epic-4542-claude-$(date -u +%Y%m%d)"
+# Typed handoff: POST /api/epics/v1/epic:4542/handoff
 ```
 
-Exit codes: `0` ok · `2` usage · `3` stream missing · `4` refuse (live holder,
-PID still up, etc.) · `5` unexpected.
+The driver launcher normally performs the claim. `--local` is the explicit
+offline fallback and prints its warning; it is not a remote handoff path.
 
 ## Manual checklist (until CLI is habitual)
 
-1. `handoff-status --stream epic:N`
-2. If dead PID (`alive=False`) → `handoff-claim` / relaunch (or force-close then open);
-   no need to wait for `expires_at`
-3. If live foreign holder (`alive=True`) → **stop** — ask that harness to close
-4. Tail stream + dual-write board; fold into your handoff file
-5. Launch with `--epic <name>` and bind exact rollover if any
-6. Drive; dual-write after each batch; clean close on end
+1. Read `GET /api/epics/v1/epic:<N>` or the equivalent SessionStart remote state.
+2. If the remote holder is expired/released, relaunch with `--epic <name>` and
+   claim the stream; no local store promotion is needed.
+3. If a live foreign holder remains, **stop** — ask that driver to close.
+4. Read the remote digest surfaced at SessionStart and fold it into your handoff file.
+5. Bind exact rollover IDs if any, then drive.
+6. Append a typed `POST …/handoff` after each batch and cleanly release on end.
 
 ## Related
 

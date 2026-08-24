@@ -41,7 +41,11 @@ def test_session_start_defers_optional_network_diagnostics() -> None:
     source = SESSION_SETUP.read_text(encoding="utf-8")
 
     assert "gh issue list" not in source
-    assert "curl " not in source
+    # The only optional network read is the bounded, fail-open remote epic
+    # hydration required by #7185.
+    assert "/api/epics/v1/" in source
+    assert source.count("curl -sS") == 1
+    assert 'response="$(_hook_deadline 3 curl -sS --max-time 2' in source
     assert "check_decisions.py" not in source
     assert "check_adrs.py" not in source
     assert "check_postmortems.py" not in source

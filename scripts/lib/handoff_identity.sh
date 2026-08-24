@@ -12,9 +12,10 @@
 # selected --agent, so each lane reads/writes its OWN slot and we don't maintain
 # a per-lane wrapper script.
 #
-# Launcher lane selectors are intentionally allowlisted below.  Do not derive a
-# slot or stream id from arbitrary user input: that creates phantom handoff
-# files and can silently attach a session to the wrong stream.
+# Launcher selectors resolve against the issue-stream registry, with the
+# compatibility aliases below layered over it.  Do not derive a slot or stream
+# id from arbitrary user input: that creates phantom handoff files and can
+# silently attach a session to the wrong stream.
 #
 # The infra stream id is the issue-stream registry anchor (infra-harness), not
 # a literal epic number. The next succession must not require a launcher edit.
@@ -30,27 +31,79 @@ _launcher_stream_anchor_epic() {
   local key="${1:-}"
   local registry="${HANDOFF_ISSUE_STREAMS_YAML:-$_HANDOFF_IDENTITY_DIR/../config/issue_streams.yaml}"
   local epic=""
-  [ -n "$key" ] && [ -f "$registry" ] || return 1
+  case "$key" in
+    ''|*[!A-Za-z0-9._-]*) return 1 ;;
+  esac
+  [ -f "$registry" ] || return 1
   epic="$(
     awk -v key="$key" '
-      $0 ~ "^  " key ":" { found = 1; next }
-      found && $0 ~ /^  [^[:space:]]/ { exit }
-      found && $0 ~ /^[[:space:]]+epics:/ {
-        if (match($0, /[0-9]+/)) {
-          print substr($0, RSTART, RLENGTH)
-          exit
+      $0 ~ /^streams:[[:space:]]*(#.*)?$/ {
+        in_streams = 1
+        next
+      }
+      !in_streams { next }
+      {
+        candidate = $1
+        if ($0 !~ /^  [^[:space:]]/ || candidate !~ /^[A-Za-z0-9][A-Za-z0-9._-]*:$/) {
+          candidate = ""
+        } else {
+          sub(/:$/, "", candidate)
         }
+        if (candidate != "") {
+          if (candidate in seen) invalid = 1
+          seen[candidate] = 1
+          if (found && !finished) finished = 1
+          if (!finished && candidate == key) found = 1
+          next
+        }
+      }
+      found && !finished && $0 ~ /^[[:space:]]+epics:[[:space:]]*\[[[:space:]]*[1-9][0-9]*([[:space:]]*,[[:space:]]*[1-9][0-9]*)*[[:space:]]*\][[:space:]]*(#.*)?$/ {
+        match($0, /[1-9][0-9]*/)
+        epic = substr($0, RSTART, RLENGTH)
+        finished = 1
+        next
+      }
+      found && !finished && $0 ~ /^[[:space:]]+epics:[[:space:]]*$/ {
         list = 1
         next
       }
-      found && list && match($0, /[0-9]+/) {
-        print substr($0, RSTART, RLENGTH)
-        exit
+      found && !finished && list {
+        if ($0 ~ /^[[:space:]]*$/ || $0 ~ /^[[:space:]]*#/) next
+        if ($0 ~ /^[[:space:]]*-[[:space:]]*[1-9][0-9]*[[:space:]]*(#.*)?$/) {
+          match($0, /[1-9][0-9]*/)
+          epic = substr($0, RSTART, RLENGTH)
+        }
+        finished = 1
+        next
+      }
+      END {
+        if (!in_streams || invalid || epic == "") exit 1
+        print epic
       }
     ' "$registry"
   )"
   [ -n "$epic" ] || return 1
   printf '%s' "$epic"
+}
+
+# _launcher_registry_stream_keys
+# Print the top-level stream keys in the configured registry.  Keep this parser
+# deliberately narrower than a general YAML parser: launchers only need the
+# registry's two-space stream keys and their first numeric epic.
+_launcher_registry_stream_keys() {
+  local registry="${HANDOFF_ISSUE_STREAMS_YAML:-$_HANDOFF_IDENTITY_DIR/../config/issue_streams.yaml}"
+  [ -f "$registry" ] || return 1
+  awk '
+    $0 ~ /^streams:[[:space:]]*(#.*)?$/ { in_streams = 1; next }
+    in_streams && $0 ~ /^  [^[:space:]]/ && $1 ~ /^[A-Za-z0-9][A-Za-z0-9._-]*:$/ {
+      key = $1
+      sub(/:$/, "", key)
+      print key
+    }
+    END {
+      if (!in_streams) exit 1
+    }
+  ' "$registry"
 }
 
 # _launcher_infra_stream_id
@@ -66,39 +119,64 @@ _launcher_infra_stream_id() {
 # single selector table shared by handoff identities and session supervision.
 # Unknown selectors return 1 and print nothing, so callers can fail closed.
 launcher_selector_resolve() {
-  local stream=""
-  case "${1:-}" in
+  local selector="${1:-}"
+  local key=""
+  local lane=""
+  local epic=""
+
+  # Compatibility aliases preserve the pre-registry lane identity while their
+  # stream anchor still comes from the registry.  Generic selectors below are
+  # intentionally not added here: a new registry row must work without a
+  # launcher edit.
+  case "$selector" in
     infra|harness|infra.fleet-comms)
-      stream="$(_launcher_infra_stream_id)" || return 1
-      case "$stream" in
-        epic:[1-9]*) ;;
-        *) return 1 ;;
-      esac
-      printf 'infra\t%s\n' "$stream"
+      key="infra-harness"
+      lane="infra"
       ;;
     devops|infra.devops)
-      printf 'devops\tepic:5703\n'
+      key="devops"
+      lane="devops"
       ;;
     monitor|infra.monitor)
-      printf 'monitor\tepic:7177\n'
+      key="monitor"
+      lane="monitor"
       ;;
     atlas|practice|practice-hub|atlas.practice)
-      printf 'atlas\tepic:4387\n'
+      key="atlas-practice"
+      lane="atlas"
       ;;
     hramatka|hramatka.lessons)
-      printf 'hramatka\tepic:4542\n'
+      key="hramatka"
+      lane="hramatka"
       ;;
     folk|seminars-folk)
-      printf 'folk\tepic:2836\n'
+      key="seminars-folk"
+      lane="folk"
       ;;
     bio|seminars-bio)
-      printf 'bio\tepic:4431\n'
+      key="seminars-bio"
+      lane="bio"
       ;;
     corpus|corpus-channels)
-      printf 'corpus\tepic:4706\n'
+      key="corpus-channels"
+      lane="corpus"
       ;;
+    infra.*)
+      key="${selector#infra.}"
+      lane="$key"
+      ;;
+    *)
+      key="$selector"
+      lane="$key"
+      ;;
+  esac
+
+  epic="$(_launcher_stream_anchor_epic "$key")" || return 1
+  case "$epic" in
+    [1-9][0-9]*) ;;
     *) return 1 ;;
   esac
+  printf '%s\tepic:%s\n' "$lane" "$epic"
 }
 
 # launcher_selector_lane "<selector>"
@@ -121,16 +199,25 @@ launcher_selector_stream() {
 # Keep launcher diagnostics in one place so every entry point documents the
 # exact same public selector surface.
 launcher_selector_help() {
+  local key=""
   cat <<'EOF'
 Valid lane selectors:
-  infra | harness | infra.fleet-comms
-  devops | infra.devops
-  monitor | infra.monitor
-  atlas | practice | atlas.practice
-  hramatka | hramatka.lessons
-  folk | seminars-folk
-  bio | seminars-bio
-  corpus | corpus-channels
+  Registry stream keys (and infra.<key>):
+EOF
+  while IFS= read -r key; do
+    [ -n "$key" ] || continue
+    printf '    %s | infra.%s\n' "$key" "$key"
+  done < <(_launcher_registry_stream_keys 2>/dev/null || true)
+  cat <<'EOF'
+  Compatibility aliases:
+    infra | harness | infra.fleet-comms
+    devops | infra.devops
+    monitor | infra.monitor
+    atlas | practice | practice-hub | atlas.practice
+    hramatka | hramatka.lessons
+    folk | seminars-folk
+    bio | seminars-bio
+    corpus | corpus-channels
 EOF
 }
 

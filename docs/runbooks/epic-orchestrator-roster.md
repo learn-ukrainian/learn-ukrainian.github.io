@@ -41,6 +41,25 @@ process starts. Codex additionally performs its transport-health probe during
 adapter preflight, before it claims the lease; a degraded probe refuses the
 launch without acquiring a lane.
 
+### Remote lease and handoff authority
+
+Driver leases are claimed on the API host through `/api/epics/v1`; remote mode is
+the default. The explicit `--local` mode is offline-only and prints a warning;
+it is not a fleet-visible lease. A handoff is an API mutation at
+`POST /api/epics/v1/epic:<N>/handoff`, not a second local ownership record.
+
+A driver on any machine resumes a lane by launching with `--epic <epic>` and
+claiming the corresponding remote stream. Before driving, it reads the remote
+lease and digest surfaced at SessionStart; at the end of a batch it appends the
+typed handoff through the API. The successor claims the same stream and folds
+that digest into its own handoff.
+
+Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before a driver claims a
+lease. Use the opaque IDs from the canonical `MONITOR_OCCUPANCY_HOST_IDS`
+mapping (for example, `host-teacher`, `host-job`, or `mac-operator`), so the
+holder is not reported as `local`. Do not substitute a hostname, alias, or IP
+address for the opaque ID.
+
 **Cursor concurrency (documented serialization, #6956):** A Cursor driver session
 **is** the Cursor lane (`fleet_communications.yaml` `concurrency_limit: 1`). Do not
 also `delegate.py dispatch --agent cursor` from that session. What the runtime
@@ -133,7 +152,7 @@ language + review lanes free and puts the loop on the most replaceable capacity:
   Anthropic capacity that does **not** consume the Opus review-of-record seat.
 - **HydrationCapsuleV1** gives Codex (272K) a measured, low-overhead score-and-hydrate path, so it
   can serve as the harness / infra / devops alternate without co-owning Gemini's stream lease.
-  Infra (`epic:4707`) and DevOps (`epic:5703`) are independent streams: one live driver does
+  Infra (`epic:6943`) and DevOps (`epic:5703`) are independent streams: one live driver does
   not block the other, while a second driver on either same stream still fails closed.
 
 ---
@@ -143,7 +162,7 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 1. Launcher pins `SESSION_EPIC`, claims the stream lease, and — for grok/gemini/kimi —
    mints the session canary; Claude/Sonnet use the SessionStart hook chain (no canary lane).
    The Codex DevOps alternate preflights its dedicated `codex-devops` rollover namespace
-   before acquiring `epic:5703`, independently of Infra's `codex-infra` / `epic:4707`
+   before acquiring `epic:5703`, independently of Infra's `codex-infra` / `epic:6943`
    ownership. It then selects at most one applicable rollover: zero packets starts fresh,
    one fresh unbound CLI packet exports exact IDs, and
    ambiguity, an already-resumed packet, or a native-app packet fails closed. After the

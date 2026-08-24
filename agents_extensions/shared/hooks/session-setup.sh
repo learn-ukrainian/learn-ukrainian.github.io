@@ -570,6 +570,90 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   esac
 fi
 
+# Additive remote epic hydration for a bound driver.  The API is already a
+# sanitized projection, so render only the typed holder/lease fields and the
+# latest state/next_action bodies.  A missing Monitor, non-200 response, bad
+# JSON, or an exhausted startup budget is fail-open and leaves the existing
+# local thread-rollover flow untouched.
+REMOTE_EPIC_CONTEXT=""
+build_remote_epic_context() {
+  local stream_id="$1"
+  local monitor_base="${LU_MONITOR_LOOPBACK:-http://127.0.0.1:8765}"
+  local authority=""
+  local port=""
+  local response=""
+  local http_status=""
+  local payload=""
+  local field=""
+  local -a fields=()
+
+  [ -n "$monitor_base" ] || return 0
+  case "$monitor_base" in
+    http://*) ;;
+    *) return 0 ;;
+  esac
+  authority="${monitor_base#http://}"
+  case "$authority" in
+    */) authority="${authority%/}" ;;
+  esac
+  case "$authority" in
+    localhost|127.0.0.1) ;;
+    localhost:*|127.0.0.1:*)
+      port="${authority#*:}"
+      case "$port" in
+        ''|*[!0-9]*) return 0 ;;
+      esac
+      ;;
+    *) return 0 ;;
+  esac
+  command -v curl >/dev/null 2>&1 || return 0
+  response="$(_hook_deadline 3 curl -sS --max-time 2 -w '\n%{http_code}' \
+    "${monitor_base%/}/api/epics/v1/${stream_id}" 2>/dev/null)" || return 0
+  http_status="${response##*$'\n'}"
+  [ "$http_status" = "200" ] || return 0
+  payload="${response%$'\n'*}"
+  [ -n "$payload" ] || return 0
+
+  while IFS= read -r -d '' field; do
+    fields+=("$field")
+  done < <(printf '%s' "$payload" | _hook_deadline 2 jq -j --arg stream_id "$stream_id" '
+    def latest_body($kind):
+      ([((.digest.pinned // []) + (.digest.recent // []))[]
+        | select(.type == $kind)]
+       | sort_by(.entry_id // 0)
+       | last
+       | (.body // "none"));
+    select(
+      .schema == "remote-epic-lifecycle.v1"
+      and .stream_id == $stream_id
+      and (.digest | type == "object")
+      and (.digest.pinned | type == "array")
+      and (.digest.recent | type == "array")
+      and ((.lease == null)
+        or ((.lease | type == "object")
+          and (.lease.state | type == "string")
+          and (.lease.holder | type == "object")))
+    ) |
+    [
+      (.stream_id // $stream_id),
+      (.lease.holder.agent // "none"),
+      (.lease.holder.harness // "none"),
+      (.lease.holder.host_id // "none"),
+      (.lease.state // "unclaimed"),
+      latest_body("state"),
+      latest_body("next_action")
+    ] | .[] | tostring, ([0] | implode)
+  ' 2>/dev/null)
+  [ "${#fields[@]}" -eq 7 ] || return 0
+
+  REMOTE_EPIC_CONTEXT="REMOTE EPIC STATE (Monitor API)
+Stream: ${fields[0]}
+Holder: ${fields[1]} · ${fields[2]} · ${fields[3]}
+Lease: ${fields[4]}
+Latest state: ${fields[5]}
+Latest next action: ${fields[6]}"
+}
+
 # --- GATE INVOCATION: one python process for record/venv/primary/lease/detect.
 # Crash honesty (issue #6411): a crashed helper maps to "could not determine",
 # never to a business verdict such as a lease conflict.
@@ -739,6 +823,25 @@ $HANDOFF_CONTEXT"
   fi
 fi
 
+# Hydrate the remote lease after the existing gate and local rollover read have
+# had their chance to run.  This keeps the additive GET from starving the
+# established thread-handoff path under the aggregate startup budget.
+if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ] \
+  && declare -f launcher_selector_stream >/dev/null 2>&1; then
+  REMOTE_EPIC_STREAM="$(launcher_selector_stream "$SESSION_EPIC" 2>/dev/null || true)"
+  case "$REMOTE_EPIC_STREAM" in
+    epic:*)
+      REMOTE_EPIC_NUMBER="${REMOTE_EPIC_STREAM#epic:}"
+      case "$REMOTE_EPIC_NUMBER" in
+        ''|0*|*[!0-9]*) ;;
+        *) build_remote_epic_context "$REMOTE_EPIC_STREAM" ;;
+      esac
+      unset REMOTE_EPIC_NUMBER
+      ;;
+  esac
+  unset REMOTE_EPIC_STREAM
+fi
+
 # Epic assignment banner
 EPIC_BANNER=""
 if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
@@ -837,6 +940,11 @@ if [ -n "$EPIC_BANNER" ]; then
   CONTEXT="$CONTEXT
 
 $EPIC_BANNER"
+fi
+if [ -n "$REMOTE_EPIC_CONTEXT" ]; then
+  CONTEXT="$CONTEXT
+
+$REMOTE_EPIC_CONTEXT"
 fi
 if [ -n "$HANDOFF_CONTEXT" ]; then
   CONTEXT="$CONTEXT
