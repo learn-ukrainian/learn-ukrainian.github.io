@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "386fe55cc7e7",
+  "session_id": "fleet-db7c6366cffa415c864db3aee9a15ff4",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-24T13:42:28.251619Z",
+  "branch": "agy/dispatch-forward-env-7230",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "scripts/orchestration/job_host_exec.py",
+    "tests/orchestration/test_job_host_exec.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "2baa34c1c0ff",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-24T13:42:28.240975Z",
+    "agent_lines": 299,
+    "agent_removed": 26,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 299,
+    "total_lines_changed": 325,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dispatch-forward-env-7230
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7230 — vps-placed dispatch must not hard-fail opaquely from agent sessions (one PR)
+
+Read `gh issue view 7230 -R learn-ukrainian/learn-ukrainian.github.io` FIRST (essentials below if gh is unavailable).
+
+## Problem (from the issue; burned the infra driver 2026-08-24)
+`decide_dispatch_placement` returns `vps`/`<host>` when a job host is healthy, then `forward_dispatch` raises
+`ValueError: LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required` and `cmd_dispatch` exits rc 2 — by design
+(config errors do not fall back to notebook). Agent sessions do not inherit the host-alias env, so every vps-placed
+dispatch from an agent session hard-fails with a message that names neither recovery path. The driver had to read
+source to learn `LU_ALLOW_NOTEBOOK_DISPATCH=1` exists.
+
+## Outcome
+1. The forward-config refusal names BOTH recovery paths explicitly and exits non-zero without a traceback:
+   set the host-alias env (name the variables) for a real forward, or `LU_ALLOW_NOTEBOOK_DISPATCH=1` for an
+   explicit local spawn — and states that config errors deliberately do NOT auto-fall-back (so the policy stays
+   fail-closed and visible).
+2. The refusal writes a terminal task record (`status=failed`, reason) exactly like the worktree-prep refusals
+   from #7241 do, so settle-loops watching `batch_state/tasks/<id>.json` fire instead of hanging on a missing file.
+3. The env contract (which variables, precedence, where a launcher is expected to export them) is documented in
+   the place `delegate.py --help` / the dispatch runbook already documents placement — extend, do not create a
+   parallel doc.
+Do NOT change placement policy, the fail-closed posture, or make the notebook fallback automatic for config errors.
+
+## Hard boundaries
+`scripts/delegate.py`, `scripts/orchestration/job_host_exec.py`, their tests, and the existing dispatch docs only.
+Do not touch launcher shell scripts, SessionStart hooks, or session-handling code.
+
+## STANDING ACCEPTANCE ITEMS
+A. `clobber self-audit: N hunks reviewed, 0 deletions beyond the intended sites` — in the PR body, and true.
+B. Entry-point smoke: `python scripts/delegate.py dispatch --help` and `python -m scripts.orchestration.job_host_exec --help` (or the module's equivalent) succeed; quote.
+C. Tests: a test that the refusal message names both recovery paths; a test that the refusal writes the terminal
+   task record; mutation-check both (break the message / skip the record write → tests fail; restore; quote).
+
+## Acceptance (quote raw output; PRIMARY interpreter; from YOUR worktree root)
+`/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_delegate.py tests/test_delegate_readonly_guard.py tests/test_delegate_runtime_tmp_sweep.py tests/test_delegate_ownership.py tests/test_delegate_primary_integrity.py tests/test_delegate_check_budget.py tests/test_delegate_timeouts.py tests/test_subprocess_timeout_guard.py tests/orchestration/test_job_host_exec.py` ALL green; ruff clean.
+One conventional commit (`fix(dispatch): name both recovery paths on forward-config refusal; write terminal task record (#7230)`, X-Agent trailer). NO push, NO auto-merge, NO amend after reporting. Report HEAD SHA + evidence + ready PR body (RETURN text; the driver posts).
