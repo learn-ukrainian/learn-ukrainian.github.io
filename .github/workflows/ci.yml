@@ -438,7 +438,7 @@ jobs:
   secret-scan:
     name: Secret scan
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 7 # 75s checkout + 3*(10s pull + 50s scan) + (10s + 30s) sleeps = 295s (~5 min) + 2 min margin (#7263)
     permissions:
       contents: read
     steps:
