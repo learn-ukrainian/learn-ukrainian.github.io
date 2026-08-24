@@ -585,7 +585,13 @@ def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
         child = tmp_path / "child.py"
         child_log = tmp_path / "child.jsonl"
         _write_child(child, wait_on_first_launch=False)
+        raw_path = os.environ.get("PATH", "")
+        repo_venv_bin = _repo_python().parent.resolve()
+        cleaned_path = os.pathsep.join(
+            p for p in raw_path.split(os.pathsep) if p and Path(p).resolve() != repo_venv_bin
+        )
         env = _route_env(
+            PATH=cleaned_path,
             CLAUDEX_SUPERVISOR_TEST_STATE_ROOT=os.fspath(tmp_path),
             SUPERVISOR_CHILD_LOG=os.fspath(child_log),
         )
@@ -601,8 +607,11 @@ def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
         )
         assert completed.returncode == 7, completed.stderr
         rows = _wait_for_log(child_log, 1)
-        assert len(rows) == 1
-        assert Path(rows[0]["executable"]) == _repo_python()
+        assert len(rows) == 1, f"expected 1 log row, got {len(rows)}\nstderr:\n{completed.stderr}"
+        assert Path(rows[0]["executable"]) == _repo_python(), (
+            f"expected child interpreter {_repo_python()} but got {rows[0]['executable']}\n"
+            f"supervisor stderr:\n{completed.stderr}"
+        )
     finally:
         subprocess.run(
             ["git", "worktree", "remove", "--force", os.fspath(worktree)],

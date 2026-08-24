@@ -687,6 +687,14 @@ class ClaudexSupervisor:
         with contextlib.suppress(OSError):
             ready_file.unlink()
         launch_env = self.base_env.copy()
+        venv_bin = os.fspath(REPO_PYTHON.parent)
+        current_path = launch_env.get("PATH", "")
+        if current_path:
+            launch_env["PATH"] = f"{venv_bin}{os.pathsep}{current_path}"
+        else:
+            launch_env["PATH"] = venv_bin
+        if (REPO_PYTHON.parent.parent / "pyvenv.cfg").is_file():
+            launch_env["VIRTUAL_ENV"] = os.fspath(REPO_PYTHON.parent.parent)
         launch_env.update(
             {
                 "LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH": "1",
