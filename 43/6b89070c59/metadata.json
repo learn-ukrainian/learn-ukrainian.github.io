@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "436b89070c59",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/blue_router.py",
+    "scripts/api/launchd_supervisor.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/api/test_blue_router.py",
+    "tests/api/test_launchd_supervisor.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/43/6b89070c59/0/metadata.json",
+      "transcript": "/43/6b89070c59/0/full.jsonl",
+      "compact_transcript": "/43/6b89070c59/0/transcript.jsonl",
+      "content_hash": "/43/6b89070c59/0/content_hash.txt",
+      "prompt": "/43/6b89070c59/0/prompt.txt"
+    }
+  ]
+}
