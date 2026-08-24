@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "45ec7d9d736d",
+  "strategy": "manual-commit",
+  "branch": "agy/timeout-burndown-7213-s7",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/contracts/gemma_hardware_probe_authorization_v1.schema.json",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/projects/open_model_data/gemma_hardware_probe.py",
+    "scripts/projects/open_model_data/phase3_heldout_label_transport.py",
+    "scripts/projects/open_model_data/phase3_rule_author_runner.py",
+    "scripts/projects/open_model_data/phase3_school_parent_section_context.py",
+    "scripts/projects/open_model_data/phase3_source_production_transport.py",
+    "tests/test_gemma_hardware_probe.py",
+    "tests/test_open_model_data_timeouts.py",
+    "tests/test_open_model_phase3_rule_author_runner.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/45/ec7d9d736d/0/metadata.json",
+      "transcript": "/45/ec7d9d736d/0/full.jsonl",
+      "compact_transcript": "/45/ec7d9d736d/0/transcript.jsonl",
+      "content_hash": "/45/ec7d9d736d/0/content_hash.txt",
+      "prompt": "/45/ec7d9d736d/0/prompt.txt"
+    }
+  ]
+}
