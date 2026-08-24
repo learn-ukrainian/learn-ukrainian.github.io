@@ -91,11 +91,18 @@ def prepend_read_only_contract(prompt: str) -> str:
     return f"{READ_ONLY_REVIEW_CONTRACT}\n\n{prompt}"
 
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 15.0
+
+
 def _resolve(path: Path) -> Path:
     return path.expanduser().resolve(strict=False)
 
 
-def primary_checkout_root(repo_root: Path) -> Path:
+def primary_checkout_root(
+    repo_root: Path,
+    *,
+    timeout: float = DEFAULT_GIT_TIMEOUT_SECONDS,
+) -> Path:
     """Return the git common primary worktree root for this repo."""
     root = _resolve(repo_root)
     try:
@@ -104,8 +111,9 @@ def primary_checkout_root(repo_root: Path) -> Path:
             capture_output=True,
             text=True,
             check=False,
+            timeout=timeout,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return root
     if out.returncode != 0:
         return root
@@ -120,8 +128,9 @@ def primary_checkout_root(repo_root: Path) -> Path:
             capture_output=True,
             text=True,
             check=False,
+            timeout=timeout,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return root
     if main.returncode != 0:
         return root
@@ -131,7 +140,11 @@ def primary_checkout_root(repo_root: Path) -> Path:
     return root
 
 
-def list_repo_worktree_paths(repo_root: Path) -> frozenset[Path]:
+def list_repo_worktree_paths(
+    repo_root: Path,
+    *,
+    timeout: float = DEFAULT_GIT_TIMEOUT_SECONDS,
+) -> frozenset[Path]:
     """All worktree paths registered for this repository (including primary)."""
     root = _resolve(repo_root)
     try:
@@ -140,8 +153,9 @@ def list_repo_worktree_paths(repo_root: Path) -> frozenset[Path]:
             capture_output=True,
             text=True,
             check=False,
+            timeout=timeout,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return frozenset({root})
     if out.returncode != 0:
         return frozenset({root})

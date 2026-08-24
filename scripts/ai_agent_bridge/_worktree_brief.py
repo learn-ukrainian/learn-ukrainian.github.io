@@ -13,6 +13,7 @@ from pathlib import Path
 import yaml
 
 _BRIEF_FILENAME = ".codex-worktree-brief.yaml"
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 
 def _utcnow() -> datetime:
@@ -20,13 +21,18 @@ def _utcnow() -> datetime:
     return datetime.now(UTC)
 
 
-def _run_git(worktree_path: Path, *args: str) -> str:
+def _run_git(
+    worktree_path: Path,
+    *args: str,
+    timeout: float = DEFAULT_GIT_TIMEOUT_SECONDS,
+) -> str:
     """Run a git command scoped to the given worktree."""
     completed = subprocess.run(
         ["git", "-C", str(worktree_path), *args],
         check=True,
         capture_output=True,
         text=True,
+        timeout=timeout,
     )
     return completed.stdout.strip()
 

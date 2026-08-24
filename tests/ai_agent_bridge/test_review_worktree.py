@@ -10,6 +10,7 @@ from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytest
 
@@ -2568,3 +2569,88 @@ def test_isolation_tool_config_helper() -> None:
     cfg = review_worktree.isolation_tool_config_for_engine("codex")
     assert cfg["review_isolation"] is True
     assert cfg["deny_nested_reviewers"] is True
+
+
+def test_run_command_timeout_raises_review_worktree_error(tmp_path: Path) -> None:
+    with pytest.raises(review_worktree.ReviewWorktreeError, match=r"timed out after 60\.0s"):
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["git", "status"], review_worktree.DEFAULT_COMMAND_TIMEOUT_SECONDS),
+        ):
+            review_worktree._run_command(["git", "status"], cwd=tmp_path)
+
+
+def test_base_blob_bytes_ls_tree_timeout_raises_review_worktree_error(tmp_path: Path) -> None:
+    with pytest.raises(review_worktree.ReviewWorktreeError, match=r"review_evidence_base_tree_failed:file\.py:timed out after 30\.0s"):
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["git", "ls-tree"], review_worktree.DEFAULT_GIT_TIMEOUT_SECONDS),
+        ):
+            review_worktree._base_blob_bytes(
+                repo_root=tmp_path,
+                git_bin=Path("/usr/bin/git"),
+                revision="HEAD",
+                rel_path="file.py",
+            )
+
+
+def test_base_blob_bytes_cat_file_timeout_raises_review_worktree_error(tmp_path: Path) -> None:
+    def fake_run(cmd, **kwargs):
+        if "ls-tree" in cmd:
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"100644 blob deadbeef\tfile.py\0")
+        if "cat-file" in cmd:
+            raise subprocess.TimeoutExpired(cmd, review_worktree.DEFAULT_GIT_TIMEOUT_SECONDS)
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match=r"review_evidence_base_blob_failed:file\.py:timed out after 30\.0s"):
+        with patch("subprocess.run", side_effect=fake_run):
+            review_worktree._base_blob_bytes(
+                repo_root=tmp_path,
+                git_bin=Path("/usr/bin/git"),
+                revision="HEAD",
+                rel_path="file.py",
+            )
+
+
+def test_changed_lines_between_bytes_timeout_raises_review_worktree_error(tmp_path: Path) -> None:
+    with pytest.raises(review_worktree.ReviewWorktreeError, match=r"review_evidence_changed_lines_failed:file\.py:timed out after 30\.0s"):
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["git", "diff"], review_worktree.DEFAULT_GIT_TIMEOUT_SECONDS),
+        ):
+            review_worktree._changed_lines_between_bytes(
+                b"before",
+                b"after",
+                repo_root=tmp_path,
+                git_bin=Path("/usr/bin/git"),
+                rel_path="file.py",
+            )
+
+
+def test_changed_line_numbers_for_snapshot_timeout_raises_review_worktree_error(tmp_path: Path) -> None:
+    snapshot_dir = tmp_path / "snapshot"
+    bundle_dir = snapshot_dir / ".review-bundle"
+    bundle_dir.mkdir(parents=True)
+    (bundle_dir / "manifest.json").write_text(
+        json.dumps({"name_status": [{"status": "M", "path": "file.py"}]}),
+        encoding="utf-8",
+    )
+    snapshot = ReviewSnapshot(
+        path=snapshot_dir,
+        base_sha="base123",
+        head_sha="head456",
+        source_fingerprint="fp123",
+        changed_paths=("file.py",),
+        mode="branch",
+    )
+    with pytest.raises(review_worktree.ReviewWorktreeError, match=r"review_evidence_changed_lines_failed:file\.py:timed out after 30\.0s"):
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["git", "diff"], review_worktree.DEFAULT_GIT_TIMEOUT_SECONDS),
+        ):
+            review_worktree._changed_line_numbers_for_snapshot(
+                snapshot,
+                repo_root=tmp_path,
+                git_bin=Path("/usr/bin/git"),
+            )
+

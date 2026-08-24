@@ -74,6 +74,9 @@ from scripts.review.snapshot import (
 )
 from scripts.review.target_resolution import ReviewTarget as CanonicalReviewTarget
 
+DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 60.0
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+
 MAX_REVIEW_PROMPT_EVIDENCE_BYTES = 512 * 1024
 MAX_BUILTIN_READ_LINES = 2000
 MAX_BUILTIN_READ_LINE_BYTES = 2000
@@ -1818,16 +1821,21 @@ def _run_command(
     *,
     cwd: Path,
     env: dict[str, str] | None = None,
+    timeout: float = DEFAULT_COMMAND_TIMEOUT_SECONDS,
 ) -> str:
     """Run one deterministic checkout command and surface useful failures."""
-    completed = subprocess.run(
-        command,
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=env,
-    )
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ReviewWorktreeError(f"{' '.join(command)} timed out after {timeout}s") from exc
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "unknown command failure").strip()
         for key in ("GH_TOKEN", "GITHUB_TOKEN"):
@@ -2225,13 +2233,17 @@ def _base_blob_bytes(
         "-c",
         "core.hooksPath=/dev/null",
     ]
-    listed = subprocess.run(
-        [*common, "ls-tree", "-z", "--full-tree", revision, "--", rel_path],
-        cwd=repo_root,
-        capture_output=True,
-        check=False,
-        env=env,
-    )
+    try:
+        listed = subprocess.run(
+            [*common, "ls-tree", "-z", "--full-tree", revision, "--", rel_path],
+            cwd=repo_root,
+            capture_output=True,
+            check=False,
+            env=env,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ReviewWorktreeError(f"review_evidence_base_tree_failed:{rel_path}:timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
     if listed.returncode != 0:
         detail = (listed.stderr or b"").decode("utf-8", errors="replace").strip()
         raise ReviewWorktreeError(f"review_evidence_base_tree_failed:{rel_path}:{detail}")
@@ -2249,13 +2261,17 @@ def _base_blob_bytes(
         raise ReviewWorktreeError(f"review_evidence_base_tree_malformed:{rel_path}") from exc
     if tree_path != rel_path or obj_type != b"blob" or mode not in {b"100644", b"100755"}:
         return None
-    blob = subprocess.run(
-        [*common, "cat-file", "blob", oid],
-        cwd=repo_root,
-        capture_output=True,
-        check=False,
-        env=env,
-    )
+    try:
+        blob = subprocess.run(
+            [*common, "cat-file", "blob", oid],
+            cwd=repo_root,
+            capture_output=True,
+            check=False,
+            env=env,
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ReviewWorktreeError(f"review_evidence_base_blob_failed:{rel_path}:timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
     if blob.returncode != 0:
         detail = (blob.stderr or b"").decode("utf-8", errors="replace").strip()
         raise ReviewWorktreeError(f"review_evidence_base_blob_failed:{rel_path}:{detail}")
@@ -2280,28 +2296,32 @@ def _changed_lines_between_bytes(
         env = _isolation_env(repo_root)
         env.pop("GH_TOKEN", None)
         env.pop("GITHUB_TOKEN", None)
-        proc = subprocess.run(
-            [
-                str(git_bin),
-                "--no-optional-locks",
-                "-c",
-                "core.fsmonitor=false",
-                "-c",
-                "core.hooksPath=/dev/null",
-                "diff",
-                "--no-index",
-                "-U0",
-                "--no-ext-diff",
-                "--no-textconv",
-                "--",
-                str(before_path),
-                str(after_path),
-            ],
-            cwd=temp_root,
-            capture_output=True,
-            check=False,
-            env=env,
-        )
+        try:
+            proc = subprocess.run(
+                [
+                    str(git_bin),
+                    "--no-optional-locks",
+                    "-c",
+                    "core.fsmonitor=false",
+                    "-c",
+                    "core.hooksPath=/dev/null",
+                    "diff",
+                    "--no-index",
+                    "-U0",
+                    "--no-ext-diff",
+                    "--no-textconv",
+                    "--",
+                    str(before_path),
+                    str(after_path),
+                ],
+                cwd=temp_root,
+                capture_output=True,
+                check=False,
+                env=env,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise ReviewWorktreeError(f"review_evidence_changed_lines_failed:{rel_path}:timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
         if proc.returncode not in {0, 1}:
             detail = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
             raise ReviewWorktreeError(f"review_evidence_changed_lines_failed:{rel_path}:{detail}")
@@ -2389,30 +2409,34 @@ def _changed_line_numbers_for_snapshot(
             if pair is not None and pair in completed_pairs:
                 continue
             pathspecs = list(pair) if pair is not None else [rel_path]
-            proc = subprocess.run(
-                [
-                    str(git_bin),
-                    "--no-optional-locks",
-                    "--literal-pathspecs",
-                    "-c",
-                    "core.fsmonitor=false",
-                    "-c",
-                    "core.hooksPath=/dev/null",
-                    "diff",
-                    "-U0",
-                    "--no-ext-diff",
-                    "--no-textconv",
-                    snapshot.base_sha,
-                    snapshot.head_sha,
-                    "--",
-                    *pathspecs,
-                ],
-                cwd=repo_root,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=env,
-            )
+            try:
+                proc = subprocess.run(
+                    [
+                        str(git_bin),
+                        "--no-optional-locks",
+                        "--literal-pathspecs",
+                        "-c",
+                        "core.fsmonitor=false",
+                        "-c",
+                        "core.hooksPath=/dev/null",
+                        "diff",
+                        "-U0",
+                        "--no-ext-diff",
+                        "--no-textconv",
+                        snapshot.base_sha,
+                        snapshot.head_sha,
+                        "--",
+                        *pathspecs,
+                    ],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    env=env,
+                    timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise ReviewWorktreeError(f"review_evidence_changed_lines_failed:{rel_path}:timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s") from exc
             if proc.returncode != 0:
                 raise ReviewWorktreeError(f"review_evidence_changed_lines_failed:{rel_path}:{proc.stderr.strip()}")
             lines = _new_side_lines(proc.stdout or "")

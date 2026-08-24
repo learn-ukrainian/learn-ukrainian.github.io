@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import re
 import subprocess
@@ -33,10 +34,16 @@ class RecoveryResult:
     changed_files: tuple[str, ...] = ()
 
 
+DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
+DEFAULT_RUFF_TIMEOUT_SECONDS: float = 30.0
+GIT_COMMIT_TIMEOUT_SECONDS: float = 120.0
+
+
 def _run(
     repo_root: Path,
     *args: str,
     check: bool = True,
+    timeout: float = DEFAULT_GIT_TIMEOUT_SECONDS,
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "-C", str(repo_root), *args],
@@ -44,6 +51,7 @@ def _run(
         capture_output=True,
         text=True,
         env=_sanitized_git_env(),
+        timeout=timeout,
     )
 
 
@@ -95,19 +103,28 @@ def _build_commit_message(candidate: RecoveryCandidate) -> str:
     )
 
 
-def _run_ruff(repo_root: Path, py_files: tuple[str, ...]) -> bool:
+def _run_ruff(
+    repo_root: Path,
+    py_files: tuple[str, ...],
+    *,
+    timeout: float = DEFAULT_RUFF_TIMEOUT_SECONDS,
+) -> bool:
     if not py_files:
         return True
     ruff_bin = repo_root / ".venv" / "bin" / "ruff"
     if not ruff_bin.exists():
         ruff_bin = REPO_ROOT / ".venv" / "bin" / "ruff"
-    result = subprocess.run(
-        [str(ruff_bin), "check", *py_files],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            [str(ruff_bin), "check", *py_files],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        return False
     return result.returncode == 0
 
 
@@ -147,38 +164,65 @@ def recover_orphan_commit(
             changed_files=changed_files,
         )
 
-    subprocess.run(
-        ["git", "-C", str(repo_root), "add", "--", *changed_files],
-        check=True,
-        capture_output=True,
-        text=True,
-        env=_sanitized_git_env(),
-    )
-    commit = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(repo_root),
-            "commit",
-            "-m",
-            _build_commit_message(candidate),
-            "--only",
-            "--",
-            *changed_files,
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        env=_sanitized_git_env(),
-    )
-    if commit.returncode != 0:
+    try:
         subprocess.run(
-            ["git", "-C", str(repo_root), "restore", "--staged", "--", *changed_files],
+            ["git", "-C", str(repo_root), "add", "--", *changed_files],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return RecoveryResult(
+            commit_sha=None,
+            reason="pre-commit-failed",
+            changed_files=changed_files,
+        )
+    try:
+        commit = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repo_root),
+                "commit",
+                "-m",
+                _build_commit_message(candidate),
+                "--only",
+                "--",
+                *changed_files,
+            ],
             check=False,
             capture_output=True,
             text=True,
             env=_sanitized_git_env(),
+            timeout=GIT_COMMIT_TIMEOUT_SECONDS,
         )
+    except subprocess.TimeoutExpired:
+        with contextlib.suppress(subprocess.SubprocessError, OSError):
+            subprocess.run(
+                ["git", "-C", str(repo_root), "restore", "--staged", "--", *changed_files],
+                check=False,
+                capture_output=True,
+                text=True,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+        return RecoveryResult(
+            commit_sha=None,
+            reason="pre-commit-failed",
+            changed_files=changed_files,
+        )
+    if commit.returncode != 0:
+        with contextlib.suppress(subprocess.SubprocessError, OSError):
+            subprocess.run(
+                ["git", "-C", str(repo_root), "restore", "--staged", "--", *changed_files],
+                check=False,
+                capture_output=True,
+                text=True,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
         return RecoveryResult(
             commit_sha=None,
             reason="pre-commit-failed",

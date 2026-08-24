@@ -52,3 +52,31 @@ def test_write_worktree_brief_calculates_divergence_from_git_commands(tmp_path):
         call(tmp_path, "rev-parse", "main"),
         call(tmp_path, "rev-list", "--left-right", "--count", "main...HEAD"),
     ]
+
+
+def test_run_git_passes_default_timeout(tmp_path):
+    import subprocess
+
+    from scripts.ai_agent_bridge import _worktree_brief
+
+    with patch("subprocess.run") as mock_run:
+        mock_run.return_value = subprocess.CompletedProcess(["git"], 0, stdout="deadbeef\n")
+        res = _worktree_brief._run_git(tmp_path, "rev-parse", "main")
+        assert res == "deadbeef"
+        assert mock_run.call_args.kwargs.get("timeout") == _worktree_brief.DEFAULT_GIT_TIMEOUT_SECONDS
+
+
+def test_run_git_timeout_raises_timeout_expired(tmp_path):
+    import subprocess
+
+    import pytest
+
+    from scripts.ai_agent_bridge import _worktree_brief
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git"], _worktree_brief.DEFAULT_GIT_TIMEOUT_SECONDS),
+    ):
+        with pytest.raises(subprocess.TimeoutExpired):
+            _worktree_brief._run_git(tmp_path, "rev-parse", "main")
+

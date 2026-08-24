@@ -540,6 +540,30 @@ class TestMessaging:
         assert parsed["from_model"] == "flash"
         assert parsed["to_model"] == "opus"
 
+    def test_send_message_passes_osascript_timeout(self, msg_db):
+        import subprocess
+
+        from scripts.ai_agent_bridge._messaging import OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS, send_message
+
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = subprocess.CompletedProcess(["osascript"], 0)
+            msg_id = send_message("hi with timeout", quiet=True)
+        assert msg_id is not None
+        assert mock_run.call_args.kwargs.get("timeout") == OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS
+
+    def test_send_message_notification_timeout_handled(self, msg_db):
+        import subprocess
+
+        from scripts.ai_agent_bridge._messaging import OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS, send_message
+
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(["osascript"], OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS),
+        ):
+            msg_id = send_message("hi with timeout error", quiet=True)
+        assert msg_id is not None
+
+
     def _insert(self, db_path, task_id, from_llm, to_llm, content, ts="2026-01-01T00:00:00"):
         conn = sqlite3.connect(str(db_path))
         conn.execute(

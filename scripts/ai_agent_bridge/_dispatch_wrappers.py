@@ -62,24 +62,40 @@ def _task_state_path(task_id: str) -> Path:
     return tasks_dir / f"{safe}.json"
 
 
-def _run_json_command(cmd: list[str]) -> dict[str, Any]:
+DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS: float = 60.0
+DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS: float = 60.0
+DISPATCH_COMMAND_TIMEOUT_SECONDS: float = 180.0
+ASK_REVIEW_WAIT_GRACE_SECONDS: float = 60.0
+
+
+def _run_json_command(
+    cmd: list[str],
+    *,
+    timeout: float = DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
     proc = subprocess.run(
         cmd,
         cwd=REPO_ROOT,
         check=True,
         capture_output=True,
         text=True,
+        timeout=timeout,
     )
     return json.loads(proc.stdout or "{}")
 
 
-def _run_text_command(cmd: list[str]) -> str:
+def _run_text_command(
+    cmd: list[str],
+    *,
+    timeout: float = DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS,
+) -> str:
     proc = subprocess.run(
         cmd,
         cwd=REPO_ROOT,
         check=True,
         capture_output=True,
         text=True,
+        timeout=timeout,
     )
     return proc.stdout
 
@@ -299,7 +315,13 @@ def _write_dry_run_state(task_id: str, command: list[str], prompt_file: Path) ->
     _task_state_path(task_id).write_text(json.dumps(state, indent=2), encoding="utf-8")
 
 
-def _run_dispatch(command: list[str], dry_run: bool, prompt_file: Path) -> int:
+def _run_dispatch(
+    command: list[str],
+    dry_run: bool,
+    prompt_file: Path,
+    *,
+    timeout: float = DISPATCH_COMMAND_TIMEOUT_SECONDS,
+) -> int:
     task_id = command[command.index("--task-id") + 1]
     if dry_run:
         _write_dry_run_state(task_id, command, prompt_file)
@@ -307,8 +329,15 @@ def _run_dispatch(command: list[str], dry_run: bool, prompt_file: Path) -> int:
         print(f"Prompt file: {prompt_file}")
         print(f"State file: {_task_state_path(task_id)}")
         return 0
-    proc = subprocess.run(command, cwd=REPO_ROOT)
-    return int(proc.returncode)
+    try:
+        proc = subprocess.run(command, cwd=REPO_ROOT, timeout=timeout)
+        return int(proc.returncode)
+    except subprocess.TimeoutExpired:
+        print(
+            f"❌ dispatch command timed out after {timeout}s: {' '.join(command)}",
+            file=sys.stderr,
+        )
+        return 1
 
 
 def handle_dispatch_fix(args: Any) -> int:
@@ -405,7 +434,19 @@ def run_ask_review_dispatch(
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
         prompt_path.write_text(content, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(agent, task_id, prompt_path, model=model, effort=effort)
-        dispatch_proc = subprocess.run(dispatch_command, cwd=REPO_ROOT, capture_output=True, text=True)
+        try:
+            dispatch_proc = subprocess.run(
+                dispatch_command,
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+                timeout=DISPATCH_COMMAND_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                f"delegate.py dispatch timed out after {DISPATCH_COMMAND_TIMEOUT_SECONDS}s: "
+                f"Command: {' '.join(dispatch_command)}"
+            ) from exc
         if dispatch_proc.returncode != 0:
             raise RuntimeError(
                 f"delegate.py dispatch failed rc={dispatch_proc.returncode}: "
@@ -414,7 +455,19 @@ def run_ask_review_dispatch(
             )
 
         wait_command = build_ask_review_wait_command(task_id, timeout=timeout)
-        wait_proc = subprocess.run(wait_command, cwd=REPO_ROOT, capture_output=True, text=True)
+        try:
+            wait_proc = subprocess.run(
+                wait_command,
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+                timeout=timeout + ASK_REVIEW_WAIT_GRACE_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                f"delegate.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
+                f"Command: {' '.join(wait_command)}"
+            ) from exc
         try:
             state = json.loads(wait_proc.stdout or "{}")
         except json.JSONDecodeError as exc:
