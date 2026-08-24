@@ -1,0 +1,53 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/delegate-sweep-7203-delta2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Delta 2: cursor/delegate-sweep-7203 (PR #7206) — cross-family review FAIL, fix on the same branch (on top)
+
+Review of record (kimi) at head 60062058f2 — read it in full on the PR:
+`gh pr view 7206 -R learn-ukrainian/learn-ukrainian.github.io --comments`. Two blocking findings, both in the
+marker-backfill path you added in delta 1; the rest of the PR passed every mandatory check.
+
+## Must fix (blocking)
+1. **Backfill must be best-effort, never fatal.** `_write_runtime_tmp_task_id_marker` (~delegate.py:735-740) is
+   called unwrapped inside the sweep loop (~1012-1015); the lease can vanish between resolution and write (worker
+   reaping its own lease at completion, or a concurrent sweep) → `FileNotFoundError` propagates out of
+   `_sweep_runtime_tmp_orphans` (called unwrapped at ~5036) → the dispatch dies before spawning. Wrap the backfill
+   in `try/except OSError` and treat failure as "skip this lease this sweep". Same class:
+   `_read_runtime_tmp_task_id_marker` (~743-749) catches only `OSError`; a corrupt non-UTF-8 marker raises
+   `UnicodeDecodeError` → also crashes the sweep. Catch `ValueError` there and fall through to the legacy path.
+2. **Backfill must not clobber.** Unconditional `os.replace` lets a stale id overwrite a fresh marker after a
+   sanitization collision (`x/y` vs `x-y` both → lease `x-y`): sweep A resolves the old task and decides to
+   backfill; the lease is reaped and recreated by the new task with its own marker; A's late backfill replaces it
+   with the stale id; the NEXT sweep reads the stale marker, finds that record terminal, and reaps the LIVE lease.
+   Make backfill no-clobber: create-exclusive (`O_CREAT|O_EXCL` / `link()` from the tmp file) or an atomic re-check
+   of marker absence immediately before the rename; on EEXIST, leave the existing marker alone.
+
+## Also fold (non-blocking, same files)
+3. Remove `_is_read_only_delegate_snapshot_sidecar_path` (~2745-2755, called at ~2765): unreachable — any path
+   under `batch_state/` is already exempted by `_is_read_only_runtime_state_path` via
+   `_READ_ONLY_RUNTIME_STATE_DIR_NAMES` (~2705). If you believe it IS reachable, add a test proving a path it
+   uniquely exempts instead of removing it; say which.
+4. PR-body note only: a failed snapshot round-trips as `{}` (sidecar writes `{}` for `None`) — semantic drift for
+   post-hoc consumers; `read_only_checkout_snapshot_error` still records the failure. No code change required.
+
+## Tests to add (finding 5) in tests/test_delegate_runtime_tmp_sweep.py
+- Lease directory removed between resolution and backfill → sweep completes, dispatch proceeds (no exception).
+- Corrupt (non-UTF-8 / garbage) marker → sweep falls through to the legacy path and completes.
+- Marker present but record missing → falls through to the existing 7-day orphan age path (assert the decision).
+- No-clobber: pre-existing marker with a different task id survives a backfill attempt.
+Mutation-check items 1 and 2 (revert the guard → the corresponding test fails/raises); quote both runs.
+
+## Acceptance (quote raw output; PRIMARY interpreter — worktrees have no .venv)
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest -q tests/test_delegate_runtime_tmp_sweep.py
+  tests/test_delegate_readonly_guard.py tests/test_delegate.py` green; ruff clean on changed files.
+- One conventional commit on top (`fix(delegate): make lease marker backfill best-effort and no-clobber (#7203)`,
+  X-Agent trailer). NO push, NO amend, NO rebase, NO auto-merge. Report new HEAD SHA + evidence.

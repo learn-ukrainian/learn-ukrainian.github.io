@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a6193c2ef23a",
+  "strategy": "manual-commit",
+  "branch": "cursor/delegate-sweep-7203",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate_readonly_guard.py",
+    "tests/test_delegate_runtime_tmp_sweep.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a6/193c2ef23a/0/metadata.json",
+      "transcript": "/a6/193c2ef23a/0/full.jsonl",
+      "compact_transcript": "/a6/193c2ef23a/0/transcript.jsonl",
+      "content_hash": "/a6/193c2ef23a/0/content_hash.txt",
+      "prompt": "/a6/193c2ef23a/0/prompt.txt"
+    }
+  ]
+}
