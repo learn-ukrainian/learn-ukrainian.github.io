@@ -1,0 +1,80 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/monitor-7269-step1-fix1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix: PR #7337 (#7269 step 1 migration) — REJECT from cross-family review
+
+Cross-family review (grok) came back REJECT with one blocking finding. The driver independently
+re-verified it against the actual exception classes in the codebase before sending this back — it
+is real, not review noise. Fix it.
+
+## Blocking: `GET /v1/status/{stream_id}` and `GET /v1/digest/{stream_id}` changed 404 → 500 when the DB file is absent
+
+**Root cause:** `MonitorContext._stores()` (`scripts/api/monitor_context.py`) always constructs a
+`SessionStreamStore` — `session_streams_store` is NEVER `None`, whether or not the underlying
+SQLite file actually exists on disk. Your migration's `if store is None:` guards
+(`session_streams_router.py` — check every occurrence, there are at least 3) are therefore dead
+code that never fires.
+
+Before your migration, `_store()` explicitly checked `db_path.is_file()` and raised
+`FileNotFoundError` if not, which `session_stream_status`/`session_stream_digest`'s
+`except (NotFoundError, FileNotFoundError)` caught and turned into a clean 404. Now, a missing
+file surfaces only when something actually tries to read from the store — `SessionStreamDatabase`
+(`agents_extensions/shared/session_streams/db.py:129`) raises `SessionStreamDatabaseError` (a
+`RuntimeError` subclass) in that case, which nothing in the router catches, so it falls through to
+FastAPI's global exception handler as an uncaught 500.
+
+**Fix — pick one, don't invent a third mechanism:**
+
+Option A (closer to the original contract): before calling into the store in
+`session_stream_status`/`session_stream_digest`/the drift route, explicitly check
+`ctx.roots.session_streams_db_path.is_file()` and raise the same `NotFoundError`/404 path the
+route already has, mirroring the pre-migration `_store()` check exactly — just reading the path
+from `ctx` instead of a module global.
+
+Option B: add `SessionStreamDatabaseError` to the `except (NotFoundError, FileNotFoundError, ...)`
+tuple in the routes that need a 404 on a missing DB — but only if you can confirm
+`SessionStreamDatabaseError` is ONLY ever raised for the missing-file case in the paths these
+routes exercise (grok's review notes it's also raised for other conditions — WAL mode, foreign
+keys, schema version mismatches — which should NOT become a silent 404; read
+`agents_extensions/shared/session_streams/db.py` in full before choosing this option, since a
+blanket catch would hide a real corruption/schema problem behind a misleading 404).
+
+**Whichever you choose:** the `if store is None:` dead-code guards must go — either become a real
+check (Option A folds the file-existence check into what was previously a no-op) or get deleted
+entirely if the exception-based approach (Option B) makes them redundant. Don't leave dead code
+that looks like it does something.
+
+**Also check the `/v1/drift` route** (grok's finding 2) — same missing-DB path, currently an
+unhandled 500 both before and after your migration (so not a regression, but worth fixing to the
+same 404 contract while you're in this file, for consistency — driver's call whether to include
+this in the same PR or note it as a known follow-up; either is acceptable, just be explicit about
+which you did).
+
+**Verification required (quote in the PR update):** reproduce grok's exact live probe —
+`create_app(fixture_context(<empty tmp_path>))`, hit `/v1/status/epic:4707` and
+`/v1/digest/epic:4707` with no DB file present, confirm both return 404 again (not 500). Add this
+as a permanent regression test if one doesn't already exist for this exact case — a missing-DB
+404 contract that silently regressed once should have a test guarding it going forward.
+
+## Not required to fix (confirmed correct by the reviewer, don't re-litigate)
+
+`DB_ACCESS_ALLOWLIST` 21→20, the 12 deleted OPSEC seams, the occupancy_local.py /
+fleet_workers_collect.py relocation, and the session/rules/rollover HTTP routes are all confirmed
+behavior-identical. Leave them as-is.
+
+## Constraints
+
+Same as the original brief. Run `tests/api/opsec_sweep/` + `tests/api/test_app_factory.py` +
+`tests/test_session_streams_api.py` + `tests/test_rollover_api.py` + `tests/test_manifest_api.py`
+green, full `tests/api -n 4` green (the one pre-existing `test_release_snapshot` flake is known
+and unrelated), `ruff` clean. Push to the SAME branch
+(`agy/monitor-7269-step1-session-streams-cluster`), do not open a new PR.
