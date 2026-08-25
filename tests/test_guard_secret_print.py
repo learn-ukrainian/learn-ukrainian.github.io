@@ -83,6 +83,7 @@ def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
         "jq keys",
         'git commit -m "notes: gh pr merge --admin and echo $GH_TOKEN"',
         'git commit -m "ref guard-secret-print.py"',
+        'git commit -m "document scripts.session_supervisor worker-env"',
         "git commit -F - <<EOF\nref guard-secret-print\nEOF",
         "tail -3 <<EOF\n.env\nEOF",
         "LEARN_UK_SECRETS_OK=1 env",
@@ -98,3 +99,17 @@ def test_environment_override_allowed(monkeypatch):
 
 def test_single_quoted_secret_var_literal_allowed(monkeypatch):
     assert _run(monkeypatch, "echo '$GH_TOKEN'") == 0
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "scripts.session_supervisor worker-env",
+        "python -m scripts.session_supervisor worker-env",
+        ".venv/bin/python -m scripts.session_supervisor worker-env --all",
+        "python3 -m scripts.session_supervisor --all worker-env",
+    ],
+)
+def test_worker_env_commands_are_blocked(monkeypatch, capsys, cmd):
+    assert _run(monkeypatch, cmd) == 2
+    assert "worker-env" in capsys.readouterr().err

@@ -13,11 +13,14 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
   - `grep` / `rg` / `ugrep` reading dotenv-style secret files without a
     key-only/count transform
   - `echo` / `printf` expanding known secret environment variables
+  - `scripts.session_supervisor worker-env` environment views, including the
+    explicit `--all` form
 
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
 message from becoming false positives. If parsing is uncertain, the hook allows
 the command; this is a guardrail, not a shell interpreter.
 """
+
 from __future__ import annotations
 
 import json
@@ -38,6 +41,8 @@ KNOWN_SECRET_VARS = {
     "GITHUB_TOKEN",
     "OPENAI_API_KEY",
 }
+WORKER_ENV_MODULE = "scripts.session_supervisor"
+WORKER_ENV_COMMAND = "worker-env"
 
 _ASSIGNMENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=.*\Z")
 _VAR_REF_RE = re.compile(
@@ -361,6 +366,28 @@ def _env_dump_reason(pipeline: list[list[str]]) -> str | None:
     return f"`{cmd}` would print the full shell environment"
 
 
+def _is_python_command(command: str) -> bool:
+    return bool(re.fullmatch(r"python(?:\d+(?:\.\d+)*)?", command.rsplit("/", 1)[-1]))
+
+
+def _worker_env_reason(seg: list[str]) -> str | None:
+    command = _command_at(seg)
+    if command is None:
+        return None
+    cmd, args, _idx = command
+    if cmd == WORKER_ENV_MODULE and WORKER_ENV_COMMAND in args:
+        return "`worker-env` can print environment values"
+    if _is_python_command(cmd):
+        for index, arg in enumerate(args[:-1]):
+            if (
+                _strip_quotes(arg) == "-m"
+                and _strip_quotes(args[index + 1]) == WORKER_ENV_MODULE
+                and any(_strip_quotes(candidate) == WORKER_ENV_COMMAND for candidate in args[index + 2 :])
+            ):
+                return "`python -m scripts.session_supervisor worker-env` can print environment values"
+    return None
+
+
 def _display_file_reason(pipeline: list[list[str]], seg_index: int) -> str | None:
     command = _command_at(pipeline[seg_index])
     if command is None:
@@ -511,6 +538,9 @@ def _danger_reason(pipeline: list[list[str]]) -> str | None:
         return reason
 
     for i, segment in enumerate(pipeline):
+        reason = _worker_env_reason(segment)
+        if reason:
+            return reason
         reason = _display_file_reason(pipeline, i)
         if reason:
             return reason

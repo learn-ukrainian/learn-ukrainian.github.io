@@ -43,6 +43,7 @@ from .remote import RemoteEpicClient, RemoteSupervisorError
 
 CAPSULE_SCHEMA = "session-supervisor-bootstrap.v1"
 LEASE_ENV_PREFIX = "SESSION_STREAM_"
+_WORKER_ENV_SECRET_SUFFIXES = ("_TOKEN", "_KEY", "_SECRET", "_PAT", "_AUTH")
 
 
 class SupervisorError(ValueError):
@@ -106,6 +107,29 @@ class BootstrapCapsule:
 def strip_lease_credentials(environment: Mapping[str, str]) -> dict[str, str]:
     """Return a worker-safe environment with every lease field removed."""
     return {key: value for key, value in environment.items() if not key.startswith(LEASE_ENV_PREFIX)}
+
+
+def _is_worker_env_secret_key(key: str) -> bool:
+    upper = key.upper()
+    return upper.endswith(_WORKER_ENV_SECRET_SUFFIXES)
+
+
+def worker_environment(environment: Mapping[str, str], *, include_all: bool = False) -> dict[str, str]:
+    """Return the CLI environment view, redacting every included value.
+
+    The default view is deliberately limited to non-credential session-stream
+    metadata. ``include_all`` is reserved for the explicit ``--all`` or
+    ``LEARN_UK_SECRETS_OK=1`` path and still uses the shared egress redactor.
+    """
+    from scripts.secret_redactor import REDACTION, redact_value
+
+    selected = {
+        key: value
+        for key, value in environment.items()
+        if include_all or (key.startswith(LEASE_ENV_PREFIX) and not _is_worker_env_secret_key(key))
+    }
+    redacted = redact_value(selected)
+    return {key: REDACTION if _is_worker_env_secret_key(key) else str(value) for key, value in redacted.items()}
 
 
 class SessionSupervisor:
@@ -466,7 +490,15 @@ def build_parser() -> argparse.ArgumentParser:
     capsule.add_argument("--stream", required=True)
     capsule.add_argument("--digest-limit", type=int, default=20)
 
-    commands.add_parser("worker-env", help="Print the current environment with all lease fields stripped.")
+    worker_env = commands.add_parser(
+        "worker-env",
+        help="Print SESSION_STREAM_* metadata; --all prints a redacted full environment.",
+        description=(
+            "Print non-credential SESSION_STREAM_* metadata. Use --all or "
+            "LEARN_UK_SECRETS_OK=1 for a redacted full environment."
+        ),
+    )
+    worker_env.add_argument("--all", action="store_true", help="Include all environment keys after redaction.")
     return parser
 
 
@@ -485,7 +517,8 @@ def main(argv: list[str] | None = None) -> int:
     """Run one lifecycle action and render only JSON to stdout."""
     args = build_parser().parse_args(argv)
     if args.command == "worker-env":
-        print(json.dumps(strip_lease_credentials(os.environ), ensure_ascii=False, sort_keys=True))
+        include_all = args.all or os.environ.get("LEARN_UK_SECRETS_OK") == "1"
+        print(json.dumps(worker_environment(os.environ, include_all=include_all), ensure_ascii=False, sort_keys=True))
         return 0
 
     if args.local:
