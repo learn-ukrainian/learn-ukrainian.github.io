@@ -484,7 +484,17 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
         key_paths = agent_payload["key_paths"]
         assert curriculum_payload["a1"]["module_count"] >= 0
         assert preparation_payload["track"] == "a1"
-        assert preparation_payload["authority"]["data_checkout"]["root"] == str(PROJECT_ROOT.resolve())
+        assert "data_checkout" not in preparation_payload["authority"]
+        expected_role = (
+            "dispatch_worktree"
+            if ".worktrees/dispatch" in PROJECT_ROOT.as_posix()
+            else "linked_worktree"
+            if (PROJECT_ROOT / ".git").is_file()
+            else "live_primary"
+        )
+        assert preparation_payload["authority"]["primary_checkout"]["role"] == expected_role
+        assert len(preparation_payload["authority"]["primary_checkout"]["head_sha"]) == 40
+        assert preparation_payload["authority"]["cwd_role"] == "other"
         assert preparation_payload["authority"]["service_code"]["mode"] == "release"
         assert key_paths["orchestration_dir"].startswith("curriculum/l2-uk-en/")
         assert not key_paths["orchestration_dir"].startswith(str(release_dir))

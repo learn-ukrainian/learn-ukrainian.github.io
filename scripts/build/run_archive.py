@@ -428,6 +428,7 @@ class RunArchive:
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=30,
             )
             if diff.returncode == 0:
                 raw = diff.stdout
@@ -436,10 +437,11 @@ class RunArchive:
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=30,
             )
             if head.returncode == 0 and head.stdout.strip():
                 head_ref = head.stdout.strip()
-        except OSError:
+        except (OSError, subprocess.TimeoutExpired):
             raw = ""
         summary = parse_git_diff_stat(
             raw,

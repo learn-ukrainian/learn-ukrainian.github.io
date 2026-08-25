@@ -39,20 +39,6 @@ owner = "monitor-retention"
 expiry = "2026-09-23"
 
 [[known_leaks]]
-id = "session-health-repo-root"
-operation = "GET /api/session-streams/v1/health"
-field = "body.repo_root"
-owner = "monitor-session-streams"
-expiry = "2026-09-23"
-
-[[known_leaks]]
-id = "session-health-db-path"
-operation = "GET /api/session-streams/v1/health"
-field = "body.db_path"
-owner = "monitor-session-streams"
-expiry = "2026-09-23"
-
-[[known_leaks]]
 id = "dashboard-index-localhost"
 operation = "dashboard:index.html"
 field = "body"

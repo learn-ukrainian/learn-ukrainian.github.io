@@ -465,6 +465,9 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
     branch = current_branch(main_root)
     heal = heal_primary_bare_if_needed(main_root)
 
+    head_proc = _run_git(main_root, "rev-parse", "HEAD")
+    head_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
+
     command = ("git", "status", "--porcelain=v1", "-z", "--untracked-files=all")
     proc = _run_git(main_root, *command[1:])
     if proc.returncode != 0:
@@ -478,7 +481,8 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
     tracked_count = sum(1 for entry in entries if entry["kind"] == "tracked")
     untracked_count = sum(1 for entry in entries if entry["kind"] == "untracked")
     return {
-        "main_root": str(main_root),
+        "role": "primary",
+        "head_sha": head_sha,
         "branch": branch,
         "protected_branch": branch in PROTECTED_BRANCHES if branch else False,
         "dirty": bool(entries),
@@ -486,7 +490,6 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
         "tracked_dirty_count": tracked_count,
         "untracked_dirty_count": untracked_count,
         "entries": entries,
-        "checked_cwd": str(main_root),
         "checked_command": " ".join(command),
         "bare_primary": False,
         "bare_healed": bool(heal.get("healed")),

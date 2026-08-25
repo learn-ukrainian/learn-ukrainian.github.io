@@ -8,6 +8,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from scripts.api.session_streams_router import router
 
 
@@ -23,13 +24,22 @@ def test_session_streams_health_and_dual_write() -> None:
     assert h.status_code == 200
     body = h.json()
     assert body["ok"] is True
-    assert "db_exists" in body
+    assert "repo_root" not in body
+    assert "db_path" not in body
+    assert set(body["repo"]) == {"role", "sha"}
+    assert body["repo"]["role"] in {"live", "release"}
+    assert set(body["store"]) == {"reachable", "schema_versions"}
 
     d = client.get("/api/session-streams/v1/dual-write-status")
     assert d.status_code == 200
     dual = d.json()
+    assert "repo_root" not in dual
+    assert "db_path" not in dual
+    assert set(dual["repo"]) == {"role", "sha"}
+    assert set(dual["store"]) == {"reachable", "schema_versions"}
     assert "candidates" in dual
     assert dual["total"] >= 0
+    assert all("path" not in candidate for candidate in dual["candidates"])
 
     c = client.get("/api/session-streams/v1/plane-continuity")
     assert c.status_code == 200
@@ -68,7 +78,8 @@ def test_session_streams_repo_root_uses_live_primary_under_release(
     db_dir = live / ".agent" / "session-streams" / "v1"
     db_dir.mkdir(parents=True)
     db = db_dir / "session-streams.sqlite3"
-    db.write_bytes(b"")
+    connection = SessionStreamDatabase(db).connect()
+    connection.close()
 
     # Synthetic release path shape: .runtime/api/releases/<40-hex>
     release = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40)
@@ -80,5 +91,8 @@ def test_session_streams_repo_root_uses_live_primary_under_release(
     assert ssr._repo_root() == live
     assert ssr._db_path() == db
     health = ssr.session_streams_health()
-    assert health["db_exists"] is True
-    assert health["repo_root"] == str(live)
+    assert "repo_root" not in health
+    assert "db_path" not in health
+    assert health["repo"] == {"role": "live", "sha": None}
+    assert health["store"]["reachable"] is True
+    assert health["store"]["schema_versions"]

@@ -79,13 +79,17 @@ def sha256_file(path: Path) -> str:
 
 
 def source_commit() -> str:
-    completed = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        completed = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise BaselineError("git rev-parse timed out before producing a source commit") from exc
     commit = completed.stdout.strip()
     _require(completed.returncode == 0 and re.fullmatch(r"[a-f0-9]{40}", commit) is not None, "source commit drift")
     return commit
@@ -691,7 +695,16 @@ def job_command(
         transport_prefix=transport_prefix,
         manifest=manifest,
     )
-    observed_cli = subprocess.run([str(hf_cli), "--version"], check=False, capture_output=True, text=True)
+    try:
+        observed_cli = subprocess.run(
+            [str(hf_cli), "--version"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise BaselineError("HF CLI version probe timed out") from exc
     _require(observed_cli.returncode == 0, "HF CLI version probe failed")
     _require(
         observed_cli.stdout.strip() == config["runtime"]["huggingface_hub_cli_version"],
@@ -882,7 +895,12 @@ def launch_once(*, command: Sequence[str], mode: str, state_path: Path, execute:
     )
     runs[mode] = intent
     write_atomic(state_path, state)
-    completed = subprocess.run(command, check=False, capture_output=True, text=True)
+    try:
+        completed = subprocess.run(command, check=False, capture_output=True, text=True, timeout=120)
+    except subprocess.TimeoutExpired as exc:
+        intent["status"] = "launch_response_failed_reconcile_required"
+        write_atomic(state_path, state)
+        raise BaselineError("HF Jobs launch timed out; reconcile provider state before retry") from exc
     intent["launch_returncode"] = completed.returncode
     if completed.returncode != 0:
         intent["status"] = "launch_response_failed_reconcile_required"

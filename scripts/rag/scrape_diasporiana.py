@@ -241,12 +241,16 @@ def download_pdf(pdf_url: str, destination: Path, pacer: RequestPacer) -> None:
 
 
 def get_pdf_page_count(pdf_path: Path) -> int:
-    result = subprocess.run(
-        ["pdfinfo", str(pdf_path)],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["pdfinfo", str(pdf_path)],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=120,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"pdfinfo timed out for {pdf_path}") from exc
     if result.returncode != 0:
         raise RuntimeError(f"pdfinfo failed for {pdf_path}: {result.stderr.strip()}")
     match = re.search(r"^Pages:\s+(\d+)$", result.stdout, re.MULTILINE)
@@ -259,11 +263,15 @@ def _run_pdftotext(pdf_path: Path) -> str | None:
     pdftotext_bin = shutil.which("pdftotext")
     if not pdftotext_bin:
         return None
-    result = subprocess.run(
-        [pdftotext_bin, "-layout", str(pdf_path), "-"],
-        capture_output=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            [pdftotext_bin, "-layout", str(pdf_path), "-"],
+            capture_output=True,
+            check=False,
+            timeout=120,
+        )
+    except subprocess.TimeoutExpired:
+        return None
     if result.returncode != 0:
         return None
     return result.stdout.decode("utf-8", errors="replace")
@@ -330,12 +338,16 @@ def ensure_tesseract_available() -> None:
             "OCR required but `tesseract` is not installed. "
             "Install `tesseract` + Ukrainian language data (`tesseract-uk`)."
         )
-    result = subprocess.run(
-        ["tesseract", "--list-langs"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["tesseract", "--list-langs"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("Tesseract language probe timed out after 60 seconds") from exc
     langs = set(result.stdout.splitlines()[1:]) if result.returncode == 0 else set()
     missing = {"ukr", "rus"} - langs
     if missing:
@@ -347,25 +359,29 @@ def ensure_tesseract_available() -> None:
 
 
 def render_page_image(pdf_path: Path, page_num: int, output_prefix: Path) -> Path:
-    result = subprocess.run(
-        [
-            "pdftoppm",
-            "-f",
-            str(page_num),
-            "-l",
-            str(page_num),
-            "-r",
-            str(OCR_DPI),
-            "-gray",
-            "-png",
-            "-singlefile",
-            str(pdf_path),
-            str(output_prefix),
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            [
+                "pdftoppm",
+                "-f",
+                str(page_num),
+                "-l",
+                str(page_num),
+                "-r",
+                str(OCR_DPI),
+                "-gray",
+                "-png",
+                "-singlefile",
+                str(pdf_path),
+                str(output_prefix),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=300,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"pdftoppm timed out for page {page_num} of {pdf_path}") from exc
     if result.returncode != 0:
         raise RuntimeError(
             f"pdftoppm failed for page {page_num} of {pdf_path}: {result.stderr.strip()}"
@@ -377,11 +393,15 @@ def render_page_image(pdf_path: Path, page_num: int, output_prefix: Path) -> Pat
 
 
 def ocr_image(image_path: Path) -> str:
-    result = subprocess.run(
-        ["tesseract", str(image_path), "stdout", "-l", OCR_LANG, "--psm", "6", "quiet"],
-        capture_output=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["tesseract", str(image_path), "stdout", "-l", OCR_LANG, "--psm", "6", "quiet"],
+            capture_output=True,
+            check=False,
+            timeout=300,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"tesseract timed out for {image_path}") from exc
     if result.returncode != 0:
         raise RuntimeError(f"tesseract failed for {image_path}: {result.stderr.decode('utf-8', 'replace')}")
     return result.stdout.decode("utf-8", errors="replace")

@@ -1831,7 +1831,8 @@ def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
     return (
         "❌ primary checkout is dirty; refusing write-capable dispatch before "
         "creating branch/worktree residue.\n"
-        f"   cwd: {status.get('checked_cwd')}\n"
+        f"   checkout role: {status.get('role')}\n"
+        f"   head: {status.get('head_sha')}\n"
         f"   command: {status.get('checked_command')}\n"
         f"   branch: {status.get('branch')}\n"
         f"   dirty files: {_format_dirty_entries(entries)}\n"

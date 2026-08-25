@@ -106,10 +106,25 @@ STAGE_RUNNER_LABELS = {
     "resolve": "resolve_runner",
     "certify": "certify_runner",
 }
+EXECUTION_LOCK_FD_ENV = "PHASE3_CYCLE007_EXECUTION_LOCK_FD"
 
 
 class ControllerError(ValueError):
     pass
+
+
+def _inherited_execution_lock_fd() -> int | None:
+    raw = os.environ.get(EXECUTION_LOCK_FD_ENV)
+    if raw is None:
+        return None
+    try:
+        descriptor = int(raw)
+        if descriptor < 0:
+            raise ValueError
+        os.fstat(descriptor)
+    except (ValueError, OSError) as exc:
+        raise ControllerError("execution_lock_binding_drift") from exc
+    return descriptor
 
 
 def canonical(value: Any) -> bytes:
@@ -1392,6 +1407,7 @@ def run_stage(
     resolution_authority_root: Path | None = None,
     resolution_nonce_ledger: Path | None = None,
     resolution_advisor_response: Path | None = None,
+    execution_lock_fd: int | None = None,
 ) -> dict[str, Any]:
     _require_contiguous(
         package,
@@ -1465,6 +1481,7 @@ def run_stage(
             stderr=subprocess.DEVNULL,
             check=False,
             shell=False,
+            pass_fds=() if execution_lock_fd is None else (execution_lock_fd,),
         )
         if completed.returncode != 0:
             raise ControllerError("stage_execution_failed")
@@ -1579,6 +1596,7 @@ def main() -> int:
             gemini_canary.resolve(),
             grok_canary.resolve(),
         )
+        execution_lock_fd = _inherited_execution_lock_fd()
         args.lock.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         with args.lock.open("a+") as lock:
             os.chmod(args.lock, 0o600)
@@ -1612,6 +1630,7 @@ def main() -> int:
                     resolution_authority_root=args.resolution_authority_root,
                     resolution_nonce_ledger=args.resolution_nonce_ledger,
                     resolution_advisor_response=args.resolution_advisor_response,
+                    execution_lock_fd=execution_lock_fd,
                 )
     except ControllerError as exc:
         result = {"ok": False, "failure_code": str(exc), "text_free": True}

@@ -22,7 +22,7 @@ from agents_extensions.shared.session_streams.projection import (
 from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
 
 from .config import LIVE_REPO_ROOT, PROJECT_ROOT
-from .repository_authority import preparation_data_root
+from .repository_authority import build_repository_identity, preparation_data_root
 
 router = APIRouter(tags=["session-streams"])
 
@@ -50,20 +50,37 @@ def _db_path() -> Path:
 def _store() -> SessionStreamStore:
     db_path = _db_path()
     if not db_path.is_file():
-        raise FileNotFoundError(f"session-stream database does not exist: {db_path}")
+        raise FileNotFoundError("session-stream database is unavailable")
     return SessionStreamStore(SessionStreamDatabase(db_path))
+
+
+def _store_health() -> dict[str, Any]:
+    """Return store reachability and migration versions without its path."""
+    connection = None
+    try:
+        connection = SessionStreamDatabase(_db_path()).connect(read_only=True)
+        versions = [
+            int(row[0])
+            for row in connection.execute(
+                "SELECT version FROM schema_migrations ORDER BY version"
+            ).fetchall()
+        ]
+        return {"reachable": True, "schema_versions": versions}
+    except Exception:
+        return {"reachable": False, "schema_versions": []}
+    finally:
+        if connection is not None:
+            connection.close()
 
 
 @router.get("/v1/health")
 def session_streams_health() -> dict[str, Any]:
     """Liveness for the session-streams monitor surface (no cutover)."""
     root = _repo_root()
-    db_path = _db_path()
     return {
         "ok": True,
-        "repo_root": str(root),
-        "db_exists": db_path.is_file(),
-        "db_path": str(db_path),
+        "repo": build_repository_identity(root),
+        "store": _store_health(),
         "cutover": "operator-gated",
     }
 
@@ -78,7 +95,7 @@ def session_stream_status(stream_id: str) -> dict[str, Any]:
     except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - defensive API boundary
-        raise HTTPException(status_code=500, detail=f"status_failed:{exc}") from exc
+        raise HTTPException(status_code=500, detail="status_failed") from exc
     return status.as_dict()
 
 
@@ -95,7 +112,7 @@ def session_stream_digest(
     except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover
-        raise HTTPException(status_code=500, detail=f"digest_failed:{exc}") from exc
+        raise HTTPException(status_code=500, detail="digest_failed") from exc
     return {
         "stream_id": stream_id,
         "limit": limit,
@@ -116,14 +133,14 @@ def dual_write_status() -> dict[str, Any]:
             "stream_id": c.stream_id,
             "stream_name": c.stream_name,
             "title": c.title,
-            "path": str(c.path.relative_to(root)) if c.path.is_relative_to(root) else str(c.path),
             "exists": c.exists,
         }
         for c in candidates
     ]
     missing = sum(1 for r in rows if not r["exists"])
     return {
-        "repo_root": str(root),
+        "repo": build_repository_identity(root),
+        "store": _store_health(),
         "total": len(rows),
         "missing_files": missing,
         "candidates": rows,
@@ -163,7 +180,7 @@ def projection_drift(
     try:
         batch = detect_projection_drift(store, root, stream_ids=stream_ids)
     except Exception as exc:  # pragma: no cover
-        raise HTTPException(status_code=500, detail=f"drift_failed:{exc}") from exc
+        raise HTTPException(status_code=500, detail="drift_failed") from exc
     # ProjectionBatchResult may be a dataclass — best-effort serialization
     if hasattr(batch, "as_dict"):
         payload = batch.as_dict()

@@ -471,7 +471,7 @@ def run_apple_pdfkit_native(
         "native",
     ]
     try:
-        completed = subprocess.run(command, check=True, capture_output=True, text=True)
+        completed = subprocess.run(command, check=True, capture_output=True, text=True, timeout=300)
     except FileNotFoundError as exc:
         raise ExtractionError("Swift is required for the macOS PDFKit fallback") from exc
     except subprocess.CalledProcessError as exc:
@@ -479,6 +479,8 @@ def run_apple_pdfkit_native(
         raise ExtractionError(
             f"Apple PDFKit extraction failed with exit code {exc.returncode}: {detail or 'no diagnostic'}"
         ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise ExtractionError("Apple PDFKit extraction timed out after 300 seconds") from exc
     try:
         payload = json.loads(completed.stdout)
         pages = payload["pages"]
@@ -527,7 +529,7 @@ def run_apple_pdfkit_native_spatial(
         "native-spatial",
     ]
     try:
-        completed = subprocess.run(command, check=True, capture_output=True, text=True)
+        completed = subprocess.run(command, check=True, capture_output=True, text=True, timeout=300)
     except FileNotFoundError as exc:
         raise ExtractionError("Swift is required for native spatial PDFKit extraction") from exc
     except subprocess.CalledProcessError as exc:
@@ -536,6 +538,8 @@ def run_apple_pdfkit_native_spatial(
             f"Apple PDFKit spatial extraction failed with exit code {exc.returncode}: "
             f"{detail or 'no diagnostic'}"
         ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise ExtractionError("Apple PDFKit spatial extraction timed out after 300 seconds") from exc
     try:
         payload = json.loads(completed.stdout)
         pages = payload["pages"]
@@ -637,6 +641,7 @@ def run_apple_vision_ocr(
             check=True,
             capture_output=True,
             text=True,
+            timeout=300,
         )
     except FileNotFoundError as exc:
         raise ExtractionError("Swift is required for the macOS Vision OCR fallback") from exc
@@ -645,6 +650,8 @@ def run_apple_vision_ocr(
         raise ExtractionError(
             f"Apple Vision OCR failed with exit code {exc.returncode}: {detail or 'no diagnostic'}"
         ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise ExtractionError("Apple Vision OCR timed out after 300 seconds") from exc
     try:
         payload = json.loads(completed.stdout)
     except json.JSONDecodeError as exc:

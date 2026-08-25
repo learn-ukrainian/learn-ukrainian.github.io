@@ -829,13 +829,17 @@ def verify_source_content(
 def fetch_page(url: str, retries: int = 3) -> str:
     """Fetch a page handling windows-1251 encoding, with retries."""
     for attempt in range(1, retries + 1):
-        result = subprocess.run(
-            ["curl", "-sL", "--max-time", "30", "--retry", "2",
-             "-H", "Accept-Charset: windows-1251,utf-8",
-             "-H", "User-Agent: Mozilla/5.0 (compatible; UkrLibScraper/1.0)",
-             url],
-            capture_output=True,
-        )
+        try:
+            result = subprocess.run(
+                ["curl", "-sL", "--max-time", "30", "--retry", "2",
+                 "-H", "Accept-Charset: windows-1251,utf-8",
+                 "-H", "User-Agent: Mozilla/5.0 (compatible; UkrLibScraper/1.0)",
+                 url],
+                capture_output=True,
+                timeout=60,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(f"curl timed out for {url}") from exc
         if result.returncode == 0 and result.stdout:
             break
         if attempt < retries:

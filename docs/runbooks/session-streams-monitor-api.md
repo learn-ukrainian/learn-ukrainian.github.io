@@ -31,7 +31,7 @@ bootstrap attempt.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | `/api/session-streams/v1/health` | DB presence / repo root |
+| GET | `/api/session-streams/v1/health` | DB reachability / repo identity |
 | GET | `/api/session-streams/v1/status/{stream_id}` | Lease/handoff diagnosis (`epic:N`) |
 | GET | `/api/session-streams/v1/digest/{stream_id}?limit=20` | Pinned + recent entries |
 | GET | `/api/session-streams/v1/dual-write-status` | Handoff file inventory existence |

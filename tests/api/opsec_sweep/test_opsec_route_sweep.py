@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import asyncio
 import fnmatch
+import importlib
 import json
 import os
 import shutil
 import socket
+import sqlite3
 import subprocess
 import sys
 import time
@@ -16,6 +18,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, unquote, urlparse
 
 import pytest
 from fastapi import HTTPException
@@ -24,6 +27,7 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.dual_write import HandoffCandidate
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     docs_router,
@@ -32,11 +36,13 @@ from scripts.api import (
     fleet_router,
     git_hygiene_router,
     governance_router,
+    images_router,
     issues_router,
     opsec_scan,
     project_state_collect,
     project_state_router,
     repository_authority,
+    route_contracts,
     session_streams_router,
     site_router,
     state_helpers,
@@ -45,6 +51,7 @@ from scripts.api import (
 )
 from scripts.api import main as api_main
 from scripts.fleet_comms import cold_start_board, message_plane
+from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
@@ -61,10 +68,6 @@ FROZEN_IDS = frozenset(
         "occupancy-host-id",
         "retention-plan-dir",
         "retention-archive-root",
-        "session-digest-detail",
-        "session-health-repo-root",
-        "session-health-db-path",
-        "session-status-detail",
         "dashboard-index-localhost",
         "dashboard-work-loopback",
     }
@@ -124,6 +127,36 @@ def _deny_subprocess(*_args: Any, **_kwargs: Any) -> None:
 
 def _deny_network(*_args: Any, **_kwargs: Any) -> None:
     raise AssertionError("OPSEC sweep fixture forbids network execution")
+
+
+def _sqlite_database_path(database: Any, *, uri: bool) -> Path | None:
+    """Resolve a sqlite database argument to a filesystem path when it has one."""
+    if isinstance(database, os.PathLike):
+        database = os.fspath(database)
+    if isinstance(database, bytes):
+        database = os.fsdecode(database)
+    if not isinstance(database, str):
+        return None
+    if database == ":memory:":
+        return None
+    if uri and database.startswith("file:"):
+        parsed = urlparse(database)
+        if parsed.path == ":memory:" or "memory" in parse_qs(parsed.query).get("mode", []):
+            return None
+        if parsed.path:
+            database = unquote(parsed.path)
+    return Path(database).expanduser().resolve()
+
+
+def _deny_real_database_connect(root: Path, original_connect: Any) -> Any:
+    def connect(database: Any, *args: Any, **kwargs: Any) -> Any:
+        uri = kwargs.get("uri", args[6] if len(args) > 6 else False)
+        database_path = _sqlite_database_path(database, uri=bool(uri))
+        if database_path is not None and root not in (database_path, *database_path.parents):
+            raise AssertionError("OPSEC sweep fixture forbids real database access")
+        return original_connect(database, *args, **kwargs)
+
+    return connect
 
 
 def _fixture_completed_process(
@@ -234,10 +267,6 @@ def _fixture_cold_start_board(
     }
 
 
-def _fixture_session_inventory_unavailable(_root: Path) -> list[Any]:
-    raise FileNotFoundError("isolated OPSEC fixture has no session inventory")
-
-
 @pytest.fixture
 def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> IsolatedFixture:
     """Redirect existing API seams into a canary-planted disposable tree."""
@@ -260,6 +289,11 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
     monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
+    session_database = SessionStreamDatabase(root / "stores" / "session-streams.sqlite3")
+    session_connection = session_database.connect()
+    session_connection.close()
+    handoff_path = root / "batch_state" / "session-handoff.md"
+    handoff_path.write_text("fixture handoff\n", encoding="utf-8")
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
     monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
     monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
@@ -295,6 +329,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # values at the seam so the route exercises its normal response shaping.
     monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(repository_authority, "_git", _fixture_authority_git)
+    monkeypatch.setattr(repository_authority, "classify_repo_path", lambda *_args, **_kwargs: "primary_checkout")
     monkeypatch.setattr(
         git_hygiene_router,
         "_run_git",
@@ -349,7 +384,19 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         lambda: root / "stores" / "session-streams.sqlite3",
     )
     monkeypatch.setattr(session_streams_router, "_store", lambda: _FixtureSessionStore())
-    monkeypatch.setattr(session_streams_router, "list_handoff_candidates", _fixture_session_inventory_unavailable)
+    monkeypatch.setattr(
+        session_streams_router,
+        "list_handoff_candidates",
+        lambda _root: [
+            HandoffCandidate(
+                stream_id="epic:4707",
+                path=handoff_path,
+                exists=True,
+                stream_name="fixture",
+                title="fixture handoff",
+            )
+        ],
+    )
     monkeypatch.setattr(
         session_streams_router,
         "diagnose_handoff",
@@ -361,11 +408,34 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         "detect_projection_drift",
         lambda *_args, **_kwargs: {"status": "fixture"},
     )
+    monkeypatch.setattr(
+        worktree_containment,
+        "primary_checkout_dirty_status",
+        lambda _start: {
+            "role": "primary",
+            "head_sha": "0" * 40,
+            "branch": "opsec-fixture",
+            "protected_branch": False,
+            "dirty": False,
+            "dirty_count": 0,
+            "tracked_dirty_count": 0,
+            "untracked_dirty_count": 0,
+            "entries": [],
+            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
+            "bare_primary": False,
+            "bare_healed": False,
+            "bare_heal_message": None,
+        },
+    )
 
-    monkeypatch.setattr(cold_start_board, "_get_local_git_info", lambda: {
-        "branch": "opsec-fixture",
-        "head": "000000000",
-    })
+    monkeypatch.setattr(
+        cold_start_board,
+        "_get_local_git_info",
+        lambda: {
+            "branch": "opsec-fixture",
+            "head": "000000000",
+        },
+    )
     monkeypatch.setattr(
         cold_start_board,
         "_resolve_session_streams_db",
@@ -381,12 +451,70 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         ),
     )
 
-    # RAG imports its source DB lazily outside the scripts.api namespace. A
-    # nonexistent worker-local path plus a failing loader models the documented
-    # empty-corpus response without opening a real DB or relying on FTS tables.
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", root / "stores" / "sources.db")
-    monkeypatch.setattr(sources_db, "_conn", None)
+    # RAG imports its source DB lazily outside the scripts.api namespace. The
+    # top-level ``rag.query`` import resolves ``wiki.sources_db`` while this
+    # fixture imports ``scripts.wiki.sources_db``; both module identities must
+    # point at the same nonexistent worker-local path. The missing-corpus
+    # behavior then stays on the documented empty-response path.
+    fixture_sources_db = root / "stores" / "sources.db"
+    rag_query = importlib.import_module("rag.query")
+    search_db_modules = {
+        sources_db,
+        rag_query.sources_db,
+    }
+    for search_db_module in search_db_modules:
+        monkeypatch.setattr(search_db_module, "SOURCES_DB_PATH", fixture_sources_db)
+        monkeypatch.setattr(search_db_module, "_conn", None)
     monkeypatch.setattr(sources_db, "_get_conn", _fixture_missing_sources_db)
+
+    # The route sweep also traverses diagnostics that import their own local
+    # stores outside ``scripts.api``. Repoint those module-level paths before
+    # installing the global guard, so missing fixture state is handled by each
+    # route's documented empty/read-only envelope instead of as a 500.
+    importlib.import_module("scripts.ai_agent_bridge._db")
+    importlib.import_module("scripts.fleet_comms.legacy_broker_report")
+    importlib.import_module("scripts.telemetry.legacy_bridge")
+    importlib.import_module("wiki.state")
+    for module_name, module in tuple(sys.modules.items()):
+        if module is None or not module_name.startswith(("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")):
+            continue
+        for name, value in tuple(vars(module).items()):
+            if not isinstance(value, Path) or not value.is_absolute():
+                continue
+            if not any(token in name.upper() for token in ("DB", "PROGRESS", "STATE")):
+                continue
+            replacement = root / "stores" / module_name.replace(".", "_") / name.lower()
+            replacement.parent.mkdir(parents=True, exist_ok=True)
+            if value.is_dir() or value.suffix == "":
+                replacement.mkdir(parents=True, exist_ok=True)
+            monkeypatch.setattr(module, name, replacement)
+
+    # Image discovery is also lazy, but its index and page caches are module
+    # singletons. Repoint its file roots and recreate the singletons so a prior
+    # test cannot leak real checkout data into this isolated route sweep.
+    monkeypatch.setattr(images_router, "IMAGES_DIR", root / "stores" / "images")
+    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", root / "stores" / "textbooks")
+    monkeypatch.setattr(
+        images_router,
+        "ANNOTATIONS_FILE",
+        root / "stores" / "image_text_pairs.jsonl",
+    )
+    monkeypatch.setattr(images_router, "_index", images_router._ImageIndex())
+    monkeypatch.setattr(images_router, "_pdf_pool", images_router._PDFPool())
+    monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
+    monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
+
+    broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
+    monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
+
+    # This is the fixture-level backstop for any future search entry point that
+    # misses a module-local path seam. Connections inside the disposable root
+    # remain valid for the other isolated stores.
+    monkeypatch.setattr(
+        sqlite3,
+        "connect",
+        _deny_real_database_connect(root, sqlite3.connect),
+    )
 
     # These docs roots are derived once at import time rather than exposed as
     # individual Path globals. Rebuild the lookup tables so docs requests
@@ -422,6 +550,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # disposable tree instead of consulting the retired local plane.
     isolated_plane_root = root / "stores" / "fleet-comms"
     isolated_plane_root.mkdir(parents=True, exist_ok=True)
+
     def isolated_plane_resolver(repo_root: Path | None = None) -> Path:
         del repo_root
         return isolated_plane_root
@@ -437,9 +566,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     for dashboards_dir in {api_main.DASHBOARDS_DIR, docs_router.DASHBOARDS_DIR}:
         dashboards_dir.mkdir(parents=True, exist_ok=True)
         for filename in ("index.html", "artifacts.html"):
-            (dashboards_dir / filename).write_text(
-                "<html><body>synthetic artifacts</body></html>\n", encoding="utf-8"
-            )
+            (dashboards_dir / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
     shutil.copytree(
         Path(__file__).resolve().parents[3] / "dashboards",
         dashboards_root,
@@ -533,7 +660,9 @@ def _response_payload(response: Any) -> Any:
         return response.content
 
 
-def _scan_response(record: registry.ExerciseRecord, response: Any, canaries: tuple[str, ...]) -> list[opsec_scan.Finding]:
+def _scan_response(
+    record: registry.ExerciseRecord, response: Any, canaries: tuple[str, ...]
+) -> list[opsec_scan.Finding]:
     payload = _response_payload(response)
     return opsec_scan.scan_response(
         record.key,
@@ -549,6 +678,16 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert registry.unrecorded_operations(api_main.app, records) == []
     assert {record.classification for record in records} >= {"read", "mutation", "stream"}
     by_key = {record.key: record for record in records}
+    assert {
+        "GET /api/images/textbooks",
+        "GET /api/rag/search_literary",
+        "GET /api/rag/search_text",
+        "GET /api/sources/search_literary",
+        "GET /api/sources/search_text",
+    } == registry.FIXTURE_EMPTY_ROUTE_KEYS
+    for key in registry.FIXTURE_EMPTY_ROUTE_KEYS:
+        assert by_key[key].fixture == "isolated"
+        assert by_key[key].expected_statuses == (200,)
     assert by_key["GET /api/session-streams/v1/drift"].query["dry_run"] == "true"
     assert by_key["POST /api/comms/send"].expected_statuses == (410,)
     assert by_key["POST /api/comms/send"].body() is not None
@@ -558,9 +697,58 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
+    assert (
+        route_contracts.contract_for_route("/api/session-streams/v1/health").response_schema_version
+        == "session-streams.v2"
+    )
+    assert route_contracts.contract_for_route("/api/state/preparation").response_schema_version == "authority.v2"
+    assert route_contracts.contract_for_route("/api/orient").response_schema_version == "orient.v2"
     for record in records:
         if record.fixture == "skip":
             assert record.owner and record.reason and record.expiry
+
+
+def test_exercised_read_registry_refuses_unexplained_5xx() -> None:
+    records = registry.build_registry(api_main.app)
+    unexplained = [
+        record.key
+        for record in records
+        if record.fixture != "skip"
+        and record.classification in {"read", "read-side-effect"}
+        and any(500 <= status < 600 for status in record.expected_statuses)
+        and not record.reason
+    ]
+    assert unexplained == []
+
+
+def test_family_one_fixture_reaches_dual_write_and_orient_git_happy_paths(
+    isolated_fixture: IsolatedFixture,
+) -> None:
+    client = TestClient(api_main.app, raise_server_exceptions=False)
+
+    dual = client.get("/api/session-streams/v1/dual-write-status")
+    assert dual.status_code == 200
+    dual_payload = dual.json()
+    assert dual_payload["total"] == 1
+    assert dual_payload["candidates"][0]["exists"] is True
+    assert "path" not in dual_payload["candidates"][0]
+    assert "repo_root" not in json.dumps(dual_payload)
+    assert "db_path" not in json.dumps(dual_payload)
+
+    orient = client.get("/api/orient", params={"sections": "git"})
+    assert orient.status_code == 200
+    git_payload = orient.json()["git"]
+    assert git_payload["primary_checkout"] == {
+        "role": "primary",
+        "head_sha": "0" * 40,
+        "dirty_count": 0,
+    }
+    assert git_payload["cwd_role"] in {"primary", "worktree", "other"}
+    encoded = json.dumps(git_payload)
+    assert "main_root" not in encoded
+    assert "checked_cwd" not in encoded
+    assert "data_checkout" not in encoded
+    assert isolated_fixture.root.name == PATH_CANARY
 
 
 def test_registry_reports_a_removed_operation() -> None:
@@ -639,6 +827,40 @@ def test_isolated_fixture_denies_network_and_subprocess(isolated_fixture: Isolat
         socket.create_connection(("127.0.0.1", 8765))
 
 
+def test_isolated_fixture_denies_real_database_access(isolated_fixture: IsolatedFixture) -> None:
+    real_db_path = Path(__file__).resolve().parents[3] / "data" / "sources.db"
+    assert real_db_path.resolve() not in (
+        isolated_fixture.root,
+        *isolated_fixture.root.parents,
+    )
+    connection: sqlite3.Connection | None = None
+    try:
+        with pytest.raises(AssertionError, match="forbids real database access"):
+            connection = sources_db._open_conn(real_db_path)
+    finally:
+        if connection is not None:
+            connection.close()
+
+    class _BytesPath:
+        def __fspath__(self) -> bytes:
+            return os.fsencode(real_db_path)
+
+    outside_databases = (
+        (real_db_path.as_uri() + "?mode=ro", {"uri": True}),
+        (os.fsencode(real_db_path), {}),
+        (_BytesPath(), {}),
+        ("file::memory:outside.db", {"uri": True}),
+    )
+    for database, kwargs in outside_databases:
+        with pytest.raises(AssertionError, match="forbids real database access"):
+            sqlite3.connect(database, **kwargs)
+
+    with sqlite3.connect(":memory:") as connection:
+        connection.execute("SELECT 1")
+    with sqlite3.connect("file:fixture-memory?mode=memory&cache=shared", uri=True) as connection:
+        connection.execute("SELECT 1")
+
+
 def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixture) -> None:
     started = time.perf_counter()
     records = registry.build_registry(api_main.app)
@@ -676,6 +898,10 @@ def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixtur
         )
         if record.expected_statuses and response.status_code not in record.expected_statuses:
             failures.append(f"{record.key} status={response.status_code}")
+        if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code >= 500:
+            failures.append(f"{record.key} real-database failure status={response.status_code}")
+        if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code == 200:
+            assert _response_payload(response) == [], f"{record.key} did not return its empty fixture envelope"
         findings.extend(_scan_response(record, response, isolated_fixture.canaries))
 
     dashboard_root = isolated_fixture.root / "dashboards"

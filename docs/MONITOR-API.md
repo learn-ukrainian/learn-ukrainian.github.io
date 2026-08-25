@@ -4,7 +4,7 @@ Base URL: `http://localhost:8765`
 
 FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
-**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement` for every endpoint family and every `dashboards/*.html` page).
+**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every `dashboards/*.html` page).
 
 This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
 
@@ -142,9 +142,9 @@ canaries. It exempts SHA values, RFC3339 timestamps, `epic:<N>` identifiers,
 corpus protects those boundaries.
 
 Each exercised record derives success and redirect statuses from OpenAPI and
-also permits the explicit isolated-fixture error contract: 200, 400, 401,
-403, 404, 409, 410, 422, 500, and 503. Any other returned status fails the
-invariant.
+permits the documented isolated-fixture 4xx contract. A 5xx is refused unless
+the registry record carries a route-specific reason and explicitly expects it;
+any other returned status fails the invariant.
 
 PR-A is intentionally green with a shrinking exception table at
 [`tests/api/opsec_sweep/known_leaks.toml`](../tests/api/opsec_sweep/known_leaks.toml).
@@ -156,11 +156,11 @@ atomically; the following manifest is the record of those boundaries:
 
 | Emitter family | Current path-bearing fields | Known consumers | PR-B shape | Schema version |
 | --- | --- | --- | --- | --- |
-| `session_streams_router.py` | `repo_root`, `db_path` | `tests/test_session_streams_api.py` | `repo: {role, sha}`, `store: {reachable, schema_versions}` | `session-streams.v2` |
-| `repository_authority.py`, `preparation_state.py`, `state_router.py` | checkout and authority roots | `tests/test_orient_api.py` and preparation/state clients | `primary_checkout: {role, head_sha, dirty_count}`, `cwd_role` | `authority.v2` |
+| `session_streams_router.py` | `repo_root`, `db_path` (removed) | `tests/test_session_streams_api.py` | `repo: {role, sha}`, `store: {reachable, schema_versions}` | `session-streams.v2 — DONE` |
+| `repository_authority.py`, `preparation_state.py`, `state_router.py` | checkout and authority roots (removed) | `tests/test_orient_api.py` and preparation/state clients | `primary_checkout: {role, head_sha, dirty_count}`, `cwd_role` | `authority.v2 — DONE` |
 | `worktrees_router.py` | worktree filesystem paths | worktree dashboards and guardrail consumers | opaque worktree id, branch, role | `worktrees.v2` |
 | `comms_router.py`, fleet facade collectors | broker/fleet database paths | comms and fleet dashboards | `store: {reachable, kind}` | `comms.v2` (done #7182 PR-B) |
-| `main.py` orient collectors | Git roots and diagnostic paths | orient clients and `tests/test_orient_api.py` | role/head metadata only | `orient.v2` |
+| `main.py` orient collectors | Git roots and diagnostic paths (removed) | orient clients and `tests/test_orient_api.py` | role/head metadata only | `orient.v2 — DONE` |
 | `telemetry.response` | transcript filenames | Monitor telemetry consumers | retain context/window/source; drop filename | `telemetry.v2` |
 
 The global error handlers preserve status codes and return
@@ -2456,7 +2456,8 @@ Query params:
     "head": "cb5f47d19",
     "authority": {
       "repository": "learn-ukrainian/learn-ukrainian.github.io",
-      "data_checkout": {"role": "live_primary", "root": "/fixed/repo", "branch": "main", "head_sha": "<40-hex>"},
+      "primary_checkout": {"role": "live_primary", "head_sha": "<40-hex>", "dirty_count": 0},
+      "cwd_role": "primary",
       "service_code": {"mode": "release", "commit_sha": "<40-hex>", "tree_sha256": "<64-hex>"}
     }
   },
