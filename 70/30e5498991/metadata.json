@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7030e5498991",
+  "strategy": "manual-commit",
+  "branch": "agy/monitor-7269-step1-session-streams-cluster",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/api/test_app_factory.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/70/30e5498991/0/metadata.json",
+      "transcript": "/70/30e5498991/0/full.jsonl",
+      "compact_transcript": "/70/30e5498991/0/transcript.jsonl",
+      "content_hash": "/70/30e5498991/0/content_hash.txt",
+      "prompt": "/70/30e5498991/0/prompt.txt"
+    }
+  ]
+}
