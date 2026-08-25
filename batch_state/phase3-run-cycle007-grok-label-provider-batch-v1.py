@@ -795,6 +795,8 @@ def _provider_mode(
         if provider.is_symlink():
             raise Error("label_count_or_envelope_drift")
         resolved = provider.resolve(strict=True)
+        if not resolved.is_file():
+            raise Error("label_count_or_envelope_drift")
     except OSError as exc:
         if synthetic_provider:
             if expected_grok_sha256 is not None:
