@@ -253,10 +253,12 @@ def _make_gemini_fake_provider(tmp_path: Path, sidecar: dict[str, Any]) -> Path:
     script = tmp_path / "mock_gemini.py"
     labels_json = json.dumps(labels)
     code = f"""#!/usr/bin/env python3
-import sys, json
+import os, sys, json
 
 schema_idx = sys.argv.index("--json-schema")
 schema_path = sys.argv[schema_idx + 1]
+assert "--print" not in sys.argv
+assert os.path.samefile(os.getcwd(), os.path.dirname(schema_path))
 with open(schema_path) as f:
     schema = json.load(f)
 challenge = schema["properties"]["liveness_challenge"]["enum"][0]

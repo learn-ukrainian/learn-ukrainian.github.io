@@ -874,6 +874,8 @@ def stop(
 
 
 def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
+    # AGY stream-input mode reads turns only from stdin; --print would add a
+    # conflicting headless prompt and can yield SUCCESS with an empty result.
     return [
         str(provider),
         "--model",
@@ -888,8 +890,6 @@ def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
         "stream-json",
         "--json-schema",
         str(schema_path),
-        "--print",
-        "",
         "--log-file",
         str(log_path),
     ]
@@ -1018,6 +1018,7 @@ def _run_chunk(
                     stderr=subprocess.DEVNULL,
                     check=False,
                     shell=False,
+                    cwd=runtime,
                 )
             metadata = _attempt_metadata(
                 raw_path,
