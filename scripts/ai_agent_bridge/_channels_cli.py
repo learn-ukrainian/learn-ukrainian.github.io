@@ -623,6 +623,16 @@ def register_channel_commands(subparsers: Any) -> None:
             "(comma-separated), e.g. codex:high,agy:high"
         ),
     )
+    discuss_parser.add_argument(
+        "--idempotency-key",
+        dest="idempotency_key",
+        default=None,
+        help=(
+            "Explicit idempotency key for the discussion-root message "
+            "(default: derived from channel + brief). Pass a new key to "
+            "start a fresh root for the same brief without mutating the body"
+        ),
+    )
 
 
 # ── dispatch ──────────────────────────────────────────────────────────
@@ -753,6 +763,19 @@ def _parse_agent_efforts(s: str) -> dict[str, str]:
         rendered = ", ".join(f"{agent}:{effort}" for agent, effort in sorted(invalid.items()))
         raise ValueError(f"invalid --efforts value(s): {rendered}")
     return efforts
+
+
+def _discussion_root_idempotency_key(channel: str, body: str) -> str:
+    """Derive the discussion-root key from channel + brief (#7160).
+
+    The authority stores channel and recipient metadata alongside the
+    key, so hashing only the brief made a same-brief retry on a fresh
+    channel fail with ``idempotency_key_reused_with_different_payload``.
+    Scoping the digest to the channel keeps same-channel replays
+    deduplicated while fresh-channel retries mint a fresh key.
+    """
+    digest = hashlib.sha256(f"{channel}\x00{body}".encode()).hexdigest()
+    return f"discussion-root:{digest}"
 
 
 def _now_utc() -> datetime:
@@ -1597,6 +1620,13 @@ def _handle_discuss(args) -> int:
     if not body.strip():
         print("❌ empty discussion topic", file=sys.stderr)
         return 1
+    explicit_idempotency_key = (getattr(args, "idempotency_key", None) or "").strip()
+    if getattr(args, "idempotency_key", None) is not None and not explicit_idempotency_key:
+        print("❌ --idempotency-key must not be empty", file=sys.stderr)
+        return 1
+    root_idempotency_key = explicit_idempotency_key or _discussion_root_idempotency_key(
+        args.channel, body
+    )
     caller_attribution = resolve_invocation_attribution()
     runtime_initiator = (
         caller_attribution.initiator
@@ -1625,7 +1655,7 @@ def _handle_discuss(args) -> int:
                 "Agent": "ab-discuss",
                 "Via": "acp",
             },
-            idempotency_key=f"discussion-root:{hashlib.sha256(body.encode('utf-8')).hexdigest()}",
+            idempotency_key=root_idempotency_key,
         )
         root_id = root.message_id
         correlation_id = root.thread_id
