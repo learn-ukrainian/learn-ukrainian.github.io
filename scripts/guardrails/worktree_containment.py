@@ -112,6 +112,11 @@ class WriteDecision:
 # git helpers
 # ---------------------------------------------------------------------------
 
+# Read-only plumbing probes run on hook hot paths; a wedged git must degrade
+# to a failed probe, never hang the session (#7213).
+_GIT_TIMEOUT_S = 30
+
+
 def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
     """Run a read-only git command scoped to ``cwd`` with sanitized env."""
     argv = ["git", "-C", str(cwd), *args]
@@ -122,6 +127,17 @@ def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
             text=True,
             check=False,
             env=sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        # Same contract as the FileNotFoundError branch below: represent the
+        # failure as a failed probe (124 = conventional shell timeout exit)
+        # so callers fall back instead of unwinding through a hook.
+        return subprocess.CompletedProcess(
+            argv,
+            returncode=124,
+            stdout="",
+            stderr=f"TimeoutExpired after {exc.timeout}s",
         )
     except FileNotFoundError as exc:
         # Root resolution promises an on-disk .git fallback when Git cannot

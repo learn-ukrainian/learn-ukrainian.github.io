@@ -43,6 +43,12 @@ except ImportError:
             return {k: v for k, v in os.environ.items() if k not in _GIT_ENV}
 
 
+# These guards run inside git hooks; a wedged git or hook installer must exit
+# loudly instead of hanging the session (#7213).
+_GIT_TIMEOUT_S = 30
+_HOOK_INSTALL_TIMEOUT_S = 60
+
+
 def check_primary_checkout_root(hook_mode: bool = False) -> Path:
     """Verify that we are executing from the root of the primary checkout."""
     try:
@@ -86,8 +92,9 @@ def get_writable_tracked_files(main_root: Path) -> list[Path]:
             text=True,
             check=True,
             env=sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_S,
         )
-    except subprocess.CalledProcessError as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
         print(f"Error listing tracked files: {e}", file=sys.stderr)
         sys.exit(1)
 
@@ -130,8 +137,9 @@ def apply_guard(hook_mode: bool = False) -> None:
             text=True,
             check=True,
             env=sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_S,
         )
-    except subprocess.CalledProcessError as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
         print(f"Error listing tracked files: {e}", file=sys.stderr)
         sys.exit(1)
 
@@ -171,8 +179,9 @@ def release_guard() -> None:
             text=True,
             check=True,
             env=sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_S,
         )
-    except subprocess.CalledProcessError as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
         print(f"Error listing tracked files: {e}", file=sys.stderr)
         sys.exit(1)
 
@@ -246,8 +255,9 @@ def install_hooks() -> None:
             cwd=main_root,
             check=True,
             env=sanitized_git_env(),
+            timeout=_HOOK_INSTALL_TIMEOUT_S,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         print(f"Failed to install tracked Git hooks: {exc}", file=sys.stderr)
         sys.exit(1)
 
