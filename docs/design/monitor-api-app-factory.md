@@ -1,26 +1,25 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v8 (revised after seven rounds of cross-family review)
+> **Version:** v9 (revised after eight rounds of cross-family review)
 > **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v8
-> needs an eighth cross-family pass before step 0 is dispatched (see § 10).
+> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v9
+> needs a ninth cross-family pass before step 0 is dispatched (see § 10).
 > **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per
-> seven rounds of codex review below.
+> eight rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
 > **Refs:** #7182 (OPSEC sweep design r2/r3 critique, task `critique-7182-design-r2-codex`, GPT-seat
 > critic origin of the proposal).
-> **Changelog:** v1→v7 each got a cross-family REJECT and fixed the prior round's findings — see §10
-> for the full seven-round record. Round 7 confirmed the exception-handler fix held, but found v7's
-> lifespan test didn't actually test anything (`_lifespan` ignores the app argument it's called with,
-> so calling it directly can't prove `create_app()` wired it in), and — the largest finding across all
-> seven rounds — that `main.py` has 18 routes and 3 exception handlers decorated directly on the
-> module-level `app` object, not inside any of the 44 router files; the design's "`main.py`'s bottom
-> becomes `app = create_app(...)`" claim cannot work as stated because those decorators need `app` to
-> already exist at the point in the file where they run, which is impossible if `app` is only built at
-> the bottom. v8 (this version) fixes the lifespan test with a real ASGI entry point (`TestClient`) and
-> resolves the structural gap by converting the 18 inline routes into a proper `core_router`
-> (`APIRouter()`, same pattern as every other router) and the 3 handlers into explicit
-> `app.add_exception_handler(...)` calls inside `create_app()` — see §10's v7 entry.
+> **Changelog:** v1→v8 each got a cross-family REJECT and fixed the prior round's findings — see §10
+> for the full eight-round record. Round 8 confirmed the core-router-last ordering and the explicit
+> exception-handler registration both actually work, but found three more issues: the v8 lifespan
+> test entered a `TestClient` block cleanly with no positive assertion, which proves nothing (a bare
+> `FastAPI()` with no lifespan at all also enters cleanly); this doc's own inline-route count was
+> wrong *again* (v7/v8 said 18, the real count re-verified against the tree is 15); and two of those
+> 15 route bodies (`health_check`, `get_config`) read the module-global `app.version` directly, which
+> would silently point every `create_app()`-built instance at the same global rather than the
+> instance actually serving the request. v9 (this version) fixes all three — the lifespan test now
+> requires a mandatory spy assertion (not an optional one), the route count is corrected to 15
+> throughout, and both handlers switch to `request.app.version` — see §10's v8 entry.
 
 ---
 
@@ -178,12 +177,12 @@ by itself is not precise enough to file a bounded sub-issue from, and lumping se
 worse. Guessing a finer split without reading what's actually inside those six files would just move
 the same ambiguity to a smaller-looking table.**
 
-### 5.1 Step 0 — Core (revised after the v2 through v7 reviews — see §10)
+### 5.1 Step 0 — Core (revised after the v2 through v8 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No behavior
 change to any of the 44 separately-defined routers** — every router still reads its own module
 globals directly, exactly as today; none of their route/handler code moves or changes. **This claim
-does not cover 18 routes and 3 exception handlers that today live inline, decorated directly on the
+does not cover 15 routes and 3 exception handlers that today live inline, decorated directly on the
 module-level `app` object inside `main.py` itself** (not in any of the 44 router files) — see point 5
 below, a real structural change step 0 cannot avoid. This matters for what step 0 can and cannot
 claim:
@@ -267,25 +266,30 @@ claim:
        rejected**: `_lifespan`'s parameter is named `_app` and the function never reads it (verified
        against `scripts/api/main.py:120`), so calling it directly proves the function itself runs, not
        that `create_app()` actually *wired it in* as the app's lifespan — the test would pass even if
-       `create_app()` registered no lifespan at all. **Fixed:** use the real ASGI lifespan entry point
-       instead — `with TestClient(factory_app) as client: ...` triggers Starlette's actual lifespan
-       protocol (startup then, on exit, shutdown), the same pattern this codebase already uses
-       elsewhere (`tests/api/test_import_pinning.py:227`, `with TestClient(app) as _:`). This proves
-       wiring, not just callability: assert the client enters without raising (startup succeeded) and
-       exits cleanly (shutdown ran) — a mocked/spied piece of `_lifespan`'s own body (e.g. patching
-       `start_periodic_refresh`) can additionally assert the specific function executed, if the
-       implementation wants stronger evidence than "no exception."
+       `create_app()` registered no lifespan at all. **v8 then proposed `with TestClient(factory_app)
+       as client: ...` with an optional spy assertion, which the reviewer also correctly rejected**:
+       entering a `TestClient` context block cleanly is *not itself* evidence anything ran — a bare
+       `FastAPI()` with no `lifespan=` argument at all enters and exits a `TestClient` block just as
+       cleanly, since there is nothing to fail. Making the positive assertion "additional, for
+       stronger evidence" left the test able to pass on a factory that wired no lifespan whatsoever.
+       **Fixed: the positive assertion is mandatory, not optional.** Patch one of `_lifespan`'s own
+       side-effecting calls (e.g. `scripts.api.main.start_periodic_refresh`, or
+       `ensure_broker_db_ready`) with a `Mock`/spy *before* constructing `factory_app`, enter
+       `with TestClient(factory_app) as client:`, and assert the spy **was called** — only a call
+       recorded on the specific function `_lifespan` invokes proves `create_app()` actually wired
+       `_lifespan` in as the app's lifespan; "the block didn't raise" proves nothing on its own and
+       must not be the test's only assertion.
      This sidesteps identity-equality entirely (comparing hardcoded values against real structures,
      not two live objects against each other) and needs no second app construction.
   4. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
      through a running app): `fixture_context(tmp_path)` resolves every configured root/store path
      under `tmp_path`, and a path crafted to escape via a symlink is rejected (§4.1 point 3). This is
      testable today, standalone, without any router depending on the context yet.
-  5. **New in v8: `main.py` has 18 routes and 3 exception handlers that are not part of any of the 44
+  5. **New in v8: `main.py` has 15 routes and 3 exception handlers that are not part of any of the 44
      routers — they are decorated directly on the module-level `app` object, inside `main.py` itself**
      (verified live, `grep -n '^@app\.\(get\|post\|put\|delete\|patch\|websocket\|exception_handler\)'
      scripts/api/main.py`): `@app.exception_handler(...)` ×3 at lines 226/238/253, and `@app.get`/
-     `@app.post`/`@app.websocket` ×18 at lines 1437–1916, including a catch-all `@app.get("/{path:path}")`
+     `@app.post`/`@app.websocket` ×15 at lines 1437–1916, including a catch-all `@app.get("/{path:path}")`
      at line 1916 that must stay registered *last* (route order determines match precedence — this
      catch-all currently is last because it is physically the last thing in the file, after all the
      `include_router` calls). **This breaks the "bottom of `main.py` becomes
@@ -296,7 +300,7 @@ claim:
      to bind to. **Fixed:** convert these into a proper router, exactly like the other 44 — add
      `core_router = APIRouter()` near the top of `main.py` (after imports, before any route
      definitions), change `@app.get(...)` / `@app.post(...)` / `@app.websocket(...)` to
-     `@core_router.get(...)` / etc. for the 18 routes (same functions, same paths, same bodies — no
+     `@core_router.get(...)` / etc. for the 15 routes (same functions, same paths, same bodies — no
      behavior change), and have `create_app()` call `app.include_router(core_router)` as the **last**
      router registration (after all 44 others), preserving today's route-matching order for the
      catch-all. For the 3 exception handlers: drop the `@app.exception_handler(...)` decorator syntax
@@ -309,6 +313,23 @@ claim:
      amendment to the "no behavior change" claim above reflects that: no *behavior* changes (same
      routes, same handlers, same responses), but this specific file's code, unlike the 44 router
      files, cannot stay untouched.
+
+     **Two of the 15 route bodies reference the module-global `app` variable directly, not just via
+     the decorator** — verified live: `health_check` (`main.py:1450`) returns `"version": app.version`
+     and `get_config` (`main.py:1759`) returns `"api_version": app.version`. A bare
+     `@core_router.get(...)` rename does not fix this: both functions would still close over
+     whichever object the name `app` resolves to in `main.py`'s module scope, which is fine for the
+     single production instance today but breaks the moment two different `create_app()`-built
+     instances need to exist (a `fixture_context` app and a `production_context` app, or two test
+     fixtures) — both handlers would report the *same* global `app.version` regardless of which
+     instance actually served the request. **Fixed:** both handlers gain a `request: Request`
+     parameter and read `request.app.version` instead of the module-global `app.version` — this is
+     FastAPI's documented, standard way for a handler to reach the specific app instance serving the
+     current request, not a new mechanism invented for this migration. Because `main.py` currently has
+     15 inline routes reviewed one-by-one for this migration, this is the only such reference found;
+     §5.2's inventory step should still grep the other 44 router files for any bare `app.` reference
+     (as opposed to `request.app.` or a context-supplied value) before assuming none exist there
+     either.
 - The grep-based call-site lint from §4.1 point 4 (all three DB-access patterns, not just
   `sqlite3.connect(`) also lands in step 0, with its initial allowlist populated by the 21 unique
   files enumerated in §4.1 plus `main.py` itself for its own direct store access, if any (checked as
@@ -392,7 +413,7 @@ table above — if the inventory contradicts a row here, the inventory wins and 
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. Cross-family design review (codex). **Done seven times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
+2. Cross-family design review (codex). **Done eight times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
    (4 further findings, incl. a router-count error), v3 REJECT (a doc-consistency bug, a real
    app-wiring proof gap, and several precision nits), v4 REJECT (v4's fixes for §7/router-count/
    connect_sqlite-count/line-counts all held; the middleware-equality mechanism itself was flawed),
@@ -400,10 +421,13 @@ table above — if the inventory contradicts a row here, the inventory wins and 
    keys claimed, 4 actual — and its `repr()` fallback was unstable), v6 REJECT (the 4-key set and
    middleware attribute names were both confirmed correct; a self-contradictory closing sentence and
    an underspecified lifespan check remained), v7 REJECT (the lifespan test didn't test anything, and
-   — the largest finding of the whole review — 18 routes + 3 handlers live inline on `main.py`'s
-   module-level `app`, breaking the "bottom of the file becomes `create_app(...)`" claim as stated).
-   v8 (this version) addresses all seven rounds (§10).**
-3. One more cross-family design review on this v8 revision before implementation starts. **Next
+   — the largest finding of the whole review — routes + handlers live inline on `main.py`'s
+   module-level `app`, breaking the "bottom of the file becomes `create_app(...)`" claim as stated),
+   v8 REJECT (the core-router-last ordering and explicit handler registration both actually work; the
+   lifespan test's positive assertion was optional instead of mandatory, the inline-route count was
+   wrong again — 18 claimed, 15 real — and two route bodies read the module-global `app.version`
+   directly). v9 (this version) addresses all eight rounds (§10).**
+3. One more cross-family design review on this v9 revision before implementation starts. **Next
    step.**
 4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
    wrong assumption in this doc before anything else builds on it.
@@ -598,13 +622,16 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      ASGI lifespan protocol — an existing pattern in this codebase
      (`tests/api/test_import_pinning.py:227`) — so the test actually exercises the wiring, not just
      the function's callability.
-  2. **Blocking, largest finding of the review: `main.py` has 18 routes and 3 exception handlers
+  2. **Blocking, largest finding of the review: `main.py` has route decorators and exception handlers
      decorated directly on the module-level `app` object** (`scripts/api/main.py:226-254` and
-     `:1437-1916`), not inside any of the 44 router files the design otherwise covers. The design's
-     "`main.py`'s bottom becomes `app = create_app(production_context())`" claim cannot work as
-     stated: those decorators need a real `app` object at the point in the file where they execute,
-     and Python evaluates top-to-bottom, so if `app` is only constructed at the bottom, none of them
-     have anything to bind to. **Fixed:** §5.1 gains a new point 5 — convert the 18 routes into a
+     `:1437-1916`), not inside any of the 44 router files the design otherwise covers. (v8 itself had
+     miscounted this as 18 routes; independently re-verified via `grep -c` against the checked-out
+     tree, the real count is **15** route decorators + 3 exception handlers — this doc's own count was
+     wrong twice in a row here, corrected below.) The design's "`main.py`'s bottom becomes
+     `app = create_app(production_context())`" claim cannot work as stated: those decorators need a
+     real `app` object at the point in the file where they execute, and Python evaluates top-to-bottom,
+     so if `app` is only constructed at the bottom, none of them have anything to bind to. **Fixed:**
+     §5.1 gains a new point 5 — convert the 15 routes into a
      `core_router = APIRouter()` (same pattern as every other router, `create_app()` includes it
      *last* to preserve the existing catch-all's route-matching order) and the 3 handlers into
      explicit `app.add_exception_handler(...)` calls inside `create_app()` (the documented equivalent
@@ -612,3 +639,29 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      the top of §5.1 is corrected to be precise about what it does and doesn't cover — same routes,
      same handlers, same responses, but `main.py` itself (unlike the 44 router files) cannot stay
      byte-for-byte untouched for step 0 to be possible at all.
+
+- **v8 (commit 92d401d), reviewer: codex, verdict: REJECT.** Confirmed the core-router-last ordering
+  actually preserves the catch-all's precedence and the explicit exception-handler registration
+  actually resolves the construction-order problem ("No additional `@app` route or exception
+  decorators were found"). Three findings:
+  1. **The lifespan test's positive assertion was optional, not mandatory** — "the client enters
+     without raising... a mocked/spied piece can *additionally* assert" let the test pass with only
+     the negative check, which a plain `FastAPI()` with no lifespan at all would also pass. **Fixed:**
+     §5.1 point 3 now requires the spy assertion — patch one of `_lifespan`'s own calls before
+     construction and assert it was called; "didn't raise" is explicitly stated as insufficient on its
+     own.
+  2. **The inline-route count was wrong again.** v7/v8 said 18; independently re-verified via
+     `grep -c` against the checked-out tree, the real count is **15** route decorators + 3 exception
+     handlers. **Fixed:** every "18" in the doc referring to this count is corrected to 15, with a
+     note that the count was wrong in two consecutive versions here — this doc's own repeated
+     miscounting is itself now part of the review record (§10 keeps it rather than quietly erasing
+     it, consistent with how earlier rounds' arithmetic errors were handled).
+  3. **Two of the 15 route bodies read the module-global `app.version` directly** — `health_check`
+     (`main.py:1450`) and `get_config` (`main.py:1759`), verified live. A bare
+     `@core_router.get(...)` rename doesn't fix this: both functions would still close over whichever
+     object `main.py`'s module-level `app` name resolves to, so two different `create_app()`-built
+     instances would both report the *same* global version rather than their own. **Fixed:** §5.1
+     point 5 gains a new paragraph — both handlers add a `request: Request` parameter and read
+     `request.app.version` instead, FastAPI's standard mechanism for a handler to reach the specific
+     app instance serving the current request. §5.2's inventory step is also asked to grep the other
+     44 router files for the same bare-`app.` pattern rather than assume these were the only two.
