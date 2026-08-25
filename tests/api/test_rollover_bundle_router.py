@@ -6,6 +6,7 @@ import base64
 import hashlib
 import json
 import sqlite3
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -232,6 +233,11 @@ def test_rollover_schema_has_both_unique_indexes_and_raw_digest_constraint(
         }
         assert "rollover_bundles_bundle_sha256_unique" in unique_indexes
         assert "rollover_bundles_identity_unique" in unique_indexes
+        foreign_keys = {
+            (str(row[2]), str(row[3]), str(row[4]))
+            for row in connection.execute("PRAGMA foreign_key_list('rollover_bundles')").fetchall()
+        }
+        assert foreign_keys == {("streams", "stream_id", "stream_id")}
 
         manifest_json = json.dumps(
             {
@@ -266,6 +272,66 @@ def test_rollover_schema_has_both_unique_indexes_and_raw_digest_constraint(
             )
     finally:
         connection.close()
+
+
+def test_claim_replaces_released_lease_with_historical_bundle_token(tmp_path: Path) -> None:
+    database = SessionStreamDatabase(tmp_path / "reclaim.sqlite3")
+    store = SessionStreamStore(database)
+    base_time = datetime(2026, 8, 25, 10, 0, tzinfo=UTC)
+    old_lease, _ = store.claim_remote_session(
+        stream_id="epic:7178",
+        holder=LeaseHolder(agent="claude", harness="claude-cli", instance_id="old", process_id=1234),
+        lineage_id="historical-lineage",
+        ttl_seconds=900,
+        session_id="historical-session",
+        lease_id="historical-lease",
+        now=base_time,
+    )
+    store.release_remote_session(old_lease, now=base_time + timedelta(seconds=1))
+
+    connection = database.connect()
+    try:
+        connection.execute(
+            "INSERT INTO rollover_bundles("
+            "stream_id, agent, lineage_id, generation, rollover_id, status, prepared_at, "
+            "bundle_sha256, manifest_json, blob, uploaded_at, uploaded_by_lease_id"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                "epic:7178",
+                "claude-infra",
+                "historical-lineage",
+                1,
+                "historical-rollover",
+                "pending_start",
+                "2026-08-25T10:00:00Z",
+                "a" * 64,
+                json.dumps({"status": "pending_start", "prepared_at": "2026-08-25T10:00:00Z"}),
+                b"historical bundle",
+                "2026-08-25T10:00:00Z",
+                old_lease.lease_id,
+            ),
+        )
+    finally:
+        connection.close()
+
+    successor, outcome = store.claim_remote_session(
+        stream_id="epic:7178",
+        holder=LeaseHolder(agent="grok", harness="grok-cli", instance_id="new", process_id=5678),
+        lineage_id="successor-lineage",
+        ttl_seconds=900,
+        session_id="successor-session",
+        lease_id="successor-lease",
+        now=base_time + timedelta(seconds=2),
+    )
+
+    assert successor.lease_id == "successor-lease"
+    assert outcome in {"claimed", "recovered"}
+    with database.connect(read_only=True) as connection:
+        bundle = connection.execute(
+            "SELECT uploaded_by_lease_id FROM rollover_bundles WHERE rollover_id = ?",
+            ("historical-rollover",),
+        ).fetchone()
+    assert bundle["uploaded_by_lease_id"] == old_lease.lease_id
 
 
 def test_bundle_upload_enforces_four_mib_cap(tmp_path: Path, monkeypatch) -> None:

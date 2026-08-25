@@ -84,7 +84,7 @@ def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> Non
 
 def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
     migrations = load_migrations()
-    assert [m.version for m in migrations] == [1, 2, 3, 4, 5, 6]
+    assert [m.version for m in migrations] == [1, 2, 3, 4, 5, 6, 7]
     assert "inventory_receipts" in migrations[1].name
     assert "app_thread_holders" in migrations[2].name
     assert "remote_epic_lifecycle" in migrations[3].name
@@ -93,7 +93,7 @@ def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
     conn = db.connect()
     try:
         versions = [int(r[0]) for r in conn.execute("SELECT version FROM schema_migrations ORDER BY 1")]
-        assert versions == [1, 2, 3, 4, 5, 6]
+        assert versions == [1, 2, 3, 4, 5, 6, 7]
         for table in (
             "stream_migration_state",
             "stream_inventory_receipts",
@@ -183,7 +183,7 @@ def test_rollover_bundle_v5_receipt_upgrades_to_status_binding_schema(tmp_path: 
             "rollover_bundles_identity_unique",
         }
         versions = [int(item[0]) for item in connection.execute("SELECT version FROM schema_migrations ORDER BY 1")]
-        assert versions == [1, 2, 3, 4, 5, 6]
+        assert versions == [1, 2, 3, 4, 5, 6, 7]
     finally:
         connection.close()
 
