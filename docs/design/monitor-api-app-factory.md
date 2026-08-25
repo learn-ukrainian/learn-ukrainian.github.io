@@ -1,9 +1,9 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v9 (revised after eight rounds of cross-family review)
-> **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v9
-> needs a ninth cross-family pass before step 0 is dispatched (see § 10).
+> **Version:** v9 (revised after eight rounds of cross-family review) — **APPROVED by round 9**
+> **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture. Design **APPROVED
+> for implementation** by cross-family review round 9 (codex, 2026-08-25 — see §10): "No new blocking
+> findings... VERDICT: approve." Sub-issue filing and step 0 dispatch may proceed.
 > **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per
 > eight rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
@@ -413,7 +413,7 @@ table above — if the inventory contradicts a row here, the inventory wins and 
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. Cross-family design review (codex). **Done eight times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
+2. Cross-family design review (codex). **Done nine times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
    (4 further findings, incl. a router-count error), v3 REJECT (a doc-consistency bug, a real
    app-wiring proof gap, and several precision nits), v4 REJECT (v4's fixes for §7/router-count/
    connect_sqlite-count/line-counts all held; the middleware-equality mechanism itself was flawed),
@@ -426,15 +426,14 @@ table above — if the inventory contradicts a row here, the inventory wins and 
    v8 REJECT (the core-router-last ordering and explicit handler registration both actually work; the
    lifespan test's positive assertion was optional instead of mandatory, the inline-route count was
    wrong again — 18 claimed, 15 real — and two route bodies read the module-global `app.version`
-   directly). v9 (this version) addresses all eight rounds (§10).**
-3. One more cross-family design review on this v9 revision before implementation starts. **Next
-   step.**
-4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
-   wrong assumption in this doc before anything else builds on it.
-5. Implement step 0.5 (§5.2) — the router dependency & seam inventory. Its output either confirms or
+   directly), **v9 APPROVE** (all three round-8 fixes independently confirmed against the checked-out
+   tree; "No new blocking findings"). **DONE — the design is approved for implementation (§10).**
+3. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
+   wrong assumption in this doc before anything else builds on it. **Next step.**
+4. Implement step 0.5 (§5.2) — the router dependency & seam inventory. Its output either confirms or
    corrects the provisional step table; file the per-family sub-issues under #7269 from its actual
    output once it lands and is reviewed.
-6. Implement the resulting steps in order, one PR at a time, each gated on the previous step's
+5. Implement the resulting steps in order, one PR at a time, each gated on the previous step's
    sweep+tests staying green, each with its own independent cross-family review of record.
 
 ## 9. Open questions / risks
@@ -665,3 +664,18 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      `request.app.version` instead, FastAPI's standard mechanism for a handler to reach the specific
      app instance serving the current request. §5.2's inventory step is also asked to grep the other
      44 router files for the same bare-`app.` pattern rather than assume these were the only two.
+
+- **v9 (commit aff2e51), reviewer: codex, verdict: APPROVE.** All three round-8 fixes independently
+  re-verified against the checked-out tree rather than trusted: the lifespan spy assertion is
+  explicitly mandatory and would fail if no lifespan were wired; an independent `grep` confirms 15
+  inline routes and 3 exception handlers (remaining "18" references in the doc are the historical
+  round-8 finding text itself, not live claims); `main.py`'s `app.version` reads at lines 1450/1759
+  match what the doc describes, and the `request.app.version` fix is accurately specified. "No new
+  blocking findings... `git diff --check` passes and the worktree is clean." **This closes the design
+  review for step 0 and this doc as a whole** — nine rounds, four of them (v2/v4/v7/v8) catching real
+  gaps this doc itself introduced (a router-count arithmetic error appearing three separate times, a
+  positional-shorthand self-contradiction, two rounds of an under-specified/non-functional test, and
+  the largest one — a genuine architectural gap in how `main.py`'s 15 inline routes attach to a
+  factory-built app that the original sketch never considered). Sub-issue filing (§5.2, from the
+  inventory's real output, not the provisional table in §5.2) and step 0 implementation dispatch may
+  now proceed per §8.
