@@ -310,6 +310,9 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
 FAKE_PROVIDER = r"""#!/usr/bin/env python3
 import json, os, pathlib, re, sys
 argv = sys.argv
+assert "--print" not in argv
+schema = pathlib.Path(argv[argv.index("--json-schema") + 1])
+assert pathlib.Path.cwd().samefile(schema.parent)
 log = pathlib.Path(argv[argv.index("--log-file") + 1])
 assert log.stat().st_mode & 0o777 == 0o600
 event = json.loads(sys.stdin.readline())

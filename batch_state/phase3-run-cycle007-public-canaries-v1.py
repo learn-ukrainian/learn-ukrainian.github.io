@@ -1026,6 +1026,8 @@ def invoke_canary(
                 raw=True,
             )
             _atomic(log_path, b"", raw=True)
+            # Stream-input turns come exclusively from stdin.  Supplying an
+            # empty --print prompt can make AGY terminate SUCCESS with no result.
             cmd = [
                 str(provider_bin),
                 "--model",
@@ -1040,8 +1042,6 @@ def invoke_canary(
                 "stream-json",
                 "--json-schema",
                 str(schema_path),
-                "--print",
-                "",
                 "--log-file",
                 str(log_path),
             ]
@@ -1086,6 +1086,7 @@ def invoke_canary(
                         stderr=subprocess.DEVNULL,
                         check=False,
                         shell=False,
+                        cwd=runtime,
                     )
                 if completed.returncode != 0:
                     raise CanaryStructuralError("provider_process_nonzero_exit")

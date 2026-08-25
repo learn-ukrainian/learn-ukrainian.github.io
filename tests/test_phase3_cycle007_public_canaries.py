@@ -105,3 +105,19 @@ def test_batch_runner_accepts_one_fenced_response_json() -> None:
     payload = {"labels_by_position": {"p01": {}, "p02": {}}}
 
     assert runner._strict_result_payload({"response": f"```json\n{json.dumps(payload)}\n```"}) == payload
+
+
+def test_batch_stream_input_command_has_no_print_prompt() -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_command_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    command = runner._command(Path("/provider"), Path("/schema.json"), Path("/agy.log"))
+
+    assert command.count("--input-format") == 1
+    assert command[command.index("--input-format") + 1] == "stream-json"
+    assert command.count("--output-format") == 1
+    assert command[command.index("--output-format") + 1] == "stream-json"
+    assert "--print" not in command
