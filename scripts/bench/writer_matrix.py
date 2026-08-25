@@ -90,6 +90,9 @@ DEFAULT_EFFORT_OVERRIDES: dict[str, str] = {
     "codex-tools": "xhigh",
 }
 
+_CELL_TIMEOUT_SECONDS = 1800
+_TIMEOUT_RETURN_CODE = 124
+
 # Phase progression — used to compute ``phase_reached`` per cell.
 PHASE_ORDER: tuple[str, ...] = (
     "knowledge_packet",
@@ -230,13 +233,25 @@ def _run_one_cell(
 
     t0 = time.monotonic()
     worktree_path: str | None = None
-    with cell_log.open("w", encoding="utf-8") as logf:
-        proc = subprocess.run(
+    try:
+        with cell_log.open("w", encoding="utf-8") as logf:
+            proc = subprocess.run(
+                argv,
+                cwd=PROJECT_ROOT,
+                stdout=logf,
+                stderr=subprocess.STDOUT,
+                check=False,
+                timeout=_CELL_TIMEOUT_SECONDS,
+            )
+    except subprocess.TimeoutExpired as exc:
+        timeout_message = f"writer cell timed out after {exc.timeout}s"
+        with cell_log.open("a", encoding="utf-8") as logf:
+            logf.write(f"\n{timeout_message}\n")
+        proc = subprocess.CompletedProcess(
             argv,
-            cwd=PROJECT_ROOT,
-            stdout=logf,
-            stderr=subprocess.STDOUT,
-            check=False,
+            _TIMEOUT_RETURN_CODE,
+            stdout="",
+            stderr=timeout_message,
         )
     duration = time.monotonic() - t0
 

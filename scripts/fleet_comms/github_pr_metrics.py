@@ -11,6 +11,8 @@ import subprocess
 from datetime import datetime
 from typing import Any
 
+_GH_TIMEOUT_SECONDS = 30
+
 
 def _parse_ts(value: str | None) -> datetime | None:
     if not value:
@@ -45,7 +47,22 @@ def collect_github_pr_metrics(
         "--json",
         "number,title,createdAt,mergedAt,additions,deletions,changedFiles",
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    try:
+        proc = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GH_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return {
+            "content_included": False,
+            "ok": False,
+            "error": f"gh timed out after {_GH_TIMEOUT_SECONDS}s",
+            "repo": repo,
+            "search": search,
+        }
     if proc.returncode != 0:
         return {
             "content_included": False,

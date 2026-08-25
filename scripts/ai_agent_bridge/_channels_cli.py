@@ -63,6 +63,7 @@ _PREFLIGHT_MULTI_STEP_RE = re.compile(
     re.IGNORECASE,
 )
 _ALLOWED_DEADLINE_SECONDS = (300, 600, 900, 1200, 1800, 2400, 3000)
+_EDITOR_TIMEOUT_SECONDS = 30
 _GEMINI_AUTH_CHOICES = ["auto", "subscription", "api-key", "api"]
 _DISCUSSION_READONLY_TOOL_CONFIG = {"discussion_readonly": True}
 _CURSOR_SESSION_ID_RE = re.compile(r'"(?:sessionId|session_id)"\s*:\s*"([^"]+)"')
@@ -1034,7 +1035,10 @@ def _handle_channel_context(args) -> int:
         # respecting POSIX quoting so "nvim -R" and similar work.
         editor_argv = shlex.split(editor) if editor else ["vi"]
         try:
-            result = subprocess.run([*editor_argv, str(path)])
+            result = subprocess.run(
+                [*editor_argv, str(path)],
+                timeout=_EDITOR_TIMEOUT_SECONDS,
+            )
         except FileNotFoundError:
             print(
                 f"❌ editor '{editor_argv[0]}' not found on PATH "
@@ -1046,6 +1050,12 @@ def _handle_channel_context(args) -> int:
             print(
                 f"❌ editor '{editor_argv[0]}' is not executable "
                 f"(check file permissions)",
+                file=sys.stderr,
+            )
+            return 1
+        except subprocess.TimeoutExpired as exc:
+            print(
+                f"❌ editor '{editor_argv[0]}' timed out after {exc.timeout}s",
                 file=sys.stderr,
             )
             return 1

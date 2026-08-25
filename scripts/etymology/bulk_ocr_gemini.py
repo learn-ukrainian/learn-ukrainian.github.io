@@ -35,6 +35,8 @@ DEFAULT_CONCURRENCY = 10
 DEFAULT_RPM = 15
 ROLLING_WINDOW = 100
 ROLLING_ERROR_LIMIT = 20
+_DECODE_TIMEOUT_SECONDS = 120
+_TIMEOUT_RETURN_CODE = 124
 
 ZIP_RE = re.compile(r"etslukrmov(\d+)_jp2\.zip$")
 PAGE_RE = re.compile(r"_(\d+)\.jp2$", re.IGNORECASE)
@@ -311,13 +313,23 @@ def decode_pages(pages: list[Page]) -> None:
 
         page.png_path.parent.mkdir(parents=True, exist_ok=True)
         started = time.monotonic()
-        proc = subprocess.run(
-            ["opj_decompress", "-i", str(page.jp2_path), "-o", str(page.png_path)],
-            cwd=ROOT,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        command = ["opj_decompress", "-i", str(page.jp2_path), "-o", str(page.png_path)]
+        try:
+            proc = subprocess.run(
+                command,
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=_DECODE_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            proc = subprocess.CompletedProcess(
+                command,
+                _TIMEOUT_RETURN_CODE,
+                stdout=exc.stdout or "",
+                stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s",
+            )
         duration = time.monotonic() - started
         if proc.returncode != 0 or not _has_content(page.png_path):
             raise RuntimeError(
