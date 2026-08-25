@@ -54,9 +54,9 @@ operator explicitly starts a provider stage.
 
 The existing reviewed controller remains the authority for provider preflight,
 packet verification, stage ordering, and stage seals. A pristine installation
-may run provider-free `prepare`, `status`, and `plan` without provider bindings;
-that bootstrap path fails closed if it finds any stage state, provider receipt,
-non-empty output root, controller, or worker. Before `resume`, and whenever
+may run provider-free `prepare`, `status`, and `plan` without provider bindings.
+The bootstrap `status` and `plan` paths fail closed if they find any stage state,
+provider receipt, non-empty output root, controller, or worker. Before `resume`, and whenever
 provider state exists, the guardian requires explicit absolute AGY and Grok
 executable bindings and all three preflight receipts. The controller verifies
 each resolved regular file against its provider-attested canary hash before any
