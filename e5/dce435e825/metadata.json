@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e5dce435e825",
+  "strategy": "manual-commit",
+  "branch": "agy/monitor-7269-step1-session-streams-cluster",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/design/count_opsec_fixture_seams.py",
+    "scripts/api/fleet_workers_collect.py",
+    "scripts/api/occupancy_local.py",
+    "scripts/api/rollover_router.py",
+    "scripts/api/rules_router.py",
+    "scripts/api/session_router.py",
+    "scripts/api/session_streams_router.py",
+    "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+    "tests/api/test_app_factory.py",
+    "tests/test_manifest_api.py",
+    "tests/test_rollover_api.py",
+    "tests/test_session_streams_api.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e5/dce435e825/0/metadata.json",
+      "transcript": "/e5/dce435e825/0/full.jsonl",
+      "compact_transcript": "/e5/dce435e825/0/transcript.jsonl",
+      "content_hash": "/e5/dce435e825/0/content_hash.txt",
+      "prompt": "/e5/dce435e825/0/prompt.txt"
+    }
+  ]
+}
