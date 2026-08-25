@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "99edae317008",
+  "session_id": "ses_fc910dd59ffeCBML5ma3cAT9in",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T03:34:07.499129624Z",
+  "branch": "ox-alpha/timeout-burndown-7213-s17",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/hygiene/lane_disk_retention.py",
+    "scripts/hygiene/root_entry_guard.py",
+    "scripts/pre_commit/check_plan_immutability.py",
+    "scripts/session_canary/grok_lane.py",
+    "tests/test_git_probe_timeouts.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "7f3de8b47e9c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 87357,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2310464,
+    "output_tokens": 16879,
+    "api_call_count": 40
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T03:34:07.432801929Z",
+    "agent_lines": 318,
+    "agent_removed": 75,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 318,
+    "total_lines_changed": 393,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
