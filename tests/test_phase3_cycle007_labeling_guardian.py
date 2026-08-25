@@ -405,6 +405,188 @@ def test_prepare_path_never_invokes_controller(guardian: ModuleType, tmp_path: P
     assert guardian.main(arguments) == 0
 
 
+def test_provider_free_prepare_accepts_no_provider_bindings(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="prepare",
+        preflight_receipt=None,
+        gemini_canary_receipt=None,
+        grok_canary_receipt=None,
+        agy_executable=None,
+        grok_executable=None,
+    )
+    monkeypatch.setattr(guardian, "_config", lambda _args: config)
+    monkeypatch.setattr(guardian, "_lock", lambda *_args: _temporary_file())
+    monkeypatch.setattr(
+        guardian,
+        "_ensure_mounts",
+        lambda *_args, **_kwargs: [{"name": name} for name in guardian.OUTPUT_ROOTS],
+    )
+    monkeypatch.setattr(guardian, "_require_free_space", lambda *_args: 100)
+    monkeypatch.setattr(guardian, "_available_bytes", lambda *_args: 100)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: pytest.fail("prepare invoked controller"),
+    )
+    assert guardian.main(
+        [
+            "prepare",
+            "--package", "/package",
+            "--backing-root", "/backing",
+            "--guardian-lock", "/locks/guardian",
+            "--controller-lock", "/locks/controller",
+            "--execution-lock", "/locks/execution",
+            "--controller", "/controller",
+            "--owner-uid", "1",
+            "--owner-gid", "1",
+            "--min-free-bytes", "1",
+        ]
+    ) == 0
+
+
+@pytest.mark.parametrize("action", ["status", "plan"])
+def test_provider_free_fresh_status_reports_gemini_without_controller(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    action: str,
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action=action,
+        through=None,
+        preflight_receipt=None,
+        gemini_canary_receipt=None,
+        grok_canary_receipt=None,
+        agy_executable=None,
+        grok_executable=None,
+    )
+    (config.package / "control").mkdir(mode=0o700)
+    for name in guardian.OUTPUT_ROOTS:
+        (config.backing_root / name).mkdir(mode=0o700)
+    monkeypatch.setattr(guardian, "_config", lambda _args: config)
+    monkeypatch.setattr(guardian, "_lock", lambda *_args: _temporary_file())
+    monkeypatch.setattr(
+        guardian,
+        "_ensure_mounts",
+        lambda *_args, **_kwargs: [{"name": name} for name in guardian.OUTPUT_ROOTS],
+    )
+    monkeypatch.setattr(guardian, "_require_free_space", lambda *_args: 100)
+    monkeypatch.setattr(guardian, "_available_bytes", lambda *_args: 100)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: pytest.fail("fresh provider-free status invoked controller"),
+    )
+    receipts: list[dict[str, Any]] = []
+    monkeypatch.setattr(guardian, "print", lambda value: receipts.append(json.loads(value)), raising=False)
+    assert guardian.main(
+        [
+            action,
+            "--package", "/package",
+            "--backing-root", "/backing",
+            "--guardian-lock", "/locks/guardian",
+            "--controller-lock", "/locks/controller",
+            "--execution-lock", "/locks/execution",
+            "--controller", "/controller",
+            "--owner-uid", "1",
+            "--owner-gid", "1",
+            "--min-free-bytes", "1",
+        ]
+    ) == 0
+    assert receipts == [
+        {
+            "action": action,
+            "available_bytes": 100,
+            "completed_stages": [],
+            "min_free_bytes": 1,
+            "mount_count": 6,
+            "mounts": [{"name": name} for name in guardian.OUTPUT_ROOTS],
+            "next_stage": "gemini",
+            "ok": True,
+            "ready": False,
+            "recovered_temporary_count": 0,
+            "schema_version": guardian.RECEIPT_SCHEMA,
+            "text_free": True,
+            "through": None,
+        }
+    ]
+
+
+def test_provider_free_bootstrap_rejects_partial_bindings(guardian: ModuleType, tmp_path: Path) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        preflight_receipt=None,
+        gemini_canary_receipt=None,
+        grok_canary_receipt=None,
+        grok_executable=None,
+    )
+    with pytest.raises(guardian.GuardianError, match="provider_binding_incomplete"):
+        guardian._provider_bindings_complete(config, required=False)
+
+
+def test_resume_still_requires_complete_provider_preflight(guardian: ModuleType, tmp_path: Path) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        preflight_receipt=None,
+        gemini_canary_receipt=None,
+        grok_canary_receipt=None,
+        agy_executable=None,
+        grok_executable=None,
+    )
+    with pytest.raises(guardian.GuardianError, match="provider_preflight_required"):
+        guardian._provider_bindings_complete(config, required=True)
+
+
+def test_provider_free_status_rejects_non_pristine_state(guardian: ModuleType, tmp_path: Path) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="status",
+        preflight_receipt=None,
+        gemini_canary_receipt=None,
+        grok_canary_receipt=None,
+        agy_executable=None,
+        grok_executable=None,
+    )
+    control = config.package / "control"
+    control.mkdir(mode=0o700)
+    for name in guardian.OUTPUT_ROOTS:
+        (config.backing_root / name).mkdir(mode=0o700)
+    (control / "stage-gemini.complete.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(guardian.GuardianError, match="provider_preflight_required"):
+        guardian._fresh_provider_free_status(config, mounts=[])
+
+
+def test_provider_free_status_rejects_active_worker(guardian: ModuleType, tmp_path: Path) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="status",
+        preflight_receipt=None,
+        gemini_canary_receipt=None,
+        grok_canary_receipt=None,
+        agy_executable=None,
+        grok_executable=None,
+    )
+    (config.package / "control").mkdir(mode=0o700)
+    for name in guardian.OUTPUT_ROOTS:
+        (config.backing_root / name).mkdir(mode=0o700)
+    worker = guardian._lock(config.execution_lock, "active_worker")
+    try:
+        with pytest.raises(guardian.GuardianError, match="active_worker"):
+            guardian._fresh_provider_free_status(config, mounts=[])
+    finally:
+        worker.close()
+
+
 def test_plan_uses_status_only_and_reports_next_stage(
     guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

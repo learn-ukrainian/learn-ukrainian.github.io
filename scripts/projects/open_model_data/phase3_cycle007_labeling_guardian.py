@@ -62,11 +62,11 @@ class Config:
     controller_lock: Path
     execution_lock: Path
     controller: Path
-    preflight_receipt: Path
-    gemini_canary_receipt: Path
-    grok_canary_receipt: Path
-    agy_executable: Path
-    grok_executable: Path
+    preflight_receipt: Path | None
+    gemini_canary_receipt: Path | None
+    grok_canary_receipt: Path | None
+    agy_executable: Path | None
+    grok_executable: Path | None
     code_paths: dict[str, Path]
     owner_uid: int
     owner_gid: int
@@ -239,6 +239,8 @@ def _validate_roots(config: Config, *, create: bool) -> None:
         config.agy_executable,
         config.grok_executable,
     ):
+        if path is None:
+            continue
         _assert_absolute(path)
     _assert_no_symlink_components(config.package)
     _assert_no_symlink_components(config.backing_root)
@@ -381,6 +383,12 @@ def _parse_controller_output(completed: subprocess.CompletedProcess[bytes]) -> d
 
 
 def _controller_command(config: Config, action: str, stage: str | None = None) -> list[str]:
+    _provider_bindings_complete(config, required=True)
+    assert config.preflight_receipt is not None
+    assert config.gemini_canary_receipt is not None
+    assert config.grok_canary_receipt is not None
+    assert config.agy_executable is not None
+    assert config.grok_executable is not None
     command = [
         sys.executable,
         str(config.controller),
@@ -478,6 +486,82 @@ def _completed_stages(status: dict[str, Any]) -> list[str]:
     if completed != list(STAGES[: len(completed)]):
         raise GuardianError("invalid_stage_seal")
     return completed
+
+
+def _provider_bindings_complete(config: Config, *, required: bool) -> bool:
+    values = (
+        config.preflight_receipt,
+        config.gemini_canary_receipt,
+        config.grok_canary_receipt,
+        config.agy_executable,
+        config.grok_executable,
+    )
+    present = sum(value is not None for value in values)
+    if present == 0:
+        if required:
+            raise GuardianError("provider_preflight_required")
+        return False
+    if present != len(values):
+        raise GuardianError("provider_binding_incomplete")
+    return True
+
+
+def _require_lock_idle(path: Path, failure_code: str) -> None:
+    if not path.exists() and not path.is_symlink():
+        return
+    info = path.lstat()
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+        raise GuardianError("lock_path_drift")
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    acquired = False
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            acquired = True
+        except BlockingIOError:
+            raise GuardianError(failure_code) from None
+        finally:
+            if acquired:
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+    finally:
+        os.close(descriptor)
+
+
+def _fresh_provider_free_status(config: Config, *, mounts: list[dict[str, Any]]) -> dict[str, Any]:
+    """Report the pristine pre-provider state without weakening the resume gate."""
+    _require_lock_idle(config.controller_lock, "controller_already_running")
+    _require_lock_idle(config.execution_lock, "active_worker")
+    control = config.package / "control"
+    state_paths = [
+        *(control / f"stage-{stage}.complete.json" for stage in STAGES),
+        *(control / f"guardian-{stage}.active.json" for stage in MARKED_STAGES),
+        control / "preflight-receipt.json",
+        control / "gemini-canary-receipt.json",
+        control / "grok-canary-receipt.json",
+    ]
+    if any(path.exists() or path.is_symlink() for path in state_paths):
+        raise GuardianError("provider_preflight_required")
+    for root_name in OUTPUT_ROOTS:
+        try:
+            if any((config.backing_root / root_name).iterdir()):
+                raise GuardianError("bootstrap_output_not_empty")
+        except OSError:
+            raise GuardianError("mount_target_unreadable") from None
+    return {
+        "schema_version": RECEIPT_SCHEMA,
+        "ok": True,
+        "action": config.action,
+        "completed_stages": [],
+        "next_stage": STAGES[0],
+        "through": config.through,
+        "mount_count": len(mounts),
+        "mounts": mounts,
+        "available_bytes": _available_bytes(config.backing_root),
+        "min_free_bytes": config.min_free_bytes,
+        "recovered_temporary_count": 0,
+        "ready": False,
+        "text_free": True,
+    }
 
 
 def _safe_status(config: Config, *, mounts: list[dict[str, Any]], recovered: int = 0) -> dict[str, Any]:
@@ -598,11 +682,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--controller-lock", type=Path, required=True, help="distinct stable controller lock")
     parser.add_argument("--execution-lock", type=Path, required=True, help="distinct inherited runner lock")
     parser.add_argument("--controller", type=Path, required=True, help="reviewed controller path")
-    parser.add_argument("--preflight-receipt", type=Path, required=True, help="text-free reviewed preflight receipt")
-    parser.add_argument("--gemini-canary-receipt", type=Path, required=True, help="text-free Gemini canary receipt")
-    parser.add_argument("--grok-canary-receipt", type=Path, required=True, help="text-free Grok canary receipt")
-    parser.add_argument("--agy-executable", type=Path, required=True, help="explicit reviewed AGY executable")
-    parser.add_argument("--grok-executable", type=Path, required=True, help="explicit reviewed Grok executable")
+    parser.add_argument("--preflight-receipt", type=Path, help="text-free reviewed preflight receipt")
+    parser.add_argument("--gemini-canary-receipt", type=Path, help="text-free Gemini canary receipt")
+    parser.add_argument("--grok-canary-receipt", type=Path, help="text-free Grok canary receipt")
+    parser.add_argument("--agy-executable", type=Path, help="explicit reviewed AGY executable")
+    parser.add_argument("--grok-executable", type=Path, help="explicit reviewed Grok executable")
     parser.add_argument("--code-path", action="append", default=[], help="LABEL=/absolute/public/code/path; repeat")
     parser.add_argument("--owner-uid", type=int, required=True, help="required output owner UID")
     parser.add_argument("--owner-gid", type=int, required=True, help="required output owner GID")
@@ -629,6 +713,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         config = _config(args)
         if config.owner_uid < 0 or config.owner_gid < 0 or config.min_free_bytes <= 0:
             raise GuardianError("invalid_runtime_parameter")
+        provider_bindings = _provider_bindings_complete(config, required=config.action == "resume")
         guardian = _lock(config.guardian_lock, "guardian_already_running")
         mounts = _ensure_mounts(config, mutate=config.action in {"prepare", "resume"})
         _require_free_space(config)
@@ -645,7 +730,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             }
         elif config.action in {"status", "plan"}:
             _reconcile_markers(config, mutate=False)
-            result = _safe_status(config, mounts=mounts)
+            result = (
+                _safe_status(config, mounts=mounts)
+                if provider_bindings
+                else _fresh_provider_free_status(config, mounts=mounts)
+            )
         else:
             result = _resume(config, mounts)
     except GuardianError as exc:
