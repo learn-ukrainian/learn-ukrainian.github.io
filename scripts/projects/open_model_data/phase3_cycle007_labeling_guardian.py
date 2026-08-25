@@ -74,7 +74,7 @@ class Config:
     through: str | None
     receipt: Path | None
     mountinfo: Path
-    mount_command: str
+    mount_command: tuple[str, ...]
     operator_inspected_count: int | None
     resolution_authorization: Path | None
     resolution_authority_attestation: Path | None
@@ -208,10 +208,12 @@ def _available_bytes(path: Path) -> int:
     return value.f_bavail * value.f_frsize
 
 
-def _bind_mount(source: Path, target: Path, mount_command: str) -> None:
+def _bind_mount(source: Path, target: Path, mount_command: tuple[str, ...]) -> None:
+    if not mount_command or any(not part or "\0" in part for part in mount_command):
+        raise GuardianError("invalid_mount_command")
     try:
         completed = subprocess.run(
-            [mount_command, "--bind", str(source), str(target)],
+            [*mount_command, "--bind", str(source), str(target)],
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -663,7 +665,7 @@ def _config(args: argparse.Namespace) -> Config:
         through=args.through,
         receipt=args.receipt,
         mountinfo=args.mountinfo,
-        mount_command=args.mount_command,
+        mount_command=tuple(args.mount_command),
         operator_inspected_count=args.operator_inspected_count,
         resolution_authorization=args.resolution_authorization,
         resolution_authority_attestation=args.resolution_authority_attestation,
@@ -694,7 +696,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--through", choices=STAGES, help="last stage the resume action may execute")
     parser.add_argument("--receipt", type=Path, help="optional external text-free guardian receipt")
     parser.add_argument("--mountinfo", type=Path, default=Path("/proc/self/mountinfo"), help=argparse.SUPPRESS)
-    parser.add_argument("--mount-command", default="mount", help=argparse.SUPPRESS)
+    parser.add_argument("--mount-command", nargs="+", default=("mount",), help=argparse.SUPPRESS)
     parser.add_argument("--operator-inspected-count", type=int)
     parser.add_argument("--resolution-authorization", type=Path)
     parser.add_argument("--resolution-authority-attestation", type=Path)

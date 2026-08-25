@@ -74,6 +74,8 @@ operational layer:
    guardian cannot start a duplicate even if the guardian and controller are
    killed while their runner remains alive.
 2. Validate the explicit package and backing roots without discovering either.
+   The hidden mount command accepts an explicit argv vector, so a non-root
+   writer may use a reviewed non-interactive privilege prefix without a shell.
 3. Create six private backing directories and six empty package mountpoints
    with the frozen lexical names `label-output-gemini-cycle007-v1`,
    `label-output-grok-cycle007-v1`, `dual-label-output-cycle007-v1`,

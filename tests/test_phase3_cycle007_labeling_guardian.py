@@ -65,7 +65,7 @@ def _config(guardian: ModuleType, root: Path, **changes: Any) -> Any:
         "through": "gemini",
         "receipt": None,
         "mountinfo": root / "mountinfo",
-        "mount_command": "mount",
+        "mount_command": ("mount",),
         "operator_inspected_count": None,
         "resolution_authorization": None,
         "resolution_authority_attestation": None,
@@ -276,7 +276,33 @@ def test_bind_mount_timeout_has_fixed_failure_code(
         lambda *_args, **_kwargs: (_ for _ in ()).throw(subprocess.TimeoutExpired("mount", 30)),
     )
     with pytest.raises(guardian.GuardianError, match="bind_mount_timeout"):
-        guardian._bind_mount(Path("/source"), Path("/target"), "mount")
+        guardian._bind_mount(Path("/source"), Path("/target"), ("mount",))
+
+
+def test_bind_mount_supports_explicit_non_shell_prefix(
+    guardian: ModuleType, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[bytes]:
+        captured["command"] = command
+        captured.update(kwargs)
+        return subprocess.CompletedProcess(command, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(guardian.subprocess, "run", run)
+    guardian._bind_mount(
+        Path("/source"),
+        Path("/target"),
+        ("/usr/bin/sudo", "/usr/bin/mount"),
+    )
+    assert captured["command"] == [
+        "/usr/bin/sudo",
+        "/usr/bin/mount",
+        "--bind",
+        "/source",
+        "/target",
+    ]
+    assert captured["shell"] is False
 
 
 def test_duplicate_guardian_lock_is_nonblocking(guardian: ModuleType, tmp_path: Path) -> None:
