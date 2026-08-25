@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import json
 import os
+import re
+import subprocess
+import sys
 from dataclasses import replace
 from pathlib import Path
 
@@ -12,7 +16,14 @@ import yaml
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import LeaseConflictError, SessionStreamStore
-from scripts.session_supervisor import LaunchRole, SessionSupervisor, SupervisorError, main, strip_lease_credentials
+from scripts.secret_redactor import REDACTION
+from scripts.session_supervisor import (
+    LaunchRole,
+    SessionSupervisor,
+    SupervisorError,
+    main,
+    strip_lease_credentials,
+)
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
@@ -102,6 +113,69 @@ def test_worker_environment_strips_every_lease_credential() -> None:
         "KEEP_ME": "safe",
     }
     assert strip_lease_credentials(environment) == {"KEEP_ME": "safe"}
+
+
+def test_worker_env_default_is_sorted_safe_session_metadata_without_secret_env(tmp_path: Path) -> None:
+    fake_secret_values = {
+        "CLAUDE_CODE_MESSAGING_TOKEN": "fake-claude-token-value",
+        "OPENAI_API_KEY": "fake-openai-key-value",
+    }
+    child_env = {
+        "PATH": os.environ["PATH"],
+        "HOME": os.environ.get("HOME", str(tmp_path)),
+        "SESSION_STREAM_ID": "epic:test",
+        "SESSION_STREAM_LEASE_ID": "lease-test",
+        "SESSION_STREAM_FENCING_TOKEN": "fencing-test",
+        "UNRELATED_RUNTIME_FLAG": "visible-only-in-full-mode",
+        **fake_secret_values,
+    }
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.session_supervisor", "worker-env"],
+        cwd=_REPO_ROOT,
+        env=child_env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    payload = json.loads(result.stdout)
+    assert list(payload) == sorted(payload)
+    assert set(payload) <= {"SESSION_STREAM_ID", "SESSION_STREAM_LEASE_ID"}
+    assert not any(re.search(r"(?:_TOKEN|_KEY|_SECRET|_PAT|_AUTH)$", key) for key in payload)
+    assert not any(name in result.stdout for name in fake_secret_values)
+    assert not any(value in result.stdout for value in fake_secret_values.values())
+
+
+def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -> None:
+    fake_secrets = {
+        "CLAUDE_CODE_MESSAGING_TOKEN": "fake-claude-token-value",
+        "OPENAI_API_KEY": "fake-openai-key-value",
+        "EXAMPLE_KEY": "fake-example-key-value",
+        "EXAMPLE_SECRET": "fake-example-secret-value",
+        "EXAMPLE_PAT": "fake-example-pat-value",
+        "EXAMPLE_AUTH": "fake-example-auth-value",
+    }
+    child_env = {
+        "PATH": os.environ["PATH"],
+        "HOME": os.environ.get("HOME", str(tmp_path)),
+        "UNRELATED_RUNTIME_FLAG": "visible-in-full-mode",
+        **fake_secrets,
+    }
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.session_supervisor", "worker-env", "--all"],
+        cwd=_REPO_ROOT,
+        env=child_env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    payload = json.loads(result.stdout)
+    assert payload["UNRELATED_RUNTIME_FLAG"] == "visible-in-full-mode"
+    assert all(payload[name] == REDACTION for name in fake_secrets)
+    assert not any(value in result.stdout for value in fake_secrets.values())
 
 
 def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
