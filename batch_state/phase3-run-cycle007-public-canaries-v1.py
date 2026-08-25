@@ -516,7 +516,7 @@ def grok_prompt(challenge: str, rows: list[dict[str, Any]], sidecar: dict[str, A
     ).encode("utf-8")
 
 
-def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
+def _agy_stream(raw: bytes, *, expected_cwd: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         events = [
             json.loads(line, object_pairs_hook=_pairs)
@@ -539,6 +539,15 @@ def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
         raise CanaryStructuralError("init_envelope_drift")
     if config.get("model") != GEMINI_MODEL:
         raise CanaryStructuralError("init_model_binding_drift")
+    if expected_cwd is not None:
+        reported_cwd = config.get("cwd")
+        try:
+            if not isinstance(reported_cwd, str) or not Path(reported_cwd).is_absolute() or not Path(
+                reported_cwd
+            ).samefile(expected_cwd):
+                raise CanaryStructuralError("init_cwd_binding_drift")
+        except OSError as exc:
+            raise CanaryStructuralError("init_cwd_binding_drift") from exc
     if not isinstance(result, dict):
         raise CanaryStructuralError("result_envelope_drift")
     if result.get("status") != "SUCCESS":
@@ -605,8 +614,10 @@ def _strict_result_payload(result: Mapping[str, Any]) -> tuple[dict[str, Any], s
     return candidates[0], "response_json"
 
 
-def _extract_gemini(raw: bytes, challenge: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    init, result = _agy_stream(raw)
+def _extract_gemini(
+    raw: bytes, challenge: str, *, expected_cwd: Path | None = None
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    init, result = _agy_stream(raw, expected_cwd=expected_cwd)
     output, _transport = _strict_result_payload(result)
     if set(output) != {"labels_by_position", "liveness_challenge"}:
         raise CanaryStructuralError("structured_output_keys_drift")
@@ -1034,6 +1045,7 @@ def invoke_canary(
                 GEMINI_MODEL,
                 "--mode",
                 "plan",
+                "--new-project",
                 "--sandbox",
                 "--disable-slash-commands",
                 "--input-format",
@@ -1095,7 +1107,7 @@ def invoke_canary(
                     raise CanaryStructuralError("provider_output_empty")
 
                 if provider_name == "gemini":
-                    init_ev, res_ev, extracted = _extract_gemini(raw_output, challenge)
+                    init_ev, res_ev, extracted = _extract_gemini(raw_output, challenge, expected_cwd=runtime)
                     norm = extracted["labels"]
                     provenance = {
                         "init_model": init_ev["init"]["model"],

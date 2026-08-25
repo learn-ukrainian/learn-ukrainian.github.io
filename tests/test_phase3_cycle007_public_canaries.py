@@ -121,3 +121,4 @@ def test_batch_stream_input_command_has_no_print_prompt() -> None:
     assert command.count("--output-format") == 1
     assert command[command.index("--output-format") + 1] == "stream-json"
     assert "--print" not in command
+    assert "--new-project" in command

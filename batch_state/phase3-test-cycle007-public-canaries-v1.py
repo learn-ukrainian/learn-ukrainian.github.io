@@ -258,6 +258,7 @@ import os, sys, json
 schema_idx = sys.argv.index("--json-schema")
 schema_path = sys.argv[schema_idx + 1]
 assert "--print" not in sys.argv
+assert "--new-project" in sys.argv
 assert os.path.samefile(os.getcwd(), os.path.dirname(schema_path))
 with open(schema_path) as f:
     schema = json.load(f)
@@ -275,7 +276,7 @@ structured_output = {{
 }}
 
 events = [
-    {{"event": "init", "init": {{"model": "Gemini 3.6 Flash (High)"}}, "conversation_id": "mock-conv-1"}},
+    {{"event": "init", "init": {{"model": "Gemini 3.6 Flash (High)", "cwd": os.getcwd()}}, "conversation_id": "mock-conv-1"}},
     {{"event": "result", "result": {{"status": "SUCCESS", "structured_output": structured_output}}, "conversation_id": "mock-conv-1"}},
 ]
 
@@ -532,7 +533,6 @@ AGY_STATUS_CASES = (
 
 def _make_gemini_status_provider(tmp_path: Path) -> Path:
     script = tmp_path / "gemini_status_failure.py"
-    init_line = json.dumps({"event": "init", "init": {"model": CANARY.GEMINI_MODEL}})
     result_line = json.dumps(
         {
             "event": "result",
@@ -542,7 +542,12 @@ def _make_gemini_status_provider(tmp_path: Path) -> Path:
             },
         }
     )
-    script.write_text(f"#!/usr/bin/env python3\nprint({init_line!r})\nprint({result_line!r})\n")
+    script.write_text(
+        "#!/usr/bin/env python3\n"
+        "import json, os\n"
+        f"print(json.dumps({{'event': 'init', 'init': {{'model': {CANARY.GEMINI_MODEL!r}, 'cwd': os.getcwd()}}}}))\n"
+        f"print({result_line!r})\n"
+    )
     script.chmod(0o755)
     return script
 
@@ -655,6 +660,28 @@ def test_gemini_output_reports_liveness_drift_separately() -> None:
 
     with pytest.raises(CANARY.CanaryStructuralError, match="liveness_challenge_drift"):
         CANARY._extract_gemini(raw, "a" * 64)
+
+
+def test_gemini_stream_binds_reported_runtime_cwd(tmp_path: Path) -> None:
+    challenge = "a" * 64
+    raw = CANARY.canonical(
+        {"event": "init", "init": {"model": CANARY.GEMINI_MODEL, "cwd": str(tmp_path)}}
+    ) + CANARY.canonical(
+        {
+            "event": "result",
+            "result": {
+                "status": "SUCCESS",
+                "structured_output": {
+                    "labels_by_position": {"p01": {}, "p02": {}},
+                    "liveness_challenge": challenge,
+                },
+            },
+        }
+    )
+
+    CANARY._extract_gemini(raw, challenge, expected_cwd=tmp_path)
+    with pytest.raises(CANARY.CanaryStructuralError, match="init_cwd_binding_drift"):
+        CANARY._extract_gemini(raw, challenge, expected_cwd=tmp_path.parent)
 
 
 def test_structural_retry_permitted_on_first_attempt_malformed(tmp_path: Path) -> None:
