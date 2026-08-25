@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
 DEFAULT_POINTER = ROOT / "data" / "lexicon-dataset.pointer.json"
 ASSET_NAME = "lexicon-open-dataset.json.gz"
+GH_RELEASE_DOWNLOAD_TIMEOUT_SECONDS = 180.0
 REQUIRED_POINTER_KEYS = (
     "asset_url",
     "release_tag",
@@ -74,8 +75,9 @@ def _download_with_gh(pointer: dict[str, Any], repo: str) -> bytes | None:
             check=False,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
+            timeout=GH_RELEASE_DOWNLOAD_TIMEOUT_SECONDS,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if result.returncode != 0:
         return None

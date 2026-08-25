@@ -19,6 +19,9 @@ DEFAULT_GZIP = ROOT / "data" / "lexicon-open-dataset.json.gz"
 DEFAULT_RELEASE_TAG = "atlas-open-dataset"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-open-dataset.json.gz"
+GH_RELEASE_VIEW_TIMEOUT_SECONDS = 30.0
+GH_RELEASE_CREATE_TIMEOUT_SECONDS = 60.0
+GH_RELEASE_ASSET_TIMEOUT_SECONDS = 180.0
 REQUIRED_DATASET_FILES = (
     "README.md",
     "ATTRIBUTION.md",
@@ -29,6 +32,15 @@ REQUIRED_DATASET_FILES = (
 
 class OpenDatasetPublishError(RuntimeError):
     """Raised when the open dataset package cannot be published."""
+
+
+def _called_process_error_from_timeout(exc: subprocess.TimeoutExpired) -> subprocess.CalledProcessError:
+    return subprocess.CalledProcessError(
+        returncode=124,
+        cmd=exc.cmd,
+        output=exc.output,
+        stderr=exc.stderr,
+    )
 
 
 def _sha256(data: bytes) -> str:
@@ -129,46 +141,55 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
 
 
 def ensure_release(release_tag: str, repo: str) -> None:
-    existing = subprocess.run(
-        ["gh", "release", "view", release_tag, "--repo", repo],
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    try:
+        existing = subprocess.run(
+            ["gh", "release", "view", release_tag, "--repo", repo],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=GH_RELEASE_VIEW_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise OpenDatasetPublishError(f"Timed out checking whether GitHub release {release_tag!r} exists") from exc
     if existing.returncode == 0:
         return
-    subprocess.run(
-        [
-            "gh",
-            "release",
-            "create",
-            release_tag,
-            "--repo",
-            repo,
-            "--title",
-            "Word Atlas open dataset",
-            "--notes",
-            "Release asset storage for the open Word Atlas lexicon dataset.",
-        ],
-        check=True,
-    )
+    try:
+        subprocess.run(
+            [
+                "gh",
+                "release",
+                "create",
+                release_tag,
+                "--repo",
+                repo,
+                "--title",
+                "Word Atlas open dataset",
+                "--notes",
+                "Release asset storage for the open Word Atlas lexicon dataset.",
+            ],
+            check=True,
+            timeout=GH_RELEASE_CREATE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise _called_process_error_from_timeout(exc) from exc
 
 
 def upload_release_asset(gzip_path: Path, *, release_tag: str, repo: str) -> None:
     ensure_release(release_tag, repo)
-    subprocess.run(
-        [
-            "gh",
-            "release",
-            "upload",
-            release_tag,
-            str(gzip_path),
-            "--repo",
-            repo,
-            "--clobber",
-        ],
-        check=True,
-    )
+    command = [
+        "gh",
+        "release",
+        "upload",
+        release_tag,
+        str(gzip_path),
+        "--repo",
+        repo,
+        "--clobber",
+    ]
+    try:
+        subprocess.run(command, check=True, timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired as exc:
+        raise _called_process_error_from_timeout(exc) from exc
 
 
 def publish_open_dataset(
