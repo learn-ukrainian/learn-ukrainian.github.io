@@ -121,3 +121,28 @@ def test_batch_stream_input_command_has_no_print_prompt() -> None:
     assert command.count("--output-format") == 1
     assert command[command.index("--output-format") + 1] == "stream-json"
     assert "--print" not in command
+    assert "--new-project" in command
+
+
+def test_batch_stream_rejects_reported_cwd_mismatch(tmp_path: Path) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_cwd_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    raw = (
+        runner.canonical({"event": "init", "init": {"model": runner.MODEL, "cwd": str(tmp_path)}})
+        + runner.canonical(
+            {
+                "event": "result",
+                "result": {
+                    "status": "SUCCESS",
+                    "structured_output": {"labels_by_position": {"p01": {}}},
+                },
+            }
+        )
+    )
+
+    assert runner._extract(raw, expected_cwd=tmp_path) == {"labels_by_position": {"p01": {}}}
+    with pytest.raises(runner.Error, match="structured_output_envelope_drift"):
+        runner._extract(raw, expected_cwd=tmp_path.parent)

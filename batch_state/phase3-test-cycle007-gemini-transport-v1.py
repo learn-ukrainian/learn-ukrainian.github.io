@@ -311,6 +311,7 @@ FAKE_PROVIDER = r"""#!/usr/bin/env python3
 import json, os, pathlib, re, sys
 argv = sys.argv
 assert "--print" not in argv
+assert "--new-project" in argv
 schema = pathlib.Path(argv[argv.index("--json-schema") + 1])
 assert pathlib.Path.cwd().samefile(schema.parent)
 log = pathlib.Path(argv[argv.index("--log-file") + 1])
@@ -377,7 +378,7 @@ for position, (row, row_ev) in enumerate(zip(rows, sidecar_rows), 1):
 if mode == "semantic":
     labels["p01"]["evidence_ids"] = ["cycle007_evidence:invented" + "0" * 48]
 
-print(json.dumps({"event": "init", "init": {"model": "Gemini 3.6 Flash (High)"}}))
+print(json.dumps({"event": "init", "init": {"model": "Gemini 3.6 Flash (High)", "cwd": os.getcwd()}}))
 out = {"labels_by_position": labels}
 print(json.dumps({"event": "result", "result": {"conversation_id": "synthetic", "status": "SUCCESS", "structured_output": out}}))
 """

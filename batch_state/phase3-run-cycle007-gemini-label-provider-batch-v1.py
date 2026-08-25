@@ -571,7 +571,7 @@ def schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
+def _agy_stream(raw: bytes, *, expected_cwd: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         events = [
             json.loads(line, object_pairs_hook=_pairs)
@@ -592,6 +592,15 @@ def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
     config, result = init.get("init"), result_event.get("result")
     if not isinstance(config, dict) or config.get("model") != MODEL:
         raise Error("structured_output_envelope_drift", structural=True)
+    if expected_cwd is not None:
+        reported_cwd = config.get("cwd")
+        try:
+            if not isinstance(reported_cwd, str) or not Path(reported_cwd).is_absolute() or not Path(
+                reported_cwd
+            ).samefile(expected_cwd):
+                raise Error("structured_output_envelope_drift", structural=True)
+        except OSError as exc:
+            raise Error("structured_output_envelope_drift", structural=True) from exc
     if (
         not isinstance(result, dict)
         or result.get("status") != "SUCCESS"
@@ -651,8 +660,8 @@ def _strict_result_payload(result: Mapping[str, Any]) -> dict[str, Any]:
     return candidates[0]
 
 
-def _extract(raw: bytes) -> dict[str, Any]:
-    _, result = _agy_stream(raw)
+def _extract(raw: bytes, *, expected_cwd: Path | None = None) -> dict[str, Any]:
+    _, result = _agy_stream(raw, expected_cwd=expected_cwd)
     return _strict_result_payload(result)
 
 
@@ -882,6 +891,7 @@ def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
         MODEL,
         "--mode",
         "plan",
+        "--new-project",
         "--sandbox",
         "--disable-slash-commands",
         "--input-format",
@@ -1032,7 +1042,7 @@ def _run_chunk(
                 raise Error("structured_output_envelope_drift")
             raw = raw_path.read_bytes()
             try:
-                labels = normalize(lane, part, _extract(raw), sidecar_part=sidecar_part)
+                labels = normalize(lane, part, _extract(raw, expected_cwd=runtime), sidecar_part=sidecar_part)
             except Error as exc:
                 failure_stage = (
                     "stream_parse"
