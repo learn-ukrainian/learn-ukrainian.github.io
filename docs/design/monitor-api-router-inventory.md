@@ -48,53 +48,161 @@ parenthesis is immediately followed by a newline (`session_router` →
 `ession_router`, etc.) and misses the multiline `reviewer_ghosts_router` mount.
 The AST parse above is authoritative.
 
-### Total route-handler count — **269** (OpenAPI operations — **280**)
+### Total route-handler count — **271** decorator sum; **280** OpenAPI HTTP ops + **1** WebSocket
 
-Per-module counts sum `@router.*` / `@core_router.*` decorators (one handler per
-route definition; double-mounted modules are counted once). OpenAPI operation
-count includes duplicate prefix mounts and the `/ws/batch` websocket.
+Three separate denominators (do not conflate them):
+
+| Metric | Value | Source |
+| --- | ---: | --- |
+| Route-handler decorator sum | **271** | `@router.*` / `@core_router.*` in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
+| OpenAPI HTTP operations | **280** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
+| WebSocket routes | **1** | `FROZEN_WEBSOCKET_ROUTE_COUNT`; `WS /ws/batch` on `core_router` — absent from `app.openapi()['paths']` |
+
+Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
+`factory_app.include_router` in `main.py`):
+
+```bash
+grep -rn '\.include_router(' scripts/api/*.py | grep -v 'factory_app\.include_router'
+# scripts/api/ops_router.py:17:router.include_router(entire_context_router, prefix="/entire-context")
+```
+
+Decorator-sum script (complete `ROUTER_MAP`; `NESTED` adds child router files
+included via `router.include_router` anywhere under `scripts/api/`):
 
 ```bash
 /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
 import re
 from pathlib import Path
-ROUTER_MAP = { ... }  # see inventory table module paths
+ROUTER_MAP = {
+    'admin_router': 'scripts/api/admin_router.py',
+    'agent_router': 'scripts/api/agent_router.py',
+    'agent_monitor_router': 'scripts/api/agent_monitor_router.py',
+    'artifacts_router': 'scripts/api/artifacts_router.py',
+    'atlas_jobs_router': 'scripts/api/atlas_jobs_router.py',
+    'blue_router': 'scripts/api/blue_router.py',
+    'build_events_router': 'scripts/api/build_events_router.py',
+    'comms_router': 'scripts/api/comms_router.py',
+    'contracts_router': 'scripts/api/route_contracts.py',
+    'coordination_router': 'scripts/api/coordination_router.py',
+    'consultation_router': 'scripts/api/consultation_router.py',
+    'cost_router': 'scripts/api/cost_router.py',
+    'dashboard_router': 'scripts/api/dashboard_router.py',
+    'decisions_router': 'scripts/api/decisions_router.py',
+    'delegate_router': 'scripts/api/delegate_router.py',
+    'discussions_router': 'scripts/api/discussions_router.py',
+    'docs_router': 'scripts/api/docs_router.py',
+    'epics_router': 'scripts/api/epics_router.py',
+    'fleet_router': 'scripts/api/fleet_router.py',
+    'fleet_workers_router': 'scripts/api/fleet_workers_router.py',
+    'git_hygiene_router': 'scripts/api/git_hygiene_router.py',
+    'gold_router': 'scripts/api/gold_router.py',
+    'governance_router': 'scripts/api/governance_router.py',
+    'hermes_cron_router': 'scripts/api/hermes_cron_router.py',
+    'images_router': 'scripts/api/images_router.py',
+    'issues_router': 'scripts/api/issues_router.py',
+    'knowledge_router': 'scripts/api/knowledge_router.py',
+    'observer_presence_router': 'scripts/api/observer_presence.py',
+    'occupancy_router': 'scripts/api/occupancy.py',
+    'ops_router': 'scripts/api/ops_router.py',
+    'project_state_router': 'scripts/api/project_state_router.py',
+    'reviewer_ghosts_router': 'scripts/api/reviewer_ghosts_router.py',
+    'rollover_router': 'scripts/api/rollover_router.py',
+    'rules_router': 'scripts/api/rules_router.py',
+    'runtime_router': 'scripts/api/runtime_router.py',
+    'session_router': 'scripts/api/session_router.py',
+    'session_streams_router': 'scripts/api/session_streams_router.py',
+    'site_router': 'scripts/api/site_router.py',
+    'sources_router': 'scripts/api/rag_router.py',
+    'state_router': 'scripts/api/state_router.py',
+    'telemetry_router': 'scripts/api/telemetry_router.py',
+    'wiki_router': 'scripts/api/wiki_router.py',
+    'work_router': 'scripts/api/work_router.py',
+    'worktrees_router': 'scripts/api/worktrees_router.py',
+    'core_router': 'scripts/api/main.py',
+}
+NESTED = {
+    'ops_router': ['scripts/api/entire_context_router.py'],
+}
+DECORATOR_PAT = re.compile(
+    r'@(router|core_router)\.(get|post|put|delete|patch|websocket|head|options)\('
+)
 total = 0
 for var, path in sorted(ROUTER_MAP.items()):
     text = Path(path).read_text()
     pat = r'@core_router\.' if var == 'core_router' else r'@router\.'
-    total += len(re.findall(pat + r'(get|post|put|delete|patch|websocket|head|options)\(', text))
+    n = len(re.findall(pat + r'(get|post|put|delete|patch|websocket|head|options)\(', text))
+    for nested in NESTED.get(var, []):
+        n += len(DECORATOR_PAT.findall(Path(nested).read_text()))
+    total += n
 print(total)
 "
-# 269
+# 271
 
 /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
 from scripts.api.main import app
+from tests.api.opsec_sweep.registry import FROZEN_HTTP_OPERATION_COUNT, FROZEN_WEBSOCKET_ROUTE_COUNT
 print(sum(len(v) for v in app.openapi()['paths'].values()))
+print(FROZEN_HTTP_OPERATION_COUNT)
+print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 "
 # 280
+# 280
+# 1
 ```
 
-### Total OPSEC seam-count baseline — **166**
+### Total OPSEC seam-count baseline — **198** unique logical seams
 
-**162** seams attributed to router modules below, plus **4** global
-infrastructure backstops (`subprocess.run`, `subprocess.Popen`,
-`socket.create_connection`, `sqlite3.connect`) that are not owned by any single
-router but stay until the migration completes.
+**194** router-attributed unique `monkeypatch.setattr` targets installed by
+`isolated_fixture`, plus **4** global infrastructure backstops
+(`subprocess.run`, `subprocess.Popen`, `socket.create_connection`,
+`sqlite3.connect`) that are not owned by any single router.
+
+Reproduce by replaying the fixture's setattr invocations and deduplicating on
+`(module, attribute)`:
 
 ```bash
 grep -c 'monkeypatch\.setattr' tests/api/opsec_sweep/test_opsec_route_sweep.py
-# 61   (static call sites; loops expand to more logical seams at runtime)
+# 61   (static call sites in source; loops expand at runtime)
+
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python docs/design/count_opsec_fixture_seams.py
+# unique_logical_seams: 198
+# router_attributed_unique: 194
+# global_backstops: 4
+# setattr_invocations_total: 205
+# router_attributed_invocations: 201
 ```
 
-The **166** baseline counts every logical seam the `isolated_fixture` in
-`tests/api/opsec_sweep/test_opsec_route_sweep.py` installs: explicit
-`monkeypatch.setattr` targets **plus** one seam per absolute `Path` module-global
-repointed by the `scripts.api` scan loop, one per `_run_command` replacement,
-one per `default_plane_root` replacement, and external-store loops for
-`wiki`/`telemetry`/`ai_agent_bridge` modules consumed by router routes. Per-router
-tallies in the table sum to **162**; adding the 4 global backstops yields **166**.
+Counting rules (mechanical, matches `isolated_fixture` in
+`tests/api/opsec_sweep/test_opsec_route_sweep.py`):
+
+1. **Explicit setattr** — every `monkeypatch.setattr` in `isolated_fixture`
+   (including loop bodies).
+2. **`path_loop:`** — for each loaded `scripts.api.*` module, one seam per
+   module-global absolute `Path` repointed by the scan at lines 308–318.
+3. **`run_command_loop:`** — one seam per `scripts.api.*` module that defines
+   `_run_command` and receives the fixture replacement (lines 320–321).
+4. **`default_plane_root_loop:`** — one seam per `scripts.api.*` module whose
+   namespace contains `default_plane_root` when the loop at lines 560–564 runs
+   (currently `entire_context_router`, `fleet_router`, `runtime_router`), **plus**
+   the explicit `message_plane.default_plane_root` and
+   `cold_start_board.default_plane_root` setattr calls (those modules live under
+   `scripts.fleet_comms`, not `scripts.api`).
+5. **`external_store_loop:`** — for each loaded module under
+   `scripts.ai_agent_bridge`, `scripts.telemetry`, or `wiki`, one seam per
+   module-global absolute `Path` whose name contains `DB`, `PROGRESS`, or
+   `STATE` (lines 478–490).
+6. **Global backstops** — the four infrastructure setattr targets listed above
+   (counted separately, not router-attributed).
+
+Duplicate setattr on the same `(module, attribute)` within one fixture run
+(e.g. `path_loop` then a later explicit repoint) counts as **one** logical seam.
+The **201** router-attributed setattr **invocations** (205 total − 4 global) is
+the invocation tally reviewers see when wrapping `monkeypatch.setattr`; the
+**198** baseline uses unique targets.
+
+Per-router tallies in the inventory table sum to **194**; adding the 4 global
+backstops yields **198**.
 
 ### Per-step module tally — sums to **45**
 
@@ -116,9 +224,9 @@ routers (§4.2 core-router-last ordering).
 
 | Step | Modules | Lines (sum) | Rationale |
 | --- | --- | ---: | --- |
-| **1** | `session_streams_router`, `rollover_router`, `session_router`, `rules_router` | 861 | Session-streams / handoff / rules cluster; shared `LIVE_REPO_ROOT`, session-streams DB |
+| **1** | `session_streams_router`, `rollover_router`, `session_router`, `rules_router` | 860 | Session-streams / handoff / rules cluster; shared `LIVE_REPO_ROOT`, session-streams DB |
 | **2** | `state_router` | 2,433 | Large; orient/authority/pipeline — see internal route groups |
-| **3** | `agent_router`, `agent_monitor_router`, `occupancy_router`, `observer_presence_router`, `fleet_workers_router`, `project_state_router` | 1,563 | Agent monitor DB + occupancy markers + in-memory presence + fleet project-state |
+| **3** | `agent_router`, `agent_monitor_router`, `occupancy_router`, `observer_presence_router`, `fleet_workers_router`, `project_state_router` | 1,608 | Agent monitor DB + occupancy markers + in-memory presence + fleet project-state |
 | **4** | `fleet_router` | 2,637 | Large; fleet facade / messages / ACP — see internal route groups |
 | **5** | `comms_router` | 1,898 | Large; `MESSAGE_DB` + fleet-comms plane — see internal route groups |
 | **6** | `runtime_router` | 1,729 | Large; runtime adapters / ACP / usage telemetry |
@@ -164,7 +272,7 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `state_router.py` | `/api/state` | 28 | 2,433 | `CURRICULUM_ROOT`, `LEVELS`, `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `BUDGET_CONFIG_PATH`, `TASKS_DIR` | 14 | 2 |
+| `state_router.py` | `/api/state` | 28 | 2,433 | `CURRICULUM_ROOT`, `LEVELS`, `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `BUDGET_CONFIG_PATH`, `TASKS_DIR` | 23 | 2 |
 
 **Internal route groups** (may split 2a/2b if a single PR exceeds review size):
 
@@ -175,11 +283,14 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 | Build status / modules | 10 | `/build-status`, `/build-status/{track_id}`, `/module-range/{track_id}`, `/llm-qg/{track_id}`, `/build-stats`, `/build-stats/{track_id}`, `/module/{track_id}/{num}`, `/module/{track_id}/slug/{slug}`, `/final-reviews/{track_id}`, `/enrichment-status` |
 | Issues / manifest | 4 | `/track-health/{track_id}`, `/issues`, `/range/{track_id}`, `/manifest` |
 
-**`state_router` seams (14):** `state_helpers._ttl_cache`,
+**`state_router` seams (23):** `state_helpers._ttl_cache`,
 `_content_file_index_cache`, `_curriculum_cache`, `_curriculum_mtime`;
 `repository_authority._git`, `classify_repo_path`; `entire_context_router.projection_path`,
-`load_provider_status`, `load_provider_capabilities`; `path_loop:CURRICULUM_ROOT`,
-`LIVE_REPO_ROOT`, `PROJECT_ROOT`, `BUDGET_CONFIG_PATH`, `TASKS_DIR`.
+`load_provider_status`, `load_provider_capabilities`; `path_loop` entries for
+`state_router`, `state_helpers`, `state_build`, `state_compute`, `state_coverage`,
+`state_issues`, `repository_authority`, `entire_context_router`, and
+`config` module globals (`CURRICULUM_ROOT`, `LIVE_REPO_ROOT`, `PROJECT_ROOT`,
+`BUDGET_CONFIG_PATH`, `TASKS_DIR`, etc.).
 
 ### Step 3 — agent / occupancy / fleet-workers cluster
 
@@ -202,18 +313,18 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `fleet_router.py` | `/api/fleet` | 27 | 2,637 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 8 | 4 |
+| `fleet_router.py` | `/api/fleet` | 27 | 2,637 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 7 | 4 |
 
 **Internal route groups:**
 
 | Group | Routes | Paths (representative) |
 | --- | ---: | --- |
-| Facade / cold-start | 8 | `/facade`, `/facade/help`, `/facade/status`, `/facade/board`, `/facade/metrics`, `/facade/backlog`, `/facade/dead`, `/facade/broker-report`, `/facade/reap-report` |
+| Facade / cold-start | 9 | `/facade`, `/facade/help`, `/facade/status`, `/facade/board`, `/facade/metrics`, `/facade/backlog`, `/facade/dead`, `/facade/broker-report`, `/facade/reap-report` |
 | Operations / overview | 5 | `/operations`, `/health`, `/overview`, `/agents`, `/endpoints` |
 | Messages / discussions / reviews | 8 | `/requests`, `/messages`, `/messages/{message_id}`, `/discussions`, `/discussions/{conversation_id}`, `/reviews`, `/reviews/{review_id}`, `/dead-letters` |
-| Authority / ACP / activity | 6 | `/authority/jobs`, `/migrations`, `/acp/conversations`, `/acp/conversations/{conversation_id}`, `/activity` |
+| Authority / ACP / activity | 5 | `/authority/jobs`, `/migrations`, `/acp/conversations`, `/acp/conversations/{conversation_id}`, `/activity` |
 
-**`fleet_router` seams (8):** `cold_start_board._get_local_git_info`,
+**`fleet_router` seams (7):** `cold_start_board._get_local_git_info`,
 `_resolve_session_streams_db`, `_probe_gh_pr_list`, `default_plane_root`;
 `fleet_router.build_cold_start_board` (seam-honesty test); `path_loop:LIVE_REPO_ROOT`,
 `PROJECT_ROOT`; `default_plane_root_loop:fleet_router`.
@@ -222,20 +333,21 @@ created by the fixture's `scripts.api` absolute-`Path` scan loop.
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `comms_router.py` | `/api/comms` | 26 | 1,898 | `CURRICULUM_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT` | `LOG_DIR`, `PID_DIR` | 7 | 5 |
+| `comms_router.py` | `/api/comms` | 26 | 1,898 | `CURRICULUM_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT` | `LOG_DIR`, `PID_DIR` | 11 | 5 |
 
 **Internal route groups:**
 
 | Group | Routes | Paths (representative) |
 | --- | ---: | --- |
 | Legacy (deprecated) | 5 | `/messages`, `/conversations`, `/conversation/{task_id}`, `/live-activity`, `/send` |
-| Health / plane / batch | 6 | `/active-processes`, `/zombies`, `/stats`, `/health`, `/v1/plane-status`, `/batch-progress`, `/batch-progress/{track}` |
-| Channels | 7 | `/channels`, `/channels/{name}`, `/channels/{name}/messages`, `/channels/{name}/threads/{thread_id}`, `/channels/{name}/deliveries`, `/channels/{name}/post`, `/cleanup`, `/acknowledge/{message_id}` |
-| Inbox / v1 metrics | 8 | `/by-module/{track}/{slug}`, `/agent-activity`, `/inbox`, `/v1/backlog`, `/v1/dead-letters`, `/v1/metrics` |
+| Health / plane / batch | 7 | `/active-processes`, `/zombies`, `/stats`, `/health`, `/v1/plane-status`, `/batch-progress`, `/batch-progress/{track}` |
+| Channels | 8 | `/channels`, `/channels/{name}`, `/channels/{name}/messages`, `/channels/{name}/threads/{thread_id}`, `/channels/{name}/deliveries`, `/channels/{name}/post`, `/cleanup`, `/acknowledge/{message_id}` |
+| Inbox / v1 metrics | 6 | `/by-module/{track}/{slug}`, `/agent-activity`, `/inbox`, `/v1/backlog`, `/v1/dead-letters`, `/v1/metrics` |
 
-**`comms_router` seams (7):** `broker_report.main_checkout_root`;
-`message_plane.default_plane_root`; `path_loop:CURRICULUM_ROOT`, `MESSAGE_DB`,
-`PROJECT_ROOT`, `PID_DIR`, `LOG_DIR`.
+**`comms_router` seams (11):** `broker_report.main_checkout_root`;
+`message_plane.default_plane_root`; `path_loop` for `comms_router` globals;
+`external_store_loop` for `scripts.ai_agent_bridge.*` DB paths consumed by
+comms routes.
 
 ### Step 6 — `runtime_router` (large)
 
@@ -255,33 +367,38 @@ ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `docs_router.py` | `/artifacts`, `/files` | 2 | 446 | `DASHBOARDS_DIR`, `PROJECT_ROOT` | `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS` | 7 | 7 |
+| `docs_router.py` | `/artifacts`, `/files` | 2 | 446 | `DASHBOARDS_DIR`, `PROJECT_ROOT` | `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS` | 5 | 7 |
 | `artifacts_router.py` | `/api/artifacts` | 7 | 854 | `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT` | `PLANS_ROOT` | 3 | 7 |
-| `images_router.py` | `/api/images` | 9 | 649 | `PROJECT_ROOT` | `IMAGES_DIR`, `TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`, `_pdf_page_count_cache` | 11 | 7 |
+| `images_router.py` | `/api/images` | 9 | 649 | `PROJECT_ROOT` | `IMAGES_DIR`, `TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`, `_pdf_page_count_cache` | 8 | 7 |
 
-**`docs_router` seams (7):** `PROJECT_ROOT`, `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`,
-`EFFECTIVE_ROOTS`, `DASHBOARDS_DIR`; `path_loop:DASHBOARDS_DIR`, `PROJECT_ROOT`.
+**`docs_router` seams (5):** explicit `PROJECT_ROOT`, `ALLOWED_ROOTS`,
+`DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS`, `DASHBOARDS_DIR` repoints (derived roots,
+not individually listed as `path_loop` entries).
 
-**`images_router` seams (11):** explicit singleton resets for `IMAGES_DIR`,
+**`images_router` seams (8):** explicit singleton resets for `IMAGES_DIR`,
 `TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`,
-`_pdf_page_count_cache`; matching `path_loop` entries.
+`_pdf_page_count_cache`; plus `path_loop:PROJECT_ROOT`.
 
 ### Step 8 — admin / ops / git
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `admin_router.py` | `/api/admin` | 8 | 381 | `MESSAGE_DB`, `PROJECT_ROOT` | `BACKUP_DIR`, `DATA_DIR`, `IMAGE_DIR`, `LOGS_DIR`, `MCP_DIR` | 7 | 8 |
-| `ops_router.py` | `/api/ops` | 2 | 70 | `PROJECT_ROOT` | `DEFAULT_PLAN_DIR` | 2 | 8 |
+| `ops_router.py` | `/api/ops` (+ nested `/entire-context`) | 4 | 70 | `PROJECT_ROOT` | `DEFAULT_PLAN_DIR` | 8 | 8 |
 | `git_hygiene_router.py` | `/api/git` | 2 | 749 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `POLICY_DOC` | 5 | 8 |
 
 **`git_hygiene_router` seams (5):** `_run_git`; `worktree_containment.primary_checkout_dirty_status`;
 `path_loop:LIVE_REPO_ROOT`, `PROJECT_ROOT`, `POLICY_DOC`.
 
+**`ops_router` seams (8):** includes nested `entire_context_router` (`projection_path`,
+`load_provider_status`, `load_provider_capabilities`, `default_plane_root_loop`);
+`path_loop` for `ops_router` and `entire_context_router` module globals.
+
 ### Step 9 — `dashboard_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `dashboard_router.py` | `/api/dashboard` | 11 | 996 | `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT`, `SEMINAR_TRACK_IDS` | — | 2 | 9 |
+| `dashboard_router.py` | `/api/dashboard` | 11 | 996 | `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT`, `SEMINAR_TRACK_IDS` | — | 10 | 9 |
 
 **Internal route groups:** overview/research/track (`/overview`, `/research`,
 `/track/*`, `/pipeline`, `/activity-config`); comms embed
@@ -292,11 +409,10 @@ ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `rag_router.py` (`sources_router`) | `/api/sources`, `/api/rag` (deprecated) | 5 | 139 | `PROJECT_ROOT` | `IMAGE_DIR` | 7 | 10 |
+| `rag_router.py` (`sources_router`) | `/api/sources`, `/api/rag` (deprecated) | 5 | 139 | `PROJECT_ROOT` | `IMAGE_DIR` | 5 | 10 |
 
-**`sources_router` seams (7):** `sources_db.SOURCES_DB_PATH`, `_conn`, `_get_conn`;
-`rag_query.sources_db.SOURCES_DB_PATH`, `_conn`; `path_loop:PROJECT_ROOT`,
-`IMAGE_DIR`.
+**`sources_router` seams (5):** `sources_db.SOURCES_DB_PATH`, `_conn`, `_get_conn`;
+`rag_query.sources_db` mirror paths; `path_loop` for `rag_router` globals.
 
 ### Step 11 — `contracts_router` / route contracts (large)
 
@@ -345,14 +461,15 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `site_router.py` | `/api/site` | 2 | 260 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `SITE_DIR`, `ASTRO_OUTPUT_DIR` | 5 | 12d |
-| `wiki_router.py` | `/api/wiki` | 8 | 436 | `CURRICULUM_ROOT`, `LEVELS` | `PROJECT_ROOT`, `SOURCES_DB_PATH` | 7 | 12d |
+| `wiki_router.py` | `/api/wiki` | 8 | 436 | `CURRICULUM_ROOT`, `LEVELS` | `PROJECT_ROOT`, `SOURCES_DB_PATH` | 12 | 12d |
 | `worktrees_router.py` | `/api/worktrees` | 1 | 221 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | — | 3 | 12d |
-| `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | `PROJECT_ROOT` | `_DB_PATH`, `_MODULE_BUILD_DB_PATH` | 4 | 12d |
+| `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | `PROJECT_ROOT` | `_DB_PATH`, `_MODULE_BUILD_DB_PATH` | 7 | 12d |
 
-**`wiki_router` seams (7):** `path_loop:CURRICULUM_ROOT`, `PROJECT_ROOT`,
-`SOURCES_DB_PATH`; `external_store_loop:wiki.config.WIKI_STATE_DIR`,
+**`wiki_router` seams (12):** `path_loop` for `wiki_router` globals;
+`external_store_loop` for `wiki.config.WIKI_STATE_DIR`,
 `wiki.source_attribution.DEFAULT_DB_PATH`, `wiki.state.WIKI_STATE_DIR`,
-`wiki.quality_gate.PROGRESS_DB`.
+`wiki.quality_gate.PROGRESS_DB`, `wiki.dense_rerank`, `wiki.embedding_manifest`,
+`wiki.sources_db` module-global DB/STATE paths.
 
 **`worktrees_router` seams (3):** `_run`; `reap_worktrees._run`;
 `path_loop:LIVE_REPO_ROOT`.
@@ -370,7 +487,7 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LEVELS`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT` | `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR` | 12 | 13 |
+| `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LEVELS`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT` | `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR` | 17 | 13 |
 
 **Routes:** `/api` (redirect), `/api/health`, `/api/orient`, `/api/config`,
 `/api/batch/dispatcher`, `/api/batch/active`, `/api/batch/failures`,
@@ -384,10 +501,11 @@ stay registered after all `/api/*` prefixed routers (§4.2). #7302 migrated thes
 helpers; no separate `_repo_root` / `_store` beyond the config imports and
 module globals listed above.
 
-**`core_router` seams (12):** `api_main._health_instance_identity`,
-`DASHBOARDS_DIR`; `path_loop:BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`,
-`LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`, `SOURCES_DB_PATH`,
-`SESSION_STATE_DIR`, `_IMAGE_DIR`; `run_command_loop:main._run_command`.
+**`core_router` seams (17):** `api_main._health_instance_identity`,
+`DASHBOARDS_DIR`; `path_loop` for `main` and shared `config` module globals;
+`run_command_loop:main._run_command`; includes `BATCH_STATE_DIR`,
+`CURRICULUM_ROOT`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`,
+`SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR`.
 
 ---
 
@@ -410,11 +528,12 @@ all routers read stores through `MonitorContext`.
 | Metric | Value |
 | --- | ---: |
 | Router modules | 45 |
-| Route handlers (decorator sum) | 269 |
+| Route handlers (decorator sum, nested included) | 271 |
 | OpenAPI HTTP operations (sweep denominator) | 280 |
-| OPSEC seams (router-attributed) | 162 |
+| WebSocket routes (separate denominator) | 1 |
+| OPSEC seams (router-attributed, unique) | 194 |
 | OPSEC seams (global backstops) | 4 |
-| **OPSEC seam baseline total** | **166** |
+| **OPSEC seam baseline total (unique)** | **198** |
 
 **Full step accounting:**
 
