@@ -115,7 +115,7 @@
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
-        "sha256": "fce4f16b8710462abc1ec6d3da8b1f1e454184f608479f8f8b449efdac967592"
+        "sha256": "4add537678b58a82a230a0cb1357422714bdc0c094453b26e232eee5c8d3708c"
       },
       {
         "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",

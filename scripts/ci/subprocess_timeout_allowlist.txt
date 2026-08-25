@@ -12,18 +12,14 @@
 #    covered by an existing entry in this file will fail CI.
 # 4. KEY FORMAT: `path::qualname::callee` (sorted alphabetically). Duplicate lines
 #    represent multiple timeout-less calls within the same enclosing function/scope.
-scripts/agent_runtime/agent_github_identity.py::_repository_name::subprocess.run
-scripts/agent_runtime/env_sanitize.py::_isolated_git_env::subprocess.run
 scripts/ai_agent_bridge/_channels_cli.py::_handle_channel_context::subprocess.run
 scripts/bench/writer_matrix.py::_run_one_cell::subprocess.run
 scripts/etymology/bulk_ocr_gemini.py::decode_pages::subprocess.run
 scripts/fleet_comms/github_pr_metrics.py::collect_github_pr_metrics::subprocess.run
-scripts/lexicon/fill_from_content.py::_run_enrichment::subprocess.run
 scripts/lexicon/runner/atlas_job.py::_run_backup_doctor::subprocess.call
 scripts/lexicon/runner/atlas_job.py::run_restic_sink::subprocess.run
 scripts/lexicon/runner/atlas_job.py::run_restic_sink::subprocess.run
 scripts/lexicon/runner/durable_mirror.py::sync_source_to_mirror::subprocess.run
-scripts/migrate/rename_track.py::git_mv::subprocess.run
 scripts/projects/open_model_data/phase3_heldout_label_transport.py::run_cycle002::subprocess.run
 scripts/projects/open_model_data/phase3_rule_author_runner.py::run::subprocess.run
 scripts/projects/open_model_data/phase3_source_production_transport.py::_subprocess_invoke::subprocess.run

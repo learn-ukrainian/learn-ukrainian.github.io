@@ -51,6 +51,8 @@ _SAFE_NAME_PREFIXES = (
     "LU_",
 )
 
+_GIT_TIMEOUT_SECONDS = 30
+
 # These are process-control paths, not credentials. A task id such as
 # ``task-4956`` contains the substring ``sk-`` and otherwise looks like an
 # OpenAI key to the generic value redactor, so keep the tmp lease controls
@@ -255,6 +257,7 @@ def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, s
                 ["git", "config", "--file", str(sandbox_global), "--unset-all", key],
                 check=False,
                 capture_output=True,
+                timeout=_GIT_TIMEOUT_SECONDS,
             )
         env = {
             "GIT_CONFIG_GLOBAL": str(sandbox_global),
@@ -283,7 +286,7 @@ def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, s
             askpass.chmod(0o700)
             env["GIT_ASKPASS"] = str(askpass)
         return env
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         # Isolation failure must not re-open the operator's global Git config.
         # Losing the copied commit identity is safer than falling back to an
         # interactive credential helper.

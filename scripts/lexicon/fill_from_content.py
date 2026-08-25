@@ -33,6 +33,7 @@ from scripts.verification.vesum import verify_words
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+_ENRICHMENT_TIMEOUT_SECONDS = 300
 _SINGLE_TOKEN_UK_RE = re.compile(r"^[\u0400-\u052f]+(?:['’ʼ-][\u0400-\u052f]+)*$", re.IGNORECASE)
 
 VesumLookup = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
@@ -380,6 +381,7 @@ def _run_enrichment() -> None:
         [str(PYTHON), "scripts/lexicon/enrich_manifest.py"],
         cwd=PROJECT_ROOT,
         check=True,
+        timeout=_ENRICHMENT_TIMEOUT_SECONDS,
     )
 
 

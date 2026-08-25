@@ -25,6 +25,7 @@ import jwt
 
 _GITHUB_API_URL = "https://api.github.com"
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+_GIT_TIMEOUT_SECONDS = 30
 
 
 class GitHubIdentityError(RuntimeError):
@@ -72,8 +73,9 @@ def _repository_name(repo_root: Path = _REPO_ROOT) -> str:
             check=True,
             capture_output=True,
             text=True,
+            timeout=_GIT_TIMEOUT_SECONDS,
         ).stdout.strip()
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise GitHubIdentityError("cannot determine the repository for the GitHub App token") from exc
 
     remote = remote.removesuffix(".git").rstrip("/")

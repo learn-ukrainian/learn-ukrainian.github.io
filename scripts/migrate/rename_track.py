@@ -23,6 +23,9 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
+_GIT_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
+
 # Directories/files to skip entirely during content replacement
 SKIP_DIRS = {
     ".git",
@@ -79,6 +82,12 @@ def should_skip(path: Path) -> bool:
     return False
 
 
+def _timeout_text(value: str | bytes | None) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
 def git_mv(src: Path, dst: Path, dry_run: bool) -> bool:
     """Rename using git mv. Returns True on success."""
     if not src.exists():
@@ -87,12 +96,22 @@ def git_mv(src: Path, dst: Path, dry_run: bool) -> bool:
     if dry_run:
         print(f"  [DRY-RUN] git mv {src.relative_to(PROJECT_ROOT)} → {dst.relative_to(PROJECT_ROOT)}")
         return True
-    result = subprocess.run(
-        ["git", "mv", str(src), str(dst)],
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-    )
+    command = ["git", "mv", str(src), str(dst)]
+    try:
+        result = subprocess.run(
+            command,
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        result = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=_timeout_text(exc.stdout),
+            stderr=_timeout_text(exc.stderr) or f"TimeoutExpired after {_GIT_TIMEOUT_SECONDS}s",
+        )
     if result.returncode != 0:
         print(f"  [ERROR] git mv failed: {result.stderr.strip()}")
         return False
