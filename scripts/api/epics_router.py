@@ -6,6 +6,7 @@ import base64
 import binascii
 import logging
 import re
+import sqlite3
 from datetime import datetime
 from pathlib import Path
 from threading import Lock
@@ -34,6 +35,7 @@ from agents_extensions.shared.session_streams.store import (
     MAX_ROLLOVER_BUNDLE_BYTES,
     ContentRejectedError,
     LeaseConflictError,
+    LifecycleError,
     NotFoundError,
     SessionStreamStore,
     validate_entry_body,
@@ -616,6 +618,9 @@ def remote_claim(stream_id: str, request: Request, body: dict[str, Any]) -> JSON
         )
     except (ValueError, ContentRejectedError):
         return _error(400, "invalid epic claim request")
+    except (sqlite3.IntegrityError, LifecycleError):
+        logger.exception("Remote epic claim rejected by a session-stream invariant")
+        return _error(409, "epic claim rejected by a session-stream invariant")
     except Exception:
         return _server_error()
 

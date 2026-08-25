@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import json
+import logging
+import sqlite3
 from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import SessionStreamStore
+from agents_extensions.shared.session_streams.store import LifecycleError, SessionStreamStore
 from scripts.api import epics_router
 
 
@@ -129,6 +132,41 @@ def test_router_responses_have_no_paths_or_host_network_tokens(tmp_path: Path, m
     assert status.status_code == 200
     assert "/Users/" not in status.text
     assert "/home/" not in status.text
+
+
+@pytest.mark.parametrize("failure", [sqlite3.IntegrityError("foreign key"), LifecycleError("unsafe lifecycle")])
+def test_router_claim_invariant_failures_are_logged_and_not_store_unavailable(
+    tmp_path: Path, monkeypatch, caplog, failure: Exception
+) -> None:
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "api.sqlite3"))
+
+    def fail_claim(**_kwargs):
+        raise failure
+
+    monkeypatch.setattr(store, "claim_remote_session", fail_claim)
+    monkeypatch.setattr(epics_router, "_store", lambda: store)
+    app = FastAPI()
+    app.include_router(epics_router.router, prefix="/api/epics")
+
+    with caplog.at_level(logging.ERROR, logger=epics_router.__name__):
+        response = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 8765)).post(
+            "/api/epics/v1/epic:7178/claim",
+            json={
+                "session_id": "failed-session",
+                "lease_id": "failed-lease",
+                "lineage_id": "failed-lineage",
+                "agent": "codex",
+                "harness": "codex-cli",
+                "instance_id": "failed-instance",
+                "process_id": 1234,
+                "host_id": "failed-host",
+            },
+        )
+
+    assert response.status_code == 409
+    assert response.json()["detail"] == "epic claim rejected by a session-stream invariant"
+    assert "store unavailable" not in response.text
+    assert any(record.exc_info for record in caplog.records)
 
 
 def test_router_force_release_requires_and_records_actor(tmp_path: Path, monkeypatch) -> None:
