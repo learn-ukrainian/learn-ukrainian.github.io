@@ -1,19 +1,23 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v3 (revised after two rounds of cross-family review)
+> **Version:** v4 (revised after three rounds of cross-family review)
 > **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v3
-> needs a third cross-family pass before step 0 is dispatched (see § 10).
-> **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per two
-> rounds of codex review below.
+> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v4
+> needs a fourth cross-family pass before step 0 is dispatched (see § 10).
+> **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per
+> three rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
 > **Refs:** #7182 (OPSEC sweep design r2/r3 critique, task `critique-7182-design-r2-codex`, GPT-seat
 > critic origin of the proposal).
-> **Changelog:** v1 (PR #7296 initial commit) got a cross-family REJECT (3 P1 + 1 P2). v2 addressed
-> those but was itself REJECTed on re-review (4 new findings, including a factual error: v2 said
-> `main.py` mounts 33 routers; the real, re-verified count is 44, and v2's step table silently
-> dropped `build_events_router`). v3 (this version) fixes all of it — see § 10 for the full
-> finding-by-finding record of both rounds.
+> **Changelog:** v1 got a cross-family REJECT (3 P1 + 1 P2). v2 addressed those but was itself
+> REJECTed (4 new findings, incl. a router-count error: said 33, real count 44). v3 fixed those but
+> was REJECTed a third time — a real doc-consistency bug (§7 still described a fixture-isolation test
+> that §5.1 had already dropped), a real design gap (route-digest + passing tests don't prove
+> middleware/lifespan/exception-handler wiring is unchanged), and several precision nits (mount count
+> vs. unique-module count, a file-count off-by-one in the `connect_sqlite()` caller list, one router's
+> line count rounded to a bracket it doesn't quite meet). v4 (this version) fixes all of it — see §10
+> for the full finding-by-finding record of all three rounds, including one place the round-3
+> reviewer's own sub-claim (a grep bug) did not hold up under independent re-verification.
 
 ---
 
@@ -89,11 +93,13 @@ this is false: DB access today goes through at least three distinct patterns, no
 - **Direct `sqlite3.connect(` calls** in `fleet_router.py`, `agent_monitor_router.py`,
   `delegate_router.py`, `fleet_workers_collect.py`, `hramatka_cache.py`, `comms_router.py`,
   `resilience.py`, `runtime_router.py`, `agents_extensions/shared/session_streams/db.py` (9 files).
-- **`connect_sqlite()`**, an existing wrapper defined in `scripts/api/resilience.py:262`, called from
-  `admin_router.py`, `discussions_router.py`, `state_helpers.py`, `gold_router.py`, `wiki_router.py`,
-  `telemetry_router.py`, `dashboard_comms.py`, `hramatka_router.py`, `comms_router.py`,
-  `telemetry/legacy_comms.py` (11 files) — this is already the closest thing to an existing choke
-  point; the design below builds on it rather than replacing it.
+- **`connect_sqlite()`**, an existing wrapper **defined** in `scripts/api/resilience.py:262` and
+  **called from 10 other files**: `admin_router.py`, `discussions_router.py`, `state_helpers.py`,
+  `gold_router.py`, `wiki_router.py`, `telemetry_router.py`, `dashboard_comms.py`,
+  `hramatka_router.py`, `comms_router.py`, `telemetry/legacy_comms.py` — this is already the closest
+  thing to an existing choke point; the design below builds on it rather than replacing it. (A plain
+  `grep -l "connect_sqlite("` returns 11 files because the definition line itself matches the search
+  string; the design-relevant count is the 10 callers.)
 - **`SessionStreamDatabase.connect()`**, a method on the class in
   `agents_extensions/shared/session_streams/db.py:97`, used by `occupancy_local.py`,
   `epics_router.py`, `session_streams_router.py` (3 files).
@@ -117,10 +123,12 @@ this is false: DB access today goes through at least three distinct patterns, no
    `sqlite3.connect(`), wired into the OPSEC sweep or a standalone test, that fails if any of them
    appears outside `monitor_context.py` (or `resilience.py`/`session_streams/db.py` themselves, which
    `MonitorContext` calls into) and any *not-yet-migrated* file listed in an explicit allowlist. The
-   §5.2 inventory step populates this allowlist's initial contents from the three lists above — 23
-   raw call-site matches (9 + 11 + 3) across **21 unique files** (`comms_router.py` and
-   `resilience.py` each appear in two of the three patterns) — that is the real, checked starting
-   count, not a placeholder.
+   §5.2 inventory step populates this allowlist's initial contents from the three lists above — 22
+   real call sites (9 direct `sqlite3.connect` + 10 `connect_sqlite()` callers, excluding its own
+   definition file + 3 `SessionStreamDatabase` users) across **21 unique files**
+   (`comms_router.py` appears in both the direct-call and `connect_sqlite()`-caller lists;
+   `resilience.py` is the direct-call site *and* the `connect_sqlite()` definition, counted once) —
+   that is the real, checked starting count, not a placeholder.
 5. The existing `monkeypatch.setattr(sqlite3, "connect", …)` global backstop in the OPSEC sweep
    **stays** through the whole migration as defense-in-depth — it becomes redundant for migrated
    routers (they can only reach handles the context already validated) but keeps catching
@@ -157,15 +165,17 @@ undercounted the router set itself (said 33; the actual count, re-verified by gr
 `app.include_router(...)` call in `main.py`, is 44 — see the exact list below) and silently dropped
 `build_events_router` from the step table. Both errors are fixed here; the count below is generated
 from `grep -oE 'app\.include_router\(\s*\n?\s*[a-zA-Z_]+' scripts/api/main.py`, not hand-counted, so
-any future reader can re-derive it. `main.py` mounts 44 router modules today, 6 of which are
-1,000+ lines and mix several concerns internally (`fleet_router.py` 2,637 lines, `state_router.py`
-2,433, `comms_router.py` 1,898, `runtime_router.py` 1,729, `route_contracts.py` 1,356,
-`dashboard_router.py` 996 — together roughly half of all router code). Naming one of these a "family"
+any future reader can re-derive it. `main.py` makes 47 `include_router` calls mounting **44 unique
+router modules** (`cost_router`, `docs_router`, and `sources_router` are each mounted at two
+prefixes — one module, two routes-tables-worth of paths); 6 of those 44 are the largest and mix
+several concerns internally (`fleet_router.py` 2,637 lines, `state_router.py` 2,433,
+`comms_router.py` 1,898, `runtime_router.py` 1,729, `route_contracts.py` 1,356, `dashboard_router.py`
+996 — together roughly half of all router code by line count). Naming one of these a "family"
 by itself is not precise enough to file a bounded sub-issue from, and lumping several together is
 worse. Guessing a finer split without reading what's actually inside those six files would just move
 the same ambiguity to a smaller-looking table.**
 
-### 5.1 Step 0 — Core (revised again after the v2 review — see §10 v2 entry)
+### 5.1 Step 0 — Core (revised after the v2 and v3 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No router
 changes** — every router still reads its own module globals directly, exactly as today. This matters
@@ -197,13 +207,24 @@ for what step 0 can and cannot claim:
      route table and require the identical count and digest — this is the concrete, already-built
      mechanism that proves `create_app()` wires up the identical route set as the hand-built app,
      with no new comparison logic to design or trust.
-  3. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
+  3. **Route digest + passing tests prove routes are unchanged; they do not prove app-level wiring is
+     unchanged** — `main.py` also configures a lifespan context manager, exception handlers, CORS and
+     resilience middleware, and app metadata (`scripts/api/main.py:148` onward) that a route-count
+     digest cannot see and that existing route tests may not each individually exercise. Add a direct
+     structural-equality assertion, new in step 0: build both apps in one test and assert
+     `legacy_app.user_middleware == factory_app.user_middleware` (same middleware classes, same order,
+     same init kwargs), `legacy_app.exception_handlers.keys() == factory_app.exception_handlers.keys()`
+     with each handler resolving to the same underlying function, and
+     `legacy_app.router.lifespan_context is factory_app.router.lifespan_context` (or an equivalent
+     check if `create_app`'s optional `lifespan` override changes how that's wired — the test must
+     cover whichever it actually is). This is the piece the route digest alone cannot prove.
+  4. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
      through a running app): `fixture_context(tmp_path)` resolves every configured root/store path
      under `tmp_path`, and a path crafted to escape via a symlink is rejected (§4.1 point 3). This is
      testable today, standalone, without any router depending on the context yet.
 - The grep-based call-site lint from §4.1 point 4 (all three DB-access patterns, not just
-  `sqlite3.connect(`) also lands in step 0, with its initial allowlist populated by the 23 files
-  enumerated in §4.1 (every router file that has not migrated yet — step 0 changes no router).
+  `sqlite3.connect(`) also lands in step 0, with its initial allowlist populated by the 21 unique
+  files enumerated in §4.1 (every router file that has not migrated yet — step 0 changes no router).
 
 ### 5.2 Step 0.5 — Router dependency & seam inventory (NEW; fixes the v1 P1a "ambiguous families" and P1b "no seam manifest" findings with one mechanism)
 
@@ -251,8 +272,8 @@ step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (21) 
 matching the live count above with none dropped.
 
 Sub-issues under #7269 are filed **from the inventory's actual output**, not from the provisional
-table above — if the inventory contradicts a row here, the inventory wins and this doc gets a v3 note
-in §10.
+table above — if the inventory contradicts a row here, the inventory wins and this doc gets a new
+§10 entry.
 
 ## 6. Constraints (binding for every step)
 
@@ -272,16 +293,22 @@ in §10.
    §5.2 — the sweep's known-seam count must equal `baseline - Σ(seams migrated so far)` exactly. This
    is a single assertable number (e.g. `test_known_seam_count_matches_migration_progress`), not an
    eyeballed "looks smaller" check — that is the fix for the v1 review's P1b finding.
-4. Step 0's byte-identical-outcome test (§5.1) and fixture-isolation test stay in the suite through
-   every later step — they are exactly the check that a family migration changed *where* a route
-   reads from, not *what* it returns.
+4. Step 0's no-op proof (§5.1: unchanged `tests/api` + route-table digest match + the app-structure
+   equality check below) and the standalone `MonitorContext`/`fixture_context` unit test stay in the
+   suite through every later step. **Neither is an app-level isolation test** — no router depends on
+   `ctx` until it migrates, so there is nothing for an app-level isolation test to check until steps
+   1+ add one per family, scoped to exactly the routers that family migrated. This is a correction to
+   a v2 wording carried over into this section that this section itself failed to update — see §10
+   v3 entry.
 
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. Cross-family design review (codex). **Done twice — v1 REJECT (3 P1 + 1 P2), v2 REJECT (4 further
-   findings, incl. a router-count error). v3 (this version) addresses all of both rounds (§10).**
-3. One more cross-family design review on this v3 revision before implementation starts. **Next
+2. Cross-family design review (codex). **Done three times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
+   (4 further findings, incl. a router-count error), v3 REJECT (a doc-consistency bug, a real
+   app-wiring proof gap, and several precision nits). v4 (this version) addresses all three rounds
+   (§10).**
+3. One more cross-family design review on this v4 revision before implementation starts. **Next
    step.**
 4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
    wrong assumption in this doc before anything else builds on it.
@@ -350,10 +377,12 @@ in §10.
      (`test_opsec_route_sweep.py:677`) against `create_app(production_context())`'s route table.
      Both mechanisms already exist; nothing new to design or trust.
   3. **P1 — the `_open_db` choke point was bypassable**: v2 claimed one call site, but real DB access
-     goes through `sqlite3.connect()` directly (9 files), the existing `connect_sqlite()` wrapper (11
-     files), and `SessionStreamDatabase.connect()` (3 files); root validation used unresolved paths,
-     permitting a symlink escape. **Fixed:** §4.1 now names all three real patterns by file (23 call
-     sites total, grepped live), has `MonitorContext` build handles by calling the *existing*
+     goes through `sqlite3.connect()` directly (9 files), the existing `connect_sqlite()` wrapper (10
+     caller files, plus its own definition file), and `SessionStreamDatabase.connect()` (3 files);
+     root validation used unresolved paths, permitting a symlink escape. **Fixed:** §4.1 now names
+     all three real patterns by file (22 call sites across 21 unique files, grepped live and
+     re-verified after this same section briefly mis-stated the connect_sqlite caller count in this
+     round — see the v3 entry below), has `MonitorContext` build handles by calling the *existing*
      `connect_sqlite()`/`SessionStreamDatabase(...)` rather than inventing a fourth mechanism, and
      resolves paths canonically (`Path.resolve()`) before the root-containment check.
   4. **P2 — §5.2 was not dispatch-ready and had false inventory evidence**: the claimed 33-router
@@ -366,3 +395,37 @@ in §10.
   - This reviewer run also could not reach `gh` for the #7269 issue comment (same harness limitation
     as the v1 run) — grounded its review in the checked-out tree instead, which is why it caught the
     router-count error directly rather than trusting the doc's stated figure.
+
+- **v3 (commit 074b9b4), reviewer: codex, verdict: REJECT.** Findings, independently re-verified
+  before disposition (one did not hold up — see below), and their v4 fix:
+  1. **§7 still described the fixture-isolation test that §5.1 had already dropped** — a real
+     doc-consistency bug: I edited §5.1's scope in the v2→v3 pass but missed updating §7's summary of
+     what stays in the regression net. **Fixed:** §7 point 4 rewritten to match §5.1 exactly — no
+     app-level isolation claim at step 0, isolation tests arrive per family starting step 1.
+  2. **Route digest + passing tests don't prove app-level wiring (middleware, exception handlers,
+     lifespan) is unchanged** — a real, previously-unaddressed gap: nothing in step 0 checked that
+     `create_app()` actually carries over CORS/resilience middleware, exception handlers, and the
+     lifespan context manager from the hand-built app. **Fixed:** §5.1 adds a direct structural-
+     equality assertion (`user_middleware`, `exception_handlers`, `lifespan_context` compared between
+     the legacy and factory-built app objects) as new point 3, distinct from the route-digest check.
+  3. **Router-count precision**: claimed "44 router modules" without distinguishing that from the 47
+     actual `include_router` calls (3 modules mounted twice). **Fixed:** §5 now states both numbers
+     and names the 3 double-mounted modules (`cost_router`, `docs_router`, `sources_router`).
+     *However*, the reviewer's specific sub-claim that "the stated grep returns 46 because it misses
+     the multiline `reviewer_ghosts_router` call" **did not hold up under independent re-verification**
+     — running the exact grep command stated in the doc returns 44 and does catch
+     `reviewer_ghosts_router` (confirmed directly against `main.py`). Noted here rather than silently
+     accepted, per this project's own rule against treating an unverified claim — including a
+     reviewer's — as fact.
+  4. **`connect_sqlite()` file-count was internally inconsistent**: v3 said "(11 files)" but listed
+     only 10 filenames, because the 11th (`resilience.py`) is the function's own definition site, not
+     a caller — a real transcription slip between the raw grep output and the doc's prose list.
+     **Fixed:** §4.1 now separates "defined in resilience.py" from "called from 10 other files" and
+     explains why a plain `grep -l` returns 11. The downstream "23 raw call sites / 21 unique files"
+     figure is corrected to 22 real call sites (9 + 10 + 3) / 21 unique files — the unique-file count
+     was already right; only the raw-match arithmetic needed the same correction.
+  5. **"6 routers are 1,000+ lines" was imprecise** for `dashboard_router.py` at 996 (already stated
+     correctly elsewhere in the same doc). **Fixed:** §5's framing no longer uses a round-number
+     bracket; it lists the six actual line counts, 996 included honestly.
+  - Verification note from this reviewer run: its own focused pytest could not start (no usable temp
+    directory in that sandbox) — an environment limitation of that run, not a product result.
