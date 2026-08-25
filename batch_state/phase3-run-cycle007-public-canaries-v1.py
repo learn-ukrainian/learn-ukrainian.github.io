@@ -916,21 +916,21 @@ def invoke_canary(
     if execution_mode == "real" and mcp_endpoint != compiler.DEFAULT_MCP_ENDPOINT:
         raise CanaryError("real_mode_sources_endpoint_drift")
 
-    # Verify real executable identity if real mode is requested
+    # Verify the explicitly bound real executable identity.  Production runs
+    # may execute on a writer whose home differs from the review workstation;
+    # the receipt binds the selected regular file by hash and the controller
+    # independently revalidates that hash before any labeling call.
     if execution_mode == "real":
+        if not provider_bin.is_absolute():
+            raise CanaryError("provider_executable_not_absolute")
         try:
+            if provider_bin.is_symlink():
+                raise CanaryError("invalid_executable")
             resolved_exe = provider_bin.resolve(strict=True)
         except OSError as exc:
             raise CanaryError("provider_executable_unavailable") from exc
         if not resolved_exe.is_file() or resolved_exe.is_symlink():
             raise CanaryError("invalid_executable")
-        expected_live_bin = AGY if provider_name == "gemini" else GROK
-        try:
-            resolved_live = expected_live_bin.resolve(strict=True)
-        except OSError:
-            resolved_live = None
-        if resolved_live is None or resolved_exe != resolved_live:
-            raise CanaryError("provider_executable_mismatch")
         exe_sha256 = contract.sha256_file(resolved_exe)
     else:
         try:
@@ -1122,6 +1122,11 @@ def invoke_canary(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--provider", choices=("gemini", "grok"), required=True, help="target provider harness")
+    parser.add_argument(
+        "--provider-bin",
+        type=Path,
+        help="explicit absolute real-provider executable; required for real mode",
+    )
     parser.add_argument("--static", action="store_true", help="static schema/evidence proof without provider execution")
     parser.add_argument("--test-provider-bin", type=Path, help="synthetic provider executable fixture")
     parser.add_argument("--synthetic-mcp", action="store_true", help="use in-memory synthetic Sources MCP double")
@@ -1131,7 +1136,7 @@ def main() -> int:
 
     try:
         if args.static:
-            if args.test_provider_bin or args.synthetic_mcp:
+            if args.provider_bin or args.test_provider_bin or args.synthetic_mcp:
                 raise CanaryError("static_mode_prohibits_provider_args")
             result = static_verify(args.provider)
             if args.receipt:
@@ -1151,10 +1156,11 @@ def main() -> int:
         else:
             if args.receipt is None:
                 raise CanaryError("receipt_path_required_for_real_mode")
-            provider_bin = AGY if args.provider == "gemini" else GROK
+            if args.provider_bin is None:
+                raise CanaryError("provider_bin_required_for_real_mode")
             result = invoke_canary(
                 args.provider,
-                provider_bin,
+                args.provider_bin,
                 execution_mode="real",
                 receipt_path=args.receipt,
                 mcp_endpoint=args.mcp_endpoint,
