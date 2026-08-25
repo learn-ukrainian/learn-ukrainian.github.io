@@ -231,6 +231,28 @@ def test_provider_provenance_tampering_is_rejected_on_resume(tmp_path: Path, mon
     assert exc.value.failure_code == "provider_provenance_failure"
 
 
+def test_real_transport_receipt_requires_executable_binding_on_resume(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package, _ = _setup_package(tmp_path)
+    selector = _fake_selector(tmp_path)
+    monkeypatch.setenv("CYCLE007_MODE", "gemini")
+    _run_synthetic(package, selector)
+
+    receipt_path = package / adj_mod.OUTPUT / "final" / "clean_label" / "receipt-0001.json"
+    receipt = json.loads(receipt_path.read_text())
+    assert receipt["provider_result_provenance"] is not None
+    receipt["execution_mode"] = "real"
+    receipt["executable_sha256"] = None
+    unsigned = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = adj_mod.digest(adj_mod.canonical(unsigned))
+    receipt_path.write_bytes(adj_mod.canonical(receipt))
+
+    with pytest.raises(adj_mod.Error) as exc:
+        adj_mod.verify_packet(package, "clean_label", 1, expected_agy_sha256="a" * 64)
+    assert exc.value.failure_code == "binding_failure"
+
+
 def test_fixture_output_cannot_resume_in_live_mode(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     package, _ = _setup_package(tmp_path)
     selector = _fake_selector(tmp_path)

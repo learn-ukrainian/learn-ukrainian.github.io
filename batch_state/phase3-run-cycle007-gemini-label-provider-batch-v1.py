@@ -44,7 +44,6 @@ EXPECTED_SOURCES_ENDPOINT_IDENTITY: dict[str, Any] = {}
 MODEL = "Gemini 3.6 Flash (High)"
 FAMILY = "google"
 HARNESS = "agy"
-AGY = Path("/Users/krisztiankoos/.local/bin/agy")
 OUTPUT = "label-output-gemini-cycle007-v1"
 CHUNK_SIZE = 20
 LANES = {"clean_label": 40, "residual_label": 164}
@@ -849,21 +848,16 @@ def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
     ]
 
 
-def agy_executable_sha256(provider: Path = AGY) -> str:
+def agy_executable_sha256(provider: Path) -> str:
     try:
+        if provider.is_symlink():
+            raise Error("structured_output_envelope_drift", structural=True)
         resolved = provider.resolve(strict=True)
     except OSError as exc:
         raise Error("structured_output_envelope_drift", structural=True) from exc
     if not resolved.is_file():
         raise Error("structured_output_envelope_drift", structural=True)
     return digest(resolved.read_bytes())
-
-
-def _real_agy_provider(provider: Path) -> bool:
-    try:
-        return provider.resolve(strict=True) == AGY.resolve(strict=True)
-    except OSError:
-        return False
 
 
 def stdin_event(prompt: str) -> bytes:
@@ -1284,7 +1278,7 @@ def run_packet(
     package: Path,
     lane: str,
     packet_index: int,
-    provider: Path = AGY,
+    provider: Path,
     *,
     expected_agy_sha256: str | None = None,
     expected_custody_sha256: str | None = None,
@@ -1300,10 +1294,9 @@ def run_packet(
     if expected_evidence_manifest_sha256 is not None:
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
     expected_label_prompt_sha = _label_prompt_hash(expected_label_prompt_sha)
-    if _real_agy_provider(provider):
-        if not isinstance(expected_agy_sha256, str) or len(expected_agy_sha256) != 64:
-            raise Error("ordinal_identity_binding_drift")
-    elif expected_agy_sha256 is not None:
+    if expected_agy_sha256 is not None and (
+        not isinstance(expected_agy_sha256, str) or len(expected_agy_sha256) != 64
+    ):
         raise Error("ordinal_identity_binding_drift")
     source_path, contents, sidecar_path, sidecar_contents = packet(package, lane, packet_index)
     if (package / OUTPUT / "provider-stop.json").exists():
@@ -1353,7 +1346,7 @@ def batch(
     lane: str,
     start: int,
     end: int,
-    provider: Path = AGY,
+    provider: Path,
     *,
     concurrency: int = 1,
     expected_agy_sha256: str | None = None,
@@ -1410,7 +1403,9 @@ def main() -> int:
     selector.add_argument("--start", type=int, help="inclusive contiguous batch range start")
     parser.add_argument("--end", type=int, help="inclusive contiguous batch range end (required with --start)")
     parser.add_argument("--concurrency", type=int, default=1, help="must remain one for fail-stop execution")
-    parser.add_argument("--test-provider-bin", type=Path, help="synthetic provider only; omitted selects AGY")
+    provider = parser.add_mutually_exclusive_group(required=True)
+    provider.add_argument("--provider-bin", type=Path, help="explicit real AGY executable")
+    provider.add_argument("--test-provider-bin", type=Path, help="synthetic provider executable only")
     parser.add_argument(
         "--expected-agy-executable-sha", help="controller-bound AGY executable SHA256; required for real provider calls"
     )
@@ -1428,7 +1423,7 @@ def main() -> int:
     try:
         if args.concurrency != 1:
             raise Error("ordinal_identity_binding_drift")
-        if args.test_provider_bin is None:
+        if args.provider_bin is not None:
             if (
                 not isinstance(args.expected_agy_executable_sha, str)
                 or len(args.expected_agy_executable_sha) != 64
@@ -1459,7 +1454,7 @@ def main() -> int:
                 args.package.resolve(),
                 args.lane,
                 args.packet_index,
-                args.test_provider_bin or AGY,
+                args.provider_bin or args.test_provider_bin,
                 expected_agy_sha256=args.expected_agy_executable_sha,
                 expected_label_prompt_sha=args.expected_label_prompt_sha,
             )
@@ -1469,7 +1464,7 @@ def main() -> int:
                 args.lane,
                 args.start,
                 args.end,
-                args.test_provider_bin or AGY,
+                args.provider_bin or args.test_provider_bin,
                 concurrency=args.concurrency,
                 expected_agy_sha256=args.expected_agy_executable_sha,
                 expected_label_prompt_sha=args.expected_label_prompt_sha,

@@ -37,7 +37,6 @@ COMPARE_OUTPUT = "dual-label-output-cycle007-v1"
 MODEL = "Claude Sonnet 4.6 (Thinking)"
 FAMILY = "anthropic"
 HARNESS = "agy"
-AGY = Path("/Users/krisztiankoos/.local/bin/agy")
 MAX_STRUCTURAL_ATTEMPTS = 2
 MAX_REVIEW_BATCH_TARGETS = 50
 
@@ -813,7 +812,10 @@ def _provider_mode(provider: Path, expected_agy_sha256: str | None, synthetic_pr
         if expected_agy_sha256 is not None:
             raise Error("mode_drift")
         try:
-            if provider.resolve(strict=True) == AGY.resolve(strict=True):
+            if provider.is_symlink():
+                raise Error("mode_drift")
+            resolved = provider.resolve(strict=True)
+            if not resolved.is_file():
                 raise Error("mode_drift")
         except OSError as exc:
             raise Error("mode_drift") from exc
@@ -821,7 +823,10 @@ def _provider_mode(provider: Path, expected_agy_sha256: str | None, synthetic_pr
     if not isinstance(expected_agy_sha256, str) or len(expected_agy_sha256) != 64 or any(c not in "0123456789abcdef" for c in expected_agy_sha256):
         raise Error("binding_failure")
     try:
-        if provider.resolve(strict=True) != AGY.resolve(strict=True) or digest(provider.resolve(strict=True).read_bytes()) != expected_agy_sha256:
+        if provider.is_symlink():
+            raise Error("binding_failure")
+        resolved = provider.resolve(strict=True)
+        if not resolved.is_file() or digest(resolved.read_bytes()) != expected_agy_sha256:
             raise Error("binding_failure")
     except OSError as exc:
         raise Error("binding_failure") from exc
@@ -1322,17 +1327,18 @@ def run_audit(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--package", type=Path, required=True)
-    parser.add_argument("--test-provider-bin", type=Path, help="explicit synthetic fixture transport only")
+    transport = parser.add_mutually_exclusive_group(required=True)
+    transport.add_argument("--provider-bin", type=Path, help="explicit real AGY executable")
+    transport.add_argument("--test-provider-bin", type=Path, help="explicit synthetic fixture transport only")
+    transport.add_argument("--human-review-result", type=Path, help="explicit private human source-review result")
     parser.add_argument("--expected-agy-executable-sha", help="required exact AGY hash for real Anthropic review")
-    parser.add_argument("--human-review-result", type=Path, help="explicit private human source-review result")
     args = parser.parse_args(argv)
     try:
-        if args.test_provider_bin is not None and args.human_review_result is not None:
-            raise Error("mode_drift")
         human_result = read(args.human_review_result, "human review result") if args.human_review_result else None
+        provider = args.provider_bin or args.test_provider_bin
         result = run_audit(
             args.package,
-            provider=args.test_provider_bin or (None if human_result is not None else AGY),
+            provider=provider,
             expected_agy_sha256=args.expected_agy_executable_sha,
             synthetic_provider=args.test_provider_bin is not None,
             human_review_result=human_result,

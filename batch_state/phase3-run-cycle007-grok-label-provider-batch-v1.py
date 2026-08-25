@@ -29,7 +29,6 @@ from scripts.projects.open_model_data import phase3_cycle007_evidence_contract a
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
 HERE = Path(__file__).resolve().parent
-GROK = Path("/Users/krisztiankoos/.local/bin/grok")
 CYCLE = "phase3-v2-1-evaluation-cycle-007"
 AMENDMENT_SHA256 = "4f2e3e58964cae391c3933ffdce531296a0744808b0154231ca513049602fea0"
 CYCLE007_AMENDMENT_SHA256 = AMENDMENT_SHA256
@@ -793,8 +792,11 @@ def _provider_mode(
 ) -> None:
     """Make synthetic executables explicit and reject fake live providers."""
     try:
+        if provider.is_symlink():
+            raise Error("label_count_or_envelope_drift")
         resolved = provider.resolve(strict=True)
-        live = GROK.resolve(strict=True)
+        if not resolved.is_file():
+            raise Error("label_count_or_envelope_drift")
     except OSError as exc:
         if synthetic_provider:
             if expected_grok_sha256 is not None:
@@ -802,11 +804,9 @@ def _provider_mode(
             return
         raise Error("label_count_or_envelope_drift") from exc
     if synthetic_provider:
-        if resolved == live or expected_grok_sha256 is not None:
+        if expected_grok_sha256 is not None:
             raise Error("label_count_or_envelope_drift")
     else:
-        if resolved != live:
-            raise Error("label_count_or_envelope_drift")
         if not isinstance(expected_grok_sha256, str) or len(expected_grok_sha256) != 64:
             raise Error("label_count_or_envelope_drift")
         if digest(resolved.read_bytes()) != expected_grok_sha256:
@@ -817,7 +817,7 @@ def run_packet(
     package: Path,
     lane: str,
     index: int,
-    provider: Path = GROK,
+    provider: Path,
     *,
     expected_grok_sha256: str | None = None,
     expected_custody_sha256: str | None = None,
@@ -1000,7 +1000,7 @@ def batch(
     lane: str,
     start: int,
     end: int,
-    provider: Path = GROK,
+    provider: Path,
     *,
     concurrency: int = 1,
     expected_grok_sha256: str | None = None,
@@ -1065,7 +1065,9 @@ def main() -> int:
     selector.add_argument("--start", type=int, help="inclusive contiguous batch range start")
     parser.add_argument("--end", type=int, help="inclusive contiguous batch range end (required with --start)")
     parser.add_argument("--concurrency", type=int, default=1, help="must remain one for fail-stop execution")
-    parser.add_argument("--test-provider-bin", type=Path, help="synthetic provider executable only")
+    provider = parser.add_mutually_exclusive_group(required=True)
+    provider.add_argument("--provider-bin", type=Path, help="explicit real Grok executable")
+    provider.add_argument("--test-provider-bin", type=Path, help="synthetic provider executable only")
     parser.add_argument(
         "--expected-grok-executable-sha",
         help="controller-bound Grok executable SHA256; required for real provider calls",
@@ -1084,7 +1086,7 @@ def main() -> int:
     try:
         if args.concurrency != 1:
             raise Error("label_count_or_envelope_drift")
-        if args.test_provider_bin is None:
+        if args.provider_bin is not None:
             if (
                 not isinstance(args.expected_grok_executable_sha, str)
                 or len(args.expected_grok_executable_sha) != 64
@@ -1116,7 +1118,10 @@ def main() -> int:
 
         package = args.package.resolve()
         synthetic = args.test_provider_bin is not None
-        provider = args.test_provider_bin.resolve() if synthetic else GROK
+        provider_path = args.provider_bin or args.test_provider_bin
+        if provider_path is None:
+            raise Error("label_count_or_envelope_drift")
+        provider = provider_path
         if args.packet_index is not None:
             if args.end is not None:
                 raise Error("label_count_or_envelope_drift")

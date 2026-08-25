@@ -53,8 +53,12 @@ operator explicitly starts a provider stage.
 ## Minimal architecture
 
 The existing reviewed controller remains the authority for preflight, packet
-verification, stage ordering, and stage seals. A small Linux-only guardian adds
-only the missing operational layer:
+verification, stage ordering, and stage seals. The guardian requires explicit
+absolute AGY and Grok executable bindings, and the controller verifies each
+resolved regular file against its provider-attested canary hash before status,
+planning, or execution. No provider executable is discovered from a workstation
+path or from `PATH`. A small Linux-only guardian adds only the missing
+operational layer:
 
 1. Acquire one non-blocking outer guardian lock located outside the disposable
    worktree and hold it through storage validation and child completion. Pass a

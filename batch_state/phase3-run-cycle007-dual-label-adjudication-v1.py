@@ -36,7 +36,6 @@ COMPARE_OUTPUT = "dual-label-output-cycle007-v1"
 MODEL = "Claude Sonnet 4.6 (Thinking)"
 FAMILY = "anthropic"
 HARNESS = "agy"
-AGY = Path("/Users/krisztiankoos/.local/bin/agy")
 MAX_STRUCTURAL_ATTEMPTS = 2
 SELECTOR_INSTRUCTION = (
     "You are the fresh source-qualified Cycle 007 disagreement adjudicator. "
@@ -269,8 +268,10 @@ def _command(provider: Path, schema_path: Path) -> list[str]:
     return [str(provider), "--model", MODEL, "--mode", "plan", "--sandbox", "--disable-slash-commands", "--input-format", "stream-json", "--output-format", "stream-json", "--json-schema", str(schema_path)]
 
 
-def agy_executable_sha256(provider: Path = AGY) -> str:
+def agy_executable_sha256(provider: Path) -> str:
     try:
+        if provider.is_symlink():
+            raise Error("binding_failure")
         resolved = provider.resolve(strict=True)
     except OSError as exc:
         raise Error("binding_failure") from exc
@@ -284,7 +285,10 @@ def _provider_mode(provider: Path, *, expected_agy_sha256: str | None, synthetic
         if expected_agy_sha256 is not None:
             raise Error("mode_drift")
         try:
-            if provider.resolve(strict=True) == AGY.resolve(strict=True):
+            if provider.is_symlink():
+                raise Error("mode_drift")
+            resolved = provider.resolve(strict=True)
+            if not resolved.is_file():
                 raise Error("mode_drift")
         except OSError as exc:
             raise Error("mode_drift") from exc
@@ -296,7 +300,10 @@ def _provider_mode(provider: Path, *, expected_agy_sha256: str | None, synthetic
     ):
         raise Error("binding_failure")
     try:
-        if provider.resolve(strict=True) != AGY.resolve(strict=True):
+        if provider.is_symlink():
+            raise Error("binding_failure")
+        resolved = provider.resolve(strict=True)
+        if not resolved.is_file() or digest(resolved.read_bytes()) != expected_agy_sha256:
             raise Error("binding_failure")
     except OSError as exc:
         raise Error("binding_failure") from exc
@@ -459,7 +466,7 @@ def adjudicate_packet(
     index: int,
     selections_override: dict[str, Any] | None = None,
     *,
-    provider: Path = AGY,
+    provider: Path | None = None,
     expected_agy_sha256: str | None = None,
     synthetic_provider: bool = False,
     fixture: bool = False,
@@ -473,7 +480,7 @@ def adjudicate_packet(
         receipt = read(_paths(package, lane, index)[3])
         if not isinstance(receipt, dict) or receipt.get("execution_mode") != ("fixture" if fixture else "real"):
             raise Error("mode_drift")
-        return verify_packet(package, lane, index)
+        return verify_packet(package, lane, index, expected_agy_sha256=expected_agy_sha256)
     if any(present):
         _stop(package, lane, index, "label_count_or_envelope_drift")
         raise Error("label_count_or_envelope_drift")
@@ -504,6 +511,8 @@ def adjudicate_packet(
             input_sha256=digest(canonical({"records": records})),
             provider_provenance={"execution_mode": "fixture" if fixture else "real", "executable_sha256": None, "transport": None},
         )
+    if provider is None:
+        raise Error("binding_failure")
     selections, attempts, input_sha256, provider_provenance = _select_with_provider(
         package,
         lane,
@@ -529,7 +538,7 @@ def _valid_sha256(value: Any) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(character in "0123456789abcdef" for character in value)
 
 
-def _validate_provider_provenance(receipt: dict[str, Any]) -> None:
+def _validate_provider_provenance(receipt: dict[str, Any], expected_agy_sha256: str | None) -> None:
     mode = receipt.get("execution_mode")
     executable = receipt.get("executable_sha256")
     transport = receipt.get("provider_result_provenance")
@@ -537,11 +546,9 @@ def _validate_provider_provenance(receipt: dict[str, Any]) -> None:
     if mode not in {"real", "fixture"} or not isinstance(adjudicator, dict):
         raise Error("label_count_or_envelope_drift")
     if mode == "real":
-        try:
-            actual = agy_executable_sha256(AGY)
-        except Error:
-            raise Error("binding_failure") from None
-        if executable != actual:
+        if (transport is None and executable is not None) or (
+            transport is not None and executable != expected_agy_sha256
+        ):
             raise Error("binding_failure")
     elif executable is not None and not _valid_sha256(executable):
         raise Error("label_count_or_envelope_drift")
@@ -582,7 +589,9 @@ def _validate_provider_provenance(receipt: dict[str, Any]) -> None:
         raise Error("provider_provenance_failure")
 
 
-def verify_packet(package: Path, lane: str, index: int) -> dict[str, Any]:
+def verify_packet(
+    package: Path, lane: str, index: int, *, expected_agy_sha256: str | None = None
+) -> dict[str, Any]:
     records = _records(package, lane, index)
     labels_path, unresolved_path, selection_path, receipt_path = _paths(package, lane, index)
     labels, unresolved, selection, receipt = (read(path) for path in (labels_path, unresolved_path, selection_path, receipt_path))
@@ -597,7 +606,7 @@ def verify_packet(package: Path, lane: str, index: int) -> dict[str, Any]:
             expected_labels.append(record["gemini_label"])
         else:
             expected_unresolved.append(record)
-    _validate_provider_provenance(receipt)
+    _validate_provider_provenance(receipt, expected_agy_sha256)
     expected = {
         "schema_version": "phase3_cycle007_dual_label_adjudication_packet_receipt_v1", "evaluation_cycle_id": CYCLE, "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()), "source_label_manifest_raw_sha256": SOURCE_MANIFEST_SHA256,
@@ -636,7 +645,7 @@ def adjudicate_all(
     package: Path,
     selections_by_packet: dict[tuple[str, int], dict[str, Any]] | None = None,
     *,
-    provider: Path = AGY,
+    provider: Path | None = None,
     expected_agy_sha256: str | None = None,
     synthetic_provider: bool = False,
     fixture: bool = False,
@@ -711,7 +720,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--lane", choices=tuple(LANES))
     parser.add_argument("--packet-index", type=int)
     parser.add_argument("--all", action="store_true")
-    parser.add_argument("--test-provider-bin", type=Path, help="explicit synthetic fixture transport only")
+    provider = parser.add_mutually_exclusive_group(required=True)
+    provider.add_argument("--provider-bin", type=Path, help="explicit real AGY executable")
+    provider.add_argument("--test-provider-bin", type=Path, help="explicit synthetic fixture transport only")
     parser.add_argument("--expected-agy-executable-sha", help="required exact AGY hash for a real selector call")
     parser.add_argument("--fixture", action="store_true", help="enable synthetic fixture transport; never use for live packages")
     args = parser.parse_args(argv)
@@ -719,12 +730,15 @@ def main(argv: list[str] | None = None) -> int:
         if args.all == (args.lane is not None or args.packet_index is not None) or (args.lane is None) != (args.packet_index is None):
             raise Error("mode_drift")
         synthetic_provider = args.test_provider_bin is not None
+        provider_path = args.provider_bin or args.test_provider_bin
+        if provider_path is None:
+            raise Error("mode_drift")
         if synthetic_provider and not args.fixture:
             raise Error("mode_drift")
         if args.all:
             result = adjudicate_all(
                 args.package,
-                provider=args.test_provider_bin or AGY,
+                provider=provider_path,
                 expected_agy_sha256=args.expected_agy_executable_sha,
                 synthetic_provider=synthetic_provider,
                 fixture=args.fixture,
@@ -734,7 +748,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.package,
                 args.lane,
                 args.packet_index,
-                provider=args.test_provider_bin or AGY,
+                provider=provider_path,
                 expected_agy_sha256=args.expected_agy_executable_sha,
                 synthetic_provider=synthetic_provider,
                 fixture=args.fixture,
