@@ -33,9 +33,8 @@ def _fixture_plan() -> dict:
 
 
 def test_build_knowledge_packet_appends_dictionary_context(monkeypatch) -> None:
-    from wiki import sources_db
-
     from scripts.verification import vesum
+    from wiki import sources_db
 
     long_definition = " ".join(f"довге{i}" for i in range(80))
     long_definition += " TAIL_SHOULD_NOT_APPEAR"

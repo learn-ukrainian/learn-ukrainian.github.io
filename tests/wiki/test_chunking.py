@@ -375,8 +375,9 @@ def test_validator_raises_when_unit_exceeds_index_max_length(
     a chunking policy's ``target_tokens`` was bumped without
     coordinating ``INDEX_MAX_LENGTH`` (or vice versa)."""
 
-    from wiki import chunking, dense_rerank
     from wiki.dense_rerank import CorpusUnit, _assert_units_fit_index_window
+
+    from wiki import chunking, dense_rerank
 
     # Synthesize a unit that's clearly over the cap (FakeTokenizer
     # uses whitespace tokens; 100 words = 100 tokens).
@@ -413,8 +414,9 @@ def test_validator_silent_on_no_chunk_corpus(tokenizer: FakeTokenizer) -> None:
     they accept unit lengths the encoder will truncate. Re-chunking
     them at index time would invalidate 137K+ vectors."""
 
-    from wiki import dense_rerank
     from wiki.dense_rerank import CorpusUnit, _assert_units_fit_index_window
+
+    from wiki import dense_rerank
 
     too_long = " ".join(f"word{i}" for i in range(100))
     unit = CorpusUnit(

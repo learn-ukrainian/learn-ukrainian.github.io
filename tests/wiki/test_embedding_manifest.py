@@ -9,7 +9,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from wiki import embedding_manifest
 from wiki.embedding_manifest import (
     LEGACY_SHIPPED_CONFIG,
     EmbeddingManifest,
@@ -23,6 +22,8 @@ from wiki.embedding_manifest_schema import (
     LEGACY_INDEX_MAX_LENGTH,
     LEGACY_POOLING_MODE,
 )
+
+from wiki import embedding_manifest
 
 
 def _manifest_path(tmp_path: Path) -> Path:

@@ -16,7 +16,6 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from ingest import sum20_official_ingest
 from rag.source_query import query_sum20 as source_query_sum20
-from wiki import sources_db
 from wiki.sum20_official import (
     FetchOutcome,
     Sum20ParseError,
@@ -25,6 +24,8 @@ from wiki.sum20_official import (
     parse_sum20_article,
     upsert_sum20_article,
 )
+
+from wiki import sources_db
 
 FIXTURES = Path(__file__).parent / "fixtures" / "sum20_official"
 

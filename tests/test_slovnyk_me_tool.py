@@ -11,8 +11,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 @pytest.fixture()
 def slovnyk_sources_db(tmp_path, monkeypatch):
-    from wiki import sources_db as sdb
     from wiki.slovnyk_me import db_row_values, ensure_slovnyk_me_schema, normalize_word
+
+    from wiki import sources_db as sdb
 
     db_path = tmp_path / "sources.db"
     conn = sqlite3.connect(str(db_path))
