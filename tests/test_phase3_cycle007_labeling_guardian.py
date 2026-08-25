@@ -65,7 +65,7 @@ def _config(guardian: ModuleType, root: Path, **changes: Any) -> Any:
         "through": "gemini",
         "receipt": None,
         "mountinfo": root / "mountinfo",
-        "mount_command": "mount",
+        "mount_command": ("/usr/bin/mount",),
         "operator_inspected_count": None,
         "resolution_authorization": None,
         "resolution_authority_attestation": None,
@@ -276,7 +276,75 @@ def test_bind_mount_timeout_has_fixed_failure_code(
         lambda *_args, **_kwargs: (_ for _ in ()).throw(subprocess.TimeoutExpired("mount", 30)),
     )
     with pytest.raises(guardian.GuardianError, match="bind_mount_timeout"):
-        guardian._bind_mount(Path("/source"), Path("/target"), "mount")
+        guardian._bind_mount(Path("/source"), Path("/target"), ("/usr/bin/mount",))
+
+
+def test_bind_mount_supports_explicit_non_shell_prefix(
+    guardian: ModuleType, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[bytes]:
+        captured["command"] = command
+        captured.update(kwargs)
+        return subprocess.CompletedProcess(command, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(guardian.subprocess, "run", run)
+    guardian._bind_mount(
+        Path("/source"),
+        Path("/target"),
+        ("/usr/bin/sudo", "-n", "/usr/bin/mount"),
+    )
+    assert captured["command"] == [
+        "/usr/bin/sudo",
+        "-n",
+        "/usr/bin/mount",
+        "--bind",
+        "/source",
+        "/target",
+    ]
+    assert captured["shell"] is False
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        (),
+        ("mount",),
+        ("/usr/bin/sudo", "/usr/bin/mount"),
+        ("/usr/bin/sudo", "-E", "/usr/bin/mount"),
+        ("/usr/bin/mount\0",),
+    ],
+)
+def test_mount_command_rejects_ambiguous_or_path_discovered_argv(
+    guardian: ModuleType, command: tuple[str, ...]
+) -> None:
+    with pytest.raises(guardian.GuardianError, match="invalid_mount_command"):
+        guardian._validate_mount_command(command)
+
+
+def test_mount_cli_builds_exact_noninteractive_sudo_argv(guardian: ModuleType) -> None:
+    args = guardian._parser().parse_args(
+        [
+            "prepare",
+            "--package", "/package",
+            "--backing-root", "/backing",
+            "--guardian-lock", "/locks/guardian",
+            "--controller-lock", "/locks/controller",
+            "--execution-lock", "/locks/execution",
+            "--controller", "/controller",
+            "--owner-uid", "1",
+            "--owner-gid", "1",
+            "--min-free-bytes", "1",
+            "--mount-command", "/usr/bin/mount",
+            "--sudo-command", "/usr/bin/sudo",
+        ]
+    )
+    assert guardian._config(args).mount_command == (
+        "/usr/bin/sudo",
+        "-n",
+        "/usr/bin/mount",
+    )
 
 
 def test_duplicate_guardian_lock_is_nonblocking(guardian: ModuleType, tmp_path: Path) -> None:

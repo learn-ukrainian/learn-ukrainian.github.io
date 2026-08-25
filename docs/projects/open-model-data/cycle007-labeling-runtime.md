@@ -74,6 +74,9 @@ operational layer:
    guardian cannot start a duplicate even if the guardian and controller are
    killed while their runner remains alive.
 2. Validate the explicit package and backing roots without discovering either.
+   Hidden flags accept explicit absolute `sudo` and `mount` executables. The
+   guardian inserts the non-interactive `-n` option and executes the fixed argv
+   without a shell; PATH discovery and arbitrary privilege options are rejected.
 3. Create six private backing directories and six empty package mountpoints
    with the frozen lexical names `label-output-gemini-cycle007-v1`,
    `label-output-grok-cycle007-v1`, `dual-label-output-cycle007-v1`,
