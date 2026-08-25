@@ -191,6 +191,7 @@ def test_registry_has_known_agents():
         "claude",
         "claude-desktop",
         "claude-infra",
+        "claude-monitor",
         "gemini",
         "grok",
         "grok-build",
@@ -437,6 +438,17 @@ def test_claude_desktop_entry_is_human_invoked():
     assert entry["adapter"] == "scripts.agent_runtime.adapters.claude:ClaudeAdapter"
     assert entry["cli_available"] is False
     assert entry["resume_policy"] == "never"
+
+
+def test_claude_monitor_entry_is_non_dispatchable_identity():
+    entry = get_agent_entry("claude-monitor")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.claude:ClaudeAdapter"
+    assert entry["default_model"] == "claude-sonnet-5"
+    assert entry["cost_tier"] == "high"
+    assert entry["cli_available"] is False
+    assert entry["resume_policy"] == "never"
+    assert entry["capabilities"] == frozenset({"architecture", "review", "planning"})
+    assert "claude-monitor" not in available_agents()
 
 
 def test_claude_entry_has_bridge_only_resume_policy():
