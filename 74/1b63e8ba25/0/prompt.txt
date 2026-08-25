@@ -1,0 +1,70 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/monitor-7295-epics-graph-endpoint-fix1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix: PR #7312 (GET /api/epics/graph/v1) — REJECT from cross-family review
+
+The cross-family review of your PR #7312 came back REJECT with 2 findings. The driver
+independently re-verified both against the checked-out tree before sending this back — they are
+real, not reviewer noise. Fix both.
+
+## 1. [BLOCKER — privacy leak] `open_issue_titles` is not in `PRIVATE_CACHE_KEYS`
+
+You added `"open_issue_titles": {str(k): v for k, v in titles.items()}` to `classify()`'s
+returned report in `scripts/orchestration/issue_stream_audit.py` (~line 972). This is correct —
+the design doc did ask for this. What's wrong: `PRIVATE_CACHE_KEYS` at line 59 of the same file
+is `("effective_membership", "open_issue_numbers")` — your new key is not in it. Both
+`scripts/api/issues_router.py:251` (`{k: v for k, v in report.items() if k not in
+audit.PRIVATE_CACHE_KEYS}`) and `scripts/work/sources_public.py` strip ONLY the keys named in
+that tuple. Your new full open-issue-title map would leak through the EXISTING public
+`GET /api/issues/streams` endpoint (and anywhere else that consumes the report via
+`sources_public.py`) on the next audit refresh — that endpoint today only ever exposes titles for
+orphan/multi-homed issues, and your change would silently turn it into "every open issue's title,
+publicly."
+
+**Fix:** add `"open_issue_titles"` to `PRIVATE_CACHE_KEYS`. The graph endpoint you're building
+reads the cache directly (not through the stripped public endpoint), so it keeps working exactly
+as designed — only the strip behavior for OTHER consumers changes. Then extend the existing
+private-key strip tests (`test_issues_streams_strips_private_index` / whatever asserts against
+`PRIVATE_CACHE_KEYS` in `sources_public.py`'s test file) to also assert `open_issue_titles` is
+stripped — do not just fix the constant, prove it with a test the way the existing two keys are
+proven.
+
+## 2. Vacuous passthrough test
+
+`test_epics_graph_store_lease_and_decision_passthrough` in `tests/api/test_epics_router.py`
+guards its real assertions (`lease is not None`, `last_state["body"] == ...`,
+`last_decision["body"] == ...`) behind `if "epic:7178" in epics_by_id:`. `7178` is a
+lease-lifecycle test fixture ID used elsewhere in the same test file for `/api/epics/v1/{stream_id}/...`
+calls — it does NOT appear anywhere in `scripts/config/issue_streams.yaml` (monitor's only
+registered epic is 7177). Your graph endpoint builds epic nodes FROM that yaml file, so
+`epic:7178` never exists in `epics_by_id`, the `if` never fires, and the test passes without ever
+running its own assertions.
+
+**Fix:** claim `epic:7177` (the real, registered monitor epic — or any other epic actually present
+in `issue_streams.yaml`) as the lease/state/decision fixture instead of the fabricated 7178, and
+remove the `if` guard entirely so a regression that breaks the passthrough actually fails the
+test. Check whether claiming the real monitor epic conflicts with anything else the test suite
+does with that epic's lease state — if it does, use a different real yaml epic instead, but do
+not keep a guard that can silently no-op.
+
+## Constraints
+
+Same as the original brief: no behavior change beyond these two fixes, run
+`tests/api/opsec_sweep/` + `tests/api/test_epics_router.py` + `tests/test_issue_stream_audit.py`
+green, `ruff check` clean, push to the SAME branch (`agy/monitor-7295-epics-graph-endpoint`), do
+not open a new PR.
+
+## Evidence preamble (required)
+
+Quote the actual test run output proving finding 1's new strip test passes AND that a manual
+check confirms `open_issue_titles` is now absent from a real `GET /api/issues/streams` response
+in a test client. Quote the fixed test file's diff for finding 2.

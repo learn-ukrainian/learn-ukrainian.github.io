@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "741b63e8ba25",
+  "session_id": "fleet-0b2c92b7ecc14e9c8a47ef68bea5c51d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T20:56:09.524689Z",
+  "branch": "agy/monitor-7295-epics-graph-endpoint",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/issue_stream_audit.py",
+    "tests/api/test_epics_router.py",
+    "tests/test_issue_stream_audit.py",
+    "tests/test_research_registry_p4.py",
+    "tests/test_work_api.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "346e787a5a06",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T20:56:09.510396Z",
+    "agent_lines": 43,
+    "agent_removed": 15,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 43,
+    "total_lines_changed": 58,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
