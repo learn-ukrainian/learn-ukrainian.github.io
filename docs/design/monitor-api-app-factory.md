@@ -1,24 +1,24 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v5 (revised after four rounds of cross-family review)
+> **Version:** v6 (revised after five rounds of cross-family review)
 > **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v5
-> needs a fifth cross-family pass before step 0 is dispatched (see § 10).
+> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v6
+> needs a sixth cross-family pass before step 0 is dispatched (see § 10).
 > **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per
-> four rounds of codex review below.
+> five rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
 > **Refs:** #7182 (OPSEC sweep design r2/r3 critique, task `critique-7182-design-r2-codex`, GPT-seat
 > critic origin of the proposal).
-> **Changelog:** v1→v4 each got a cross-family REJECT and fixed the prior round's findings — see §10
-> for the full four-round record, including one place a reviewer's own sub-claim did not hold up
-> under independent re-verification. Round 4 verified v4's fixes for §7, the router count, the
-> `connect_sqlite()` count, and the line-count framing all held — the only remaining finding was that
-> v4's proposed middleware/exception-handler/lifespan check compared two live app objects with
-> Starlette's identity-equality `Middleware` type (which never compares two independently-built,
-> even-identical instances as equal) against a `legacy_app` that no longer exists once `main.py` is
-> rewritten to call the factory. v5 (this version) replaces that with a hardcoded expected-snapshot
-> comparison grounded directly in `main.py`'s actual current wiring (read, not assumed) — see §5.1
-> point 3 and §10's v4 entry.
+> **Changelog:** v1→v5 each got a cross-family REJECT and fixed the prior round's findings — see §10
+> for the full five-round record. Round 5 confirmed the v5 middleware mechanism itself sound (it does
+> avoid the round-4 identity-equality problem) and confirmed the CORS/resilience/lifespan/handler
+> wiring otherwise matched `main.py`, but found the exception-handler snapshot incomplete — a bare
+> `FastAPI()` app registers 3 default handlers, one of which (`WebSocketRequestValidationError`)
+> `main.py` never overrides, so the real app has 4 exception-handler keys, not the 3 v5 claimed — and
+> flagged that the `repr()` fallback v5 proposed for the middleware comparison is unstable (Starlette's
+> middleware `repr()` embeds a function memory address). v6 (this version) fixes both, with every
+> value in §5.1 point 3 now independently confirmed by importing the real `scripts.api.main.app` and
+> inspecting it directly, not assumed — see §10's v5 entry.
 
 ---
 
@@ -176,7 +176,7 @@ by itself is not precise enough to file a bounded sub-issue from, and lumping se
 worse. Guessing a finer split without reading what's actually inside those six files would just move
 the same ambiguity to a smaller-looking table.**
 
-### 5.1 Step 0 — Core (revised after the v2, v3, and v4 reviews — see §10)
+### 5.1 Step 0 — Core (revised after the v2 through v5 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No router
 changes** — every router still reads its own module globals directly, exactly as today. This matters
@@ -225,19 +225,29 @@ for what step 0 can and cannot claim:
      `RequestValidationError`, and `Exception`. Step 0 hardcodes this as an **expected snapshot** —
      not a second live app to diff against — and asserts `create_app(production_context())`'s app
      matches it:
-     - Expected CORS entry: class `CORSMiddleware` with those four kwargs.
-     - Expected function-middleware entry: the `resilience_middleware` callable specifically (not
-       just "a middleware exists") — compare by identity/qualname against the imported function, not
-       by `==` on the wrapping `Middleware` object.
-     - Expected exception-handler key set: `{StarletteHTTPException, RequestValidationError,
-       Exception}`, each resolving to the same handler function by identity.
+     Every field below was independently confirmed by importing the real `scripts.api.main.app` and
+     inspecting `app.user_middleware` / `app.exception_handlers` directly (2026-08-25), not guessed:
+     - Extract each `app.user_middleware` entry's `.cls`, `.args`, `.kwargs` (these are the real
+       `starlette.middleware.Middleware` attribute names, confirmed live — `args` is always `()` for
+       both entries below) and compare against:
+       - `CORSMiddleware` with `kwargs == {"allow_origins": ["*"], "allow_credentials": True,
+         "allow_methods": ["*"], "allow_headers": ["*"]}`.
+       - `BaseHTTPMiddleware` with `kwargs["dispatch"] is resilience_middleware` (the function-based
+         middleware `app.middleware("http")(resilience_middleware)` wraps into this shape — confirmed
+         live; do **not** compare `repr()` as a fallback, since Starlette's middleware `repr()`
+         embeds the function's memory address and is not stable across runs).
+     - Expected exception-handler key set is **four** entries, not three — a bare `FastAPI()` app
+       already registers `starlette.exceptions.HTTPException`, `fastapi.exceptions.
+       RequestValidationError`, and `fastapi.exceptions.WebSocketRequestValidationError` by default;
+       `main.py`'s three `@app.exception_handler(...)` calls override the first two and add
+       `Exception` as a fourth, but never touch `WebSocketRequestValidationError` — it stays FastAPI's
+       default handler. Confirmed live: `app.exception_handlers` has exactly these 4 keys:
+       `StarletteHTTPException` (overridden), `RequestValidationError` (overridden),
+       `WebSocketRequestValidationError` (FastAPI default, untouched), `Exception` (added). An
+       exact-three-key assertion would fail against the real app; the test must assert all four,
+       each resolving to the correct handler function by identity (the first three to `main.py`'s
+       custom handlers, the fourth to FastAPI's own default).
      - Expected lifespan: the same `_lifespan` function passed to `create_app`.
-     - `Middleware.__init__`'s exact field names for extracting `(cls, args, kwargs)` differ across
-       Starlette versions and are not asserted here without checking the installed version; step 0's
-       implementation must confirm the correct accessor (or fall back to comparing each entry's
-       `repr()` against a hardcoded expected `repr()` string, which is stable across the class's
-       public interface even when internal field names are not) — this is the one piece intentionally
-       left to the implementation PR rather than guessed here.
      This sidesteps identity-equality entirely (comparing hardcoded values against real structures,
      not two live objects against each other) and needs no second app construction.
   4. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
@@ -326,12 +336,14 @@ table above — if the inventory contradicts a row here, the inventory wins and 
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. Cross-family design review (codex). **Done four times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
+2. Cross-family design review (codex). **Done five times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
    (4 further findings, incl. a router-count error), v3 REJECT (a doc-consistency bug, a real
    app-wiring proof gap, and several precision nits), v4 REJECT (v4's fixes for §7/router-count/
-   connect_sqlite-count/line-counts all held; the middleware-equality mechanism itself was flawed).
-   v5 (this version) addresses all four rounds (§10).**
-3. One more cross-family design review on this v5 revision before implementation starts. **Next
+   connect_sqlite-count/line-counts all held; the middleware-equality mechanism itself was flawed),
+   v5 REJECT (the fixed mechanism was sound but its exception-handler snapshot was incomplete — 3
+   keys claimed, 4 actual — and its `repr()` fallback was unstable). v6 (this version) addresses all
+   five rounds (§10).**
+3. One more cross-family design review on this v6 revision before implementation starts. **Next
    step.**
 4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
    wrong assumption in this doc before anything else builds on it.
@@ -473,3 +485,26 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      `(cls, args, kwargs)` from a `Middleware` entry are explicitly left to the step-0 implementation
      PR (with a version-tolerant `repr()`-comparison fallback named), rather than guessed here and
      risking a fifth round on a wrong private attribute name.
+
+- **v5 (commit 62ca873), reviewer: codex, verdict: REJECT.** Confirmed the fixed mechanism itself
+  sound — "distinct, same-valued `Middleware` wrappers compare unequal, while comparing their
+  extracted class/kwargs and the dispatch callable directly works" — and confirmed the
+  CORS/resilience/lifespan/handler wiring otherwise matched `main.py`. Two findings:
+  1. **Blocking: the exception-handler snapshot was incomplete.** v5 claimed exactly 3 keys
+     (`StarletteHTTPException`, `RequestValidationError`, `Exception`). The real app has 4: a bare
+     `FastAPI()` already registers `WebSocketRequestValidationError` as a default handler, and
+     `main.py` never overrides it — an exact-3-key assertion would fail against the real app; a
+     subset assertion wouldn't verify complete wiring. **Fixed:** independently re-confirmed by
+     importing `scripts.api.main.app` directly and inspecting `app.exception_handlers` (4 keys,
+     exactly as the reviewer described); §5.1 point 3 now specifies all 4 explicitly, with the origin
+     of each (3 from `main.py`'s custom handlers, 1 from FastAPI's own default).
+  2. **The proposed `repr()` fallback was not stable** — Starlette's middleware `repr()` embeds a
+     function memory address, so it changes across runs/processes and can't be hardcoded as an
+     expected value. **Fixed:** the fallback is dropped. Independently confirmed live (importing the
+     real app and inspecting `app.user_middleware`) that `entry.cls` / `entry.args` / `entry.kwargs`
+     are the real, correct Starlette attribute names — §5.1 point 3 now specifies these directly with
+     no hedge, since they are now verified rather than assumed.
+  - Also noted: `git diff --check` passed; full app import was unavailable in that sandbox (no usable
+    temp directory, an environment limitation), but isolated FastAPI/Starlette probes completed —
+    this session's own follow-up verification used the real `scripts.api.main.app` import directly and
+    got the same 4-key, 2-middleware-entry result the reviewer described from its isolated probes.
