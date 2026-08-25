@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from scripts.api.monitor_context import MonitorContext, production_context
+from scripts.api import main as api_main
+from scripts.api.monitor_context import (
+    MonitorContext,
+    fixture_context,
+    production_context,
+)
 from scripts.api.session_streams_router import router
 
 
@@ -102,3 +108,41 @@ def test_session_streams_repo_root_uses_live_primary_under_release(
     assert health["repo"] == {"role": "live", "sha": None}
     assert health["store"]["reachable"] is True
     assert health["store"]["schema_versions"]
+
+
+def test_session_streams_missing_db_returns_404(tmp_path: Path) -> None:
+    """When the SQLite DB does not exist, status/digest/drift return 404 cleanly."""
+    ctx = fixture_context(tmp_path)
+    client = _client(ctx)
+
+    s = client.get("/api/session-streams/v1/status/epic:4707")
+    assert s.status_code == 404
+    assert "session-stream database is unavailable" in s.json()["detail"]
+
+    d = client.get("/api/session-streams/v1/digest/epic:4707")
+    assert d.status_code == 404
+    assert "session-stream database is unavailable" in d.json()["detail"]
+
+    drift = client.get("/api/session-streams/v1/drift")
+    assert drift.status_code == 404
+    assert "session-stream database is unavailable" in drift.json()["detail"]
+
+    # Full app factory regression probe (mirrors reviewer live probe)
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    app = api_main.create_app(ctx, lifespan=no_lifespan)
+    with TestClient(app) as factory_client:
+        s = factory_client.get("/api/session-streams/v1/status/epic:4707")
+        assert s.status_code == 404
+        assert "session-stream database is unavailable" in s.json()["detail"]
+
+        d = factory_client.get("/api/session-streams/v1/digest/epic:4707")
+        assert d.status_code == 404
+        assert "session-stream database is unavailable" in d.json()["detail"]
+
+        drift = factory_client.get("/api/session-streams/v1/drift")
+        assert drift.status_code == 404
+        assert "session-stream database is unavailable" in drift.json()["detail"]
+

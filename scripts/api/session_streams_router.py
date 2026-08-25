@@ -17,7 +17,7 @@ from agents_extensions.shared.session_streams.projection import (
     detect_projection_drift,
     list_projection_receipts,
 )
-from agents_extensions.shared.session_streams.store import NotFoundError
+from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
 
 from .monitor_context import MonitorContext, get_ctx
 from .repository_authority import build_repository_identity
@@ -25,11 +25,25 @@ from .repository_authority import build_repository_identity
 router = APIRouter(tags=["session-streams"])
 
 
+def _store(ctx: MonitorContext) -> SessionStreamStore:
+    db_path = ctx.roots.session_streams_db_path
+    if db_path is None or not db_path.is_file():
+        raise FileNotFoundError("session-stream database is unavailable")
+    store = ctx.stores.session_streams_store
+    if store is None:
+        raise FileNotFoundError("session-stream database is unavailable")
+    return store
+
+
 def _store_health(ctx: MonitorContext) -> dict[str, Any]:
     """Return store reachability and migration versions without its path."""
     connection = None
     try:
-        if ctx.stores.session_streams_database is None:
+        if (
+            ctx.stores.session_streams_database is None
+            or ctx.roots.session_streams_db_path is None
+            or not ctx.roots.session_streams_db_path.is_file()
+        ):
             return {"reachable": False, "schema_versions": []}
         connection = ctx.stores.session_streams_database.connect(read_only=True)
         versions = [
@@ -66,11 +80,8 @@ def session_stream_status(
     """Handoff/lease diagnosis for one stream (read-only; no claim)."""
     if not stream_id.startswith("epic:"):
         raise HTTPException(status_code=400, detail="stream_id must look like epic:N")
-    store = ctx.stores.session_streams_store
-    if store is None:
-        raise HTTPException(status_code=404, detail="session-stream database is unavailable")
     try:
-        status = diagnose_handoff(store, stream_id)
+        status = diagnose_handoff(_store(ctx), stream_id)
     except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - defensive API boundary
@@ -87,11 +98,8 @@ def session_stream_digest(
     """Pinned entries plus last N non-pinned entries (bounded)."""
     if not stream_id.startswith("epic:"):
         raise HTTPException(status_code=400, detail="stream_id must look like epic:N")
-    store = ctx.stores.session_streams_store
-    if store is None:
-        raise HTTPException(status_code=404, detail="session-stream database is unavailable")
     try:
-        digest = store.load_digest(stream_id, limit=limit)
+        digest = _store(ctx).load_digest(stream_id, limit=limit)
     except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover
@@ -147,9 +155,10 @@ def projection_drift(
     to run detect_projection_drift (records receipts; still no stream cutover).
     """
     root = ctx.roots.live_repo_root
-    store = ctx.stores.session_streams_store
-    if store is None:
-        raise HTTPException(status_code=500, detail="session_streams_store unavailable")
+    try:
+        store = _store(ctx)
+    except (NotFoundError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     if dry_run:
         receipts = list_projection_receipts(store, stream_id=stream_id)
         dual = dual_write_status(ctx=ctx)

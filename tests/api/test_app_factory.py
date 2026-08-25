@@ -257,6 +257,16 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         assert first_client.get("/api/rollovers").status_code == 200
         assert second_client.get("/api/rollovers").status_code == 200
 
+    # Third uninitialized instance: missing DB must return 404 for status, digest, and drift
+    third_root = tmp_path / "third"
+    third_ctx = fixture_context(third_root)
+    third_app = api_main.create_app(third_ctx, lifespan=no_lifespan)
+    with TestClient(third_app) as third_client:
+        assert third_client.get("/api/session-streams/v1/status/epic:4707").status_code == 404
+        assert third_client.get("/api/session-streams/v1/digest/epic:4707").status_code == 404
+        assert third_client.get("/api/session-streams/v1/drift").status_code == 404
+
+
 
 def test_db_access_patterns_have_the_step_one_allowlist() -> None:
     assert len(DB_ACCESS_ALLOWLIST) == 20
