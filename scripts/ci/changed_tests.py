@@ -92,12 +92,15 @@ def load_repo_invariant_tests() -> list[str]:
 def select_test_modules(paths: Iterable[str], *, include_repo_invariants: bool = False) -> list[str]:
     """Return direct tests, optionally unioned with triggered repo invariants."""
     changed_paths = list(paths)
-    selected = sorted({path for path in changed_paths if is_test_module(path)})
+    selected = {path for path in changed_paths if is_test_module(path)}
 
-    if include_repo_invariants and any(is_repo_invariant_trigger(path) for path in changed_paths):
-        selected = sorted(set(selected).union(load_repo_invariant_tests()))
+    if include_repo_invariants:
+        if any(is_repo_invariant_trigger(path) for path in changed_paths):
+            selected.update(load_repo_invariant_tests())
+        if any(path.startswith("scripts/api/") for path in changed_paths):
+            selected.add("tests/api/test_release_snapshot.py")
 
-    return selected
+    return sorted(selected)
 
 
 def write_plan(path: str, selected: Sequence[str]) -> None:

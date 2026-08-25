@@ -77,12 +77,33 @@ def test_shell_changes_trigger_repo_invariant_manifest_but_docs_do_not() -> None
 
 def test_monitor_opsec_surface_changes_trigger_repo_invariant_manifest() -> None:
     for path in (
-        "scripts/api/opsec_scan.py",
-        "scripts/api/session_streams_router.py",
         "dashboards/index.html",
         "tests/api/opsec_sweep/registry.py",
     ):
         assert changed_tests.select_test_modules([path], include_repo_invariants=True) == sorted(_manifest())
+
+
+def test_api_script_changes_trigger_repo_invariant_manifest_and_select_release_snapshot() -> None:
+    manifest = _manifest()
+    assert "tests/api/test_release_snapshot.py" not in manifest, (
+        "release snapshot test is exempted from fastlane_always_tests.txt to preserve PR-tier budget"
+    )
+    for path in (
+        "scripts/api/docs_router.py",
+        "scripts/api/release_snapshot.py",
+        "scripts/api/opsec_scan.py",
+        "scripts/api/session_streams_router.py",
+    ):
+        selected = changed_tests.select_test_modules([path], include_repo_invariants=True)
+        assert selected == sorted(set(manifest).union({"tests/api/test_release_snapshot.py"}))
+        assert "tests/api/test_release_snapshot.py" in selected
+
+    deduped = changed_tests.select_test_modules(
+        ["tests/api/test_release_snapshot.py", "scripts/api/docs_router.py"],
+        include_repo_invariants=True,
+    )
+    assert deduped == sorted(set(manifest).union({"tests/api/test_release_snapshot.py"}))
+    assert len(deduped) == len(set(deduped))
 
 
 def test_config_and_fixture_changes_trigger_repo_invariant_manifest() -> None:
