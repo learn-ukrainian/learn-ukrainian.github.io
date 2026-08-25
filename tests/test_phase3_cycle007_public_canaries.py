@@ -82,3 +82,26 @@ def test_real_invoke_rejects_relative_and_symlink_provider(tmp_path: Path) -> No
     link.symlink_to(target)
     with pytest.raises(runner.CanaryError, match="invalid_executable"):
         runner.invoke_canary("gemini", link, execution_mode="real")
+
+
+def test_canary_accepts_one_strict_response_json_and_rejects_ambiguity() -> None:
+    runner = _load_runner()
+    payload = {"labels_by_position": {"p01": {}, "p02": {}}, "liveness_challenge": "challenge"}
+
+    decoded, transport = runner._strict_result_payload({"response": json.dumps(payload)})
+    assert decoded == payload
+    assert transport == "response_json"
+
+    with pytest.raises(runner.CanaryStructuralError, match="structured_output_missing"):
+        runner._strict_result_payload({"response": [json.dumps(payload), json.dumps(payload)]})
+
+
+def test_batch_runner_accepts_one_fenced_response_json() -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    payload = {"labels_by_position": {"p01": {}, "p02": {}}}
+
+    assert runner._strict_result_payload({"response": f"```json\n{json.dumps(payload)}\n```"}) == payload

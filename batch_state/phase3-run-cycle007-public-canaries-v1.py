@@ -543,21 +543,71 @@ def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
         raise CanaryStructuralError("result_envelope_drift")
     if result.get("status") != "SUCCESS":
         raise CanaryStructuralError(_agy_static_failure_code(result))
-    if "structured_output" not in result:
+    if "structured_output" not in result and "response" not in result:
         raise CanaryStructuralError("structured_output_missing")
     return init, result
 
 
+def _strict_result_payload(result: Mapping[str, Any]) -> tuple[dict[str, Any], str]:
+    """Decode one exact label object from AGY's schema or response field.
+
+    AGY 1.1.20 can return a successful, schema-guided turn in ``response``
+    without copying the validated JSON into ``structured_output``.  Accept
+    only one standalone JSON object (or one standalone fenced JSON object),
+    then leave all identity and semantic enforcement to the existing closed
+    validators below.
+    """
+    if "structured_output" in result:
+        output = result["structured_output"]
+        if isinstance(output, str):
+            try:
+                output = json.loads(output, object_pairs_hook=_pairs)
+            except (json.JSONDecodeError, CanaryError) as exc:
+                raise CanaryStructuralError("label_json_invalid") from exc
+        if not isinstance(output, dict):
+            raise CanaryStructuralError("structured_output_type_drift")
+        return output, "structured_output"
+
+    candidates: list[dict[str, Any]] = []
+
+    def inspect(value: Any, *, depth: int = 0) -> None:
+        if depth > 4:
+            return
+        if isinstance(value, str):
+            text = value.strip()
+            fence = "`" * 3
+            if text.startswith(fence) and text.endswith(fence):
+                text = text[len(fence) : -len(fence)].strip()
+                if text.startswith("json"):
+                    text = text[4:].lstrip()
+            try:
+                decoded = json.loads(text, object_pairs_hook=_pairs)
+            except (json.JSONDecodeError, CanaryError):
+                return
+            if isinstance(decoded, dict) and "labels_by_position" in decoded:
+                candidates.append(decoded)
+            return
+        if isinstance(value, list):
+            for item in value:
+                inspect(item, depth=depth + 1)
+            return
+        if isinstance(value, dict):
+            if "labels_by_position" in value:
+                candidates.append(value)
+                return
+            for key in ("content", "message", "parts", "response", "text"):
+                if key in value:
+                    inspect(value[key], depth=depth + 1)
+
+    inspect(result.get("response"))
+    if len(candidates) != 1:
+        raise CanaryStructuralError("structured_output_missing")
+    return candidates[0], "response_json"
+
+
 def _extract_gemini(raw: bytes, challenge: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     init, result = _agy_stream(raw)
-    output = result["structured_output"]
-    if isinstance(output, str):
-        try:
-            output = json.loads(output, object_pairs_hook=_pairs)
-        except (json.JSONDecodeError, CanaryError) as exc:
-            raise CanaryStructuralError("label_json_invalid") from exc
-    if not isinstance(output, dict):
-        raise CanaryStructuralError("structured_output_type_drift")
+    output, _transport = _strict_result_payload(result)
     if set(output) != {"labels_by_position", "liveness_challenge"}:
         raise CanaryStructuralError("structured_output_keys_drift")
     if output.get("liveness_challenge") != challenge:
@@ -1049,6 +1099,9 @@ def invoke_canary(
                     provenance = {
                         "init_model": init_ev["init"]["model"],
                         "result_status": res_ev.get("status", "SUCCESS"),
+                        "result_transport": (
+                            "structured_output" if "structured_output" in res_ev else "response_json"
+                        ),
                         "init_conversation_id": init_ev.get("conversation_id"),
                         "result_conversation_id": res_ev.get("conversation_id"),
                         "challenge_sha256": digest(challenge.encode("utf-8")),

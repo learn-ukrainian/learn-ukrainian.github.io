@@ -18,6 +18,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -591,22 +592,68 @@ def _agy_stream(raw: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
     config, result = init.get("init"), result_event.get("result")
     if not isinstance(config, dict) or config.get("model") != MODEL:
         raise Error("structured_output_envelope_drift", structural=True)
-    if not isinstance(result, dict) or result.get("status") != "SUCCESS" or "structured_output" not in result:
+    if (
+        not isinstance(result, dict)
+        or result.get("status") != "SUCCESS"
+        or ("structured_output" not in result and "response" not in result)
+    ):
         raise Error("structured_output_envelope_drift", structural=True)
     return init, result
 
 
+def _strict_result_payload(result: Mapping[str, Any]) -> dict[str, Any]:
+    """Decode exactly one label object from AGY's schema or response field."""
+    if "structured_output" in result:
+        output = result["structured_output"]
+        if isinstance(output, str):
+            try:
+                output = json.loads(output, object_pairs_hook=_pairs)
+            except (json.JSONDecodeError, Error) as exc:
+                raise Error("label_json_invalid", structural=True) from exc
+        if not isinstance(output, dict):
+            raise Error("structured_output_envelope_drift", structural=True)
+        return output
+
+    candidates: list[dict[str, Any]] = []
+
+    def inspect(value: Any, *, depth: int = 0) -> None:
+        if depth > 4:
+            return
+        if isinstance(value, str):
+            text = value.strip()
+            fence = "`" * 3
+            if text.startswith(fence) and text.endswith(fence):
+                text = text[len(fence) : -len(fence)].strip()
+                if text.startswith("json"):
+                    text = text[4:].lstrip()
+            try:
+                decoded = json.loads(text, object_pairs_hook=_pairs)
+            except (json.JSONDecodeError, Error):
+                return
+            if isinstance(decoded, dict) and "labels_by_position" in decoded:
+                candidates.append(decoded)
+            return
+        if isinstance(value, list):
+            for item in value:
+                inspect(item, depth=depth + 1)
+            return
+        if isinstance(value, dict):
+            if "labels_by_position" in value:
+                candidates.append(value)
+                return
+            for key in ("content", "message", "parts", "response", "text"):
+                if key in value:
+                    inspect(value[key], depth=depth + 1)
+
+    inspect(result.get("response"))
+    if len(candidates) != 1:
+        raise Error("structured_output_envelope_drift", structural=True)
+    return candidates[0]
+
+
 def _extract(raw: bytes) -> dict[str, Any]:
     _, result = _agy_stream(raw)
-    output = result["structured_output"]
-    if isinstance(output, str):
-        try:
-            output = json.loads(output, object_pairs_hook=_pairs)
-        except (json.JSONDecodeError, Error) as exc:
-            raise Error("label_json_invalid", structural=True) from exc
-    if not isinstance(output, dict):
-        raise Error("structured_output_envelope_drift", structural=True)
-    return output
+    return _strict_result_payload(result)
 
 
 def _semantic_failure(exc: Exception) -> Error:
