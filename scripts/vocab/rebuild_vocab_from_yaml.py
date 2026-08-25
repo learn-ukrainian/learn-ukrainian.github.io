@@ -22,6 +22,9 @@ from pathlib import Path
 
 import yaml
 
+_VOCAB_INIT_TIMEOUT_SECONDS = 300
+_TIMEOUT_RETURN_CODE = 124
+
 # Configuration
 CURRICULUM_DIR = Path("curriculum/l2-uk-en")
 DB_PATH = CURRICULUM_DIR / "vocabulary.db"
@@ -144,9 +147,21 @@ def populate_database(levels: list[str], force: bool = False):
     # Initialize fresh database
     print(f"🆕 Initializing database: {DB_PATH}")
     import subprocess
-    result = subprocess.run([
-        '.venv/bin/python', 'scripts/vocab_init.py', 'l2-uk-en', '--force'
-    ], capture_output=True, text=True)
+    command = ['.venv/bin/python', 'scripts/vocab_init.py', 'l2-uk-en', '--force']
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=_VOCAB_INIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        result = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=exc.stdout or "",
+            stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s",
+        )
 
     if result.returncode != 0:
         print("❌ Failed to initialize database")

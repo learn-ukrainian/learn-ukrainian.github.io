@@ -20,6 +20,8 @@ YELLOW = "\033[93m"
 DIM = "\033[2m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
+_AUDIT_TIMEOUT_SECONDS = 300
+_TIMEOUT_RETURN_CODE = 124
 
 
 def load_curriculum():
@@ -64,9 +66,16 @@ def run_audit(content_path, skip_activities, project_root):
         cmd.append("--skip-activities")
     cmd.append(str(content_path))
 
-    result = subprocess.run(
-        cmd, capture_output=True, text=True, cwd=str(project_root),
-    )
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd=str(project_root),
+            timeout=_AUDIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return _TIMEOUT_RETURN_CODE, f"Audit timed out after {_AUDIT_TIMEOUT_SECONDS}s"
     return result.returncode, result.stdout
 
 
