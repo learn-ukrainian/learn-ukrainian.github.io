@@ -25,6 +25,8 @@ DEFAULT_REQUESTS = ROOT / "data/projects/ua_eval_harness/baselines/v1/generation
 DEFAULT_PROMPT = ROOT / "data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt"
 DEFAULT_SCHEMA = ROOT / "data/projects/ua_eval_harness/model_output_schema_v1.json"
 RUNNER_VERSION = "ua_eval_codex_cli_batch_runner.v1"
+_CLI_VERSION_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
 
 
 class RunnerError(ValueError):
@@ -93,13 +95,29 @@ def _load_source_only_requests(path: Path) -> tuple[dict[str, Any], list[dict[st
     return header, requests
 
 
+def _timeout_text(value: str | bytes | None) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
 def _cli_version(codex_bin: str) -> str:
-    result = subprocess.run(
-        [codex_bin, "--version"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    command = [codex_bin, "--version"]
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_CLI_VERSION_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        result = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=_timeout_text(exc.stdout),
+            stderr=_timeout_text(exc.stderr) or f"TimeoutExpired after {_CLI_VERSION_TIMEOUT_SECONDS}s",
+        )
     if result.returncode:
         raise RunnerError(f"cannot resolve Codex CLI version: {result.stderr.strip()}")
     return result.stdout.strip()

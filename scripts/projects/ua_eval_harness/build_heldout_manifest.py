@@ -26,6 +26,8 @@ DEFAULT_CONFIG = ROOT / "data/projects/ua_eval_harness/heldout_manifest_config.j
 DEFAULT_OUTPUT = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 DEFAULT_UA_GEC_ROOT = ROOT / "data/ua-gec"
 SCHEMA_VERSION = "ua_gec_heldout_manifest.v1"
+_GIT_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
 ITEM_FIELDS = [
     "id",
     "doc_id",
@@ -100,13 +102,29 @@ def _mapping(value: Any, label: str) -> Mapping[str, Any]:
     return value
 
 
+def _timeout_text(value: str | bytes | None) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
 def _git_head(repo: Path) -> str:
-    result = subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    command = ["git", "-C", str(repo), "rev-parse", "HEAD"]
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        result = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=_timeout_text(exc.stdout),
+            stderr=_timeout_text(exc.stderr) or f"TimeoutExpired after {_GIT_TIMEOUT_SECONDS}s",
+        )
     if result.returncode:
         raise ManifestError(f"UA-GEC root is not a readable Git checkout: {repo}")
     return result.stdout.strip()
