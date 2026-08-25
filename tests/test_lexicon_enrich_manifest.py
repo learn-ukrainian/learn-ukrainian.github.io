@@ -2,6 +2,7 @@ import json
 import sqlite3
 import typing
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 
 import pytest
@@ -91,6 +92,7 @@ from scripts.lexicon.source_attribution import (
     ORTHOEPY_LABEL,
     ORTHOGRAPHY_LABEL,
     PROVERBS_LABEL,
+    WIKIDATA_LABEL,
     join_academic_source_labels,
 )
 
@@ -3030,7 +3032,7 @@ def test_translation_uses_goroh_after_source_misses(monkeypatch) -> None:
     assert translation["source"] == "Горох (переклад)"
 
 
-def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(monkeypatch) -> None:
+def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u_wikidata(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
@@ -3043,6 +3045,7 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
 
     goroh_calls: list[str] = []
     e2u_calls: list[str] = []
+    wikidata_calls: list[str] = []
 
     def mock_goroh(lemma: str) -> list[str]:
         goroh_calls.append(lemma)
@@ -3052,8 +3055,21 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
         e2u_calls.append(lemma)
         return [{"headword": "базиліка", "translation": "arch. basilica"}]
 
+    def mock_wikidata(lemma: str) -> list[dict[str, Any]]:
+        wikidata_calls.append(lemma)
+        return [
+            {
+                "id": "Q163687",
+                "labels": {"uk": {"value": "базиліка"}, "en": {"value": "basilica"}},
+                "descriptions": {"uk": {"value": "тип споруди"}, "en": {"value": "type of building"}},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Базиліка"}},
+            }
+        ]
+
     monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", mock_goroh)
     monkeypatch.setattr(enrich_manifest_module, "query_e2u_uk_en", mock_e2u)
+    monkeypatch.setattr(enrich_manifest_module, "query_wikidata_uk_en", mock_wikidata)
 
     # 1. dmklinger wins over everything
     conn.execute(
@@ -3066,6 +3082,7 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
     assert res_dmklinger["source"] == enrich_manifest_module._TRANSLATION_SOURCE
     assert not goroh_calls
     assert not e2u_calls
+    assert not wikidata_calls
 
     # 2. Kaikki wins when dmklinger misses
     conn.execute("DELETE FROM dmklinger_uk_en")
@@ -3075,6 +3092,7 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
     assert res_kaikki["source"] == KAIKKI_SOURCE
     assert not goroh_calls
     assert not e2u_calls
+    assert not wikidata_calls
 
     # 3. Balla reverse wins when dmklinger and Kaikki miss
     res_balla = _translation(conn, "базиліка", {}, entry_pos="noun", gloss_hints={"basilica"})
@@ -3082,6 +3100,7 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
     assert res_balla["source"] == _BALLA_REVERSE_SOURCE
     assert not goroh_calls
     assert not e2u_calls
+    assert not wikidata_calls
 
     # 4. Slovnyk ukreng wins when Balla reverse misses
     slovnyk_cache = {
@@ -3098,8 +3117,9 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
     assert res_slovnyk["source"] == _SLOVNYK_UKRENG_SOURCE
     assert not goroh_calls
     assert not e2u_calls
+    assert not wikidata_calls
 
-    # 5. Goroh wins when all previous miss (e2u is not called)
+    # 5. Goroh wins when all previous miss (e2u and wikidata not called)
     empty_cache = {"lookups": {"ukreng": None}}
     res_goroh = _translation(conn, "базиліка", {}, slovnyk_cache=empty_cache)
     assert res_goroh is not None
@@ -3107,8 +3127,9 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
     assert res_goroh["en"] == ["basilica", "basilicas"]
     assert goroh_calls == ["базиліка"]
     assert not e2u_calls
+    assert not wikidata_calls
 
-    # 6. e2u wins when Goroh misses
+    # 6. e2u wins when Goroh misses (wikidata not called)
     monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
     res_e2u = _translation(conn, "базиліка", {}, slovnyk_cache=empty_cache)
     assert res_e2u is not None
@@ -3117,6 +3138,16 @@ def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u(m
     assert "source_url" in res_e2u
     assert "e2u.org.ua" in res_e2u["source_url"]
     assert e2u_calls == ["базиліка"]
+    assert not wikidata_calls
+
+    # 7. Wikidata wins when e2u misses
+    monkeypatch.setattr(enrich_manifest_module, "query_e2u_uk_en", lambda lemma: [])
+    res_wikidata = _translation(conn, "базиліка", {}, slovnyk_cache=empty_cache)
+    assert res_wikidata is not None
+    assert res_wikidata["source"] == WIKIDATA_LABEL
+    assert res_wikidata["en"] == ["basilica"]
+    assert res_wikidata["source_url"] == "https://www.wikidata.org/wiki/Q163687"
+    assert wikidata_calls == ["базиліка"]
 
 
 def test_goroh_translation_filters_non_english_and_caps_at_6(monkeypatch) -> None:
@@ -5452,4 +5483,349 @@ def test_morphology_filters_russian_infinitive_tsya_form(monkeypatch) -> None:
     marked_forms = morphology.get("marked_forms", [])
     marked_form_words = {row["form"] for row in marked_forms}
     assert "подаваться" not in marked_form_words
+
+
+def test_wikidata_translation_heldout_table(monkeypatch) -> None:
+    """Validate all held-out lemmas from the Wikidata translation spec (#4387)."""
+    mock_data: dict[str, list[dict[str, Any]]] = {
+        "школа": [
+            {
+                "id": "Q3914",
+                "labels": {"uk": {"value": "школа"}, "en": {"value": "school"}},
+                "descriptions": {
+                    "uk": {"value": "заклад освіти"},
+                    "en": {"value": "institution for the education of students by teachers"},
+                },
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q122754124"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Школа"}},
+            },
+            {
+                "id": "Q48041007",
+                "labels": {"uk": {"value": "Школа"}, "en": {"value": "School"}},
+                "descriptions": {
+                    "uk": {"value": "український телесеріал"},
+                    "en": {"value": "Ukrainian drama television series"},
+                },
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q5398426"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Школа (телесеріал, 2018)"}},
+            },
+            {
+                "id": "Q269770",
+                "labels": {"uk": {"value": "школа-інтернат"}, "en": {"value": "boarding school"}},
+                "descriptions": {"uk": {"value": "школа-інтернат"}, "en": {"value": "boarding school"}},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Школа-інтернат"}},
+            },
+            {
+                "id": "Q18280338",
+                "labels": {"uk": {"value": "Школа"}, "en": {"value": "The School"}},
+                "descriptions": {
+                    "uk": {"value": "повість Аркадія Гайдара"},
+                    "en": {"value": "novella by Arkady Gaidar"},
+                },
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q7725634"}}}}]},
+                "sitelinks": {},
+            },
+            {
+                "id": "Q273593",
+                "labels": {"uk": {"value": "Національна вища школа красних мистецтв"}, "en": {"value": "Beaux-Arts de Paris"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {},
+            },
+        ],
+        "ампір": [
+            {
+                "id": "Q191105",
+                "labels": {"uk": {"value": "ампір"}, "en": {"value": "Empire style"}},
+                "descriptions": {
+                    "uk": {"value": "архітектурний стиль"},
+                    "en": {"value": "19th-century art movement and style of architecture and interior design"},
+                },
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q32880"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Ампір"}},
+            },
+            {
+                "id": "Q97159881",
+                "labels": {"uk": {"value": "Ампір"}, "en": {"value": "Cinema Theatre Ampir"}},
+                "descriptions": {},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q96083918"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Ампір (кінотеатр)"}},
+            },
+            {
+                "id": "Q3796845",
+                "labels": {"uk": {"value": "Ампір (фільм)"}, "en": {"value": "Empire"}},
+                "descriptions": {"uk": {"value": "фільм 1986 року"}, "en": {"value": "1986 film by Alexander Sokurov"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q11424"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Ампір (фільм)"}},
+            },
+            {
+                "id": "Q51449846",
+                "labels": {"en": {"value": "Empire V"}},
+                "descriptions": {"en": {"value": "2021 film directed by Victor Ginzburg"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q11424"}}}}]},
+                "sitelinks": {},
+            },
+            {
+                "id": "Q4064507",
+                "labels": {"uk": {"value": "Ампір (значення)"}},
+                "descriptions": {
+                    "uk": {"value": "сторінка значень у проєкті Вікімедіа"},
+                    "en": {"value": "Wikimedia disambiguation page"},
+                },
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q4167410"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Ампір (значення)"}},
+            },
+        ],
+        "аптечний": [
+            {
+                "id": "Q620576",
+                "labels": {"uk": {"value": "Аптечний сцинк"}, "en": {"value": "Scincus scincus"}},
+                "descriptions": {"uk": {"value": "вид плазунів"}, "en": {"value": "species of reptile"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q16521"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Аптечний сцинк"}},
+            },
+            {
+                "id": "Q1261193",
+                "labels": {"uk": {"value": "Аптечний ковбой (фільм)"}, "en": {"value": "Drugstore Cowboy"}},
+                "descriptions": {"uk": {"value": "фільм 1989 року"}, "en": {"value": "1989 film by Gus Van Sant"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q11424"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Аптечний ковбой (фільм)"}},
+            },
+            {
+                "id": "Q1780285",
+                "labels": {"uk": {"value": "Аптечний робот"}, "en": {"value": "pharmacy robot"}},
+                "descriptions": {"en": {"value": "order picking machine to be used in pharmacies"}},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Аптечний робот"}},
+            },
+            {
+                "id": "Q131982795",
+                "labels": {"uk": {"value": "Аптечний провулок"}},
+                "descriptions": {"en": {"value": "street in Donetsk"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q79007"}}}}]},
+                "sitelinks": {},
+            },
+        ],
+        "берегиня": [
+            {
+                "id": "Q2622635",
+                "labels": {"uk": {"value": "Берегиня"}, "en": {"value": "Berehynia"}},
+                "descriptions": {"uk": {"value": "істота слов'янської міфології"}, "en": {"value": "Slavic water spirit"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q55138169"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Берегиня"}},
+            },
+            {
+                "id": "Q4039798",
+                "labels": {"uk": {"value": "Берегиня"}, "en": {"value": "Berehynia"}},
+                "descriptions": {"uk": {"value": "зоря в сузір'ї Персея"}, "en": {"value": "G-type main-sequence star in Perseus"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q523"}}}}, {"mainsnak": {"datavalue": {"value": {"id": "Q67206785"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Берегиня (зоря)"}},
+            },
+            {
+                "id": "Q12110232",
+                "labels": {"uk": {"value": "Київський академічний театр українського фольклору «Берегиня»"}, "en": {"value": "Kyiv Academic Theatre of Ukrainian Folklore"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Київський академічний театр українського фольклору «Берегиня»"}},
+            },
+            {
+                "id": "Q18600282",
+                "labels": {"uk": {"value": "Берегиня"}, "en": {"value": '"Bereginya" craft centre'}},
+                "descriptions": {"uk": {"value": "центр народних ремесел"}, "en": {"value": "in Russia"}},
+                "claims": {},
+                "sitelinks": {},
+            },
+            {
+                "id": "Q16692570",
+                "labels": {"uk": {"value": "Берегиня"}},
+                "descriptions": {"uk": {"value": "Чернігівська взуттєва фабрика"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q4830453"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Берегиня (фабрика)"}},
+            },
+        ],
+        "індус": [
+            {
+                "id": "Q10090",
+                "labels": {"uk": {"value": "індус"}, "en": {"value": "Hindu"}},
+                "descriptions": {"uk": {"value": "послідовник індуїзму"}, "en": {"value": "adherents of Hinduism"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q41710"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Індус"}},
+            },
+            {
+                "id": "Q8148",
+                "labels": {"uk": {"value": "Інд"}, "en": {"value": "Indus River"}},
+                "descriptions": {"uk": {"value": "річка в Азії"}, "en": {"value": "river in Asia"}},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Інд"}},
+            },
+            {
+                "id": "Q932586",
+                "labels": {"uk": {"value": "Індіанець"}, "en": {"value": "Indus"}},
+                "descriptions": {"uk": {"value": "сузір'я"}, "en": {"value": "constellation in the southern celestial hemisphere"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q8928"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Індіанець (сузір'я)"}},
+            },
+        ],
+        "безмежжя": [],
+        "істотно": [],
+    }
+
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: mock_data.get(lemma, []),
+    )
+
+    # 1. школа -> school (exact UK-label match, TV series & novella noise filtered)
+    res_shkola = enrich_manifest_module._wikidata_translation("школа")
+    assert res_shkola is not None
+    assert res_shkola["en"] == ["school"]
+    assert res_shkola["source"] == WIKIDATA_LABEL
+    assert res_shkola["source_url"] == "https://www.wikidata.org/wiki/Q3914"
+
+    # 2. ампір -> Empire style
+    res_ampir = enrich_manifest_module._wikidata_translation("ампір")
+    assert res_ampir is not None
+    assert res_ampir["en"] == ["Empire style"]
+    assert res_ampir["source"] == WIKIDATA_LABEL
+    assert res_ampir["source_url"] == "https://www.wikidata.org/wiki/Q191105"
+
+    # 3. аптечний -> None (all hits fail UK-label / sitelink exact match)
+    assert enrich_manifest_module._wikidata_translation("аптечний") is None
+
+    # 4. берегиня -> None (Berehynia is transliteration, star/theatre/craft centre filtered)
+    assert enrich_manifest_module._wikidata_translation("берегиня") is None
+
+    # 5. індус -> Hindu (Indus river/constellation filtered)
+    res_indus = enrich_manifest_module._wikidata_translation("індус")
+    assert res_indus is not None
+    assert res_indus["en"] == ["Hindu"]
+    assert res_indus["source"] == WIKIDATA_LABEL
+    assert res_indus["source_url"] == "https://www.wikidata.org/wiki/Q10090"
+
+    # 6. безмежжя -> None (empty search)
+    assert enrich_manifest_module._wikidata_translation("безмежжя") is None
+
+    # 7. істотно -> None (empty search)
+    assert enrich_manifest_module._wikidata_translation("істотно") is None
+
+
+def test_wikidata_translation_ambiguous_returns_none(monkeypatch) -> None:
+    """When Wikidata yields 2+ distinct English labels for a variant, return None."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q1",
+                "labels": {"uk": {"value": "термін"}, "en": {"value": "term"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Термін"}},
+            },
+            {
+                "id": "Q2",
+                "labels": {"uk": {"value": "термін"}, "en": {"value": "deadline"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Термін"}},
+            },
+        ],
+    )
+    assert enrich_manifest_module._wikidata_translation("термін") is None
+
+
+def test_wikidata_translation_binomial_rejected(monkeypatch) -> None:
+    """Scientific binomials and taxon items are rejected."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q100",
+                "labels": {"uk": {"value": "лисиця"}, "en": {"value": "Vulpes vulpes"}},
+                "descriptions": {"uk": {"value": "вид ссавців"}, "en": {"value": "species of mammal"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q16521"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Лисиця"}},
+            }
+        ],
+    )
+    assert enrich_manifest_module._wikidata_translation("лисиця") is None
+
+
+def test_wikidata_translation_transliteration_rejected(monkeypatch) -> None:
+    """Transliterations of the Ukrainian lemma are rejected."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q200",
+                "labels": {"uk": {"value": "кобзар"}, "en": {"value": "Kobzar"}},
+                "descriptions": {"uk": {"value": "виконавець"}, "en": {"value": "bard"}},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Кобзар"}},
+            }
+        ],
+    )
+    assert enrich_manifest_module._wikidata_translation("кобзар") is None
+
+
+def test_wikidata_translation_noise_entity_rejected(monkeypatch) -> None:
+    """Film, television, song, and star items are rejected."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q300",
+                "labels": {"uk": {"value": "тіні"}, "en": {"value": "Shadows"}},
+                "descriptions": {"uk": {"value": "фільм"}, "en": {"value": "1959 film"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q11424"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Тіні (фільм)"}},
+            }
+        ],
+    )
+    assert enrich_manifest_module._wikidata_translation("тіні") is None
+
+
+def test_wikidata_translation_sitelink_match_kept(monkeypatch) -> None:
+    """An item where ukwiki title equals variant (even if labels.uk differs) is matched."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q400",
+                "labels": {"en": {"value": "sculpture"}},
+                "descriptions": {"en": {"value": "branch of visual arts"}},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Скульптура"}},
+            }
+        ],
+    )
+    res = enrich_manifest_module._wikidata_translation("скульптура")
+    assert res is not None
+    assert res["en"] == ["sculpture"]
+    assert res["source"] == WIKIDATA_LABEL
+    assert res["source_url"] == "https://www.wikidata.org/wiki/Q400"
+
+
+def test_wikidata_translation_offline_mode(monkeypatch) -> None:
+    """When offline mode is active, query_wikidata_uk_en returns empty list without calling network."""
+    called = False
+
+    def fake_search(query: str, **kwargs) -> list[dict[str, Any]]:
+        nonlocal called
+        called = True
+        return [{"id": "Q999"}]
+
+    monkeypatch.setattr("scripts.rag.source_query.wikidata_search_entities", fake_search)
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
+    enrich_manifest_module.query_wikidata_uk_en.cache_clear()
+    res = enrich_manifest_module.query_wikidata_uk_en("тест_offline_unique")
+    assert res == []
+    assert not called
+
 

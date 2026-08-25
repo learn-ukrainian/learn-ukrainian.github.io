@@ -13,6 +13,7 @@ from scripts.lexicon.source_attribution import (
     MIYKLAS_LABEL,
     PHRASEOLOGY_LABEL,
     SUM20_ACADEMIC_LABEL,
+    WIKIDATA_LABEL,
     apply_entry_attribution,
     join_academic_source_labels,
     learner_facing_mirror_violations,
@@ -254,3 +255,33 @@ def test_normalize_academic_label_maps_e2u() -> None:
     assert normalize_academic_label("e2u: Переклад") == E2U_LABEL
     assert normalize_academic_label("e2u (переклад)") == E2U_LABEL
     assert normalize_academic_label(E2U_LABEL) == E2U_LABEL
+
+
+def test_apply_entry_attribution_handles_wikidata_translation() -> None:
+    entry = {
+        "lemma": "школа",
+        "enrichment": {
+            "translation": {
+                "en": ["school"],
+                "source": "Wikidata",
+                "source_url": "https://www.wikidata.org/wiki/Q3914",
+            },
+            "sources": ["Wikidata"],
+        },
+    }
+    assert apply_entry_attribution(entry) is False
+    assert entry["enrichment"]["translation"]["source"] == WIKIDATA_LABEL
+    assert (
+        entry["enrichment"]["translation"]["source_url"]
+        == "https://www.wikidata.org/wiki/Q3914"
+    )
+    assert entry["enrichment"]["sources"] == [WIKIDATA_LABEL]
+    assert learner_facing_mirror_violations(entry) == []
+    assert learner_facing_unmapped_source_violations(entry) == []
+
+
+def test_normalize_academic_label_maps_wikidata() -> None:
+    assert normalize_academic_label("wikidata") == WIKIDATA_LABEL
+    assert normalize_academic_label("Wikidata") == WIKIDATA_LABEL
+    assert normalize_academic_label("wikidata.org") == WIKIDATA_LABEL
+    assert normalize_academic_label(WIKIDATA_LABEL) == WIKIDATA_LABEL

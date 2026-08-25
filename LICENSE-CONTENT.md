@@ -115,7 +115,7 @@ Wikipedia is NEVER cited as the primary source for historical dates, names, or e
 - **ukrainianlessons.com** (Ukrainian Lessons Podcast, Anna Ohoiko) — **commercial, all rights reserved.** We may reference their free blog articles as external resources (link out only) but NEVER copy content from the paid ULP membership. The relationship is understood by the ULP author; see `docs/resources/external_resources.yaml` for the referenced URL set.
 - **Реальна Історія (Akím Galímov), imtgsh, Istoria-Movy, Speak Ukrainian, Red Purple Ukrainian** — YouTube channels with free-to-view content. Subtitle transcripts are used internally for wiki compilation as context, not republished. Links to the original videos appear in module Ресурси tabs for learners.
 - **Dobra Forma (opentext.ku.edu)** — Creative Commons licensed by the University of Kansas. We reference the URLs; derivative teaching material is separately attributed.
-- **Горох (goroh.pp.ua), e2u (e2u.org.ua), VESUM** — linguistic dictionaries, freely available for educational use. Never redistributed in bulk; used only as query services.
+- **Горох (goroh.pp.ua), e2u (e2u.org.ua), Wikidata (wikidata.org), VESUM** — linguistic dictionaries and structured knowledge bases, freely available for educational use. Never redistributed in bulk; used only as query services.
 
 ### Dictionaries
 
@@ -138,6 +138,7 @@ The following dictionaries are ingested as SQLite FTS5 indices for internal ling
 | **Ukrajinet WordNet** | 122K synsets; auto-translated from Open English WordNet per upstream README. ⚠️ Quality concern documented (#1657 Tier 3 audit). | Synonym lookup (with caveats) |
 | **English Wiktionary via Kaikki.org / wiktextract** | English Wiktionary extract, **CC BY-SA 3.0**. Preprocessed from the local Kaikki Ukrainian JSONL extract into a compact per-lemma lookup; Atlas pages that use it render the attribution line "Pronunciation / etymology from English Wiktionary, CC BY-SA 3.0." | IPA pronunciation and final-fallback etymology |
 | **e2u.org.ua** | Aggregator © r2u.org.ua (compilers Rysin, Starko et al.; constituent works: Гороть 2011/2016, Андрусишин–Крет 1955, scientific UK↔EN, …). Non-commercial educational use. | Per-query UK→EN lookup + short learner gloss + attribution. No bulk dump, no GitHub ingest. |
+| **Wikidata** | CC0 (Wikimedia Foundation) | Per-query UK→EN lookup for Word Atlas translation fallback. No bulk dump, no GitHub ingest. |
 
 ---
 
@@ -165,4 +166,4 @@ For modified derivative works:
 
 Licensing questions go to issues on GitHub or the maintainer directly. The above is a best-effort plain-language summary of the legal position — it is not legal advice. If you need formal permissions or have commercial redistribution questions beyond the standard CC BY-SA 4.0 terms, open an issue and we'll figure it out.
 
-Last updated: 2026-08-24 — added e2u.org.ua (Rysin, Starko et al.) for Word Atlas English translation lookup fallback (#4387). Predecessor: 2026-06-12 — added English Wiktionary via Kaikki.org / wiktextract (CC BY-SA 3.0) for Word Atlas IPA pronunciation and final-fallback etymology. Predecessor: 2026-05-05 — added good-faith / non-profit-posture section (user-requested defensive documentation), expanded dictionary inventory (ЕСУМ vol 1, slovnyk.me as СУМ-20 supersession, Гринчишин/Сербенська paronyms, Karavansky r2u, Holovashchuk pending, Ukrajinet caveat), noted СУМ-11 sovietization risk + Грінченко rename. Predecessor: 2026-04-11 (#1092).
+Last updated: 2026-08-25 — added Wikidata (CC0, Wikimedia Foundation) for Word Atlas English translation lookup fallback (#4387). Predecessor: 2026-08-24 — added e2u.org.ua (Rysin, Starko et al.) for Word Atlas English translation lookup fallback (#4387). Predecessor: 2026-06-12 — added English Wiktionary via Kaikki.org / wiktextract (CC BY-SA 3.0) for Word Atlas IPA pronunciation and final-fallback etymology. Predecessor: 2026-05-05 — added good-faith / non-profit-posture section (user-requested defensive documentation), expanded dictionary inventory (ЕСУМ vol 1, slovnyk.me as СУМ-20 supersession, Гринчишин/Сербенська paronyms, Karavansky r2u, Holovashchuk pending, Ukrajinet caveat), noted СУМ-11 sovietization risk + Грінченко rename. Predecessor: 2026-04-11 (#1092).

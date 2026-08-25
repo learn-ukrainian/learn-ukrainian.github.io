@@ -1156,6 +1156,78 @@ def wiktionary_translate(ukrainian_word: str) -> str:
 
 
 # ══════════════════════════════════════════════════════════════════
+# Wikidata (wikidata.org) — Structured knowledge base
+# ══════════════════════════════════════════════════════════════════
+
+WIKIDATA_API = "https://www.wikidata.org/w/api.php"
+WIKIDATA_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)"
+
+
+def wikidata_search_entities(
+    query: str,
+    language: str = "uk",
+    entity_type: str = "item",
+    limit: int = 5,
+    headers: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
+    """Search Wikidata entities using wbsearchentities."""
+    req_headers = {"User-Agent": WIKIDATA_USER_AGENT, "Accept": "application/json"}
+    if headers:
+        req_headers.update(headers)
+    params = {
+        "action": "wbsearchentities",
+        "search": query,
+        "language": language,
+        "type": entity_type,
+        "limit": limit,
+        "format": "json",
+        "utf8": 1,
+    }
+    try:
+        r = _get(WIKIDATA_API, params=params, headers=req_headers, timeout=REQUEST_TIMEOUT)
+        r.raise_for_status()
+        data = r.json()
+        if not isinstance(data, dict):
+            return []
+        return data.get("search", []) or []
+    except (requests.RequestException, ValueError):
+        return []
+
+
+def wikidata_get_entities(
+    entity_ids: list[str],
+    languages: list[str] | None = None,
+    props: list[str] | None = None,
+    headers: dict[str, str] | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Fetch Wikidata entity JSON for given IDs using wbgetentities."""
+    if not entity_ids:
+        return {}
+    req_headers = {"User-Agent": WIKIDATA_USER_AGENT, "Accept": "application/json"}
+    if headers:
+        req_headers.update(headers)
+    params: dict[str, Any] = {
+        "action": "wbgetentities",
+        "ids": "|".join(entity_ids),
+        "format": "json",
+        "utf8": 1,
+    }
+    if languages:
+        params["languages"] = "|".join(languages)
+    if props:
+        params["props"] = "|".join(props)
+    try:
+        r = _get(WIKIDATA_API, params=params, headers=req_headers, timeout=REQUEST_TIMEOUT)
+        r.raise_for_status()
+        data = r.json()
+        if not isinstance(data, dict):
+            return {}
+        return data.get("entities", {}) or {}
+    except (requests.RequestException, ValueError):
+        return {}
+
+
+# ══════════════════════════════════════════════════════════════════
 # pravopys (2019.pravopys.net) — Ukrainian orthography rules
 # ══════════════════════════════════════════════════════════════════
 
