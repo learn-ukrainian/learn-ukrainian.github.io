@@ -1,0 +1,89 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/monitor-7269-step1-fix3
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix: PR #7337 — merge-queue kick, real regression in tests/test_monitor_client_sdk.py
+
+The merge-queue's full 4-shard Python suite (which runs on the merge_group ref, not on ordinary
+PR-tier CI — this is why neither the driver's `tests/api` runs nor two rounds of grok review
+caught it) failed with:
+
+```
+FAILED tests/test_monitor_client_sdk.py::test_sdk_survives_session_404 -
+AttributeError: <module 'scripts.api.session_router'> has no attribute 'PROJECT_ROOT'
+```
+
+## Root cause
+
+`tests/test_monitor_client_sdk.py` is an SDK-level test file (outside `tests/api/`, not tracked
+by the OPSEC sweep's seam bookkeeping — a genuinely different, previously-unknown consumer of the
+module-global constants your migration removed). It has THREE monkeypatch sites:
+
+- `stub_rules` fixture (line ~53): `monkeypatch.setattr(rules_router, "PROJECT_ROOT", tmp_path)`
+- `stub_session` fixture (line ~63): `monkeypatch.setattr(session_router, "PROJECT_ROOT", tmp_path)`
+- `test_sdk_survives_session_404` (line ~262, standalone, no fixture):
+  `monkeypatch.setattr(session_router, "PROJECT_ROOT", empty_docs)`
+
+All three monkeypatch the module-global `PROJECT_ROOT` your migration deleted, to redirect the
+SAME production `client = TestClient(api_main.app, ...)` instance's routes at a per-test temp
+directory.
+
+## Fix — migrate the test to the new pattern, do NOT resurrect the dead constant
+
+Restoring a dead `PROJECT_ROOT` module constant just to keep this old monkeypatch working would
+be the wrong fix — it perpetuates exactly the test-side-module-monkeypatch anti-pattern the whole
+MonitorContext migration exists to eliminate, and leaves an unused constant in production code
+that nothing reads.
+
+**Correct fix**: `client.app` is the module-level production app
+(`TestClient(api_main.app, ...)`), and `get_ctx(request)` reads `request.app.state.ctx` — so
+swap `client.app.state.ctx` (equivalently `api_main.app.state.ctx`) to a
+`fixture_context(<temp root>)`-built context for the duration of each test, instead of
+monkeypatching a router module attribute:
+
+```python
+from scripts.api.monitor_context import fixture_context
+
+@pytest.fixture
+def stub_rules(monkeypatch, tmp_path):
+    rule = tmp_path / "rule.md"
+    rule.write_text("# Rules\n\nBe careful.\n", encoding="utf-8")
+    monkeypatch.setattr(rules_router, "RULE_SOURCES", ("rule.md",))  # unrelated constant, keep
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    return rule
+```
+
+Work out the equivalent for `stub_session` and the standalone `test_sdk_survives_session_404`
+site — `fixture_context(root)` builds `docs/session-state/current.md` at
+`root / "docs" / "session-state" / "current.md"` relative to `project_root`, matching
+`stub_session`'s existing `state = tmp_path / "docs" / "session-state"` layout, so this should be
+close to a direct swap. For `test_sdk_survives_session_404`, its existing `empty_docs` directory
+IS the fixture root you'd pass to `fixture_context(empty_docs)`.
+
+**Verify this actually isolates correctly** — after the swap, confirm each test's original
+assertions still hold (the 304/ETag tests, the missing-current.md 404-survival test). If
+`fixture_context` builds paths that don't line up with what a given test expects (e.g. it expects
+`RULE_SOURCES` files somewhere `fixture_context` doesn't create), adjust the test setup, don't
+force a mismatched fixture to "sort of" work.
+
+**Check for more sites**: grep the WHOLE repo (not just `tests/api/`) for
+`session_router.PROJECT_ROOT` / `rules_router.PROJECT_ROOT` / any other reference to a
+module-global constant your original step-1 migration removed, to confirm this is the complete
+list and nothing else outside `tests/api/` depends on the old module attributes. This is now the
+second time a hidden cross-file consumer surfaced after the fact (the first was
+`occupancy_local.py`, caught before merge; this one only surfaced via the merge-queue's full
+suite) — be thorough this time.
+
+## Constraints
+
+Run the fixed `tests/test_monitor_client_sdk.py` (full file, not just the one failing test) plus
+`tests/api/opsec_sweep/` + `tests/api/test_app_factory.py` — all green. `ruff` clean. Push to the
+SAME branch (`agy/monitor-7269-step1-session-streams-cluster`).
