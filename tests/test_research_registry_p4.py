@@ -1031,10 +1031,12 @@ def test_issues_streams_strips_private_index(tmp_path, monkeypatch):
         "orphans": [],
         "effective_membership": {"5": {"epics": [100], "streams": ["s"], "unique_stream": True}},
         "open_issue_numbers": [5, 100],
+        "open_issue_titles": {"5": "Issue 5 title", "100": "Issue 100 title"},
     }
     stripped = issues_router._strip_private_index(report)
     assert "effective_membership" not in stripped
     assert "open_issue_numbers" not in stripped
+    assert "open_issue_titles" not in stripped
     assert stripped["open_total"] == 3 and stripped["ok"] is True
 
 
@@ -1050,6 +1052,7 @@ _LEAKY_REPORT = {
     "orphans": [],
     "effective_membership": {"5": {"epics": [100], "streams": ["s"], "unique_stream": True}},
     "open_issue_numbers": [5, 100],
+    "open_issue_titles": {"5": "Issue 5 title", "100": "Issue 100 title"},
 }
 
 _IDLE_REFRESH = {
@@ -1075,6 +1078,7 @@ _SCHEDULED_REFRESH = {
 def _assert_no_private_keys(body: dict[str, Any]) -> None:
     assert "effective_membership" not in body
     assert "open_issue_numbers" not in body
+    assert "open_issue_titles" not in body
     assert body["open_total"] == 3 and body["ok"] is True
 
 

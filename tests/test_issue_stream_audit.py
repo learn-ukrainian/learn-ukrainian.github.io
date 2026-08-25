@@ -1041,3 +1041,13 @@ def test_refresh_state_atomic_replace_never_exposes_partial_json(tmp_path, monke
             failures.append(exc)
     thread.join()
     assert failures == []
+
+
+def test_private_cache_keys_includes_open_issue_titles():
+    assert "open_issue_titles" in issue_stream_audit.PRIVATE_CACHE_KEYS
+    assert issue_stream_audit.PRIVATE_CACHE_KEYS == (
+        "effective_membership",
+        "open_issue_numbers",
+        "open_issue_titles",
+    )
+

@@ -25,9 +25,15 @@ def _client(tmp_path: Path, monkeypatch) -> TestClient:
     return TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
 
 
-def _claim(client: TestClient, *, session_id: str = "api-session", lease_id: str = "api-lease") -> dict:
+def _claim(
+    client: TestClient,
+    stream_id: str = "epic:7178",
+    *,
+    session_id: str = "api-session",
+    lease_id: str = "api-lease",
+) -> dict:
     response = client.post(
-        "/api/epics/v1/epic:7178/claim",
+        f"/api/epics/v1/{stream_id}/claim",
         json={
             "session_id": session_id,
             "lease_id": lease_id,
@@ -369,16 +375,16 @@ def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
 
 def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
-    claimed = _claim(client)
+    claimed = _claim(client, "epic:7177")  # allow-hardcoded-epic: remote lifecycle route fixture
     lease = claimed["lease"]
 
     # Append a state entry and a decision entry
     client.post(
-        "/api/epics/v1/epic:7178/handoff",
+        "/api/epics/v1/epic:7177/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
         json={**lease, "type": "state", "body": "working on graph", "idempotency_key": "graph-state-1"},
     )
     client.post(
-        "/api/epics/v1/epic:7178/handoff",
+        "/api/epics/v1/epic:7177/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
         json={**lease, "type": "decision", "body": "design approved", "idempotency_key": "graph-dec-1"},
     )
 
@@ -390,10 +396,9 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
     data = response.json()
 
     epics_by_id = {e["id"]: e for e in data["nodes"]["epics"]}
-    # If epic:7178 was claimed in store, its lease/state/decision should be passed through
-    if "epic:7178" in epics_by_id:  # allow-hardcoded-epic: store passthrough check
-        epic_7178 = epics_by_id["epic:7178"]  # allow-hardcoded-epic: store passthrough check
-        assert epic_7178["lease"] is not None
-        assert epic_7178["last_state"]["body"] == "working on graph"
-        assert epic_7178["last_decision"]["body"] == "design approved"
+    assert "epic:7177" in epics_by_id  # allow-hardcoded-epic: store passthrough check
+    epic_7177 = epics_by_id["epic:7177"]  # allow-hardcoded-epic: store passthrough check
+    assert epic_7177["lease"] is not None
+    assert epic_7177["last_state"]["body"] == "working on graph"
+    assert epic_7177["last_decision"]["body"] == "design approved"
 
