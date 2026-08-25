@@ -1,17 +1,19 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v2 (revised after cross-family review)
+> **Version:** v3 (revised after two rounds of cross-family review)
 > **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below.
-> **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising v1 per
-> the codex review below.
+> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v3
+> needs a third cross-family pass before step 0 is dispatched (see § 10).
+> **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per two
+> rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
 > **Refs:** #7182 (OPSEC sweep design r2/r3 critique, task `critique-7182-design-r2-codex`, GPT-seat
 > critic origin of the proposal).
-> **v1 → v2 changelog:** v1 (PR #7296 initial commit) got a cross-family REJECT from codex with 3 P1
-> findings + 1 P2. All four are addressed below; see § 10 for the finding-by-finding record.
-> `main.py`'s actual 33-router `include_router` list was pulled live (not guessed) to ground the
-> rollout plan — see § 5.
+> **Changelog:** v1 (PR #7296 initial commit) got a cross-family REJECT (3 P1 + 1 P2). v2 addressed
+> those but was itself REJECTed on re-review (4 new findings, including a factual error: v2 said
+> `main.py` mounts 33 routers; the real, re-verified count is 44, and v2's step table silently
+> dropped `build_events_router`). v3 (this version) fixes all of it — see § 10 for the full
+> finding-by-finding record of both rounds.
 
 ---
 
@@ -80,25 +82,48 @@ Verified against today's mechanism: the #7284/#7182 guard is currently one proce
 patches — nothing stops a route from calling `sqlite3.connect(<real path>)` directly; the sweep only
 catches it because the test happens to intercept the interpreter-global function.
 
-`MonitorContext` replaces this with an in-code choke point:
+**v2 named a single `_open_db` choke point and claimed it was "the only call site anywhere in
+`scripts/api/` permitted to call `sqlite3.connect`." Verified against the actual tree (2026-08-25),
+this is false: DB access today goes through at least three distinct patterns, not one —**
 
-1. `MonitorContext.stores` holds **already-open handles** (`sqlite3.Connection` / equivalent), not
-   raw `Path` values. Nothing downstream of the context receives a bare path it could open itself.
-2. Every handle is produced by exactly one internal method, e.g. `MonitorContext._open_db(name:
-   str) -> sqlite3.Connection`, which resolves the configured path, and — for a `fixture_context`
-   only — asserts `path.is_relative_to(self.root)` before calling `sqlite3.connect(path)`.
-   `production_context()` has no such root restriction (it legitimately opens the real stores); the
-   guarantee is specifically "a fixture-built app cannot reach outside its temp root," which is what
-   #7284 needs.
-3. `_open_db` is the **only** call site anywhere in `scripts/api/` permitted to call `sqlite3.connect`
-   once a router family has migrated. Step 0 adds a grep-based lint check (cheap, mechanical, wired
-   into the OPSEC sweep or a standalone test) that fails if `sqlite3.connect(` appears outside
-   `monitor_context.py` and any *not-yet-migrated* router listed in an explicit allowlist — the
-   allowlist shrinks by exactly the routers each family step migrates, so it is machine-checkable
-   proof of progress, not a promise.
-4. The existing `monkeypatch.setattr(sqlite3, "connect", …)` global backstop in the OPSEC sweep
+- **Direct `sqlite3.connect(` calls** in `fleet_router.py`, `agent_monitor_router.py`,
+  `delegate_router.py`, `fleet_workers_collect.py`, `hramatka_cache.py`, `comms_router.py`,
+  `resilience.py`, `runtime_router.py`, `agents_extensions/shared/session_streams/db.py` (9 files).
+- **`connect_sqlite()`**, an existing wrapper defined in `scripts/api/resilience.py:262`, called from
+  `admin_router.py`, `discussions_router.py`, `state_helpers.py`, `gold_router.py`, `wiki_router.py`,
+  `telemetry_router.py`, `dashboard_comms.py`, `hramatka_router.py`, `comms_router.py`,
+  `telemetry/legacy_comms.py` (11 files) — this is already the closest thing to an existing choke
+  point; the design below builds on it rather than replacing it.
+- **`SessionStreamDatabase.connect()`**, a method on the class in
+  `agents_extensions/shared/session_streams/db.py:97`, used by `occupancy_local.py`,
+  `epics_router.py`, `session_streams_router.py` (3 files).
+
+`MonitorContext` replaces this with an in-code choke point that accounts for all three:
+
+1. `MonitorContext.stores` holds **already-open handles** (`sqlite3.Connection` / a
+   `SessionStreamDatabase` instance / equivalent), not raw `Path` values. Nothing downstream of the
+   context receives a bare path it could open itself.
+2. Internally, `MonitorContext` builds every handle by calling the *existing* `connect_sqlite()` (for
+   plain sqlite stores) or constructing a `SessionStreamDatabase` (for the session-streams store) —
+   it does not invent a fourth mechanism. What changes is that **only** `MonitorContext`'s
+   construction code is allowed to call `connect_sqlite()` / `sqlite3.connect()` /
+   `SessionStreamDatabase(...)` directly; every router gets a ready handle via `Depends(get_ctx)`.
+3. For a `fixture_context` specifically, the context resolves the target path with `Path.resolve()`
+   (canonical, symlink-following) before asserting `resolved_path.is_relative_to(self.root.resolve())`
+   — plain `is_relative_to` on unresolved paths permits a symlink escape, which v2 missed.
+   `production_context()` has no such root restriction; the guarantee is "a fixture-built app cannot
+   reach outside its temp root," which is what #7284 needs.
+4. Step 0 adds a grep-based lint check enumerating **all three** patterns above (not just
+   `sqlite3.connect(`), wired into the OPSEC sweep or a standalone test, that fails if any of them
+   appears outside `monitor_context.py` (or `resilience.py`/`session_streams/db.py` themselves, which
+   `MonitorContext` calls into) and any *not-yet-migrated* file listed in an explicit allowlist. The
+   §5.2 inventory step populates this allowlist's initial contents from the three lists above — 23
+   raw call-site matches (9 + 11 + 3) across **21 unique files** (`comms_router.py` and
+   `resilience.py` each appear in two of the three patterns) — that is the real, checked starting
+   count, not a placeholder.
+5. The existing `monkeypatch.setattr(sqlite3, "connect", …)` global backstop in the OPSEC sweep
    **stays** through the whole migration as defense-in-depth — it becomes redundant for migrated
-   routers (they can only reach `_open_db`, which already enforces the root) but keeps catching
+   routers (they can only reach handles the context already validated) but keeps catching
    not-yet-migrated routers and any future non-context code path.
 
 ### 4.2 `create_app(context, *, lifespan=None) -> FastAPI`
@@ -127,8 +152,12 @@ that family, confirm the sweep stays green with **fewer** seams than before, run
 `tests/api -n 4`, get an independent cross-family review of record.
 
 **v1 named families by concept ("session-streams / orient / authority") without checking them
-against the actual router set — codex's review caught that this is not filing-ready: `main.py`
-mounts 33 router modules today (`app.include_router(...)`, checked live 2026-08-25), 6 of which are
+against the actual router set — codex's review caught that this is not filing-ready. v2 then
+undercounted the router set itself (said 33; the actual count, re-verified by grepping every
+`app.include_router(...)` call in `main.py`, is 44 — see the exact list below) and silently dropped
+`build_events_router` from the step table. Both errors are fixed here; the count below is generated
+from `grep -oE 'app\.include_router\(\s*\n?\s*[a-zA-Z_]+' scripts/api/main.py`, not hand-counted, so
+any future reader can re-derive it. `main.py` mounts 44 router modules today, 6 of which are
 1,000+ lines and mix several concerns internally (`fleet_router.py` 2,637 lines, `state_router.py`
 2,433, `comms_router.py` 1,898, `runtime_router.py` 1,729, `route_contracts.py` 1,356,
 `dashboard_router.py` 996 — together roughly half of all router code). Naming one of these a "family"
@@ -136,27 +165,45 @@ by itself is not precise enough to file a bounded sub-issue from, and lumping se
 worse. Guessing a finer split without reading what's actually inside those six files would just move
 the same ambiguity to a smaller-looking table.**
 
-### 5.1 Step 0 — Core (unchanged from v1)
+### 5.1 Step 0 — Core (revised again after the v2 review — see §10 v2 entry)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No router
-changes.** Concrete, executable definition of "byte-identical outcome" (this is the fix for the v1
-review's P2 finding — v1 asserted this with no test):
+changes** — every router still reads its own module globals directly, exactly as today. This matters
+for what step 0 can and cannot claim:
 
-- New test, kept permanently (it is cheap and it is exactly the regression net for every later
-  step): build `legacy_app = <today's `scripts.api.main.app`>` and `factory_app =
-  create_app(production_context())` inside one test process. Enumerate the OPSEC sweep's existing
-  route denominator (`tests/api/opsec_sweep/` already has a SHA-pinned list of every GET/HEAD route —
-  reuse it, do not build a second one). For every route in that list, call it against both apps via
-  `TestClient` with the same inputs and assert identical status code **and** identical JSON body (or
-  identical bytes for non-JSON responses). Mutating (POST/PUT/DELETE) routes are exercised for
-  status/shape only where the sweep already has a safe fixture for them; routes the sweep has no safe
-  fixture for are out of scope for this specific test (already true of the sweep itself).
-- Add a fixture-isolation test: `fixture_context(tmp_path)` two separate app instances built from two
-  different temp roots must not observe each other's writes (proves `create_app` really is
-  side-effect-free per call, not a hidden singleton).
-- The grep-based `sqlite3.connect(` call-site lint from §4.1 point 3 also lands in step 0, with its
-  initial allowlist populated by every router file that has not migrated yet (i.e., everything —
-  step 0 changes no router).
+- **What step 0 does NOT claim.** v2 asserted a "fixture-isolation test" at step 0 — two apps built
+  from two different temp roots must not observe each other's writes. The v2 reviewer correctly
+  rejected this: since no router reads from `ctx` yet, a `fixture_context`-built app's routers still
+  hit the *same real module globals* as every other app in the process. There is nothing to isolate
+  until a router actually depends on the context. That guarantee becomes true, and testable,
+  **incrementally, per family, starting at step 1** — not at step 0. Claiming it earlier was wrong;
+  dropped.
+- **What step 0 does claim, concretely, reusing existing infrastructure instead of inventing a new
+  comparison harness** (this replaces v2's custom byte-identical-body test, which the reviewer
+  correctly flagged as unspecified — no legacy-app builder, a wrong description of the sweep's
+  denominator as "GET/HEAD" when it is actually 280 HTTP operations across
+  `{DELETE, GET, PATCH, POST, PUT}` plus 1 WebSocket route with read/read-side-effect/mutation/stream
+  classes and isolated/skip fixture kinds — see `tests/api/opsec_sweep/registry.py` — and no
+  normalization plan for non-deterministic fields like UUIDs/timestamps in real responses):
+  1. `main.py`'s bottom becomes `app = create_app(production_context())`. Since no router changed,
+     every existing test that imports `scripts.api.main.app` (the bulk of `tests/api/`) exercises the
+     factory-built app already — **the existing `tests/api -n 4` suite passing, unchanged, is itself
+     the primary behavioral-equivalence proof**, because the routers it calls are byte-identical
+     Python functions before and after this step.
+  2. The OPSEC sweep's frozen-denominator check (`FROZEN_HTTP_OPERATION_COUNT`,
+     `FROZEN_WEBSOCKET_ROUTE_COUNT`, `FROZEN_DENOMINATOR_SHA256` in `registry.py`, asserted at
+     `test_opsec_route_sweep.py:677`) already exists specifically to catch a route table that grew,
+     shrank, or changed shape. Re-run this exact check against `create_app(production_context())`'s
+     route table and require the identical count and digest — this is the concrete, already-built
+     mechanism that proves `create_app()` wires up the identical route set as the hand-built app,
+     with no new comparison logic to design or trust.
+  3. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
+     through a running app): `fixture_context(tmp_path)` resolves every configured root/store path
+     under `tmp_path`, and a path crafted to escape via a symlink is rejected (§4.1 point 3). This is
+     testable today, standalone, without any router depending on the context yet.
+- The grep-based call-site lint from §4.1 point 4 (all three DB-access patterns, not just
+  `sqlite3.connect(`) also lands in step 0, with its initial allowlist populated by the 23 files
+  enumerated in §4.1 (every router file that has not migrated yet — step 0 changes no router).
 
 ### 5.2 Step 0.5 — Router dependency & seam inventory (NEW; fixes the v1 P1a "ambiguous families" and P1b "no seam manifest" findings with one mechanism)
 
@@ -197,7 +244,11 @@ the source of truth that confirms or corrects this, not this doc**):
 | 9 | `dashboard_router.py` (own step; inventory decides if it splits) | large, own step |
 | 10 | `rag_router.py` (mounted as `/api/sources` + deprecated `/api/rag`) | small — folds the #7284 connect-deny guard into the context per §4.1 |
 | 11 | `route_contracts.py` (own step; inventory decides if it splits) | large, own step |
-| 12 | Everything else the inventory has not yet placed: `atlas_jobs_router.py`, `blue_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `hermes_cron_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
+| 12 | Everything else the inventory has not yet placed: `atlas_jobs_router.py`, `blue_router.py`, `build_events_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `hermes_cron_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (21 modules) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
+
+Full accounting: step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1) +
+step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (21) = **44 modules**,
+matching the live count above with none dropped.
 
 Sub-issues under #7269 are filed **from the inventory's actual output**, not from the provisional
 table above — if the inventory contradicts a row here, the inventory wins and this doc gets a v3 note
@@ -228,9 +279,10 @@ in §10.
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. One cross-family design review (codex seat) on the doc. **Done — v1 got a REJECT with 3 P1 + 1
-   P2 finding; this v2 addresses all four (§10).**
-3. One more cross-family design review on this v2 revision before implementation starts.
+2. Cross-family design review (codex). **Done twice — v1 REJECT (3 P1 + 1 P2), v2 REJECT (4 further
+   findings, incl. a router-count error). v3 (this version) addresses all of both rounds (§10).**
+3. One more cross-family design review on this v3 revision before implementation starts. **Next
+   step.**
 4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
    wrong assumption in this doc before anything else builds on it.
 5. Implement step 0.5 (§5.2) — the router dependency & seam inventory. Its output either confirms or
@@ -278,3 +330,39 @@ in §10.
     (GitHub network access was unavailable in that sandbox) — this is a harness limitation of that
     run, not a finding; the source-of-record comment is quoted in full in this repo's PR #7296
     description for any reviewer without live `gh` access.
+
+- **v2 (commit 5d3a6c4), reviewer: codex, verdict: REJECT.** Findings and their v3 disposition:
+  1. **P1 — step 0 was internally contradictory**: §5.1 asserted a fixture-isolation test, but
+     routers still read module globals directly at step 0, so there was nothing for
+     `fixture_context` to isolate yet. **Fixed:** §5.1 now explicitly states what step 0 does *not*
+     claim (isolation — deferred to step 1+, per-family, as each router actually starts depending on
+     `ctx`) and replaces the fixture-isolation app-level test with a narrow unit test of
+     `MonitorContext`/`fixture_context` alone (path resolution + symlink-escape rejection), which is
+     genuinely testable without any router migrated.
+  2. **P1 — the byte-identical test was not executable**: no legacy-app builder was defined; the
+     OPSEC sweep denominator was mischaracterized as "GET/HEAD" when it is actually 280 HTTP
+     operations across 5 methods plus 1 WebSocket route with mutation/read/stream classes
+     (`tests/api/opsec_sweep/registry.py`); real responses contain UUIDs/timestamps that break a
+     byte-comparison with no normalization plan. **Fixed:** §5.1 drops the custom body-diff harness
+     entirely and instead (a) relies on the existing, unchanged `tests/api -n 4` suite passing
+     against the factory-built app — valid specifically because step 0 changes no router code — and
+     (b) re-runs the sweep's existing frozen-denominator count+digest check
+     (`test_opsec_route_sweep.py:677`) against `create_app(production_context())`'s route table.
+     Both mechanisms already exist; nothing new to design or trust.
+  3. **P1 — the `_open_db` choke point was bypassable**: v2 claimed one call site, but real DB access
+     goes through `sqlite3.connect()` directly (9 files), the existing `connect_sqlite()` wrapper (11
+     files), and `SessionStreamDatabase.connect()` (3 files); root validation used unresolved paths,
+     permitting a symlink escape. **Fixed:** §4.1 now names all three real patterns by file (23 call
+     sites total, grepped live), has `MonitorContext` build handles by calling the *existing*
+     `connect_sqlite()`/`SessionStreamDatabase(...)` rather than inventing a fourth mechanism, and
+     resolves paths canonically (`Path.resolve()`) before the root-containment check.
+  4. **P2 — §5.2 was not dispatch-ready and had false inventory evidence**: the claimed 33-router
+     count was wrong (real count: 44, re-grepped live); `build_events_router` and `reviewer_ghosts_router`
+     were named as omitted — `reviewer_ghosts_router` was in fact present in v2's step 12, but
+     `build_events_router` really was missing. **Fixed:** the router count and full step table are
+     corrected (§5), with an explicit per-step module tally that sums to 44 with none dropped, and the
+     count is now derived from a reproducible grep command stated in the doc rather than asserted from
+     memory.
+  - This reviewer run also could not reach `gh` for the #7269 issue comment (same harness limitation
+    as the v1 run) — grounded its review in the checked-out tree instead, which is why it caught the
+    router-count error directly rather than trusting the doc's stated figure.
