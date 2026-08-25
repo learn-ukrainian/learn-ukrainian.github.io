@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 81235,
-      "output": 20530,
+      "input": 84267,
+      "output": 21943,
       "reasoning": 0,
       "cache": {
-        "read": 2450624,
+        "read": 2786752,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1787617607530,
-      "updated": 1787618319700
+      "updated": 1787618397090
     }
   },
   "messages": [
@@ -5325,19 +5325,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 84512,
+          "input": 1533,
+          "output": 419,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 82560
           }
         },
         "modelID": "stealth/ox-alpha",
         "providerID": "openrouter",
         "time": {
-          "created": 1787618319697
+          "created": 1787618319697,
+          "completed": 1787618342823
         },
+        "finish": "tool-calls",
         "id": "msg_0365add51001tojyEfpgcxahaJ",
         "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw"
       },
@@ -5388,16 +5391,21 @@
           "tool": "bash",
           "callID": "62c91b58-36ae-424b-86c2-1414dc52e157",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/guardrails/assert_primary_on_main.py scripts/guardrails/primary_write_guard.py scripts/guardrails/worktree_containment.py scripts/ci/subprocess_timeout_allowlist.txt tests/test_guardrails_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n\nSlice 12: add timeout= to all six remaining timeout-less subprocess.run\nsites under scripts/guardrails/ (30s git plumbing, 60s hook installer)\nand map subprocess.TimeoutExpired so hooks never unwind with a traceback:\n\n- worktree_containment._run_git: failed probe (rc=124), callers fall\n  back exactly like the FileNotFoundError branch\n- assert_primary_on_main._git: failed CompletedProcess so the existing\n  detached/wrong-branch/heal-failure paths fire\n- primary_write_guard get_writable_tracked_files/apply_guard/\n  release_guard: caught alongside CalledProcessError (print + exit 1)\n- primary_write_guard.install_hooks: joins the existing\n  (OSError, CalledProcessError) handler\n\nShrinks scripts/ci/subprocess_timeout_allowlist.txt by the six matching\nentries; remaining scripts/guardrails/ allowlist keys: 0.\n\nNew tests/test_guardrails_timeouts.py mocks subprocess.run and asserts\ntimeout= plus TimeoutExpired mapping for every site, including an\nend-to-end proof that primary_head_state survives a total git timeout.\n\nX-Agent: ox-alpha/timeout-burndown-7213-s12\nEOF\n)\" && git log --oneline -2 && git status --short",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12"
             },
+            "output": "[ox-alpha/timeout-burndown-7213-s12 a86545ad12] fix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n 5 files changed, 352 insertions(+), 18 deletions(-)\n create mode 100644 tests/test_guardrails_timeouts.py\na86545ad12 fix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n9811ac85c1 fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213) (#7283)\n",
+            "metadata": {
+              "output": "[ox-alpha/timeout-burndown-7213-s12 a86545ad12] fix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n 5 files changed, 352 insertions(+), 18 deletions(-)\n create mode 100644 tests/test_guardrails_timeouts.py\na86545ad12 fix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n9811ac85c1 fix(eval): bound ua_open_weight_eval subprocess calls with explicit timeouts (#7213) (#7283)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/guardrails/assert_primary_on_main.py scripts/guardrails/primary_write_guard.py scripts/guardrails/worktree_containment.py scripts/ci/subprocess_timeout_allowlist.txt tests/test_guardrails_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n\nSlice 12: add timeout= to all six remaining timeout-less subprocess.run\nsites under scripts/guardrails/ (30s git plumbing, 60s hook installer)\nand map subprocess.TimeoutExpired so hooks never unwind with a traceback:\n\n- worktree_containment._run_git: failed probe (rc=124), callers fall\n  back exactly like the FileNotFoundError branch\n- assert_primary_on_main._git: failed CompletedProcess so the existing\n  detached/wrong-branch/heal-failure paths fire\n- primary_write_guard get_writable_tracked_files/apply_guard/\n  release_guard: caught alongside CalledProcessError (print + exit 1)\n- primary_write_guard.install_hooks: joins the existing\n  (OSError, CalledProcessError) handler\n\nShrinks scripts/ci/subprocess_timeout_allowlist.txt by the six matching\nentries; remaining scripts/guardrails/ allowlist keys: 0.\n\nNew tests/test_guardrails_timeouts.py mocks subprocess.run and asserts\ntimeout= plus TimeoutExpired mapping for every site, including an\nend-to-end proof that primary_head_state survives a total git timeout.\n\nX-Agent: ox-alpha/timeout-burndown-7213-s12\nEOF\n)\" && git log --oneline -2 && git status --short",
             "time": {
-              "start": 1787618335200
+              "start": 1787618342559,
+              "end": 1787618342648
             }
           },
           "metadata": {
@@ -5415,6 +5423,390 @@
           "id": "prt_0365afa10001UKnq5s1E3LHTGy",
           "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
           "messageID": "msg_0365add51001tojyEfpgcxahaJ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 84512,
+            "input": 1533,
+            "output": 419,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 82560
+            }
+          },
+          "cost": 0,
+          "id": "prt_0365b3750001wnwGQLVG1U92Wg",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365add51001tojyEfpgcxahaJ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0364fffb5001FTrJF0R9jIgRXn",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 84897,
+          "input": 610,
+          "output": 255,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 84032
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787618342838,
+          "completed": 1787618388744
+        },
+        "finish": "tool-calls",
+        "id": "msg_0365b37b6001RwwQCHkgc81O7F",
+        "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw"
+      },
+      "parts": [
+        {
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-start",
+          "id": "prt_0365b4d3a001EPRAMBCq9Zm6W8",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365b37b6001RwwQCHkgc81O7F"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed cleanly. Final verification: re-run the exact acceptance commands quoted in the brief against the committed state, to quote raw output.",
+          "time": {
+            "start": 1787618348349,
+            "end": 1787618348996
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "Committed cleanly. Final verification: re-run the exact acceptance commands quoted in the brief against the committed state, to quote raw output.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "id": "prt_0365b4d3d001VlkZhHykX2bf9r",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365b37b6001RwwQCHkgc81O7F"
+        },
+        {
+          "type": "text",
+          "text": "Final acceptance run against the committed state (quoting raw):",
+          "time": {
+            "start": 1787618349000,
+            "end": 1787618353259
+          },
+          "id": "prt_0365b4fc8001XikZSr7s6UxFT3",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365b37b6001RwwQCHkgc81O7F"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "d97e0c3b-a157-408c-905c-e87eb003f51d",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_subprocess_timeout_guard.py tests/test_guardrails_timeouts.py tests/test_worktree_containment.py tests/test_assert_primary_on_main.py tests/test_guard_primary_checkout_write.py -q 2>&1 | tail -2 && /home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/guardrails/assert_primary_on_main.py scripts/guardrails/primary_write_guard.py scripts/guardrails/worktree_containment.py tests/test_guardrails_timeouts.py && grep -c \"^scripts/guardrails/\" scripts/ci/subprocess_timeout_allowlist.txt; echo \"remaining-guardrails-keys-exit=$?\"; git status --short; git log --format='%H %s' -1",
+              "timeout": 600000,
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12"
+            },
+            "output": "\n============================= 140 passed in 18.88s =============================\n\u001b[1;32mAll checks passed!\u001b[0m\n0\nremaining-guardrails-keys-exit=1\na86545ad12ee05c2b3636c02e16c5aeb38286c32 fix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n",
+            "metadata": {
+              "output": "\n============================= 140 passed in 18.88s =============================\n\u001b[1;32mAll checks passed!\u001b[0m\n0\nremaining-guardrails-keys-exit=1\na86545ad12ee05c2b3636c02e16c5aeb38286c32 fix(guardrails): bound guardrail subprocess calls with explicit timeouts (#7213)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_subprocess_timeout_guard.py tests/test_guardrails_timeouts.py tests/test_worktree_containment.py tests/test_assert_primary_on_main.py tests/test_guard_primary_checkout_write.py -q 2>&1 | tail -2 && /home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/guardrails/assert_primary_on_main.py scripts/guardrails/primary_write_guard.py scripts/guardrails/worktree_containment.py tests/test_guardrails_timeouts.py && grep -c \"^scripts/guardrails/\" scripts/ci/subprocess_timeout_allowlist.txt; echo \"remaining-guardrails-keys-exit=$?\"; git status --short; git log --format='%H %s' -1",
+            "time": {
+              "start": 1787618388541,
+              "end": 1787618388548
+            }
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "Committed cleanly. Final verification: re-run the exact acceptance commands quoted in the brief against the committed state, to quote raw output.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "id": "prt_0365b511b001ZJTwTpwKha9dCC",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365b37b6001RwwQCHkgc81O7F"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 84897,
+            "input": 610,
+            "output": 255,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 84032
+            }
+          },
+          "cost": 0,
+          "id": "prt_0365bea91001NyEUptnzsA9qzc",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365b37b6001RwwQCHkgc81O7F"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0364fffb5001FTrJF0R9jIgRXn",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 85192,
+          "input": 376,
+          "output": 208,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 84608
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787618388755,
+          "completed": 1787618397075
+        },
+        "finish": "tool-calls",
+        "id": "msg_0365beb13001WAj9H4g3rhaHVJ",
+        "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw"
+      },
+      "parts": [
+        {
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-start",
+          "id": "prt_0365c013b001x5fjhQ71Ev2s8F",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365beb13001WAj9H4g3rhaHVJ"
+        },
+        {
+          "type": "tool",
+          "tool": "todowrite",
+          "callID": "a48afb11-7bae-4184-9c80-9b3aac9fb48b",
+          "state": {
+            "status": "completed",
+            "input": {
+              "todos": [
+                {
+                  "content": "Add timeout= + TimeoutExpired mapping in worktree_containment._run_git",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Add timeout= + TimeoutExpired mapping in assert_primary_on_main._git",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Add timeouts in primary_write_guard (4 sites)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Remove 6 allowlist lines (shrink-only)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Write tests/test_guardrails_timeouts.py (6 sites)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Run acceptance pytest + ruff + --help smoke",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Commit locally with X-Agent trailer",
+                  "priority": "medium",
+                  "status": "completed"
+                }
+              ]
+            },
+            "output": "[\n  {\n    \"content\": \"Add timeout= + TimeoutExpired mapping in worktree_containment._run_git\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Add timeout= + TimeoutExpired mapping in assert_primary_on_main._git\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Add timeouts in primary_write_guard (4 sites)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Remove 6 allowlist lines (shrink-only)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Write tests/test_guardrails_timeouts.py (6 sites)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run acceptance pytest + ruff + --help smoke\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Commit locally with X-Agent trailer\",\n    \"status\": \"completed\",\n    \"priority\": \"medium\"\n  }\n]",
+            "metadata": {
+              "todos": [
+                {
+                  "content": "Add timeout= + TimeoutExpired mapping in worktree_containment._run_git",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Add timeout= + TimeoutExpired mapping in assert_primary_on_main._git",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Add timeouts in primary_write_guard (4 sites)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Remove 6 allowlist lines (shrink-only)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Write tests/test_guardrails_timeouts.py (6 sites)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Run acceptance pytest + ruff + --help smoke",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Commit locally with X-Agent trailer",
+                  "status": "completed",
+                  "priority": "medium"
+                }
+              ],
+              "truncated": false
+            },
+            "title": "0 todos",
+            "time": {
+              "start": 1787618396824,
+              "end": 1787618396829
+            }
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": []
+            }
+          },
+          "id": "prt_0365c013f001WqendJ2lF5F6Nt",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365beb13001WAj9H4g3rhaHVJ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 85192,
+            "input": 376,
+            "output": 208,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 84608
+            }
+          },
+          "cost": 0,
+          "id": "prt_0365c0b26001SMalQNkMC6Z4Rp",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365beb13001WAj9H4g3rhaHVJ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0364fffb5001FTrJF0R9jIgRXn",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s12"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 85972,
+          "input": 513,
+          "output": 531,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 84928
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787618397087,
+          "completed": 1787618410647
+        },
+        "finish": "stop",
+        "id": "msg_0365c0b9f001zaxZ19ufWM4umV",
+        "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw"
+      },
+      "parts": [
+        {
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-start",
+          "id": "prt_0365c1ac8001yzsFu6kYUjFKnY",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365c0b9f001zaxZ19ufWM4umV"
+        },
+        {
+          "type": "text",
+          "text": "Slice 12 complete. Summary:\n\n**Changed files** (branch `ox-alpha/timeout-burndown-7213-s12`, commit `a86545ad12`, not pushed):\n- `scripts/guardrails/worktree_containment.py` — `_run_git`: `timeout=30`; `TimeoutExpired` → failed probe (rc=124), mirroring the FileNotFoundError fallback\n- `scripts/guardrails/assert_primary_on_main.py` — `_git`: `timeout=30`; timeout → failed `CompletedProcess` so detached/wrong-branch/heal paths fire\n- `scripts/guardrails/primary_write_guard.py` — 3× `ls-files` sites: `timeout=30`, caught with `CalledProcessError` (print + exit 1); `install_hooks`: `timeout=60`, joined existing `(OSError, CalledProcessError)` handler\n- `scripts/ci/subprocess_timeout_allowlist.txt` — exactly the 6 owned keys removed (57 → 51 entries; **guardrails remaining: 0**, CLOBBER-audited via diff)\n- `tests/test_guardrails_timeouts.py` (new) — mocks `subprocess.run`, asserts `timeout=` + mapping for all 6 sites, incl. end-to-end proof that `primary_head_state` survives a total git timeout\n\n**Verification:**\n```\n/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_subprocess_timeout_guard.py tests/test_guardrails_timeouts.py tests/test_worktree_containment.py tests/test_assert_primary_on_main.py tests/test_guard_primary_checkout_write.py -q\n============================= 140 passed in 18.88s =============================\n/home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/guardrails/... tests/test_guardrails_timeouts.py\nAll checks passed!\n```\nEntry-point smoke: `--help` OK on both CLIs.\n\n**Notes / residual:** `test_post_checkout_hook_diagnoses_without_reattaching` initially failed on the *unmodified base commit* too — environmental: this worktree had no `.venv`. Fixed locally with a gitignored `.venv → /home/ops/learn-ukrainian/.venv` symlink (untracked, not committed). No secrets printed; nothing pushed.\n\nCOMMIT=a86545ad12ee05c2b3636c02e16c5aeb38286c32 ALLOWLIST_GUARDRAILS_REMAINING=0 TESTS=pass",
+          "time": {
+            "start": 1787618400972,
+            "end": 1787618410429
+          },
+          "id": "prt_0365c1acc001v7KARNlcJqib82",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365c0b9f001zaxZ19ufWM4umV"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "5a1c501b49eb0dc8121f9e11159dc32478dfff4d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 85972,
+            "input": 513,
+            "output": 531,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 84928
+            }
+          },
+          "cost": 0,
+          "id": "prt_0365c4037001r9TC0pMF02n6KJ",
+          "sessionID": "ses_fc9b00095ffeHj4Ev7duuazidw",
+          "messageID": "msg_0365c0b9f001zaxZ19ufWM4umV"
         }
       ]
     }
