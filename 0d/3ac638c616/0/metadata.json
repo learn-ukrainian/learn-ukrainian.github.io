@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0d3ac638c616",
+  "session_id": "ses_fc94dd9d3ffely1SbYmwMToXw8",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T02:19:57.823800463Z",
+  "branch": "ox-alpha/timeout-burndown-7213-s15",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/open_dataset/publish.py",
+    "scripts/open_dataset/hydrate.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/test_open_dataset_timeouts.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "9b862e5a12cc",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 61289,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 847296,
+    "output_tokens": 8372,
+    "api_call_count": 26
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T02:19:57.796876493Z",
+    "agent_lines": 233,
+    "agent_removed": 39,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 233,
+    "total_lines_changed": 272,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

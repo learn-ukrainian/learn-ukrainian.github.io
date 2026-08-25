@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0d3ac638c616",
+  "strategy": "manual-commit",
+  "branch": "ox-alpha/timeout-burndown-7213-s15",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/open_dataset/hydrate.py",
+    "scripts/open_dataset/publish.py",
+    "tests/test_open_dataset_timeouts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0d/3ac638c616/0/metadata.json",
+      "transcript": "/0d/3ac638c616/0/full.jsonl",
+      "compact_transcript": "/0d/3ac638c616/0/transcript.jsonl",
+      "content_hash": "/0d/3ac638c616/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 61289,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 847296,
+    "output_tokens": 8372,
+    "api_call_count": 26
+  }
+}
