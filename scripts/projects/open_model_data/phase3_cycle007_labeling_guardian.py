@@ -65,6 +65,8 @@ class Config:
     preflight_receipt: Path
     gemini_canary_receipt: Path
     grok_canary_receipt: Path
+    agy_executable: Path
+    grok_executable: Path
     code_paths: dict[str, Path]
     owner_uid: int
     owner_gid: int
@@ -234,6 +236,8 @@ def _validate_roots(config: Config, *, create: bool) -> None:
         config.preflight_receipt,
         config.gemini_canary_receipt,
         config.grok_canary_receipt,
+        config.agy_executable,
+        config.grok_executable,
     ):
         _assert_absolute(path)
     _assert_no_symlink_components(config.package)
@@ -391,6 +395,10 @@ def _controller_command(config: Config, action: str, stage: str | None = None) -
         str(config.gemini_canary_receipt),
         "--grok-canary-receipt",
         str(config.grok_canary_receipt),
+        "--agy-executable",
+        str(config.agy_executable),
+        "--grok-executable",
+        str(config.grok_executable),
     ]
     for label, path in sorted(config.code_paths.items()):
         command.extend(["--code-path", f"{label}={path}"])
@@ -562,6 +570,8 @@ def _config(args: argparse.Namespace) -> Config:
         preflight_receipt=args.preflight_receipt,
         gemini_canary_receipt=args.gemini_canary_receipt,
         grok_canary_receipt=args.grok_canary_receipt,
+        agy_executable=args.agy_executable,
+        grok_executable=args.grok_executable,
         code_paths=_parse_code_paths(args.code_path),
         owner_uid=args.owner_uid,
         owner_gid=args.owner_gid,
@@ -591,6 +601,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--preflight-receipt", type=Path, required=True, help="text-free reviewed preflight receipt")
     parser.add_argument("--gemini-canary-receipt", type=Path, required=True, help="text-free Gemini canary receipt")
     parser.add_argument("--grok-canary-receipt", type=Path, required=True, help="text-free Grok canary receipt")
+    parser.add_argument("--agy-executable", type=Path, required=True, help="explicit reviewed AGY executable")
+    parser.add_argument("--grok-executable", type=Path, required=True, help="explicit reviewed Grok executable")
     parser.add_argument("--code-path", action="append", default=[], help="LABEL=/absolute/public/code/path; repeat")
     parser.add_argument("--owner-uid", type=int, required=True, help="required output owner UID")
     parser.add_argument("--owner-gid", type=int, required=True, help="required output owner GID")

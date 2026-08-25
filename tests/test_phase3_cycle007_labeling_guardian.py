@@ -56,6 +56,8 @@ def _config(guardian: ModuleType, root: Path, **changes: Any) -> Any:
         "preflight_receipt": root / "preflight.json",
         "gemini_canary_receipt": root / "gemini.json",
         "grok_canary_receipt": root / "grok.json",
+        "agy_executable": root / "agy",
+        "grok_executable": root / "grok",
         "code_paths": {},
         "owner_uid": os.getuid(),
         "owner_gid": os.getgid(),
@@ -394,6 +396,8 @@ def test_prepare_path_never_invokes_controller(guardian: ModuleType, tmp_path: P
         "--preflight-receipt", "/preflight",
         "--gemini-canary-receipt", "/gemini",
         "--grok-canary-receipt", "/grok",
+        "--agy-executable", "/tools/agy",
+        "--grok-executable", "/tools/grok",
         "--owner-uid", "1",
         "--owner-gid", "1",
         "--min-free-bytes", "1",
@@ -416,6 +420,18 @@ def test_plan_uses_status_only_and_reports_next_stage(
     result = guardian._safe_status(config, mounts=[])
     assert result["next_stage"] == "grok"
     assert calls == [("status", None)]
+
+
+def test_controller_command_forwards_explicit_provider_executables(
+    guardian: ModuleType, tmp_path: Path
+) -> None:
+    config = _config(guardian, tmp_path, action="status")
+    command = guardian._controller_command(config, "status")
+
+    agy_index = command.index("--agy-executable")
+    grok_index = command.index("--grok-executable")
+    assert command[agy_index + 1] == str(config.agy_executable)
+    assert command[grok_index + 1] == str(config.grok_executable)
 
 
 def test_controller_status_drops_ambient_execution_descriptor(

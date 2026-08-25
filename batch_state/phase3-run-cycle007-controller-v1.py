@@ -47,9 +47,6 @@ LABEL_PROMPT_PATHS = {
 }
 GEMINI_MODEL = "Gemini 3.6 Flash (High)"
 GROK_MODEL = "grok-4.5"
-AGY = Path("/Users/krisztiankoos/.local/bin/agy")
-GROK = Path("/Users/krisztiankoos/.local/bin/grok")
-
 REQUIRED_CODE_PATHS = {
     "gemini_runner": HERE / "phase3-run-cycle007-gemini-label-provider-batch-v1.py",
     "label_validator": HERE / "phase3-cycle007-label-validation-v1.py",
@@ -83,6 +80,8 @@ MCP_REQUIRED_TOOL_NAMES = (
     "search_ua_gec_errors",
     "verify_words",
 )
+AGY: Path | None = None
+GROK: Path | None = None
 
 STAGE_SEAL_SCHEMA = "phase3_cycle007_stage_complete_v2"
 STAGE_SEAL_FIELDS = frozenset(
@@ -411,7 +410,7 @@ EXACT_GROK_CANARY_KEYS = frozenset(
 
 
 def _validate_canary_receipt(
-    receipt_path: Path, expected_provider: str
+    receipt_path: Path, expected_provider: str, provider_executable: Path
 ) -> tuple[str, str, dict[str, Any], dict[str, Any]]:
     """Accept only a valid public canary receipt matching exact model/family/harness and bound criteria."""
     _mode(receipt_path, 0o600)
@@ -431,8 +430,10 @@ def _validate_canary_receipt(
         ):
             raise ControllerError("preflight_binding_drift")
         try:
-            resolved_exe = AGY.resolve(strict=True)
-            if not resolved_exe.is_file() or resolved_exe.is_symlink():
+            if provider_executable.is_symlink():
+                raise ControllerError("preflight_binding_drift")
+            resolved_exe = provider_executable.resolve(strict=True)
+            if not resolved_exe.is_file():
                 raise ControllerError("preflight_binding_drift")
             exe_sha256 = sha256(resolved_exe)
         except OSError as exc:
@@ -452,8 +453,10 @@ def _validate_canary_receipt(
         ):
             raise ControllerError("preflight_binding_drift")
         try:
-            resolved_exe = GROK.resolve(strict=True)
-            if not resolved_exe.is_file() or resolved_exe.is_symlink():
+            if provider_executable.is_symlink():
+                raise ControllerError("preflight_binding_drift")
+            resolved_exe = provider_executable.resolve(strict=True)
+            if not resolved_exe.is_file():
                 raise ControllerError("preflight_binding_drift")
             exe_sha256 = sha256(resolved_exe)
         except OSError as exc:
@@ -551,6 +554,8 @@ def preflight(
     code_paths: dict[str, Path],
     gemini_canary_receipt_path: Path,
     grok_canary_receipt_path: Path | None = None,
+    agy_executable: Path | None = None,
+    grok_executable: Path | None = None,
 ) -> dict[str, Any]:
     python_executable_sha256 = _python_executable_sha256()
     if sha256(AMENDMENT) != AMENDMENT_SHA256:
@@ -564,14 +569,22 @@ def preflight(
         if code_paths.get(label) != path.resolve():
             raise ControllerError("preflight_binding_drift")
 
-    if grok_canary_receipt_path is None:
+    agy_executable = agy_executable or AGY
+    grok_executable = grok_executable or GROK
+    if (
+        grok_canary_receipt_path is None
+        or agy_executable is None
+        or grok_executable is None
+        or not agy_executable.is_absolute()
+        or not grok_executable.is_absolute()
+    ):
         raise ControllerError("preflight_binding_drift")
 
     gemini_canary_sha256, agy_sha256, gemini_sources_id, gemini_receipt = _validate_canary_receipt(
-        gemini_canary_receipt_path, "gemini"
+        gemini_canary_receipt_path, "gemini", agy_executable
     )
     grok_canary_sha256, grok_sha256, grok_sources_id, grok_receipt = _validate_canary_receipt(
-        grok_canary_receipt_path, "grok"
+        grok_canary_receipt_path, "grok", grok_executable
     )
 
     if gemini_sources_id != grok_sources_id:
@@ -1193,6 +1206,8 @@ def _commands_for_stage(
     code_paths: dict[str, Path],
     expected_agy_executable_sha256: str | None,
     expected_grok_executable_sha256: str | None = None,
+    agy_executable: Path | None = None,
+    grok_executable: Path | None = None,
     expected_label_prompt_sha256s: dict[str, dict[str, str]] | None = None,
     expected_custody_sha256: str | None,
     expected_label_manifest_sha256: str | None,
@@ -1203,10 +1218,14 @@ def _commands_for_stage(
     resolution_nonce_ledger: Path | None = None,
     resolution_advisor_response: Path | None = None,
 ) -> tuple[list[list[str]], Any | None]:
+    agy_executable = agy_executable or AGY
+    grok_executable = grok_executable or GROK
     if not _exact_label_prompt_sha256s(expected_label_prompt_sha256s):
         raise ControllerError("preflight_binding_drift")
     assert expected_label_prompt_sha256s is not None
     if stage == "gemini":
+        if agy_executable is None:
+            raise ControllerError("preflight_binding_drift")
         ranges = gemini_missing_ranges(
             package,
             expected_custody_sha256 or "",
@@ -1229,6 +1248,8 @@ def _commands_for_stage(
                     str(end),
                     "--concurrency",
                     "1",
+                    "--provider-bin",
+                    str(agy_executable),
                     "--expected-agy-executable-sha",
                     expected_agy_executable_sha256 or "",
                     "--expected-custody-sha",
@@ -1247,6 +1268,8 @@ def _commands_for_stage(
         )
     assert runner is not None
     if stage == "grok":
+        if grok_executable is None:
+            raise ControllerError("preflight_binding_drift")
         grok = _load_bound_runner("grok_runner", code_paths)
         ranges = grok_missing_ranges(
             package,
@@ -1272,6 +1295,8 @@ def _commands_for_stage(
                     str(end),
                     "--concurrency",
                     "1",
+                    "--provider-bin",
+                    str(grok_executable),
                     "--expected-custody-sha",
                     expected_custody_sha256 or "",
                     "--expected-label-manifest-sha",
@@ -1289,12 +1314,18 @@ def _commands_for_stage(
     if stage == "compare":
         return ([[*common, "--all"]], None)
     if stage == "audit":
+        if agy_executable is None:
+            raise ControllerError("preflight_binding_drift")
         cmd = list(common)
+        cmd.extend(["--provider-bin", str(agy_executable)])
         if expected_agy_executable_sha256 and expected_agy_executable_sha256 != "synthetic":
             cmd.extend(["--expected-agy-executable-sha", expected_agy_executable_sha256])
         return ([cmd], None)
     if stage == "adjudicate":
+        if agy_executable is None:
+            raise ControllerError("preflight_binding_drift")
         cmd = [*common, "--all"]
+        cmd.extend(["--provider-bin", str(agy_executable)])
         if expected_agy_executable_sha256 and expected_agy_executable_sha256 != "synthetic":
             cmd.extend(["--expected-agy-executable-sha", expected_agy_executable_sha256])
         return ([cmd], None)
@@ -1395,6 +1426,8 @@ def run_stage(
     concurrency: int = 1,
     expected_agy_executable_sha256: str | None = None,
     expected_grok_executable_sha256: str | None = None,
+    agy_executable: Path | None = None,
+    grok_executable: Path | None = None,
     expected_python_executable_sha256: str | None = None,
     expected_label_prompt_sha256s: dict[str, dict[str, str]] | None = None,
     expected_custody_sha256: str | None = None,
@@ -1454,6 +1487,8 @@ def run_stage(
         code_paths=paths,
         expected_agy_executable_sha256=expected_agy_executable_sha256,
         expected_grok_executable_sha256=expected_grok_executable_sha256,
+        agy_executable=agy_executable,
+        grok_executable=grok_executable,
         expected_label_prompt_sha256s=expected_label_prompt_sha256s,
         expected_custody_sha256=expected_custody_sha256,
         expected_label_manifest_sha256=expected_label_manifest_sha256,
@@ -1551,6 +1586,8 @@ def main() -> int:
         type=Path,
         help="0600 real-provider-attested public Grok canary receipt",
     )
+    parser.add_argument("--agy-executable", type=Path, required=True, help="explicit reviewed AGY executable")
+    parser.add_argument("--grok-executable", type=Path, required=True, help="explicit reviewed Grok executable")
     parser.add_argument(
         "--public-canary-receipt",
         type=Path,
@@ -1595,6 +1632,8 @@ def main() -> int:
             code_paths,
             gemini_canary.resolve(),
             grok_canary.resolve(),
+            args.agy_executable,
+            args.grok_executable,
         )
         execution_lock_fd = _inherited_execution_lock_fd()
         args.lock.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -1618,6 +1657,8 @@ def main() -> int:
                     concurrency=args.concurrency,
                     expected_agy_executable_sha256=proof["expected_agy_executable_sha256"],
                     expected_grok_executable_sha256=proof.get("expected_grok_executable_sha256"),
+                    agy_executable=args.agy_executable,
+                    grok_executable=args.grok_executable,
                     expected_python_executable_sha256=proof["expected_python_executable_sha256"],
                     expected_label_prompt_sha256s=proof["expected_label_prompt_sha256s"],
                     expected_custody_sha256=proof["expected_custody_sha256"],

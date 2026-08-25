@@ -294,6 +294,44 @@ def test_preflight_valid(tmp_path: Path) -> None:
     assert proof["sources_endpoint_identity"]
 
 
+def test_preflight_accepts_explicit_provider_executable_bindings(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    agy = tmp_path / "bin" / "agy"
+    grok = tmp_path / "bin" / "grok"
+    CTRL.AGY = None
+    CTRL.GROK = None
+
+    proof = CTRL.preflight(
+        pkg,
+        preflight_path,
+        code_paths,
+        gemini_canary,
+        grok_canary,
+        agy_executable=agy,
+        grok_executable=grok,
+    )
+
+    assert proof["expected_agy_executable_sha256"] == CTRL.sha256(agy)
+    assert proof["expected_grok_executable_sha256"] == CTRL.sha256(grok)
+
+
+def test_preflight_rejects_symlinked_provider_executable(tmp_path: Path) -> None:
+    pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
+    agy_link = tmp_path / "bin" / "agy-link"
+    agy_link.symlink_to(tmp_path / "bin" / "agy")
+
+    with pytest.raises(CTRL.ControllerError, match="preflight_binding_drift"):
+        CTRL.preflight(
+            pkg,
+            preflight_path,
+            code_paths,
+            gemini_canary,
+            grok_canary,
+            agy_executable=agy_link,
+            grok_executable=tmp_path / "bin" / "grok",
+        )
+
+
 def test_preflight_persists_canonical_receipts_under_control(tmp_path: Path) -> None:
     pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
     CTRL.preflight(pkg, preflight_path, code_paths, gemini_canary, grok_canary)
@@ -476,6 +514,8 @@ def test_audit_stage_cli_receives_expected_agy_executable_sha(tmp_path: Path) ->
     assert "--expected-agy-executable-sha" in cmds[0]
     idx = cmds[0].index("--expected-agy-executable-sha")
     assert cmds[0][idx + 1] == proof["expected_agy_executable_sha256"]
+    provider_idx = cmds[0].index("--provider-bin")
+    assert cmds[0][provider_idx + 1] == str(CTRL.AGY)
 
 
 def test_gemini_cli_receives_expected_prompt_sha(tmp_path: Path) -> None:
@@ -497,6 +537,8 @@ def test_gemini_cli_receives_expected_prompt_sha(tmp_path: Path) -> None:
         )
         prompt_idx = cmds[0].index("--expected-label-prompt-sha")
         assert cmds[0][prompt_idx + 1] == proof["expected_label_prompt_sha256s"]["gemini"]["clean_label"]
+        provider_idx = cmds[0].index("--provider-bin")
+        assert cmds[0][provider_idx + 1] == str(CTRL.AGY)
     finally:
         CTRL.gemini_missing_ranges = original
 
@@ -529,6 +571,8 @@ def test_grok_cli_receives_lane_specific_reviewed_prompt_sha(tmp_path: Path) -> 
         )
         prompt_idx = commands[0].index("--expected-label-prompt-sha")
         assert commands[0][prompt_idx + 1] == proof["expected_label_prompt_sha256s"]["grok"]["residual_label"]
+        provider_idx = commands[0].index("--provider-bin")
+        assert commands[0][provider_idx + 1] == str(CTRL.GROK)
     finally:
         CTRL.grok_missing_ranges = original
 
