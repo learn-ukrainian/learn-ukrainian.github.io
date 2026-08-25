@@ -3392,6 +3392,197 @@ def test_run_worker_marks_needs_finalize_when_dirty_state_is_unknown(
     assert rc == 1
 
 
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize("unpushed_count", [1, None])
+def test_run_worker_marks_needs_finalize_for_unpushed_commits(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    mode,
+    unpushed_count,
+):
+    """Clean tree with unpushed commits or no remote tracking ref must need finalize (#7311)."""
+    task_id = f"needs-finalize-unpushed-{mode}-{unpushed_count}"
+    worktree = tmp_path / f"wt-{task_id}"
+    worktree.mkdir()
+    state_path = delegate._state_path(task_id)
+    _init_git_repo_for_test(worktree, monkeypatch)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "worktree_branch": "feat/fix-7311",
+        },
+    )
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+        patch.object(delegate, "_count_unpushed_commits", return_value=unpushed_count),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="do the work",
+            mode=mode,
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize", (
+        f"unpushed commits reported {state['status']!r}; a clean dispatch with unpushed "
+        "commits must not settle as done"
+    )
+    assert state["needs_finalize"] is True
+    assert state["commits_ahead"] == 1
+    assert state["worktree_dirty_on_exit"] is False
+    assert rc == 1
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_run_worker_marks_done_when_branch_commits_pushed(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    mode,
+):
+    """Pushed branch commits prove delivery and settle as done (#7311)."""
+    task_id = f"shipped-pushed-{mode}"
+    worktree = tmp_path / f"wt-{task_id}"
+    worktree.mkdir()
+    state_path = delegate._state_path(task_id)
+    _init_git_repo_for_test(worktree, monkeypatch)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "worktree_branch": "feat/fix-7311",
+        },
+    )
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+        patch.object(delegate, "_count_unpushed_commits", return_value=0),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="do the work",
+            mode=mode,
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["commits_ahead"] == 1
+    assert rc == 0
+
+
+@pytest.mark.parametrize("branch", [None, "", "main", "master"])
+def test_run_worker_unpushed_check_skips_omitted_or_protected_branch(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    branch,
+):
+    """Omitted or protected worktree_branch keeps existing commits_ahead delivery behavior (#7311)."""
+    task_id = f"skip-unpushed-check-{branch}"
+    worktree = tmp_path / f"wt-{task_id}"
+    worktree.mkdir()
+    state_path = delegate._state_path(task_id)
+    _init_git_repo_for_test(worktree, monkeypatch)
+    state_payload = {
+        "task_id": task_id,
+        "worktree_path": str(worktree),
+        "worktree_base": "main",
+    }
+    if branch is not None:
+        state_payload["worktree_branch"] = branch
+    delegate._write_state_atomic(state_path, state_payload)
+
+    unpushed_called = False
+
+    def _mock_unpushed(*_args, **_kwargs):
+        nonlocal unpushed_called
+        unpushed_called = True
+        return None
+
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", _mock_unpushed)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="do the work",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert unpushed_called is False
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert rc == 0
+
+
+def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatch):
+    """_count_unpushed_commits returns correct count against origin ref or None (#7311)."""
+    _sanitize_git_env_for_test(monkeypatch)
+    origin = tmp_path / "origin.git"
+    worktree = tmp_path / "worktree"
+    subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "init", "--initial-branch=main", str(worktree)], check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "test"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "remote", "add", "origin", str(origin)], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "push", "-u", "origin", "main"], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    # 1. New local branch not yet pushed to origin: returns None (cannot count / no remote ref)
+    subprocess.run(["git", "checkout", "-b", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    (worktree / "file.txt").write_text("hello\n", encoding="utf-8")
+    subprocess.run(["git", "add", "file.txt"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "feat: add file"], cwd=worktree, check=True, timeout=30)
+
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") is None
+
+    # 2. Push branch to origin: now 0 unpushed commits
+    subprocess.run(["git", "push", "-u", "origin", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") == 0
+
+    # 3. Add 1 local commit without pushing: now 1 unpushed commit
+    (worktree / "file2.txt").write_text("hello 2\n", encoding="utf-8")
+    subprocess.run(["git", "add", "file2.txt"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "feat: add file 2"], cwd=worktree, check=True, timeout=30)
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") == 1
+
+    # 4. Non-existent worktree path: returns None
+    assert delegate._count_unpushed_commits(tmp_path / "nonexistent", "feat/my-branch") is None
+
+
 def test_run_worker_auto_finalizes_dirty_agy_worktree(
     tmp_tasks_dir,
     tmp_path,

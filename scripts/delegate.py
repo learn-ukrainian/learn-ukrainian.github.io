@@ -2591,6 +2591,50 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
     return None
 
 
+def _unpushed_commit_refs(worktree: Path, branch: str) -> tuple[str, ...]:
+    """Return ordered remote-tracking ref candidates for unpushed-commit checks."""
+    clean_branch = branch.removeprefix("refs/heads/").removeprefix("refs/remotes/")
+    if clean_branch.startswith("origin/"):
+        clean_branch = clean_branch.removeprefix("origin/")
+    if not clean_branch:
+        return ()
+
+    candidates: list[str] = [f"{clean_branch}@{{upstream}}", "@{upstream}"]
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote:
+        candidates.append(f"{tracking_remote}/{clean_branch}")
+    candidates.append(f"origin/{clean_branch}")
+    return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
+
+
+def _count_unpushed_commits(worktree: Path, branch: str) -> int | None:
+    """Return commits on HEAD not reachable from the branch's remote, or None.
+
+    ``None`` means cannot count or no remote tracking ref exists. Fail closed
+    on unknown or unpushed commits (#7311).
+    """
+    for candidate in _unpushed_commit_refs(worktree, branch):
+        try:
+            proc = subprocess.run(
+                ["git", "rev-list", "--count", f"{candidate}..HEAD"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        if proc.returncode != 0:
+            continue
+        try:
+            return int((proc.stdout or "").strip())
+        except ValueError:
+            return None
+    return None
+
+
 def _commit_count_base_ref(worktree: Path, base_branch: str) -> str:
     """Keep an explicit available non-origin remote base for finalization."""
     explicit_ref = base_branch.removeprefix("refs/remotes/")
@@ -4701,6 +4745,26 @@ def _run_worker(
                 # the task for finalization rather than letting it settle as ``done``.
                 if dirty_on_exit in (True, None) and commits_ahead in (0, None):
                     needs_finalize = True
+
+                # Catch committed-but-unpushed write dispatches (#7311):
+                # A clean tree with local commits on the dispatch branch has commits_ahead >= 1
+                # relative to base_ref (e.g. origin/main), but if those commits were never
+                # pushed to the branch's remote tracking ref, the work has not left the machine.
+                worktree_branch = final_state.get("worktree_branch")
+                if isinstance(worktree_branch, str) and worktree_branch.strip():
+                    normalized_branch = worktree_branch.strip()
+                    if normalized_branch.startswith("refs/heads/"):
+                        normalized_branch = normalized_branch.removeprefix("refs/heads/")
+                    if normalized_branch.startswith("origin/"):
+                        normalized_branch = normalized_branch.removeprefix("origin/")
+                    containment = _load_worktree_containment()
+                    if normalized_branch not in containment.PROTECTED_BRANCHES:
+                        unpushed_commits = _count_unpushed_commits(
+                            Path(worktree_path),
+                            normalized_branch,
+                        )
+                        if unpushed_commits is None or unpushed_commits > 0:
+                            needs_finalize = True
 
                 if needs_finalize and returncode == 0 and mode == "danger":
                     auto_finalize = _auto_finalize_dirty_worktree(
