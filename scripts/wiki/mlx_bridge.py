@@ -36,7 +36,7 @@ def get_physical_ram() -> int | None:
     """Read physical RAM size in bytes. Returns None if it cannot be determined."""
     if sys.platform == "darwin":
         try:
-            out = subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True)
+            out = subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True, timeout=10)
             return int(out.strip())
         except Exception:
             return None
