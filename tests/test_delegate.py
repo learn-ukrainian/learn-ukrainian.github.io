@@ -2421,17 +2421,18 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
         timeout=30,
     )
 
+    ignored_paths = [".cache/lemma-frequency-c1-999.json"]
     leaked_paths = [
-        ".cache/lemma-frequency-c1-999.json",
         "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md",
         "curriculum/l2-uk-en/bio/andrii-malyshko/status/module.json",
     ]
+    all_written_paths = [*ignored_paths, *leaked_paths]
     state_path = delegate._state_path("read-only-seminar-leak")
     delegate._write_state_atomic(state_path, {"task_id": "read-only-seminar-leak"})
     result = _finalize_mock_result()
 
     def legacy_audit_side_effect(*_args, **_kwargs):
-        for relative_path in leaked_paths:
+        for relative_path in all_written_paths:
             target = worktree / relative_path
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text("legacy audit leak\n", encoding="utf-8")
@@ -2454,6 +2455,7 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     assert state["status"] == "failed"
     assert state["read_only_checkout_pre"] == {}
     assert state["read_only_mutation_paths"] == leaked_paths
+    assert state["read_only_ignored_mutation_paths"] == ignored_paths
     assert state["read_only_checkout_post"] == {
         ".cache/lemma-frequency-c1-999.json": "!!",
         "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md": "??",
@@ -2482,6 +2484,7 @@ def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
     )
     (repo / ".gitignore").write_text(
         ".agent/\n"
+        ".cache/\n"
         "batch_state/\n"
         ".pytest_cache/\n"
         ".pytest_breadcrumbs/\n"
@@ -2769,7 +2772,18 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
     assert delegate._read_only_mutation_paths(before, after_mixed) == ["tracked.txt"]
 
     after_cache_leak = {**after_runtime, ".cache/lemma-frequency-c1-999.json": "!!"}
-    assert delegate._read_only_mutation_paths(before, after_cache_leak) == [".cache/lemma-frequency-c1-999.json"]
+    assert delegate._read_only_mutation_paths(before, after_cache_leak) == []
+    assert delegate._read_only_ignored_mutation_paths(before, after_cache_leak) == sorted(
+        [*after_runtime, ".cache/lemma-frequency-c1-999.json"]
+    )
+    assert delegate._read_only_mutation_paths(
+        {".cache/lemma-frequency-c1-999.json": "!!"},
+        {},
+    ) == []
+    assert delegate._read_only_ignored_mutation_paths(
+        {".cache/lemma-frequency-c1-999.json": "!!"},
+        {},
+    ) == [".cache/lemma-frequency-c1-999.json"]
 
     # Force-added tracked file under an exempted prefix must still trip (#6803 r2 / #6860).
     tracked_session = ".agent/sessions/force-added.json"
@@ -2833,6 +2847,52 @@ def test_read_only_dispatch_allows_harness_runtime_state(
     for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
         assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
+
+
+def test_read_only_dispatch_allows_gitignored_cache_write(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#7253: a new gitignored cache file is diagnostic-only, not a failure."""
+    checkout = (tmp_path / "gitignored-cache").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = "read-only-gitignored-cache"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+    cache_path = ".cache/lemma-frequency-c1-999.json"
+
+    def cache_only_side_effect(*_args, **_kwargs):
+        target = checkout / cache_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("cache\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=cache_only_side_effect):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ignored_mutation_paths"] == [cache_path]
+    assert state["last_error"] is None
+    assert state["read_only_checkout_post"][cache_path] == "!!"
+    assert (checkout / cache_path).exists()
 
 
 @pytest.mark.parametrize(
@@ -2993,8 +3053,8 @@ def test_read_only_mutation_paths_ignore_new_sibling_dispatch_sandbox_only():
     existing = f"{_SIBLING_DISPATCH_SANDBOX}/README.md"
     planted = f"{_SIBLING_DISPATCH_SANDBOX}/evil.txt"
     assert delegate._read_only_mutation_paths(
-        {existing: "!!"},
-        {existing: "!!", planted: "!!"},
+        {existing: "??"},
+        {existing: "??", planted: "??"},
     ) == [planted]
 
 
