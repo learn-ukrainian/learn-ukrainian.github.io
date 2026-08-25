@@ -52,11 +52,15 @@ operator explicitly starts a provider stage.
 
 ## Minimal architecture
 
-The existing reviewed controller remains the authority for preflight, packet
-verification, stage ordering, and stage seals. The guardian requires explicit
-absolute AGY and Grok executable bindings, and the controller verifies each
-resolved regular file against its provider-attested canary hash before status,
-planning, or execution. No provider executable is discovered from a workstation
+The existing reviewed controller remains the authority for provider preflight,
+packet verification, stage ordering, and stage seals. A pristine installation
+may run provider-free `prepare`, `status`, and `plan` without provider bindings;
+that bootstrap path fails closed if it finds any stage state, provider receipt,
+non-empty output root, controller, or worker. Before `resume`, and whenever
+provider state exists, the guardian requires explicit absolute AGY and Grok
+executable bindings and all three preflight receipts. The controller verifies
+each resolved regular file against its provider-attested canary hash before any
+provider execution. No provider executable is discovered from a workstation
 path or from `PATH`. A small Linux-only guardian adds only the missing
 operational layer:
 
@@ -150,12 +154,14 @@ of being claimed as automatically resumable.
 ## Run sequence
 
 1. `prepare`: mount and verify storage only; provider calls remain off.
-2. `plan`: report the next missing stage and safe counts only.
-3. `resume --through gemini`: finish and seal Gemini.
-4. `resume --through grok`: finish and seal Grok.
-5. `resume --through adjudicate`: compare, audit, and adjudicate after both
+2. `status`: verify the pristine provider-off state and safe counts only.
+3. `plan`: report Gemini as the next missing stage and safe counts only.
+4. `resume --through gemini`: require the complete provider preflight, then
+   finish and seal Gemini.
+5. `resume --through grok`: finish and seal Grok.
+6. `resume --through adjudicate`: compare, audit, and adjudicate after both
    provider seals exist.
-6. `resume --through certify`: run authorized resolution when required and the
+7. `resume --through certify`: run authorized resolution when required and the
    existing certifier; success requires zero unresolved rows.
 
 The staged `--through` boundary prevents an operator intending to start one
