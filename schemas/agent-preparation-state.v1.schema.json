@@ -21,20 +21,20 @@
     "authority": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository", "data_checkout", "service_code", "manifest"],
+      "required": ["repository", "primary_checkout", "cwd_role", "service_code", "manifest"],
       "properties": {
         "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
-        "data_checkout": {
+        "primary_checkout": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["role", "root", "branch", "head_sha"],
+          "required": ["role", "head_sha", "dirty_count"],
           "properties": {
             "role": {"enum": ["live_primary", "dispatch_worktree", "linked_worktree"]},
-            "root": {"type": "string", "minLength": 1},
-            "branch": {"type": ["string", "null"]},
-            "head_sha": {"$ref": "#/$defs/commitSha"}
+            "head_sha": {"$ref": "#/$defs/commitSha"},
+            "dirty_count": {"type": "integer", "minimum": 0}
           }
         },
+        "cwd_role": {"enum": ["primary", "worktree", "other"]},
         "service_code": {
           "type": "object",
           "additionalProperties": false,

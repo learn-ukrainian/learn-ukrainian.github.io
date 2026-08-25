@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import MANIFEST_NAME, is_release_root
+from scripts.guardrails.worktree_containment import classify_repo_path
 
 _FULL_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _HASH_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -32,10 +33,29 @@ def preparation_data_root(*, project_root: Path, live_repo_root: Path) -> Path:
 
 
 def _checkout_role(root: Path) -> str:
+    """Return the stable public role for a real checkout's structural class."""
+    path_class = classify_repo_path(root, cwd=root)
+    return {
+        "primary_checkout": "live_primary",
+        "dispatch_worktree": "dispatch_worktree",
+        "other_worktree": "linked_worktree",
+        # ``build_repository_authority`` has already proved that this is a Git
+        # checkout. Preserve the historical fallback for unusual Git layouts
+        # that the containment classifier cannot anchor to a primary root.
+        "outside_repo": "live_primary",
+    }[path_class]
+
+
+def cwd_role(root: Path) -> str:
+    """Classify the serving cwd without returning its filesystem location."""
+    if is_release_root(root):
+        return "other"
     git_entry = root / ".git"
     if git_entry.is_file():
-        return "dispatch_worktree" if ".worktrees/dispatch" in root.as_posix() else "linked_worktree"
-    return "live_primary"
+        return "worktree"
+    if git_entry.is_dir():
+        return "primary"
+    return "other"
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -103,6 +123,28 @@ def _release_identity(project_root: Path) -> dict[str, str | None]:
     }
 
 
+def _dirty_count(root: Path) -> int:
+    """Return only the number of non-ignored dirty entries."""
+    status = _git(root, "status", "--porcelain=v1", "--untracked-files=all")
+    return sum(1 for line in status.splitlines() if line)
+
+
+def build_repository_identity(root: Path) -> dict[str, str | None]:
+    """Return the stable live/release identity used by session-stream routes."""
+    resolved = root.resolve()
+    try:
+        candidate = _git(resolved, "rev-parse", "HEAD")
+        sha = candidate if _FULL_SHA_RE.fullmatch(candidate) else None
+    except Exception:
+        # Health and inventory remain useful when the configured checkout is
+        # unavailable; the absence of a SHA is explicit and path-free.
+        sha = None
+    return {
+        "role": "release" if is_release_root(resolved) else "live",
+        "sha": sha,
+    }
+
+
 def build_repository_authority(
     *,
     project_root: Path,
@@ -112,8 +154,9 @@ def build_repository_authority(
 ) -> dict[str, object]:
     """Build the single authority envelope used by agent-facing API routes.
 
-    The only filesystem path exposed is the configured, fixed live-data root.
-    Callers cannot select another root, branch, commit, or worktree.
+    Callers receive stable repository identity and checkout metadata, never a
+    filesystem path. Callers cannot select another root, branch, commit, or
+    worktree.
     """
     try:
         data_root = live_repo_root.resolve(strict=True)
@@ -122,18 +165,17 @@ def build_repository_authority(
         raise RepositoryAuthorityError("configured repository root is unavailable") from exc
 
     remote = _git(data_root, "remote", "get-url", "origin")
-    branch = data_branch if data_branch is not None else _git(data_root, "branch", "--show-current")
     head_sha = data_head_sha if data_head_sha is not None else _git(data_root, "rev-parse", "HEAD")
     if not _FULL_SHA_RE.fullmatch(head_sha):
         raise RepositoryAuthorityError("live-data checkout SHA is invalid")
 
     return {
         "repository": _repository_slug(remote),
-        "data_checkout": {
+        "primary_checkout": {
             "role": _checkout_role(data_root),
-            "root": str(data_root),
-            "branch": branch or None,
             "head_sha": head_sha,
+            "dirty_count": _dirty_count(data_root),
         },
+        "cwd_role": cwd_role(code_root),
         "service_code": _release_identity(code_root),
     }

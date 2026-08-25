@@ -95,7 +95,7 @@ from .ops_router import router as ops_router
 from .preload import preload_all
 from .project_state_router import router as project_state_router
 from .rag_router import router as sources_router
-from .repository_authority import build_repository_authority
+from .repository_authority import build_repository_authority, cwd_role
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
 from .rollover_router import collect_rollover_orient_data
@@ -498,6 +498,7 @@ def _run_command(args: list[str], *, timeout: float = 2.0) -> subprocess.Complet
 def _collect_git_orient_data() -> dict:
     branch_proc = _run_command(["git", "branch", "--show-current"])
     head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"])
+    full_head_proc = _run_command(["git", "rev-parse", "HEAD"])
     ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"])
     log_proc = _run_command(["git", "log", "--oneline", "-5"])
 
@@ -524,20 +525,19 @@ def _collect_git_orient_data() -> dict:
             ahead_value = 0
     try:
         primary_status = worktree_containment.primary_checkout_dirty_status(LIVE_REPO_ROOT)
-    except Exception as exc:
+    except Exception:
         branch = branch_proc.stdout.strip()
         primary_status = {
-            "main_root": str(LIVE_REPO_ROOT),
+            "role": "primary",
+            "head_sha": (
+                full_head_proc.stdout.strip()
+                if full_head_proc.returncode == 0
+                else None
+            ),
             "branch": branch,
             "protected_branch": branch in worktree_containment.PROTECTED_BRANCHES,
             "dirty": False,
             "dirty_count": 0,
-            "tracked_dirty_count": 0,
-            "untracked_dirty_count": 0,
-            "entries": [],
-            "checked_cwd": str(LIVE_REPO_ROOT),
-            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
-            "error": str(exc),
         }
 
     branch = branch_proc.stdout.strip()
@@ -552,7 +552,13 @@ def _collect_git_orient_data() -> dict:
         "ahead_of_origin": ahead_value,
         "recent_commits": recent_commits,
         "primary_checkout_dirty": primary_status["dirty"],
-        "primary_checkout": primary_status,
+        "primary_checkout": {
+            "role": primary_status.get("role", "primary"),
+            "head_sha": primary_status.get("head_sha")
+            or (full_head_proc.stdout.strip() if full_head_proc.returncode == 0 else None),
+            "dirty_count": int(primary_status.get("dirty_count", 0)),
+        },
+        "cwd_role": cwd_role(Path(LIVE_REPO_ROOT)),
         "authority": authority,
     }
 

@@ -14,7 +14,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.api import preparation_state, state_router
 from scripts.api.main import app
-from scripts.api.repository_authority import build_repository_authority, preparation_data_root
+from scripts.api.repository_authority import build_repository_authority, cwd_role, preparation_data_root
 from scripts.orchestration import curriculum_readiness
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,12 +23,12 @@ VALIDATOR = Draft202012Validator(SCHEMA)
 CLIENT = TestClient(app, raise_server_exceptions=False)
 AUTHORITY = {
     "repository": "learn-ukrainian/learn-ukrainian.github.io",
-    "data_checkout": {
+    "primary_checkout": {
         "role": "live_primary",
-        "root": "/fixed/repository",
-        "branch": "main",
         "head_sha": "a" * 40,
+        "dirty_count": 0,
     },
+    "cwd_role": "primary",
     "service_code": {
         "mode": "release",
         "commit_sha": "b" * 40,
@@ -67,6 +67,19 @@ def _repo(path: Path, *, remote: str) -> Path:
     (path / "tracked.txt").write_text(path.name, encoding="utf-8")
     _git(path, "add", "tracked.txt")
     _git(path, "commit", "-q", "-m", "init")
+    return path
+
+
+def _clone_repo(source: Path, path: Path) -> Path:
+    subprocess.run(
+        ["git", "clone", "-q", "--no-hardlinks", str(source), str(path)],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_git_env(),
+        timeout=120,
+    )
+    _git(path, "remote", "set-url", "origin", "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git")
     return path
 
 
@@ -427,7 +440,7 @@ def test_ready_to_build_is_additively_deprecated_and_session_start_migrated() ->
     assert "/api/state/preparation" in script
 
 
-def test_repository_authority_distinguishes_data_checkout_from_development_code(tmp_path: Path) -> None:
+def test_repository_authority_distinguishes_primary_checkout_from_development_code(tmp_path: Path) -> None:
     data = _repo(
         tmp_path / "data",
         remote="https://secret-token@github.com/learn-ukrainian/learn-ukrainian.github.io.git",
@@ -441,12 +454,13 @@ def test_repository_authority_distinguishes_data_checkout_from_development_code(
 
     assert authority["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
     assert "secret-token" not in json.dumps(authority)
-    assert authority["data_checkout"] == {
+    assert authority["primary_checkout"] == {
         "role": "live_primary",
-        "root": str(data),
-        "branch": "main",
         "head_sha": _git(data, "rev-parse", "HEAD"),
+        "dirty_count": 0,
     }
+    assert authority["cwd_role"] == "primary"
+    assert "data_checkout" not in authority
     assert authority["service_code"]["mode"] == "development"
     assert authority["service_code"]["commit_sha"] == _git(code, "rev-parse", "HEAD")
 
@@ -473,10 +487,41 @@ def test_repository_authority_reads_immutable_release_manifest(tmp_path: Path) -
     }
 
 
-def test_release_route_reads_from_the_reported_live_data_checkout(
+def test_repository_authority_classifies_checkout_roles_by_structure(tmp_path: Path) -> None:
+    primary = _repo(
+        tmp_path / "repo",
+        remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+    )
+    dispatch = primary / ".worktrees" / "dispatch" / "codex" / "task"
+    linked = tmp_path / "linked"
+    other = primary / ".worktrees" / "legacy"
+    _git(primary, "worktree", "add", "-q", "-b", "codex/task", str(dispatch))
+    _git(primary, "worktree", "add", "-q", "-b", "linked", str(linked))
+    _git(primary, "worktree", "add", "-q", "-b", "legacy", str(other))
+
+    cases = (
+        (primary, "live_primary", "primary"),
+        (dispatch, "dispatch_worktree", "worktree"),
+        (linked, "linked_worktree", "worktree"),
+        # The guardrail calls every registered non-dispatch worktree
+        # ``other_worktree``; the public authority vocabulary stays
+        # ``linked_worktree`` for compatibility.
+        (other, "linked_worktree", "worktree"),
+    )
+    for checkout, expected_role, expected_cwd_role in cases:
+        authority = build_repository_authority(project_root=checkout, live_repo_root=checkout)
+        assert authority["primary_checkout"]["role"] == expected_role
+        assert authority["cwd_role"] == expected_cwd_role
+    assert cwd_role(tmp_path / "other") == "other"
+
+
+def test_release_route_reads_from_the_reported_primary_checkout(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
+    primary = _clone_repo(ROOT, tmp_path / "repo")
+    dispatch = primary / ".worktrees" / "dispatch" / "codex" / "release-test"
+    _git(primary, "worktree", "add", "-q", "-b", "codex/release-test", str(dispatch))
     release_sha = "e" * 40
     release = tmp_path / ".runtime/api/releases" / release_sha
     release.mkdir(parents=True)
@@ -485,14 +530,17 @@ def test_release_route_reads_from_the_reported_live_data_checkout(
         encoding="utf-8",
     )
     monkeypatch.setattr(state_router, "PROJECT_ROOT", release)
-    monkeypatch.setattr(state_router, "LIVE_REPO_ROOT", ROOT)
+    monkeypatch.setattr(state_router, "LIVE_REPO_ROOT", dispatch)
 
     response = CLIENT.get("/api/state/preparation?track=a1")
 
     assert response.status_code == 200
     data = response.json()
     VALIDATOR.validate(data)
-    assert data["authority"]["data_checkout"]["root"] == str(ROOT)
+    assert "data_checkout" not in data["authority"]
+    assert data["authority"]["primary_checkout"]["role"] == "dispatch_worktree"
+    assert data["authority"]["primary_checkout"]["head_sha"] == _git(dispatch, "rev-parse", "HEAD")
+    assert data["authority"]["cwd_role"] == "other"
     assert data["authority"]["service_code"] == {
         "mode": "release",
         "commit_sha": release_sha,
@@ -501,12 +549,12 @@ def test_release_route_reads_from_the_reported_live_data_checkout(
     assert data["tracks"][0]["module_state_counts"]["built"] == 55
 
 
-def test_development_dispatch_worktree_is_reported_as_the_data_checkout(tmp_path: Path) -> None:
+def test_development_dispatch_worktree_is_reported_as_the_primary_checkout(tmp_path: Path) -> None:
     primary = _repo(
-        tmp_path / "primary",
+        tmp_path / "repo",
         remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
     )
-    dispatch = tmp_path / ".worktrees/dispatch/codex/example"
+    dispatch = primary / ".worktrees/dispatch/codex/example"
     dispatch.parent.mkdir(parents=True)
     _git(primary, "worktree", "add", "-q", "-b", "codex/example", str(dispatch))
 
@@ -514,5 +562,10 @@ def test_development_dispatch_worktree_is_reported_as_the_data_checkout(tmp_path
     authority = build_repository_authority(project_root=dispatch, live_repo_root=data_root)
 
     assert data_root == dispatch
-    assert authority["data_checkout"]["role"] == "dispatch_worktree"
-    assert authority["data_checkout"]["root"] == str(dispatch)
+    assert authority["primary_checkout"] == {
+        "role": "dispatch_worktree",
+        "head_sha": _git(dispatch, "rev-parse", "HEAD"),
+        "dirty_count": 0,
+    }
+    assert authority["cwd_role"] == "worktree"
+    assert "data_checkout" not in authority

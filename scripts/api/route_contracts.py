@@ -31,6 +31,7 @@ class RouteContract:
     recommendation: str
     mutates: bool = False
     replacement: str | None = None
+    response_schema_version: str | None = None
 
     def matches(self, path: str, kind: ContractKind) -> bool:
         if self.kind != kind:
@@ -83,6 +84,19 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         mutates=True,
     ),
     RouteContract(
+        "/api/session-streams",
+        "prefix",
+        "http",
+        "Read-only session-stream health, status, digest, dual-write, and projection-drift surfaces.",
+        "SessionStreamStore plus bounded legacy-handoff inventory and projection receipts.",
+        "Health and inventory are generated per request; store schema versions are read from the configured database.",
+        ("agents", "Monitor", "session-stream consumers"),
+        "Complements the remote /api/epics/v1 lifecycle projection; it never exposes filesystem paths.",
+        "medium if callers treat local inventory as remote lease authority",
+        "keep as the path-free session-stream observability contract",
+        response_schema_version="session-streams.v2",
+    ),
+    RouteContract(
         "/api/ops/entire-context",
         "prefix",
         "http",
@@ -130,6 +144,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Replaces readiness inferences from legacy /api/state/summary, /module, and /ready-to-build telemetry.",
         "low — failures in manifest, readiness contracts, selectors, or repository authority fail closed",
         "keep as the canonical agent-facing curriculum preparation contract",
+        response_schema_version="authority.v2",
     ),
     RouteContract(
         "/api/state/ready-to-build",
@@ -656,6 +671,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Aggregates many other API sections.",
         "low/medium when upstream collectors degrade",
         "keep cold-start source of truth",
+        response_schema_version="orient.v2",
     ),
     RouteContract(
         "/api/rollovers",
