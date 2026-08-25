@@ -2779,7 +2779,7 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         ),
         (
             "ignored",
-            ["git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+            ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignored"],
         ),
     )
     outputs: dict[str, str] = {}
@@ -2827,8 +2827,15 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
             entries[path] = state
         if rename_source is not None and not _is_read_only_snapshot_excluded_path(rename_source):
             entries[rename_source] = f"{state}:source"
-    for path in outputs["ignored"].split("\0"):
-        if path and not _is_read_only_snapshot_excluded_path(path):
+    # ``git status`` without ``--ignored`` omits ignored paths entirely. The
+    # second status invocation makes those paths observable as ``!!`` while
+    # retaining porcelain's tracked/untracked classification for the first
+    # invocation. Do not let the second invocation overwrite real statuses.
+    for record in outputs["ignored"].split("\0"):
+        if len(record) < 4 or record[:2] != "!!" or record[2] != " ":
+            continue
+        path = record[3:]
+        if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
     return entries, None
 
@@ -2924,7 +2931,8 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
     sidecars that false-failed successful read-only tasks (#6860). Task-authored
-    ignored leaks such as ``.cache/`` stay visible to the guard (#4840).
+    ignored paths such as ``.cache/`` are classified separately as diagnostic
+    notes (#4840, #7253).
     """
     if _is_read_only_delegate_snapshot_sidecar_path(path):
         return True
@@ -2991,13 +2999,48 @@ def _is_read_only_runtime_state_exemption(path: str, *, before_state: str | None
     )
 
 
+def _is_read_only_ignored_status(state: str | None) -> bool:
+    """Return whether a snapshot status is Git's ignored ``!!`` marker."""
+    return state is not None and state[:2] == "!!"
+
+
+def _is_read_only_ignored_mutation(*, before_state: str | None, after_state: str | None) -> bool:
+    """Return whether a changed path is ignored in its observable final state.
+
+    A deleted ignored file disappears from both porcelain snapshots, so its
+    pre-snapshot ``!!`` marker is also sufficient to classify that delta as an
+    ignored mutation. A path that becomes ordinary untracked ``??`` remains a
+    real mutation and is intentionally not classified as ignored.
+    """
+    if after_state is not None:
+        return _is_read_only_ignored_status(after_state)
+    return _is_read_only_ignored_status(before_state)
+
+
+def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
+    """Return changed paths Git reports as ignored, for diagnostic notes only."""
+    before_roots = _read_only_dispatch_sandbox_roots(before)
+    return sorted(
+        path
+        for path in set(before) | set(after)
+        if before.get(path) != after.get(path)
+        and _is_read_only_ignored_mutation(
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
+        and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
+    )
+
+
 def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
-    Gitignored harness/tooling runtime state is excluded when it is ignored or
-    untracked: the runtime owns those writes, so they are not evidence that a
-    read-only worker mutated the tree (#6803, #6860). Tracked paths under the
-    same prefixes (including force-added files) still trip the guard.
+    Gitignored paths are excluded because ``git status`` marks them ``!!`` (or
+    omits them without ``--ignored``); they are recorded by
+    :func:`_read_only_ignored_mutation_paths` instead. Runtime-state exemptions
+    remain for older snapshots and for paths whose status is not ignored.
+    Tracked paths under runtime prefixes (including force-added files) still
+    trip the guard.
 
     Newly appeared sibling dispatch sandboxes under
     ``.worktrees/dispatch/<agent>/<task>/`` are also excluded (#6938): concurrent
@@ -3011,6 +3054,10 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
         path
         for path in set(before) | set(after)
         if before.get(path) != after.get(path)
+        and not _is_read_only_ignored_mutation(
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
         and not _is_read_only_runtime_state_exemption(
             path,
             before_state=before.get(path),
@@ -4476,6 +4523,7 @@ def _run_worker(
     read_only_checkout_post: dict[str, str] | None = None
     read_only_snapshot_error: str | None = None
     read_only_mutation_paths: list[str] = []
+    read_only_ignored_mutation_paths: list[str] = []
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
         _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
@@ -4674,10 +4722,15 @@ def _run_worker(
                 read_only_snapshot_error = post_snapshot_error
             final_state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
             if read_only_checkout_pre is not None and read_only_checkout_post is not None:
+                read_only_ignored_mutation_paths = _read_only_ignored_mutation_paths(
+                    read_only_checkout_pre,
+                    read_only_checkout_post,
+                )
                 read_only_mutation_paths = _read_only_mutation_paths(
                     read_only_checkout_pre,
                     read_only_checkout_post,
                 )
+            final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
             if read_only_mutation_paths:
                 final_status = "failed"
