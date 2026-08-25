@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "edf0213d975e",
+  "session_id": "ses_fc8d1357effeXBUoEu5tbadqUs",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T04:40:17.011405489Z",
+  "branch": "ox-alpha/timeout-burndown-7213-s19",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/agent_github_identity.py",
+    "scripts/agent_runtime/env_sanitize.py",
+    "scripts/projects/ua_eval_harness/build_heldout_manifest.py",
+    "scripts/projects/ua_eval_harness/run_codex_baseline.py",
+    "scripts/migrate/rename_track.py",
+    "scripts/lexicon/fill_from_content.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/test_identity_eval_timeouts.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "eca3ad8d5180",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 89863,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2537408,
+    "output_tokens": 13919,
+    "api_call_count": 45
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T04:40:16.954034047Z",
+    "agent_lines": 177,
+    "agent_removed": 26,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 177,
+    "total_lines_changed": 203,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
