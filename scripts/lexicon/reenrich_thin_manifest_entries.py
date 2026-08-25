@@ -28,6 +28,7 @@ DEFAULT_CANARY_LEMMAS = ["вода", "аби", "хліб", "свіжий"]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.audit.audit_atlas_poc_richness import poc_thin_entries
 from scripts.audit.audit_atlas_thin_enriched import (
     has_learner_english_anchor,
     thin_old_gate_entries,
@@ -556,6 +557,9 @@ def reenrich_thin_entries(
         targets = missing_translation_entries(manifest)
     elif target == "missing-anchor":
         targets = thin_old_gate_entries(manifest)
+    elif target == "poc-thin":
+        targets = poc_thin_entries(manifest)
+        full_entry = True
     elif target == "full-catalog":
         targets = [entry for entry in manifest.get("entries", []) if isinstance(entry, dict)]
         full_entry = True
@@ -697,11 +701,13 @@ def main() -> int:
     )
     parser.add_argument(
         "--target",
-        choices=("missing-anchor", "missing-translation", "full-catalog"),
+        choices=("missing-anchor", "missing-translation", "poc-thin", "full-catalog"),
         default="missing-anchor",
         help=(
             "Select entries to re-enrich. Default keeps the old gate repair behavior; "
-            "missing-translation fills sourced translation cards; full-catalog re-enriches all catalog entries."
+            "missing-translation fills sourced translation cards; "
+            "poc-thin selects richness-gate thin pages; "
+            "full-catalog re-enriches all catalog entries."
         ),
     )
     parser.add_argument(

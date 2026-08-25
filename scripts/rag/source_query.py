@@ -74,29 +74,66 @@ def _get(url: str, timeout: int = REQUEST_TIMEOUT, **kwargs) -> requests.Respons
 
 WIKI_REST = "https://uk.wikipedia.org/api/rest_v1"
 WIKI_API = "https://uk.wikipedia.org/w/api.php"
+WIKI_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; uk.wikipedia REST summary per lemma)"
+WIKI_REST_HEADERS = {
+    "User-Agent": WIKI_USER_AGENT,
+    "Accept": "application/json",
+}
+
+
+def _wiki_title_candidates(title: str) -> list[str]:
+    raw = (title or "").strip()
+    if not raw:
+        return []
+    candidates = [raw]
+    sentence_cased = raw[0].upper() + raw[1:]
+    if sentence_cased not in candidates:
+        candidates.append(sentence_cased)
+    return candidates
+
+
+def _is_disambiguation_summary(data: dict[str, Any]) -> bool:
+    if data.get("type") == "disambiguation":
+        return True
+    title = str(data.get("title") or "")
+    if "(значення)" in title.casefold():
+        return True
+    desc = str(data.get("description") or "").casefold()
+    return "сторінка значень" in desc
 
 
 def wikipedia_summary(title: str) -> dict[str, Any] | None:
     """Fetch a Wikipedia article summary via REST API.
 
-    Returns dict with keys: title, description, extract, url
-    or None if article not found.
+    Returns dict with keys: title, description, extract, url, type
+    or None if article not found or is a disambiguation page.
     """
-    url = f"{WIKI_REST}/page/summary/{quote(title)}"
-    try:
-        r = _get(url)
-        if r.status_code == 404:
-            return None
-        r.raise_for_status()
-        data = r.json()
-        return {
-            "title": data.get("title", ""),
-            "description": data.get("description", ""),
-            "extract": data.get("extract", ""),
-            "url": data.get("content_urls", {}).get("desktop", {}).get("page", ""),
-        }
-    except requests.RequestException:
+    candidates = _wiki_title_candidates(title)
+    if not candidates:
         return None
+
+    for cand in candidates:
+        url = f"{WIKI_REST}/page/summary/{quote(cand)}"
+        try:
+            r = requests.get(url, headers=WIKI_REST_HEADERS, timeout=REQUEST_TIMEOUT)
+            if r.status_code in (403, 404):
+                continue
+            r.raise_for_status()
+            data = r.json()
+            if not isinstance(data, dict):
+                continue
+            if _is_disambiguation_summary(data):
+                return None
+            return {
+                "title": data.get("title", ""),
+                "description": data.get("description", ""),
+                "extract": data.get("extract", ""),
+                "url": data.get("content_urls", {}).get("desktop", {}).get("page", ""),
+                "type": data.get("type", "standard"),
+            }
+        except (requests.RequestException, ValueError):
+            continue
+    return None
 
 
 def wikipedia_search(query: str, limit: int = 5) -> list[dict[str, str]]:

@@ -980,3 +980,103 @@ def test_diminutive_fallback_fails_closed_when_vesum_rejects(monkeypatch) -> Non
     dim_entry = manifest["entries"][1]
     assert summary["filled_translation"] == 0
     assert "translation" not in dim_entry.get("enrichment", {})
+
+
+def test_poc_thin_target_selection_and_full_entry(monkeypatch: pytest.MonkeyPatch) -> None:
+    manifest = {
+        "entries": [
+            # Entry 1: 4 sections (meaning, morphology, literary, translation) -> POC-thin (< 5)
+            {
+                "lemma": "ампір",
+                "pos": "noun",
+                "url_slug": "ампір",
+                "gloss": "Empire style",
+                "enrichment": {
+                    "meaning": {"definitions": ["стиль пізнього класицизму"]},
+                    "morphology": {"forms": ["ампір", "ампіру"]},
+                    "literary_attestation": {"text": "приклад у літературі"},
+                    "translation": {"en": ["Empire style"], "source": "fixture"},
+                },
+            },
+            # Entry 2: 5 sections (meaning, morphology, literary, translation, wikipedia) -> NOT thin (>= 5)
+            {
+                "lemma": "вода",
+                "pos": "noun",
+                "url_slug": "вода",
+                "gloss": "water",
+                "enrichment": {
+                    "meaning": {"definitions": ["прозора рідина"]},
+                    "morphology": {"forms": ["вода", "води"]},
+                    "literary_attestation": {"text": "тече вода"},
+                    "translation": {"en": ["water"], "source": "fixture"},
+                },
+                "wiki_reference": {
+                    "wikipedia": {"title": "Вода", "summary": "Вода...", "url": "https://uk.wikipedia.org/wiki/Вода"}
+                },
+            },
+            # Entry 3: grammar term -> not static search entry -> NOT thin
+            {
+                "lemma": "іменник",
+                "pos": "grammar term",
+                "url_slug": "іменник",
+                "enrichment": {
+                    "meaning": {"definitions": ["частина мови"]},
+                },
+            },
+        ]
+    }
+
+    seen: list[str] = []
+
+    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags=False):
+        seen.append(entry["lemma"])
+        entry["wiki_reference"] = {
+            "wikipedia": {"title": "Ампір", "summary": "Ампір...", "url": "https://uk.wikipedia.org/wiki/Ампір"}
+        }
+
+    monkeypatch.setattr(enrich_manifest, "enrich_entry", fake_enrich_entry)
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="poc-thin",
+            refresh_wiki=True,
+        )
+
+    assert seen == ["ампір"]
+    assert summary["targets"] == 1
+    assert manifest["entries"][0]["wiki_reference"]["wikipedia"]["title"] == "Ампір"
+    assert "wiki_reference" not in manifest["entries"][2]
+
+
+def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps({"entries": []}), encoding="utf-8")
+
+    canary_called = False
+
+    def fake_canary(*args, **kwargs):
+        nonlocal canary_called
+        canary_called = True
+        return {"success": True, "details": {}}
+
+    monkeypatch.setattr(reenrich, "run_canary_check", fake_canary)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "reenrich_thin_manifest_entries.py",
+            "--local",
+            "--manifest",
+            str(manifest_path),
+            "--target",
+            "poc-thin",
+        ],
+    )
+
+    exit_code = reenrich.main()
+    assert exit_code == 0
+    assert not canary_called
+
