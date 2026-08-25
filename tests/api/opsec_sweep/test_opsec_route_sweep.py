@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import asyncio
 import fnmatch
+import importlib
 import json
 import os
 import shutil
 import socket
+import sqlite3
 import subprocess
 import sys
 import time
@@ -16,6 +18,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, unquote, urlparse
 
 import pytest
 from fastapi import HTTPException
@@ -32,6 +35,7 @@ from scripts.api import (
     fleet_router,
     git_hygiene_router,
     governance_router,
+    images_router,
     issues_router,
     opsec_scan,
     project_state_collect,
@@ -133,6 +137,36 @@ def _deny_subprocess(*_args: Any, **_kwargs: Any) -> None:
 
 def _deny_network(*_args: Any, **_kwargs: Any) -> None:
     raise AssertionError("OPSEC sweep fixture forbids network execution")
+
+
+def _sqlite_database_path(database: Any, *, uri: bool) -> Path | None:
+    """Resolve a sqlite database argument to a filesystem path when it has one."""
+    if isinstance(database, os.PathLike):
+        database = os.fspath(database)
+    if isinstance(database, bytes):
+        database = os.fsdecode(database)
+    if not isinstance(database, str):
+        return None
+    if database == ":memory:":
+        return None
+    if uri and database.startswith("file:"):
+        parsed = urlparse(database)
+        if parsed.path == ":memory:" or "memory" in parse_qs(parsed.query).get("mode", []):
+            return None
+        if parsed.path:
+            database = unquote(parsed.path)
+    return Path(database).expanduser().resolve()
+
+
+def _deny_real_database_connect(root: Path, original_connect: Any) -> Any:
+    def connect(database: Any, *args: Any, **kwargs: Any) -> Any:
+        uri = kwargs.get("uri", args[6] if len(args) > 6 else False)
+        database_path = _sqlite_database_path(database, uri=bool(uri))
+        if database_path is not None and root not in (database_path, *database_path.parents):
+            raise AssertionError("OPSEC sweep fixture forbids real database access")
+        return original_connect(database, *args, **kwargs)
+
+    return connect
 
 
 def _fixture_completed_process(
@@ -363,12 +397,72 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         ),
     )
 
-    # RAG imports its source DB lazily outside the scripts.api namespace. A
-    # nonexistent worker-local path plus a failing loader models the documented
-    # empty-corpus response without opening a real DB or relying on FTS tables.
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", root / "stores" / "sources.db")
-    monkeypatch.setattr(sources_db, "_conn", None)
+    # RAG imports its source DB lazily outside the scripts.api namespace. The
+    # top-level ``rag.query`` import resolves ``wiki.sources_db`` while this
+    # fixture imports ``scripts.wiki.sources_db``; both module identities must
+    # point at the same nonexistent worker-local path. The missing-corpus
+    # behavior then stays on the documented empty-response path.
+    fixture_sources_db = root / "stores" / "sources.db"
+    rag_query = importlib.import_module("rag.query")
+    search_db_modules = {
+        sources_db,
+        rag_query.sources_db,
+    }
+    for search_db_module in search_db_modules:
+        monkeypatch.setattr(search_db_module, "SOURCES_DB_PATH", fixture_sources_db)
+        monkeypatch.setattr(search_db_module, "_conn", None)
     monkeypatch.setattr(sources_db, "_get_conn", _fixture_missing_sources_db)
+
+    # The route sweep also traverses diagnostics that import their own local
+    # stores outside ``scripts.api``. Repoint those module-level paths before
+    # installing the global guard, so missing fixture state is handled by each
+    # route's documented empty/read-only envelope instead of as a 500.
+    importlib.import_module("scripts.ai_agent_bridge._db")
+    importlib.import_module("scripts.fleet_comms.legacy_broker_report")
+    importlib.import_module("scripts.telemetry.legacy_bridge")
+    importlib.import_module("wiki.state")
+    for module_name, module in tuple(sys.modules.items()):
+        if module is None or not module_name.startswith(
+            ("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")
+        ):
+            continue
+        for name, value in tuple(vars(module).items()):
+            if not isinstance(value, Path) or not value.is_absolute():
+                continue
+            if not any(token in name.upper() for token in ("DB", "PROGRESS", "STATE")):
+                continue
+            replacement = root / "stores" / module_name.replace(".", "_") / name.lower()
+            replacement.parent.mkdir(parents=True, exist_ok=True)
+            if value.is_dir() or value.suffix == "":
+                replacement.mkdir(parents=True, exist_ok=True)
+            monkeypatch.setattr(module, name, replacement)
+
+    # Image discovery is also lazy, but its index and page caches are module
+    # singletons. Repoint its file roots and recreate the singletons so a prior
+    # test cannot leak real checkout data into this isolated route sweep.
+    monkeypatch.setattr(images_router, "IMAGES_DIR", root / "stores" / "images")
+    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", root / "stores" / "textbooks")
+    monkeypatch.setattr(
+        images_router,
+        "ANNOTATIONS_FILE",
+        root / "stores" / "image_text_pairs.jsonl",
+    )
+    monkeypatch.setattr(images_router, "_index", images_router._ImageIndex())
+    monkeypatch.setattr(images_router, "_pdf_pool", images_router._PDFPool())
+    monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
+    monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
+
+    broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
+    monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
+
+    # This is the fixture-level backstop for any future search entry point that
+    # misses a module-local path seam. Connections inside the disposable root
+    # remain valid for the other isolated stores.
+    monkeypatch.setattr(
+        sqlite3,
+        "connect",
+        _deny_real_database_connect(root, sqlite3.connect),
+    )
 
     # These docs roots are derived once at import time rather than exposed as
     # individual Path globals. Rebuild the lookup tables so docs requests
@@ -531,6 +625,16 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert registry.unrecorded_operations(api_main.app, records) == []
     assert {record.classification for record in records} >= {"read", "mutation", "stream"}
     by_key = {record.key: record for record in records}
+    assert {
+        "GET /api/images/textbooks",
+        "GET /api/rag/search_literary",
+        "GET /api/rag/search_text",
+        "GET /api/sources/search_literary",
+        "GET /api/sources/search_text",
+    } == registry.FIXTURE_EMPTY_ROUTE_KEYS
+    for key in registry.FIXTURE_EMPTY_ROUTE_KEYS:
+        assert by_key[key].fixture == "isolated"
+        assert by_key[key].expected_statuses == (200,)
     assert by_key["GET /api/session-streams/v1/drift"].query["dry_run"] == "true"
     assert by_key["POST /api/comms/send"].expected_statuses == (410,)
     assert by_key["POST /api/comms/send"].body() is not None
@@ -600,6 +704,40 @@ def test_isolated_fixture_denies_network_and_subprocess(isolated_fixture: Isolat
         socket.create_connection(("127.0.0.1", 8765))
 
 
+def test_isolated_fixture_denies_real_database_access(isolated_fixture: IsolatedFixture) -> None:
+    real_db_path = Path(__file__).resolve().parents[3] / "data" / "sources.db"
+    assert real_db_path.resolve() not in (
+        isolated_fixture.root,
+        *isolated_fixture.root.parents,
+    )
+    connection: sqlite3.Connection | None = None
+    try:
+        with pytest.raises(AssertionError, match="forbids real database access"):
+            connection = sources_db._open_conn(real_db_path)
+    finally:
+        if connection is not None:
+            connection.close()
+
+    class _BytesPath:
+        def __fspath__(self) -> bytes:
+            return os.fsencode(real_db_path)
+
+    outside_databases = (
+        (real_db_path.as_uri() + "?mode=ro", {"uri": True}),
+        (os.fsencode(real_db_path), {}),
+        (_BytesPath(), {}),
+        ("file::memory:outside.db", {"uri": True}),
+    )
+    for database, kwargs in outside_databases:
+        with pytest.raises(AssertionError, match="forbids real database access"):
+            sqlite3.connect(database, **kwargs)
+
+    with sqlite3.connect(":memory:") as connection:
+        connection.execute("SELECT 1")
+    with sqlite3.connect("file:fixture-memory?mode=memory&cache=shared", uri=True) as connection:
+        connection.execute("SELECT 1")
+
+
 def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixture) -> None:
     started = time.perf_counter()
     records = registry.build_registry(api_main.app)
@@ -637,6 +775,10 @@ def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixtur
         )
         if record.expected_statuses and response.status_code not in record.expected_statuses:
             failures.append(f"{record.key} status={response.status_code}")
+        if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code >= 500:
+            failures.append(f"{record.key} real-database failure status={response.status_code}")
+        if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code == 200:
+            assert _response_payload(response) == [], f"{record.key} did not return its empty fixture envelope"
         findings.extend(_scan_response(record, response, isolated_fixture.canaries))
 
     dashboard_root = isolated_fixture.root / "dashboards"
