@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "758870595841",
+  "strategy": "manual-commit",
+  "branch": "agy/monitor-7295-epics-graph-endpoint",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/epics_router.py",
+    "scripts/orchestration/issue_stream_audit.py",
+    "tests/api/opsec_sweep/registry.py",
+    "tests/api/test_epics_router.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/75/8870595841/0/metadata.json",
+      "transcript": "/75/8870595841/0/full.jsonl",
+      "compact_transcript": "/75/8870595841/0/transcript.jsonl",
+      "content_hash": "/75/8870595841/0/content_hash.txt",
+      "prompt": "/75/8870595841/0/prompt.txt"
+    }
+  ]
+}

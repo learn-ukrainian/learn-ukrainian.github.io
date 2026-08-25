@@ -1,0 +1,98 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/monitor-7295-epics-graph-endpoint
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #7295 step 2 — implement GET /api/epics/graph/v1
+
+Full spec: `docs/design/monitor-epics-graph-map.md` (APPROVED, cross-family reviewed). Read the
+WHOLE doc before starting, especially §4.1 (exact response shape), §4.3 (exact reuse pattern to
+mirror — do not paraphrase it), and §5 (binding OPSEC sweep constraint). This brief summarizes;
+the doc is the source of truth on any conflict.
+
+## Scope — backing endpoint only, NOT the dashboard view
+
+This PR is `GET /api/epics/graph/v1` in `scripts/api/epics_router.py` plus the OPSEC sweep update.
+Do NOT build `dashboards/epics-map.html` in this PR — that is a separate, later PR gated on this
+one merging (design doc §7).
+
+## What to build
+
+1. New route in `scripts/api/epics_router.py` (same file, same router — do not create a new
+   router module): `GET /api/epics/graph/v1`. Response shape is fully specified in design doc
+   §4.1 — follow it exactly, including the `"id": "area:<id>"` / `"id": "epic:<number>"` node-id
+   convention, the `last_state`/`last_decision`/`last_next_action` pass-through from the existing
+   `/api/epics/v1` row shape, and the capped `issues_by_epic` shape
+   (`{"items": [...], "total_open": N, "truncated": bool}`, 50-item cap per epic).
+
+2. **Mirror `GET /api/issues/streams`'s caching pattern exactly** (`scripts/api/issues_router.py`,
+   the `issues_streams` handler and its `_load()` closure) — design doc §4.3 names this as the
+   literal implementation to copy the shape of, not paraphrase: `audit.read_cache(max_age_s=3600)`
+   first, `read_cache(max_age_s=7*24*3600)` stale fallback with a `"stale": true` marker,
+   `schedule_refresh(force=fresh)` only on a genuine cache miss or explicit `?fresh=true`, and the
+   whole thing off the event loop via `asyncio.to_thread`. Do NOT call `fetch_epic_membership()`
+   or any other live-`gh` function inline on the request path.
+
+3. **`classify()` addition** (`scripts/orchestration/issue_stream_audit.py`, the function that
+   builds the cached report): it already computes `titles = {i["number"]: i["title"] for i in
+   open_issues}` locally but only re-embeds it for orphan/multi-homed entries. Add a new
+   top-level key to the returned report dict, e.g. `"open_issue_titles": titles`, so the graph
+   endpoint can build `issues_by_epic`'s per-issue `title` field from the cache without an inline
+   `gh` call. This is a small, additive change to an existing function — do not restructure
+   `classify()` beyond adding this one key. Existing consumers of the report dict (e.g.
+   `scripts/api/issues_router.py`'s `_strip_private_index`) must not break — check whether the
+   new key needs stripping there too (it is not private data — issue titles are already public —
+   but confirm `_strip_private_index` doesn't choke on an unexpected key).
+
+4. **Area layer**: assemble from `scripts/config/issue_streams.yaml` directly (13 streams, 18
+   epic slots) — NOT `scripts/config/fleet_taxonomy.yaml` (design doc §2.1 explains why: it's
+   stale, missing the monitor area entirely). Do not "helpfully" reconcile the two registries in
+   this PR — that's tracked separately as #7306, out of scope here.
+
+5. **OPSEC sweep update** (`tests/api/opsec_sweep/registry.py`) — binding, design doc §5:
+   - `FROZEN_HTTP_OPERATION_COUNT` (currently 280) increments by 1.
+   - `FROZEN_DENOMINATOR_SHA256` changes — re-derive it from the sweep's own digest function
+     against the updated route table; do not hand-compute it.
+   - Add an `isolated` fixture-reason entry for the new route, same pattern and same underlying
+     reason as the existing `"GET /api/epics/v1": "isolated fixture has no seeded epic registry
+     snapshot"` entry (`registry.py:63`).
+   - Run the full sweep (`tests/api/opsec_sweep/`) and confirm it stays green with the updated
+     frozen values.
+
+## Constraints
+
+- No mutation, no GitHub write — read-only endpoint.
+- No changes to `.github/workflows/*`, `scripts/ci/*`, or `opsec_scan.py`.
+- No behavior change to any existing route.
+- Run the full `tests/api -n 4` suite green, not just the new route's tests.
+- `ruff check scripts/api/ scripts/orchestration/` clean.
+
+## Evidence preamble (required in PR description, #M-4)
+
+Quote the actual command + output for: the new `FROZEN_HTTP_OPERATION_COUNT` and
+`FROZEN_DENOMINATOR_SHA256` values and how you derived them, the full OPSEC sweep run result, and
+the full `tests/api -n 4` run result.
+
+## Steps
+
+1. Worktree/branch handled by the dispatch harness.
+2. Read `docs/design/monitor-epics-graph-map.md` in full.
+3. Implement the route, the `classify()` addition, and the OPSEC sweep update.
+4. Run `tests/api/opsec_sweep/` and `tests/api -n 4` — both green.
+5. `ruff check` clean.
+6. Conventional commit (`feat(monitor): GET /api/epics/graph/v1 backing endpoint (#7295)`), push,
+   open a PR against `main` referencing #7295. **Do NOT auto-merge** — leave open for independent
+   cross-family review.
+
+## Research classification
+
+role=implementer, task-family=monitor-api-feature, track=monitor.epic,
+owned-path=scripts/api/epics_router.py, owned-path=scripts/orchestration/issue_stream_audit.py,
+owned-path=tests/api/opsec_sweep/registry.py.
