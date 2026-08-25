@@ -545,8 +545,10 @@ def _validate_provider_provenance(receipt: dict[str, Any], expected_agy_sha256: 
     adjudicator = receipt.get("adjudicator")
     if mode not in {"real", "fixture"} or not isinstance(adjudicator, dict):
         raise Error("label_count_or_envelope_drift")
-    if mode == "real" and executable is not None:
-        if executable != expected_agy_sha256:
+    if mode == "real":
+        if (transport is None and executable is not None) or (
+            transport is not None and executable != expected_agy_sha256
+        ):
             raise Error("binding_failure")
     elif executable is not None and not _valid_sha256(executable):
         raise Error("label_count_or_envelope_drift")

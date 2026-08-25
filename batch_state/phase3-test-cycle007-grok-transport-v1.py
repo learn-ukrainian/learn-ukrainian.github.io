@@ -375,6 +375,49 @@ def _make_fake_bin(tmp_path: Path) -> Path:
     return bin_path
 
 
+def test_main_rejects_symlinked_real_provider_before_call(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    provider_link = tmp_path / "grok-link"
+    provider_link.symlink_to(fake_bin)
+    state_file = tmp_path / "state.txt"
+    monkeypatch.setenv("FAKE_STATE", str(state_file))
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"),
+            "--package",
+            str(pkg),
+            "--lane",
+            "clean_label",
+            "--packet-index",
+            "1",
+            "--provider-bin",
+            str(provider_link),
+            "--expected-grok-executable-sha",
+            RUN.digest(fake_bin.read_bytes()),
+            "--expected-custody-sha",
+            RUN.digest((pkg / "custody-receipt.json").read_bytes()),
+            "--expected-label-manifest-sha",
+            RUN.digest((pkg / "manifest.json").read_bytes()),
+            "--expected-evidence-manifest-sha",
+            RUN.digest((pkg / "evidence" / "manifest.json").read_bytes()),
+            "--expected-label-prompt-sha",
+            label_prompt_hash(pkg, "clean_label"),
+        ],
+    )
+
+    assert RUN.main() == 2
+    assert json.loads(capsys.readouterr().out)["failure_code"] == "label_count_or_envelope_drift"
+    assert not state_file.exists()
+
+
 def test_valid_clean_packet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     pkg = make_package(tmp_path, lane="clean_label", count=50)
     fake_bin = _make_fake_bin(tmp_path)

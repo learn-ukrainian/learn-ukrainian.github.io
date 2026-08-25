@@ -1121,7 +1121,7 @@ def main() -> int:
         provider_path = args.provider_bin or args.test_provider_bin
         if provider_path is None:
             raise Error("label_count_or_envelope_drift")
-        provider = provider_path.resolve()
+        provider = provider_path
         if args.packet_index is not None:
             if args.end is not None:
                 raise Error("label_count_or_envelope_drift")
