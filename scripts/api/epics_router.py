@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import binascii
 import logging
@@ -12,7 +13,8 @@ from pathlib import Path
 from threading import Lock
 from typing import Any
 
-from fastapi import APIRouter, Request
+import yaml
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase, default_database_path
@@ -43,12 +45,14 @@ from agents_extensions.shared.session_streams.store import (
 from scripts.api.config import LIVE_REPO_ROOT
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
+from scripts.orchestration import issue_stream_audit as audit
 from scripts.orchestration.thread_handoff import _bundle_extract, _bundle_secret_hits
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 SCHEMA = "remote-epic-lifecycle.v1"
+GRAPH_SCHEMA = "epics-graph.v1"
 DEFAULT_TTL_SECONDS = 15 * 60
 MAX_DIGEST_LIMIT = 100
 TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
@@ -564,6 +568,198 @@ def remote_epic_list() -> JSONResponse:
         content={"schema": SCHEMA, "registry_status": registry_status, "streams": rows},
         headers={"Cache-Control": "no-store"},
     )
+
+
+def _load_issue_streams() -> dict[str, Any]:
+    try:
+        path = resolve_streams_yaml(LIVE_REPO_ROOT)
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if isinstance(data, dict) and isinstance(data.get("streams"), dict):
+            return data["streams"]
+    except Exception:
+        logger.warning("Failed to load issue-stream registry", exc_info=True)
+    return {}
+
+
+@router.get("/graph/v1")
+async def remote_epics_graph(
+    fresh: bool = Query(False, description="Schedule a refresh instead of only serving the cache."),
+) -> JSONResponse:
+    """Epics & Areas Relationship Map backing endpoint (#7295, M5 of #7177)."""
+
+    def _load() -> dict[str, Any]:
+        store = _store()
+        report = audit.read_cache(max_age_s=3600)
+        stale = None if report is not None else audit.read_cache(max_age_s=7 * 24 * 3600)
+
+        state = (
+            audit.schedule_refresh(force=fresh)
+            if fresh or report is None
+            else audit.read_refresh_state()
+        )
+
+        streams_data = _load_issue_streams()
+        audit_data = report if report is not None else (stale or {})
+        effective_membership = audit_data.get("effective_membership") or {}
+        open_issue_numbers = {int(n) for n in (audit_data.get("open_issue_numbers") or [])}
+        open_issue_titles = {
+            str(k): v for k, v in (audit_data.get("open_issue_titles") or {}).items()
+        }
+
+        registry_status = registry_health_snapshot()["status"]
+        projections = {str(row["stream_id"]): row for row in store.list_remote_projections()}
+        now = utc_now()
+
+        all_epic_numbers: set[int] = set()
+        areas: list[dict[str, Any]] = []
+        edges: list[dict[str, Any]] = []
+
+        for stream_id, spec in streams_data.items():
+            if not isinstance(spec, dict):
+                continue
+            epics = [int(n) for n in (spec.get("epics") or [])]
+            for e in epics:
+                all_epic_numbers.add(e)
+            area_title = _response_registry_text(spec.get("title")) or str(stream_id)
+            areas.append(
+                {
+                    "id": f"area:{stream_id}",
+                    "stream_id": stream_id,
+                    "title": area_title,
+                    "epic_count": len(epics),
+                }
+            )
+            for epic_num in epics:
+                edges.append(
+                    {
+                        "kind": "contains",
+                        "from": f"area:{stream_id}",
+                        "to": f"epic:{epic_num}",
+                    }
+                )
+
+        open_by_epic: dict[int, list[int]] = {e: [] for e in all_epic_numbers}
+        closed_by_epic: dict[int, list[int]] = {e: [] for e in all_epic_numbers}
+
+        for issue_str, entry in effective_membership.items():
+            if not isinstance(entry, dict):
+                continue
+            try:
+                issue_num = int(issue_str)
+            except (TypeError, ValueError):
+                continue
+            for e in entry.get("epics", []):
+                try:
+                    e_int = int(e)
+                except (TypeError, ValueError):
+                    continue
+                if e_int not in open_by_epic:
+                    continue
+                if issue_num in open_issue_numbers:
+                    open_by_epic[e_int].append(issue_num)
+                else:
+                    closed_by_epic[e_int].append(issue_num)
+
+        epics_nodes: list[dict[str, Any]] = []
+        issues_by_epic: dict[str, Any] = {}
+
+        for stream_id, spec in streams_data.items():
+            if not isinstance(spec, dict):
+                continue
+            epics = [int(n) for n in (spec.get("epics") or [])]
+            for epic_num in epics:
+                stream_key = f"epic:{epic_num}"
+                row = projections.get(stream_key)
+                lease_payload = None
+                session_state = None
+                if row is not None and row.get("lease_id") is not None:
+                    lease = store._lease_from_row(row)
+                    session_state = (
+                        SessionState.EXPIRED.value if row.get("session_expired_at") else str(row["session_state"])
+                    )
+                    lease_payload = _lease_payload(
+                        lease,
+                        projection_state=str(row["state"]),
+                        session_state=session_state,
+                        now=now,
+                    )
+                digest = _digest_payload(store, stream_key, 3) if row is not None else {"pinned": [], "recent": []}
+                latest = {entry["type"]: entry for entry in (*digest["pinned"], *digest["recent"])}
+                reg_fields = (
+                    _registry_fields(store, stream_key)
+                    if row is not None
+                    else {"registered": False, "stream_name": None, "title": None}
+                )
+
+                epic_title = reg_fields.get("title") or _response_registry_text(open_issue_titles.get(str(epic_num)))
+                epic_reg_status = registry_status if reg_fields.get("registered") else "unregistered"
+
+                open_issues = sorted(open_by_epic.get(epic_num, []))
+                closed_issues = closed_by_epic.get(epic_num, [])
+                open_count = len(open_issues)
+                closed_count = len(closed_issues)
+
+                epics_nodes.append(
+                    {
+                        "id": f"epic:{epic_num}",
+                        "number": epic_num,
+                        "area_id": stream_id,
+                        "title": epic_title,
+                        "registry_status": epic_reg_status,
+                        "lease": lease_payload,
+                        "session_state": session_state,
+                        "last_state": latest.get(EntryType.STATE.value),
+                        "last_decision": latest.get(EntryType.DECISION.value),
+                        "last_next_action": latest.get(EntryType.NEXT_ACTION.value),
+                        "open_issue_count": open_count,
+                        "closed_issue_count": closed_count,
+                    }
+                )
+
+                capped_items = open_issues[:50]
+                issues_by_epic[str(epic_num)] = {
+                    "items": [
+                        {
+                            "number": n,
+                            "title": " ".join(str(open_issue_titles.get(str(n)) or f"Issue #{n}").split()),
+                            "state": "open",
+                            "url": f"https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/{n}",
+                        }
+                        for n in capped_items
+                    ],
+                    "total_open": open_count,
+                    "truncated": open_count > 50,
+                }
+
+        payload: dict[str, Any] = {
+            "schema": GRAPH_SCHEMA,
+            "generated_at": isoformat_z(now),
+            "nodes": {
+                "areas": areas,
+                "epics": epics_nodes,
+            },
+            "edges": edges,
+            "issues_by_epic": issues_by_epic,
+        }
+
+        if report is None:
+            if stale is not None:
+                payload["stale"] = True
+            else:
+                payload["status"] = "no-cache"
+                payload["ok"] = None
+
+        refresh = audit.public_refresh_view(state)
+        payload["refreshing"] = refresh["phase"] in {"scheduled", "running"}
+        payload["refresh"] = refresh
+
+        return payload
+
+    try:
+        payload = await asyncio.to_thread(_load)
+        return JSONResponse(content=payload, headers={"Cache-Control": "no-store"})
+    except Exception:
+        return _server_error()
 
 
 @router.get("/v1/{stream_id}")

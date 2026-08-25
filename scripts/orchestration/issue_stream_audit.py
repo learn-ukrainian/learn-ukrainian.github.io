@@ -969,6 +969,7 @@ def classify(
             epic_numbers, stream_of_epic, membership
         ),
         "open_issue_numbers": sorted(open_numbers),
+        "open_issue_titles": {str(k): v for k, v in titles.items()},
     }
 
 

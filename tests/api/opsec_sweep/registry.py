@@ -29,9 +29,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 280
+FROZEN_HTTP_OPERATION_COUNT = 281
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "4876620305f8035f30103fc6f2d0f0d4f22e43dfb00247f1a7aa32604cbccd20"
+FROZEN_DENOMINATOR_SHA256 = "7d024f0daaa8149908b3c6343df51c7ae9d33f3a5279f06b64d74b223a6d4599"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -60,6 +60,7 @@ EXERCISED_READ_5XX_REASONS: dict[str, str] = {
     "GET /api/dashboard/comms/conversation/{task_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/message/{message_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/messages": "isolated fixture has no dashboard comms store",
+    "GET /api/epics/graph/v1": "isolated fixture has no seeded epic registry snapshot",
     "GET /api/epics/v1": "isolated fixture has no seeded epic registry snapshot",
     "GET /api/rules": "isolated fixture has no deployed rule files",
     "GET /api/state/preparation": "sparse isolated fixture omits the curriculum tree",
