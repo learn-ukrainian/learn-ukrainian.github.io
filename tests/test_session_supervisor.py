@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import re
@@ -178,6 +179,43 @@ def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -
     assert payload["UNRELATED_RUNTIME_FLAG"] == "visible-in-full-mode"
     assert all(payload[name] == REDACTION for name in fake_secrets)
     assert not any(value in result.stdout for value in fake_secrets.values())
+
+
+def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.MonkeyPatch) -> None:
+    subprocess_code = (
+        "import sys; "
+        "sys.modules['scripts.secret_redactor'] = None; "
+        "import scripts.session_supervisor; "
+        "assert hasattr(scripts.session_supervisor, 'SessionSupervisor')"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", subprocess_code],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+
+    monkeypatch.setitem(sys.modules, "scripts.secret_redactor", None)
+    monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
+    supervisor_mod = importlib.import_module("scripts.session_supervisor")
+    assert hasattr(supervisor_mod, "SessionSupervisor")
+
+    with pytest.raises(ModuleNotFoundError):
+        supervisor_mod.worker_environment({"CLAUDE_CODE_MESSAGING_TOKEN": "secret"}, include_all=True)
+
+    monkeypatch.undo()
+    monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
+    restored_mod = importlib.import_module("scripts.session_supervisor")
+    env = {
+        "CLAUDE_CODE_MESSAGING_TOKEN": "real-secret-token",
+        "UNRELATED_RUNTIME_FLAG": "visible",
+    }
+    redacted = restored_mod.worker_environment(env, include_all=True)
+    assert redacted["CLAUDE_CODE_MESSAGING_TOKEN"] == REDACTION
+    assert redacted["UNRELATED_RUNTIME_FLAG"] == "visible"
 
 
 def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:

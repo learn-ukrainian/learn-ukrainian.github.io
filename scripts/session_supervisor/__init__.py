@@ -38,7 +38,6 @@ from agents_extensions.shared.session_streams.store import (
     SessionStreamError,
     SessionStreamStore,
 )
-from scripts.secret_redactor import REDACTION, redact_value
 
 from .remote import RemoteEpicClient, RemoteSupervisorError
 
@@ -122,6 +121,8 @@ def worker_environment(environment: Mapping[str, str], *, include_all: bool = Fa
     metadata. ``include_all`` is reserved for the explicit ``--all`` or
     ``LEARN_UK_SECRETS_OK=1`` path and still uses the shared egress redactor.
     """
+    from scripts.secret_redactor import REDACTION, redact_value
+
     selected = {
         key: value
         for key, value in environment.items()
