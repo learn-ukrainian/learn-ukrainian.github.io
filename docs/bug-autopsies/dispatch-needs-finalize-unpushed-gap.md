@@ -1,25 +1,29 @@
-# `needs_finalize` misses committed-but-unpushed dispatches (cursor, 2026-08-25)
+# `needs_finalize` misses committed-but-unpushed dispatches (3/3 this session, not agent-specific)
 
 **Date:** 2026-08-25
 **Issue:** #7311
 **Category:** agent-dispatch / silent-exit-unpushed
 **Tool:** `scripts/delegate.py` (`needs_finalize` finalize gate, ~line 4680-4703)
-**Impact:** Two consecutive `--agent cursor --mode danger` dispatches in one monitor-epic
-session settled `status: done` with real work committed locally but never pushed and no PR
-opened — caught only by the existing manual "check the worktree" driver protocol, not by the
-harness itself.
+**Impact:** Every write-capable dispatch in one monitor-epic session (3/3 — two `--agent cursor
+--mode danger`, one `--agent agy --mode workspace-write`) settled `status: done` with real work
+committed locally but never pushed and no PR opened — caught only by the existing manual "check
+the worktree" driver protocol, not by the harness itself. Confirmed NOT agent- or mode-specific.
 
 ## What broke
 
-Two consecutive `scripts/delegate.py dispatch --agent cursor --mode danger` tasks in the same
-monitor-epic session (`monitor-7269-step05-router-inventory` and its follow-up
-`monitor-7269-step05-router-inventory-fix1`) both settled `status: done` with `pr_url: null`,
-`pr: null`, `branch: null`. In both cases the worker had actually done the requested work and
-committed it locally on the dispatch branch — but the commit never reached `origin`, and no PR
-was ever opened. The driver caught both only by following the existing manual protocol ("before
-declaring a dispatch dead: `gh pr list` first, then check the worktree for finished-but-unpushed
-work") — a workaround that exists specifically because this class of failure was already known,
-but whose root cause had not been isolated in delegate.py itself.
+Three consecutive write-capable `scripts/delegate.py dispatch` tasks in the same monitor-epic
+session — `monitor-7269-step05-router-inventory` and its follow-up
+`monitor-7269-step05-router-inventory-fix1` (both `--agent cursor --mode danger`), then
+`monitor-7295-epics-graph-endpoint` (`--agent agy --mode workspace-write`) — all three settled
+`status: done` with `pr_url: null`, `pr: null`, `branch: null`. In every case the worker had
+actually done the requested work and committed it locally on the dispatch branch, with green
+tests confirmed by the driver afterward — but the commit never reached `origin`, and no PR was
+ever opened. Two different agents, two different write modes, same failure shape: this rules out
+a cursor-specific or danger-mode-specific cause and points at the shared finalize logic. The
+driver caught all three only by following the existing manual protocol ("before declaring a
+dispatch dead: `gh pr list` first, then check the worktree for finished-but-unpushed work") — a
+workaround that exists specifically because this class of failure was already known, but whose
+root cause had not been isolated in delegate.py itself.
 
 ## Why
 
@@ -44,13 +48,14 @@ from the base branch* (yes — that's what `commits_ahead` measures) versus *did
 leave the local worktree* (unmeasured). A worker can satisfy the first without ever attempting
 the second.
 
-This is not a hypothetical — it reproduced identically twice in a row for the same agent/mode in
-one session, with no code difference in delegate.py between the two runs. The worker CLI
-(cursor-agent, `--mode danger`, `--force --sandbox disabled` — confirmed technically capable of
-`git push` / `gh pr create` per the adapter comment at `scripts/agent_runtime/adapters/cursor.py`
-around the danger-mode branch) apparently stopped after the local commit both times, for reasons
-outside delegate.py's visibility — but the finalize logic should have caught the *symptom*
-(nothing published) regardless of the worker-side cause.
+This reproduced identically three times in one session across two different agent CLIs and two
+different write modes, with no code difference in delegate.py between the runs — ruling out a
+single worker's idiosyncrasy as the explanation. Both underlying CLIs are configured as
+technically capable of `git push` / `gh pr create` in their respective modes (confirmed live for
+cursor's danger-mode adapter path in `scripts/agent_runtime/adapters/cursor.py`); each apparently
+stopped after the local commit anyway, for reasons outside delegate.py's visibility. Whatever the
+worker-side cause, the finalize logic should catch the *symptom* — nothing published — regardless
+of which agent or mode produced it, and currently does not.
 
 ## Prevention
 
@@ -62,7 +67,7 @@ fires for write-capable modes regardless of the base-branch-ahead count. The two
 orthogonal: a dirty tree and a clean-but-unpushed tree are both "not actually shipped" states,
 and only the first is currently covered.
 
-Until fixed: **`status: done` from a write-capable cursor dispatch is not proof the work was
-published.** Every dispatch finalize must still run `gh pr list --state open` / check the
-worktree branch's push state before treating `done` as terminal-success — the existing driver
-protocol note is correct and remains load-bearing until #7311 closes.
+Until fixed: **`status: done` from ANY write-capable dispatch is not proof the work was
+published**, not just cursor's. Every dispatch finalize must still run `gh pr list --state open`
+/ check the worktree branch's push state before treating `done` as terminal-success — the
+existing driver protocol note is correct and remains load-bearing until #7311 closes.
