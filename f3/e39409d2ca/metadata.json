@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f3e39409d2ca",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7269-step05-router-inventory",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/design/monitor-api-router-inventory.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f3/e39409d2ca/0/metadata.json",
+      "transcript": "/f3/e39409d2ca/0/full.jsonl",
+      "compact_transcript": "/f3/e39409d2ca/0/transcript.jsonl",
+      "content_hash": "/f3/e39409d2ca/0/content_hash.txt",
+      "prompt": "/f3/e39409d2ca/0/prompt.txt"
+    }
+  ]
+}
