@@ -19,6 +19,8 @@ from scripts.api.monitor_context import fixture_context, production_context
 from scripts.api.resilience import resilience_middleware
 from tests.api.opsec_sweep import registry
 
+pytestmark = pytest.mark.repo_invariant
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DB_ACCESS_PATTERNS = (
     re.compile(r"\bsqlite3\.connect\("),
