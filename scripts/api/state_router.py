@@ -75,6 +75,7 @@ try:
     from agent_runtime.usage import summarize_lane_runtime
 except ImportError:
     from scripts.agent_runtime.usage import summarize_lane_runtime
+from .monitor_context import get_ctx
 from .repository_authority import (
     RepositoryAuthorityError,
     build_repository_authority,
@@ -2388,17 +2389,18 @@ async def manifest(request: Request):
     session, every compaction. The manifest collapses the steady
     state to one tiny call.
     """
+    ctx = get_ctx(request)
     session_id = session_id_from_request(request)
     body = {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "rules": {
-            "hash": rules_hash(),
+            "hash": rules_hash(ctx.roots.project_root),
             "url": "/api/rules?format=markdown",
             "format": "markdown",
             "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
         },
         "session": {
-            "hash": session_hash(),
+            "hash": session_hash(project_root=ctx.roots.project_root),
             "url": "/api/session/current?agent=orchestrator&format=markdown",
             "format": "markdown",
             "note": "Current.md + recent session-state handoff filenames.",

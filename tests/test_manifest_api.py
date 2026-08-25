@@ -322,8 +322,8 @@ def test_manifest_shape_and_hashes(monkeypatch, tmp_path):
     # where they are USED (state_router binds them at import time via
     # top-level `from .rules_router import rules_hash` — patching the origin
     # module would not affect the already-bound reference).
-    monkeypatch.setattr(state_router, "rules_hash", lambda: "r" * 64)
-    monkeypatch.setattr(state_router, "session_hash", lambda: "s" * 64)
+    monkeypatch.setattr(state_router, "rules_hash", lambda *args, **kwargs: "r" * 64)
+    monkeypatch.setattr(state_router, "session_hash", lambda *args, **kwargs: "s" * 64)
 
     resp = client.get("/api/state/manifest")
     assert resp.status_code == 200

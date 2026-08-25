@@ -22,9 +22,9 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router
-import scripts.api.session_router as session_router
 from scripts.ai_agent_bridge import _monitor_cache as cache
 from scripts.ai_agent_bridge import monitor_client
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -50,8 +50,8 @@ def _disable_telemetry_footer(monkeypatch):
 def stub_rules(monkeypatch, tmp_path):
     rule = tmp_path / "rule.md"
     rule.write_text("# Rules\n\nBe careful.\n", encoding="utf-8")
-    monkeypatch.setattr(rules_router, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(rules_router, "RULE_SOURCES", ("rule.md",))
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
     return rule
 
 
@@ -60,7 +60,7 @@ def stub_session(monkeypatch, tmp_path):
     state = tmp_path / "docs" / "session-state"
     state.mkdir(parents=True)
     (state / "current.md").write_text("# Now\nThinking.\n", encoding="utf-8")
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
     return state
 
 
@@ -259,7 +259,7 @@ def test_sdk_survives_session_404(monkeypatch, tmp_path):
     # Point session router at a docs/ tree with NO current.md.
     empty_docs = tmp_path / "empty-repo"
     (empty_docs / "docs" / "session-state").mkdir(parents=True)
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", empty_docs)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(empty_docs))
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cache.invalidate()
