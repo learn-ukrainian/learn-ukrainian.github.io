@@ -115,6 +115,20 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": False,
         "resume_policy": "never",
     },
+    "claude-monitor": {
+        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "default_model": "claude-sonnet-5",
+        "cost_tier": "high",
+        "capabilities": frozenset(
+            {
+                "architecture",
+                "review",
+                "planning",
+            }
+        ),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
         "default_model": "gemini-3.1-pro-high",
