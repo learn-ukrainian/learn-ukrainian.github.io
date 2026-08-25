@@ -1,6 +1,7 @@
 # Epics & Areas Relationship Map — Design Doc (v1)
 
-> **Status:** DRAFT — awaiting cross-family design review (not yet implemented).
+> **Status:** APPROVED by cross-family review (agy, 2026-08-25) — see §9. Deltas from the review
+> are folded into §4.1/§4.3 below, not left as a separate errata list. Not yet implemented.
 > **Author:** Claude (monitor-epic driver).
 > **Issue:** #7295 (parent epic #7177, milestone M5).
 > **Refs:** #7269 (sibling hardening track — no code overlap; `epics_router.py` is untouched by
@@ -82,14 +83,16 @@ Response shape:
   "generated_at": "2026-08-25T20:00:00Z",
   "nodes": {
     "areas": [
-      {"id": "monitor", "title": "Monitor API + UI — fleet & host observability", "epic_count": 1}
-      // one per issue_streams.yaml stream key — 13 in the live registry today
+      {"id": "area:monitor", "stream_id": "monitor", "title": "Monitor API + UI — fleet & host observability", "epic_count": 1}
+      // one per issue_streams.yaml stream key — 13 in the live registry today; "id" is the
+      // graph-traversal key (matches edge endpoints), "stream_id" is the bare registry key
+      // (matches /api/epics/v1's stream_id) — same split as epic nodes' id vs number
     ],
     "epics": [
       {
-        "number": 7177, "area_id": "monitor", "title": "...",
+        "id": "epic:7177", "number": 7177, "area_id": "monitor", "title": "...",
         "registry_status": "...", "lease": {...}, "session_state": "...",
-        "last_decision": {...}, "last_next_action": {...},   // verbatim from /api/epics/v1 rows
+        "last_state": {...}, "last_decision": {...}, "last_next_action": {...},
         "open_issue_count": 4, "closed_issue_count": 12
       }
       // one per epics: [...] entry across all 18 streams, keyed by epic number (a stream with
@@ -98,20 +101,28 @@ Response shape:
   },
   "edges": [
     {"kind": "contains", "from": "area:monitor", "to": "epic:7177"}
-    // one per area→epic membership; no issue-level edges in v1 (see §6 non-goals)
+    // one per area→epic membership; no issue-level edges in v1 (see §6 non-goals). Edge
+    // endpoints use the same "area:<id>" / "epic:<number>" id strings as node.id, so the
+    // dashboard JS can index nodes by id without a second lookup table.
   ],
   "issues_by_epic": {
-    "7177": [{"number": 7269, "title": "...", "state": "open", "url": "..."}, ...]
-    // populated from fetch_epic_membership() open-issue numbers, joined against
-    // fetch_open_issues() titles — powers the click-through detail panel
+    "7177": {
+      "items": [{"number": 7269, "title": "...", "state": "open", "url": "..."}, ...],
+      "total_open": 4,
+      "truncated": false
+    }
+    // capped at 50 items per epic (agy review finding, §9) — an umbrella epic with a large
+    // open-issue count gets total_open + truncated:true instead of an unbounded array; the
+    // dashboard falls back to a "view all N on GitHub" link when truncated
   }
 }
 ```
 
-**Epic-level status fields are pass-through from the existing `/api/epics/v1` row shape** — no new
-status vocabulary invented; a stream/epic with no registry row (never claimed by a driver) gets
-`registry_status: "unregistered"` (the existing value `remote_epic_list()` already produces for
-that case) rather than a new field.
+**Epic-level status fields are pass-through from the existing `/api/epics/v1` row shape** (now
+including `last_state`, not just `last_decision`/`last_next_action` — corrected per §9 finding 4)
+— no new status vocabulary invented; a stream/epic with no registry row (never claimed by a
+driver) gets `registry_status: "unregistered"` (the existing value `remote_epic_list()` already
+produces for that case) rather than a new field.
 
 ### 4.2 Issue-level relations — scoped down for v1, not the full cross-reference graph
 
@@ -124,16 +135,42 @@ an epic detail panel with its issues") without a new GraphQL surface. A full men
 explicitly deferred (§6) — flag this scoping choice for the design review; it is the one place
 this doc narrows the issue's literal wording and should be confirmed, not assumed correct.
 
-### 4.3 Refresh / caching — reuse the existing worker, do not build a second one
+### 4.3 Refresh / caching — mirror the existing `GET /api/issues/streams` endpoint exactly
 
 `fetch_epic_membership()` calls `gh api graphql` per epic (18 epic slots) — expensive to run
 per-request. `issue_stream_audit.py` already has a **file-locked background refresh worker**
-(`schedule_refresh(force=False)`, `_spawn_worker`, `read_refresh_state`) built for exactly this
-shape of problem (`/api/state/issues-health` already uses it). The graph endpoint calls
-`schedule_refresh()` (cheap, returns immediately if a fresh cache exists or a refresh is already
-in flight) and serves `read_refresh_state()`'s cached membership — it does not invoke `gh` inline
-on the request path. This is the same pattern `work_router.py`'s `warm_projection_cache` uses for
-its own single-flight background build; no third caching mechanism is introduced.
+(`schedule_refresh(force=False)`, `_spawn_worker`) built for exactly this shape of problem, and a
+**live consumer already implements the exact pattern this endpoint needs**:
+`GET /api/issues/streams` (`scripts/api/issues_router.py:187-230`, not the more general
+`/api/state/issues-health` this doc originally (and incorrectly) pointed at — corrected per §9
+finding 2). Its `_load()` does exactly what this endpoint should do, and is the literal
+implementation to mirror rather than paraphrase:
+
+1. Read the cache directly — `audit.read_cache(max_age_s=3600)` — **not**
+   `read_refresh_state()`, which returns the worker's lifecycle state machine
+   (`phase`/`last_outcome`/`retry_after`), not the audit payload. This was wrong in the doc's
+   first draft — flagged and fixed per §9.
+2. On a cache miss, fall back to a stale read (`read_cache(max_age_s=7*24*3600)`) with a
+   `"stale": true` marker rather than blocking on a live audit.
+3. Schedule a background refresh (`schedule_refresh(force=fresh)`) only when the cache is
+   genuinely absent or the caller passed `?fresh=true` — never inline `gh` work on the request
+   path.
+4. Run the whole cache/state read off the ASGI event loop via `asyncio.to_thread` (file locks and
+   fsync are synchronous OS calls even though no network call happens inline).
+
+The graph endpoint's `_load()` is the same four steps, reading `audit.read_cache(...)`'s
+`effective_membership` / `open_issue_numbers` to build `issues_by_epic` instead of
+`issues_router.py`'s orphan/multi-homed hygiene report.
+
+**Title-map gap (§9 finding 2) — needs a small, contained addition to `classify()`.** The cached
+report (`scripts/orchestration/issue_stream_audit.py:classify()`, ~line 929) already computes
+`titles = {i["number"]: i["title"] for i in open_issues}` locally, but only re-embeds it for
+`orphans` and `multi_homed` entries in the returned dict — there is no full open-issue title map
+in the persisted cache today. Building `issues_by_epic`'s per-issue `title` field without an
+inline `gh` call requires `classify()` to persist the full `titles` dict as a new top-level report
+key (e.g. `"open_issue_titles": titles`) — a few-line addition to an existing function, not a new
+subsystem. This is in scope for the implementation PR, called out explicitly here so it isn't
+discovered mid-implementation.
 
 ### 4.4 View: `dashboards/epics-map.html`
 
@@ -174,18 +211,46 @@ same reason, for the same underlying store.
 
 ## 7. Sequencing
 
-1. This doc — cross-family design review (1 round expected; this is materially smaller scope than
-   #7269's app-factory refactor, so budget for iteration but not nine rounds).
+1. This doc — cross-family design review. **Done** (agy, APPROVE, one round — §9).
 2. Implement `GET /api/epics/graph/v1` in `epics_router.py` + OPSEC sweep update (§5) — one PR.
+   **Next.**
 3. Implement `dashboards/epics-map.html` — one PR, gated on step 2 merging (needs the live feed to
    render against, not a mock).
 4. Verify render end-to-end (not an empty stub) before promoting — per this project's render-
    before-promote gate.
 
-## 8. Open questions for the reviewer
+## 8. Open questions — resolved by review (§9)
 
-- Is epic→issue membership only (§4.2) an acceptable v1 scope, or does the operator's "relations"
-  language require the fuller mention-graph now rather than as a deferred v1.1?
-- Confirm the `issues_by_epic` cap — an epic with a very large open-issue count (e.g. a long-lived
-  umbrella epic) should probably paginate or cap the inline list rather than ship an unbounded
-  array; this doc does not yet specify a limit — reviewer input wanted before implementation.
+- **Epic→issue membership only, not the full mention-graph (§4.2):** confirmed as the right v1
+  scope. A full cross-issue mention graph would add a materially larger, rate-limit-risky GraphQL
+  surface for a click-through detail panel that membership already satisfies; deferred to v1.1.
+- **`issues_by_epic` cap:** resolved as a **50-item cap per epic**, with `total_open` and
+  `truncated` fields so the UI can show "view all N on GitHub" when truncated (§4.1 response
+  shape now reflects this).
+
+## 9. Cross-family review record
+
+- **v1 (PR #7308, commit `c5552d950d`), reviewer: agy (`gemini-3.7-flash-high`), verdict:
+  APPROVE.** Verified §2/§2.1's `issue_streams.yaml` vs `fleet_taxonomy.yaml` staleness claims
+  directly against both files (confirmed correct). Four findings, all incorporated above rather
+  than left as a separate errata list:
+  1. §4.3 named `/api/state/issues-health` as the existing consumer of this refresh pattern; the
+     concrete, more useful precedent is `GET /api/issues/streams`
+     (`scripts/api/issues_router.py:187-230`), which already implements the exact read-cache /
+     stale-fallback / schedule-refresh / off-event-loop pattern this endpoint needs. **Fixed:**
+     §4.3 now points at and mirrors that handler directly.
+  2. §4.3 said the endpoint "serves `read_refresh_state()`'s cached membership" — wrong:
+     `read_refresh_state()` returns the background worker's lifecycle state (phase/outcome/retry),
+     not the audit payload; the actual cached membership is `audit.read_cache(max_age_s=...)`.
+     Also surfaced a real, previously-unnoticed gap: the cached report only retains issue titles
+     for orphan/multi-homed entries, not the full open-issue set needed for `issues_by_epic`.
+     **Fixed:** §4.3 corrected to the right function and specifies the small `classify()` addition
+     (`open_issue_titles`) the implementation PR needs.
+  3. The response shape (§4.1) dropped `last_state` while keeping `last_decision` /
+     `last_next_action` from the same `/api/epics/v1` row, and used inconsistent id shapes between
+     `nodes` (bare `"number"`) and `edges` (`"epic:N"` strings). **Fixed:** §4.1 now includes
+     `last_state`, and every node carries an `"id"` field in the same `"area:<id>"` /
+     `"epic:<number>"` shape edges use, so the dashboard JS indexes nodes by `id` directly.
+  4. Recommended resolutions for both §8 open questions (membership-only scope; a capped
+     `issues_by_epic` with truncation metadata). **Fixed:** §8 now records both as decided, and
+     §4.1's response shape reflects the 50-item cap.
