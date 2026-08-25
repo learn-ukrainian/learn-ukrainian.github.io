@@ -1167,6 +1167,17 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "keep as the canonical remote epic lifecycle observer",
     ),
     PageContract(
+        "epics-map.html",
+        "/epics-map.html",
+        "Read-only relationship map of issue-stream areas, epic lease/status nodes, and cached issue membership.",
+        "GET /api/epics/graph/v1 over issue_streams.yaml area membership, API-host SessionStreamStore projections, and the bounded issue-stream audit cache.",
+        "Client fetches the live graph with a 5s timeout and auto-refreshes every 15s; stale/no-cache markers are rendered explicitly and there are no client mutation controls.",
+        ("humans", "operators", "orchestrators"),
+        "Complements epics.html's flat lifecycle table with area grouping and issue-membership detail.",
+        "medium if stale or no-cache data is mistaken for confirmed zero issue membership",
+        "keep as the read-only epic relationship-map observer",
+    ),
+    PageContract(
         "channels.html",
         "/channels.html",
         "Compatibility redirect to the consolidated read-only Fleet Observer.",
