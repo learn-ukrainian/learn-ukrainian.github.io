@@ -26,7 +26,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
@@ -88,6 +88,7 @@ from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
+from .monitor_context import MonitorContext, production_context
 from .observer_presence import router as observer_presence_router
 from .occupancy import router as occupancy_router
 from .occupancy_local import resolve_launcher_host_id
@@ -114,6 +115,8 @@ from .wiki_router import router as wiki_router
 from .work_router import router as work_router
 from .work_router import warm_projection_cache
 from .worktrees_router import router as worktrees_router
+
+core_router = APIRouter()
 
 
 @asynccontextmanager
@@ -143,30 +146,6 @@ async def _lifespan(_app: FastAPI):
         yield
     finally:
         stop_periodic_refresh()
-
-
-app = FastAPI(
-    title="Playground API",
-    version="2.0.0",
-    description=(
-        "Monitor API for the Ukrainian curriculum pipeline. "
-        "Powers the ukraine-ops dashboards (root /), agent cold-start (orient, rules, session), "
-        "state queries, comms, delegate, build events, and operational tooling. "
-        "Interactive explorer: /docs (Swagger) and /redoc. "
-        "Machine-readable route contracts: /api/contracts/routes. "
-        "See docs/MONITOR-API.md for the full reference."
-    ),
-    lifespan=_lifespan,
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-app.middleware("http")(resilience_middleware)
 
 
 def _error_envelope(error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None) -> JSONResponse:
@@ -223,7 +202,6 @@ def _sanitize_public_detail(detail: Any) -> Any:
     return detail
 
 
-@app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     """Normalize handled HTTP errors without changing their status codes."""
     del request
@@ -235,7 +213,6 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     )
 
 
-@app.exception_handler(RequestValidationError)
 async def request_validation_exception_handler(request: Request, exc: RequestValidationError):
     """Return validation shape without echoing submitted values."""
     del request
@@ -250,7 +227,6 @@ async def request_validation_exception_handler(request: Request, exc: RequestVal
     return _error_envelope("validation_error", sanitized_errors, status_code=422)
 
 
-@app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Consistent JSON error format for unhandled exceptions."""
     error_id = uuid.uuid4().hex
@@ -264,63 +240,6 @@ async def global_exception_handler(request: Request, exc: Exception):
             "detail": "internal server error",
         },
     )
-
-
-# Mount team routers — each team owns their own file
-app.include_router(admin_router, prefix="/api/admin")
-app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
-app.include_router(agent_monitor_router, prefix="/api/agent-monitor")
-app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
-app.include_router(atlas_jobs_router, prefix="/api/atlas-jobs", tags=["atlas-jobs"])
-app.include_router(occupancy_router, prefix="/api/occupancy", tags=["occupancy"])
-app.include_router(observer_presence_router, prefix="/api/observer", tags=["observer"])
-app.include_router(epics_router, prefix="/api/epics", tags=["epics"])
-app.include_router(blue_router, prefix="/api/blue")
-app.include_router(comms_router, prefix="/api/comms")
-app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
-app.include_router(project_state_router, prefix="/api/fleet", tags=["fleet"])
-app.include_router(fleet_workers_router, prefix="/api/fleet", tags=["fleet"])
-app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
-app.include_router(coordination_router, prefix="/api/coordination")
-app.include_router(consultation_router, prefix="/api/consultation")
-app.include_router(cost_router, prefix="/api/cost")
-app.include_router(cost_router, prefix="/api/analytics/cost")
-app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])
-app.include_router(dashboard_router, prefix="/api/dashboard")
-app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
-app.include_router(delegate_router, prefix="/api/delegate")
-app.include_router(docs_router, prefix="/artifacts")
-app.include_router(docs_router, prefix="/files")
-app.include_router(discussions_router, prefix="/api/discussions", tags=["discussions"])
-app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
-app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
-app.include_router(gold_router, prefix="/api/gold")
-app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
-app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
-app.include_router(build_events_router, prefix="/api/build/events")
-app.include_router(images_router, prefix="/api/images")
-app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
-app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
-app.include_router(sources_router, prefix="/api/sources", tags=["sources"])
-app.include_router(sources_router, prefix="/api/rag", tags=["rag"], deprecated=True)
-# GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
-# can discover it alongside the other state-query endpoints.
-app.include_router(
-    reviewer_ghosts_router,
-    prefix="/api/state/reviewer-ghosts",
-    tags=["reviewer-ghosts"],
-)
-app.include_router(rollover_router, prefix="/api/rollovers", tags=["rollovers"])
-app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
-app.include_router(runtime_router, prefix="/api/runtime")
-app.include_router(session_router, prefix="/api/session", tags=["session"])
-app.include_router(site_router, prefix="/api/site", tags=["site"])
-app.include_router(state_router, prefix="/api/state")
-app.include_router(telemetry_router)
-app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
-app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
-app.include_router(work_router, prefix="/api/work", tags=["work"])
-
 
 # Server start time for uptime calculation
 _SERVER_START = datetime.now(UTC)
@@ -1434,20 +1353,20 @@ def _health_instance_identity() -> dict[str, str | None]:
     }
 
 
-@app.get("/api", status_code=307)
+@core_router.get("/api", status_code=307)
 async def api_index():
     """API root — redirect humans to the interactive docs explorer (#7090)."""
     return RedirectResponse(url="/docs", status_code=307)
 
 
-@app.get("/api/health")
-async def health_check():
+@core_router.get("/api/health")
+async def health_check(request: Request):
     """Root health check — returns server status, version, uptime."""
     now = datetime.now(UTC)
     uptime = now - _SERVER_START
     return {
         "status": "ok",
-        "version": app.version,
+        "version": request.app.version,
         "uptime_seconds": int(uptime.total_seconds()),
         "started_at": _SERVER_START.isoformat(),
         "checked_at": now.isoformat(),
@@ -1597,7 +1516,7 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
     }
 
 
-@app.get("/api/orient")
+@core_router.get("/api/orient")
 async def orient(
     request: Request,
     fresh: bool = False,
@@ -1747,8 +1666,8 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
         response.pop("research", None)
 
 
-@app.get("/api/config")
-async def get_config():
+@core_router.get("/api/config")
+async def get_config(request: Request):
     # Import pipeline phase config — single source of truth
     try:
         from scripts.build.phase_constants import PHASE_LABELS, PHASES  # noqa: PLC0415 — preserves endpoint fallback
@@ -1756,10 +1675,10 @@ async def get_config():
         pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
     except ImportError:
         pipeline_info = {}
-    return {"levels": LEVELS, "api_version": app.version, "pipeline": pipeline_info}
+    return {"levels": LEVELS, "api_version": request.app.version, "pipeline": pipeline_info}
 
 
-@app.get("/api/batch/dispatcher")
+@core_router.get("/api/batch/dispatcher")
 async def get_dispatcher_state():
     state_file = BATCH_STATE_DIR / "dispatcher_state.json"
     if not state_file.exists():
@@ -1768,7 +1687,7 @@ async def get_dispatcher_state():
         return json.load(f)
 
 
-@app.get("/api/batch/active")
+@core_router.get("/api/batch/active")
 async def get_active_orchestration():
     active = []
     for track_dir in CURRICULUM_ROOT.iterdir():
@@ -1795,7 +1714,7 @@ async def get_active_orchestration():
     return active
 
 
-@app.get("/api/batch/failures")
+@core_router.get("/api/batch/failures")
 async def get_failure_queue():
     f_file = BATCH_STATE_DIR / "failure_queue.json"
     if not f_file.exists():
@@ -1804,7 +1723,7 @@ async def get_failure_queue():
         return json.load(f)
 
 
-@app.get("/api/batch/usage")
+@core_router.get("/api/batch/usage")
 async def get_batch_usage():
     usage_dir = BATCH_STATE_DIR / "api_usage"
     if not usage_dir.exists():
@@ -1820,7 +1739,7 @@ async def get_batch_usage():
     return summaries
 
 
-@app.get("/api/batch/checkpoints")
+@core_router.get("/api/batch/checkpoints")
 async def get_all_checkpoints():
     results = {}
     for f in BATCH_STATE_DIR.glob("checkpoint_*.json"):
@@ -1833,12 +1752,12 @@ async def get_all_checkpoints():
     return results
 
 
-@app.get("/api/batch/dispatcher/running")
+@core_router.get("/api/batch/dispatcher/running")
 async def dispatcher_running():
     return {"running": False}
 
 
-@app.post("/api/batch/dispatcher/scan")
+@core_router.post("/api/batch/dispatcher/scan")
 async def run_dispatcher_scan():
     cmd = [
         str(LIVE_REPO_ROOT / ".venv" / "bin" / "python"),
@@ -1852,7 +1771,7 @@ async def run_dispatcher_scan():
     return {"status": "ok"}
 
 
-@app.get("/api/batch/dispatcher/logs")
+@core_router.get("/api/batch/dispatcher/logs")
 async def get_dispatcher_logs(lines: int = 50):
     log_file = PROJECT_ROOT / "logs" / "dispatcher.log"
     if not log_file.exists():
@@ -1863,7 +1782,7 @@ async def get_dispatcher_logs(lines: int = 50):
 # ==================== WEBSOCKET ====================
 
 
-@app.websocket("/ws/batch")
+@core_router.websocket("/ws/batch")
 async def batch_websocket(websocket: WebSocket):
     await websocket.accept()
     try:
@@ -1888,7 +1807,7 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
         return None
 
 
-@app.get("/images/{path:path}")
+@core_router.get("/images/{path:path}")
 async def serve_image(path: str):
     """Serve textbook images with caching. Path relative to data/textbook_images/."""
     file_path = _safe_join(_IMAGE_DIR, path)
@@ -1913,7 +1832,7 @@ async def serve_image(path: str):
 # ==================== STATIC FILES (MUST BE LAST) ====================
 
 
-@app.get("/{path:path}")
+@core_router.get("/{path:path}")
 async def serve_static(path: str):
     if not path or path == "/":
         return FileResponse(DASHBOARDS_DIR / "index.html")
@@ -1937,3 +1856,94 @@ async def serve_static(path: str):
         ):
             return FileResponse(html_candidate)
     raise HTTPException(status_code=404)
+
+
+def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
+    """Build a fresh Monitor API app bound to one context."""
+    factory_lifespan = _lifespan if lifespan is None else lifespan
+    factory_app = FastAPI(
+        title="Playground API",
+        version="2.0.0",
+        description=(
+            "Monitor API for the Ukrainian curriculum pipeline. "
+            "Powers the ukraine-ops dashboards (root /), agent cold-start (orient, rules, session), "
+            "state queries, comms, delegate, build events, and operational tooling. "
+            "Interactive explorer: /docs (Swagger) and /redoc. "
+            "Machine-readable route contracts: /api/contracts/routes. "
+            "See docs/MONITOR-API.md for the full reference."
+        ),
+        lifespan=factory_lifespan,
+    )
+    factory_app.state.ctx = context
+    factory_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    factory_app.middleware("http")(resilience_middleware)
+    factory_app.add_exception_handler(StarletteHTTPException, http_exception_handler)
+    factory_app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
+    factory_app.add_exception_handler(Exception, global_exception_handler)
+
+    # Mount team routers in the established order. The core router must remain
+    # last so its catch-all route keeps today's matching precedence.
+    factory_app.include_router(admin_router, prefix="/api/admin")
+    factory_app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
+    factory_app.include_router(agent_monitor_router, prefix="/api/agent-monitor")
+    factory_app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
+    factory_app.include_router(atlas_jobs_router, prefix="/api/atlas-jobs", tags=["atlas-jobs"])
+    factory_app.include_router(occupancy_router, prefix="/api/occupancy", tags=["occupancy"])
+    factory_app.include_router(observer_presence_router, prefix="/api/observer", tags=["observer"])
+    factory_app.include_router(epics_router, prefix="/api/epics", tags=["epics"])
+    factory_app.include_router(blue_router, prefix="/api/blue")
+    factory_app.include_router(comms_router, prefix="/api/comms")
+    factory_app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
+    factory_app.include_router(project_state_router, prefix="/api/fleet", tags=["fleet"])
+    factory_app.include_router(fleet_workers_router, prefix="/api/fleet", tags=["fleet"])
+    factory_app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
+    factory_app.include_router(coordination_router, prefix="/api/coordination")
+    factory_app.include_router(consultation_router, prefix="/api/consultation")
+    factory_app.include_router(cost_router, prefix="/api/cost")
+    factory_app.include_router(cost_router, prefix="/api/analytics/cost")
+    factory_app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])
+    factory_app.include_router(dashboard_router, prefix="/api/dashboard")
+    factory_app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
+    factory_app.include_router(delegate_router, prefix="/api/delegate")
+    factory_app.include_router(docs_router, prefix="/artifacts")
+    factory_app.include_router(docs_router, prefix="/files")
+    factory_app.include_router(discussions_router, prefix="/api/discussions", tags=["discussions"])
+    factory_app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
+    factory_app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
+    factory_app.include_router(gold_router, prefix="/api/gold")
+    factory_app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
+    factory_app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
+    factory_app.include_router(build_events_router, prefix="/api/build/events")
+    factory_app.include_router(images_router, prefix="/api/images")
+    factory_app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
+    factory_app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
+    factory_app.include_router(sources_router, prefix="/api/sources", tags=["sources"])
+    factory_app.include_router(sources_router, prefix="/api/rag", tags=["rag"], deprecated=True)
+    # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
+    # can discover it alongside the other state-query endpoints.
+    factory_app.include_router(
+        reviewer_ghosts_router,
+        prefix="/api/state/reviewer-ghosts",
+        tags=["reviewer-ghosts"],
+    )
+    factory_app.include_router(rollover_router, prefix="/api/rollovers", tags=["rollovers"])
+    factory_app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
+    factory_app.include_router(runtime_router, prefix="/api/runtime")
+    factory_app.include_router(session_router, prefix="/api/session", tags=["session"])
+    factory_app.include_router(site_router, prefix="/api/site", tags=["site"])
+    factory_app.include_router(state_router, prefix="/api/state")
+    factory_app.include_router(telemetry_router)
+    factory_app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
+    factory_app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
+    factory_app.include_router(work_router, prefix="/api/work", tags=["work"])
+    factory_app.include_router(core_router)
+    return factory_app
+
+
+app = create_app(production_context())

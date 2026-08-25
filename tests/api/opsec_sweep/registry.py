@@ -158,7 +158,14 @@ def _walk_routes(node: Any, prefix: str = "") -> Iterable[tuple[str, Operation]]
     if callable(effective_contexts):
         for context in effective_contexts():
             original_route = getattr(context, "original_route", context)
-            path = normalize_path_template(getattr(context, "path", getattr(original_route, "path", "/")))
+            context_path = getattr(context, "path", None)
+            if not context_path:
+                # FastAPI's included-router context currently leaves the
+                # synthetic path blank for WebSocket routes while retaining
+                # the correctly prefixed Starlette route.
+                starlette_route = getattr(context, "starlette_route", None)
+                context_path = getattr(starlette_route, "path", None)
+            path = normalize_path_template(context_path or getattr(original_route, "path", "/"))
             if isinstance(original_route, WebSocketRoute):
                 yield "websocket", Operation("WEBSOCKET", path)
             elif isinstance(original_route, APIRoute) and getattr(context, "include_in_schema", True):
