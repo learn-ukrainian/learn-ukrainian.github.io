@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 87357,
-      "output": 16879,
+      "input": 88427,
+      "output": 17694,
       "reasoning": 0,
       "cache": {
-        "read": 2310464,
+        "read": 2451392,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1787628036775,
-      "updated": 1787628828302
+      "updated": 1787628847813
     }
   },
   "messages": [
@@ -4919,19 +4919,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 71109,
+          "input": 549,
+          "output": 352,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 70208
           }
         },
         "modelID": "stealth/ox-alpha",
         "providerID": "openrouter",
         "time": {
-          "created": 1787628828299
+          "created": 1787628828299,
+          "completed": 1787628847800
         },
+        "finish": "tool-calls",
         "id": "msg_036fb368b001ZoyEFa3OcZIQk5",
         "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in"
       },
@@ -4948,16 +4951,21 @@
           "tool": "bash",
           "callID": "6aed40e9-ee4a-4c8e-a0a2-8087ac1bb39f",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/ci/subprocess_timeout_allowlist.txt scripts/hygiene/lane_disk_retention.py scripts/hygiene/root_entry_guard.py scripts/pre_commit/check_plan_immutability.py scripts/session_canary/grok_lane.py tests/test_git_probe_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(hooks): bound git plumbing subprocesses (#7213 slice 17)\n\nBound six git-probe subprocess.run sites to a 30s timeout and mapped\nTimeoutExpired onto each site's existing fail-closed / non-zero / falsy\nshape (hooks and CLI lanes, no raw traceback):\n\n- check_plan_immutability: _run_git raises RuntimeError via rc-124\n  CompletedProcess; _git_blob_exists returns False\n- grok_lane cmd_mint/cmd_score: synthesize rc-124 CompletedProcess;\n  score records verdict FAIL-HANDOFF with rc 124\n- lane_disk_retention _git: returns \"\" (degraded advisory output)\n- root_entry_guard _run_git: rc-124 CompletedProcess; tracked-name\n  probe still fails closed via existing RuntimeError path\n\nRemoved the six matching entries from the subprocess timeout allowlist\n(32 -> 26; shrink-only). New tests/test_git_probe_timeouts.py mocks\nsubprocess.run for all six sites asserting timeout=30 plus mapping.\n\nX-Agent: ox-alpha/timeout-burndown-7213-s17\nEOF\n)\" && git log --oneline -2 && git status --short",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s17"
             },
+            "output": "[ox-alpha/timeout-burndown-7213-s17 572e50d726] fix(hooks): bound git plumbing subprocesses (#7213 slice 17)\n 6 files changed, 318 insertions(+), 75 deletions(-)\n create mode 100644 tests/test_git_probe_timeouts.py\n572e50d726 fix(hooks): bound git plumbing subprocesses (#7213 slice 17)\ne3b5425420 fix(sync): bound subprocess calls in scripts/sync (#7213 slice 16) (#7289)\n",
+            "metadata": {
+              "output": "[ox-alpha/timeout-burndown-7213-s17 572e50d726] fix(hooks): bound git plumbing subprocesses (#7213 slice 17)\n 6 files changed, 318 insertions(+), 75 deletions(-)\n create mode 100644 tests/test_git_probe_timeouts.py\n572e50d726 fix(hooks): bound git plumbing subprocesses (#7213 slice 17)\ne3b5425420 fix(sync): bound subprocess calls in scripts/sync (#7213 slice 16) (#7289)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/ci/subprocess_timeout_allowlist.txt scripts/hygiene/lane_disk_retention.py scripts/hygiene/root_entry_guard.py scripts/pre_commit/check_plan_immutability.py scripts/session_canary/grok_lane.py tests/test_git_probe_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(hooks): bound git plumbing subprocesses (#7213 slice 17)\n\nBound six git-probe subprocess.run sites to a 30s timeout and mapped\nTimeoutExpired onto each site's existing fail-closed / non-zero / falsy\nshape (hooks and CLI lanes, no raw traceback):\n\n- check_plan_immutability: _run_git raises RuntimeError via rc-124\n  CompletedProcess; _git_blob_exists returns False\n- grok_lane cmd_mint/cmd_score: synthesize rc-124 CompletedProcess;\n  score records verdict FAIL-HANDOFF with rc 124\n- lane_disk_retention _git: returns \"\" (degraded advisory output)\n- root_entry_guard _run_git: rc-124 CompletedProcess; tracked-name\n  probe still fails closed via existing RuntimeError path\n\nRemoved the six matching entries from the subprocess timeout allowlist\n(32 -> 26; shrink-only). New tests/test_git_probe_timeouts.py mocks\nsubprocess.run for all six sites asserting timeout=30 plus mapping.\n\nX-Agent: ox-alpha/timeout-burndown-7213-s17\nEOF\n)\" && git log --oneline -2 && git status --short",
             "time": {
-              "start": 1787628839873
+              "start": 1787628847542,
+              "end": 1787628847615
             }
           },
           "metadata": {
@@ -4968,6 +4976,119 @@
           "id": "prt_036fb4bf80015BiOtrkOV2xYSz",
           "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in",
           "messageID": "msg_036fb368b001ZoyEFa3OcZIQk5"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "bf6c740887aeaacc9ddd35ce88dd23686a624e8c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 71109,
+            "input": 549,
+            "output": 352,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 70208
+            }
+          },
+          "cost": 0,
+          "id": "prt_036fb825b001OObfrMb8np7ZEw",
+          "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in",
+          "messageID": "msg_036fb368b001ZoyEFa3OcZIQk5"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_036ef22f6001qVDeySwhGsChyi",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s17",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s17"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 71704,
+          "input": 521,
+          "output": 463,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 70720
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787628847811,
+          "completed": 1787628929363
+        },
+        "finish": "stop",
+        "id": "msg_036fb82c3001U6uU1hixUssaKA",
+        "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in"
+      },
+      "parts": [
+        {
+          "snapshot": "bf6c740887aeaacc9ddd35ce88dd23686a624e8c",
+          "type": "step-start",
+          "id": "prt_036fb9eeb001PSC9GU3DYukmqm",
+          "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in",
+          "messageID": "msg_036fb82c3001U6uU1hixUssaKA"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed in the worktree on branch ox-alpha/timeout-burndown-7213-s17, not pushed. Working tree clean.\n\nFinal verification summary:\n- COMMIT=572e50d726\n- ALLOWLIST_SLICE17_REMAINING=0 (keys for the four files)\n- TESTS=pass (17 passed acceptance; 99 passed related suites)\n\nAlso confirm primary checkout untouched: earlier verified clean on main. Done. Print the required line.",
+          "time": {
+            "start": 1787628855022,
+            "end": 1787628878905
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "Committed in the worktree on branch ox-alpha/timeout-burndown-7213-s17, not pushed. Working tree clean.\n\nFinal verification summary:\n- COMMIT=572e50d726\n- ALLOWLIST_SLICE17_REMAINING=0 (keys for the four files)\n- TESTS=pass (17 passed acceptance; 99 passed related suites)\n\nAlso confirm primary checkout untouched: earlier verified clean on main. Done. Print the required line.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "id": "prt_036fb9eee001FUSEtnd0U5oZkq",
+          "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in",
+          "messageID": "msg_036fb82c3001U6uU1hixUssaKA"
+        },
+        {
+          "type": "text",
+          "text": "Done. Summary of the completed work:\n\n- **6 sites bounded at 30s** with TimeoutExpired mapped onto existing shapes:\n  - `check_plan_immutability.py` — `_run_git` → rc-124 CompletedProcess → existing `RuntimeError` path; `_git_blob_exists` → returns `False`\n  - `grok_lane.py` — `cmd_mint`/`cmd_score` synthesize rc-124 CompletedProcess; score records `FAIL-HANDOFF` verdict with rc 124 and flows through the existing handback pipeline\n  - `lane_disk_retention.py::_git` → returns `\"\"` (advisory degradation)\n  - `root_entry_guard.py::_run_git` → rc-124 CompletedProcess; `_tracked_top_level_names` still fails closed via its existing `RuntimeError`\n- **Allowlist shrunk-only**: 32 → 26 entries; the six slice-17 keys removed, zero remaining for the four files.\n- **New tests** `tests/test_git_probe_timeouts.py`: 9 tests mocking `subprocess.run`, asserting `timeout=30` plus mapping at all six sites.\n- **Verification** (worktree, `/home/ops/learn-ukrainian/.venv/bin/python`): acceptance pytest **17 passed**, ruff **all checks passed**, plus 99 passed across the seven pre-existing suites covering these modules.\n- Process note: my edits initially landed in the primary checkout by mistake; I transferred the identical diff into the dispatch worktree via patch and restored the primary to pristine (`git status` clean, branch `main`) before running final acceptance and committing here.\n\nCOMMIT=572e50d726 ALLOWLIST_SLICE17_REMAINING=0 TESTS=pass",
+          "time": {
+            "start": 1787628878910,
+            "end": 1787628929145
+          },
+          "id": "prt_036fbfc3e001KYwSjYCJSQS9y0",
+          "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in",
+          "messageID": "msg_036fb82c3001U6uU1hixUssaKA"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "bf6c740887aeaacc9ddd35ce88dd23686a624e8c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 71704,
+            "input": 521,
+            "output": 463,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 70720
+            }
+          },
+          "cost": 0,
+          "id": "prt_036fcc0f0001VydOvMRO5zuLd2",
+          "sessionID": "ses_fc910dd59ffeCBML5ma3cAT9in",
+          "messageID": "msg_036fb82c3001U6uU1hixUssaKA"
         }
       ]
     }
