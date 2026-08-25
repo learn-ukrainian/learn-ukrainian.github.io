@@ -1046,6 +1046,9 @@ def _scan_live_activity(minutes: int = 15) -> list[dict]:
     activities = []
 
     # 1. Scan all orchestration state files modified recently
+    if not CURRICULUM_ROOT.is_dir():
+        return activities
+
     for track_dir in CURRICULUM_ROOT.iterdir():
         if not track_dir.is_dir():
             continue
@@ -1127,6 +1130,9 @@ def _scan_recent_completions(minutes: int = 60) -> list[dict]:
     now = time.time()
     cutoff = now - (minutes * 60)
     completions = []
+
+    if not CURRICULUM_ROOT.is_dir():
+        return completions
 
     for track_dir in CURRICULUM_ROOT.iterdir():
         if not track_dir.is_dir():

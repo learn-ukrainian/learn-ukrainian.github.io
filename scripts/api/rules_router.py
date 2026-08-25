@@ -23,12 +23,14 @@ Source of truth is the Claude extensions rule directory — `.claude/rules/`,
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse, PlainTextResponse
 
-from .config import PROJECT_ROOT
+from . import config
+from .monitor_context import MonitorContext, get_ctx
 from .telemetry.response import (
     add_json_telemetry,
     append_telemetry_footer,
@@ -91,12 +93,13 @@ RULE_SOURCES: tuple[str, ...] = (
 _FILE_SEP = "\n\n---\n\n"
 
 
-def _read_rule_files() -> tuple[list[str], list[str]]:
+def _read_rule_files(project_root: Path | None = None) -> tuple[list[str], list[str]]:
     """Return (present_paths, file_contents) for every file that exists."""
+    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
     present_paths: list[str] = []
     contents: list[str] = []
     for rel in RULE_SOURCES:
-        path = PROJECT_ROOT / rel
+        path = root / rel
         if not path.exists() or not path.is_file():
             continue
         try:
@@ -111,13 +114,13 @@ def _read_rule_files() -> tuple[list[str], list[str]]:
     return present_paths, contents
 
 
-def _assemble_rules() -> tuple[str, list[str], str]:
+def _assemble_rules(project_root: Path | None = None) -> tuple[str, list[str], str]:
     """Return (markdown, sources, sha256_hex) for the concatenated rules.
 
     Raises ``HTTPException(500)`` if not a single source file could be
     read — something is badly wrong with the checkout in that case.
     """
-    sources, parts = _read_rule_files()
+    sources, parts = _read_rule_files(project_root)
     if not parts:
         raise HTTPException(
             status_code=500,
@@ -135,6 +138,7 @@ def get_rules(
         "markdown",
         description="'markdown' returns the raw Markdown blob; 'json' wraps it with hash + metadata.",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Return the condensed agent rule text.
 
@@ -149,7 +153,7 @@ def get_rules(
     body — the client should reuse its cache. This makes the SDK's
     cache-hit path one small HTTP round-trip with zero payload.
     """
-    markdown, sources, digest = _assemble_rules()
+    markdown, sources, digest = _assemble_rules(ctx.roots.project_root)
     etag = f'"{digest}"'
     session_id = session_id_from_request(request)
 
@@ -200,7 +204,7 @@ def _cache_headers(etag: str, digest: str, hash_header: str) -> dict[str, str]:
     return headers
 
 
-def rules_hash() -> str:
+def rules_hash(project_root: Path | None = None) -> str:
     """Hash-only helper used by ``/api/state/manifest``.
 
     Cheap enough to call on every manifest request (three small file
@@ -208,16 +212,17 @@ def rules_hash() -> str:
     stays 200-OK even if rules are momentarily missing.
     """
     try:
-        _, _, digest = _assemble_rules()
+        _, _, digest = _assemble_rules(project_root)
     except HTTPException:
         return ""
     return digest
 
 
-def rules_source_paths() -> list[str]:
+def rules_source_paths(project_root: Path | None = None) -> list[str]:
     """Resolve the set of rule sources that actually exist right now.
 
     Mirrors ``_read_rule_files()`` but without reading the bodies, for
     the manifest to advertise what the current concat covers.
     """
-    return [rel for rel in RULE_SOURCES if (PROJECT_ROOT / rel).is_file()]
+    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
+    return [rel for rel in RULE_SOURCES if (root / rel).is_file()]

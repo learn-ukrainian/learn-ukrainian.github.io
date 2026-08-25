@@ -18,8 +18,8 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router
-import scripts.api.session_router as session_router
 import scripts.api.state_router as state_router
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -108,7 +108,7 @@ def test_rules_markdown_default(monkeypatch, tmp_path):
     rule_file = tmp_path / "rules.md"
     rule_file.write_text("# Rule A\n\nBe excellent.\n", encoding="utf-8")
     monkeypatch.setattr(rules_router, "RULE_SOURCES", (str(rule_file.relative_to(tmp_path.parent)),))
-    monkeypatch.setattr(rules_router, "PROJECT_ROOT", tmp_path.parent)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path.parent))
 
     resp = client.get("/api/rules")
     assert resp.status_code == 200
@@ -122,7 +122,7 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
     b = tmp_path / "b.md"
     a.write_text("A body\n", encoding="utf-8")
     b.write_text("B body\n", encoding="utf-8")
-    monkeypatch.setattr(rules_router, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
     monkeypatch.setattr(
         rules_router,
         "RULE_SOURCES",
@@ -139,7 +139,7 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
 
 
 def test_rules_500_when_no_sources_readable(monkeypatch, tmp_path):
-    monkeypatch.setattr(rules_router, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
     monkeypatch.setattr(rules_router, "RULE_SOURCES", ("missing.md",))
     resp = client.get("/api/rules")
     assert resp.status_code == 500
@@ -171,7 +171,7 @@ def session_fixture(tmp_path, monkeypatch):
     (session_dir / "2026-04-01-old.md").write_text("old handoff\n", encoding="utf-8")
     (session_dir / "2026-04-17-newest.md").write_text("new handoff\n", encoding="utf-8")
 
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
     return project_root
 
 
@@ -223,7 +223,7 @@ def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_pa
     (session_dir / "codex-orchestrator-handoff.md").write_text(
         "# Durable task\n\nDurable orchestrator state.\n", encoding="utf-8"
     )
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
 
     resp = client.get("/api/session/current?format=json")
 
@@ -238,7 +238,7 @@ def test_session_current_codex_without_router_uses_durable_handoff(tmp_path, mon
     session_dir = project_root / "docs" / "session-state"
     session_dir.mkdir(parents=True)
     (session_dir / "codex-orchestrator-handoff.md").write_text("# Durable task\n\nCodex UI state.\n", encoding="utf-8")
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
 
     resp = client.get("/api/session/current?agent=codex&format=json")
 
@@ -254,7 +254,7 @@ def test_session_current_codex_empty_router_uses_router_body(tmp_path, monkeypat
     session_dir.mkdir(parents=True)
     (session_dir / "current.md").write_text("# Legacy current body\n\nNo agent router yet.\n", encoding="utf-8")
     (session_dir / "codex-orchestrator-handoff.md").write_text("# Durable task\n\nCodex UI state.\n", encoding="utf-8")
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
 
     resp = client.get("/api/session/current?agent=codex&format=json")
 
@@ -279,7 +279,7 @@ def test_session_current_legacy_pointer_remap_is_codex_or_orchestrator_only(tmp_
     (session_dir / "codex-orchestrator-handoff.md").write_text(
         "# Durable task\n\nDurable orchestrator state.\n", encoding="utf-8"
     )
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
 
     resp = client.get("/api/session/current?agent=claude&format=json")
 
@@ -305,7 +305,7 @@ def test_session_current_rejects_invalid_agent(session_fixture):
 def test_session_current_404_without_current_md(tmp_path, monkeypatch):
     project_root = tmp_path
     (project_root / "docs" / "session-state").mkdir(parents=True)
-    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
 
     resp = client.get("/api/session/current")
     assert resp.status_code == 404
@@ -322,8 +322,8 @@ def test_manifest_shape_and_hashes(monkeypatch, tmp_path):
     # where they are USED (state_router binds them at import time via
     # top-level `from .rules_router import rules_hash` — patching the origin
     # module would not affect the already-bound reference).
-    monkeypatch.setattr(state_router, "rules_hash", lambda: "r" * 64)
-    monkeypatch.setattr(state_router, "session_hash", lambda: "s" * 64)
+    monkeypatch.setattr(state_router, "rules_hash", lambda *args, **kwargs: "r" * 64)
+    monkeypatch.setattr(state_router, "session_hash", lambda *args, **kwargs: "s" * 64)
 
     resp = client.get("/api/state/manifest")
     assert resp.status_code == 200

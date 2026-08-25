@@ -21,11 +21,11 @@ from typing import Any
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import parse_timestamp
+from scripts.api import config
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.occupancy_sanitize import safe_field as _safe_field
-from scripts.api.session_streams_router import _db_path as session_streams_db_path
-from scripts.api.session_streams_router import _repo_root
+from scripts.api.repository_authority import preparation_data_root
 from scripts.lexicon.runner import atlas_job
 
 ENV_DRIVER_HOST_ID = "MONITOR_OCCUPANCY_DRIVER_HOST_ID"
@@ -36,6 +36,17 @@ MARKERS_SCHEMA = "monitor-occupancy-markers.v1"
 MARKER_KINDS = frozenset({"driver", "worker", "job", "service"})
 DEFAULT_MARKER_TTL_S = 15 * 60
 _MARKERS_REL = Path(".agent") / "occupancy" / "markers"
+
+
+def _repo_root() -> Path:
+    return preparation_data_root(
+        project_root=Path(config.PROJECT_ROOT),
+        live_repo_root=Path(config.LIVE_REPO_ROOT),
+    )
+
+
+def session_streams_db_path() -> Path:
+    return _repo_root() / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
 
 
 @dataclass(frozen=True)

@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 from datetime import timedelta
+from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from scripts.orchestration import thread_handoff
 from scripts.orchestration.task_family import rollover_registry as registry
 
-from .config import LIVE_REPO_ROOT
+from . import config
+from .monitor_context import MonitorContext, get_ctx
 
 router = APIRouter(tags=["rollovers"])
 
@@ -27,10 +29,11 @@ def _client_registry_errors(errors: list | None) -> list[dict[str, str]]:
     return out
 
 
-def collect_rollover_orient_data() -> dict:
+def collect_rollover_orient_data(live_repo_root: Path | None = None) -> dict:
     """Compact cold-start projection; full evidence remains on this router."""
-    audit = registry.audit_fleet(LIVE_REPO_ROOT)
-    identity_snapshot = thread_handoff.rollover_identity_snapshot(LIVE_REPO_ROOT)
+    root = live_repo_root if live_repo_root is not None else Path(config.LIVE_REPO_ROOT)
+    audit = registry.audit_fleet(root)
+    identity_snapshot = thread_handoff.rollover_identity_snapshot(root)
     actionable = [
         entry
         for entry in audit["entries"]
@@ -58,6 +61,7 @@ def rollover_audit(
     lineage_id: str | None = Query(None),
     rollover_id: str | None = Query(None),
     stale_hours: float = Query(registry.DEFAULT_STALE_HOURS, gt=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict:
     """Classify the fleet or return one exact read-only selector projection."""
     selectors = {
@@ -67,7 +71,7 @@ def rollover_audit(
         "rollover_id": rollover_id,
     }
     if any(selectors.values()):
-        records, errors = registry.scan_records(LIVE_REPO_ROOT)
+        records, errors = registry.scan_records(ctx.roots.live_repo_root)
         try:
             selected = registry.select_exact(records, agent=agent, **selectors)
         except ValueError as exc:
@@ -87,7 +91,7 @@ def rollover_audit(
                 },
             )
         record = selected[0]
-        selected_errors = registry.record_source_errors(LIVE_REPO_ROOT, record, errors)
+        selected_errors = registry.record_source_errors(ctx.roots.live_repo_root, record, errors)
         if selected_errors:
             raise HTTPException(
                 status_code=409,
@@ -113,7 +117,7 @@ def rollover_audit(
             "terminal_reason": record.get("terminal_reason"),
             "registry_errors": _client_registry_errors(errors),
         }
-    audit = registry.audit_fleet(LIVE_REPO_ROOT, stale_hours=stale_hours)
+    audit = registry.audit_fleet(ctx.roots.live_repo_root, stale_hours=stale_hours)
     if agent is not None:
         try:
             agent = registry.normalize_agent(agent)

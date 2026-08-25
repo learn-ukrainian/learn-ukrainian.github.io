@@ -6,12 +6,10 @@ any cutover mutation. Operator cutovers remain explicit CLI/events.
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.dual_write import list_handoff_candidates
 from agents_extensions.shared.session_streams.handoff import diagnose_handoff
 from agents_extensions.shared.session_streams.model import entry_as_dict
@@ -21,44 +19,33 @@ from agents_extensions.shared.session_streams.projection import (
 )
 from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
 
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
-from .repository_authority import build_repository_identity, preparation_data_root
+from .monitor_context import MonitorContext, get_ctx
+from .repository_authority import build_repository_identity
 
 router = APIRouter(tags=["session-streams"])
 
 
-def _repo_root() -> Path:
-    """Live-data checkout that owns shared .agent/ + dual-write handoffs.
-
-    Release-mode API code roots under ``.runtime/api/releases/<sha>`` have no
-    ``.git`` and do not symlink ``.agent`` / ``.claude`` (see LIVE_DATA_PATHS).
-    ``primary_checkout_root(PROJECT_ROOT)`` therefore returns the release path
-    and PR-K surfaces 404 for a DB that only exists on the live primary.
-    Use the same authority helper as state_router: when PROJECT_ROOT is a
-    release snapshot, read mutable continuity state from LIVE_REPO_ROOT.
-    """
-    return preparation_data_root(
-        project_root=Path(PROJECT_ROOT),
-        live_repo_root=Path(LIVE_REPO_ROOT),
-    )
-
-
-def _db_path() -> Path:
-    return _repo_root() / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
-
-
-def _store() -> SessionStreamStore:
-    db_path = _db_path()
-    if not db_path.is_file():
+def _store(ctx: MonitorContext) -> SessionStreamStore:
+    db_path = ctx.roots.session_streams_db_path
+    if db_path is None or not db_path.is_file():
         raise FileNotFoundError("session-stream database is unavailable")
-    return SessionStreamStore(SessionStreamDatabase(db_path))
+    store = ctx.stores.session_streams_store
+    if store is None:
+        raise FileNotFoundError("session-stream database is unavailable")
+    return store
 
 
-def _store_health() -> dict[str, Any]:
+def _store_health(ctx: MonitorContext) -> dict[str, Any]:
     """Return store reachability and migration versions without its path."""
     connection = None
     try:
-        connection = SessionStreamDatabase(_db_path()).connect(read_only=True)
+        if (
+            ctx.stores.session_streams_database is None
+            or ctx.roots.session_streams_db_path is None
+            or not ctx.roots.session_streams_db_path.is_file()
+        ):
+            return {"reachable": False, "schema_versions": []}
+        connection = ctx.stores.session_streams_database.connect(read_only=True)
         versions = [
             int(row[0])
             for row in connection.execute(
@@ -74,24 +61,27 @@ def _store_health() -> dict[str, Any]:
 
 
 @router.get("/v1/health")
-def session_streams_health() -> dict[str, Any]:
+def session_streams_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Liveness for the session-streams monitor surface (no cutover)."""
-    root = _repo_root()
+    root = ctx.roots.live_repo_root
     return {
         "ok": True,
         "repo": build_repository_identity(root),
-        "store": _store_health(),
+        "store": _store_health(ctx),
         "cutover": "operator-gated",
     }
 
 
 @router.get("/v1/status/{stream_id:path}")
-def session_stream_status(stream_id: str) -> dict[str, Any]:
+def session_stream_status(
+    stream_id: str,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
     """Handoff/lease diagnosis for one stream (read-only; no claim)."""
     if not stream_id.startswith("epic:"):
         raise HTTPException(status_code=400, detail="stream_id must look like epic:N")
     try:
-        status = diagnose_handoff(_store(), stream_id)
+        status = diagnose_handoff(_store(ctx), stream_id)
     except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - defensive API boundary
@@ -103,12 +93,13 @@ def session_stream_status(stream_id: str) -> dict[str, Any]:
 def session_stream_digest(
     stream_id: str,
     limit: int = Query(default=20, ge=0, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Pinned entries plus last N non-pinned entries (bounded)."""
     if not stream_id.startswith("epic:"):
         raise HTTPException(status_code=400, detail="stream_id must look like epic:N")
     try:
-        digest = _store().load_digest(stream_id, limit=limit)
+        digest = _store(ctx).load_digest(stream_id, limit=limit)
     except (NotFoundError, FileNotFoundError) as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover
@@ -124,9 +115,9 @@ def session_stream_digest(
 
 
 @router.get("/v1/dual-write-status")
-def dual_write_status() -> dict[str, Any]:
+def dual_write_status(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Inventory-derived handoff dual-write paths and file existence (no cutover)."""
-    root = _repo_root()
+    root = ctx.roots.live_repo_root
     candidates = list_handoff_candidates(root)
     rows = [
         {
@@ -140,7 +131,7 @@ def dual_write_status() -> dict[str, Any]:
     missing = sum(1 for r in rows if not r["exists"])
     return {
         "repo": build_repository_identity(root),
-        "store": _store_health(),
+        "store": _store_health(ctx),
         "total": len(rows),
         "missing_files": missing,
         "candidates": rows,
@@ -155,6 +146,7 @@ def projection_drift(
         default=True,
         description="When true, classify only without writing new receipts when possible",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Projection drift surface for dual-write (PR-K).
 
@@ -162,11 +154,14 @@ def projection_drift(
     missing-file count without forcing a full project rewrite. Set dry_run=false
     to run detect_projection_drift (records receipts; still no stream cutover).
     """
-    root = _repo_root()
-    store = _store()
+    root = ctx.roots.live_repo_root
+    try:
+        store = _store(ctx)
+    except (NotFoundError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     if dry_run:
         receipts = list_projection_receipts(store, stream_id=stream_id)
-        dual = dual_write_status()
+        dual = dual_write_status(ctx=ctx)
         return {
             "mode": "receipts_snapshot",
             "stream_id": stream_id,
@@ -197,13 +192,13 @@ def projection_drift(
 
 
 @router.get("/v1/plane-continuity")
-def plane_continuity_bundle() -> dict[str, Any]:
+def plane_continuity_bundle(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """One-shot continuity board: health + dual-write + optional plane-status pointer.
 
     Does not mutate streams or flip message-plane defaults.
     """
-    health = session_streams_health()
-    dual = dual_write_status()
+    health = session_streams_health(ctx=ctx)
+    dual = dual_write_status(ctx=ctx)
     return {
         "session_streams": health,
         "dual_write": {
