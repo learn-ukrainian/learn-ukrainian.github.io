@@ -148,7 +148,8 @@ def test_explicit_bridge_store_replaces_co_located_bridge_counts(tmp_path: Path)
 
     bridge_reports = [item for item in report["stores"] if item["kind"] == "legacy_bridge"]
     assert len(bridge_reports) == 1
-    assert bridge_reports[0]["path"] == str(bridge_database)
+    assert bridge_reports[0]["store"] == {"kind": "broker", "reachable": True}
+    assert "path" not in bridge_reports[0]
     assert bridge_reports[0]["usage"]["seat"]["count"] == 0
 
 

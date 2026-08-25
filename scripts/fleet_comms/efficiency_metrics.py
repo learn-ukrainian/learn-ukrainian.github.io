@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from scripts.fleet_comms.message_plane import resolve_plane_mode
+from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
 
 # Alert thresholds are intentionally reported, not enforced here. #5646 owns
 # consuming them. Dispatch uses the delegate default floor of 7,200 seconds.
@@ -581,8 +582,26 @@ def collect_stream_bottleneck_metrics(
         "by_stream_epic": {},
         "by_task_family": {},
     }
-    errors: list[dict[str, str]] = []
+    errors: list[dict[str, Any]] = []
     dispatch_hard_timeouts: list[int] = []
+    tasks_store = batch_tasks_store(reachable=tasks_dir.is_dir())
+    plane_store = comms_plane_store(reachable=plane_db.is_file())
+
+    def _dispatch_error(error_kind: str) -> dict[str, Any]:
+        return {"source": "dispatch", "error_kind": error_kind, "store": tasks_store}
+
+    def _plane_error(error_kind: str, *, source: str = "formal_cf") -> dict[str, Any]:
+        return {"source": source, "error_kind": error_kind, "store": plane_store}
+
+    def _github_error(error_kind: str, *, pr_number: int | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "source": "github",
+            "error_kind": error_kind,
+            "store": plane_store,
+        }
+        if pr_number is not None:
+            payload["pr_number"] = pr_number
+        return payload
 
     def add(
         identity: tuple[str | None, str | None],
@@ -610,30 +629,30 @@ def collect_stream_bottleneck_metrics(
     try:
         task_paths = sorted(tasks_dir.glob("*.json"))
         if not tasks_dir.is_dir():
-            raise FileNotFoundError(tasks_dir)
+            raise FileNotFoundError("tasks_dir_missing")
         for path in task_paths:
             try:
                 record = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError) as exc:
-                errors.append({"source": "dispatch", "error": f"{path.name}: {exc}"})
+            except (OSError, json.JSONDecodeError):
+                errors.append(_dispatch_error("task_record_unreadable"))
                 continue
             if not isinstance(record, dict):
-                errors.append({"source": "dispatch", "error": f"{path.name}: expected object"})
+                errors.append(_dispatch_error("task_record_not_object"))
                 continue
             hard_timeout = record.get("hard_timeout")
             if isinstance(hard_timeout, int) and hard_timeout >= 0:
                 dispatch_hard_timeouts.append(hard_timeout)
             started = _parse_timestamp(record.get("started_at"))
             if started is None:
-                errors.append({"source": "dispatch", "error": f"{path.name}: invalid started_at"})
+                errors.append(_dispatch_error("invalid_started_at"))
                 continue
             finished_raw = record.get("finished_at")
             finished = _parse_timestamp(finished_raw)
             if finished_raw not in (None, "") and finished is None:
-                errors.append({"source": "dispatch", "error": f"{path.name}: invalid finished_at"})
+                errors.append(_dispatch_error("invalid_finished_at"))
                 continue
             if finished is not None and finished < started:
-                errors.append({"source": "dispatch", "error": f"{path.name}: negative duration"})
+                errors.append(_dispatch_error("negative_duration"))
                 continue
             add(
                 _identity(record),
@@ -641,13 +660,15 @@ def collect_stream_bottleneck_metrics(
                 (finished - started).total_seconds() if finished else None,
                 max(0.0, (clock - started).total_seconds()) if finished is None else None,
             )
-    except OSError as exc:
-        errors.append({"source": "dispatch", "error": str(exc)})
+    except FileNotFoundError:
+        errors.append(_dispatch_error("tasks_dir_missing"))
+    except OSError:
+        errors.append(_dispatch_error("tasks_dir_unreadable"))
 
     merged_cache: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
     try:
         if not plane_db.is_file():
-            raise FileNotFoundError(f"plane DB missing: {plane_db}")
+            raise FileNotFoundError("plane_db_missing")
         with _connect(plane_db) as conn:
             if not (_table_exists(conn, "formal_review_jobs") and _table_exists(conn, "github_publications")):
                 raise sqlite3.DatabaseError("required formal_review_jobs/github_publications tables missing")
@@ -668,15 +689,15 @@ def collect_stream_bottleneck_metrics(
                 identity = _identity(record)
                 created = _parse_timestamp(record.get("created_at"))
                 if created is None:
-                    errors.append({"source": "formal_cf", "error": "invalid formal_review_jobs.created_at"})
+                    errors.append(_plane_error("invalid_formal_review_created_at"))
                     continue
                 published_raw = record.get("published_at")
                 published = _parse_timestamp(published_raw)
                 if published_raw not in (None, "") and published is None:
-                    errors.append({"source": "formal_cf", "error": "invalid github_publications.published_at"})
+                    errors.append(_plane_error("invalid_github_publication_published_at"))
                     continue
                 if published is not None and published < created:
-                    errors.append({"source": "formal_cf", "error": "negative publication duration"})
+                    errors.append(_plane_error("negative_publication_duration"))
                     continue
                 add(
                     identity,
@@ -689,16 +710,11 @@ def collect_stream_bottleneck_metrics(
                 repo = str(record.get("repository") or "")
                 try:
                     pr_number = int(record["pr_number"])
-                except (KeyError, TypeError, ValueError) as exc:
-                    errors.append(
-                        {
-                            "source": "github",
-                            "error": f"invalid pr_number {record.get('pr_number')!r}: {exc}",
-                        }
-                    )
+                except (KeyError, TypeError, ValueError):
+                    errors.append(_github_error("invalid_pr_number"))
                     continue
                 if not repo:
-                    errors.append({"source": "github", "error": "missing repository for gate_to_merge"})
+                    errors.append(_github_error("missing_repository"))
                     continue
                 cache_key = (repo, pr_number)
                 if cache_key not in merged_cache:
@@ -708,10 +724,10 @@ def collect_stream_bottleneck_metrics(
                         merged_cache[cache_key] = (None, str(exc))
                 merged, lookup_error = merged_cache[cache_key]
                 if lookup_error:
-                    errors.append({"source": "github", "error": f"PR {pr_number}: {lookup_error}"})
+                    errors.append(_github_error("pr_lookup_failed", pr_number=pr_number))
                     continue
                 if merged is not None and merged < published:
-                    errors.append({"source": "github", "error": f"PR {pr_number}: negative merge duration"})
+                    errors.append(_github_error("negative_merge_duration", pr_number=pr_number))
                     continue
                 add(
                     identity,
@@ -719,8 +735,10 @@ def collect_stream_bottleneck_metrics(
                     (merged - published).total_seconds() if merged else None,
                     max(0.0, (clock - published).total_seconds()) if merged is None else None,
                 )
-    except (OSError, sqlite3.Error) as exc:
-        errors.append({"source": "formal_cf", "error": str(exc)})
+    except FileNotFoundError:
+        errors.append(_plane_error("plane_db_missing"))
+    except (OSError, sqlite3.Error):
+        errors.append(_plane_error("plane_db_unreadable"))
 
     def summarize(groups: dict[str, dict[str, dict[str, list[float]]]]) -> dict[str, Any]:
         return {

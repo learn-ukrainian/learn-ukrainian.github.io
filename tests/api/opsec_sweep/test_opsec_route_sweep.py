@@ -64,21 +64,10 @@ KNOWN_LEAKS_PATH = Path(__file__).with_name("known_leaks.toml")
 FROZEN_IDS = frozenset(
     {
         "admin-backup-dir",
-        "comms-plane-status",
-        "comms-plane-schema-db-path",
-        "comms-plane-telemetry-path",
-        "fleet-facade-db-paths",
-        "fleet-facade-status",
-        "fleet-facade-status-schema-db-path",
-        "fleet-facade-status-telemetry-path",
-        "fleet-broker-report-store-0",
-        "fleet-broker-report-store-1",
         "fleet-workers-host-id",
         "occupancy-host-id",
         "retention-plan-dir",
         "retention-archive-root",
-        "session-digest-detail",
-        "session-status-detail",
         "dashboard-index-localhost",
         "dashboard-work-loopback",
     }
@@ -233,6 +222,34 @@ def _fixture_health_identity() -> dict[str, str | None]:
     }
 
 
+REAL_BOARD_PROBE_KEYS = frozenset(
+    {
+        "capsule_session_env",
+        "plane_status",
+        "backlog_and_dead_letters",
+        "bottleneck_slice",
+        "orient_lean",
+        "issues_streams_membership",
+        "session_streams_and_handoff",
+        "inbox_check",
+        "gh_pr_list",
+        "needle_search",
+    }
+)
+
+
+def _assert_real_cold_start_board_producer() -> None:
+    from scripts.fleet_comms.cold_start_board import build_cold_start_board as real_build
+
+    assert fleet_router.build_cold_start_board is real_build
+
+
+def _assert_board_payload_is_real_shape(payload: dict[str, Any]) -> None:
+    probes = payload.get("probes") or {}
+    assert REAL_BOARD_PROBE_KEYS.issubset(probes.keys())
+    assert "db_path" not in json.dumps(payload)
+
+
 def _fixture_cold_start_board(
     *,
     stream_id: str | None = None,
@@ -279,7 +296,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
     monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
-    monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
     monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
@@ -412,10 +428,14 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         },
     )
 
-    monkeypatch.setattr(cold_start_board, "_get_local_git_info", lambda: {
-        "branch": "opsec-fixture",
-        "head": "000000000",
-    })
+    monkeypatch.setattr(
+        cold_start_board,
+        "_get_local_git_info",
+        lambda: {
+            "branch": "opsec-fixture",
+            "head": "000000000",
+        },
+    )
     monkeypatch.setattr(
         cold_start_board,
         "_resolve_session_streams_db",
@@ -456,9 +476,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(
-            ("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")
-        ):
+        if module is None or not module_name.startswith(("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")):
             continue
         for name, value in tuple(vars(module).items()):
             if not isinstance(value, Path) or not value.is_absolute():
@@ -532,6 +550,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # disposable tree instead of consulting the retired local plane.
     isolated_plane_root = root / "stores" / "fleet-comms"
     isolated_plane_root.mkdir(parents=True, exist_ok=True)
+
     def isolated_plane_resolver(repo_root: Path | None = None) -> Path:
         del repo_root
         return isolated_plane_root
@@ -547,9 +566,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     for dashboards_dir in {api_main.DASHBOARDS_DIR, docs_router.DASHBOARDS_DIR}:
         dashboards_dir.mkdir(parents=True, exist_ok=True)
         for filename in ("index.html", "artifacts.html"):
-            (dashboards_dir / filename).write_text(
-                "<html><body>synthetic artifacts</body></html>\n", encoding="utf-8"
-            )
+            (dashboards_dir / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
     shutil.copytree(
         Path(__file__).resolve().parents[3] / "dashboards",
         dashboards_root,
@@ -643,7 +660,9 @@ def _response_payload(response: Any) -> Any:
         return response.content
 
 
-def _scan_response(record: registry.ExerciseRecord, response: Any, canaries: tuple[str, ...]) -> list[opsec_scan.Finding]:
+def _scan_response(
+    record: registry.ExerciseRecord, response: Any, canaries: tuple[str, ...]
+) -> list[opsec_scan.Finding]:
     payload = _response_payload(response)
     return opsec_scan.scan_response(
         record.key,
@@ -678,7 +697,10 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
-    assert route_contracts.contract_for_route("/api/session-streams/v1/health").response_schema_version == "session-streams.v2"
+    assert (
+        route_contracts.contract_for_route("/api/session-streams/v1/health").response_schema_version
+        == "session-streams.v2"
+    )
     assert route_contracts.contract_for_route("/api/state/preparation").response_schema_version == "authority.v2"
     assert route_contracts.contract_for_route("/api/orient").response_schema_version == "orient.v2"
     for record in records:
@@ -772,6 +794,27 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
     )
     with pytest.raises(AssertionError, match="expired"):
         _validate_known_leaks([expired], [matching])
+
+
+def test_sweep_seam_honesty_requires_real_cold_start_board_producer(
+    isolated_fixture: IsolatedFixture,
+) -> None:
+    del isolated_fixture
+    _assert_real_cold_start_board_producer()
+    client = TestClient(api_main.app, raise_server_exceptions=False)
+    response = client.get("/api/fleet/facade/board")
+    assert response.status_code == 200
+    _assert_board_payload_is_real_shape(response.json())
+
+
+def test_sweep_cold_start_board_stub_restoration_fails_seam_honesty(
+    isolated_fixture: IsolatedFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    del isolated_fixture
+    monkeypatch.setattr(fleet_router, "build_cold_start_board", _fixture_cold_start_board)
+    with pytest.raises(AssertionError):
+        _assert_real_cold_start_board_producer()
 
 
 def test_isolated_fixture_denies_network_and_subprocess(isolated_fixture: IsolatedFixture) -> None:

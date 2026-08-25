@@ -35,6 +35,13 @@ from scripts.fleet_comms.message_plane import (
     read_plane_status,
     resolve_plane_mode,
 )
+from scripts.fleet_comms.opsec_store import (
+    COMMS_RESPONSE_SCHEMA_VERSION,
+    batch_tasks_store,
+    comms_plane_store,
+    legacy_broker_store,
+    session_streams_store,
+)
 
 try:
     from agents_extensions.shared.session_streams.db import (
@@ -127,15 +134,10 @@ def cap_data(
     return data
 
 
-def _probe_capsule_session_env(
-    stream_id: str | None, agent: str | None
-) -> dict[str, Any]:
+def _probe_capsule_session_env(stream_id: str | None, agent: str | None) -> dict[str, Any]:
     resolved_stream = stream_id or os.environ.get("SESSION_STREAM_ID")
     resolved_agent = (
-        agent
-        or os.environ.get("SESSION_HANDOFF_AGENT")
-        or os.environ.get("AGENT")
-        or os.environ.get("X_AGENT")
+        agent or os.environ.get("SESSION_HANDOFF_AGENT") or os.environ.get("AGENT") or os.environ.get("X_AGENT")
     )
     try:
         plane_mode: str = resolve_plane_mode(None)
@@ -172,35 +174,33 @@ def _resolve_broker_db_ro(root: Path | None, repo_root: Path | None) -> Path:
     return _default_message_db()
 
 
-def _probe_backlog_and_dead_letters(
-    root: Path | None, repo_root: Path | None
-) -> dict[str, Any]:
+def _probe_backlog_and_dead_letters(root: Path | None, repo_root: Path | None) -> dict[str, Any]:
     """Backlog + dead-letters; prefer authority tables when plane mode is authority."""
     source = resolve_metrics_source()
     plane_root = root if root is not None else default_plane_root(repo_root=repo_root)
 
     if source == "authority":
         db_path = plane_root / "comms.sqlite3"
+        store = comms_plane_store(reachable=db_path.is_file())
         if not db_path.is_file():
             return {
                 "source": source,
                 "db_missing": True,
-                "db_path": str(db_path),
+                "store": store,
                 "backlog_total": 0,
                 "dead_letters_total": 0,
             }
-        backlog = collect_delivery_backlog_authority(
-            db_path, limit=5, exclude_retired=True
-        )
+        backlog = collect_delivery_backlog_authority(db_path, limit=5, exclude_retired=True)
         dead_letters = collect_dead_letters_authority(db_path, limit=5)
         label = "authority"
     else:
         db_path = _resolve_broker_db_ro(root, repo_root)
+        store = legacy_broker_store(reachable=db_path.is_file())
         if not db_path.is_file():
             return {
                 "source": "legacy",
                 "db_missing": True,
-                "db_path": str(db_path),
+                "store": store,
                 "backlog_total": 0,
                 "dead_letters_total": 0,
             }
@@ -210,7 +210,7 @@ def _probe_backlog_and_dead_letters(
 
     return {
         "source": label,
-        "db_path": str(db_path),
+        "store": store,
         "db_exists": True,
         "backlog_total": backlog.get("total", 0),
         "backlog_by_agent": backlog.get("by_agent", {}),
@@ -246,11 +246,10 @@ def _probe_bottleneck_slice(
     return {
         "total_streams": len(streams),
         "slice": selected,
-        "tasks_dir": str(tasks_dir),
-        "plane_db": str(plane_db),
+        "tasks_store": batch_tasks_store(reachable=tasks_dir.is_dir()),
+        "plane_store": comms_plane_store(reachable=plane_db.is_file()),
         "db_missing": not plane_db.is_file(),
     }
-
 
 
 def _get_local_git_info() -> dict[str, Any]:
@@ -280,9 +279,7 @@ def _probe_orient_lean(
     # drive-epic contract: lean orient (do not pull the full briefing).
     url = f"{base_url}/api/orient?lean=true"
     try:
-        req = urllib.request.Request(
-            url, headers={"User-Agent": "fleet-comms-cold-start/1.0"}
-        )
+        req = urllib.request.Request(url, headers={"User-Agent": "fleet-comms-cold-start/1.0"})
         with urllib.request.urlopen(req, timeout=timeout_s) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             elapsed = (time.perf_counter() - start) * 1000.0
@@ -314,11 +311,13 @@ def _probe_issues_streams_membership(orient_result: ProbeResult) -> dict[str, An
         raw_issues = orient_data.get("issues") or []
         for issue in raw_issues[:5]:
             if isinstance(issue, dict):
-                issues.append({
-                    "number": issue.get("number"),
-                    "title": str(issue.get("title", ""))[:80],
-                    "state": issue.get("state"),
-                })
+                issues.append(
+                    {
+                        "number": issue.get("number"),
+                        "title": str(issue.get("title", ""))[:80],
+                        "state": issue.get("state"),
+                    }
+                )
 
     return {
         "top_issues": issues,
@@ -385,7 +384,7 @@ def _probe_session_streams_and_handoff(
             data={
                 "stream_id": stream_id,
                 "db_exists": False,
-                "db_path": str(db_path),
+                "store": session_streams_store(reachable=False),
                 "reason": "session_streams_db_missing",
             },
         )
@@ -407,7 +406,7 @@ def _probe_session_streams_and_handoff(
             data={
                 "stream_id": stream_id,
                 "db_exists": True,
-                "db_path": str(db_path),
+                "store": session_streams_store(reachable=True),
                 "handoff": handoff_data,
                 "digest": digest_data,
             },
@@ -418,7 +417,11 @@ def _probe_session_streams_and_handoff(
             status="degraded",
             elapsed_ms=elapsed,
             error=str(exc),
-            data={"stream_id": stream_id, "db_exists": True, "db_path": str(db_path)},
+            data={
+                "stream_id": stream_id,
+                "db_exists": True,
+                "store": session_streams_store(reachable=True),
+            },
         )
 
 
@@ -449,7 +452,7 @@ def _probe_inbox_authority(
             "agent": agent,
             "inbox_pending_count": 0,
             "db_missing": True,
-            "db_path": str(plane_db),
+            "store": comms_plane_store(reachable=False),
             "recent_deliveries": [],
         }
 
@@ -466,7 +469,7 @@ def _probe_inbox_authority(
                 "source": "authority",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(plane_db),
+                "store": comms_plane_store(reachable=True),
                 "table_missing": True,
                 "recent_deliveries": [],
             }
@@ -517,7 +520,7 @@ def _probe_inbox_authority(
         "agent": agent,
         "matched_agent": matched_agent,
         "inbox_pending_count": total,
-        "db_path": str(plane_db),
+        "store": comms_plane_store(reachable=True),
         "recent_deliveries": deliveries,
     }
 
@@ -532,7 +535,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
             "agent": agent,
             "inbox_pending_count": 0,
             "db_missing": True,
-            "db_path": str(db_path),
+            "store": legacy_broker_store(reachable=False),
             "recent_deliveries": [],
         }
 
@@ -550,20 +553,18 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
                 "source": "legacy",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(db_path),
+                "store": legacy_broker_store(reachable=True),
                 "table_missing": True,
                 "recent_deliveries": [],
             }
         cols = _column_names(conn, "deliveries")
-        agent_col = "to_agent" if "to_agent" in cols else (
-            "recipient" if "recipient" in cols else None
-        )
+        agent_col = "to_agent" if "to_agent" in cols else ("recipient" if "recipient" in cols else None)
         if agent_col is None:
             return {
                 "source": "legacy",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(db_path),
+                "store": legacy_broker_store(reachable=True),
                 "schema_unsupported": True,
                 "recent_deliveries": [],
             }
@@ -572,7 +573,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
                 "source": "legacy",
                 "agent": agent,
                 "inbox_pending_count": 0,
-                "db_path": str(db_path),
+                "store": legacy_broker_store(reachable=True),
                 "schema_unsupported": True,
                 "recent_deliveries": [],
             }
@@ -591,9 +592,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
             if c in cols
         ]
         order_col = (
-            "dispatched_at"
-            if "dispatched_at" in cols
-            else ("created_at" if "created_at" in cols else select_parts[0])
+            "dispatched_at" if "dispatched_at" in cols else ("created_at" if "created_at" in cols else select_parts[0])
         )
 
         join_sql = ""
@@ -607,9 +606,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
                 ("kind", "cm.kind" if "kind" in cm_cols else None),
                 (
                     "created_at",
-                    "cm.created_at"
-                    if "created_at" in cm_cols and "created_at" not in cols
-                    else None,
+                    "cm.created_at" if "created_at" in cm_cols and "created_at" not in cols else None,
                 ),
             ):
                 if expr is not None:
@@ -659,7 +656,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
         "agent": agent,
         "matched_agent": matched_agent,
         "inbox_pending_count": total,
-        "db_path": str(db_path),
+        "store": legacy_broker_store(reachable=True),
         "recent_deliveries": deliveries,
     }
 
@@ -742,8 +739,7 @@ def _probe_gh_pr_list() -> ProbeResult:
             return ProbeResult(
                 status="degraded",
                 elapsed_ms=elapsed,
-                error=proc.stderr.strip()[:200]
-                or f"gh returned code {proc.returncode}",
+                error=proc.stderr.strip()[:200] or f"gh returned code {proc.returncode}",
                 data={"gh_available": True, "prs": []},
             )
     except Exception as exc:
@@ -799,6 +795,33 @@ def _probe_needle_search(
     )
 
 
+def _board_serialized_bytes(board: dict[str, Any]) -> int:
+    """Byte length of the canonical indented JSON board serialization."""
+    return len(json.dumps(board, indent=2).encode("utf-8"))
+
+
+def _minimal_probe(probe_dict: dict[str, Any]) -> dict[str, Any]:
+    """Strip a probe to status/error/store fields for oversized fallback."""
+    minimal: dict[str, Any] = {"status": probe_dict.get("status")}
+    if probe_dict.get("error") is not None:
+        minimal["error"] = probe_dict["error"]
+    data = probe_dict.get("data")
+    if isinstance(data, dict):
+        if data.get("error_kind") is not None:
+            minimal["error_kind"] = data["error_kind"]
+        if data.get("store") is not None:
+            minimal["store"] = data["store"]
+    return minimal
+
+
+def _apply_oversized_fallback(board: dict[str, Any], probes: dict[str, Any]) -> dict[str, Any]:
+    """Last-resort cap: drop probe data, keep status/error_kind/store only."""
+    board["probes"] = {name: _minimal_probe(probe_dict) for name, probe_dict in probes.items()}
+    board["_board_truncated"] = True
+    board["_board_oversized_fallback"] = True
+    return board
+
+
 def compute_board_status(probes: dict[str, Any]) -> str:
     """Headline status from load-bearing probes only.
 
@@ -830,17 +853,13 @@ def build_cold_start_board(
     r_root = repo_root or Path.cwd()
     p_root = root if root is not None else default_plane_root(repo_root=r_root)
 
-    env_probe = run_fail_open_probe(
-        "capsule_session_env", _probe_capsule_session_env, stream_id, agent
-    )
+    env_probe = run_fail_open_probe("capsule_session_env", _probe_capsule_session_env, stream_id, agent)
 
     res_env = env_probe.data or {}
     eff_stream_id = stream_id or res_env.get("stream_id")
     eff_agent = agent or res_env.get("agent")
 
-    plane_probe = run_fail_open_probe(
-        "plane_status", _probe_plane_status, p_root, r_root
-    )
+    plane_probe = run_fail_open_probe("plane_status", _probe_plane_status, p_root, r_root)
 
     backlog_probe = run_fail_open_probe(
         "backlog_and_dead_letters",
@@ -865,13 +884,9 @@ def build_cold_start_board(
         orient_probe,
     )
 
-    session_streams_probe = _probe_session_streams_and_handoff(
-        r_root, eff_stream_id
-    )
+    session_streams_probe = _probe_session_streams_and_handoff(r_root, eff_stream_id)
 
-    inbox_probe = run_fail_open_probe(
-        "inbox_check", _probe_inbox, p_root, r_root, eff_agent
-    )
+    inbox_probe = run_fail_open_probe("inbox_check", _probe_inbox, p_root, r_root, eff_agent)
 
     gh_probe = run_fail_open_probe("gh_pr_list", _probe_gh_pr_list)
 
@@ -887,30 +902,41 @@ def build_cold_start_board(
         "gh_pr_list": gh_probe.to_dict(),
     }
 
-    needle_probe = run_fail_open_probe(
-        "needle_search", _probe_needle_search, needle, probes
-    )
+    needle_probe = run_fail_open_probe("needle_search", _probe_needle_search, needle, probes)
     probes["needle_search"] = needle_probe.to_dict()
 
     board_status = compute_board_status(probes)
 
-    capped_probes = cap_data(probes, max_str=MAX_STRING_LEN, max_list=MAX_LIST_LEN)
+    capped_needle = cap_data(needle, max_str=MAX_STRING_LEN, max_list=MAX_LIST_LEN) if needle is not None else None
 
     board: dict[str, Any] = {
+        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
         "timestamp": datetime.now(UTC).isoformat(),
         "board_status": board_status,
         "stream_id": eff_stream_id,
         "agent": eff_agent,
-        "needle": needle,
-        "probes": capped_probes,
+        "needle": capped_needle,
+        "probes": cap_data(probes, max_str=MAX_STRING_LEN, max_list=MAX_LIST_LEN),
     }
 
-    json_bytes = json.dumps(board, indent=2).encode("utf-8")
-    if len(json_bytes) > MAX_BOARD_BYTES:
-        stricter_probes = cap_data(probes, max_str=100, max_list=3)
-        board["probes"] = stricter_probes
-        board["_board_truncated"] = True
+    cap_steps = (
+        (MAX_STRING_LEN, MAX_LIST_LEN),
+        (100, 3),
+        (80, 2),
+        (50, 1),
+    )
+    for step_index, (max_str, max_list) in enumerate(cap_steps):
+        board["probes"] = cap_data(probes, max_str=max_str, max_list=max_list)
+        if step_index > 0:
+            board["_board_truncated"] = True
+        else:
+            board.pop("_board_truncated", None)
+        if _board_serialized_bytes(board) <= MAX_BOARD_BYTES:
+            return board
 
+    board = _apply_oversized_fallback(board, probes)
+    if _board_serialized_bytes(board) > MAX_BOARD_BYTES:
+        raise ValueError(f"cold start board exceeds {MAX_BOARD_BYTES} bytes after oversized fallback")
     return board
 
 
@@ -994,8 +1020,5 @@ def render_markdown_board(board_data: dict[str, Any]) -> str:
 
     output = "\n".join(lines) + "\n"
     if len(output.encode("utf-8")) > MAX_BOARD_BYTES:
-        output = (
-            output.encode("utf-8")[:MAX_BOARD_BYTES].decode("utf-8", errors="ignore")
-            + "\n...[truncated]\n"
-        )
+        output = output.encode("utf-8")[:MAX_BOARD_BYTES].decode("utf-8", errors="ignore") + "\n...[truncated]\n"
     return output

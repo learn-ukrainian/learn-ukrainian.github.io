@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.fleet_comms.opsec_store import store_descriptor
 
 _SOURCE_REPO_ROOT = Path(__file__).resolve().parents[2]
 _ROUTES_TABLE = "legacy_comms_route_usage"
@@ -113,7 +114,7 @@ def _usage_summary(rows: list[sqlite3.Row], *, bridge: bool) -> dict[str, Any]:
 def _missing_store(path: Path, *, kind: str) -> dict[str, Any]:
     return {
         "kind": kind,
-        "path": str(path),
+        "store": store_descriptor(kind="broker", reachable=False),
         "state": "missing",
         "coverage_started_at": None,
         "window_fully_observed": None,
@@ -135,7 +136,7 @@ def _read_store(
         return [
             {
                 "kind": "telemetry_store",
-                "path": str(path),
+                "store": store_descriptor(kind="broker", reachable=False),
                 "state": "unreadable",
                 "reason": type(exc).__name__,
             }
@@ -161,7 +162,7 @@ def _read_store(
             reports.append(
                 {
                     "kind": "legacy_comms_routes",
-                    "path": str(path),
+                    "store": store_descriptor(kind="broker", reachable=True),
                     "state": "ok",
                     "coverage_started_at": coverage,
                     "window_fully_observed": _coverage_is_complete(coverage, window_start),
@@ -184,7 +185,7 @@ def _read_store(
             coverage = _meta_value(connection, "bridge_coverage_started_at")
             report = {
                 "kind": "legacy_bridge",
-                "path": str(path),
+                "store": store_descriptor(kind="broker", reachable=True),
                 "state": "ok",
                 "coverage_started_at": coverage,
                 "window_fully_observed": _coverage_is_complete(coverage, window_start),
@@ -207,7 +208,7 @@ def _read_store(
         return [
             {
                 "kind": "telemetry_store",
-                "path": str(path),
+                "store": store_descriptor(kind="broker", reachable=False),
                 "state": "unreadable",
                 "reason": type(exc).__name__,
             }

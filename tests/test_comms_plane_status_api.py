@@ -6,6 +6,7 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -39,6 +40,11 @@ def test_read_plane_status_defaults_to_configured_mode(tmp_path: Path, monkeypat
     assert status["schema"]["db_exists"] is False
     assert status["parity_telemetry"]["exists"] is False
     assert status["parity_telemetry"]["event_count"] == 0
+    assert "plane_root" not in status
+    assert "db_path" not in status["schema"]
+    assert "path" not in status["parity_telemetry"]
+    assert status["store"]["kind"] == "comms-plane"
+    assert status["store"]["reachable"] is False
 
 
 def test_read_plane_status_with_schema_and_telemetry(tmp_path: Path, monkeypatch) -> None:
@@ -73,6 +79,10 @@ def test_read_plane_status_with_schema_and_telemetry(tmp_path: Path, monkeypatch
     assert status["parity_telemetry"]["parity_ok_count"] == 1
     assert status["parity_telemetry"]["parity_fail_count"] == 1
     assert len(status["parity_telemetry"]["recent"]) == 3
+    assert "plane_root" not in status
+    assert "db_path" not in status["schema"]
+    assert "path" not in status["parity_telemetry"]
+    assert status["response_schema_version"] == "comms.v2"
 
 
 def test_api_plane_status_endpoint(tmp_path: Path, monkeypatch) -> None:
@@ -93,14 +103,20 @@ def test_api_plane_status_endpoint(tmp_path: Path, monkeypatch) -> None:
     assert data["mode"] == "dual_write"
     assert data["enabled"] is True
     assert data["read_only"] is True
-    assert data["plane_root"] == str(tmp_path / "plane")
+    assert data["response_schema_version"] == "comms.v2"
+    assert data["store"]["kind"] == "comms-plane"
+    assert data["store"]["reachable"] is False
+    assert "plane_root" not in data
+    assert "db_path" not in data["schema"]
+    assert "path" not in data["parity_telemetry"]
     assert data["parity_telemetry"]["exists"] is True
     assert data["parity_telemetry"]["event_count"] == 1
     assert data["schema"]["known_version"] == MIGRATIONS[-1].version
 
 
-def test_api_plane_status_invalid_mode(monkeypatch) -> None:
+def test_api_plane_status_invalid_mode(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "production")
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
     client = _client()
     response = client.get("/api/comms/v1/plane-status")
     assert response.status_code == 200
@@ -108,3 +124,60 @@ def test_api_plane_status_invalid_mode(monkeypatch) -> None:
     assert data["mode"] == "invalid"
     assert data["enabled"] is False
     assert data["mode_error"] == "invalid_mode"
+
+
+def test_comms_v1_collectors_emit_store_not_db_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("scripts.api.comms_router.MESSAGE_DB", tmp_path / "missing.db")
+    client = _client()
+    for path in ("/api/comms/v1/backlog", "/api/comms/v1/dead-letters", "/api/comms/v1/metrics"):
+        response = client.get(path)
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["response_schema_version"] == "comms.v2"
+        assert "store" in payload
+        assert payload["store"]["kind"] == "legacy-broker"
+        assert "db_path" not in payload
+
+
+def test_comms_v1_collectors_with_seeded_broker(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    broker = tmp_path / "messages.db"
+    conn = sqlite3.connect(broker)
+    conn.executescript(
+        """
+        CREATE TABLE channel_messages (
+          message_id TEXT PRIMARY KEY,
+          channel TEXT,
+          from_agent TEXT,
+          kind TEXT,
+          body TEXT,
+          created_at TEXT
+        );
+        CREATE TABLE deliveries (
+          delivery_id TEXT PRIMARY KEY,
+          message_id TEXT,
+          to_agent TEXT,
+          to_model TEXT,
+          status TEXT,
+          dispatched_at TEXT,
+          delivered_at TEXT,
+          attempt_count INTEGER DEFAULT 0
+        );
+        """
+    )
+    conn.close()
+    monkeypatch.setattr("scripts.api.comms_router.MESSAGE_DB", broker)
+    client = _client()
+    backlog = client.get("/api/comms/v1/backlog").json()
+    dead = client.get("/api/comms/v1/dead-letters").json()
+    metrics = client.get("/api/comms/v1/metrics").json()
+    for payload in (backlog, dead, metrics):
+        assert payload["response_schema_version"] == "comms.v2"
+        assert payload["store"]["kind"] == "legacy-broker"
+        assert payload["store"]["reachable"] is True
+        assert "db_path" not in payload

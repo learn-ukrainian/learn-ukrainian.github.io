@@ -51,6 +51,7 @@ from scripts.fleet_comms.efficiency_metrics import (
 )
 from scripts.fleet_comms.message_plane import read_plane_status, resolve_plane_mode
 from scripts.fleet_comms.migrations import apply_migrations
+from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, legacy_broker_store
 
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 from .resilience import connect_sqlite
@@ -1840,12 +1841,22 @@ async def comms_v1_backlog(
     exclude_retired: bool = Query(True),
 ) -> dict:
     """Pending delivery backlog (no message content). Sol PR-M."""
+    store = legacy_broker_store(reachable=MESSAGE_DB.is_file())
     if not MESSAGE_DB.exists():
-        return {"total": 0, "by_agent": {}, "by_status": {}, "rows": [], "db_missing": True}
+        return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+            "total": 0,
+            "by_agent": {},
+            "by_status": {},
+            "rows": [],
+            "db_missing": True,
+            "store": store,
+        }
     payload = collect_delivery_backlog(
         MESSAGE_DB, limit=limit, exclude_retired=exclude_retired
     )
-    payload["db_path"] = str(MESSAGE_DB)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = store
     payload["content_included"] = False
     return payload
 
@@ -1853,10 +1864,19 @@ async def comms_v1_backlog(
 @router.get("/v1/dead-letters")
 async def comms_v1_dead_letters(limit: int = Query(100, ge=1, le=500)) -> dict:
     """Dead-letter inventory (metadata only). Sol PR-M."""
+    store = legacy_broker_store(reachable=MESSAGE_DB.is_file())
     if not MESSAGE_DB.exists():
-        return {"total": 0, "by_reason": {}, "rows": [], "db_missing": True}
+        return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+            "total": 0,
+            "by_reason": {},
+            "rows": [],
+            "db_missing": True,
+            "store": store,
+        }
     payload = collect_dead_letters(MESSAGE_DB, limit=limit)
-    payload["db_path"] = str(MESSAGE_DB)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = store
     payload["content_included"] = False
     return payload
 
@@ -1864,8 +1884,15 @@ async def comms_v1_dead_letters(limit: int = Query(100, ge=1, le=500)) -> dict:
 @router.get("/v1/metrics")
 async def comms_v1_metrics() -> dict:
     """Efficiency metrics from durable timestamps (no content). Sol PR-M."""
+    store = legacy_broker_store(reachable=MESSAGE_DB.is_file())
     if not MESSAGE_DB.exists():
-        return {"content_included": False, "db_missing": True}
+        return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+            "content_included": False,
+            "db_missing": True,
+            "store": store,
+        }
     payload = collect_efficiency_metrics(MESSAGE_DB)
-    payload["db_path"] = str(MESSAGE_DB)
+    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    payload["store"] = store
     return payload
