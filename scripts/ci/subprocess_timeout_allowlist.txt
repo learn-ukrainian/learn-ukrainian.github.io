@@ -57,9 +57,3 @@ scripts/sync/promote_module.py::_run_make_atlas::subprocess.run
 scripts/sync/prune_module_forensics.py::_run_git::subprocess.run
 scripts/validate/verify_track.py::run_audit::subprocess.run
 scripts/vocab/rebuild_vocab_from_yaml.py::populate_database::subprocess.run
-scripts/wiki/backfill_generated_by_model.py::load_head_text::subprocess.run
-scripts/wiki/backfill_generated_by_model.py::load_historical_meta::subprocess.run
-scripts/wiki/backfill_generated_by_model.py::run_git::subprocess.run
-scripts/wiki/diagnostics/corpus_gaps/audit.py::run_codex_concept_extraction::subprocess.run
-scripts/wiki/mlx_bridge.py::get_physical_ram::subprocess.check_output
-scripts/wiki/rebuild.py::_run_compile::subprocess.run

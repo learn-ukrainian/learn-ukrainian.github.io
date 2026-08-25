@@ -35,6 +35,7 @@ A1_REPORT_PATH = PROJECT_ROOT / "docs" / "architecture" / "corpus-coverage-map-a
 
 DEFAULT_TRACKS = ("a1", "a2", "b1")
 DEFAULT_MODEL = "gpt-5.5"
+CODEX_TIMEOUT_S = 300
 DEFAULT_CHUNKS_PER_PAGE = 1.4
 MAX_CONCEPTS_PER_ARTICLE = 15
 MIN_CONCEPTS_PER_ARTICLE = 8
@@ -680,13 +681,19 @@ def run_codex_concept_extraction(prompt: str, model: str = DEFAULT_MODEL) -> dic
             str(PROJECT_ROOT),
             "-",
         ]
-        completed = subprocess.run(
-            command,
-            input=prompt,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
+        try:
+            completed = subprocess.run(
+                command,
+                input=prompt,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=CODEX_TIMEOUT_S,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                f"Codex concept extraction failed: timed out after {CODEX_TIMEOUT_S}s"
+            ) from exc
         if completed.returncode != 0:
             raise RuntimeError(
                 "Codex concept extraction failed: "

@@ -125,6 +125,11 @@ PHASES: list[dict[str, Any]] = [
 #: File where orchestrator state lives. Lives alongside wiki build log.
 _STATE_FILE = WIKI_STATE_DIR / "rebuild-progress.json"
 
+#: Hard ceiling for one ``compile.py --track … --review`` invocation. Track
+#: compiles can be slow, but a hung subprocess must never wedge the rebuild
+#: loop forever; expiry is reported as returncode 124 (see ``_run_compile``).
+COMPILE_TIMEOUT_S = 1800
+
 #: Status values a task can hold.
 _STATUS_PENDING = "pending"
 _STATUS_RUNNING = "running"
@@ -285,6 +290,11 @@ def _run_compile(task: TaskState, *, dry_run: bool = False) -> int:
     re-invoking on the same track is idempotent — already-compiled
     articles are skipped. ``--review`` runs the per-dim + MIN orchestrator
     (post-#1455 — the legacy single-call weighted-average path is gone).
+
+    The invocation is hard-bounded at ``COMPILE_TIMEOUT_S`` (1800s
+    documented ceiling — track compile+review can be slow, but must stay
+    bounded); expiry kills the subprocess and returns 124 instead of
+    crashing with an uncaught traceback.
     """
     cmd = [
         ".venv/bin/python", "scripts/wiki/compile.py",
@@ -307,12 +317,19 @@ def _run_compile(task: TaskState, *, dry_run: bool = False) -> int:
     # (no start_new_session), so Ctrl-C hits both. compile.py's
     # KeyboardInterrupt handler finishes current article and exits.
     try:
-        proc = subprocess.run(cmd, cwd=_REPO_ROOT, check=False)
+        proc = subprocess.run(cmd, cwd=_REPO_ROOT, check=False, timeout=COMPILE_TIMEOUT_S)
         return proc.returncode
     except KeyboardInterrupt:
         # Shouldn't reach here — subprocess.run propagates but we
         # catch it defensively.
         return 130
+    except subprocess.TimeoutExpired:
+        print(
+            f"⏱️  {task.display()} exceeded the {COMPILE_TIMEOUT_S}s ceiling; "
+            "killing compile subprocess.",
+            file=sys.stderr,
+        )
+        return 124
 
 
 # ── Runner ────────────────────────────────────────────────────────

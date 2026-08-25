@@ -22,6 +22,7 @@ REPORT_PATH = PROJECT_ROOT / "audit" / "phase-2a-wiki-metadata" / "report.md"
 CHAT_DIR = Path.home() / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
 FIXED_MODEL = "gemini-2.5-pro"
 UNKNOWN_MODEL = "unknown"
+GIT_TIMEOUT_S = 30
 FALLBACK_CUTOVER = datetime.fromisoformat("2026-04-21T13:12:10+02:00")
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
 PROMPT_META_RE = re.compile(r"<!--\s*wiki-meta\s*\n(?P<body>.*?)-->", re.DOTALL)
@@ -133,13 +134,21 @@ def render_wiki_meta(meta: dict) -> str:
 
 def run_git(*args: str, check: bool = True) -> str:
     """Run a git command from the project root and return stdout."""
-    result = subprocess.run(
-        ["git", *args],
-        cwd=PROJECT_ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=PROJECT_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        if check:
+            raise RuntimeError(
+                f"git command timed out after {GIT_TIMEOUT_S}s: git {' '.join(args)}"
+            ) from exc
+        return ""
     if check and result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or "git command failed")
     return result.stdout
@@ -228,13 +237,17 @@ def file_last_commit_time(path: Path) -> datetime | None:
 def load_head_text(path: Path) -> str:
     """Read the tracked ``HEAD`` version of a file for stable report diffs."""
     relpath = str(path.relative_to(PROJECT_ROOT))
-    result = subprocess.run(
-        ["git", "show", f"HEAD:{relpath}"],
-        cwd=PROJECT_ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "show", f"HEAD:{relpath}"],
+            cwd=PROJECT_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        return path.read_text(encoding="utf-8")
     if result.returncode != 0:
         return path.read_text(encoding="utf-8")
     return result.stdout
@@ -245,13 +258,17 @@ def load_historical_meta(path: Path) -> tuple[dict, str | None]:
     relpath = str(path.relative_to(PROJECT_ROOT))
     commit_ids = [line.strip() for line in run_git("log", "--follow", "--format=%H", "--", relpath).splitlines() if line.strip()]
     for commit_id in commit_ids:
-        result = subprocess.run(
-            ["git", "show", f"{commit_id}:{relpath}"],
-            cwd=PROJECT_ROOT,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
+        try:
+            result = subprocess.run(
+                ["git", "show", f"{commit_id}:{relpath}"],
+                cwd=PROJECT_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=GIT_TIMEOUT_S,
+            )
+        except subprocess.TimeoutExpired:
+            continue
         if result.returncode != 0:
             continue
         meta, _ = parse_wiki_meta(result.stdout)
