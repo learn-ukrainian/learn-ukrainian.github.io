@@ -100,7 +100,7 @@ jobs:
                 ;;
             esac
           done
-          python -m ruff check scripts/
+          python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
 
   # ---------------------------------------------------------------------
   # 0b. landing-class — classify merge_group/push/dispatch diffs (#7018/#7173).

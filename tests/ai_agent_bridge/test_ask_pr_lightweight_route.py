@@ -150,7 +150,7 @@ def test_ordinary_ask_without_review_intent_still_uses_acp(
 def test_ask_help_no_longer_requires_review_pr() -> None:
     parser = _cli._build_parser()
     help_text = parser.format_help()
-    for sub in parser._subparsers._group_actions:  # noqa: SLF001
+    for sub in parser._subparsers._group_actions:
         for action in getattr(sub, "choices", {}).values():
             help_text += "\n" + action.format_help()
     assert "formal review targets require the review-pr command" not in help_text

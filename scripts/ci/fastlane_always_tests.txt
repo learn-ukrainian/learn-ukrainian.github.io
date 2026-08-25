@@ -13,5 +13,6 @@ tests/test_lexicon_manifest_fingerprint.py
 tests/test_lint_test_assertions.py
 tests/test_path_safety.py
 tests/test_repo_invariant_fastlane.py
+tests/test_ruff_ci_scope.py
 tests/test_subprocess_timeout_guard.py
 tests/test_threshold_source_of_truth.py

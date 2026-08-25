@@ -8,11 +8,10 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
-
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable

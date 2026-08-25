@@ -5,8 +5,6 @@ from contextlib import contextmanager
 from types import SimpleNamespace
 from unittest.mock import patch
 
-import pytest
-
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.ai_agent_bridge import _cli, _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree

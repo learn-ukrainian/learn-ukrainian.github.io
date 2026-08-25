@@ -83,7 +83,7 @@ def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
 def test_default_plane_root_refuses_retired_local_marker(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from scripts.fleet_comms.paths import PlaneRootAnchorError, RETIRED_LOCAL_MARKER
+    from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER, PlaneRootAnchorError
 
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)

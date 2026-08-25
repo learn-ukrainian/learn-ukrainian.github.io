@@ -194,9 +194,10 @@ def _write_usage_file(path: Path, records: list[dict]) -> None:
 
 def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """#7089: _collect_runtime_orient_data() populates by_agent from real usage records."""
+    from datetime import UTC, datetime, timedelta
+
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
-    from datetime import UTC, datetime, timedelta
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
@@ -242,9 +243,10 @@ def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Pat
 
 def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """#7089: API-to-render contract test using live collector output with non-zero per-agent outcomes."""
+    from datetime import UTC, datetime, timedelta
+
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
-    from datetime import UTC, datetime, timedelta
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
@@ -310,10 +312,12 @@ def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, mo
 
 def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """#7089: End-to-end GET /api/orient response rendered into HTML cards."""
+    from datetime import UTC, datetime, timedelta
+
     from fastapi.testclient import TestClient
+
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
-    from datetime import UTC, datetime, timedelta
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)

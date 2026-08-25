@@ -4,6 +4,7 @@ import json
 import sqlite3
 from pathlib import Path
 
+from scripts.practice_deck.markup_integrity import stem_requires_markup
 from scripts.practice_deck.zno import (
     LEXICAL_NORM_LIVE_CANDIDATE_COUNT,
     LEXICAL_NORM_SQL,
@@ -16,13 +17,11 @@ from scripts.practice_deck.zno import (
     PHONETICS_SQL,
     SYNTACTIC_NORM_SQL,
     SYNTAX_SQL,
-    build_zno_fill_residual,
     build_zno_shards,
     learner_attribution,
     write_zno_fill_residual,
     write_zno_shards,
 )
-from scripts.practice_deck.markup_integrity import stem_requires_markup
 
 
 def _database(path: Path) -> Path:
