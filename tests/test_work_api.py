@@ -72,6 +72,7 @@ def _sections_with_canary() -> dict[str, SectionResult]:
                 # Inject private keys that public streams API must strip — Work must not reintroduce them.
                 "effective_membership": {"5921": {"private": True}},
                 "open_issue_numbers": [5921],
+                "open_issue_titles": {"5921": "Private title should be stripped"},
             },
             count=1,
         ),
@@ -168,6 +169,7 @@ def test_projection_endpoint_with_injected_sources(monkeypatch):
     assert "SHOULD-NOT-APPEAR" not in blob
     assert "effective_membership" not in blob
     assert "open_issue_numbers" not in blob
+    assert "open_issue_titles" not in blob
     assert "sealed_verdict_blob" not in blob
 
 
@@ -671,6 +673,7 @@ def test_streams_loader_derives_public_membership_and_strips_private_index():
                 },
             },
             "open_issue_numbers": [6001],
+            "open_issue_titles": {"6001": "Title 6001"},
         }
 
     section = fetch_streams_projection(loader=loader)
@@ -679,6 +682,7 @@ def test_streams_loader_derives_public_membership_and_strips_private_index():
     # Closed issue 5000 never surfaces; the private index keys are stripped.
     assert "effective_membership" not in section.payload
     assert "open_issue_numbers" not in section.payload
+    assert "open_issue_titles" not in section.payload
     blob = json.dumps(section.payload)
     assert "5000" not in blob
     assert "unique_stream" not in blob
@@ -714,6 +718,7 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
                 },
             },
             "open_issue_numbers": [6001, 6004],
+            "open_issue_titles": {"6001": "Title 6001", "6004": "Title 6004"},
             # Pre-set map with a typo — must be re-validated, not trusted.
             "open_stream_membership": {
                 "6009": ["infra-harness", "typo-stream"],

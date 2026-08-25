@@ -53,10 +53,14 @@ DEFAULT_MAX_CONFIRMED_AGE_DAYS = 14
 MAX_MILESTONE_ISSUE_RANGE = 100
 
 # ADR-011 P4 — private keys added to the cache report for the strict adoption
-# gate/observability. They carry an exact effective issue→epic membership index
-# and the bounded open-issue set; both are stripped from the public
-# ``/api/issues/streams`` response (see ``issues_router.strip_private_index``).
-PRIVATE_CACHE_KEYS = ("effective_membership", "open_issue_numbers")
+# gate/observability. They carry an exact effective issue→epic membership index,
+# the bounded open-issue set, and the open-issue titles map; all are stripped
+# from the public ``/api/issues/streams`` response (see ``issues_router._strip_private_index``).
+PRIVATE_CACHE_KEYS = (
+    "effective_membership",
+    "open_issue_numbers",
+    "open_issue_titles",
+)
 
 # A resolver proving issue N is a live child of stream epic E, offline, from a
 # fresh cache. Signature mirrors P1's ``check_research_registry.MembershipResolver``.
@@ -969,6 +973,7 @@ def classify(
             epic_numbers, stream_of_epic, membership
         ),
         "open_issue_numbers": sorted(open_numbers),
+        "open_issue_titles": {str(k): v for k, v in titles.items()},
     }
 
 
