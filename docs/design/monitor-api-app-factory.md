@@ -1,23 +1,24 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v4 (revised after three rounds of cross-family review)
+> **Version:** v5 (revised after four rounds of cross-family review)
 > **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v4
-> needs a fourth cross-family pass before step 0 is dispatched (see § 10).
+> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v5
+> needs a fifth cross-family pass before step 0 is dispatched (see § 10).
 > **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per
-> three rounds of codex review below.
+> four rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
 > **Refs:** #7182 (OPSEC sweep design r2/r3 critique, task `critique-7182-design-r2-codex`, GPT-seat
 > critic origin of the proposal).
-> **Changelog:** v1 got a cross-family REJECT (3 P1 + 1 P2). v2 addressed those but was itself
-> REJECTed (4 new findings, incl. a router-count error: said 33, real count 44). v3 fixed those but
-> was REJECTed a third time — a real doc-consistency bug (§7 still described a fixture-isolation test
-> that §5.1 had already dropped), a real design gap (route-digest + passing tests don't prove
-> middleware/lifespan/exception-handler wiring is unchanged), and several precision nits (mount count
-> vs. unique-module count, a file-count off-by-one in the `connect_sqlite()` caller list, one router's
-> line count rounded to a bracket it doesn't quite meet). v4 (this version) fixes all of it — see §10
-> for the full finding-by-finding record of all three rounds, including one place the round-3
-> reviewer's own sub-claim (a grep bug) did not hold up under independent re-verification.
+> **Changelog:** v1→v4 each got a cross-family REJECT and fixed the prior round's findings — see §10
+> for the full four-round record, including one place a reviewer's own sub-claim did not hold up
+> under independent re-verification. Round 4 verified v4's fixes for §7, the router count, the
+> `connect_sqlite()` count, and the line-count framing all held — the only remaining finding was that
+> v4's proposed middleware/exception-handler/lifespan check compared two live app objects with
+> Starlette's identity-equality `Middleware` type (which never compares two independently-built,
+> even-identical instances as equal) against a `legacy_app` that no longer exists once `main.py` is
+> rewritten to call the factory. v5 (this version) replaces that with a hardcoded expected-snapshot
+> comparison grounded directly in `main.py`'s actual current wiring (read, not assumed) — see §5.1
+> point 3 and §10's v4 entry.
 
 ---
 
@@ -175,7 +176,7 @@ by itself is not precise enough to file a bounded sub-issue from, and lumping se
 worse. Guessing a finer split without reading what's actually inside those six files would just move
 the same ambiguity to a smaller-looking table.**
 
-### 5.1 Step 0 — Core (revised after the v2 and v3 reviews — see §10)
+### 5.1 Step 0 — Core (revised after the v2, v3, and v4 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No router
 changes** — every router still reads its own module globals directly, exactly as today. This matters
@@ -209,15 +210,36 @@ for what step 0 can and cannot claim:
      with no new comparison logic to design or trust.
   3. **Route digest + passing tests prove routes are unchanged; they do not prove app-level wiring is
      unchanged** — `main.py` also configures a lifespan context manager, exception handlers, CORS and
-     resilience middleware, and app metadata (`scripts/api/main.py:148` onward) that a route-count
-     digest cannot see and that existing route tests may not each individually exercise. Add a direct
-     structural-equality assertion, new in step 0: build both apps in one test and assert
-     `legacy_app.user_middleware == factory_app.user_middleware` (same middleware classes, same order,
-     same init kwargs), `legacy_app.exception_handlers.keys() == factory_app.exception_handlers.keys()`
-     with each handler resolving to the same underlying function, and
-     `legacy_app.router.lifespan_context is factory_app.router.lifespan_context` (or an equivalent
-     check if `create_app`'s optional `lifespan` override changes how that's wired — the test must
-     cover whichever it actually is). This is the piece the route digest alone cannot prove.
+     resilience middleware, and app metadata that a route-count digest cannot see and that existing
+     route tests may not each individually exercise. **v4 proposed diffing `legacy_app` against
+     `factory_app` directly (`legacy_app.user_middleware == factory_app.user_middleware`), which the
+     reviewer correctly rejected**: Starlette's `Middleware` entries compare by identity, so two
+     independently-built (even structurally identical) apps never compare equal that way, and no
+     `legacy_app` object exists to build once `main.py`'s bottom is rewritten to
+     `app = create_app(production_context())` — there is nothing left to diff against.
+     **Fixed, against the real current wiring** (`scripts/api/main.py:148-168`, read directly rather
+     than assumed): `FastAPI(title="Playground API", version="2.0.0", description=..., lifespan=
+     _lifespan)`, then `app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,
+     allow_methods=["*"], allow_headers=["*"])`, then `app.middleware("http")(resilience_middleware)`,
+     then three `@app.exception_handler(...)` registrations for `StarletteHTTPException`,
+     `RequestValidationError`, and `Exception`. Step 0 hardcodes this as an **expected snapshot** —
+     not a second live app to diff against — and asserts `create_app(production_context())`'s app
+     matches it:
+     - Expected CORS entry: class `CORSMiddleware` with those four kwargs.
+     - Expected function-middleware entry: the `resilience_middleware` callable specifically (not
+       just "a middleware exists") — compare by identity/qualname against the imported function, not
+       by `==` on the wrapping `Middleware` object.
+     - Expected exception-handler key set: `{StarletteHTTPException, RequestValidationError,
+       Exception}`, each resolving to the same handler function by identity.
+     - Expected lifespan: the same `_lifespan` function passed to `create_app`.
+     - `Middleware.__init__`'s exact field names for extracting `(cls, args, kwargs)` differ across
+       Starlette versions and are not asserted here without checking the installed version; step 0's
+       implementation must confirm the correct accessor (or fall back to comparing each entry's
+       `repr()` against a hardcoded expected `repr()` string, which is stable across the class's
+       public interface even when internal field names are not) — this is the one piece intentionally
+       left to the implementation PR rather than guessed here.
+     This sidesteps identity-equality entirely (comparing hardcoded values against real structures,
+     not two live objects against each other) and needs no second app construction.
   4. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
      through a running app): `fixture_context(tmp_path)` resolves every configured root/store path
      under `tmp_path`, and a path crafted to escape via a symlink is rejected (§4.1 point 3). This is
@@ -304,11 +326,12 @@ table above — if the inventory contradicts a row here, the inventory wins and 
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. Cross-family design review (codex). **Done three times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
+2. Cross-family design review (codex). **Done four times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
    (4 further findings, incl. a router-count error), v3 REJECT (a doc-consistency bug, a real
-   app-wiring proof gap, and several precision nits). v4 (this version) addresses all three rounds
-   (§10).**
-3. One more cross-family design review on this v4 revision before implementation starts. **Next
+   app-wiring proof gap, and several precision nits), v4 REJECT (v4's fixes for §7/router-count/
+   connect_sqlite-count/line-counts all held; the middleware-equality mechanism itself was flawed).
+   v5 (this version) addresses all four rounds (§10).**
+3. One more cross-family design review on this v5 revision before implementation starts. **Next
    step.**
 4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
    wrong assumption in this doc before anything else builds on it.
@@ -429,3 +452,24 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      bracket; it lists the six actual line counts, 996 included honestly.
   - Verification note from this reviewer run: its own focused pytest could not start (no usable temp
     directory in that sandbox) — an environment limitation of that run, not a product result.
+
+- **v4 (commit b0361e1), reviewer: codex, verdict: REJECT.** This round independently re-verified
+  every round-3 fix rather than trusting the doc, and confirmed four of them held: §7 no longer
+  claims step-0 app isolation; the router count (44 unique / 47 mounts, 3 double-mounted) checked out
+  against `main.py`; the `connect_sqlite()` count (10 callers + 1 definition) checked out; the six
+  line counts, including `dashboard_router.py` at 996, checked out. One finding remained:
+  1. **The middleware/exception-handler/lifespan structural-equality check itself was flawed** — it
+     proposed `legacy_app.user_middleware == factory_app.user_middleware`, but Starlette's
+     `Middleware` entries compare by identity, so two independently-built apps — even with identical
+     configuration — never compare equal that way; and no `legacy_app` object exists to build once
+     `main.py`'s bottom is rewritten to call the factory, so there was nothing concrete to diff
+     against in the first place. **Fixed:** §5.1 point 3 replaces the two-live-apps diff with a
+     hardcoded expected-snapshot comparison, grounded directly in `main.py`'s actual current
+     construction (`FastAPI(title=..., lifespan=_lifespan)`, the CORS `add_middleware` call with its
+     four kwargs, the `resilience_middleware` function-based middleware, and the three
+     `@app.exception_handler` registrations — read from the file, not assumed) — the factory-built
+     app is checked against these hardcoded values, not against a second live app, which sidesteps
+     the identity-equality problem entirely. The exact Starlette-internal field names for extracting
+     `(cls, args, kwargs)` from a `Middleware` entry are explicitly left to the step-0 implementation
+     PR (with a version-tolerant `repr()`-comparison fallback named), rather than guessed here and
+     risking a fifth round on a wrong private attribute name.
