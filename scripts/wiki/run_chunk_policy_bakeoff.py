@@ -83,13 +83,14 @@ from rag.benchmark_embeddings import (
     ndcg_at_k,
     recall_at_k,
 )
-from wiki import chunking as chunking_module
-from wiki import dense_rerank as dense_rerank_module
 from wiki.chunking import (
     NO_CHUNK,
     ChunkingPolicy,
     chunk_text,
 )
+
+from wiki import chunking as chunking_module
+from wiki import dense_rerank as dense_rerank_module
 
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_OUTPUT = (
