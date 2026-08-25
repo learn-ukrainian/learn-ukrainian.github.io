@@ -5829,3 +5829,103 @@ def test_wikidata_translation_offline_mode(monkeypatch) -> None:
     assert not called
 
 
+def test_wikidata_translation_ukwiki_regressions(monkeypatch) -> None:
+    """Entities where labels.uk matches but ukwiki is missing or different must return None (#4387).
+
+    Regressions:
+    - бакай -> Buckeye (ukwiki missing/different)
+    - дюк -> Duke (ukwiki is Герцог)
+    - ци -> qi (ukwiki is Ці)
+    """
+    mock_data: dict[str, list[dict[str, Any]]] = {
+        "бакай": [
+            {
+                "id": "Q12345",
+                "labels": {"uk": {"value": "бакай"}, "en": {"value": "Buckeye"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {},
+            }
+        ],
+        "дюк": [
+            {
+                "id": "Q67890",
+                "labels": {"uk": {"value": "дюк"}, "en": {"value": "Duke"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Герцог"}},
+            }
+        ],
+        "ци": [
+            {
+                "id": "Q11111",
+                "labels": {"uk": {"value": "ци"}, "en": {"value": "qi"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Ці"}},
+            }
+        ],
+    }
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: mock_data.get(lemma, []),
+    )
+    assert enrich_manifest_module._wikidata_translation("бакай") is None
+    assert enrich_manifest_module._wikidata_translation("дюк") is None
+    assert enrich_manifest_module._wikidata_translation("ци") is None
+
+
+def test_wikidata_translation_offline_mocks_ukwiki_title_requirement(monkeypatch) -> None:
+    """Validate that labels.uk match without ukwiki exact match returns None, while ukwiki exact match fills."""
+    # 1. labels.uk exact, ukwiki missing -> None
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q501",
+                "labels": {"uk": {"value": "міст"}, "en": {"value": "bridge"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {},
+            }
+        ],
+    )
+    assert enrich_manifest_module._wikidata_translation("міст") is None
+
+    # 2. labels.uk exact, ukwiki different title -> None
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q502",
+                "labels": {"uk": {"value": "міст"}, "en": {"value": "bridge"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Міст (значення)"}},
+            }
+        ],
+    )
+    assert enrich_manifest_module._wikidata_translation("міст") is None
+
+    # 3. ukwiki exact + unique EN label -> fill
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q503",
+                "labels": {"uk": {"value": "інший_лейбл"}, "en": {"value": "bridge"}},
+                "descriptions": {},
+                "claims": {},
+                "sitelinks": {"ukwiki": {"title": "Міст"}},
+            }
+        ],
+    )
+    res = enrich_manifest_module._wikidata_translation("міст")
+    assert res is not None
+    assert res["en"] == ["bridge"]
+    assert res["source"] == WIKIDATA_LABEL
+    assert res["source_url"] == "https://www.wikidata.org/wiki/Q503"
