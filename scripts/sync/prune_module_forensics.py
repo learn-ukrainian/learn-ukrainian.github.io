@@ -16,6 +16,9 @@ if str(ROOT) not in sys.path:
 
 from scripts.sync.promote_module import CURRICULUM_ROOT, FORENSICS_FILES, _sanitized_git_env
 
+_GIT_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
+
 
 @dataclass(frozen=True)
 class ModuleTarget:
@@ -32,12 +35,29 @@ class ModuleTarget:
 
 
 def _run_git(repo_root: Path, args: list[str], *, check: bool = True) -> subprocess.CompletedProcess[bytes]:
-    return subprocess.run(
-        ["git", "-C", str(repo_root), *args],
-        check=check,
-        capture_output=True,
-        env=_sanitized_git_env(),
-    )
+    command = ["git", "-C", str(repo_root), *args]
+    try:
+        return subprocess.run(
+            command,
+            check=check,
+            capture_output=True,
+            env=_sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        if check:
+            raise subprocess.CalledProcessError(
+                _TIMEOUT_RETURN_CODE,
+                command,
+                output=exc.output,
+                stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s".encode(),
+            ) from exc
+        return subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=exc.output or b"",
+            stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s".encode(),
+        )
 
 
 def _decode(data: bytes) -> str:

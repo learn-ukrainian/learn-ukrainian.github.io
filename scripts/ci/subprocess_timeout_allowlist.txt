@@ -41,10 +41,6 @@ scripts/projects/ua_eval_harness/run_codex_baseline.py::_cli_version::subprocess
 scripts/review/snapshot.py::_run_git::subprocess.run
 scripts/session_canary/grok_lane.py::cmd_mint::subprocess.run
 scripts/session_canary/grok_lane.py::cmd_score::subprocess.run
-scripts/sync/promote_module.py::_branch_for_worktree::subprocess.run
-scripts/sync/promote_module.py::_run_generate_readings::subprocess.run
-scripts/sync/promote_module.py::_run_git::subprocess.run
 scripts/sync/promote_module.py::_run_make_atlas::subprocess.run
-scripts/sync/prune_module_forensics.py::_run_git::subprocess.run
 scripts/validate/verify_track.py::run_audit::subprocess.run
 scripts/vocab/rebuild_vocab_from_yaml.py::populate_database::subprocess.run
