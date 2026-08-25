@@ -262,8 +262,8 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
     third_ctx = fixture_context(third_root)
     third_app = api_main.create_app(third_ctx, lifespan=no_lifespan)
     with TestClient(third_app) as third_client:
-        assert third_client.get("/api/session-streams/v1/status/epic:4707").status_code == 404
-        assert third_client.get("/api/session-streams/v1/digest/epic:4707").status_code == 404
+        assert third_client.get("/api/session-streams/v1/status/epic:4707").status_code == 404  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
+        assert third_client.get("/api/session-streams/v1/digest/epic:4707").status_code == 404  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
         assert third_client.get("/api/session-streams/v1/drift").status_code == 404
 
 
