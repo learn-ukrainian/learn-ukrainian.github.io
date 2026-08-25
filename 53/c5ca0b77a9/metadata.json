@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "53c5ca0b77a9",
+  "strategy": "manual-commit",
+  "branch": "cursor/monitor-7269-step05-router-inventory",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/design/count_opsec_fixture_seams.py",
+    "docs/design/monitor-api-router-inventory.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/53/c5ca0b77a9/0/metadata.json",
+      "transcript": "/53/c5ca0b77a9/0/full.jsonl",
+      "compact_transcript": "/53/c5ca0b77a9/0/transcript.jsonl",
+      "content_hash": "/53/c5ca0b77a9/0/content_hash.txt",
+      "prompt": "/53/c5ca0b77a9/0/prompt.txt"
+    }
+  ]
+}

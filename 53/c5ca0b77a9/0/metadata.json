@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "53c5ca0b77a9",
+  "session_id": "fleet-727cd15b337947dc8b99d27c04de142a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T20:32:36.419175Z",
+  "branch": "cursor/monitor-7269-step05-router-inventory",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/design/count_opsec_fixture_seams.py",
+    "docs/design/monitor-api-router-inventory.md"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "bae6f5215bf7",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T20:32:36.403188Z",
+    "agent_lines": 475,
+    "agent_removed": 62,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 475,
+    "total_lines_changed": 537,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
