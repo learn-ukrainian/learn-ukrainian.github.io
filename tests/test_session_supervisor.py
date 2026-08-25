@@ -136,6 +136,7 @@ def test_worker_env_default_is_sorted_safe_session_metadata_without_secret_env(t
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
 
     assert result.returncode == 0
@@ -169,6 +170,7 @@ def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
 
     assert result.returncode == 0
