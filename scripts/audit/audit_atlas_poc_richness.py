@@ -282,6 +282,29 @@ def _row(entry: dict[str, Any], sections: set[str], *, entry_class: str) -> dict
     }
 
 
+def poc_thin_entries(
+    manifest: dict[str, Any],
+    *,
+    min_rich_sections: int = 5,
+) -> list[dict[str, Any]]:
+    """Return old-gate-enriched static search entries failing the POC richness gate."""
+    entries = [entry for entry in manifest.get("entries", []) if isinstance(entry, dict)]
+    search_entries = [entry for entry in entries if _is_static_search_entry(entry)]
+    old_enriched = [entry for entry in search_entries if old_gate_enriched(entry)]
+    targets: list[dict[str, Any]] = []
+    for entry in old_enriched:
+        entry_class = classify_entry(entry)
+        sections = rendered_sections(entry)
+        if _entry_is_poc_thin(
+            entry,
+            sections,
+            entry_class=entry_class,
+            min_rich_sections=min_rich_sections,
+        ):
+            targets.append(entry)
+    return targets
+
+
 def audit_manifest(
     manifest: dict[str, Any],
     *,
