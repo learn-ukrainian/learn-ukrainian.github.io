@@ -52,6 +52,9 @@ ATLAS_OUTPUT_FILES = (
 )
 READINGS_GENERATOR = "scripts.readings.generate_readings"
 PROMOTE_QUALITY_FILE = "promote_quality.json"
+_GIT_TIMEOUT_SECONDS = 30
+_READINGS_TIMEOUT_SECONDS = 300
+_TIMEOUT_RETURN_CODE = 124
 
 LESSON_SOURCE_FILES = frozenset(
     {
@@ -102,12 +105,29 @@ def _sanitized_git_env() -> dict[str, str]:
 
 
 def _run_git(repo_root: Path, args: list[str], *, check: bool = True) -> subprocess.CompletedProcess[bytes]:
-    return subprocess.run(
-        ["git", "-C", str(repo_root), *args],
-        check=check,
-        capture_output=True,
-        env=_sanitized_git_env(),
-    )
+    command = ["git", "-C", str(repo_root), *args]
+    try:
+        return subprocess.run(
+            command,
+            check=check,
+            capture_output=True,
+            env=_sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        if check:
+            raise subprocess.CalledProcessError(
+                _TIMEOUT_RETURN_CODE,
+                command,
+                output=exc.output,
+                stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s".encode(),
+            ) from exc
+        return subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=exc.output or b"",
+            stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s".encode(),
+        )
 
 
 def _decode(data: bytes) -> str:
@@ -204,12 +224,17 @@ def _resolve_latest_branch(repo_root: Path, level: str, slug: str) -> str:
 
 
 def _branch_for_worktree(worktree: Path) -> str | None:
-    proc = subprocess.run(
-        ["git", "-C", str(worktree), "rev-parse", "--abbrev-ref", "HEAD"],
-        check=False,
-        capture_output=True,
-        env=_sanitized_git_env(),
-    )
+    command = ["git", "-C", str(worktree), "rev-parse", "--abbrev-ref", "HEAD"]
+    try:
+        proc = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            env=_sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return None
     if proc.returncode != 0:
         return None
     branch = _decode(proc.stdout).strip()
@@ -389,19 +414,33 @@ def _run_generate_readings(repo_root: Path, source: SourceSpec) -> tuple[int, li
     if source.level != "folk":
         return 0, []
     module_dir = CURRICULUM_ROOT / source.level / source.slug
-    proc = subprocess.run(
-        [
-            str(_python(repo_root)),
-            "-m",
-            READINGS_GENERATOR,
-            module_dir.as_posix(),
-            "--json",
-        ],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        env=_sanitized_git_env(),
-    )
+    command = [
+        str(_python(repo_root)),
+        "-m",
+        READINGS_GENERATOR,
+        module_dir.as_posix(),
+        "--json",
+    ]
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            env=_sanitized_git_env(),
+            timeout=_READINGS_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        stderr = exc.stderr
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode("utf-8", errors="replace")
+        print(
+            f"ERROR readings generator timed out after {_READINGS_TIMEOUT_SECONDS}s",
+            file=sys.stderr,
+        )
+        if stderr:
+            print(stderr, file=sys.stderr, end="" if stderr.endswith("\n") else "\n")
+        return _TIMEOUT_RETURN_CODE, []
     if proc.stderr:
         print(proc.stderr, file=sys.stderr, end="" if proc.stderr.endswith("\n") else "\n")
     if proc.returncode != 0:
