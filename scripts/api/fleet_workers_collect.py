@@ -33,6 +33,7 @@ from scripts.api.occupancy_local import (
     read_session_streams,
     resolve_launcher_host_id,
     self_host_opaque_ids,
+    session_streams_db_path,
 )
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID, opaque_host_id, safe_field
 from scripts.api.project_state_store import (
@@ -40,7 +41,6 @@ from scripts.api.project_state_store import (
     get_live_report,
     workers_status_from_document,
 )
-from scripts.api.session_streams_router import _db_path as session_streams_db_path
 from scripts.lexicon.runner import atlas_job
 
 WORKERS_SCHEMA = "monitor-fleet-workers.v1"

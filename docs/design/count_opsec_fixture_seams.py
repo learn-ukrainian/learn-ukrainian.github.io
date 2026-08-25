@@ -24,7 +24,6 @@ from scripts.api import (
     docs_router,
     entire_context_router,
     epics_router,
-    fleet_router,
     git_hygiene_router,
     governance_router,
     images_router,
@@ -32,7 +31,6 @@ from scripts.api import (
     project_state_collect,
     project_state_router,
     repository_authority,
-    session_streams_router,
     site_router,
     state_helpers,
     work_router,
@@ -167,21 +165,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
-    monkeypatch.setattr(session_streams_router, "_repo_root", lambda: root)
-    monkeypatch.setattr(
-        session_streams_router,
-        "_db_path",
-        lambda: root / "stores" / "session-streams.sqlite3",
-    )
-    monkeypatch.setattr(session_streams_router, "_store", lambda: _FixtureSessionStore())
-    monkeypatch.setattr(session_streams_router, "list_handoff_candidates", lambda _root: [])
-    monkeypatch.setattr(
-        session_streams_router,
-        "diagnose_handoff",
-        lambda _store, stream_id: _FixtureHandoff(stream_id),
-    )
-    monkeypatch.setattr(session_streams_router, "list_projection_receipts", lambda *_a, **_k: [])
-    monkeypatch.setattr(session_streams_router, "detect_projection_drift", lambda *_a, **_k: {})
     monkeypatch.setattr(worktree_containment, "primary_checkout_dirty_status", lambda _s: {})
     monkeypatch.setattr(cold_start_board, "_get_local_git_info", lambda: {})
     monkeypatch.setattr(

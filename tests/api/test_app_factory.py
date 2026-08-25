@@ -47,7 +47,6 @@ DB_ACCESS_ALLOWLIST = frozenset(
         "scripts/api/occupancy_local.py",
         "scripts/api/resilience.py",
         "scripts/api/runtime_router.py",
-        "scripts/api/session_streams_router.py",
         "scripts/api/state_helpers.py",
         "scripts/api/telemetry/legacy_comms.py",
         "scripts/api/telemetry_router.py",
@@ -165,8 +164,102 @@ def test_core_routes_read_the_serving_app_version(tmp_path: Path) -> None:
         assert second_client.get("/api/config").json()["api_version"] == "second-version"
 
 
-def test_db_access_patterns_have_the_step_zero_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 21
+def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    # Set up first isolated instance
+    first_root = tmp_path / "first"
+    first_ctx = fixture_context(first_root)
+    first_conn = first_ctx.stores.session_streams_database.connect()
+    first_conn.close()
+
+    (first_root / "docs" / "session-state").mkdir(parents=True)
+    (first_root / "docs" / "session-state" / "current.md").write_text(
+        "# First Instance Session\nAgent-Handoff:\n- orchestrator: docs/session-state/current.orchestrator.md\n",
+        encoding="utf-8",
+    )
+    (first_root / "docs" / "session-state" / "current.orchestrator.md").write_text(
+        "First instance orchestrator state\n",
+        encoding="utf-8",
+    )
+    (first_root / "agents_extensions" / "shared" / "rules").mkdir(parents=True)
+    (first_root / "agents_extensions" / "shared" / "rules" / "operator-expectations.md").write_text(
+        "# First Rules\nFirst rule body\n",
+        encoding="utf-8",
+    )
+    (first_root / "scripts" / "config").mkdir(parents=True)
+    (first_root / "scripts" / "config" / "issue_streams.yaml").write_text(
+        "schema_version: issue-streams.v1\nstreams: {}\n",
+        encoding="utf-8",
+    )
+
+    # Set up second isolated instance
+    second_root = tmp_path / "second"
+    second_ctx = fixture_context(second_root)
+    second_conn = second_ctx.stores.session_streams_database.connect()
+    second_conn.close()
+
+    (second_root / "docs" / "session-state").mkdir(parents=True)
+    (second_root / "docs" / "session-state" / "current.md").write_text(
+        "# Second Instance Session\nAgent-Handoff:\n- orchestrator: docs/session-state/current.orchestrator.md\n",
+        encoding="utf-8",
+    )
+    (second_root / "docs" / "session-state" / "current.orchestrator.md").write_text(
+        "Second instance orchestrator state\n",
+        encoding="utf-8",
+    )
+    (second_root / "agents_extensions" / "shared" / "rules").mkdir(parents=True)
+    (second_root / "agents_extensions" / "shared" / "rules" / "operator-expectations.md").write_text(
+        "# Second Rules\nSecond rule body\n",
+        encoding="utf-8",
+    )
+    (second_root / "scripts" / "config").mkdir(parents=True)
+    (second_root / "scripts" / "config" / "issue_streams.yaml").write_text(
+        "schema_version: issue-streams.v1\nstreams: {}\n",
+        encoding="utf-8",
+    )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        # Session streams health
+        first_health = first_client.get("/api/session-streams/v1/health").json()
+        assert first_health["ok"] is True
+        assert first_health["store"]["reachable"] is True
+        assert "path" not in first_health["repo"]
+
+        # Session current endpoint isolation
+        first_session = first_client.get("/api/session/current")
+        assert first_session.status_code == 200
+        assert "First instance orchestrator state" in first_session.text
+        assert "Second instance" not in first_session.text
+
+        second_session = second_client.get("/api/session/current")
+        assert second_session.status_code == 200
+        assert "Second instance orchestrator state" in second_session.text
+        assert "First instance" not in second_session.text
+
+        # Rules endpoint isolation
+        first_rules = first_client.get("/api/rules")
+        assert first_rules.status_code == 200
+        assert "First rule body" in first_rules.text
+        assert "Second rule body" not in first_rules.text
+
+        second_rules = second_client.get("/api/rules")
+        assert second_rules.status_code == 200
+        assert "Second rule body" in second_rules.text
+        assert "First rule body" not in second_rules.text
+
+        # Rollovers endpoint
+        assert first_client.get("/api/rollovers").status_code == 200
+        assert second_client.get("/api/rollovers").status_code == 200
+
+
+def test_db_access_patterns_have_the_step_one_allowlist() -> None:
+    assert len(DB_ACCESS_ALLOWLIST) == 20
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

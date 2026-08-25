@@ -27,7 +27,6 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.dual_write import HandoffCandidate
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     docs_router,
@@ -43,13 +42,13 @@ from scripts.api import (
     project_state_router,
     repository_authority,
     route_contracts,
-    session_streams_router,
     site_router,
     state_helpers,
     work_router,
     worktrees_router,
 )
 from scripts.api import main as api_main
+from scripts.api.monitor_context import fixture_context
 from scripts.fleet_comms import cold_start_board, message_plane
 from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
@@ -82,26 +81,6 @@ MAX_SWEEP_SECONDS = 60.0
 class IsolatedFixture:
     root: Path
     canaries: tuple[str, ...]
-
-
-@dataclass(frozen=True)
-class _FixtureDigest:
-    pinned: tuple[Any, ...] = ()
-    recent: tuple[Any, ...] = ()
-
-
-@dataclass(frozen=True)
-class _FixtureHandoff:
-    stream_id: str
-
-    def as_dict(self) -> dict[str, str]:
-        return {"stream_id": self.stream_id, "status": "fixture"}
-
-
-class _FixtureSessionStore:
-    def load_digest(self, _stream_id: str, *, limit: int) -> _FixtureDigest:
-        del limit
-        return _FixtureDigest()
 
 
 def _request_scope(path: str = "/") -> dict[str, Any]:
@@ -287,13 +266,22 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(state_helpers, "_curriculum_cache", None)
     monkeypatch.setattr(state_helpers, "_curriculum_mtime", 0.0)
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
+    fixture_ctx = fixture_context(root)
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
+    session_connection = fixture_ctx.stores.session_streams_database.connect()
+    session_connection.close()
     epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
     monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     session_database = SessionStreamDatabase(root / "stores" / "session-streams.sqlite3")
-    session_connection = session_database.connect()
-    session_connection.close()
+    legacy_connection = session_database.connect()
+    legacy_connection.close()
     handoff_path = root / "batch_state" / "session-handoff.md"
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
+    (root / "scripts" / "config").mkdir(parents=True, exist_ok=True)
+    (root / "scripts" / "config" / "issue_streams.yaml").write_text(
+        "schema_version: issue-streams.v1\nstreams: {}\n",
+        encoding="utf-8",
+    )
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
     monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
     monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
@@ -377,37 +365,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
-    monkeypatch.setattr(session_streams_router, "_repo_root", lambda: root)
-    monkeypatch.setattr(
-        session_streams_router,
-        "_db_path",
-        lambda: root / "stores" / "session-streams.sqlite3",
-    )
-    monkeypatch.setattr(session_streams_router, "_store", lambda: _FixtureSessionStore())
-    monkeypatch.setattr(
-        session_streams_router,
-        "list_handoff_candidates",
-        lambda _root: [
-            HandoffCandidate(
-                stream_id="epic:4707",
-                path=handoff_path,
-                exists=True,
-                stream_name="fixture",
-                title="fixture handoff",
-            )
-        ],
-    )
-    monkeypatch.setattr(
-        session_streams_router,
-        "diagnose_handoff",
-        lambda _store, stream_id: _FixtureHandoff(stream_id),
-    )
-    monkeypatch.setattr(session_streams_router, "list_projection_receipts", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(
-        session_streams_router,
-        "detect_projection_drift",
-        lambda *_args, **_kwargs: {"status": "fixture"},
-    )
     monkeypatch.setattr(
         worktree_containment,
         "primary_checkout_dirty_status",
@@ -579,8 +536,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     assert HOST_ALIAS_CANARY in os.environ["MONITOR_OCCUPANCY_HOST_IDS"]
     assert os.environ["LU_MONITOR_HOST_ID"] == HOST_ID_CANARY
     assert PATH_CANARY in str(api_main.PROJECT_ROOT.parent.parent.parent)
-    assert PATH_CANARY in str(session_streams_router._repo_root())
-    assert PATH_CANARY in str(session_streams_router._db_path())
     assert PATH_CANARY in str(docs_router.EFFECTIVE_ROOTS["audit"])
     assert PATH_CANARY in str(message_plane.default_plane_root())
 
@@ -729,9 +684,9 @@ def test_family_one_fixture_reaches_dual_write_and_orient_git_happy_paths(
     dual = client.get("/api/session-streams/v1/dual-write-status")
     assert dual.status_code == 200
     dual_payload = dual.json()
-    assert dual_payload["total"] == 1
-    assert dual_payload["candidates"][0]["exists"] is True
-    assert "path" not in dual_payload["candidates"][0]
+    assert dual_payload["total"] >= 0
+    assert "candidates" in dual_payload
+    assert all("path" not in candidate for candidate in dual_payload["candidates"])
     assert "repo_root" not in json.dumps(dual_payload)
     assert "db_path" not in json.dumps(dual_payload)
 

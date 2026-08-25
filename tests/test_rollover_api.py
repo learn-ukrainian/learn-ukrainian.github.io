@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.rollover_router as rollover_router
 from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context
 from scripts.orchestration import task_identity
 from scripts.orchestration.task_family import rollover_registry as registry
 
@@ -86,7 +87,7 @@ def test_rollover_audit_route_is_read_only_and_uses_live_repo_root(monkeypatch, 
             "mutation_allowed": False,
         }
 
-    monkeypatch.setattr(rollover_router, "LIVE_REPO_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", fixture_context(tmp_path))
     monkeypatch.setattr(rollover_router.registry, "audit_fleet", fake_audit)
 
     response = client.get("/api/rollovers")
@@ -153,7 +154,7 @@ def test_rollover_exact_selector_fails_closed_when_ambiguous(monkeypatch):
 def test_rollover_exact_selector_surfaces_corrupt_authoritative_record(monkeypatch, tmp_path):
     record = _record()
     corrupt_path = registry.record_path(tmp_path, **record["key"]).relative_to(tmp_path).as_posix()
-    monkeypatch.setattr(rollover_router, "LIVE_REPO_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", fixture_context(tmp_path))
     monkeypatch.setattr(
         rollover_router.registry,
         "scan_records",
@@ -173,7 +174,6 @@ def test_rollover_orient_projection_exposes_only_actionable_entries(monkeypatch,
         "classification": registry.AuditClassification.AWAITING_NATIVE_ACTION.value,
     }
     finished = {**actionable, "live_pending": False, "classification": registry.AuditClassification.SUPERSEDED.value}
-    monkeypatch.setattr(rollover_router, "LIVE_REPO_ROOT", tmp_path)
     monkeypatch.setattr(
         rollover_router.registry,
         "audit_fleet",
@@ -185,7 +185,7 @@ def test_rollover_orient_projection_exposes_only_actionable_entries(monkeypatch,
         },
     )
 
-    payload = rollover_router.collect_rollover_orient_data()
+    payload = rollover_router.collect_rollover_orient_data(live_repo_root=tmp_path)
 
     assert payload["actionable"] == [actionable]
     assert payload["counts"]["total"] == 2

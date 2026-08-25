@@ -4,16 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from scripts.api.monitor_context import MonitorContext, production_context
 from scripts.api.session_streams_router import router
 
 
-def _client() -> TestClient:
+def _client(ctx: MonitorContext | None = None) -> TestClient:
     app = FastAPI()
+    app.state.ctx = ctx or production_context()
     app.include_router(router, prefix="/api/session-streams")
     return TestClient(app)
 
@@ -68,11 +69,9 @@ def test_session_stream_status_rejects_bad_id() -> None:
 
 
 def test_session_streams_repo_root_uses_live_primary_under_release(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch
 ) -> None:
     """PR-K residual: release code root must not own .agent/session-streams."""
-    from scripts.api import session_streams_router as ssr
-
     live = tmp_path / "live"
     live.mkdir()
     db_dir = live / ".agent" / "session-streams" / "v1"
@@ -85,12 +84,19 @@ def test_session_streams_repo_root_uses_live_primary_under_release(
     release = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40)
     release.mkdir(parents=True)
 
-    monkeypatch.setattr(ssr, "PROJECT_ROOT", release)
-    monkeypatch.setattr(ssr, "LIVE_REPO_ROOT", live)
+    from scripts.api import config
+    monkeypatch.setattr(config, "PROJECT_ROOT", release)
+    monkeypatch.setattr(config, "LIVE_REPO_ROOT", live)
+    monkeypatch.setattr(
+        "agents_extensions.shared.session_streams.db.canonical_state_root",
+        lambda root=None: live,
+    )
 
-    assert ssr._repo_root() == live
-    assert ssr._db_path() == db
-    health = ssr.session_streams_health()
+    ctx = production_context()
+    client = _client(ctx)
+    resp = client.get("/api/session-streams/v1/health")
+    assert resp.status_code == 200
+    health = resp.json()
     assert "repo_root" not in health
     assert "db_path" not in health
     assert health["repo"] == {"role": "live", "sha": None}
