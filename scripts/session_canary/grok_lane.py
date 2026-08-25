@@ -84,6 +84,8 @@ EPIC_STREAM_DEFAULTS: dict[str, str] = _epic_stream_defaults()
 DEFAULT_PASS_RATIO = 0.8
 DEFAULT_SIM_THRESHOLD = 0.75
 N_ANCHORS = 10
+_CANARY_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
 
 
 def _utc_now() -> str:
@@ -363,21 +365,31 @@ def cmd_mint(args: argparse.Namespace) -> int:
     facts_path.write_text(json.dumps(facts, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     # Delegate freeze to context_canary (legacy path) so scoring stays shared.
-    proc = subprocess.run(
-        [
-            sys.executable,
-            str(repo / "scripts" / "context_canary.py"),
-            "mint",
-            "--facts",
-            str(facts_path),
-            "--out",
-            str(probe_path),
-        ],
-        cwd=repo,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    command = [
+        sys.executable,
+        str(repo / "scripts" / "context_canary.py"),
+        "mint",
+        "--facts",
+        str(facts_path),
+        "--out",
+        str(probe_path),
+    ]
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_CANARY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        proc = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout="",
+            stderr=exc.stderr or f"context_canary mint timed out after {exc.timeout}s",
+        )
     if proc.returncode != 0:
         print(proc.stdout, end="")
         print(proc.stderr, end="", file=sys.stderr)
@@ -450,31 +462,41 @@ def cmd_score(args: argparse.Namespace) -> int:
     pass_ratio = float(args.pass_ratio)
     threshold = float(args.threshold)
 
-    proc = subprocess.run(
-        [
-            sys.executable,
-            str(repo / "scripts" / "context_canary.py"),
-            "score",
-            "--probe",
-            str(probe_path),
-            "--answers",
-            str(answers_path),
-            "--pass-ratio",
-            str(pass_ratio),
-            "--threshold",
-            str(threshold),
-            "--context-tokens",
-            str(int(args.context_tokens)),
-            "--model",
-            args.model,
-            "--log",
-            str(log_path),
-        ],
-        cwd=repo,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    command = [
+        sys.executable,
+        str(repo / "scripts" / "context_canary.py"),
+        "score",
+        "--probe",
+        str(probe_path),
+        "--answers",
+        str(answers_path),
+        "--pass-ratio",
+        str(pass_ratio),
+        "--threshold",
+        str(threshold),
+        "--context-tokens",
+        str(int(args.context_tokens)),
+        "--model",
+        args.model,
+        "--log",
+        str(log_path),
+    ]
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_CANARY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        proc = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout="",
+            stderr=exc.stderr or f"context_canary score timed out after {exc.timeout}s",
+        )
     print(proc.stdout, end="")
     if proc.stderr:
         print(proc.stderr, end="", file=sys.stderr)
