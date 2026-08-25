@@ -209,8 +209,7 @@ def _available_bytes(path: Path) -> int:
 
 
 def _bind_mount(source: Path, target: Path, mount_command: tuple[str, ...]) -> None:
-    if not mount_command or any(not part or "\0" in part for part in mount_command):
-        raise GuardianError("invalid_mount_command")
+    _validate_mount_command(mount_command)
     try:
         completed = subprocess.run(
             [*mount_command, "--bind", str(source), str(target)],
@@ -225,6 +224,18 @@ def _bind_mount(source: Path, target: Path, mount_command: tuple[str, ...]) -> N
         raise GuardianError("bind_mount_timeout") from None
     if completed.returncode != 0:
         raise GuardianError("bind_mount_failed")
+
+
+def _validate_mount_command(mount_command: tuple[str, ...]) -> None:
+    direct = len(mount_command) == 1 and Path(mount_command[0]).is_absolute()
+    sudo = (
+        len(mount_command) == 3
+        and Path(mount_command[0]).is_absolute()
+        and mount_command[1] == "-n"
+        and Path(mount_command[2]).is_absolute()
+    )
+    if any(not part or "\0" in part for part in mount_command) or not (direct or sudo):
+        raise GuardianError("invalid_mount_command")
 
 
 def _validate_roots(config: Config, *, create: bool) -> None:
@@ -645,6 +656,11 @@ def _parse_code_paths(items: Iterable[str]) -> dict[str, Path]:
 
 
 def _config(args: argparse.Namespace) -> Config:
+    mount_command = (
+        (str(args.sudo_command), "-n", str(args.mount_command))
+        if args.sudo_command is not None
+        else (str(args.mount_command),)
+    )
     return Config(
         action=args.action,
         package=args.package,
@@ -665,7 +681,7 @@ def _config(args: argparse.Namespace) -> Config:
         through=args.through,
         receipt=args.receipt,
         mountinfo=args.mountinfo,
-        mount_command=tuple(args.mount_command),
+        mount_command=mount_command,
         operator_inspected_count=args.operator_inspected_count,
         resolution_authorization=args.resolution_authorization,
         resolution_authority_attestation=args.resolution_authority_attestation,
@@ -696,7 +712,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--through", choices=STAGES, help="last stage the resume action may execute")
     parser.add_argument("--receipt", type=Path, help="optional external text-free guardian receipt")
     parser.add_argument("--mountinfo", type=Path, default=Path("/proc/self/mountinfo"), help=argparse.SUPPRESS)
-    parser.add_argument("--mount-command", nargs="+", default=("mount",), help=argparse.SUPPRESS)
+    parser.add_argument("--mount-command", type=Path, default=Path("mount"), help=argparse.SUPPRESS)
+    parser.add_argument("--sudo-command", type=Path, help=argparse.SUPPRESS)
     parser.add_argument("--operator-inspected-count", type=int)
     parser.add_argument("--resolution-authorization", type=Path)
     parser.add_argument("--resolution-authority-attestation", type=Path)
@@ -716,6 +733,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         if config.owner_uid < 0 or config.owner_gid < 0 or config.min_free_bytes <= 0:
             raise GuardianError("invalid_runtime_parameter")
         provider_bindings = _provider_bindings_complete(config, required=config.action == "resume")
+        if config.action in {"prepare", "resume"}:
+            _validate_mount_command(config.mount_command)
         guardian = _lock(config.guardian_lock, "guardian_already_running")
         mounts = _ensure_mounts(config, mutate=config.action in {"prepare", "resume"})
         _require_free_space(config)
