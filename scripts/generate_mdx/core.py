@@ -57,6 +57,8 @@ from yaml_activities import (
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 
 VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+_VALIDATE_TIMEOUT_SECONDS = 60
+_TIMEOUT_RETURN_CODE = 124
 
 
 def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | None]:
@@ -962,5 +964,9 @@ def main():
             validate_args.append(target_level)
         if target_module:
             validate_args.append(str(target_module))
-        result = subprocess.run(validate_args)
+        try:
+            result = subprocess.run(validate_args, timeout=_VALIDATE_TIMEOUT_SECONDS)
+        except subprocess.TimeoutExpired as exc:
+            print(f"MDX validation timed out after {exc.timeout}s", file=sys.stderr)
+            sys.exit(_TIMEOUT_RETURN_CODE)
         sys.exit(result.returncode)

@@ -18,6 +18,9 @@ from pathlib import Path
 import yaml
 from slug_utils import to_bare_slug
 
+_DIFF_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
+
 
 def load_yaml(path: Path) -> dict:
     """Load YAML file."""
@@ -401,17 +404,21 @@ def main():
         print()
 
         # Use diff with context
-        result = subprocess.run(
-            ['diff', '-u', '--color=always', str(archive_path), tmp_path],
-            capture_output=True,
-            text=True
-        )
+        try:
+            result = subprocess.run(
+                ['diff', '-u', '--color=always', str(archive_path), tmp_path],
+                capture_output=True,
+                text=True,
+                timeout=_DIFF_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            print(f"diff timed out after {exc.timeout}s", file=sys.stderr)
+            raise SystemExit(_TIMEOUT_RETURN_CODE) from exc
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
         print(result.stdout)
         if result.stderr:
             print(result.stderr, file=sys.stderr)
-
-        # Cleanup
-        Path(tmp_path).unlink()
     else:
         print(markdown)
 
