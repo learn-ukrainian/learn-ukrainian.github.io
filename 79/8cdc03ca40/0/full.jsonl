@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 94424,
-      "output": 20230,
+      "input": 95384,
+      "output": 21320,
       "reasoning": 0,
       "cache": {
-        "read": 3660544,
+        "read": 3851520,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1787619664091,
-      "updated": 1787620492187
+      "updated": 1787620510511
     }
   },
   "messages": [
@@ -6410,19 +6410,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 96141,
+          "input": 396,
+          "output": 449,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 95296
           }
         },
         "modelID": "stealth/ox-alpha",
         "providerID": "openrouter",
         "time": {
-          "created": 1787620492185
+          "created": 1787620492185,
+          "completed": 1787620510494
         },
+        "finish": "tool-calls",
         "id": "msg_0367c0399001rt2gd0givX9IE2",
         "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ"
       },
@@ -6439,16 +6442,21 @@
           "tool": "bash",
           "callID": "a68f24d1-c754-4197-853e-18dd5262305e",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/ci/subprocess_timeout_allowlist.txt scripts/wiki/backfill_generated_by_model.py scripts/wiki/diagnostics/corpus_gaps/audit.py scripts/wiki/mlx_bridge.py scripts/wiki/rebuild.py tests/test_wiki_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(wiki): bound subprocess calls with explicit timeouts (#7213 slice 13)\n\nBurn down the last 6 scripts/wiki/ allowlist keys (51 -> 45):\n\n- backfill_generated_by_model: run_git / load_head_text /\n  load_historical_meta get timeout=30s; TimeoutExpired maps onto the\n  existing RuntimeError (check=True), empty stdout (check=False),\n  on-disk fallback, and commit-skip degradations respectively.\n- diagnostics/corpus_gaps/audit: codex concept extraction bounded at\n  300s, TimeoutExpired mapped onto the existing\n  RuntimeError(\"Codex concept extraction failed: ...\") path.\n- mlx_bridge: Darwin sysctl RAM probe bounded at 10s inside the\n  existing except Exception -> None shape.\n- rebuild: compile+review invocation hard-bounded at the documented\n  1800s ceiling (COMPILE_TIMEOUT_S); TimeoutExpired returns 124 with a\n  stderr notice instead of an uncaught traceback.\n\nNew tests/test_wiki_timeouts.py mocks subprocess.run/check_output and\nasserts both the timeout= value and the TimeoutExpired mapping for all\n6 sites, plus --help entry-point smoke for the three CLIs.\n\nResidual (pre-existing on main, outside owned paths): bare\n`python scripts/wiki/<cli>.py --help` cannot resolve the `scripts`\nnamespace (scripts/storage/__init__.py imports scripts.*); smoke tests\ntherefore set PYTHONPATH like pytest's own pythonpath does.\n\nX-Agent: ox-alpha/timeout-burndown-7213-s13\nEOF\n)\" && git log --oneline -1 && git status --short",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s13"
             },
+            "output": "[ox-alpha/timeout-burndown-7213-s13 6db7ab8471] fix(wiki): bound subprocess calls with explicit timeouts (#7213 slice 13)\n 6 files changed, 397 insertions(+), 36 deletions(-)\n create mode 100644 tests/test_wiki_timeouts.py\n6db7ab8471 fix(wiki): bound subprocess calls with explicit timeouts (#7213 slice 13)\n",
+            "metadata": {
+              "output": "[ox-alpha/timeout-burndown-7213-s13 6db7ab8471] fix(wiki): bound subprocess calls with explicit timeouts (#7213 slice 13)\n 6 files changed, 397 insertions(+), 36 deletions(-)\n create mode 100644 tests/test_wiki_timeouts.py\n6db7ab8471 fix(wiki): bound subprocess calls with explicit timeouts (#7213 slice 13)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/ci/subprocess_timeout_allowlist.txt scripts/wiki/backfill_generated_by_model.py scripts/wiki/diagnostics/corpus_gaps/audit.py scripts/wiki/mlx_bridge.py scripts/wiki/rebuild.py tests/test_wiki_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(wiki): bound subprocess calls with explicit timeouts (#7213 slice 13)\n\nBurn down the last 6 scripts/wiki/ allowlist keys (51 -> 45):\n\n- backfill_generated_by_model: run_git / load_head_text /\n  load_historical_meta get timeout=30s; TimeoutExpired maps onto the\n  existing RuntimeError (check=True), empty stdout (check=False),\n  on-disk fallback, and commit-skip degradations respectively.\n- diagnostics/corpus_gaps/audit: codex concept extraction bounded at\n  300s, TimeoutExpired mapped onto the existing\n  RuntimeError(\"Codex concept extraction failed: ...\") path.\n- mlx_bridge: Darwin sysctl RAM probe bounded at 10s inside the\n  existing except Exception -> None shape.\n- rebuild: compile+review invocation hard-bounded at the documented\n  1800s ceiling (COMPILE_TIMEOUT_S); TimeoutExpired returns 124 with a\n  stderr notice instead of an uncaught traceback.\n\nNew tests/test_wiki_timeouts.py mocks subprocess.run/check_output and\nasserts both the timeout= value and the TimeoutExpired mapping for all\n6 sites, plus --help entry-point smoke for the three CLIs.\n\nResidual (pre-existing on main, outside owned paths): bare\n`python scripts/wiki/<cli>.py --help` cannot resolve the `scripts`\nnamespace (scripts/storage/__init__.py imports scripts.*); smoke tests\ntherefore set PYTHONPATH like pytest's own pythonpath does.\n\nX-Agent: ox-alpha/timeout-burndown-7213-s13\nEOF\n)\" && git log --oneline -1 && git status --short",
             "time": {
-              "start": 1787620502265
+              "start": 1787620510230,
+              "end": 1787620510317
             }
           },
           "metadata": {
@@ -6459,6 +6467,119 @@
           "id": "prt_0367c0bf9001Pnzfm55YJnZrbN",
           "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ",
           "messageID": "msg_0367c0399001rt2gd0givX9IE2"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "6b7d79dfe44bedf9a585ed83b5086fa536997cb9",
+          "type": "step-finish",
+          "tokens": {
+            "total": 96141,
+            "input": 396,
+            "output": 449,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 95296
+            }
+          },
+          "cost": 0,
+          "id": "prt_0367c4abc0019R72JGNwHWVr76",
+          "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ",
+          "messageID": "msg_0367c0399001rt2gd0givX9IE2"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0366f612b001v3wHq37PZ94Gxz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s13",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/ox-alpha/timeout-burndown-7213-s13"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 96885,
+          "input": 564,
+          "output": 641,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 95680
+          }
+        },
+        "modelID": "stealth/ox-alpha",
+        "providerID": "openrouter",
+        "time": {
+          "created": 1787620510508,
+          "completed": 1787620532472
+        },
+        "finish": "stop",
+        "id": "msg_0367c4b2c001PoYR0FRGvEdqJ8",
+        "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ"
+      },
+      "parts": [
+        {
+          "snapshot": "6b7d79dfe44bedf9a585ed83b5086fa536997cb9",
+          "type": "step-start",
+          "id": "prt_0367c6ffb001wr2mb20y5RxxAj",
+          "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ",
+          "messageID": "msg_0367c4b2c001PoYR0FRGvEdqJ8"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed. Working tree clean. Final verification of the acceptance commands one more time post-commit (already ran, but let me quote raw output as the brief requires \"Acceptance (quote raw)\"). I already have:\n\n```\n26 passed in 9.68s\nAll checks passed! (ruff)\n```\n\nAllowlist scripts/wiki remaining = 0.\n\nReport per completion contract: changed files, commands/results, branch status, user-visible outcome, residual.",
+          "time": {
+            "start": 1787620519935,
+            "end": 1787620522592
+          },
+          "metadata": {
+            "openrouter": {
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "Committed. Working tree clean. Final verification of the acceptance commands one more time post-commit (already ran, but let me quote raw output as the brief requires \"Acceptance (quote raw)\"). I already have:\n\n```\n26 passed in 9.68s\nAll checks passed! (ruff)\n```\n\nAllowlist scripts/wiki remaining = 0.\n\nReport per completion contract: changed files, commands/results, branch status, user-visible outcome, residual.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "id": "prt_0367c6fff00132w2cSoQXOkJih",
+          "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ",
+          "messageID": "msg_0367c4b2c001PoYR0FRGvEdqJ8"
+        },
+        {
+          "type": "text",
+          "text": "Slice 13 complete. Summary:\n\n**Changed files** (all in-scope):\n- `scripts/wiki/backfill_generated_by_model.py` — `run_git`, `load_head_text`, `load_historical_meta` now pass `timeout=30` (`GIT_TIMEOUT_S`); TimeoutExpired maps to RuntimeError / empty-stdout / on-disk-fallback / commit-skip respectively\n- `scripts/wiki/diagnostics/corpus_gaps/audit.py` — codex extraction bounded at `CODEX_TIMEOUT_S = 300`; TimeoutExpired → existing `RuntimeError(\"Codex concept extraction failed: …\")`\n- `scripts/wiki/mlx_bridge.py` — sysctl probe `timeout=10`, existing `except Exception: return None` shape kept\n- `scripts/wiki/rebuild.py` — `_run_compile` bounded at documented `COMPILE_TIMEOUT_S = 1800`; TimeoutExpired prints stderr notice and returns **124**, KeyboardInterrupt→130 preserved\n- `scripts/ci/subprocess_timeout_allowlist.txt` — shrunk by exactly those 6 keys (51 → 45)\n- `tests/test_wiki_timeouts.py` — new: 18 tests mocking `subprocess.run`/`check_output`, asserting `timeout=` + TimeoutExpired mapping for all 6 sites, plus `--help` smoke for all 3 CLIs\n\n**Acceptance (raw):**\n```\n$ .venv/bin/python -m pytest tests/test_subprocess_timeout_guard.py tests/test_wiki_timeouts.py -q\n26 passed in 9.68s\n\n$ .venv/bin/python -m ruff check scripts/wiki/backfill_generated_by_model.py scripts/wiki/diagnostics/corpus_gaps/audit.py scripts/wiki/mlx_bridge.py scripts/wiki/rebuild.py tests/test_wiki_timeouts.py\nAll checks passed!\n```\n\nAlso verified no regression: `test_mlx_bridge_gate.py` + `tests/wiki/diagnostics/test_corpus_gaps.py` → 13 passed.\n\n**Branch:** `ox-alpha/timeout-burndown-7213-s13`, clean tree, not pushed.\n\nCOMMIT=6db7ab8471 ALLOWLIST_WIKI_REMAINING=0 TESTS=pass\n\n**Residual (pre-existing on main, outside owned paths):** bare `python scripts/wiki/<cli>.py --help` cannot resolve the `scripts` namespace (`scripts/storage/__init__.py` imports `scripts.*`; fails identically at `6f68c65a8a`). Smoke tests set `PYTHONPATH` mirroring pytest's own pythonpath; root cause is left for an F007-class fix with its own outcome.",
+          "time": {
+            "start": 1787620522595,
+            "end": 1787620532290
+          },
+          "id": "prt_0367c7a63001m07i0Xj29NfUfe",
+          "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ",
+          "messageID": "msg_0367c4b2c001PoYR0FRGvEdqJ8"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "6b7d79dfe44bedf9a585ed83b5086fa536997cb9",
+          "type": "step-finish",
+          "tokens": {
+            "total": 96885,
+            "input": 564,
+            "output": 641,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 95680
+            }
+          },
+          "cost": 0,
+          "id": "prt_0367ca0a0001G0vIyVwUnw7S72",
+          "sessionID": "ses_fc9909f24ffenxiSun4uaXm6nZ",
+          "messageID": "msg_0367c4b2c001PoYR0FRGvEdqJ8"
         }
       ]
     }
