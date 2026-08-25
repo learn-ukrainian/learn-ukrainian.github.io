@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "798cdc03ca40",
+  "strategy": "manual-commit",
+  "branch": "ox-alpha/timeout-burndown-7213-s13",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "scripts/wiki/backfill_generated_by_model.py",
+    "scripts/wiki/diagnostics/corpus_gaps/audit.py",
+    "scripts/wiki/mlx_bridge.py",
+    "scripts/wiki/rebuild.py",
+    "tests/test_wiki_timeouts.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/79/8cdc03ca40/0/metadata.json",
+      "transcript": "/79/8cdc03ca40/0/full.jsonl",
+      "compact_transcript": "/79/8cdc03ca40/0/transcript.jsonl",
+      "content_hash": "/79/8cdc03ca40/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 94424,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3660544,
+    "output_tokens": 20230,
+    "api_call_count": 52
+  }
+}

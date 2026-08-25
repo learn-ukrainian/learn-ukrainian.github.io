@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "798cdc03ca40",
+  "session_id": "ses_fc9909f24ffenxiSun4uaXm6nZ",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T01:15:10.203263507Z",
+  "branch": "ox-alpha/timeout-burndown-7213-s13",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/wiki/backfill_generated_by_model.py",
+    "scripts/wiki/diagnostics/corpus_gaps/audit.py",
+    "scripts/wiki/mlx_bridge.py",
+    "scripts/wiki/rebuild.py",
+    "scripts/ci/subprocess_timeout_allowlist.txt",
+    "tests/test_wiki_timeouts.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "9aa770420e7c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 94424,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3660544,
+    "output_tokens": 20230,
+    "api_call_count": 52
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T01:15:10.132092828Z",
+    "agent_lines": 397,
+    "agent_removed": 36,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 397,
+    "total_lines_changed": 433,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
