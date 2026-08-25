@@ -35,11 +35,6 @@ scripts/open_dataset/hydrate.py::_download_with_gh::subprocess.run
 scripts/open_dataset/publish.py::ensure_release::subprocess.run
 scripts/open_dataset/publish.py::ensure_release::subprocess.run
 scripts/open_dataset/publish.py::upload_release_asset::subprocess.run
-scripts/practice_deck/publish.py::_download_release_asset::subprocess.run
-scripts/practice_deck/publish.py::_release_asset_names::subprocess.run
-scripts/practice_deck/publish.py::ensure_release::subprocess.run
-scripts/practice_deck/publish.py::ensure_release::subprocess.run
-scripts/practice_deck/publish.py::upload_release_asset::subprocess.run
 scripts/pre_commit/check_plan_immutability.py::_git_blob_exists::subprocess.run
 scripts/pre_commit/check_plan_immutability.py::_run_git::subprocess.run
 scripts/projects/open_model_data/phase3_heldout_label_transport.py::run_cycle002::subprocess.run

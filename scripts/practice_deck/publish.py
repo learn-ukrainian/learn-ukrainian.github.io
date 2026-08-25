@@ -38,6 +38,9 @@ DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-practice-deck.json.gz"
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
+GH_RELEASE_VIEW_TIMEOUT_SECONDS = 30.0
+GH_RELEASE_CREATE_TIMEOUT_SECONDS = 60.0
+GH_RELEASE_ASSET_TIMEOUT_SECONDS = 180.0
 KINDS = {
     "index": ("practice-index.{level}.json", "atlas-practice-index"),
     "lexemes": ("practice-lexemes.{level}.json", "atlas-practice-lexemes"),
@@ -55,6 +58,15 @@ KINDS = {
 
 class PracticeDeckPublishError(RuntimeError):
     """Raised when the practice deck release asset cannot be built."""
+
+
+def _called_process_error_from_timeout(exc: subprocess.TimeoutExpired) -> subprocess.CalledProcessError:
+    return subprocess.CalledProcessError(
+        returncode=124,
+        cmd=exc.cmd,
+        output=exc.output,
+        stderr=exc.stderr,
+    )
 
 
 def _sha256(data: bytes) -> str:
@@ -238,29 +250,39 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
 
 
 def ensure_release(release_tag: str, repo: str) -> None:
-    existing = subprocess.run(
-        ["gh", "release", "view", release_tag, "--repo", repo],
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    try:
+        existing = subprocess.run(
+            ["gh", "release", "view", release_tag, "--repo", repo],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=GH_RELEASE_VIEW_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise PracticeDeckPublishError(
+            f"Timed out checking whether GitHub release {release_tag!r} exists"
+        ) from exc
     if existing.returncode == 0:
         return
-    subprocess.run(
-        [
-            "gh",
-            "release",
-            "create",
-            release_tag,
-            "--repo",
-            repo,
-            "--title",
-            "Atlas practice deck",
-            "--notes",
-            "Release asset storage for generated Atlas practice deck shards.",
-        ],
-        check=True,
-    )
+    try:
+        subprocess.run(
+            [
+                "gh",
+                "release",
+                "create",
+                release_tag,
+                "--repo",
+                repo,
+                "--title",
+                "Atlas practice deck",
+                "--notes",
+                "Release asset storage for generated Atlas practice deck shards.",
+            ],
+            check=True,
+            timeout=GH_RELEASE_CREATE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise _called_process_error_from_timeout(exc) from exc
 
 
 def upload_release_asset(
@@ -289,16 +311,23 @@ def upload_release_asset(
         ]
         if clobber:
             command.append("--clobber")
-        subprocess.run(command, check=True)
+        try:
+            subprocess.run(command, check=True, timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS)
+        except subprocess.TimeoutExpired as exc:
+            raise _called_process_error_from_timeout(exc) from exc
 
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
-    result = subprocess.run(
-        ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=GH_RELEASE_VIEW_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise _called_process_error_from_timeout(exc) from exc
     payload = json.loads(result.stdout)
     assets = payload.get("assets", [])
     if not isinstance(assets, list):
@@ -312,11 +341,15 @@ def _download_release_asset(
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
 ) -> bytes:
-    result = subprocess.run(
-        ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
-        check=True,
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
+            check=True,
+            capture_output=True,
+            timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise _called_process_error_from_timeout(exc) from exc
     return result.stdout
 
 
@@ -418,21 +451,36 @@ def publish_practice_deck(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Publish the Atlas practice deck release asset.")
-    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR)
-    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP)
-    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER)
-    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
-    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
-    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
-    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
-    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
-    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS)
-    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS)
-    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
-    parser.add_argument("--curated-membership", type=Path)
-    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
-    parser.add_argument("--repo", default=DEFAULT_REPO)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build and publish the hash-pinned Atlas practice deck release asset.\n"
+            "Use after rebuilding the practice shards; use --dry-run to validate without publishing."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/publish.py --dry-run\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/publish.py "
+            "--release-tag atlas-practice-deck --repo learn-ukrainian/learn-ukrainian.github.io\n\n"
+            "Outputs: writes the gzip asset and pointer locally; without --dry-run, uploads GitHub Release assets.\n"
+            "Exit codes: 0 on success; non-zero when validation, GitHub, or filesystem work fails.\n"
+            "Related: practice-deck generation and timeout guard for issue #7213."
+        ),
+    )
+    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR, help="Shard directory (default: %(default)s).")
+    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP, help="Output gzip package path (default: %(default)s).")
+    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Output pointer JSON path (default: %(default)s).")
+    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Public Atlas DB input (default: %(default)s).")
+    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze-source JSON input (default: %(default)s).")
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence-inventory JSON input (default: %(default)s).")
+    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS, help="Heritage-pair YAML input (default: %(default)s).")
+    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS, help="Paronym-pair YAML input (default: %(default)s).")
+    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS, help="Antonym-pair YAML input (default: %(default)s).")
+    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS, help="Homonym-pair YAML input (default: %(default)s).")
+    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Synonym-verdict YAML input (default: %(default)s).")
+    parser.add_argument("--curated-membership", type=Path, help="Optional curated-membership JSON input (default: none).")
+    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG, help="GitHub Release tag (default: %(default)s).")
+    parser.add_argument("--repo", default=DEFAULT_REPO, help="GitHub repository in OWNER/REPO form (default: %(default)s).")
     parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading/writing pointer")
     args = parser.parse_args()
     pointer = publish_practice_deck(
