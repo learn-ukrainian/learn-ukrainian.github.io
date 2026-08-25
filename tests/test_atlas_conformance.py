@@ -1,17 +1,20 @@
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 
 import pytest
 import yaml
 
+import scripts.lexicon.manifest_io as manifest_io
 from scripts.audit.validate_atlas_conformance import HeritageLemmaLookup, VesumLemmaLookup, validate
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
-from scripts.lexicon.manifest_io import load_manifest
 from scripts.lexicon.migrate_source_labels import migrate_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
+POINTER_PATH = MANIFEST_PATH.with_name("lexicon-manifest.pointer.json")
 VESUM_PATH = PROJECT_ROOT / "data" / "vesum.db"
 SOURCES_PATH = PROJECT_ROOT / "data" / "sources.db"
 CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
@@ -55,8 +58,35 @@ def _gates_for(
     return [violation.gate for violation in violations]
 
 
+def _pinned_local_manifest(
+    manifest_path: Path = MANIFEST_PATH, pointer_path: Path = POINTER_PATH
+) -> dict | None:
+    """Return the pinned release manifest from the local file only, or None.
+
+    #7248: the manifest is gitignored and hydrated at build time from a GitHub
+    Release asset (``manifest_io.load_manifest`` downloads it when the local file
+    is absent or diverges from the committed pointer). Unit tests run under the
+    socket-guard, so this test must never trigger that hydrate path — it reads the
+    local file iff it exactly matches the pointer's pinned ``json_sha256``, and
+    otherwise returns None so the caller can skip. CI restores/rehydrates the
+    pinned file before pytest, so full real conformance still runs there.
+    """
+    if not manifest_path.exists():
+        return None
+    data = manifest_path.read_bytes()
+    pointer = json.loads(pointer_path.read_text(encoding="utf-8"))
+    if hashlib.sha256(data).hexdigest() != pointer.get("json_sha256"):
+        return None
+    return json.loads(data.decode("utf-8"))
+
+
 def test_real_lexicon_manifest_conforms_to_atlas_gates():
-    manifest = load_manifest(MANIFEST_PATH)
+    manifest = _pinned_local_manifest()
+    if manifest is None:
+        pytest.skip(
+            "Atlas manifest not hydrated locally (or stale vs pointer); hydrate with: "
+            + manifest_io.RECOVERY_COMMAND
+        )
     migrate_manifest(manifest)
     curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
     heritage = SOURCES_PATH if SOURCES_PATH.exists() else None
@@ -74,6 +104,37 @@ def test_real_lexicon_manifest_conforms_to_atlas_gates():
     # (synonym_verdicts, grinchyshyn-1986, ukr-mova.in.ua) until corpus map expansion
     # and migrate_source_labels.py --write (#5163); enforce every other gate here.
     assert [v for v in violations if v.gate != "unmapped_source_label"] == []
+
+
+def test_pinned_local_manifest_loader_never_downloads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """#7248 regression: with the socket-guard active, the conformance test's
+    manifest loader must resolve from the local pinned file or return None —
+    never attempt a live github.com hydrate (which would raise SocketBlockedError).
+    """
+    def _boom(*args: object, **kwargs: object) -> bytes:
+        raise AssertionError("atlas conformance loader attempted a live download")
+
+    monkeypatch.setattr(manifest_io, "_download", _boom)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+
+    # Local file absent → None, no download attempt.
+    assert _pinned_local_manifest(manifest_path, pointer_path) is None
+
+    # Local file stale vs the pointer's pinned sha256 → None, no download attempt.
+    manifest_path.write_bytes(b'{"entries": []}')
+    pointer_path.write_text(json.dumps({"json_sha256": "0" * 64}), encoding="utf-8")
+    assert _pinned_local_manifest(manifest_path, pointer_path) is None
+
+    # Local file matching the pinned sha256 → served locally, no download attempt.
+    data = b'{"entries": []}'
+    manifest_path.write_bytes(data)
+    pointer_path.write_text(
+        json.dumps({"json_sha256": hashlib.sha256(data).hexdigest()}), encoding="utf-8"
+    )
+    assert _pinned_local_manifest(manifest_path, pointer_path) == {"entries": []}
 
 
 def test_clean_fixture_passes_all_gates():
