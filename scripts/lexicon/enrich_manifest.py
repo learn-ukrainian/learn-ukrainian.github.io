@@ -100,6 +100,7 @@ from scripts.lexicon.source_attribution import (
     SYNONYMS_LABEL,
     VTS_ACADEMIC_LABEL,
     VTS_SHORT_LABEL,
+    WIKIDATA_LABEL,
     attach_official_url,
     join_academic_source_labels,
     normalize_academic_label,
@@ -241,6 +242,9 @@ _GOROH_TRANSLATION_SOURCE = GOROH_LABEL
 _E2U_TRANSLATION_SOURCE = E2U_LABEL
 _E2U_DELAY_SECONDS = float(os.environ.get("LEXICON_E2U_DELAY", "0.34"))
 _E2U_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup)"
+_WIKIDATA_TRANSLATION_SOURCE = WIKIDATA_LABEL
+_WIKIDATA_DELAY_SECONDS = float(os.environ.get("LEXICON_WIKIDATA_DELAY", "0.34"))
+_WIKIDATA_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)"
 _SLOVNYK_BASE = "https://slovnyk.me"
 # v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
 # written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
@@ -333,6 +337,7 @@ _SYNONYM_LABEL_RE = re.compile(
 
 _last_slovnyk_fetch = 0.0
 _last_e2u_fetch = 0.0
+_last_wikidata_fetch = 0.0
 _stressifier: Any | None = None
 
 # Same-sense A1 allowlist. A synonym is emitted only when it is both present in
@@ -1530,6 +1535,15 @@ def _polite_e2u_delay() -> None:
         if elapsed < _E2U_DELAY_SECONDS:
             time.sleep(_E2U_DELAY_SECONDS - elapsed)
     _last_e2u_fetch = time.monotonic()
+
+
+def _polite_wikidata_delay() -> None:
+    global _last_wikidata_fetch
+    if _last_wikidata_fetch:
+        elapsed = time.monotonic() - _last_wikidata_fetch
+        if elapsed < _WIKIDATA_DELAY_SECONDS:
+            time.sleep(_WIKIDATA_DELAY_SECONDS - elapsed)
+    _last_wikidata_fetch = time.monotonic()
 
 
 def _parse_retry_after(value: str | None) -> float | None:
@@ -6536,6 +6550,322 @@ def _e2u_translation(lemma: str, *, entry_pos: object = None) -> dict[str, objec
     return None
 
 
+def _wikidata_get_text(prop_dict: Any, lang: str) -> str:
+    if not isinstance(prop_dict, dict):
+        return ""
+    val = prop_dict.get(lang)
+    if isinstance(val, dict):
+        return str(val.get("value") or "").strip()
+    if isinstance(val, str):
+        return val.strip()
+    return ""
+
+
+def _wikidata_get_sitelink_title(sitelinks: Any, site: str) -> str:
+    if not isinstance(sitelinks, dict):
+        return ""
+    val = sitelinks.get(site)
+    if isinstance(val, dict):
+        return str(val.get("title") or "").strip()
+    if isinstance(val, str):
+        return val.strip()
+    return ""
+
+
+def _wikidata_get_p31_qids(claims: Any) -> list[str]:
+    if not isinstance(claims, dict):
+        return []
+    p31 = claims.get("P31")
+    if not p31:
+        return []
+    qids: list[str] = []
+    if isinstance(p31, list):
+        for item in p31:
+            if isinstance(item, str):
+                qids.append(item)
+            elif isinstance(item, dict):
+                if "id" in item:
+                    qids.append(str(item["id"]))
+                elif "mainsnak" in item and isinstance(item["mainsnak"], dict):
+                    snak = item["mainsnak"]
+                    datavalue = snak.get("datavalue")
+                    if isinstance(datavalue, dict):
+                        val = datavalue.get("value")
+                        if isinstance(val, dict) and "id" in val:
+                            qids.append(str(val["id"]))
+                        elif isinstance(val, str):
+                            qids.append(val)
+    return qids
+
+
+def _fold_wikidata_translit(text: str) -> str:
+    s = text.casefold()
+    s = re.sub(r"['ʼ`\-\s\(\)\[\]\"«».,;:!?]+", "", s)
+    s = s.replace("shch", "sh").replace("sch", "sh")
+    s = s.replace("kh", "h").replace("gh", "h")
+    s = s.replace("zh", "z").replace("ts", "c").replace("ch", "c")
+    s = s.replace("ya", "ia").replace("yu", "iu").replace("ye", "ie")
+    s = s.replace("g", "h").replace("y", "i").replace("j", "i")
+    return s
+
+
+def _is_wikidata_transliteration(uk_text: str, en_text: str) -> bool:
+    from scripts.etymology.transliterate import transliterate
+
+    uk_translit = transliterate(uk_text)
+    uk_folded = _fold_wikidata_translit(uk_translit)
+    en_folded = _fold_wikidata_translit(en_text)
+    if uk_folded and uk_folded == en_folded:
+        return True
+    if len(uk_folded) >= 4:
+        for word in re.findall(r"[A-Za-z0-9'ʼ`\-]+", en_text):
+            if _fold_wikidata_translit(word) == uk_folded:
+                return True
+    return False
+
+
+def _is_wikidata_scientific_binomial(en_label: str, entity: dict[str, Any]) -> bool:
+    s = en_label.strip()
+    p31_qids = _wikidata_get_p31_qids(entity.get("claims"))
+    if "Q16521" in p31_qids:
+        return True
+    uk_desc = _wikidata_get_text(entity.get("descriptions"), "uk").casefold()
+    en_desc = _wikidata_get_text(entity.get("descriptions"), "en").casefold()
+    taxon_desc_pattern = r"\b(?:species of|genus of|subspecies of|family of|taxon|вид |рід )\b"
+    if re.search(taxon_desc_pattern, uk_desc) or re.search(taxon_desc_pattern, en_desc):
+        return True
+    if re.match(r"^[A-Z][a-z]+\s+[A-Z][a-z]+$", s):
+        return True
+    if re.match(r"^[A-Z][a-z]+\s+[a-z]+$", s) and (
+        "reptile" in en_desc
+        or "plant" in en_desc
+        or "animal" in en_desc
+        or "bird" in en_desc
+        or "fish" in en_desc
+        or "insect" in en_desc
+        or "fungus" in en_desc
+        or "рослин" in uk_desc
+        or "тварин" in uk_desc
+        or "птахів" in uk_desc
+        or "риб" in uk_desc
+        or "комах" in uk_desc
+        or "плазунів" in uk_desc
+    ):
+        return True
+    return False
+
+
+_WIKIDATA_NOISE_P31 = frozenset({
+    "Q4167410",   # disambiguation page
+    "Q13406463",  # list article
+    "Q11266439",  # template
+    "Q11424",     # film
+    "Q202866",    # animated film
+    "Q24856",     # film series
+    "Q5398426",   # television series
+    "Q526877",    # television program
+    "Q21191270",  # TV episode
+    "Q7725634",   # literary work
+    "Q571",       # book
+    "Q8261",      # novel
+    "Q47461344",  # written work
+    "Q7366",      # song
+    "Q482994",    # album
+    "Q134556",    # single
+    "Q2188189",   # musical work
+    "Q523",       # star
+    "Q67206785",  # Bayer object
+    "Q3863",      # asteroid
+    "Q318",       # galaxy
+    "Q16521",     # taxon
+    "Q95074",     # fictional character
+    "Q15632617",  # fictional entity
+    "Q21070568",  # character in work
+})
+
+_WIKIDATA_TITLE_QUALIFIER_RE = re.compile(
+    r"\((?:фільм|кінофільм|телесеріал|серіал|пісня|альбом|сингл|зоря|зірка|сузір['ʼ’]?я|астероїд|значення|film|tv series|television series|song|album|single|star|constellation|asteroid|disambiguation)\b",
+    re.IGNORECASE,
+)
+
+_WIKIDATA_UK_NOISE_PATTERNS = (
+    re.compile(r"\bфільм\b", re.IGNORECASE),
+    re.compile(r"\bкінофільм\b", re.IGNORECASE),
+    re.compile(r"\bтелефільм\b", re.IGNORECASE),
+    re.compile(r"\bмультфільм\b", re.IGNORECASE),
+    re.compile(r"\bкороткометраж", re.IGNORECASE),
+    re.compile(r"\bтелесеріал\b", re.IGNORECASE),
+    re.compile(r"\bсеріал\b", re.IGNORECASE),
+    re.compile(r"\bмінісеріал\b", re.IGNORECASE),
+    re.compile(r"\bміні-серіал\b", re.IGNORECASE),
+    re.compile(r"\bвебсеріал\b", re.IGNORECASE),
+    re.compile(r"\bпісня\b", re.IGNORECASE),
+    re.compile(r"\bсингл\b", re.IGNORECASE),
+    re.compile(r"\bальбом\b", re.IGNORECASE),
+    re.compile(r"\bдиск\b", re.IGNORECASE),
+    re.compile(r"\bтрек\b", re.IGNORECASE),
+    re.compile(r"\bсаундтрек\b", re.IGNORECASE),
+    re.compile(r"\bзоря\b", re.IGNORECASE),
+    re.compile(r"\bзірка\b", re.IGNORECASE),
+    re.compile(r"\bастероїд\b", re.IGNORECASE),
+    re.compile(r"\bгалактика\b", re.IGNORECASE),
+    re.compile(r"сузір['ʼ’]?я", re.IGNORECASE),
+    re.compile(r"\bкомета\b", re.IGNORECASE),
+    re.compile(r"\bекзопланета\b", re.IGNORECASE),
+    re.compile(r"\bповість\b", re.IGNORECASE),
+    re.compile(r"\bроман\b", re.IGNORECASE),
+    re.compile(r"\bоповідання\b", re.IGNORECASE),
+    re.compile(r"\bп['ʼ’]?єса\b", re.IGNORECASE),
+    re.compile(r"\bпоема\b", re.IGNORECASE),
+    re.compile(r"сторінка значень", re.IGNORECASE),
+    re.compile(r"\bперсонаж\b", re.IGNORECASE),
+)
+
+_WIKIDATA_EN_NOISE_PATTERNS = (
+    re.compile(r"\bfilm\b", re.IGNORECASE),
+    re.compile(r"\bmovie\b", re.IGNORECASE),
+    re.compile(r"\btelevision series\b", re.IGNORECASE),
+    re.compile(r"\btv series\b", re.IGNORECASE),
+    re.compile(r"\bminiseries\b", re.IGNORECASE),
+    re.compile(r"\bweb series\b", re.IGNORECASE),
+    re.compile(r"\bepisode\b", re.IGNORECASE),
+    re.compile(r"\bsong\b", re.IGNORECASE),
+    re.compile(r"\bsingle\b", re.IGNORECASE),
+    re.compile(r"\balbum\b", re.IGNORECASE),
+    re.compile(r"\btrack\b", re.IGNORECASE),
+    re.compile(r"\bsoundtrack\b", re.IGNORECASE),
+    re.compile(r"\bstar\b", re.IGNORECASE),
+    re.compile(r"\basteroid\b", re.IGNORECASE),
+    re.compile(r"\bgalaxy\b", re.IGNORECASE),
+    re.compile(r"\bconstellation\b", re.IGNORECASE),
+    re.compile(r"\bcomet\b", re.IGNORECASE),
+    re.compile(r"\bexoplanet\b", re.IGNORECASE),
+    re.compile(r"\bnovella\b", re.IGNORECASE),
+    re.compile(r"\bnovel\b", re.IGNORECASE),
+    re.compile(r"\bshort story\b", re.IGNORECASE),
+    re.compile(r"\bplay by\b", re.IGNORECASE),
+    re.compile(r"\bpoem by\b", re.IGNORECASE),
+    re.compile(r"\bbook by\b", re.IGNORECASE),
+    re.compile(r"\bdisambiguation page\b", re.IGNORECASE),
+    re.compile(r"\bfictional character\b", re.IGNORECASE),
+    re.compile(r"\bcharacter in\b", re.IGNORECASE),
+)
+
+
+def _is_wikidata_noise_entity(entity: dict[str, Any]) -> bool:
+    p31_qids = set(_wikidata_get_p31_qids(entity.get("claims")))
+    if p31_qids & _WIKIDATA_NOISE_P31:
+        return True
+
+    uk_label = _wikidata_get_text(entity.get("labels"), "uk")
+    en_label = _wikidata_get_text(entity.get("labels"), "en")
+    uk_sitelink = _wikidata_get_sitelink_title(entity.get("sitelinks"), "ukwiki")
+    uk_desc = _wikidata_get_text(entity.get("descriptions"), "uk")
+    en_desc = _wikidata_get_text(entity.get("descriptions"), "en")
+
+    all_titles = f"{uk_label} {en_label} {uk_sitelink}"
+    if _WIKIDATA_TITLE_QUALIFIER_RE.search(all_titles):
+        return True
+
+    uk_text = f"{uk_label} {uk_desc}"
+    en_text = f"{en_label} {en_desc}"
+
+    if any(pat.search(uk_text) for pat in _WIKIDATA_UK_NOISE_PATTERNS):
+        return True
+    if any(pat.search(en_text) for pat in _WIKIDATA_EN_NOISE_PATTERNS):
+        return True
+
+    return False
+
+
+@functools.cache
+def query_wikidata_uk_en(lemma: str) -> list[dict[str, Any]]:
+    """Wrapper around rag.source_query Wikidata helpers to support caching and unit test mocking."""
+    if _phase1_offline_mode():
+        return []
+
+    try:
+        _polite_wikidata_delay()
+        from scripts.rag.source_query import wikidata_get_entities, wikidata_search_entities
+
+        headers = {"User-Agent": _WIKIDATA_USER_AGENT}
+        search_hits = wikidata_search_entities(lemma, language="uk", limit=5, headers=headers)
+        if not search_hits:
+            return []
+        qids = [str(hit.get("id")) for hit in search_hits if hit.get("id")]
+        if not qids:
+            return []
+        _polite_wikidata_delay()
+        entities = wikidata_get_entities(
+            qids,
+            languages=["uk", "en"],
+            props=["labels", "descriptions", "claims", "sitelinks"],
+            headers=headers,
+        )
+        return [entities[qid] for qid in qids if qid in entities and isinstance(entities[qid], dict)]
+    except Exception:
+        return []
+
+
+def _wikidata_translation(lemma: str) -> dict[str, object] | None:
+    """English translations for a Ukrainian lemma via Wikidata (#4387)."""
+    for variant in _split_lemma_variants(lemma):
+        norm_variant = _strip_stress(variant).strip().casefold()
+        if not norm_variant:
+            continue
+        entities = query_wikidata_uk_en(variant)
+        if not entities:
+            continue
+        distinct_en_labels: dict[str, tuple[str, str]] = {}
+        for ent in entities:
+            if not isinstance(ent, dict):
+                continue
+            qid = str(ent.get("id") or "").strip()
+            if not qid:
+                continue
+
+            # Step 2: Keep iff labels.uk or sitelinks.ukwiki.title exact-equals the variant
+            uk_label = _wikidata_get_text(ent.get("labels"), "uk")
+            uk_sitelink = _wikidata_get_sitelink_title(ent.get("sitelinks"), "ukwiki")
+            uk_label_norm = _strip_stress(uk_label).strip().casefold()
+            uk_sitelink_norm = _strip_stress(uk_sitelink).strip().casefold()
+            if uk_label_norm != norm_variant and uk_sitelink_norm != norm_variant:
+                continue
+
+            # Step 3: Drop conditions
+            en_label = _wikidata_get_text(ent.get("labels"), "en")
+            if not en_label or not _is_learner_english_text(en_label):
+                continue
+            if _is_wikidata_scientific_binomial(en_label, ent):
+                continue
+            if _is_wikidata_transliteration(norm_variant, en_label):
+                continue
+            if _is_wikidata_noise_entity(ent):
+                continue
+
+            clean_hw = _clean_ukreng_gloss(en_label) or en_label
+            if not clean_hw or not _is_learner_english_text(clean_hw):
+                continue
+            if len(clean_hw.split()) > 6:
+                continue
+
+            key = clean_hw.casefold()
+            if key not in distinct_en_labels:
+                distinct_en_labels[key] = (clean_hw, qid)
+
+        # Step 4: exactly 1 distinct English label -> return it
+        if len(distinct_en_labels) == 1:
+            label, qid = next(iter(distinct_en_labels.values()))
+            block = {
+                "en": [label],
+                "source": _WIKIDATA_TRANSLATION_SOURCE,
+                "source_url": f"https://www.wikidata.org/wiki/{qid}",
+            }
+            return block
+
+    return None
+
+
 def _translation(
     conn: sqlite3.Connection,
     lemma: str,
@@ -6555,7 +6885,7 @@ def _translation(
     existing learner-gloss hint from the source entry. When slovnyk.me has a cached or
     fetched ukreng entry, that is used next. When all previous sources miss, fall back
     to goroh.pp.ua translation (#6876). When goroh misses, fall back to e2u.org.ua
-    translation (#4387). Returns up to six glosses.
+    translation (#4387). When e2u misses, fall back to Wikidata (#4387). Returns up to six glosses.
     """
     for variant in _split_lemma_variants(lemma):
         rows = _dmklinger_lookup(conn, _dmklinger_key(variant))
@@ -6597,6 +6927,9 @@ def _translation(
     e2u_translation = _e2u_translation(lemma, entry_pos=entry_pos)
     if e2u_translation:
         return e2u_translation
+    wikidata_translation = _wikidata_translation(lemma)
+    if wikidata_translation:
+        return wikidata_translation
 
     for variant in _split_lemma_variants(lemma):
         curated = _CURATED_LEARNER_TRANSLATIONS.get(_lookup_key(variant).casefold())

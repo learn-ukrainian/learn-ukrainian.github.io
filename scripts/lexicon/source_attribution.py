@@ -60,6 +60,7 @@ HOLOSKEVYCH_LABEL = "Правописний словник Голоскевич�
 ORTHOEPY_LABEL = "Орфоепічний словник української мови"
 GOROH_LABEL = "Горох (переклад)"
 E2U_LABEL = "e2u.org.ua (Rysin, Starko et al.)"
+WIKIDATA_LABEL = "Wikidata"
 
 
 RELATION_PAIRS_PREFIX = "relation_pairs/"
@@ -104,6 +105,9 @@ LEGACY_LABEL_ALIASES: dict[str, str] = {
     "e2u: Переклад": E2U_LABEL,
     "E2U": E2U_LABEL,
     E2U_LABEL: E2U_LABEL,
+    "wikidata": WIKIDATA_LABEL,
+    "Wikidata": WIKIDATA_LABEL,
+    WIKIDATA_LABEL: WIKIDATA_LABEL,
 }
 
 KNOWN_ACADEMIC_LABELS = frozenset(
@@ -134,6 +138,7 @@ KNOWN_ACADEMIC_LABELS = frozenset(
         ORTHOEPY_LABEL,
         GOROH_LABEL,
         E2U_LABEL,
+        WIKIDATA_LABEL,
     }
 )
 
@@ -255,6 +260,8 @@ def normalize_academic_label(label: str) -> str:
         return GOROH_LABEL
     if cleaned.casefold().startswith("e2u.org.ua") or cleaned.casefold() == "e2u":
         return E2U_LABEL
+    if cleaned.casefold() == "wikidata" or cleaned.casefold().startswith("wikidata.org"):
+        return WIKIDATA_LABEL
     if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
         return _remap_relation_pairs_label(cleaned)
     if cleaned in LEGACY_LABEL_ALIASES:
