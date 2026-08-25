@@ -23,17 +23,29 @@ METADATA_ONLY_FIELDS = {
     "prerequisites",
 }
 YAML_BACKUP_SUFFIXES = (".yaml.bak", ".yml.bak", ".yaml.orig", ".yml.orig")
+_GIT_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
 
 
 def _run_git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a git command from the target repository."""
-    result = subprocess.run(
-        ["git", *args],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    command = ["git", *args]
+    try:
+        result = subprocess.run(
+            command,
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        result = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=exc.stdout or "",
+            stderr=exc.stderr or f"git {' '.join(args)} timed out after {exc.timeout}s",
+        )
     if check and result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or f"git {' '.join(args)} failed")
     return result
@@ -62,14 +74,22 @@ def _is_yaml_backup_path(path: str) -> bool:
 
 
 def _git_blob_exists(repo_root: Path, spec: str) -> bool:
-    """Return whether a git object spec resolves successfully."""
-    result = subprocess.run(
-        ["git", "cat-file", "-e", spec],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    """Return whether a git object spec resolves successfully.
+
+    A timed-out probe counts as missing (falsy) so the pre-commit hook
+    degrades to skipping the comparison instead of hanging or raising.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "cat-file", "-e", spec],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return False
     return result.returncode == 0
 
 

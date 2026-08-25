@@ -37,6 +37,9 @@ except ImportError:  # scripts/ on sys.path (stripped flavor)
 
 __all__ = ["UnexpectedEntry", "main", "scan_unexpected_root_entries"]
 
+_GIT_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
+
 
 class UnexpectedEntry:
     """One top-level repo-root entry that git does not expect."""
@@ -56,13 +59,23 @@ class UnexpectedEntry:
 
 
 def _run_git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", "-C", str(root), *args],
-        capture_output=True,
-        text=True,
-        check=False,
-        env=sanitized_git_env(),
-    )
+    command = ["git", "-C", str(root), *args]
+    try:
+        return subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=sanitized_git_env(),
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=exc.stdout or "",
+            stderr=exc.stderr or f"TimeoutExpired after {exc.timeout}s",
+        )
 
 
 def _tracked_top_level_names(root: Path) -> set[str]:

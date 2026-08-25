@@ -24,6 +24,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_WORKTREE_STALE_HOURS = 72
 DEFAULT_SESSION_STALE_DAYS = 14
+_GIT_TIMEOUT_SECONDS = 30
 
 
 @dataclass(frozen=True)
@@ -37,13 +38,17 @@ class WorktreeReport:
 
 
 def _git(args: list[str], *, cwd: Path) -> str:
-    result = subprocess.run(
-        ["git", *args],
-        cwd=str(cwd),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=str(cwd),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        return ""
     return (result.stdout or "").strip()
 
 
