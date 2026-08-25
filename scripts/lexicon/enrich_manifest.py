@@ -6636,23 +6636,24 @@ def _is_wikidata_scientific_binomial(en_label: str, entity: dict[str, Any]) -> b
         return True
     if re.match(r"^[A-Z][a-z]+\s+[A-Z][a-z]+$", s):
         return True
-    if re.match(r"^[A-Z][a-z]+\s+[a-z]+$", s) and (
-        "reptile" in en_desc
-        or "plant" in en_desc
-        or "animal" in en_desc
-        or "bird" in en_desc
-        or "fish" in en_desc
-        or "insect" in en_desc
-        or "fungus" in en_desc
-        or "рослин" in uk_desc
-        or "тварин" in uk_desc
-        or "птахів" in uk_desc
-        or "риб" in uk_desc
-        or "комах" in uk_desc
-        or "плазунів" in uk_desc
-    ):
-        return True
-    return False
+    return bool(
+        re.match(r"^[A-Z][a-z]+\s+[a-z]+$", s)
+        and (
+            "reptile" in en_desc
+            or "plant" in en_desc
+            or "animal" in en_desc
+            or "bird" in en_desc
+            or "fish" in en_desc
+            or "insect" in en_desc
+            or "fungus" in en_desc
+            or "рослин" in uk_desc
+            or "тварин" in uk_desc
+            or "птахів" in uk_desc
+            or "риб" in uk_desc
+            or "комах" in uk_desc
+            or "плазунів" in uk_desc
+        )
+    )
 
 
 _WIKIDATA_NOISE_P31 = frozenset({
@@ -6772,10 +6773,7 @@ def _is_wikidata_noise_entity(entity: dict[str, Any]) -> bool:
 
     if any(pat.search(uk_text) for pat in _WIKIDATA_UK_NOISE_PATTERNS):
         return True
-    if any(pat.search(en_text) for pat in _WIKIDATA_EN_NOISE_PATTERNS):
-        return True
-
-    return False
+    return any(pat.search(en_text) for pat in _WIKIDATA_EN_NOISE_PATTERNS)
 
 
 @functools.cache
