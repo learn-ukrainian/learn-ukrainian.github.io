@@ -36,9 +36,9 @@ repos:
     hooks:
       - id: ruff
         name: ruff (lint)
-        # CI runs `ruff check scripts/` — match that here.
+        # CI runs `ruff check scripts/ tests/ agents_extensions/ dashboards/` — match that here.
         args: [--config=pyproject.toml]
-        files: ^scripts/.*\.py$
+        files: ^(scripts|tests|agents_extensions|dashboards)/.*\.py$
 
   # --- Gitleaks: prevent secrets from ever being committed ---
   # The repository already has a .gitleaks.toml allowlist for the

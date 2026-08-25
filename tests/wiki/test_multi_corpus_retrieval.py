@@ -10,14 +10,13 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+from wiki import dense_rerank, sources_db
 from wiki.embedding_manifest import (
     LEGACY_SHIPPED_CONFIG,
     EmbeddingManifest,
     UnitSpecInput,
     append_shard,
 )
-
-from wiki import dense_rerank, sources_db
 
 
 class FakeTokenizer:

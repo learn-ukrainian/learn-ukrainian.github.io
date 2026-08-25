@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import patch
 
 from scripts.ai_agent_bridge._review_pr_thrash import (
-    ThrashDecision,
     evaluate_formal_cf_thrash,
     github_actions_outaged,
 )

@@ -219,7 +219,7 @@ def _verify_step_reachability(spec: dict[str, Any]) -> None:
         sh_prog = cmd_argv[2] if len(cmd_argv) > 2 else " ".join(cmd_argv)
         passthrough = KNOWN_PASSTHROUGH_VOCABULARY.get((trail_id, step_id), set())
 
-        for trans_key in step["transitions"].keys():
+        for trans_key in step["transitions"]:
             is_literal = trans_key in sh_prog
             is_passthrough = trans_key in passthrough
             assert is_literal or is_passthrough, (
