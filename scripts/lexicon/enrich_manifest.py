@@ -6822,12 +6822,10 @@ def _wikidata_translation(lemma: str) -> dict[str, object] | None:
             if not qid:
                 continue
 
-            # Step 2: Keep iff labels.uk or sitelinks.ukwiki.title exact-equals the variant
-            uk_label = _wikidata_get_text(ent.get("labels"), "uk")
+            # Step 2: Keep iff sitelinks.ukwiki.title exact-equals the variant
             uk_sitelink = _wikidata_get_sitelink_title(ent.get("sitelinks"), "ukwiki")
-            uk_label_norm = _strip_stress(uk_label).strip().casefold()
             uk_sitelink_norm = _strip_stress(uk_sitelink).strip().casefold()
-            if uk_label_norm != norm_variant and uk_sitelink_norm != norm_variant:
+            if uk_sitelink_norm != norm_variant:
                 continue
 
             # Step 3: Drop conditions
