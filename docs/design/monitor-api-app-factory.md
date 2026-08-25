@@ -1,24 +1,25 @@
 # Monitor API App Factory + Typed Root/Store Context — Design Doc
 
-> **Version:** v6 (revised after five rounds of cross-family review)
+> **Version:** v7 (revised after six rounds of cross-family review)
 > **Status:** APPROVED (operator, 2026-08-25) — hardening, not new architecture; proceeds without
-> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v6
-> needs a sixth cross-family pass before step 0 is dispatched (see § 10).
+> further sign-off. Rollout is incremental and gated per family below. **Not yet re-reviewed** — v7
+> needs a seventh cross-family pass before step 0 is dispatched (see § 10).
 > **Author:** Claude (monitor-epic driver), formalizing the operator's sketch, then revising per
-> five rounds of codex review below.
+> six rounds of codex review below.
 > **Issue:** #7269 (parent epic #7177, milestone M5 hardening).
 > **Refs:** #7182 (OPSEC sweep design r2/r3 critique, task `critique-7182-design-r2-codex`, GPT-seat
 > critic origin of the proposal).
-> **Changelog:** v1→v5 each got a cross-family REJECT and fixed the prior round's findings — see §10
-> for the full five-round record. Round 5 confirmed the v5 middleware mechanism itself sound (it does
-> avoid the round-4 identity-equality problem) and confirmed the CORS/resilience/lifespan/handler
-> wiring otherwise matched `main.py`, but found the exception-handler snapshot incomplete — a bare
-> `FastAPI()` app registers 3 default handlers, one of which (`WebSocketRequestValidationError`)
-> `main.py` never overrides, so the real app has 4 exception-handler keys, not the 3 v5 claimed — and
-> flagged that the `repr()` fallback v5 proposed for the middleware comparison is unstable (Starlette's
-> middleware `repr()` embeds a function memory address). v6 (this version) fixes both, with every
-> value in §5.1 point 3 now independently confirmed by importing the real `scripts.api.main.app` and
-> inspecting it directly, not assumed — see §10's v5 entry.
+> **Changelog:** v1→v6 each got a cross-family REJECT and fixed the prior round's findings — see §10
+> for the full six-round record. Round 6 confirmed v6's 4-key exception-handler set and its
+> `.cls`/`.args`/`.kwargs` middleware attributes were both correct, but found two more issues: v6's
+> closing sentence for the exception-handler bullet stated the per-key custom/default origins
+> backwards from what the bullet's own preceding list already said correctly (a self-contradiction),
+> and the lifespan check was underspecified — importing the real app shows
+> `app.router.lifespan_context` is FastAPI's `merged_lifespan` wrapper, not `_lifespan` itself, so an
+> identity check against `_lifespan` would never pass. v7 (this version) fixes both — the
+> exception-handler bullet now states each key's origin explicitly rather than positionally, and the
+> lifespan check is redefined to call `_lifespan` directly (reusing an existing test pattern already
+> in this codebase) instead of comparing the wrapped object — see §10's v6 entry.
 
 ---
 
@@ -176,7 +177,7 @@ by itself is not precise enough to file a bounded sub-issue from, and lumping se
 worse. Guessing a finer split without reading what's actually inside those six files would just move
 the same ambiguity to a smaller-looking table.**
 
-### 5.1 Step 0 — Core (revised after the v2 through v5 reviews — see §10)
+### 5.1 Step 0 — Core (revised after the v2 through v6 reviews — see §10)
 
 `MonitorContext` + `create_app` + `production_context`/`fixture_context` per §4. **No router
 changes** — every router still reads its own module globals directly, exactly as today. This matters
@@ -239,15 +240,29 @@ for what step 0 can and cannot claim:
      - Expected exception-handler key set is **four** entries, not three — a bare `FastAPI()` app
        already registers `starlette.exceptions.HTTPException`, `fastapi.exceptions.
        RequestValidationError`, and `fastapi.exceptions.WebSocketRequestValidationError` by default;
-       `main.py`'s three `@app.exception_handler(...)` calls override the first two and add
-       `Exception` as a fourth, but never touch `WebSocketRequestValidationError` — it stays FastAPI's
-       default handler. Confirmed live: `app.exception_handlers` has exactly these 4 keys:
-       `StarletteHTTPException` (overridden), `RequestValidationError` (overridden),
-       `WebSocketRequestValidationError` (FastAPI default, untouched), `Exception` (added). An
-       exact-three-key assertion would fail against the real app; the test must assert all four,
-       each resolving to the correct handler function by identity (the first three to `main.py`'s
-       custom handlers, the fourth to FastAPI's own default).
-     - Expected lifespan: the same `_lifespan` function passed to `create_app`.
+       `main.py`'s three `@app.exception_handler(...)` calls override two of those three and add
+       `Exception` as a new fourth key. Confirmed live: `app.exception_handlers` has exactly these 4
+       keys, each resolving to the handler stated: `StarletteHTTPException` → `main.py`'s custom
+       handler (overridden), `RequestValidationError` → `main.py`'s custom handler (overridden),
+       `WebSocketRequestValidationError` → **FastAPI's own default** (the one key `main.py` does
+       *not* touch), `Exception` → `main.py`'s custom handler (added, not a default). An
+       exact-three-key assertion would fail against the real app; the test must assert all four keys
+       by name against this exact per-key origin, not a positional "first N vs. last one" shorthand
+       (a v6 draft of this same bullet stated the origins positionally and got them backwards — fixed
+       here by naming each key's origin explicitly instead).
+     - **Expected lifespan: do NOT compare `app.router.lifespan_context` for identity or structural
+       equality against `_lifespan`.** Verified live: `app.router.lifespan_context` is
+       `<function _merge_lifespan_context.<locals>.merged_lifespan at 0x...>` — FastAPI wraps
+       whatever `lifespan=` value it receives in a fresh closure on every app construction, so it is
+       never `_lifespan` itself (`is` returns `False`), and two independently-built apps' wrapped
+       closures are two different objects with nothing meaningful to structurally compare — the same
+       independent-construction trap as the middleware finding above, just one layer deeper. Instead,
+       reuse the pattern this codebase already uses to test `_lifespan` directly:
+       `tests/api/test_epics_registry_seed.py:380-384` calls `api_main._lifespan(api_main.app)` as an
+       async context manager, bypassing `app.router.lifespan_context` entirely. Step 0's test calls
+       `_lifespan(factory_app)` the same way against the factory-built app and asserts it still
+       behaves as expected — this tests the actual function's behavior, not an opaque wrapper's
+       identity.
      This sidesteps identity-equality entirely (comparing hardcoded values against real structures,
      not two live objects against each other) and needs no second app construction.
   4. Add a narrow, new unit test scoped to `MonitorContext`/`fixture_context` **in isolation** (not
@@ -336,14 +351,15 @@ table above — if the inventory contradicts a row here, the inventory wins and 
 ## 8. Sequencing
 
 1. Formalize this doc (done, v1, PR #7296).
-2. Cross-family design review (codex). **Done five times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
+2. Cross-family design review (codex). **Done six times — v1 REJECT (3 P1 + 1 P2), v2 REJECT
    (4 further findings, incl. a router-count error), v3 REJECT (a doc-consistency bug, a real
    app-wiring proof gap, and several precision nits), v4 REJECT (v4's fixes for §7/router-count/
    connect_sqlite-count/line-counts all held; the middleware-equality mechanism itself was flawed),
    v5 REJECT (the fixed mechanism was sound but its exception-handler snapshot was incomplete — 3
-   keys claimed, 4 actual — and its `repr()` fallback was unstable). v6 (this version) addresses all
-   five rounds (§10).**
-3. One more cross-family design review on this v6 revision before implementation starts. **Next
+   keys claimed, 4 actual — and its `repr()` fallback was unstable), v6 REJECT (the 4-key set and
+   middleware attribute names were both confirmed correct; a self-contradictory closing sentence and
+   an underspecified lifespan check remained). v7 (this version) addresses all six rounds (§10).**
+3. One more cross-family design review on this v7 revision before implementation starts. **Next
    step.**
 4. Implement step 0 (§5.1) — the dependency for every later step and the step most likely to reveal a
    wrong assumption in this doc before anything else builds on it.
@@ -508,3 +524,23 @@ table above — if the inventory contradicts a row here, the inventory wins and 
     temp directory, an environment limitation), but isolated FastAPI/Starlette probes completed —
     this session's own follow-up verification used the real `scripts.api.main.app` import directly and
     got the same 4-key, 2-middleware-entry result the reviewer described from its isolated probes.
+
+- **v6 (commit 5e9f595), reviewer: codex, verdict: REJECT.** Confirmed the 4-key exception-handler set
+  and the `.cls`/`.args`/`.kwargs` middleware attributes were both correct. Two findings:
+  1. **v6's closing sentence contradicted its own preceding list.** The bullet correctly listed each
+     key's origin (`StarletteHTTPException` overridden, `RequestValidationError` overridden,
+     `WebSocketRequestValidationError` FastAPI default, `Exception` added), then closed with "the
+     first three... custom handlers, the fourth... FastAPI's own default" — which is backwards: the
+     3rd listed key is the default, and the 4th is custom. **Fixed:** §5.1 point 3 now states each
+     key's origin explicitly next to the key name (no positional "first N / last one" shorthand that
+     can drift out of sync with the list above it).
+  2. **The lifespan check was underspecified and, as stated, would fail.** "Compare the same
+     `_lifespan` function passed to `create_app`" implied an identity or structural check against
+     `app.router.lifespan_context` — independently confirmed live that this is
+     `_merge_lifespan_context.<locals>.merged_lifespan`, a fresh FastAPI-generated closure per app
+     construction, never `_lifespan` itself (`is` returns `False`). **Fixed:** §5.1 point 3 now
+     explicitly says not to touch `app.router.lifespan_context`, and instead reuses an existing
+     pattern already in this codebase (`tests/api/test_epics_registry_seed.py:380-384`, which calls
+     `api_main._lifespan(api_main.app)` directly as an async context manager) — the same call against
+     the factory-built app, testing the actual function's behavior rather than an opaque wrapper's
+     identity.
