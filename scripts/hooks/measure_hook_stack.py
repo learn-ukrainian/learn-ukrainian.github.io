@@ -19,6 +19,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+_HOOK_TIMEOUT_SECONDS = 60
+_TIMEOUT_RETURN_CODE = 124
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -138,9 +140,20 @@ def _time_one(
     last_rc = 0
     for _ in range(max(1, repeats)):
         t0 = time.perf_counter()
-        proc = subprocess.run(argv, input=stdin, capture_output=True, env=env, cwd=ROOT)
+        try:
+            proc = subprocess.run(
+                argv,
+                input=stdin,
+                capture_output=True,
+                env=env,
+                cwd=ROOT,
+                timeout=_HOOK_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired:
+            last_rc = _TIMEOUT_RETURN_CODE
+        else:
+            last_rc = int(proc.returncode)
         samples.append((time.perf_counter() - t0) * 1000.0)
-        last_rc = int(proc.returncode)
     return {
         "name": name,
         "ms_median": round(statistics.median(samples), 2),

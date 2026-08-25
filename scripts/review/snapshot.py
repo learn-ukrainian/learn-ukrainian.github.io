@@ -71,6 +71,18 @@ MAX_CHANGED_FILE_BYTES = 16 * 1024 * 1024
 MAX_CHANGED_EVIDENCE_BYTES = 64 * 1024 * 1024
 MAX_COPY_DETECTION_COMPARISONS = 1_000_000
 GIT_EVIDENCE_TIMEOUT_SECONDS = 30.0
+_TIMEOUT_RETURN_CODE = 124
+
+
+def _timeout_stream(value: str | bytes | None, *, text: bool) -> str | bytes:
+    """Keep partial TimeoutExpired output in the CompletedProcess shape."""
+    if text:
+        if isinstance(value, bytes):
+            return value.decode("utf-8", errors="replace")
+        return value or ""
+    if isinstance(value, str):
+        return value.encode()
+    return value or b""
 
 
 def _is_git_binary_marker_line(line: bytes) -> bool:
@@ -308,15 +320,25 @@ def _run_git(
         "fetch.recurseSubmodules=false",
         *args,
     ]
-    result = subprocess.run(
-        cmd,
-        cwd=str(cwd),
-        capture_output=True,
-        text=text,
-        input=input_data,
-        env=_git_env(cwd),
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=str(cwd),
+            capture_output=True,
+            text=text,
+            input=input_data,
+            env=_git_env(cwd),
+            check=False,
+            timeout=GIT_EVIDENCE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        detail = f"TimeoutExpired after {GIT_EVIDENCE_TIMEOUT_SECONDS:g}s"
+        result = subprocess.CompletedProcess(
+            cmd,
+            _TIMEOUT_RETURN_CODE,
+            stdout=_timeout_stream(exc.stdout, text=text),
+            stderr=_timeout_stream(exc.stderr, text=text) or (detail if text else detail.encode()),
+        )
     if check and result.returncode != 0:
         detail = (
             result.stderr

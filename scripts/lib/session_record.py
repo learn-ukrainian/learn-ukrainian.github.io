@@ -24,6 +24,8 @@ else:
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = 1
 SESSION_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
+_GIT_TIMEOUT_SECONDS = 30
+_TIMEOUT_RETURN_CODE = 124
 ALLOWED_RECORD_KEYS = {
     "schema_version",
     "session_id",
@@ -58,6 +60,12 @@ ALLOWED_RECORD_KEYS = {
 }
 
 
+def _timeout_text(value: str | bytes | None) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
 class SessionRecordError(ValueError):
     """A session record or its canonical state location is invalid."""
 
@@ -82,20 +90,30 @@ def canonical_state_root(project_root: Path = PROJECT_ROOT) -> Path:
     env = os.environ.copy()
     for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
         env.pop(name, None)
-    result = subprocess.run(
-        [
-            "git",
-            "-C",
-            os.fspath(project_root),
-            "rev-parse",
-            "--path-format=absolute",
-            "--git-common-dir",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        env=env,
-    )
+    command = [
+        "git",
+        "-C",
+        os.fspath(project_root),
+        "rev-parse",
+        "--path-format=absolute",
+        "--git-common-dir",
+    ]
+    try:
+        result = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        result = subprocess.CompletedProcess(
+            command,
+            _TIMEOUT_RETURN_CODE,
+            stdout=_timeout_text(exc.stdout),
+            stderr=_timeout_text(exc.stderr) or f"TimeoutExpired after {exc.timeout}s",
+        )
     common_dir_raw = result.stdout.strip()
     if result.returncode != 0 or not common_dir_raw:
         detail = result.stderr.strip() or "git did not report a common directory"

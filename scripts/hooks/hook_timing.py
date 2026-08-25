@@ -22,6 +22,16 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LOG = ROOT / "batch_state" / "hook-timing.jsonl"
+_HOOK_TIMEOUT_SECONDS = 60
+_TIMEOUT_RETURN_CODE = 124
+
+
+def _timeout_bytes(value: str | bytes | None) -> bytes:
+    if isinstance(value, bytes):
+        return value
+    if isinstance(value, str):
+        return value.encode()
+    return b""
 
 
 def timing_enabled() -> bool:
@@ -57,7 +67,21 @@ def run_wrapped(argv: list[str]) -> int:
     tool = os.environ.get("HOOK_TOOL_NAME") or ""
     stdin = sys.stdin.buffer.read()
     t0 = time.perf_counter()
-    proc = subprocess.run(argv, input=stdin, capture_output=True)
+    try:
+        proc = subprocess.run(
+            argv,
+            input=stdin,
+            capture_output=True,
+            timeout=_HOOK_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        proc = subprocess.CompletedProcess(
+            argv,
+            _TIMEOUT_RETURN_CODE,
+            stdout=_timeout_bytes(exc.stdout),
+            stderr=_timeout_bytes(exc.stderr)
+            or f"hook command timed out after {exc.timeout}s\n".encode(),
+        )
     ms = (time.perf_counter() - t0) * 1000.0
     # preserve hook contract: stdout/stderr pass-through
     if proc.stdout:
