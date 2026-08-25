@@ -28,6 +28,10 @@ from scripts.guardrails.worktree_containment import (
     resolve_main_root,
 )
 
+# Git probes feed primary_head_state / heal decisions; bound them so a wedged
+# git surfaces as a failed probe instead of hanging a launcher (#7213).
+_GIT_TIMEOUT_S = 30
+
 
 def _git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
@@ -40,14 +44,26 @@ def _git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
         "GIT_ALTERNATE_OBJECT_DIRECTORIES",
     ):
         env.pop(name, None)
-    return subprocess.run(
-        ["git", *args],
-        cwd=str(cwd),
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-    )
+    argv = ["git", *args]
+    try:
+        return subprocess.run(
+            argv,
+            cwd=str(cwd),
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        # Map to a failed CompletedProcess so the existing detached /
+        # wrong-branch / heal-failure paths fire; never raise from a hook.
+        return subprocess.CompletedProcess(
+            argv,
+            returncode=124,
+            stdout="",
+            stderr=f"TimeoutExpired after {exc.timeout}s",
+        )
 
 
 def primary_head_state(cwd: Path | None = None) -> dict[str, object]:
