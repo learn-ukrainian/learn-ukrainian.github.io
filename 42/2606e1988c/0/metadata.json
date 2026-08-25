@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "422606e1988c",
+  "session_id": "ses_fc53fd70cffeJQf5bMOHzPQ0OZ",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-25T21:23:13.852679063Z",
+  "branch": "glm/fix-7160-discussion-idempotency",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_channels_cli.py",
+    "tests/test_channels_discuss_idempotency.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "4b86d12c5e03",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 74901,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2666176,
+    "output_tokens": 6688,
+    "api_call_count": 54
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-25T21:23:13.796200711Z",
+    "agent_lines": 173,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 173,
+    "total_lines_changed": 174,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

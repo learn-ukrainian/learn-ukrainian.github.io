@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "422606e1988c",
+  "strategy": "manual-commit",
+  "branch": "glm/fix-7160-discussion-idempotency",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_channels_cli.py",
+    "tests/test_channels_discuss_idempotency.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/42/2606e1988c/0/metadata.json",
+      "transcript": "/42/2606e1988c/0/full.jsonl",
+      "compact_transcript": "/42/2606e1988c/0/transcript.jsonl",
+      "content_hash": "/42/2606e1988c/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 74901,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2666176,
+    "output_tokens": 6688,
+    "api_call_count": 54
+  }
+}
