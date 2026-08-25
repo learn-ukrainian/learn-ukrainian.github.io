@@ -41,6 +41,15 @@ FROZEN_DENOMINATOR_SHA256 = "4876620305f8035f30103fc6f2d0f0d4f22e43dfb00247f1a7a
 DOCUMENTED_EXERCISE_STATUSES = frozenset(
     {200, 400, 401, 403, 404, 409, 410, 422, 500, 503}
 )
+FIXTURE_EMPTY_ROUTE_KEYS = frozenset(
+    {
+        "GET /api/images/textbooks",
+        "GET /api/rag/search_literary",
+        "GET /api/rag/search_text",
+        "GET /api/sources/search_literary",
+        "GET /api/sources/search_text",
+    }
+)
 
 _CONVERTER_RE = re.compile(r"\{(?P<name>[A-Za-z_][A-Za-z0-9_]*)(?::[^}]+)?\}")
 _PATH_PARAM_RE = re.compile(r"\{(?P<name>[A-Za-z_][A-Za-z0-9_]*)(?::[^}]+)?\}")
@@ -395,6 +404,18 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             fixture="isolated",
             body_factory=_body_factory(operation.path_template),
             expected_statuses=(410,),
+        )
+
+    if operation.key in FIXTURE_EMPTY_ROUTE_KEYS:
+        return ExerciseRecord(
+            method=operation.method,
+            path_template=operation.path_template,
+            classification="read",
+            fixture="isolated",
+            path_values=path_values,
+            query=_query_for(operation.path_template),
+            reason="fixture-local corpus is absent, so the documented empty envelope is expected",
+            expected_statuses=(200,),
         )
 
     if operation.method in {"POST", "PUT", "DELETE", "PATCH"}:
