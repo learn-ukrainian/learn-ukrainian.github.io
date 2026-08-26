@@ -784,7 +784,7 @@ def main() -> int:
     with sqlite3.connect(sources_db) as conn:
         has_flags = enrich_manifest._sum11_has_flag_columns(conn)
 
-        if args.canary or args.target == "full-catalog":
+        if args.canary or (args.target == "full-catalog" and not slug_filter):
             lemmas = [s.strip() for s in args.canary_lemmas.split(",")] if args.canary_lemmas else None
             canary_res = run_canary_check(conn, kaikki_lookup, canary_lemmas=lemmas, has_sum11_flags=has_flags)
             if not canary_res["success"]:

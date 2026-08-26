@@ -5694,8 +5694,12 @@ def test_wikidata_translation_heldout_table(monkeypatch) -> None:
     # 3. аптечний -> None (all hits fail UK-label / sitelink exact match)
     assert enrich_manifest_module._wikidata_translation("аптечний") is None
 
-    # 4. берегиня -> None (Berehynia is transliteration, star/theatre/craft centre filtered)
-    assert enrich_manifest_module._wikidata_translation("берегиня") is None
+    # 4. берегиня -> Berehynia (theonym exception with P31 Q55138169 and exact ukwiki sitelink; star/theatre/craft centre/factory filtered)
+    res_berehynia = enrich_manifest_module._wikidata_translation("берегиня")
+    assert res_berehynia is not None
+    assert res_berehynia["en"] == ["Berehynia"]
+    assert res_berehynia["source"] == WIKIDATA_LABEL
+    assert res_berehynia["source_url"] == "https://www.wikidata.org/wiki/Q2622635"
 
     # 5. індус -> Hindu (Indus river/constellation filtered)
     res_indus = enrich_manifest_module._wikidata_translation("індус")
@@ -5929,3 +5933,187 @@ def test_wikidata_translation_offline_mocks_ukwiki_title_requirement(monkeypatch
     assert res["en"] == ["bridge"]
     assert res["source"] == WIKIDATA_LABEL
     assert res["source_url"] == "https://www.wikidata.org/wiki/Q503"
+
+
+def test_wikidata_translation_theonym_exception(monkeypatch) -> None:
+    """Named mythological figures with transliterated English names are kept under the theonym exception."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q2622635",
+                "labels": {"uk": {"value": "Берегиня"}, "en": {"value": "Berehynia"}},
+                "descriptions": {"uk": {"value": "істота слов'янської міфології"}, "en": {"value": "Slavic water spirit"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q55138169"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Берегиня"}},
+            }
+        ],
+    )
+    res = enrich_manifest_module._wikidata_translation("берегиня")
+    assert res is not None
+    assert res["en"] == ["Berehynia"]
+    assert res["source"] == WIKIDATA_LABEL
+    assert res["source_url"] == "https://www.wikidata.org/wiki/Q2622635"
+
+
+def test_definition_cards_sum20_outranks_dialect_vts() -> None:
+    """When VTS leads with dialect/archaic marker while СУМ-20 has standard modern senses, СУМ-20 is top card."""
+    cache = {
+        "schema_version": 4,
+        "lookups": {
+            "vts": {
+                "dictionary_slug": "vts",
+                "word": "берегиня",
+                "text": "БЕРЕГИ́НЯ, і, ж., діал. Русалка.",
+            },
+            "newsum": {
+                "dictionary_slug": "newsum",
+                "word": "берегиня",
+                "text": (
+                    "БЕРЕГИ́НЯ, і, ж. 1. За давньослов'янськими релігійними уявленнями, мати всього живого, "
+                    "первісне божество – захисниця людини, богиня родючості, природи та добра; згодом "
+                    "уважалася охоронницею дому і родини, подружньої вірності, покровителькою рибалок. "
+                    "2. перен. Жінка, яка охороняє, піклується про когось або щось. "
+                    "3. заст. Русалка."
+                ),
+            },
+        },
+    }
+    cards = enrich_manifest_module._definition_cards(_conn(), "берегиня", has_sum11_flags=False, cache=cache)
+    assert len(cards) == 2
+    assert cards[0]["id"] == "sum20"
+    assert cards[1]["id"] == "vts"
+    assert "богиня родючості" in cards[0]["definitions"][0]
+    assert "Русалка" in cards[1]["definitions"][0]
+
+
+def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
+    """Validate full enrichment rework for берегиня: СУМ-20 sense 1 hero gloss, definition cards, Berehynia translation, no rusalka synonym identity."""
+    cache = {
+        "schema_version": 4,
+        "lookups": {
+            "newsum": {
+                "dictionary_slug": "newsum",
+                "dictionary_label": "Словник української мови у 20 томах (СУМ-20)",
+                "word": "берегиня",
+                "source_url": "https://slovnyk.me/dict/newsum/%D0%B1%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+                "text": (
+                    "БЕРЕГИ́НЯ, і, ж. 1. За давньослов'янськими релігійними уявленнями, мати всього живого, "
+                    "первісне божество – захисниця людини, богиня родючості, природи та добра; згодом "
+                    "уважалася охоронницею дому і родини, подружньої вірності, покровителькою рибалок. "
+                    "2. перен. Жінка, яка охороняє, піклується про когось або щось. "
+                    "3. заст. Русалка."
+                ),
+            },
+            "vts": {
+                "dictionary_slug": "vts",
+                "dictionary_label": "Великий тлумачний словник сучасної української мови",
+                "word": "берегиня",
+                "source_url": "https://slovnyk.me/dict/vts/%D0%B1%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+                "text": "БЕРЕГИ́НЯ, і, ж., діал. Русалка.",
+            },
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "word": "берегиня",
+                "text": "БЕРЕГИНЯ (русалка) РУСА́ЛКА, НІ́МФА, НАЯ́ДА, МА́ВКА, ВІ́ЛА, УНДИ́НА, СИРЕ́НА.",
+            },
+            "ukreng": None,
+        },
+    }
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
+    monkeypatch.setattr(enrich_manifest_module, "_e2u_translation", lambda *a, **k: None)
+    monkeypatch.setattr(enrich_manifest_module, "_goroh_translation", lambda *a, **k: None)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikidata_uk_en",
+        lambda lemma: [
+            {
+                "id": "Q2622635",
+                "labels": {"uk": {"value": "Берегиня"}, "en": {"value": "Berehynia"}},
+                "descriptions": {"uk": {"value": "істота слов'янської міфології"}, "en": {"value": "Slavic water spirit"}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q55138169"}}}}]},
+                "sitelinks": {"ukwiki": {"title": "Берегиня"}},
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "standard",
+            "is_russianism": False,
+            "russian_shadow": False,
+            "calque_warning": None,
+            "attestations": [],
+        },
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "query_wikipedia",
+        lambda title: {
+            "title": "Берегиня",
+            "extract": "Береги́ня — архаїчний образ нижчої міфології слов'ян, пізніше — богиня-захисниця.",
+            "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+        },
+    )
+
+    entry = {
+        "lemma": "берегиня",
+        "url_slug": "берегиня",
+        "gloss": "діал. Русалка. Нариси стар. іст. УРСР, 1957, 191",
+        "pos": "noun",
+    }
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS literary_texts (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT,
+            author TEXT,
+            work TEXT,
+            title TEXT,
+            year INTEGER,
+            text TEXT,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO literary_texts(chunk_id, author, work, title, year, text)
+        VALUES ('feaa5fa7_c0557', 'Колектив', 'Енциклопедія українознавства', '', 1955,
+        'Давні письмові джерела виявляють ці два прошарки, давніший, релігію »прежде Перуна« з культом роду, рожениць, упирів і берегинь, і пізнішу релігію »Перуна-бога«.')
+        """
+    )
+
+    enrich_manifest_module.enrich_entry(entry, conn, {}, has_sum11_flags=False)
+
+    # 1. Hero gloss replaced by СУМ-20 sense 1 (not Русалка)
+    assert entry["gloss"].startswith("За давньослов'янськими релігійними уявленнями, мати всього живого")
+    assert "богиня родючості" in entry["gloss"]
+    assert not entry["gloss"].startswith("діал.")
+    assert not entry["gloss"].startswith("Русалка")
+
+    # 2. Definition cards: СУМ-20 is first card, contains all 3 senses
+    cards = entry["enrichment"]["definition_cards"]
+    assert len(cards) >= 1
+    assert cards[0]["id"] == "sum20"
+    sum20_body = cards[0]["definitions"][0]
+    assert "1. За давньослов'янськими" in sum20_body
+    assert "2. перен. Жінка, яка охороняє" in sum20_body
+    assert "3. заст. Русалка" in sum20_body
+
+    # 3. Translation is Berehynia from Wikidata
+    assert entry["enrichment"]["translation"]["en"] == ["Berehynia"]
+
+    # 4. Literary attestation uses feaa5fa7_c0557
+    assert entry["enrichment"]["literary_attestation"]["chunk_id"] == "feaa5fa7_c0557"
+
+    # 5. Synonyms do not identify her as a water-nymph / rusalka synset
+    assert "synonyms" not in entry.get("sections", {})
+
+    # 6. Wikipedia reference is attached
+    assert entry["wiki_reference"]["wikipedia"]["title"] == "Берегиня"
+

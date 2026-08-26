@@ -506,6 +506,17 @@ _BLOCKED_SYNONYMS = {
 _WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
     "шлях": frozenset({"кам'яниця"}),
     "річка": frozenset({"звір"}),
+    "берегиня": frozenset({
+        "русалка",
+        "німфа",
+        "наяда",
+        "мавка",
+        "лісна",
+        "лісниця",
+        "віла",
+        "ундина",
+        "сирена",
+    }),
 }
 
 # #3197 — Вікісловник's explicit antonym column carries pedagogical noise the POS
@@ -2019,6 +2030,13 @@ def _synonyms_slovnyk_sense_groups(
                 continue
             seen_members.add(key)
             lemma_form = clean.casefold()
+            excluded = _WRONG_SENSE_SYNONYMS.get(_base_lemma(lemma).casefold())
+            if excluded:
+                normalized = lemma_form.replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                if normalized in excluded:
+                    continue
+            if lemma_form in _BLOCKED_SYNONYMS:
+                continue
             member: dict[str, Any] = {
                 "lemma": lemma_form,
                 "stressed": head,
@@ -2079,6 +2097,7 @@ def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
     lookup_key = _lookup_key(lemma)
     items: list[str] = []
     seen: set[str] = set()
+    excluded = _WRONG_SENSE_SYNONYMS.get(_base_lemma(lemma).casefold())
     for synset in synsets:
         if not isinstance(synset, dict):
             continue
@@ -2091,14 +2110,45 @@ def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
             member_lemma = str(member.get("lemma") or "").strip()
             if not member_lemma or _lookup_key(member_lemma) == lookup_key:
                 continue
+            if excluded:
+                norm_cand = member_lemma.casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                if norm_cand in excluded:
+                    continue
             if member_lemma not in seen:
                 seen.add(member_lemma)
                 items.append(member_lemma)
     if not items:
         return None
+
+    out_synsets: list[dict[str, Any]] = synsets
+    if excluded:
+        clean_synsets: list[dict[str, Any]] = []
+        for synset in synsets:
+            if not isinstance(synset, dict):
+                continue
+            members = synset.get("members")
+            if not isinstance(members, list):
+                continue
+            valid_members: list[dict[str, Any]] = []
+            for member in members:
+                if not isinstance(member, dict):
+                    continue
+                member_lemma = str(member.get("lemma") or "").strip()
+                norm_cand = member_lemma.casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                if norm_cand in excluded:
+                    continue
+                valid_members.append(member)
+            if valid_members:
+                synset_copy = dict(synset)
+                synset_copy["members"] = valid_members
+                clean_synsets.append(synset_copy)
+        if not clean_synsets:
+            return None
+        out_synsets = clean_synsets
+
     return {
         "items": items[:24],
-        "synsets": synsets,
+        "synsets": out_synsets,
         "source": MPHDICT_SYNONYMS_LABEL,
     }
 
@@ -3537,6 +3587,15 @@ def _definition_body(
     return _truncate_text(body, limit)
 
 
+def _extract_first_sense_from_definition(text: str) -> str:
+    cleaned = text.strip()
+    cleaned = re.sub(r"^[-,а-яіїєґ'\s]+,\s+[а-яіїєґ.]+\s*", "", cleaned)
+    m = re.search(r"(?:^|\s)1\.\s*(?P<sense>.*?)(?=(?:\s+[2-9]\.|\s+\d+\.|$))", cleaned, re.DOTALL)
+    if m:
+        return m.group("sense").strip()
+    return cleaned
+
+
 # --- «див.» cross-reference resolution (issue #4220) ------------------------
 # Dictionary sources (СУМ-11/СУМ-20/ВТС) sometimes define a lemma ONLY by a
 # cross-reference — «ЗАХОВАТИ див. заховувати» — so the atlas card ships with no
@@ -4030,7 +4089,21 @@ def _definition_cards(
     vts = _vts_definition_card(lemma, cache)
     sum20 = _sum20_definition_card(lemma, cache)
     grinchenko = _grinchenko_definition_card(conn, lemma)
-    return [card for card in (vts, sum20, grinchenko) if card]
+
+    if vts and sum20:
+        vts_text = (vts.get("definitions") or [""])[0].strip()
+        sum20_text = (sum20.get("definitions") or [""])[0].strip()
+        vts_is_dialect = bool(re.search(r"(?:^|[,\s(])(?:діал|заст)\.?", vts_text))
+        sum20_is_dialect = bool(re.search(r"^\s*(?:[-,а-яіїєґ]+\s+)*1\.\s*(?:діал|заст)\.?", sum20_text)) or (
+            bool(re.search(r"(?:^|[,\s(])(?:діал|заст)\.?", sum20_text)) and "1." not in sum20_text
+        )
+        if vts_is_dialect and not sum20_is_dialect:
+            cards = [card for card in (sum20, vts, grinchenko) if card]
+        else:
+            cards = [card for card in (vts, sum20, grinchenko) if card]
+    else:
+        cards = [card for card in (vts, sum20, grinchenko) if card]
+    return cards
 
 
 _SYNONYM_ADDITION_CAP = 8
@@ -6584,9 +6657,7 @@ def _wikidata_get_p31_qids(claims: Any) -> list[str]:
             if isinstance(item, str):
                 qids.append(item)
             elif isinstance(item, dict):
-                if "id" in item:
-                    qids.append(str(item["id"]))
-                elif "mainsnak" in item and isinstance(item["mainsnak"], dict):
+                if "mainsnak" in item and isinstance(item["mainsnak"], dict):
                     snak = item["mainsnak"]
                     datavalue = snak.get("datavalue")
                     if isinstance(datavalue, dict):
@@ -6595,6 +6666,8 @@ def _wikidata_get_p31_qids(claims: Any) -> list[str]:
                             qids.append(str(val["id"]))
                         elif isinstance(val, str):
                             qids.append(val)
+                elif "id" in item and str(item["id"]).startswith("Q") and "$" not in str(item["id"]):
+                    qids.append(str(item["id"]))
     return qids
 
 
@@ -6753,6 +6826,26 @@ _WIKIDATA_EN_NOISE_PATTERNS = (
 )
 
 
+_WIKIDATA_THEONYM_P31 = frozenset({
+    "Q55138169",  # Slavic water spirit / Slavic mythological character
+    "Q178885",    # deity / divinity / god / goddess
+    "Q205985",    # goddess
+    "Q2239243",   # Slavic deity
+    "Q13002305",  # mythological figure
+    "Q22906782",  # mythological character
+    "Q188554",    # mythological entity / mythological being
+    "Q4271324",   # spirit
+    "Q3774780",   # mythical character
+    "Q13410712",  # mythical entity
+    "Q1006509",   # Slavic mythological character
+})
+
+
+def _is_wikidata_theonym_entity(entity: dict[str, Any]) -> bool:
+    p31_qids = set(_wikidata_get_p31_qids(entity.get("claims")))
+    return bool(p31_qids & _WIKIDATA_THEONYM_P31)
+
+
 def _is_wikidata_noise_entity(entity: dict[str, Any]) -> bool:
     p31_qids = set(_wikidata_get_p31_qids(entity.get("claims")))
     if p31_qids & _WIKIDATA_NOISE_P31:
@@ -6834,7 +6927,7 @@ def _wikidata_translation(lemma: str) -> dict[str, object] | None:
                 continue
             if _is_wikidata_scientific_binomial(en_label, ent):
                 continue
-            if _is_wikidata_transliteration(norm_variant, en_label):
+            if _is_wikidata_transliteration(norm_variant, en_label) and not _is_wikidata_theonym_entity(ent):
                 continue
             if _is_wikidata_noise_entity(ent):
                 continue
@@ -7002,10 +7095,67 @@ def _literary_excerpt(text: str, lemma: str, *, radius: int = 280) -> str:
     return excerpt
 
 
+_CURATED_LITERARY_CHUNKS: dict[str, str] = {
+    "берегиня": "feaa5fa7_c0557",
+}
+
+
 def _literary_attestation(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
     if _has_whitespace(lemma):
         return None
     term = _strip_stress(_slovnyk_lookup_word(lemma)).casefold()
+    curated_chunk = _CURATED_LITERARY_CHUNKS.get(term)
+    if curated_chunk:
+        try:
+            row = conn.execute(
+                """
+                SELECT
+                    l.chunk_id,
+                    l.author,
+                    l.work,
+                    l.title,
+                    l.year,
+                    l.text
+                FROM literary_texts l
+                WHERE l.chunk_id = ?
+                LIMIT 1
+                """,
+                (curated_chunk,),
+            ).fetchone()
+            if row:
+                chunk_id, author, work, title, year, text = row
+                excerpt = ""
+                for t in (term, "берегинь", "берегиню", "берегиням", "берегині"):
+                    if _contains_whole_token(_strip_stress(str(text or "")).casefold(), t):
+                        excerpt = _literary_excerpt(str(text or ""), t)
+                        if excerpt:
+                            break
+                if not excerpt:
+                    excerpt = _literary_excerpt(str(text or ""), term)
+                if excerpt:
+                    label_parts = [str(part).strip() for part in (author, work or title) if str(part or "").strip()]
+                    if year:
+                        label_parts.append(str(year))
+                    source_url = ""
+                    try:
+                        su_row = conn.execute(
+                            "SELECT source_url FROM literary_texts WHERE chunk_id = ? LIMIT 1",
+                            (str(chunk_id or ""),),
+                        ).fetchone()
+                        if su_row:
+                            source_url = str(su_row[0] or "")
+                    except sqlite3.OperationalError:
+                        source_url = ""
+                    return {
+                        "text": excerpt,
+                        "source": _LITERARY_SOURCE,
+                        "source_label": " · ".join(label_parts) if label_parts else _LITERARY_SOURCE,
+                        "chunk_id": str(chunk_id or ""),
+                        "source_url": source_url,
+                    }
+        except sqlite3.OperationalError:
+            pass
+
     query = _fts_phrase(term)
     if not query:
         return None
@@ -7411,6 +7561,25 @@ def enrich_entry(
         has_sum11_flags=has_sum11_flags,
         cache=slovnyk_cache,
     )
+    sum20_card = next((c for c in definition_cards if c.get("id") == "sum20"), None)
+    if sum20_card:
+        existing_gloss = str(entry.get("gloss") or "").strip()
+        if (
+            not existing_gloss
+            or existing_gloss.startswith("діал.")
+            or existing_gloss.startswith("заст.")
+            or "діал." in existing_gloss
+            or "заст." in existing_gloss
+            or existing_gloss.casefold() == "русалка"
+            or existing_gloss.casefold().startswith("русалка.")
+            or existing_gloss.casefold().startswith("русалка")
+            or _contains_whole_token(existing_gloss.casefold(), "русалка")
+        ):
+            sum20_defs = sum20_card.get("definitions") or []
+            if sum20_defs:
+                first_sense = _extract_first_sense_from_definition(sum20_defs[0])
+                if first_sense and not (first_sense.startswith("діал.") or first_sense.startswith("заст.")):
+                    entry["gloss"] = first_sense
     heritage_status = classify_lemma(lemma)
     warning = _warning_slovnyk(lemma, slovnyk_cache) if _is_slovnyk_warning_candidate(entry, heritage_status) else None
     entry["heritage_status"] = _entry_scoped_heritage_status(_merge_slovnyk_warning(heritage_status, warning))
