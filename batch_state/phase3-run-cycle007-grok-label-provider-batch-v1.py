@@ -789,8 +789,8 @@ def _run_provider(provider: Path, prompt_bytes: bytes, package: Path) -> subproc
     descriptor, raw_prompt_path = tempfile.mkstemp(prefix=".cycle007-grok-prompt-", dir=package)
     prompt_path = Path(raw_prompt_path)
     try:
-        os.fchmod(descriptor, 0o600)
         with os.fdopen(descriptor, "wb") as handle:
+            os.fchmod(handle.fileno(), 0o600)
             handle.write(prompt_bytes)
             handle.flush()
             os.fsync(handle.fileno())
