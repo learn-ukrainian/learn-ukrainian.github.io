@@ -42,6 +42,32 @@ EXPECTED_LABEL_MANIFEST_SHA256 = ""
 EXPECTED_EVIDENCE_MANIFEST_SHA256 = ""
 EXPECTED_SOURCES_ENDPOINT_IDENTITY: dict[str, Any] = {}
 
+# The installed Cycle007 evidence was compiled and certified against this
+# exact compiler identity.  Runtime-only edits to the current compiler module
+# (for example, occupancy instrumentation) must not silently redefine the
+# identity expected by an already-frozen evidence manifest.  The manifest's
+# raw SHA-256 remains independently bound by the controller preflight, and the
+# validator still compares every field below exactly.
+FROZEN_EVIDENCE_TOKENIZER_ID = "phase3-cycle007-cyrillic-tokenizer-v1"
+FROZEN_EVIDENCE_TOKENIZER_VERSION = "1"
+FROZEN_EVIDENCE_COMPILER_SHA256 = "8c66529479976f71ce5f28b82765a5916cc06c9dee737d7ce20bd89aa27cc522"
+FROZEN_EVIDENCE_CODE_HASHES = {
+    "compiler_id": "phase3-cycle007-evidence-compiler-v2",
+    "compiler_sha256": FROZEN_EVIDENCE_COMPILER_SHA256,
+    "tokenizer_id": FROZEN_EVIDENCE_TOKENIZER_ID,
+    "tokenizer_version": FROZEN_EVIDENCE_TOKENIZER_VERSION,
+    "tokenizer_sha256": FROZEN_EVIDENCE_COMPILER_SHA256,
+    "compound_parser_id": "phase3-cycle007-compound-splitter-v1",
+    "compound_parser_version": "2",
+    "compound_parser_sha256": FROZEN_EVIDENCE_COMPILER_SHA256,
+    "mcp_response_parser_id": "phase3-cycle007-mcp-response-parser-v1",
+    "mcp_response_parser_version": "1",
+    "mcp_response_parser_sha256": FROZEN_EVIDENCE_COMPILER_SHA256,
+    "query_plan_id": "phase3-cycle007-query-plan-v1",
+    "query_plan_version": "1",
+    "query_plan_sha256": FROZEN_EVIDENCE_COMPILER_SHA256,
+}
+
 MODEL = "Gemini 3.6 Flash (High)"
 FAMILY = "google"
 HARNESS = "agy"
@@ -227,9 +253,9 @@ def _get_expected_identity() -> dict[str, Any]:
     if not vesum_db_sha and compiler.DEFAULT_VESUM_DB.is_file():
         vesum_db_sha = contract.sha256_file(compiler.DEFAULT_VESUM_DB)
     return {
-        "tokenizer_id": compiler.TOKENIZER_ID,
-        "tokenizer_version": compiler.TOKENIZER_VERSION,
-        "code_hashes": compiler.CODE_HASHES,
+        "tokenizer_id": FROZEN_EVIDENCE_TOKENIZER_ID,
+        "tokenizer_version": FROZEN_EVIDENCE_TOKENIZER_VERSION,
+        "code_hashes": dict(FROZEN_EVIDENCE_CODE_HASHES),
         "server_code_sha256": server_code_sha or "",
         "sources_db_sha256": sources_db_sha or "",
         "vesum_db_sha256": vesum_db_sha or "",
