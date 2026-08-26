@@ -24,8 +24,8 @@ codex:
 gemini:
   weekly_cap_usd: 500
 
-# Subscription lanes (per CodexBar design constraint): claude/codex/gemini/cursor/grok/kimi only.
-# API-billed (deepseek etc.) absent from this snapshot BY DESIGN — absence ≠ unavailable.
+# Subscription lanes (per CodexBar design constraint): claude/codex/gemini/cursor/grok/kimi/glm.
+# Prepaid API accounts (openrouter, deepseek) are probed separately via api_accounts on routing-budget.
 # For lanes without numeric cap here, status="unknown" (data lives in user's external CodexBar snapshot).
 grok:
   # Native grok CLI seat (canonical). Historical alias: grok-build (dual-READ in

@@ -1091,6 +1091,7 @@ def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
 
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
     subscription_usage_mod._run_all_refreshes()
     # No override passed -> refresh_provider_usage_data resolves the shared
@@ -1184,6 +1185,7 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
 
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
     worker = threading.Thread(target=subscription_usage_mod._run_all_refreshes, daemon=True)
     worker.start()
@@ -1192,3 +1194,131 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     release.set()
     worker.join(timeout=1.0)
     assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]
+
+
+OPENROUTER_KEY_FIXTURE = {
+    "data": {
+        "usage": 12.5,
+        "usage_daily": 1.2,
+        "usage_weekly": 5.0,
+        "usage_monthly": 12.5,
+        "limit": 100.0,
+        "limit_remaining": 87.5,
+        "limit_reset": "2026-09-01T00:00:00Z",
+        "is_free_tier": False,
+    }
+}
+
+DEEPSEEK_BALANCE_FIXTURE = {
+    "is_available": True,
+    "balance_infos": [
+        {
+            "currency": "USD",
+            "total_balance": "42.50",
+            "granted_balance": "10.00",
+            "topped_up_balance": "32.50",
+        }
+    ],
+}
+
+
+def test_openrouter_missing_key_returns_need_probe(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: None)
+    codexbar_usage_mod._api_account_last_good.pop("openrouter", None)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["usage_usd"] is None
+    assert result["limit_remaining_usd"] is None
+
+
+def test_deepseek_missing_key_returns_need_probe(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: None)
+    codexbar_usage_mod._api_account_last_good.pop("deepseek", None)
+    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["total_balance"] is None
+    assert result["local_only"] is True
+
+
+def test_openrouter_key_probe_success(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: "fixture-openrouter-key")
+
+    def _fake_http(method, url, **kwargs):
+        if url.endswith("/key"):
+            return 200, dict(OPENROUTER_KEY_FIXTURE), None
+        return 0, None, "unexpected url"
+
+    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
+    assert result["probe_state"] == "ok"
+    assert result["usage_usd"] == 12.5
+    assert result["limit_remaining_usd"] == 87.5
+    assert result["is_free_tier"] is False
+
+
+def test_deepseek_balance_probe_success(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: "fixture-deepseek-key")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, dict(DEEPSEEK_BALANCE_FIXTURE), None),
+    )
+    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
+    assert result["probe_state"] == "ok"
+    assert result["local_only"] is True
+    assert result["currency"] == "USD"
+    assert result["total_balance"] == 42.5
+    assert result["is_available"] is True
+
+
+def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
+    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", tmp_path / "agent_budgets.yaml")
+    (tmp_path / "agent_budgets.yaml").write_text("codex:\n  weekly_cap_usd: 1000\n", encoding="utf-8")
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: {"lane": p, "weekly_used_pct": None})
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: {"lane": "cursor", "probe_state": "NEED_PROBE"})
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *args, **kwargs: {"windows": {}})
+    monkeypatch.setattr(state_router, "summarize_lane_runtime", lambda *args, **kwargs: {"headroom_blocked": False})
+
+    openrouter = {
+        "kind": "prepaid_credits",
+        "probe_state": "ok",
+        "usage_usd": 1.0,
+        "usage_daily_usd": 0.1,
+        "usage_weekly_usd": 0.5,
+        "usage_monthly_usd": 1.0,
+        "limit_usd": 50.0,
+        "limit_remaining_usd": 49.0,
+        "limit_reset": None,
+        "is_free_tier": False,
+        "fetched_at": "2026-08-26T12:00:00Z",
+    }
+    deepseek = {
+        "kind": "prepaid_credits",
+        "probe_state": "ok",
+        "local_only": True,
+        "is_available": True,
+        "currency": "USD",
+        "total_balance": 25.0,
+        "granted_balance": 5.0,
+        "topped_up_balance": 20.0,
+        "fetched_at": "2026-08-26T12:00:00Z",
+    }
+    monkeypatch.setattr(
+        state_router,
+        "get_api_account_data",
+        lambda provider: openrouter if provider == "openrouter" else deepseek,
+    )
+
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    assert "api_accounts" in data
+    assert data["api_accounts"]["openrouter"]["limit_remaining_usd"] == 49.0
+    assert data["api_accounts"]["deepseek"]["total_balance"] == 25.0
+    ranked_api = [row for row in data["ranked_by_headroom"] if row["type"] == "api"]
+    assert len(ranked_api) == 2
+    assert ranked_api[0]["remaining_usd"] == 49.0
+
+
+def test_routing_html_contains_api_accounts_panel():
+    text = Path("dashboards/routing.html").read_text(encoding="utf-8")
+    assert "API accounts" in text

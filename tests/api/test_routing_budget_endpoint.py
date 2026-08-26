@@ -178,6 +178,16 @@ def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", _mock_cb)
     monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: _mock_cursor_lane())
+    monkeypatch.setattr(
+        state_router,
+        "get_api_account_data",
+        lambda provider: {
+            "kind": "prepaid_credits",
+            "probe_state": "NEED_PROBE",
+            "fetched_at": None,
+            **({"local_only": True} if provider == "deepseek" else {}),
+        },
+    )
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _empty_fleet_burn)
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
     monkeypatch.setattr(

@@ -35,6 +35,12 @@ from scripts.api.subscription_usage import (  # noqa: F401
     stop_periodic_refresh,
     trigger_background_refresh,
     trigger_cursor_background_refresh,
+    trigger_api_account_background_refresh,
+    API_ACCOUNT_PROVIDERS,
+    DEFAULT_API_ACCOUNT_CACHE_TTL_S,
+    get_api_account_data,
+    get_api_accounts_snapshot,
+    refresh_api_account_data,
 )
 
 # Tests and legacy callers import underscore-prefixed helpers from this module.
@@ -60,3 +66,6 @@ _load_codex_oauth_token = _subscription_usage._load_codex_oauth_token
 _load_claude_oauth_token = _subscription_usage._load_claude_oauth_token
 _scheduler_is_running = _subscription_usage._scheduler_is_running
 _refresh_cursor_usage_live = _subscription_usage._refresh_cursor_usage_live
+_load_deepseek_api_key = _subscription_usage._load_deepseek_api_key
+_load_openrouter_api_key = _subscription_usage._load_openrouter_api_key
+_api_account_last_good = _subscription_usage._api_account_last_good

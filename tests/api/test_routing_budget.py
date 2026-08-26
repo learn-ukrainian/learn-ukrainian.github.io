@@ -46,6 +46,16 @@ def _configure_base(monkeypatch, tmp_path: Path) -> None:
         lambda lane, snapshot: {"trend": "flat", "samples": 1},
     )
     monkeypatch.setattr(
+        state_router,
+        "get_api_account_data",
+        lambda provider: {
+            "kind": "prepaid_credits",
+            "probe_state": "NEED_PROBE",
+            "fetched_at": None,
+            **({"local_only": True} if provider == "deepseek" else {}),
+        },
+    )
+    monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",
         lambda **_kwargs: {"tasks": []},

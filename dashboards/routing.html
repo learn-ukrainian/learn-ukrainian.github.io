@@ -93,6 +93,12 @@ tr:last-child td { border-bottom:none; }
   </section>
 
   <section class="section panel">
+    <h2>API accounts</h2>
+    <p class="sub" style="margin-bottom:10px">Prepaid credits (not a subscription window). OpenRouter is pay-as-you-go USD. DeepSeek is first-party api.deepseek.com remaining balance (LOCAL-ONLY).</p>
+    <div id="api-accounts-table"></div>
+  </section>
+
+  <section class="section panel">
     <h2>Runtime Agents</h2>
     <div id="agent-table"></div>
   </section>
@@ -357,6 +363,92 @@ function renderLaneFreshness(agent) {
   return parts.length ? `<span class="stale-note">${escapeHtml(parts.join(' · '))}</span>` : '';
 }
 
+function formatUsd(value, currency = 'USD') {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return null;
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency, maximumFractionDigits: 2 }).format(num);
+  } catch {
+    return `$${num.toFixed(2)}`;
+  }
+}
+
+function renderApiAccountFreshness(account) {
+  const fetched = account?.fetched_at;
+  const age = account?.age_s;
+  const stale = account?.stale;
+  const parts = [];
+  if (fetched) parts.push(formatTs(fetched));
+  if (age != null) parts.push(formatAge(age));
+  if (stale) parts.push('stale');
+  return parts.length ? `<span class="stale-note">${escapeHtml(parts.join(' · '))}</span>` : '';
+}
+
+function renderApiAccounts(routing) {
+  const accounts = routing.api_accounts || {};
+  const lanes = ['openrouter', 'deepseek'];
+  const rows = lanes.map(name => {
+    const account = accounts[name] || {};
+    const probeState = String(account.probe_state || 'NEED_PROBE').toUpperCase();
+    const needProbe = probeState !== 'OK';
+    let remainingHtml = '';
+    let detailHtml = '';
+
+    if (name === 'openrouter') {
+      const limitRemaining = account.limit_remaining_usd;
+      const accountRemaining = account.account_remaining_usd;
+      if (needProbe) {
+        remainingHtml = `<span class="pill need_probe">NEED_PROBE</span>`;
+      } else if (limitRemaining != null && Number.isFinite(Number(limitRemaining))) {
+        remainingHtml = escapeHtml(formatUsd(limitRemaining) || String(limitRemaining));
+      } else if (accountRemaining != null && Number.isFinite(Number(accountRemaining))) {
+        remainingHtml = escapeHtml(formatUsd(accountRemaining) || String(accountRemaining));
+      } else if (limitRemaining == null && probeState === 'OK') {
+        remainingHtml = '<span class="stale-note">no per-key cap</span>';
+      } else {
+        remainingHtml = '<span class="pill unknown">unknown</span>';
+      }
+      const spendParts = [];
+      if (account.usage_usd != null) spendParts.push(`total ${formatUsd(account.usage_usd) || account.usage_usd}`);
+      if (account.usage_daily_usd != null) spendParts.push(`daily ${formatUsd(account.usage_daily_usd) || account.usage_daily_usd}`);
+      if (account.usage_weekly_usd != null) spendParts.push(`weekly ${formatUsd(account.usage_weekly_usd) || account.usage_weekly_usd}`);
+      if (account.usage_monthly_usd != null) spendParts.push(`monthly ${formatUsd(account.usage_monthly_usd) || account.usage_monthly_usd}`);
+      detailHtml = spendParts.length
+        ? `<div class="fleet-burn">${escapeHtml(spendParts.join(' · '))}</div>`
+        : '<span class="fleet-burn">—</span>';
+    } else {
+      const currency = account.currency || 'USD';
+      const total = account.total_balance;
+      if (needProbe) {
+        remainingHtml = `<span class="pill need_probe">NEED_PROBE</span>`;
+      } else if (total != null && Number.isFinite(Number(total))) {
+        remainingHtml = escapeHtml(formatUsd(total, currency) || String(total));
+      } else {
+        remainingHtml = '<span class="pill unknown">unknown</span>';
+      }
+      const detailParts = [];
+      if (account.granted_balance != null) detailParts.push(`granted ${formatUsd(account.granted_balance, currency) || account.granted_balance}`);
+      if (account.topped_up_balance != null) detailParts.push(`topped-up ${formatUsd(account.topped_up_balance, currency) || account.topped_up_balance}`);
+      if (account.is_available != null) detailParts.push(account.is_available ? 'available' : 'unavailable');
+      detailHtml = `<div class="fleet-burn">${escapeHtml(detailParts.join(' · ') || '—')}<br><span class="stale-note">LOCAL-ONLY</span></div>`;
+    }
+
+    const status = needProbe ? 'need_probe' : (name === 'deepseek' && account.is_available === false ? 'near_cap' : 'ok');
+    return `<tr>
+      <td class="mono">${escapeHtml(name)}</td>
+      <td>${statusPill(status)}</td>
+      <td>${remainingHtml}</td>
+      <td>${detailHtml}</td>
+      <td>${renderApiAccountFreshness(account)}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('api-accounts-table').innerHTML = `<table>
+    <tr><th>Account</th><th>Status</th><th>Remaining</th><th>Spend / detail</th><th>Freshness</th></tr>
+    ${rows || '<tr><td colspan="5">No API account data.</td></tr>'}
+  </table>`;
+}
+
 function renderSubscriptions(routing) {
   const agents = routing.agents || {};
   const subscriptionLanes = ['cursor', 'claude', 'codex', 'gemini', 'grok', 'kimi', 'glm'];
@@ -462,9 +554,11 @@ async function loadRouting() {
   if (routing) {
     renderSummary(routing, usage, delegates);
     renderSubscriptions(routing);
+    renderApiAccounts(routing);
   } else {
     document.getElementById('summary-grid').innerHTML = `<div class="error">Routing budget unavailable${errors.length ? `: ${escapeHtml(errors.join(', '))}` : ''}</div>`;
     document.getElementById('subscriptions-table').innerHTML = '<div class="error">Subscriptions unavailable — routing-budget failed.</div>';
+    document.getElementById('api-accounts-table').innerHTML = '<div class="error">API accounts unavailable — routing-budget failed.</div>';
   }
   renderAgents(agents, usage);
   renderDelegates(delegates);
