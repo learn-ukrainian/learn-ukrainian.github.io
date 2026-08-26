@@ -181,7 +181,7 @@ router = APIRouter(tags=["state"])
 
 BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
 TASKS_DIR = Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
-SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
+SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi", "glm")
 API_LANES = ("deepseek",)  # representative; others via openrouter absent BY DESIGN
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
 STATE_SUMMARY_TTL_S = 60.0

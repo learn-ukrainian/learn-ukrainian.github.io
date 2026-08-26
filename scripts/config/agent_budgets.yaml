@@ -38,5 +38,8 @@ cursor:
   # pin ``--model auto`` to spend Auto allocation. Pinning sonnet/opus burns API pool.
   # Native probe: cursor dashboard API; CodexBar optional overlay when binary exists.
 kimi:
-  # Native Kimi Code OAuth subscription lane (K3). CodexBar exposes request
-  # windows directly; do not duplicate a synthetic dollar cap here.
+  # Native Kimi Code OAuth subscription lane (K3). Request windows come from
+  # the Kimi Code usages API; do not duplicate a synthetic dollar cap here.
+glm:
+  # Z.AI Coding Plan (GLM). Native probe: api.z.ai quota API (5h + weekly).
+  # LOCAL-ONLY credential file ~/.secret/zai.key or ZAI_API_KEY.

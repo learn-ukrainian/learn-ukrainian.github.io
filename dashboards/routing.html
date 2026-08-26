@@ -154,8 +154,8 @@ function statusPill(status) {
 }
 
 const CODEXBAR_HOST_TOOLING_SKIP = {
-  warning: 'Host-tooling skip: CodexBar is not installed on this host; routing recommendation omitted.',
-  detail: 'CodexBar is not installed on this host, so the routing recommendation is omitted. This is a host-tooling skip, not an indication that routing data is empty; the lane tables remain available.'
+  warning: 'Host-tooling skip: native subscription probes returned no usable data; routing recommendation omitted.',
+  detail: 'No lane returned a usable native subscription snapshot, so the routing recommendation is omitted. This is a probe/login gap, not proof that fleet burn is empty; the lane tables remain available.'
 };
 
 function codexbarSnapshotIsMissingBinary(snapshot) {
@@ -359,7 +359,7 @@ function renderLaneFreshness(agent) {
 
 function renderSubscriptions(routing) {
   const agents = routing.agents || {};
-  const subscriptionLanes = ['cursor', 'claude', 'codex', 'gemini', 'grok', 'kimi'];
+  const subscriptionLanes = ['cursor', 'claude', 'codex', 'gemini', 'grok', 'kimi', 'glm'];
   const rows = subscriptionLanes
     .filter(name => agents[name])
     .map(name => {
