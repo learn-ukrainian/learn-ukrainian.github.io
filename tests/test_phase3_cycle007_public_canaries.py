@@ -238,7 +238,7 @@ def test_grok_canary_requires_documented_json_envelope_and_matching_session() ->
         "requestId": "request-7",
     }
 
-    assert runner._extract_grok(json.dumps(envelope).encode(), "challenge", session_id) == {
+    assert runner._extract_grok(("CLI presentation\n" + json.dumps(envelope)).encode(), "challenge", session_id) == {
         "labels": payload["labels"]
     }
     with pytest.raises(runner.CanaryStructuralError, match="structured_output_envelope_drift"):
@@ -246,8 +246,11 @@ def test_grok_canary_requires_documented_json_envelope_and_matching_session() ->
     with pytest.raises(runner.CanaryStructuralError, match="structured_output_envelope_drift"):
         runner._extract_grok(json.dumps(payload).encode(), "challenge", session_id)
     trailing = envelope | {"text": f"{json.dumps(payload)}\nuntrusted trailing prose"}
-    with pytest.raises(runner.CanaryStructuralError, match="stream_json_invalid"):
+    with pytest.raises(runner.CanaryStructuralError, match="schema_json_trailing_drift"):
         runner._extract_grok(json.dumps(trailing).encode(), "challenge", session_id)
+    doubled = (json.dumps(envelope) + "\n" + json.dumps(envelope)).encode()
+    with pytest.raises(runner.CanaryStructuralError, match="outer_json_trailing_drift"):
+        runner._extract_grok(doubled, "challenge", session_id)
 
 
 def test_grok_canary_retry_mints_a_fresh_session(
@@ -305,7 +308,7 @@ def test_grok_batch_decodes_only_documented_matching_session_envelope(
 
     monkeypatch.setattr(batch, "validate", fake_validate)
     decoded = batch._decode_provider(
-        json.dumps(envelope).encode(),
+        ("CLI presentation\n" + json.dumps(envelope)).encode(),
         {"lane": "clean_label"},
         expected_session_id=session_id,
     )
@@ -319,7 +322,7 @@ def test_grok_batch_decodes_only_documented_matching_session_envelope(
             expected_session_id="wrong-session",
         )
     trailing = envelope | {"text": f"{json.dumps(payload)}\nuntrusted trailing prose"}
-    with pytest.raises(batch.Invalid, match="stream_json_invalid"):
+    with pytest.raises(batch.Invalid, match="schema_json_trailing_drift"):
         batch._decode_provider(
             json.dumps(trailing).encode(),
             {"lane": "clean_label"},
@@ -338,7 +341,9 @@ def test_grok_terminal_json_rule_rejects_multiple_values_but_skips_malformed_dec
 
     for runner in (canary, batch):
         assert runner._strict_grok_text_json(f"presentation {{broken\n{json.dumps(value)}") == value
-        with pytest.raises((canary.CanaryStructuralError, batch.Invalid), match="stream_json_invalid"):
+        with pytest.raises(
+            (canary.CanaryStructuralError, batch.Invalid), match="schema_json_trailing_drift"
+        ):
             runner._strict_grok_text_json(f"{json.dumps(value)}\n{json.dumps(value)}")
 
 

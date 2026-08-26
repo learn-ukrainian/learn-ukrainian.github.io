@@ -685,7 +685,12 @@ def _extract_gemini(
 _GROK_TRAILING_FENCE_RE = re.compile(r"\s*(?:```(?:json)?\s*)?\Z", re.IGNORECASE)
 
 
-def _strict_grok_text_json(text: str) -> Any:
+def _strict_grok_text_json(
+    text: str,
+    *,
+    missing_code: str = "schema_json_missing",
+    trailing_code: str = "schema_json_trailing_drift",
+) -> Any:
     """Extract Grok's one terminal schema value and reject anything after it.
 
     Native Grok JSON mode can prepend presentation text inside ``envelope.text``
@@ -703,16 +708,21 @@ def _strict_grok_text_json(text: str) -> Any:
         except (json.JSONDecodeError, CanaryError):
             continue
         if _GROK_TRAILING_FENCE_RE.fullmatch(candidate[end:]) is None:
-            raise CanaryStructuralError("stream_json_invalid")
+            raise CanaryStructuralError(trailing_code)
         return decoded
-    raise CanaryStructuralError("stream_json_invalid")
+    raise CanaryStructuralError(missing_code)
 
 
 def _extract_grok(raw: bytes, challenge: str, expected_session_id: str) -> dict[str, Any]:
     try:
-        envelope = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
-    except (UnicodeDecodeError, json.JSONDecodeError, CanaryError) as exc:
-        raise CanaryStructuralError("stream_json_invalid") from exc
+        raw_text = raw.decode("utf-8", "strict")
+    except UnicodeDecodeError as exc:
+        raise CanaryStructuralError("outer_json_missing") from exc
+    envelope = _strict_grok_text_json(
+        raw_text,
+        missing_code="outer_json_missing",
+        trailing_code="outer_json_trailing_drift",
+    )
     if (
         not isinstance(envelope, dict)
         or envelope.get("sessionId") != expected_session_id
