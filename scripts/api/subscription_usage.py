@@ -6,14 +6,15 @@ Provides background-threaded asynchronous caching of provider dashboard metrics.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import platform
+import subprocess
 import threading
-import contextlib
+import time
 import urllib.error
 import urllib.request
-import time
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
@@ -323,10 +324,8 @@ def _http_json_request(
             return resp.status, json.loads(raw.decode("utf-8")), None
     except urllib.error.HTTPError as exc:
         err_body = ""
-        try:
+        with contextlib.suppress(Exception):
             err_body = exc.read(4096).decode("utf-8", errors="replace")
-        except Exception:
-            pass
         parsed = None
         if err_body:
             with contextlib.suppress(json.JSONDecodeError, ValueError):
@@ -361,8 +360,6 @@ def _load_claude_oauth_token() -> str | None:
         security = Path("/usr/bin/security")
         if security.is_file():
             try:
-                import subprocess
-
                 completed = subprocess.run(
                     [
                         str(security),
@@ -427,7 +424,7 @@ def _load_grok_bearer() -> str | None:
     data = _read_json_file(grok_home / "auth.json")
     if not data:
         return None
-    for scope_key, entry in data.items():
+    for _scope_key, entry in data.items():
         if not isinstance(entry, dict):
             continue
         key = entry.get("key")
@@ -1212,9 +1209,13 @@ def _probe_glm_native(*, timeout_s: float) -> dict[str, Any]:
         elif unit in {"day", "days"} and isinstance(number, (int, float)):
             minutes = int(number) * 1440
         used = item.get("usedPercent") or item.get("used_percent")
-        if used is None and isinstance(item.get("usage"), (int, float)) and isinstance(item.get("limit"), (int, float)):
-            if item["limit"]:
-                used = float(item["usage"]) / float(item["limit"]) * 100.0
+        if (
+            used is None
+            and isinstance(item.get("usage"), (int, float))
+            and isinstance(item.get("limit"), (int, float))
+            and item["limit"]
+        ):
+            used = float(item["usage"]) / float(item["limit"]) * 100.0
         if not isinstance(used, (int, float)):
             continue
         resets = item.get("nextResetTime") or item.get("next_reset_time")
@@ -1838,10 +1839,7 @@ def _fetch_cursor_lane_usage_live(*, prefer_native: bool = True) -> dict[str, An
         }
 
     native = probe_cursor_provider_windows()
-    if prefer_native and native.get("probe_state") == "healthy":
-        merged = dict(native)
-    else:
-        merged = dict(native)
+    merged = dict(native)
 
     if native.get("probe_state") == "healthy" or _is_usable_capacity(merged):
         trend = persist_provider_snapshot("cursor", merged)
