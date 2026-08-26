@@ -777,7 +777,6 @@ def _provider_command(provider: Path) -> list[str]:
         "--permission-mode",
         "plan",
         "--no-alt-screen",
-        "--no-memory",
         "--no-subagents",
         "--disable-web-search",
         "--verbatim",

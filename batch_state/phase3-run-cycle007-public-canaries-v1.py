@@ -516,6 +516,25 @@ def grok_prompt(challenge: str, rows: list[dict[str, Any]], sidecar: dict[str, A
     ).encode("utf-8")
 
 
+def _grok_command(provider_bin: Path) -> list[str]:
+    """Build the reviewed native Grok CLI invocation."""
+    return [
+        str(provider_bin),
+        "--model",
+        GROK_MODEL,
+        "--reasoning-effort",
+        "high",
+        "--output-format",
+        "plain",
+        "--permission-mode",
+        "plan",
+        "--no-alt-screen",
+        "--no-subagents",
+        "--disable-web-search",
+        "--verbatim",
+    ]
+
+
 def _agy_stream(raw: bytes, *, expected_cwd: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         events = [
@@ -1061,22 +1080,7 @@ def invoke_canary(
             prompt_bytes = grok_prompt(challenge, rows, sidecar)
             stdin_path = runtime / "prompt.stdin"
             _atomic(stdin_path, prompt_bytes, raw=True)
-            cmd = [
-                str(provider_bin),
-                "--model",
-                GROK_MODEL,
-                "--reasoning-effort",
-                "high",
-                "--output-format",
-                "plain",
-                "--permission-mode",
-                "plan",
-                "--no-alt-screen",
-                "--no-memory",
-                "--no-subagents",
-                "--disable-web-search",
-                "--verbatim",
-            ]
+            cmd = _grok_command(provider_bin)
 
         attempt = 1
         provider_calls = 0
