@@ -684,9 +684,10 @@ def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
         }
 
     try:
-        payload = json.loads(res.stdout or "{}")
+        parsed = json.loads(res.stdout or "{}")
     except json.JSONDecodeError:
-        payload = {}
+        parsed = {}
+    payload = parsed if isinstance(parsed, dict) else {}
 
     is_auth = bool(payload.get("isAuthenticated"))
     if not is_auth and str(payload.get("status") or "").lower() == "authenticated":
