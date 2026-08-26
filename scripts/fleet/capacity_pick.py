@@ -37,8 +37,19 @@ CODE_LANES: tuple[str, ...] = (
     "glm",
 )
 
-_AVOID_STATUSES = frozenset({"hot", "near_cap"})
+_AVOID_STATUSES = frozenset({"hot", "near_cap", "need_login"})
 _COOL_STATUSES = frozenset({"cool", "warm", "idle"})
+_CODE_LANE_PRIORITY = {
+    "cursor": 0,
+    "codex": 1,
+    "claude": 2,
+    "grok": 3,
+    "kimi": 4,
+    "gemini": 5,
+    "agy": 6,
+    "deepseek": 7,
+    "glm": 8,
+}
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
 
 
@@ -67,13 +78,11 @@ def will_last_to_reset(agent_info: dict[str, Any] | None) -> bool | None:
 
 
 def is_avoid_lane(agent_info: dict[str, Any] | None, *, lane: str | None = None) -> bool:
-    """True when hot/near_cap, CodexBar deficit, or ``lane`` is a retired CLI alias.
-
-    A retired lane (currently just ``gemini`` → agy) is force-AVOID regardless
-    of its budget reading — a "cool" CodexBar snapshot is not proof the binary
-    is still installed.
-    """
+    """True when hot/near_cap/need_login, CodexBar deficit, or ``lane`` is retired."""
     if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
+        return True
+    info = agent_info or {}
+    if info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN":
         return True
     status = lane_status(agent_info)
     if status in _AVOID_STATUSES:
@@ -86,6 +95,14 @@ def remaining_pct(agent_info: dict[str, Any] | None) -> float | None:
     rem = info.get("remaining_pct")
     if isinstance(rem, (int, float)):
         return float(rem)
+    provider_windows = info.get("provider_windows")
+    if isinstance(provider_windows, dict):
+        auto = provider_windows.get("auto")
+        if isinstance(auto, dict) and isinstance(auto.get("remaining_pct"), (int, float)):
+            return float(auto["remaining_pct"])
+    headroom = info.get("headroom_pct")
+    if isinstance(headroom, (int, float)):
+        return float(headroom)
     burn = info.get("burn_pct_7d")
     if isinstance(burn, (int, float)):
         return 100.0 - float(burn)
@@ -151,6 +168,8 @@ def build_lane_rows(
         notes: list[str] = []
         if avoid:
             notes.append("AVOID")
+            if info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN":
+                notes.append("NEED_LOGIN")
             if retired_target:
                 notes.append(f"retired→{retired_target}")
             if will_last is False:
@@ -186,6 +205,8 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         rem = row.get("remaining_pct")
         rem_key = -float(rem) if isinstance(rem, (int, float)) else 0.0
         in_flight = int(row.get("in_flight") or 0)
+        lane_name = str(row.get("lane") or "")
+        lane_rank = _CODE_LANE_PRIORITY.get(lane_name, 50)
         status_rank = {
             "cool": 0,
             "warm": 1,
@@ -194,7 +215,7 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "hot": 8,
             "near_cap": 9,
         }.get(status, 5)
-        return (avoid, status_rank, in_flight, rem_key, str(row.get("lane")))
+        return (avoid, status_rank, lane_rank, in_flight, rem_key, lane_name)
 
     ordered = sorted(rows, key=_sort_key)
     out: list[dict[str, Any]] = []

@@ -212,23 +212,18 @@ def test_normalize_cursor_three_windows():
     }
     res = _normalize_provider_data("cursor", raw)
     assert res["lane"] == "cursor"
-    assert res["primary_used_pct"] == 44.7
-    assert abs(res["primary_remaining_pct"] - 55.3) < 0.01
+    assert res["primary_used_pct"] == 36.0
     assert res["secondary_used_pct"] == 36.0
-    assert res["secondary_remaining_pct"] == 64.0
     assert res["tertiary_used_pct"] == 100.0
-    assert res["tertiary_remaining_pct"] == 0.0
-    # Burn/status alias tracks Total (primary), not Auto (secondary).
-    assert res["weekly_used_pct"] == 44.7
-    assert abs(res["weekly_remaining_pct"] - 55.3) < 0.01
-    assert res["weekly_resets_at"] == "2026-08-01T09:58:38Z"
-    assert res["windows"]["primary"]["label"] == "Total"
+    # Burn/status tracks Auto monthly pool, not Total primary.
+    assert res["weekly_used_pct"] is None
+    assert res["weekly_remaining_pct"] is None
+    assert res["provider_windows"]["auto"]["used_pct"] == 36.0
+    assert res["provider_windows"]["api"]["used_pct"] == 100.0
     assert res["windows"]["secondary"]["label"] == "Auto"
     assert res["windows"]["tertiary"]["label"] == "API"
     assert res["windows"]["tertiary"]["used_pct"] == 100.0
-    assert res["windows"]["tertiary"]["remaining_pct"] == 0.0
-    assert res["windows"]["primary"]["resets_at"] == "2026-08-01T09:58:38Z"
-    # Must not quietly copy Total into the Auto window block.
+    assert res["weekly_resets_at"] == "2026-08-01T09:58:38Z"
     assert res["windows"]["secondary"]["used_pct"] == 36.0
 
 
@@ -338,6 +333,25 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+    })
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "fetched_at": "2026-07-09T14:13:52Z",
+        },
+    )
 
     now = datetime(2026, 7, 9, 16, 13, tzinfo=UTC)
     res = state_router.compute_routing_budget(now)
@@ -356,26 +370,37 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
     assert "weekly-pace signal" in deficit_warnings[0]
 
 
-def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
-    """Cursor burn tracks Total; exhausted API allotment emits an advisory warning."""
+def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
+    """Cursor burn tracks Auto monthly pool; exhausted API allotment emits advisory warning."""
     cursor_row = {
         "lane": "cursor",
-        "primary_used_pct": 44.7,
-        "primary_remaining_pct": 55.3,
+        "login_state": "authenticated",
+        "probe_state": "healthy",
+        "primary_used_pct": 36.0,
+        "primary_remaining_pct": 64.0,
         "secondary_used_pct": 36.0,
         "secondary_remaining_pct": 64.0,
         "tertiary_used_pct": 100.0,
         "tertiary_remaining_pct": 0.0,
-        "weekly_used_pct": 44.7,
-        "weekly_remaining_pct": 55.3,
-        "windows": {
-            "primary": {
-                "used_pct": 44.7,
-                "remaining_pct": 55.3,
+        "weekly_used_pct": None,
+        "weekly_remaining_pct": None,
+        "provider_windows": {
+            "auto": {
+                "window": "monthly",
+                "label": "Auto",
+                "used_pct": 36.0,
+                "remaining_pct": 64.0,
                 "resets_at": "2026-08-01T09:58:38Z",
-                "window_minutes": 44640,
-                "label": "Total",
             },
+            "api": {
+                "window": "monthly",
+                "label": "API",
+                "used_pct": 100.0,
+                "remaining_pct": 0.0,
+                "resets_at": "2026-08-01T09:58:38Z",
+            },
+        },
+        "windows": {
             "secondary": {
                 "used_pct": 36.0,
                 "remaining_pct": 64.0,
@@ -397,11 +422,11 @@ def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
         "weekly_pace_delta_pct": -20.0,
         "will_last_to_reset": True,
         "pace_summary": "-20% pace delta",
-        "source": "codexbar",
+        "source": "cursor_native",
         "fetched_at": "2026-07-21T19:00:00Z",
         "stale": False,
         "age_s": 1.0,
-        "status": "healthy",
+        "status": "cool",
         "auth_error": None,
     }
 
@@ -426,13 +451,25 @@ def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
         }
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: dict(cursor_row))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+    })
+    monkeypatch.setattr(
+        state_router,
+        "persist_provider_snapshot",
+        lambda lane, snapshot: {"trend": "flat", "samples": 1},
+    )
 
     res = state_router.compute_routing_budget(datetime(2026, 7, 21, 19, 0, tzinfo=UTC))
     cursor = res["agents"]["cursor"]
-    assert cursor["burn_pct_7d"] == 44.7
+    assert cursor["burn_pct_7d"] == 36.0
     assert cursor["status"] == "cool"
-    assert cursor["codexbar"]["windows"]["primary"]["label"] == "Total"
+    assert cursor["provider_windows"]["auto"]["used_pct"] == 36.0
+    assert cursor["provider_windows"]["api"]["used_pct"] == 100.0
     api_warnings = [w for w in res["recommendation"]["warnings"] if "API/on-demand" in w]
     assert api_warnings
     assert "100% used" in api_warnings[0]

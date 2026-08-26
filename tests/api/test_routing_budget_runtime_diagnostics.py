@@ -78,6 +78,24 @@ def _configure(
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+        },
+    )
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+    })
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
     monkeypatch.setattr(
         state_router,

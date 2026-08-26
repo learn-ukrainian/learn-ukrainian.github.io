@@ -25,8 +25,13 @@ import json
 import logging
 import re
 import shutil
+import subprocess
+import urllib.error
+import urllib.request
 from collections.abc import Mapping
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -640,3 +645,207 @@ def _extract_concrete_model_from_events(events: list[dict]) -> str | None:
         if candidate:
             return candidate
     return None
+
+
+_CURSOR_AUTH_PATH = Path.home() / ".config" / "cursor" / "auth.json"
+_CURSOR_USAGE_URL = (
+    "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage"
+)
+
+
+def _cursor_cli_binary() -> str:
+    return shutil.which("cursor-agent") or shutil.which("agent") or "cursor-agent"
+
+
+def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
+    """Preflight Cursor CLI auth without printing secrets.
+
+    Returns ``login_state`` of ``authenticated`` or ``NEED_LOGIN``.
+    """
+    fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    try:
+        res = subprocess.run(
+            [_cursor_cli_binary(), "status", "--format", "json"],
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+            check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        kind = "missing_binary" if isinstance(exc, FileNotFoundError) else "timeout"
+        return {
+            "lane": "cursor",
+            "source": "cursor_cli",
+            "login_state": "NEED_LOGIN",
+            "is_authenticated": False,
+            "status": "need_login",
+            "error_kind": kind,
+            "fetched_at": fetched_at,
+        }
+
+    try:
+        payload = json.loads(res.stdout or "{}")
+    except json.JSONDecodeError:
+        payload = {}
+
+    is_auth = bool(payload.get("isAuthenticated"))
+    if not is_auth and str(payload.get("status") or "").lower() == "authenticated":
+        is_auth = True
+
+    return {
+        "lane": "cursor",
+        "source": "cursor_cli",
+        "login_state": "authenticated" if is_auth else "NEED_LOGIN",
+        "is_authenticated": is_auth,
+        "status": "authenticated" if is_auth else "need_login",
+        "error_kind": None if is_auth else "not_authenticated",
+        "fetched_at": fetched_at,
+    }
+
+
+def _load_cursor_access_token() -> str | None:
+    try:
+        data = json.loads(_CURSOR_AUTH_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    token = data.get("accessToken")
+    return str(token).strip() if isinstance(token, str) and token.strip() else None
+
+
+def _ms_to_iso_z(raw_ms: object) -> str | None:
+    try:
+        ms = int(str(raw_ms))
+    except (TypeError, ValueError):
+        return None
+    return datetime.fromtimestamp(ms / 1000.0, tz=UTC).isoformat().replace("+00:00", "Z")
+
+
+def _monthly_window_block(
+    used_pct: float | None,
+    *,
+    label: str,
+    resets_at: str | None,
+) -> dict[str, Any]:
+    remaining = None if used_pct is None else max(0.0, min(100.0, 100.0 - used_pct))
+    return {
+        "window": "monthly",
+        "label": label,
+        "used_pct": used_pct,
+        "remaining_pct": remaining,
+        "resets_at": resets_at,
+    }
+
+
+def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
+    """Read Cursor Auto/API monthly pools from the first-party dashboard API.
+
+    Never logs or returns access tokens. When credentials are absent, returns
+    ``probe_state=NEED_PROBE`` with empty windows (no fabricated percentages).
+    """
+    fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    login = probe_cursor_login(timeout_s=min(timeout_s, 5.0))
+    if not login.get("is_authenticated"):
+        return {
+            "lane": "cursor",
+            "source": "cursor_native",
+            "probe_state": "NEED_LOGIN",
+            "login_state": "NEED_LOGIN",
+            "status": "need_login",
+            "provider_windows": {
+                "auto": _monthly_window_block(None, label="Auto", resets_at=None),
+                "api": _monthly_window_block(None, label="API", resets_at=None),
+            },
+            "fetched_at": fetched_at,
+        }
+
+    token = _load_cursor_access_token()
+    if not token:
+        return {
+            "lane": "cursor",
+            "source": "cursor_native",
+            "probe_state": "NEED_PROBE",
+            "login_state": "authenticated",
+            "status": "unknown",
+            "provider_windows": {
+                "auto": _monthly_window_block(None, label="Auto", resets_at=None),
+                "api": _monthly_window_block(None, label="API", resets_at=None),
+            },
+            "auth_error": "Cursor credentials unavailable for usage probe",
+            "error_kind": "missing_credentials",
+            "fetched_at": fetched_at,
+        }
+
+    try:
+        req = urllib.request.Request(
+            _CURSOR_USAGE_URL,
+            data=b"{}",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
+        return {
+            "lane": "cursor",
+            "source": "cursor_native",
+            "probe_state": "NEED_PROBE",
+            "login_state": "authenticated",
+            "status": "unknown",
+            "provider_windows": {
+                "auto": _monthly_window_block(None, label="Auto", resets_at=None),
+                "api": _monthly_window_block(None, label="API", resets_at=None),
+            },
+            "auth_error": str(exc)[:200],
+            "error_kind": "fetch_error",
+            "fetched_at": fetched_at,
+        }
+
+    plan = payload.get("planUsage") if isinstance(payload.get("planUsage"), dict) else {}
+    auto_used = plan.get("autoPercentUsed")
+    api_used = plan.get("apiPercentUsed")
+    auto_pct = float(auto_used) if isinstance(auto_used, (int, float)) else None
+    api_pct = float(api_used) if isinstance(api_used, (int, float)) else None
+    resets_at = _ms_to_iso_z(payload.get("billingCycleEnd"))
+
+    auto_block = _monthly_window_block(auto_pct, label="Auto", resets_at=resets_at)
+    api_block = _monthly_window_block(api_pct, label="API", resets_at=resets_at)
+
+    # Burn/status tracks the Auto-routing pool (operator: pin ``auto`` to spend Auto).
+    burn_pct = auto_pct
+    if burn_pct is not None:
+        if burn_pct >= 90.0:
+            lane_status = "near_cap"
+        elif burn_pct >= 75.0:
+            lane_status = "hot"
+        elif burn_pct < 50.0:
+            lane_status = "cool"
+        else:
+            lane_status = "warm"
+    else:
+        lane_status = "unknown"
+
+    return {
+        "lane": "cursor",
+        "source": "cursor_native",
+        "probe_state": "healthy",
+        "login_state": "authenticated",
+        "status": lane_status,
+        "auto_used_pct": auto_pct,
+        "api_used_pct": api_pct,
+        "auto_remaining_pct": auto_block.get("remaining_pct"),
+        "api_remaining_pct": api_block.get("remaining_pct"),
+        "primary_used_pct": auto_pct,
+        "primary_remaining_pct": auto_block.get("remaining_pct"),
+        "secondary_used_pct": auto_pct,
+        "secondary_remaining_pct": auto_block.get("remaining_pct"),
+        "tertiary_used_pct": api_pct,
+        "tertiary_remaining_pct": api_block.get("remaining_pct"),
+        "weekly_used_pct": None,
+        "weekly_remaining_pct": None,
+        "weekly_resets_at": resets_at,
+        "provider_windows": {"auto": auto_block, "api": api_block},
+        "fetched_at": fetched_at,
+    }
