@@ -214,7 +214,7 @@ def load_curriculum(
                 data = yaml.safe_load(curriculum_yaml.read_text(encoding="utf-8")) or {}
                 _curriculum_cache[curriculum_yaml] = (current_mtime, data)
             return _curriculum_cache[curriculum_yaml][1]
-        except OSError:
+        except (OSError, yaml.YAMLError, Exception):
             return {}
     return {}
 
@@ -629,8 +629,8 @@ def is_review_stale(review_path: Path, content_path: Path | None) -> bool:
 
 
 def get_broker_messages_for_slug(
-    track_dir: Path,
     slug: str,
+    limit: int = 20,
     *,
     message_db: Any = None,
 ) -> list[dict]:
@@ -648,8 +648,8 @@ def get_broker_messages_for_slug(
             "SELECT id, task_id, from_llm, to_llm, message_type, "
             "substr(content, 1, 200) as preview, timestamp "
             "FROM messages WHERE task_id LIKE ? "
-            "ORDER BY timestamp DESC LIMIT 20",
-            (f"%{slug}%",),
+            "ORDER BY id DESC LIMIT ?",
+            (f"%{slug}%", limit),
         ).fetchall()
         return [dict(r) for r in rows]
     except Exception:

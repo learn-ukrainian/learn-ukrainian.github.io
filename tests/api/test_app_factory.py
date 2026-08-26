@@ -134,6 +134,7 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
         for path in values:
             assert Path(path).resolve().is_relative_to(tmp_path.resolve())
 
+    assert context.roots.plans_root == context.roots.curriculum_root / "plans"
     assert context.stores.sources_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.message_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.session_streams_database.path.resolve().is_relative_to(tmp_path.resolve())
@@ -300,6 +301,11 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         "# Second Content\n", encoding="utf-8"
     )
 
+    (first_root / "curriculum" / "l2-uk-en" / "plans" / "a1").mkdir(parents=True)
+    (first_root / "curriculum" / "l2-uk-en" / "plans" / "a1" / "first-slug.yaml").write_text(
+        "title: First Plan\nplan_fixes:\n  - fix 1\n", encoding="utf-8"
+    )
+
     first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
 
@@ -313,6 +319,15 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         second_pipeline = second_client.get("/api/state/pipeline/a1?fresh=true").json()
         assert first_pipeline["modules"][0]["slug"] == "first-slug"
         assert second_pipeline["modules"][0]["slug"] == "second-slug"
+
+        first_enrichment = first_client.get("/api/state/enrichment-status?track=a1").json()
+        assert first_enrichment["tracks"]["a1"]["enriched"] == 1
+
+        from scripts.api.state_helpers import cache_invalidate
+
+        cache_invalidate()
+        second_enrichment = second_client.get("/api/state/enrichment-status?track=a1").json()
+        assert second_enrichment["tracks"]["a1"]["enriched"] == 0
 
         first_manifest = first_client.get("/api/state/manifest").json()
         second_manifest = second_client.get("/api/state/manifest").json()

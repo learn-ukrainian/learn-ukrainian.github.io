@@ -451,14 +451,11 @@ def _collect_git_orient_data() -> dict:
         }
 
     branch = branch_proc.stdout.strip()
-    try:
-        authority = build_repository_authority(
-            project_root=PROJECT_ROOT,
-            live_repo_root=LIVE_REPO_ROOT,
-            data_branch=branch,
-        )
-    except Exception:
-        authority = None
+    authority = build_repository_authority(
+        project_root=PROJECT_ROOT,
+        live_repo_root=LIVE_REPO_ROOT,
+        data_branch=branch,
+    )
     return {
         "branch": branch,
         "head": head_proc.stdout.strip(),

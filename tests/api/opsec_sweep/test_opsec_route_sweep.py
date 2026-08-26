@@ -366,6 +366,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             "bare_heal_message": None,
         },
     )
+    monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     monkeypatch.setattr(
         cold_start_board,
