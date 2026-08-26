@@ -5,18 +5,19 @@ from __future__ import annotations
 import sqlite3
 import time
 from collections.abc import Callable
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.admin_router as admin_router
-import scripts.api.comms_router as comms_router
 import scripts.api.dashboard_comms as dashboard_comms
 import scripts.api.images_router as images_router
 import scripts.api.state_helpers as state_helpers
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
+from scripts.api.monitor_context import DatabaseHandle, production_context
 from tests.latency_budget import assert_under_budget
 
 SAMPLE_COUNT = 3
@@ -249,7 +250,17 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     broker_db = tmp_path / "messages.db"
     _init_broker_db(broker_db)
     monkeypatch.setattr(admin_router, "MESSAGE_DB", broker_db)
-    monkeypatch.setattr(comms_router, "MESSAGE_DB", broker_db)
+    # comms_router keeps no path globals since #7269 step 5 — it resolves
+    # its broker DB from the app's MonitorContext. Pin the context's message
+    # DB onto this smoke broker while keeping every other production root
+    # intact for the non-comms dashboards this test also exercises.
+    base_ctx = production_context()
+    broker_ctx = replace(
+        base_ctx,
+        roots=replace(base_ctx.roots, message_db_path=broker_db),
+        stores=replace(base_ctx.stores, message_db=DatabaseHandle(broker_db, base_ctx._open_db)),
+    )
+    monkeypatch.setattr(app.state, "ctx", broker_ctx)
     monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
     monkeypatch.setattr(state_helpers, "MESSAGE_DB", broker_db)
     image_root = tmp_path / "textbook_images"

@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from dataclasses import replace
 
 import pytest
 from fastapi.testclient import TestClient
@@ -19,7 +20,7 @@ from fastapi.testclient import TestClient
 import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router
 import scripts.api.state_router as state_router
-from scripts.api.monitor_context import fixture_context
+from scripts.api.monitor_context import DatabaseHandle, fixture_context
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -481,8 +482,6 @@ def test_inbox_400_on_invalid_agent(monkeypatch):
 
 def test_agent_activity_summarizes_deliveries_and_events(monkeypatch, tmp_path):
     """The activity endpoint gives orchestrators one compact bridge snapshot."""
-    import scripts.api.comms_router as comms_router
-
     db_path = tmp_path / "messages.db"
     conn = sqlite3.connect(db_path)
     conn.executescript("""
@@ -588,7 +587,16 @@ def test_agent_activity_summarizes_deliveries_and_events(monkeypatch, tmp_path):
     conn.commit()
     conn.close()
 
-    monkeypatch.setattr(comms_router, "MESSAGE_DB", db_path)
+    # comms_router keeps no path globals since #7269 step 5 — it resolves
+    # its broker DB from the app's MonitorContext. Pin the context's message
+    # DB onto this fixture broker exactly like the old MESSAGE_DB patch did.
+    base_ctx = fixture_context(tmp_path)
+    broker_ctx = replace(
+        base_ctx,
+        roots=replace(base_ctx.roots, message_db_path=db_path),
+        stores=replace(base_ctx.stores, message_db=DatabaseHandle(db_path, base_ctx._open_db)),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", broker_ctx)
 
     resp = client.get("/api/comms/agent-activity?agents=codex,gemini&limit=2")
     assert resp.status_code == 200
