@@ -1155,9 +1155,9 @@ def _run_chunk(
         if terminal.exists():
             if attempt == 2:
                 raise Error("ordinal_identity_binding_drift")
-            _verify_recovery_receipt(package, started, terminal)
             marker = _read_json(terminal)
-            if marker.get("failure_code") not in {
+            failure_code = marker.get("failure_code")
+            if failure_code not in {
                 "stream_json_invalid",
                 "terminal_result_count_drift",
                 "structured_output_envelope_drift",
@@ -1166,6 +1166,8 @@ def _run_chunk(
                 "label_count_or_envelope_drift",
             } | PROVIDER_STATUS_RECOVERY_CODES:
                 raise Error("ordinal_identity_binding_drift")
+            if failure_code in PROVIDER_STATUS_RECOVERY_CODES:
+                _verify_recovery_receipt(package, started, terminal)
             continue
         runtime = Path(
             tempfile.mkdtemp(
