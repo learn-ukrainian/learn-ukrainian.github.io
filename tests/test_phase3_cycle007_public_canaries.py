@@ -136,6 +136,20 @@ def test_batch_stream_input_command_has_no_print_prompt() -> None:
     assert "--new-project" in command
 
 
+def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:
+    canary = _load_runner()
+    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_grok_batch_command_test", path)
+    assert spec is not None and spec.loader is not None
+    batch = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(batch)
+
+    expected_isolation_flags = {"--permission-mode", "--no-alt-screen", "--no-subagents", "--disable-web-search"}
+    for command in (canary._grok_command(Path("/provider")), batch._provider_command(Path("/provider"))):
+        assert expected_isolation_flags <= set(command)
+        assert "--no-memory" not in command
+
+
 def test_batch_stream_rejects_reported_cwd_mismatch(tmp_path: Path) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_cwd_test", path)
