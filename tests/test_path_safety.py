@@ -163,3 +163,10 @@ def test_raw_rm_rf_lint_allowlist_keyed_by_content_not_line(tmp_path: Path) -> N
     assert len(findings) == 1
     assert findings[0][1] == lockdir_rm
     assert findings[0][0].startswith("services.sh:")
+
+
+def test_control_plane_sqlite_lint_allowlists_remaining_direct_opens() -> None:
+    from scripts.hygiene import lint_control_plane_sqlite
+
+    violations = lint_control_plane_sqlite.find_unallowlisted_connects()
+    assert violations == [], f"unallowlisted control-plane sqlite opens: {violations}"

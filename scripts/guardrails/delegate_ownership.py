@@ -30,6 +30,9 @@ try:
 except ImportError:  # pragma: no cover - flat script path
     from common.repo_root import resolve_repo_root  # type: ignore
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
+
 # File lives at scripts/guardrails/… → parents[2] is the checkout root.
 _REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 DEFAULT_LEDGER_PATH = _REPO_ROOT / "batch_state" / "tasks" / "write-ownership.sqlite3"
@@ -421,7 +424,13 @@ class OwnershipLedger:
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def _connect(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(str(self.path), timeout=30.0, isolation_level=None)
+        conn = cp_connect(
+            StoreId.WRITE_OWNERSHIP,
+            path=self.path,
+            read_only=False,
+            timeout=30.0,
+            isolation_level=None,
+        )
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA busy_timeout=30000")
