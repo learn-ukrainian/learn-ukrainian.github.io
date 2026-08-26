@@ -2243,7 +2243,8 @@ async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 @router.get("/build-status")
 async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
     """All-tracks build progress in one call."""
-    cached = cache_get("build_status_all", ttl=30.0)
+    cache_key = f"build_status_all_{ctx.roots.project_root}"
+    cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
     result = await asyncio.to_thread(
@@ -2251,7 +2252,7 @@ async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
-    cache_set("build_status_all", result)
+    cache_set(cache_key, result)
     return result
 
 
@@ -2497,7 +2498,8 @@ async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_c
 @router.get("/enrichment-status")
 async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """Which plans are enriched per track."""
-    cached = cache_get("enrichment_status", ttl=120.0)
+    cache_key = f"enrichment_status_{ctx.roots.project_root}_{track or 'all'}"
+    cached = cache_get(cache_key, ttl=120.0)
     if cached is not None:
         return cached
     result = await asyncio.to_thread(
@@ -2506,7 +2508,7 @@ async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
-    cache_set("enrichment_status", result)
+    cache_set(cache_key, result)
     return result
 
 
