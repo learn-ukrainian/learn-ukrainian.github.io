@@ -713,12 +713,60 @@ def test_controller_preserves_python_launcher_for_stage_subprocesses(
         expected_custody_sha256="f" * 64,
         expected_label_manifest_sha256="1" * 64,
         expected_evidence_manifest_sha256="2" * 64,
+        expected_sources_endpoint_identity={
+            "server_code_sha256": "3" * 64,
+            "sources_db_sha256": "4" * 64,
+            "vesum_db_sha256": "5" * 64,
+        },
     )
 
     assert commands[0][0] == os.fspath(launcher)
     assert commands[0][0] != os.fspath(target)
+    assert commands[0][commands[0].index("--expected-server-code-sha") + 1] == "3" * 64
+    assert commands[0][commands[0].index("--expected-sources-db-sha") + 1] == "4" * 64
+    assert commands[0][commands[0].index("--expected-vesum-db-sha") + 1] == "5" * 64
     assert expected_python_sha256 == controller._python_executable_sha256()
     assert controller._require_python_binding(expected_python_sha256) == target
+
+
+def test_controller_binds_preflight_source_identity_into_grok_command(
+    controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runner = tmp_path / "grok.py"
+    runner.write_text("# public fixture\n", encoding="utf-8")
+    monkeypatch.setattr(controller, "_load_bound_runner", lambda *_args: SimpleNamespace())
+    monkeypatch.setattr(
+        controller,
+        "grok_missing_ranges",
+        lambda *_args, **_kwargs: {"clean_label": [(1, 1)], "residual_label": []},
+    )
+
+    commands, _runner = controller._commands_for_stage(
+        tmp_path,
+        "grok",
+        runner,
+        code_paths={"grok_runner": runner},
+        expected_agy_executable_sha256="a" * 64,
+        expected_grok_executable_sha256="b" * 64,
+        grok_executable=tmp_path / "grok",
+        expected_label_prompt_sha256s={
+            "gemini": {"clean_label": "c" * 64, "residual_label": "d" * 64},
+            "grok": {"clean_label": "e" * 64, "residual_label": "f" * 64},
+        },
+        expected_custody_sha256="1" * 64,
+        expected_label_manifest_sha256="2" * 64,
+        expected_evidence_manifest_sha256="3" * 64,
+        expected_sources_endpoint_identity={
+            "server_code_sha256": "4" * 64,
+            "sources_db_sha256": "5" * 64,
+            "vesum_db_sha256": "6" * 64,
+        },
+    )
+
+    command = commands[0]
+    assert command[command.index("--expected-server-code-sha") + 1] == "4" * 64
+    assert command[command.index("--expected-sources-db-sha") + 1] == "5" * 64
+    assert command[command.index("--expected-vesum-db-sha") + 1] == "6" * 64
 
 
 def test_controller_executes_bound_target_with_venv_launcher_semantics(

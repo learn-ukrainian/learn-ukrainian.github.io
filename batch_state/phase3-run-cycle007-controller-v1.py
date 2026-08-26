@@ -231,6 +231,19 @@ def _hex64(value: Any) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
 
 
+SOURCE_IDENTITY_HASH_KEYS = (
+    "server_code_sha256",
+    "sources_db_sha256",
+    "vesum_db_sha256",
+)
+
+
+def _source_identity_hashes(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict) or any(not _hex64(value.get(key)) for key in SOURCE_IDENTITY_HASH_KEYS):
+        raise ControllerError("preflight_binding_drift")
+    return {key: value[key] for key in SOURCE_IDENTITY_HASH_KEYS}
+
+
 def _public_fixture_hashes() -> dict[str, Any]:
     rows = [
         {
@@ -987,6 +1000,7 @@ def _gemini_runner(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
+    expected_sources_endpoint_identity: dict[str, Any] | None = None,
 ) -> Any:
     path = HERE / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_controller_gemini", path)
@@ -999,6 +1013,7 @@ def _gemini_runner(
     module.EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     module.EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     module.EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256 or ""
+    module.EXPECTED_SOURCES_ENDPOINT_IDENTITY = _source_identity_hashes(expected_sources_endpoint_identity)
     return module
 
 
@@ -1008,12 +1023,14 @@ def revalidate_full_packets(
     expected_label_manifest_sha256: str,
     expected_evidence_manifest_sha256: str,
     expected_label_prompt_sha256s: dict[str, dict[str, str]],
+    expected_sources_endpoint_identity: dict[str, Any],
 ) -> None:
     """Revalidate every reassembled Gemini packet before its stage can seal."""
     runner = _gemini_runner(
         expected_custody_sha256,
         expected_label_manifest_sha256,
         expected_evidence_manifest_sha256,
+        expected_sources_endpoint_identity,
     )
     for lane, count in LANES.items():
         for index in range(1, count + 1):
@@ -1031,12 +1048,14 @@ def gemini_missing_ranges(
     expected_label_manifest_sha256: str,
     expected_evidence_manifest_sha256: str,
     expected_label_prompt_sha256s: dict[str, dict[str, str]],
+    expected_sources_endpoint_identity: dict[str, Any],
 ) -> dict[str, list[tuple[int, int]]]:
     """Return only contiguous entirely-unsealed packet ranges; partial seals refuse."""
     runner = _gemini_runner(
         expected_custody_sha256,
         expected_label_manifest_sha256,
         expected_evidence_manifest_sha256,
+        expected_sources_endpoint_identity,
     )
     result: dict[str, list[tuple[int, int]]] = {}
     for lane, count in LANES.items():
@@ -1092,6 +1111,7 @@ def grok_missing_ranges(
     expected_label_manifest_sha256: str = "",
     expected_evidence_manifest_sha256: str = "",
     expected_label_prompt_sha256s: dict[str, dict[str, str]] | None = None,
+    expected_sources_endpoint_identity: dict[str, Any] | None = None,
 ) -> dict[str, list[tuple[int, int]]]:
     """Return contiguous unsealed Grok ranges and reject any partial/invalid sealed packet."""
     output_root = getattr(runner, "OUTPUT_ROOT", None)
@@ -1103,6 +1123,7 @@ def grok_missing_ranges(
         runner.EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     if expected_evidence_manifest_sha256:
         runner.EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
+    runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = _source_identity_hashes(expected_sources_endpoint_identity)
     if not _exact_label_prompt_sha256s(expected_label_prompt_sha256s):
         raise ControllerError("preflight_binding_drift")
     assert expected_label_prompt_sha256s is not None
@@ -1146,6 +1167,7 @@ def revalidate_grok_full_packets(
     expected_evidence_manifest_sha256: str = "",
     expected_grok_executable_sha256: str | None = None,
     expected_label_prompt_sha256s: dict[str, dict[str, str]] | None = None,
+    expected_sources_endpoint_identity: dict[str, Any] | None = None,
 ) -> None:
     if expected_custody_sha256:
         runner.EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
@@ -1153,6 +1175,7 @@ def revalidate_grok_full_packets(
         runner.EXPECTED_LABEL_MANIFEST_SHA256 = expected_label_manifest_sha256
     if expected_evidence_manifest_sha256:
         runner.EXPECTED_EVIDENCE_MANIFEST_SHA256 = expected_evidence_manifest_sha256
+    runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = _source_identity_hashes(expected_sources_endpoint_identity)
     if expected_grok_executable_sha256 and expected_grok_executable_sha256 != "synthetic":
         runner.EXPECTED_GROK_EXECUTABLE_SHA256 = expected_grok_executable_sha256
     if not _exact_label_prompt_sha256s(expected_label_prompt_sha256s):
@@ -1309,6 +1332,7 @@ def _commands_for_stage(
     expected_custody_sha256: str | None,
     expected_label_manifest_sha256: str | None,
     expected_evidence_manifest_sha256: str | None,
+    expected_sources_endpoint_identity: dict[str, Any] | None = None,
     resolution_authorization: Path | None = None,
     resolution_authority_attestation: Path | None = None,
     resolution_authority_root: Path | None = None,
@@ -1323,12 +1347,14 @@ def _commands_for_stage(
     if stage == "gemini":
         if agy_executable is None:
             raise ControllerError("preflight_binding_drift")
+        source_identity_hashes = _source_identity_hashes(expected_sources_endpoint_identity)
         ranges = gemini_missing_ranges(
             package,
             expected_custody_sha256 or "",
             expected_label_manifest_sha256 or "",
             expected_evidence_manifest_sha256 or "",
             expected_label_prompt_sha256s,
+            source_identity_hashes,
         )
         return (
             [
@@ -1355,6 +1381,12 @@ def _commands_for_stage(
                     expected_label_manifest_sha256 or "",
                     "--expected-evidence-manifest-sha",
                     expected_evidence_manifest_sha256 or "",
+                    "--expected-server-code-sha",
+                    source_identity_hashes["server_code_sha256"],
+                    "--expected-sources-db-sha",
+                    source_identity_hashes["sources_db_sha256"],
+                    "--expected-vesum-db-sha",
+                    source_identity_hashes["vesum_db_sha256"],
                     "--expected-label-prompt-sha",
                     expected_label_prompt_sha256s["gemini"][lane],
                 ]
@@ -1367,6 +1399,7 @@ def _commands_for_stage(
     if stage == "grok":
         if grok_executable is None:
             raise ControllerError("preflight_binding_drift")
+        source_identity_hashes = _source_identity_hashes(expected_sources_endpoint_identity)
         grok = _load_bound_runner("grok_runner", code_paths)
         ranges = grok_missing_ranges(
             package,
@@ -1375,6 +1408,7 @@ def _commands_for_stage(
             expected_label_manifest_sha256 or "",
             expected_evidence_manifest_sha256 or "",
             expected_label_prompt_sha256s,
+            source_identity_hashes,
         )
         commands: list[list[str]] = []
         for lane, lane_ranges in ranges.items():
@@ -1400,6 +1434,12 @@ def _commands_for_stage(
                     expected_label_manifest_sha256 or "",
                     "--expected-evidence-manifest-sha",
                     expected_evidence_manifest_sha256 or "",
+                    "--expected-server-code-sha",
+                    source_identity_hashes["server_code_sha256"],
+                    "--expected-sources-db-sha",
+                    source_identity_hashes["sources_db_sha256"],
+                    "--expected-vesum-db-sha",
+                    source_identity_hashes["vesum_db_sha256"],
                     "--expected-label-prompt-sha",
                     expected_label_prompt_sha256s["grok"][lane],
                 ]
@@ -1530,6 +1570,7 @@ def run_stage(
     expected_custody_sha256: str | None = None,
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
+    expected_sources_endpoint_identity: dict[str, Any] | None = None,
     code_paths: dict[str, Path] | None = None,
     operator_inspected_count: int | None = None,
     resolution_authorization: Path | None = None,
@@ -1590,6 +1631,7 @@ def run_stage(
         expected_custody_sha256=expected_custody_sha256,
         expected_label_manifest_sha256=expected_label_manifest_sha256,
         expected_evidence_manifest_sha256=expected_evidence_manifest_sha256,
+        expected_sources_endpoint_identity=expected_sources_endpoint_identity,
         resolution_authorization=resolution_authorization,
         resolution_authority_attestation=resolution_authority_attestation,
         resolution_authority_root=resolution_authority_root,
@@ -1626,6 +1668,7 @@ def run_stage(
             expected_label_manifest_sha256 or "",
             expected_evidence_manifest_sha256 or "",
             expected_label_prompt_sha256s,
+            _source_identity_hashes(expected_sources_endpoint_identity),
         )
     elif stage == "grok":
         revalidate_grok_full_packets(
@@ -1636,6 +1679,7 @@ def run_stage(
             expected_evidence_manifest_sha256 or "",
             expected_grok_executable_sha256,
             expected_label_prompt_sha256s,
+            _source_identity_hashes(expected_sources_endpoint_identity),
         )
     elif stage == "compare":
         _revalidate_compare_receipts(package, expected_custody_sha256 or "", expected_label_manifest_sha256 or "")
@@ -1759,6 +1803,7 @@ def main() -> int:
                     expected_custody_sha256=proof["expected_custody_sha256"],
                     expected_label_manifest_sha256=proof["expected_label_manifest_sha256"],
                     expected_evidence_manifest_sha256=proof["expected_evidence_manifest_sha256"],
+                    expected_sources_endpoint_identity=proof["sources_endpoint_identity"],
                     code_paths=code_paths,
                     operator_inspected_count=args.operator_inspected_count,
                     resolution_authorization=args.resolution_authorization,
