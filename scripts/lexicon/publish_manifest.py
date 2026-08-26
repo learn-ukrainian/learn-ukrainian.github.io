@@ -16,11 +16,11 @@ import json
 import subprocess
 import sys
 import tempfile
+import urllib.error
+import urllib.request
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
-import urllib.error
-import urllib.request
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]

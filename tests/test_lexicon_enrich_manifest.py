@@ -6040,6 +6040,17 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     )
     monkeypatch.setattr(
         enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "standard",
+            "is_russianism": False,
+            "russian_shadow": False,
+            "calque_warning": None,
+            "attestations": [],
+        },
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
         "query_wikipedia",
         lambda title: {
             "title": "Берегиня",
