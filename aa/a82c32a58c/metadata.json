@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "aaa82c32a58c",
+  "strategy": "manual-commit",
+  "branch": "glm/fix-7269-step5-comms",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_manifest_api.py",
+    "tests/test_playground_api_stability.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/aa/a82c32a58c/0/metadata.json",
+      "transcript": "/aa/a82c32a58c/0/full.jsonl",
+      "compact_transcript": "/aa/a82c32a58c/0/transcript.jsonl",
+      "content_hash": "/aa/a82c32a58c/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 64111,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1553152,
+    "output_tokens": 3293,
+    "api_call_count": 35
+  }
+}

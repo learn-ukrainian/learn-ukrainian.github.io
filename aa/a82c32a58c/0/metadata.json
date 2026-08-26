@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "aaa82c32a58c",
+  "session_id": "ses_fc00940ccffeLQL3goM9Yk4fO1",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T21:32:30.816373571Z",
+  "branch": "glm/fix-7269-step5-comms",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_playground_api_stability.py",
+    "tests/test_manifest_api.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "6b35b033df0d",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 64111,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1553152,
+    "output_tokens": 3293,
+    "api_call_count": 35
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T21:32:30.723282041Z",
+    "agent_lines": 25,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 25,
+    "total_lines_changed": 31,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
