@@ -52,6 +52,8 @@ def test_load_fleet_taxonomy_structure() -> None:
     assert "core" in registry.areas
     assert "seminars" in registry.areas
     assert "hramatka" in registry.areas
+    assert "monitor" in registry.areas
+    assert "open-model-data" in registry.areas
 
 
 def test_resolve_area_canonical_ids() -> None:
@@ -59,7 +61,7 @@ def test_resolve_area_canonical_ids() -> None:
     assert isinstance(infra, ResolvedArea)
     assert infra.id == "infra"
     assert "infra-harness" in infra.aliases
-    assert EpicInfo(number=4707, name="Infra & fleet reliability (hooks, dispatch, routing)") in infra.epics
+    assert EpicInfo(number=6943, name="Infra & fleet reliability (hooks, dispatch, routing)") in infra.epics
 
     harness = resolve_area("harness")
     assert harness.id == "harness"
@@ -67,6 +69,14 @@ def test_resolve_area_canonical_ids() -> None:
 
     devops = resolve_area("devops")
     assert devops.id == "devops"
+
+    monitor = resolve_area("monitor")
+    assert monitor.id == "monitor"
+    assert monitor.epics == (EpicInfo(7177, "Monitor API + UI — fleet & host observability"),)
+
+    open_model_data = resolve_area("open-model-data")
+    assert open_model_data.id == "open-model-data"
+    assert open_model_data.epics == (EpicInfo(6321, "Ukrainian open-model data infrastructure"),)
 
 
 def test_resolve_area_aliases() -> None:
@@ -93,7 +103,7 @@ def test_resolve_area_aliases() -> None:
 
 def test_resolve_area_by_epic_number() -> None:
     # int epic lookup
-    infra = resolve_area(4707)
+    infra = resolve_area(6943)
     assert infra.id == "infra"
 
     devops = resolve_area(5703)
@@ -103,10 +113,12 @@ def test_resolve_area_by_epic_number() -> None:
     assert harness.id == "harness"
 
     # string epic lookup
-    assert resolve_area("4707").id == "infra"
-    assert resolve_area("epic:4707").id == "infra"  # allow-hardcoded-epic: taxonomy alias reverse lookup
-    assert resolve_area_by_epic(4707).id == "infra"
+    assert resolve_area("6943").id == "infra"
+    assert resolve_area("epic:6943").id == "infra"  # allow-hardcoded-epic: taxonomy alias reverse lookup
+    assert resolve_area_by_epic(6943).id == "infra"
     assert resolve_area_by_epic("epic:5703").id == "devops"  # allow-hardcoded-epic: taxonomy alias reverse lookup
+    assert resolve_area(7177).id == "monitor"
+    assert resolve_area(6321).id == "open-model-data"
 
 
 def test_resolve_area_unknown_raises_typed_error() -> None:
@@ -134,6 +146,8 @@ def test_list_valid_names() -> None:
     assert "harness" in names
     assert "eval-harness" in names
     assert "devops" in names
+    assert "monitor" in names
+    assert "open-model-data" in names
     assert names == tuple(sorted(names))
 
 
@@ -145,7 +159,7 @@ def test_list_valid_names() -> None:
 def test_inventory_session_streams_wiring() -> None:
     """Verify session_streams inventory uses fleet_taxonomy resolution."""
     # infra-harness is keyed by stream name so succession keeps harness-epic paths
-    cands_infra = _handoff_candidates_for("infra-harness", 4707)
+    cands_infra = _handoff_candidates_for("infra-harness", 6943)
     assert any("harness-epic" in path for path in cands_infra)
     cands_successor = _handoff_candidates_for("infra-harness", 888001)
     assert any("harness-epic" in path for path in cands_successor)

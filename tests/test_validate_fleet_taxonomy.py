@@ -33,9 +33,9 @@ def test_happy_path_real_files() -> None:
     """Validate real fleet_taxonomy.yaml and area_assignments.yaml."""
     res = validate_fleet_taxonomy()
     assert res["ok"] is True
-    assert res["areas_count"] == 7
-    assert res["epics_count"] == 18
-    assert res["assignments_count"] == 7
+    assert res["areas_count"] == 9
+    assert res["epics_count"] == 20
+    assert res["assignments_count"] == 9
 
 
 def test_negative_duplicate_alias_across_areas(tmp_path: Any) -> None:
@@ -68,8 +68,8 @@ def test_negative_epic_in_two_areas(tmp_path: Any) -> None:
     tax_data = yaml.safe_load(TAXONOMY_PATH.read_text(encoding="utf-8"))
     ass_data = yaml.safe_load(ASSIGNMENTS_PATH.read_text(encoding="utf-8"))
 
-    # Break taxonomy by adding epic 4707 (from infra) into devops as well
-    tax_data["areas"]["devops"]["epics"].append({"number": 4707, "name": "Duplicate 4707"})
+    # Break taxonomy by adding epic 6943 (from infra) into devops as well
+    tax_data["areas"]["devops"]["epics"].append({"number": 6943, "name": "Duplicate 6943"})
 
     tax_file = tmp_path / "fleet_taxonomy.yaml"
     ass_file = tmp_path / "area_assignments.yaml"
@@ -84,7 +84,7 @@ def test_negative_epic_in_two_areas(tmp_path: Any) -> None:
             assignments_schema_path=ASSIGNMENTS_SCHEMA_PATH,
         )
 
-    assert "Epic number 4707 belongs to multiple areas" in str(exc_info.value)
+    assert "Epic number 6943 belongs to multiple areas" in str(exc_info.value)
 
 
 def test_negative_assignment_for_unknown_area(tmp_path: Any) -> None:

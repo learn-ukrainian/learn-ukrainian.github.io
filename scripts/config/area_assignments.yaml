@@ -23,6 +23,9 @@ assignments:
       - gemini-devops
       - grok-devops
       - kimi-devops
+  monitor:
+    driver_agent_type: infra-orchestrator
+    slots: []
   harness:
     driver_agent_type: infra-orchestrator
     slots:
@@ -31,6 +34,9 @@ assignments:
       - gemini-corpus
       - grok-corpus
       - kimi-corpus
+  open-model-data:
+    driver_agent_type: infra-orchestrator
+    slots: []
   atlas:
     driver_agent_type: infra-orchestrator
     slots:
