@@ -30,12 +30,13 @@ DB_ACCESS_PATTERNS = (
 
 # The exact pre-migration inventory from design §4.1: 22 access sites in 21
 # unique files. Infrastructure files are listed too so the denominator cannot
-# silently shrink when the exemptions below are changed.
+# silently shrink when the exemptions below are changed. #7269 step 5 removed
+# scripts/api/comms_router.py deliberately: its routes now read every DB
+# through the app's MonitorContext DatabaseHandle (20 -> 19 files).
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/admin_router.py",
         "scripts/api/agent_monitor_router.py",
-        "scripts/api/comms_router.py",
         "scripts/api/dashboard_comms.py",
         "scripts/api/delegate_router.py",
         "scripts/api/discussions_router.py",
@@ -269,7 +270,7 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
 
 
 def test_db_access_patterns_have_the_step_one_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 20
+    assert len(DB_ACCESS_ALLOWLIST) == 19
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

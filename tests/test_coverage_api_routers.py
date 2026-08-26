@@ -83,16 +83,19 @@ def _insert_messages(db_path, messages):
 
 @pytest.fixture()
 def _patch_config(mock_project_root, broker_db):
-    """Patch config module paths to use tmp_path."""
+    """Patch config module paths to use tmp_path.
+
+    comms_router itself keeps no path globals since #7269 step 5 — it
+    resolves everything from the app's MonitorContext — so steering comms
+    routes at the fixture root happens via ``app.state.ctx`` (see
+    ``comms_client`` and ``_comms_ctx``). The config patches below remain
+    for the routers that still read config directly (admin, images) and
+    for helpers that read ``scripts.api.config`` at call time.
+    """
     with (
         patch("scripts.api.config.PROJECT_ROOT", mock_project_root),
         patch("scripts.api.config.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
         patch("scripts.api.config.MESSAGE_DB", broker_db),
-        patch("scripts.api.comms_router.PROJECT_ROOT", mock_project_root),
-        patch("scripts.api.comms_router.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
-        patch("scripts.api.comms_router.MESSAGE_DB", broker_db),
-        patch("scripts.api.comms_router.PID_DIR", mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"),
-        patch("scripts.api.comms_router.LOG_DIR", mock_project_root / "logs" / "research-preseed"),
         patch("scripts.api.admin_router.PROJECT_ROOT", mock_project_root),
         patch("scripts.api.admin_router.MESSAGE_DB", broker_db),
         patch("scripts.api.admin_router.BACKUP_DIR", mock_project_root / "data" / "backups"),
@@ -108,11 +111,30 @@ def _patch_config(mock_project_root, broker_db):
         yield
 
 
+def _comms_ctx(project_root, **root_overrides):
+    """Build the comms app context for the fixture root (#7269 step 5).
+
+    Same pattern as ``tests/test_comms_router_expiry_sweep.py``: a fixture
+    context whose roots all live under the test's project root.
+    ``root_overrides`` replace individual ``MonitorRoots`` fields (e.g.
+    ``pid_dir=Path("/nonexistent")``).
+    """
+    from dataclasses import replace
+
+    from scripts.api.monitor_context import fixture_context
+
+    ctx = fixture_context(project_root)
+    if root_overrides:
+        ctx = replace(ctx, roots=replace(ctx.roots, **root_overrides))
+    return ctx
+
+
 @pytest.fixture()
-def comms_client(_patch_config):
+def comms_client(_patch_config, mock_project_root):
     """TestClient for comms router."""
     from scripts.api.comms_router import router
     app = FastAPI()
+    app.state.ctx = _comms_ctx(mock_project_root)
     app.include_router(router, prefix="/api/comms")
     return TestClient(app)
 
@@ -170,8 +192,7 @@ class TestCommsMessages:
         """When DB doesn't exist, return empty with error."""
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.get("/api/comms/messages")
+        r = comms_client.get("/api/comms/messages")
         assert r.status_code == 200
         assert r.json()["error"] == "Broker DB not found"
 
@@ -259,8 +280,7 @@ class TestCommsConversations:
     def test_conversations_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.get("/api/comms/conversations")
+        r = comms_client.get("/api/comms/conversations")
         assert r.json()["conversations"] == []
 
     def test_conversations_grouped(self, comms_client, broker_db):
@@ -314,8 +334,7 @@ class TestCommsConversationDetail:
     def test_conversation_detail_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.get("/api/comms/conversation/task-X")
+        r = comms_client.get("/api/comms/conversation/task-X")
         assert r.json()["messages"] == []
 
     def test_conversation_not_found(self, comms_client, broker_db):
@@ -326,9 +345,9 @@ class TestCommsConversationDetail:
 class TestCommsActiveProcesses:
     """Tests for /api/comms/active-processes endpoint."""
 
-    def test_no_pid_dir(self, comms_client):
-        with patch("scripts.api.comms_router.PID_DIR", Path("/nonexistent")):
-            r = comms_client.get("/api/comms/active-processes")
+    def test_no_pid_dir(self, comms_client, mock_project_root):
+        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
+        r = comms_client.get("/api/comms/active-processes")
         assert r.json()["count"] == 0
 
     def test_with_pid_files(self, comms_client, mock_project_root):
@@ -387,11 +406,8 @@ class TestCommsZombies:
     def test_zombies_no_db_no_pids(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with (
-            patch("scripts.api.comms_router.MESSAGE_DB", db_path),
-            patch("scripts.api.comms_router.PID_DIR", Path("/nonexistent")),
-        ):
-            r = comms_client.get("/api/comms/zombies")
+        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
+        r = comms_client.get("/api/comms/zombies")
         assert r.json()["count"] == 0
 
     def test_stale_messages(self, comms_client, broker_db):
@@ -462,8 +478,7 @@ class TestCommsStats:
     def test_stats_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.get("/api/comms/stats")
+        r = comms_client.get("/api/comms/stats")
         assert r.json()["error"] == "Broker DB not found"
 
     def test_stats_with_data(self, comms_client, broker_db):
@@ -510,8 +525,7 @@ class TestCommsHealth:
     def test_health_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.get("/api/comms/health")
+        r = comms_client.get("/api/comms/health")
         data = r.json()
         assert data["db_exists"] is False
 
@@ -521,9 +535,9 @@ class TestCommsHealth:
         r = comms_client.get("/api/comms/health")
         assert r.json()["alive_processes"] == 1
 
-    def test_health_pid_dir_missing(self, comms_client):
-        with patch("scripts.api.comms_router.PID_DIR", Path("/nonexistent")):
-            r = comms_client.get("/api/comms/health")
+    def test_health_pid_dir_missing(self, comms_client, mock_project_root):
+        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
+        r = comms_client.get("/api/comms/health")
         assert r.json()["pid_dir_exists"] is False
 
 
@@ -597,11 +611,8 @@ class TestCommsActions:
     def test_cleanup_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with (
-            patch("scripts.api.comms_router.MESSAGE_DB", db_path),
-            patch("scripts.api.comms_router.PID_DIR", Path("/nonexistent")),
-        ):
-            r = comms_client.post("/api/comms/cleanup")
+        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
+        r = comms_client.post("/api/comms/cleanup")
         self._assert_retired(r, "legacy comms writes retired; use fleet-comms authority tooling")
 
     def test_acknowledge_message(self, comms_client, broker_db):
@@ -612,8 +623,7 @@ class TestCommsActions:
     def test_acknowledge_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.post("/api/comms/acknowledge/1")
+        r = comms_client.post("/api/comms/acknowledge/1")
         self._assert_retired(r, "legacy acknowledge retired; use fleet-comms delivery receipts")
 
     def test_send_message(self, comms_client, broker_db):
@@ -629,10 +639,9 @@ class TestCommsActions:
     def test_send_message_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.post("/api/comms/send", json={
-                "from_llm": "a", "to_llm": "b", "content": "c",
-            })
+        r = comms_client.post("/api/comms/send", json={
+            "from_llm": "a", "to_llm": "b", "content": "c",
+        })
         self._assert_retired(r, "legacy send retired; use fleet-comms authority")
 
     def test_send_message_defaults(self, comms_client, broker_db):
@@ -661,8 +670,7 @@ class TestCommsByModule:
     def test_by_module_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
-            r = comms_client.get("/api/comms/by-module/a1/greetings")
+        r = comms_client.get("/api/comms/by-module/a1/greetings")
         assert r.status_code == 500
 
     def test_by_module_no_matches(self, comms_client, broker_db):
@@ -1430,15 +1438,14 @@ class TestImagesHelpers:
 class TestCommsInternalHelpers:
     """Tests for internal helper functions in comms_router."""
 
-    def test_scan_preseed_logs_no_dir(self, _patch_config):
+    def test_scan_preseed_logs_no_dir(self, _patch_config, mock_project_root):
         from scripts.api.comms_router import _scan_preseed_logs
-        with patch("scripts.api.comms_router.LOG_DIR", Path("/nonexistent")):
-            result = _scan_preseed_logs()
+        result = _scan_preseed_logs(_comms_ctx(mock_project_root, logs_dir=Path("/nonexistent")))
         assert result == []
 
     def test_scan_preseed_logs_no_files(self, _patch_config, mock_project_root):
         from scripts.api.comms_router import _scan_preseed_logs
-        result = _scan_preseed_logs()
+        result = _scan_preseed_logs(_comms_ctx(mock_project_root))
         assert result == []
 
     def test_check_build_processes(self, _patch_config):
@@ -1456,7 +1463,7 @@ class TestCommsInternalHelpers:
 
     def test_scan_track_progress_no_dir(self, _patch_config, mock_project_root):
         from scripts.api.comms_router import _scan_track_progress
-        result = _scan_track_progress("nonexistent")
+        result = _scan_track_progress(_comms_ctx(mock_project_root), "nonexistent")
         assert result["research_done"] == 0
 
     def test_scan_track_progress_with_files(self, _patch_config, mock_project_root):
@@ -1464,7 +1471,7 @@ class TestCommsInternalHelpers:
         research_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "research"
         research_dir.mkdir(parents=True)
         (research_dir / "topic-research.md").write_text("# Research")
-        result = _scan_track_progress("hist")
+        result = _scan_track_progress(_comms_ctx(mock_project_root), "hist")
         assert result["research_done"] == 1
         assert result["last_created"] is not None
         assert result["last_created"]["slug"] == "topic"
@@ -1614,7 +1621,7 @@ class TestCommsPreseedLogParsing:
             "Last meaningful line here\n"
         )
         (log_dir / "hist-20260301-0100.log").write_text(log_content)
-        result = _scan_preseed_logs()
+        result = _scan_preseed_logs(_comms_ctx(mock_project_root))
         assert len(result) == 1
         assert result[0]["passed"] == 1
         assert result[0]["failed"] == 2  # FAIL + ERROR
@@ -1625,5 +1632,5 @@ class TestCommsPreseedLogParsing:
         from scripts.api.comms_router import _scan_preseed_logs
         log_dir = mock_project_root / "logs" / "research-preseed"
         (log_dir / "random.log").write_text("no timestamp\n")
-        result = _scan_preseed_logs()
+        result = _scan_preseed_logs(_comms_ctx(mock_project_root))
         assert result == []

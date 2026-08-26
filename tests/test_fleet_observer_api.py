@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -11,14 +12,29 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
+from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
 @pytest.fixture()
-def client() -> TestClient:
+def client(tmp_path: Path) -> TestClient:
     app = FastAPI()
+    # The /operations route resolves the broker DB and read-model roots from
+    # the app's MonitorContext (same as production); keep every root under the
+    # test's tmp_path unless a test pins a broker DB explicitly.
+    app.state.ctx = fixture_context(tmp_path)
     app.include_router(fleet_router.router, prefix="/api/fleet")
     return TestClient(app)
+
+
+def _broker_ctx(root: Path, broker_path: Path) -> MonitorContext:
+    """Fixture context whose legacy broker DB is pinned to ``broker_path``."""
+    ctx = fixture_context(root)
+    return replace(
+        ctx,
+        roots=replace(ctx.roots, message_db_path=broker_path),
+        stores=replace(ctx.stores, message_db=DatabaseHandle(broker_path, ctx._open_db)),
+    )
 
 
 @pytest.fixture()
@@ -810,9 +826,9 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     finally:
         connection.close()
     before = broker_path.read_bytes()
-    monkeypatch.setattr(fleet_router.legacy_comms, "MESSAGE_DB", broker_path)
+    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
 
-    async def fake_processes() -> dict:
+    async def fake_processes(*, ctx: MonitorContext | None = None) -> dict:
         return {
             "alive": 2,
             "processes": [
@@ -820,7 +836,12 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
             ],
         }
 
-    async def fake_zombies(*, stale_hours: float, pingpong_threshold: int) -> dict:
+    async def fake_zombies(
+        *,
+        stale_hours: float,
+        pingpong_threshold: int,
+        ctx: MonitorContext | None = None,
+    ) -> dict:
         assert stale_hours == 2.0
         assert pingpong_threshold == 5
         return {
@@ -840,7 +861,7 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
             ],
         }
 
-    def fake_batches() -> dict:
+    def fake_batches(ctx: MonitorContext | None = None) -> dict:
         return {
             "generated_at": "2026-08-02T00:00:00Z",
             "running_processes": 3,
@@ -917,15 +938,15 @@ def test_operations_missing_store_does_not_create_it(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     broker_path = tmp_path / "missing" / "legacy-broker.db"
-    monkeypatch.setattr(fleet_router.legacy_comms, "MESSAGE_DB", broker_path)
+    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
 
-    async def empty_processes() -> dict:
+    async def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
         return {"alive": 0, "processes": []}
 
     async def empty_zombies(**_kwargs: object) -> dict:
         return {"count": 0, "zombies": []}
 
-    def empty_batches() -> dict:
+    def empty_batches(ctx: MonitorContext | None = None) -> dict:
         return {"running_processes": 0, "tracks": {}}
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
@@ -950,12 +971,12 @@ def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
 ) -> None:
     broker_path = tmp_path / "broken-broker.db"
     broker_path.write_bytes(b"not-a-sqlite-database private-outage-detail")
-    monkeypatch.setattr(fleet_router.legacy_comms, "MESSAGE_DB", broker_path)
+    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
 
     async def unavailable(*_args: object, **_kwargs: object) -> dict:
         raise RuntimeError("private dependency path and credential")
 
-    def unavailable_batch() -> dict:
+    def unavailable_batch(ctx: MonitorContext | None = None) -> dict:
         raise RuntimeError("private dependency path and credential")
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", unavailable)
@@ -976,12 +997,14 @@ def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
 
 
 def test_operations_batch_snapshot_reuses_uncached_read_models(
+    tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
         fleet_router.legacy_comms,
         "_scan_preseed_logs",
-        lambda: [
+        lambda ctx: [
             {
                 "track": "hist",
                 "complete": False,
@@ -999,7 +1022,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
     monkeypatch.setattr(
         fleet_router.legacy_comms,
         "_scan_track_progress",
-        lambda track: {
+        lambda ctx, track: {
             "track": track,
             "total_expected": 10,
             "research_done": 3,
@@ -1015,7 +1038,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
         lambda *_args, **_kwargs: pytest.fail("operations snapshot must not write cache state"),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot()
+    snapshot = fleet_router._legacy_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] == 1
     assert snapshot["tracks"]["hist"]["health"] == "healthy"

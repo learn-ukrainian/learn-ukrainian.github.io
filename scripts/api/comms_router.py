@@ -221,9 +221,9 @@ def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
 
     # `_db.get_db()` reads its own module-level DB_PATH, bound once from
     # AB_DB_PATH at first import — it does not track this router's
-    # MESSAGE_DB. Point it at the exact same broker DB this router already
-    # resolved so the sweep can never land on a different file (this is
-    # also what makes the sweep respect test patches of MESSAGE_DB).
+    # MonitorContext. Point it at the exact same broker DB this router
+    # already resolved from the app's context so the sweep can never land
+    # on a different file.
     previous_db_path = _ch_db.DB_PATH
     _ch_db.DB_PATH = message_db
     try:

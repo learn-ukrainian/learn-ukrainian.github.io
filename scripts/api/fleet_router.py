@@ -21,7 +21,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from scripts.fleet_comms.cli import fleet_help_payload, fleet_status_payload
@@ -40,6 +40,7 @@ from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
 from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
 router = APIRouter(tags=["fleet"])
@@ -762,14 +763,14 @@ def _non_negative_float(value: Any) -> float:
     return max(0.0, round(number, 1))
 
 
-def _legacy_broker_snapshot() -> dict[str, Any]:
+def _legacy_broker_snapshot(ctx: MonitorContext) -> dict[str, Any]:
     """Read the legacy broker with an explicit query-only connection.
 
     The legacy health route opens a normal connection so that it can report
     writability. This consolidated observer deliberately does not reuse that
     behavior: a GET must never create, migrate, or journal the broker database.
     """
-    db_path = Path(legacy_comms.MESSAGE_DB)
+    db_path = ctx.roots.message_db_path
     result: dict[str, Any] = {
         "availability": "db_missing",
         "db_exists": False,
@@ -777,7 +778,7 @@ def _legacy_broker_snapshot() -> dict[str, Any]:
         "size_kb": 0.0,
         "unacknowledged_depth": 0,
     }
-    if not db_path.is_file():
+    if db_path is None or not db_path.is_file():
         return result
 
     result["db_exists"] = True
@@ -914,9 +915,9 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
     }
 
 
-def _legacy_batch_snapshot() -> dict[str, Any]:
+def _legacy_batch_snapshot(ctx: MonitorContext) -> dict[str, Any]:
     """Collect the existing batch read models without populating their cache."""
-    logs = legacy_comms._scan_preseed_logs()
+    logs = legacy_comms._scan_preseed_logs(ctx)
     processes = legacy_comms._check_build_processes()
     all_tracks = {
         str(item.get("track"))
@@ -925,7 +926,7 @@ def _legacy_batch_snapshot() -> dict[str, Any]:
     }
     tracks: dict[str, dict[str, Any]] = {}
     for track in sorted(all_tracks):
-        progress = legacy_comms._scan_track_progress(track)
+        progress = legacy_comms._scan_track_progress(ctx, track)
         log = next(
             (item for item in logs if isinstance(item, dict) and item.get("track") == track),
             None,
@@ -961,13 +962,13 @@ def _legacy_batch_snapshot() -> dict[str, Any]:
 
 
 @router.get("/operations")
-async def fleet_operations() -> dict[str, Any]:
+async def fleet_operations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Sanitized legacy broker, zombie, and batch operations projection."""
     broker_result, process_result, zombie_result, batch_result = await asyncio.gather(
-        asyncio.to_thread(_legacy_broker_snapshot),
-        legacy_comms.active_processes(),
-        legacy_comms.detect_zombies(stale_hours=2.0, pingpong_threshold=5),
-        asyncio.to_thread(_legacy_batch_snapshot),
+        asyncio.to_thread(_legacy_broker_snapshot, ctx),
+        legacy_comms.active_processes(ctx=ctx),
+        legacy_comms.detect_zombies(stale_hours=2.0, pingpong_threshold=5, ctx=ctx),
+        asyncio.to_thread(_legacy_batch_snapshot, ctx),
         return_exceptions=True,
     )
 
