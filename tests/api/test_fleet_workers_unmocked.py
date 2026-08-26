@@ -14,6 +14,7 @@ from scripts.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID
 from scripts.api.main import app
 from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
 from scripts.api.occupancy_local import write_marker
+from scripts.api.project_state_router import reset_local_document_cache
 from scripts.api.project_state_store import reset_project_state_store
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -32,6 +33,7 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
     """Exercise real adapters on fixture stores without monkeypatching the collector."""
     reset_project_state_store()
     reset_observer_presence()
+    reset_local_document_cache()
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -123,6 +125,7 @@ def test_unmocked_local_host_driver_lease_in_unattributed_bucket(tmp_path: Path,
     """Driver lease with holder_host_id local must surface under unattributed, not vanish."""
     reset_project_state_store()
     reset_observer_presence()
+    reset_local_document_cache()
 
     db = tmp_path / "session_streams.db"
     _seed_local_driver_lease(db)

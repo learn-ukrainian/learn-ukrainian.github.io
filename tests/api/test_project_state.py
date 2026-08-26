@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -88,8 +89,10 @@ def _document(
 @pytest.fixture(autouse=True)
 def _clear_store() -> None:
     reset_project_state_store()
+    router_mod.reset_local_document_cache()
     yield
     reset_project_state_store()
+    router_mod.reset_local_document_cache()
 
 
 def _post_report(document: dict[str, Any]) -> Any:
@@ -247,6 +250,76 @@ def test_in_process_self_host_is_fresh(monkeypatch: pytest.MonkeyPatch) -> None:
     host = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
     assert host["freshness"] == "fresh"
     assert host["age_s"] == 0.0
+
+
+def test_self_report_cache_is_shared_by_project_and_worker_routes(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    document = _document("host-job")
+    calls = 0
+
+    def collect(host_id: str) -> dict[str, Any]:
+        nonlocal calls
+        calls += 1
+        assert host_id == "host-job"
+        return document
+
+    monkeypatch.setattr(router_mod, "collect_local_document", collect)
+    monkeypatch.setattr("scripts.api.fleet_workers_collect._self_host_ids", lambda: {"host-job"})
+    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_driver_workers", lambda **_: ([], []))
+    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_delegate_workers", lambda *_, **__: [])
+    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_job_workers", lambda **_: ([], None))
+    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_marker_workers", lambda **_: [])
+
+    project = client.get("/api/fleet/projects/v1?host_id=host-job")
+    workers = client.get("/api/fleet/workers/v1?host_id=host-job")
+
+    assert project.status_code == 200
+    assert workers.status_code == 200
+    assert calls == 1
+    project_host = project.json()["hosts"]["host-job"]
+    worker_host = workers.json()["hosts"][0]
+    assert project_host["freshness"] == "fresh"
+    assert project_host["age_s"] == 0.0
+    assert worker_host["freshness"] == "fresh"
+    assert worker_host["age_s"] == 0.0
+
+
+def test_self_report_cache_serves_stale_while_refreshing(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    document = _document("host-job")
+    calls = 0
+    refresh_started = threading.Event()
+    release_refresh = threading.Event()
+
+    def collect(_host_id: str) -> dict[str, Any]:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return document
+        refresh_started.set()
+        release_refresh.wait(timeout=2.0)
+        return {**document, "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z")}
+
+    monkeypatch.setattr(router_mod, "collect_local_document", collect)
+    first = router_mod.get_cached_local_document("host-job")
+    assert first.document is document
+    cached_entry = router_mod._LOCAL_DOCUMENT_CACHE["host-job"]
+    router_mod._LOCAL_DOCUMENT_CACHE["host-job"] = router_mod._LocalDocumentCacheEntry(
+        document,
+        cached_entry.stored_at_mono - router_mod.LOCAL_DOCUMENT_FRESH_S - 1.0,
+    )
+
+    try:
+        stale = router_mod.get_cached_local_document("host-job")
+        assert refresh_started.wait(timeout=1.0)
+        assert stale.document is document
+        assert stale.freshness == "stale"
+        assert stale.age_s is not None and stale.age_s > router_mod.LOCAL_DOCUMENT_FRESH_S
+        assert calls == 2
+    finally:
+        release_refresh.set()
 
 
 def test_self_host_live_collection_unmocked(

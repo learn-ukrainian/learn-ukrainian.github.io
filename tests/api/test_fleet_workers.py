@@ -21,6 +21,7 @@ from scripts.api.fleet_workers_sanitize import validate_workers_list
 from scripts.api.main import app
 from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
 from scripts.api.occupancy_local import _marker_fresh
+from scripts.api.project_state_router import reset_local_document_cache
 from scripts.api.project_state_sanitize import ProjectStateValidationError
 from scripts.api.project_state_store import get_stored_report, reset_project_state_store
 
@@ -109,9 +110,11 @@ def _worker_row(**overrides: Any) -> dict[str, Any]:
 def _reset_stores() -> None:
     reset_project_state_store()
     reset_observer_presence()
+    reset_local_document_cache()
     yield
     reset_project_state_store()
     reset_observer_presence()
+    reset_local_document_cache()
 
 
 def test_workers_route_schema(monkeypatch: pytest.MonkeyPatch) -> None:
