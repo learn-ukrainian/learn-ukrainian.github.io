@@ -95,7 +95,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "c2af4446bcd1f8b82fc07fcbc46993854ac70c9605336a18039561ffc1ffa883"
+        "sha256": "a0eb6425472c6924218062135243b8a7b051d1e62fe2738166ef74cc1c7aadf7"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -223,11 +223,11 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "fe55142c3cb85f87474eb7adc53c66dc34b2ddbdb380bc1ce9d883bcd3d2b971"
+        "sha256": "cd9bc507316c676952c35ac56debaad1f62b415e3f6d93cd729d9810799ecea6"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "b3349d0b17311070440705d388df7c99a5617f2e2602a178604a2a5b0681cee3"
+        "sha256": "ba331eaaddd2fe078eeca27203868493ee2c9315b8d1e5daf6ed037e7a7e4837"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",
