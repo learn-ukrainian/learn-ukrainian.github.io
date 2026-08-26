@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -181,9 +182,10 @@ def _fake_track(tmp_path: Path, monkeypatch) -> None:
     )
     (track_dir / "unscored-mod").mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(state_router, "LEVELS", [{"id": "demo", "name": "Demo", "path": "demo"}])
-    monkeypatch.setattr(state_router, "CURRICULUM_ROOT", tmp_path)
+    new_roots = replace(api_main.app.state.ctx.roots, curriculum_root=tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", replace(api_main.app.state.ctx, roots=new_roots))
     monkeypatch.setattr(
-        state_router, "get_plan_slugs", lambda _t: [(1, "scored-mod"), (2, "unscored-mod")]
+        state_router, "get_plan_slugs", lambda _t, *args, **kwargs: [(1, "scored-mod"), (2, "unscored-mod")]
     )
 
 

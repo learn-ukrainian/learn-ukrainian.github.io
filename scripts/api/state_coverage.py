@@ -80,7 +80,7 @@ def compute_summary(
     module_sources = _module_sources_by_track(curriculum_root=curriculum_root)
     tracks_out = {}
     totals = {
-        "modules": 0,
+        "total": 0,
         "research_done": 0,
         "content_done": 0,
         "audit_passing": 0,

@@ -856,10 +856,7 @@ def compute_routing_budget(
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
-    try:
-        budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
-    except TypeError:
-        budgets, warnings = _load_agent_budgets()
+    budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
     runtime_records_7d = _runtime_usage_records_7d()
     extras = _load_budget_extras(budgets)
     reset_hours = extras["reset_imminent_hours"]
@@ -2343,7 +2340,6 @@ async def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(g
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
         message_db=ctx.stores.message_db,
-        project_root=ctx.roots.project_root,
     )
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
@@ -2409,7 +2405,6 @@ async def module_detail_by_slug(
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
         message_db=ctx.stores.message_db,
-        project_root=ctx.roots.project_root,
     )
     if "error" in full:
         return JSONResponse(status_code=404, content=full)

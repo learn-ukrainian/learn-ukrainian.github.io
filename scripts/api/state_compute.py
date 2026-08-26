@@ -433,7 +433,6 @@ def compute_module_detail(
     curriculum_root: Path | None = None,
     plans_root: Path | None = None,
     message_db: Any = None,
-    project_root: Path | None = None,
 ) -> dict:
     """Compute single module deep-dive data."""
     if curriculum_root is None:
@@ -488,7 +487,7 @@ def compute_module_detail(
         "enriched": plan_has_revision_log(plan_file),
         "quick_verify": _get_quick_verify(orch_dir),
         "consultations": state_data.get("consultations", []),
-        "comms": get_broker_messages_for_slug(slug, limit=15, message_db=message_db),
+        "comms": get_broker_messages_for_slug(track_dir, slug, message_db=message_db),
         "generated_at": datetime.now(UTC).isoformat(),
     }
 

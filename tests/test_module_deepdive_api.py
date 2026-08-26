@@ -30,20 +30,23 @@ def test_module_by_slug_compact_default(monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(state_router, "LEVELS", fake_levels)
     monkeypatch.setattr(
-        state_router, "get_plan_slugs",
-        lambda _t: [(3, "target-slug")],
+        state_router,
+        "get_plan_slugs",
+        lambda _t, *args, **kwargs: [(3, "target-slug")],
     )
 
-    def fake_detail(track, num, cfg):
+    def fake_detail(track, num, cfg, *args, **kwargs):
         return {
-            "track": track, "num": num, "slug": "target-slug",
-            "pipeline_version": "v6", "needs_rebuild": False,
+            "track": track,
+            "num": num,
+            "slug": "target-slug",
+            "pipeline_version": "v6",
+            "needs_rebuild": False,
             "phases": {
                 "write": {"status": "complete", "executor": {"agent": "gemini"}},
                 "review": {"status": "in_progress", "executor": {"agent": "claude"}, "retries": 2},
             },
-            "audit": {"status": "pass", "word_count": 1300, "word_target": 1200,
-                      "blocking_issues": []},
+            "audit": {"status": "pass", "word_count": 1300, "word_target": 1200, "blocking_issues": []},
             "review": {"score": 9.4, "verdict": "PASS"},
             "final_review": {"exists": True, "verdict": "PASS"},
             "shippable": True,
@@ -69,9 +72,10 @@ def test_module_by_slug_compact_default(monkeypatch):
 def test_module_by_slug_verbose_returns_full_payload(monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(state_router, "LEVELS", fake_levels)
-    monkeypatch.setattr(state_router, "get_plan_slugs", lambda _t: [(1, "x")])
+    monkeypatch.setattr(state_router, "get_plan_slugs", lambda _t, *args, **kwargs: [(1, "x")])
     monkeypatch.setattr(
-        state_router, "compute_module_detail",
+        state_router,
+        "compute_module_detail",
         lambda *_a, **_kw: {"num": 1, "slug": "x", "phases": {"write": {"status": "complete"}}},
     )
 
@@ -82,7 +86,7 @@ def test_module_by_slug_verbose_returns_full_payload(monkeypatch):
 def test_module_by_slug_404_on_unknown_slug(monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(state_router, "LEVELS", fake_levels)
-    monkeypatch.setattr(state_router, "get_plan_slugs", lambda _t: [(1, "one")])
+    monkeypatch.setattr(state_router, "get_plan_slugs", lambda _t, *args, **kwargs: [(1, "one")])
 
     resp = client.get("/api/state/module/a1/slug/nope")
     assert resp.status_code == 404
@@ -122,6 +126,7 @@ def _classification_fixture(tmp_path: Path, monkeypatch):
 
     # Bump plan back to OLDER than generated so the stale check is off.
     import os
+
     base_mtime = plan.stat().st_mtime
     for p in (base / "hello.md", base / "audit" / "hello-audit.md"):
         os.utime(p, (base_mtime + 100, base_mtime + 100))
@@ -132,7 +137,9 @@ def _classification_fixture(tmp_path: Path, monkeypatch):
     (mdx_dir / "hello.mdx").write_text("<p>", encoding="utf-8")
 
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
     monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
@@ -160,6 +167,7 @@ def test_files_detects_stale_generated_artifact(tmp_path, monkeypatch):
 
     # Push the plan's mtime FAR into the future so generated output is stale.
     import os
+
     future = plan.stat().st_mtime + 10_000
     os.utime(plan, (future, future))
 
@@ -170,7 +178,9 @@ def test_files_detects_stale_generated_artifact(tmp_path, monkeypatch):
 
 def test_files_404_on_unknown_track(monkeypatch):
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     resp = client.get("/api/artifacts/does-not-exist/foo/files")
     assert resp.status_code == 404
@@ -187,13 +197,14 @@ def test_review_snapshot_flags_empty_findings_with_high_score(tmp_path, monkeypa
     (base / "review").mkdir(parents=True, exist_ok=True)
     # High score + zero findings == reviewer-gaming pattern.
     (base / "review" / "hello-review.md").write_text(
-        "# Review\n**Overall Score:** 9.5/10\n**Status:** PASS\n"
-        "Looks great overall, ensuring a high score.\n",
+        "# Review\n**Overall Score:** 9.5/10\n**Status:** PASS\nLooks great overall, ensuring a high score.\n",
         encoding="utf-8",
     )
 
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
     monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
@@ -215,7 +226,9 @@ def test_review_snapshot_no_flag_when_low_score_or_findings(tmp_path, monkeypatc
     )
 
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
     monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
@@ -247,17 +260,21 @@ def test_review_snapshot_does_not_pick_final_review_as_main(tmp_path, monkeypatc
         encoding="utf-8",
     )
     import os
+
     os.utime(main, (1_000_000, 1_000_000))
     os.utime(final, (2_000_000, 2_000_000))
 
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
     monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
     # get_final_review_info is called to populate final_review field.
     monkeypatch.setattr(
-        artifacts_router, "get_final_review_info",
+        artifacts_router,
+        "get_final_review_info",
         lambda *_a, **_kw: {"exists": True, "verdict": "PASS"},
     )
 
@@ -274,7 +291,9 @@ def test_review_snapshot_handles_missing_files(tmp_path, monkeypatch):
     proj = tmp_path
     (proj / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
     monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
@@ -299,7 +318,9 @@ def _drift_fixture(tmp_path: Path, monkeypatch):
     mdx_dir.mkdir(parents=True, exist_ok=True)
 
     monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
     monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
     monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
@@ -315,15 +336,18 @@ def test_drift_flags_publish_complete_without_mdx(tmp_path, monkeypatch):
     )
     # Stub downstream helpers
     monkeypatch.setattr(
-        artifacts_router, "get_audit_status",
+        artifacts_router,
+        "get_audit_status",
         lambda *_a, **_kw: {"status": "pass"},
     )
     monkeypatch.setattr(
-        artifacts_router, "get_final_review_info",
+        artifacts_router,
+        "get_final_review_info",
         lambda *_a, **_kw: None,
     )
     monkeypatch.setattr(
-        artifacts_router, "find_content_file",
+        artifacts_router,
+        "find_content_file",
         lambda *_a, **_kw: base / "hello.md",
     )
     # content file exists so audit_passes_without_content doesn't fire
@@ -340,15 +364,19 @@ def test_drift_flags_mdx_without_state(tmp_path, monkeypatch):
     # MDX present but no state.json
     (mdx / "hello.mdx").write_text("<p>", encoding="utf-8")
     monkeypatch.setattr(
-        artifacts_router, "get_audit_status",
+        artifacts_router,
+        "get_audit_status",
         lambda *_a, **_kw: {"status": "not_run"},
     )
     monkeypatch.setattr(
-        artifacts_router, "get_final_review_info",
+        artifacts_router,
+        "get_final_review_info",
         lambda *_a, **_kw: None,
     )
     monkeypatch.setattr(
-        artifacts_router, "find_content_file", lambda *_a, **_kw: None,
+        artifacts_router,
+        "find_content_file",
+        lambda *_a, **_kw: None,
     )
 
     body = client.get("/api/artifacts/a1/hello/drift").json()
@@ -367,15 +395,19 @@ def test_drift_in_sync_when_everything_agrees(tmp_path, monkeypatch):
     content.write_text("c", encoding="utf-8")
 
     monkeypatch.setattr(
-        artifacts_router, "get_audit_status",
+        artifacts_router,
+        "get_audit_status",
         lambda *_a, **_kw: {"status": "pass"},
     )
     monkeypatch.setattr(
-        artifacts_router, "get_final_review_info",
+        artifacts_router,
+        "get_final_review_info",
         lambda *_a, **_kw: {"exists": True, "verdict": "PASS"},
     )
     monkeypatch.setattr(
-        artifacts_router, "find_content_file", lambda *_a, **_kw: content,
+        artifacts_router,
+        "find_content_file",
+        lambda *_a, **_kw: content,
     )
 
     body = client.get("/api/artifacts/a1/hello/drift").json()

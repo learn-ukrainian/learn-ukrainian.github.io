@@ -207,7 +207,7 @@ class TestBuildStatusEndpoint:
     def test_per_track_counts_failed_audit_before_running_phase(self, monkeypatch):
         from scripts.api import state_build
 
-        monkeypatch.setattr(state_build, "get_plan_slugs", lambda _track_id: [(1, "failed-module")])
+        monkeypatch.setattr(state_build, "get_plan_slugs", lambda _track_id, *args, **kwargs: [(1, "failed-module")])
         monkeypatch.setattr(state_build, "detect_pipeline_version", lambda _orch_dir: "v6")
         monkeypatch.setattr(
             state_build,
@@ -322,9 +322,7 @@ class TestDashboardOverviewEndpoint:
         warm = client.get("/api/state/summary?fresh=true")
         assert warm.status_code == 200
         summary = warm.json()
-        seeded = dashboard_router._build_overview_from_state_summary(
-            summary, "hit", 0.0, track_scan="hit"
-        )
+        seeded = dashboard_router._build_overview_from_state_summary(summary, "hit", 0.0, track_scan="hit")
         state_helpers.cache_set(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY, seeded)
 
         release = threading.Event()
@@ -543,12 +541,30 @@ class TestComputeTrackStats:
         from scripts.api.dashboard_helpers import compute_track_stats as _compute_track_stats
 
         modules = [
-            {"status": "pass", "has_review": True, "has_final_review": False,
-             "has_plan_review": False, "plan_review_verdict": None, "research": {}},
-            {"status": "fail", "has_review": False, "has_final_review": False,
-             "has_plan_review": True, "plan_review_verdict": "PASS", "research": {}},
-            {"status": "missing", "has_review": False, "has_final_review": False,
-             "has_plan_review": False, "plan_review_verdict": None, "research": {}},
+            {
+                "status": "pass",
+                "has_review": True,
+                "has_final_review": False,
+                "has_plan_review": False,
+                "plan_review_verdict": None,
+                "research": {},
+            },
+            {
+                "status": "fail",
+                "has_review": False,
+                "has_final_review": False,
+                "has_plan_review": True,
+                "plan_review_verdict": "PASS",
+                "research": {},
+            },
+            {
+                "status": "missing",
+                "has_review": False,
+                "has_final_review": False,
+                "has_plan_review": False,
+                "plan_review_verdict": None,
+                "research": {},
+            },
         ]
         stats = _compute_track_stats(modules, "a1")
         assert stats["pass"] == 1
@@ -725,8 +741,7 @@ class TestWeakPointsEndpoint:
         import scripts.api.state_router as state_router
 
         monkeypatch.setattr(state_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}])
-        monkeypatch.setattr(state_router, "CURRICULUM_ROOT", Path("/tmp/curriculum"))
-        monkeypatch.setattr(state_router, "get_plan_slugs", lambda track_id: [(1, "test-slug")])
+        monkeypatch.setattr(state_router, "get_plan_slugs", lambda track_id, *args, **kwargs: [(1, "test-slug")])
         monkeypatch.setattr(
             state_router,
             "get_audit_status",

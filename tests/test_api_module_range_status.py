@@ -25,12 +25,10 @@ def test_compute_module_range_status_reports_complete_and_remaining(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(state_build, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(state_build, "CURRICULUM_ROOT", tmp_path / "curriculum" / "l2-uk-en")
     monkeypatch.setattr(
         state_build,
         "get_plan_slugs",
-        lambda track_id: [(32, "m32"), (33, "m33"), (34, "m34")],
+        lambda track_id, *args, **kwargs: [(32, "m32"), (33, "m33"), (34, "m34")],
     )
 
     _write_module_files(tmp_path, "m32")
@@ -51,6 +49,8 @@ def test_compute_module_range_status_reports_complete_and_remaining(
         {"path": "b2"},
         start=32,
         end=34,
+        curriculum_root=tmp_path / "curriculum" / "l2-uk-en",
+        project_root=tmp_path,
     )
 
     assert result["deterministic"] is True
@@ -76,9 +76,7 @@ def test_compute_module_range_status_accepts_unpadded_score_module_numbers(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(state_build, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(state_build, "CURRICULUM_ROOT", tmp_path / "curriculum" / "l2-uk-en")
-    monkeypatch.setattr(state_build, "get_plan_slugs", lambda track_id: [(7, "m7")])
+    monkeypatch.setattr(state_build, "get_plan_slugs", lambda track_id, *args, **kwargs: [(7, "m7")])
 
     _write_module_files(tmp_path, "m7")
     score_dir = tmp_path / "docs" / "audits"
@@ -93,6 +91,8 @@ def test_compute_module_range_status_accepts_unpadded_score_module_numbers(
         {"path": "b2"},
         start=7,
         end=7,
+        curriculum_root=tmp_path / "curriculum" / "l2-uk-en",
+        project_root=tmp_path,
     )
 
     assert result["complete"] == 1
@@ -131,6 +131,7 @@ def test_module_range_status_route_returns_computed_payload(
         *,
         start: int,
         end: int,
+        **kwargs,
     ) -> dict:
         calls.append((track_id, level_cfg["path"], start, end))
         return payload

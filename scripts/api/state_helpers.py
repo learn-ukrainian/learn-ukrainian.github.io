@@ -651,18 +651,7 @@ def get_broker_messages_for_slug(
             "ORDER BY timestamp DESC LIMIT 20",
             (f"%{slug}%",),
         ).fetchall()
-        return [
-            {
-                "id": r["id"],
-                "task_id": r["task_id"],
-                "from": r["from_llm"],
-                "to": r["to_llm"],
-                "type": r["message_type"],
-                "preview": r["preview"],
-                "timestamp": r["timestamp"],
-            }
-            for r in rows
-        ]
+        return [dict(r) for r in rows]
     except Exception:
         return []
     finally:
