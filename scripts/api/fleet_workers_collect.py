@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import sqlite3
+import threading
 import time
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -45,6 +47,31 @@ from scripts.lexicon.runner import atlas_job
 
 WORKERS_SCHEMA = "monitor-fleet-workers.v1"
 UNATTRIBUTED_HOST_ID = "unattributed"
+
+# Self-host collection re-reads every delegate task JSON. On the API host that
+# directory can be hundreds of MB, so warm GETs reuse a short-lived payload
+# snapshot in the same 15–30s family as occupancy / project-state SWR.
+WORKERS_PAYLOAD_CACHE_TTL_S = 20.0
+
+
+@dataclass(frozen=True)
+class _WorkersPayloadCacheEntry:
+    payload: dict[str, Any]
+    stored_at_mono: float
+
+
+_WORKERS_PAYLOAD_CACHE: dict[str, _WorkersPayloadCacheEntry] = {}
+_WORKERS_PAYLOAD_LOCK = threading.Lock()
+
+
+def reset_workers_payload_cache() -> None:
+    """Clear the in-process workers payload cache (tests / forced refresh)."""
+    with _WORKERS_PAYLOAD_LOCK:
+        _WORKERS_PAYLOAD_CACHE.clear()
+
+
+def _workers_payload_cache_key(host_id: str | None) -> str:
+    return host_id if host_id is not None else ""
 
 MARKER_KIND_NORMALIZE = {
     "worker": "service",
@@ -595,7 +622,7 @@ def collect_local_workers_for_reporter(
     return [worker_row_dict(item.row) for item in workers[:200]]
 
 
-def workers_payload(
+def _build_workers_payload(
     *,
     host_id: str | None = None,
     tasks_dir: Path | None = None,
@@ -715,3 +742,42 @@ def workers_payload(
         "attention": attention,
         "hosts": hosts,
     }
+
+
+def workers_payload(
+    *,
+    host_id: str | None = None,
+    tasks_dir: Path | None = None,
+    session_db: Path | None = None,
+    markers_root: Path | None = None,
+    now_mono: float | None = None,
+) -> dict[str, Any]:
+    """Join live workers. Production GETs reuse a short in-process snapshot.
+
+    Explicit fixture paths / ``now_mono`` bypass the cache so tests stay hermetic.
+    """
+    use_cache = (
+        tasks_dir is None and session_db is None and markers_root is None and now_mono is None
+    )
+    key = _workers_payload_cache_key(host_id)
+    if use_cache:
+        now = time.monotonic()
+        with _WORKERS_PAYLOAD_LOCK:
+            entry = _WORKERS_PAYLOAD_CACHE.get(key)
+            if entry is not None and (now - entry.stored_at_mono) < WORKERS_PAYLOAD_CACHE_TTL_S:
+                return copy.deepcopy(entry.payload)
+
+    payload = _build_workers_payload(
+        host_id=host_id,
+        tasks_dir=tasks_dir,
+        session_db=session_db,
+        markers_root=markers_root,
+        now_mono=now_mono,
+    )
+    if use_cache:
+        with _WORKERS_PAYLOAD_LOCK:
+            _WORKERS_PAYLOAD_CACHE[key] = _WorkersPayloadCacheEntry(
+                copy.deepcopy(payload),
+                time.monotonic(),
+            )
+    return payload
