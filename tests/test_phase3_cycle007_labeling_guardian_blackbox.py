@@ -108,6 +108,7 @@ config = module.Config(
     resolution_authority_root=None,
     resolution_nonce_ledger=None,
     resolution_advisor_response=None,
+    expected_stop_sha256=None,
 )
 module._recover_guardian_temporaries = lambda _config: 0
 module._require_free_space = lambda _config: 100

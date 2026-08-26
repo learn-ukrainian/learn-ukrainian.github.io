@@ -242,7 +242,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "row_count": count,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": compiler.CODE_HASHES,
+        "code_hashes": RUN.FROZEN_EVIDENCE_CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -260,7 +260,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "evaluation_cycle_id": RUN.CYCLE,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": compiler.CODE_HASHES,
+        "code_hashes": RUN.FROZEN_EVIDENCE_CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -343,6 +343,10 @@ if mode == "invalid" or (mode == "retry" and count == 0):
     raise SystemExit(0)
 if mode == "nonzero":
     print("not-json")
+    raise SystemExit(23)
+if mode == "quota":
+    print(json.dumps({"event": "init", "init": {"model": "Gemini 3.6 Flash (High)", "cwd": os.getcwd()}}))
+    print(json.dumps({"event": "result", "result": {"status": "FAILURE", "error": {"code": "RESOURCE_EXHAUSTED"}}}))
     raise SystemExit(23)
 
 labels = {}
@@ -514,6 +518,29 @@ def test_retryable_structural_failure_recovers(tmp_path: Path, monkeypatch: pyte
     assert (chunk_dir / "attempt-1-chunk-01.terminal.json").exists()
 
 
+def test_retryable_structural_failure_resumes_in_fresh_process(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    state_file = tmp_path / "state.txt"
+    monkeypatch.setenv("FAKE_STATE", str(state_file))
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    chunk_dir = pkg / RUN.OUTPUT / "clean_label" / "chunks" / "packet-0001"
+    put(chunk_dir / "attempt-1-chunk-01.started.json", {"state": "started"})
+    put(
+        chunk_dir / "attempt-1-chunk-01.terminal.json",
+        {"state": "terminal", "failure_code": "stream_json_invalid"},
+    )
+
+    result = run_packet(pkg, "clean_label", 1, fake_bin)
+
+    assert result["ok"] is True
+    assert int(state_file.read_text()) == 3
+    assert not (pkg / RUN.OUTPUT / RUN.RECOVERY_RECEIPT).exists()
+    assert not (pkg / RUN.OUTPUT / "provider-stop.json").exists()
+
+
 def test_two_structural_failures_writes_stop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     pkg = make_package(tmp_path, lane="clean_label", count=50)
     fake_bin = _make_fake_bin(tmp_path)
@@ -524,6 +551,49 @@ def test_two_structural_failures_writes_stop(tmp_path: Path, monkeypatch: pytest
     with pytest.raises(RUN.Error):
         run_packet(pkg, "clean_label", 1, fake_bin)
     assert (pkg / RUN.OUTPUT / "provider-stop.json").exists()
+
+
+def test_nonzero_provider_result_is_reduced_to_safe_status_code(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "quota")
+
+    with pytest.raises(RUN.Error) as exc_info:
+        run_packet(pkg, "clean_label", 1, fake_bin)
+    assert exc_info.value.code == "provider_status_quota_or_rate_limit"
+    stop_path = pkg / RUN.OUTPUT / "provider-stop.json"
+    stop_raw = stop_path.read_bytes()
+    stop = json.loads(stop_raw)
+    assert stop["failure_code"] == "provider_status_quota_or_rate_limit"
+    assert stop["failure_stage"] == "provider_return"
+    assert stop["text_free"] is True
+
+    attempt = pkg / RUN.OUTPUT / "clean_label/chunks/packet-0001"
+    started = attempt / "attempt-1-chunk-01.started.json"
+    terminal = attempt / "attempt-1-chunk-01.terminal.json"
+    terminal_value = json.loads(terminal.read_text())
+    recovery_body = {
+        "schema_version": "phase3_cycle007_gemini_provider_recovery_v1",
+        "evaluation_cycle_id": RUN.CYCLE,
+        "source_provider_stop_sha256": RUN.digest(stop_raw),
+        "started_marker_sha256": RUN.digest(started.read_bytes()),
+        "terminal_marker_sha256": RUN.digest(terminal.read_bytes()),
+        "failure_code": terminal_value["failure_code"],
+        "failure_stage": terminal_value["failure_stage"],
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": RUN.MODEL,
+        "model_family": RUN.FAMILY,
+        "harness": RUN.HARNESS,
+        "text_free": True,
+    }
+    recovery = recovery_body | {"receipt_sha256": RUN.digest(RUN.canonical(recovery_body))}
+    put(pkg / RUN.OUTPUT / RUN.RECOVERY_RECEIPT, recovery)
+    stop_path.unlink()
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    assert run_packet(pkg, "clean_label", 1, fake_bin)["ok"] is True
 
 
 def test_semantic_failure_immediately_stops(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -705,7 +775,9 @@ def main() -> int:
         test_valid_residual_packet(tmp / "t6", mp)
         test_resume_sealed_packet(tmp / "t7", mp)
         test_retryable_structural_failure_recovers(tmp / "t8", mp)
+        test_retryable_structural_failure_resumes_in_fresh_process(tmp / "t8b", mp)
         test_two_structural_failures_writes_stop(tmp / "t9", mp)
+        test_nonzero_provider_result_is_reduced_to_safe_status_code(tmp / "t9b", mp)
         test_semantic_failure_immediately_stops(tmp / "t10", mp)
         test_stop_idempotence(tmp / "t11", mp)
         test_concurrency_must_be_one(tmp / "t12")
