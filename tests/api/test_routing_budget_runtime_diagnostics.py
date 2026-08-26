@@ -75,7 +75,12 @@ def _configure(
     runtime_records_7d: int,
 ) -> None:
     """Empty USD ledger, quiet 5-minute reactive window, no CodexBar data."""
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
+    budget_path = _write_budget_config(tmp_path)
+    monkeypatch.setattr(
+        state_router,
+        "_load_agent_budgets",
+        lambda budget_config_path=None, **_: state_router._read_agent_budgets_file(budget_path),
+    )
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)

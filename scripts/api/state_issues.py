@@ -4,15 +4,19 @@ Handles final review aggregation, outstanding issue collection from
 review files and audit failures, and issue pattern counting.
 """
 
+from __future__ import annotations
+
 import re
 from datetime import UTC, datetime
+from pathlib import Path
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, LEVELS
+from . import config
+from .config import LEVELS
 from .state_helpers import (
     detect_pipeline_version,
     find_content_file,
@@ -28,22 +32,50 @@ try:
     from scripts.build.phase_constants import PHASES as V6_PHASES
 except ImportError:
     V6_PHASES = [
-        "check", "research", "skeleton", "pre-verify", "write",
-        "exercises", "activities", "repair", "verify-exercises",
-        "annotate", "vocab", "enrich", "verify", "review", "stress",
-        "publish", "audit",
+        "check",
+        "research",
+        "skeleton",
+        "pre-verify",
+        "write",
+        "exercises",
+        "activities",
+        "repair",
+        "verify-exercises",
+        "annotate",
+        "vocab",
+        "enrich",
+        "verify",
+        "review",
+        "stress",
+        "publish",
+        "audit",
     ]
 
-CRITICAL_KEYWORDS = frozenset({
-    "factual error", "factual mistake", "incorrect", "wrong",
-    "grammar error", "grammatical error", "activity error",
-    "missing section", "critical",
-})
+CRITICAL_KEYWORDS = frozenset(
+    {
+        "factual error",
+        "factual mistake",
+        "incorrect",
+        "wrong",
+        "grammar error",
+        "grammatical error",
+        "activity error",
+        "missing section",
+        "critical",
+    }
+)
 
 ISSUE_PATTERN_KEYWORDS = [
-    "FACTUAL", "PLAN COMPLIANCE", "ACTIVITY", "ANTI-SURZHYK",
-    "PRONUNCIATION", "MISLEADING", "COLONIAL", "WORD COUNT",
-    "MISSING", "RUSSICISM",
+    "FACTUAL",
+    "PLAN COMPLIANCE",
+    "ACTIVITY",
+    "ANTI-SURZHYK",
+    "PRONUNCIATION",
+    "MISLEADING",
+    "COLONIAL",
+    "WORD COUNT",
+    "MISSING",
+    "RUSSICISM",
 ]
 
 
@@ -62,10 +94,18 @@ def _is_ready_for_final_review(orch_dir, version: str) -> bool:
     return False
 
 
-def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
+def compute_final_reviews(
+    track_id: str,
+    level_cfg: dict,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute final review aggregation for a track."""
-    plan_slugs = get_plan_slugs(track_id)
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
+    track_dir = curriculum_root / level_cfg["path"]
 
     approved = []
     rejected = []
@@ -73,7 +113,7 @@ def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
     all_issues = []
 
     for num, slug in plan_slugs:
-        info = get_final_review_info(track_dir, slug)
+        info = get_final_review_info(track_dir, slug, curriculum_root=curriculum_root)
         if info is None:
             orch_dir = safe_join(track_dir / "orchestration", slug)
             version = detect_pipeline_version(orch_dir)
@@ -98,10 +138,7 @@ def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
         "approved": len(approved),
         "rejected": len(rejected),
         "pending_review": len(pending),
-        "approval_rate": (
-            f"{round(len(approved) / total_reviewed * 100)}%"
-            if total_reviewed > 0 else "N/A"
-        ),
+        "approval_rate": (f"{round(len(approved) / total_reviewed * 100)}%" if total_reviewed > 0 else "N/A"),
         "issue_patterns": pattern_counts,
         "rejected_modules": rejected,
         "pending_modules": pending[:10],
@@ -120,20 +157,33 @@ def count_issue_patterns(all_issues: list) -> dict:
     return pattern_counts
 
 
-def compute_issues(track: str | None, severity: str | None) -> dict:
+def compute_issues(
+    track: str | None = None,
+    severity: str | None = None,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute aggregated outstanding issues."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
     issues = []
     level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
 
     for level_cfg in level_cfgs:
         track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id)
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
+        track_dir = curriculum_root / level_cfg["path"]
         review_dir = track_dir / "review"
 
         for num, slug in plan_slugs:
             collect_review_issues(
-                track_dir, review_dir, track_id, slug, num, issues,
+                track_dir,
+                review_dir,
+                track_id,
+                slug,
+                num,
+                issues,
             )
             collect_audit_issues(track_dir, track_id, slug, num, issues)
 
@@ -168,7 +218,8 @@ def parse_review_blocks(text, review_filename, track_id, slug, num, issues):
     """Parse issue blocks from a review file's text."""
     issue_blocks = re.split(
         r"(?=^#{1,4}\s+Issue\s*#?\s*\d+)",
-        text, flags=re.MULTILINE | re.IGNORECASE,
+        text,
+        flags=re.MULTILINE | re.IGNORECASE,
     )
     for block in issue_blocks:
         if not re.match(r"^#{1,4}\s+Issue\s*#?\s*\d+", block, re.IGNORECASE):
@@ -182,19 +233,22 @@ def _parse_single_issue_block(block, review_filename, track_id, slug, num):
     """Parse a single issue block into a structured dict."""
     title_match = re.match(
         r"^#{1,4}\s+Issue\s*#?\s*\d+[:\s\u2014\u2013-]*(.+?)$",
-        block, re.MULTILINE | re.IGNORECASE,
+        block,
+        re.MULTILINE | re.IGNORECASE,
     )
     title = title_match.group(1).strip() if title_match else "Issue"
 
     loc_match = re.search(
         r"(?:\*\*|__)Location(?:\*\*|__)[:\s]+(.+?)(?:\n|$)",
-        block, re.IGNORECASE,
+        block,
+        re.IGNORECASE,
     )
     location = loc_match.group(1).strip() if loc_match else ""
 
     fix_match = re.search(
         r"(?:\*\*|__)Fix(?:\*\*|__)[:\s]+(.+?)(?:\n\n|\Z)",
-        block, re.IGNORECASE | re.DOTALL,
+        block,
+        re.IGNORECASE | re.DOTALL,
     )
     fix = fix_match.group(1).strip()[:200] if fix_match else ""
 
@@ -207,9 +261,14 @@ def _parse_single_issue_block(block, review_filename, track_id, slug, num):
 
     source_type = "final-review" if "final-review" in review_filename else "review"
     return {
-        "track": track_id, "slug": slug, "num": num,
-        "source": source_type, "severity": issue_severity,
-        "title": title[:80], "location": location[:120], "fix": fix,
+        "track": track_id,
+        "slug": slug,
+        "num": num,
+        "source": source_type,
+        "severity": issue_severity,
+        "title": title[:80],
+        "location": location[:120],
+        "fix": fix,
     }
 
 
@@ -218,10 +277,15 @@ def collect_audit_issues(track_dir, track_id, slug, num, issues):
     audit = get_audit_status(track_dir, slug)
     if audit["status"] == "fail":
         for blocking in audit.get("blocking_issues", []):
-            issues.append({
-                "track": track_id, "slug": slug, "num": num,
-                "source": "audit", "severity": "critical",
-                "title": f"Audit gate failed: {blocking.get('gate', 'unknown')}",
-                "location": blocking.get("gate", ""),
-                "fix": blocking.get("message", "")[:200],
-            })
+            issues.append(
+                {
+                    "track": track_id,
+                    "slug": slug,
+                    "num": num,
+                    "source": "audit",
+                    "severity": "critical",
+                    "title": f"Audit gate failed: {blocking.get('gate', 'unknown')}",
+                    "location": blocking.get("gate", ""),
+                    "fix": blocking.get("message", "")[:200],
+                }
+            )

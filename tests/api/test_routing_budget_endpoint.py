@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import state_router
+from scripts.api.monitor_context import fixture_context
 
 
 def _write_budget_config(tmp_path: Path) -> Path:
@@ -78,12 +79,17 @@ def _empty_runtime(agent: str) -> dict:
 
 
 def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
+    budget_path = _write_budget_config(tmp_path)
+    monkeypatch.setattr(
+        state_router,
+        "_load_agent_budgets",
+        lambda budget_config_path=None: state_router._read_agent_budgets_file(budget_path),
+    )
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
 
     def _mock_cb(provider: str) -> dict | None:
         spent = sum(r.cost_usd_est for r in records if r.agent.startswith(provider))
-        is_promo = (provider == "claude" and any(r.mtime and r.mtime.date() <= date(2026, 7, 13) for r in records))
+        is_promo = provider == "claude" and any(r.mtime and r.mtime.date() <= date(2026, 7, 13) for r in records)
         caps = {"claude": 690.0 if is_promo else 460.0, "codex": 1000.0, "gemini": 500.0}
         cap = caps.get(provider)
         if cap and spent > 0:
@@ -118,6 +124,7 @@ def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
 def test_endpoint_returns_documented_shape(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, [])
     app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
     app.include_router(state_router.router, prefix="/api/state")
 
     response = TestClient(app).get("/api/state/routing-budget")
@@ -154,18 +161,20 @@ def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     monkeypatch.setattr(
         state_router,
         "get_provider_usage_data",
-        lambda provider: {
-            "lane": provider,
-            "primary_used_pct": 5.0,
-            "weekly_used_pct": 10.0,
-            "weekly_pace_delta_pct": -20.0,
-            "will_last_to_reset": True,
-            "pace_summary": "ok",
-            "stale": False,
-            "age_s": 1.0,
-        }
-        if provider == "codex"
-        else None,
+        lambda provider: (
+            {
+                "lane": provider,
+                "primary_used_pct": 5.0,
+                "weekly_used_pct": 10.0,
+                "weekly_pace_delta_pct": -20.0,
+                "will_last_to_reset": True,
+                "pace_summary": "ok",
+                "stale": False,
+                "age_s": 1.0,
+            }
+            if provider == "codex"
+            else None
+        ),
     )
 
     data = state_router.compute_routing_budget(now)
@@ -573,6 +582,7 @@ def test_http_fresh_codexbar_kicks_background_and_does_not_block(monkeypatch, tm
     )
 
     app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
     app.include_router(state_router.router, prefix="/api/state")
     response = TestClient(app).get("/api/state/routing-budget?fresh_codexbar=true")
 
@@ -582,4 +592,3 @@ def test_http_fresh_codexbar_kicks_background_and_does_not_block(monkeypatch, tm
     assert kicked == ["kick"]
     assert data["diagnostics"]["fresh_codexbar_requested"] is True
     assert data["diagnostics"]["fresh_codexbar_blocking"] is False
-

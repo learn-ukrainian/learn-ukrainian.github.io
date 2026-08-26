@@ -30,7 +30,8 @@ def _run_git(repo_root: Path, *args: str) -> str:
         capture_output=True,
         check=True,
         env=sanitized_git_env(),
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     )
     return result.stdout.strip()
 
@@ -42,7 +43,8 @@ def _release_test_sha(repo_root: Path) -> str:
         ["git", "diff", "--cached", "--quiet", "HEAD", "--", "scripts", "schemas"],
         cwd=repo_root,
         check=False,
-        env=sanitized_git_env(), timeout=30,
+        env=sanitized_git_env(),
+        timeout=30,
     )
     if staged.returncode == 0:
         return head
@@ -65,7 +67,8 @@ def _release_test_sha(repo_root: Path) -> str:
         check=True,
         env=environment,
         input="release snapshot staged test\n",
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     )
     return result.stdout.strip()
 
@@ -137,6 +140,19 @@ def _provision_missing_live_data_roots(repo_root: Path) -> list[Path]:
         if not path.exists():
             path.mkdir(parents=True)
             created.append(path)
+    manifest_path = repo_root / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    if not manifest_path.exists():
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            content = _run_git(repo_root, "show", "HEAD:curriculum/l2-uk-en/curriculum.yaml")
+            manifest_path.write_text(content, encoding="utf-8")
+        except Exception:
+            pass
+        mod_file = repo_root / "curriculum" / "l2-uk-en" / "a1" / "01-sounds-letters-and-hello.md"
+        mod_file.parent.mkdir(parents=True, exist_ok=True)
+        mod_file.write_text("# Sounds\n", encoding="utf-8")
+        if repo_root / "curriculum" not in created:
+            created.append(repo_root / "curriculum")
     return created
 
 
@@ -269,7 +285,8 @@ def test_git_service_environment_targets_live_checkout(tmp_path: Path) -> None:
         env=environment,
         capture_output=True,
         check=True,
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     )
     assert "?? live-only.txt" in result.stdout
 
@@ -296,6 +313,7 @@ def test_pruning_preserves_a_live_release_outside_the_newest_three(tmp_path: Pat
         cwd=release_dirs[0],
     )
     try:
+
         def lsof_for_live_listener(*_args, **_kwargs) -> subprocess.CompletedProcess[str]:
             return subprocess.CompletedProcess(
                 args=["lsof"],
@@ -474,8 +492,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
                 )
                 artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
                 docs_text = _read_text(
-                    "http://127.0.0.1:"
-                    f"{port}/files/docs/research/2026-06-12-atlas-synonym-sense-fix-report.md"
+                    f"http://127.0.0.1:{port}/files/docs/research/2026-06-12-atlas-synonym-sense-fix-report.md"
                 )
             finally:
                 process.terminate()

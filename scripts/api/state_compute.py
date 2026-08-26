@@ -4,12 +4,15 @@ Contains research detail computation, module detail deep-dive,
 pipeline version phase resolution, and legacy research/content checks.
 """
 
+from __future__ import annotations
+
 import contextlib
 import json
 import re
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -29,14 +32,14 @@ from scripts.audit.llm_qg_store import (
     llm_qg_file_is_current_for_module,
 )
 
+from . import config
+
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT
 from .state_helpers import (
-    PLANS_ROOT,
     V5_PHASE_ORDER,
     detect_pipeline_version,
     find_content_file,
@@ -69,11 +72,19 @@ def severity_key(m: dict) -> int:
     return -score
 
 
-
-def compute_research_detail(track_id: str, level_cfg: dict, min_score: int) -> dict:
+def compute_research_detail(
+    track_id: str,
+    level_cfg: dict,
+    min_score: int,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute per-module research quality for a track."""
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
-    plan_slugs = get_plan_slugs(track_id)
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    track_dir = curriculum_root / level_cfg["path"]
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     rubric_name = get_rubric(track_id)
     dimensions = get_dimensions(rubric_name) if rubric_name else []
 
@@ -84,8 +95,12 @@ def compute_research_detail(track_id: str, level_cfg: dict, min_score: int) -> d
 
     for num, slug in plan_slugs:
         mod_entry, quality, score = _assess_module_research(
-            track_dir, track_id, num, slug,
-            rp_finder=find_research_path, assessor=assess_research_compat,
+            track_dir,
+            track_id,
+            num,
+            slug,
+            rp_finder=find_research_path,
+            assessor=assess_research_compat,
         )
         modules.append(mod_entry)
 
@@ -100,22 +115,31 @@ def compute_research_detail(track_id: str, level_cfg: dict, min_score: int) -> d
             scores.append(score)
             if score < min_score:
                 gaps = mod_entry.get("gaps") or []
-                upgrade_queue.append({
-                    "num": num, "slug": slug, "score": score,
-                    "gaps": [g.split(":")[0] for g in gaps],
-                })
+                upgrade_queue.append(
+                    {
+                        "num": num,
+                        "slug": slug,
+                        "score": score,
+                        "gaps": [g.split(":")[0] for g in gaps],
+                    }
+                )
 
-    upgrade_queue.sort(key=lambda x: (x["score"] if x["score"] is not None else -1))
+    upgrade_queue.sort(key=lambda x: x["score"] if x["score"] is not None else -1)
     avg_score = round(sum(scores) / len(scores), 1) if scores else None
 
     return {
-        "track": track_id, "rubric": rubric_name,
+        "track": track_id,
+        "rubric": rubric_name,
         "dimensions": dimensions,
         "dimension_labels": {d: DIMENSION_SHORT_LABELS.get(d, d[:3]) for d in dimensions} if dimensions else {},
-        "total": len(plan_slugs), "researched": len(scores), "avg_score": avg_score,
+        "total": len(plan_slugs),
+        "researched": len(scores),
+        "avg_score": avg_score,
         "quality_distribution": quality_counts,
-        "upgrade_queue": upgrade_queue, "upgrade_count": len(upgrade_queue),
-        "min_score_threshold": min_score, "modules": modules,
+        "upgrade_queue": upgrade_queue,
+        "upgrade_count": len(upgrade_queue),
+        "min_score_threshold": min_score,
+        "modules": modules,
         "generated_at": datetime.now(UTC).isoformat(),
     }
 
@@ -124,8 +148,13 @@ def _assess_module_research(track_dir, track_id, num, slug, *, rp_finder, assess
     """Assess research quality for a single module. Returns (entry, quality, score)."""
     rp = rp_finder(track_dir, slug)
     empty = {
-        "num": num, "slug": slug, "exists": False,
-        "score": None, "quality": None, "dimensions": None, "gaps": None,
+        "num": num,
+        "slug": slug,
+        "exists": False,
+        "score": None,
+        "quality": None,
+        "dimensions": None,
+        "gaps": None,
     }
     if not rp:
         return empty, None, None
@@ -137,13 +166,15 @@ def _assess_module_research(track_dir, track_id, num, slug, *, rp_finder, assess
 
     dims = info.get("dimensions") or {}
     mod_entry = {
-        "num": num, "slug": slug, "exists": True,
+        "num": num,
+        "slug": slug,
+        "exists": True,
         "words": info.get("words", 0),
-        "score": info.get("score"), "quality": info.get("quality"),
-        "dimensions": {
-            k: {"score": v["score"], "max": v["max"], "detail": v["detail"]}
-            for k, v in dims.items()
-        } if dims else None,
+        "score": info.get("score"),
+        "quality": info.get("quality"),
+        "dimensions": {k: {"score": v["score"], "max": v["max"], "detail": v["detail"]} for k, v in dims.items()}
+        if dims
+        else None,
         "gaps": info.get("gaps") or [],
         "content_alignment": info.get("content_alignment"),
     }
@@ -163,9 +194,14 @@ def _get_friction_data(orch_dir: Path) -> dict:
         return {
             "active": len(active),
             "resolved": len(resolved),
-            "items": [{"id": f.get("id", ""), "type": f.get("type", ""),
-                       "description": f.get("description", "").strip()[:200]}
-                      for f in active],
+            "items": [
+                {
+                    "id": f.get("id", ""),
+                    "type": f.get("type", ""),
+                    "description": f.get("description", "").strip()[:200],
+                }
+                for f in active
+            ],
         }
     except Exception:
         return {"active": 0, "resolved": 0, "items": []}
@@ -315,10 +351,19 @@ def summarize_llm_qg(llm_qg: dict | None) -> dict | None:
     }
 
 
-def compute_llm_qg_track(track_id: str, level_cfg: dict, *, verbose: bool = False) -> dict:
+def compute_llm_qg_track(
+    track_id: str,
+    level_cfg: dict,
+    *,
+    verbose: bool = False,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute per-module LLM quality-gate status from artifacts already on disk."""
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
-    plan_slugs = get_plan_slugs(track_id)
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    track_dir = curriculum_root / level_cfg["path"]
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     modules = []
     min_scores = []
     scored = 0
@@ -331,11 +376,7 @@ def compute_llm_qg_track(track_id: str, level_cfg: dict, *, verbose: bool = Fals
         status = read_module_status(track_dir, slug)
         has_llm_qg = llm_qg is not None
 
-        aggregate = (
-            llm_qg.get("aggregate")
-            if has_llm_qg and isinstance(llm_qg.get("aggregate"), dict)
-            else None
-        )
+        aggregate = llm_qg.get("aggregate") if has_llm_qg and isinstance(llm_qg.get("aggregate"), dict) else None
         dimensions = _project_llm_qg_dimensions(
             llm_qg.get("dimensions") if has_llm_qg else None,
             verbose=verbose,
@@ -352,20 +393,22 @@ def compute_llm_qg_track(track_id: str, level_cfg: dict, *, verbose: bool = Fals
             if isinstance(min_score, (int, float)) and not isinstance(min_score, bool):
                 min_scores.append(float(min_score))
 
-        modules.append({
-            "num": num,
-            "slug": slug,
-            "has_llm_qg": has_llm_qg,
-            "verdict": verdict,
-            "aggregate": aggregate,
-            "dimensions": dimensions if has_llm_qg else None,
-            "wiki_gate": (
-                {"verdict": wiki_gate.get("verdict")}
-                if isinstance(wiki_gate, dict) and "verdict" in wiki_gate
-                else None
-            ),
-            "status": status,
-        })
+        modules.append(
+            {
+                "num": num,
+                "slug": slug,
+                "has_llm_qg": has_llm_qg,
+                "verdict": verdict,
+                "aggregate": aggregate,
+                "dimensions": dimensions if has_llm_qg else None,
+                "wiki_gate": (
+                    {"verdict": wiki_gate.get("verdict")}
+                    if isinstance(wiki_gate, dict) and "verdict" in wiki_gate
+                    else None
+                ),
+                "status": status,
+            }
+        )
 
     return {
         "track": track_id,
@@ -382,14 +425,28 @@ def compute_llm_qg_track(track_id: str, level_cfg: dict, *, verbose: bool = Fals
     }
 
 
-def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
+def compute_module_detail(
+    track_id: str,
+    num: int,
+    level_cfg: dict,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+    message_db: Any = None,
+    project_root: Path | None = None,
+) -> dict:
     """Compute single module deep-dive data."""
-    plan_slugs = get_plan_slugs(track_id)
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if plans_root is None:
+        plans_root = curriculum_root / "plans"
+
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     match = next(((n, s) for n, s in plan_slugs if n == num), None)
     if not match:
         return {"error": f"Module #{num} not found in track '{track_id}'"}
     _, slug = match
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    track_dir = curriculum_root / level_cfg["path"]
     orch_dir = safe_join(track_dir / "orchestration", slug)
 
     version = detect_pipeline_version(orch_dir)
@@ -400,17 +457,22 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
     audit = get_audit_status(track_dir, slug)
     word_target = audit.get("word_target", 0)
     if word_target == 0:
-        word_target = get_word_target_from_plan(track_id, slug)
+        word_target = get_word_target_from_plan(track_id, slug, plans_root=plans_root, curriculum_root=curriculum_root)
 
-    plan_file = PLANS_ROOT / track_id / f"{slug}.yaml"
+    plan_file = plans_root / track_id / f"{slug}.yaml"
 
     return {
-        "track": track_id, "num": num, "slug": slug,
-        "pipeline_version": version, "needs_rebuild": version != "v6",
+        "track": track_id,
+        "num": num,
+        "slug": slug,
+        "pipeline_version": version,
+        "needs_rebuild": version != "v6",
         "phases": phases,
         "audit": {
-            "status": audit["status"], "word_count": audit.get("word_count", 0),
-            "word_target": word_target, "blocking_issues": audit.get("blocking_issues", []),
+            "status": audit["status"],
+            "word_count": audit.get("word_count", 0),
+            "word_target": word_target,
+            "blocking_issues": audit.get("blocking_issues", []),
         },
         "research": {
             "exists": has_research_file(track_dir, slug),
@@ -418,16 +480,15 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
         },
         "review": _get_review_score(track_dir, slug),
         "friction": _get_friction_data(orch_dir),
-        "shippable": _compute_shippable(
-            audit["status"], _get_review_score(track_dir, slug)["score"]),
+        "shippable": _compute_shippable(audit["status"], _get_review_score(track_dir, slug)["score"]),
         "stress": _get_stress_issues(orch_dir),
         "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
-        "final_review": get_final_review_info(track_dir, slug),
+        "final_review": get_final_review_info(track_dir, slug, curriculum_root=curriculum_root),
         "enriched": plan_has_revision_log(plan_file),
         "quick_verify": _get_quick_verify(orch_dir),
         "consultations": state_data.get("consultations", []),
-        "comms": get_broker_messages_for_slug(slug, limit=15),
+        "comms": get_broker_messages_for_slug(slug, limit=15, message_db=message_db),
         "generated_at": datetime.now(UTC).isoformat(),
     }
 
@@ -436,11 +497,11 @@ def get_phases_for_version(orch_dir, version, *, state_data: dict | None = None)
     """Get phase status dict appropriate for the pipeline version."""
     if version == "v6":
         from .state_build import V6_PHASE_ORDER  # noqa: PLC0415 — breaks state-build import cycle
+
         v6 = state_data if state_data is not None else read_v2_state(orch_dir)
         phases = v6.get("phases", {})
         return {
-            name: {"status": phases.get(name, {}).get("status", "pending"),
-                   "ts": phases.get(name, {}).get("ts")}
+            name: {"status": phases.get(name, {}).get("status", "pending"), "ts": phases.get(name, {}).get("ts")}
             for name in V6_PHASE_ORDER
         }
     elif version == "v5":

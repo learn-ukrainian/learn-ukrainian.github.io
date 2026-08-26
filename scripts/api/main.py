@@ -148,7 +148,9 @@ async def _lifespan(_app: FastAPI):
         stop_periodic_refresh()
 
 
-def _error_envelope(error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None) -> JSONResponse:
+def _error_envelope(
+    error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None
+) -> JSONResponse:
     """Build the public error shape without serializing exception text.
 
     Route-specific ``HTTPException`` details remain available when they are
@@ -170,11 +172,7 @@ def _error_envelope(error: str, detail: Any, *, status_code: int, headers: dict[
 def _sanitize_public_detail(detail: Any) -> Any:
     """Retain stable API details while dropping raw exception-shaped values."""
     if isinstance(detail, dict):
-        return {
-            str(key): _sanitize_public_detail(value)
-            for key, value in detail.items()
-            if key != "input"
-        }
+        return {str(key): _sanitize_public_detail(value) for key, value in detail.items() if key != "input"}
     if isinstance(detail, list):
         return [_sanitize_public_detail(value) for value in detail]
     if not isinstance(detail, str):
@@ -218,11 +216,7 @@ async def request_validation_exception_handler(request: Request, exc: RequestVal
     del request
     sanitized_errors = []
     for error in exc.errors():
-        sanitized = {
-            key: _sanitize_public_detail(value)
-            for key, value in error.items()
-            if key not in {"ctx", "input"}
-        }
+        sanitized = {key: _sanitize_public_detail(value) for key, value in error.items() if key not in {"ctx", "input"}}
         sanitized_errors.append(sanitized)
     return _error_envelope("validation_error", sanitized_errors, status_code=422)
 
@@ -240,6 +234,7 @@ async def global_exception_handler(request: Request, exc: Exception):
             "detail": "internal server error",
         },
     )
+
 
 # Server start time for uptime calculation
 _SERVER_START = datetime.now(UTC)
@@ -448,11 +443,7 @@ def _collect_git_orient_data() -> dict:
         branch = branch_proc.stdout.strip()
         primary_status = {
             "role": "primary",
-            "head_sha": (
-                full_head_proc.stdout.strip()
-                if full_head_proc.returncode == 0
-                else None
-            ),
+            "head_sha": (full_head_proc.stdout.strip() if full_head_proc.returncode == 0 else None),
             "branch": branch,
             "protected_branch": branch in worktree_containment.PROTECTED_BRANCHES,
             "dirty": False,
@@ -460,11 +451,14 @@ def _collect_git_orient_data() -> dict:
         }
 
     branch = branch_proc.stdout.strip()
-    authority = build_repository_authority(
-        project_root=PROJECT_ROOT,
-        live_repo_root=LIVE_REPO_ROOT,
-        data_branch=branch,
-    )
+    try:
+        authority = build_repository_authority(
+            project_root=PROJECT_ROOT,
+            live_repo_root=LIVE_REPO_ROOT,
+            data_branch=branch,
+        )
+    except Exception:
+        authority = None
     return {
         "branch": branch,
         "head": head_proc.stdout.strip(),

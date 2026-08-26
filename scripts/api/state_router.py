@@ -28,6 +28,8 @@ Performance notes:
   - Results are cached in-memory with a TTL (60s for summary/pipeline, 300s for coverage).
 """
 
+from __future__ import annotations
+
 import asyncio
 import json
 import logging
@@ -37,7 +39,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
-from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 
 from scripts.analytics.cost_report import CostRecord, load_cost_records
@@ -66,7 +68,7 @@ from .codexbar_usage import (
     refresh_provider_usage_data,
     trigger_background_refresh,
 )
-from .config import CURRICULUM_ROOT, LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
+from .config import LEVELS
 from .lane_health import compute_lane_health
 from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
@@ -75,7 +77,7 @@ try:
     from agent_runtime.usage import summarize_lane_runtime
 except ImportError:
     from scripts.agent_runtime.usage import summarize_lane_runtime
-from .monitor_context import get_ctx
+from .monitor_context import MonitorContext, get_ctx
 from .repository_authority import (
     RepositoryAuthorityError,
     build_repository_authority,
@@ -135,8 +137,6 @@ _is_content_done = is_content_done
 
 router = APIRouter(tags=["state"])
 
-BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
-TASKS_DIR = Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
 SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
 API_LANES = ("deepseek",)  # representative; others via openrouter absent BY DESIGN
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
@@ -223,14 +223,20 @@ def _parse_iso_date(value: Any) -> date | None:
         return None
 
 
-def _load_agent_budgets() -> tuple[dict[str, Any], list[str]]:
+def _read_agent_budgets_file(path: Path) -> tuple[dict[str, Any], list[str]]:
     try:
-        loaded = yaml.safe_load(BUDGET_CONFIG_PATH.read_text(encoding="utf-8")) or {}
+        loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     except (OSError, yaml.YAMLError) as exc:
         return {}, [f"budget config unavailable: {type(exc).__name__}"]
     if not isinstance(loaded, dict):
         return {}, ["budget config unavailable: root is not a mapping"]
     return loaded, []
+
+
+def _load_agent_budgets(budget_config_path: Path | None = None) -> tuple[dict[str, Any], list[str]]:
+    if budget_config_path is None:
+        budget_config_path = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
+    return _read_agent_budgets_file(budget_config_path)
 
 
 def _load_budget_extras(budgets: dict[str, Any]) -> dict[str, Any]:
@@ -539,6 +545,7 @@ def _recommend_agent(
         if not unknown_candidates:
             unknown_candidates = [a for a in status_map if a in SUBSCRIPTION_LANES]
         if unknown_candidates:
+
             def _sort_in_flight(lane_name: str) -> int:
                 return int(agents_dict.get(lane_name, {}).get("in_flight", 0))
 
@@ -582,9 +589,7 @@ def _recommend_agent(
                 h = agents[lane].get("health", {})
                 cf = h.get("consecutive_failures", 0)
                 sm = h.get("span_minutes", 0)
-                warnings.append(
-                    f"lane {lane} skipped for recommendation: {cf} spawn failures in {sm}m"
-                )
+                warnings.append(f"lane {lane} skipped for recommendation: {cf} spawn failures in {sm}m")
 
     return {
         "primary_agent_for_code": res.get("primary_agent_for_code"),
@@ -613,9 +618,7 @@ def _runtime_usage_records_7d() -> int | None:
 
 
 def _status_from_weekly_used(weekly_used: float, weekly_pace_delta_pct: float | None) -> str:
-    is_in_deficit = (
-        weekly_pace_delta_pct is not None and weekly_pace_delta_pct > 0
-    ) or weekly_used >= 90.0
+    is_in_deficit = (weekly_pace_delta_pct is not None and weekly_pace_delta_pct > 0) or weekly_used >= 90.0
     if weekly_used >= 90.0:
         return "near_cap"
     if is_in_deficit:
@@ -699,11 +702,16 @@ def compute_routing_budget(
     *,
     fresh_codexbar: bool = False,
     refresh_requested: bool | None = None,
+    budget_config_path: Path | None = None,
+    tasks_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
-    budgets, warnings = _load_agent_budgets()
+    try:
+        budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
+    except TypeError:
+        budgets, warnings = _load_agent_budgets()
     runtime_records_7d = _runtime_usage_records_7d()
     extras = _load_budget_extras(budgets)
     reset_hours = extras["reset_imminent_hours"]
@@ -713,9 +721,12 @@ def compute_routing_budget(
 
     health_records = {}
     try:
+        resolved_tasks_dir = (
+            tasks_dir if tasks_dir is not None else (Path(__file__).resolve().parents[2] / "batch_state" / "tasks")
+        )
         health_records = compute_lane_health(
-            TASKS_DIR,
-            now=current_time
+            resolved_tasks_dir,
+            now=current_time,
         )
     except Exception as exc:
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
@@ -946,9 +957,9 @@ def compute_routing_budget(
     for lane in SUBSCRIPTION_LANES:
         cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
         if isinstance(cb_data, dict):
-            cb_freshness[lane] = str(cb_data.get("freshness") or (
-                "stale_last_good" if cb_data.get("stale") else "fresh"
-            ))
+            cb_freshness[lane] = str(
+                cb_data.get("freshness") or ("stale_last_good" if cb_data.get("stale") else "fresh")
+            )
         if cb_data and cb_data.get("weekly_used_pct") is not None:
             cb_sourced_any = True
             weekly_used = cb_data["weekly_used_pct"]
@@ -994,9 +1005,7 @@ def compute_routing_budget(
                 "will_last_to_reset": cb_data.get("will_last_to_reset"),
                 "pace_summary": cb_data.get("pace_summary"),
                 "stale": cb_data.get("stale", False),
-                "freshness": cb_data.get("freshness") or (
-                    "stale_last_good" if cb_data.get("stale") else "fresh"
-                ),
+                "freshness": cb_data.get("freshness") or ("stale_last_good" if cb_data.get("stale") else "fresh"),
                 "age_s": cb_data.get("age_s"),
                 "fetched_at": cb_data.get("fetched_at"),
                 "failure_kind": cb_data.get("failure_kind"),
@@ -1042,7 +1051,9 @@ def compute_routing_budget(
             # Retain ledger-derived burn_pct_7d/remaining_pct/status if available (or "unknown" if no cap/records).
             # Do NOT overwrite agents[lane]["status"] to "unavailable", which creates a contradictory
             # status vs health ("healthy: True, status: unavailable").
-            err_msg = (cb_data.get("auth_error") if isinstance(cb_data, dict) else None) or "CodexBar usage data unavailable"
+            err_msg = (
+                cb_data.get("auth_error") if isinstance(cb_data, dict) else None
+            ) or "CodexBar usage data unavailable"
             err_kind = (cb_data.get("error_kind") if isinstance(cb_data, dict) else None) or "unavailable"
             err_code = cb_data.get("error_code") if isinstance(cb_data, dict) else None
             agents[lane]["codexbar"] = {
@@ -1071,7 +1082,9 @@ def compute_routing_budget(
                 "error_code": err_code,
                 "failure_kind": cb_data.get("failure_kind", err_kind) if isinstance(cb_data, dict) else err_kind,
                 "last_failure_at": cb_data.get("last_failure_at") if isinstance(cb_data, dict) else None,
-                "last_failure_code": cb_data.get("last_failure_code", err_code) if isinstance(cb_data, dict) else err_code,
+                "last_failure_code": cb_data.get("last_failure_code", err_code)
+                if isinstance(cb_data, dict)
+                else err_code,
             }
 
     cb_had_any_before_notebook = cb_sourced_any
@@ -1096,9 +1109,7 @@ def compute_routing_budget(
         try:
             runtime = summarize_lane_runtime(lane)
         except Exception as exc:  # never break routing-budget on telemetry I/O
-            logging.getLogger("state_router").debug(
-                "lane runtime summary failed for %s: %s", lane, exc
-            )
+            logging.getLogger("state_router").debug("lane runtime summary failed for %s: %s", lane, exc)
             runtime = {
                 "source": "agent_runtime_jsonl",
                 "window_s": 300,
@@ -1200,17 +1211,10 @@ def compute_routing_budget(
                         )
                     elif primary_mins is None or int(primary_mins) <= 300:
                         # Claude/Codex primary is the ≤5h window; mocks may omit minutes.
-                        short_bit = (
-                            f"5h window {primary_pct:.0f}% used, {100 - primary_pct:.0f}% reserve"
-                        )
+                        short_bit = f"5h window {primary_pct:.0f}% used, {100 - primary_pct:.0f}% reserve"
                     else:
-                        short_bit = (
-                            f"primary window {primary_pct:.0f}% used, "
-                            f"{100 - primary_pct:.0f}% reserve"
-                        )
-                    warnings.append(
-                        f"lane {lane} is in deficit ({pace_sum}; weekly-pace signal — {short_bit})"
-                    )
+                        short_bit = f"primary window {primary_pct:.0f}% used, {100 - primary_pct:.0f}% reserve"
+                    warnings.append(f"lane {lane} is in deficit ({pace_sum}; weekly-pace signal — {short_bit})")
                 else:
                     warnings.append(f"lane {lane} is in deficit ({pace_sum})")
 
@@ -1338,9 +1342,7 @@ def compute_routing_budget(
             "codexbar_data_available": cb_sourced_any,
             "codexbar_freshness": cb_freshness,
             "codexbar_max_age_s": cb_max_age_s,
-            "fresh_codexbar_requested": (
-                fresh_codexbar if refresh_requested is None else refresh_requested
-            ),
+            "fresh_codexbar_requested": (fresh_codexbar if refresh_requested is None else refresh_requested),
             "fresh_codexbar_blocking": fresh_codexbar,
             "runtime_data_available": runtime_data_available,
             "runtime_usage_records_7d": runtime_records_7d,
@@ -1366,7 +1368,7 @@ def compute_routing_budget(
 
 
 @router.get("/routing-budget")
-async def routing_budget(fresh_codexbar: bool = Query(False)):
+async def routing_budget(fresh_codexbar: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-agent soft-cap burn and routing recommendation for dispatch planning.
 
     HTTP never waits for the CodexBar CLI. ``?fresh_codexbar=true`` kicks a
@@ -1376,15 +1378,19 @@ async def routing_budget(fresh_codexbar: bool = Query(False)):
     """
     if fresh_codexbar:
         trigger_background_refresh()
+    budget_config_path = ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml"
+    tasks_dir = ctx.roots.batch_state_dir / "tasks"
     return await asyncio.to_thread(
         compute_routing_budget,
         fresh_codexbar=False,
         refresh_requested=fresh_codexbar,
+        budget_config_path=budget_config_path,
+        tasks_dir=tasks_dir,
     )
 
 
 @router.get("/summary")
-async def state_summary(fresh: bool = Query(False)):
+async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Full project snapshot. One call replaces 5 bash scripts at session start."""
     if fresh:
         cache_invalidate("summary")
@@ -1398,7 +1404,12 @@ async def state_summary(fresh: bool = Query(False)):
             cache="hit",
             age_s=age_s,
         )
-    result = await asyncio.to_thread(compute_summary)
+    result = await asyncio.to_thread(
+        compute_summary,
+        curriculum_root=ctx.roots.curriculum_root,
+        project_root=ctx.roots.project_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set("summary", result)
     return _with_state_meta(
         result,
@@ -1410,7 +1421,7 @@ async def state_summary(fresh: bool = Query(False)):
 
 
 @router.get("/pipeline/{track_id}")
-async def pipeline_track(track_id: str, fresh: bool = Query(False)):
+async def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-module pipeline state for one track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -1429,7 +1440,14 @@ async def pipeline_track(track_id: str, fresh: bool = Query(False)):
             cache="hit",
             age_s=age_s,
         )
-    result = await asyncio.to_thread(compute_pipeline_track, track_id, level_cfg)
+    result = await asyncio.to_thread(
+        compute_pipeline_track,
+        track_id,
+        level_cfg,
+        curriculum_root=ctx.roots.curriculum_root,
+        project_root=ctx.roots.project_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set(cache_key, result)
     return _with_state_meta(
         result,
@@ -1441,7 +1459,9 @@ async def pipeline_track(track_id: str, fresh: bool = Query(False)):
 
 
 @router.get("/pipeline-versions")
-async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query(False)):
+async def pipeline_versions(
+    track: str | None = Query(None), fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
+):
     """All modules grouped by pipeline version."""
 
     def _compute():
@@ -1453,11 +1473,13 @@ async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query
 
         for level_cfg in level_cfgs:
             track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(track_id)
+            plan_slugs = get_plan_slugs(
+                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+            )
             if not plan_slugs:
                 continue
 
-            track_dir = CURRICULUM_ROOT / level_cfg["path"]
+            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
             track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
 
             for num, slug in plan_slugs:
@@ -1529,17 +1551,18 @@ async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query
 async def preparation_roster(
     request: Request,
     track: str | None = Query(None, min_length=1, max_length=64, pattern=r"^[a-z0-9][a-z0-9-]*$"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Active-manifest learner bundle and publication state, without readiness sweeps."""
     _validate_preparation_query(request, {"track"})
 
     def _compute() -> dict[str, Any]:
         data_root = preparation_data_root(
-            project_root=PROJECT_ROOT,
-            live_repo_root=LIVE_REPO_ROOT,
+            project_root=ctx.roots.project_root,
+            live_repo_root=ctx.roots.live_repo_root,
         )
         authority = build_repository_authority(
-            project_root=PROJECT_ROOT,
+            project_root=ctx.roots.project_root,
             live_repo_root=data_root,
         )
         return preparation_state.build_roster(
@@ -1571,6 +1594,7 @@ async def preparation_module(
     track: str,
     slug: str,
     evidence: Literal["summary", "expanded"] = Query("summary"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """One fail-closed canonical preparation decision plus orthogonal publication state."""
     _validate_preparation_query(request, {"evidence"})
@@ -1579,11 +1603,11 @@ async def preparation_module(
 
     def _compute() -> dict[str, Any]:
         data_root = preparation_data_root(
-            project_root=PROJECT_ROOT,
-            live_repo_root=LIVE_REPO_ROOT,
+            project_root=ctx.roots.project_root,
+            live_repo_root=ctx.roots.live_repo_root,
         )
         authority = build_repository_authority(
-            project_root=PROJECT_ROOT,
+            project_root=ctx.roots.project_root,
             live_repo_root=data_root,
         )
         return preparation_state.build_module_state(
@@ -1614,7 +1638,7 @@ async def preparation_module(
 
 
 @router.get("/ready-to-build", deprecated=True)
-async def ready_to_build(track: str | None = Query(None)):
+async def ready_to_build(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """Deprecated research-complete candidates; not generation readiness."""
 
     def _compute():
@@ -1623,8 +1647,10 @@ async def ready_to_build(track: str | None = Query(None)):
 
         for level_cfg in level_cfgs:
             track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(track_id)
-            track_dir = CURRICULUM_ROOT / level_cfg["path"]
+            plan_slugs = get_plan_slugs(
+                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+            )
+            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
 
             for num, slug in plan_slugs:
                 orch_dir = safe_join(track_dir / "orchestration", slug)
@@ -1660,6 +1686,7 @@ async def weak_points(
     track: str | None = Query(None),
     min_score: int = Query(7, ge=0, le=10),
     limit: int = Query(20, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
     cache_key = f"weak_points_{track or 'all'}_{min_score}_{limit}"
@@ -1673,8 +1700,10 @@ async def weak_points(
 
         for level_cfg in level_cfgs:
             track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(track_id)
-            track_dir = CURRICULUM_ROOT / level_cfg["path"]
+            plan_slugs = get_plan_slugs(
+                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+            )
+            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
 
             for num, slug in plan_slugs:
                 issues = []
@@ -1690,7 +1719,9 @@ async def weak_points(
                 word_count = audit.get("word_count", 0)
                 word_target = audit.get("word_target", 0)
                 if word_target == 0 and word_count > 0:
-                    word_target = get_word_target_from_plan(track_id, slug)
+                    word_target = get_word_target_from_plan(
+                        track_id, slug, plans_root=ctx.roots.plans_root, curriculum_root=ctx.roots.curriculum_root
+                    )
                 if word_target > 0 and word_count > 0 and word_count < word_target * 0.8:
                     issues.append(f"low_words_{word_count}/{word_target}")
 
@@ -1720,7 +1751,7 @@ async def weak_points(
 
 
 @router.get("/failing")
-async def failing_modules(track: str | None = Query(None)):
+async def failing_modules(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """All modules with audit failures or phase failures."""
 
     def _compute():
@@ -1729,8 +1760,10 @@ async def failing_modules(track: str | None = Query(None)):
 
         for level_cfg in level_cfgs:
             track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(track_id)
-            track_dir = CURRICULUM_ROOT / level_cfg["path"]
+            plan_slugs = get_plan_slugs(
+                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+            )
+            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
 
             for num, slug in plan_slugs:
                 orch_dir = safe_join(track_dir / "orchestration", slug)
@@ -1833,7 +1866,7 @@ def _module_score_record(track_id: str, track_dir: Path, num: int, slug: str) ->
 
 
 @router.get("/scores/{track}")
-async def module_scores(track: str):
+async def module_scores(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module status + LLM-QG aggregate + per-dimension scores for a track.
 
     The view the user watches the seminar quality-gate prototype converge with
@@ -1847,8 +1880,9 @@ async def module_scores(track: str):
         level_cfg = next((l for l in LEVELS if l["id"] == track), None)
         if not level_cfg:
             return None
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
-        modules = [_module_score_record(track, track_dir, num, slug) for num, slug in get_plan_slugs(track)]
+        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
+        plan_slugs = get_plan_slugs(track, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root)
+        modules = [_module_score_record(track, track_dir, num, slug) for num, slug in plan_slugs]
         scored = sum(1 for m in modules if m["scored"])
         return {"track": track, "count": len(modules), "scored": scored, "modules": modules}
 
@@ -1859,15 +1893,16 @@ async def module_scores(track: str):
 
 
 @router.get("/scores/{track}/{slug}")
-async def module_scores_one(track: str, slug: str):
+async def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """One module's status + LLM-QG aggregate + per-dimension scores."""
 
     def _compute() -> dict[str, Any] | None:
         level_cfg = next((l for l in LEVELS if l["id"] == track), None)
         if not level_cfg:
             return None
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
-        match = next((ns for ns in get_plan_slugs(track) if ns[1] == slug), None)
+        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
+        plan_slugs = get_plan_slugs(track, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root)
+        match = next((ns for ns in plan_slugs if ns[1] == slug), None)
         if match is None:
             return {"__not_found__": "slug"}
         num, resolved_slug = match
@@ -1882,7 +1917,7 @@ async def module_scores_one(track: str, slug: str):
 
 
 @router.get("/research-coverage")
-async def research_coverage(fresh: bool = Query(False)):
+async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-track research completeness and quality."""
     if fresh:
         cache_invalidate("research_coverage")
@@ -1896,7 +1931,11 @@ async def research_coverage(fresh: bool = Query(False)):
             cache="hit",
             age_s=age_s,
         )
-    result = await asyncio.to_thread(compute_research_coverage)
+    result = await asyncio.to_thread(
+        compute_research_coverage,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set("research_coverage", result)
     return _with_state_meta(
         result,
@@ -1908,7 +1947,9 @@ async def research_coverage(fresh: bool = Query(False)):
 
 
 @router.get("/research/{track_id}")
-async def research_detail(track_id: str, min_score: int = 9, fresh: bool = Query(False)):
+async def research_detail(
+    track_id: str, min_score: int = 9, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
+):
     """Per-module research quality with dimension scores, gaps, and upgrade queue."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -1928,7 +1969,14 @@ async def research_detail(track_id: str, min_score: int = 9, fresh: bool = Query
             age_s=age_s,
         )
 
-    result = await asyncio.to_thread(compute_research_detail, track_id, level_cfg, min_score)
+    result = await asyncio.to_thread(
+        compute_research_detail,
+        track_id,
+        level_cfg,
+        min_score,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set(cache_key, result)
     return _with_state_meta(
         result,
@@ -1940,7 +1988,7 @@ async def research_detail(track_id: str, min_score: int = 9, fresh: bool = Query
 
 
 @router.get("/review-coverage")
-async def review_coverage(fresh: bool = Query(False)):
+async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-track review and final-review coverage + quality signal."""
     if fresh:
         cache_invalidate("review_coverage")
@@ -1954,7 +2002,11 @@ async def review_coverage(fresh: bool = Query(False)):
             cache="hit",
             age_s=age_s,
         )
-    result = await asyncio.to_thread(compute_review_coverage)
+    result = await asyncio.to_thread(
+        compute_review_coverage,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set("review_coverage", result)
     return _with_state_meta(
         result,
@@ -1966,7 +2018,7 @@ async def review_coverage(fresh: bool = Query(False)):
 
 
 @router.get("/build-status/{track_id}")
-async def build_status(track_id: str):
+async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Compact build progress for a track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -1976,18 +2028,28 @@ async def build_status(track_id: str):
     cached = cache_get(cache_key, ttl=15.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(compute_build_status_track, track_id, level_cfg)
+    result = await asyncio.to_thread(
+        compute_build_status_track,
+        track_id,
+        level_cfg,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set(cache_key, result)
     return result
 
 
 @router.get("/build-status")
-async def build_status_all():
+async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
     """All-tracks build progress in one call."""
     cached = cache_get("build_status_all", ttl=30.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(compute_build_status_all)
+    result = await asyncio.to_thread(
+        compute_build_status_all,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set("build_status_all", result)
     return result
 
@@ -1997,6 +2059,7 @@ async def module_range_status(
     track_id: str,
     start: int = Query(..., ge=1),
     end: int = Query(..., ge=1),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Deterministic committed-file status for a module number range."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
@@ -2017,6 +2080,9 @@ async def module_range_status(
         level_cfg,
         start=start,
         end=end,
+        curriculum_root=ctx.roots.curriculum_root,
+        project_root=ctx.roots.project_root,
+        plans_root=ctx.roots.plans_root,
     )
     cache_set(cache_key, result)
     return result
@@ -2029,35 +2095,52 @@ async def llm_qg_track(
         False,
         description="True = include full dimension evidence. Default returns score-only dimensions.",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Per-module LLM quality-gate scores from build artifacts on disk."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    return await asyncio.to_thread(compute_llm_qg_track, track_id, level_cfg, verbose=verbose)
+    return await asyncio.to_thread(
+        compute_llm_qg_track,
+        track_id,
+        level_cfg,
+        verbose=verbose,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
 
 
 @router.get("/build-stats")
-async def build_stats_all():
+async def build_stats_all(ctx: MonitorContext = Depends(get_ctx)):
     """V6 build stats aggregated across all tracks."""
-    return await asyncio.to_thread(compute_build_stats_all)
+    return await asyncio.to_thread(compute_build_stats_all, curriculum_root=ctx.roots.curriculum_root)
 
 
 @router.get("/build-stats/{track_id}")
-async def build_stats(track_id: str):
+async def build_stats(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """V6 build-stats.jsonl parsed: attempts, success rate, recent entries."""
-    return await asyncio.to_thread(compute_build_stats, track_id)
+    return await asyncio.to_thread(compute_build_stats, track_id, curriculum_root=ctx.roots.curriculum_root)
 
 
 @router.get("/module/{track_id}/{num}")
-async def module_detail(track_id: str, num: int):
+async def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(get_ctx)):
     """Single module deep-dive: pipeline state, audit, research, review, comms."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    result = await asyncio.to_thread(compute_module_detail, track_id, num, level_cfg)
+    result = await asyncio.to_thread(
+        compute_module_detail,
+        track_id,
+        num,
+        level_cfg,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+        message_db=ctx.stores.message_db,
+        project_root=ctx.roots.project_root,
+    )
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -2071,6 +2154,7 @@ async def module_detail_by_slug(
         False,
         description="True = full compute_module_detail payload. Default returns a compact view.",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Slug-keyed module state (#1313 / Codex-1).
 
@@ -2104,7 +2188,7 @@ async def module_detail_by_slug(
             content={"error": f"Track '{track_id}' not found"},
         )
 
-    plan_slugs = get_plan_slugs(track_id)
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root)
     match = next(((n, s) for n, s in plan_slugs if s == slug), None)
     if not match:
         return JSONResponse(
@@ -2113,7 +2197,16 @@ async def module_detail_by_slug(
         )
     num, _ = match
 
-    full = await asyncio.to_thread(compute_module_detail, track_id, num, level_cfg)
+    full = await asyncio.to_thread(
+        compute_module_detail,
+        track_id,
+        num,
+        level_cfg,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+        message_db=ctx.stores.message_db,
+        project_root=ctx.roots.project_root,
+    )
     if "error" in full:
         return JSONResponse(status_code=404, content=full)
 
@@ -2147,7 +2240,7 @@ async def module_detail_by_slug(
     audit = full.get("audit") or {}
     review = full.get("review") or {}
     final_review = full.get("final_review")
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    track_dir = ctx.roots.curriculum_root / level_cfg["path"]
     llm_qg = await asyncio.to_thread(read_llm_qg, track_dir, slug)
 
     return {
@@ -2181,7 +2274,7 @@ async def module_detail_by_slug(
 
 
 @router.get("/final-reviews/{track_id}")
-async def final_reviews_track(track_id: str):
+async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Phase F results aggregated per track: verdicts, issue counts, common patterns."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -2191,24 +2284,35 @@ async def final_reviews_track(track_id: str):
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(compute_final_reviews, track_id, level_cfg)
+    result = await asyncio.to_thread(
+        compute_final_reviews,
+        track_id,
+        level_cfg,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set(cache_key, result)
     return result
 
 
 @router.get("/enrichment-status")
-async def enrichment_status(track: str | None = Query(None)):
+async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """Which plans are enriched per track."""
     cached = cache_get("enrichment_status", ttl=120.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(compute_enrichment_status, track)
+    result = await asyncio.to_thread(
+        compute_enrichment_status,
+        track,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set("enrichment_status", result)
     return result
 
 
 @router.get("/track-health/{track_id}")
-async def track_health(track_id: str):
+async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single-call track health summary."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
@@ -2218,7 +2322,13 @@ async def track_health(track_id: str):
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
-    result = await asyncio.to_thread(compute_track_health, track_id, level_cfg)
+    result = await asyncio.to_thread(
+        compute_track_health,
+        track_id,
+        level_cfg,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
     cache_set(cache_key, result)
     return result
 
@@ -2227,9 +2337,16 @@ async def track_health(track_id: str):
 async def outstanding_issues(
     track: str | None = Query(None),
     severity: str | None = Query(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Aggregated outstanding issues from review files + audit failures."""
-    return await asyncio.to_thread(compute_issues, track, severity)
+    return await asyncio.to_thread(
+        compute_issues,
+        track,
+        severity,
+        curriculum_root=ctx.roots.curriculum_root,
+        plans_root=ctx.roots.plans_root,
+    )
 
 
 # ==================== RANGE STATUS (#1313 / Codex-4) ====================
@@ -2243,6 +2360,7 @@ async def range_status(
         None,
         description="Last module number (inclusive). Omit to go to the end of the track.",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Compact per-module table for one [start, end] slice of a track.
 
@@ -2261,7 +2379,13 @@ async def range_status(
         )
 
     def _compute() -> dict:
-        full = compute_pipeline_track(track_id, level_cfg)
+        full = compute_pipeline_track(
+            track_id,
+            level_cfg,
+            curriculum_root=ctx.roots.curriculum_root,
+            project_root=ctx.roots.project_root,
+            plans_root=ctx.roots.plans_root,
+        )
         modules = full.get("modules", []) if isinstance(full, dict) else full
         if not isinstance(modules, list):
             return {"error": "pipeline_track returned non-list"}
@@ -2359,7 +2483,7 @@ async def range_status(
 
 
 @router.get("/manifest")
-async def manifest(request: Request):
+async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     """Tiny JSON index for agent cold-start coordination.
 
     Target size < 2 KB. Returns a hash + URL for every consolidated
@@ -2389,7 +2513,6 @@ async def manifest(request: Request):
     session, every compaction. The manifest collapses the steady
     state to one tiny call.
     """
-    ctx = get_ctx(request)
     session_id = session_id_from_request(request)
     body = {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),

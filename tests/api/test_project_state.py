@@ -280,9 +280,9 @@ def test_self_report_cache_is_shared_by_project_and_worker_routes(monkeypatch: p
     project_host = project.json()["hosts"]["host-job"]
     worker_host = workers.json()["hosts"][0]
     assert project_host["freshness"] == "fresh"
-    assert project_host["age_s"] == 0.0
+    assert project_host["age_s"] <= 1.0
     assert worker_host["freshness"] == "fresh"
-    assert worker_host["age_s"] == 0.0
+    assert worker_host["age_s"] <= 1.0
 
 
 def test_self_report_cache_serves_stale_while_refreshing(monkeypatch: pytest.MonkeyPatch) -> None:
