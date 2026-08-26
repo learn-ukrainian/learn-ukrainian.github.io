@@ -50,6 +50,20 @@ def test_gemini_schema_decisions_are_all_known_to_evidence_validator() -> None:
         assert decision_enum <= runner.validator.KNOWN_DECISIONS
 
 
+def test_grok_schema_preserves_ordered_row_identity_and_liveness() -> None:
+    runner = _load_runner()
+    rows = runner.fixture_rows()
+    schema = runner.grok_schema(rows, "challenge")
+
+    labels = schema["properties"]["labels"]
+    assert labels["minItems"] == labels["maxItems"] == 2
+    assert labels["additionalItems"] is False
+    assert [item["properties"]["unit_id"]["enum"][0] for item in labels["items"]] == [
+        row["unit_id"] for row in rows
+    ]
+    assert schema["properties"]["liveness_challenge"] == {"enum": ["challenge"]}
+
+
 def test_real_cli_passes_explicit_provider_bin(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     runner = _load_runner()
     provider = (tmp_path / "agy").resolve()
@@ -146,14 +160,42 @@ def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:
 
     expected_isolation_flags = {"--permission-mode", "--no-alt-screen", "--no-subagents", "--disable-web-search"}
     prompt_path = Path("/private/prompt")
+    output_schema = {"type": "object"}
+    session_id = "00000000-0000-4000-8000-000000000007"
     for command in (
-        canary._grok_command(Path("/provider"), prompt_path),
-        batch._provider_command(Path("/provider"), prompt_path),
+        canary._grok_command(Path("/provider"), prompt_path, output_schema, session_id),
+        batch._provider_command(Path("/provider"), prompt_path, output_schema, session_id),
     ):
         assert expected_isolation_flags <= set(command)
         assert "--no-memory" not in command
         assert command.count("--prompt-file") == 1
         assert command[command.index("--prompt-file") + 1] == str(prompt_path)
+        assert command[command.index("--output-format") + 1] == "json"
+        schema_argument = command[command.index("--json-schema") + 1]
+        assert json.loads(schema_argument) == output_schema
+        assert not schema_argument.endswith("\n")
+        assert command[command.index("--session-id") + 1] == session_id
+
+
+def test_grok_batch_schema_keeps_private_identity_out_of_bounded_argument() -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_grok_batch_schema_test", path)
+    assert spec is not None and spec.loader is not None
+    batch = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(batch)
+    rows = [{"unit_id": f"private-unit-{index:02d}", "unit_sha256": f"{index:064x}"} for index in range(50)]
+
+    for lane in ("clean_label", "residual_label"):
+        schema = batch._provider_schema(lane, rows)
+        labels = schema["properties"]["labels"]
+        identity = labels["items"]["properties"]
+        assert labels["minItems"] == labels["maxItems"] == 50
+        assert identity["unit_id"] == {"type": "string", "minLength": 1}
+        assert identity["unit_sha256"] == {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        argument = json.dumps(schema, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        assert all(row["unit_id"] not in argument and row["unit_sha256"] not in argument for row in rows)
+        assert len(argument.encode()) < 16_384
+        assert not argument.endswith("\n")
 
 
 def test_grok_batch_binds_and_removes_private_prompt_file(
@@ -176,10 +218,103 @@ def test_grok_batch_binds_and_removes_private_prompt_file(
         return batch.subprocess.CompletedProcess(command, 0, stdout=b"{}", stderr=b"")
 
     monkeypatch.setattr(batch.subprocess, "run", fake_run)
-    result = batch._run_provider(Path("/provider"), b"public prompt", tmp_path)
+    result, session_id = batch._run_provider(
+        Path("/provider"), b"public prompt", tmp_path, {"type": "object"}
+    )
 
     assert result.returncode == 0
+    assert session_id
     assert not observed["prompt_path"].exists()
+
+
+def test_grok_canary_requires_documented_json_envelope_and_matching_session() -> None:
+    runner = _load_runner()
+    payload = {"labels": [{"one": 1}, {"two": 2}], "liveness_challenge": "challenge"}
+    session_id = "00000000-0000-4000-8000-000000000007"
+    envelope = {
+        "text": f"```json\n{json.dumps(payload)}\n```",
+        "sessionId": session_id,
+        "stopReason": "end_turn",
+        "requestId": "request-7",
+    }
+
+    assert runner._extract_grok(json.dumps(envelope).encode(), "challenge", session_id) == {
+        "labels": payload["labels"]
+    }
+    with pytest.raises(runner.CanaryStructuralError, match="structured_output_envelope_drift"):
+        runner._extract_grok(json.dumps(envelope).encode(), "challenge", "wrong-session")
+    with pytest.raises(runner.CanaryStructuralError, match="structured_output_envelope_drift"):
+        runner._extract_grok(json.dumps(payload).encode(), "challenge", session_id)
+
+
+def test_grok_canary_retry_mints_a_fresh_session(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    runner = _load_runner()
+    provider = tmp_path / "grok"
+    provider.write_bytes(b"#!/bin/sh\n")
+    provider.chmod(0o700)
+    sources = runner.make_synthetic_mcp_client(tmp_path / "sources")
+    observed_sessions: list[str] = []
+
+    def fake_run(command: list[str], **kwargs: object) -> object:
+        observed_sessions.append(command[command.index("--session-id") + 1])
+        kwargs["stdout"].write(b"{}")
+        return runner.subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(runner.subprocess, "run", fake_run)
+    with pytest.raises(runner.CanaryError, match="structural_retry_exhausted"):
+        runner.invoke_canary(
+            "grok",
+            provider,
+            execution_mode="synthetic",
+            sources_client=sources,
+            max_attempts=2,
+        )
+
+    assert len(observed_sessions) == 2
+    assert len(set(observed_sessions)) == 2
+
+
+def test_grok_batch_decodes_only_documented_matching_session_envelope(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_grok_batch_decode_test", path)
+    assert spec is not None and spec.loader is not None
+    batch = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(batch)
+    payload = {"labels": [{"unit_id": "one"}]}
+    session_id = "00000000-0000-4000-8000-000000000007"
+    envelope = {
+        "text": json.dumps(payload),
+        "sessionId": session_id,
+        "stopReason": "end_turn",
+        "requestId": "request-7",
+    }
+    validated: list[bytes] = []
+
+    def fake_validate(lane: str, packet: dict[str, object], raw: bytes, **kwargs: object) -> dict[str, object]:
+        assert lane == "clean_label"
+        assert packet == {"lane": "clean_label"}
+        validated.append(raw)
+        return payload
+
+    monkeypatch.setattr(batch, "validate", fake_validate)
+    decoded = batch._decode_provider(
+        json.dumps(envelope).encode(),
+        {"lane": "clean_label"},
+        expected_session_id=session_id,
+    )
+
+    assert decoded == batch.canonical(payload)
+    assert validated == [batch.canonical(payload)]
+    with pytest.raises(batch.Invalid, match="structured_output_envelope_drift"):
+        batch._decode_provider(
+            json.dumps(envelope).encode(),
+            {"lane": "clean_label"},
+            expected_session_id="wrong-session",
+        )
 
 
 def test_batch_stream_rejects_reported_cwd_mismatch(tmp_path: Path) -> None:
