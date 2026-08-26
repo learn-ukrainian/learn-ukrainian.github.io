@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 
 import pytest
 from fastapi.testclient import TestClient
@@ -56,18 +57,18 @@ def folk_llm_qg_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
             encoding="utf-8",
         )
 
-    def fake_get_plan_slugs(track_id: str) -> list[tuple[int, str]]:
+    def fake_get_plan_slugs(track_id: str, *args, **kwargs) -> list[tuple[int, str]]:
         if track_id == "folk":
             return _FOLK_LLM_QG_SLUGS
-        return router_get_plan_slugs(track_id)
+        return router_get_plan_slugs(track_id, *args, **kwargs)
 
-    def fake_compute_get_plan_slugs(track_id: str) -> list[tuple[int, str]]:
+    def fake_compute_get_plan_slugs(track_id: str, *args, **kwargs) -> list[tuple[int, str]]:
         if track_id == "folk":
             return _FOLK_LLM_QG_SLUGS
-        return compute_get_plan_slugs(track_id)
+        return compute_get_plan_slugs(track_id, *args, **kwargs)
 
-    monkeypatch.setattr(state_router, "CURRICULUM_ROOT", curriculum_root)
-    monkeypatch.setattr(state_compute, "CURRICULUM_ROOT", curriculum_root)
+    new_roots = replace(api_main.app.state.ctx.roots, curriculum_root=curriculum_root)
+    monkeypatch.setattr(api_main.app.state, "ctx", replace(api_main.app.state.ctx, roots=new_roots))
     monkeypatch.setattr(state_router, "get_plan_slugs", fake_get_plan_slugs)
     monkeypatch.setattr(state_compute, "get_plan_slugs", fake_compute_get_plan_slugs)
 
