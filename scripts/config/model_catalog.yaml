@@ -693,32 +693,25 @@ models:
     weaknesses: [excluded_from_automatic_routing_pending_fresh_evidence]
     sources:
       - https://github.com/QwenLM/Qwen3.6
-  openrouter/stealth/ox-alpha:
-    family: zhipu   # unconfirmed; tokenizer fingerprint matches GLM-5.3. Do not treat as proof.
+  glm-5.3-flash:
+    family: zhipu
     tier: frontier_practical
-    lifecycle: hold
-    aliases: [ox-alpha, 0x-alpha, stealth/ox-alpha]
-    roles: [explicit_bakeoff_only, hard_implement]
+    lifecycle: active
+    aliases: [ox-alpha, 0x-alpha, stealth/ox-alpha, openrouter/stealth/ox-alpha, glm53-flash]
+    roles: [implementation, hard_implement, long_running_coding]
     transports: [opencode]
-    strengths: [long_horizon_coding, one_million_context, free_preview]
-    weaknesses:
-      - anonymous_provider_retains_prompts
-      - preview_window
-      - china_data_egress_likely
-      - not_language_lane
-      - identity_unconfirmed
-      - not_automatic_routing
+    strengths: [long_horizon_coding, one_million_context, frontier_coding, token_efficient]
+    weaknesses: [china_data_egress, local_interactive_only, never_openrouter, not_language_lane]
     notes: >-
-      Released 2026-08-20; OpenRouter lists $0 / 1M context; OpenCode said ~one-week free window
-      (~through 2026-08-27). Provider retains prompts and completions (OpenRouter stealth terms).
-      LOCAL-ONLY: never CI, never secrets, never unpublished curriculum. Invocation for probes:
-      `opencode run --model openrouter/stealth/ox-alpha`. ask-opencode generic ACP route stays
-      RETIRED — do not add ask-ox-alpha / --agent ox-alpha. NOT a review_candidate. NOT on any
-      review_ladder. NOT formal_review_eligible. lifecycle: hold = local shadow/compare seat only
-      (operator 2026-08-23, #6943).
+      Revealed 2026-08-26 as GLM-5.3-Flash (formerly OpenRouter stealth ox-alpha). OpenCode
+      invocation `zai/glm-5.3-flash` via `--agent glm` (default Flash workhorse). LOCAL-ONLY
+      China egress; Z.AI API prepaid (provider `zai`), not Coding Plan. Stealth slug retired.
+      NOT a review_candidate. NOT on review ladders. NOT formal_review_eligible (same-family zhipu).
+      Coding Plan `glm-5.3` remains explicit `--model glm-5.3` for security/coherence.
     sources:
-      - https://openrouter.ai/stealth/ox-alpha
-      - https://openrouter.ai/stealth
+      - https://openrouter.ai/z-ai/glm-5.3-flash
+      - https://z.ai/blog
+      - https://huggingface.co/zai-org/GLM-5.3-Flash
   claude-sonnet-4.6-thinking:
     family: anthropic
     tier: compatibility

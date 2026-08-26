@@ -51,6 +51,11 @@ _DEEPSEEK_FAMILY_MODEL_RE = re.compile(r"^deepseek", re.IGNORECASE)
 # gemma-family ids are the only zero-cost ids this provider may carry.
 _GOOGLE_AIS_PREFIX_RE = re.compile(r"^google[-_]ais/", re.IGNORECASE)
 _GEMMA_FAMILY_MODEL_RE = re.compile(r"^gemma", re.IGNORECASE)
+# Stealth ox-alpha delisted 2026-08-26; canonical seat is zai/glm-5.3-flash via --agent glm.
+_OX_ALPHA_RETIRED_RE = re.compile(
+    r"openrouter/stealth/ox-alpha|stealth/ox-alpha|^ox-alpha$|^0x-alpha$",
+    re.IGNORECASE,
+)
 _OVERRIDE_ENV = "LU_ROUTING_GUARD_OVERRIDE"
 
 
@@ -68,6 +73,13 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
     text = str(model or "").strip()
     if not text:
         return
+    if _OX_ALPHA_RETIRED_RE.search(text):
+        raise RoutingGuardError(
+            f"{context}: {text!r} is the retired OpenRouter stealth ox-alpha pin "
+            "(delisted 2026-08-26). Use zai/glm-5.3-flash via "
+            "`delegate.py dispatch --agent glm` (default Flash workhorse). "
+            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
+        )
     if _QWEN_RE.search(text):
         raise RoutingGuardError(
             f"{context}: qwen models are EXCLUDED by standing user order "

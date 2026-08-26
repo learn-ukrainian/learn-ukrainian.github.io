@@ -104,10 +104,11 @@ _EFFORT_TO_VARIANT = {
     "max": "max",
 }
 
-# Zhipu GLM fleet member (model glm-5.3), reached via the Z.AI Coding Plan
-# provider under opencode (also reachable as openrouter/z-ai/glm-5.3). Strong
-# code + review + browsing; a distinct (China-lab) family → valid cross-family
-# reviewer.
+# Zhipu GLM bridge consult pin: Coding Plan glm-5.3 (do not silently burn API +
+# Coding Plan on every ask). Implement dispatch defaults to Flash workhorse via
+# GlmAdapter (`zai/glm-5.3-flash`; `--model glm-5.3` keeps this Coding Plan pin).
+# Strong code + review + browsing; a distinct (China-lab) family → valid
+# cross-family reviewer.
 #
 # ⚠️ HARD DATA-GOVERNANCE CONSTRAINT: GLM is China-hosted (Zhipu/z.ai) → prompt
 # data EGRESSES TO CHINA. LOCAL-ONLY — never call it from CI / automated

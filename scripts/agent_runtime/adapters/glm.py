@@ -1,6 +1,8 @@
-"""GlmAdapter — wraps opencode CLI for Zhipu GLM-5.3 (glm-5.3).
+"""GlmAdapter — wraps opencode CLI for Zhipu GLM (Flash workhorse + Coding Plan pins).
 
-GLM-5.3 is a strong cross-family code and review model.
+Default dispatch (`--agent glm`, omitted `--model`) routes GLM-5.3-Flash via
+`zai/glm-5.3-flash`. Explicit `--model glm-5.3` keeps the Coding Plan pin for
+security / large-context coherence.
 LOCAL-ONLY: prompt data egresses to China — forbidden in CI.
 """
 
@@ -22,6 +24,7 @@ _logger = logging.getLogger(__name__)
 
 # Bare catalog model id → subscription-pinned opencode provider route.
 _OPENCODE_MODEL_ROUTES: dict[str, str] = {
+    "glm-5.3-flash": "zai/glm-5.3-flash",
     "glm-5.3": "zai-coding-plan/glm-5.3",
     "glm-5.2": "zai-coding-plan/glm-5.2",  # prior pin
 }
@@ -80,13 +83,13 @@ def _extract_text_from_stdout(stdout: str) -> str:
 
 
 class GlmAdapter:
-    """Adapter for the opencode CLI with glm-5.3."""
+    """Adapter for the opencode CLI with glm-5.3-flash workhorse default."""
 
     name: str = "glm"
-    # Fleet MODEL identity (must resolve in model_catalog.yaml). The Z.AI
-    # Coding Plan provider pin is an opencode INVOCATION detail — applied in
+    # Fleet MODEL identity (must resolve in model_catalog.yaml). Provider pins
+    # (Flash API vs Coding Plan) are opencode INVOCATION details — applied in
     # build_invocation via _OPENCODE_MODEL_ROUTES, not stored as identity.
-    default_model: str = "glm-5.3"
+    default_model: str = "glm-5.3-flash"
     # Operator 2026-08-13: omitted effort defaults to high (--variant high);
     # an explicit --effort always wins.
     default_effort: str = "high"

@@ -64,6 +64,10 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         "google-ais/",
         "GOOGLE-AIS/GEMINI-3.1-PRO",
         "google_ais/gemini-3.1-pro",
+        "openrouter/stealth/ox-alpha",
+        "stealth/ox-alpha",
+        "ox-alpha",
+        "0x-alpha",
     ],
 )
 def test_forbidden_models_refused(model: str) -> None:
@@ -83,6 +87,8 @@ def test_forbidden_models_refused(model: str) -> None:
         "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path
         "claude-opus-4.8",  # native Anthropic lane
         "gpt-5.5",  # native codex lane
+        "zai/glm-5.3-flash",
+        "glm-5.3-flash",
         None,
         "",
     ],
