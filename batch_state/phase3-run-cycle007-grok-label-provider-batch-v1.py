@@ -1221,6 +1221,9 @@ def main() -> int:
     parser.add_argument(
         "--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256"
     )
+    parser.add_argument("--expected-server-code-sha", required=True, help="controller-bound Sources server SHA256")
+    parser.add_argument("--expected-sources-db-sha", required=True, help="controller-bound sources DB SHA256")
+    parser.add_argument("--expected-vesum-db-sha", required=True, help="controller-bound VESUM DB SHA256")
     parser.add_argument(
         "--expected-label-prompt-sha",
         required=True,
@@ -1246,6 +1249,14 @@ def main() -> int:
             or any(character not in "0123456789abcdef" for character in args.expected_custody_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_label_manifest_sha)
             or any(character not in "0123456789abcdef" for character in args.expected_evidence_manifest_sha)
+            or any(
+                len(value) != 64 or any(character not in "0123456789abcdef" for character in value)
+                for value in (
+                    args.expected_server_code_sha,
+                    args.expected_sources_db_sha,
+                    args.expected_vesum_db_sha,
+                )
+            )
         ):
             raise Error("label_count_or_envelope_drift")
         if len(args.expected_label_prompt_sha) != 64 or any(
@@ -1254,11 +1265,16 @@ def main() -> int:
             raise Error("label_count_or_envelope_drift")
 
         global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
-        global EXPECTED_GROK_EXECUTABLE_SHA256
+        global EXPECTED_GROK_EXECUTABLE_SHA256, EXPECTED_SOURCES_ENDPOINT_IDENTITY
         EXPECTED_CUSTODY_SHA256 = args.expected_custody_sha
         EXPECTED_LABEL_MANIFEST_SHA256 = args.expected_label_manifest_sha
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha
         EXPECTED_GROK_EXECUTABLE_SHA256 = args.expected_grok_executable_sha or ""
+        EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
+            "server_code_sha256": args.expected_server_code_sha,
+            "sources_db_sha256": args.expected_sources_db_sha,
+            "vesum_db_sha256": args.expected_vesum_db_sha,
+        }
 
         package = args.package.resolve()
         synthetic = args.test_provider_bin is not None

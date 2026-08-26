@@ -68,8 +68,11 @@ provider receipt, non-empty output root, controller, or worker. Before `resume`,
 provider state exists, the guardian requires explicit absolute AGY and Grok
 executable bindings and all three preflight receipts. The controller verifies
 each resolved regular file against its provider-attested canary hash before any
-provider execution. No provider executable is discovered from a workstation
-path or from `PATH`. A small Linux-only guardian adds only the missing
+provider execution. The controller also passes the three preflight-verified
+Sources server/database hashes to each provider runner explicitly; immutable
+code releases do not need local copies of the source databases merely to
+revalidate the already-frozen evidence identity. No provider executable is
+discovered from a workstation path or from `PATH`. A small Linux-only guardian adds only the missing
 operational layer:
 
 1. Acquire one non-blocking outer guardian lock located outside the disposable

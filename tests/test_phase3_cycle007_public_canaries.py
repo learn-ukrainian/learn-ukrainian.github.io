@@ -259,6 +259,58 @@ def test_batch_runner_pins_the_certified_evidence_compiler_identity(
     assert identity["code_hashes"] is not runner.FROZEN_EVIDENCE_CODE_HASHES
 
 
+def test_batch_runner_uses_controller_bound_source_identity_without_local_databases(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_bound_sources_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    monkeypatch.setattr(runner.compiler, "DEFAULT_SERVER_CODE", tmp_path / "missing-server.py")
+    monkeypatch.setattr(runner.compiler, "DEFAULT_SOURCES_DB", tmp_path / "missing-sources.db")
+    monkeypatch.setattr(runner.compiler, "DEFAULT_VESUM_DB", tmp_path / "missing-vesum.db")
+    runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
+        "server_code_sha256": "1" * 64,
+        "sources_db_sha256": "2" * 64,
+        "vesum_db_sha256": "3" * 64,
+    }
+
+    identity = runner._get_expected_identity()
+
+    assert identity["server_code_sha256"] == "1" * 64
+    assert identity["sources_db_sha256"] == "2" * 64
+    assert identity["vesum_db_sha256"] == "3" * 64
+
+
+def test_grok_runner_uses_controller_bound_source_identity_without_local_databases(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_grok_bound_sources_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    monkeypatch.setattr(runner.compiler, "DEFAULT_SERVER_CODE", tmp_path / "missing-server.py")
+    monkeypatch.setattr(runner.compiler, "DEFAULT_SOURCES_DB", tmp_path / "missing-sources.db")
+    monkeypatch.setattr(runner.compiler, "DEFAULT_VESUM_DB", tmp_path / "missing-vesum.db")
+    runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
+        "server_code_sha256": "4" * 64,
+        "sources_db_sha256": "5" * 64,
+        "vesum_db_sha256": "6" * 64,
+    }
+
+    identity = runner._get_expected_identity()
+
+    assert identity["server_code_sha256"] == "4" * 64
+    assert identity["sources_db_sha256"] == "5" * 64
+    assert identity["vesum_db_sha256"] == "6" * 64
+
+
 def test_batch_stream_input_command_has_no_print_prompt() -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_command_test", path)
