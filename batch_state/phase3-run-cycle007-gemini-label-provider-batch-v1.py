@@ -113,6 +113,14 @@ FAILURE_CODES = frozenset(
         "unknown_decision_code",
         "evidence_shape_drift",
         "source_role_boundary_violation",
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_structured_request_rejected",
+        "provider_status_authentication_or_permission",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+        "provider_status_unknown",
     }
 )
 ATTEMPT_FAILURE_STAGES = frozenset(
@@ -123,6 +131,97 @@ EXECUTABLE_BINDINGS = frozenset({"not_checked", "verified", "mismatch", "unavail
 RETURN_CODES = frozenset({"not_started", "zero", "nonzero"})
 RESULT_STATUSES = frozenset({"not_inspected", "success", "non_success", "missing"})
 STRUCTURED_OUTPUT_TYPES = frozenset({"not_inspected", "missing", "object", "string", "null", "other"})
+PROVIDER_STATUS_FAILURE_CODES = frozenset(
+    {
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_structured_request_rejected",
+        "provider_status_authentication_or_permission",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+        "provider_status_unknown",
+    }
+)
+RECOVERY_RECEIPT = "provider-recovery.json"
+
+_AGY_PROVIDER_STATUS_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "provider_status_quota_or_rate_limit",
+        (
+            "quota",
+            "rate limit",
+            "rate-limit",
+            "rate_limit",
+            "too many requests",
+            "too_many_requests",
+            "resource exhausted",
+            "resource_exhausted",
+            "429",
+        ),
+    ),
+    (
+        "provider_status_capacity_unavailable",
+        (
+            "capacity",
+            "overload",
+            "overloaded",
+            "service unavailable",
+            "service_unavailable",
+            "temporarily unavailable",
+            "temporarily_unavailable",
+            "unavailable",
+            "503",
+        ),
+    ),
+    (
+        "provider_status_structured_request_rejected",
+        (
+            "structured output",
+            "structured_output",
+            "json schema",
+            "json_schema",
+            "schema",
+            "invalid request",
+            "invalid_request",
+            "bad request",
+            "bad_request",
+            "request rejected",
+            "request_rejected",
+            "validation",
+        ),
+    ),
+    (
+        "provider_status_authentication_or_permission",
+        (
+            "authentication",
+            "unauthenticated",
+            "unauthorized",
+            "unauthorised",
+            "auth error",
+            "auth_error",
+            "permission denied",
+            "permission_denied",
+            "forbidden",
+            "access denied",
+            "access_denied",
+            "401",
+            "403",
+        ),
+    ),
+    (
+        "provider_status_timeout",
+        ("timeout", "timed out", "deadline exceeded", "deadline_exceeded"),
+    ),
+    (
+        "provider_status_cancelled",
+        ("cancelled", "canceled", "cancelled_by", "canceled_by", "aborted", "interrupted"),
+    ),
+    (
+        "provider_status_internal_error",
+        ("internal error", "internal_error", "server error", "server_error", "500"),
+    ),
+)
 
 
 def _load_validator() -> Any:
@@ -597,6 +696,27 @@ def schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _agy_static_failure_code(result: Mapping[str, Any]) -> str:
+    """Reduce untrusted AGY diagnostics to one closed, text-free status code."""
+
+    def matches(value: Any, patterns: tuple[str, ...], *, depth: int = 0) -> bool:
+        if isinstance(value, str):
+            lowered = value.lower()
+            return any(pattern in lowered for pattern in patterns)
+        if not isinstance(value, Mapping) or depth >= 2:
+            return False
+        keys = ("status", "code", "error_code", "error_type", "reason", "message", "response", "error")
+        return any(matches(value.get(key), patterns, depth=depth + 1) for key in keys)
+
+    try:
+        for code, patterns in _AGY_PROVIDER_STATUS_PATTERNS:
+            if matches(result, patterns):
+                return code
+    except Exception:
+        pass
+    return "provider_status_unknown"
+
+
 def _agy_stream(raw: bytes, *, expected_cwd: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         events = [
@@ -627,11 +747,11 @@ def _agy_stream(raw: bytes, *, expected_cwd: Path | None = None) -> tuple[dict[s
                 raise Error("structured_output_envelope_drift", structural=True)
         except OSError as exc:
             raise Error("structured_output_envelope_drift", structural=True) from exc
-    if (
-        not isinstance(result, dict)
-        or result.get("status") != "SUCCESS"
-        or ("structured_output" not in result and "response" not in result)
-    ):
+    if not isinstance(result, dict):
+        raise Error("structured_output_envelope_drift", structural=True)
+    if result.get("status") != "SUCCESS":
+        raise Error(_agy_static_failure_code(result), structural=False)
+    if "structured_output" not in result and "response" not in result:
         raise Error("structured_output_envelope_drift", structural=True)
     return init, result
 
@@ -908,6 +1028,39 @@ def stop(
         raise
 
 
+def _verify_recovery_receipt(package: Path, started: Path, terminal: Path) -> None:
+    """Require the one-call operator recovery receipt before a stopped retry."""
+    path = package / OUTPUT / RECOVERY_RECEIPT
+    receipt = _read_json(path)
+    _mode(path, 0o600)
+    terminal_value = _read_json(terminal)
+    expected = {
+        "schema_version": "phase3_cycle007_gemini_provider_recovery_v1",
+        "evaluation_cycle_id": CYCLE,
+        "source_provider_stop_sha256": receipt.get("source_provider_stop_sha256"),
+        "started_marker_sha256": digest(started.read_bytes()),
+        "terminal_marker_sha256": digest(terminal.read_bytes()),
+        "failure_code": terminal_value.get("failure_code"),
+        "failure_stage": terminal_value.get("failure_stage"),
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": MODEL,
+        "model_family": FAMILY,
+        "harness": HARNESS,
+        "text_free": True,
+    }
+    stop_hash = expected["source_provider_stop_sha256"]
+    if (
+        not isinstance(stop_hash, str)
+        or len(stop_hash) != 64
+        or any(character not in "0123456789abcdef" for character in stop_hash)
+        or set(receipt) != set(expected) | {"receipt_sha256"}
+        or any(receipt.get(key) != value for key, value in expected.items())
+        or receipt.get("receipt_sha256") != digest(canonical(expected))
+    ):
+        raise Error("ordinal_identity_binding_drift")
+
+
 def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
     # AGY stream-input mode reads turns only from stdin; --print would add a
     # conflicting headless prompt and can yield SUCCESS with an empty result.
@@ -993,6 +1146,7 @@ def _run_chunk(
         if terminal.exists():
             if attempt == 2:
                 raise Error("ordinal_identity_binding_drift")
+            _verify_recovery_receipt(package, started, terminal)
             marker = _read_json(terminal)
             if marker.get("failure_code") not in {
                 "stream_json_invalid",
@@ -1065,15 +1219,21 @@ def _run_chunk(
             )
             if completed.returncode:
                 failure_stage = "provider_return"
+                try:
+                    _agy_stream(raw_path.read_bytes(), expected_cwd=runtime)
+                except Error as exc:
+                    if exc.code in PROVIDER_STATUS_FAILURE_CODES:
+                        raise exc
                 raise Error("structured_output_envelope_drift")
             raw = raw_path.read_bytes()
             try:
                 labels = normalize(lane, part, _extract(raw, expected_cwd=runtime), sidecar_part=sidecar_part)
             except Error as exc:
                 failure_stage = (
-                    "stream_parse"
-                    if exc.code
-                    in {
+                    "provider_return"
+                    if exc.code in PROVIDER_STATUS_FAILURE_CODES
+                    else "stream_parse"
+                    if exc.code in {
                         "stream_json_invalid",
                         "terminal_result_count_drift",
                         "structured_output_envelope_drift",

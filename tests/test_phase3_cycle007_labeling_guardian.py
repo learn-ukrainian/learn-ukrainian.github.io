@@ -9,6 +9,7 @@ import sys
 import tempfile
 import time
 import venv
+from dataclasses import replace
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 from typing import Any
@@ -75,6 +76,7 @@ def _config(guardian: ModuleType, root: Path, **changes: Any) -> Any:
         "resolution_authority_root": None,
         "resolution_nonce_ledger": None,
         "resolution_advisor_response": None,
+        "expected_stop_sha256": None,
     }
     values.update(changes)
     return guardian.Config(**values)
@@ -239,6 +241,115 @@ def test_orphan_guardian_temporary_is_quarantined_without_reading(
     assert not orphan.exists()
     recovery = config.backing_root / ".cycle007-guardian-recovery"
     assert len(list(recovery.iterdir())) == 1
+
+
+def _write_private_json(path: Path, value: dict[str, Any]) -> bytes:
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    os.chmod(path.parent, 0o700)
+    raw = (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+    path.write_bytes(raw)
+    os.chmod(path, 0o600)
+    return raw
+
+
+def test_explicit_gemini_stop_recovery_preserves_stop_and_authorizes_one_call(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="recover-gemini-stop",
+        expected_stop_sha256="0" * 64,
+    )
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    attempt = output / "clean_label/chunks/packet-0001"
+    attempt.mkdir(parents=True, mode=0o700)
+    for directory in (output, output / "clean_label", output / "clean_label/chunks", attempt):
+        os.chmod(directory, 0o700)
+    common = {
+        "schema_version": "phase3_cycle007_gemini_attempt_v1",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": "clean_label",
+        "packet_index": 1,
+        "chunk_index": 1,
+        "attempt": 1,
+        "exact_model": "Gemini 3.6 Flash (High)",
+        "model_family": "google",
+        "harness": "agy",
+        "text_free": True,
+    }
+    started_raw = _write_private_json(
+        attempt / "attempt-1-chunk-01.started.json", common | {"state": "started"}
+    )
+    terminal = common | {
+        "state": "terminal",
+        "failure_code": "structured_output_envelope_drift",
+        "failure_stage": "provider_return",
+        "provider_call_started": True,
+        "executable_binding_result": "verified",
+        "provider_return_code": "nonzero",
+        "init_count": 1,
+        "result_count": 1,
+        "first_event_kind": "init",
+        "last_event_kind": "result",
+        "model_binding_result": "verified",
+        "result_status": "non_success",
+        "structured_output_type": "missing",
+    }
+    terminal_raw = _write_private_json(attempt / "attempt-1-chunk-01.terminal.json", terminal)
+    stop = {
+        **{key: terminal[key] for key in terminal if key not in {"schema_version", "state", "packet_index", "chunk_index", "attempt"}},
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v1",
+        "terminal_packet_index": 1,
+        "new_provider_calls_allowed": False,
+    }
+    stop_raw = _write_private_json(output / "provider-stop.json", stop)
+    stop_sha = guardian._digest(stop_raw)
+    config = replace(config, expected_stop_sha256=stop_sha)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "stopped": True,
+            "completed_stages": [],
+            "text_free": True,
+        },
+    )
+    monkeypatch.setattr(guardian, "_available_bytes", lambda *_args: 123)
+
+    result = guardian._gemini_stop_recovery(config, mounts=[])
+    assert result["authorized_additional_provider_calls"] == 1
+    assert result["prior_provider_call_count"] == 1
+    assert not (output / "provider-stop.json").exists()
+    receipt_path = output / guardian.GEMINI_RECOVERY_RECEIPT
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["source_provider_stop_sha256"] == stop_sha
+    assert receipt["started_marker_sha256"] == guardian._digest(started_raw)
+    assert receipt["terminal_marker_sha256"] == guardian._digest(terminal_raw)
+    archived = tmp_path / "backing" / guardian.GEMINI_STOP_RECOVERY_ROOT / stop_sha / "provider-stop.json"
+    assert guardian._digest(archived.read_bytes()) == stop_sha
+    assert guardian._gemini_stop_recovery(config, mounts=[])["recovered_stop_count"] == 1
+
+
+def test_explicit_gemini_stop_recovery_refuses_unbound_stop(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="recover-gemini-stop",
+        expected_stop_sha256="0" * 64,
+    )
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    output.mkdir(mode=0o700)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: {"stopped": True, "completed_stages": []},
+    )
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._gemini_stop_recovery(config, mounts=[])
 
 
 def test_wrong_existing_mount_is_refused_without_mount_command(

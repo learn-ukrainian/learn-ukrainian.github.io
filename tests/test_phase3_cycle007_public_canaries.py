@@ -133,6 +133,77 @@ def test_batch_runner_accepts_one_fenced_response_json() -> None:
     assert runner._strict_result_payload({"response": f"```json\n{json.dumps(payload)}\n```"}) == payload
 
 
+def test_batch_runner_classifies_non_success_without_disclosing_provider_text() -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_status_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    raw = (
+        json.dumps({"event": "init", "init": {"model": runner.MODEL}})
+        + "\n"
+        + json.dumps(
+            {
+                "event": "result",
+                "result": {"status": "FAILURE", "error": {"code": "RESOURCE_EXHAUSTED"}},
+            }
+        )
+        + "\n"
+    ).encode()
+
+    with pytest.raises(runner.Error) as exc_info:
+        runner._agy_stream(raw)
+    assert exc_info.value.code == "provider_status_quota_or_rate_limit"
+    assert exc_info.value.structural is False
+
+
+def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path: Path) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_recovery_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    attempt = package / runner.OUTPUT / "clean_label/chunks/packet-0001"
+    attempt.mkdir(parents=True, mode=0o700)
+    started = attempt / "attempt-1-chunk-01.started.json"
+    terminal = attempt / "attempt-1-chunk-01.terminal.json"
+    started.write_bytes(runner.canonical({"state": "started", "text_free": True}))
+    terminal_value = {
+        "failure_code": "structured_output_envelope_drift",
+        "failure_stage": "provider_return",
+        "text_free": True,
+    }
+    terminal.write_bytes(runner.canonical(terminal_value))
+    started.chmod(0o600)
+    terminal.chmod(0o600)
+    body = {
+        "schema_version": "phase3_cycle007_gemini_provider_recovery_v1",
+        "evaluation_cycle_id": runner.CYCLE,
+        "source_provider_stop_sha256": "a" * 64,
+        "started_marker_sha256": runner.digest(started.read_bytes()),
+        "terminal_marker_sha256": runner.digest(terminal.read_bytes()),
+        "failure_code": terminal_value["failure_code"],
+        "failure_stage": terminal_value["failure_stage"],
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": runner.MODEL,
+        "model_family": runner.FAMILY,
+        "harness": runner.HARNESS,
+        "text_free": True,
+    }
+    receipt = body | {"receipt_sha256": runner.digest(runner.canonical(body))}
+    receipt_path = package / runner.OUTPUT / runner.RECOVERY_RECEIPT
+    receipt_path.write_bytes(runner.canonical(receipt))
+    receipt_path.chmod(0o600)
+
+    runner._verify_recovery_receipt(package, started, terminal)
+    receipt["authorized_additional_provider_calls"] = 2
+    receipt_path.write_bytes(runner.canonical(receipt))
+    with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
+        runner._verify_recovery_receipt(package, started, terminal)
+
+
 def test_batch_runner_pins_the_certified_evidence_compiler_identity(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

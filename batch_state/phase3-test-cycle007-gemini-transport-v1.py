@@ -242,7 +242,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "row_count": count,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": compiler.CODE_HASHES,
+        "code_hashes": RUN.FROZEN_EVIDENCE_CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -260,7 +260,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "evaluation_cycle_id": RUN.CYCLE,
         "tokenizer_id": "phase3-cycle007-cyrillic-tokenizer-v1",
         "tokenizer_version": "1",
-        "code_hashes": compiler.CODE_HASHES,
+        "code_hashes": RUN.FROZEN_EVIDENCE_CODE_HASHES,
         "server_code_sha256": "f" * 64,
         "sources_db_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
@@ -343,6 +343,10 @@ if mode == "invalid" or (mode == "retry" and count == 0):
     raise SystemExit(0)
 if mode == "nonzero":
     print("not-json")
+    raise SystemExit(23)
+if mode == "quota":
+    print(json.dumps({"event": "init", "init": {"model": "Gemini 3.6 Flash (High)", "cwd": os.getcwd()}}))
+    print(json.dumps({"event": "result", "result": {"status": "FAILURE", "error": {"code": "RESOURCE_EXHAUSTED"}}}))
     raise SystemExit(23)
 
 labels = {}
@@ -526,6 +530,22 @@ def test_two_structural_failures_writes_stop(tmp_path: Path, monkeypatch: pytest
     assert (pkg / RUN.OUTPUT / "provider-stop.json").exists()
 
 
+def test_nonzero_provider_result_is_reduced_to_safe_status_code(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pkg = make_package(tmp_path, lane="clean_label", count=50)
+    fake_bin = _make_fake_bin(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "quota")
+
+    with pytest.raises(RUN.Error) as exc_info:
+        run_packet(pkg, "clean_label", 1, fake_bin)
+    assert exc_info.value.code == "provider_status_quota_or_rate_limit"
+    stop = json.loads((pkg / RUN.OUTPUT / "provider-stop.json").read_text())
+    assert stop["failure_code"] == "provider_status_quota_or_rate_limit"
+    assert stop["failure_stage"] == "provider_return"
+    assert stop["text_free"] is True
+
+
 def test_semantic_failure_immediately_stops(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     pkg = make_package(tmp_path, lane="clean_label", count=50)
     fake_bin = _make_fake_bin(tmp_path)
@@ -706,6 +726,7 @@ def main() -> int:
         test_resume_sealed_packet(tmp / "t7", mp)
         test_retryable_structural_failure_recovers(tmp / "t8", mp)
         test_two_structural_failures_writes_stop(tmp / "t9", mp)
+        test_nonzero_provider_result_is_reduced_to_safe_status_code(tmp / "t9b", mp)
         test_semantic_failure_immediately_stops(tmp / "t10", mp)
         test_stop_idempotence(tmp / "t11", mp)
         test_concurrency_must_be_one(tmp / "t12")

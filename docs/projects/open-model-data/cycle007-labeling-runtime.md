@@ -47,6 +47,11 @@ operator explicitly starts a provider stage.
 - No database, queue service, container platform, or new background daemon.
 - No provider call during installation, storage preparation, status, or plan.
 - No automatic clearing of provider-stop receipts or semantic failures.
+- One explicit `recover-gemini-stop` action is available only for the frozen
+  first-call provider-return incident. It hash-binds and archives the immutable
+  text-free stop, binds the matching started and terminal markers, and
+  authorizes exactly one additional Gemini subscription call. It cannot recover
+  a semantic failure, any sealed output, a second attempt, or a changed stop.
 - No persistent `/etc/fstab` or systemd mutation. Re-running the same guardian
   command after reboot restores the bind mounts and resumes from seals.
 
@@ -153,6 +158,7 @@ of being claimed as automatically resumable.
 | Controller status call exceeds 300 seconds | Fail with `controller_timeout`; status never invokes a provider, so no paid runner is created by this path. |
 | Controller stage call exceeds 72 hours | Kill only the controller wrapper and fail with `controller_timeout`. A surviving paid runner is deliberately not signalled, retains the inherited execution lock, and makes a replacement return `active_worker` with zero additional provider calls. After it exits, durable receipts, seals, and active-stage markers determine the only safe recovery point. |
 | Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
+| Exact first Gemini provider-return stop after explicit recovery direction | `recover-gemini-stop --expected-stop-sha256 …` preserves the stop in the private backing filesystem and publishes one text-free recovery receipt. The runner accepts that exact receipt only for attempt 2; no recovery action invokes a provider. |
 
 ## Run sequence
 
@@ -169,6 +175,12 @@ of being claimed as automatically resumable.
 
 The staged `--through` boundary prevents an operator intending to start one
 provider from accidentally starting the other or entering adjudication.
+When the exact first Gemini call has a provider-return stop, the operator may
+insert the reviewed `recover-gemini-stop` action before repeating step 4. The
+recovery action is idempotent, preserves the original stop by same-filesystem
+link-and-unlink, holds the guardian and inherited execution locks while the
+controller verifies stopped status, and
+does not authorize Grok or any later stage.
 
 ## Acceptance evidence
 
