@@ -85,6 +85,10 @@ DEC = SOURCE.DEC
 FAILURE_CODES = frozenset(
     {
         "stream_json_invalid",
+        "outer_json_missing",
+        "outer_json_trailing_drift",
+        "schema_json_missing",
+        "schema_json_trailing_drift",
         "terminal_result_count_drift",
         "structured_output_envelope_drift",
         "ordinal_key_drift",
@@ -120,6 +124,10 @@ FAILURE_CODES = frozenset(
 STRUCTURAL_CODES = frozenset(
     {
         "stream_json_invalid",
+        "outer_json_missing",
+        "outer_json_trailing_drift",
+        "schema_json_missing",
+        "schema_json_trailing_drift",
         "terminal_result_count_drift",
         "structured_output_envelope_drift",
         "ordinal_key_drift",
@@ -568,7 +576,12 @@ def validate(
 _GROK_TRAILING_FENCE_RE = re.compile(r"\s*(?:```(?:json)?\s*)?\Z", re.IGNORECASE)
 
 
-def _strict_grok_text_json(text: str) -> Any:
+def _strict_grok_text_json(
+    text: str,
+    *,
+    missing_code: str = "schema_json_missing",
+    trailing_code: str = "schema_json_trailing_drift",
+) -> Any:
     """Extract Grok's one terminal schema value and reject anything after it.
 
     Native Grok JSON mode can prepend presentation text inside ``envelope.text``
@@ -586,9 +599,9 @@ def _strict_grok_text_json(text: str) -> Any:
         except (json.JSONDecodeError, Invalid):
             continue
         if _GROK_TRAILING_FENCE_RE.fullmatch(candidate[end:]) is None:
-            raise Invalid("stream_json_invalid")
+            raise Invalid(trailing_code)
         return decoded
-    raise Invalid("stream_json_invalid")
+    raise Invalid(missing_code)
 
 
 def _decode_provider(
@@ -599,9 +612,14 @@ def _decode_provider(
     sidecar_value: dict[str, Any] | None = None,
 ) -> bytes:
     try:
-        envelope = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=pairs)
-    except (UnicodeDecodeError, json.JSONDecodeError, Invalid):
-        raise Invalid("stream_json_invalid") from None
+        raw_text = raw.decode("utf-8", "strict")
+    except UnicodeDecodeError:
+        raise Invalid("outer_json_missing") from None
+    envelope = _strict_grok_text_json(
+        raw_text,
+        missing_code="outer_json_missing",
+        trailing_code="outer_json_trailing_drift",
+    )
     if (
         not isinstance(envelope, dict)
         or envelope.get("sessionId") != expected_session_id
