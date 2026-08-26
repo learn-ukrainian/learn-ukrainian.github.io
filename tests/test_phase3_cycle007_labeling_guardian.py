@@ -433,6 +433,69 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     lock_file.close()
 
 
+def test_controller_preserves_python_launcher_for_stage_subprocesses(
+    controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = tmp_path / "base-python"
+    target.write_bytes(b"base interpreter")
+    os.chmod(target, 0o755)
+    launcher = tmp_path / "venv/bin/python"
+    launcher.parent.mkdir(mode=0o700, parents=True)
+    launcher.symlink_to(target)
+    monkeypatch.setattr(controller, "PRIMARY_PYTHON", launcher)
+    expected_python_sha256 = controller._python_executable_sha256()
+    runner = tmp_path / "gemini.py"
+    runner.write_text("# public fixture\n", encoding="utf-8")
+    labels = {
+        "gemini": {"clean_label": "a" * 64, "residual_label": "b" * 64},
+        "grok": {"clean_label": "c" * 64, "residual_label": "d" * 64},
+    }
+    monkeypatch.setattr(
+        controller,
+        "gemini_missing_ranges",
+        lambda *_args, **_kwargs: {"clean_label": [(1, 1)], "residual_label": []},
+    )
+
+    commands, _runner = controller._commands_for_stage(
+        tmp_path,
+        "gemini",
+        None,
+        code_paths={"gemini_runner": runner},
+        expected_agy_executable_sha256="e" * 64,
+        agy_executable=tmp_path / "agy",
+        expected_label_prompt_sha256s=labels,
+        expected_custody_sha256="f" * 64,
+        expected_label_manifest_sha256="1" * 64,
+        expected_evidence_manifest_sha256="2" * 64,
+    )
+
+    assert commands[0][0] == os.fspath(launcher)
+    assert commands[0][0] != os.fspath(target)
+    assert expected_python_sha256 == controller._python_executable_sha256()
+
+
+def test_controller_rejects_python_target_drift(
+    controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first_target = tmp_path / "python-first"
+    second_target = tmp_path / "python-second"
+    first_target.write_bytes(b"first interpreter")
+    second_target.write_bytes(b"different interpreter")
+    os.chmod(first_target, 0o755)
+    os.chmod(second_target, 0o755)
+    launcher = tmp_path / "venv/bin/python"
+    launcher.parent.mkdir(mode=0o700, parents=True)
+    launcher.symlink_to(first_target)
+    monkeypatch.setattr(controller, "PRIMARY_PYTHON", launcher)
+    expected_python_sha256 = controller._python_executable_sha256()
+
+    launcher.unlink()
+    launcher.symlink_to(second_target)
+
+    with pytest.raises(controller.ControllerError, match="preflight_binding_drift"):
+        controller._require_python_binding(expected_python_sha256)
+
+
 def test_controller_rejects_invalid_inherited_descriptor(
     controller: ModuleType, monkeypatch: pytest.MonkeyPatch
 ) -> None:

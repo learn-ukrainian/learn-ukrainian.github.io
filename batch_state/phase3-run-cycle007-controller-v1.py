@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import stat
 import subprocess
 import sys
 import tempfile
@@ -25,7 +26,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 HERE = Path(__file__).resolve().parent
-PRIMARY_PYTHON = Path(sys.executable).resolve()
+# Keep the launcher path exactly as supplied by the active interpreter.  A
+# venv launcher is commonly a symlink whose path is significant to Python's
+# environment discovery, so resolving it here would silently leave the venv.
+PRIMARY_PYTHON = Path(sys.executable)
 AMENDMENT = HERE / "phase3-cycle007-source-grounded-amendment-v1.md"
 AMENDMENT_SHA256 = "4f2e3e58964cae391c3933ffdce531296a0744808b0154231ca513049602fea0"
 CYCLE = "phase3-v2-1-evaluation-cycle-007"
@@ -531,20 +535,33 @@ def _validate_canary_receipt(
     return sha256(receipt_path), exe_sha256, sources_id, receipt
 
 
-def _python_executable_sha256() -> str:
+def _python_executable_target() -> Path:
+    """Return the launcher target after strict absolute/regular-file checks."""
+    if not PRIMARY_PYTHON.is_absolute():
+        raise ControllerError("preflight_binding_drift")
     try:
-        if PRIMARY_PYTHON.is_symlink():
-            raise ControllerError("preflight_binding_drift")
-        executable = PRIMARY_PYTHON.resolve(strict=True)
-        if not executable.is_file() or executable.is_symlink():
-            raise ControllerError("preflight_binding_drift")
-        return sha256(executable)
-    except OSError as exc:
+        target = PRIMARY_PYTHON.resolve(strict=True)
+        target_stat = target.stat()
+    except (OSError, RuntimeError) as exc:
         raise ControllerError("preflight_binding_drift") from exc
+    if target.is_symlink() or not stat.S_ISREG(target_stat.st_mode):
+        raise ControllerError("preflight_binding_drift")
+    return target
+
+
+def _python_launcher() -> Path:
+    """Return the validated absolute launcher without resolving its path."""
+    _python_executable_target()
+    return PRIMARY_PYTHON
+
+
+def _python_executable_sha256() -> str:
+    return sha256(_python_executable_target())
 
 
 def _require_python_binding(expected_sha256: str) -> None:
-    if not _hex64(expected_sha256) or _python_executable_sha256() != expected_sha256:
+    actual_sha256 = _python_executable_sha256()
+    if not _hex64(expected_sha256) or actual_sha256 != expected_sha256:
         raise ControllerError("preflight_binding_drift")
 
 
@@ -1236,7 +1253,7 @@ def _commands_for_stage(
         return (
             [
                 [
-                    str(PRIMARY_PYTHON),
+                    str(_python_launcher()),
                     str(code_paths["gemini_runner"]),
                     "--package",
                     str(package),
@@ -1283,7 +1300,7 @@ def _commands_for_stage(
         for lane, lane_ranges in ranges.items():
             for start, end in lane_ranges:
                 cmd = [
-                    str(PRIMARY_PYTHON),
+                    str(_python_launcher()),
                     str(runner),
                     "--package",
                     str(package),
@@ -1310,7 +1327,7 @@ def _commands_for_stage(
                     cmd.extend(["--expected-grok-executable-sha", expected_grok_executable_sha256])
                 commands.append(cmd)
         return (commands, grok)
-    common = [str(PRIMARY_PYTHON), str(runner), "--package", str(package)]
+    common = [str(_python_launcher()), str(runner), "--package", str(package)]
     if stage == "compare":
         return ([[*common, "--all"]], None)
     if stage == "audit":
