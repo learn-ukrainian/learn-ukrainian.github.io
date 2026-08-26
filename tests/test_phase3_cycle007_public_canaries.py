@@ -57,10 +57,10 @@ def test_grok_schema_preserves_ordered_row_identity_and_liveness() -> None:
 
     labels = schema["properties"]["labels"]
     assert labels["minItems"] == labels["maxItems"] == 2
-    assert labels["additionalItems"] is False
-    assert [item["properties"]["unit_id"]["enum"][0] for item in labels["items"]] == [
-        row["unit_id"] for row in rows
-    ]
+    assert "additionalItems" not in labels
+    assert isinstance(labels["items"], dict)
+    assert labels["items"]["properties"]["unit_id"]["enum"] == [row["unit_id"] for row in rows]
+    assert labels["items"]["properties"]["unit_sha256"]["enum"] == [row["unit_sha256"] for row in rows]
     assert schema["properties"]["liveness_challenge"] == {"enum": ["challenge"]}
 
 

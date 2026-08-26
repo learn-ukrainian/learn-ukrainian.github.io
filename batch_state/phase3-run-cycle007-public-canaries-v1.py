@@ -497,7 +497,13 @@ def gemini_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
 
 def grok_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
     """Express the existing Grok list envelope as a strict CLI output schema."""
-    labels = [_clean_label_schema(row) for row in rows]
+    # xAI structured outputs rejects Draft-07 tuple syntax (``items`` as an
+    # array). Constrain the packet identity set in one supported item schema;
+    # the unchanged official validator remains authoritative for ordinal
+    # identity pairing and order.
+    label = _clean_label_schema(rows[0])
+    label["properties"]["unit_id"] = {"enum": [row["unit_id"] for row in rows]}
+    label["properties"]["unit_sha256"] = {"enum": [row["unit_sha256"] for row in rows]}
     return {
         "type": "object",
         "additionalProperties": False,
@@ -505,10 +511,9 @@ def grok_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
         "properties": {
             "labels": {
                 "type": "array",
-                "items": labels,
-                "additionalItems": False,
-                "minItems": len(labels),
-                "maxItems": len(labels),
+                "items": label,
+                "minItems": len(rows),
+                "maxItems": len(rows),
             },
             "liveness_challenge": {"enum": [challenge]},
         },
