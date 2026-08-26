@@ -189,14 +189,11 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
         lambda: (_ for _ in ()).throw(FileNotFoundError("fixture")),
     )
 
-    importlib.import_module("scripts.ai_agent_bridge._db")
     importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(
-            ("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")
-        ):
+        if module is None or not module_name.startswith(("scripts.telemetry", "wiki")):
             continue
         for name, value in tuple(vars(module).items()):
             if not isinstance(value, Path) or not value.is_absolute():
@@ -245,7 +242,7 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
         del repo_root
         return isolated_plane_root
 
-    monkeypatch.setattr(message_plane, "default_plane_root", isolated_plane_resolver)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(isolated_plane_root))
     monkeypatch.setattr(cold_start_board, "default_plane_root", isolated_plane_resolver)
     for module_name, module in tuple(sys.modules.items()):
         if not module_name.startswith("scripts.api") or module is None:

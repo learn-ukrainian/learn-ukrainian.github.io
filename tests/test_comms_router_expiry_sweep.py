@@ -2,18 +2,20 @@
 
 The sweep is a lazy, codexbar-style background trigger hooked to
 GET /api/comms/agent-activity (scripts/api/comms_router.py). The critical
-property under test: it must operate on THIS router's own `MESSAGE_DB`
-(so it respects test patches and never diverges from what the router
-reports), and must NEVER touch `ai_agent_bridge`'s own default DB path —
-a real production risk since `ai_agent_bridge._db.get_db()` resolves its
-own DB_PATH independently and would silently create + migrate a fresh
-broker DB if ever pointed at a path that doesn't exist yet.
+property under test: it must operate on THIS router's own broker DB as
+resolved from the app's MonitorContext (so it respects fixture contexts
+and never diverges from what the router reports), and must NEVER touch
+``ai_agent_bridge``'s own default DB path — a real production risk since
+``ai_agent_bridge._db.get_db()`` resolves its own DB_PATH independently
+and would silently create + migrate a fresh broker DB if ever pointed at
+a path that doesn't exist yet.
 """
 
 from __future__ import annotations
 
 import sqlite3
 import sys
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -25,7 +27,18 @@ from scripts.ai_agent_bridge import _channels
 from scripts.ai_agent_bridge import _config as ab_config
 from scripts.ai_agent_bridge import _db as ab_db
 from scripts.api import comms_router
+from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context
 from scripts.api.state_helpers import cache_invalidate
+
+
+def _message_ctx(root: Path, message_db: Path) -> MonitorContext:
+    """Fixture context whose broker DB is pinned to ``message_db``."""
+    ctx = fixture_context(root)
+    return replace(
+        ctx,
+        roots=replace(ctx.roots, message_db_path=message_db),
+        stores=replace(ctx.stores, message_db=DatabaseHandle(message_db, ctx._open_db)),
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -43,8 +56,7 @@ def test_authority_mode_never_mutates_legacy_delivery_state(tmp_path, monkeypatc
     ids = _seed_channel_db(db_path)
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
 
-    with patch.object(comms_router, "MESSAGE_DB", db_path):
-        comms_router._maybe_run_delivery_expiry_sweep()
+    comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, db_path))
 
     assert comms_router._expire_sweep_thread is None
     assert _delivery_status(db_path, ids["stale_delivery_id"]) == "pending"
@@ -92,11 +104,10 @@ def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path):
         real_default_db_path.read_bytes() if real_default_db_path.exists() else None
     )
 
-    with patch.object(comms_router, "MESSAGE_DB", db_path):
-        comms_router._maybe_run_delivery_expiry_sweep()
-        assert comms_router._expire_sweep_thread is not None
-        comms_router._expire_sweep_thread.join(timeout=5)
-        assert not comms_router._expire_sweep_thread.is_alive()
+    comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, db_path))
+    assert comms_router._expire_sweep_thread is not None
+    comms_router._expire_sweep_thread.join(timeout=5)
+    assert not comms_router._expire_sweep_thread.is_alive()
 
     assert _delivery_status(db_path, ids["stale_delivery_id"]) == "expired"
     assert _delivery_status(db_path, ids["dead_delivery_id"]) == "expired"
@@ -114,8 +125,7 @@ def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path):
 
 def test_sweep_is_noop_when_message_db_missing(tmp_path):
     missing = tmp_path / "does-not-exist.db"
-    with patch.object(comms_router, "MESSAGE_DB", missing):
-        comms_router._maybe_run_delivery_expiry_sweep()
+    comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, missing))
     assert comms_router._expire_sweep_thread is None
     assert not missing.exists()
 
@@ -129,8 +139,7 @@ def test_sweep_is_noop_when_channel_tables_missing(tmp_path):
     conn.commit()
     conn.close()
 
-    with patch.object(comms_router, "MESSAGE_DB", db_path):
-        comms_router._maybe_run_delivery_expiry_sweep()
+    comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, db_path))
 
     assert comms_router._expire_sweep_thread is None
     conn = sqlite3.connect(str(db_path))
@@ -180,8 +189,7 @@ def test_sweep_is_noop_on_pre_priority_column_schema(tmp_path):
     conn.commit()
     conn.close()
 
-    with patch.object(comms_router, "MESSAGE_DB", db_path):
-        comms_router._maybe_run_delivery_expiry_sweep()
+    comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, db_path))
 
     assert comms_router._expire_sweep_thread is None
     assert _delivery_status(db_path, "d1") == "pending"
@@ -197,14 +205,14 @@ def test_sweep_triggers_at_most_once_per_interval(tmp_path):
     db_path = tmp_path / "messages.db"
     _seed_channel_db(db_path)
 
-    with patch.object(comms_router, "MESSAGE_DB", db_path):
-        comms_router._maybe_run_delivery_expiry_sweep()
-        first_thread = comms_router._expire_sweep_thread
-        first_thread.join(timeout=5)
+    ctx = _message_ctx(tmp_path, db_path)
+    comms_router._maybe_run_delivery_expiry_sweep(ctx)
+    first_thread = comms_router._expire_sweep_thread
+    first_thread.join(timeout=5)
 
-        comms_router._maybe_run_delivery_expiry_sweep()
-        # Cache still warm — no second thread spawned.
-        assert comms_router._expire_sweep_thread is first_thread
+    comms_router._maybe_run_delivery_expiry_sweep(ctx)
+    # Cache still warm — no second thread spawned.
+    assert comms_router._expire_sweep_thread is first_thread
 
 
 def test_agent_activity_endpoint_triggers_sweep(tmp_path):
@@ -215,15 +223,15 @@ def test_agent_activity_endpoint_triggers_sweep(tmp_path):
     ids = _seed_channel_db(db_path)
 
     app = FastAPI()
+    app.state.ctx = _message_ctx(tmp_path, db_path)
     app.include_router(comms_router.router, prefix="/api/comms")
     client = TestClient(app)
 
-    with patch.object(comms_router, "MESSAGE_DB", db_path):
-        resp = client.get("/api/comms/agent-activity")
-        assert resp.status_code == 200
-        thread = comms_router._expire_sweep_thread
-        assert thread is not None
-        thread.join(timeout=5)
+    resp = client.get("/api/comms/agent-activity")
+    assert resp.status_code == 200
+    thread = comms_router._expire_sweep_thread
+    assert thread is not None
+    thread.join(timeout=5)
 
     assert _delivery_status(db_path, ids["stale_delivery_id"]) == "expired"
     assert _delivery_status(db_path, ids["dead_delivery_id"]) == "expired"
