@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -224,6 +226,7 @@ def _preserve_existing_metadata(
     *,
     existing_cefr: dict[str, Any] | None,
     existing_wiki_reference: dict[str, Any] | None,
+    existing_translation: dict[str, Any] | None = None,
 ) -> None:
     enrichment = entry.get("enrichment")
     if isinstance(enrichment, dict) and existing_cefr and "cefr" not in enrichment:
@@ -236,6 +239,12 @@ def _preserve_existing_metadata(
             enrichment["sources"] = sorted(sources)
     if existing_wiki_reference and "wiki_reference" not in entry:
         entry["wiki_reference"] = existing_wiki_reference
+    if existing_translation and not _has_translation(entry):
+        if not isinstance(enrichment, dict):
+            enrichment = {}
+            entry["enrichment"] = enrichment
+        enrichment["translation"] = existing_translation
+        _add_source(enrichment, existing_translation.get("source"))
 
 
 def _add_source(enrichment: dict[str, Any], source: object) -> None:
@@ -597,6 +606,11 @@ def reenrich_thin_entries(
             enrichment = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}
             existing_cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
             existing_wiki_reference = entry.get("wiki_reference")
+            existing_translation = (
+                copy.deepcopy(enrichment.get("translation"))
+                if isinstance(enrichment.get("translation"), dict) and _has_translation(entry)
+                else None
+            )
             had_anchor = has_learner_english_anchor(entry)
             had_translation = _has_translation(entry)
             before = json.dumps(entry, ensure_ascii=False, sort_keys=True)
@@ -621,6 +635,7 @@ def reenrich_thin_entries(
                 existing_wiki_reference=(
                     existing_wiki_reference if isinstance(existing_wiki_reference, dict) else None
                 ),
+                existing_translation=existing_translation,
             )
             was_enriched = had_anchor or had_translation or (_categorize_entry(entry) == "ENRICHED")
             after = json.dumps(entry, ensure_ascii=False, sort_keys=True)
@@ -780,6 +795,9 @@ def main() -> int:
     manifest = _read_local_manifest(manifest_path) if args.local else load_manifest(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)
     slug_filter = _load_slug_filter(args.slugs_file) if args.slugs_file else None
+
+    if args.cached_slovnyk_only:
+        os.environ["LEXICON_SLOVNYK_OFFLINE"] = "1"
 
     with sqlite3.connect(sources_db) as conn:
         has_flags = enrich_manifest._sum11_has_flag_columns(conn)
