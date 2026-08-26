@@ -232,7 +232,7 @@ def test_grok_canary_requires_documented_json_envelope_and_matching_session() ->
     payload = {"labels": [{"one": 1}, {"two": 2}], "liveness_challenge": "challenge"}
     session_id = "00000000-0000-4000-8000-000000000007"
     envelope = {
-        "text": f"```json\n{json.dumps(payload)}\n```",
+        "text": f"Schema result follows.\n```json\n{json.dumps(payload)}\n```",
         "sessionId": session_id,
         "stopReason": "end_turn",
         "requestId": "request-7",
@@ -245,6 +245,9 @@ def test_grok_canary_requires_documented_json_envelope_and_matching_session() ->
         runner._extract_grok(json.dumps(envelope).encode(), "challenge", "wrong-session")
     with pytest.raises(runner.CanaryStructuralError, match="structured_output_envelope_drift"):
         runner._extract_grok(json.dumps(payload).encode(), "challenge", session_id)
+    trailing = envelope | {"text": f"{json.dumps(payload)}\nuntrusted trailing prose"}
+    with pytest.raises(runner.CanaryStructuralError, match="stream_json_invalid"):
+        runner._extract_grok(json.dumps(trailing).encode(), "challenge", session_id)
 
 
 def test_grok_canary_retry_mints_a_fresh_session(
@@ -287,7 +290,7 @@ def test_grok_batch_decodes_only_documented_matching_session_envelope(
     payload = {"labels": [{"unit_id": "one"}]}
     session_id = "00000000-0000-4000-8000-000000000007"
     envelope = {
-        "text": json.dumps(payload),
+        "text": f"Schema result follows.\n{json.dumps(payload)}",
         "sessionId": session_id,
         "stopReason": "end_turn",
         "requestId": "request-7",
@@ -314,6 +317,13 @@ def test_grok_batch_decodes_only_documented_matching_session_envelope(
             json.dumps(envelope).encode(),
             {"lane": "clean_label"},
             expected_session_id="wrong-session",
+        )
+    trailing = envelope | {"text": f"{json.dumps(payload)}\nuntrusted trailing prose"}
+    with pytest.raises(batch.Invalid, match="stream_json_invalid"):
+        batch._decode_provider(
+            json.dumps(trailing).encode(),
+            {"lane": "clean_label"},
+            expected_session_id=session_id,
         )
 
 

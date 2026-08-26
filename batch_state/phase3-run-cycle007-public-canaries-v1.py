@@ -17,6 +17,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import secrets
 import shutil
 import socket
@@ -681,18 +682,22 @@ def _extract_gemini(
     return init, result, {"labels": labels}
 
 
+_GROK_TRAILING_FENCE_RE = re.compile(r"\s*(?:```(?:json)?\s*)?\Z", re.IGNORECASE)
+
+
 def _strict_grok_text_json(text: str) -> Any:
-    """Decode one schema-constrained JSON value, allowing only an optional fence."""
-    candidate = text.strip()
-    if candidate.startswith("```"):
-        lines = candidate.splitlines()
-        if len(lines) < 3 or lines[0].strip().lower() not in {"```", "```json"} or lines[-1].strip() != "```":
+    """Extract one schema-constrained JSON value and reject trailing prose."""
+    decoder = json.JSONDecoder(object_pairs_hook=_pairs)
+    for matched in re.finditer(r"[\[{]", text):
+        candidate = text[matched.start() :]
+        try:
+            decoded, end = decoder.raw_decode(candidate)
+        except (json.JSONDecodeError, CanaryError):
+            continue
+        if _GROK_TRAILING_FENCE_RE.fullmatch(candidate[end:]) is None:
             raise CanaryStructuralError("stream_json_invalid")
-        candidate = "\n".join(lines[1:-1]).strip()
-    try:
-        return json.loads(candidate, object_pairs_hook=_pairs)
-    except (json.JSONDecodeError, CanaryError) as exc:
-        raise CanaryStructuralError("stream_json_invalid") from exc
+        return decoded
+    raise CanaryStructuralError("stream_json_invalid")
 
 
 def _extract_grok(raw: bytes, challenge: str, expected_session_id: str) -> dict[str, Any]:
