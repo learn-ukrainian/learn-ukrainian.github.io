@@ -555,7 +555,7 @@ def _grok_command(
         "--output-format",
         "json",
         "--json-schema",
-        canonical(output_schema).decode("utf-8"),
+        json.dumps(output_schema, sort_keys=True, separators=(",", ":"), ensure_ascii=False),
         "--session-id",
         session_id,
         "--permission-mode",
@@ -1099,6 +1099,7 @@ def invoke_canary(
 
         challenge = secrets.token_hex(32)
         grok_session_id: str | None = None
+        grok_output_schema: dict[str, Any] | None = None
         if provider_name == "gemini":
             prompt_bytes = gemini_prompt(challenge, rows, sidecar)
             schema_dict = gemini_schema(rows, challenge)
@@ -1136,8 +1137,8 @@ def invoke_canary(
             prompt_bytes = grok_prompt(challenge, rows, sidecar)
             stdin_path = runtime / "prompt.stdin"
             _atomic(stdin_path, prompt_bytes, raw=True)
-            grok_session_id = str(uuid.uuid4())
-            cmd = _grok_command(provider_bin, stdin_path, grok_schema(rows, challenge), grok_session_id)
+            grok_output_schema = grok_schema(rows, challenge)
+            cmd = []
 
         attempt = 1
         provider_calls = 0
@@ -1147,6 +1148,10 @@ def invoke_canary(
         provenance: dict[str, Any] = {}
 
         while attempt <= max_attempts:
+            if provider_name == "grok":
+                assert grok_output_schema is not None
+                grok_session_id = str(uuid.uuid4())
+                cmd = _grok_command(provider_bin, stdin_path, grok_output_schema, grok_session_id)
             provider_calls += 1
             raw_path = runtime / f"provider-{attempt}.raw"
             try:

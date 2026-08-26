@@ -772,13 +772,13 @@ def _verify_sealed(
     }
 
 
-def _label_schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    # Keep the CLI argument comfortably below the kernel's per-argument limit.
-    # The schema constrains identities to this packet; the unchanged official
-    # validator below remains authoritative for ordinal ID/hash pairing.
+def _label_schema(lane: str) -> dict[str, Any]:
+    # Keep private packet identities out of process argv. The schema constrains
+    # their shape; the unchanged official validator below remains authoritative
+    # for exact ordinal ID/hash pairing against the private packet.
     identity = {
-        "unit_id": {"enum": [row["unit_id"] for row in rows]},
-        "unit_sha256": {"enum": [row["unit_sha256"] for row in rows]},
+        "unit_id": {"type": "string", "minLength": 1},
+        "unit_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     }
     if lane == "clean_label":
         return {
@@ -827,7 +827,7 @@ def _label_schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
 def _provider_schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
     if lane not in LANES or not 1 <= len(rows) <= PACKET_SIZE:
         raise Error("label_count_or_envelope_drift")
-    label = _label_schema(lane, rows)
+    label = _label_schema(lane)
     return {
         "type": "object",
         "additionalProperties": False,
@@ -860,7 +860,7 @@ def _provider_command(
         "--output-format",
         "json",
         "--json-schema",
-        canonical(output_schema).decode("utf-8"),
+        json.dumps(output_schema, sort_keys=True, separators=(",", ":"), ensure_ascii=False),
         "--session-id",
         session_id,
         "--permission-mode",

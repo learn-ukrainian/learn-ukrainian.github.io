@@ -171,26 +171,31 @@ def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:
         assert command.count("--prompt-file") == 1
         assert command[command.index("--prompt-file") + 1] == str(prompt_path)
         assert command[command.index("--output-format") + 1] == "json"
-        assert json.loads(command[command.index("--json-schema") + 1]) == output_schema
+        schema_argument = command[command.index("--json-schema") + 1]
+        assert json.loads(schema_argument) == output_schema
+        assert not schema_argument.endswith("\n")
         assert command[command.index("--session-id") + 1] == session_id
 
 
-def test_grok_batch_schema_constrains_packet_identity_without_oversized_argument() -> None:
+def test_grok_batch_schema_keeps_private_identity_out_of_bounded_argument() -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_grok_batch_schema_test", path)
     assert spec is not None and spec.loader is not None
     batch = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(batch)
-    rows = [{"unit_id": f"unit-{index:02d}", "unit_sha256": f"{index:064x}"} for index in range(50)]
+    rows = [{"unit_id": f"private-unit-{index:02d}", "unit_sha256": f"{index:064x}"} for index in range(50)]
 
     for lane in ("clean_label", "residual_label"):
         schema = batch._provider_schema(lane, rows)
         labels = schema["properties"]["labels"]
         identity = labels["items"]["properties"]
         assert labels["minItems"] == labels["maxItems"] == 50
-        assert identity["unit_id"]["enum"] == [row["unit_id"] for row in rows]
-        assert identity["unit_sha256"]["enum"] == [row["unit_sha256"] for row in rows]
-        assert len(batch.canonical(schema)) < 32_768
+        assert identity["unit_id"] == {"type": "string", "minLength": 1}
+        assert identity["unit_sha256"] == {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        argument = json.dumps(schema, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        assert all(row["unit_id"] not in argument and row["unit_sha256"] not in argument for row in rows)
+        assert len(argument.encode()) < 16_384
+        assert not argument.endswith("\n")
 
 
 def test_grok_batch_binds_and_removes_private_prompt_file(
@@ -240,6 +245,35 @@ def test_grok_canary_requires_documented_json_envelope_and_matching_session() ->
         runner._extract_grok(json.dumps(envelope).encode(), "challenge", "wrong-session")
     with pytest.raises(runner.CanaryStructuralError, match="structured_output_envelope_drift"):
         runner._extract_grok(json.dumps(payload).encode(), "challenge", session_id)
+
+
+def test_grok_canary_retry_mints_a_fresh_session(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    runner = _load_runner()
+    provider = tmp_path / "grok"
+    provider.write_bytes(b"#!/bin/sh\n")
+    provider.chmod(0o700)
+    sources = runner.make_synthetic_mcp_client(tmp_path / "sources")
+    observed_sessions: list[str] = []
+
+    def fake_run(command: list[str], **kwargs: object) -> object:
+        observed_sessions.append(command[command.index("--session-id") + 1])
+        kwargs["stdout"].write(b"{}")
+        return runner.subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(runner.subprocess, "run", fake_run)
+    with pytest.raises(runner.CanaryError, match="structural_retry_exhausted"):
+        runner.invoke_canary(
+            "grok",
+            provider,
+            execution_mode="synthetic",
+            sources_client=sources,
+            max_attempts=2,
+        )
+
+    assert len(observed_sessions) == 2
+    assert len(set(observed_sessions)) == 2
 
 
 def test_grok_batch_decodes_only_documented_matching_session_envelope(
