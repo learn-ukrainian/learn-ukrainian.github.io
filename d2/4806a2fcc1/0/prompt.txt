@@ -1,0 +1,58 @@
+"[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/glm/fix-7269-step5-comms
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {\"outcome\":\"no_change\",\"reason\":\"why no changes are required\"}`. This line is optional — its absence never fails the dispatch.
+
+# #7323 — #7269 step 5: migrate `comms_router` to MonitorContext
+
+GLM-5.3, LOCAL-ONLY (z.ai). This is real paid-lane fill: unused GLM is waste.
+
+Parent #7269 / #7323. Design: `docs/design/monitor-api-app-factory.md` §4.3.
+Inventory: `docs/design/monitor-api-router-inventory.md` step 5 row.
+
+## ROUTING_CARD_V1
+
+- tier: practical
+- model_x_harness: glm / glm-5.3 @ high (opencode, LOCAL-ONLY)
+- why_this_tier: mechanical router migrate; China-egress OK for this infra code on the VPS, never CI
+- owned_paths: `scripts/api/comms_router.py` and its tests / inventory seam list only
+- acceptance_cmd: see Acceptance
+- alternatives_considered: cursor (taken by subscription-usage PR), agy
+- parallel_free_seats: cursor `fix-subscription-usage` (disjoint: not comms_router)
+
+## Scope
+
+Migrate `comms_router.py` (~1898 lines) to `Depends(get_ctx)` instead of module globals.
+Delete exactly the **11** OPSEC seams this step’s inventory row lists — sweep `KNOWN_SEAMS` count must drop by exactly 11.
+
+Copy the pattern from already-merged step 1 (`#7337` session-streams cluster). Do not invent a new factory.
+
+## Do not
+
+- Touch `state_router.py`, `codexbar_usage.py`, `capacity_pick.py`, `adapters/cursor.py` (parallel Cursor PR).
+- Change endpoint response shapes.
+- Run in CI (GLM LOCAL-ONLY — this dispatch is the local VPS, that is allowed).
+- Merge.
+
+Worktree. Conventional commit. Trailer `X-Agent: glm/fix-7269-step5-comms`. Commit locally; push if possible.
+
+## Acceptance
+
+```
+.venv/bin/python -m pytest tests/api/opsec_sweep tests/api -n 4 --tb=short -q
+.venv/bin/ruff check scripts/api/comms_router.py
+```
+
+Inventory row: known-seam count drops by exactly 11. Quote before/after.
+
+## Return
+
+PR URL or HEAD sha, seam delta, pytest output.
+"

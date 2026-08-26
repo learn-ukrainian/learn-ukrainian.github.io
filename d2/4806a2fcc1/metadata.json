@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d24806a2fcc1",
+  "strategy": "manual-commit",
+  "branch": "glm/fix-7269-step5-comms",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "docs/design/count_opsec_fixture_seams.py",
+    "scripts/api/comms_router.py",
+    "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+    "tests/test_comms_router_expiry_sweep.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d2/4806a2fcc1/0/metadata.json",
+      "transcript": "/d2/4806a2fcc1/0/full.jsonl",
+      "compact_transcript": "/d2/4806a2fcc1/0/transcript.jsonl",
+      "content_hash": "/d2/4806a2fcc1/0/content_hash.txt",
+      "prompt": "/d2/4806a2fcc1/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 331911,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 15630912,
+    "output_tokens": 19859,
+    "api_call_count": 108
+  }
+}
