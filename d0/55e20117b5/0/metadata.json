@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d055e20117b5",
+  "session_id": "ses_fc033e93affej3iYOHG0XH86sJ",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T20:53:55.748711469Z",
+  "branch": "glm/fix-7269-step5-comms",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/fleet_router.py",
+    "scripts/api/comms_router.py",
+    "tests/test_comms_plane_status_api.py",
+    "tests/test_fleet_observer_api.py",
+    "tests/test_coverage_api_routers.py",
+    "tests/test_legacy_comms_telemetry.py",
+    "tests/api/test_app_factory.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "a29c807155a2",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 130510,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 9125248,
+    "output_tokens": 19983,
+    "api_call_count": 104
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T20:53:55.610090753Z",
+    "agent_lines": 139,
+    "agent_removed": 90,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 139,
+    "total_lines_changed": 229,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

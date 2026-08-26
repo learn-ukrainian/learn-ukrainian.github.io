@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d055e20117b5",
+  "strategy": "manual-commit",
+  "branch": "glm/fix-7269-step5-comms",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/comms_router.py",
+    "scripts/api/fleet_router.py",
+    "tests/api/test_app_factory.py",
+    "tests/test_comms_plane_status_api.py",
+    "tests/test_coverage_api_routers.py",
+    "tests/test_fleet_observer_api.py",
+    "tests/test_legacy_comms_telemetry.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d0/55e20117b5/0/metadata.json",
+      "transcript": "/d0/55e20117b5/0/full.jsonl",
+      "compact_transcript": "/d0/55e20117b5/0/transcript.jsonl",
+      "content_hash": "/d0/55e20117b5/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 130510,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 9125248,
+    "output_tokens": 19983,
+    "api_call_count": 104
+  }
+}
