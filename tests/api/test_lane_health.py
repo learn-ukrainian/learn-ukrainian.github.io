@@ -47,7 +47,15 @@ def test_is_spawn_phase_failure():
     assert is_spawn_phase_failure({"status": "running", "returncode": None, "duration_s": None}) is False
 
 
-def _write_task(tmp_path: Path, task_id: str, agent: str, status: str, returncode: int | None, duration_s: float | None, started_at: datetime) -> None:
+def _write_task(
+    tmp_path: Path,
+    task_id: str,
+    agent: str,
+    status: str,
+    returncode: int | None,
+    duration_s: float | None,
+    started_at: datetime,
+) -> None:
     task_file = tmp_path / f"{task_id}.json"
     data = {
         "task_id": task_id,
@@ -125,8 +133,10 @@ def test_routing_budget_demotes_unhealthy(monkeypatch, tmp_path):
     now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
 
     # Configure mock budgets (empty budget or mock loaded)
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", tmp_path / "absent_budgets.yaml")
-    monkeypatch.setattr(state_router, "TASKS_DIR", tmp_path)
+    monkeypatch.setattr(state_router, "_load_agent_budgets", lambda budget_config_path=None, **_: ({}, []))
+    monkeypatch.setattr(
+        state_router, "compute_lane_health", lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now)
+    )
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
     monkeypatch.setattr(
         state_router.delegate_api,
@@ -160,7 +170,7 @@ def test_delegate_prints_warning(monkeypatch, capsys):
                     "healthy": False,
                     "consecutive_failures": 2,
                     "span_minutes": 45,
-                }
+                },
             },
             "codex": {
                 "status": "unknown",
@@ -168,8 +178,8 @@ def test_delegate_prints_warning(monkeypatch, capsys):
                     "healthy": True,
                     "consecutive_failures": 0,
                     "span_minutes": 0,
-                }
-            }
+                },
+            },
         },
         "diagnostics": {
             "records_loaded": 1,
@@ -190,7 +200,7 @@ def test_delegate_prints_warning(monkeypatch, capsys):
                     "healthy": True,
                     "consecutive_failures": 0,
                     "span_minutes": 0,
-                }
+                },
             },
             {
                 "lane": "claude",
@@ -200,9 +210,9 @@ def test_delegate_prints_warning(monkeypatch, capsys):
                     "healthy": False,
                     "consecutive_failures": 2,
                     "span_minutes": 45,
-                }
-            }
-        ]
+                },
+            },
+        ],
     }
 
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: mock_payload)
@@ -254,8 +264,16 @@ gemini:
 """.lstrip(),
         encoding="utf-8",
     )
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", budget_path)
-    monkeypatch.setattr(state_router, "TASKS_DIR", tmp_path)
+    monkeypatch.setattr(
+        state_router,
+        "_load_agent_budgets",
+        lambda budget_config_path=None, **_: state_router._read_agent_budgets_file(budget_path),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "compute_lane_health",
+        lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now),
+    )
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
     # These tests exercise ledger burn plus task-file health. Keep process-global
     # CodexBar cache entries and host agent-runtime JSONL from changing that
@@ -306,10 +324,7 @@ def test_recommendation_skips_unhealthy_lane(monkeypatch, tmp_path):
     # Claude has lowest burn (10% vs Codex 20%), but since Claude is unhealthy,
     # recommendation should skip to Codex.
     assert rec["primary_agent_for_code"] == "codex"
-    assert any(
-        "lane claude skipped for recommendation: 2 spawn failures in 45m" in w
-        for w in rec["warnings"]
-    )
+    assert any("lane claude skipped for recommendation: 2 spawn failures in 45m" in w for w in rec["warnings"])
 
 
 def test_recommendation_ignores_seeded_external_telemetry_cache(monkeypatch, tmp_path):

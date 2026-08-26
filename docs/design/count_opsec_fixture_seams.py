@@ -30,9 +30,7 @@ from scripts.api import (
     issues_router,
     project_state_collect,
     project_state_router,
-    repository_authority,
     site_router,
-    state_helpers,
     work_router,
     worktrees_router,
 )
@@ -80,10 +78,6 @@ class MonkeypatchRecorder:
 
 def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> None:
     """Mirror isolated_fixture setattr side effects (no pytest tmp_path wrapper)."""
-    monkeypatch.setattr(state_helpers, "_ttl_cache", {})
-    monkeypatch.setattr(state_helpers, "_content_file_index_cache", {})
-    monkeypatch.setattr(state_helpers, "_curriculum_cache", None)
-    monkeypatch.setattr(state_helpers, "_curriculum_mtime", 0.0)
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
     monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
@@ -124,12 +118,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(repository_authority, "_git", lambda *_args, **_kwargs: "")
-    monkeypatch.setattr(
-        repository_authority,
-        "classify_repo_path",
-        lambda *_args, **_kwargs: "primary_checkout",
-    )
     monkeypatch.setattr(
         git_hygiene_router,
         "_run_git",
@@ -193,7 +181,7 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(("scripts.telemetry", "wiki")):
+        if module is None or not module_name.startswith(("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")):
             continue
         for name, value in tuple(vars(module).items()):
             if not isinstance(value, Path) or not value.is_absolute():
