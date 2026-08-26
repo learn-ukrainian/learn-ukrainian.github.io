@@ -27,6 +27,7 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+import uuid
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -449,31 +450,34 @@ def compile_public_sidecar(
     return sidecar
 
 
+def _clean_label_schema(row: dict[str, Any]) -> dict[str, Any]:
+    """Return the existing clean-label contract pinned to one row identity."""
+    identity = {"unit_id": {"enum": [row["unit_id"]]}, "unit_sha256": {"enum": [row["unit_sha256"]]}}
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": [
+            "unit_id",
+            "unit_sha256",
+            "decision_code",
+            "clean_modern_standard_prose",
+            "modern_genre_id",
+            "evidence_ids",
+        ],
+        "properties": identity
+        | {
+            "decision_code": {"enum": sorted(SOURCE.REJECTS)},
+            "clean_modern_standard_prose": {"type": "boolean"},
+            "modern_genre_id": {"anyOf": [{"enum": sorted(SOURCE.GENRES)}, {"type": "null"}]},
+            "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        },
+    }
+
+
 def gemini_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
     """Generate Gemini JSON schema requiring liveness_challenge."""
-    def label_for(row: dict[str, Any]) -> dict[str, Any]:
-        identity = {"unit_id": {"enum": [row["unit_id"]]}, "unit_sha256": {"enum": [row["unit_sha256"]]}}
-        return {
-            "type": "object",
-            "additionalProperties": False,
-            "required": [
-                "unit_id",
-                "unit_sha256",
-                "decision_code",
-                "clean_modern_standard_prose",
-                "modern_genre_id",
-                "evidence_ids",
-            ],
-            "properties": identity
-            | {
-                "decision_code": {"enum": sorted(SOURCE.REJECTS)},
-                "clean_modern_standard_prose": {"type": "boolean"},
-                "modern_genre_id": {"anyOf": [{"enum": sorted(SOURCE.GENRES)}, {"type": "null"}]},
-                "evidence_ids": {"type": "array", "items": {"type": "string"}},
-            },
-        }
 
-    properties = {f"p{position:02d}": label_for(row) for position, row in enumerate(rows, 1)}
+    properties = {f"p{position:02d}": _clean_label_schema(row) for position, row in enumerate(rows, 1)}
     return {
         "type": "object",
         "additionalProperties": False,
@@ -484,6 +488,26 @@ def gemini_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
                 "additionalProperties": False,
                 "required": list(properties),
                 "properties": properties,
+            },
+            "liveness_challenge": {"enum": [challenge]},
+        },
+    }
+
+
+def grok_schema(rows: list[dict[str, Any]], challenge: str) -> dict[str, Any]:
+    """Express the existing Grok list envelope as a strict CLI output schema."""
+    labels = [_clean_label_schema(row) for row in rows]
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["labels", "liveness_challenge"],
+        "properties": {
+            "labels": {
+                "type": "array",
+                "items": labels,
+                "additionalItems": False,
+                "minItems": len(labels),
+                "maxItems": len(labels),
             },
             "liveness_challenge": {"enum": [challenge]},
         },
@@ -516,7 +540,9 @@ def grok_prompt(challenge: str, rows: list[dict[str, Any]], sidecar: dict[str, A
     ).encode("utf-8")
 
 
-def _grok_command(provider_bin: Path, prompt_path: Path) -> list[str]:
+def _grok_command(
+    provider_bin: Path, prompt_path: Path, output_schema: Mapping[str, Any], session_id: str
+) -> list[str]:
     """Build the reviewed native Grok CLI invocation."""
     return [
         str(provider_bin),
@@ -527,7 +553,11 @@ def _grok_command(provider_bin: Path, prompt_path: Path) -> list[str]:
         "--reasoning-effort",
         "high",
         "--output-format",
-        "plain",
+        "json",
+        "--json-schema",
+        canonical(output_schema).decode("utf-8"),
+        "--session-id",
+        session_id,
         "--permission-mode",
         "plan",
         "--no-alt-screen",
@@ -651,11 +681,34 @@ def _extract_gemini(
     return init, result, {"labels": labels}
 
 
-def _extract_grok(raw: bytes, challenge: str) -> dict[str, Any]:
+def _strict_grok_text_json(text: str) -> Any:
+    """Decode one schema-constrained JSON value, allowing only an optional fence."""
+    candidate = text.strip()
+    if candidate.startswith("```"):
+        lines = candidate.splitlines()
+        if len(lines) < 3 or lines[0].strip().lower() not in {"```", "```json"} or lines[-1].strip() != "```":
+            raise CanaryStructuralError("stream_json_invalid")
+        candidate = "\n".join(lines[1:-1]).strip()
     try:
-        direct = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
+        return json.loads(candidate, object_pairs_hook=_pairs)
+    except (json.JSONDecodeError, CanaryError) as exc:
+        raise CanaryStructuralError("stream_json_invalid") from exc
+
+
+def _extract_grok(raw: bytes, challenge: str, expected_session_id: str) -> dict[str, Any]:
+    try:
+        envelope = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
     except (UnicodeDecodeError, json.JSONDecodeError, CanaryError) as exc:
         raise CanaryStructuralError("stream_json_invalid") from exc
+    if (
+        not isinstance(envelope, dict)
+        or envelope.get("sessionId") != expected_session_id
+        or not isinstance(envelope.get("stopReason"), str)
+        or not isinstance(envelope.get("requestId"), str)
+        or not isinstance(envelope.get("text"), str)
+    ):
+        raise CanaryStructuralError("structured_output_envelope_drift")
+    direct = _strict_grok_text_json(envelope["text"])
     if (
         not isinstance(direct, dict)
         or set(direct) != {"labels", "liveness_challenge"}
@@ -1045,6 +1098,7 @@ def invoke_canary(
         sources_identity = sources_client.server_identity()
 
         challenge = secrets.token_hex(32)
+        grok_session_id: str | None = None
         if provider_name == "gemini":
             prompt_bytes = gemini_prompt(challenge, rows, sidecar)
             schema_dict = gemini_schema(rows, challenge)
@@ -1082,7 +1136,8 @@ def invoke_canary(
             prompt_bytes = grok_prompt(challenge, rows, sidecar)
             stdin_path = runtime / "prompt.stdin"
             _atomic(stdin_path, prompt_bytes, raw=True)
-            cmd = _grok_command(provider_bin, stdin_path)
+            grok_session_id = str(uuid.uuid4())
+            cmd = _grok_command(provider_bin, stdin_path, grok_schema(rows, challenge), grok_session_id)
 
         attempt = 1
         provider_calls = 0
@@ -1127,7 +1182,8 @@ def invoke_canary(
                         "raw_stream_sha256": digest(raw_output),
                     }
                 else:
-                    extracted = _extract_grok(raw_output, challenge)
+                    assert grok_session_id is not None
+                    extracted = _extract_grok(raw_output, challenge, grok_session_id)
                     norm = extracted["labels"]
                     provenance = {
                         "challenge_sha256": digest(challenge.encode("utf-8")),

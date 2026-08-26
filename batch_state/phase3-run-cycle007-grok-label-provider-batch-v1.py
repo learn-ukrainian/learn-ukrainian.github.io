@@ -17,6 +17,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -563,34 +564,40 @@ def validate(
         raise _semantic_failure(exc) from exc
 
 
-def _decode_provider(raw: bytes, packet_value: dict[str, Any], sidecar_value: dict[str, Any] | None = None) -> bytes:
+def _strict_grok_text_json(text: str) -> Any:
+    """Decode one schema-constrained JSON value, allowing only an optional fence."""
+    candidate = text.strip()
+    if candidate.startswith("```"):
+        lines = candidate.splitlines()
+        if len(lines) < 3 or lines[0].strip().lower() not in {"```", "```json"} or lines[-1].strip() != "```":
+            raise Invalid("stream_json_invalid")
+        candidate = "\n".join(lines[1:-1]).strip()
     try:
-        direct = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=pairs)
+        return json.loads(candidate, object_pairs_hook=pairs)
     except (UnicodeDecodeError, json.JSONDecodeError, Invalid):
-        lines = [line for line in raw.splitlines() if line.strip()]
-        if not lines:
-            raise Invalid("stream_json_invalid") from None
-        events: list[Any] = []
-        for line in lines:
-            try:
-                events.append(json.loads(line.decode("utf-8", "strict"), object_pairs_hook=pairs))
-            except (UnicodeDecodeError, json.JSONDecodeError, Invalid):
-                raise Invalid("stream_json_invalid") from None
-        results = [item for item in events if isinstance(item, dict) and item.get("event") == "result"]
-        if len(results) != 1:
-            raise Invalid("terminal_result_count_drift") from None
-        result = results[0]
-        if result.get("status") != "SUCCESS" or not isinstance(result.get("structured_output"), dict):
-            raise Invalid("structured_output_envelope_drift") from None
-        direct = result["structured_output"]
-    if isinstance(direct, dict) and "structured_output" in direct:
-        if (
-            set(direct) != {"status", "structured_output"}
-            or direct.get("status") != "SUCCESS"
-            or not isinstance(direct["structured_output"], dict)
-        ):
-            raise Invalid("structured_output_envelope_drift")
-        direct = direct["structured_output"]
+        raise Invalid("stream_json_invalid") from None
+
+
+def _decode_provider(
+    raw: bytes,
+    packet_value: dict[str, Any],
+    *,
+    expected_session_id: str,
+    sidecar_value: dict[str, Any] | None = None,
+) -> bytes:
+    try:
+        envelope = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=pairs)
+    except (UnicodeDecodeError, json.JSONDecodeError, Invalid):
+        raise Invalid("stream_json_invalid") from None
+    if (
+        not isinstance(envelope, dict)
+        or envelope.get("sessionId") != expected_session_id
+        or not isinstance(envelope.get("stopReason"), str)
+        or not isinstance(envelope.get("requestId"), str)
+        or not isinstance(envelope.get("text"), str)
+    ):
+        raise Invalid("structured_output_envelope_drift")
+    direct = _strict_grok_text_json(envelope["text"])
     canonical_value = canonical(direct)
     validate(packet_value["lane"], packet_value, canonical_value, sidecar=sidecar_value)
     return canonical_value
@@ -765,7 +772,83 @@ def _verify_sealed(
     }
 
 
-def _provider_command(provider: Path, prompt_path: Path) -> list[str]:
+def _label_schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    # Keep the CLI argument comfortably below the kernel's per-argument limit.
+    # The schema constrains identities to this packet; the unchanged official
+    # validator below remains authoritative for ordinal ID/hash pairing.
+    identity = {
+        "unit_id": {"enum": [row["unit_id"] for row in rows]},
+        "unit_sha256": {"enum": [row["unit_sha256"] for row in rows]},
+    }
+    if lane == "clean_label":
+        return {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "unit_id",
+                "unit_sha256",
+                "decision_code",
+                "clean_modern_standard_prose",
+                "modern_genre_id",
+                "evidence_ids",
+            ],
+            "properties": identity
+            | {
+                "decision_code": {"enum": sorted(SOURCE.REJECTS)},
+                "clean_modern_standard_prose": {"type": "boolean"},
+                "modern_genre_id": {"anyOf": [{"enum": sorted(SOURCE.GENRES)}, {"type": "null"}]},
+                "evidence_ids": {"type": "array", "items": {"type": "string"}},
+            },
+        }
+    phenomenon = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["phenomenon_id", "decision_code", "evidence_sufficiency", "evidence_ids"],
+        "properties": {
+            "phenomenon_id": {"enum": list(SOURCE.TAX)},
+            "decision_code": {"enum": sorted(SOURCE.DEC)},
+            "evidence_sufficiency": {"enum": ["sufficient", "insufficient"]},
+            "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        },
+    }
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["unit_id", "unit_sha256", "phenomena", "primary_phenomenon_id", "item_decision_rollup"],
+        "properties": identity
+        | {
+            "phenomena": {"type": "array", "minItems": 1, "items": phenomenon},
+            "primary_phenomenon_id": {"anyOf": [{"enum": list(SOURCE.TAX)}, {"type": "null"}]},
+            "item_decision_rollup": {"enum": sorted(SOURCE.DEC)},
+        },
+    }
+
+
+def _provider_schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    if lane not in LANES or not 1 <= len(rows) <= PACKET_SIZE:
+        raise Error("label_count_or_envelope_drift")
+    label = _label_schema(lane, rows)
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["labels"],
+        "properties": {
+            "labels": {
+                "type": "array",
+                "items": label,
+                "minItems": len(rows),
+                "maxItems": len(rows),
+            }
+        },
+    }
+
+
+def _provider_command(
+    provider: Path,
+    prompt_path: Path,
+    output_schema: dict[str, Any],
+    session_id: str,
+) -> list[str]:
     return [
         str(provider),
         "--prompt-file",
@@ -775,7 +858,11 @@ def _provider_command(provider: Path, prompt_path: Path) -> list[str]:
         "--reasoning-effort",
         "high",
         "--output-format",
-        "plain",
+        "json",
+        "--json-schema",
+        canonical(output_schema).decode("utf-8"),
+        "--session-id",
+        session_id,
         "--permission-mode",
         "plan",
         "--no-alt-screen",
@@ -785,7 +872,9 @@ def _provider_command(provider: Path, prompt_path: Path) -> list[str]:
     ]
 
 
-def _run_provider(provider: Path, prompt_bytes: bytes, package: Path) -> subprocess.CompletedProcess[bytes]:
+def _run_provider(
+    provider: Path, prompt_bytes: bytes, package: Path, output_schema: dict[str, Any]
+) -> tuple[subprocess.CompletedProcess[bytes], str]:
     descriptor, raw_prompt_path = tempfile.mkstemp(prefix=".cycle007-grok-prompt-", dir=package)
     prompt_path = Path(raw_prompt_path)
     try:
@@ -794,13 +883,15 @@ def _run_provider(provider: Path, prompt_bytes: bytes, package: Path) -> subproc
             handle.write(prompt_bytes)
             handle.flush()
             os.fsync(handle.fileno())
-        return subprocess.run(
-            _provider_command(provider, prompt_path),
+        session_id = str(uuid.uuid4())
+        completed = subprocess.run(
+            _provider_command(provider, prompt_path, output_schema, session_id),
             input=prompt_bytes,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             check=False,
         )
+        return completed, session_id
     finally:
         prompt_path.unlink(missing_ok=True)
 
@@ -913,11 +1004,18 @@ def run_packet(
             )
             raw_capture: bytes | None = None
             try:
-                run = _run_provider(provider, prompt_bytes, package)
+                run, session_id = _run_provider(
+                    provider, prompt_bytes, package, _provider_schema(lane, packet_value["rows"])
+                )
                 if run.returncode != 0:
                     raise Invalid("stream_json_invalid")
                 raw_capture = run.stdout
-                canonical_labels = _decode_provider(raw_capture, packet_value, sidecar_value=sidecar_value)
+                canonical_labels = _decode_provider(
+                    raw_capture,
+                    packet_value,
+                    expected_session_id=session_id,
+                    sidecar_value=sidecar_value,
+                )
             except Invalid as exc:
                 retryable = attempt == 1 and exc.failure_code in STRUCTURAL_CODES
                 _mark(out, lane, index, attempt, exc.failure_code, retryable=retryable)
