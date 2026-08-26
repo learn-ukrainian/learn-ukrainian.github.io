@@ -326,7 +326,7 @@ def test_check_budget_reports_deficit_from_empty_ledger_codexbar(monkeypatch, tm
     assert "claude" in err and "codex" in err
 
 
-def test_check_budget_reports_unknown_when_empty_ledger_codexbar_unavailable(monkeypatch, tmp_path, capsys):
+def test_check_budget_reports_unknown_when_empty_ledger_subscription_snapshots_unavailable(monkeypatch, tmp_path, capsys):
     """A failed guard refresh must be explicit rather than using the old silent empty design."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
@@ -335,7 +335,7 @@ def test_check_budget_reports_unknown_when_empty_ledger_codexbar_unavailable(mon
         "_fetch_routing_budget",
         lambda: {
             "recommendation": {"primary_agent_for_code": None, "warnings": []},
-            "agents": {"claude": {"status": "unknown", "burn_pct_7d": None}},
+            "agents": {},
             "diagnostics": {
                 "records_loaded": 0,
                 "stale": False,
@@ -348,7 +348,10 @@ def test_check_budget_reports_unknown_when_empty_ledger_codexbar_unavailable(mon
 
     assert rc == 0
     err = capsys.readouterr().err
-    assert "budget UNKNOWN — could not verify CodexBar data; lanes may be in deficit" in err
+    assert (
+        "budget UNKNOWN — could not verify subscription usage snapshots; "
+        "lanes may be in deficit; no hard sub."
+    ) in err
     assert "per design" not in err
     assert "HARD AUTO-SUBSTITUTE" not in err
 

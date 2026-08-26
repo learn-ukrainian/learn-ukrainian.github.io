@@ -314,7 +314,7 @@ def test_routing_page_uses_live_monitor_sources():
     assert "Live routing budget" in html
 
 
-def test_routing_page_labels_missing_codexbar_as_host_tooling_skip():
+def test_routing_page_labels_host_tooling_skip_when_native_probes_unavailable():
     html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
     start = html.index("const CODEXBAR_HOST_TOOLING_SKIP")
     end = html.index("function renderSummary")
@@ -350,10 +350,10 @@ def test_routing_page_labels_missing_codexbar_as_host_tooling_skip():
 
     assert output["missingBinary"]["title"] == "Routing Recommendation"
     assert output["missingBinary"]["value"] == "Skipped"
-    assert "CodexBar is not installed on this host" in output["missingBinary"]["detail"]
-    assert "not an indication that routing data is empty" in output["missingBinary"]["detail"]
+    assert "No lane returned a usable native subscription snapshot" in output["missingBinary"]["detail"]
+    assert "not proof that fleet burn is empty" in output["missingBinary"]["detail"]
     assert output["missingBinary"]["warnings"] == [
-        "Host-tooling skip: CodexBar is not installed on this host; routing recommendation omitted."
+        "Host-tooling skip: native subscription probes returned no usable data; routing recommendation omitted."
     ]
     assert output["cliNotFound"]["value"] == "Skipped"
     assert output["nonBinaryFailure"]["value"] == "unknown"
