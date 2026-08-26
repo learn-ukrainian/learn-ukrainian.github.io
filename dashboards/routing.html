@@ -37,10 +37,15 @@ tr:last-child td { border-bottom:none; }
 .pill.cool, .pill.ok, .pill.done { background:rgba(63,185,80,.15); color:var(--green); }
 .pill.warm, .pill.hot, .pill.warn, .pill.timeout { background:rgba(210,153,34,.15); color:var(--orange); }
 .pill.near_cap, .pill.error, .pill.failed, .pill.rate_limited, .pill.zombie { background:rgba(248,81,73,.15); color:var(--red); }
-.pill.gray, .pill.unknown, .pill.spawning, .pill.running, .pill.unavailable { background:rgba(72,79,88,.2); color:var(--text2); }
+.pill.gray, .pill.unknown, .pill.spawning, .pill.running, .pill.unavailable, .pill.need_login, .pill.need_probe { background:rgba(72,79,88,.2); color:var(--text2); }
+.pill.need_login { background:rgba(248,81,73,.2); color:var(--red); font-weight:700; }
 .bar { background:var(--bg3); border-radius:4px; height:8px; overflow:hidden; min-width:90px; }
 .bar span { background:var(--accent); display:block; height:100%; }
-.bar.unavailable span { background: repeating-linear-gradient(45deg, var(--border), var(--border) 4px, var(--bg3) 4px, var(--bg3) 8px); opacity: 0.7; }
+.bar.unavailable span, .bar.empty span { background: repeating-linear-gradient(45deg, var(--border), var(--border) 4px, var(--bg3) 4px, var(--bg3) 8px); opacity: 0.7; }
+.sub-window { margin-bottom:6px; }
+.sub-window .label { color:var(--text2); font-size:12px; margin-bottom:2px; }
+.fleet-burn { color:var(--text2); font-size:12px; line-height:1.45; }
+.stale-note { color:var(--text3); font-size:11px; margin-top:4px; }
 .section { margin-top:18px; }
 .section h2 { font-family: Charter, Georgia, serif; font-size:22px; margin:0 0 10px; }
 .error { color:var(--red); font-size:13px; padding:12px 0; }
@@ -82,8 +87,9 @@ tr:last-child td { border-bottom:none; }
   <div class="grid" id="summary-grid"></div>
 
   <section class="section panel">
-    <h2>Budget Headroom</h2>
-    <div id="budget-table"></div>
+    <h2>Subscriptions</h2>
+    <p class="sub" style="margin-bottom:10px">Provider allotment (Auto/API monthly for Cursor; other lanes per payload). Fleet burn is our dispatch JSONL — distinct from provider remaining.</p>
+    <div id="subscriptions-table"></div>
   </section>
 
   <section class="section panel">
@@ -166,7 +172,22 @@ function codexbarSnapshotIsMissingBinary(snapshot) {
     || /\b(?:codexbar\s+)?(?:cli\s+)?(?:binary\s+)?not found\b/.test(details);
 }
 
+function cursorHasNativeSubscription(routing) {
+  const cursor = routing.agents?.cursor;
+  if (!cursor || typeof cursor !== 'object') return false;
+  if (cursor.login_state === 'authenticated' || cursor.probe_state === 'healthy') {
+    const pw = cursor.provider_windows;
+    if (pw && typeof pw === 'object') {
+      const auto = pw.auto;
+      if (auto && typeof auto.used_pct === 'number') return true;
+      if (cursor.probe_state === 'healthy') return true;
+    }
+  }
+  return false;
+}
+
 function codexbarHostToolingMissing(routing) {
+  if (cursorHasNativeSubscription(routing)) return false;
   const agentRecords = Object.values(routing.agents || {})
     .filter(agent => agent && typeof agent === 'object');
   const snapshots = agentRecords.map(agent => agent.codexbar);
@@ -230,38 +251,159 @@ function renderSummary(routing, usage, delegates) {
   `;
 }
 
-function renderBudget(routing, usage) {
+function formatAge(ageS) {
+  const num = Number(ageS);
+  if (!Number.isFinite(num) || num < 0) return '';
+  if (num < 60) return `${Math.round(num)}s ago`;
+  if (num < 3600) return `${Math.round(num / 60)}m ago`;
+  return `${(num / 3600).toFixed(1)}h ago`;
+}
+
+function windowKindLabel(win) {
+  if (!win || typeof win !== 'object') return 'window';
+  if (win.label) return String(win.label);
+  if (win.window) return String(win.window);
+  const mins = win.window_minutes;
+  if (mins != null) {
+    const m = Number(mins);
+    if (m <= 300) return '5h';
+    if (m === 10080) return 'weekly';
+    if (m >= 40000) return 'monthly';
+    return `${m}m`;
+  }
+  return 'window';
+}
+
+function pctDisplay(used, remaining) {
+  const usedNum = Number(used);
+  const remNum = Number(remaining);
+  if (!Number.isFinite(usedNum)) return null;
+  const rem = Number.isFinite(remNum) ? remNum : Math.max(0, 100 - usedNum);
+  return `${usedNum.toFixed(0)}% used · ${rem.toFixed(0)}% left`;
+}
+
+function renderWindowBlock(label, win, opts = {}) {
+  const rawUsed = win?.used_pct;
+  const usedNum = (rawUsed === null || rawUsed === undefined) ? NaN : Number(rawUsed);
+  const rawRemaining = win?.remaining_pct;
+  const remNum = (rawRemaining === null || rawRemaining === undefined) ? NaN : Number(rawRemaining);
+  const hasPct = Number.isFinite(usedNum);
+  const display = hasPct ? pctDisplay(usedNum, remNum) : (opts.missingLabel || 'unknown');
+  const barClass = hasPct ? 'bar' : `bar ${opts.barClass || 'unavailable'}`;
+  const barWidth = hasPct ? pct(usedNum) : 100;
+  const resets = win?.resets_at ? ` · resets ${formatTs(win.resets_at)}` : '';
+  return `<div class="sub-window">
+    <div class="label"><span class="mono">${escapeHtml(label)}</span> ${hasPct ? escapeHtml(display) : `<span class="pill ${escapeHtml(opts.missingLabel === 'NEED_PROBE' ? 'need_probe' : 'unknown')}">${escapeHtml(display)}</span>`}${resets ? `<span class="stale-note">${escapeHtml(resets)}</span>` : ''}</div>
+    <div class="${barClass}" title="${escapeHtml(display)}"><span style="width:${barWidth}%"></span></div>
+  </div>`;
+}
+
+function collectSubscriptionWindows(agent) {
+  const cb = agent.codexbar || {};
+  const providerWindows = agent.provider_windows || cb.provider_windows;
+  if (providerWindows && typeof providerWindows === 'object') {
+    return Object.entries(providerWindows).map(([key, win]) => ({
+      key,
+      label: (win && win.label) || (key === 'auto' ? 'Auto' : key === 'api' ? 'API' : key),
+      win: win || {},
+    }));
+  }
+  const named = cb.windows;
+  if (named && typeof named === 'object') {
+    return ['primary', 'secondary', 'tertiary']
+      .filter(k => named[k] && typeof named[k] === 'object')
+      .map(k => ({
+        key: k,
+        label: named[k].label || windowKindLabel(named[k]),
+        win: named[k],
+      }))
+      .filter(entry => entry.win.used_pct != null || entry.win.remaining_pct != null);
+  }
+  if (cb.weekly_used_pct != null && typeof cb.weekly_used_pct === 'number') {
+    return [{
+      key: 'weekly',
+      label: 'weekly',
+      win: {
+        used_pct: cb.weekly_used_pct,
+        remaining_pct: cb.weekly_remaining_pct,
+        resets_at: cb.weekly_resets_at || agent.resets_at,
+      },
+    }];
+  }
+  return [];
+}
+
+function renderFleetBurnCell(agent) {
+  const fb = agent.fleet_burn;
+  if (!fb || typeof fb !== 'object') return '<span class="fleet-burn">—</span>';
+  const wins = fb.windows || {};
+  const parts = ['5h', '7d', '30d'].map(name => {
+    const block = wins[name];
+    const total = block?.counts?.total;
+    return `${name}: ${total == null ? '—' : escapeHtml(total)}`;
+  });
+  return `<div class="fleet-burn">${parts.join(' · ')}<br><span class="stale-note">dispatch JSONL</span></div>`;
+}
+
+function renderLaneFreshness(agent) {
+  const cb = agent.codexbar || {};
+  const fetched = cb.fetched_at || agent.fetched_at;
+  const age = cb.age_s ?? agent.age_s;
+  const stale = cb.stale || agent.stale;
+  const parts = [];
+  if (fetched) parts.push(formatTs(fetched));
+  if (age != null) parts.push(formatAge(age));
+  if (stale) parts.push('stale');
+  return parts.length ? `<span class="stale-note">${escapeHtml(parts.join(' · '))}</span>` : '';
+}
+
+function renderSubscriptions(routing) {
   const agents = routing.agents || {};
-  const diag = routing.diagnostics || {};
-  const ledgerEmpty = diag.budget_ledger_empty === true || Number(diag.records_loaded || 0) === 0;
-  const runtimeRecords = Number(diag.runtime_usage_records_7d ?? (usage || {}).records_total ?? 0);
-  const ledgerNote = ledgerEmpty
-    ? (runtimeRecords > 0
-      ? `<div class="sub" style="margin-bottom:8px">USD budget ledger is empty — 7d burn/headroom unknown. Runtime usage exists (${runtimeRecords} call(s) in 7d); see Runtime Agents below.</div>`
-      : `<div class="sub" style="margin-bottom:8px">USD budget ledger is empty — 7d burn/headroom unknown; no runtime usage records this week either.</div>`)
-    : '';
-  const unavailableTitle = ledgerEmpty
-    ? 'Burn unknown — USD budget ledger empty'
-    : 'Capacity unavailable';
-  const rows = Object.entries(agents).map(([name, data]) => {
-    const isUnavailable = data.status === 'unavailable' || data.burn_pct_7d == null || typeof data.burn_pct_7d !== 'number';
-    const burnStr = isUnavailable ? 'unavailable' : `${Number(data.burn_pct_7d).toFixed(1)}%`;
-    const barCell = isUnavailable
-      ? `<div class="bar unavailable" title="${escapeHtml(unavailableTitle)}"><span style="width:100%"></span></div>`
-      : `<div class="bar"><span style="width:${pct(data.burn_pct_7d)}%"></span></div>`;
-    const cap = data.weekly_cap_usd == null ? 'n/a' : `$${Number(data.weekly_cap_usd).toFixed(0)}`;
-    return `<tr>
-      <td class="mono">${escapeHtml(name)}</td>
-      <td>${statusPill(data.status)}</td>
-      <td>${escapeHtml(burnStr)}</td>
-      <td>${barCell}</td>
-      <td>${cap}</td>
-      <td>${escapeHtml((routing.in_flight || {})[name] ?? 0)}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('budget-table').innerHTML = `${ledgerNote}<table>
-    <tr><th>Agent</th><th>Status</th><th>7d Burn</th><th>Headroom</th><th>Weekly Cap</th><th>In Flight</th></tr>
-    ${rows || '<tr><td colspan="6">No budget data.</td></tr>'}
+  const subscriptionLanes = ['cursor', 'claude', 'codex', 'gemini', 'grok', 'kimi'];
+  const rows = subscriptionLanes
+    .filter(name => agents[name])
+    .map(name => {
+      const agent = agents[name];
+      const isCursor = name === 'cursor';
+      const needLogin = agent.login_state === 'NEED_LOGIN' || agent.probe_state === 'NEED_LOGIN';
+      const needProbe = !needLogin && agent.probe_state === 'NEED_PROBE';
+      let windowsHtml = '';
+
+      if (needLogin) {
+        windowsHtml = `<span class="pill need_login">NEED_LOGIN</span>
+          ${renderWindowBlock('Auto', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}
+          ${renderWindowBlock('API', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}`;
+      } else if (isCursor) {
+        const pw = agent.provider_windows || {};
+        windowsHtml = [
+          renderWindowBlock('Auto', pw.auto || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
+          renderWindowBlock('API', pw.api || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
+        ].join('');
+      } else {
+        const windows = collectSubscriptionWindows(agent);
+        if (windows.length) {
+          windowsHtml = windows.map(w => renderWindowBlock(
+            w.label,
+            w.win,
+            { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }
+          )).join('');
+        } else {
+          windowsHtml = `<span class="pill ${needProbe ? 'need_probe' : 'unknown'}">${needProbe ? 'NEED_PROBE' : 'unknown'}</span>`;
+        }
+      }
+
+      return `<tr>
+        <td class="mono">${escapeHtml(name)}</td>
+        <td>${statusPill(agent.status)}</td>
+        <td>${windowsHtml}${renderLaneFreshness(agent)}</td>
+        <td>${renderFleetBurnCell(agent)}</td>
+        <td>${escapeHtml((routing.in_flight || {})[name] ?? 0)}</td>
+      </tr>`;
+    }).join('');
+
+  document.getElementById('subscriptions-table').innerHTML = `<table>
+    <tr><th>Lane</th><th>Status</th><th>Provider allotment</th><th>Fleet burn (calls)</th><th>In Flight</th></tr>
+    ${rows || '<tr><td colspan="5">No subscription data.</td></tr>'}
   </table>`;
 }
 
@@ -303,22 +445,32 @@ function renderDelegates(delegates) {
 async function loadRouting() {
   const status = document.getElementById('refresh-status');
   status.textContent = 'Loading...';
-  try {
-    const [routing, agents, usage, delegates] = await Promise.all([
-      fetchJson(ENDPOINTS.routing),
-      fetchJson(ENDPOINTS.agents),
-      fetchJson(ENDPOINTS.usage),
-      fetchJson(ENDPOINTS.delegates)
-    ]);
+  const results = await Promise.allSettled([
+    fetchJson(ENDPOINTS.routing),
+    fetchJson(ENDPOINTS.agents),
+    fetchJson(ENDPOINTS.usage),
+    fetchJson(ENDPOINTS.delegates)
+  ]);
+  const routing = results[0].status === 'fulfilled' ? results[0].value : null;
+  const agents = results[1].status === 'fulfilled' ? results[1].value : { agents: [] };
+  const usage = results[2].status === 'fulfilled' ? results[2].value : {};
+  const delegates = results[3].status === 'fulfilled' ? results[3].value : { tasks: [] };
+  const errors = results
+    .map((r, i) => (r.status === 'rejected' ? Object.values(ENDPOINTS)[i] : null))
+    .filter(Boolean);
+
+  if (routing) {
     renderSummary(routing, usage, delegates);
-    renderBudget(routing, usage);
-    renderAgents(agents, usage);
-    renderDelegates(delegates);
-    status.textContent = `Updated ${new Date().toLocaleTimeString()}`;
-  } catch (err) {
-    status.textContent = 'Load failed';
-    document.getElementById('summary-grid').innerHTML = `<div class="error">API unavailable: ${escapeHtml(err.message)}</div>`;
+    renderSubscriptions(routing);
+  } else {
+    document.getElementById('summary-grid').innerHTML = `<div class="error">Routing budget unavailable${errors.length ? `: ${escapeHtml(errors.join(', '))}` : ''}</div>`;
+    document.getElementById('subscriptions-table').innerHTML = '<div class="error">Subscriptions unavailable — routing-budget failed.</div>';
   }
+  renderAgents(agents, usage);
+  renderDelegates(delegates);
+  status.textContent = errors.length
+    ? `Partial load (${errors.length} failed) ${new Date().toLocaleTimeString()}`
+    : `Updated ${new Date().toLocaleTimeString()}`;
 }
 
 document.getElementById('refresh-btn').addEventListener('click', loadRouting);

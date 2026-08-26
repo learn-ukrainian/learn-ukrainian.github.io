@@ -58,6 +58,11 @@ DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S = 25.0
 DEFAULT_CODEXBAR_CACHE_TTL_S = 720.0
 DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
 
+# Native Cursor login + dashboard probe can exceed routing.html's 5s timeout.
+# Cache HTTP reads for 10 minutes; background refresh keeps snapshots warm.
+DEFAULT_CURSOR_CACHE_TTL_S = 600.0
+CURSOR_CACHE_KEY = "cursor_lane_usage"
+
 SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
     "claude",
     "codex",
@@ -88,6 +93,9 @@ _scheduler_stop = threading.Event()
 _scheduler_thread: threading.Thread | None = None
 _last_refresh_started_at: float | None = None
 _last_refresh_finished_at: float | None = None
+_cursor_last_good: tuple[float, dict[str, Any]] | None = None
+_cursor_refresh_lock = threading.Lock()
+_cursor_refresh_thread: threading.Thread | None = None
 
 
 def _is_usable_capacity(data: dict[str, Any] | None) -> bool:
@@ -197,6 +205,11 @@ def _codexbar_refresh_interval_s() -> float:
     return _env_positive_float(
         "CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S
     )
+
+
+def _cursor_cache_ttl_s() -> float:
+    """How long a successful Cursor native snapshot is labelled fresh."""
+    return _env_positive_float("CURSOR_CACHE_TTL_S", DEFAULT_CURSOR_CACHE_TTL_S)
 
 
 def _periodic_refresh_enabled() -> bool:
@@ -782,10 +795,16 @@ def _run_all_refreshes() -> None:
         # floor as the explicit fresh-refresh path (see _codexbar_refresh_timeout_s)
         # rather than the prior 2.0s, which never let the claude lane's ~17s CLI
         # probe complete.
-        refresh_provider_usage_data(SUBSCRIPTION_PROVIDERS)
+        refresh_provider_usage_data(SUBSCRIPTION_LANES_WITHOUT_CURSOR)
+        _refresh_cursor_usage_live()
     finally:
         _last_refresh_finished_at = time.monotonic()
         _refresh_in_flight.release()
+
+
+SUBSCRIPTION_LANES_WITHOUT_CURSOR: tuple[str, ...] = tuple(
+    p for p in SUBSCRIPTION_PROVIDERS if p != "cursor"
+)
 
 
 def _scheduler_is_running() -> bool:
@@ -928,8 +947,8 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
     }
 
 
-def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
-    """Cursor lane: login gate + native Auto/API probe; CodexBar optional overlay."""
+def _fetch_cursor_lane_usage_live(*, prefer_native: bool = True) -> dict[str, Any]:
+    """Probe Cursor login + native Auto/API pools (blocking; background/scheduler only)."""
     login = probe_cursor_login()
     if not login.get("is_authenticated"):
         return {
@@ -966,6 +985,105 @@ def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
             merged["headroom_pct"] = max(0.0, 100.0 - float(auto_used))
             merged["deficit"] = bool(trend.get("deficit"))
     return merged
+
+
+def _cursor_probe_is_cacheable(data: dict[str, Any] | None) -> bool:
+    """Any completed Cursor probe (including NEED_LOGIN) is worth caching."""
+    if not isinstance(data, dict):
+        return False
+    if data.get("fetched_at"):
+        return True
+    return data.get("probe_state") in {"NEED_LOGIN", "NEED_PROBE", "healthy"}
+
+
+def _record_cursor_probe_result(data: dict[str, Any] | None) -> bool:
+    global _cursor_last_good
+    if not _cursor_probe_is_cacheable(data):
+        return False
+    assert data is not None
+    snapshot = dict(data)
+    cache_set(CURSOR_CACHE_KEY, snapshot)
+    _cursor_last_good = (time.monotonic(), snapshot)
+    return True
+
+
+def _with_cursor_observation_metadata(
+    data: dict[str, Any],
+    *,
+    freshness: str,
+    age_s: float | None,
+) -> dict[str, Any]:
+    result = dict(data)
+    result.update(
+        {
+            "freshness": freshness,
+            "stale": freshness == "stale_last_good",
+            "age_s": age_s,
+        }
+    )
+    return result
+
+
+def _refresh_cursor_usage_live() -> dict[str, Any] | None:
+    data = _fetch_cursor_lane_usage_live()
+    if _record_cursor_probe_result(data):
+        return _with_cursor_observation_metadata(data, freshness="fresh", age_s=0.0)
+    return None
+
+
+def trigger_cursor_background_refresh() -> None:
+    """Start one bounded Cursor native refresh without making an API request wait."""
+    global _cursor_refresh_thread
+    with _cursor_refresh_lock:
+        if _cursor_refresh_thread is not None and _cursor_refresh_thread.is_alive():
+            return
+        _cursor_refresh_thread = threading.Thread(
+            target=_refresh_cursor_usage_live,
+            name="cursor-usage-refresh",
+            daemon=True,
+        )
+        _cursor_refresh_thread.start()
+
+
+def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
+    """Cursor lane: cache-only HTTP path; native probe runs in background."""
+    cached = cache_get_with_age(CURSOR_CACHE_KEY, ttl=_cursor_cache_ttl_s())
+    if cached is not None:
+        val, age = cached
+        if _cursor_probe_is_cacheable(val):
+            return _with_cursor_observation_metadata(
+                val,
+                freshness="fresh",
+                age_s=age,
+            )
+
+    if not _scheduler_is_running() and _on_demand_refresh_enabled():
+        trigger_cursor_background_refresh()
+
+    if _cursor_last_good is not None:
+        t_mono, val = _cursor_last_good
+        return _with_cursor_observation_metadata(
+            val,
+            freshness="stale_last_good",
+            age_s=time.monotonic() - t_mono,
+        )
+
+    return _with_cursor_observation_metadata(
+        {
+            "lane": "cursor",
+            "login_state": "unknown",
+            "probe_state": "NEED_PROBE",
+            "status": "unknown",
+            "provider_windows": {
+                "auto": {"window": "monthly", "label": "Auto", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "label": "API", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "fetched_at": None,
+            "source": "cursor_native",
+        },
+        freshness="unavailable",
+        age_s=None,
+    )
 
 
 def scheduler_status() -> dict[str, Any]:
