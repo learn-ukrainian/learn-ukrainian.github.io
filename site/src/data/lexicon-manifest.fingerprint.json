@@ -223,11 +223,11 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "6716f3b32bdff5c3b27235aa977f192a3211d03c13e028193441c8b4f1817ac6"
+        "sha256": "fe55142c3cb85f87474eb7adc53c66dc34b2ddbdb380bc1ce9d883bcd3d2b971"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "9bc12996666692e9cf05e72c95c9e7fb819828eb061371fac6826f5ff221be35"
+        "sha256": "6e9f44eedcd9f009d7d6f62a39853f71c8ccf474821e75d2aa5243955d3e6e73"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",

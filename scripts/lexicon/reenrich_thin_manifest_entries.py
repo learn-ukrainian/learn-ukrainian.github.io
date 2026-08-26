@@ -7,7 +7,6 @@ import argparse
 import copy
 import hashlib
 import json
-import os
 import re
 import sqlite3
 import sys
@@ -795,9 +794,6 @@ def main() -> int:
     manifest = _read_local_manifest(manifest_path) if args.local else load_manifest(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)
     slug_filter = _load_slug_filter(args.slugs_file) if args.slugs_file else None
-
-    if args.cached_slovnyk_only:
-        os.environ["LEXICON_SLOVNYK_OFFLINE"] = "1"
 
     with sqlite3.connect(sources_db) as conn:
         has_flags = enrich_manifest._sum11_has_flag_columns(conn)
