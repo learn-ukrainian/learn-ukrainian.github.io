@@ -133,6 +133,47 @@ def test_batch_runner_accepts_one_fenced_response_json() -> None:
     assert runner._strict_result_payload({"response": f"```json\n{json.dumps(payload)}\n```"}) == payload
 
 
+def test_batch_runner_pins_the_certified_evidence_compiler_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_identity_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    monkeypatch.setattr(runner.compiler, "TOKENIZER_ID", "runtime-drift")
+    monkeypatch.setattr(runner.compiler, "TOKENIZER_VERSION", "runtime-drift")
+    monkeypatch.setattr(runner.compiler, "CODE_HASHES", {"compiler_sha256": "0" * 64})
+
+    identity = runner._get_expected_identity()
+    expected_hash = "8c66529479976f71ce5f28b82765a5916cc06c9dee737d7ce20bd89aa27cc522"
+    assert identity["tokenizer_id"] == "phase3-cycle007-cyrillic-tokenizer-v1"
+    assert identity["tokenizer_version"] == "1"
+    assert set(identity["code_hashes"]) == {
+        "compiler_id",
+        "compiler_sha256",
+        "compound_parser_id",
+        "compound_parser_sha256",
+        "compound_parser_version",
+        "mcp_response_parser_id",
+        "mcp_response_parser_sha256",
+        "mcp_response_parser_version",
+        "query_plan_id",
+        "query_plan_sha256",
+        "query_plan_version",
+        "tokenizer_id",
+        "tokenizer_sha256",
+        "tokenizer_version",
+    }
+    assert {
+        value
+        for key, value in identity["code_hashes"].items()
+        if key.endswith("_sha256")
+    } == {expected_hash}
+    assert identity["code_hashes"] is not runner.FROZEN_EVIDENCE_CODE_HASHES
+
+
 def test_batch_stream_input_command_has_no_print_prompt() -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_command_test", path)
