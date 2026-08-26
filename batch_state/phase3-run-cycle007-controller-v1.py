@@ -110,10 +110,34 @@ STAGE_RUNNER_LABELS = {
     "certify": "certify_runner",
 }
 EXECUTION_LOCK_FD_ENV = "PHASE3_CYCLE007_EXECUTION_LOCK_FD"
+MAX_RUNNER_STATUS_BYTES = 4096
 
 
 class ControllerError(ValueError):
     pass
+
+
+def _runner_failure_code(stdout: bytes) -> str:
+    """Return only a bounded text-free child failure code."""
+    if len(stdout) > MAX_RUNNER_STATUS_BYTES:
+        return "stage_execution_failed"
+    try:
+        value = json.loads(stdout.decode("utf-8", "strict"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return "stage_execution_failed"
+    if not isinstance(value, dict):
+        return "stage_execution_failed"
+    code = value.get("failure_code")
+    if (
+        value.get("ok") is not False
+        or value.get("text_free") is not True
+        or not isinstance(code, str)
+        or not 1 <= len(code) <= 64
+        or not code.isascii()
+        or any(not (character.islower() or character.isdigit() or character == "_") for character in code)
+    ):
+        return "stage_execution_failed"
+    return code
 
 
 def _inherited_execution_lock_fd() -> int | None:
@@ -1535,14 +1559,14 @@ def run_stage(
             command,
             executable=str(python_target),
             stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             check=False,
             shell=False,
             pass_fds=() if execution_lock_fd is None else (execution_lock_fd,),
         )
         if completed.returncode != 0:
-            raise ControllerError("stage_execution_failed")
+            raise ControllerError(_runner_failure_code(completed.stdout))
         _require_python_binding(expected_python_executable_sha256 or "")
         if any(path.exists() for path in _stage_stop_paths(package)):
             raise ControllerError("provider_stop_present")

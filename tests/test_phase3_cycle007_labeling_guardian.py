@@ -434,7 +434,64 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     assert result["ok"] is True
     assert captured["pass_fds"] == (lock_file.fileno(),)
     assert captured["executable"] == os.fspath(python_target)
+    assert captured["stdout"] is subprocess.PIPE
     lock_file.close()
+
+
+@pytest.mark.parametrize(
+    ("stdout", "expected"),
+    [
+        (
+            b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":true}\n',
+            "sidecar_binding_drift",
+        ),
+        (b'{"failure_code":"PRIVATE CONTENT","ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b"not-json", "stage_execution_failed"),
+        (b"x" * (4096 + 1), "stage_execution_failed"),
+    ],
+)
+def test_controller_accepts_only_bounded_text_free_runner_failure_codes(
+    controller: ModuleType, stdout: bytes, expected: str
+) -> None:
+    assert controller._runner_failure_code(stdout) == expected
+
+
+def test_controller_propagates_safe_runner_failure_code(
+    controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runner = tmp_path / "compare.py"
+    runner.write_text("# public fixture\n", encoding="utf-8")
+    python_target = tmp_path / "python-target"
+    python_target.write_bytes(b"fixture interpreter")
+    monkeypatch.setattr(controller, "_require_contiguous", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(controller, "_require_python_binding", lambda *_args, **_kwargs: python_target)
+    monkeypatch.setattr(controller, "_commands_for_stage", lambda *_args, **_kwargs: ([["fixture"]], None))
+    monkeypatch.setattr(
+        controller.subprocess,
+        "run",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            returncode=2,
+            stdout=b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":true}\n',
+        ),
+    )
+
+    with pytest.raises(controller.ControllerError, match=r"^sidecar_binding_drift$"):
+        controller.run_stage(
+            tmp_path,
+            "compare",
+            runner,
+            "a" * 64,
+            dry_run=False,
+            expected_python_executable_sha256="b" * 64,
+            expected_label_prompt_sha256s={
+                "gemini": {"clean_label": "c" * 64, "residual_label": "d" * 64},
+                "grok": {"clean_label": "e" * 64, "residual_label": "f" * 64},
+            },
+            expected_custody_sha256="1" * 64,
+            expected_label_manifest_sha256="2" * 64,
+            expected_evidence_manifest_sha256="3" * 64,
+            code_paths={"compare_runner": runner.resolve()},
+        )
 
 
 def test_controller_preserves_python_launcher_for_stage_subprocesses(
