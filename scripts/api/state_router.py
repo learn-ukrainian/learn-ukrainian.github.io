@@ -519,10 +519,12 @@ def _recommend_agent(
         )
 
     def select_agent(agents_dict, status_map, burn_map, resets_map):
-        def _sort_burn(agent: str) -> tuple[int, float]:
+        def _sort_burn(agent: str) -> tuple[float, int]:
             val = burn_map.get(agent)
             burn_key = float(val) if isinstance(val, (int, float)) else 999.0
-            return (CODE_IMPLEMENT_LANE_PRIORITY.get(agent, 50), burn_key)
+            # Burn first (lowest 7d spend), lane rank only as a tie-break.
+            # Cursor-first for cool Ultra is the explicit branch above, not this sort.
+            return (burn_key, CODE_IMPLEMENT_LANE_PRIORITY.get(agent, 50))
 
         if "near_cap" in status_map.values():
             candidates = [agent for agent, st in status_map.items() if st == "cool"]
