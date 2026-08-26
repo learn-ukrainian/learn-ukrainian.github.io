@@ -64,6 +64,24 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "['conversation', 'filter-conversation']" in html
 
 
+def test_fleet_refresh_fail_opens_per_endpoint() -> None:
+    """One aborted fleet fetch must not blank the whole observer page."""
+    html = (DASHBOARDS / "fleet.html").read_text(encoding="utf-8")
+    refresh = html[html.index("async function refreshFleet") : html.index("function queueRefresh")]
+
+    assert "Promise.allSettled" in refresh
+    assert "Promise.all([" not in refresh
+    assert "/api/fleet/workers/v1" in refresh
+    assert "failed.join" in refresh or "failed.length" in refresh
+    assert "Observer data could not be read:" in refresh
+
+    index = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert "async function loadWeakPointsStat" in index
+    assert "void loadWeakPointsStat()" in index
+    load_stats = index[index.index("async function loadStats") :]
+    assert "weak-points" not in load_stats.split("void loadWeakPointsStat()")[0]
+
+
 def test_fleet_page_exposes_body_free_context_and_safe_acp_navigation() -> None:
     html = (DASHBOARDS / "fleet.html").read_text(encoding="utf-8")
 

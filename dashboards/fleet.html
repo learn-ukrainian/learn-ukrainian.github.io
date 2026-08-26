@@ -691,31 +691,84 @@ function renderMessages(data) {
 
 async function refreshFleet() {
   setError('');
-  try {
-    const common = ['state', 'agent', 'source', 'conversation'];
-    const contextStatusRequest = fetchJson('/api/ops/entire-context/status').catch(() => ({
-      recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
-      use: {},
-    }));
-    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, workers, occupancy, projects, activity, messages, contextStatus] = await Promise.all([
-      fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
-      fetchJson(query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' })),
-      fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
-      fetchJson(query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr'])),
-      fetchJson(query('/api/fleet/acp/conversations', common)),
-      fetchJson(query('/api/fleet/dead-letters', ['state', 'agent', 'source'])),
-      fetchJson('/api/fleet/workers/v1'),
-      fetchJson('/api/occupancy'),
-      fetchJson('/api/fleet/projects/v1'),
-      fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
-      fetchJson(query('/api/fleet/messages', ['kind', ...common])),
-      contextStatusRequest,
-    ]);
-    renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
-    renderAcp(acp); renderDeadLetters(deadLetters); renderWorkers(workers); renderOccupancy(occupancy); renderOccupancyAttention(occupancy.attention); renderProjects(projects); renderActivity(activity); renderMessages(messages);
-    await refreshConversationContext(contextStatus);
-  } catch (error) {
-    setError(`Observer data could not be read: ${error.message}`);
+  const common = ['state', 'agent', 'source', 'conversation'];
+  const contextStatusFallback = {
+    recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
+    use: {},
+  };
+  // Each load applies on success as soon as its fetch settles so a slow/aborted
+  // endpoint (e.g. workers/v1) cannot block health/overview paint.
+  const loads = [
+    { label: '/api/fleet/health', url: '/api/fleet/health', apply: (data) => { renderHealth(data); } },
+    { label: '/api/fleet/overview', url: '/api/fleet/overview', apply: (data) => { renderOverview(data); } },
+    { label: '/api/fleet/operations', url: '/api/fleet/operations', apply: (data) => { renderOperations(data); } },
+    {
+      label: '/api/fleet/authority/jobs?kind=request',
+      url: query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' }),
+      apply: (data) => { renderRequests(data); },
+    },
+    {
+      label: '/api/fleet/authority/jobs',
+      url: query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation']),
+      apply: (data) => { renderAuthorityJobs(data); },
+    },
+    {
+      label: '/api/fleet/reviews',
+      url: query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr']),
+      apply: (data) => { renderReviews(data); },
+    },
+    {
+      label: '/api/fleet/acp/conversations',
+      url: query('/api/fleet/acp/conversations', common),
+      apply: (data) => { renderAcp(data); },
+    },
+    {
+      label: '/api/fleet/dead-letters',
+      url: query('/api/fleet/dead-letters', ['state', 'agent', 'source']),
+      apply: (data) => { renderDeadLetters(data); },
+    },
+    { label: '/api/fleet/workers/v1', url: '/api/fleet/workers/v1', apply: (data) => { renderWorkers(data); } },
+    {
+      label: '/api/occupancy',
+      url: '/api/occupancy',
+      apply: (data) => { renderOccupancy(data); renderOccupancyAttention(data.attention); },
+    },
+    { label: '/api/fleet/projects/v1', url: '/api/fleet/projects/v1', apply: (data) => { renderProjects(data); } },
+    {
+      label: '/api/fleet/activity',
+      url: query('/api/fleet/activity', ['state', 'agent', 'source']),
+      apply: (data) => { renderActivity(data); },
+    },
+    {
+      label: '/api/fleet/messages',
+      url: query('/api/fleet/messages', ['kind', ...common]),
+      apply: (data) => { renderMessages(data); },
+    },
+    {
+      label: '/api/ops/entire-context/status',
+      url: '/api/ops/entire-context/status',
+      softFail: true,
+      apply: async (data) => { await refreshConversationContext(data); },
+    },
+  ];
+  const settled = await Promise.allSettled(loads.map(async ({ label, url, apply, softFail }) => {
+    try {
+      const data = await fetchJson(url);
+      await apply(data);
+    } catch (error) {
+      if (softFail) {
+        await apply(contextStatusFallback);
+        return label;
+      }
+      throw error;
+    }
+    return label;
+  }));
+  const failed = settled
+    .map((result, index) => (result.status === 'rejected' ? loads[index].label : null))
+    .filter(Boolean);
+  if (failed.length) {
+    setError(`Observer data could not be read: ${failed.join(', ')}`);
   }
 }
 

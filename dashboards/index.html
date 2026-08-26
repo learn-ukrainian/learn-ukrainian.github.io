@@ -337,15 +337,21 @@ function resolveOperationalBuildState(pv, summary) {
   return buildStateSummary(pv, trackIds);
 }
 
+async function loadWeakPointsStat() {
+  const weakPoints = await safeFetch('/api/state/weak-points?limit=1');
+  if (!weakPoints) return;
+  document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
+}
+
 async function loadStats() {
   let buildState = { pending: true, current: null, backlog: null, builtPct: null };
   let pendingConsultations = 0;
-  const [data, pv, cMetrics, summary, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
+  // Quality card is often >5s; defer it so it cannot gate first paint of the fast cards.
+  const [data, pv, cMetrics, summary, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions?fresh=true'),
     safeFetch('/api/consultation/metrics'),
     safeFetch('/api/state/summary?fresh=true'),
-    safeFetch('/api/state/weak-points?limit=1'),
     safeFetch('/api/orient'),
     safeFetch('/api/runtime/agents'),
     safeFetch('/api/delegate/tasks?limit=100'),
@@ -354,6 +360,7 @@ async function loadStats() {
     safeFetch('/api/analytics/cost'),
     safeFetch('/api/contracts/routes'),
   ]);
+  void loadWeakPointsStat();
 
   try {
     if (!data) throw new Error('overview unavailable');
@@ -394,11 +401,6 @@ async function loadStats() {
     const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
       `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
-  } catch(e) {}
-
-  try {
-    if (!weakPoints) throw new Error('weak points unavailable');
-    document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
   } catch(e) {}
 
   if (orient) {
