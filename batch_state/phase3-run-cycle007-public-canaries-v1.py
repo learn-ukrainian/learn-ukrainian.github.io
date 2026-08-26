@@ -686,7 +686,15 @@ _GROK_TRAILING_FENCE_RE = re.compile(r"\s*(?:```(?:json)?\s*)?\Z", re.IGNORECASE
 
 
 def _strict_grok_text_json(text: str) -> Any:
-    """Extract one schema-constrained JSON value and reject trailing prose."""
+    """Extract Grok's one terminal schema value and reject anything after it.
+
+    Native Grok JSON mode can prepend presentation text inside ``envelope.text``
+    even with ``--json-schema``. This deliberately matches the established
+    ``layerb_judge_bridge._strict_grok_json_value`` transport rule: ignore that
+    prefix, accept exactly one terminal JSON value plus an optional fence, and
+    reject trailing prose or multiple values. Schema, liveness, and semantic
+    validation remain authoritative downstream.
+    """
     decoder = json.JSONDecoder(object_pairs_hook=_pairs)
     for matched in re.finditer(r"[\[{]", text):
         candidate = text[matched.start() :]

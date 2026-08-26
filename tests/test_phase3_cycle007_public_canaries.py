@@ -327,6 +327,21 @@ def test_grok_batch_decodes_only_documented_matching_session_envelope(
         )
 
 
+def test_grok_terminal_json_rule_rejects_multiple_values_but_skips_malformed_decoys() -> None:
+    canary = _load_runner()
+    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_grok_batch_terminal_json_test", path)
+    assert spec is not None and spec.loader is not None
+    batch = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(batch)
+    value = {"labels": []}
+
+    for runner in (canary, batch):
+        assert runner._strict_grok_text_json(f"presentation {{broken\n{json.dumps(value)}") == value
+        with pytest.raises((canary.CanaryStructuralError, batch.Invalid), match="stream_json_invalid"):
+            runner._strict_grok_text_json(f"{json.dumps(value)}\n{json.dumps(value)}")
+
+
 def test_batch_stream_rejects_reported_cwd_mismatch(tmp_path: Path) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_cwd_test", path)
