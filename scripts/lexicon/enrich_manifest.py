@@ -2098,14 +2098,12 @@ def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
     items: list[str] = []
     seen: set[str] = set()
     excluded = _WRONG_SENSE_SYNONYMS.get(_base_lemma(lemma).casefold())
-    clean_synsets: list[dict[str, Any]] = []
     for synset in synsets:
         if not isinstance(synset, dict):
             continue
         members = synset.get("members")
         if not isinstance(members, list):
             continue
-        valid_members: list[dict[str, Any]] = []
         for member in members:
             if not isinstance(member, dict):
                 continue
@@ -2116,21 +2114,41 @@ def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
                 norm_cand = member_lemma.casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
                 if norm_cand in excluded:
                     continue
-            if member_lemma.casefold() in _BLOCKED_SYNONYMS:
-                continue
             if member_lemma not in seen:
                 seen.add(member_lemma)
                 items.append(member_lemma)
-            valid_members.append(member)
-        if valid_members:
-            synset_copy = dict(synset)
-            synset_copy["members"] = valid_members
-            clean_synsets.append(synset_copy)
-    if not items or not clean_synsets:
+    if not items:
         return None
+
+    out_synsets: list[dict[str, Any]] = synsets
+    if excluded:
+        clean_synsets: list[dict[str, Any]] = []
+        for synset in synsets:
+            if not isinstance(synset, dict):
+                continue
+            members = synset.get("members")
+            if not isinstance(members, list):
+                continue
+            valid_members: list[dict[str, Any]] = []
+            for member in members:
+                if not isinstance(member, dict):
+                    continue
+                member_lemma = str(member.get("lemma") or "").strip()
+                norm_cand = member_lemma.casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                if norm_cand in excluded:
+                    continue
+                valid_members.append(member)
+            if valid_members:
+                synset_copy = dict(synset)
+                synset_copy["members"] = valid_members
+                clean_synsets.append(synset_copy)
+        if not clean_synsets:
+            return None
+        out_synsets = clean_synsets
+
     return {
         "items": items[:24],
-        "synsets": clean_synsets,
+        "synsets": out_synsets,
         "source": MPHDICT_SYNONYMS_LABEL,
     }
 
