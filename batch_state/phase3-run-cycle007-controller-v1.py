@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import selectors
 import stat
 import subprocess
 import sys
@@ -110,10 +111,86 @@ STAGE_RUNNER_LABELS = {
     "certify": "certify_runner",
 }
 EXECUTION_LOCK_FD_ENV = "PHASE3_CYCLE007_EXECUTION_LOCK_FD"
+MAX_RUNNER_STATUS_BYTES = 4096
 
 
 class ControllerError(ValueError):
     pass
+
+
+def _runner_failure_code(stdout: bytes) -> str:
+    """Return only a bounded text-free child failure code."""
+    if len(stdout) > MAX_RUNNER_STATUS_BYTES:
+        return "stage_execution_failed"
+    try:
+        value = json.loads(stdout.decode("utf-8", "strict"), object_pairs_hook=_pairs)
+    except (UnicodeDecodeError, json.JSONDecodeError, ControllerError):
+        return "stage_execution_failed"
+    if not isinstance(value, dict) or set(value) != {"failure_code", "ok", "text_free"}:
+        return "stage_execution_failed"
+    code = value.get("failure_code")
+    if (
+        value.get("ok") is not False
+        or value.get("text_free") is not True
+        or not isinstance(code, str)
+        or not 1 <= len(code) <= 64
+        or not code.isascii()
+        or any(not (character.islower() or character.isdigit() or character == "_") for character in code)
+    ):
+        return "stage_execution_failed"
+    return code
+
+
+def _run_stage_subprocess(
+    command: list[str], *, executable: Path, pass_fds: tuple[int, ...]
+) -> tuple[int, bytes]:
+    """Drain child stdout while retaining only one bounded failure status."""
+    with subprocess.Popen(
+        command,
+        executable=str(executable),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        shell=False,
+        pass_fds=pass_fds,
+    ) as process:
+        assert process.stdout is not None
+        descriptor = process.stdout.fileno()
+        os.set_blocking(descriptor, False)
+        status = bytearray()
+        selector = selectors.DefaultSelector()
+        selector.register(descriptor, selectors.EVENT_READ)
+
+        def drain(*, single_read: bool = False) -> bool:
+            while True:
+                try:
+                    chunk = os.read(descriptor, 64 * 1024)
+                except BlockingIOError:
+                    return True
+                if not chunk:
+                    return False
+                remaining = MAX_RUNNER_STATUS_BYTES + 1 - len(status)
+                if remaining > 0:
+                    status.extend(chunk[:remaining])
+                if single_read:
+                    return True
+
+        try:
+            pipe_open = True
+            while process.poll() is None:
+                if pipe_open and selector.select(timeout=0.1):
+                    pipe_open = drain()
+                    if not pipe_open:
+                        selector.unregister(descriptor)
+                elif not pipe_open:
+                    with contextlib.suppress(subprocess.TimeoutExpired):
+                        process.wait(timeout=0.1)
+            if pipe_open:
+                drain(single_read=True)
+        finally:
+            selector.close()
+        return_code = process.wait()
+    return return_code, b"" if return_code == 0 else bytes(status)
 
 
 def _inherited_execution_lock_fd() -> int | None:
@@ -1531,18 +1608,13 @@ def run_stage(
         python_target = _require_python_binding(expected_python_executable_sha256 or "")
         # Bind exec to the verified target while argv[0] retains the venv launcher
         # that CPython uses to locate pyvenv.cfg and its installed dependencies.
-        completed = subprocess.run(
+        return_code, failure_status = _run_stage_subprocess(
             command,
-            executable=str(python_target),
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
-            shell=False,
+            executable=python_target,
             pass_fds=() if execution_lock_fd is None else (execution_lock_fd,),
         )
-        if completed.returncode != 0:
-            raise ControllerError("stage_execution_failed")
+        if return_code != 0:
+            raise ControllerError(_runner_failure_code(failure_status))
         _require_python_binding(expected_python_executable_sha256 or "")
         if any(path.exists() for path in _stage_stop_paths(package)):
             raise ControllerError("provider_stop_present")

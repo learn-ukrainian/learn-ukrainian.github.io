@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import contextlib
 import importlib.util
 import json
 import os
 import subprocess
 import sys
 import tempfile
+import time
 import venv
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
@@ -409,11 +411,12 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     monkeypatch.setattr(controller, "_stage_stop_paths", lambda *_args, **_kwargs: ())
     monkeypatch.setattr(controller, "_seal", lambda *_args, **_kwargs: None)
 
-    def run(*_args: Any, **kwargs: Any) -> Any:
+    def run(command: list[str], **kwargs: Any) -> tuple[int, bytes]:
+        captured["command"] = command
         captured.update(kwargs)
-        return SimpleNamespace(returncode=0)
+        return 0, b""
 
-    monkeypatch.setattr(controller.subprocess, "run", run)
+    monkeypatch.setattr(controller, "_run_stage_subprocess", run)
     result = controller.run_stage(
         tmp_path,
         "compare",
@@ -433,8 +436,130 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     )
     assert result["ok"] is True
     assert captured["pass_fds"] == (lock_file.fileno(),)
-    assert captured["executable"] == os.fspath(python_target)
+    assert captured["executable"] == python_target
     lock_file.close()
+
+
+@pytest.mark.parametrize(
+    ("stdout", "expected"),
+    [
+        (
+            b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":true}\n',
+            "sidecar_binding_drift",
+        ),
+        (b'{"failure_code":"PRIVATE CONTENT","ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (
+            b'{"failure_code":"sidecar_binding_drift","ok":false,"private":"x","text_free":true}\n',
+            "stage_execution_failed",
+        ),
+        (
+            b'{"failure_code":"sidecar_binding_drift","ok":true,"ok":false,"text_free":true}\n',
+            "stage_execution_failed",
+        ),
+        (b'{"failure_code":"sidecar_binding_drift","ok":true,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":false}\n', "stage_execution_failed"),
+        (b'{"failure_code":"","ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":123,"ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":null,"ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":"a","invalid":true,"ok":false}\n', "stage_execution_failed"),
+        (
+            b'{"failure_code":"' + b"a" * 65 + b'","ok":false,"text_free":true}\n',
+            "stage_execution_failed",
+        ),
+        (b"not-json", "stage_execution_failed"),
+        (b"x" * (4096 + 1), "stage_execution_failed"),
+    ],
+)
+def test_controller_accepts_only_bounded_text_free_runner_failure_codes(
+    controller: ModuleType, stdout: bytes, expected: str
+) -> None:
+    assert controller._runner_failure_code(stdout) == expected
+
+
+def test_controller_stage_subprocess_capture_is_bounded(controller: ModuleType) -> None:
+    command = [sys.executable, "-c", "import sys; sys.stdout.write('x' * 8192); raise SystemExit(2)"]
+    return_code, status = controller._run_stage_subprocess(
+        command,
+        executable=Path(sys.executable).resolve(),
+        pass_fds=(),
+    )
+    assert return_code == 2
+    assert len(status) == controller.MAX_RUNNER_STATUS_BYTES + 1
+
+
+def test_controller_discards_successful_stage_stdout(controller: ModuleType) -> None:
+    command = [sys.executable, "-c", "print('ignored')"]
+    return_code, status = controller._run_stage_subprocess(
+        command,
+        executable=Path(sys.executable).resolve(),
+        pass_fds=(),
+    )
+    assert return_code == 0
+    assert status == b""
+
+
+def test_controller_does_not_wait_for_grandchild_inherited_stdout(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    pid_file = tmp_path / "grandchild.pid"
+    child = (
+        "import pathlib,subprocess,sys; "
+        "p=subprocess.Popen([sys.executable,'-c',"
+        "\"import os; b=b'x'*65536; exec('while True:\\\\n os.write(1,b)')\"]); "
+        f"pathlib.Path({str(pid_file)!r}).write_text(str(p.pid)); "
+        "raise SystemExit(2)"
+    )
+    started = time.monotonic()
+    try:
+        return_code, _status = controller._run_stage_subprocess(
+            [sys.executable, "-c", child],
+            executable=Path(sys.executable).resolve(),
+            pass_fds=(),
+        )
+        assert return_code == 2
+        assert time.monotonic() - started < 5
+    finally:
+        if pid_file.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(pid_file.read_text(encoding="utf-8")), 15)
+
+
+def test_controller_propagates_safe_runner_failure_code(
+    controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runner = tmp_path / "compare.py"
+    runner.write_text("# public fixture\n", encoding="utf-8")
+    python_target = tmp_path / "python-target"
+    python_target.write_bytes(b"fixture interpreter")
+    monkeypatch.setattr(controller, "_require_contiguous", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(controller, "_require_python_binding", lambda *_args, **_kwargs: python_target)
+    monkeypatch.setattr(controller, "_commands_for_stage", lambda *_args, **_kwargs: ([["fixture"]], None))
+    monkeypatch.setattr(
+        controller,
+        "_run_stage_subprocess",
+        lambda *_args, **_kwargs: (
+            2,
+            b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":true}\n',
+        ),
+    )
+
+    with pytest.raises(controller.ControllerError, match=r"^sidecar_binding_drift$"):
+        controller.run_stage(
+            tmp_path,
+            "compare",
+            runner,
+            "a" * 64,
+            dry_run=False,
+            expected_python_executable_sha256="b" * 64,
+            expected_label_prompt_sha256s={
+                "gemini": {"clean_label": "c" * 64, "residual_label": "d" * 64},
+                "grok": {"clean_label": "e" * 64, "residual_label": "f" * 64},
+            },
+            expected_custody_sha256="1" * 64,
+            expected_label_manifest_sha256="2" * 64,
+            expected_evidence_manifest_sha256="3" * 64,
+            code_paths={"compare_runner": runner.resolve()},
+        )
 
 
 def test_controller_preserves_python_launcher_for_stage_subprocesses(
