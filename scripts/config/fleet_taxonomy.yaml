@@ -19,7 +19,7 @@ areas:
     aliases:
       - infra-harness
     epics:
-      - number: 4707
+      - number: 6943  # successor to closed #4707
         name: "Infra & fleet reliability (hooks, dispatch, routing)"
   devops:
     id: devops
@@ -28,6 +28,13 @@ areas:
     epics:
       - number: 5703
         name: "DevOps automation, CI, release & launcher reliability"
+  monitor:
+    id: monitor
+    aliases:
+      - monitor
+    epics:
+      - number: 7177
+        name: "Monitor API + UI — fleet & host observability"
   harness:
     id: harness
     aliases:
@@ -41,6 +48,13 @@ areas:
         name: "Ukrainian LLM factuality benchmark — community release"
       - number: 4706  # operator ruling: corpus->harness, datasets mission
         name: "Corpus channels — acquisition & ingestion"
+  open-model-data:
+    id: open-model-data
+    aliases:
+      - open-model-data
+    epics:
+      - number: 6321
+        name: "Ukrainian open-model data infrastructure"
   atlas:
     id: atlas
     aliases:
