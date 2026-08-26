@@ -347,11 +347,12 @@ def test_validate_label_evidence_refs_rejects_insufficient_agree_decision():
     assert excinfo.value.code == "insufficient_evidence_for_decision"
 
 
-def test_validate_label_evidence_refs_uncertainty_path_never_needs_sufficiency():
+@pytest.mark.parametrize("decision_code", sorted(validator.CLEAN_REJECTION_DECISIONS))
+def test_validate_label_evidence_refs_clean_rejection_paths_never_need_sufficiency(decision_code: str):
     record = _vesum_record(ROW_A, status="not_found")
     row_evidence = _row_evidence(ROW_A, [record])
     validator.validate_label_evidence_refs(
-        row_evidence, decision_code="reject_insufficient_locator_evidence", evidence_ids=[record["evidence_id"]]
+        row_evidence, decision_code=decision_code, evidence_ids=[record["evidence_id"]]
     )
 
 
