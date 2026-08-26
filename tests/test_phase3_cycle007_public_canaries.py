@@ -155,6 +155,20 @@ def test_batch_runner_classifies_non_success_without_disclosing_provider_text() 
         runner._agy_stream(raw)
     assert exc_info.value.code == "provider_status_quota_or_rate_limit"
     assert exc_info.value.structural is False
+    assert {
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+    } == runner.PROVIDER_STATUS_RECOVERY_CODES
+    assert runner.PROVIDER_STATUS_RECOVERY_CODES.isdisjoint(
+        {
+            "provider_status_authentication_or_permission",
+            "provider_status_structured_request_rejected",
+            "provider_status_unknown",
+        }
+    )
 
 
 def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path: Path) -> None:

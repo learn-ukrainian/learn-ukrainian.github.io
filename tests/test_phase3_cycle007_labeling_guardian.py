@@ -252,8 +252,15 @@ def _write_private_json(path: Path, value: dict[str, Any]) -> bytes:
     return raw
 
 
+@pytest.mark.parametrize(
+    "failure_code",
+    ["structured_output_envelope_drift", "provider_status_quota_or_rate_limit"],
+)
 def test_explicit_gemini_stop_recovery_preserves_stop_and_authorizes_one_call(
-    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failure_code: str,
 ) -> None:
     config = _config(
         guardian,
@@ -283,7 +290,7 @@ def test_explicit_gemini_stop_recovery_preserves_stop_and_authorizes_one_call(
     )
     terminal = common | {
         "state": "terminal",
-        "failure_code": "structured_output_envelope_drift",
+        "failure_code": failure_code,
         "failure_stage": "provider_return",
         "provider_call_started": True,
         "executable_binding_result": "verified",

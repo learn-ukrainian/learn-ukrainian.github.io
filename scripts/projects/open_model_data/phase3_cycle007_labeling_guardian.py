@@ -37,6 +37,16 @@ RECEIPT_SCHEMA = "phase3_cycle007_labeling_guardian_v1"
 GEMINI_RECOVERY_SCHEMA = "phase3_cycle007_gemini_provider_recovery_v1"
 GEMINI_RECOVERY_RECEIPT = "provider-recovery.json"
 GEMINI_STOP_RECOVERY_ROOT = ".cycle007-gemini-stop-recovery"
+GEMINI_RECOVERABLE_FIRST_STOP_CODES = frozenset(
+    {
+        "structured_output_envelope_drift",
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+    }
+)
 MAX_RECOVERY_FILES = 64
 MAX_RECOVERY_BYTES = 16 * 1024 * 1024
 MOUNT_TIMEOUT_SECONDS = 30
@@ -756,7 +766,7 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
             or terminal.get("chunk_index") != 1
             or terminal.get("attempt") != 1
             or terminal.get("state") != "terminal"
-            or terminal.get("failure_code") != "structured_output_envelope_drift"
+            or terminal.get("failure_code") not in GEMINI_RECOVERABLE_FIRST_STOP_CODES
             or terminal.get("failure_stage") != "provider_return"
             or terminal.get("provider_call_started") is not True
             or terminal.get("executable_binding_result") != "verified"

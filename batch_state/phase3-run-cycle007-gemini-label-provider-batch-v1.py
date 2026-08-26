@@ -143,6 +143,15 @@ PROVIDER_STATUS_FAILURE_CODES = frozenset(
         "provider_status_unknown",
     }
 )
+PROVIDER_STATUS_RECOVERY_CODES = frozenset(
+    {
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+    }
+)
 RECOVERY_RECEIPT = "provider-recovery.json"
 
 _AGY_PROVIDER_STATUS_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
@@ -1155,7 +1164,7 @@ def _run_chunk(
                 "ordinal_key_drift",
                 "label_json_invalid",
                 "label_count_or_envelope_drift",
-            }:
+            } | PROVIDER_STATUS_RECOVERY_CODES:
                 raise Error("ordinal_identity_binding_drift")
             continue
         runtime = Path(

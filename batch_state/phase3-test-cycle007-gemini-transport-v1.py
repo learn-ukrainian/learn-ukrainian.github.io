@@ -540,10 +540,37 @@ def test_nonzero_provider_result_is_reduced_to_safe_status_code(
     with pytest.raises(RUN.Error) as exc_info:
         run_packet(pkg, "clean_label", 1, fake_bin)
     assert exc_info.value.code == "provider_status_quota_or_rate_limit"
-    stop = json.loads((pkg / RUN.OUTPUT / "provider-stop.json").read_text())
+    stop_path = pkg / RUN.OUTPUT / "provider-stop.json"
+    stop_raw = stop_path.read_bytes()
+    stop = json.loads(stop_raw)
     assert stop["failure_code"] == "provider_status_quota_or_rate_limit"
     assert stop["failure_stage"] == "provider_return"
     assert stop["text_free"] is True
+
+    attempt = pkg / RUN.OUTPUT / "clean_label/chunks/packet-0001"
+    started = attempt / "attempt-1-chunk-01.started.json"
+    terminal = attempt / "attempt-1-chunk-01.terminal.json"
+    terminal_value = json.loads(terminal.read_text())
+    recovery_body = {
+        "schema_version": "phase3_cycle007_gemini_provider_recovery_v1",
+        "evaluation_cycle_id": RUN.CYCLE,
+        "source_provider_stop_sha256": RUN.digest(stop_raw),
+        "started_marker_sha256": RUN.digest(started.read_bytes()),
+        "terminal_marker_sha256": RUN.digest(terminal.read_bytes()),
+        "failure_code": terminal_value["failure_code"],
+        "failure_stage": terminal_value["failure_stage"],
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": RUN.MODEL,
+        "model_family": RUN.FAMILY,
+        "harness": RUN.HARNESS,
+        "text_free": True,
+    }
+    recovery = recovery_body | {"receipt_sha256": RUN.digest(RUN.canonical(recovery_body))}
+    put(pkg / RUN.OUTPUT / RUN.RECOVERY_RECEIPT, recovery)
+    stop_path.unlink()
+    monkeypatch.setenv("FAKE_MODE", "valid")
+    assert run_packet(pkg, "clean_label", 1, fake_bin)["ok"] is True
 
 
 def test_semantic_failure_immediately_stops(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

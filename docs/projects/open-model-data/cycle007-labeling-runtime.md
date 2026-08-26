@@ -47,11 +47,14 @@ operator explicitly starts a provider stage.
 - No database, queue service, container platform, or new background daemon.
 - No provider call during installation, storage preparation, status, or plan.
 - No automatic clearing of provider-stop receipts or semantic failures.
-- One explicit `recover-gemini-stop` action is available only for the frozen
-  first-call provider-return incident. It hash-binds and archives the immutable
-  text-free stop, binds the matching started and terminal markers, and
-  authorizes exactly one additional Gemini subscription call. It cannot recover
-  a semantic failure, any sealed output, a second attempt, or a changed stop.
+- One explicit `recover-gemini-stop` action is available only for an exact
+  first-call provider-return incident with the historical generic envelope code
+  or a bounded transient status: quota, capacity, timeout, cancellation, or
+  internal-provider failure. It hash-binds and archives the immutable text-free
+  stop, binds the matching started and terminal markers, and authorizes exactly
+  one additional Gemini subscription call. It cannot recover authentication,
+  structured-request rejection, an unknown or semantic failure, any sealed
+  output, a second attempt, or a changed stop.
 - No persistent `/etc/fstab` or systemd mutation. Re-running the same guardian
   command after reboot restores the bind mounts and resumes from seals.
 
