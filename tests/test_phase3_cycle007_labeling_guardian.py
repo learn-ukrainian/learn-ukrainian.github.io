@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import contextlib
 import importlib.util
 import json
 import os
 import subprocess
 import sys
 import tempfile
+import time
 import venv
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
@@ -456,6 +458,10 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
         ),
         (b'{"failure_code":"sidecar_binding_drift","ok":true,"text_free":true}\n', "stage_execution_failed"),
         (b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":false}\n', "stage_execution_failed"),
+        (b'{"failure_code":"","ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":123,"ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":null,"ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":"a","invalid":true,"ok":false}\n', "stage_execution_failed"),
         (
             b'{"failure_code":"' + b"a" * 65 + b'","ok":false,"text_free":true}\n',
             "stage_execution_failed",
@@ -490,6 +496,32 @@ def test_controller_discards_successful_stage_stdout(controller: ModuleType) -> 
     )
     assert return_code == 0
     assert status == b""
+
+
+def test_controller_does_not_wait_for_grandchild_inherited_stdout(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    pid_file = tmp_path / "grandchild.pid"
+    child = (
+        "import pathlib,subprocess,sys; "
+        "p=subprocess.Popen([sys.executable,'-c',"
+        "\"import os; b=b'x'*65536; exec('while True:\\\\n os.write(1,b)')\"]); "
+        f"pathlib.Path({str(pid_file)!r}).write_text(str(p.pid)); "
+        "raise SystemExit(2)"
+    )
+    started = time.monotonic()
+    try:
+        return_code, _status = controller._run_stage_subprocess(
+            [sys.executable, "-c", child],
+            executable=Path(sys.executable).resolve(),
+            pass_fds=(),
+        )
+        assert return_code == 2
+        assert time.monotonic() - started < 5
+    finally:
+        if pid_file.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(pid_file.read_text(encoding="utf-8")), 15)
 
 
 def test_controller_propagates_safe_runner_failure_code(

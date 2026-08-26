@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import selectors
 import stat
 import subprocess
 import sys
@@ -154,11 +155,40 @@ def _run_stage_subprocess(
         pass_fds=pass_fds,
     ) as process:
         assert process.stdout is not None
+        descriptor = process.stdout.fileno()
+        os.set_blocking(descriptor, False)
         status = bytearray()
-        for chunk in iter(lambda: process.stdout.read(64 * 1024), b""):
-            remaining = MAX_RUNNER_STATUS_BYTES + 1 - len(status)
-            if remaining > 0:
-                status.extend(chunk[:remaining])
+        selector = selectors.DefaultSelector()
+        selector.register(descriptor, selectors.EVENT_READ)
+
+        def drain(*, single_read: bool = False) -> bool:
+            while True:
+                try:
+                    chunk = os.read(descriptor, 64 * 1024)
+                except BlockingIOError:
+                    return True
+                if not chunk:
+                    return False
+                remaining = MAX_RUNNER_STATUS_BYTES + 1 - len(status)
+                if remaining > 0:
+                    status.extend(chunk[:remaining])
+                if single_read:
+                    return True
+
+        try:
+            pipe_open = True
+            while process.poll() is None:
+                if pipe_open and selector.select(timeout=0.1):
+                    pipe_open = drain()
+                    if not pipe_open:
+                        selector.unregister(descriptor)
+                elif not pipe_open:
+                    with contextlib.suppress(subprocess.TimeoutExpired):
+                        process.wait(timeout=0.1)
+            if pipe_open:
+                drain(single_read=True)
+        finally:
+            selector.close()
         return_code = process.wait()
     return return_code, b"" if return_code == 0 else bytes(status)
 
