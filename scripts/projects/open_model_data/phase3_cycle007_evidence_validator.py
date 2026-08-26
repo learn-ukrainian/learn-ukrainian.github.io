@@ -25,10 +25,30 @@ from typing import Any
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 
 # Decisions that require sufficient normative/attestation evidence (amendment
-# model-contract section). Any other outcome is the fail-closed uncertainty
-# path and never needs sufficiency.
+# model-contract section). Clean-label rejections and residual abstention or
+# disagreement are the closed fail-closed uncertainty paths and never need
+# sufficiency. Keep the clean-label set aligned with the frozen public label
+# semantics; otherwise a schema-valid provider response can fail later as an
+# unknown decision.
 SUFFICIENT_REQUIRED_DECISIONS = frozenset({"agree", "positive", "acceptable_control", "protected"})
-UNCERTAINTY_DECISIONS = frozenset({"reject_insufficient_locator_evidence", "abstention", "disagreement"})
+CLEAN_REJECTION_DECISIONS = frozenset(
+    {
+        "reject_fragment_or_too_short",
+        "reject_exercise_or_task_prompt",
+        "reject_error_or_contrast_example",
+        "reject_table_list_formula_code",
+        "reject_metalinguistic_or_grammar_talk",
+        "reject_quoted_literary_or_anthology",
+        "reject_archaic_historical_language",
+        "reject_dialectal_regional_surzhyk",
+        "reject_foreign_or_translation_artifact",
+        "reject_learner_or_simplified_broken",
+        "reject_parallel_norm_or_pre2026_only",
+        "reject_mixed_or_uncertain",
+        "reject_insufficient_locator_evidence",
+    }
+)
+UNCERTAINTY_DECISIONS = CLEAN_REJECTION_DECISIONS | {"abstention", "disagreement"}
 KNOWN_DECISIONS = SUFFICIENT_REQUIRED_DECISIONS | UNCERTAINTY_DECISIONS
 
 # Channels whose absence/ambiguity actually drives a sufficiency classification.

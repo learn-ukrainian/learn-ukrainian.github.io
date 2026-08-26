@@ -38,6 +38,18 @@ def test_real_cli_requires_explicit_provider_bin(
     }
 
 
+def test_gemini_schema_decisions_are_all_known_to_evidence_validator() -> None:
+    runner = _load_runner()
+    rows = runner.fixture_rows()
+    schema = runner.gemini_schema(rows, "challenge")
+
+    positions = schema["properties"]["labels_by_position"]["properties"]
+    for position in ("p01", "p02"):
+        decision_enum = set(positions[position]["properties"]["decision_code"]["enum"])
+        assert decision_enum == runner.SOURCE.REJECTS
+        assert decision_enum <= runner.validator.KNOWN_DECISIONS
+
+
 def test_real_cli_passes_explicit_provider_bin(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     runner = _load_runner()
     provider = (tmp_path / "agy").resolve()
