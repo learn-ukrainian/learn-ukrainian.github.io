@@ -409,11 +409,12 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     monkeypatch.setattr(controller, "_stage_stop_paths", lambda *_args, **_kwargs: ())
     monkeypatch.setattr(controller, "_seal", lambda *_args, **_kwargs: None)
 
-    def run(*_args: Any, **kwargs: Any) -> Any:
+    def run(command: list[str], **kwargs: Any) -> tuple[int, bytes]:
+        captured["command"] = command
         captured.update(kwargs)
-        return SimpleNamespace(returncode=0)
+        return 0, b""
 
-    monkeypatch.setattr(controller.subprocess, "run", run)
+    monkeypatch.setattr(controller, "_run_stage_subprocess", run)
     result = controller.run_stage(
         tmp_path,
         "compare",
@@ -433,8 +434,7 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     )
     assert result["ok"] is True
     assert captured["pass_fds"] == (lock_file.fileno(),)
-    assert captured["executable"] == os.fspath(python_target)
-    assert captured["stdout"] is subprocess.PIPE
+    assert captured["executable"] == python_target
     lock_file.close()
 
 
@@ -454,6 +454,12 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
             b'{"failure_code":"sidecar_binding_drift","ok":true,"ok":false,"text_free":true}\n',
             "stage_execution_failed",
         ),
+        (b'{"failure_code":"sidecar_binding_drift","ok":true,"text_free":true}\n', "stage_execution_failed"),
+        (b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":false}\n', "stage_execution_failed"),
+        (
+            b'{"failure_code":"' + b"a" * 65 + b'","ok":false,"text_free":true}\n',
+            "stage_execution_failed",
+        ),
         (b"not-json", "stage_execution_failed"),
         (b"x" * (4096 + 1), "stage_execution_failed"),
     ],
@@ -462,6 +468,28 @@ def test_controller_accepts_only_bounded_text_free_runner_failure_codes(
     controller: ModuleType, stdout: bytes, expected: str
 ) -> None:
     assert controller._runner_failure_code(stdout) == expected
+
+
+def test_controller_stage_subprocess_capture_is_bounded(controller: ModuleType) -> None:
+    command = [sys.executable, "-c", "import sys; sys.stdout.write('x' * 8192); raise SystemExit(2)"]
+    return_code, status = controller._run_stage_subprocess(
+        command,
+        executable=Path(sys.executable).resolve(),
+        pass_fds=(),
+    )
+    assert return_code == 2
+    assert len(status) == controller.MAX_RUNNER_STATUS_BYTES + 1
+
+
+def test_controller_discards_successful_stage_stdout(controller: ModuleType) -> None:
+    command = [sys.executable, "-c", "print('ignored')"]
+    return_code, status = controller._run_stage_subprocess(
+        command,
+        executable=Path(sys.executable).resolve(),
+        pass_fds=(),
+    )
+    assert return_code == 0
+    assert status == b""
 
 
 def test_controller_propagates_safe_runner_failure_code(
@@ -475,11 +503,11 @@ def test_controller_propagates_safe_runner_failure_code(
     monkeypatch.setattr(controller, "_require_python_binding", lambda *_args, **_kwargs: python_target)
     monkeypatch.setattr(controller, "_commands_for_stage", lambda *_args, **_kwargs: ([["fixture"]], None))
     monkeypatch.setattr(
-        controller.subprocess,
-        "run",
-        lambda *_args, **_kwargs: SimpleNamespace(
-            returncode=2,
-            stdout=b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":true}\n',
+        controller,
+        "_run_stage_subprocess",
+        lambda *_args, **_kwargs: (
+            2,
+            b'{"failure_code":"sidecar_binding_drift","ok":false,"text_free":true}\n',
         ),
     )
 

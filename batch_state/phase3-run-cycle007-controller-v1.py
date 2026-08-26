@@ -140,6 +140,29 @@ def _runner_failure_code(stdout: bytes) -> str:
     return code
 
 
+def _run_stage_subprocess(
+    command: list[str], *, executable: Path, pass_fds: tuple[int, ...]
+) -> tuple[int, bytes]:
+    """Drain child stdout while retaining only one bounded failure status."""
+    with subprocess.Popen(
+        command,
+        executable=str(executable),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        shell=False,
+        pass_fds=pass_fds,
+    ) as process:
+        assert process.stdout is not None
+        status = bytearray()
+        for chunk in iter(lambda: process.stdout.read(64 * 1024), b""):
+            remaining = MAX_RUNNER_STATUS_BYTES + 1 - len(status)
+            if remaining > 0:
+                status.extend(chunk[:remaining])
+        return_code = process.wait()
+    return return_code, b"" if return_code == 0 else bytes(status)
+
+
 def _inherited_execution_lock_fd() -> int | None:
     raw = os.environ.get(EXECUTION_LOCK_FD_ENV)
     if raw is None:
@@ -1555,18 +1578,13 @@ def run_stage(
         python_target = _require_python_binding(expected_python_executable_sha256 or "")
         # Bind exec to the verified target while argv[0] retains the venv launcher
         # that CPython uses to locate pyvenv.cfg and its installed dependencies.
-        completed = subprocess.run(
+        return_code, failure_status = _run_stage_subprocess(
             command,
-            executable=str(python_target),
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            check=False,
-            shell=False,
+            executable=python_target,
             pass_fds=() if execution_lock_fd is None else (execution_lock_fd,),
         )
-        if completed.returncode != 0:
-            raise ControllerError(_runner_failure_code(completed.stdout))
+        if return_code != 0:
+            raise ControllerError(_runner_failure_code(failure_status))
         _require_python_binding(expected_python_executable_sha256 or "")
         if any(path.exists() for path in _stage_stop_paths(package)):
             raise ControllerError("provider_stop_present")
