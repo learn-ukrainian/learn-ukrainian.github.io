@@ -1215,6 +1215,15 @@ def compute_routing_budget(
         agents[lane]["fleet_burn"] = fleet_burn
         if _fleet_burn_has_activity(fleet_burn):
             fleet_burn_any = True
+            # Native/CodexBar miss must not hide an authenticated Cursor lane
+            # that we are already dispatching (CF #7359).
+            if (
+                lane == "cursor"
+                and agents[lane].get("login_state") == "authenticated"
+                and agents[lane].get("probe_state") != "NEED_LOGIN"
+                and agents[lane].get("status") in (None, "unknown", "unavailable")
+            ):
+                agents[lane]["status"] = "cool"
         try:
             runtime = summarize_lane_runtime(lane)
         except Exception as exc:  # never break routing-budget on telemetry I/O

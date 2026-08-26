@@ -152,6 +152,42 @@ def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tm
     assert data["recommendation"]["primary_agent_for_code"] == "cursor"
 
 
+def test_need_probe_with_fleet_burn_still_picks_cursor(monkeypatch, tmp_path):
+    """NEED_PROBE + JSONL activity must not leave cursor unknown / unpicked."""
+    _configure_base(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "status": "unknown",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "source": "cursor_native",
+        },
+    )
+
+    def _fleet(agent: str, **kwargs) -> dict:
+        total = 4 if agent == "cursor" else 0
+        return {
+            "source": "agent_runtime_jsonl",
+            "agent": agent,
+            "windows": {"7d": {"counts": {"total": total}, "hours": 1.0}},
+        }
+
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    cursor = data["agents"]["cursor"]
+    assert cursor["status"] == "cool"
+    assert cursor["probe_state"] == "NEED_PROBE"
+    assert cursor["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 4
+    assert data["recommendation"]["primary_agent_for_code"] == "cursor"
+
+
 def test_capacity_pick_orders_cursor_before_agy_when_cool(monkeypatch):
     budget = {
         "generated_at": "2026-08-26T12:00:00Z",
