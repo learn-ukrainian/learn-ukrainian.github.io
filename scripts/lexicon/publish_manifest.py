@@ -16,8 +16,6 @@ import json
 import subprocess
 import sys
 import tempfile
-import urllib.error
-import urllib.request
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
@@ -286,25 +284,13 @@ def _download_release_asset(
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
 ) -> bytes:
-    try:
-        result = subprocess.run(
-            ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
-            check=True,
-            capture_output=True,
-            timeout=DEFAULT_GH_TIMEOUT_SECONDS,
-        )
-        return result.stdout
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
-        url = f"https://github.com/{repo}/releases/download/{release_tag}/{asset_name}"
-        req = urllib.request.Request(
-            url,
-            headers={
-                "Accept": "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
-                "User-Agent": "learn-ukrainian-atlas-manifest-hydrate/1.0",
-            },
-        )
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            return resp.read()
+    result = subprocess.run(
+        ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
+        check=True,
+        capture_output=True,
+        timeout=DEFAULT_GH_TIMEOUT_SECONDS,
+    )
+    return result.stdout
 
 
 def _stderr_excerpt(error: subprocess.CalledProcessError, *, limit: int = 400) -> str:
