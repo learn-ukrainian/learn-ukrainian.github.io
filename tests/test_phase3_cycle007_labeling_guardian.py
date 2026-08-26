@@ -446,6 +446,14 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
             "sidecar_binding_drift",
         ),
         (b'{"failure_code":"PRIVATE CONTENT","ok":false,"text_free":true}\n', "stage_execution_failed"),
+        (
+            b'{"failure_code":"sidecar_binding_drift","ok":false,"private":"x","text_free":true}\n',
+            "stage_execution_failed",
+        ),
+        (
+            b'{"failure_code":"sidecar_binding_drift","ok":true,"ok":false,"text_free":true}\n',
+            "stage_execution_failed",
+        ),
         (b"not-json", "stage_execution_failed"),
         (b"x" * (4096 + 1), "stage_execution_failed"),
     ],

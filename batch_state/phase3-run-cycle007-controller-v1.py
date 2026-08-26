@@ -122,10 +122,10 @@ def _runner_failure_code(stdout: bytes) -> str:
     if len(stdout) > MAX_RUNNER_STATUS_BYTES:
         return "stage_execution_failed"
     try:
-        value = json.loads(stdout.decode("utf-8", "strict"))
-    except (UnicodeDecodeError, json.JSONDecodeError):
+        value = json.loads(stdout.decode("utf-8", "strict"), object_pairs_hook=_pairs)
+    except (UnicodeDecodeError, json.JSONDecodeError, ControllerError):
         return "stage_execution_failed"
-    if not isinstance(value, dict):
+    if not isinstance(value, dict) or set(value) != {"failure_code", "ok", "text_free"}:
         return "stage_execution_failed"
     code = value.get("failure_code")
     if (
