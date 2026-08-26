@@ -4,20 +4,34 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from dataclasses import replace
 from pathlib import Path
 
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context, production_context
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
-def _client() -> TestClient:
+def _message_ctx(root: Path, message_db: Path) -> MonitorContext:
+    """Fixture context whose broker DB is pinned to ``message_db``."""
+    ctx = fixture_context(root)
+    return replace(
+        ctx,
+        roots=replace(ctx.roots, message_db_path=message_db),
+        stores=replace(ctx.stores, message_db=DatabaseHandle(message_db, ctx._open_db)),
+    )
+
+
+def _client(ctx: MonitorContext | None = None) -> TestClient:
     from scripts.api.comms_router import router
 
     app = FastAPI()
+    # comms_router resolves all roots/stores from the app context (#7269
+    # step 5); a bare app must still carry the same state production sets.
+    app.state.ctx = ctx or production_context()
     app.include_router(router, prefix="/api/comms")
     return TestClient(app)
 
@@ -128,10 +142,8 @@ def test_api_plane_status_invalid_mode(monkeypatch, tmp_path: Path) -> None:
 
 def test_comms_v1_collectors_emit_store_not_db_path(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr("scripts.api.comms_router.MESSAGE_DB", tmp_path / "missing.db")
-    client = _client()
+    client = _client(_message_ctx(tmp_path, tmp_path / "missing.db"))
     for path in ("/api/comms/v1/backlog", "/api/comms/v1/dead-letters", "/api/comms/v1/metrics"):
         response = client.get(path)
         assert response.status_code == 200
@@ -144,7 +156,6 @@ def test_comms_v1_collectors_emit_store_not_db_path(
 
 def test_comms_v1_collectors_with_seeded_broker(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     broker = tmp_path / "messages.db"
     conn = sqlite3.connect(broker)
@@ -171,8 +182,7 @@ def test_comms_v1_collectors_with_seeded_broker(
         """
     )
     conn.close()
-    monkeypatch.setattr("scripts.api.comms_router.MESSAGE_DB", broker)
-    client = _client()
+    client = _client(_message_ctx(tmp_path, broker))
     backlog = client.get("/api/comms/v1/backlog").json()
     dead = client.get("/api/comms/v1/dead-letters").json()
     metrics = client.get("/api/comms/v1/metrics").json()

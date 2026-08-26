@@ -428,12 +428,15 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # stores outside ``scripts.api``. Repoint those module-level paths before
     # installing the global guard, so missing fixture state is handled by each
     # route's documented empty/read-only envelope instead of as a 500.
-    importlib.import_module("scripts.ai_agent_bridge._db")
+    # ``scripts.ai_agent_bridge`` is deliberately absent here (#7269 step 5):
+    # comms routes now hand the bridge the MonitorContext's broker DB
+    # explicitly, so the bridge's import-time default DB_PATH globals are no
+    # longer seams this sweep must repoint.
     importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")):
+        if module is None or not module_name.startswith(("scripts.telemetry", "wiki")):
             continue
         for name, value in tuple(vars(module).items()):
             if not isinstance(value, Path) or not value.is_absolute():
@@ -461,6 +464,15 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
     monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
 
+    # NOTE (#7269 step 5): the step-5 inventory row originally attributed
+    # this seam to comms_router, but its only sweep consumer is the
+    # still-unmigrated fleet facade route (fleet_router.py:598 ->
+    # build_legacy_broker_report -> default_routes_db()). Deleting it here
+    # was verified to fail the sweep with "GET /api/fleet/facade/broker-report
+    # status=500" on any machine whose primary checkout has a live
+    # data/telemetry/legacy_comms_routes.db (the deny-connect backstop
+    # correctly rejects the real-DB open). It migrates with step 4
+    # (fleet_router), not step 5.
     broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
 
@@ -503,16 +515,20 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", dashboards_root)
 
     # Facade/status readers retain imported references to the resolver;
-    # redirect every such reference and the resolver's own global into the
-    # disposable tree instead of consulting the retired local plane.
+    # redirect every such reference into the disposable tree instead of
+    # consulting the retired local plane. The resolver's own module global
+    # no longer needs a setattr seam (#7269 step 5): default_plane_root
+    # honors the documented FLEET_COMMS_ROOT operator override, which the
+    # migrated comms routes and every still-unmigrated internal caller
+    # (read_plane_status in fleet/runtime routers) resolve through.
     isolated_plane_root = root / "stores" / "fleet-comms"
     isolated_plane_root.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(isolated_plane_root))
 
     def isolated_plane_resolver(repo_root: Path | None = None) -> Path:
         del repo_root
         return isolated_plane_root
 
-    monkeypatch.setattr(message_plane, "default_plane_root", isolated_plane_resolver)
     monkeypatch.setattr(cold_start_board, "default_plane_root", isolated_plane_resolver)
     for module_name, module in tuple(sys.modules.items()):
         if not module_name.startswith("scripts.api") or module is None:

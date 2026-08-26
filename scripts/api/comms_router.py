@@ -35,7 +35,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-from fastapi import APIRouter, Query, Request, Response
+from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import JSONResponse
 
 try:
@@ -53,17 +53,17 @@ from scripts.fleet_comms.message_plane import read_plane_status, resolve_plane_m
 from scripts.fleet_comms.migrations import apply_migrations
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, legacy_broker_store
 
-from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
-from .resilience import connect_sqlite
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .state_helpers import cache_get, cache_set
 from .telemetry.legacy_comms import LegacyCommsTelemetryRoute
 
 router = APIRouter(tags=["comms"], route_class=LegacyCommsTelemetryRoute)
 
 # ==================== DB HELPERS ====================
+#
+# Roots and store handles are read from MonitorContext via Depends(get_ctx)
+# (#7269 step 5): this module keeps no module-global Path seams.
 
-PID_DIR = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "pids"
-LOG_DIR = PROJECT_ROOT / "logs" / "research-preseed"
 BATCH_LOG_TAIL_BYTES = 256 * 1024
 DEFAULT_ACTIVITY_AGENTS = (
     "claude",
@@ -95,15 +95,20 @@ def _tune_db_connection(conn: sqlite3.Connection, *, writable: bool) -> None:
     conn.row_factory = sqlite3.Row
 
 
-def ensure_broker_db_ready() -> None:
+def ensure_broker_db_ready(ctx: MonitorContext | None = None) -> None:
     """Run idempotent broker startup tuning and migrations."""
-    if not MESSAGE_DB.exists():
+    if ctx is None:
+        ctx = production_context()
+    message_db = ctx.roots.message_db_path
+    if not message_db.exists():
         return
 
-    conn = sqlite3.connect(str(MESSAGE_DB))
+    conn = ctx.stores.message_db.connect() if ctx.stores.message_db is not None else None
+    if conn is None:
+        return
     try:
         _tune_db_connection(conn, writable=True)
-        migration_path = PROJECT_ROOT / "scripts" / "migrations" / "2026-05-06-broker-indexes.py"
+        migration_path = ctx.roots.project_root / "scripts" / "migrations" / "2026-05-06-broker-indexes.py"
         if migration_path.exists():
             spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
             if spec is not None and spec.loader is not None:
@@ -116,11 +121,12 @@ def ensure_broker_db_ready() -> None:
         conn.close()
 
 
-def _get_db() -> sqlite3.Connection | None:
+def _get_db(ctx: MonitorContext) -> sqlite3.Connection | None:
     """Get read-only broker DB connection. Returns None if DB missing."""
-    if not MESSAGE_DB.exists():
+    handle = ctx.stores.message_db
+    if handle is None or not handle.path.exists():
         return None
-    conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+    conn = handle.connect(read_only=True)
     _tune_db_connection(conn, writable=False)
     return conn
 
@@ -151,7 +157,7 @@ _expire_sweep_lock = threading.Lock()
 _expire_sweep_thread: threading.Thread | None = None
 
 
-def _maybe_run_delivery_expiry_sweep() -> None:
+def _maybe_run_delivery_expiry_sweep(ctx: MonitorContext) -> None:
     """Lazily trigger the channel-delivery TTL + dead-lane expire sweep.
 
     Non-blocking: the sweep runs in a daemon thread so a slow SQLite
@@ -167,12 +173,13 @@ def _maybe_run_delivery_expiry_sweep() -> None:
     router's DB happens to resemble (e.g. an older/synthetic fixture) is
     not — it must look exactly like a current, real broker DB first.
     """
-    if resolve_plane_mode(None) == "authority" or not MESSAGE_DB.exists():
+    message_db = ctx.roots.message_db_path
+    if resolve_plane_mode(None) == "authority" or not message_db.exists():
         return
     if cache_get("bridge_expire_sweep", ttl=_EXPIRE_SWEEP_INTERVAL_S) is not None:
         return
 
-    conn = _get_db()
+    conn = _get_db(ctx)
     if conn is None:
         return
     try:
@@ -191,10 +198,10 @@ def _maybe_run_delivery_expiry_sweep() -> None:
     with _expire_sweep_lock:
         if _expire_sweep_thread is not None and _expire_sweep_thread.is_alive():
             return
-        # Snapshot MESSAGE_DB on the request thread (respects test patches of
-        # this module's MESSAGE_DB) and hand it to the sweep explicitly.
+        # Snapshot the message DB path from the request's context (respects
+        # the app's MonitorContext) and hand it to the sweep explicitly.
         _expire_sweep_thread = threading.Thread(
-            target=_run_delivery_expiry_sweep, args=(MESSAGE_DB,), daemon=True
+            target=_run_delivery_expiry_sweep, args=(message_db,), daemon=True
         )
         _expire_sweep_thread.start()
 
@@ -214,9 +221,9 @@ def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
 
     # `_db.get_db()` reads its own module-level DB_PATH, bound once from
     # AB_DB_PATH at first import — it does not track this router's
-    # MESSAGE_DB. Point it at the exact same broker DB this router already
-    # resolved so the sweep can never land on a different file (this is
-    # also what makes the sweep respect test patches of MESSAGE_DB).
+    # MonitorContext. Point it at the exact same broker DB this router
+    # already resolved from the app's context so the sweep can never land
+    # on a different file.
     previous_db_path = _ch_db.DB_PATH
     _ch_db.DB_PATH = message_db
     try:
@@ -379,6 +386,7 @@ async def list_messages(
     offset: int = Query(0, ge=0),
     since: str | None = Query(None, description="Only messages with timestamp > this ISO-8601 value"),
     cursor: int | None = Query(None, ge=1, description="Keyset cursor: return messages older than this id"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """**Deprecated (#1190 B.5).** All broker messages with optional filters.
 
@@ -386,7 +394,7 @@ async def list_messages(
     conversations. The former comms.html page now redirects to the Fleet
     observer; direct ask-* CLI calls bypass this route.
     """
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return {"messages": [], "total": 0, "error": "Broker DB not found"}
 
@@ -438,13 +446,16 @@ async def list_messages(
 
 
 @router.get("/conversations", deprecated=True)
-async def list_conversations(limit: int = Query(50, ge=1, le=200)):
+async def list_conversations(
+    limit: int = Query(50, ge=1, le=200),
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """**Deprecated (#1190 B.5).** Broker messages grouped by task_id.
 
     Use /api/comms/channels/{name}/threads/{thread_id} for
     channel-based threads.
     """
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return {"conversations": []}
 
@@ -476,13 +487,14 @@ async def get_conversation(
     limit: int = Query(100, ge=1, le=500),
     since: str | None = Query(None, description="Only messages with timestamp > this ISO-8601 value"),
     cursor: int | None = Query(None, ge=1, description="Keyset cursor: return messages older than this id"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """**Deprecated (#1190 B.5).** Full broker thread for one task_id.
 
     Use /api/comms/channels/{name}/threads/{thread_id} for
     channel-based threads.
     """
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return {"messages": []}
 
@@ -533,13 +545,14 @@ async def get_conversation(
 
 
 @router.get("/active-processes")
-async def active_processes():
+async def active_processes(ctx: MonitorContext = Depends(get_ctx)):
     """Live bridge PIDs with health status."""
-    if not PID_DIR.exists():
+    pid_dir = ctx.roots.pid_dir
+    if not pid_dir.exists():
         return {"processes": [], "count": 0}
 
     processes = []
-    for pf in sorted(PID_DIR.glob("*.json")):
+    for pf in sorted(pid_dir.glob("*.json")):
         try:
             data = json.loads(pf.read_text())
             pid = data.get("pid", 0)
@@ -585,9 +598,10 @@ async def active_processes():
 async def detect_zombies(
     stale_hours: float = Query(2.0, description="Unacked messages older than this = stale"),
     pingpong_threshold: int = Query(5, description="Round-trips on same task in 1h = loop"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Auto-detect stuck patterns."""
-    conn = _get_db()
+    conn = _get_db(ctx)
     zombies = []
 
     if conn:
@@ -669,8 +683,9 @@ async def detect_zombies(
         conn.close()
 
     # 4. Orphan PID files
-    if PID_DIR.exists():
-        for pf in PID_DIR.glob("*.json"):
+    pid_dir = ctx.roots.pid_dir
+    if pid_dir.exists():
+        for pf in pid_dir.glob("*.json"):
             try:
                 data = json.loads(pf.read_text())
                 pid = data.get("pid", 0)
@@ -696,9 +711,9 @@ async def detect_zombies(
 
 
 @router.get("/stats")
-async def comms_stats():
+async def comms_stats(ctx: MonitorContext = Depends(get_ctx)):
     """Message rate, latency, error %, per-agent breakdown."""
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return {"error": "Broker DB not found"}
 
@@ -742,30 +757,35 @@ async def comms_stats():
 
 
 @router.get("/health")
-async def broker_health():
+async def broker_health(ctx: MonitorContext = Depends(get_ctx)):
     """Broker DB writable, queue depth."""
+    message_db = ctx.roots.message_db_path
+    pid_dir = ctx.roots.pid_dir
     health = {
-        "db_exists": MESSAGE_DB.exists(),
+        "db_exists": message_db.exists(),
         "db_writable": False,
         "db_size_kb": 0,
         "queue_depth": 0,
-        "pid_dir_exists": PID_DIR.exists(),
+        "pid_dir_exists": pid_dir.exists(),
         "alive_processes": 0,
     }
 
-    if MESSAGE_DB.exists():
-        health["db_size_kb"] = round(MESSAGE_DB.stat().st_size / 1024, 1)
+    if message_db.exists():
+        health["db_size_kb"] = round(message_db.stat().st_size / 1024, 1)
         try:
-            conn = connect_sqlite(str(MESSAGE_DB))
-            conn.execute("SELECT 1")
-            health["db_writable"] = True
-            health["queue_depth"] = conn.execute("SELECT COUNT(*) FROM messages WHERE acknowledged = 0").fetchone()[0]
-            conn.close()
+            conn = ctx.stores.message_db.connect() if ctx.stores.message_db is not None else None
+            if conn is not None:
+                conn.execute("SELECT 1")
+                health["db_writable"] = True
+                health["queue_depth"] = conn.execute(
+                    "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
+                ).fetchone()[0]
+                conn.close()
         except Exception:
             pass
 
-    if PID_DIR.exists():
-        for pf in PID_DIR.glob("*.json"):
+    if pid_dir.exists():
+        for pf in pid_dir.glob("*.json"):
             try:
                 data = json.loads(pf.read_text())
                 os.kill(data.get("pid", 0), 0)
@@ -777,7 +797,7 @@ async def broker_health():
 
 
 @router.get("/v1/plane-status")
-async def message_plane_status():
+async def message_plane_status(ctx: MonitorContext = Depends(get_ctx)):
     """Read-only fleet message-plane status (PR-K-ish / #5512 parity surface).
 
     Reports ``FLEET_COMMS_MESSAGE_PLANE`` mode (default off), schema migration
@@ -785,19 +805,25 @@ async def message_plane_status():
     recent parity telemetry summary when the optional JSONL file is present.
     Never writes or migrates.
     """
-    return read_plane_status(repo_root=PROJECT_ROOT)
+    return read_plane_status(repo_root=ctx.roots.project_root)
 
 
 # ==================== BATCH PROGRESS ====================
 
 
-def _scan_preseed_logs() -> list[dict]:
+def _preseed_log_dir(ctx: MonitorContext):
+    """Research-preseed log directory under the context's logs root."""
+    return ctx.roots.logs_dir / "research-preseed"
+
+
+def _scan_preseed_logs(ctx: MonitorContext) -> list[dict]:
     """Scan preseed log files for progress info."""
-    if not LOG_DIR.exists():
+    log_dir = _preseed_log_dir(ctx)
+    if not log_dir.exists():
         return []
 
     # Find the most recent batch of logs (same timestamp suffix)
-    log_files = sorted(LOG_DIR.glob("*.log"), key=lambda f: f.stat().st_mtime, reverse=True)
+    log_files = sorted(log_dir.glob("*.log"), key=lambda f: f.stat().st_mtime, reverse=True)
     if not log_files:
         return []
 
@@ -813,7 +839,7 @@ def _scan_preseed_logs() -> list[dict]:
         return []
 
     results = []
-    for lf in LOG_DIR.glob(f"*-{latest_ts}.log"):
+    for lf in log_dir.glob(f"*-{latest_ts}.log"):
         track = lf.name.replace(f"-{latest_ts}.log", "")
         stat = lf.stat()
 
@@ -855,10 +881,11 @@ def _scan_preseed_logs() -> list[dict]:
     return sorted(results, key=lambda r: r["track"])
 
 
-def _scan_track_progress(track: str) -> dict:
+def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
     """Count research files and check running processes for a track."""
+    curriculum_root = ctx.roots.curriculum_root
     try:
-        track_dir = safe_join(CURRICULUM_ROOT, track)
+        track_dir = safe_join(curriculum_root, track)
         research_dir = safe_join(track_dir, "research")
     except ValueError:
         return {
@@ -884,7 +911,7 @@ def _scan_track_progress(track: str) -> dict:
     # Count total expected from curriculum.yaml
     total_expected = 0
     try:
-        curriculum_yaml = CURRICULUM_ROOT / "curriculum.yaml"
+        curriculum_yaml = curriculum_root / "curriculum.yaml"
         if curriculum_yaml.exists():
             data = yaml.safe_load(curriculum_yaml.read_text()) or {}
             modules = data.get("levels", {}).get(track, {}).get("modules", [])
@@ -950,18 +977,18 @@ def _check_build_processes() -> list[dict]:
 
 
 @router.get("/batch-progress")
-async def batch_progress():
+async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
     """Live batch progress: logs + research files + running processes.
 
     This is the main endpoint for monitoring overnight/background builds.
     """
-    cache_key = f"comms_batch_progress_{LOG_DIR}_{PID_DIR}"
+    cache_key = f"comms_batch_progress_{_preseed_log_dir(ctx)}_{ctx.roots.pid_dir}"
     cached = cache_get(cache_key, ttl=10.0)
     if cached is not None:
         return cached
 
     logs, processes = await asyncio.gather(
-        asyncio.to_thread(_scan_preseed_logs),
+        asyncio.to_thread(_scan_preseed_logs, ctx),
         asyncio.to_thread(_check_build_processes),
     )
 
@@ -975,7 +1002,7 @@ async def batch_progress():
     # Scan each track's actual file progress
     track_progress = {}
     for track in sorted(all_tracks):
-        tp = await asyncio.to_thread(_scan_track_progress, track)
+        tp = await asyncio.to_thread(_scan_track_progress, ctx, track)
 
         # Find matching log
         log = next((l for l in logs if l["track"] == track), None)
@@ -1010,13 +1037,13 @@ async def batch_progress():
 
 
 @router.get("/batch-progress/{track}")
-async def batch_progress_track(track: str):
+async def batch_progress_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Detailed progress for one track."""
-    tp = await asyncio.to_thread(_scan_track_progress, track)
+    tp = await asyncio.to_thread(_scan_track_progress, ctx, track)
 
     # Get research file timeline (last 20 files)
     try:
-        research_dir = safe_join(CURRICULUM_ROOT, track, "research")
+        research_dir = safe_join(ctx.roots.curriculum_root, track, "research")
     except ValueError:
         return {**tp, "recent_files": []}
     timeline = []
@@ -1039,17 +1066,18 @@ async def batch_progress_track(track: str):
 # ==================== LIVE ACTIVITY ====================
 
 
-def _scan_live_activity(minutes: int = 15) -> list[dict]:
+def _scan_live_activity(ctx: MonitorContext, minutes: int = 15) -> list[dict]:
     """Scan legacy and v6 state files for live module-level activity."""
     now = time.time()
     cutoff = now - (minutes * 60)
     activities = []
+    curriculum_root = ctx.roots.curriculum_root
 
     # 1. Scan all orchestration state files modified recently
-    if not CURRICULUM_ROOT.is_dir():
+    if not curriculum_root.is_dir():
         return activities
 
-    for track_dir in CURRICULUM_ROOT.iterdir():
+    for track_dir in curriculum_root.iterdir():
         if not track_dir.is_dir():
             continue
         orch_dir = track_dir / "orchestration"
@@ -1125,16 +1153,17 @@ def _scan_live_activity(minutes: int = 15) -> list[dict]:
     return activities
 
 
-def _scan_recent_completions(minutes: int = 60) -> list[dict]:
+def _scan_recent_completions(ctx: MonitorContext, minutes: int = 60) -> list[dict]:
     """Scan research files created recently for a completion feed."""
     now = time.time()
     cutoff = now - (minutes * 60)
     completions = []
+    curriculum_root = ctx.roots.curriculum_root
 
-    if not CURRICULUM_ROOT.is_dir():
+    if not curriculum_root.is_dir():
         return completions
 
-    for track_dir in CURRICULUM_ROOT.iterdir():
+    for track_dir in curriculum_root.iterdir():
         if not track_dir.is_dir():
             continue
         research_dir = track_dir / "research"
@@ -1167,6 +1196,7 @@ async def live_activity(
     limit: int = Query(30, ge=1, le=500, description="Maximum recent broker dispatches"),
     since: str | None = Query(None, description="Only dispatches with timestamp > this ISO-8601 value"),
     cursor: int | None = Query(None, ge=1, description="Keyset cursor: return dispatches older than this id"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """What's being built RIGHT NOW — module-level live feed.
 
@@ -1190,12 +1220,12 @@ async def live_activity(
     )
 
     acts, completions = await asyncio.gather(
-        asyncio.to_thread(_scan_live_activity, minutes),
-        asyncio.to_thread(_scan_recent_completions, 60),
+        asyncio.to_thread(_scan_live_activity, ctx, minutes),
+        asyncio.to_thread(_scan_recent_completions, ctx, 60),
     )
 
     # Also get recent broker messages for the dispatch feed
-    conn = _get_db()
+    conn = _get_db(ctx)
     dispatches = []
     rows = []
     if conn:
@@ -1310,12 +1340,12 @@ class ChannelPostRequest(BaseModel):
 
 
 @router.get("/channels")
-async def list_channels_endpoint():
+async def list_channels_endpoint(ctx: MonitorContext = Depends(get_ctx)):
     """List all channels with row counts and last activity.
 
     Read-only. Safe to poll from the frontend every few seconds.
     """
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return {"channels": [], "error": "Broker DB not found"}
 
@@ -1361,7 +1391,7 @@ async def list_channels_endpoint():
 
 
 @router.get("/channels/{name}")
-async def get_channel_endpoint(name: str):
+async def get_channel_endpoint(name: str, ctx: MonitorContext = Depends(get_ctx)):
     """Channel metadata + context preview + pending delivery count."""
     from scripts.ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — canonical identity (#6812)
 
@@ -1372,7 +1402,7 @@ async def get_channel_endpoint(name: str):
         # (CodeQL py/stack-trace-exposure).
         return JSONResponse(status_code=400, content={"error": "invalid_channel_name"})
 
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
 
@@ -1425,9 +1455,10 @@ async def get_channel_endpoint(name: str):
 async def list_channel_messages(
     name: str,
     tail: int = Query(20, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Most recent messages in a channel, ordered oldest-first."""
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
     try:
@@ -1479,9 +1510,9 @@ async def list_channel_messages(
 
 
 @router.get("/channels/{name}/threads/{thread_id}")
-async def get_thread(name: str, thread_id: str):
+async def get_thread(name: str, thread_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """All messages in a thread, ordered by round_index then created_at."""
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
     try:
@@ -1535,9 +1566,10 @@ async def channel_deliveries(
     name: str,
     status: str | None = Query(None, description="Filter by status"),
     limit: int = Query(50, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Delivery status for messages in a channel."""
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
 
@@ -1595,9 +1627,14 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
     )
 
 @router.get("/by-module/{track}/{slug}")
-async def messages_by_module(track: str, slug: str, limit: int = 30):
+async def messages_by_module(
+    track: str,
+    slug: str,
+    limit: int = 30,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Full communication trail for a module. Shows all broker messages where task_id contains the slug."""
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return JSONResponse(status_code=500, content={"error": "DB not available"})
 
@@ -1652,6 +1689,7 @@ def agent_activity(
         description="Comma-separated agent names. Defaults to core CLI + desktop agents.",
     ),
     limit: int = Query(5, ge=1, le=25, description="Max recent rows per section."),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Compact read-only channel activity snapshot for orchestrators.
 
@@ -1663,9 +1701,9 @@ def agent_activity(
     item 4) — this is the endpoint dashboards poll to see per-agent
     pending counts, so it doubles as the sweep's periodic trigger.
     """
-    _maybe_run_delivery_expiry_sweep()
+    _maybe_run_delivery_expiry_sweep(ctx)
     selected_agents = _parse_agent_csv(agents)
-    conn = _get_db()
+    conn = _get_db(ctx)
     if not conn:
         return _empty_agent_activity_response(
             selected_agents,
@@ -1758,6 +1796,7 @@ def agent_activity(
 def comms_inbox(
     agent: str = Query(..., description="Target agent name (e.g. 'claude', 'claude-infra', 'codex')."),
     limit: int = Query(10, ge=1, le=50, description="Max deliveries to return."),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Per-agent unread channel deliveries, oldest first.
 
@@ -1790,6 +1829,7 @@ def comms_inbox(
     ``ai_agent_bridge`` to actually drain messages.
     """
     try:
+        from scripts.ai_agent_bridge import _db as _bridge_db  # noqa: PLC0415 — optional broker bridge
         from scripts.ai_agent_bridge._channels import pending_deliveries_for  # noqa: PLC0415 — optional broker bridge
     except ImportError:
         return JSONResponse(
@@ -1797,6 +1837,15 @@ def comms_inbox(
             content={"error": "channel bridge not importable"},
         )
 
+    # ``_db.get_db()`` reads its own module-level DB_PATH, bound once from
+    # AB_DB_PATH at first import — it does not track this router's
+    # MonitorContext. Point it at the context's broker DB for the duration
+    # of the query so the bridge can never land on a different file than
+    # every other comms route (same save/restore discipline as the
+    # delivery-expiry sweep below).
+    message_db = ctx.roots.message_db_path
+    previous_db_path = _bridge_db.DB_PATH
+    _bridge_db.DB_PATH = message_db
     try:
         all_pending = pending_deliveries_for(agent)
     except ValueError as exc:
@@ -1812,6 +1861,8 @@ def comms_inbox(
             status_code=500,
             content={"error": "bridge query failed", "error_id": error_id},
         )
+    finally:
+        _bridge_db.DB_PATH = previous_db_path
 
     total = len(all_pending)
     truncated = total > limit
@@ -1845,10 +1896,12 @@ def comms_inbox(
 async def comms_v1_backlog(
     limit: int = Query(100, ge=1, le=500),
     exclude_retired: bool = Query(True),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict:
     """Pending delivery backlog (no message content). Sol PR-M."""
-    store = legacy_broker_store(reachable=MESSAGE_DB.is_file())
-    if not MESSAGE_DB.exists():
+    message_db = ctx.roots.message_db_path
+    store = legacy_broker_store(reachable=message_db.is_file())
+    if not message_db.exists():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "total": 0,
@@ -1859,7 +1912,7 @@ async def comms_v1_backlog(
             "store": store,
         }
     payload = collect_delivery_backlog(
-        MESSAGE_DB, limit=limit, exclude_retired=exclude_retired
+        message_db, limit=limit, exclude_retired=exclude_retired
     )
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["store"] = store
@@ -1868,10 +1921,14 @@ async def comms_v1_backlog(
 
 
 @router.get("/v1/dead-letters")
-async def comms_v1_dead_letters(limit: int = Query(100, ge=1, le=500)) -> dict:
+async def comms_v1_dead_letters(
+    limit: int = Query(100, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict:
     """Dead-letter inventory (metadata only). Sol PR-M."""
-    store = legacy_broker_store(reachable=MESSAGE_DB.is_file())
-    if not MESSAGE_DB.exists():
+    message_db = ctx.roots.message_db_path
+    store = legacy_broker_store(reachable=message_db.is_file())
+    if not message_db.exists():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "total": 0,
@@ -1880,7 +1937,7 @@ async def comms_v1_dead_letters(limit: int = Query(100, ge=1, le=500)) -> dict:
             "db_missing": True,
             "store": store,
         }
-    payload = collect_dead_letters(MESSAGE_DB, limit=limit)
+    payload = collect_dead_letters(message_db, limit=limit)
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["store"] = store
     payload["content_included"] = False
@@ -1888,17 +1945,18 @@ async def comms_v1_dead_letters(limit: int = Query(100, ge=1, le=500)) -> dict:
 
 
 @router.get("/v1/metrics")
-async def comms_v1_metrics() -> dict:
+async def comms_v1_metrics(ctx: MonitorContext = Depends(get_ctx)) -> dict:
     """Efficiency metrics from durable timestamps (no content). Sol PR-M."""
-    store = legacy_broker_store(reachable=MESSAGE_DB.is_file())
-    if not MESSAGE_DB.exists():
+    message_db = ctx.roots.message_db_path
+    store = legacy_broker_store(reachable=message_db.is_file())
+    if not message_db.exists():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "content_included": False,
             "db_missing": True,
             "store": store,
         }
-    payload = collect_efficiency_metrics(MESSAGE_DB)
+    payload = collect_efficiency_metrics(message_db)
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["store"] = store
     return payload

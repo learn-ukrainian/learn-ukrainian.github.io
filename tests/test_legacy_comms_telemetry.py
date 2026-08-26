@@ -6,6 +6,7 @@ import json
 import sqlite3
 import stat
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.api import comms_router, telemetry_router
+from scripts.api.monitor_context import fixture_context
 from scripts.api.telemetry import legacy_comms
 
 
@@ -26,9 +28,14 @@ def telemetry_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 @pytest.fixture()
-def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, telemetry_db: Path):
-    monkeypatch.setattr(comms_router, "MESSAGE_DB", tmp_path / "missing-broker.db")
+def client(tmp_path: Path, telemetry_db: Path):
+    # comms_router resolves its broker DB from the app's MonitorContext
+    # (#7269 step 5); pin the context at a missing broker DB exactly like
+    # the old MESSAGE_DB patch did.
+    base = fixture_context(tmp_path)
+    ctx = replace(base, roots=replace(base.roots, message_db_path=tmp_path / "missing-broker.db"))
     app = FastAPI()
+    app.state.ctx = ctx
     app.include_router(comms_router.router, prefix="/api/comms")
     app.include_router(telemetry_router.router)
     with TestClient(app, raise_server_exceptions=False) as test_client:
