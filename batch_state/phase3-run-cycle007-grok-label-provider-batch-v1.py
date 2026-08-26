@@ -765,9 +765,11 @@ def _verify_sealed(
     }
 
 
-def _provider_command(provider: Path) -> list[str]:
+def _provider_command(provider: Path, prompt_path: Path) -> list[str]:
     return [
         str(provider),
+        "--prompt-file",
+        str(prompt_path),
         "--model",
         "grok-4.5",
         "--reasoning-effort",
@@ -781,6 +783,26 @@ def _provider_command(provider: Path) -> list[str]:
         "--disable-web-search",
         "--verbatim",
     ]
+
+
+def _run_provider(provider: Path, prompt_bytes: bytes, package: Path) -> subprocess.CompletedProcess[bytes]:
+    descriptor, raw_prompt_path = tempfile.mkstemp(prefix=".cycle007-grok-prompt-", dir=package)
+    prompt_path = Path(raw_prompt_path)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            os.fchmod(handle.fileno(), 0o600)
+            handle.write(prompt_bytes)
+            handle.flush()
+            os.fsync(handle.fileno())
+        return subprocess.run(
+            _provider_command(provider, prompt_path),
+            input=prompt_bytes,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    finally:
+        prompt_path.unlink(missing_ok=True)
 
 
 def _provider_mode(
@@ -891,13 +913,7 @@ def run_packet(
             )
             raw_capture: bytes | None = None
             try:
-                run = subprocess.run(
-                    _provider_command(provider),
-                    input=prompt_bytes,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    check=False,
-                )
+                run = _run_provider(provider, prompt_bytes, package)
                 if run.returncode != 0:
                     raise Invalid("stream_json_invalid")
                 raw_capture = run.stdout

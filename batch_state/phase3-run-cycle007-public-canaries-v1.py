@@ -516,10 +516,12 @@ def grok_prompt(challenge: str, rows: list[dict[str, Any]], sidecar: dict[str, A
     ).encode("utf-8")
 
 
-def _grok_command(provider_bin: Path) -> list[str]:
+def _grok_command(provider_bin: Path, prompt_path: Path) -> list[str]:
     """Build the reviewed native Grok CLI invocation."""
     return [
         str(provider_bin),
+        "--prompt-file",
+        str(prompt_path),
         "--model",
         GROK_MODEL,
         "--reasoning-effort",
@@ -1080,7 +1082,7 @@ def invoke_canary(
             prompt_bytes = grok_prompt(challenge, rows, sidecar)
             stdin_path = runtime / "prompt.stdin"
             _atomic(stdin_path, prompt_bytes, raw=True)
-            cmd = _grok_command(provider_bin)
+            cmd = _grok_command(provider_bin, stdin_path)
 
         attempt = 1
         provider_calls = 0

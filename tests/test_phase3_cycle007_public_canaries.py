@@ -145,9 +145,41 @@ def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:
     spec.loader.exec_module(batch)
 
     expected_isolation_flags = {"--permission-mode", "--no-alt-screen", "--no-subagents", "--disable-web-search"}
-    for command in (canary._grok_command(Path("/provider")), batch._provider_command(Path("/provider"))):
+    prompt_path = Path("/private/prompt")
+    for command in (
+        canary._grok_command(Path("/provider"), prompt_path),
+        batch._provider_command(Path("/provider"), prompt_path),
+    ):
         assert expected_isolation_flags <= set(command)
         assert "--no-memory" not in command
+        assert command.count("--prompt-file") == 1
+        assert command[command.index("--prompt-file") + 1] == str(prompt_path)
+
+
+def test_grok_batch_binds_and_removes_private_prompt_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_grok_batch_prompt_test", path)
+    assert spec is not None and spec.loader is not None
+    batch = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(batch)
+    observed: dict[str, Path] = {}
+
+    def fake_run(command: list[str], **kwargs: object) -> object:
+        prompt_path = Path(command[command.index("--prompt-file") + 1])
+        observed["prompt_path"] = prompt_path
+        assert prompt_path.parent == tmp_path
+        assert prompt_path.read_bytes() == b"public prompt"
+        assert prompt_path.stat().st_mode & 0o777 == 0o600
+        assert kwargs["input"] == b"public prompt"
+        return batch.subprocess.CompletedProcess(command, 0, stdout=b"{}", stderr=b"")
+
+    monkeypatch.setattr(batch.subprocess, "run", fake_run)
+    result = batch._run_provider(Path("/provider"), b"public prompt", tmp_path)
+
+    assert result.returncode == 0
+    assert not observed["prompt_path"].exists()
 
 
 def test_batch_stream_rejects_reported_cwd_mismatch(tmp_path: Path) -> None:
