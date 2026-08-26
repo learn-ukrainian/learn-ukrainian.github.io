@@ -7,6 +7,7 @@ import json
 import os
 import re
 import sqlite3
+import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -20,7 +21,7 @@ from scripts.api.fleet_workers_models import WorkerRow
 from scripts.api.fleet_workers_sanitize import validate_workers_list
 from scripts.api.main import app
 from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
-from scripts.api.occupancy_local import _marker_fresh
+from scripts.api.occupancy_local import OccupancyRead, _marker_fresh
 from scripts.api.project_state_router import reset_local_document_cache
 from scripts.api.project_state_sanitize import ProjectStateValidationError
 from scripts.api.project_state_store import get_stored_report, reset_project_state_store
@@ -111,10 +112,12 @@ def _reset_stores() -> None:
     reset_project_state_store()
     reset_observer_presence()
     reset_local_document_cache()
+    collect_mod.reset_workers_payload_cache()
     yield
     reset_project_state_store()
     reset_observer_presence()
     reset_local_document_cache()
+    collect_mod.reset_workers_payload_cache()
 
 
 def test_workers_route_schema(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -593,3 +596,70 @@ def test_workers_opsec_no_sensitive_tokens(monkeypatch: pytest.MonkeyPatch) -> N
         assert alias not in text
     assert "run_nonce" not in text
     assert "pid" not in text
+
+
+def test_workers_payload_warm_cache_skips_delegate_collector(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Warm GET must not re-enter collect_delegate_workers within the TTL window."""
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    now = datetime.now(UTC)
+    (tasks / "warm-task.json").write_text(
+        json.dumps(
+            {
+                "task_id": "warm-task",
+                "agent": "cursor",
+                "status": "running",
+                "pid": os.getpid(),
+                "started_at": now.isoformat(),
+                "run_nonce": "warm-cache-nonce",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setattr("scripts.api.delegate_router.TASKS_DIR", tasks)
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-job"})
+    monkeypatch.setattr(
+        collect_mod,
+        "collect_job_workers",
+        lambda **_kwargs: ([], None),
+    )
+    monkeypatch.setattr(collect_mod, "collect_marker_workers", lambda **_kwargs: [])
+    monkeypatch.setattr(
+        collect_mod,
+        "read_session_streams",
+        lambda **_kwargs: OccupancyRead([], True, 0.0),
+    )
+
+    calls = {"delegate": 0}
+    real_delegate = collect_mod.collect_delegate_workers
+
+    def _counting_delegate(*args: Any, **kwargs: Any) -> Any:
+        calls["delegate"] += 1
+        return real_delegate(*args, **kwargs)
+
+    monkeypatch.setattr(collect_mod, "collect_delegate_workers", _counting_delegate)
+
+    first = workers_payload()
+    assert calls["delegate"] == 1
+    assert any(
+        row.get("id") == "warm-task"
+        for host in first["hosts"]
+        for row in host.get("workers", [])
+    )
+
+    t0 = time.perf_counter()
+    second = workers_payload()
+    warm_s = time.perf_counter() - t0
+    assert calls["delegate"] == 1
+    assert warm_s < 0.5
+    assert second["counts"] == first["counts"]
+    assert second["hosts"] == first["hosts"]
+
+    # Fixture overrides must bypass the cache (hermetic collectors).
+    third = workers_payload(tasks_dir=tasks)
+    assert calls["delegate"] == 2
