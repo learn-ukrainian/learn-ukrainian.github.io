@@ -1,4 +1,4 @@
-"""Unit and integration tests for GlmAdapter (opencode CLI hosting glm-5.3)."""
+"""Unit and integration tests for GlmAdapter (opencode CLI hosting glm-5.3-flash workhorse)."""
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ def test_glm_registry_and_choices_wiring():
     assert "glm" in registry.AGENTS
     entry = registry.get_agent_entry("glm")
     assert entry["cli_available"] is True
-    assert entry["default_model"] == "glm-5.3"
+    assert entry["default_model"] == "glm-5.3-flash"
     assert entry["default_effort"] == "high"
     assert entry["resume_policy"] == "never"
     assert "glm" in delegate._DISPATCH_AGENT_CHOICES
@@ -59,7 +59,7 @@ def test_glm_adapter_basic_argv_construction(tmp_path):
     assert plan.cmd[0] == FAKE_OPENCODE
     assert plan.cmd[1] == "run"
     assert plan.cmd[2] == "--model"
-    assert plan.cmd[3] == "zai-coding-plan/glm-5.3"
+    assert plan.cmd[3] == "zai/glm-5.3-flash"
     assert "--auto" not in plan.cmd
     assert plan.cmd[-2] == "--"
     assert plan.cmd[-1] == "Analyze code architecture"
@@ -86,11 +86,16 @@ def test_glm_adapter_mode_mapping(tmp_path):
 
 
 def test_glm_adapter_model_override_and_effort(tmp_path):
-    plan = _build("Refactor module", tmp_path, model="zai-coding-plan/glm-5.3", effort="high")
+    plan = _build("Refactor module", tmp_path, model="glm-5.3", effort="high")
     assert plan.cmd[3] == "zai-coding-plan/glm-5.3"
     assert "--variant" in plan.cmd
     variant_idx = plan.cmd.index("--variant")
     assert plan.cmd[variant_idx + 1] == "high"
+
+
+def test_glm_adapter_explicit_coding_plan_provider_pin(tmp_path):
+    plan = _build("Refactor module", tmp_path, model="zai-coding-plan/glm-5.3", effort="high")
+    assert plan.cmd[3] == "zai-coding-plan/glm-5.3"
 
 
 def test_glm_adapter_omitted_effort_defaults_to_variant_high(tmp_path):

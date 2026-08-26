@@ -41,14 +41,14 @@ _AVOID_STATUSES = frozenset({"hot", "near_cap", "need_login"})
 _COOL_STATUSES = frozenset({"cool", "warm", "idle"})
 _CODE_LANE_PRIORITY = {
     "cursor": 0,
-    "codex": 1,
-    "claude": 2,
-    "grok": 3,
-    "kimi": 4,
-    "gemini": 5,
-    "agy": 6,
-    "deepseek": 7,
-    "glm": 8,
+    "glm": 1,
+    "codex": 2,
+    "claude": 3,
+    "grok": 4,
+    "kimi": 5,
+    "gemini": 6,
+    "agy": 7,
+    "deepseek": 8,
 }
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
 

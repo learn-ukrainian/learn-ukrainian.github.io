@@ -268,9 +268,9 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "glm": {
         "adapter": "scripts.agent_runtime.adapters.glm:GlmAdapter",
-        # Catalog model id; the Z.AI Coding Plan provider pin is applied at
-        # invocation time by the adapter (_OPENCODE_MODEL_ROUTES).
-        "default_model": "glm-5.3",
+        # Catalog model id; provider pin (Flash API vs Coding Plan) is applied
+        # at invocation time by the adapter (_OPENCODE_MODEL_ROUTES).
+        "default_model": "glm-5.3-flash",
         "default_effort": "high",
         "cost_tier": "low",
         "capabilities": frozenset(

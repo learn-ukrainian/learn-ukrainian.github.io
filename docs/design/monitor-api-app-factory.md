@@ -389,8 +389,8 @@ table above — if the inventory contradicts a row here, the inventory wins and 
 - No endpoint behavior change; response shapes stay as the #7182 burn-down left them.
 - No new leak-table rows; the OPSEC sweep denominator stays SHA-pinned.
 - Fenced paths: `.github/workflows/*`, `scripts/ci/*`, `opsec_scan.py`.
-- Reviews of record stay cross-family on trusted seats (codex / agy / claude) — **not** ox-alpha
-  (ox-alpha may implement; it does not review its own or anyone else's work here).
+- Reviews of record stay cross-family on trusted seats (codex / agy / claude) — **not** glm-5.3-flash
+  (glm-5.3-flash may implement; it does not review its own or anyone else's work here).
 
 ## 7. Regression net
 

@@ -70,7 +70,7 @@ def test_pick_order_cool_first():
     assert "codex" in avoid_lanes
     assert "claude" in avoid_lanes
     assert ranked[0]["lane"] == "cursor"
-    assert ranked[1]["lane"] in {"deepseek", "glm", "grok", "agy"}
+    assert ranked[1]["lane"] == "glm"
 
 
 def test_format_includes_rec():

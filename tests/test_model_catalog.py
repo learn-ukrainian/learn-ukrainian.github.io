@@ -67,24 +67,31 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
 
 
-def test_ox_alpha_is_cataloged_as_local_shadow_compare_only() -> None:
-    """OpenRouter stealth ox-alpha is a hold-tier local shadow seat, not a CF route."""
+def test_glm_53_flash_is_active_workhorse_catalog_entry() -> None:
+    """GLM-5.3-Flash replaces retired ox-alpha as the LOCAL-ONLY workhorse seat."""
     catalog = load_model_catalog()
-    ox = catalog["models"]["openrouter/stealth/ox-alpha"]
-    assert ox["tier"] == "frontier_practical"
-    assert ox["lifecycle"] == "hold"
-    assert ox["transports"] == ["opencode"]
-    assert ox["family"] == "zhipu"
-    assert set(ox["aliases"]) == {"ox-alpha", "0x-alpha", "stealth/ox-alpha"}
-    assert "openrouter/stealth/ox-alpha" not in catalog["review_candidates"]
+    assert "openrouter/stealth/ox-alpha" not in catalog["models"]
+    flash = catalog["models"]["glm-5.3-flash"]
+    assert flash["tier"] == "frontier_practical"
+    assert flash["lifecycle"] == "active"
+    assert flash["transports"] == ["opencode"]
+    assert flash["family"] == "zhipu"
+    assert set(flash["aliases"]) == {
+        "ox-alpha",
+        "0x-alpha",
+        "stealth/ox-alpha",
+        "openrouter/stealth/ox-alpha",
+        "glm53-flash",
+    }
+    assert "glm-5.3-flash" not in catalog["review_candidates"]
     for ladder in catalog["review_ladders"].values():
         candidates = {candidate for rung in ladder for candidate in rung}
-        assert not any("ox-alpha" in name for name in candidates)
+        assert "glm-5.3-flash" not in candidates
     aliases = model_aliases()
-    assert aliases["ox-alpha"] == "openrouter/stealth/ox-alpha"
-    assert aliases["0x-alpha"] == "openrouter/stealth/ox-alpha"
-    assert aliases["stealth/ox-alpha"] == "openrouter/stealth/ox-alpha"
-    assert model_families.normalize_family("openrouter/stealth/ox-alpha") is model_families.Family.UNKNOWN
+    assert aliases["ox-alpha"] == "glm-5.3-flash"
+    assert aliases["0x-alpha"] == "glm-5.3-flash"
+    assert aliases["stealth/ox-alpha"] == "glm-5.3-flash"
+    assert model_families.normalize_family("glm-5.3-flash") is model_families.Family.ZHIPU
 
 
 def test_luna_worker_does_not_enter_formal_review_ladders() -> None:

@@ -558,7 +558,7 @@ def test_load_adapter_glm():
     adapter = _load_adapter("glm")
     assert adapter.__class__.__name__ == "GlmAdapter"
     assert adapter.name == "glm"
-    assert adapter.default_model == "glm-5.3"
+    assert adapter.default_model == "glm-5.3-flash"
 
 
 def test_load_adapter_cached():
