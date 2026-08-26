@@ -442,7 +442,6 @@ def test_controller_preserves_python_launcher_for_stage_subprocesses(
 ) -> None:
     target = tmp_path / "base-python"
     target.write_bytes(b"base interpreter")
-    os.chmod(target, 0o755)
     launcher = tmp_path / "venv/bin/python"
     launcher.parent.mkdir(mode=0o700, parents=True)
     launcher.symlink_to(target)
@@ -533,8 +532,6 @@ def test_controller_rejects_python_target_drift(
     second_target = tmp_path / "python-second"
     first_target.write_bytes(b"first interpreter")
     second_target.write_bytes(b"different interpreter")
-    os.chmod(first_target, 0o755)
-    os.chmod(second_target, 0o755)
     launcher = tmp_path / "venv/bin/python"
     launcher.parent.mkdir(mode=0o700, parents=True)
     launcher.symlink_to(first_target)
