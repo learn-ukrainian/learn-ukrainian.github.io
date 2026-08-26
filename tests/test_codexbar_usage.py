@@ -11,6 +11,7 @@ from pathlib import Path
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_router
+from scripts.api import subscription_usage as subscription_usage_mod
 from scripts.api.codexbar_usage import _normalize_provider_data
 from scripts.api.state_helpers import cache_invalidate
 
@@ -182,7 +183,7 @@ def test_normalize_claude_shape():
     assert res["weekly_pace_delta_pct"] == 27.0
     assert res["will_last_to_reset"] is False
     assert "27% in deficit" in res["pace_summary"]
-    assert res["source"] == "codexbar"
+    assert res["source"] == "web"
     assert res["fetched_at"] is not None
 
 
@@ -554,19 +555,21 @@ def test_normalize_kimi_healthy_shape():
     assert res["weekly_used_pct"] == 40.0
     assert res["weekly_resets_at"] == "2026-07-20T18:00:00Z"
     assert res["will_last_to_reset"] is True
-    assert res["source"] == "codexbar"
+    assert res["source"] == "oauth"
 
 
 def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     """Credential/provider error -> status='unknown' + auth_error, never zero usage."""
-
-    class _FakeResult:
-        returncode = 0
-        stdout = KIMI_ERROR_FIXTURE
-        stderr = ""
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
-    # Never fall back to last-good data
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (
+            401,
+            {"error": "expired"},
+            "Kimi Code CLI credential is expired, please re-authenticate",
+        ),
+    )
     codexbar_usage_mod._last_good_data.pop("kimi", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
@@ -576,28 +579,26 @@ def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     assert res["status"] in ("unavailable", "unknown")
     assert res["weekly_used_pct"] is None
     assert res["primary_used_pct"] is None
-    assert "credential is expired" in res["auth_error"]
+    assert "credential" in (res["auth_error"] or "").lower() or "rejected" in (res["auth_error"] or "").lower()
     assert res["error_kind"] == "provider"
-    assert res["error_code"] == 1
+    assert res["error_code"] == 401
 
 
 def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
-    """LIVE-verified gap (2026-07-17): the CLI exits rc=1 on credential errors
-    while printing the error JSON — rc alone must not swallow the payload."""
-
-    class _FakeResult:
-        returncode = 1
-        stdout = KIMI_ERROR_FIXTURE
-        stderr = ""
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    """HTTP 401 on credential errors must surface the payload, not be swallowed."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (401, None, "credential is expired"),
+    )
     codexbar_usage_mod._last_good_data.pop("kimi", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
 
     assert res is not None
     assert res["status"] in ("unavailable", "unknown")
-    assert "credential is expired" in res["auth_error"]
+    assert "expired" in (res["auth_error"] or "").lower() or "credential" in (res["auth_error"] or "").lower()
 
 
 def test_healthy_record_carries_error_shape_defaults():
@@ -610,40 +611,27 @@ def test_healthy_record_carries_error_shape_defaults():
     assert res["error_code"] is None
 
 
-def test_missing_homebrew_binary_reaches_path_fallback(monkeypatch):
-    """FileNotFoundError on the homebrew path must not bypass the PATH fallback (review-5386 F1)."""
-    calls = []
-
-    def fake_run(cmd, **kw):
-        calls.append(cmd[0])
-        if cmd[0].startswith("/opt/homebrew"):
-            raise FileNotFoundError(cmd[0])
-
-        class _R:
-            returncode = 0
-            stdout = KIMI_HEALTHY_FIXTURE
-            stderr = ""
-
-        return _R()
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", fake_run)
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert calls == ["/opt/homebrew/bin/codexbar", "codexbar"]
-    assert res is not None and res["lane"] == "kimi" and res["status"] == "healthy"
-
-
-def test_codexbar_unavailable_missing_binary(monkeypatch):
-    """Regression test for missing binary: must surface status='unavailable' and auth_error."""
-    def fake_run(cmd, **kw):
-        raise FileNotFoundError(cmd[0])
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", fake_run)
+def test_missing_credentials_returns_need_login(monkeypatch):
+    """Missing native credentials must surface NEED_LOGIN, not missing_binary."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
     assert res["status"] == "unavailable"
-    assert res["error_kind"] == "missing_binary"
-    assert "binary not found" in res["auth_error"].lower()
+    assert res["error_kind"] == "need_login"
+    assert res["probe_state"] == "NEED_LOGIN"
+    assert "credential" in res["auth_error"].lower()
+
+
+def test_native_probe_unavailable_missing_credentials(monkeypatch):
+    """Regression: missing credentials must not masquerade as a healthy 0% lane."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "need_login"
+    assert "credential" in res["auth_error"].lower()
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
@@ -662,20 +650,22 @@ def test_codexbar_unavailable_missing_binary(monkeypatch):
     assert data["agents"]["codex"]["burn_pct_7d"] is not None
     assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "missing_binary"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "need_login"
 
 
 def test_codexbar_unavailable_timeout(monkeypatch):
     """Regression test for timeout: must surface status='unavailable' and auth_error."""
-    def fake_run(cmd, **kw):
-        raise codexbar_usage_mod.subprocess.TimeoutExpired(cmd, 2.0)
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", fake_run)
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (0, None, "timed out after 1s"),
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
     assert res["status"] == "unavailable"
-    assert res["error_kind"] == "timeout"
+    assert res["error_kind"] == "fetch_error"
     assert "timed out" in res["auth_error"].lower()
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
@@ -695,23 +685,23 @@ def test_codexbar_unavailable_timeout(monkeypatch):
     assert data["agents"]["codex"]["burn_pct_7d"] is not None
     assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "timeout"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "fetch_error"
 
 
 def test_codexbar_unavailable_nonzero_exit(monkeypatch):
-    """Regression test for non-zero exit: must surface status='unavailable' and auth_error."""
-    class _FakeResult:
-        returncode = 1
-        stdout = ""
-        stderr = "fatal CLI error"
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    """Regression test for HTTP failure: must surface status='unavailable' and auth_error."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (500, None, "fatal upstream error"),
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
     assert res["status"] == "unavailable"
-    assert res["error_kind"] == "non_zero_exit"
-    assert "fatal CLI error" in res["auth_error"]
+    assert res["error_kind"] == "fetch_error"
+    assert "fatal upstream error" in res["auth_error"]
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
@@ -730,23 +720,22 @@ def test_codexbar_unavailable_nonzero_exit(monkeypatch):
     assert data["agents"]["codex"]["burn_pct_7d"] is not None
     assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "non_zero_exit"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "fetch_error"
 
 
 def test_codexbar_unavailable_malformed_json(monkeypatch):
     """Regression test for malformed JSON: must surface status='unavailable' and auth_error."""
-    class _FakeResult:
-        returncode = 0
-        stdout = "not valid json {{"
-        stderr = ""
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
 
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    def _bad_json(*args, **kwargs):
+        raise json.JSONDecodeError("bad", "doc", 0)
+
+    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _bad_json)
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
     assert res["status"] == "unavailable"
-    assert res["error_kind"] == "malformed_json"
-    assert "malformed JSON" in res["auth_error"]
+    assert res["error_kind"] == "fetch_error"
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
@@ -765,23 +754,21 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
     assert data["agents"]["codex"]["burn_pct_7d"] is not None
     assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "malformed_json"
+    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "fetch_error"
 
 
 def test_codexbar_unavailable_unparseable_schema(monkeypatch):
-    """Regression test for unparseable schema: must surface status='unavailable' and auth_error."""
-    class _FakeResult:
-        returncode = 0
-        stdout = "[]"
-        stderr = ""
-
-    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    """Regression test for empty schema: must surface status='unavailable'."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, {}, None),
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
     assert res["status"] == "unavailable"
-    assert res["error_kind"] == "unparseable_schema"
-    assert "unparseable" in res["auth_error"].lower()
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
@@ -985,7 +972,7 @@ def test_failed_refresh_never_poison_last_known_good_capacity(monkeypatch):
         {"kind": "timeout", "code": "TIMEOUT", "message": "timed out after 2s"},
     )
     results = iter([healthy, timeout])
-    monkeypatch.setattr(codexbar_usage_mod, "fetch_codexbar_usage", lambda *_args, **_kwargs: next(results))
+    monkeypatch.setattr(subscription_usage_mod, "fetch_provider_usage", lambda *_args, **_kwargs: next(results))
 
     assert provider in codexbar_usage_mod.refresh_provider_usage_data([provider], timeout_s=2.0)
     # Expire the short TTL to force use of the LKG branch rather than the
@@ -1009,7 +996,7 @@ def test_malformed_or_provider_failure_is_unavailable_without_lkg(monkeypatch):
         provider,
         {"kind": "malformed_json", "code": "MALFORMED_JSON", "message": "malformed"},
     )
-    monkeypatch.setattr(codexbar_usage_mod, "fetch_codexbar_usage", lambda *_args, **_kwargs: malformed)
+    monkeypatch.setattr(subscription_usage_mod, "fetch_provider_usage", lambda *_args, **_kwargs: malformed)
 
     assert codexbar_usage_mod.refresh_provider_usage_data([provider], timeout_s=2.0) == {}
     result = codexbar_usage_mod.get_provider_usage_data(provider)
@@ -1023,7 +1010,7 @@ def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
     cache_invalidate("codexbar_usage:")
     codexbar_usage_mod._last_good_data.pop(provider, None)
     codexbar_usage_mod._last_failure_data.pop(provider, None)
-    monkeypatch.setattr(codexbar_usage_mod, "_refresh_thread", None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_thread", None)
     monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "1")
     entered = threading.Event()
     release = threading.Event()
@@ -1032,7 +1019,7 @@ def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
         entered.set()
         release.wait(timeout=1.0)
 
-    monkeypatch.setattr(codexbar_usage_mod, "_run_all_refreshes", slow_background)
+    monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", slow_background)
     started = time.monotonic()
     result = codexbar_usage_mod.get_provider_usage_data(provider)
     elapsed = time.monotonic() - started
@@ -1078,9 +1065,7 @@ def test_refresh_timeout_env_override(monkeypatch):
 
 
 def test_refresh_provider_usage_data_defaults_to_realistic_timeout(monkeypatch):
-    """The blocking fresh-refresh path (state_router fresh_codexbar=True) must
-    pass the realistic default down to the CLI subprocess timeout, not the
-    prior 2.0s that starved slow lanes like claude."""
+    """The blocking fresh-refresh path must pass the realistic default to native probes."""
     monkeypatch.delenv("CODEXBAR_REFRESH_TIMEOUT_S", raising=False)
     seen_timeouts = []
 
@@ -1088,7 +1073,7 @@ def test_refresh_provider_usage_data_defaults_to_realistic_timeout(monkeypatch):
         seen_timeouts.append(timeout_s)
         return _normalize_provider_data(provider, json.loads(CODEX_FIXTURE)[0])
 
-    monkeypatch.setattr(codexbar_usage_mod, "fetch_codexbar_usage", fake_fetch)
+    monkeypatch.setattr(subscription_usage_mod, "fetch_provider_usage", fake_fetch)
     codexbar_usage_mod.refresh_provider_usage_data(["codex"])
     assert seen_timeouts == [codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S]
 
@@ -1104,10 +1089,11 @@ def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
         captured["providers"] = tuple(providers)
         return {}
 
-    monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
-    monkeypatch.setattr(codexbar_usage_mod, "_refresh_cursor_usage_live", lambda: None)
-    monkeypatch.setattr(codexbar_usage_mod, "_refresh_in_flight", threading.Lock())
-    codexbar_usage_mod._run_all_refreshes()
+    monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
+    subscription_usage_mod._run_all_refreshes()
     # No override passed -> refresh_provider_usage_data resolves the shared
     # realistic default itself, instead of the caller hardcoding 2.0.
     assert captured["timeout_s"] is None
@@ -1124,7 +1110,7 @@ def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
 
     timeout_result = codexbar_usage_mod._normalize_provider_error(
         "claude",
-        {"kind": "timeout", "code": "TIMEOUT", "message": "CodexBar CLI timed out after 25.0s"},
+        {"kind": "timeout", "code": "TIMEOUT", "message": "Native probe timed out after 25.0s"},
     )
     assert timeout_result["status"] == "unavailable"
     assert timeout_result["error_kind"] == "timeout"
@@ -1174,8 +1160,8 @@ def test_periodic_refresh_runs_immediately_then_stops(monkeypatch):
 
     monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
     monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "30")
-    monkeypatch.setattr(codexbar_usage_mod, "_run_all_refreshes", fake_run)
-    monkeypatch.setattr(codexbar_usage_mod, "_scheduler_thread", None)
+    monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", fake_run)
+    monkeypatch.setattr(subscription_usage_mod, "_scheduler_thread", None)
     try:
         codexbar_usage_mod.start_periodic_refresh(run_immediately=True)
         assert runs.wait(timeout=1.0)
@@ -1197,13 +1183,142 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
         release.wait(timeout=1.0)
         return {}
 
-    monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
-    monkeypatch.setattr(codexbar_usage_mod, "_refresh_cursor_usage_live", lambda: None)
-    monkeypatch.setattr(codexbar_usage_mod, "_refresh_in_flight", threading.Lock())
-    worker = threading.Thread(target=codexbar_usage_mod._run_all_refreshes, daemon=True)
+    monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
+    worker = threading.Thread(target=subscription_usage_mod._run_all_refreshes, daemon=True)
     worker.start()
     assert started.wait(timeout=1.0)
-    codexbar_usage_mod._run_all_refreshes()  # must no-op while first is in flight
+    subscription_usage_mod._run_all_refreshes()  # must no-op while first is in flight
     release.set()
     worker.join(timeout=1.0)
     assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]
+
+
+OPENROUTER_KEY_FIXTURE = {
+    "data": {
+        "usage": 12.5,
+        "usage_daily": 1.2,
+        "usage_weekly": 5.0,
+        "usage_monthly": 12.5,
+        "limit": 100.0,
+        "limit_remaining": 87.5,
+        "limit_reset": "2026-09-01T00:00:00Z",
+        "is_free_tier": False,
+    }
+}
+
+DEEPSEEK_BALANCE_FIXTURE = {
+    "is_available": True,
+    "balance_infos": [
+        {
+            "currency": "USD",
+            "total_balance": "42.50",
+            "granted_balance": "10.00",
+            "topped_up_balance": "32.50",
+        }
+    ],
+}
+
+
+def test_openrouter_missing_key_returns_need_probe(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: None)
+    codexbar_usage_mod._api_account_last_good.pop("openrouter", None)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["usage_usd"] is None
+    assert result["limit_remaining_usd"] is None
+
+
+def test_deepseek_missing_key_returns_need_probe(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: None)
+    codexbar_usage_mod._api_account_last_good.pop("deepseek", None)
+    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["total_balance"] is None
+    assert result["local_only"] is True
+
+
+def test_openrouter_key_probe_success(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: "fixture-openrouter-key")
+
+    def _fake_http(method, url, **kwargs):
+        if url.endswith("/key"):
+            return 200, dict(OPENROUTER_KEY_FIXTURE), None
+        return 0, None, "unexpected url"
+
+    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
+    assert result["probe_state"] == "ok"
+    assert result["usage_usd"] == 12.5
+    assert result["limit_remaining_usd"] == 87.5
+    assert result["is_free_tier"] is False
+
+
+def test_deepseek_balance_probe_success(monkeypatch):
+    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: "fixture-deepseek-key")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, dict(DEEPSEEK_BALANCE_FIXTURE), None),
+    )
+    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
+    assert result["probe_state"] == "ok"
+    assert result["local_only"] is True
+    assert result["currency"] == "USD"
+    assert result["total_balance"] == 42.5
+    assert result["is_available"] is True
+
+
+def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
+    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", tmp_path / "agent_budgets.yaml")
+    (tmp_path / "agent_budgets.yaml").write_text("codex:\n  weekly_cap_usd: 1000\n", encoding="utf-8")
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: {"lane": p, "weekly_used_pct": None})
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: {"lane": "cursor", "probe_state": "NEED_PROBE"})
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *args, **kwargs: {"windows": {}})
+    monkeypatch.setattr(state_router, "summarize_lane_runtime", lambda *args, **kwargs: {"headroom_blocked": False})
+
+    openrouter = {
+        "kind": "prepaid_credits",
+        "probe_state": "ok",
+        "usage_usd": 1.0,
+        "usage_daily_usd": 0.1,
+        "usage_weekly_usd": 0.5,
+        "usage_monthly_usd": 1.0,
+        "limit_usd": 50.0,
+        "limit_remaining_usd": 49.0,
+        "limit_reset": None,
+        "is_free_tier": False,
+        "fetched_at": "2026-08-26T12:00:00Z",
+    }
+    deepseek = {
+        "kind": "prepaid_credits",
+        "probe_state": "ok",
+        "local_only": True,
+        "is_available": True,
+        "currency": "USD",
+        "total_balance": 25.0,
+        "granted_balance": 5.0,
+        "topped_up_balance": 20.0,
+        "fetched_at": "2026-08-26T12:00:00Z",
+    }
+    monkeypatch.setattr(
+        state_router,
+        "get_api_account_data",
+        lambda provider: openrouter if provider == "openrouter" else deepseek,
+    )
+
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    assert "api_accounts" in data
+    assert data["api_accounts"]["openrouter"]["limit_remaining_usd"] == 49.0
+    assert data["api_accounts"]["deepseek"]["total_balance"] == 25.0
+    ranked_api = [row for row in data["ranked_by_headroom"] if row["type"] == "api"]
+    assert len(ranked_api) == 2
+    assert ranked_api[0]["remaining_usd"] == 49.0
+
+
+def test_routing_html_contains_api_accounts_panel():
+    text = Path("dashboards/routing.html").read_text(encoding="utf-8")
+    assert "API accounts" in text

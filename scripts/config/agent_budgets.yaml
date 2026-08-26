@@ -24,8 +24,8 @@ codex:
 gemini:
   weekly_cap_usd: 500
 
-# Subscription lanes (per CodexBar design constraint): claude/codex/gemini/cursor/grok/kimi only.
-# API-billed (deepseek etc.) absent from this snapshot BY DESIGN — absence ≠ unavailable.
+# Subscription lanes (per CodexBar design constraint): claude/codex/gemini/cursor/grok/kimi/glm.
+# Prepaid API accounts (openrouter, deepseek) are probed separately via api_accounts on routing-budget.
 # For lanes without numeric cap here, status="unknown" (data lives in user's external CodexBar snapshot).
 grok:
   # Native grok CLI seat (canonical). Historical alias: grok-build (dual-READ in
@@ -38,5 +38,8 @@ cursor:
   # pin ``--model auto`` to spend Auto allocation. Pinning sonnet/opus burns API pool.
   # Native probe: cursor dashboard API; CodexBar optional overlay when binary exists.
 kimi:
-  # Native Kimi Code OAuth subscription lane (K3). CodexBar exposes request
-  # windows directly; do not duplicate a synthetic dollar cap here.
+  # Native Kimi Code OAuth subscription lane (K3). Request windows come from
+  # the Kimi Code usages API; do not duplicate a synthetic dollar cap here.
+glm:
+  # Z.AI Coding Plan (GLM). Native probe: api.z.ai quota API (5h + weekly).
+  # LOCAL-ONLY credential file ~/.secret/zai.key or ZAI_API_KEY.

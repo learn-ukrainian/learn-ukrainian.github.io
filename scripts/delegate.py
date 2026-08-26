@@ -6560,13 +6560,14 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
+    subscription_data_available = codexbar_data_available or bool(agents)
 
-    # An empty ledger is only unknown when the explicit CodexBar refresh also
+    # An empty ledger is only unknown when the explicit subscription refresh also
     # yielded no authoritative weekly data. Never quietly fail open here.
-    if not agents or (records_loaded == 0 and not codexbar_data_available):
+    if not agents or (records_loaded == 0 and not subscription_data_available):
         print(
-            "⚠ ROUTING CHECK UNKNOWN: budget UNKNOWN — could not verify CodexBar data; "
-            "lanes may be in deficit; no hard sub.",
+            "⚠ ROUTING CHECK UNKNOWN: budget UNKNOWN — could not verify subscription "
+            "usage snapshots; lanes may be in deficit; no hard sub.",
             file=sys.stderr,
         )
         return requested
