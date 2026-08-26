@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import venv
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 from typing import Any
@@ -400,7 +401,9 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     captured: dict[str, Any] = {}
 
     monkeypatch.setattr(controller, "_require_contiguous", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(controller, "_require_python_binding", lambda *_args, **_kwargs: None)
+    python_target = tmp_path / "python-target"
+    python_target.write_bytes(b"fixture interpreter")
+    monkeypatch.setattr(controller, "_require_python_binding", lambda *_args, **_kwargs: python_target)
     monkeypatch.setattr(controller, "_commands_for_stage", lambda *_args, **_kwargs: ([['fixture']], None))
     monkeypatch.setattr(controller, "_revalidate_compare_receipts", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(controller, "_stage_stop_paths", lambda *_args, **_kwargs: ())
@@ -430,6 +433,7 @@ def test_controller_passes_execution_descriptor_to_stage_runner(
     )
     assert result["ok"] is True
     assert captured["pass_fds"] == (lock_file.fileno(),)
+    assert captured["executable"] == os.fspath(python_target)
     lock_file.close()
 
 
@@ -472,6 +476,54 @@ def test_controller_preserves_python_launcher_for_stage_subprocesses(
     assert commands[0][0] == os.fspath(launcher)
     assert commands[0][0] != os.fspath(target)
     assert expected_python_sha256 == controller._python_executable_sha256()
+    assert controller._require_python_binding(expected_python_sha256) == target
+
+
+def test_controller_executes_bound_target_with_venv_launcher_semantics(
+    controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    venv_root = tmp_path / "venv"
+    venv.EnvBuilder(with_pip=False).create(venv_root)
+    launcher = venv_root / "bin/python"
+    marker = tmp_path / "venv-active"
+    runner = tmp_path / "probe.py"
+    runner.write_text(
+        "from pathlib import Path\n"
+        "import sys\n"
+        "Path(sys.argv[1]).write_text('1' if sys.prefix != sys.base_prefix else '0')\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(controller, "PRIMARY_PYTHON", launcher)
+    expected_python_sha256 = controller._python_executable_sha256()
+    monkeypatch.setattr(controller, "_require_contiguous", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(
+        controller,
+        "_commands_for_stage",
+        lambda *_args, **_kwargs: ([[os.fspath(launcher), os.fspath(runner), os.fspath(marker)]], None),
+    )
+    monkeypatch.setattr(controller, "_revalidate_compare_receipts", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(controller, "_stage_stop_paths", lambda *_args, **_kwargs: ())
+    monkeypatch.setattr(controller, "_seal", lambda *_args, **_kwargs: None)
+
+    result = controller.run_stage(
+        tmp_path,
+        "compare",
+        runner,
+        "a" * 64,
+        dry_run=False,
+        expected_python_executable_sha256=expected_python_sha256,
+        expected_label_prompt_sha256s={
+            "gemini": {"clean_label": "b" * 64, "residual_label": "c" * 64},
+            "grok": {"clean_label": "d" * 64, "residual_label": "e" * 64},
+        },
+        expected_custody_sha256="f" * 64,
+        expected_label_manifest_sha256="1" * 64,
+        expected_evidence_manifest_sha256="2" * 64,
+        code_paths={"compare_runner": runner.resolve()},
+    )
+
+    assert result["ok"] is True
+    assert marker.read_text(encoding="utf-8") == "1"
 
 
 def test_controller_rejects_python_target_drift(

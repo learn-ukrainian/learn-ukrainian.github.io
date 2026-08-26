@@ -544,14 +544,15 @@ def _python_executable_target() -> Path:
         target_stat = target.stat()
     except (OSError, RuntimeError) as exc:
         raise ControllerError("preflight_binding_drift") from exc
-    if target.is_symlink() or not stat.S_ISREG(target_stat.st_mode):
+    if not stat.S_ISREG(target_stat.st_mode):
         raise ControllerError("preflight_binding_drift")
     return target
 
 
 def _python_launcher() -> Path:
-    """Return the validated absolute launcher without resolving its path."""
-    _python_executable_target()
+    """Return the absolute venv launcher used as the child argv[0]."""
+    if not PRIMARY_PYTHON.is_absolute():
+        raise ControllerError("preflight_binding_drift")
     return PRIMARY_PYTHON
 
 
@@ -559,10 +560,12 @@ def _python_executable_sha256() -> str:
     return sha256(_python_executable_target())
 
 
-def _require_python_binding(expected_sha256: str) -> None:
-    actual_sha256 = _python_executable_sha256()
+def _require_python_binding(expected_sha256: str) -> Path:
+    target = _python_executable_target()
+    actual_sha256 = sha256(target)
     if not _hex64(expected_sha256) or actual_sha256 != expected_sha256:
         raise ControllerError("preflight_binding_drift")
+    return target
 
 
 def preflight(
@@ -1525,9 +1528,10 @@ def run_stage(
             "text_free": True,
         }
     for command in commands:
-        _require_python_binding(expected_python_executable_sha256 or "")
+        python_target = _require_python_binding(expected_python_executable_sha256 or "")
         completed = subprocess.run(
             command,
+            executable=str(python_target),
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
