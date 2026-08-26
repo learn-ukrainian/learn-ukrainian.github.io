@@ -1529,6 +1529,8 @@ def run_stage(
         }
     for command in commands:
         python_target = _require_python_binding(expected_python_executable_sha256 or "")
+        # Bind exec to the verified target while argv[0] retains the venv launcher
+        # that CPython uses to locate pyvenv.cfg and its installed dependencies.
         completed = subprocess.run(
             command,
             executable=str(python_target),

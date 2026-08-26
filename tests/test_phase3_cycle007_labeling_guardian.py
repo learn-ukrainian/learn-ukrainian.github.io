@@ -483,7 +483,7 @@ def test_controller_executes_bound_target_with_venv_launcher_semantics(
     controller: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     venv_root = tmp_path / "venv"
-    venv.EnvBuilder(with_pip=False).create(venv_root)
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(venv_root)
     launcher = venv_root / "bin/python"
     marker = tmp_path / "venv-active"
     runner = tmp_path / "probe.py"
