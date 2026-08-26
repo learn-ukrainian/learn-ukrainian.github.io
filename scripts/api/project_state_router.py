@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import threading
 import time
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
@@ -34,6 +36,164 @@ from scripts.api.project_state_store import (
 router = APIRouter(prefix="/projects/v1", tags=["fleet-projects"])
 
 EXTRA_REPORTER_HOST_IDS = frozenset({"mac-operator"})
+
+# The API host is the only project-state reporter that is collected on the
+# request path. Keep its snapshot short-lived, but retain a bounded last-good
+# value while one refresh is in flight, matching the occupancy host-load
+# stale-while-revalidate behavior.
+LOCAL_DOCUMENT_FRESH_S = 30.0
+LOCAL_DOCUMENT_MAX_STALE_S = 300.0
+LOCAL_DOCUMENT_REFRESH_BACKOFF_S = 30.0
+
+
+@dataclass(frozen=True)
+class LocalDocumentSnapshot:
+    document: dict[str, Any] | None
+    age_s: float | None
+    freshness: str
+
+
+@dataclass(frozen=True)
+class _LocalDocumentCacheEntry:
+    document: dict[str, Any]
+    stored_at_mono: float
+
+
+_LOCAL_DOCUMENT_CACHE: dict[str, _LocalDocumentCacheEntry] = {}
+_LOCAL_DOCUMENT_REFRESH_THREADS: dict[str, threading.Thread] = {}
+_LOCAL_DOCUMENT_REFRESH_BACKOFF_UNTIL: dict[str, float] = {}
+_LOCAL_DOCUMENT_MISS_EVENTS: dict[str, threading.Event] = {}
+_LOCAL_DOCUMENT_GENERATION = 0
+_LOCAL_DOCUMENT_LOCK = threading.Lock()
+
+
+def _local_document_snapshot(
+    entry: _LocalDocumentCacheEntry,
+    *,
+    now_mono: float,
+) -> LocalDocumentSnapshot:
+    age = max(0.0, now_mono - entry.stored_at_mono)
+    age_s = round(age, 2)
+    if age <= LOCAL_DOCUMENT_FRESH_S:
+        return LocalDocumentSnapshot(entry.document, age_s, "fresh")
+    if age <= LOCAL_DOCUMENT_MAX_STALE_S:
+        return LocalDocumentSnapshot(entry.document, age_s, "stale")
+    return LocalDocumentSnapshot(None, age_s, "unknown")
+
+
+def _peek_local_document_snapshot(host_id: str) -> LocalDocumentSnapshot | None:
+    now_mono = time.monotonic()
+    with _LOCAL_DOCUMENT_LOCK:
+        entry = _LOCAL_DOCUMENT_CACHE.get(host_id)
+        if entry is None:
+            return None
+        return _local_document_snapshot(entry, now_mono=now_mono)
+
+
+def _refresh_local_document(host_id: str, generation: int) -> None:
+    document: dict[str, Any] | None = None
+    try:
+        collected = collect_local_document(host_id)
+        if isinstance(collected, dict):
+            document = collected
+    except Exception:
+        # A failed refresh must not take down a read that has a last-good
+        # snapshot. The caller will expose its age and stale/unknown state.
+        document = None
+
+    current_thread = threading.current_thread()
+    with _LOCAL_DOCUMENT_LOCK:
+        if generation != _LOCAL_DOCUMENT_GENERATION:
+            return
+        if document is not None:
+            _LOCAL_DOCUMENT_CACHE[host_id] = _LocalDocumentCacheEntry(document, time.monotonic())
+            _LOCAL_DOCUMENT_REFRESH_BACKOFF_UNTIL.pop(host_id, None)
+        else:
+            _LOCAL_DOCUMENT_REFRESH_BACKOFF_UNTIL[host_id] = time.monotonic() + LOCAL_DOCUMENT_REFRESH_BACKOFF_S
+        if _LOCAL_DOCUMENT_REFRESH_THREADS.get(host_id) is current_thread:
+            _LOCAL_DOCUMENT_REFRESH_THREADS.pop(host_id, None)
+
+
+def _schedule_local_document_refresh(host_id: str) -> None:
+    now_mono = time.monotonic()
+    with _LOCAL_DOCUMENT_LOCK:
+        existing = _LOCAL_DOCUMENT_REFRESH_THREADS.get(host_id)
+        if existing is not None and existing.is_alive():
+            return
+        backoff_until = _LOCAL_DOCUMENT_REFRESH_BACKOFF_UNTIL.get(host_id)
+        if backoff_until is not None and now_mono < backoff_until:
+            return
+        thread = threading.Thread(
+            target=_refresh_local_document,
+            args=(host_id, _LOCAL_DOCUMENT_GENERATION),
+            daemon=True,
+            name=f"project-state-refresh-{host_id}",
+        )
+        _LOCAL_DOCUMENT_REFRESH_THREADS[host_id] = thread
+        thread.start()
+
+
+def _collect_missing_local_document(host_id: str) -> LocalDocumentSnapshot:
+    """Synchronously fill a cold cache, with one collector per host."""
+    with _LOCAL_DOCUMENT_LOCK:
+        event = _LOCAL_DOCUMENT_MISS_EVENTS.get(host_id)
+        owner = event is None
+        if owner:
+            event = threading.Event()
+            _LOCAL_DOCUMENT_MISS_EVENTS[host_id] = event
+            generation = _LOCAL_DOCUMENT_GENERATION
+
+    if not owner:
+        event.wait()
+        snapshot = _peek_local_document_snapshot(host_id)
+        if snapshot is not None:
+            return snapshot
+        return LocalDocumentSnapshot(None, None, "unknown")
+
+    document: dict[str, Any] | None = None
+    try:
+        collected = collect_local_document(host_id)
+        if isinstance(collected, dict):
+            document = collected
+    except Exception:
+        document = None
+    finally:
+        with _LOCAL_DOCUMENT_LOCK:
+            if generation == _LOCAL_DOCUMENT_GENERATION and document is not None:
+                _LOCAL_DOCUMENT_CACHE[host_id] = _LocalDocumentCacheEntry(document, time.monotonic())
+                _LOCAL_DOCUMENT_REFRESH_BACKOFF_UNTIL.pop(host_id, None)
+            if _LOCAL_DOCUMENT_MISS_EVENTS.get(host_id) is event:
+                _LOCAL_DOCUMENT_MISS_EVENTS.pop(host_id, None)
+            event.set()
+
+    snapshot = _peek_local_document_snapshot(host_id)
+    if snapshot is not None:
+        return snapshot
+    return LocalDocumentSnapshot(None, None, "unknown")
+
+
+def get_cached_local_document(host_id: str) -> LocalDocumentSnapshot:
+    """Return the API host's cached report, refreshing stale data in background."""
+    snapshot = _peek_local_document_snapshot(host_id)
+    if snapshot is None:
+        return _collect_missing_local_document(host_id)
+    if snapshot.freshness != "fresh":
+        _schedule_local_document_refresh(host_id)
+    return snapshot
+
+
+def reset_local_document_cache() -> None:
+    """Clear cached self-reports and wait briefly for test refreshes to finish."""
+    global _LOCAL_DOCUMENT_GENERATION
+    with _LOCAL_DOCUMENT_LOCK:
+        _LOCAL_DOCUMENT_GENERATION += 1
+        threads = list(_LOCAL_DOCUMENT_REFRESH_THREADS.values())
+        _LOCAL_DOCUMENT_CACHE.clear()
+        _LOCAL_DOCUMENT_REFRESH_THREADS.clear()
+        _LOCAL_DOCUMENT_REFRESH_BACKOFF_UNTIL.clear()
+        _LOCAL_DOCUMENT_MISS_EVENTS.clear()
+    for thread in threads:
+        thread.join(timeout=2.0)
 
 
 def allowed_reporter_host_ids() -> frozenset[str]:
@@ -68,7 +228,16 @@ def _self_host_ids() -> set[str]:
 
 
 def _live_local_document(host_id: str) -> dict[str, Any] | None:
-    return collect_local_document(host_id)
+    return get_cached_local_document(host_id).document
+
+
+def _local_document_metadata(host_id: str, document: dict[str, Any]) -> tuple[float, str]:
+    snapshot = _peek_local_document_snapshot(host_id)
+    if snapshot is not None and snapshot.document is document:
+        return snapshot.age_s or 0.0, snapshot.freshness
+    # Keep the existing private seam useful for tests and callers that inject
+    # a document without going through the in-process cache.
+    return 0.0, "fresh"
 
 
 def _payload_for_host(host_id: str, *, now_mono: float) -> dict[str, Any]:
@@ -76,10 +245,11 @@ def _payload_for_host(host_id: str, *, now_mono: float) -> dict[str, Any]:
         document = _live_local_document(host_id)
         if document is None:
             return unknown_host_payload(host_id)
+        age_s, freshness = _local_document_metadata(host_id, document)
         return shape_host_payload(
             document,
-            age_s=0.0,
-            freshness="fresh",
+            age_s=age_s,
+            freshness=freshness,
             collected_at=document["collected_at"],
         )
 
