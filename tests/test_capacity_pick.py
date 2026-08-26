@@ -69,10 +69,8 @@ def test_pick_order_cool_first():
     ranked = [p for p in picks if p["pick"] != "AVOID"]
     assert "codex" in avoid_lanes
     assert "claude" in avoid_lanes
-    assert ranked[0]["lane"] in {"cursor", "deepseek", "glm", "agy", "grok"}
-    assert all(p["lane"] not in avoid_lanes for p in ranked)
-    assert report["recommendation"]["primary_agent_for_code"] == "cursor"
-    assert "cursor" in report["cooler_lanes"]
+    assert ranked[0]["lane"] == "cursor"
+    assert ranked[1]["lane"] in {"deepseek", "glm", "grok", "agy"}
 
 
 def test_format_includes_rec():

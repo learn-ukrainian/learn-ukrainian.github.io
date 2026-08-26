@@ -34,8 +34,9 @@ grok:
   # cap value not duplicated here to avoid drift with user's live tracking.
 # grok-hermes is API/Hermes-path and intentionally ABSENT from subscription caps.
 cursor:
-  # Cursor Pro+ subscription lane (CodexBar: Total / Auto / API).
-  # Burn/status tracks Total; do not invent a synthetic dollar cap here.
+  # Cursor Ultra 20× — monthly Auto + API pools (not 5h/weekly). Burn/status tracks Auto;
+  # pin ``--model auto`` to spend Auto allocation. Pinning sonnet/opus burns API pool.
+  # Native probe: cursor dashboard API; CodexBar optional overlay when binary exists.
 kimi:
   # Native Kimi Code OAuth subscription lane (K3). CodexBar exposes request
   # windows directly; do not duplicate a synthetic dollar cap here.

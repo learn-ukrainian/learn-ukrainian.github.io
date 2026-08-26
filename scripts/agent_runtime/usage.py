@@ -283,6 +283,78 @@ def summarize_lane_runtime(
     }
 
 
+def _new_fleet_burn_window() -> dict[str, Any]:
+    return {
+        "window_s": 0,
+        "counts": {"ok": 0, "error": 0, "rate_limited": 0, "timeout": 0, "other": 0, "total": 0},
+        "hours": 0.0,
+    }
+
+
+def summarize_fleet_burn(
+    agent: str,
+    *,
+    usage_dir: Path | None = None,
+    now: float | None = None,
+) -> dict[str, Any]:
+    """Dispatch burn from our JSONL across 5h / 7d / 30d windows."""
+    now_ts = time.time() if now is None else now
+    windows_s = {
+        "5h": 5 * 3600,
+        "7d": 7 * 24 * 3600,
+        "30d": 30 * 24 * 3600,
+    }
+    buckets = {name: _new_fleet_burn_window() for name in windows_s}
+    for name, window_s in windows_s.items():
+        buckets[name]["window_s"] = int(window_s)
+
+    root = usage_dir if usage_dir is not None else _usage_dir()
+    if root.is_dir():
+        for file_path in root.glob(f"usage_{agent}-*.jsonl"):
+            try:
+                with open(file_path, encoding="utf-8") as handle:
+                    for raw in handle:
+                        raw = raw.strip()
+                        if not raw:
+                            continue
+                        try:
+                            rec = json.loads(raw)
+                        except json.JSONDecodeError:
+                            continue
+                        ts_str = rec.get("ts")
+                        if not ts_str:
+                            continue
+                        try:
+                            ts = datetime.fromisoformat(
+                                str(ts_str).replace("Z", "+00:00")
+                            ).timestamp()
+                        except (ValueError, AttributeError, TypeError):
+                            continue
+                        outcome = str(rec.get("outcome") or "other")
+                        duration = rec.get("duration_s")
+                        hours = float(duration) / 3600.0 if isinstance(duration, (int, float)) else 0.0
+                        for name, window_s in windows_s.items():
+                            if ts < now_ts - window_s:
+                                continue
+                            bucket = buckets[name]
+                            counts = bucket["counts"]
+                            key = outcome if outcome in counts else "other"
+                            counts[key] += 1
+                            counts["total"] += 1
+                            bucket["hours"] = round(float(bucket["hours"]) + hours, 4)
+            except OSError:
+                continue
+
+    for bucket in buckets.values():
+        bucket["hours"] = round(float(bucket["hours"]), 4)
+
+    return {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": buckets,
+    }
+
+
 def has_headroom(agent: str, model: str) -> tuple[bool, str]:
     """Check whether (agent, model) has quota headroom for a new call.
 

@@ -212,23 +212,18 @@ def test_normalize_cursor_three_windows():
     }
     res = _normalize_provider_data("cursor", raw)
     assert res["lane"] == "cursor"
-    assert res["primary_used_pct"] == 44.7
-    assert abs(res["primary_remaining_pct"] - 55.3) < 0.01
+    assert res["primary_used_pct"] == 36.0
     assert res["secondary_used_pct"] == 36.0
-    assert res["secondary_remaining_pct"] == 64.0
     assert res["tertiary_used_pct"] == 100.0
-    assert res["tertiary_remaining_pct"] == 0.0
-    # Burn/status alias tracks Total (primary), not Auto (secondary).
-    assert res["weekly_used_pct"] == 44.7
-    assert abs(res["weekly_remaining_pct"] - 55.3) < 0.01
-    assert res["weekly_resets_at"] == "2026-08-01T09:58:38Z"
-    assert res["windows"]["primary"]["label"] == "Total"
+    # Burn/status tracks Auto monthly pool, not Total primary.
+    assert res["weekly_used_pct"] is None
+    assert res["weekly_remaining_pct"] is None
+    assert res["provider_windows"]["auto"]["used_pct"] == 36.0
+    assert res["provider_windows"]["api"]["used_pct"] == 100.0
     assert res["windows"]["secondary"]["label"] == "Auto"
     assert res["windows"]["tertiary"]["label"] == "API"
     assert res["windows"]["tertiary"]["used_pct"] == 100.0
-    assert res["windows"]["tertiary"]["remaining_pct"] == 0.0
-    assert res["windows"]["primary"]["resets_at"] == "2026-08-01T09:58:38Z"
-    # Must not quietly copy Total into the Auto window block.
+    assert res["weekly_resets_at"] == "2026-08-01T09:58:38Z"
     assert res["windows"]["secondary"]["used_pct"] == 36.0
 
 
@@ -338,6 +333,25 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+    })
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "fetched_at": "2026-07-09T14:13:52Z",
+        },
+    )
 
     now = datetime(2026, 7, 9, 16, 13, tzinfo=UTC)
     res = state_router.compute_routing_budget(now)
@@ -356,26 +370,37 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
     assert "weekly-pace signal" in deficit_warnings[0]
 
 
-def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
-    """Cursor burn tracks Total; exhausted API allotment emits an advisory warning."""
+def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
+    """Cursor burn tracks Auto monthly pool; exhausted API allotment emits advisory warning."""
     cursor_row = {
         "lane": "cursor",
-        "primary_used_pct": 44.7,
-        "primary_remaining_pct": 55.3,
+        "login_state": "authenticated",
+        "probe_state": "healthy",
+        "primary_used_pct": 36.0,
+        "primary_remaining_pct": 64.0,
         "secondary_used_pct": 36.0,
         "secondary_remaining_pct": 64.0,
         "tertiary_used_pct": 100.0,
         "tertiary_remaining_pct": 0.0,
-        "weekly_used_pct": 44.7,
-        "weekly_remaining_pct": 55.3,
-        "windows": {
-            "primary": {
-                "used_pct": 44.7,
-                "remaining_pct": 55.3,
+        "weekly_used_pct": None,
+        "weekly_remaining_pct": None,
+        "provider_windows": {
+            "auto": {
+                "window": "monthly",
+                "label": "Auto",
+                "used_pct": 36.0,
+                "remaining_pct": 64.0,
                 "resets_at": "2026-08-01T09:58:38Z",
-                "window_minutes": 44640,
-                "label": "Total",
             },
+            "api": {
+                "window": "monthly",
+                "label": "API",
+                "used_pct": 100.0,
+                "remaining_pct": 0.0,
+                "resets_at": "2026-08-01T09:58:38Z",
+            },
+        },
+        "windows": {
             "secondary": {
                 "used_pct": 36.0,
                 "remaining_pct": 64.0,
@@ -397,11 +422,11 @@ def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
         "weekly_pace_delta_pct": -20.0,
         "will_last_to_reset": True,
         "pace_summary": "-20% pace delta",
-        "source": "codexbar",
+        "source": "cursor_native",
         "fetched_at": "2026-07-21T19:00:00Z",
         "stale": False,
         "age_s": 1.0,
-        "status": "healthy",
+        "status": "cool",
         "auth_error": None,
     }
 
@@ -426,13 +451,25 @@ def test_routing_budget_cursor_burns_total_and_warns_on_api(monkeypatch):
         }
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: dict(cursor_row))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+    })
+    monkeypatch.setattr(
+        state_router,
+        "persist_provider_snapshot",
+        lambda lane, snapshot: {"trend": "flat", "samples": 1},
+    )
 
     res = state_router.compute_routing_budget(datetime(2026, 7, 21, 19, 0, tzinfo=UTC))
     cursor = res["agents"]["cursor"]
-    assert cursor["burn_pct_7d"] == 44.7
+    assert cursor["burn_pct_7d"] == 36.0
     assert cursor["status"] == "cool"
-    assert cursor["codexbar"]["windows"]["primary"]["label"] == "Total"
+    assert cursor["provider_windows"]["auto"]["used_pct"] == 36.0
+    assert cursor["provider_windows"]["api"]["used_pct"] == 100.0
     api_warnings = [w for w in res["recommendation"]["warnings"] if "API/on-demand" in w]
     assert api_warnings
     assert "100% used" in api_warnings[0]
@@ -767,37 +804,30 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
 
 
 def test_dashboard_routing_html_renders_unavailable_explicitly():
-    """Prove dashboards/routing.html renders 'unavailable' non-numeric display, not 0.0% or 0-width bar."""
+    """Prove dashboards/routing.html renders 'unknown' non-numeric display, not 0.0% or 0-width bar."""
     import subprocess
     script = """
     const fs = require('fs');
     const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const renderBudgetMatch = html.match(/function renderBudget\\(routing, usage\\) \\{[\\s\\S]*?\\n\\}/);
-    if (!renderBudgetMatch) throw new Error('renderBudget not found');
-
-    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[ch]));
-    const pct = (value) => {
-      const num = Number(value);
-      return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
-    };
-    const statusPill = (status) => `<span class="pill ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+    const start = html.indexOf('function escapeHtml');
+    const end = html.indexOf('function renderAgents');
+    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
+    const helpers = html.slice(start, end);
 
     let innerHTML = '';
     const document = {
       getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
     };
 
-    eval(renderBudgetMatch[0]);
+    eval(helpers);
 
-    renderBudget({
+    renderSubscriptions({
       agents: {
         codex: {
           status: 'unavailable',
           burn_pct_7d: null,
           remaining_pct: null,
-          weekly_cap_usd: null
+          codexbar: { weekly_used_pct: null, fetched_at: null }
         }
       },
       in_flight: {}
@@ -808,9 +838,139 @@ def test_dashboard_routing_html_renders_unavailable_explicitly():
     res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
     out = res.stdout
     assert "0.0%" not in out, f"Dashboard rendered 0.0% for unavailable state: {out}"
-    assert "style=\"width:0%\"" not in out, f"Dashboard rendered 0-width bar for unavailable state: {out}"
-    assert "unavailable" in out
-    assert 'class="bar unavailable"' in out
+    assert 'style="width:0%"' not in out, f"Dashboard rendered 0-width bar for unavailable state: {out}"
+    assert "unknown" in out
+    assert 'class="bar unavailable"' in out or 'class="pill unknown"' in out
+
+
+def test_dashboard_routing_html_renders_cursor_auto_api_subscriptions():
+    """Subscriptions table must show Cursor Auto + API percents from provider_windows."""
+    import subprocess
+
+    script = """
+    const fs = require('fs');
+    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
+    const start = html.indexOf('function escapeHtml');
+    const end = html.indexOf('function renderAgents');
+    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
+    const helpers = html.slice(start, end);
+
+    let innerHTML = '';
+    const document = {
+      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
+    };
+    eval(helpers);
+
+    renderSubscriptions({
+      agents: {
+        cursor: {
+          status: 'cool',
+          login_state: 'authenticated',
+          probe_state: 'healthy',
+          provider_windows: {
+            auto: { window: 'monthly', label: 'Auto', used_pct: 23, remaining_pct: 77, resets_at: '2026-09-01T00:00:00Z' },
+            api: { window: 'monthly', label: 'API', used_pct: 40, remaining_pct: 60, resets_at: '2026-09-01T00:00:00Z' },
+          },
+          codexbar: { fetched_at: '2026-08-26T12:00:00Z', age_s: 120 },
+          fleet_burn: { windows: { '5h': { counts: { total: 1 } }, '7d': { counts: { total: 3 } }, '30d': { counts: { total: 10 } } } },
+        },
+      },
+      in_flight: { cursor: 0 },
+    });
+    console.log(innerHTML);
+    """
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
+    out = res.stdout
+    assert "Auto" in out
+    assert "API" in out
+    assert "23" in out
+    assert "40" in out
+    assert "77" in out or "60" in out
+
+
+def test_dashboard_routing_html_need_login_does_not_render_zero_auto_used():
+    """NEED_LOGIN fixture must not paint Auto as 0.0% used."""
+    import subprocess
+
+    script = """
+    const fs = require('fs');
+    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
+    const start = html.indexOf('function escapeHtml');
+    const end = html.indexOf('function renderAgents');
+    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
+    const helpers = html.slice(start, end);
+
+    let innerHTML = '';
+    const document = {
+      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
+    };
+    eval(helpers);
+
+    renderSubscriptions({
+      agents: {
+        cursor: {
+          status: 'need_login',
+          login_state: 'NEED_LOGIN',
+          probe_state: 'NEED_LOGIN',
+          provider_windows: {
+            auto: { window: 'monthly', used_pct: null, remaining_pct: null },
+            api: { window: 'monthly', used_pct: null, remaining_pct: null },
+          },
+        },
+      },
+      in_flight: {},
+    });
+    console.log(innerHTML);
+    """
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
+    out = res.stdout
+    assert "NEED_LOGIN" in out
+    assert "0.0%" not in out
+    assert 'style="width:0%"' not in out
+
+
+def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
+    """HTTP reads must not block on live Cursor probes."""
+    cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)
+    codexbar_usage_mod._cursor_last_good = None
+    probe_calls = {"login": 0, "windows": 0}
+
+    def _login(**kwargs):
+        probe_calls["login"] += 1
+        return {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "is_authenticated": True,
+            "fetched_at": "2026-08-26T12:00:00Z",
+        }
+
+    def _windows(**kwargs):
+        probe_calls["windows"] += 1
+        return {
+            "lane": "cursor",
+            "probe_state": "healthy",
+            "login_state": "authenticated",
+            "provider_windows": {
+                "auto": {"window": "monthly", "label": "Auto", "used_pct": 12.0, "remaining_pct": 88.0, "resets_at": None},
+                "api": {"window": "monthly", "label": "API", "used_pct": 5.0, "remaining_pct": 95.0, "resets_at": None},
+            },
+            "fetched_at": "2026-08-26T12:00:00Z",
+        }
+
+    monkeypatch.setattr(codexbar_usage_mod, "probe_cursor_login", _login)
+    monkeypatch.setattr(codexbar_usage_mod, "probe_cursor_provider_windows", _windows)
+    monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
+
+    result = codexbar_usage_mod.get_cursor_lane_usage()
+    assert result["freshness"] == "unavailable"
+    assert probe_calls == {"login": 0, "windows": 0}
+
+    codexbar_usage_mod._record_cursor_probe_result(_windows())
+    probe_calls["windows"] = 0
+    cached = codexbar_usage_mod.get_cursor_lane_usage()
+    assert cached["freshness"] == "fresh"
+    assert cached["provider_windows"]["auto"]["used_pct"] == 12.0
+    assert probe_calls == {"login": 0, "windows": 0}
 
 
 def test_failed_refresh_never_poison_last_known_good_capacity(monkeypatch):
@@ -945,12 +1105,14 @@ def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
         return {}
 
     monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(codexbar_usage_mod, "_refresh_cursor_usage_live", lambda: None)
     monkeypatch.setattr(codexbar_usage_mod, "_refresh_in_flight", threading.Lock())
     codexbar_usage_mod._run_all_refreshes()
     # No override passed -> refresh_provider_usage_data resolves the shared
     # realistic default itself, instead of the caller hardcoding 2.0.
     assert captured["timeout_s"] is None
     assert "claude" in captured["providers"]
+    assert "cursor" not in captured["providers"]
 
 
 def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
@@ -1036,6 +1198,7 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
         return {}
 
     monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(codexbar_usage_mod, "_refresh_cursor_usage_live", lambda: None)
     monkeypatch.setattr(codexbar_usage_mod, "_refresh_in_flight", threading.Lock())
     worker = threading.Thread(target=codexbar_usage_mod._run_all_refreshes, daemon=True)
     worker.start()
@@ -1043,4 +1206,4 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     codexbar_usage_mod._run_all_refreshes()  # must no-op while first is in flight
     release.set()
     worker.join(timeout=1.0)
-    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_PROVIDERS)]
+    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]

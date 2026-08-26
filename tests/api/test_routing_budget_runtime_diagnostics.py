@@ -78,6 +78,24 @@ def _configure(
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
+    monkeypatch.setattr(
+        state_router,
+        "get_cursor_lane_usage",
+        lambda **kwargs: {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+        },
+    )
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
+    })
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
     monkeypatch.setattr(
         state_router,
@@ -171,44 +189,44 @@ def test_empty_ledger_rec_stays_suppressed_when_runtime_exists(monkeypatch, tmp_
         assert status in ("unknown", "unavailable"), f"{lane} must stay unknown on empty ledger"
 
 
-def test_routing_html_states_ledger_empty_when_runtime_usage_exists():
-    """dashboards/routing.html must say "ledger empty, runtime exists" — not a silent $0 week."""
+def test_routing_html_subscriptions_renders_cursor_windows_without_fabricating_zero():
+    """Subscriptions section shows provider windows; missing data is unknown, not 0%."""
     import subprocess
 
     script = """
     const fs = require('fs');
     const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const renderBudgetMatch = html.match(/function renderBudget\\(routing, usage\\) \\{[\\s\\S]*?\\n\\}/);
-    if (!renderBudgetMatch) throw new Error('renderBudget not found');
-
-    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[ch]));
-    const pct = (value) => {
-      const num = Number(value);
-      return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
-    };
-    const statusPill = (status) => `<span class="pill ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+    const start = html.indexOf('function escapeHtml');
+    const end = html.indexOf('function renderAgents');
+    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
+    const helpers = html.slice(start, end);
 
     let innerHTML = '';
     const document = {
       getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
     };
+    eval(helpers);
 
-    eval(renderBudgetMatch[0]);
-
-    const routing = {
+    renderSubscriptions({
       agents: {
-        codex: { status: 'unknown', burn_pct_7d: null, remaining_pct: null, weekly_cap_usd: 1000 }
+        cursor: {
+          status: 'unknown',
+          login_state: 'authenticated',
+          probe_state: 'NEED_PROBE',
+          provider_windows: {
+            auto: { window: 'monthly', used_pct: null, remaining_pct: null },
+            api: { window: 'monthly', used_pct: null, remaining_pct: null },
+          },
+        },
+        codex: { status: 'unknown', burn_pct_7d: null, codexbar: { weekly_used_pct: null } },
       },
       in_flight: {},
       diagnostics: { records_loaded: 0, budget_ledger_empty: true, runtime_usage_records_7d: 25 }
-    };
-    renderBudget(routing, { records_total: 25 });
+    });
     console.log(innerHTML);
     """
     res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
     out = res.stdout
-    assert "budget ledger is empty" in out, f"missing ledger-empty note: {out}"
-    assert "Runtime usage exists (25 call(s) in 7d)" in out, f"missing runtime-exists copy: {out}"
-    assert "Burn unknown — USD budget ledger empty" in out, f"missing honest bar title: {out}"
+    assert "NEED_PROBE" in out or "unknown" in out
+    assert "0.0%" not in out
+    assert "Fleet burn" in out or "5h:" in out

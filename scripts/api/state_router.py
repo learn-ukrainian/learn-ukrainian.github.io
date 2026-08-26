@@ -62,7 +62,9 @@ from . import delegate_router as delegate_api
 from . import preparation_state
 from .codexbar_usage import (
     compute_weekly_pace_delta_pct,
+    get_cursor_lane_usage,
     get_provider_usage_data,
+    persist_provider_snapshot,  # noqa: F401 — tests monkeypatch via state_router
     refresh_provider_usage_data,
     trigger_background_refresh,
 )
@@ -72,9 +74,9 @@ from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
 
 try:
-    from agent_runtime.usage import summarize_lane_runtime
+    from agent_runtime.usage import summarize_fleet_burn, summarize_lane_runtime
 except ImportError:
-    from scripts.agent_runtime.usage import summarize_lane_runtime
+    from scripts.agent_runtime.usage import summarize_fleet_burn, summarize_lane_runtime
 from .monitor_context import get_ctx
 from .repository_authority import (
     RepositoryAuthorityError,
@@ -132,6 +134,48 @@ from .telemetry.response import add_json_telemetry, session_id_from_request
 _detect_pipeline_version = detect_pipeline_version
 _is_research_done = is_research_done
 _is_content_done = is_content_done
+
+CODE_IMPLEMENT_LANE_PRIORITY: dict[str, int] = {
+    "cursor": 0,
+    "codex": 1,
+    "claude": 2,
+    "grok": 3,
+    "kimi": 4,
+    "gemini": 5,
+}
+
+
+def _capacity_used_pct(cb_data: dict[str, Any] | None) -> float | None:
+    """Resolve the authoritative used-% for a lane (weekly or Cursor Auto monthly)."""
+    if not isinstance(cb_data, dict):
+        return None
+    weekly = cb_data.get("weekly_used_pct")
+    if isinstance(weekly, (int, float)) and not isinstance(weekly, bool):
+        return float(weekly)
+    provider_windows = cb_data.get("provider_windows")
+    if isinstance(provider_windows, dict):
+        auto = provider_windows.get("auto")
+        if isinstance(auto, dict) and isinstance(auto.get("used_pct"), (int, float)):
+            return float(auto["used_pct"])
+    primary = cb_data.get("primary_used_pct")
+    if isinstance(primary, (int, float)) and not isinstance(primary, bool):
+        return float(primary)
+    return None
+
+
+def _fleet_burn_has_activity(fleet_burn: dict[str, Any] | None) -> bool:
+    if not isinstance(fleet_burn, dict):
+        return False
+    windows = fleet_burn.get("windows")
+    if not isinstance(windows, dict):
+        return False
+    for block in windows.values():
+        if not isinstance(block, dict):
+            continue
+        counts = block.get("counts")
+        if isinstance(counts, dict) and int(counts.get("total") or 0) > 0:
+            return True
+    return False
 
 router = APIRouter(tags=["state"])
 
@@ -437,6 +481,9 @@ def _recommend_agent(
         if a in core or a not in agents:
             continue
         st = agents[a].get("status", "unknown")
+        login_state = agents[a].get("login_state")
+        if login_state == "NEED_LOGIN" or st == "need_login":
+            continue
         if st not in ("unknown", "unavailable"):
             status_by_agent[a] = st
             burn_by_agent[a] = agents[a].get("burn_pct_7d")
@@ -472,9 +519,12 @@ def _recommend_agent(
         )
 
     def select_agent(agents_dict, status_map, burn_map, resets_map):
-        def _sort_burn(agent: str) -> float:
+        def _sort_burn(agent: str) -> tuple[float, int]:
             val = burn_map.get(agent)
-            return float(val) if isinstance(val, (int, float)) else 999.0
+            burn_key = float(val) if isinstance(val, (int, float)) else 999.0
+            # Burn first (lowest 7d spend), lane rank only as a tie-break.
+            # Cursor-first for cool Ultra is the explicit branch above, not this sort.
+            return (burn_key, CODE_IMPLEMENT_LANE_PRIORITY.get(agent, 50))
 
         if "near_cap" in status_map.values():
             candidates = [agent for agent, st in status_map.items() if st == "cool"]
@@ -491,6 +541,22 @@ def _recommend_agent(
                         f"available 7d burn ({_format_pct(burn_map.get(recommended))}%)."
                     ),
                 }
+
+        # Operator 2026-08-26: authenticated Cursor Ultra must lead cool code-implement seats.
+        cursor_st = status_map.get("cursor")
+        cursor_info = agents_dict.get("cursor") if isinstance(agents_dict.get("cursor"), dict) else {}
+        if (
+            cursor_st == "cool"
+            and cursor_info.get("login_state") != "NEED_LOGIN"
+            and cursor_info.get("probe_state") != "NEED_LOGIN"
+        ):
+            return {
+                "primary_agent_for_code": "cursor",
+                "rationale": (
+                    "Cursor Ultra is authenticated and cool; prefer Auto-pool utilization "
+                    f"({_format_pct(burn_map.get('cursor'))}% Auto monthly burn)."
+                ),
+            }
 
         # claude pool still special
         if "claude" in agents_dict:
@@ -944,14 +1010,43 @@ def compute_routing_budget(
     refreshed_codexbar = refresh_provider_usage_data(SUBSCRIPTION_LANES) if fresh_codexbar else {}
 
     for lane in SUBSCRIPTION_LANES:
-        cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
+        if lane == "cursor":
+            cb_data = get_cursor_lane_usage()
+        else:
+            cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
         if isinstance(cb_data, dict):
             cb_freshness[lane] = str(cb_data.get("freshness") or (
                 "stale_last_good" if cb_data.get("stale") else "fresh"
             ))
-        if cb_data and cb_data.get("weekly_used_pct") is not None:
+
+        if lane == "cursor" and isinstance(cb_data, dict):
+            agents[lane]["login_state"] = cb_data.get("login_state")
+            agents[lane]["probe_state"] = cb_data.get("probe_state")
+            if isinstance(cb_data.get("provider_windows"), dict):
+                agents[lane]["provider_windows"] = cb_data["provider_windows"]
+            if cb_data.get("trend"):
+                agents[lane]["trend"] = cb_data["trend"]
+            if cb_data.get("login_state") == "NEED_LOGIN" or cb_data.get("probe_state") == "NEED_LOGIN":
+                agents[lane]["status"] = "need_login"
+                agents[lane]["remaining_pct"] = None
+                agents[lane]["burn_pct_7d"] = None
+                agents[lane]["codexbar"] = {
+                    "login_state": "NEED_LOGIN",
+                    "probe_state": "NEED_LOGIN",
+                    "status": "need_login",
+                    "provider_windows": cb_data.get("provider_windows"),
+                    "fetched_at": cb_data.get("fetched_at"),
+                }
+                warnings.append(
+                    "lane cursor NEED_LOGIN — operator must authenticate (`agent login`); "
+                    "do not silently substitute to agy/codex"
+                )
+                continue
+
+        capacity_used = _capacity_used_pct(cb_data if isinstance(cb_data, dict) else None)
+        if cb_data and capacity_used is not None:
             cb_sourced_any = True
-            weekly_used = cb_data["weekly_used_pct"]
+            weekly_used = capacity_used
 
             # Determine status using deficit signal
             is_in_deficit = (
@@ -987,12 +1082,18 @@ def compute_routing_budget(
                 "weekly_used_pct": cb_data.get("weekly_used_pct"),
                 "weekly_remaining_pct": cb_data.get("weekly_remaining_pct"),
                 "windows": cb_data.get("windows"),
+                "provider_windows": cb_data.get("provider_windows"),
+                "probe_state": cb_data.get("probe_state"),
+                "login_state": cb_data.get("login_state"),
                 "monthly_cap_usd": cb_data.get("monthly_cap_usd"),
                 "monthly_used_usd": cb_data.get("monthly_used_usd"),
                 "weekly_resets_at": cb_data.get("weekly_resets_at"),
                 "weekly_pace_delta_pct": cb_data.get("weekly_pace_delta_pct"),
                 "will_last_to_reset": cb_data.get("will_last_to_reset"),
                 "pace_summary": cb_data.get("pace_summary"),
+                "trend": cb_data.get("trend"),
+                "headroom_pct": cb_data.get("headroom_pct"),
+                "deficit": cb_data.get("deficit"),
                 "stale": cb_data.get("stale", False),
                 "freshness": cb_data.get("freshness") or (
                     "stale_last_good" if cb_data.get("stale") else "fresh"
@@ -1002,7 +1103,10 @@ def compute_routing_budget(
                 "failure_kind": cb_data.get("failure_kind"),
                 "last_failure_at": cb_data.get("last_failure_at"),
                 "last_failure_code": cb_data.get("last_failure_code"),
+                "source": cb_data.get("source"),
             }
+            if isinstance(cb_data.get("provider_windows"), dict):
+                agents[lane]["provider_windows"] = cb_data["provider_windows"]
 
             # Update authoritative keys in agents
             if lane == "claude":
@@ -1031,12 +1135,23 @@ def compute_routing_budget(
                 agent_config = budgets.get(lane) if isinstance(budgets.get(lane), dict) else {}
                 cap = float(agent_config.get("weekly_cap_usd") or 0.0) if agent_config else 0.0
                 agents[lane]["burn_pct_7d"] = weekly_used
-                agents[lane]["status"] = cb_status
+                agents[lane]["status"] = cb_data.get("status") if lane == "cursor" and cb_data.get("status") else cb_status
                 agents[lane]["spent_7d_usd"] = _round_money((weekly_used / 100.0) * cap) if cap else None
                 agents[lane]["remaining_pct"] = 100.0 - weekly_used
                 if cb_data.get("weekly_resets_at"):
                     agents[lane]["resets_at"] = cb_data["weekly_resets_at"]
 
+        elif lane == "cursor" and isinstance(cb_data, dict) and cb_data.get("probe_state") == "NEED_PROBE":
+            agents[lane]["provider_windows"] = cb_data.get("provider_windows")
+            agents[lane]["probe_state"] = "NEED_PROBE"
+            agents[lane]["codexbar"] = {
+                "probe_state": "NEED_PROBE",
+                "provider_windows": cb_data.get("provider_windows"),
+                "auth_error": cb_data.get("auth_error"),
+                "error_kind": cb_data.get("error_kind"),
+                "fetched_at": cb_data.get("fetched_at"),
+                "status": "unknown",
+            }
         else:
             # CodexBar capacity is unavailable (missing binary, timeout, non-zero exit, malformed JSON, unparseable schema, provider error, or fallback).
             # Retain ledger-derived burn_pct_7d/remaining_pct/status if available (or "unknown" if no cap/records).
@@ -1090,9 +1205,27 @@ def compute_routing_budget(
     # surfaces reactive 429/burn so a dashboard-green lane that is actively
     # rate-limiting still demotes in ranking and warnings.
     runtime_sourced_any = False
+    fleet_burn_any = False
     for lane in SUBSCRIPTION_LANES:
         if lane not in agents:
             continue
+        try:
+            fleet_burn = summarize_fleet_burn(lane)
+        except Exception as exc:
+            logging.getLogger("state_router").debug("fleet burn failed for %s: %s", lane, exc)
+            fleet_burn = {"source": "agent_runtime_jsonl", "agent": lane, "windows": {}}
+        agents[lane]["fleet_burn"] = fleet_burn
+        if _fleet_burn_has_activity(fleet_burn):
+            fleet_burn_any = True
+            # Native/CodexBar miss must not hide an authenticated Cursor lane
+            # that we are already dispatching (CF #7359).
+            if (
+                lane == "cursor"
+                and agents[lane].get("login_state") == "authenticated"
+                and agents[lane].get("probe_state") != "NEED_LOGIN"
+                and agents[lane].get("status") in (None, "unknown", "unavailable")
+            ):
+                agents[lane]["status"] = "cool"
         try:
             runtime = summarize_lane_runtime(lane)
         except Exception as exc:  # never break routing-budget on telemetry I/O
@@ -1193,9 +1326,13 @@ def compute_routing_budget(
                     if lane == "cursor":
                         auto_pct = cb.get("secondary_used_pct")
                         api_pct = cb.get("tertiary_used_pct")
+                        provider_windows = cb.get("provider_windows") if isinstance(cb.get("provider_windows"), dict) else {}
+                        if isinstance(provider_windows.get("auto"), dict):
+                            auto_pct = provider_windows["auto"].get("used_pct", auto_pct)
+                        if isinstance(provider_windows.get("api"), dict):
+                            api_pct = provider_windows["api"].get("used_pct", api_pct)
                         short_bit = (
-                            f"Total {primary_pct:.0f}% used"
-                            + (f", Auto {auto_pct:.0f}%" if auto_pct is not None else "")
+                            f"Auto {auto_pct:.0f}% used"
                             + (f", API {api_pct:.0f}%" if api_pct is not None else "")
                         )
                     elif primary_mins is None or int(primary_mins) <= 300:
@@ -1255,7 +1392,7 @@ def compute_routing_budget(
         reset_imminent_hours=reset_hours,
         is_stale=is_stale,
         records_loaded=len(records),
-        authoritative_data_available=cb_sourced_any,
+        authoritative_data_available=cb_sourced_any or fleet_burn_any,
     )
 
     # Build ranked view: subscription by remaining headroom (low burn = high remaining first), API always unknown
@@ -1351,10 +1488,14 @@ def compute_routing_budget(
                     if nb_sourced_any and cb_had_any_before_notebook
                     else "notebook-report"
                     if nb_sourced_any
+                    else "codexbar+cursor_native"
+                    if agents.get("cursor", {}).get("probe_state") == "healthy"
                     else "codexbar"
                 ),
                 "burn_rate_limit": "agent_runtime_jsonl",
+                "fleet_burn": "agent_runtime_jsonl",
             },
+            "fleet_burn_available": fleet_burn_any,
             "notebook_report_available": nb_sourced_any,
             "notebook_report_max_age_s": nb_max_age_s,
         },

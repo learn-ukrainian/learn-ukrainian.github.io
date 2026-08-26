@@ -77,6 +77,76 @@ def _empty_runtime(agent: str) -> dict:
     }
 
 
+def _empty_fleet_burn(agent: str) -> dict:
+    empty_counts = {"ok": 0, "error": 0, "rate_limited": 0, "timeout": 0, "other": 0, "total": 0}
+    return {
+        "source": "agent_runtime_jsonl",
+        "agent": agent,
+        "windows": {
+            "5h": {"window_s": 18000, "counts": dict(empty_counts), "hours": 0.0},
+            "7d": {"window_s": 604800, "counts": dict(empty_counts), "hours": 0.0},
+            "30d": {"window_s": 2592000, "counts": dict(empty_counts), "hours": 0.0},
+        },
+    }
+
+
+def _mock_cursor_lane(*, auto_pct: float | None = None, api_pct: float = 20.0, login: str = "authenticated") -> dict:
+    if login == "NEED_LOGIN":
+        return {
+            "lane": "cursor",
+            "login_state": "NEED_LOGIN",
+            "probe_state": "NEED_LOGIN",
+            "is_authenticated": False,
+            "status": "need_login",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "fetched_at": "2026-05-13T20:30:00Z",
+        }
+    if auto_pct is None:
+        return {
+            "lane": "cursor",
+            "login_state": "authenticated",
+            "probe_state": "NEED_PROBE",
+            "is_authenticated": True,
+            "status": "unknown",
+            "provider_windows": {
+                "auto": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "fetched_at": "2026-05-13T20:30:00Z",
+        }
+    return {
+        "lane": "cursor",
+        "login_state": "authenticated",
+        "probe_state": "healthy",
+        "is_authenticated": True,
+        "status": "cool",
+        "primary_used_pct": auto_pct,
+        "tertiary_used_pct": api_pct,
+        "provider_windows": {
+            "auto": {
+                "window": "monthly",
+                "label": "Auto",
+                "used_pct": auto_pct,
+                "remaining_pct": 100.0 - auto_pct,
+                "resets_at": "2026-08-01T09:58:38Z",
+            },
+            "api": {
+                "window": "monthly",
+                "label": "API",
+                "used_pct": api_pct,
+                "remaining_pct": 100.0 - api_pct,
+                "resets_at": "2026-08-01T09:58:38Z",
+            },
+        },
+        "weekly_resets_at": "2026-08-01T09:58:38Z",
+        "fetched_at": "2026-05-13T20:30:00Z",
+        "source": "cursor_native",
+    }
+
+
 def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
@@ -107,7 +177,14 @@ def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
         return None
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", _mock_cb)
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: _mock_cursor_lane())
+    monkeypatch.setattr(state_router, "summarize_fleet_burn", _empty_fleet_burn)
     monkeypatch.setattr(state_router, "summarize_lane_runtime", _empty_runtime)
+    monkeypatch.setattr(
+        state_router,
+        "persist_provider_snapshot",
+        lambda lane, snapshot: {"trend": "flat", "samples": 1},
+    )
     monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",
@@ -125,7 +202,7 @@ def test_endpoint_returns_documented_shape(monkeypatch, tmp_path):
     assert response.status_code == 200
     data = response.json()
     assert {"agents", "in_flight", "recommendation", "diagnostics", "generated_at"} <= data.keys()
-    assert data["diagnostics"]["usage_sources"]["allotment"] == "codexbar"
+    assert data["diagnostics"]["usage_sources"]["allotment"] in {"codexbar", "codexbar+cursor_native"}
     assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
     assert "runtime" in data["agents"]["codex"]
 

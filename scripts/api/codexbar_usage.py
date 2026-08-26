@@ -13,14 +13,31 @@ import time
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
 
 from scripts.api.state_helpers import cache_get_with_age, cache_set
+
+try:
+    from scripts.agent_runtime.adapters.cursor import (
+        probe_cursor_login,
+        probe_cursor_provider_windows,
+    )
+except ImportError:  # pragma: no cover
+    from agent_runtime.adapters.cursor import (  # type: ignore
+        probe_cursor_login,
+        probe_cursor_provider_windows,
+    )
 
 WEEKLY_WINDOW_MINUTES = 10080
 # Reject monthly/long windows when no exact weekly window exists (e.g. 43200 min).
 WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
 PACE_TOLERANCE_PCT = 10.0
+
+try:
+    from scripts.common.repo_root import main_checkout_root
+except ImportError:  # pragma: no cover
+    from common.repo_root import main_checkout_root
 
 # Live-measured 2026-08-04: `codexbar usage --json --provider claude` took
 # ~17s end-to-end twice in a row (its own dashboard-fetch latency, not a
@@ -40,6 +57,11 @@ DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S = 25.0
 # CODEXBAR_REFRESH_INTERVAL_S.
 DEFAULT_CODEXBAR_CACHE_TTL_S = 720.0
 DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
+
+# Native Cursor login + dashboard probe can exceed routing.html's 5s timeout.
+# Cache HTTP reads for 10 minutes; background refresh keeps snapshots warm.
+DEFAULT_CURSOR_CACHE_TTL_S = 600.0
+CURSOR_CACHE_KEY = "cursor_lane_usage"
 
 SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
     "claude",
@@ -71,14 +93,31 @@ _scheduler_stop = threading.Event()
 _scheduler_thread: threading.Thread | None = None
 _last_refresh_started_at: float | None = None
 _last_refresh_finished_at: float | None = None
+_cursor_last_good: tuple[float, dict[str, Any]] | None = None
+_cursor_refresh_lock = threading.Lock()
+_cursor_refresh_thread: threading.Thread | None = None
 
 
 def _is_usable_capacity(data: dict[str, Any] | None) -> bool:
     """Return whether a probe supplied authoritative capacity, not merely JSON."""
-    if not isinstance(data, dict) or data.get("status") != "healthy":
+    if not isinstance(data, dict):
+        return False
+    if data.get("status") in {"unavailable", "unknown", "need_login"}:
+        return False
+    if data.get("probe_state") in {"NEED_PROBE", "NEED_LOGIN"}:
+        return False
+    if data.get("login_state") == "NEED_LOGIN":
         return False
     weekly_used = data.get("weekly_used_pct")
-    return isinstance(weekly_used, (int, float)) and not isinstance(weekly_used, bool)
+    if isinstance(weekly_used, (int, float)) and not isinstance(weekly_used, bool):
+        return True
+    provider_windows = data.get("provider_windows")
+    if isinstance(provider_windows, dict):
+        auto = provider_windows.get("auto")
+        if isinstance(auto, dict) and isinstance(auto.get("used_pct"), (int, float)):
+            return True
+    primary_used = data.get("primary_used_pct")
+    return isinstance(primary_used, (int, float)) and not isinstance(primary_used, bool)
 
 
 def _failure_metadata(data: dict[str, Any]) -> dict[str, Any]:
@@ -166,6 +205,11 @@ def _codexbar_refresh_interval_s() -> float:
     return _env_positive_float(
         "CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S
     )
+
+
+def _cursor_cache_ttl_s() -> float:
+    """How long a successful Cursor native snapshot is labelled fresh."""
+    return _env_positive_float("CURSOR_CACHE_TTL_S", DEFAULT_CURSOR_CACHE_TTL_S)
 
 
 def _periodic_refresh_enabled() -> bool:
@@ -470,29 +514,63 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
     named_tertiary = usage.get("tertiary") if isinstance(usage.get("tertiary"), dict) else None
 
     cursor_window_labels: dict[str, str] | None = None
+    cursor_provider_windows: dict[str, Any] | None = None
     if lane == "cursor":
-        # Burn/status must track Total, not Auto. The generic absolute fallback
-        # wrongly promoted secondary→weekly and understated account pressure.
-        primary_win = named_primary or primary_win
-        weekly_win = named_primary or weekly_win
-        cursor_window_labels = {"primary": "Total", "secondary": "Auto", "tertiary": "API"}
+        # Cursor Ultra: monthly Auto + API pools only. Do not mash Total into burn/status.
+        auto_win = named_secondary
+        api_win = named_tertiary
+        primary_win = auto_win
+        weekly_win = None
+        cursor_window_labels = {"secondary": "Auto", "tertiary": "API"}
+        auto_used = _used_pct(auto_win) if auto_win else _used_pct(named_secondary)
+        api_used = _used_pct(api_win) if api_win else _used_pct(named_tertiary)
+        resets_at = None
+        if auto_win and auto_win.get("resetsAt"):
+            resets_at = auto_win.get("resetsAt")
+        elif api_win and api_win.get("resetsAt"):
+            resets_at = api_win.get("resetsAt")
+        elif named_primary and named_primary.get("resetsAt"):
+            resets_at = named_primary.get("resetsAt")
+        cursor_provider_windows = {
+            "auto": {
+                "window": "monthly",
+                "label": "Auto",
+                "used_pct": auto_used,
+                "remaining_pct": _remaining_pct(auto_used),
+                "resets_at": resets_at,
+                "window_minutes": (auto_win or {}).get("windowMinutes"),
+            },
+            "api": {
+                "window": "monthly",
+                "label": "API",
+                "used_pct": api_used,
+                "remaining_pct": _remaining_pct(api_used),
+                "resets_at": resets_at,
+                "window_minutes": (api_win or {}).get("windowMinutes"),
+            },
+        }
+
+    auto_win = named_secondary if lane == "cursor" else None
+    api_win = named_tertiary if lane == "cursor" else None
 
     primary_used_pct = _used_pct(primary_win) if primary_win else _used_pct(named_primary)
     if primary_used_pct is None:
         primary_used_pct = _used_pct(named_primary)
+    if lane == "cursor" and cursor_provider_windows:
+        primary_used_pct = cursor_provider_windows["auto"]["used_pct"]
+        secondary_used_pct = primary_used_pct
+        tertiary_used_pct = cursor_provider_windows["api"]["used_pct"]
+    else:
+        secondary_used_pct = _used_pct(named_secondary)
+        tertiary_used_pct = _used_pct(named_tertiary)
 
     weekly_used_pct = _used_pct(weekly_win) if weekly_win else _used_pct(named_secondary)
     if weekly_used_pct is None:
         weekly_used_pct = _used_pct(named_secondary)
-    if lane == "cursor" and primary_used_pct is not None:
-        # Prefer Total even when a leftover weekly_win still points elsewhere.
-        weekly_used_pct = primary_used_pct
-
-    secondary_used_pct = _used_pct(named_secondary)
-    if secondary_used_pct is None and lane != "cursor" and weekly_used_pct is not None:
+    if lane == "cursor":
+        weekly_used_pct = None
+    elif secondary_used_pct is None and weekly_used_pct is not None:
         secondary_used_pct = weekly_used_pct
-
-    tertiary_used_pct = _used_pct(named_tertiary)
 
     weekly_resets_at = None
     if weekly_win:
@@ -503,8 +581,10 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         weekly_resets_at = named_secondary.get("resetsAt")
     if not weekly_resets_at and named_primary:
         weekly_resets_at = named_primary.get("resetsAt")
-    if lane == "cursor" and named_primary and named_primary.get("resetsAt"):
-        weekly_resets_at = named_primary.get("resetsAt")
+    if lane == "cursor" and cursor_provider_windows:
+        auto_resets = cursor_provider_windows["auto"].get("resets_at")
+        if auto_resets:
+            weekly_resets_at = auto_resets
 
     monthly_cap_usd = None
     monthly_used_usd = None
@@ -533,7 +613,8 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         pace_summary = weekly_pace.get("summary")
     else:
         # Fallback manual calculation of pace
-        if weekly_resets_at and weekly_used_pct is not None:
+        pace_used = primary_used_pct if lane == "cursor" else weekly_used_pct
+        if weekly_resets_at and pace_used is not None:
             try:
                 dt_str = weekly_resets_at.replace("Z", "+00:00")
                 resets_at_dt = datetime.fromisoformat(dt_str)
@@ -542,8 +623,13 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
                 win_mins = 10080
                 if weekly_win and weekly_win.get("windowMinutes") is not None:
                     win_mins = int(weekly_win["windowMinutes"])
-                elif lane == "cursor" and named_primary and named_primary.get("windowMinutes") is not None:
-                    win_mins = int(named_primary["windowMinutes"])
+                elif lane == "cursor" and cursor_provider_windows:
+                    auto_resets = cursor_provider_windows["auto"].get("resets_at")
+                    if auto_resets:
+                        weekly_resets_at = auto_resets
+                    win_mins = cursor_provider_windows["auto"].get("window_minutes")
+                    if win_mins is not None:
+                        win_mins = int(win_mins)
 
                 window_duration_seconds = win_mins * 60
                 window_start_dt = resets_at_dt - timedelta(seconds=window_duration_seconds)
@@ -553,10 +639,10 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
                     elapsed_fraction = elapsed_seconds / window_duration_seconds
                     elapsed_fraction = max(0.0, min(1.0, elapsed_fraction))
                     expected_pct = elapsed_fraction * 100.0
-                    weekly_pace_delta_pct = weekly_used_pct - expected_pct
+                    weekly_pace_delta_pct = pace_used - expected_pct
 
                     margin = 10.0
-                    is_in_deficit = weekly_used_pct > expected_pct + margin
+                    is_in_deficit = pace_used > expected_pct + margin
                     will_last_to_reset = not is_in_deficit
                     pace_summary = f"{weekly_pace_delta_pct:.1f}% pace delta | Expected {expected_pct:.1f}% used"
             except Exception:
@@ -580,7 +666,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         return block
 
     labels = cursor_window_labels or {}
-    return {
+    result = {
         "lane": lane,
         "primary_used_pct": primary_used_pct,
         "primary_remaining_pct": _remaining_pct(primary_used_pct),
@@ -588,7 +674,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "secondary_remaining_pct": _remaining_pct(secondary_used_pct),
         "tertiary_used_pct": tertiary_used_pct,
         "tertiary_remaining_pct": _remaining_pct(tertiary_used_pct),
-        # Back-compat: weekly ≈ secondary for Claude/Codex; Cursor weekly ≈ Total (primary).
+        # Back-compat weekly for Claude/Codex only; Cursor has monthly auto/api pools.
         "weekly_used_pct": weekly_used_pct,
         "weekly_remaining_pct": _remaining_pct(weekly_used_pct),
         "windows": {
@@ -596,11 +682,11 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
                 named_primary or primary_win, primary_used_pct, label=labels.get("primary")
             ),
             "secondary": _window_block(
-                named_secondary or (None if lane == "cursor" else weekly_win),
+                named_secondary or (auto_win if lane == "cursor" else weekly_win),
                 secondary_used_pct,
                 label=labels.get("secondary"),
             ),
-            "tertiary": _window_block(named_tertiary, tertiary_used_pct, label=labels.get("tertiary")),
+            "tertiary": _window_block(named_tertiary or api_win, tertiary_used_pct, label=labels.get("tertiary")),
         },
         "monthly_cap_usd": monthly_cap_usd,
         "monthly_used_usd": monthly_used_usd,
@@ -617,6 +703,9 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "source": "codexbar",
         "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     }
+    if cursor_provider_windows is not None:
+        result["provider_windows"] = cursor_provider_windows
+    return result
 
 
 def _stdout_has_provider_payload(stdout: str) -> bool:
@@ -706,10 +795,16 @@ def _run_all_refreshes() -> None:
         # floor as the explicit fresh-refresh path (see _codexbar_refresh_timeout_s)
         # rather than the prior 2.0s, which never let the claude lane's ~17s CLI
         # probe complete.
-        refresh_provider_usage_data(SUBSCRIPTION_PROVIDERS)
+        refresh_provider_usage_data(SUBSCRIPTION_LANES_WITHOUT_CURSOR)
+        _refresh_cursor_usage_live()
     finally:
         _last_refresh_finished_at = time.monotonic()
         _refresh_in_flight.release()
+
+
+SUBSCRIPTION_LANES_WITHOUT_CURSOR: tuple[str, ...] = tuple(
+    p for p in SUBSCRIPTION_PROVIDERS if p != "cursor"
+)
 
 
 def _scheduler_is_running() -> bool:
@@ -755,6 +850,240 @@ def stop_periodic_refresh(*, join_timeout_s: float = 1.0) -> None:
         _scheduler_thread = None
     if thread is not None and thread.is_alive():
         thread.join(timeout=join_timeout_s)
+
+
+def _routing_budget_state_dir() -> Path:
+    source_repo_root = Path(__file__).resolve().parents[2]
+    repo_root = main_checkout_root(source_repo_root)
+    path = repo_root / "batch_state" / "routing_budget"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _provider_lkg_path() -> Path:
+    return _routing_budget_state_dir() / "provider_lkg.json"
+
+
+def _read_provider_lkg() -> dict[str, Any]:
+    path = _provider_lkg_path()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _write_provider_lkg(data: dict[str, Any]) -> None:
+    path = _provider_lkg_path()
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    tmp.replace(path)
+
+
+def persist_provider_snapshot(lane: str, snapshot: dict[str, Any]) -> dict[str, Any]:
+    """Append a sanitized provider snapshot to on-disk LKG (max 8 per lane)."""
+    lkg = _read_provider_lkg()
+    lane_key = str(lane)
+    history = lkg.get(lane_key)
+    if not isinstance(history, list):
+        history = []
+    provider_windows = snapshot.get("provider_windows") if isinstance(snapshot.get("provider_windows"), dict) else {}
+    auto = provider_windows.get("auto") if isinstance(provider_windows.get("auto"), dict) else {}
+    api = provider_windows.get("api") if isinstance(provider_windows.get("api"), dict) else {}
+    entry = {
+        "at": snapshot.get("fetched_at") or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "source": snapshot.get("source"),
+        "auto_used_pct": auto.get("used_pct", snapshot.get("primary_used_pct")),
+        "api_used_pct": api.get("used_pct", snapshot.get("tertiary_used_pct")),
+        "weekly_used_pct": snapshot.get("weekly_used_pct"),
+    }
+    history.append(entry)
+    lkg[lane_key] = history[-8:]
+    _write_provider_lkg(lkg)
+    return compute_provider_trend(lane_key, history=lkg[lane_key])
+
+
+def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Derive simple trend/deficit/headroom hints from the last two on-disk samples."""
+    rows = history if history is not None else _read_provider_lkg().get(lane, [])
+    if not isinstance(rows, list) or not rows:
+        return {"trend": None, "delta_auto_pct": None, "samples": 0}
+    if len(rows) == 1:
+        auto = rows[-1].get("auto_used_pct")
+        if isinstance(auto, (int, float)):
+            headroom = max(0.0, 100.0 - float(auto))
+            return {
+                "trend": "flat",
+                "delta_auto_pct": 0.0,
+                "headroom_pct": headroom,
+                "deficit": float(auto) >= 90.0,
+                "samples": 1,
+            }
+        weekly = rows[-1].get("weekly_used_pct")
+        if isinstance(weekly, (int, float)):
+            headroom = max(0.0, 100.0 - float(weekly))
+            return {
+                "trend": "flat",
+                "delta_auto_pct": 0.0,
+                "headroom_pct": headroom,
+                "deficit": float(weekly) >= 90.0,
+                "samples": 1,
+            }
+        return {"trend": None, "delta_auto_pct": None, "samples": 1}
+    prev, cur = rows[-2], rows[-1]
+    prev_auto = prev.get("auto_used_pct") if isinstance(prev.get("auto_used_pct"), (int, float)) else prev.get("weekly_used_pct")
+    cur_auto = cur.get("auto_used_pct") if isinstance(cur.get("auto_used_pct"), (int, float)) else cur.get("weekly_used_pct")
+    if not isinstance(cur_auto, (int, float)):
+        return {"trend": None, "delta_auto_pct": None, "samples": len(rows)}
+    delta = float(cur_auto) - float(prev_auto or 0.0)
+    trend = "up" if delta > 1.0 else "down" if delta < -1.0 else "flat"
+    headroom = max(0.0, 100.0 - float(cur_auto))
+    return {
+        "trend": trend,
+        "delta_auto_pct": round(delta, 2),
+        "headroom_pct": headroom,
+        "deficit": float(cur_auto) >= 90.0,
+        "samples": len(rows),
+    }
+
+
+def _fetch_cursor_lane_usage_live(*, prefer_native: bool = True) -> dict[str, Any]:
+    """Probe Cursor login + native Auto/API pools (blocking; background/scheduler only)."""
+    login = probe_cursor_login()
+    if not login.get("is_authenticated"):
+        return {
+            **login,
+            "probe_state": "NEED_LOGIN",
+            "provider_windows": {
+                "auto": {"window": "monthly", "label": "Auto", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "label": "API", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+        }
+
+    native = probe_cursor_provider_windows()
+    if prefer_native and native.get("probe_state") == "healthy":
+        merged = dict(native)
+    else:
+        cb = get_provider_usage_data("cursor")
+        if _is_usable_capacity(cb):
+            merged = dict(cb)
+            merged["source"] = "codexbar"
+        else:
+            merged = dict(native)
+
+    if native.get("probe_state") == "healthy" or _is_usable_capacity(merged):
+        trend = persist_provider_snapshot("cursor", merged)
+        merged["trend"] = trend
+        auto_used = None
+        if isinstance(merged.get("provider_windows"), dict):
+            auto_block = merged["provider_windows"].get("auto")
+            if isinstance(auto_block, dict):
+                auto_used = auto_block.get("used_pct")
+        if auto_used is None:
+            auto_used = merged.get("primary_used_pct")
+        if isinstance(auto_used, (int, float)):
+            merged["headroom_pct"] = max(0.0, 100.0 - float(auto_used))
+            merged["deficit"] = bool(trend.get("deficit"))
+    return merged
+
+
+def _cursor_probe_is_cacheable(data: dict[str, Any] | None) -> bool:
+    """Any completed Cursor probe (including NEED_LOGIN) is worth caching."""
+    if not isinstance(data, dict):
+        return False
+    if data.get("fetched_at"):
+        return True
+    return data.get("probe_state") in {"NEED_LOGIN", "NEED_PROBE", "healthy"}
+
+
+def _record_cursor_probe_result(data: dict[str, Any] | None) -> bool:
+    global _cursor_last_good
+    if not _cursor_probe_is_cacheable(data):
+        return False
+    assert data is not None
+    snapshot = dict(data)
+    cache_set(CURSOR_CACHE_KEY, snapshot)
+    _cursor_last_good = (time.monotonic(), snapshot)
+    return True
+
+
+def _with_cursor_observation_metadata(
+    data: dict[str, Any],
+    *,
+    freshness: str,
+    age_s: float | None,
+) -> dict[str, Any]:
+    result = dict(data)
+    result.update(
+        {
+            "freshness": freshness,
+            "stale": freshness == "stale_last_good",
+            "age_s": age_s,
+        }
+    )
+    return result
+
+
+def _refresh_cursor_usage_live() -> dict[str, Any] | None:
+    data = _fetch_cursor_lane_usage_live()
+    if _record_cursor_probe_result(data):
+        return _with_cursor_observation_metadata(data, freshness="fresh", age_s=0.0)
+    return None
+
+
+def trigger_cursor_background_refresh() -> None:
+    """Start one bounded Cursor native refresh without making an API request wait."""
+    global _cursor_refresh_thread
+    with _cursor_refresh_lock:
+        if _cursor_refresh_thread is not None and _cursor_refresh_thread.is_alive():
+            return
+        _cursor_refresh_thread = threading.Thread(
+            target=_refresh_cursor_usage_live,
+            name="cursor-usage-refresh",
+            daemon=True,
+        )
+        _cursor_refresh_thread.start()
+
+
+def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
+    """Cursor lane: cache-only HTTP path; native probe runs in background."""
+    cached = cache_get_with_age(CURSOR_CACHE_KEY, ttl=_cursor_cache_ttl_s())
+    if cached is not None:
+        val, age = cached
+        if _cursor_probe_is_cacheable(val):
+            return _with_cursor_observation_metadata(
+                val,
+                freshness="fresh",
+                age_s=age,
+            )
+
+    if not _scheduler_is_running() and _on_demand_refresh_enabled():
+        trigger_cursor_background_refresh()
+
+    if _cursor_last_good is not None:
+        t_mono, val = _cursor_last_good
+        return _with_cursor_observation_metadata(
+            val,
+            freshness="stale_last_good",
+            age_s=time.monotonic() - t_mono,
+        )
+
+    return _with_cursor_observation_metadata(
+        {
+            "lane": "cursor",
+            "login_state": "unknown",
+            "probe_state": "NEED_PROBE",
+            "status": "unknown",
+            "provider_windows": {
+                "auto": {"window": "monthly", "label": "Auto", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "api": {"window": "monthly", "label": "API", "used_pct": None, "remaining_pct": None, "resets_at": None},
+            },
+            "fetched_at": None,
+            "source": "cursor_native",
+        },
+        freshness="unavailable",
+        age_s=None,
+    )
 
 
 def scheduler_status() -> dict[str, Any]:
