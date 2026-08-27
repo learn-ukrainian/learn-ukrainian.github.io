@@ -13,6 +13,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
@@ -154,6 +155,9 @@ PROVIDER_STATUS_RECOVERY_CODES = frozenset(
 )
 RECOVERY_RECEIPT = "provider-recovery.json"
 SECOND_RECOVERY_RECEIPT = "provider-recovery-attempt-3.json"
+ATTEMPT_MARKER_RE = re.compile(
+    r"^attempt-(?P<attempt>[1-9][0-9]*)-chunk-(?P<chunk>[0-9]+)\.(?P<state>started|terminal)\.json$"
+)
 
 _AGY_PROVIDER_STATUS_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
@@ -997,11 +1001,34 @@ def stop(
     *,
     metadata: dict[str, Any] | None = None,
     failure_stage: str | None = None,
+    chunk_index: int | None = None,
+    attempt: int | None = None,
+    terminal_marker_sha256: str | None = None,
 ) -> None:
     """Atomically write the first stop; any existing stop is already authoritative."""
     path = package / OUTPUT / "provider-stop.json"
+    occurrence = (chunk_index, attempt, terminal_marker_sha256)
+    occurrence_bound = all(value is not None for value in occurrence)
+    if any(value is not None for value in occurrence) and not occurrence_bound:
+        raise Error("ordinal_identity_binding_drift")
+    if occurrence_bound and (
+        not isinstance(chunk_index, int)
+        or isinstance(chunk_index, bool)
+        or chunk_index < 1
+        or not isinstance(attempt, int)
+        or isinstance(attempt, bool)
+        or attempt < 1
+        or not isinstance(terminal_marker_sha256, str)
+        or len(terminal_marker_sha256) != 64
+        or any(character not in "0123456789abcdef" for character in terminal_marker_sha256)
+    ):
+        raise Error("ordinal_identity_binding_drift")
     value = {
-        "schema_version": "phase3_cycle007_gemini_provider_stop_v1",
+        "schema_version": (
+            "phase3_cycle007_gemini_provider_stop_v2"
+            if occurrence_bound
+            else "phase3_cycle007_gemini_provider_stop_v1"
+        ),
         "evaluation_cycle_id": CYCLE,
         "lane": lane,
         "terminal_packet_index": packet_index,
@@ -1014,13 +1041,23 @@ def stop(
     }
     value["failure_stage"] = failure_stage if failure_stage in ATTEMPT_FAILURE_STAGES else "package_binding"
     value.update(metadata or _attempt_metadata())
+    if occurrence_bound:
+        value |= {
+            "chunk_index": chunk_index,
+            "attempt": attempt,
+            "terminal_marker_sha256": terminal_marker_sha256,
+        }
     try:
         _mkdir_private(path.parent)
         descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     except FileExistsError:
         existing = _read_json(path)
         if (
-            existing.get("schema_version") != "phase3_cycle007_gemini_provider_stop_v1"
+            existing.get("schema_version")
+            not in {
+                "phase3_cycle007_gemini_provider_stop_v1",
+                "phase3_cycle007_gemini_provider_stop_v2",
+            }
             or existing.get("evaluation_cycle_id") != CYCLE
             or existing.get("failure_code") not in FAILURE_CODES
             or existing.get("new_provider_calls_allowed") is not False
@@ -1038,86 +1075,100 @@ def stop(
         raise
 
 
-def _verify_recovery_receipt(package: Path, started: Path, terminal: Path) -> None:
-    """Require the one-call operator recovery receipt before a stopped retry."""
-    path = package / OUTPUT / RECOVERY_RECEIPT
+def _recovery_candidates(
+    package: Path, out: Path, chunk_index: int, authorized_attempt: int
+) -> tuple[Path, ...]:
+    local = out / f"provider-recovery-chunk-{chunk_index:02d}-attempt-{authorized_attempt}.json"
+    legacy: Path | None = None
+    if out == package / OUTPUT / "clean_label/chunks/packet-0001" and chunk_index == 1:
+        if authorized_attempt == 2:
+            legacy = package / OUTPUT / RECOVERY_RECEIPT
+        elif authorized_attempt == 3:
+            legacy = package / OUTPUT / SECOND_RECOVERY_RECEIPT
+    return (local,) if legacy is None else (legacy, local)
+
+
+def _recovery_path(
+    package: Path, out: Path, chunk_index: int, authorized_attempt: int
+) -> Path | None:
+    candidates = [
+        path
+        for path in _recovery_candidates(package, out, chunk_index, authorized_attempt)
+        if path.exists() or path.is_symlink()
+    ]
+    if len(candidates) > 1:
+        raise Error("ordinal_identity_binding_drift")
+    return candidates[0] if candidates else None
+
+
+def _verify_recovery_receipt(
+    package: Path,
+    out: Path,
+    chunk_index: int,
+    failed_attempt: int,
+    *,
+    prior_recovery_raw: bytes | None,
+    prior_provider_call_count: int | None,
+) -> tuple[bytes, dict[str, Any]]:
+    """Require one exact, marker-bound operator authorization for the next call."""
+    authorized_attempt = failed_attempt + 1
+    path = _recovery_path(package, out, chunk_index, authorized_attempt)
+    if path is None or path.is_symlink():
+        raise Error("ordinal_identity_binding_drift")
     receipt = _read_json(path)
     _mode(path, 0o600)
+    started = out / f"attempt-{failed_attempt}-chunk-{chunk_index:02d}.started.json"
+    terminal = out / f"attempt-{failed_attempt}-chunk-{chunk_index:02d}.terminal.json"
+    for marker in (started, terminal):
+        _mode(marker, 0o600)
     terminal_value = _read_json(terminal)
+    call_count = receipt.get("prior_provider_call_count")
     expected = {
-        "schema_version": "phase3_cycle007_gemini_provider_recovery_v1",
+        "schema_version": (
+            "phase3_cycle007_gemini_provider_recovery_v1"
+            if prior_recovery_raw is None
+            else "phase3_cycle007_gemini_provider_second_recovery_v1"
+        ),
         "evaluation_cycle_id": CYCLE,
         "source_provider_stop_sha256": receipt.get("source_provider_stop_sha256"),
         "started_marker_sha256": digest(started.read_bytes()),
         "terminal_marker_sha256": digest(terminal.read_bytes()),
         "failure_code": terminal_value.get("failure_code"),
         "failure_stage": terminal_value.get("failure_stage"),
-        "prior_provider_call_count": 1,
+        "prior_provider_call_count": call_count,
         "authorized_additional_provider_calls": 1,
         "exact_model": MODEL,
         "model_family": FAMILY,
         "harness": HARNESS,
         "text_free": True,
     }
+    if prior_recovery_raw is not None:
+        expected |= {
+            "prior_recovery_receipt_sha256": digest(prior_recovery_raw),
+            "authorized_attempt": authorized_attempt,
+        }
     stop_hash = expected["source_provider_stop_sha256"]
     if (
         not isinstance(stop_hash, str)
         or len(stop_hash) != 64
         or any(character not in "0123456789abcdef" for character in stop_hash)
+        or not isinstance(call_count, int)
+        or isinstance(call_count, bool)
+        or call_count < 1
+        or (
+            prior_provider_call_count is not None
+            and call_count != prior_provider_call_count + 1
+        )
         or set(receipt) != set(expected) | {"receipt_sha256"}
         or any(receipt.get(key) != value for key, value in expected.items())
         or receipt.get("receipt_sha256") != digest(canonical(expected))
     ):
         raise Error("ordinal_identity_binding_drift")
-
-
-def _verify_second_recovery_receipt(package: Path, out: Path, chunk_index: int) -> None:
-    """Require the exact chained receipt that authorizes attempt 3 only."""
-    first_started = out / f"attempt-1-chunk-{chunk_index:02d}.started.json"
-    first_terminal = out / f"attempt-1-chunk-{chunk_index:02d}.terminal.json"
-    second_started = out / f"attempt-2-chunk-{chunk_index:02d}.started.json"
-    second_terminal = out / f"attempt-2-chunk-{chunk_index:02d}.terminal.json"
-    for marker in (first_started, first_terminal, second_started, second_terminal):
-        _mode(marker, 0o600)
-    _verify_recovery_receipt(package, first_started, first_terminal)
-    first_recovery = package / OUTPUT / RECOVERY_RECEIPT
-    path = package / OUTPUT / SECOND_RECOVERY_RECEIPT
-    receipt = _read_json(path)
-    _mode(path, 0o600)
-    terminal_value = _read_json(second_terminal)
-    expected = {
-        "schema_version": "phase3_cycle007_gemini_provider_second_recovery_v1",
-        "evaluation_cycle_id": CYCLE,
-        "source_provider_stop_sha256": receipt.get("source_provider_stop_sha256"),
-        "prior_recovery_receipt_sha256": digest(first_recovery.read_bytes()),
-        "started_marker_sha256": digest(second_started.read_bytes()),
-        "terminal_marker_sha256": digest(second_terminal.read_bytes()),
-        "failure_code": "provider_status_timeout",
-        "failure_stage": "provider_return",
-        "prior_provider_call_count": 2,
-        "authorized_additional_provider_calls": 1,
-        "authorized_attempt": 3,
-        "exact_model": MODEL,
-        "model_family": FAMILY,
-        "harness": HARNESS,
-        "text_free": True,
-    }
-    stop_hash = expected["source_provider_stop_sha256"]
-    if (
-        terminal_value.get("failure_code") != expected["failure_code"]
-        or terminal_value.get("failure_stage") != expected["failure_stage"]
-        or not isinstance(stop_hash, str)
-        or len(stop_hash) != 64
-        or any(character not in "0123456789abcdef" for character in stop_hash)
-        or set(receipt) != set(expected) | {"receipt_sha256"}
-        or any(receipt.get(key) != value for key, value in expected.items())
-        or receipt.get("receipt_sha256") != digest(canonical(expected))
-    ):
-        raise Error("ordinal_identity_binding_drift")
+    return path.read_bytes(), receipt
 
 
 def _next_attempt(package: Path, out: Path, chunk_index: int) -> int:
-    """Resolve the only authorized next call; attempt 4 is never representable."""
+    """Resolve the one explicitly authorized next call without a retry ceiling."""
     retryable = {
         "stream_json_invalid",
         "terminal_result_count_drift",
@@ -1126,28 +1177,54 @@ def _next_attempt(package: Path, out: Path, chunk_index: int) -> int:
         "label_json_invalid",
         "label_count_or_envelope_drift",
     } | PROVIDER_STATUS_RECOVERY_CODES
-    for attempt in (1, 2, 3):
+    observed: dict[tuple[int, str], Path] = {}
+    for path in out.iterdir():
+        match = ATTEMPT_MARKER_RE.fullmatch(path.name)
+        if match is None or int(match["chunk"]) != chunk_index:
+            continue
+        key = (int(match["attempt"]), match["state"])
+        if key in observed or path.is_symlink():
+            raise Error("ordinal_identity_binding_drift")
+        observed[key] = path
+    if not observed:
+        return 1
+    attempts = sorted({attempt for attempt, _state in observed})
+    if attempts != list(range(1, len(attempts) + 1)):
+        raise Error("ordinal_identity_binding_drift")
+    maximum = len(attempts)
+
+    prior_recovery_raw: bytes | None = None
+    prior_provider_call_count: int | None = None
+    for attempt in range(1, maximum + 1):
         started = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.started.json"
         terminal = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.terminal.json"
-        if started.exists() and not terminal.exists():
+        if not started.exists() or started.is_symlink():
             raise Error("ordinal_identity_binding_drift")
         if not terminal.exists():
-            return attempt
+            if attempt != maximum:
+                raise Error("ordinal_identity_binding_drift")
+            raise Error("ordinal_identity_binding_drift")
         _mode(started, 0o600)
         _mode(terminal, 0o600)
-        if attempt == 3:
-            raise Error("ordinal_identity_binding_drift")
         marker = _read_json(terminal)
         failure_code = marker.get("failure_code")
         if failure_code not in retryable:
             raise Error("ordinal_identity_binding_drift")
-        if attempt == 1 and failure_code in PROVIDER_STATUS_RECOVERY_CODES:
-            _verify_recovery_receipt(package, started, terminal)
-        if attempt == 2:
-            if failure_code != "provider_status_timeout":
+        recovery_path = _recovery_path(package, out, chunk_index, attempt + 1)
+        if attempt == 1 and failure_code in retryable - PROVIDER_STATUS_RECOVERY_CODES:
+            if recovery_path is not None:
                 raise Error("ordinal_identity_binding_drift")
-            _verify_second_recovery_receipt(package, out, chunk_index)
-    raise Error("ordinal_identity_binding_drift")
+            continue
+        prior_recovery_raw, receipt = _verify_recovery_receipt(
+            package,
+            out,
+            chunk_index,
+            attempt,
+            prior_recovery_raw=prior_recovery_raw,
+            prior_provider_call_count=prior_provider_call_count,
+        )
+        prior_provider_call_count = receipt["prior_provider_call_count"]
+    return maximum + 1
 
 
 def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
@@ -1326,7 +1403,17 @@ def _run_chunk(
                 )
                 if exc.structural and attempt == 1:
                     continue
-                stop(package, lane, packet_index, exc.code, metadata=metadata, failure_stage=failure_stage)
+                stop(
+                    package,
+                    lane,
+                    packet_index,
+                    exc.code,
+                    metadata=metadata,
+                    failure_stage=failure_stage,
+                    chunk_index=chunk_index,
+                    attempt=attempt,
+                    terminal_marker_sha256=digest(terminal.read_bytes()),
+                )
                 raise
             raw_hash = _atomic(out / f"raw-chunk-{chunk_index:02d}.raw", raw, raw=True)
             labels_hash = _atomic(labels_path, labels)
@@ -1366,7 +1453,23 @@ def _run_chunk(
                     metadata=metadata,
                     failure_stage=failure_stage,
                 )
-            stop(package, lane, packet_index, exc.code, metadata=metadata, failure_stage=failure_stage)
+            stop(
+                package,
+                lane,
+                packet_index,
+                exc.code,
+                metadata=metadata,
+                failure_stage=failure_stage,
+                **(
+                    {
+                        "chunk_index": chunk_index,
+                        "attempt": attempt,
+                        "terminal_marker_sha256": digest(terminal.read_bytes()),
+                    }
+                    if terminal.is_file() and not terminal.is_symlink()
+                    else {}
+                ),
+            )
             raise
         finally:
             shutil.rmtree(runtime, ignore_errors=True)
@@ -1415,8 +1518,11 @@ def _verify_chunk(
         "harness": HARNESS,
         "text_free": True,
     }
+    attempt_count = receipt.get("attempt_count")
     if (
-        receipt.get("attempt_count") not in {1, 2, 3}
+        not isinstance(attempt_count, int)
+        or isinstance(attempt_count, bool)
+        or attempt_count < 1
         or set(receipt) != set(expected) | {"receipt_sha256"}
         or any(receipt.get(key) != value for key, value in expected.items())
         or receipt.get("receipt_sha256") != digest(canonical(expected))

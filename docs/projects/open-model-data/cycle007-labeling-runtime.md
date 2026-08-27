@@ -47,17 +47,16 @@ operator explicitly starts a provider stage.
 - No database, queue service, container platform, or new background daemon.
 - No provider call during installation, storage preparation, status, or plan.
 - No automatic clearing of provider-stop receipts or semantic failures.
-- One explicit `recover-gemini-stop` action is available only for an exact
-  first-call provider-return incident with the historical generic envelope code
-  or a bounded transient status: quota, capacity, timeout, cancellation, or
+- One explicit `recover-gemini-stop` action is available for an exact
+  provider-return incident with the historical generic envelope code or a
+  bounded transient status: quota, capacity, timeout, cancellation, or
   internal-provider failure. It hash-binds and archives the immutable text-free
-  stop, binds the matching started and terminal markers, and authorizes exactly
-  one additional Gemini subscription call. It cannot recover authentication,
-  structured-request rejection, an unknown or semantic failure, any sealed
-  output or a changed stop. One further exception is narrowly bound to the
-  preserved second-attempt `provider_status_timeout`: the first recovery must
-  still verify, both attempts must be terminal with no committed output, and
-  an exact second stop hash may authorize attempt 3 only. No attempt 4 exists.
+  stop, binds the exact packet, chunk, attempt, started marker, terminal marker, and
+  predecessor recovery receipt, and authorizes exactly one additional Gemini
+  subscription call. It cannot recover authentication, structured-request
+  rejection, an unknown or semantic failure, a changed stop, or a sealed Gemini
+  stage. There is no permanent attempt ceiling: every later call still requires
+  a new exact-stop operator recovery, so no automatic retry loop is possible.
 - No persistent `/etc/fstab` or systemd mutation. Re-running the same guardian
   command after reboot restores the bind mounts and resumes from seals.
 
@@ -167,8 +166,8 @@ of being claimed as automatically resumable.
 | Controller status call exceeds 300 seconds | Fail with `controller_timeout`; status never invokes a provider, so no paid runner is created by this path. |
 | Controller stage call exceeds 72 hours | Kill only the controller wrapper and fail with `controller_timeout`. A surviving paid runner is deliberately not signalled, retains the inherited execution lock, and makes a replacement return `active_worker` with zero additional provider calls. After it exits, durable receipts, seals, and active-stage markers determine the only safe recovery point. |
 | Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
-| Exact first Gemini provider-return stop after explicit recovery direction | `recover-gemini-stop --expected-stop-sha256 …` preserves the stop in the private backing filesystem and publishes one text-free recovery receipt. The runner accepts that exact receipt only for attempt 2; no recovery action invokes a provider. |
-| Exact second Gemini `provider_status_timeout` after explicit recovery direction | The same action verifies and hash-binds the first recovery, both attempt pairs, and the exact second stop before publishing a separate chained receipt for attempt 3. It invokes no provider, accepts no other second failure, and cannot authorize attempt 4. |
+| Exact Gemini provider-return stop after explicit recovery direction | `recover-gemini-stop --expected-stop-sha256 …` preserves the stop in the private backing filesystem and publishes one text-free receipt for exactly the next attempt. It verifies the contiguous attempt and authorization chain for that packet and chunk, preserves committed earlier chunks and packets without reading their content, and invokes no provider. |
+| Repeated transient Gemini provider-return stops | Each new runner stop atomically includes its chunk, attempt, and terminal-marker digest. Each explicit recovery binds that occurrence, the failed attempt markers, exact provider-call count, and predecessor receipt. A fresh process accepts the resulting next attempt once; another terminal failure remains stopped until another explicit recovery. Attempt numbers are not capped. |
 | Reviewed code or provider executable identity changes before any stage seal | Provider-bound `prepare` validates the complete successor preflight and both public canaries under the execution and controller locks. Rotation is accepted only when the successor names the exact installed preflight SHA-256, preserves canonical superseded receipts, writes the authoritative preflight copy last, and remains idempotent after interruption. Any existing stage seal blocks rotation. No provider is invoked. |
 
 ## Run sequence
@@ -188,15 +187,21 @@ of being claimed as automatically resumable.
 
 The staged `--through` boundary prevents an operator intending to start one
 provider from accidentally starting the other or entering adjudication.
-When the exact first Gemini call has a provider-return stop, the operator may
+When an exact Gemini call has a recoverable provider-return stop, the operator may
 insert the reviewed `recover-gemini-stop` action before repeating step 4. The
 recovery action is idempotent, preserves the original stop by same-filesystem
 link-and-unlink, holds the guardian and inherited execution locks while the
 controller verifies stopped status, and
 does not authorize Grok or any later stage.
-For the exact second-attempt timeout only, a second invocation with the exact
-new stop hash publishes a separate receipt chained to the first recovery and
-authorizes one final Gemini attempt. A terminal third attempt remains stopped.
+If the authorized call stops again, another invocation with that new exact stop
+hash publishes a chunk-local receipt chained to the prior authorization and
+authorizes exactly one more call. Existing attempt-2 and attempt-3 receipts use
+their reviewed legacy locations and remain valid; later receipts are local to
+the stopped chunk so recovery remains collision-free after committed progress.
+The already-installed version-1 stop format is accepted only for its bounded
+clean-label packet-1/chunk-1 attempts through attempt 3. Every newly emitted
+recoverable stop uses the occurrence-bound version-2 format, preventing a stale
+identical stop hash from authorizing a later occurrence.
 
 ## Acceptance evidence
 
@@ -206,7 +211,12 @@ authorizes one final Gemini attempt. A terminal third attempt remains stopped.
   and controller locks, inherited execution-lock continuity, a real child lock
   invocation, duplicate guardian,
   zero-provider prepare/plan/status, completed-packet preservation, requested
-  `--through` boundaries, stage continuation, and safe stop receipts.
+  `--through` boundaries, stage continuation, and safe stop receipts. Renewable
+  recovery tests cover the exact third timeout, a fresh-process attempt-4
+  resume, committed-prefix preservation without content reads, per-chunk receipt
+  isolation, exact pre-call versus provider-call accounting, occurrence-bound
+  stop identities, a twelve-link chain with no permanent ceiling, and refusal
+  when any one-call authorization link is absent or changed.
 - Preflight-rotation tests cover the exact predecessor link, immutable archives,
   authoritative-last replacement, idempotent retry, wrong-chain refusal, and
   the no-rotation-after-seal boundary.
