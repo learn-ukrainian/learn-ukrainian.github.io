@@ -324,7 +324,7 @@ def test_batch_runner_fresh_process_accepts_attempt_three_and_refuses_fourth(
         "raise SystemExit(0 if m._next_attempt(pkg,o,1)==3 else 1)"
     )
     assert subprocess.run(
-        [sys.executable, "-c", script, str(path), str(package)], check=False
+        [sys.executable, "-c", script, str(path), str(package)], check=False, timeout=30
     ).returncode == 0
 
     attempt_three_started = out / "attempt-3-chunk-01.started.json"
@@ -347,7 +347,7 @@ def test_batch_runner_fresh_process_accepts_attempt_three_and_refuses_fourth(
         "\ntry:m._next_attempt(pkg,o,1)\nexcept m.Error:raise SystemExit(0)\nraise SystemExit(1)",
     )
     assert subprocess.run(
-        [sys.executable, "-c", refusal_script, str(path), str(package)], check=False
+        [sys.executable, "-c", refusal_script, str(path), str(package)], check=False, timeout=30
     ).returncode == 0
 
 
