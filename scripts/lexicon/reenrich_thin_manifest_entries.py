@@ -48,6 +48,10 @@ from scripts.lexicon.publish_manifest import (
     gzip_manifest,
     write_pointer,
 )
+from scripts.rag.source_query import (
+    _wiki_title_candidates,
+    _wiki_title_matches_candidates,
+)
 from scripts.verification.vesum import verify_word
 
 
@@ -220,6 +224,57 @@ def _write_default_release_pointer(
     return pointer
 
 
+def _wiki_lookup_title_candidates(entry: dict[str, Any]) -> list[str]:
+    """Lemma/slug title variants used for the #7376 exact-title gate."""
+    seen: set[str] = set()
+    candidates: list[str] = []
+    for key in ("lemma", "url_slug"):
+        raw = str(entry.get(key) or "").strip()
+        if not raw:
+            continue
+        for candidate in _wiki_title_candidates(raw):
+            if candidate in seen:
+                continue
+            seen.add(candidate)
+            candidates.append(candidate)
+    return candidates
+
+
+def wiki_reference_passes_exact_title_gate(
+    entry: dict[str, Any],
+    wiki_reference: dict[str, Any],
+) -> bool:
+    """True when stored Wikipedia title exact-matches lemma/slug candidates."""
+    wiki = wiki_reference.get("wikipedia")
+    if not isinstance(wiki, dict):
+        return False
+    title = wiki.get("title")
+    if not title:
+        return False
+    candidates = _wiki_lookup_title_candidates(entry)
+    if not candidates:
+        return False
+    return _wiki_title_matches_candidates(str(title), candidates)
+
+
+def strip_mismatched_wiki_references(manifest: dict[str, Any]) -> dict[str, int]:
+    """Drop wiki_reference cards whose title fails the exact-title gate."""
+    stripped = 0
+    kept = 0
+    for entry in manifest.get("entries", []):
+        if not isinstance(entry, dict):
+            continue
+        wiki_reference = entry.get("wiki_reference")
+        if not isinstance(wiki_reference, dict):
+            continue
+        if wiki_reference_passes_exact_title_gate(entry, wiki_reference):
+            kept += 1
+            continue
+        entry.pop("wiki_reference", None)
+        stripped += 1
+    return {"stripped": stripped, "kept": kept}
+
+
 def _preserve_existing_metadata(
     entry: dict[str, Any],
     *,
@@ -236,7 +291,11 @@ def _preserve_existing_metadata(
             sources.add(str(source))
         if sources:
             enrichment["sources"] = sorted(sources)
-    if existing_wiki_reference and "wiki_reference" not in entry:
+    if (
+        existing_wiki_reference
+        and "wiki_reference" not in entry
+        and wiki_reference_passes_exact_title_gate(entry, existing_wiki_reference)
+    ):
         entry["wiki_reference"] = existing_wiki_reference
     if existing_translation and not _has_translation(entry):
         if not isinstance(enrichment, dict):
@@ -798,6 +857,14 @@ def main() -> int:
         action="store_true",
         help="Do not update the release pointer when writing the manifest.",
     )
+    parser.add_argument(
+        "--strip-mismatched-wiki",
+        action="store_true",
+        help=(
+            "Drop wiki_reference cards whose Wikipedia title fails the #7376 exact-title "
+            "gate (stress-strip + casefold match against lemma/url_slug candidates)."
+        ),
+    )
     args = parser.parse_args()
 
     manifest_path = args.manifest if args.manifest.is_absolute() else ROOT / args.manifest
@@ -808,6 +875,27 @@ def main() -> int:
     manifest = _read_local_manifest(manifest_path) if args.local else load_manifest(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)
     slug_filter = _load_slug_filter(args.slugs_file) if args.slugs_file else None
+
+    if args.strip_mismatched_wiki:
+        strip_summary = strip_mismatched_wiki_references(manifest)
+        print(json.dumps({"strip_mismatched_wiki": strip_summary}, ensure_ascii=False, indent=2))
+        if args.write:
+            _refresh_manifest_fingerprint(manifest)
+            _write_manifest(manifest_path, manifest)
+            if not args.no_pointer:
+                pointer = _write_default_release_pointer(
+                    manifest_path,
+                    bootstrap_no_baseline=args.bootstrap_no_baseline,
+                    allow_richness_regression_reason=args.allow_richness_regression,
+                )
+                if pointer:
+                    print(
+                        f"Updated local atlas-manifest pointer "
+                        f"{pointer['manifest_fingerprint']} {pointer['json_sha256']}"
+                    )
+        else:
+            print("Dry run only; pass --write to update the manifest.")
+        return 0
 
     with sqlite3.connect(sources_db) as conn:
         has_flags = enrich_manifest._sum11_has_flag_columns(conn)
