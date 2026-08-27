@@ -179,6 +179,84 @@ def test_reenrich_with_refresh_wiki_does_not_restore_redirect_card(monkeypatch) 
     assert "wiki_reference" not in manifest["entries"][0]
 
 
+_BEZMEZHZHYA_REDIRECT_WIKI = {
+    "wikipedia": {
+        "title": "Нескінченність",
+        "summary": "Нескі́нченність — ...",
+        "url": "https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D1%81%D0%BA%D1%96%D0%BD%D1%87%D0%B5%D0%BD%D0%BD%D1%96%D1%81%D1%82%D1%8C",
+    }
+}
+
+
+def test_translation_only_reenrich_strips_stale_redirect_wiki_reference(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "безмежжя",
+                "url_slug": "безмежжя",
+                "pos": "noun",
+                "enrichment": {},
+                "wiki_reference": dict(_BEZMEZHZHYA_REDIRECT_WIKI),
+            }
+        ]
+    }
+
+    def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None, slovnyk_cache=None):
+        return {"en": ["vastness"], "source": "fixture source"}
+
+    monkeypatch.setattr(enrich_manifest, "_translation", fake_translation)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+        )
+
+    assert summary["targets"] == 1
+    assert summary["filled_translation"] == 1
+    assert "wiki_reference" not in manifest["entries"][0]
+
+
+def test_refresh_wiki_strips_stale_cached_redirect_wiki_reference(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "безмежжя",
+                "url_slug": "безмежжя",
+                "pos": "noun",
+                "enrichment": {},
+                "wiki_reference": dict(_BEZMEZHZHYA_REDIRECT_WIKI),
+            }
+        ]
+    }
+
+    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags=False):
+        # Cached redirect summary predating #7376; enrich_entry would attach it again.
+        entry["wiki_reference"] = {
+            **_BEZMEZHZHYA_REDIRECT_WIKI,
+            "wiktionary_url": "https://uk.wiktionary.org/wiki/%D0%B1%D0%B5%D0%B7%D0%BC%D0%B5%D0%B6%D0%B6%D1%8F",
+            "attribution": "Матеріали з Вікіпедії та Вікісловника, надані на умовах ліцензії CC BY-SA 4.0.",
+        }
+
+    monkeypatch.setattr(enrich_manifest, "enrich_entry", fake_enrich_entry)
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="full-catalog",
+            refresh_wiki=True,
+        )
+
+    assert summary["targets"] == 1
+    assert "wiki_reference" not in manifest["entries"][0]
+
+
 def test_missing_translation_target_fills_only_entries_without_translation(monkeypatch) -> None:
     manifest = {
         "entries": [

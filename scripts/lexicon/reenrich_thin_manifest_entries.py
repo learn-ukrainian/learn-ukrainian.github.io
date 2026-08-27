@@ -303,6 +303,9 @@ def _preserve_existing_metadata(
             entry["enrichment"] = enrichment
         enrichment["translation"] = existing_translation
         _add_source(enrichment, existing_translation.get("source"))
+    wiki_reference = entry.get("wiki_reference")
+    if isinstance(wiki_reference, dict) and not wiki_reference_passes_exact_title_gate(entry, wiki_reference):
+        entry.pop("wiki_reference", None)
 
 
 def _add_source(enrichment: dict[str, Any], source: object) -> None:
