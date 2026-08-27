@@ -306,6 +306,40 @@ def test_batch_runner_accepts_only_exact_chained_attempt_three_receipt(tmp_path:
         runner._next_attempt(package, out, 1)
 
 
+def test_batch_runner_accepts_exact_receipt_after_first_structural_call(
+    tmp_path: Path,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_legacy_structural_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    out = _seed_runner_second_recovery(runner, package)
+
+    first_terminal_path = out / "attempt-1-chunk-01.terminal.json"
+    first_terminal = json.loads(first_terminal_path.read_text(encoding="utf-8"))
+    first_terminal["failure_code"] = "structured_output_envelope_drift"
+    first_terminal_path.write_bytes(runner.canonical(first_terminal))
+
+    first_path = package / runner.OUTPUT / runner.RECOVERY_RECEIPT
+    first = json.loads(first_path.read_text(encoding="utf-8"))
+    first["failure_code"] = "structured_output_envelope_drift"
+    first["terminal_marker_sha256"] = runner.digest(first_terminal_path.read_bytes())
+    first_unsigned = {key: value for key, value in first.items() if key != "receipt_sha256"}
+    first["receipt_sha256"] = runner.digest(runner.canonical(first_unsigned))
+    first_path.write_bytes(runner.canonical(first))
+
+    second_path = package / runner.OUTPUT / runner.SECOND_RECOVERY_RECEIPT
+    second = json.loads(second_path.read_text(encoding="utf-8"))
+    second["prior_recovery_receipt_sha256"] = runner.digest(first_path.read_bytes())
+    second_unsigned = {key: value for key, value in second.items() if key != "receipt_sha256"}
+    second["receipt_sha256"] = runner.digest(runner.canonical(second_unsigned))
+    second_path.write_bytes(runner.canonical(second))
+
+    assert runner._next_attempt(package, out, 1) == 3
+
+
 def test_batch_runner_fresh_process_requires_then_accepts_exact_attempt_four_receipt(
     tmp_path: Path,
 ) -> None:
