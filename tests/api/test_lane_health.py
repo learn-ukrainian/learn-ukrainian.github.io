@@ -148,7 +148,13 @@ def test_routing_budget_demotes_unhealthy(monkeypatch, tmp_path):
     _write_task(tmp_path, "task-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=45))
     _write_task(tmp_path, "task-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=15))
 
-    budget = state_router.compute_routing_budget(now)
+    budget = state_router.compute_routing_budget(
+        now,
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
 
     assert budget["agents"]["claude"]["health"]["healthy"] is False
     assert budget["agents"]["claude"]["health"]["consecutive_failures"] == 2
@@ -250,7 +256,7 @@ def _mock_cost_record(agent: str, cost_usd: float, mtime: datetime) -> CostRecor
     )
 
 
-def _configure_test_budgets(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
+def _configure_test_budgets(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> Path:
     budget_path = tmp_path / "agent_budgets.yaml"
     budget_path.write_text(
         """
@@ -279,6 +285,7 @@ gemini:
     # CodexBar cache entries and host agent-runtime JSONL from changing that
     # deliberately narrow fixture when the module runs inside a full CI shard.
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _provider: None)
+    monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda: None)
     monkeypatch.setattr(
         state_router,
         "summarize_lane_runtime",
@@ -303,6 +310,7 @@ gemini:
         "list_delegate_tasks",
         lambda **_kwargs: {"tasks": []},
     )
+    return budget_path
 
 
 def test_recommendation_skips_unhealthy_lane(monkeypatch, tmp_path):
@@ -312,13 +320,19 @@ def test_recommendation_skips_unhealthy_lane(monkeypatch, tmp_path):
         _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
         _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
     ]
-    _configure_test_budgets(monkeypatch, tmp_path, records)
+    _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
 
     # Claude unhealthy (2 failures)
     _write_task(tmp_path, "task-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=45))
     _write_task(tmp_path, "task-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=15))
 
-    budget = state_router.compute_routing_budget(now)
+    budget = state_router.compute_routing_budget(
+        now,
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     rec = budget["recommendation"]
 
     # Claude has lowest burn (10% vs Codex 20%), but since Claude is unhealthy,
@@ -352,11 +366,17 @@ def test_recommendation_ignores_seeded_external_telemetry_cache(monkeypatch, tmp
     )
     assert codexbar_usage_mod.get_provider_usage_data("codex")["weekly_used_pct"] == 95.0
 
-    _configure_test_budgets(monkeypatch, tmp_path, records)
+    _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
     _write_task(tmp_path, "task-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=45))
     _write_task(tmp_path, "task-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=15))
 
-    budget = state_router.compute_routing_budget(now)
+    budget = state_router.compute_routing_budget(
+        now,
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
 
     assert budget["agents"]["codex"]["burn_pct_7d"] == 20.0
     assert budget["recommendation"]["primary_agent_for_code"] == "codex"
@@ -369,14 +389,20 @@ def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
         _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
         _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
     ]
-    _configure_test_budgets(monkeypatch, tmp_path, records)
+    _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
 
     # Every subscription lane is unhealthy (2 failures each).
     for agent in ("claude", "codex", "gemini", "grok", "cursor", "kimi"):
         _write_task(tmp_path, f"task-{agent}-1", agent, "failed", 1, 10.0, now - timedelta(minutes=45))
         _write_task(tmp_path, f"task-{agent}-2", agent, "failed", 1, 10.0, now - timedelta(minutes=15))
 
-    budget = state_router.compute_routing_budget(now)
+    budget = state_router.compute_routing_budget(
+        now,
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     rec = budget["recommendation"]
 
     # Since all candidate lanes are unhealthy, should fallback to budget-only pick (claude)
@@ -391,7 +417,7 @@ def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):
         _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
         _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
     ]
-    _configure_test_budgets(monkeypatch, tmp_path, records)
+    _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
 
     # No task failures written -> no health fields present on agents (mock health absent scenario)
     # We can also call _recommend_agent directly with health removed to verify fail-open
@@ -429,11 +455,17 @@ def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_
     records = [
         _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
     ]
-    _configure_test_budgets(monkeypatch, tmp_path, records)
+    _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
 
     # When all subscription lanes have unavailable status (no CodexBar data observed),
     # verify router does NOT make false 'inline_orchestrator' or 'all hot' claims.
-    budget = state_router.compute_routing_budget(now)
+    budget = state_router.compute_routing_budget(
+        now,
+        budget_config_path=_budget_path,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     rec = budget["recommendation"]
 
     assert rec["primary_agent_for_code"] != "inline_orchestrator"
