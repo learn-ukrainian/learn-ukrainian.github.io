@@ -191,8 +191,26 @@ def test_ask_glm_honors_model_override_when_not_ci(monkeypatch):
         patch("scripts.ai_agent_bridge._opencode.acknowledge"),
         patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
     ):
-        ask_glm("hi", task_id="t", model="openrouter/z-ai/glm-5.3")
-        assert inv.call_args[0][1] == "openrouter/z-ai/glm-5.3"
+        ask_glm("hi", task_id="t", model="zai/glm-5.3-flash")
+        assert inv.call_args[0][1] == "zai/glm-5.3-flash"
+
+
+def test_ask_glm_refuses_openrouter_glm_before_subprocess(monkeypatch):
+    """GLM via OpenRouter must fail at the routing guard inside _run_opencode."""
+    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+    with (
+        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
+        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
+        patch(
+            "scripts.ai_agent_bridge._opencode.subprocess.run",
+            side_effect=AssertionError("subprocess must not run for refused GLM route"),
+        ),
+    ):
+        with pytest.raises(RoutingGuardError):
+            ask_glm("hi", task_id="t", model="openrouter/z-ai/glm-5.3")
 
 
 # --- capture fix for multi-message streams (first vs last assistant msg) ---

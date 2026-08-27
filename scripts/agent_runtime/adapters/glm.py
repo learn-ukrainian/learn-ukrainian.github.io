@@ -125,6 +125,13 @@ class GlmAdapter:
         # scripts/ai_agent_bridge/_opencode.py GLM_MODEL.
         invocation_model = _OPENCODE_MODEL_ROUTES.get(target_model, target_model)
 
+        try:
+            from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+        except ModuleNotFoundError:  # pragma: no cover - direct-script runs with only scripts/ on sys.path
+            from ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+        assert_model_routing_allowed(invocation_model, context="GlmAdapter")
+
         cmd: list[str] = [binary, "run", "--model", invocation_model]
 
         if mode in ("workspace-write", "danger"):

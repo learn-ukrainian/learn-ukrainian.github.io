@@ -805,10 +805,9 @@ def ask_glm(
     for top-stakes work. Weak at Ukrainian (anglicizes/code-switches) and
     long-form prose / pedagogy — do NOT use it there.
 
-    ``model`` overrides the pinned ``GLM_MODEL`` — needed while the tag drifts
-    (``zai-coding-plan`` needs opencode auth; the openrouter fallback is
-    ``openrouter/z-ai/glm-5.3``). Any override MUST still be a GLM model — the
-    China-egress guard above is unconditional.
+    ``model`` overrides the pinned ``GLM_MODEL``. Any override MUST still be a
+    GLM model on ``zai/`` or ``zai-coding-plan/`` only — the China-egress guard
+    above is unconditional.
     """
     try:
         formal_review = assert_formal_review_ask_payload(

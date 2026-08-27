@@ -37,6 +37,14 @@ _SUBSCRIPTION_VIA_OPENROUTER_RE = re.compile(
 # deepseek-direct/<model> is canonical; transport-comparison experiments
 # (#4321/#4358) go through the override env.
 _DEEPSEEK_VIA_OPENROUTER_RE = re.compile(r"openrouter/deepseek", re.IGNORECASE)
+# GLM defaults to FIRST-PARTY z.ai, never OpenRouter (user order 2026-08-27:
+# subscribed / prepaid GLM seats must not hop through OpenRouter — same class
+# as DeepSeek first-party 2026-07-07).
+_GLM_VIA_OPENROUTER_RE = re.compile(
+    r"openrouter/(?:z-ai|zhipu|zai)(?:/|$)",
+    re.IGNORECASE,
+)
+_OPENROUTER_GLM_MODEL_RE = re.compile(r"openrouter/.+/glm[-]", re.IGNORECASE)
 # deepseek-direct is a POSITIVE allowlist, not a family blocklist: the grok-build
 # adversarial review of #4730 produced working bypasses for every blocklist
 # formulation tried (anthropic-claude, openai-gpt, google-gemini, ../claude,
@@ -102,6 +110,16 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             "fee + a needless hop). Use deepseek-direct/<model>. "
             f"Set {_OVERRIDE_ENV}=1 for a deliberate transport-comparison "
             "run (#4321/#4358) — billing-safe under BYOK."
+        )
+    if _GLM_VIA_OPENROUTER_RE.search(text) or _OPENROUTER_GLM_MODEL_RE.search(text):
+        raise RoutingGuardError(
+            f"{context}: {text!r} routes GLM through OpenRouter. "
+            "Default is FIRST-PARTY z.ai (user order 2026-08-27; prepaid GLM "
+            "seats must not meter through OpenRouter). Flash workhorse: "
+            "zai/glm-5.3-flash via `delegate.py dispatch --agent glm`. "
+            "Coding Plan consult: zai-coding-plan/glm-5.3 via ask-glm / "
+            "`--model glm-5.3`. "
+            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
         )
     direct_prefix = _DEEPSEEK_DIRECT_PREFIX_RE.match(text)
     if direct_prefix and not _DEEPSEEK_FAMILY_MODEL_RE.match(text[direct_prefix.end() :]):

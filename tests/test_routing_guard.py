@@ -54,6 +54,11 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         "openrouter/deepseek/deepseek-v4-flash",
         "openrouter/deepseek/deepseek-v4-pro",
         "OPENROUTER/DEEPSEEK/DEEPSEEK-V4-PRO",
+        # user order 2026-08-27: GLM NEVER via OpenRouter (prepaid z.ai seats)
+        "openrouter/z-ai/glm-5.3",
+        "openrouter/z-ai/glm-5.3-flash",
+        "OPENROUTER/Z-AI/GLM-5.3-FLASH",
+        "openrouter/zhipu/glm-5.3",
         # google-ais fail-closed allowlist (2026-07-07): the AIS key's Cloud
         # project is POSTPAY — Gemini through it WOULD bill; only Gemma (no
         # paid SKU) may ride this provider.
@@ -89,6 +94,7 @@ def test_forbidden_models_refused(model: str) -> None:
         "gpt-5.5",  # native codex lane
         "zai/glm-5.3-flash",
         "glm-5.3-flash",
+        "zai-coding-plan/glm-5.3",
         None,
         "",
     ],
