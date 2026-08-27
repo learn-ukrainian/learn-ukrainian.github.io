@@ -65,6 +65,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from scripts.lexicon.atlas_wikipedia_intro import atlas_wikipedia_ok_as_intro
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 from scripts.lexicon.build_kaikki_lookup import _clean_gloss as _clean_translation_gloss
@@ -7287,16 +7288,20 @@ def _wiki_reference(lemma: str, literary_attestation: dict | None = None) -> dic
     wiktionary_url = f"https://uk.wiktionary.org/wiki/{quote(clean_lemma)}"
     wikisource_url = f"https://uk.wikisource.org/wiki/{quote(clean_lemma)}" if literary_attestation else None
 
-    return {
-        "wikipedia": {
-            "title": wiki_data.get("title", ""),
-            "summary": wiki_data.get("extract", ""),
-            "url": wiki_data.get("url", ""),
-        },
+    ref: dict[str, Any] = {
         "wiktionary_url": wiktionary_url,
         "wikisource_url": wikisource_url,
         "attribution": "Матеріали з Вікіпедії та Вікісловника, надані на умовах ліцензії CC BY-SA 4.0.",
     }
+    # #7379: exact-title hits may still teach the rusalka-kin identity. Drop
+    # that Wikipedia card; keep Wiktionary/Wikisource. Do not invent a gloss.
+    if atlas_wikipedia_ok_as_intro(clean_lemma, wiki_data):
+        ref["wikipedia"] = {
+            "title": wiki_data.get("title", ""),
+            "summary": wiki_data.get("extract", ""),
+            "url": wiki_data.get("url", ""),
+        }
+    return ref
 
 
 def _wikipedia_one_line_gloss(raw: object) -> str:
@@ -7310,7 +7315,7 @@ def _wikipedia_one_line_gloss(raw: object) -> str:
 def _proper_noun_wikipedia_meaning(lemma: str) -> dict[str, object] | None:
     clean_lemma = _strip_stress(_base_lemma(lemma)).strip()
     wiki_data = _cached_wikipedia_summary(clean_lemma)
-    if not wiki_data:
+    if not wiki_data or not atlas_wikipedia_ok_as_intro(clean_lemma, wiki_data):
         return None
     gloss = _wikipedia_one_line_gloss(wiki_data.get("extract"))
     if not gloss:

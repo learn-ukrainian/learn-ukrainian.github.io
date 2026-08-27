@@ -26,6 +26,10 @@
         "sha256": "61aa4828ae462ccae3918e564fc0af0bc5ba0543291e7acdcc6219058ff490e2"
       },
       {
+        "path": "scripts/lexicon/atlas_wikipedia_intro.py",
+        "sha256": "35ee8c5cfcb1e4e0a03c8c86941b0b52133c80b84cd2047cd045af6fb333d86a"
+      },
+      {
         "path": "scripts/lexicon/backfill_course_usage.py",
         "sha256": "593f83da3295beed8008b98bcec77a8db392d6a5497eb26c581d4ff7c148f350"
       },
@@ -95,7 +99,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "d3511ff5bf4bb20ad5879a8f66afc448d6e250e74aaa6debb4630a8cb8ed92c5"
+        "sha256": "f60b8d67774ce12d8eca93cf9216fbaee20adb33637ce6e055f7087fcec3c4de"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",

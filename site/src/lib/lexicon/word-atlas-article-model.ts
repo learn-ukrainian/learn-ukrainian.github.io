@@ -453,6 +453,77 @@ export function shouldRenderDefinitionCard(card: DefinitionCard) {
   return !isSum11DefinitionCard(card);
 }
 
+const RUSALKA_CLASS_LEMMAS = new Set([
+  "русалка",
+  "русалки",
+  "мавка",
+  "мавки",
+  "нявка",
+  "нявки",
+]);
+
+const WIKI_RUSALKA_KIN_RE =
+  /спор[іі]днен\w{0,8}\s+(?:із|з)\s+русалк|інш(?:а|ою)\s+назва(?:ою)?\s+русалк|тотожн\w{0,8}\s+(?:із|з)\s+русалк/i;
+const WIKI_LESSER_SPIRIT_RE = /нижч(?:ий|а|і)\s+дух/i;
+const WIKI_RUSALKA_STEM_RE = /русалк/i;
+
+function stripWikiStress(text: string): string {
+  return text.replaceAll("\u0301", "");
+}
+
+export function normalizeAtlasLemma(lemma: string): string {
+  return stripWikiStress(lemma).trim().toLocaleLowerCase("uk");
+}
+
+export function isRusalkaClassLemma(lemma: string): boolean {
+  return RUSALKA_CLASS_LEMMAS.has(normalizeAtlasLemma(lemma));
+}
+
+export function wikipediaLeadText(...parts: Array<string | null | undefined>): string {
+  return parts
+    .map((part) => {
+      const raw = stripWikiStress(part ?? "").trim();
+      if (!raw) return "";
+      return raw.split(/(?<=[.!?])\s+/, 1)[0]?.trim() ?? "";
+    })
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function wikipediaLeadHasRusalkaKinFraming(
+  ...parts: Array<string | null | undefined>
+): boolean {
+  const lead = wikipediaLeadText(...parts);
+  if (!lead) return false;
+  if (WIKI_RUSALKA_KIN_RE.test(lead)) return true;
+  return WIKI_LESSER_SPIRIT_RE.test(lead) && WIKI_RUSALKA_STEM_RE.test(lead);
+}
+
+export function atlasWikipediaOkAsIntro(
+  lemma: string,
+  wiki: { description?: string; extract?: string; summary?: string } | null | undefined,
+): boolean {
+  if (!wiki) return false;
+  if (isRusalkaClassLemma(lemma)) return true;
+  return !wikipediaLeadHasRusalkaKinFraming(
+    wiki.description,
+    wiki.extract ?? wiki.summary,
+  );
+}
+
+export function sanitizeWikiReference(
+  lemma: string,
+  wiki: LexiconEntryView["wiki_reference"] | null | undefined,
+): LexiconEntryView["wiki_reference"] | null {
+  if (!wiki) return null;
+  const keepWikipedia = atlasWikipediaOkAsIntro(lemma, wiki.wikipedia);
+  const next = keepWikipedia ? wiki : { ...wiki, wikipedia: undefined };
+  if (!next.wikipedia && !next.wiktionary_url && !next.wikisource_url) {
+    return null;
+  }
+  return next;
+}
+
 export function sourceClass(card: DefinitionCard) {
   if (card.id.includes("sum11") && ((card.sovietization_risk ?? 0) > 0 || card.id.includes("flagged"))) {
     return "sum11-flagged";
@@ -490,7 +561,12 @@ export function buildWordAtlasArticleView(
   generatedAt: string,
   manifestVersion: string,
 ) {
-  const entry = record.entry as unknown as LexiconEntryView;
+  const rawEntry = record.entry as unknown as LexiconEntryView;
+  const wikiReference = sanitizeWikiReference(rawEntry.lemma, rawEntry.wiki_reference);
+  const entry =
+    wikiReference === rawEntry.wiki_reference
+      ? rawEntry
+      : { ...rawEntry, wiki_reference: wikiReference };
   const enrichment = entry.enrichment ?? null;
   const sections = entry.sections ?? null;
   const synonymSets = sections?.synonyms?.synsets ?? [];
