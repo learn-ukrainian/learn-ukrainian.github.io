@@ -36,6 +36,8 @@ EXECUTION_LOCK_FD_ENV = "PHASE3_CYCLE007_EXECUTION_LOCK_FD"
 RECEIPT_SCHEMA = "phase3_cycle007_labeling_guardian_v1"
 GEMINI_RECOVERY_SCHEMA = "phase3_cycle007_gemini_provider_recovery_v1"
 GEMINI_RECOVERY_RECEIPT = "provider-recovery.json"
+GEMINI_SECOND_RECOVERY_SCHEMA = "phase3_cycle007_gemini_provider_second_recovery_v1"
+GEMINI_SECOND_RECOVERY_RECEIPT = "provider-recovery-attempt-3.json"
 GEMINI_STOP_RECOVERY_ROOT = ".cycle007-gemini-stop-recovery"
 GEMINI_RECOVERABLE_FIRST_STOP_CODES = frozenset(
     {
@@ -47,6 +49,7 @@ GEMINI_RECOVERABLE_FIRST_STOP_CODES = frozenset(
         "provider_status_internal_error",
     }
 )
+GEMINI_RECOVERABLE_SECOND_STOP_CODES = frozenset({"provider_status_timeout"})
 MAX_RECOVERY_FILES = 64
 MAX_RECOVERY_BYTES = 16 * 1024 * 1024
 MOUNT_TIMEOUT_SECONDS = 30
@@ -709,8 +712,293 @@ def _resume(config: Config, mounts: list[dict[str, Any]]) -> dict[str, Any]:
         execution.close()
 
 
+def _gemini_attempt_pair(
+    config: Config,
+    output: Path,
+    *,
+    attempt: int,
+    failure_codes: frozenset[str],
+) -> tuple[bytes, dict[str, Any], bytes, dict[str, Any]]:
+    terminal_path = (
+        output
+        / "clean_label/chunks/packet-0001"
+        / f"attempt-{attempt}-chunk-01.terminal.json"
+    )
+    started_path = terminal_path.with_name(f"attempt-{attempt}-chunk-01.started.json")
+    terminal_raw, terminal = _private_json(
+        terminal_path, config.owner_uid, config.owner_gid
+    )
+    started_raw, started = _private_json(started_path, config.owner_uid, config.owner_gid)
+    if (
+        terminal.get("schema_version") != "phase3_cycle007_gemini_attempt_v1"
+        or terminal.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007"
+        or terminal.get("lane") != "clean_label"
+        or terminal.get("packet_index") != 1
+        or terminal.get("chunk_index") != 1
+        or terminal.get("attempt") != attempt
+        or terminal.get("state") != "terminal"
+        or terminal.get("failure_code") not in failure_codes
+        or terminal.get("failure_stage") != "provider_return"
+        or terminal.get("provider_call_started") is not True
+        or terminal.get("executable_binding_result") != "verified"
+        or terminal.get("provider_return_code") != "nonzero"
+        or terminal.get("init_count") != 1
+        or terminal.get("result_count") != 1
+        or terminal.get("first_event_kind") != "init"
+        or terminal.get("last_event_kind") != "result"
+        or terminal.get("model_binding_result") != "verified"
+        or terminal.get("result_status") != "non_success"
+        or terminal.get("structured_output_type") != "missing"
+        or terminal.get("exact_model") != "Gemini 3.6 Flash (High)"
+        or terminal.get("model_family") != "google"
+        or terminal.get("harness") != "agy"
+        or terminal.get("text_free") is not True
+    ):
+        raise GuardianError("stop_recovery_state_drift")
+    if (
+        started.get("schema_version") != "phase3_cycle007_gemini_attempt_v1"
+        or started.get("evaluation_cycle_id") != terminal["evaluation_cycle_id"]
+        or started.get("lane") != terminal["lane"]
+        or started.get("packet_index") != terminal["packet_index"]
+        or started.get("chunk_index") != terminal["chunk_index"]
+        or started.get("attempt") != terminal["attempt"]
+        or started.get("state") != "started"
+        or started.get("exact_model") != terminal["exact_model"]
+        or started.get("model_family") != terminal["model_family"]
+        or started.get("harness") != terminal["harness"]
+        or started.get("text_free") is not True
+    ):
+        raise GuardianError("stop_recovery_state_drift")
+    return started_raw, started, terminal_raw, terminal
+
+
+def _verified_first_recovery(
+    config: Config,
+    output: Path,
+    *,
+    started_raw: bytes,
+    terminal_raw: bytes,
+    terminal: dict[str, Any],
+) -> tuple[bytes, dict[str, Any]]:
+    recovery_path = output / GEMINI_RECOVERY_RECEIPT
+    recovery_raw, recovery = _private_json(
+        recovery_path, config.owner_uid, config.owner_gid
+    )
+    body = {
+        "schema_version": GEMINI_RECOVERY_SCHEMA,
+        "evaluation_cycle_id": terminal["evaluation_cycle_id"],
+        "source_provider_stop_sha256": recovery.get("source_provider_stop_sha256"),
+        "started_marker_sha256": _digest(started_raw),
+        "terminal_marker_sha256": _digest(terminal_raw),
+        "failure_code": terminal["failure_code"],
+        "failure_stage": terminal["failure_stage"],
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": terminal["exact_model"],
+        "model_family": terminal["model_family"],
+        "harness": terminal["harness"],
+        "text_free": True,
+    }
+    source_stop = body["source_provider_stop_sha256"]
+    if (
+        not isinstance(source_stop, str)
+        or len(source_stop) != 64
+        or any(character not in "0123456789abcdef" for character in source_stop)
+        or set(recovery) != set(body) | {"receipt_sha256"}
+        or any(recovery.get(key) != value for key, value in body.items())
+        or recovery.get("receipt_sha256") != _digest(_canonical(body))
+        or _digest(recovery_raw) != _digest(_canonical(recovery))
+    ):
+        raise GuardianError("stop_recovery_state_drift")
+    archive_root = config.backing_root / GEMINI_STOP_RECOVERY_ROOT
+    archive = archive_root / source_stop
+    _private_directory(archive_root, config.owner_uid, config.owner_gid, create=False)
+    _private_directory(archive, config.owner_uid, config.owner_gid, create=False)
+    archived_raw, _archived = _private_json(
+        archive / "provider-stop.json",
+        config.owner_uid,
+        config.owner_gid,
+    )
+    if _digest(archived_raw) != source_stop:
+        raise GuardianError("stop_recovery_binding_drift")
+    return recovery_raw, recovery
+
+
+def _archive_exact_stop(
+    config: Config,
+    *,
+    stop_path: Path,
+    expected_stop: str,
+) -> None:
+    archive_root = config.backing_root / GEMINI_STOP_RECOVERY_ROOT
+    _private_directory(archive_root, config.owner_uid, config.owner_gid, create=True)
+    _fsync_directory(config.backing_root)
+    archive = archive_root / expected_stop
+    _private_directory(archive, config.owner_uid, config.owner_gid, create=True)
+    _fsync_directory(archive_root)
+    archived_stop = archive / "provider-stop.json"
+    if archived_stop.exists() or archived_stop.is_symlink():
+        archived_raw, _archived = _private_json(
+            archived_stop, config.owner_uid, config.owner_gid
+        )
+        if _digest(archived_raw) != expected_stop:
+            raise GuardianError("stop_recovery_collision")
+        return
+    try:
+        os.link(stop_path, archived_stop, follow_symlinks=False)
+    except OSError:
+        raise GuardianError("stop_recovery_archive_failed") from None
+    _fsync_directory(archive)
+
+
+def _gemini_second_stop_recovery(
+    config: Config,
+    mounts: list[dict[str, Any]],
+    *,
+    status: dict[str, Any],
+    output: Path,
+    expected_stop: str,
+) -> dict[str, Any]:
+    """Authorize attempt 3 only for the exact preserved attempt-2 timeout."""
+    first_started_raw, _first_started, first_terminal_raw, first_terminal = (
+        _gemini_attempt_pair(
+            config,
+            output,
+            attempt=1,
+            failure_codes=GEMINI_RECOVERABLE_FIRST_STOP_CODES,
+        )
+    )
+    second_started_raw, _second_started, second_terminal_raw, second_terminal = (
+        _gemini_attempt_pair(
+            config,
+            output,
+            attempt=2,
+            failure_codes=GEMINI_RECOVERABLE_SECOND_STOP_CODES,
+        )
+    )
+    first_recovery_raw, _first_recovery = _verified_first_recovery(
+        config,
+        output,
+        started_raw=first_started_raw,
+        terminal_raw=first_terminal_raw,
+        terminal=first_terminal,
+    )
+    stop_path = output / "provider-stop.json"
+    second_recovery_path = output / GEMINI_SECOND_RECOVERY_RECEIPT
+    allowed = {
+        output / "clean_label/chunks/packet-0001/attempt-1-chunk-01.started.json",
+        output / "clean_label/chunks/packet-0001/attempt-1-chunk-01.terminal.json",
+        output / "clean_label/chunks/packet-0001/attempt-2-chunk-01.started.json",
+        output / "clean_label/chunks/packet-0001/attempt-2-chunk-01.terminal.json",
+        output / GEMINI_RECOVERY_RECEIPT,
+    }
+    if stop_path.exists() or stop_path.is_symlink():
+        allowed.add(stop_path)
+    if second_recovery_path.exists() or second_recovery_path.is_symlink():
+        allowed.add(second_recovery_path)
+    observed = {path for path in output.rglob("*") if path.is_file() or path.is_symlink()}
+    if observed != allowed or any(path.is_symlink() for path in observed):
+        raise GuardianError("stop_recovery_state_drift")
+    for directory in (output, *[path for path in output.rglob("*") if path.is_dir()]):
+        _private_directory(directory, config.owner_uid, config.owner_gid, create=False)
+
+    if stop_path.exists() or stop_path.is_symlink():
+        if status.get("stopped") is not True:
+            raise GuardianError("stop_recovery_state_drift")
+        stop_raw, stop = _private_json(stop_path, config.owner_uid, config.owner_gid)
+        if _digest(stop_raw) != expected_stop:
+            raise GuardianError("stop_recovery_binding_drift")
+        for key in (
+            "evaluation_cycle_id",
+            "lane",
+            "failure_code",
+            "failure_stage",
+            "provider_call_started",
+            "executable_binding_result",
+            "provider_return_code",
+            "init_count",
+            "result_count",
+            "first_event_kind",
+            "last_event_kind",
+            "model_binding_result",
+            "result_status",
+            "structured_output_type",
+            "exact_model",
+            "model_family",
+            "harness",
+            "text_free",
+        ):
+            if stop.get(key) != second_terminal.get(key):
+                raise GuardianError("stop_recovery_state_drift")
+        if (
+            stop.get("schema_version") != "phase3_cycle007_gemini_provider_stop_v1"
+            or stop.get("terminal_packet_index") != 1
+            or stop.get("new_provider_calls_allowed") is not False
+        ):
+            raise GuardianError("stop_recovery_state_drift")
+        _archive_exact_stop(config, stop_path=stop_path, expected_stop=expected_stop)
+    else:
+        if status.get("stopped") is not False or not second_recovery_path.exists():
+            raise GuardianError("stop_recovery_state_drift")
+        archive_root = config.backing_root / GEMINI_STOP_RECOVERY_ROOT
+        archive = archive_root / expected_stop
+        _private_directory(archive_root, config.owner_uid, config.owner_gid, create=False)
+        _private_directory(archive, config.owner_uid, config.owner_gid, create=False)
+        archived_raw, _archived = _private_json(
+            archive / "provider-stop.json",
+            config.owner_uid,
+            config.owner_gid,
+        )
+        if _digest(archived_raw) != expected_stop:
+            raise GuardianError("stop_recovery_binding_drift")
+
+    receipt_body = {
+        "schema_version": GEMINI_SECOND_RECOVERY_SCHEMA,
+        "evaluation_cycle_id": second_terminal["evaluation_cycle_id"],
+        "source_provider_stop_sha256": expected_stop,
+        "prior_recovery_receipt_sha256": _digest(first_recovery_raw),
+        "started_marker_sha256": _digest(second_started_raw),
+        "terminal_marker_sha256": _digest(second_terminal_raw),
+        "failure_code": second_terminal["failure_code"],
+        "failure_stage": second_terminal["failure_stage"],
+        "prior_provider_call_count": 2,
+        "authorized_additional_provider_calls": 1,
+        "authorized_attempt": 3,
+        "exact_model": second_terminal["exact_model"],
+        "model_family": second_terminal["model_family"],
+        "harness": second_terminal["harness"],
+        "text_free": True,
+    }
+    receipt = receipt_body | {"receipt_sha256": _digest(_canonical(receipt_body))}
+    if second_recovery_path.exists() or second_recovery_path.is_symlink():
+        existing_raw, existing = _private_json(
+            second_recovery_path, config.owner_uid, config.owner_gid
+        )
+        if existing != receipt or _digest(existing_raw) != _digest(_canonical(receipt)):
+            raise GuardianError("stop_recovery_collision")
+    else:
+        _exclusive_json(second_recovery_path, receipt)
+    if stop_path.exists():
+        _remove_durable(stop_path)
+
+    return {
+        "schema_version": RECEIPT_SCHEMA,
+        "ok": True,
+        "action": "recover-gemini-stop",
+        "mount_count": len(mounts),
+        "mounts": mounts,
+        "available_bytes": _available_bytes(config.backing_root),
+        "min_free_bytes": config.min_free_bytes,
+        "prior_provider_call_count": 2,
+        "authorized_additional_provider_calls": 1,
+        "authorized_attempt": 3,
+        "recovered_stop_count": 1,
+        "text_free": True,
+    }
+
+
 def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[str, Any]:
-    """Preserve one exact stopped call and authorize only its second attempt."""
+    """Preserve one exact stopped call and authorize its bounded next attempt."""
     expected_stop = config.expected_stop_sha256
     if (
         not isinstance(expected_stop, str)
@@ -722,15 +1010,25 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
     execution = _lock(config.execution_lock, "active_worker")
     try:
         status = _invoke_controller(config, "status", execution_fd=execution.fileno())
-        if status.get("stopped") is not True or _completed_stages(status):
+        if _completed_stages(status):
             raise GuardianError("stop_recovery_state_drift")
 
         output = config.backing_root / OUTPUT_ROOTS[0]
         _private_directory(output, config.owner_uid, config.owner_gid, create=False)
-        recovery_path = output / GEMINI_RECOVERY_RECEIPT
-        stop_path = output / "provider-stop.json"
         terminal_candidates = list(output.rglob("attempt-*-chunk-*.terminal.json"))
         started_candidates = list(output.rglob("attempt-*-chunk-*.started.json"))
+        if len(terminal_candidates) == 2 and len(started_candidates) == 2:
+            return _gemini_second_stop_recovery(
+                config,
+                mounts,
+                status=status,
+                output=output,
+                expected_stop=expected_stop,
+            )
+        if status.get("stopped") is not True:
+            raise GuardianError("stop_recovery_state_drift")
+        recovery_path = output / GEMINI_RECOVERY_RECEIPT
+        stop_path = output / "provider-stop.json"
         if len(terminal_candidates) != 1 or len(started_candidates) != 1:
             raise GuardianError("stop_recovery_state_drift")
         terminal_path, started_path = terminal_candidates[0], started_candidates[0]

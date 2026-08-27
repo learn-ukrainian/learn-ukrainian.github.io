@@ -153,6 +153,7 @@ PROVIDER_STATUS_RECOVERY_CODES = frozenset(
     }
 )
 RECOVERY_RECEIPT = "provider-recovery.json"
+SECOND_RECOVERY_RECEIPT = "provider-recovery-attempt-3.json"
 
 _AGY_PROVIDER_STATUS_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
@@ -1070,6 +1071,85 @@ def _verify_recovery_receipt(package: Path, started: Path, terminal: Path) -> No
         raise Error("ordinal_identity_binding_drift")
 
 
+def _verify_second_recovery_receipt(package: Path, out: Path, chunk_index: int) -> None:
+    """Require the exact chained receipt that authorizes attempt 3 only."""
+    first_started = out / f"attempt-1-chunk-{chunk_index:02d}.started.json"
+    first_terminal = out / f"attempt-1-chunk-{chunk_index:02d}.terminal.json"
+    second_started = out / f"attempt-2-chunk-{chunk_index:02d}.started.json"
+    second_terminal = out / f"attempt-2-chunk-{chunk_index:02d}.terminal.json"
+    for marker in (first_started, first_terminal, second_started, second_terminal):
+        _mode(marker, 0o600)
+    _verify_recovery_receipt(package, first_started, first_terminal)
+    first_recovery = package / OUTPUT / RECOVERY_RECEIPT
+    path = package / OUTPUT / SECOND_RECOVERY_RECEIPT
+    receipt = _read_json(path)
+    _mode(path, 0o600)
+    terminal_value = _read_json(second_terminal)
+    expected = {
+        "schema_version": "phase3_cycle007_gemini_provider_second_recovery_v1",
+        "evaluation_cycle_id": CYCLE,
+        "source_provider_stop_sha256": receipt.get("source_provider_stop_sha256"),
+        "prior_recovery_receipt_sha256": digest(first_recovery.read_bytes()),
+        "started_marker_sha256": digest(second_started.read_bytes()),
+        "terminal_marker_sha256": digest(second_terminal.read_bytes()),
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "prior_provider_call_count": 2,
+        "authorized_additional_provider_calls": 1,
+        "authorized_attempt": 3,
+        "exact_model": MODEL,
+        "model_family": FAMILY,
+        "harness": HARNESS,
+        "text_free": True,
+    }
+    stop_hash = expected["source_provider_stop_sha256"]
+    if (
+        terminal_value.get("failure_code") != expected["failure_code"]
+        or terminal_value.get("failure_stage") != expected["failure_stage"]
+        or not isinstance(stop_hash, str)
+        or len(stop_hash) != 64
+        or any(character not in "0123456789abcdef" for character in stop_hash)
+        or set(receipt) != set(expected) | {"receipt_sha256"}
+        or any(receipt.get(key) != value for key, value in expected.items())
+        or receipt.get("receipt_sha256") != digest(canonical(expected))
+    ):
+        raise Error("ordinal_identity_binding_drift")
+
+
+def _next_attempt(package: Path, out: Path, chunk_index: int) -> int:
+    """Resolve the only authorized next call; attempt 4 is never representable."""
+    retryable = {
+        "stream_json_invalid",
+        "terminal_result_count_drift",
+        "structured_output_envelope_drift",
+        "ordinal_key_drift",
+        "label_json_invalid",
+        "label_count_or_envelope_drift",
+    } | PROVIDER_STATUS_RECOVERY_CODES
+    for attempt in (1, 2, 3):
+        started = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.started.json"
+        terminal = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.terminal.json"
+        if started.exists() and not terminal.exists():
+            raise Error("ordinal_identity_binding_drift")
+        if not terminal.exists():
+            return attempt
+        _mode(started, 0o600)
+        _mode(terminal, 0o600)
+        if attempt == 3:
+            raise Error("ordinal_identity_binding_drift")
+        marker = _read_json(terminal)
+        failure_code = marker.get("failure_code")
+        if failure_code not in retryable:
+            raise Error("ordinal_identity_binding_drift")
+        if attempt == 1 and failure_code in PROVIDER_STATUS_RECOVERY_CODES:
+            _verify_recovery_receipt(package, started, terminal)
+        if attempt == 2:
+            if failure_code != "provider_status_timeout":
+                raise Error("ordinal_identity_binding_drift")
+            _verify_second_recovery_receipt(package, out, chunk_index)
+    raise Error("ordinal_identity_binding_drift")
+
+
 def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
     # AGY stream-input mode reads turns only from stdin; --print would add a
     # conflicting headless prompt and can yield SUCCESS with an empty result.
@@ -1147,28 +1227,9 @@ def _run_chunk(
         return {"chunk_index": chunk_index, "resumed": True, "text_free": True}
     if (package / OUTPUT / "provider-stop.json").exists():
         raise Error("ordinal_identity_binding_drift")
-    for attempt in (1, 2):
-        started = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.started.json"
+    while True:
+        attempt = _next_attempt(package, out, chunk_index)
         terminal = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.terminal.json"
-        if started.exists() and not terminal.exists():
-            raise Error("ordinal_identity_binding_drift")
-        if terminal.exists():
-            if attempt == 2:
-                raise Error("ordinal_identity_binding_drift")
-            marker = _read_json(terminal)
-            failure_code = marker.get("failure_code")
-            if failure_code not in {
-                "stream_json_invalid",
-                "terminal_result_count_drift",
-                "structured_output_envelope_drift",
-                "ordinal_key_drift",
-                "label_json_invalid",
-                "label_count_or_envelope_drift",
-            } | PROVIDER_STATUS_RECOVERY_CODES:
-                raise Error("ordinal_identity_binding_drift")
-            if failure_code in PROVIDER_STATUS_RECOVERY_CODES:
-                _verify_recovery_receipt(package, started, terminal)
-            continue
         runtime = Path(
             tempfile.mkdtemp(
                 prefix=f".cycle007-gemini-{lane}-{packet_index:04d}-{chunk_index:02d}-{attempt}-", dir=package
@@ -1309,7 +1370,6 @@ def _run_chunk(
             raise
         finally:
             shutil.rmtree(runtime, ignore_errors=True)
-    raise Error("structured_output_envelope_drift")
 
 
 def _verify_chunk(
@@ -1356,7 +1416,7 @@ def _verify_chunk(
         "text_free": True,
     }
     if (
-        receipt.get("attempt_count") not in {1, 2}
+        receipt.get("attempt_count") not in {1, 2, 3}
         or set(receipt) != set(expected) | {"receipt_sha256"}
         or any(receipt.get(key) != value for key, value in expected.items())
         or receipt.get("receipt_sha256") != digest(canonical(expected))
