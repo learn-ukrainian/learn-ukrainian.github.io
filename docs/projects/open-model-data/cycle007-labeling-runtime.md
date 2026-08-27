@@ -169,10 +169,13 @@ of being claimed as automatically resumable.
 | Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
 | Exact first Gemini provider-return stop after explicit recovery direction | `recover-gemini-stop --expected-stop-sha256 …` preserves the stop in the private backing filesystem and publishes one text-free recovery receipt. The runner accepts that exact receipt only for attempt 2; no recovery action invokes a provider. |
 | Exact second Gemini `provider_status_timeout` after explicit recovery direction | The same action verifies and hash-binds the first recovery, both attempt pairs, and the exact second stop before publishing a separate chained receipt for attempt 3. It invokes no provider, accepts no other second failure, and cannot authorize attempt 4. |
+| Reviewed code or provider executable identity changes before any stage seal | Provider-bound `prepare` validates the complete successor preflight and both public canaries under the execution and controller locks. Rotation is accepted only when the successor names the exact installed preflight SHA-256, preserves canonical superseded receipts, writes the authoritative preflight copy last, and remains idempotent after interruption. Any existing stage seal blocks rotation. No provider is invoked. |
 
 ## Run sequence
 
-1. `prepare`: mount and verify storage only; provider calls remain off.
+1. `prepare`: mount and verify storage; when complete provider bindings are
+   supplied, validate and install or explicitly chain-rotate their preflight
+   identities. Provider calls remain off.
 2. `status`: verify the pristine provider-off state and safe counts only.
 3. `plan`: report Gemini as the next missing stage and safe counts only.
 4. `resume --through gemini`: require the complete provider preflight, then
@@ -204,6 +207,9 @@ authorizes one final Gemini attempt. A terminal third attempt remains stopped.
   invocation, duplicate guardian,
   zero-provider prepare/plan/status, completed-packet preservation, requested
   `--through` boundaries, stage continuation, and safe stop receipts.
+- Preflight-rotation tests cover the exact predecessor link, immutable archives,
+  authoritative-last replacement, idempotent retry, wrong-chain refusal, and
+  the no-rotation-after-seal boundary.
 - Interruption tests cover the boundary before a started marker, after the
   started marker, after provider return, after each final file, and after the
   terminal receipt. Only the pre-start orphan-temp case auto-recovers; every

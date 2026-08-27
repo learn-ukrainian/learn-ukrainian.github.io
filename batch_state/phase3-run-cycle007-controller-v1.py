@@ -406,6 +406,106 @@ def _atomic(path: Path, value: dict[str, Any]) -> None:
         raise
 
 
+def _replace_atomic(path: Path, value: dict[str, Any]) -> None:
+    """Replace one validated control receipt without exposing a partial file."""
+    data = canonical(value)
+    parent = path.parent
+    if parent.is_symlink() or not parent.is_dir() or os.stat(parent).st_mode & 0o777 != 0o700:
+        raise ControllerError("preflight_rotation_state_drift")
+    descriptor, name = tempfile.mkstemp(prefix=f".{path.name}.", dir=parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            os.fchmod(stream.fileno(), 0o600)
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        os.chmod(path, 0o600)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def _canonical_embedded_receipt(path: Path) -> tuple[bytes, dict[str, Any]]:
+    value = _read_json(path)
+    raw = path.read_bytes()
+    unsigned = {key: item for key, item in value.items() if key != "receipt_sha256"}
+    if raw != canonical(value) or value.get("receipt_sha256") != digest(canonical(unsigned)):
+        raise ControllerError("preflight_rotation_state_drift")
+    return raw, value
+
+
+def _archive_superseded_receipt(control: Path, label: str, raw: bytes, value: dict[str, Any]) -> None:
+    archive = control / "superseded-receipts"
+    archive.mkdir(mode=0o700, exist_ok=True)
+    if archive.is_symlink() or not archive.is_dir() or os.stat(archive).st_mode & 0o777 != 0o700:
+        raise ControllerError("preflight_rotation_state_drift")
+    _atomic(archive / f"{label}-{digest(raw)}.json", value)
+
+
+def _install_preflight_receipts(
+    package: Path,
+    receipt: dict[str, Any],
+    gemini_receipt: dict[str, Any],
+    grok_receipt: dict[str, Any],
+) -> None:
+    """Install or rotate an exact preflight identity before any stage is sealed.
+
+    Rotation is explicit in the successor receipt, preserves every superseded
+    receipt, writes the authoritative preflight receipt last, and is idempotent
+    after interruption.
+    """
+    control = _control(package)
+    if control.is_symlink():
+        raise ControllerError("preflight_rotation_state_drift")
+    with contextlib.suppress(FileExistsError):
+        control.mkdir(mode=0o700)
+    if control.is_symlink() or not control.is_dir() or os.stat(control).st_mode & 0o777 != 0o700:
+        raise ControllerError("preflight_rotation_state_drift")
+    destinations = {
+        "gemini-canary": (control / "gemini-canary-receipt.json", gemini_receipt),
+        "grok-canary": (control / "grok-canary-receipt.json", grok_receipt),
+        "preflight": (control / "preflight-receipt.json", receipt),
+    }
+    preflight_path, _ = destinations["preflight"]
+    if not preflight_path.exists() and not preflight_path.is_symlink():
+        for _label, (path, value) in destinations.items():
+            _atomic(path, value)
+        return
+
+    current_raw, current = _canonical_embedded_receipt(preflight_path)
+    desired_raw = canonical(receipt)
+    if current_raw == desired_raw:
+        for _label, (path, value) in destinations.items():
+            _atomic(path, value)
+        return
+    if any(_stage_seal(package, stage).exists() or _stage_seal(package, stage).is_symlink() for stage in STAGES):
+        raise ControllerError("preflight_rotation_blocked")
+    reviews = receipt.get("review_hashes")
+    if (
+        current.get("schema_version") != "phase3_cycle007_preflight_receipt_v1"
+        or not isinstance(reviews, dict)
+        or reviews.get("superseded_preflight_receipt_sha256") != digest(current_raw)
+    ):
+        raise ControllerError("preflight_rotation_not_authorized")
+
+    # Canary copies may already be current after an interrupted rotation.  The
+    # preflight copy remains authoritative and is always replaced last.
+    for label in ("gemini-canary", "grok-canary"):
+        path, value = destinations[label]
+        if path.exists() or path.is_symlink():
+            installed_raw, installed = _canonical_embedded_receipt(path)
+            if installed_raw == canonical(value):
+                continue
+            _archive_superseded_receipt(control, label, installed_raw, installed)
+            _replace_atomic(path, value)
+        else:
+            _atomic(path, value)
+    _archive_superseded_receipt(control, "preflight", current_raw, current)
+    _replace_atomic(preflight_path, receipt)
+
+
 def _parse_code_paths(items: list[str]) -> dict[str, Path]:
     result: dict[str, Path] = {}
     for item in items:
@@ -783,10 +883,7 @@ def preflight(
     ):
         raise ControllerError("preflight_binding_drift")
 
-    control_dir = _control(package)
-    _atomic(control_dir / "preflight-receipt.json", receipt)
-    _atomic(control_dir / "gemini-canary-receipt.json", gemini_receipt)
-    _atomic(control_dir / "grok-canary-receipt.json", grok_receipt)
+    _install_preflight_receipts(package, receipt, gemini_receipt, grok_receipt)
 
     return {
         "ok": True,
@@ -1706,7 +1803,9 @@ def run_stage(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "action", choices=("status", "plan", "run"), help="inspect, dry-run, or execute exactly one stage"
+        "action",
+        choices=("preflight", "status", "plan", "run"),
+        help="install identity, inspect, dry-run, or execute exactly one stage",
     )
     parser.add_argument("--package", type=Path, required=True, help="explicit 0700 operator-owned package")
     parser.add_argument(
@@ -1765,16 +1864,6 @@ def main() -> int:
         grok_canary = args.grok_canary_receipt
         if gemini_canary is None or grok_canary is None:
             raise ControllerError("preflight_binding_drift")
-        proof = preflight(
-            package,
-            args.preflight_receipt.resolve(),
-            code_paths,
-            gemini_canary.resolve(),
-            grok_canary.resolve(),
-            args.agy_executable,
-            args.grok_executable,
-        )
-        execution_lock_fd = _inherited_execution_lock_fd()
         args.lock.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         with args.lock.open("a+") as lock:
             os.chmod(args.lock, 0o600)
@@ -1782,7 +1871,19 @@ def main() -> int:
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError as exc:
                 raise ControllerError("controller_already_running") from exc
-            if args.action == "status":
+            proof = preflight(
+                package,
+                args.preflight_receipt.resolve(),
+                code_paths,
+                gemini_canary.resolve(),
+                grok_canary.resolve(),
+                args.agy_executable,
+                args.grok_executable,
+            )
+            execution_lock_fd = _inherited_execution_lock_fd()
+            if args.action == "preflight":
+                result = proof
+            elif args.action == "status":
                 result = {"ok": True, **status(package), **proof}
             else:
                 if args.stage is None or (args.stage != "gemini" and args.runner is None):
