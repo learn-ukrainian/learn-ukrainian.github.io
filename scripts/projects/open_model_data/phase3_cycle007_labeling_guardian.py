@@ -674,6 +674,28 @@ def _require_free_space(config: Config) -> int:
     return available
 
 
+def _prepare(config: Config, mounts: list[dict[str, Any]], *, provider_bindings: bool) -> dict[str, Any]:
+    preflight_ready = False
+    if provider_bindings:
+        execution = _lock(config.execution_lock, "active_worker")
+        try:
+            _invoke_controller(config, "preflight", execution_fd=execution.fileno())
+            preflight_ready = True
+        finally:
+            execution.close()
+    return {
+        "schema_version": RECEIPT_SCHEMA,
+        "ok": True,
+        "action": "prepare",
+        "mount_count": len(mounts),
+        "mounts": mounts,
+        "available_bytes": _available_bytes(config.backing_root),
+        "min_free_bytes": config.min_free_bytes,
+        "preflight_ready": preflight_ready,
+        "text_free": True,
+    }
+
+
 def _resume(config: Config, mounts: list[dict[str, Any]]) -> dict[str, Any]:
     if config.through is None:
         raise GuardianError("through_required")
@@ -1309,16 +1331,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         _require_free_space(config)
         if config.action == "prepare":
-            result = {
-                "schema_version": RECEIPT_SCHEMA,
-                "ok": True,
-                "action": "prepare",
-                "mount_count": len(mounts),
-                "mounts": mounts,
-                "available_bytes": _available_bytes(config.backing_root),
-                "min_free_bytes": config.min_free_bytes,
-                "text_free": True,
-            }
+            result = _prepare(config, mounts, provider_bindings=provider_bindings)
         elif config.action in {"status", "plan"}:
             _reconcile_markers(config, mutate=False)
             result = (

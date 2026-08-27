@@ -34,6 +34,12 @@ def _temporary_file() -> Any:
     return tempfile.TemporaryFile()
 
 
+def _signed_receipt(controller: ModuleType, **values: Any) -> dict[str, Any]:
+    receipt = dict(values)
+    receipt["receipt_sha256"] = controller.digest(controller.canonical(receipt))
+    return receipt
+
+
 @pytest.fixture()
 def guardian() -> ModuleType:
     return _load(GUARDIAN_PATH, "cycle007_labeling_guardian_test")
@@ -1039,8 +1045,11 @@ def test_controller_rejects_invalid_inherited_descriptor(
         controller._inherited_execution_lock_fd()
 
 
-def test_prepare_path_never_invokes_controller(guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_prepare_with_bindings_invokes_provider_free_preflight(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     config = _config(guardian, tmp_path, action="prepare")
+    calls: list[tuple[str, int | None]] = []
     monkeypatch.setattr(guardian, "_config", lambda _args: config)
     monkeypatch.setattr(guardian, "_lock", lambda *_args: _temporary_file())
     monkeypatch.setattr(guardian, "_ensure_mounts", lambda *_args, **_kwargs: [{"name": name} for name in guardian.OUTPUT_ROOTS])
@@ -1049,7 +1058,8 @@ def test_prepare_path_never_invokes_controller(guardian: ModuleType, tmp_path: P
     monkeypatch.setattr(
         guardian,
         "_invoke_controller",
-        lambda *_args, **_kwargs: pytest.fail("prepare invoked controller"),
+        lambda _config, action, **kwargs: calls.append((action, kwargs.get("execution_fd")))
+        or {"ok": True, "text_free": True},
     )
     arguments = [
         "prepare",
@@ -1069,6 +1079,9 @@ def test_prepare_path_never_invokes_controller(guardian: ModuleType, tmp_path: P
         "--min-free-bytes", "1",
     ]
     assert guardian.main(arguments) == 0
+    assert len(calls) == 1
+    assert calls[0][0] == "preflight"
+    assert isinstance(calls[0][1], int)
 
 
 def test_provider_free_prepare_accepts_no_provider_bindings(
@@ -1409,6 +1422,158 @@ def test_guardian_receipt_rejects_non_text_free_controller_output(guardian: Modu
     completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=b'{"ok":true}\n', stderr=b"")
     with pytest.raises(guardian.GuardianError, match="controller_protocol_failure"):
         guardian._parse_controller_output(completed)
+
+
+def test_preflight_receipt_rotation_is_chained_archived_and_idempotent(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    package = tmp_path / "package"
+    package.mkdir(mode=0o700)
+    old_preflight = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": "0" * 64},
+        text_free=True,
+    )
+    old_gemini = _signed_receipt(controller, schema_version="gemini-old", text_free=True)
+    grok = _signed_receipt(controller, schema_version="grok", text_free=True)
+    controller._install_preflight_receipts(package, old_preflight, old_gemini, grok)
+
+    old_raw = controller.canonical(old_preflight)
+    new_preflight = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": controller.digest(old_raw)},
+        text_free=True,
+    )
+    new_gemini = _signed_receipt(controller, schema_version="gemini-new", text_free=True)
+    controller._install_preflight_receipts(package, new_preflight, new_gemini, grok)
+    controller._install_preflight_receipts(package, new_preflight, new_gemini, grok)
+
+    control = package / "control"
+    assert (control / "preflight-receipt.json").read_bytes() == controller.canonical(new_preflight)
+    assert (control / "gemini-canary-receipt.json").read_bytes() == controller.canonical(new_gemini)
+    archives = sorted((control / "superseded-receipts").iterdir())
+    assert len(archives) == 2
+    assert all(path.stat().st_mode & 0o777 == 0o600 for path in archives)
+    assert (control / "superseded-receipts").stat().st_mode & 0o777 == 0o700
+
+
+def test_preflight_receipt_rotation_resumes_after_canary_replacement(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    package = tmp_path / "package"
+    package.mkdir(mode=0o700)
+    old_preflight = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": "0" * 64},
+        text_free=True,
+    )
+    old_gemini = _signed_receipt(controller, schema_version="gemini-old", text_free=True)
+    grok = _signed_receipt(controller, schema_version="grok", text_free=True)
+    controller._install_preflight_receipts(package, old_preflight, old_gemini, grok)
+    successor = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={
+            "superseded_preflight_receipt_sha256": controller.digest(controller.canonical(old_preflight))
+        },
+        text_free=True,
+    )
+    new_gemini = _signed_receipt(controller, schema_version="gemini-new", text_free=True)
+    control = package / "control"
+    old_gemini_raw = controller.canonical(old_gemini)
+    controller._archive_superseded_receipt(control, "gemini-canary", old_gemini_raw, old_gemini)
+    controller._replace_atomic(control / "gemini-canary-receipt.json", new_gemini)
+
+    controller._install_preflight_receipts(package, successor, new_gemini, grok)
+    assert (control / "preflight-receipt.json").read_bytes() == controller.canonical(successor)
+    assert len(list((control / "superseded-receipts").iterdir())) == 2
+
+
+def test_preflight_receipt_rotation_rejects_wrong_chain_without_mutation(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    package = tmp_path / "package"
+    package.mkdir(mode=0o700)
+    old_preflight = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": "0" * 64},
+        text_free=True,
+    )
+    old_gemini = _signed_receipt(controller, schema_version="gemini-old", text_free=True)
+    grok = _signed_receipt(controller, schema_version="grok", text_free=True)
+    controller._install_preflight_receipts(package, old_preflight, old_gemini, grok)
+    wrong = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": "f" * 64},
+        text_free=True,
+    )
+    new_gemini = _signed_receipt(controller, schema_version="gemini-new", text_free=True)
+
+    with pytest.raises(controller.ControllerError, match="preflight_rotation_not_authorized"):
+        controller._install_preflight_receipts(package, wrong, new_gemini, grok)
+    control = package / "control"
+    assert (control / "preflight-receipt.json").read_bytes() == controller.canonical(old_preflight)
+    assert (control / "gemini-canary-receipt.json").read_bytes() == controller.canonical(old_gemini)
+    assert not (control / "superseded-receipts").exists()
+
+
+def test_preflight_receipt_rotation_is_blocked_after_any_stage_seal(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    package = tmp_path / "package"
+    package.mkdir(mode=0o700)
+    old = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": "0" * 64},
+        text_free=True,
+    )
+    canary = _signed_receipt(controller, schema_version="canary", text_free=True)
+    controller._install_preflight_receipts(package, old, canary, canary)
+    seal = package / "control/stage-gemini.complete.json"
+    seal.write_text("{}", encoding="utf-8")
+    successor = _signed_receipt(
+        controller,
+        schema_version="phase3_cycle007_preflight_receipt_v1",
+        review_hashes={"superseded_preflight_receipt_sha256": controller.digest(controller.canonical(old))},
+        text_free=True,
+    )
+    with pytest.raises(controller.ControllerError, match="preflight_rotation_blocked"):
+        controller._install_preflight_receipts(package, successor, canary, canary)
+
+
+def test_prepare_installs_preflight_under_execution_lock(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="prepare")
+    execution = _temporary_file()
+    calls: list[tuple[str, int | None]] = []
+    monkeypatch.setattr(guardian, "_lock", lambda *_args: execution)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda _config, action, **kwargs: calls.append((action, kwargs.get("execution_fd")))
+        or {"ok": True, "text_free": True},
+    )
+    monkeypatch.setattr(guardian, "_available_bytes", lambda _path: 123)
+    result = guardian._prepare(config, [], provider_bindings=True)
+    assert result["preflight_ready"] is True
+    assert calls == [("preflight", calls[0][1])]
+    assert isinstance(calls[0][1], int)
+
+
+def test_prepare_without_bindings_is_provider_free(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="prepare")
+    monkeypatch.setattr(guardian, "_available_bytes", lambda _path: 123)
+    result = guardian._prepare(config, [], provider_bindings=False)
+    assert result["preflight_ready"] is False
 
 
 def test_cli_help_is_available() -> None:
