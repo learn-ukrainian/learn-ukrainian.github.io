@@ -17,8 +17,13 @@ from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.main import app
-from scripts.api.observer_presence import reset_observer_presence
-from scripts.api.occupancy import parse_host_id_map
+from scripts.api.observer_presence import (
+    PresenceRequest,
+    list_live,
+    reset_observer_presence,
+    upsert_presence,
+)
+from scripts.api.occupancy import MAC_OPERATOR_HOST_ID, parse_host_id_map
 from scripts.api.occupancy_local import write_marker
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
@@ -102,6 +107,19 @@ def _open_lease(db_path: Path, *, ttl_seconds: int = 600) -> None:
     )
 
 
+def _assert_quiet_mac_row(host: dict) -> None:
+    assert host["host_id"] == MAC_OPERATOR_HOST_ID
+    assert host["status"] == "unavailable"
+    assert host["error"] == "unreachable"
+    assert host["occupants"] == []
+    assert host["occupant_count"] == 0
+    assert host["ai_seats"] == []
+    assert host["idle_or_empty"] is False
+    assert "cpu_count" not in host
+    assert "mem" not in host
+    assert "loadavg" not in host
+
+
 def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
@@ -113,7 +131,7 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
         assert resp.status_code == 200
         data = resp.json()
         assert data["schema"] == "monitor-occupancy.v1"
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher"]
+        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
         for host_id in ("host-job", "host-teacher"):
             entry = data["hosts"][host_id]
             assert entry["host_id"] == host_id
@@ -125,9 +143,75 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
             assert entry["ai_seats"] == []
             assert "cpu_count" not in entry
             assert "mem" not in entry
+        _assert_quiet_mac_row(data["hosts"]["mac-operator"])
         text = resp.text
         for alias in _ALIAS_LEAKS:
             assert alias not in text
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_occupancy_default_glance_keeps_quiet_mac(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        _warm_load(fake)
+        assert list_live() == []
+        resp = client.get("/api/occupancy")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "mac-operator" in data["hosts"]
+        _assert_quiet_mac_row(data["hosts"]["mac-operator"])
+        assert data["hosts"]["mac-operator"]["burn_state"] == "unknown"
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_occupancy_default_glance_merges_live_mac_observer(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        _warm_load(fake)
+        upsert_presence(
+            PresenceRequest.model_validate(
+                {
+                    "agent": "cursor",
+                    "kind": "observer",
+                    "task_id": "7104",
+                    "status": "working",
+                    "host_id": "mac-operator",
+                    "instance_id": "gui",
+                }
+            )
+        )
+        resp = client.get("/api/occupancy")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
+        host = data["hosts"]["mac-operator"]
+        assert host["status"] == "unavailable"
+        assert host["error"] == "unreachable"
+        assert host["occupants"] == [
+            {
+                "kind": "observer",
+                "agent": "cursor",
+                "task_id": "7104",
+                "epic": None,
+                "status": "working",
+                "instance_id": "gui",
+            }
+        ]
+        assert host["occupant_count"] == 1
+        assert host["ai_seats"] == ["cursor"]
+        assert host["idle_or_empty"] is False
+        assert "cpu_count" not in host
+        assert "mem" not in host
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -145,8 +229,9 @@ def test_occupancy_shape_uses_placeholders(tmp_path, monkeypatch) -> None:
         assert resp.headers.get("cache-control") == "no-store"
         data = resp.json()
         assert data["schema"] == "monitor-occupancy.v1"
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher"]
-        for host_id, host in data["hosts"].items():
+        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
+        for host_id in ("host-job", "host-teacher"):
+            host = data["hosts"][host_id]
             assert host["host_id"] == host_id
             assert host["status"] == "fresh"
             assert "cpu_count" in host
@@ -163,6 +248,7 @@ def test_occupancy_shape_uses_placeholders(tmp_path, monkeypatch) -> None:
             assert isinstance(host["idle_or_empty"], bool)
             assert host["idle_or_empty"] is True
             assert "error" not in host
+        _assert_quiet_mac_row(data["hosts"]["mac-operator"])
         text = json.dumps(data)
         assert _IP.findall(text) == []
         for alias in _ALIAS_LEAKS:
@@ -490,13 +576,14 @@ def test_occupancy_dual_host_partial_map(tmp_path, monkeypatch) -> None:
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher"]
+        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
         assert data["hosts"]["host-job"]["status"] == "fresh"
         assert data["hosts"]["host-job"]["cpu_count"] == 4
         assert data["hosts"]["host-teacher"]["status"] == "unavailable"
         assert data["hosts"]["host-teacher"]["error"] == "unreachable"
         assert data["hosts"]["host-teacher"]["burn_state"] == "unknown"
         assert data["hosts"]["host-teacher"]["idle_or_empty"] is False
+        _assert_quiet_mac_row(data["hosts"]["mac-operator"])
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
