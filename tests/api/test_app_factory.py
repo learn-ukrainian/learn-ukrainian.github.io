@@ -31,8 +31,8 @@ DB_ACCESS_PATTERNS = (
 # The exact pre-migration inventory from design §4.1: 22 access sites in 21
 # unique files. Infrastructure files are listed too so the denominator cannot
 # silently shrink when the exemptions below are changed. #7269 step 5 removed
-# scripts/api/comms_router.py deliberately: its routes now read every DB
-# through the app's MonitorContext DatabaseHandle (20 -> 19 files).
+# scripts/api/comms_router.py deliberately (20 -> 19); step 2 removed
+# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18).
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/admin_router.py",
@@ -335,28 +335,8 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         assert "session" in second_manifest
 
 
-def test_db_access_patterns_have_the_step_one_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 19
-    files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
-    files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
-    findings: list[str] = []
-    for path in files:
-        relative = path.relative_to(REPO_ROOT).as_posix()
-        if relative in DB_ACCESS_INFRASTRUCTURE:
-            continue
-        source = path.read_text(encoding="utf-8")
-        if any(pattern.search(source) for pattern in DB_ACCESS_PATTERNS):
-            findings.append(relative)
-
-    expected_non_infrastructure = DB_ACCESS_ALLOWLIST - DB_ACCESS_INFRASTRUCTURE
-    assert set(findings) == expected_non_infrastructure, {
-        "missing": sorted(expected_non_infrastructure - set(findings)),
-        "unexpected": sorted(set(findings) - expected_non_infrastructure),
-    }
-
-
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 19
+    assert len(DB_ACCESS_ALLOWLIST) == 18
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []
