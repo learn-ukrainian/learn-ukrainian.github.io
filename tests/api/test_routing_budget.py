@@ -255,7 +255,7 @@ def test_in_flight_excludes_zombie_running_tasks(tmp_path: Path, monkeypatch) ->
     monkeypatch.setattr(
         state_router.delegate_api,
         "_pid_alive",
-        lambda pid: False if int(pid) == dead_pid else True,
+        lambda pid: int(pid) != dead_pid,
     )
     (tasks / "live.json").write_text(
         '{"task_id":"live","agent":"codex","status":"running","pid":12345}',
