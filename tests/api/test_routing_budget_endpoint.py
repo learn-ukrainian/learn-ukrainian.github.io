@@ -60,7 +60,7 @@ def _record(agent: str, cost_usd: float, mtime: datetime) -> CostRecord:
     )
 
 
-def _empty_runtime(agent: str) -> dict:
+def _empty_runtime(agent: str, **_kwargs) -> dict:
     return {
         "source": "agent_runtime_jsonl",
         "window_s": 300,
@@ -78,7 +78,7 @@ def _empty_runtime(agent: str) -> dict:
     }
 
 
-def _empty_fleet_burn(agent: str) -> dict:
+def _empty_fleet_burn(agent: str, **_kwargs) -> dict:
     empty_counts = {"ok": 0, "error": 0, "rate_limited": 0, "timeout": 0, "other": 0, "total": 0}
     return {
         "source": "agent_runtime_jsonl",
@@ -229,7 +229,7 @@ def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 10.0, now)])
 
-    def _runtime(agent: str) -> dict:
+    def _runtime(agent: str, **_kwargs) -> dict:
         base = _empty_runtime(agent)
         if agent == "codex":
             base.update(

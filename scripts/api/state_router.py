@@ -879,6 +879,7 @@ def compute_routing_budget(
     budget_config_path: Path | None = None,
     tasks_dir: Path | None = None,
     project_root: Path | None = None,
+    curriculum_root: Path | None = None,
     batch_state_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
@@ -1033,7 +1034,7 @@ def compute_routing_budget(
             "ranked_by_headroom": ranked,
         }
 
-    records = load_cost_records(root=project_root)
+    records = load_cost_records(root=curriculum_root)
     ledger_stale, ledger_age_s = _snapshot_is_stale(current_time, records)
     is_stale = ledger_stale
     data_age_s = ledger_age_s
@@ -1328,7 +1329,7 @@ def compute_routing_budget(
         if lane not in agents:
             continue
         try:
-            fleet_burn = summarize_fleet_burn(lane)
+            fleet_burn = summarize_fleet_burn(lane, usage_dir=usage_dir)
         except Exception as exc:
             logging.getLogger("state_router").debug("fleet burn failed for %s: %s", lane, exc)
             fleet_burn = {"source": "agent_runtime_jsonl", "agent": lane, "windows": {}}
@@ -1345,7 +1346,7 @@ def compute_routing_budget(
             ):
                 agents[lane]["status"] = "cool"
         try:
-            runtime = summarize_lane_runtime(lane)
+            runtime = summarize_lane_runtime(lane, usage_dir=usage_dir)
         except Exception as exc:  # never break routing-budget on telemetry I/O
             logging.getLogger("state_router").debug("lane runtime summary failed for %s: %s", lane, exc)
             runtime = {
@@ -1622,6 +1623,7 @@ async def routing_budget(fresh_codexbar: bool = Query(False), ctx: MonitorContex
         budget_config_path=budget_config_path,
         tasks_dir=tasks_dir,
         project_root=ctx.roots.project_root,
+        curriculum_root=ctx.roots.curriculum_root,
         batch_state_dir=ctx.roots.batch_state_dir,
     )
 

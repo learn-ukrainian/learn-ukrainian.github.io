@@ -1317,6 +1317,7 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
         budget_config_path=budget_path,
         tasks_dir=tmp_path / "tasks",
         project_root=tmp_path,
+        curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
     assert "api_accounts" in data

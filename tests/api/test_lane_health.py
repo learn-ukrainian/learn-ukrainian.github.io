@@ -150,9 +150,9 @@ def test_routing_budget_demotes_unhealthy(monkeypatch, tmp_path):
 
     budget = state_router.compute_routing_budget(
         now,
-        budget_config_path=_budget_path,
         tasks_dir=tmp_path,
         project_root=tmp_path,
+        curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
 
@@ -289,7 +289,7 @@ gemini:
     monkeypatch.setattr(
         state_router,
         "summarize_lane_runtime",
-        lambda _provider: {
+        lambda _provider, **_kwargs: {
             "source": "agent_runtime_jsonl",
             "window_s": 300,
             "ok": 0,
@@ -331,6 +331,7 @@ def test_recommendation_skips_unhealthy_lane(monkeypatch, tmp_path):
         budget_config_path=_budget_path,
         tasks_dir=tmp_path,
         project_root=tmp_path,
+        curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
     rec = budget["recommendation"]
@@ -375,6 +376,7 @@ def test_recommendation_ignores_seeded_external_telemetry_cache(monkeypatch, tmp
         budget_config_path=_budget_path,
         tasks_dir=tmp_path,
         project_root=tmp_path,
+        curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
 
@@ -401,6 +403,7 @@ def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
         budget_config_path=_budget_path,
         tasks_dir=tmp_path,
         project_root=tmp_path,
+        curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
     rec = budget["recommendation"]
@@ -464,6 +467,7 @@ def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_
         budget_config_path=_budget_path,
         tasks_dir=tmp_path,
         project_root=tmp_path,
+        curriculum_root=tmp_path,
         batch_state_dir=tmp_path,
     )
     rec = budget["recommendation"]

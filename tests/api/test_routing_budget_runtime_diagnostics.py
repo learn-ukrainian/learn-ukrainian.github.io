@@ -31,7 +31,7 @@ codex:
     return path
 
 
-def _empty_runtime(agent: str) -> dict:
+def _empty_runtime(agent: str, **_kwargs) -> dict:
     return {
         "source": "agent_runtime_jsonl",
         "window_s": 300,
@@ -167,7 +167,7 @@ def test_reactive_window_alone_still_marks_runtime_available(monkeypatch, tmp_pa
     """A busy 5-minute window keeps runtime_data_available true even at 0 rows in 7d."""
     _configure(monkeypatch, tmp_path, runtime_records_7d=0)
 
-    def _busy_runtime(agent: str) -> dict:
+    def _busy_runtime(agent: str, **_kwargs) -> dict:
         base = _empty_runtime(agent)
         base.update({"ok": 2, "total": 2})
         return base

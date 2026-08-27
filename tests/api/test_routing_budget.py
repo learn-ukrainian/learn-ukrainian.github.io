@@ -65,7 +65,7 @@ def _configure_base(monkeypatch, tmp_path: Path) -> Path:
     monkeypatch.setattr(
         state_router,
         "summarize_lane_runtime",
-        lambda agent: {
+        lambda agent, **_kwargs: {
             "source": "agent_runtime_jsonl",
             "window_s": 300,
             "ok": 0,
@@ -103,7 +103,7 @@ def test_cursor_logout_surfaces_need_login_without_substitution(monkeypatch, tmp
         "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
     })
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, batch_state_dir=tmp_path)
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
     cursor = data["agents"]["cursor"]
     assert cursor["status"] == "need_login"
     assert cursor["login_state"] == "NEED_LOGIN"
@@ -155,7 +155,7 @@ def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tm
 
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, batch_state_dir=tmp_path)
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
     cursor = data["agents"]["cursor"]
     assert cursor["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 3
     assert cursor["provider_windows"]["auto"]["window"] == "monthly"
@@ -192,7 +192,7 @@ def test_need_probe_with_fleet_burn_still_picks_cursor(monkeypatch, tmp_path):
         }
 
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, batch_state_dir=tmp_path)
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
     cursor = data["agents"]["cursor"]
     assert cursor["status"] == "cool"
     assert cursor["probe_state"] == "NEED_PROBE"
