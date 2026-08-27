@@ -1211,9 +1211,11 @@ def _next_attempt(package: Path, out: Path, chunk_index: int) -> int:
         if failure_code not in retryable:
             raise Error("ordinal_identity_binding_drift")
         recovery_path = _recovery_path(package, out, chunk_index, attempt + 1)
-        if attempt == 1 and failure_code in retryable - PROVIDER_STATUS_RECOVERY_CODES:
-            if recovery_path is not None:
-                raise Error("ordinal_identity_binding_drift")
+        if (
+            attempt == 1
+            and failure_code in retryable - PROVIDER_STATUS_RECOVERY_CODES
+            and recovery_path is None
+        ):
             continue
         prior_recovery_raw, receipt = _verify_recovery_receipt(
             package,

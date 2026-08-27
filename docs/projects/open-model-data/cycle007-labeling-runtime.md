@@ -202,6 +202,13 @@ The already-installed version-1 stop format is accepted only for its bounded
 clean-label packet-1/chunk-1 attempts through attempt 3. Every newly emitted
 recoverable stop uses the occurrence-bound version-2 format, preventing a stale
 identical stop hash from authorizing a later occurrence.
+An exact version-1 `ordinal_identity_binding_drift` stop emitted before a new
+attempt starts is handled separately: recovery requires the complete marker and
+receipt chain, proves that no new attempt marker or provider call exists, archives
+the stop, and reuses the sole already-published authorization. It does not create
+another receipt or increment the authorized attempt. A first structural provider
+failure may therefore be followed by either the reviewed automatic path when no
+receipt exists or a fully verified legacy explicit receipt when one was published.
 
 ## Acceptance evidence
 
@@ -215,8 +222,10 @@ identical stop hash from authorizing a later occurrence.
   recovery tests cover the exact third timeout, a fresh-process attempt-4
   resume, committed-prefix preservation without content reads, per-chunk receipt
   isolation, exact pre-call versus provider-call accounting, occurrence-bound
-  stop identities, a twelve-link chain with no permanent ceiling, and refusal
-  when any one-call authorization link is absent or changed.
+  stop identities, exact reuse of an unconsumed attempt-4 authorization after a
+  pre-call chain stop, an explicit legacy receipt after a first structural call,
+  a twelve-link chain with no permanent ceiling, and refusal when any one-call
+  authorization link is absent or changed.
 - Preflight-rotation tests cover the exact predecessor link, immutable archives,
   authoritative-last replacement, idempotent retry, wrong-chain refusal, and
   the no-rotation-after-seal boundary.

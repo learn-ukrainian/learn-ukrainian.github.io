@@ -1369,6 +1369,163 @@ def _validate_gemini_stop(stop: dict[str, Any]) -> None:
         raise GuardianError("stop_recovery_state_drift")
 
 
+def _validate_pre_call_chain_stop(stop: dict[str, Any]) -> None:
+    """Accept only the exact content-free stop emitted before a new attempt starts."""
+    lane = stop.get("lane")
+    packet_index = stop.get("terminal_packet_index")
+    empty_sha256 = _digest(b"")
+    expected = {
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v1",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": lane,
+        "terminal_packet_index": packet_index,
+        "failure_code": "ordinal_identity_binding_drift",
+        "new_provider_calls_allowed": False,
+        "exact_model": "Gemini 3.6 Flash (High)",
+        "model_family": "google",
+        "harness": "agy",
+        "text_free": True,
+        "failure_stage": "package_binding",
+        "provider_call_started": False,
+        "executable_binding_result": "not_checked",
+        "provider_return_code": "not_started",
+        "raw_byte_count": 0,
+        "raw_sha256": empty_sha256,
+        "log_byte_count": 0,
+        "log_sha256": empty_sha256,
+        "init_count": 0,
+        "result_count": 0,
+        "first_event_kind": "unavailable",
+        "last_event_kind": "unavailable",
+        "model_binding_result": "not_inspected",
+        "result_status": "not_inspected",
+        "structured_output_type": "not_inspected",
+    }
+    if (
+        lane not in {"clean_label", "residual_label"}
+        or not isinstance(packet_index, int)
+        or isinstance(packet_index, bool)
+        or packet_index < 1
+        or stop != expected
+    ):
+        raise GuardianError("stop_recovery_state_drift")
+
+
+def _existing_unstarted_authorization(
+    config: Config,
+    output: Path,
+    stop: dict[str, Any],
+) -> tuple[int, int]:
+    """Return the sole marker-bound authorization whose attempt has not started."""
+    lane = str(stop["lane"])
+    packet_index = int(stop["terminal_packet_index"])
+    attempt_root = output / lane / "chunks" / f"packet-{packet_index:04d}"
+    _private_directory(attempt_root, config.owner_uid, config.owner_gid, create=False)
+
+    chunk_attempts: dict[int, set[int]] = {}
+    for path in attempt_root.iterdir():
+        match = GEMINI_ATTEMPT_MARKER_RE.fullmatch(path.name)
+        if match is None:
+            continue
+        if path.is_symlink():
+            raise GuardianError("stop_recovery_state_drift")
+        chunk_attempts.setdefault(int(match["chunk"]), set()).add(int(match["attempt"]))
+
+    candidates: list[tuple[int, int]] = []
+    for chunk_index, attempts in sorted(chunk_attempts.items()):
+        terminal_attempt = max(attempts)
+        pairs, prior_recovery_raw, prior_provider_call_count = _attempt_chain(
+            config,
+            output,
+            attempt_root,
+            lane=lane,
+            packet_index=packet_index,
+            chunk_index=chunk_index,
+            terminal_attempt=terminal_attempt,
+        )
+        authorized_attempt = terminal_attempt + 1
+        next_markers = [
+            attempt_root
+            / f"attempt-{authorized_attempt}-chunk-{chunk_index:02d}.{state}.json"
+            for state in ("started", "terminal")
+        ]
+        if any(path.exists() or path.is_symlink() for path in next_markers):
+            raise GuardianError("stop_recovery_state_drift")
+        recovery_path = _existing_recovery_path(
+            output,
+            attempt_root,
+            lane=lane,
+            packet_index=packet_index,
+            chunk_index=chunk_index,
+            authorized_attempt=authorized_attempt,
+        )
+        if recovery_path is None:
+            continue
+        committed = [
+            attempt_root / f"{prefix}-chunk-{chunk_index:02d}.json"
+            for prefix in ("labels", "receipt")
+        ]
+        if any(path.exists() or path.is_symlink() for path in committed):
+            raise GuardianError("stop_recovery_state_drift")
+        started_raw, _started, terminal_raw, terminal = pairs[-1]
+        _recovery_raw, receipt = _verified_recovery_receipt(
+            config,
+            recovery_path,
+            started_raw=started_raw,
+            terminal_raw=terminal_raw,
+            terminal=terminal,
+            authorized_attempt=authorized_attempt,
+            prior_recovery_raw=prior_recovery_raw,
+            prior_provider_call_count=prior_provider_call_count,
+        )
+        provider_call_count = _provider_call_count(config, output)
+        if provider_call_count != receipt.get("prior_provider_call_count"):
+            raise GuardianError("stop_recovery_state_drift")
+        candidates.append((authorized_attempt, provider_call_count))
+    if len(candidates) != 1:
+        raise GuardianError("stop_recovery_state_drift")
+    return candidates[0]
+
+
+def _reuse_pre_call_authorization(
+    config: Config,
+    mounts: list[dict[str, Any]],
+    *,
+    output: Path,
+    expected_stop: str,
+    stop_raw: bytes,
+    stop: dict[str, Any],
+    stop_path: Path | None,
+) -> dict[str, Any]:
+    """Archive one exact pre-call stop without consuming or widening authorization."""
+    if _digest(stop_raw) != expected_stop:
+        raise GuardianError("stop_recovery_binding_drift")
+    _validate_pre_call_chain_stop(stop)
+    authorized_attempt, provider_call_count = _existing_unstarted_authorization(
+        config, output, stop
+    )
+    if stop_path is not None:
+        _archive_exact_stop(config, stop_path=stop_path, expected_stop=expected_stop)
+        _remove_durable(stop_path)
+    if _provider_call_count(config, output) != provider_call_count:
+        raise GuardianError("stop_recovery_state_drift")
+    return {
+        "schema_version": RECEIPT_SCHEMA,
+        "ok": True,
+        "action": "recover-gemini-stop",
+        "mount_count": len(mounts),
+        "mounts": mounts,
+        "available_bytes": _available_bytes(config.backing_root),
+        "min_free_bytes": config.min_free_bytes,
+        "prior_provider_call_count": provider_call_count,
+        "authorized_additional_provider_calls": 1,
+        "authorized_attempt": authorized_attempt,
+        "recovered_stop_count": 1,
+        "reused_existing_authorization": True,
+        "text_free": True,
+    }
+
+
 def _idempotent_recovery(
     config: Config,
     mounts: list[dict[str, Any]],
@@ -1385,6 +1542,16 @@ def _idempotent_recovery(
     )
     if _digest(archived_raw) != expected_stop:
         raise GuardianError("stop_recovery_binding_drift")
+    if archived.get("failure_code") == "ordinal_identity_binding_drift":
+        return _reuse_pre_call_authorization(
+            config,
+            mounts,
+            output=output,
+            expected_stop=expected_stop,
+            stop_raw=archived_raw,
+            stop=archived,
+            stop_path=None,
+        )
     _validate_gemini_stop(archived)
     attempt_root, chunk_index, terminal_attempt = _stopped_attempt_coordinates(
         config, output, archived
@@ -1472,6 +1639,16 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
         stop_raw, stop = _private_json(stop_path, config.owner_uid, config.owner_gid)
         if _digest(stop_raw) != expected_stop:
             raise GuardianError("stop_recovery_binding_drift")
+        if stop.get("failure_code") == "ordinal_identity_binding_drift":
+            return _reuse_pre_call_authorization(
+                config,
+                mounts,
+                output=output,
+                expected_stop=expected_stop,
+                stop_raw=stop_raw,
+                stop=stop,
+                stop_path=stop_path,
+            )
         _validate_gemini_stop(stop)
         lane = stop["lane"]
         packet_index = stop["terminal_packet_index"]
