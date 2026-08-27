@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { buildWordAtlasArticleView, formatPos } from "@site/src/lib/lexicon/word-atlas-article-model";
+import {
+  atlasWikipediaOkAsIntro,
+  buildWordAtlasArticleView,
+  formatPos,
+  sanitizeWikiReference,
+} from "@site/src/lib/lexicon/word-atlas-article-model";
+import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import { articleProps } from "../helpers/word-atlas-record";
 
 describe("formatPos", () => {
@@ -89,5 +95,109 @@ describe("formattedOrigin in article view model", () => {
     expect(originCard).toBeDefined();
     expect(originCard!.ready).toBe(true);
     expect(originCard!.detail).toBe("From Latin monēta.");
+  });
+});
+
+describe("Atlas Wikipedia rusalka-kin intro gate (#7379)", () => {
+  const liveExtract =
+    "Береги́ня — істота східнослов’янської міфології, нижчий дух, споріднений із русалками. Ім'я духа пов'язують з берегами.";
+  const goddessExtract =
+    "Берегиня — за давньослов'янськими релігійними уявленнями, мати всього живого, первісне божество – захисниця людини.";
+
+  test("refuses the live Берегиня rusalka-kin REST extract", () => {
+    expect(
+      atlasWikipediaOkAsIntro("берегиня", {
+        description: "істота слов'янської міфології",
+        extract: liveExtract,
+      }),
+    ).toBe(false);
+    const sanitized = sanitizeWikiReference("берегиня", {
+      wikipedia: {
+        title: "Берегиня",
+        summary: liveExtract,
+        url: "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+      },
+      wiktionary_url: "https://uk.wiktionary.org/wiki/берегиня",
+      attribution: "CC BY-SA 4.0",
+    });
+    expect(sanitized?.wikipedia).toBeUndefined();
+    expect(sanitized?.wiktionary_url).toContain("wiktionary");
+  });
+
+  test("hydrated берегиня page keeps СУМ-20 lead and drops Wikipedia rusalka intro", () => {
+    const html = renderWordAtlasArticle(
+      articleProps({
+        lemma: "берегиня",
+        url_slug: "берегиня",
+        gloss:
+          "За давньослов'янськими релігійними уявленнями, мати всього живого, первісне божество – захисниця людини, богиня родючості, природи та добра.",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          definition_cards: [
+            {
+              id: "sum20",
+              source: "СУМ-20",
+              source_pill: "СУМ-20",
+              definitions: [
+                "1. За давньослов'янськими релігійними уявленнями, мати всього живого, первісне божество – захисниця людини, богиня родючості. 3. заст. Русалка.",
+              ],
+            },
+          ],
+          translation: { en: ["Berehynia"], source: "Wikidata" },
+        },
+        wiki_reference: {
+          wikipedia: {
+            title: "Берегиня",
+            summary: liveExtract,
+            url: "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+          },
+          wiktionary_url: "https://uk.wiktionary.org/wiki/берегиня",
+          attribution: "CC BY-SA 4.0",
+        },
+      }),
+    );
+    expect(html).toContain("богиня родючості");
+    expect(html).toContain("Berehynia");
+    expect(html).toContain("заст. Русалка");
+    expect(html).not.toContain("нижчий дух");
+    expect(html).not.toContain("споріднений із русалками");
+    expect(html).not.toContain("істота східнослов");
+  });
+
+  test("keeps a goddess-protectress excerpt and a rusalka lemma card", () => {
+    expect(atlasWikipediaOkAsIntro("берегиня", { extract: goddessExtract })).toBe(true);
+    expect(
+      atlasWikipediaOkAsIntro("русалка", {
+        extract: "Русалка — міфологічна істота, нижчий дух, споріднений із русалками.",
+      }),
+    ).toBe(true);
+
+    const view = buildWordAtlasArticleView(
+      articleProps({
+        lemma: "берегиня",
+        url_slug: "берегиня",
+        gloss: goddessExtract,
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        wiki_reference: {
+          wikipedia: {
+            title: "Берегиня",
+            summary: goddessExtract,
+            url: "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+          },
+          attribution: "CC BY-SA 4.0",
+        },
+      }).record,
+      "test",
+      "test",
+    );
+    expect(view.entry.wiki_reference?.wikipedia?.summary).toBe(goddessExtract);
   });
 });

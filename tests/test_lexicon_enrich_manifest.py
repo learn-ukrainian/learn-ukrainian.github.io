@@ -3483,6 +3483,60 @@ def test_proper_noun_wikipedia_meaning_uses_one_line_cached_gloss(monkeypatch, t
     }
 
 
+def test_wiki_reference_drops_berehynia_rusalka_kin_intro(monkeypatch, tmp_path) -> None:
+    """#7379: exact-title Берегиня still must not attach the rusalka-kin lead."""
+    live_extract = (
+        "Береги́ня — істота східнослов’янської міфології, нижчий дух, "
+        "споріднений із русалками. Ім'я духа пов'язують з берегами."
+    )
+
+    def mock_query(title: str) -> dict | None:
+        if title.casefold() == "берегиня":
+            return {
+                "title": "Берегиня",
+                "description": "істота слов'янської міфології",
+                "extract": live_extract,
+                "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+            }
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    ref = enrich_manifest_module._wiki_reference("берегиня")
+    assert ref is not None
+    assert "wikipedia" not in ref
+    assert _url_hostname(ref["wiktionary_url"]) == "uk.wiktionary.org"
+    assert _proper_noun_wikipedia_meaning("берегиня") is None
+
+
+def test_wiki_reference_keeps_berehynia_goddess_excerpt(monkeypatch, tmp_path) -> None:
+    def mock_query(title: str) -> dict | None:
+        if title.casefold() == "берегиня":
+            return {
+                "title": "Берегиня",
+                "extract": (
+                    "Берегиня — за давньослов'янськими релігійними уявленнями, "
+                    "мати всього живого, первісне божество – захисниця людини."
+                ),
+                "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
+            }
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    ref = enrich_manifest_module._wiki_reference("берегиня")
+    assert ref is not None
+    assert ref["wikipedia"]["title"] == "Берегиня"
+    assert "захисниця" in ref["wikipedia"]["summary"]
+    assert "русалк" not in ref["wikipedia"]["summary"].casefold()
+
+
 def test_wiki_reference_missing(monkeypatch, tmp_path) -> None:
     def mock_query(title: str) -> dict | None:
         return None
@@ -6054,7 +6108,11 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
         "query_wikipedia",
         lambda title: {
             "title": "Берегиня",
-            "extract": "Береги́ня — архаїчний образ нижчої міфології слов'ян, пізніше — богиня-захисниця.",
+            "description": "істота слов'янської міфології",
+            "extract": (
+                "Береги́ня — істота східнослов’янської міфології, нижчий дух, "
+                "споріднений із русалками. Ім'я духа пов'язують з берегами."
+            ),
             "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
         },
     )
@@ -6114,6 +6172,9 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     # 5. Synonyms do not identify her as a water-nymph / rusalka synset
     assert "synonyms" not in entry.get("sections", {})
 
-    # 6. Wikipedia reference is attached
-    assert entry["wiki_reference"]["wikipedia"]["title"] == "Берегиня"
+    # 6. Wikipedia card is refused: live exact-title extract is rusalka-kin (#7379)
+    wiki_ref = entry["wiki_reference"]
+    assert "wikipedia" not in wiki_ref
+    assert "русалк" not in str(wiki_ref).casefold()
+    assert "нижчий дух" not in str(wiki_ref)
 
