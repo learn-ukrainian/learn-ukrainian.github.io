@@ -147,6 +147,113 @@ def test_wikipedia_summary_honest_miss_returns_none(monkeypatch: pytest.MonkeyPa
     assert wikipedia_summary("абзац") is None
 
 
+def test_wikipedia_summary_rejects_redirect_target_bezmezhzhya(monkeypatch: pytest.MonkeyPatch) -> None:
+    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
+        return DummyResponse(
+            200,
+            data={
+                "type": "standard",
+                "title": "Нескінченність",
+                "description": "філософське поняття",
+                "extract": "Нескі́нченність — ...",
+                "content_urls": {
+                    "desktop": {
+                        "page": "https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D1%81%D0%BA%D1%96%D0%BD%D1%87%D0%B5%D0%BD%D0%BD%D1%96%D1%81%D1%82%D1%8C"
+                    }
+                },
+            },
+        )
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    assert wikipedia_summary("безмежжя") is None
+    assert wikipedia_summary("Безмежжя") is None
+
+
+def test_wikipedia_summary_rejects_redirect_target_indus(monkeypatch: pytest.MonkeyPatch) -> None:
+    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
+        return DummyResponse(
+            200,
+            data={
+                "type": "standard",
+                "title": "Індуїзм",
+                "description": "релігія",
+                "extract": "Індуї́зм — ...",
+                "content_urls": {
+                    "desktop": {
+                        "page": "https://uk.wikipedia.org/wiki/%D0%86%D0%BD%D0%B4%D1%83%D1%97%D0%B7%D0%BC"
+                    }
+                },
+            },
+        )
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    assert wikipedia_summary("індус") is None
+    assert wikipedia_summary("Індус") is None
+
+
+def test_wikipedia_summary_skips_bakay_disambiguation(monkeypatch: pytest.MonkeyPatch) -> None:
+    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
+        return DummyResponse(
+            200,
+            data={
+                "type": "disambiguation",
+                "title": "Бакай",
+                "description": "сторінка значень у проєкті Вікімедіа",
+                "extract": "Бака́й: ...",
+                "content_urls": {
+                    "desktop": {
+                        "page": "https://uk.wikipedia.org/wiki/%D0%91%D0%B0%D0%BA%D0%B0%D0%B9"
+                    }
+                },
+            },
+        )
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    assert wikipedia_summary("бакай") is None
+    assert wikipedia_summary("Бакай") is None
+
+
+def test_wikipedia_summary_attaches_shkola(monkeypatch: pytest.MonkeyPatch) -> None:
+    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
+        if quote("школа") in url:
+            return DummyResponse(403, text="Forbidden")
+        if quote("Школа") in url:
+            return DummyResponse(
+                200,
+                data={
+                    "type": "standard",
+                    "title": "Школа",
+                    "description": "навчальний заклад",
+                    "extract": "Шко́ла — заклад освіти...",
+                    "content_urls": {
+                        "desktop": {
+                            "page": "https://uk.wikipedia.org/wiki/%D0%A8%D0%BA%D0%BE%D0%BB%D0%B0"
+                        }
+                    },
+                },
+            )
+        return DummyResponse(404)
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    result = wikipedia_summary("школа")
+    assert result is not None
+    assert result["title"] == "Школа"
+    assert result["extract"] == "Шко́ла — заклад освіти..."
+
+
+def test_wikipedia_summary_aptechnyi_internal_error_returns_none(monkeypatch: pytest.MonkeyPatch) -> None:
+    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
+        return DummyResponse(500, text="Internal Server Error")
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    assert wikipedia_summary("аптечний") is None
+
+
 def test_enrich_manifest_query_wikipedia_and_wiki_reference(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     enrich_manifest.query_wikipedia.cache_clear()
     monkeypatch.setattr(enrich_manifest, "_phase1_offline_mode", lambda: False)
