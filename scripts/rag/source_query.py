@@ -102,6 +102,31 @@ def _is_disambiguation_summary(data: dict[str, Any]) -> bool:
     return "сторінка значень" in desc
 
 
+def _wiki_normalize_title(title: str) -> str:
+    """Stress-strip and casefold for exact-title comparison."""
+    return str(title or "").replace("\u0301", "").casefold()
+
+
+def _wiki_rest_article_title(data: dict[str, Any]) -> str:
+    """Article title from REST summary (top-level title or titles.canonical)."""
+    titles = data.get("titles")
+    if isinstance(titles, dict):
+        canonical = titles.get("canonical")
+        if canonical:
+            return str(canonical)
+    return str(data.get("title") or "")
+
+
+def _wiki_title_matches_candidates(article_title: str, candidates: list[str]) -> bool:
+    normalized_article = _wiki_normalize_title(article_title)
+    if not normalized_article:
+        return False
+    return any(
+        _wiki_normalize_title(candidate) == normalized_article
+        for candidate in candidates
+    )
+
+
 def wikipedia_summary(title: str) -> dict[str, Any] | None:
     """Fetch a Wikipedia article summary via REST API.
 
@@ -124,6 +149,8 @@ def wikipedia_summary(title: str) -> dict[str, Any] | None:
                 continue
             if _is_disambiguation_summary(data):
                 return None
+            if not _wiki_title_matches_candidates(_wiki_rest_article_title(data), candidates):
+                continue
             return {
                 "title": data.get("title", ""),
                 "description": data.get("description", ""),
