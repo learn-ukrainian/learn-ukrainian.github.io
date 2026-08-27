@@ -425,7 +425,11 @@ def _snapshot_is_stale(
 
 
 def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
-    """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir."""
+    """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir.
+
+    When *tasks_dir* is set, preserve the same PID-liveness semantics as
+    ``delegate_api.active_delegate_tasks`` (dead ``running`` PIDs → zombie, not in-flight).
+    """
     in_flight = {agent: 0 for agent in AGENT_NAMES}
     try:
         if tasks_dir is not None:
@@ -440,7 +444,8 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
                     continue
                 if not isinstance(payload, dict):
                     continue
-                if payload.get("status") not in {"running", "spawning"}:
+                status, _alive = delegate_api._derived_task_status(payload)
+                if status not in {"running", "spawning"}:
                     continue
                 agent = _agent_key(payload.get("agent"))
                 if agent:

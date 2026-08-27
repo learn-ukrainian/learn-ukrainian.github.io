@@ -245,3 +245,25 @@ def test_capacity_pick_marks_logout_cursor_avoid(monkeypatch):
     rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget)}
     assert rows["cursor"]["avoid"] is True
     assert "NEED_LOGIN" in rows["cursor"]["notes"]
+
+
+def test_in_flight_excludes_zombie_running_tasks(tmp_path: Path, monkeypatch) -> None:
+    """Context-scoped in-flight counts must match active_delegate_tasks liveness."""
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    dead_pid = 2_147_000_001
+    monkeypatch.setattr(
+        state_router.delegate_api,
+        "_pid_alive",
+        lambda pid: False if int(pid) == dead_pid else True,
+    )
+    (tasks / "live.json").write_text(
+        '{"task_id":"live","agent":"codex","status":"running","pid":12345}',
+        encoding="utf-8",
+    )
+    (tasks / "zombie.json").write_text(
+        f'{{"task_id":"zombie","agent":"codex","status":"running","pid":{dead_pid}}}',
+        encoding="utf-8",
+    )
+    counts = state_router._in_flight_by_agent(tasks)
+    assert counts["codex"] == 1
