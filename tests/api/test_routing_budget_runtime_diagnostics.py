@@ -81,7 +81,7 @@ def _configure(
         "_load_agent_budgets",
         lambda budget_config_path=None, **_: state_router._read_agent_budgets_file(budget_path),
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
     monkeypatch.setattr(
         state_router,
@@ -105,7 +105,7 @@ def _configure(
     monkeypatch.setattr(
         state_router,
         "summarize_runtime_usage",
-        lambda *, days=7, agent=None, entrypoint=None: {
+        lambda *, days=7, agent=None, entrypoint=None, usage_dir=None: {
             "window_days": days,
             "records_total": runtime_records_7d,
             "by_agent": {},

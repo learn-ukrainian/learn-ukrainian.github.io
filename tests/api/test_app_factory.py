@@ -310,24 +310,28 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
-        first_summary = first_client.get("/api/state/summary?fresh=true").json()
-        second_summary = second_client.get("/api/state/summary?fresh=true").json()
+        # No fresh=true / no manual cache_invalidate: proves ctx-scoped keys.
+        first_summary = first_client.get("/api/state/summary").json()
+        second_summary = second_client.get("/api/state/summary").json()
         assert first_summary["tracks"]["a1"]["total"] == 1
         assert second_summary["tracks"]["a1"]["total"] == 1
+        assert first_summary.get("meta", {}).get("cache") == "miss"
+        assert second_summary.get("meta", {}).get("cache") == "miss"
 
-        first_pipeline = first_client.get("/api/state/pipeline/a1?fresh=true").json()
-        second_pipeline = second_client.get("/api/state/pipeline/a1?fresh=true").json()
+        first_pipeline = first_client.get("/api/state/pipeline/a1").json()
+        second_pipeline = second_client.get("/api/state/pipeline/a1").json()
         assert first_pipeline["modules"][0]["slug"] == "first-slug"
         assert second_pipeline["modules"][0]["slug"] == "second-slug"
 
         first_enrichment = first_client.get("/api/state/enrichment-status?track=a1").json()
         assert first_enrichment["tracks"]["a1"]["enriched"] == 1
 
-        from scripts.api.state_helpers import cache_invalidate
-
-        cache_invalidate()
         second_enrichment = second_client.get("/api/state/enrichment-status?track=a1").json()
         assert second_enrichment["tracks"]["a1"]["enriched"] == 0
+
+        first_summary_hit = first_client.get("/api/state/summary").json()
+        assert first_summary_hit.get("meta", {}).get("cache") == "hit"
+        assert first_summary_hit["tracks"]["a1"]["total"] == 1
 
         first_manifest = first_client.get("/api/state/manifest").json()
         second_manifest = second_client.get("/api/state/manifest").json()

@@ -195,6 +195,13 @@ STATE_PIPELINE_VERSIONS_TTL_S = 60.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 
 
+def _ctx_cache_key(ctx: MonitorContext, *parts: object) -> str:
+    """Cache key scoped to one MonitorContext root (process-global TTL cache)."""
+    root = str(ctx.roots.project_root.resolve())
+    return ":".join((root, *(str(p) for p in parts)))
+
+
+
 def _validate_preparation_query(request: Request, allowed: set[str]) -> None:
     unknown = sorted(set(request.query_params) - allowed)
     if unknown:
@@ -417,9 +424,28 @@ def _snapshot_is_stale(
     return age > threshold_s, round(age, 1)
 
 
-def _in_flight_by_agent() -> dict[str, int]:
+def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
+    """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir."""
     in_flight = {agent: 0 for agent in AGENT_NAMES}
     try:
+        if tasks_dir is not None:
+            if not tasks_dir.exists():
+                return in_flight
+            for path in tasks_dir.glob("*.json"):
+                if path.name.endswith(".snapshots.json"):
+                    continue
+                try:
+                    payload = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    continue
+                if not isinstance(payload, dict):
+                    continue
+                if payload.get("status") not in {"running", "spawning"}:
+                    continue
+                agent = _agent_key(payload.get("agent"))
+                if agent:
+                    in_flight[agent] += 1
+            return in_flight
         tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
         return in_flight
@@ -666,7 +692,7 @@ def _recommend_agent(
     }
 
 
-def _runtime_usage_records_7d() -> int | None:
+def _runtime_usage_records_7d(*, usage_dir: Path | None = None) -> int | None:
     """Count agent-runtime usage rows over the same 7-day window served by
     ``GET /api/runtime/usage?days=7``. Returns None when the probe itself fails.
 
@@ -675,7 +701,7 @@ def _runtime_usage_records_7d() -> int | None:
     because the 5-minute reactive window (``summarize_lane_runtime``) is quiet.
     """
     try:
-        summary = summarize_runtime_usage(days=7)
+        summary = summarize_runtime_usage(days=7, usage_dir=usage_dir)
     except Exception as exc:  # never break routing-budget on telemetry I/O
         logging.getLogger("state_router").debug("runtime usage probe failed: %s", exc)
         return None
@@ -852,12 +878,20 @@ def compute_routing_budget(
     refresh_requested: bool | None = None,
     budget_config_path: Path | None = None,
     tasks_dir: Path | None = None,
+    project_root: Path | None = None,
+    batch_state_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
-    runtime_records_7d = _runtime_usage_records_7d()
+    resolved_batch_state = (
+        batch_state_dir
+        if batch_state_dir is not None
+        else (Path(__file__).resolve().parents[2] / "batch_state")
+    )
+    usage_dir = resolved_batch_state / "api_usage"
+    runtime_records_7d = _runtime_usage_records_7d(usage_dir=usage_dir)
     extras = _load_budget_extras(budgets)
     reset_hours = extras["reset_imminent_hours"]
     resets_at = _next_weekly_reset(current_time)
@@ -865,10 +899,10 @@ def compute_routing_budget(
     nb_max_age_s: float | None = None
 
     health_records = {}
+    resolved_tasks_dir = (
+        tasks_dir if tasks_dir is not None else (resolved_batch_state / "tasks")
+    )
     try:
-        resolved_tasks_dir = (
-            tasks_dir if tasks_dir is not None else (Path(__file__).resolve().parents[2] / "batch_state" / "tasks")
-        )
         health_records = compute_lane_health(
             resolved_tasks_dir,
             now=current_time,
@@ -977,7 +1011,7 @@ def compute_routing_budget(
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
             "api_accounts": api_accounts,
-            "in_flight": _in_flight_by_agent(),
+            "in_flight": _in_flight_by_agent(resolved_tasks_dir),
             "recommendation": rec,
             "diagnostics": {
                 "records_loaded": 0,
@@ -999,7 +1033,7 @@ def compute_routing_budget(
             "ranked_by_headroom": ranked,
         }
 
-    records = load_cost_records()
+    records = load_cost_records(root=project_root)
     ledger_stale, ledger_age_s = _snapshot_is_stale(current_time, records)
     is_stale = ledger_stale
     data_age_s = ledger_age_s
@@ -1489,7 +1523,7 @@ def compute_routing_budget(
                 "burn_pct_7d": a.get("burn_pct_7d"),
                 "remaining_pct": a.get("remaining_pct"),
                 "resets_at": a.get("resets_at"),
-                "in_flight": _in_flight_by_agent().get(lane, 0),
+                "in_flight": _in_flight_by_agent(resolved_tasks_dir).get(lane, 0),
                 "health": a.get("health", {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
             }
         )
@@ -1526,7 +1560,7 @@ def compute_routing_budget(
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
         "api_accounts": api_accounts,
-        "in_flight": _in_flight_by_agent(),
+        "in_flight": _in_flight_by_agent(resolved_tasks_dir),
         "recommendation": rec,
         "diagnostics": {
             "records_loaded": len(records),
@@ -1587,15 +1621,18 @@ async def routing_budget(fresh_codexbar: bool = Query(False), ctx: MonitorContex
         refresh_requested=fresh_codexbar,
         budget_config_path=budget_config_path,
         tasks_dir=tasks_dir,
+        project_root=ctx.roots.project_root,
+        batch_state_dir=ctx.roots.batch_state_dir,
     )
 
 
 @router.get("/summary")
 async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Full project snapshot. One call replaces 5 bash scripts at session start."""
+    cache_key = _ctx_cache_key(ctx, "summary")
     if fresh:
-        cache_invalidate("summary")
-    cached = cache_get_with_age("summary", ttl=STATE_SUMMARY_TTL_S)
+        cache_invalidate(cache_key)
+    cached = cache_get_with_age(cache_key, ttl=STATE_SUMMARY_TTL_S)
     if cached is not None:
         value, age_s = cached
         return _with_state_meta(
@@ -1611,7 +1648,7 @@ async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depend
         project_root=ctx.roots.project_root,
         plans_root=ctx.roots.plans_root,
     )
-    cache_set("summary", result)
+    cache_set(cache_key, result)
     return _with_state_meta(
         result,
         source="fs:plans+orchestration+artifacts+research",
@@ -1628,7 +1665,7 @@ async def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: Monitor
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    cache_key = f"pipeline_{track_id}"
+    cache_key = _ctx_cache_key(ctx, "pipeline", track_id)
     if fresh:
         cache_invalidate(cache_key)
     cached = cache_get_with_age(cache_key, ttl=STATE_PIPELINE_TTL_S)
@@ -1724,7 +1761,7 @@ async def pipeline_versions(
             "generated_at": datetime.now(UTC).isoformat(),
         }
 
-    cache_key = f"pipeline_versions_{track or 'all'}"
+    cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
     if fresh:
         cache_invalidate(cache_key)
     cached = cache_get_with_age(cache_key, ttl=STATE_PIPELINE_VERSIONS_TTL_S)
@@ -1890,7 +1927,7 @@ async def weak_points(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
-    cache_key = f"weak_points_{track or 'all'}_{min_score}_{limit}"
+    cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
@@ -2120,9 +2157,10 @@ async def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends
 @router.get("/research-coverage")
 async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-track research completeness and quality."""
+    cache_key = _ctx_cache_key(ctx, "research_coverage")
     if fresh:
-        cache_invalidate("research_coverage")
-    cached = cache_get_with_age("research_coverage", ttl=STATE_RESEARCH_COVERAGE_TTL_S)
+        cache_invalidate(cache_key)
+    cached = cache_get_with_age(cache_key, ttl=STATE_RESEARCH_COVERAGE_TTL_S)
     if cached is not None:
         value, age_s = cached
         return _with_state_meta(
@@ -2137,7 +2175,7 @@ async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = De
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
-    cache_set("research_coverage", result)
+    cache_set(cache_key, result)
     return _with_state_meta(
         result,
         source="fs:research+dossiers",
@@ -2156,7 +2194,7 @@ async def research_detail(
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    cache_key = f"research_detail_{track_id}_{min_score}"
+    cache_key = _ctx_cache_key(ctx, "research_detail", track_id, min_score)
     if fresh:
         cache_invalidate(cache_key)
     cached = cache_get_with_age(cache_key, ttl=STATE_RESEARCH_DETAIL_TTL_S)
@@ -2191,9 +2229,10 @@ async def research_detail(
 @router.get("/review-coverage")
 async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-track review and final-review coverage + quality signal."""
+    cache_key = _ctx_cache_key(ctx, "review_coverage")
     if fresh:
-        cache_invalidate("review_coverage")
-    cached = cache_get_with_age("review_coverage", ttl=STATE_REVIEW_COVERAGE_TTL_S)
+        cache_invalidate(cache_key)
+    cached = cache_get_with_age(cache_key, ttl=STATE_REVIEW_COVERAGE_TTL_S)
     if cached is not None:
         value, age_s = cached
         return _with_state_meta(
@@ -2208,7 +2247,7 @@ async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depe
         curriculum_root=ctx.roots.curriculum_root,
         plans_root=ctx.roots.plans_root,
     )
-    cache_set("review_coverage", result)
+    cache_set(cache_key, result)
     return _with_state_meta(
         result,
         source="fs:review+audit",
@@ -2225,7 +2264,7 @@ async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    cache_key = f"build_status_{track_id}"
+    cache_key = _ctx_cache_key(ctx, "build_status", track_id)
     cached = cache_get(cache_key, ttl=15.0)
     if cached is not None:
         return cached
@@ -2243,7 +2282,7 @@ async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 @router.get("/build-status")
 async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
     """All-tracks build progress in one call."""
-    cache_key = f"build_status_all_{ctx.roots.project_root}"
+    cache_key = _ctx_cache_key(ctx, "build_status_all")
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
@@ -2272,7 +2311,7 @@ async def module_range_status(
             status_code=422,
             content={"error": "end must be greater than or equal to start"},
         )
-    cache_key = f"module_range_{track_id}_{start}_{end}"
+    cache_key = _ctx_cache_key(ctx, "module_range", track_id, start, end)
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached
@@ -2480,7 +2519,7 @@ async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_c
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    cache_key = f"final_reviews_{track_id}"
+    cache_key = _ctx_cache_key(ctx, "final_reviews", track_id)
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
@@ -2498,7 +2537,7 @@ async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_c
 @router.get("/enrichment-status")
 async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """Which plans are enriched per track."""
-    cache_key = f"enrichment_status_{ctx.roots.project_root}_{track or 'all'}"
+    cache_key = _ctx_cache_key(ctx, "enrichment_status", track or "all")
     cached = cache_get(cache_key, ttl=120.0)
     if cached is not None:
         return cached
@@ -2519,7 +2558,7 @@ async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
-    cache_key = f"track_health_{track_id}"
+    cache_key = _ctx_cache_key(ctx, "track_health", track_id)
     cached = cache_get(cache_key, ttl=30.0)
     if cached is not None:
         return cached

@@ -155,7 +155,7 @@ def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
         "_load_agent_budgets",
         lambda budget_config_path=None: state_router._read_agent_budgets_file(budget_path),
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: records)
 
     def _mock_cb(provider: str) -> dict | None:
         spent = sum(r.cost_usd_est for r in records if r.agent.startswith(provider))

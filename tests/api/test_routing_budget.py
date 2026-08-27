@@ -29,7 +29,7 @@ codex:
 
 def _configure_base(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(
         state_router,
         "get_provider_usage_data",

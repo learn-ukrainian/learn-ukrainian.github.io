@@ -137,7 +137,7 @@ def test_routing_budget_demotes_unhealthy(monkeypatch, tmp_path):
     monkeypatch.setattr(
         state_router, "compute_lane_health", lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now)
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",
@@ -274,7 +274,7 @@ gemini:
         "compute_lane_health",
         lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now),
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: records)
     # These tests exercise ledger burn plus task-file health. Keep process-global
     # CodexBar cache entries and host agent-runtime JSONL from changing that
     # deliberately narrow fixture when the module runs inside a full CI shard.
