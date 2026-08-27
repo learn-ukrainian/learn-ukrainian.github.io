@@ -589,8 +589,20 @@ def reenrich_thin_entries(
 
     has_sum11_flags = enrich_manifest._sum11_has_flag_columns(conn)
     original_wiki_reference = enrich_manifest._wiki_reference
+    original_slovnyk_cache = enrich_manifest._slovnyk_cache
+    original_fetch_slovnyk = enrich_manifest._fetch_slovnyk_entry
     if not refresh_wiki:
         enrich_manifest._wiki_reference = lambda *args, **kwargs: None
+    if cached_slovnyk_only:
+        enrich_manifest._fetch_slovnyk_entry = lambda *args, **kwargs: None
+        enrich_manifest._slovnyk_cache = (
+            lambda lemma: enrich_manifest._load_current_slovnyk_cache_file(
+                enrich_manifest._slovnyk_cache_path(lemma)
+            )
+            or enrich_manifest._new_slovnyk_cache(
+                lemma, enrich_manifest._slovnyk_lookup_word(lemma)
+            )
+        )
 
     manifest_index = manifest_lemma_index(manifest)
 
@@ -667,6 +679,8 @@ def reenrich_thin_entries(
 
     finally:
         enrich_manifest._wiki_reference = original_wiki_reference
+        enrich_manifest._slovnyk_cache = original_slovnyk_cache
+        enrich_manifest._fetch_slovnyk_entry = original_fetch_slovnyk
 
     categories = {"ENRICHED": 0, "DETERMINISTIC_EXCLUSION": 0, "UNRESOLVED_RESIDUAL": 0}
     layer_counters = {"proverbs": 0, "usage_notes": 0, "grinchenko": 0, "forms": 0}
