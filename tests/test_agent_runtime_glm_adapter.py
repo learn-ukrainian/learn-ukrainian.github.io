@@ -93,6 +93,13 @@ def test_glm_adapter_model_override_and_effort(tmp_path):
     assert plan.cmd[variant_idx + 1] == "high"
 
 
+def test_glm_adapter_refuses_openrouter_route(tmp_path):
+    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+
+    with pytest.raises(RoutingGuardError, match="routes GLM through OpenRouter"):
+        _build("Refactor module", tmp_path, model="openrouter/z-ai/glm-5.3-flash")
+
+
 def test_glm_adapter_explicit_coding_plan_provider_pin(tmp_path):
     plan = _build("Refactor module", tmp_path, model="zai-coding-plan/glm-5.3", effort="high")
     assert plan.cmd[3] == "zai-coding-plan/glm-5.3"

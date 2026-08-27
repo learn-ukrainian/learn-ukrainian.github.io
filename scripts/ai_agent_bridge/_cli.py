@@ -832,7 +832,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--type", default="query", help="Message type")
     ask_glm_parser.add_argument("--data", help="Path to data file to attach")
     ask_glm_parser.add_argument(
-        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.3)"
+        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. zai/glm-5.3-flash or zai-coding-plan/glm-5.3)"
     )
     ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
