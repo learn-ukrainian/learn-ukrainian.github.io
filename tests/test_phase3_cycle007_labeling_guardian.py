@@ -715,13 +715,38 @@ def test_pre_call_chain_stop_reuses_exact_attempt_four_authorization(
         "structured_output_type": "not_inspected",
     }
     tampered_stop = pre_call_stop | {"provider_call_started": True}
+    tampered_raw = _write_private_json(output / "provider-stop.json", tampered_stop)
+    tampered_config = replace(
+        config, expected_stop_sha256=guardian._digest(tampered_raw)
+    )
     with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
-        guardian._validate_pre_call_chain_stop(tampered_stop)
+        guardian._gemini_stop_recovery(tampered_config, mounts=[])
+    assert (output / "provider-stop.json").read_bytes() == tampered_raw
+    (output / "provider-stop.json").unlink()
     unexpected_field_stop = pre_call_stop | {"unexpected": True}
     with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
         guardian._validate_pre_call_chain_stop(unexpected_field_stop)
     pre_call_raw = _write_private_json(output / "provider-stop.json", pre_call_stop)
     config = replace(config, expected_stop_sha256=guardian._digest(pre_call_raw))
+
+    held_receipt_path = fourth_receipt_path.with_suffix(".held")
+    fourth_receipt_path.replace(held_receipt_path)
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._gemini_stop_recovery(config, mounts=[])
+    held_receipt_path.replace(fourth_receipt_path)
+
+    attempt_four_started = attempt_root / "attempt-4-chunk-01.started.json"
+    _write_private_json(attempt_four_started, {"state": "started", "text_free": True})
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._gemini_stop_recovery(config, mounts=[])
+    attempt_four_started.unlink()
+
+    committed_label = attempt_root / "labels-chunk-01.json"
+    committed_label.write_bytes(b"opaque")
+    committed_label.chmod(0o600)
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._gemini_stop_recovery(config, mounts=[])
+    committed_label.unlink()
 
     result = guardian._gemini_stop_recovery(config, mounts=[])
     assert result["prior_provider_call_count"] == 3
@@ -739,6 +764,73 @@ def test_pre_call_chain_stop_reuses_exact_attempt_four_authorization(
     assert guardian._digest(terminal_raw) == json.loads(
         fourth_receipt_raw
     )["terminal_marker_sha256"]
+
+
+def test_pre_call_authorization_refuses_multiple_candidates(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path)
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    attempt_root = output / "clean_label/chunks/packet-0001"
+    attempt_root.mkdir(parents=True, mode=0o700)
+    for directory in (output, output / "clean_label", output / "clean_label/chunks"):
+        os.chmod(directory, 0o700)
+    for chunk_index in (1, 2):
+        _write_private_json(
+            attempt_root / f"attempt-1-chunk-{chunk_index:02d}.started.json",
+            {"text_free": True},
+        )
+        _write_private_json(
+            attempt_root / f"attempt-1-chunk-{chunk_index:02d}.terminal.json",
+            {"text_free": True},
+        )
+
+    terminal = {"text_free": True}
+    pair = (b"started", {}, b"terminal", terminal)
+    monkeypatch.setattr(
+        guardian,
+        "_attempt_chain",
+        lambda *_args, **_kwargs: ([pair], None, None),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_existing_recovery_path",
+        lambda *_args, **_kwargs: tmp_path / "recovery.json",
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_verified_recovery_receipt",
+        lambda *_args, **_kwargs: (b"recovery", {"prior_provider_call_count": 3}),
+    )
+    monkeypatch.setattr(guardian, "_provider_call_count", lambda *_args: 3)
+
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._existing_unstarted_authorization(
+            config,
+            output,
+            {"lane": "clean_label", "terminal_packet_index": 1},
+        )
+
+
+def test_pre_call_authorization_rejects_marker_symlink_immediately(
+    guardian: ModuleType, tmp_path: Path
+) -> None:
+    config = _config(guardian, tmp_path)
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    attempt_root = output / "clean_label/chunks/packet-0001"
+    attempt_root.mkdir(parents=True, mode=0o700)
+    for directory in (output, output / "clean_label", output / "clean_label/chunks"):
+        os.chmod(directory, 0o700)
+    target = tmp_path / "marker-target.json"
+    target.write_text("{}\n", encoding="utf-8")
+    (attempt_root / "attempt-1-chunk-01.started.json").symlink_to(target)
+
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._existing_unstarted_authorization(
+            config,
+            output,
+            {"lane": "clean_label", "terminal_packet_index": 1},
+        )
 
 
 def test_recovery_after_committed_progress_is_content_blind_and_chunk_local(

@@ -1427,6 +1427,8 @@ def _existing_unstarted_authorization(
         match = GEMINI_ATTEMPT_MARKER_RE.fullmatch(path.name)
         if match is None:
             continue
+        if path.is_symlink():
+            raise GuardianError("stop_recovery_state_drift")
         chunk_attempts.setdefault(int(match["chunk"]), set()).add(int(match["attempt"]))
 
     candidates: list[tuple[int, int]] = []
