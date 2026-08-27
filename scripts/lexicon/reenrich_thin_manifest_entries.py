@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import re
@@ -224,6 +225,7 @@ def _preserve_existing_metadata(
     *,
     existing_cefr: dict[str, Any] | None,
     existing_wiki_reference: dict[str, Any] | None,
+    existing_translation: dict[str, Any] | None = None,
 ) -> None:
     enrichment = entry.get("enrichment")
     if isinstance(enrichment, dict) and existing_cefr and "cefr" not in enrichment:
@@ -236,6 +238,12 @@ def _preserve_existing_metadata(
             enrichment["sources"] = sorted(sources)
     if existing_wiki_reference and "wiki_reference" not in entry:
         entry["wiki_reference"] = existing_wiki_reference
+    if existing_translation and not _has_translation(entry):
+        if not isinstance(enrichment, dict):
+            enrichment = {}
+            entry["enrichment"] = enrichment
+        enrichment["translation"] = existing_translation
+        _add_source(enrichment, existing_translation.get("source"))
 
 
 def _add_source(enrichment: dict[str, Any], source: object) -> None:
@@ -581,8 +589,20 @@ def reenrich_thin_entries(
 
     has_sum11_flags = enrich_manifest._sum11_has_flag_columns(conn)
     original_wiki_reference = enrich_manifest._wiki_reference
+    original_slovnyk_cache = enrich_manifest._slovnyk_cache
+    original_fetch_slovnyk = enrich_manifest._fetch_slovnyk_entry
     if not refresh_wiki:
         enrich_manifest._wiki_reference = lambda *args, **kwargs: None
+    if cached_slovnyk_only:
+        enrich_manifest._fetch_slovnyk_entry = lambda *args, **kwargs: None
+        enrich_manifest._slovnyk_cache = (
+            lambda lemma: enrich_manifest._load_current_slovnyk_cache_file(
+                enrich_manifest._slovnyk_cache_path(lemma)
+            )
+            or enrich_manifest._new_slovnyk_cache(
+                lemma, enrich_manifest._slovnyk_lookup_word(lemma)
+            )
+        )
 
     manifest_index = manifest_lemma_index(manifest)
 
@@ -597,6 +617,11 @@ def reenrich_thin_entries(
             enrichment = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}
             existing_cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
             existing_wiki_reference = entry.get("wiki_reference")
+            existing_translation = (
+                copy.deepcopy(enrichment.get("translation"))
+                if isinstance(enrichment.get("translation"), dict) and _has_translation(entry)
+                else None
+            )
             had_anchor = has_learner_english_anchor(entry)
             had_translation = _has_translation(entry)
             before = json.dumps(entry, ensure_ascii=False, sort_keys=True)
@@ -621,6 +646,7 @@ def reenrich_thin_entries(
                 existing_wiki_reference=(
                     existing_wiki_reference if isinstance(existing_wiki_reference, dict) else None
                 ),
+                existing_translation=existing_translation,
             )
             was_enriched = had_anchor or had_translation or (_categorize_entry(entry) == "ENRICHED")
             after = json.dumps(entry, ensure_ascii=False, sort_keys=True)
@@ -653,6 +679,8 @@ def reenrich_thin_entries(
 
     finally:
         enrich_manifest._wiki_reference = original_wiki_reference
+        enrich_manifest._slovnyk_cache = original_slovnyk_cache
+        enrich_manifest._fetch_slovnyk_entry = original_fetch_slovnyk
 
     categories = {"ENRICHED": 0, "DETERMINISTIC_EXCLUSION": 0, "UNRESOLVED_RESIDUAL": 0}
     layer_counters = {"proverbs": 0, "usage_notes": 0, "grinchenko": 0, "forms": 0}
