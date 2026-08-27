@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -216,6 +217,138 @@ def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path
     receipt_path.write_bytes(runner.canonical(receipt))
     with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
         runner._verify_recovery_receipt(package, started, terminal)
+
+
+def _seed_runner_second_recovery(runner: ModuleType, package: Path) -> Path:
+    out = package / runner.OUTPUT / "clean_label/chunks/packet-0001"
+    out.mkdir(parents=True, mode=0o700)
+    markers: dict[int, tuple[Path, Path]] = {}
+    for attempt in (1, 2):
+        started = out / f"attempt-{attempt}-chunk-01.started.json"
+        terminal = out / f"attempt-{attempt}-chunk-01.terminal.json"
+        started.write_bytes(runner.canonical({"attempt": attempt, "state": "started", "text_free": True}))
+        terminal.write_bytes(
+            runner.canonical(
+                {
+                    "attempt": attempt,
+                    "state": "terminal",
+                    "failure_code": "provider_status_timeout",
+                    "failure_stage": "provider_return",
+                    "text_free": True,
+                }
+            )
+        )
+        started.chmod(0o600)
+        terminal.chmod(0o600)
+        markers[attempt] = (started, terminal)
+    first_started, first_terminal = markers[1]
+    first_body = {
+        "schema_version": "phase3_cycle007_gemini_provider_recovery_v1",
+        "evaluation_cycle_id": runner.CYCLE,
+        "source_provider_stop_sha256": "a" * 64,
+        "started_marker_sha256": runner.digest(first_started.read_bytes()),
+        "terminal_marker_sha256": runner.digest(first_terminal.read_bytes()),
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": runner.MODEL,
+        "model_family": runner.FAMILY,
+        "harness": runner.HARNESS,
+        "text_free": True,
+    }
+    first_receipt = first_body | {"receipt_sha256": runner.digest(runner.canonical(first_body))}
+    first_path = package / runner.OUTPUT / runner.RECOVERY_RECEIPT
+    first_path.write_bytes(runner.canonical(first_receipt))
+    first_path.chmod(0o600)
+    second_started, second_terminal = markers[2]
+    second_body = {
+        "schema_version": "phase3_cycle007_gemini_provider_second_recovery_v1",
+        "evaluation_cycle_id": runner.CYCLE,
+        "source_provider_stop_sha256": "b" * 64,
+        "prior_recovery_receipt_sha256": runner.digest(first_path.read_bytes()),
+        "started_marker_sha256": runner.digest(second_started.read_bytes()),
+        "terminal_marker_sha256": runner.digest(second_terminal.read_bytes()),
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "prior_provider_call_count": 2,
+        "authorized_additional_provider_calls": 1,
+        "authorized_attempt": 3,
+        "exact_model": runner.MODEL,
+        "model_family": runner.FAMILY,
+        "harness": runner.HARNESS,
+        "text_free": True,
+    }
+    second_receipt = second_body | {
+        "receipt_sha256": runner.digest(runner.canonical(second_body))
+    }
+    second_path = package / runner.OUTPUT / runner.SECOND_RECOVERY_RECEIPT
+    second_path.write_bytes(runner.canonical(second_receipt))
+    second_path.chmod(0o600)
+    return out
+
+
+def test_batch_runner_accepts_only_exact_chained_attempt_three_receipt(tmp_path: Path) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_attempt_three_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    out = _seed_runner_second_recovery(runner, package)
+
+    assert runner._next_attempt(package, out, 1) == 3
+    second_path = package / runner.OUTPUT / runner.SECOND_RECOVERY_RECEIPT
+    receipt = json.loads(second_path.read_text(encoding="utf-8"))
+    receipt["prior_recovery_receipt_sha256"] = "0" * 64
+    second_path.write_bytes(runner.canonical(receipt))
+    with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
+        runner._next_attempt(package, out, 1)
+
+
+def test_batch_runner_fresh_process_accepts_attempt_three_and_refuses_fourth(
+    tmp_path: Path,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_fresh_process_seed", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    out = _seed_runner_second_recovery(runner, package)
+    script = (
+        "import importlib.util,sys;"
+        "p=sys.argv[1];pkg=__import__('pathlib').Path(sys.argv[2]);"
+        "s=importlib.util.spec_from_file_location('fresh',p);m=importlib.util.module_from_spec(s);"
+        "s.loader.exec_module(m);o=pkg/m.OUTPUT/'clean_label/chunks/packet-0001';"
+        "raise SystemExit(0 if m._next_attempt(pkg,o,1)==3 else 1)"
+    )
+    assert subprocess.run(
+        [sys.executable, "-c", script, str(path), str(package)], check=False, timeout=30
+    ).returncode == 0
+
+    attempt_three_started = out / "attempt-3-chunk-01.started.json"
+    attempt_three_terminal = out / "attempt-3-chunk-01.terminal.json"
+    attempt_three_started.write_bytes(runner.canonical({"state": "started", "text_free": True}))
+    attempt_three_terminal.write_bytes(
+        runner.canonical(
+            {
+                "state": "terminal",
+                "failure_code": "provider_status_timeout",
+                "failure_stage": "provider_return",
+                "text_free": True,
+            }
+        )
+    )
+    attempt_three_started.chmod(0o600)
+    attempt_three_terminal.chmod(0o600)
+    refusal_script = script.replace(
+        "raise SystemExit(0 if m._next_attempt(pkg,o,1)==3 else 1)",
+        "\ntry:m._next_attempt(pkg,o,1)\nexcept m.Error:raise SystemExit(0)\nraise SystemExit(1)",
+    )
+    assert subprocess.run(
+        [sys.executable, "-c", refusal_script, str(path), str(package)], check=False, timeout=30
+    ).returncode == 0
 
 
 def test_batch_runner_pins_the_certified_evidence_compiler_identity(
