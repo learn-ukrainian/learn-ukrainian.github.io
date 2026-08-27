@@ -185,7 +185,7 @@ def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path
     terminal = attempt / "attempt-1-chunk-01.terminal.json"
     started.write_bytes(runner.canonical({"state": "started", "text_free": True}))
     terminal_value = {
-        "failure_code": "structured_output_envelope_drift",
+        "failure_code": "provider_status_timeout",
         "failure_stage": "provider_return",
         "text_free": True,
     }
@@ -212,11 +212,11 @@ def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path
     receipt_path.write_bytes(runner.canonical(receipt))
     receipt_path.chmod(0o600)
 
-    runner._verify_recovery_receipt(package, started, terminal)
+    assert runner._next_attempt(package, attempt, 1) == 2
     receipt["authorized_additional_provider_calls"] = 2
     receipt_path.write_bytes(runner.canonical(receipt))
     with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
-        runner._verify_recovery_receipt(package, started, terminal)
+        runner._next_attempt(package, attempt, 1)
 
 
 def _seed_runner_second_recovery(runner: ModuleType, package: Path) -> Path:
@@ -306,7 +306,7 @@ def test_batch_runner_accepts_only_exact_chained_attempt_three_receipt(tmp_path:
         runner._next_attempt(package, out, 1)
 
 
-def test_batch_runner_fresh_process_accepts_attempt_three_and_refuses_fourth(
+def test_batch_runner_fresh_process_requires_then_accepts_exact_attempt_four_receipt(
     tmp_path: Path,
 ) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
@@ -349,6 +349,120 @@ def test_batch_runner_fresh_process_accepts_attempt_three_and_refuses_fourth(
     assert subprocess.run(
         [sys.executable, "-c", refusal_script, str(path), str(package)], check=False, timeout=30
     ).returncode == 0
+
+    prior_recovery = package / runner.OUTPUT / runner.SECOND_RECOVERY_RECEIPT
+    fourth_body = {
+        "schema_version": "phase3_cycle007_gemini_provider_second_recovery_v1",
+        "evaluation_cycle_id": runner.CYCLE,
+        "source_provider_stop_sha256": "c" * 64,
+        "prior_recovery_receipt_sha256": runner.digest(prior_recovery.read_bytes()),
+        "started_marker_sha256": runner.digest(attempt_three_started.read_bytes()),
+        "terminal_marker_sha256": runner.digest(attempt_three_terminal.read_bytes()),
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "prior_provider_call_count": 3,
+        "authorized_additional_provider_calls": 1,
+        "authorized_attempt": 4,
+        "exact_model": runner.MODEL,
+        "model_family": runner.FAMILY,
+        "harness": runner.HARNESS,
+        "text_free": True,
+    }
+    fourth_receipt = fourth_body | {
+        "receipt_sha256": runner.digest(runner.canonical(fourth_body))
+    }
+    fourth_path = out / "provider-recovery-chunk-01-attempt-4.json"
+    fourth_path.write_bytes(runner.canonical(fourth_receipt))
+    fourth_path.chmod(0o600)
+    fourth_script = script.replace("==3", "==4")
+    assert subprocess.run(
+        [sys.executable, "-c", fourth_script, str(path), str(package)],
+        check=False,
+        timeout=30,
+    ).returncode == 0
+
+
+def test_batch_runner_has_no_permanent_retry_ceiling_and_requires_each_link(
+    tmp_path: Path,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_renewable_chain_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    out = package / runner.OUTPUT / "clean_label/chunks/packet-0001"
+    out.mkdir(parents=True, mode=0o700)
+    prior_raw: bytes | None = None
+
+    def add_timeout(attempt: int, *, authorize_next: bool) -> None:
+        nonlocal prior_raw
+        started = out / f"attempt-{attempt}-chunk-01.started.json"
+        terminal = out / f"attempt-{attempt}-chunk-01.terminal.json"
+        started.write_bytes(
+            runner.canonical({"attempt": attempt, "state": "started", "text_free": True})
+        )
+        terminal.write_bytes(
+            runner.canonical(
+                {
+                    "attempt": attempt,
+                    "state": "terminal",
+                    "failure_code": "provider_status_timeout",
+                    "failure_stage": "provider_return",
+                    "text_free": True,
+                }
+            )
+        )
+        started.chmod(0o600)
+        terminal.chmod(0o600)
+        if not authorize_next:
+            return
+        body = {
+            "schema_version": (
+                "phase3_cycle007_gemini_provider_recovery_v1"
+                if prior_raw is None
+                else "phase3_cycle007_gemini_provider_second_recovery_v1"
+            ),
+            "evaluation_cycle_id": runner.CYCLE,
+            "source_provider_stop_sha256": f"{attempt:064x}",
+            "started_marker_sha256": runner.digest(started.read_bytes()),
+            "terminal_marker_sha256": runner.digest(terminal.read_bytes()),
+            "failure_code": "provider_status_timeout",
+            "failure_stage": "provider_return",
+            "prior_provider_call_count": attempt,
+            "authorized_additional_provider_calls": 1,
+            "exact_model": runner.MODEL,
+            "model_family": runner.FAMILY,
+            "harness": runner.HARNESS,
+            "text_free": True,
+        }
+        if prior_raw is not None:
+            body |= {
+                "prior_recovery_receipt_sha256": runner.digest(prior_raw),
+                "authorized_attempt": attempt + 1,
+            }
+        receipt = body | {"receipt_sha256": runner.digest(runner.canonical(body))}
+        if attempt == 1:
+            receipt_path = package / runner.OUTPUT / runner.RECOVERY_RECEIPT
+        elif attempt == 2:
+            receipt_path = package / runner.OUTPUT / runner.SECOND_RECOVERY_RECEIPT
+        else:
+            receipt_path = (
+                out / f"provider-recovery-chunk-01-attempt-{attempt + 1}.json"
+            )
+        receipt_path.write_bytes(runner.canonical(receipt))
+        receipt_path.chmod(0o600)
+        prior_raw = receipt_path.read_bytes()
+
+    for attempt in range(1, 13):
+        add_timeout(attempt, authorize_next=True)
+    assert runner._next_attempt(package, out, 1) == 13
+
+    add_timeout(13, authorize_next=False)
+    with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
+        runner._next_attempt(package, out, 1)
+    add_timeout(13, authorize_next=True)
+    assert runner._next_attempt(package, out, 1) == 14
 
 
 def test_batch_runner_pins_the_certified_evidence_compiler_identity(
