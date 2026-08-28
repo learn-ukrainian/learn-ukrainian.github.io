@@ -17,6 +17,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
+from scripts.api.monitor_context import production_context
 from scripts.fleet_comms.migrations import apply_migrations
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 @pytest.fixture()
 def client() -> TestClient:
     app = FastAPI()
+    app.state.ctx = production_context()
     app.include_router(fleet_router.router, prefix="/api/fleet")
     return TestClient(app)
 
