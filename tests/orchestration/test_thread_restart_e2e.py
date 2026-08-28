@@ -103,6 +103,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         "scripts/guardrails/worktree_containment.py",
         "scripts/common/__init__.py",
         "scripts/common/git_context.py",
+        "scripts/common/repo_root.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",
         "scripts/config/context_profiles.yaml",
@@ -151,6 +152,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         sources.extend(
             str(path.relative_to(REPO_ROOT))
             for source_dir in (
+                REPO_ROOT / "scripts/control_plane",
                 REPO_ROOT / "scripts/session_canary",
                 REPO_ROOT / "scripts/session_supervisor",
                 REPO_ROOT / "agents_extensions/shared/session_streams",
