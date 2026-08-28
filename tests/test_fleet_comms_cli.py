@@ -216,6 +216,8 @@ def test_supported_bridge_command_defaults_to_durable_acp(
         lambda channel: {"body": "", "revs": {}, "missing": []},
     )
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
+    monkeypatch.delenv("LU_RUNTIME_INITIATOR", raising=False)
+    monkeypatch.delenv("LU_RUNTIME_INITIATOR_SOURCE", raising=False)
     monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
     _channels.create_channel("architecture", exist_ok=False)
     observed: dict[str, object] = {}

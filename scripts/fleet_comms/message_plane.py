@@ -34,6 +34,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
 from scripts.fleet_comms.paths import (
@@ -527,7 +529,7 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
     if not db_exists:
         return payload
     try:
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
         try:
             row = conn.execute(
                 "SELECT version, name FROM comms_schema_migrations ORDER BY version DESC LIMIT 1"

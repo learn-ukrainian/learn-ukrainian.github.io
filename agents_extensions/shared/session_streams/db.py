@@ -12,6 +12,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
+
 from .model import isoformat_z, utc_now
 
 DEFAULT_RELATIVE_DATABASE = Path(".agent/session-streams/v1/session-streams.sqlite3")
@@ -92,6 +95,7 @@ class SessionStreamDatabase:
     """Open configured SQLite connections and verify forward-only migrations."""
 
     def __init__(self, path: Path | str | None = None, *, repo_root: Path | None = None) -> None:
+        self._repo_root = repo_root
         self.path = Path(path).resolve() if path is not None else default_database_path(repo_root)
 
     def connect(self, *, read_only: bool = False, now: datetime | None = None) -> sqlite3.Connection:
@@ -124,22 +128,14 @@ class SessionStreamDatabase:
         ) from last_error
 
     def _connect_once(self, *, read_only: bool, now: datetime | None) -> sqlite3.Connection:
-        if read_only:
-            if not self.path.is_file():
-                raise SessionStreamDatabaseError(f"session-stream database does not exist: {self.path}")
-            connection = sqlite3.connect(
-                f"file:{self.path}?mode=ro",
-                uri=True,
-                isolation_level=None,
-                timeout=BUSY_TIMEOUT_MS / 1000,
-            )
-        else:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-            connection = sqlite3.connect(
-                self.path,
-                isolation_level=None,
-                timeout=BUSY_TIMEOUT_MS / 1000,
-            )
+        connection = cp_connect(
+            StoreId.SESSION_STREAMS,
+            path=self.path,
+            read_only=read_only,
+            repo_root=self._repo_root,
+            isolation_level=None,
+            timeout=BUSY_TIMEOUT_MS / 1000,
+        )
         connection.row_factory = sqlite3.Row
         try:
             self._configure(connection, read_only=read_only)

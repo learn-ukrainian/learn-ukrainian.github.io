@@ -30,11 +30,6 @@ _SKIP_PATH_PREFIXES: tuple[str, ...] = ("tests/",)
 # Exact ``(path, stripped snippet, max_occurrences)`` for remaining direct opens.
 _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
     (
-        "agents_extensions/shared/session_streams/db.py",
-        "connection = sqlite3.connect(",
-        2,
-    ),
-    (
         "scripts/agent_runtime/acpx_discuss.py",
         'connection = sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)',
         1,
@@ -62,31 +57,6 @@ _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
     (
         "scripts/entire_context/resolvers.py",
         'with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:',
-        1,
-    ),
-    (
-        "scripts/fleet_comms/artifacts.py",
-        "self._conn = sqlite3.connect(",
-        1,
-    ),
-    (
-        "scripts/fleet_comms/cli.py",
-        'conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)',
-        1,
-    ),
-    (
-        "scripts/fleet_comms/cold_start_board.py",
-        'conn = sqlite3.connect(f"file:{plane_db.resolve().as_posix()}?mode=ro", uri=True)',
-        1,
-    ),
-    (
-        "scripts/fleet_comms/message_plane.py",
-        'conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)',
-        1,
-    ),
-    (
-        "scripts/fleet_comms/routing_reservations.py",
-        'connection = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)',
         1,
     ),
     (
