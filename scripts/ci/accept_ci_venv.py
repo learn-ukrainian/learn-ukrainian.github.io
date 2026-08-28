@@ -16,7 +16,6 @@ from __future__ import annotations
 import argparse
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 REQUIRED_IMPORTS: tuple[str, ...] = ("pytest", "coverage")
