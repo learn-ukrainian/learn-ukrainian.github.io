@@ -15,8 +15,9 @@ When a lane-owned pull request has a green CI Gate and is not a draft:
    day; do not abandon it.
 3. On a sealed **APPROVE** or **correct** verdict, or on non-blocking nits,
    run `publish-review-verdict` and immediately arm
-   `gh pr merge --auto --squash --delete-branch`. Green, reviewed PRs do not
-   remain idle for later action.
+   `gh pr merge --auto --squash`. Do **not** pass `--delete-branch` while this
+   repo uses a merge queue (delete the remote branch only after `MERGED`).
+   Green, reviewed PRs do not remain idle for later action.
 4. A green, cross-family-passed PR that is not auto-merged for more than one
    hour is a utilization failure. Its owning lane must arm the merge or post a
    blocker naming an owner and ETA.

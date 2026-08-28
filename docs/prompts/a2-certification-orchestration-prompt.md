@@ -446,9 +446,9 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
     When CI is green and required reviews are addressed:
 
     ```bash
-    gh pr merge <PR_NUMBER> --squash --delete-branch
-    git switch main
-    git pull --ff-only
+    gh pr merge <PR_NUMBER> --auto --squash
+    # Do not pass --delete-branch under merge queue; delete remote only after MERGED.
+    # Stay in the dispatch worktree — never `git switch` on the primary checkout.
     ```
 
     After deploy, verify:
@@ -457,11 +457,11 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
     curl -sI https://learn-ukrainian.github.io/a2/<slug>/ | head
     ```
 
-    Then clean the worktree:
+    Then clean the worktree (after `gh pr view` shows MERGED):
 
     ```bash
-    git worktree remove .worktrees/dispatch/codex/a2-mXX-<slug>-certify
-    git branch -d codex/a2-mXX-<slug>-certify
+    .venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged \
+      --worktree .worktrees/dispatch/codex/a2-mXX-<slug>-certify
     ```
 
 13. Move to the next module only after the previous module is merged and live.
