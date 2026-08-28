@@ -65,6 +65,7 @@ def test_build_candidate_from_committed_inventory(lemma: str) -> None:
     assert (candidate["gloss"] or "").strip()
     assert candidate["heritage_status"]["vesum_attested"] is True
     assert candidate["heritage_status"]["is_russianism"] is False
+    assert candidate["surface_admission"] == {"practice": True}
     provenance = candidate["source_provenance"]
     assert provenance and all(item.get("inventory_path") for item in provenance)
 
@@ -78,6 +79,7 @@ def test_build_candidate_for_zabojatysja_has_no_explicit_entry_type() -> None:
     assert candidate["lemma"] == ZABOJATYSJA_LEMMA
     assert "entry_type" not in candidate
     assert candidate["pos"] == "verb"
+    assert candidate["surface_admission"] == {"practice": True}
 
 
 def test_scratch_decision_subset_raises_on_missing_lemma(tmp_path: Path) -> None:
@@ -98,6 +100,7 @@ def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path) -> No
     doc = yaml.safe_load(out.read_text(encoding="utf-8"))
     assert {row["lemma"] for row in doc["decisions"]} == lemmas
     assert doc["source_queue"]["promotion_batch_size"] == len(lemmas)
+    assert all(row.get("surface_admission") == {"practice": True} for row in doc["decisions"])
 
 
 def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(tmp_path: Path) -> None:
@@ -131,6 +134,8 @@ def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(tmp_path: Pa
         entry = entries_by_lemma[lemma]
         assert entry["entry_type"] == expected_type
         assert " " in entry["lemma"], f"{lemma} must stay a genuine multiword lemma, not collapsed"
+        assert entry.get("surface_admission") == {"practice": True}
     zabojatysja = entries_by_lemma[ZABOJATYSJA_LEMMA]
     assert zabojatysja["pos"] == "verb"
     assert zabojatysja.get("entry_type") is None
+    assert zabojatysja.get("surface_admission") == {"practice": True}
