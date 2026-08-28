@@ -24,6 +24,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
+from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.cli import fleet_help_payload, fleet_status_payload
 from scripts.fleet_comms.cold_start_board import build_cold_start_board
 from scripts.fleet_comms.efficiency_metrics import (
@@ -33,13 +34,12 @@ from scripts.fleet_comms.efficiency_metrics import (
 )
 from scripts.fleet_comms.endpoints import load_endpoint_registry
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
-from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
+from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
 from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 from .monitor_context import MonitorContext, get_ctx
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
@@ -109,19 +109,19 @@ _BEARER_TOKEN = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{8,}")
 _TOKEN_LITERAL = re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{16,}|sk-[A-Za-z0-9_-]{16,})\b")
 
 
-def _plane_root() -> Path:
+def _plane_root(ctx: MonitorContext) -> Path:
     """Resolve the existing durable plane root without creating it."""
-    return default_plane_root(repo_root=Path(PROJECT_ROOT))
+    return message_plane.default_plane_root(repo_root=ctx.roots.project_root)
 
 
-def _plane_db_path() -> Path:
-    return _plane_root() / "comms.sqlite3"
+def _plane_db_path(ctx: MonitorContext) -> Path:
+    return _plane_root(ctx) / "comms.sqlite3"
 
 
 @contextmanager
-def _read_connection() -> Iterator[tuple[sqlite3.Connection | None, str]]:
+def _read_connection(ctx: MonitorContext) -> Iterator[tuple[sqlite3.Connection | None, str]]:
     """Yield a query-only connection, never creating a database or schema."""
-    db_path = _plane_db_path()
+    db_path = _plane_db_path(ctx)
     if not db_path.is_file():
         yield None, "db_missing"
         return
@@ -346,9 +346,9 @@ def _paged_query(
     )
 
 
-def _safe_plane_status() -> dict[str, Any]:
+def _safe_plane_status(ctx: MonitorContext) -> dict[str, Any]:
     """Project the existing plane read model without paths or raw telemetry rows."""
-    status = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=0)
+    status = read_plane_status(repo_root=ctx.roots.project_root, recent_limit=0)
     mode = _safe_text(status.get("mode"), fallback="invalid")
     authority_active = mode == "authority"
     schema = status.get("schema") if isinstance(status.get("schema"), dict) else {}
@@ -391,9 +391,10 @@ def _authority_store_descriptor(db_path: Path) -> dict[str, Any]:
 
 def _facade_authority_payload(
     collector: Callable[[Path], dict[str, Any]],
+    ctx: MonitorContext,
 ) -> dict[str, Any]:
     """Run an authority collector fail-open without creating a plane database."""
-    db_path = _plane_db_path()
+    db_path = _plane_db_path(ctx)
     if not db_path.is_file():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -422,9 +423,9 @@ def _facade_authority_payload(
     return payload
 
 
-def _facade_backlog_payload(limit: int) -> dict[str, Any]:
+def _facade_backlog_payload(limit: int, ctx: MonitorContext) -> dict[str, Any]:
     """Return the existing authority backlog projection for the thin facade."""
-    db_path = _plane_db_path()
+    db_path = _plane_db_path(ctx)
     if not db_path.is_file():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -464,9 +465,9 @@ def _facade_backlog_payload(limit: int) -> dict[str, Any]:
     return payload
 
 
-def _facade_dead_letters_payload(limit: int) -> dict[str, Any]:
+def _facade_dead_letters_payload(limit: int, ctx: MonitorContext) -> dict[str, Any]:
     """Return the existing authority dead-letter projection for the thin facade."""
-    db_path = _plane_db_path()
+    db_path = _plane_db_path(ctx)
     if not db_path.is_file():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -502,11 +503,11 @@ def _facade_dead_letters_payload(limit: int) -> dict[str, Any]:
     return payload
 
 
-def _facade_reap_report() -> dict[str, Any]:
+def _facade_reap_report(ctx: MonitorContext) -> dict[str, Any]:
     """Return the established merged-head reaper report in dry-run mode only."""
     try:
         results = reap_worktrees.reap_worktrees(
-            repo_root=reap_worktrees.primary_checkout_root(Path(LIVE_REPO_ROOT)),
+            repo_root=reap_worktrees.primary_checkout_root(ctx.roots.live_repo_root),
             apply=False,
             prune_merged_branches=True,
             safe_only=True,
@@ -530,8 +531,9 @@ def _facade_reap_report() -> dict[str, Any]:
 
 @router.get("/facade")
 @router.get("/facade/help")
-def fleet_facade_help() -> dict[str, Any]:
+def fleet_facade_help(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Index the read-only CLI facade routes available to seats and the Monitor UI."""
+    del ctx
     payload = fleet_help_payload()
     payload.update(
         {
@@ -552,9 +554,9 @@ def fleet_facade_help() -> dict[str, Any]:
 
 
 @router.get("/facade/status")
-def fleet_facade_status() -> dict[str, Any]:
+def fleet_facade_status(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Expose the CLI fleet-status payload without a second health authority."""
-    status = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=50)
+    status = read_plane_status(repo_root=ctx.roots.project_root, recent_limit=50)
     payload = fleet_status_payload(status)
     payload["read_only"] = True
     return payload
@@ -565,46 +567,58 @@ def fleet_facade_board(
     stream_id: str | None = Query(default=None),
     agent: str | None = Query(default=None),
     needle: str | None = Query(default=None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Expose the JSON cold-start board already used by the fleet CLI."""
     return build_cold_start_board(
         stream_id=stream_id,
         agent=agent,
         needle=needle,
-        repo_root=Path(PROJECT_ROOT),
+        repo_root=ctx.roots.project_root,
     )
 
 
 @router.get("/facade/metrics")
-def fleet_facade_metrics() -> dict[str, Any]:
+def fleet_facade_metrics(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Return authority-plane metrics through the existing collector."""
-    return _facade_authority_payload(collect_efficiency_metrics_authority)
+    return _facade_authority_payload(collect_efficiency_metrics_authority, ctx)
 
 
 @router.get("/facade/backlog")
-def fleet_facade_backlog(limit: int = Query(default=100, ge=1, le=500)) -> dict[str, Any]:
+def fleet_facade_backlog(
+    limit: int = Query(default=100, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
     """Return the authority-plane delivery backlog; retired endpoints stay excluded."""
-    return _facade_backlog_payload(limit)
+    return _facade_backlog_payload(limit, ctx)
 
 
 @router.get("/facade/dead")
-def fleet_facade_dead(limit: int = Query(default=100, ge=1, le=500)) -> dict[str, Any]:
+def fleet_facade_dead(
+    limit: int = Query(default=100, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
     """Return the authority-plane dead-letter inventory without message bodies."""
-    return _facade_dead_letters_payload(limit)
+    return _facade_dead_letters_payload(limit, ctx)
 
 
 @router.get("/facade/broker-report")
-def fleet_facade_broker_report(days: int = Query(default=7, ge=1, le=90)) -> dict[str, Any]:
+def fleet_facade_broker_report(
+    days: int = Query(default=7, ge=1, le=90),
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
     """Expose the legacy Broker Ops retirement report through its shared builder."""
-    payload = build_legacy_broker_report(days)
+    routes_db = ctx.roots.project_root / "data" / "telemetry" / "legacy_comms_routes.db"
+    bridge_db = ctx.roots.project_root / "data" / "telemetry" / "legacy_bridge"
+    payload = build_legacy_broker_report(days, routes_db=routes_db, bridge_db=bridge_db)
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     return payload
 
 
 @router.get("/facade/reap-report")
-def fleet_facade_reap_report() -> dict[str, Any]:
+def fleet_facade_reap_report(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Expose the guarded reaper's dry-run report; apply is never an API option."""
-    return _facade_reap_report()
+    return _facade_reap_report(ctx)
 
 
 def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> dict[str, int]:
@@ -1018,10 +1032,10 @@ async def fleet_operations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, 
 
 
 @router.get("/health")
-def fleet_health() -> dict[str, Any]:
+def fleet_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Read-only health, mode, schema, and current authority posture."""
-    status = _safe_plane_status()
-    with _read_connection() as (connection, availability):
+    status = _safe_plane_status(ctx)
+    with _read_connection(ctx) as (connection, availability):
         authority_health = (
             _authority_health_snapshot(connection, availability=availability)
             if status["mode"] == "authority"
@@ -1054,9 +1068,9 @@ def fleet_health() -> dict[str, Any]:
 
 
 @router.get("/overview")
-def fleet_overview() -> dict[str, Any]:
+def fleet_overview(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Compact durable-plane counts for the consolidated fleet dashboard."""
-    status = _safe_plane_status()
+    status = _safe_plane_status(ctx)
     result: dict[str, Any] = {
         "read_only": True,
         "authority": status["authority"],
@@ -1073,7 +1087,7 @@ def fleet_overview() -> dict[str, Any]:
         },
         "availability": "db_missing",
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             result["availability"] = availability
             return result
@@ -1160,9 +1174,10 @@ def _registered_endpoints(connection: sqlite3.Connection | None) -> dict[str, di
 def fleet_agents(
     agent: str | None = Query(default=None),
     state: str | None = Query(default=None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Configured and durable endpoint inventory with configuration secrets omitted."""
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         registered = _registered_endpoints(connection)
     try:
         registry = load_endpoint_registry()
@@ -1264,6 +1279,7 @@ def fleet_requests(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Queued, in-flight, and terminal request projection without request bodies."""
     since_value = _normalize_time(since, "since")
@@ -1277,7 +1293,7 @@ def fleet_requests(
         "since": since_value,
         "until": until_value,
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return _empty_collection(
                 "requests", limit=limit, offset=offset, availability=availability, filters=filters
@@ -1457,6 +1473,7 @@ def fleet_authority_jobs(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Read-only authority queue projection; payload and result blobs remain sealed."""
     since_value = _normalize_time(since, "since")
@@ -1471,7 +1488,7 @@ def fleet_authority_jobs(
         "since": since_value,
         "until": until_value,
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return _empty_collection(
                 "jobs", limit=limit, offset=offset, availability=availability, filters=filters
@@ -1665,6 +1682,7 @@ def fleet_messages(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Message metadata and redacted inline previews, never artifact body content."""
     since_value = _normalize_time(since, "since")
@@ -1678,7 +1696,7 @@ def fleet_messages(
         "since": since_value,
         "until": until_value,
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return _empty_collection(
                 "messages", limit=limit, offset=offset, availability=availability, filters=filters
@@ -1804,9 +1822,12 @@ def _message_detail(connection: sqlite3.Connection, message_id: str) -> dict[str
 
 
 @router.get("/messages/{message_id}")
-def fleet_message_detail(message_id: str) -> JSONResponse:
+def fleet_message_detail(
+    message_id: str,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
     """A no-store, explicitly bounded inline body preview for one message."""
-    with _read_connection() as (connection, _availability):
+    with _read_connection(ctx) as (connection, _availability):
         item = _message_detail(connection, message_id) if connection is not None else None
     if item is None:
         raise HTTPException(status_code=404, detail="Message not found")
@@ -1852,6 +1873,7 @@ def fleet_discussions(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Conversations plus message/round counts; messages remain separately bounded."""
     since_value = _normalize_time(since, "since")
@@ -1865,7 +1887,7 @@ def fleet_discussions(
         "since": since_value,
         "until": until_value,
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return _empty_collection(
                 "discussions", limit=limit, offset=offset, availability=availability, filters=filters
@@ -1982,9 +2004,10 @@ def fleet_discussion_detail(
     conversation_id: str,
     limit: int = Query(default=50, ge=1, le=MAX_DETAIL_ROWS),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     """One bounded discussion timeline without artifact retrieval or write controls."""
-    with _read_connection() as (connection, _availability):
+    with _read_connection(ctx) as (connection, _availability):
         if connection is None or not _table_exists(connection, "conversations"):
             raise HTTPException(status_code=404, detail="Discussion not found")
         message_summary = (
@@ -2098,6 +2121,7 @@ def fleet_reviews(
     until: Annotated[str | None, Query()] = None,
     limit: Annotated[int, Query(ge=1, le=MAX_PAGE_SIZE)] = DEFAULT_PAGE_SIZE,
     offset: Annotated[int, Query(ge=0)] = 0,
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Formal-review jobs, attempts, and publication counts without sealed blobs.
 
@@ -2116,7 +2140,7 @@ def fleet_reviews(
         "since": since_value,
         "until": until_value,
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return _empty_collection(
                 "reviews", limit=limit, offset=offset, availability=availability, filters=filters
@@ -2192,9 +2216,10 @@ def fleet_reviews(
 def fleet_review_detail(
     review_id: str,
     attempt_limit: int = Query(default=MAX_DETAIL_ROWS, ge=1, le=MAX_DETAIL_ROWS),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     """Bounded formal-review detail; sealed verdict and raw captures are never read."""
-    with _read_connection() as (connection, _availability):
+    with _read_connection(ctx) as (connection, _availability):
         if connection is None or not _table_exists(connection, "formal_review_jobs"):
             raise HTTPException(status_code=404, detail="Review not found")
         row = connection.execute(
@@ -2291,6 +2316,7 @@ def fleet_dead_letters(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Current authority DLQ metadata, or the legacy read projection during rollback."""
     since_value = _normalize_time(since, "since")
@@ -2302,12 +2328,12 @@ def fleet_dead_letters(
         "since": since_value,
         "until": until_value,
     }
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return _empty_collection(
                 "dead_letters", limit=limit, offset=offset, availability=availability, filters=filters
             )
-        if _safe_plane_status()["mode"] == "authority":
+        if _safe_plane_status(ctx)["mode"] == "authority":
             if not _table_exists(connection, "authority_dead_letters"):
                 return _empty_collection(
                     "dead_letters",
@@ -2451,10 +2477,10 @@ def fleet_dead_letters(
 
 
 @router.get("/migrations")
-def fleet_migrations() -> dict[str, Any]:
+def fleet_migrations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Schema migration status from the existing plane, without applying a migration."""
     known = [{"version": item.version, "name": item.name} for item in MIGRATIONS]
-    with _read_connection() as (connection, availability):
+    with _read_connection(ctx) as (connection, availability):
         if connection is None:
             return {
                 "read_only": True,
@@ -2513,8 +2539,10 @@ def fleet_acp_conversations(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Reuse the ACP read model for body-free conversation and round observability."""
+    del ctx
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -2559,8 +2587,12 @@ def fleet_acp_conversations(
 
 
 @router.get("/acp/conversations/{conversation_id}")
-def fleet_acp_conversation_detail(conversation_id: str) -> JSONResponse:
+def fleet_acp_conversation_detail(
+    conversation_id: str,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
     """Reuse the existing body-free ACP event timeline for one conversation."""
+    del ctx
     record = get_acp_conversation(conversation_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
@@ -2584,8 +2616,10 @@ def fleet_activity(
     until: str | None = Query(default=None),
     limit: int = Query(default=DEFAULT_PAGE_SIZE, ge=1, le=MAX_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Recent runtime provenance records projected under the unified observer."""
+    del ctx
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
