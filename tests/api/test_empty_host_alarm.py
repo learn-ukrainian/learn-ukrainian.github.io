@@ -319,7 +319,7 @@ def test_activity_resets_idle_timer(monkeypatch: pytest.MonkeyPatch, tmp_path: P
 
 
 def test_routing_budget_consumes_notebook_report(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(state_router, "_load_agent_budgets", lambda: ({}, []))
+    monkeypatch.setattr(state_router, "_load_agent_budgets", lambda **_kw: ({}, []))
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _lane: {"weekly_used_pct": None})
     upsert_report(_document_with_lane_usage(lane_usage=[_lane_usage(used_pct=25.0)]))
     now = datetime(2026, 8, 24, 12, 0, tzinfo=UTC)

@@ -13,6 +13,8 @@ Pipeline version note (#1186, 2026-04-11):
     ``V6_PHASE_ORDER``.
 """
 
+from __future__ import annotations
+
 import contextlib
 import hashlib
 import json
@@ -20,6 +22,7 @@ import re
 import sqlite3
 import sys
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -28,15 +31,14 @@ try:
 except ImportError:
     from ..path_safety import safe_join, trusted_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB, SEMINAR_TRACK_IDS
+from . import config
+from .config import LEVELS, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from pipeline.state import is_complete as _phase_complete
 from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
-
-from .resilience import connect_sqlite
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
@@ -52,10 +54,23 @@ try:
     from build.phase_constants import PHASES as _V6_PHASES
 except ImportError:
     _V6_PHASES = [
-        "check", "research", "skeleton", "pre-verify", "write",
-        "exercises", "activities", "repair", "verify-exercises",
-        "annotate", "vocab", "enrich", "verify", "review", "stress",
-        "publish", "audit",
+        "check",
+        "research",
+        "skeleton",
+        "pre-verify",
+        "write",
+        "exercises",
+        "activities",
+        "repair",
+        "verify-exercises",
+        "annotate",
+        "vocab",
+        "enrich",
+        "verify",
+        "review",
+        "stress",
+        "publish",
+        "audit",
     ]
     _V6_PHASE_LABELS: dict[str, str] = {}
 
@@ -76,16 +91,11 @@ _PIPELINE_PHASE_LABELS = _V6_PHASE_LABELS
 
 # ==================== CONSTANTS ====================
 
-CURRICULUM_YAML = CURRICULUM_ROOT / "curriculum.yaml"
-PLANS_ROOT = CURRICULUM_ROOT / "plans"
 _EMPTY_YAML_VALUES = {"", "[]", "null", "Null", "NULL", "~"}
 
 # Track -> profile mapping. Keep this derived from config so newly added
 # seminar tracks do not silently render as core in state summaries.
-PROFILE_MAP = {
-    cfg["id"]: ("seminar" if cfg["id"] in SEMINAR_TRACK_IDS else "core")
-    for cfg in LEVELS
-}
+PROFILE_MAP = {cfg["id"]: ("seminar" if cfg["id"] in SEMINAR_TRACK_IDS else "core") for cfg in LEVELS}
 
 
 def plan_has_revision_log(plan_path: Path) -> bool:
@@ -107,7 +117,7 @@ def plan_has_revision_log(plan_path: Path) -> bool:
         if value not in _EMPTY_YAML_VALUES:
             return True
 
-        for child in lines[index + 1:]:
+        for child in lines[index + 1 :]:
             stripped = child.strip()
             if not stripped or stripped.startswith("#"):
                 continue
@@ -118,6 +128,7 @@ def plan_has_revision_log(plan_path: Path) -> bool:
         return False
 
     return False
+
 
 # Legacy phase orders kept for parsing historical state files only.
 # Prefer ``V6_PHASE_ORDER`` for any new code.
@@ -181,21 +192,31 @@ def cache_invalidate(prefix: str = "") -> int:
 
 # ==================== CURRICULUM LOADING ====================
 
-_curriculum_cache: dict | None = None
-_curriculum_mtime: float = 0.0
+_curriculum_cache: dict[Path, tuple[float, dict]] = {}
 
 
-def load_curriculum() -> dict:
+def load_curriculum(
+    curriculum_root: Path | None = None,
+    *,
+    curriculum_yaml: Path | None = None,
+) -> dict:
     """Load curriculum.yaml, cached with mtime check for auto-refresh."""
-    global _curriculum_cache, _curriculum_mtime
-    if CURRICULUM_YAML.exists():
-        current_mtime = CURRICULUM_YAML.stat().st_mtime
-        if _curriculum_cache is None or current_mtime != _curriculum_mtime:
-            _curriculum_cache = yaml.safe_load(CURRICULUM_YAML.read_text()) or {}
-            _curriculum_mtime = current_mtime
-    else:
-        _curriculum_cache = {}
-    return _curriculum_cache
+    if curriculum_yaml is None:
+        if curriculum_root is not None:
+            curriculum_yaml = curriculum_root / "curriculum.yaml"
+        else:
+            curriculum_yaml = config.CURRICULUM_ROOT / "curriculum.yaml"
+    if curriculum_yaml.exists():
+        try:
+            current_mtime = curriculum_yaml.stat().st_mtime
+            entry = _curriculum_cache.get(curriculum_yaml)
+            if entry is None or current_mtime != entry[0]:
+                data = yaml.safe_load(curriculum_yaml.read_text(encoding="utf-8")) or {}
+                _curriculum_cache[curriculum_yaml] = (current_mtime, data)
+            return _curriculum_cache[curriculum_yaml][1]
+        except (OSError, yaml.YAMLError, Exception):
+            return {}
+    return {}
 
 
 def to_bare_slug(entry: str) -> str:
@@ -207,37 +228,54 @@ def to_bare_slug(entry: str) -> str:
     return match.group(1) if match else entry
 
 
-def get_plan_slugs(track_id: str) -> list[tuple[int, str]]:
+def get_plan_slugs(
+    track_id: str,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+    curriculum_yaml: Path | None = None,
+) -> list[tuple[int, str]]:
     """Return [(num, slug)] for a track, sorted by position.
 
     Primary: curriculum.yaml ordering.
-    Fallback: scan PLANS_ROOT / track_id / *.yaml, sorted alphabetically.
+    Fallback: scan plans_root / track_id / *.yaml, sorted alphabetically.
     """
-    data = load_curriculum()
+    if curriculum_root is None and curriculum_yaml is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if curriculum_yaml is None and curriculum_root is not None:
+        curriculum_yaml = curriculum_root / "curriculum.yaml"
+    if plans_root is None and curriculum_root is not None:
+        plans_root = curriculum_root / "plans"
+
+    data = load_curriculum(curriculum_root=curriculum_root, curriculum_yaml=curriculum_yaml)
     modules = data.get("levels", {}).get(track_id, {}).get("modules", [])
     if modules:
         result = []
         for i, entry in enumerate(modules):
-            slug = to_bare_slug(str(entry))
+            raw = entry.get("id") or entry.get("slug") if isinstance(entry, dict) else str(entry)
+            slug = to_bare_slug(str(raw)) if raw else ""
             if slug:
                 result.append((i + 1, slug))
         return result
 
-    try:
-        plan_dir = safe_join(PLANS_ROOT, track_id)
-    except ValueError:
-        return []
-    if plan_dir.is_dir():
-        plan_files = sorted(plan_dir.glob("*.yaml"))
-        return [(i + 1, f.stem) for i, f in enumerate(plan_files)]
+    if plans_root is not None:
+        try:
+            plan_dir = safe_join(plans_root, track_id)
+        except ValueError:
+            return []
+        if plan_dir.is_dir():
+            plan_files = sorted(plan_dir.glob("*.yaml"))
+            return [(i + 1, f.stem) for i, f in enumerate(plan_files)]
 
     return []
 
 
 # ==================== PIPELINE STATE ====================
 
+
 class StateCtx:
     """Lightweight context for pipeline.state.load_state (needs .track, .slug, .orch_dir)."""
+
     __slots__ = ("orch_dir", "slug", "track")
 
     def __init__(self, track: str, slug: str, orch_dir: Path):
@@ -309,6 +347,7 @@ def detect_pipeline_version(orch_dir: Path) -> str:
 
 # ==================== BACKWARD-COMPAT STATE READERS ====================
 
+
 def read_v3_state(orch_dir: Path) -> dict:
     """Read state-v3.json, return {} if missing or invalid."""
     try:
@@ -339,6 +378,7 @@ def read_v2_state(orch_dir: Path) -> dict:
 
 
 # ==================== PHASE STATUS PARSING ====================
+
 
 def parse_v5_phase_status(v5_state: dict, phase_name: str) -> dict:
     """Extract status info for a v5 phase. V5 uses plain keys (no prefix)."""
@@ -388,6 +428,7 @@ def parse_phase_status_from_state(state: dict, phase_name: str) -> dict:
 
 
 # ==================== RESEARCH & CONTENT HELPERS ====================
+
 
 def has_research_file(track_dir: Path, slug: str) -> bool:
     """Return True if a research file exists for this module (V5 or V6 format)."""
@@ -443,6 +484,7 @@ def find_content_file(track_dir: Path, slug: str) -> Path | None:
 
 # ==================== AUDIT STATUS ====================
 
+
 def get_audit_status(track_dir: Path, slug: str) -> dict:
     """Read status/{slug}.json. Returns {status, word_count, word_target, blocking_issues}.
 
@@ -492,10 +534,12 @@ def get_audit_status(track_dir: Path, slug: str) -> dict:
         blocking_issues = []
         for gate_name, gate_info in data.get("gates", {}).items():
             if isinstance(gate_info, dict) and gate_info.get("status") == "fail":
-                blocking_issues.append({
-                    "gate": gate_name,
-                    "message": gate_info.get("message", ""),
-                })
+                blocking_issues.append(
+                    {
+                        "gate": gate_name,
+                        "message": gate_info.get("message", ""),
+                    }
+                )
         return {
             "status": overall_status,
             "word_count": word_count,
@@ -508,6 +552,7 @@ def get_audit_status(track_dir: Path, slug: str) -> dict:
 
 # ==================== RESEARCH SCORING ====================
 
+
 def get_research_score(track_dir: Path, slug: str, track_id: str) -> int | None:
     """Get research quality score for a module (0-10 or None)."""
     rp = find_research_path(track_dir, slug)
@@ -519,10 +564,18 @@ def get_research_score(track_dir: Path, slug: str, track_id: str) -> int | None:
     return None
 
 
-def get_word_target_from_plan(track_id: str, slug: str) -> int:
+def get_word_target_from_plan(
+    track_id: str,
+    slug: str,
+    *,
+    plans_root: Path | None = None,
+    curriculum_root: Path | None = None,
+) -> int:
     """Try to read word_target from the individual plan YAML file."""
+    if plans_root is None:
+        plans_root = curriculum_root / "plans" if curriculum_root is not None else config.CURRICULUM_ROOT / "plans"
     try:
-        plan_file = safe_join(PLANS_ROOT, track_id, f"{slug}.yaml")
+        plan_file = safe_join(plans_root, track_id, f"{slug}.yaml")
     except ValueError:
         return 0
     if not plan_file.exists():
@@ -535,6 +588,7 @@ def get_word_target_from_plan(track_id: str, slug: str) -> int:
 
 
 # ==================== REVIEW HELPERS ====================
+
 
 def extract_content_hash(review_path: Path) -> str | None:
     """Extract content hash from review file header (#618).
@@ -574,12 +628,21 @@ def is_review_stale(review_path: Path, content_path: Path | None) -> bool:
     return content_mtime > 0 and review_mtime < content_mtime
 
 
-def get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
+def get_broker_messages_for_slug(
+    slug: str,
+    limit: int = 20,
+    *,
+    message_db: Any = None,
+) -> list[dict]:
     """Query broker DB for messages related to a module slug."""
-    if not MESSAGE_DB.exists():
+    if message_db is None:
         return []
+    conn = None
     try:
-        conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+        if hasattr(message_db, "connect"):
+            conn = message_db.connect(read_only=True)
+        else:
+            return []
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             "SELECT id, task_id, from_llm, to_llm, message_type, "
@@ -588,13 +651,21 @@ def get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
             "ORDER BY id DESC LIMIT ?",
             (f"%{slug}%", limit),
         ).fetchall()
-        conn.close()
         return [dict(r) for r in rows]
     except Exception:
         return []
+    finally:
+        if conn is not None:
+            with contextlib.suppress(Exception):
+                conn.close()
 
 
-def get_final_review_info(track_dir: Path, slug: str) -> dict | None:
+def get_final_review_info(
+    track_dir: Path,
+    slug: str,
+    *,
+    curriculum_root: Path | None = None,
+) -> dict | None:
     """Parse final review file for verdict and issue count."""
     try:
         review_file = safe_join(track_dir, "review", f"{slug}-final-review.md")
@@ -602,6 +673,8 @@ def get_final_review_info(track_dir: Path, slug: str) -> dict | None:
         return None
     if not review_file.exists():
         return None
+    if curriculum_root is None:
+        curriculum_root = track_dir.parent
     try:
         text = review_file.read_text()
         verdict = None
@@ -614,18 +687,21 @@ def get_final_review_info(track_dir: Path, slug: str) -> dict | None:
         issues = []
         for m in re.finditer(
             r"\*\*ISSUE\s+(\d+)\s*[—–-]\s*([^*]+)\*\*",
-            text, re.IGNORECASE,
+            text,
+            re.IGNORECASE,
         ):
-            issues.append({
-                "num": int(m.group(1)),
-                "summary": m.group(2).strip()[:120],
-            })
+            issues.append(
+                {
+                    "num": int(m.group(1)),
+                    "summary": m.group(2).strip()[:120],
+                }
+            )
 
         return {
             "verdict": verdict,
             "issue_count": issue_count,
             "issues": issues,
-            "file": str(review_file.relative_to(CURRICULUM_ROOT)),
+            "file": str(review_file.relative_to(curriculum_root)),
         }
     except Exception:
         return None

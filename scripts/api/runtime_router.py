@@ -270,8 +270,9 @@ def _usage_day_from_name(path: Path) -> date | None:
         return None
 
 
-def _usage_files(*, days: int) -> list[Path]:
-    if not USAGE_DIR.exists():
+def _usage_files(*, days: int, usage_dir: Path | None = None) -> list[Path]:
+    root = usage_dir if usage_dir is not None else USAGE_DIR
+    if not root.exists():
         return []
     today = datetime.now(UTC).date()
     earliest = today - timedelta(days=max(1, days) - 1)
@@ -279,7 +280,7 @@ def _usage_files(*, days: int) -> list[Path]:
     # Hyphens are valid in both agent and entrypoint names, so the filename's
     # ``<agent>-<entrypoint>`` segment is intentionally not parsed here.
     # Callers apply exact filters to the JSONL record fields instead.
-    for path in sorted(USAGE_DIR.glob("usage_*.jsonl")):
+    for path in sorted(root.glob("usage_*.jsonl")):
         day = _usage_day_from_name(path)
         if day is None or day < earliest or day > today:
             continue
@@ -427,14 +428,18 @@ def list_runtime_agents() -> list[dict[str, Any]]:
 
 
 def summarize_runtime_usage(
-    *, days: int = 7, agent: str | None = None, entrypoint: str | None = None
+    *,
+    days: int = 7,
+    agent: str | None = None,
+    entrypoint: str | None = None,
+    usage_dir: Path | None = None,
 ) -> dict[str, Any]:
     window_days = min(max(1, int(days)), 30)
     by_agent: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     by_entrypoint: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     total = 0
 
-    for record in _iter_usage_records(_usage_files(days=window_days)):
+    for record in _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir)):
         record_agent = record.get("agent")
         record_entrypoint = record.get("entrypoint")
         if agent and record_agent != agent:

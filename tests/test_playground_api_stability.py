@@ -14,7 +14,6 @@ from fastapi.testclient import TestClient
 import scripts.api.admin_router as admin_router
 import scripts.api.dashboard_comms as dashboard_comms
 import scripts.api.images_router as images_router
-import scripts.api.state_helpers as state_helpers
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
 from scripts.api.monitor_context import DatabaseHandle, production_context
@@ -262,7 +261,9 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     )
     monkeypatch.setattr(app.state, "ctx", broker_ctx)
     monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
-    monkeypatch.setattr(state_helpers, "MESSAGE_DB", broker_db)
+    db_handle = DatabaseHandle(broker_db, app.state.ctx._open_db)
+    new_stores = replace(app.state.ctx.stores, message_db=db_handle)
+    monkeypatch.setattr(app.state, "ctx", replace(app.state.ctx, stores=new_stores))
     image_root = tmp_path / "textbook_images"
     textbooks_dir = tmp_path / "textbooks"
     image_root.mkdir()
@@ -278,9 +279,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     for dashboard, endpoints in DASHBOARD_LOADS.items():
         for endpoint in endpoints:
             endpoint_budget = BUDGETS[endpoint]
-            responses, timings, p95_elapsed = three_run_perf_probe(
-                lambda endpoint=endpoint: client.get(endpoint)
-            )
+            responses, timings, p95_elapsed = three_run_perf_probe(lambda endpoint=endpoint: client.get(endpoint))
             endpoint_timings.append((dashboard, endpoint, p95_elapsed))
 
             for response in responses:
@@ -298,8 +297,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
             )
 
         dashboard_p95 = max(
-            elapsed for seen_dashboard, _endpoint, elapsed in endpoint_timings
-            if seen_dashboard == dashboard
+            elapsed for seen_dashboard, _endpoint, elapsed in endpoint_timings if seen_dashboard == dashboard
         )
         dashboard_budget = max(BUDGETS[endpoint] for endpoint in endpoints)
         assert_under_budget(
@@ -308,9 +306,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
             f"{dashboard} p95 budget exceeded: {dashboard_p95:.3f}s",
         )
 
-        health_responses, health_timings, health_p95 = three_run_perf_probe(
-            lambda: client.get(HEALTH_ENDPOINT)
-        )
+        health_responses, health_timings, health_p95 = three_run_perf_probe(lambda: client.get(HEALTH_ENDPOINT))
         for health in health_responses:
             assert health.status_code == 200
         assert_under_budget(

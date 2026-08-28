@@ -545,17 +545,15 @@ class TestGetWordTargetFromPlan:
     def test_reads_target(self, tmp_path):
         from scripts.api.state_helpers import get_word_target_from_plan
 
-        with patch("scripts.api.state_helpers.PLANS_ROOT", tmp_path):
-            plan_dir = tmp_path / "a1"
-            plan_dir.mkdir()
-            (plan_dir / "test.yaml").write_text("word_target: 1200\ntitle: Test")
-            assert get_word_target_from_plan("a1", "test") == 1200
+        plan_dir = tmp_path / "a1"
+        plan_dir.mkdir()
+        (plan_dir / "test.yaml").write_text("word_target: 1200\ntitle: Test")
+        assert get_word_target_from_plan("a1", "test", plans_root=tmp_path) == 1200
 
     def test_missing_plan(self, tmp_path):
         from scripts.api.state_helpers import get_word_target_from_plan
 
-        with patch("scripts.api.state_helpers.PLANS_ROOT", tmp_path):
-            assert get_word_target_from_plan("a1", "missing") == 0
+        assert get_word_target_from_plan("a1", "missing", plans_root=tmp_path) == 0
 
 
 class TestGetFinalReviewInfo:
@@ -577,8 +575,7 @@ class TestGetFinalReviewInfo:
             "**ISSUE 2 — Missing section**\n"
         )
         (review_dir / "test-final-review.md").write_text(text)
-        with patch("scripts.api.state_helpers.CURRICULUM_ROOT", tmp_path):
-            result = get_final_review_info(tmp_path, "test")
+        result = get_final_review_info(tmp_path, "test", curriculum_root=tmp_path.parent)
         assert result is not None
         assert result["verdict"] == "APPROVE"
         assert result["issue_count"] == 2
@@ -590,8 +587,7 @@ class TestGetFinalReviewInfo:
         review_dir = tmp_path / "review"
         review_dir.mkdir()
         (review_dir / "test-final-review.md").write_text("Some review without verdict")
-        with patch("scripts.api.state_helpers.CURRICULUM_ROOT", tmp_path):
-            result = get_final_review_info(tmp_path, "test")
+        result = get_final_review_info(tmp_path, "test", curriculum_root=tmp_path.parent)
         assert result is not None
         assert result["verdict"] is None
 
@@ -1457,10 +1453,9 @@ class TestComputeBuildStatusAllV5:
 
         with (
             patch("scripts.api.state_build.LEVELS", [level_cfg]),
-            patch("scripts.api.state_build.CURRICULUM_ROOT", tmp_path / "curriculum"),
             patch("scripts.api.state_build.get_plan_slugs", return_value=plan_slugs),
         ):
-            result = compute_build_status_all()
+            result = compute_build_status_all(curriculum_root=tmp_path / "curriculum")
 
         assert result["tracks"]["a1"]["done"] == 1
         assert result["tracks"]["a1"]["building"] == 0
@@ -1484,10 +1479,9 @@ class TestComputeBuildStatusAllV5:
 
         with (
             patch("scripts.api.state_build.LEVELS", [level_cfg]),
-            patch("scripts.api.state_build.CURRICULUM_ROOT", tmp_path / "curriculum"),
             patch("scripts.api.state_build.get_plan_slugs", return_value=plan_slugs),
         ):
-            result = compute_build_status_all()
+            result = compute_build_status_all(curriculum_root=tmp_path / "curriculum")
 
         assert result["tracks"]["a1"]["done"] == 0
         assert result["tracks"]["a1"]["building"] == 1
@@ -1512,11 +1506,10 @@ class TestComputeFinalReviewsV5:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_issues.CURRICULUM_ROOT", tmp_path / "curriculum"),
             patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
             patch("scripts.api.state_issues.get_final_review_info", return_value=None),
         ):
-            result = compute_final_reviews("a1", level_cfg)
+            result = compute_final_reviews("a1", level_cfg, curriculum_root=tmp_path / "curriculum")
 
         assert result["pending_review"] == 1
         assert result["pending_modules"][0]["slug"] == "test-slug"
@@ -1536,11 +1529,10 @@ class TestComputeFinalReviewsV5:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_issues.CURRICULUM_ROOT", tmp_path / "curriculum"),
             patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
             patch("scripts.api.state_issues.get_final_review_info", return_value=None),
         ):
-            result = compute_final_reviews("a1", level_cfg)
+            result = compute_final_reviews("a1", level_cfg, curriculum_root=tmp_path / "curriculum")
 
         assert result["pending_review"] == 0
 
@@ -1564,11 +1556,75 @@ class TestComputeFinalReviewsV6:
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
 
         with (
-            patch("scripts.api.state_issues.CURRICULUM_ROOT", tmp_path / "curriculum"),
             patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
             patch("scripts.api.state_issues.get_final_review_info", return_value=None),
         ):
-            result = compute_final_reviews("a1", level_cfg)
+            result = compute_final_reviews("a1", level_cfg, curriculum_root=tmp_path / "curriculum")
 
         assert result["pending_review"] == 1
         assert result["pending_modules"][0]["slug"] == "test-slug"
+
+
+class TestLoadCurriculum:
+    """load_curriculum parses YAML safely with mtime caching and error handling."""
+
+    def test_load_valid_curriculum(self, tmp_path):
+        from scripts.api.state_helpers import load_curriculum
+
+        yaml_file = tmp_path / "curriculum.yaml"
+        yaml_file.write_text("levels:\n  a1:\n    modules:\n      - demo\n", encoding="utf-8")
+        data = load_curriculum(curriculum_yaml=yaml_file)
+        assert "levels" in data
+        assert data["levels"]["a1"]["modules"] == ["demo"]
+
+    def test_load_corrupted_yaml_returns_empty(self, tmp_path):
+        from scripts.api.state_helpers import load_curriculum
+
+        yaml_file = tmp_path / "curriculum.yaml"
+        yaml_file.write_text("broken: [unclosed list", encoding="utf-8")
+        data = load_curriculum(curriculum_yaml=yaml_file)
+        assert data == {}
+
+    def test_load_missing_yaml_returns_empty(self, tmp_path):
+        from scripts.api.state_helpers import load_curriculum
+
+        data = load_curriculum(curriculum_yaml=tmp_path / "nonexistent.yaml")
+        assert data == {}
+
+
+class TestGetBrokerMessagesForSlug:
+    """get_broker_messages_for_slug queries database with limit."""
+
+    def test_respects_limit_and_order(self, tmp_path):
+        import sqlite3
+
+        from scripts.api.monitor_context import DatabaseHandle
+        from scripts.api.resilience import connect_sqlite
+        from scripts.api.state_helpers import get_broker_messages_for_slug
+
+        db_path = tmp_path / "messages.sqlite3"
+        conn = sqlite3.connect(str(db_path))
+        conn.execute(
+            "CREATE TABLE messages (id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT, to_llm TEXT, message_type TEXT, content TEXT, timestamp TEXT)"
+        )
+        for i in range(1, 10):
+            conn.execute(
+                "INSERT INTO messages VALUES (?, ?, 'agent1', 'agent2', 'chat', ?, '2026-08-26T12:00:00Z')",
+                (i, "task-test-module-slug", f"content {i}"),
+            )
+        conn.commit()
+        conn.close()
+
+        handle = DatabaseHandle(db_path, lambda path, **kw: connect_sqlite(str(path)))
+        results = get_broker_messages_for_slug("test-module-slug", limit=3, message_db=handle)
+        assert len(results) == 3
+        # Ordered by id DESC
+        assert results[0]["id"] == 9
+        assert results[1]["id"] == 8
+        assert results[2]["id"] == 7
+
+    def test_none_database_returns_empty(self):
+        from scripts.api.state_helpers import get_broker_messages_for_slug
+
+        assert get_broker_messages_for_slug("test-slug", message_db=None) == []
+

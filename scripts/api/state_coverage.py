@@ -4,6 +4,8 @@ These functions compute summary, pipeline track, research coverage,
 and review coverage data. All are sync functions designed for asyncio.to_thread().
 """
 
+from __future__ import annotations
+
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -15,7 +17,8 @@ try:
 except ImportError:
     from ..path_safety import trusted_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT, SEMINAR_TRACK_IDS
+from . import config
+from .config import LEVELS, SEMINAR_TRACK_IDS
 from .state_helpers import (
     PROFILE_MAP,
     detect_pipeline_version,
@@ -41,36 +44,67 @@ try:
     from scripts.build.phase_constants import PHASES as V6_PHASES
 except ImportError:
     V6_PHASES = [
-        "check", "research", "skeleton", "pre-verify", "write",
-        "exercises", "activities", "repair", "verify-exercises",
-        "annotate", "vocab", "enrich", "verify", "review", "stress",
-        "publish", "audit",
+        "check",
+        "research",
+        "skeleton",
+        "pre-verify",
+        "write",
+        "exercises",
+        "activities",
+        "repair",
+        "verify-exercises",
+        "annotate",
+        "vocab",
+        "enrich",
+        "verify",
+        "review",
+        "stress",
+        "publish",
+        "audit",
     ]
     V6_PHASE_LABELS = {}
 
 
-def compute_summary() -> dict:
+def compute_summary(
+    *,
+    curriculum_root: Path | None = None,
+    project_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Synchronous summary computation -- safe to run in asyncio.to_thread()."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if project_root is None:
+        project_root = config.PROJECT_ROOT
     generated_at = datetime.now(UTC).isoformat()
-    module_sources = _module_sources_by_track()
+    module_sources = _module_sources_by_track(curriculum_root=curriculum_root)
     tracks_out = {}
     totals = {
-        "total": 0, "research_done": 0, "content_done": 0,
-        "audit_passing": 0, "reviewed": 0, "final_review_done": 0,
-        "prompt_reviewed": 0, "content_reviewed": 0,
-        "generated_md": 0, "published_mdx": 0, "dossier_done": 0,
-        "dossier_docs": 0, "dossier_curriculum": 0, "audit_stale": 0,
+        "total": 0,
+        "research_done": 0,
+        "content_done": 0,
+        "audit_passing": 0,
+        "reviewed": 0,
+        "final_review_done": 0,
+        "prompt_reviewed": 0,
+        "content_reviewed": 0,
+        "generated_md": 0,
+        "published_mdx": 0,
+        "dossier_done": 0,
+        "dossier_docs": 0,
+        "dossier_curriculum": 0,
+        "audit_stale": 0,
     }
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id)
+        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
         if not plan_slugs:
             continue
 
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        track_dir = curriculum_root / level_cfg["path"]
         profile = PROFILE_MAP.get(track_id, "core")
-        counts = _count_summary_for_track(track_dir, track_id, plan_slugs)
+        counts = _count_summary_for_track(track_dir, track_id, plan_slugs, project_root=project_root)
 
         tracks_out[track_id] = {
             "total": len(plan_slugs),
@@ -106,25 +140,23 @@ def compute_summary() -> dict:
     }
 
 
-def _module_sources_by_track() -> dict[str, str]:
+def _module_sources_by_track(*, curriculum_root: Path | None = None) -> dict[str, str]:
     """Describe which catalog source get_plan_slugs will use per track."""
-    data_path = CURRICULUM_ROOT / "curriculum.yaml"
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    data_path = curriculum_root / "curriculum.yaml"
     try:
         data = yaml.safe_load(data_path.read_text(encoding="utf-8")) or {}
     except Exception:
         data = {}
     levels = data.get("levels", {})
     return {
-        level_cfg["id"]: (
-            "curriculum.yaml"
-            if levels.get(level_cfg["id"], {}).get("modules", [])
-            else "plans-fallback"
-        )
+        level_cfg["id"]: ("curriculum.yaml" if levels.get(level_cfg["id"], {}).get("modules", []) else "plans-fallback")
         for level_cfg in LEVELS
     }
 
 
-def _count_summary_for_track(track_dir, track_id, plan_slugs):
+def _count_summary_for_track(track_dir, track_id, plan_slugs, *, project_root: Path | None = None):
     """Count research/content/audit/review stats for a single track."""
     research_done = content_done = audit_passing = 0
     reviewed = final_review_done = prompt_reviewed = content_reviewed = 0
@@ -153,7 +185,7 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs):
             content_done += 1
         if find_content_file(track_dir, slug):
             generated_md += 1
-        if _published_mdx_path(track_id, slug).exists():
+        if _published_mdx_path(track_id, slug, project_root=project_root).exists():
             published_mdx += 1
 
         audit = get_audit_status(track_dir, slug)
@@ -172,24 +204,43 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs):
             content_reviewed += 1
 
     return {
-        "research_done": research_done, "content_done": content_done,
-        "audit_passing": audit_passing, "reviewed": reviewed,
+        "research_done": research_done,
+        "content_done": content_done,
+        "audit_passing": audit_passing,
+        "reviewed": reviewed,
         "final_review_done": final_review_done,
-        "prompt_reviewed": prompt_reviewed, "content_reviewed": content_reviewed,
-        "generated_md": generated_md, "published_mdx": published_mdx,
-        "dossier_done": dossier_done, "dossier_docs": dossier_docs,
-        "dossier_curriculum": dossier_curriculum, "audit_stale": audit_stale,
+        "prompt_reviewed": prompt_reviewed,
+        "content_reviewed": content_reviewed,
+        "generated_md": generated_md,
+        "published_mdx": published_mdx,
+        "dossier_done": dossier_done,
+        "dossier_docs": dossier_docs,
+        "dossier_curriculum": dossier_curriculum,
+        "audit_stale": audit_stale,
     }
 
 
-def _published_mdx_path(track_id: str, slug: str) -> Path:
-    return PROJECT_ROOT / "site" / "src" / "content" / "docs" / track_id / f"{slug}.mdx"
+def _published_mdx_path(track_id: str, slug: str, *, project_root: Path | None = None) -> Path:
+    if project_root is None:
+        project_root = config.PROJECT_ROOT
+    return project_root / "site" / "src" / "content" / "docs" / track_id / f"{slug}.mdx"
 
 
-def compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
+def compute_pipeline_track(
+    track_id: str,
+    level_cfg: dict,
+    *,
+    curriculum_root: Path | None = None,
+    project_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Sync computation for pipeline/{track}."""
-    plan_slugs = get_plan_slugs(track_id)
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if project_root is None:
+        project_root = config.PROJECT_ROOT
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
+    track_dir = curriculum_root / level_cfg["path"]
     modules = []
 
     for num, slug in plan_slugs:
@@ -206,31 +257,34 @@ def compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
         word_count = audit.get("word_count", 0)
         word_target = audit.get("word_target", 0)
         if word_target == 0:
-            word_target = get_word_target_from_plan(track_id, slug)
+            word_target = get_word_target_from_plan(
+                track_id, slug, plans_root=plans_root, curriculum_root=curriculum_root
+            )
 
-        phases = {
-            name: parse_phase_status_from_state(state, name)
-            for name in V6_PHASES
-        }
+        phases = {name: parse_phase_status_from_state(state, name) for name in V6_PHASES}
 
-        modules.append({
-            "num": num, "slug": slug,
-            "pipeline_version": version,
-            "needs_rebuild": version != "v6",
-            "phases": phases,
-            "audit": audit["status"],
-            "word_count": word_count,
-            "words": word_count, "word_target": word_target,
-            "research_score": research_score,
-            "generated_md": bool(content_path),
-            "published_mdx": _published_mdx_path(track_id, slug).exists(),
-            "dossier": {
-                "exists": research_path is not None,
-                "source": _research_source(research_path),
-            },
-            "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
-            "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
-        })
+        modules.append(
+            {
+                "num": num,
+                "slug": slug,
+                "pipeline_version": version,
+                "needs_rebuild": version != "v6",
+                "phases": phases,
+                "audit": audit["status"],
+                "word_count": word_count,
+                "words": word_count,
+                "word_target": word_target,
+                "research_score": research_score,
+                "generated_md": bool(content_path),
+                "published_mdx": _published_mdx_path(track_id, slug, project_root=project_root).exists(),
+                "dossier": {
+                    "exists": research_path is not None,
+                    "source": _research_source(research_path),
+                },
+                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
+                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
+            }
+        )
 
     return {
         "track": track_id,
@@ -253,17 +307,23 @@ def _research_source(research_path: Path | None) -> str | None:
     return "curriculum/research"
 
 
-def compute_research_coverage() -> dict:
+def compute_research_coverage(
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Sync research coverage computation."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
     tracks_out = {}
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id)
+        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
         if not plan_slugs:
             continue
 
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        track_dir = curriculum_root / level_cfg["path"]
         total = len(plan_slugs)
         has_research = 0
         quality_counts = {"exemplary": 0, "solid": 0, "adequate": 0, "thin": 0, "stub": 0}
@@ -291,25 +351,34 @@ def compute_research_coverage() -> dict:
         avg_score = round(sum(scores) / len(scores), 1) if scores else None
 
         tracks_out[track_id] = {
-            "total_modules": total, "has_research": has_research,
-            "pct_coverage": pct_coverage, "quality": quality_counts,
-            "avg_score": avg_score, "needs_upgrade": needs_upgrade,
+            "total_modules": total,
+            "has_research": has_research,
+            "pct_coverage": pct_coverage,
+            "quality": quality_counts,
+            "avg_score": avg_score,
+            "needs_upgrade": needs_upgrade,
         }
 
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks_out}
 
 
-def compute_review_coverage() -> dict:
+def compute_review_coverage(
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Sync review coverage computation."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
     tracks_out = {}
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id)
+        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
         if not plan_slugs:
             continue
 
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        track_dir = curriculum_root / level_cfg["path"]
         stats = _compute_review_stats_for_track(track_dir, plan_slugs)
         tracks_out[track_id] = stats
 
@@ -326,11 +395,13 @@ def _compute_review_stats_for_track(track_dir, plan_slugs):
     plan_reviewed = plan_pass = plan_needs_fixes = plan_fail = 0
 
     for num, slug in plan_slugs:
-        md_exists = any([
-            (track_dir / f"{slug}.md").exists(),
-            (track_dir / f"{num:02d}-{slug}.md").exists(),
-            (track_dir / f"{num}-{slug}.md").exists(),
-        ])
+        md_exists = any(
+            [
+                (track_dir / f"{slug}.md").exists(),
+                (track_dir / f"{num:02d}-{slug}.md").exists(),
+                (track_dir / f"{num}-{slug}.md").exists(),
+            ]
+        )
         if md_exists:
             total_built += 1
 
@@ -364,11 +435,14 @@ def _compute_review_stats_for_track(track_dir, plan_slugs):
                 pass
 
     return {
-        "total_built": total_built, "has_review": has_review,
+        "total_built": total_built,
+        "has_review": has_review,
         "has_final_review": has_final_review,
         "avg_score": round(sum(scores) / len(scores), 1) if scores else None,
         "pass_rate": round(pass_count / has_review, 2) if has_review > 0 else None,
         "total_issues_found": total_issues,
-        "plan_reviewed": plan_reviewed, "plan_pass": plan_pass,
-        "plan_needs_fixes": plan_needs_fixes, "plan_fail": plan_fail,
+        "plan_reviewed": plan_reviewed,
+        "plan_pass": plan_pass,
+        "plan_needs_fixes": plan_needs_fixes,
+        "plan_fail": plan_fail,
     }

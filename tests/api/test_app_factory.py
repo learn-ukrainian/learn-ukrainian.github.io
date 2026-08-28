@@ -31,8 +31,8 @@ DB_ACCESS_PATTERNS = (
 # The exact pre-migration inventory from design §4.1: 22 access sites in 21
 # unique files. Infrastructure files are listed too so the denominator cannot
 # silently shrink when the exemptions below are changed. #7269 step 5 removed
-# scripts/api/comms_router.py deliberately: its routes now read every DB
-# through the app's MonitorContext DatabaseHandle (20 -> 19 files).
+# scripts/api/comms_router.py deliberately (20 -> 19); step 2 removed
+# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18).
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/admin_router.py",
@@ -48,7 +48,6 @@ DB_ACCESS_ALLOWLIST = frozenset(
         "scripts/api/occupancy_local.py",
         "scripts/api/resilience.py",
         "scripts/api/runtime_router.py",
-        "scripts/api/state_helpers.py",
         "scripts/api/telemetry/legacy_comms.py",
         "scripts/api/telemetry_router.py",
         "scripts/api/wiki_router.py",
@@ -135,6 +134,7 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
         for path in values:
             assert Path(path).resolve().is_relative_to(tmp_path.resolve())
 
+    assert context.roots.plans_root == context.roots.curriculum_root / "plans"
     assert context.stores.sources_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.message_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.session_streams_database.path.resolve().is_relative_to(tmp_path.resolve())
@@ -263,14 +263,84 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
     third_ctx = fixture_context(third_root)
     third_app = api_main.create_app(third_ctx, lifespan=no_lifespan)
     with TestClient(third_app) as third_client:
-        assert third_client.get("/api/session-streams/v1/status/epic:4707").status_code == 404  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
-        assert third_client.get("/api/session-streams/v1/digest/epic:4707").status_code == 404  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
+        assert (
+            third_client.get("/api/session-streams/v1/status/epic:4707").status_code == 404
+        )  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
+        assert (
+            third_client.get("/api/session-streams/v1/digest/epic:4707").status_code == 404
+        )  # allow-hardcoded-epic: synthetic epic id for missing-DB 404 regression probe
         assert third_client.get("/api/session-streams/v1/drift").status_code == 404
 
 
+def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
 
-def test_db_access_patterns_have_the_step_one_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 19
+    # Set up first isolated instance
+    first_root = tmp_path / "first"
+    first_ctx = fixture_context(first_root)
+    (first_root / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True)
+    (first_root / "curriculum" / "l2-uk-en" / "curriculum.yaml").write_text(
+        "levels:\n  a1:\n    path: a1\n    modules:\n      - id: 01-first-slug\n        title: First Module\n",
+        encoding="utf-8",
+    )
+    (first_root / "curriculum" / "l2-uk-en" / "a1" / "01-first-slug.md").write_text(
+        "# First Content\n", encoding="utf-8"
+    )
+
+    # Set up second isolated instance
+    second_root = tmp_path / "second"
+    second_ctx = fixture_context(second_root)
+    (second_root / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True)
+    (second_root / "curriculum" / "l2-uk-en" / "curriculum.yaml").write_text(
+        "levels:\n  a1:\n    path: a1\n    modules:\n      - id: 01-second-slug\n        title: Second Module\n",
+        encoding="utf-8",
+    )
+    (second_root / "curriculum" / "l2-uk-en" / "a1" / "01-second-slug.md").write_text(
+        "# Second Content\n", encoding="utf-8"
+    )
+
+    (first_root / "curriculum" / "l2-uk-en" / "plans" / "a1").mkdir(parents=True)
+    (first_root / "curriculum" / "l2-uk-en" / "plans" / "a1" / "first-slug.yaml").write_text(
+        "title: First Plan\nplan_fixes:\n  - fix 1\n", encoding="utf-8"
+    )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        # No fresh=true / no manual cache_invalidate: proves ctx-scoped keys.
+        first_summary = first_client.get("/api/state/summary").json()
+        second_summary = second_client.get("/api/state/summary").json()
+        assert first_summary["tracks"]["a1"]["total"] == 1
+        assert second_summary["tracks"]["a1"]["total"] == 1
+        assert first_summary.get("meta", {}).get("cache") == "miss"
+        assert second_summary.get("meta", {}).get("cache") == "miss"
+
+        first_pipeline = first_client.get("/api/state/pipeline/a1").json()
+        second_pipeline = second_client.get("/api/state/pipeline/a1").json()
+        assert first_pipeline["modules"][0]["slug"] == "first-slug"
+        assert second_pipeline["modules"][0]["slug"] == "second-slug"
+
+        first_enrichment = first_client.get("/api/state/enrichment-status?track=a1").json()
+        assert first_enrichment["tracks"]["a1"]["enriched"] == 1
+
+        second_enrichment = second_client.get("/api/state/enrichment-status?track=a1").json()
+        assert second_enrichment["tracks"]["a1"]["enriched"] == 0
+
+        first_summary_hit = first_client.get("/api/state/summary").json()
+        assert first_summary_hit.get("meta", {}).get("cache") == "hit"
+        assert first_summary_hit["tracks"]["a1"]["total"] == 1
+
+        first_manifest = first_client.get("/api/state/manifest").json()
+        second_manifest = second_client.get("/api/state/manifest").json()
+        assert "rules" in first_manifest
+        assert "session" in second_manifest
+
+
+def test_db_access_patterns_have_the_step_two_allowlist() -> None:
+    assert len(DB_ACCESS_ALLOWLIST) == 18
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

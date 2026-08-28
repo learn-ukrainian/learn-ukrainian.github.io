@@ -27,9 +27,11 @@ codex:
     return path
 
 
-def _configure_base(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+def _configure_base(monkeypatch, tmp_path: Path) -> Path:
+    budget_path = _write_budget_config(tmp_path)
+    (tmp_path / "tasks").mkdir(exist_ok=True)
+    (tmp_path / "api_usage").mkdir(exist_ok=True)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(
         state_router,
         "get_provider_usage_data",
@@ -63,7 +65,7 @@ def _configure_base(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(
         state_router,
         "summarize_lane_runtime",
-        lambda agent: {
+        lambda agent, **_kwargs: {
             "source": "agent_runtime_jsonl",
             "window_s": 300,
             "ok": 0,
@@ -79,7 +81,7 @@ def _configure_base(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_cursor_logout_surfaces_need_login_without_substitution(monkeypatch, tmp_path):
-    _configure_base(monkeypatch, tmp_path)
+    _budget_path = _configure_base(monkeypatch, tmp_path)
     monkeypatch.setattr(
         state_router,
         "get_cursor_lane_usage",
@@ -101,7 +103,7 @@ def test_cursor_logout_surfaces_need_login_without_substitution(monkeypatch, tmp
         "windows": {"7d": {"counts": {"total": 0}, "hours": 0.0}},
     })
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
     cursor = data["agents"]["cursor"]
     assert cursor["status"] == "need_login"
     assert cursor["login_state"] == "NEED_LOGIN"
@@ -110,7 +112,7 @@ def test_cursor_logout_surfaces_need_login_without_substitution(monkeypatch, tmp
 
 
 def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tmp_path):
-    _configure_base(monkeypatch, tmp_path)
+    _budget_path = _configure_base(monkeypatch, tmp_path)
     monkeypatch.setattr(
         state_router,
         "get_cursor_lane_usage",
@@ -153,7 +155,7 @@ def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tm
 
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
     cursor = data["agents"]["cursor"]
     assert cursor["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 3
     assert cursor["provider_windows"]["auto"]["window"] == "monthly"
@@ -164,7 +166,7 @@ def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tm
 
 def test_need_probe_with_fleet_burn_still_picks_cursor(monkeypatch, tmp_path):
     """NEED_PROBE + JSONL activity must not leave cursor unknown / unpicked."""
-    _configure_base(monkeypatch, tmp_path)
+    _budget_path = _configure_base(monkeypatch, tmp_path)
     monkeypatch.setattr(
         state_router,
         "get_cursor_lane_usage",
@@ -190,7 +192,7 @@ def test_need_probe_with_fleet_burn_still_picks_cursor(monkeypatch, tmp_path):
         }
 
     monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC), budget_config_path=_budget_path, tasks_dir=tmp_path / "tasks", project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path)
     cursor = data["agents"]["cursor"]
     assert cursor["status"] == "cool"
     assert cursor["probe_state"] == "NEED_PROBE"
@@ -243,3 +245,25 @@ def test_capacity_pick_marks_logout_cursor_avoid(monkeypatch):
     rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget)}
     assert rows["cursor"]["avoid"] is True
     assert "NEED_LOGIN" in rows["cursor"]["notes"]
+
+
+def test_in_flight_excludes_zombie_running_tasks(tmp_path: Path, monkeypatch) -> None:
+    """Context-scoped in-flight counts must match active_delegate_tasks liveness."""
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    dead_pid = 2_147_000_001
+    monkeypatch.setattr(
+        state_router.delegate_api,
+        "_pid_alive",
+        lambda pid: int(pid) != dead_pid,
+    )
+    (tasks / "live.json").write_text(
+        '{"task_id":"live","agent":"codex","status":"running","pid":12345}',
+        encoding="utf-8",
+    )
+    (tasks / "zombie.json").write_text(
+        f'{{"task_id":"zombie","agent":"codex","status":"running","pid":{dead_pid}}}',
+        encoding="utf-8",
+    )
+    counts = state_router._in_flight_by_agent(tasks)
+    assert counts["codex"] == 1

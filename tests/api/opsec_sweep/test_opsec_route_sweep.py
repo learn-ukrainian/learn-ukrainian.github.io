@@ -40,10 +40,8 @@ from scripts.api import (
     opsec_scan,
     project_state_collect,
     project_state_router,
-    repository_authority,
     route_contracts,
     site_router,
-    state_helpers,
     work_router,
     worktrees_router,
 )
@@ -167,16 +165,6 @@ def _fixture_run_command(args: Any, **_kwargs: Any) -> subprocess.CompletedProce
     return _fixture_completed_process(args)
 
 
-def _fixture_authority_git(_cwd: Path, *args: str) -> str:
-    if args == ("remote", "get-url", "origin"):
-        return "https://example.invalid/opsec/repository.git"
-    if args == ("branch", "--show-current"):
-        return "opsec-fixture"
-    if args == ("rev-parse", "HEAD"):
-        return "0" * 40
-    return ""
-
-
 def _fixture_missing_sources_db() -> Any:
     raise FileNotFoundError("isolated OPSEC fixture has no source database")
 
@@ -261,10 +249,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # different fixture root. Replace the mutable stores rather than allowing
     # a prior test (or a background projection build) to replay another root's
     # logical work ids into this sweep.
-    monkeypatch.setattr(state_helpers, "_ttl_cache", {})
-    monkeypatch.setattr(state_helpers, "_content_file_index_cache", {})
-    monkeypatch.setattr(state_helpers, "_curriculum_cache", None)
-    monkeypatch.setattr(state_helpers, "_curriculum_mtime", 0.0)
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     fixture_ctx = fixture_context(root)
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
@@ -316,8 +300,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # sweep must not execute their git/gh/process seams. Return bounded fixture
     # values at the seam so the route exercises its normal response shaping.
     monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(repository_authority, "_git", _fixture_authority_git)
-    monkeypatch.setattr(repository_authority, "classify_repo_path", lambda *_args, **_kwargs: "primary_checkout")
     monkeypatch.setattr(
         git_hygiene_router,
         "_run_git",
@@ -384,6 +366,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             "bare_heal_message": None,
         },
     )
+    monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     monkeypatch.setattr(
         cold_start_board,

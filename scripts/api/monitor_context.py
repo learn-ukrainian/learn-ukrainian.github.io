@@ -162,7 +162,7 @@ def _roots(
         dashboards_dir=dashboards_dir,
         batch_state_dir=batch_state_dir,
         curriculum_root=curriculum_root,
-        plans_root=project_root / "plans",
+        plans_root=curriculum_root / "plans",
         backup_dir=backup_dir,
         logs_dir=project_root / "logs",
         queue_dir=project_root / "agents_extensions" / "shared" / "consultation-queue",

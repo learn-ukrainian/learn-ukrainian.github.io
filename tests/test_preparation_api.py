@@ -12,7 +12,7 @@ from typing import Any
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
-from scripts.api import preparation_state, state_router
+from scripts.api import preparation_state
 from scripts.api.main import app
 from scripts.api.repository_authority import build_repository_authority, cwd_role, preparation_data_root
 from scripts.orchestration import curriculum_readiness
@@ -529,8 +529,14 @@ def test_release_route_reads_from_the_reported_primary_checkout(
         json.dumps({"sha": release_sha, "file_count": 1, "tree_sha256": "f" * 64}),
         encoding="utf-8",
     )
-    monkeypatch.setattr(state_router, "PROJECT_ROOT", release)
-    monkeypatch.setattr(state_router, "LIVE_REPO_ROOT", dispatch)
+    from dataclasses import replace
+
+    test_roots = replace(
+        app.state.ctx.roots,
+        project_root=release,
+        live_repo_root=dispatch,
+    )
+    monkeypatch.setattr(app.state, "ctx", replace(app.state.ctx, roots=test_roots))
 
     response = CLIENT.get("/api/state/preparation?track=a1")
 

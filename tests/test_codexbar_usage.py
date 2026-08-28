@@ -333,7 +333,7 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
         }
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
         "source": "agent_runtime_jsonl",
         "agent": agent,
@@ -453,7 +453,7 @@ def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
 
     monkeypatch.setattr(state_router, "get_provider_usage_data", mock_usage)
     monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: dict(cursor_row))
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda agent, **kwargs: {
         "source": "agent_runtime_jsonl",
         "agent": agent,
@@ -642,7 +642,7 @@ def test_native_probe_unavailable_missing_credentials(monkeypatch):
         prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
         used_default_rate=False, cost_usd_est=500.0,
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
@@ -677,7 +677,7 @@ def test_codexbar_unavailable_timeout(monkeypatch):
         prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
         used_default_rate=False, cost_usd_est=500.0,
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
@@ -712,7 +712,7 @@ def test_codexbar_unavailable_nonzero_exit(monkeypatch):
         prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
         used_default_rate=False, cost_usd_est=500.0,
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
@@ -746,7 +746,7 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
         prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
         used_default_rate=False, cost_usd_est=500.0,
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
@@ -779,7 +779,7 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
         prompt_tokens_source="stored", response_tokens_source="stored", rate_model="fixture-model",
         used_default_rate=False, cost_usd_est=500.0,
     )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [record])
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
@@ -1272,9 +1272,11 @@ def test_deepseek_balance_probe_success(monkeypatch):
 
 
 def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", tmp_path / "agent_budgets.yaml")
-    (tmp_path / "agent_budgets.yaml").write_text("codex:\n  weekly_cap_usd: 1000\n", encoding="utf-8")
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    budget_path = tmp_path / "agent_budgets.yaml"
+    budget_path.write_text("codex:\n  weekly_cap_usd: 1000\n", encoding="utf-8")
+    (tmp_path / "tasks").mkdir(exist_ok=True)
+    (tmp_path / "api_usage").mkdir(exist_ok=True)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: {"lane": p, "weekly_used_pct": None})
     monkeypatch.setattr(state_router, "get_cursor_lane_usage", lambda **kwargs: {"lane": "cursor", "probe_state": "NEED_PROBE"})
     monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *args, **kwargs: {"windows": {}})
@@ -1310,7 +1312,14 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
         lambda provider: openrouter if provider == "openrouter" else deepseek,
     )
 
-    data = state_router.compute_routing_budget(datetime(2026, 8, 26, 12, 0, tzinfo=UTC))
+    data = state_router.compute_routing_budget(
+        datetime(2026, 8, 26, 12, 0, tzinfo=UTC),
+        budget_config_path=budget_path,
+        tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
     assert "api_accounts" in data
     assert data["api_accounts"]["openrouter"]["limit_remaining_usd"] == 49.0
     assert data["api_accounts"]["deepseek"]["total_balance"] == 25.0

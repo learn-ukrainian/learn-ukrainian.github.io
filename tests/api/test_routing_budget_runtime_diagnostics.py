@@ -31,7 +31,7 @@ codex:
     return path
 
 
-def _empty_runtime(agent: str) -> dict:
+def _empty_runtime(agent: str, **_kwargs) -> dict:
     return {
         "source": "agent_runtime_jsonl",
         "window_s": 300,
@@ -75,8 +75,13 @@ def _configure(
     runtime_records_7d: int,
 ) -> None:
     """Empty USD ledger, quiet 5-minute reactive window, no CodexBar data."""
-    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
-    monkeypatch.setattr(state_router, "load_cost_records", lambda: [])
+    budget_path = _write_budget_config(tmp_path)
+    monkeypatch.setattr(
+        state_router,
+        "_load_agent_budgets",
+        lambda budget_config_path=None, **_: state_router._read_agent_budgets_file(budget_path),
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
     monkeypatch.setattr(
         state_router,
@@ -100,7 +105,7 @@ def _configure(
     monkeypatch.setattr(
         state_router,
         "summarize_runtime_usage",
-        lambda *, days=7, agent=None, entrypoint=None: {
+        lambda *, days=7, agent=None, entrypoint=None, usage_dir=None: {
             "window_days": days,
             "records_total": runtime_records_7d,
             "by_agent": {},
@@ -162,7 +167,7 @@ def test_reactive_window_alone_still_marks_runtime_available(monkeypatch, tmp_pa
     """A busy 5-minute window keeps runtime_data_available true even at 0 rows in 7d."""
     _configure(monkeypatch, tmp_path, runtime_records_7d=0)
 
-    def _busy_runtime(agent: str) -> dict:
+    def _busy_runtime(agent: str, **_kwargs) -> dict:
         base = _empty_runtime(agent)
         base.update({"ok": 2, "total": 2})
         return base

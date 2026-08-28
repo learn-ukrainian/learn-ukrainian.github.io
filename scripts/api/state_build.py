@@ -4,6 +4,8 @@ Handles build progress tracking, ETA calculation, and track health
 aggregation. All functions are sync and designed for asyncio.to_thread().
 """
 
+from __future__ import annotations
+
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -13,10 +15,10 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
+from . import config
+from .config import LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
-    PLANS_ROOT,
     V5_PHASE_ORDER,
     detect_pipeline_version,
     get_audit_status,
@@ -31,17 +33,38 @@ try:
     from scripts.build.phase_constants import PHASES as V6_PHASE_ORDER
 except ImportError:
     V6_PHASE_ORDER = [
-        "check", "research", "skeleton", "pre-verify", "write",
-        "exercises", "activities", "repair", "verify-exercises",
-        "annotate", "vocab", "enrich", "verify", "review", "stress",
-        "publish", "audit",
+        "check",
+        "research",
+        "skeleton",
+        "pre-verify",
+        "write",
+        "exercises",
+        "activities",
+        "repair",
+        "verify-exercises",
+        "annotate",
+        "vocab",
+        "enrich",
+        "verify",
+        "review",
+        "stress",
+        "publish",
+        "audit",
     ]
 
 
-def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
+def compute_build_status_track(
+    track_id: str,
+    level_cfg: dict,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute build progress for a single track."""
-    plan_slugs = get_plan_slugs(track_id)
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
+    track_dir = curriculum_root / level_cfg["path"]
     total = len(plan_slugs)
 
     building_now = []
@@ -56,12 +79,16 @@ def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
         if audit_status == "complete":
             done += 1
             audit_result = get_audit_status(track_dir, slug)
-            recent_completions.append({
-                "num": num, "slug": slug, "phase": furthest or "audit",
-                "audit": audit_result.get("status", "unknown"),
-                "words": f"{audit_result.get('word_count', 0)}/{audit_result.get('word_target', 0)}",
-                "ts": latest_ts,
-            })
+            recent_completions.append(
+                {
+                    "num": num,
+                    "slug": slug,
+                    "phase": furthest or "audit",
+                    "audit": audit_result.get("status", "unknown"),
+                    "words": f"{audit_result.get('word_count', 0)}/{audit_result.get('word_target', 0)}",
+                    "ts": latest_ts,
+                }
+            )
         elif audit_status == "failed":
             failed += 1
         elif running_phase:
@@ -74,13 +101,18 @@ def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
     recent_completions.sort(key=lambda x: x.get("ts") or "", reverse=True)
 
     return {
-        "track": track_id, "total": total, "done": done,
-        "building": len(building_now), "queued": queued, "failed": failed,
-        "progress": f"{done}/{total} ({round(done/total*100) if total else 0}%)",
+        "track": track_id,
+        "total": total,
+        "done": done,
+        "building": len(building_now),
+        "queued": queued,
+        "failed": failed,
+        "progress": f"{done}/{total} ({round(done / total * 100) if total else 0}%)",
         "currently_building": building_now[:5],
         "recent_completions": recent_completions[:5],
         "generated_at": datetime.now(UTC).isoformat(),
     }
+
 
 def scan_module_phases(orch_dir, version):
     """Scan pipeline phases for a module. Returns (furthest, running, latest_ts, audit_status)."""
@@ -123,15 +155,21 @@ def scan_module_phases(orch_dir, version):
     return furthest, running_phase, latest_ts, audit_status
 
 
-def compute_build_status_all() -> dict:
+def compute_build_status_all(
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute build progress across all tracks."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
     tracks = {}
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id)
+        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
         if not plan_slugs:
             continue
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        track_dir = curriculum_root / level_cfg["path"]
         total = len(plan_slugs)
         done = building = queued = failed = 0
 
@@ -149,16 +187,22 @@ def compute_build_status_all() -> dict:
                 queued += 1
 
         tracks[track_id] = {
-            "total": total, "done": done, "building": building, "queued": queued, "failed": failed,
-            "progress": f"{done}/{total} ({round(done/total*100) if total else 0}%)",
+            "total": total,
+            "done": done,
+            "building": building,
+            "queued": queued,
+            "failed": failed,
+            "progress": f"{done}/{total} ({round(done / total * 100) if total else 0}%)",
         }
 
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
 
 
-def _score_docs_text(track_id: str) -> str:
+def _score_docs_text(track_id: str, *, project_root: Path | None = None) -> str:
     """Return concatenated durable score docs text for a track."""
-    docs_dir = safe_join(PROJECT_ROOT, "docs", "audits")
+    if project_root is None:
+        project_root = config.PROJECT_ROOT
+    docs_dir = safe_join(project_root, "docs", "audits")
     if not docs_dir.exists():
         return ""
     chunks: list[str] = []
@@ -223,6 +267,9 @@ def compute_module_range_status(
     *,
     start: int,
     end: int,
+    curriculum_root: Path | None = None,
+    project_root: Path | None = None,
+    plans_root: Path | None = None,
 ) -> dict:
     """Compute deterministic committed-file status for a module number range.
 
@@ -236,16 +283,18 @@ def compute_module_range_status(
     if end < start:
         raise ValueError("end must be greater than or equal to start")
 
-    plan_slugs = get_plan_slugs(track_id)
-    selected = [(num, slug) for num, slug in plan_slugs if start <= num <= end]
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
-    mdx_dir = safe_join(PROJECT_ROOT, "site", "src", "content", "docs", track_id)
-    score_text = _score_docs_text(track_id)
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if project_root is None:
+        project_root = config.PROJECT_ROOT
 
-    modules = [
-        _module_range_entry(track_dir, mdx_dir, score_text, num, slug)
-        for num, slug in selected
-    ]
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
+    selected = [(num, slug) for num, slug in plan_slugs if start <= num <= end]
+    track_dir = curriculum_root / level_cfg["path"]
+    mdx_dir = safe_join(project_root, "site", "src", "content", "docs", track_id)
+    score_text = _score_docs_text(track_id, project_root=project_root)
+
+    modules = [_module_range_entry(track_dir, mdx_dir, score_text, num, slug) for num, slug in selected]
 
     total = len(modules)
     complete_count = sum(1 for module in modules if module["complete"])
@@ -261,8 +310,7 @@ def compute_module_range_status(
         "score_persisted": score_persisted_count,
         "incomplete": len(incomplete),
         "remaining": [
-            {"num": module["num"], "slug": module["slug"], "missing": module["missing"]}
-            for module in incomplete
+            {"num": module["num"], "slug": module["slug"], "missing": module["missing"]} for module in incomplete
         ],
         "modules": modules,
         "deterministic": True,
@@ -271,11 +319,21 @@ def compute_module_range_status(
     }
 
 
-def compute_track_health(track_id: str, level_cfg: dict) -> dict:
+def compute_track_health(
+    track_id: str,
+    level_cfg: dict,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute track health summary."""
-    plan_slugs = get_plan_slugs(track_id)
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
-    plan_dir = PLANS_ROOT / track_id
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if plans_root is None:
+        plans_root = curriculum_root / "plans"
+    plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
+    track_dir = curriculum_root / level_cfg["path"]
+    plan_dir = plans_root / track_id
     total = len(plan_slugs)
 
     built = audit_pass = audit_fail = enriched = final_reviewed = final_approved = shippable = 0
@@ -320,19 +378,22 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
     attention.sort(key=lambda x: 0 if "fail" in x["reason"] else 1)
 
     return {
-        "track": track_id, "total": total,
+        "track": track_id,
+        "total": total,
         "build": {"done": built, "pct": round(built / total * 100) if total else 0},
         "audit": {"passing": audit_pass, "failing": audit_fail, "pct": round(audit_pass / total * 100) if total else 0},
         "shippable": {"count": shippable, "pct": round(shippable / total * 100) if total else 0},
         "enrichment": {"done": enriched, "pct": round(enriched / total * 100) if total else 0},
         "final_review": {
-            "reviewed": final_reviewed, "approved": final_approved,
+            "reviewed": final_reviewed,
+            "approved": final_approved,
             "approval_rate": f"{round(final_approved / final_reviewed * 100)}%" if final_reviewed else "N/A",
         },
         "words": {"avg_ratio": f"{avg_word_ratio}x" if avg_word_ratio else "N/A"},
         "eta": {
-            "remaining": remaining, "minutes": eta_minutes,
-            "display": f"~{eta_minutes}min ({eta_minutes//60}h{eta_minutes%60:02d}m)" if eta_minutes else "N/A",
+            "remaining": remaining,
+            "minutes": eta_minutes,
+            "display": f"~{eta_minutes}min ({eta_minutes // 60}h{eta_minutes % 60:02d}m)" if eta_minutes else "N/A",
         },
         "attention": attention[:10],
         "generated_at": datetime.now(UTC).isoformat(),
@@ -364,8 +425,7 @@ def _check_audit_health(audit, num, slug):
     if audit["status"] == "pass":
         return 1, 0, None
     if audit["status"] == "fail":
-        detail = (audit.get("blocking_issues", [{}])[0].get("gate", "")
-                  if audit.get("blocking_issues") else "")
+        detail = audit.get("blocking_issues", [{}])[0].get("gate", "") if audit.get("blocking_issues") else ""
         return 0, 1, {"num": num, "slug": slug, "reason": "audit_fail", "detail": detail}
     return 0, 0, None
 
@@ -377,11 +437,16 @@ def _check_final_review_health(track_dir, num, slug):
         return 0, 0, None
     if fr["verdict"] == "APPROVE":
         return 1, 1, None
-    return 1, 0, {
-        "num": num, "slug": slug,
-        "reason": f"final_review_{fr['verdict']}",
-        "detail": f"{fr['issue_count']} issues",
-    }
+    return (
+        1,
+        0,
+        {
+            "num": num,
+            "slug": slug,
+            "reason": f"final_review_{fr['verdict']}",
+            "detail": f"{fr['issue_count']} issues",
+        },
+    )
 
 
 def compute_eta(completion_times: list, remaining: int) -> int | None:
@@ -389,7 +454,7 @@ def compute_eta(completion_times: list, remaining: int) -> int | None:
     if len(completion_times) < 3:
         return None
     sorted_ts = sorted(completion_times)
-    recent = sorted_ts[-min(10, len(sorted_ts)):]
+    recent = sorted_ts[-min(10, len(sorted_ts)) :]
     if len(recent) < 2:
         return None
     try:
@@ -405,34 +470,46 @@ def compute_eta(completion_times: list, remaining: int) -> int | None:
     return None
 
 
-def compute_enrichment_status(track: str | None) -> dict:
+def compute_enrichment_status(
+    track: str | None = None,
+    *,
+    curriculum_root: Path | None = None,
+    plans_root: Path | None = None,
+) -> dict:
     """Compute enrichment status across tracks."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    if plans_root is None:
+        plans_root = curriculum_root / "plans"
     tracks = {}
     level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
     for level_cfg in level_cfgs:
         track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(track_id)
+        plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
         if not plan_slugs:
             continue
-        plan_dir = PLANS_ROOT / track_id
-        revision_logs = [
-            (slug, plan_has_revision_log(plan_dir / f"{slug}.yaml"))
-            for _, slug in plan_slugs
-        ]
+        plan_dir = plans_root / track_id
+        revision_logs = [(slug, plan_has_revision_log(plan_dir / f"{slug}.yaml")) for _, slug in plan_slugs]
         enriched = sum(1 for _slug, has_revision_log in revision_logs if has_revision_log)
         not_enriched = [slug for slug, has_revision_log in revision_logs if not has_revision_log]
         total = len(plan_slugs)
         tracks[track_id] = {
-            "total": total, "enriched": enriched, "pending": total - enriched,
+            "total": total,
+            "enriched": enriched,
+            "pending": total - enriched,
             "pct": round(enriched / total * 100) if total else 0,
-            "not_enriched": not_enriched[:10] if len(not_enriched) <= 10 else [*not_enriched[:5], f"...+{len(not_enriched) - 5}"],
+            "not_enriched": not_enriched[:10]
+            if len(not_enriched) <= 10
+            else [*not_enriched[:5], f"...+{len(not_enriched) - 5}"],
         }
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
 
 
-def compute_build_stats(track: str) -> dict:
+def compute_build_stats(track: str, *, curriculum_root: Path | None = None) -> dict:
     """Parse V6 build-stats.jsonl for a track."""
-    stats_path = CURRICULUM_ROOT / track / "build-stats.jsonl"
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
+    stats_path = curriculum_root / track / "build-stats.jsonl"
     if not stats_path.exists():
         return {"track": track, "entries": [], "summary": {}}
 
@@ -459,8 +536,10 @@ def compute_build_stats(track: str) -> dict:
     }
 
 
-def compute_build_stats_all() -> dict:
+def compute_build_stats_all(*, curriculum_root: Path | None = None) -> dict:
     """Aggregate V6 build stats across all tracks."""
+    if curriculum_root is None:
+        curriculum_root = config.CURRICULUM_ROOT
     all_stats = {}
     total_attempts = 0
     total_successes = 0
@@ -468,7 +547,7 @@ def compute_build_stats_all() -> dict:
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        stats = compute_build_stats(track_id)
+        stats = compute_build_stats(track_id, curriculum_root=curriculum_root)
         if stats.get("total_attempts", 0) > 0:
             all_stats[track_id] = {
                 "total_attempts": stats["total_attempts"],
