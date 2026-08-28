@@ -69,7 +69,7 @@ def _assert_rb3_babysit_routing(spec: dict[str, Any]) -> None:
 
 @pytest.mark.parametrize(
     ("path", "trail_id", "version"),
-    [(RB3_PATH, "rb3-pr-lifecycle", "2.2.0"), (RB4_PATH, "rb4-red-ci-triage", "0.5.0")],
+    [(RB3_PATH, "rb3-pr-lifecycle", "2.3.0"), (RB4_PATH, "rb4-red-ci-triage", "0.5.0")],
 )
 def test_migrated_trails_validate_v11(path: Path, trail_id: str, version: str) -> None:
     """Both P9 rails are execution-eligible v1.1 specifications."""
