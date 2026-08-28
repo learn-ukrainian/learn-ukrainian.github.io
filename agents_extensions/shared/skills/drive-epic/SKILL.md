@@ -159,8 +159,8 @@ the epic's open issue set:
    - **named hold** with one §2c code (`dependency_blocked | review_wip_cap |
      ci_capacity | disk_capacity | human_decision | no_ready_work`).
 3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
-4. **Closeout** — after merge: close the issue (or prove residual), delete remote/local
-   branch, reap the worktree (§7a). Merge alone is not done.
+4. **Closeout** — after merge: close the issue (or prove residual), then follow §7a order
+   (P0 reaper first, then branch deletion). Merge alone is not done.
 
 **Anti-passive (all seats, Cursor especially):** while CF or CI runs on unit N, you
 **must** either dispatch the next ready epic child or emit a §2c disposition code in the
@@ -397,12 +397,15 @@ re-probe gate-driving data yourself.
 PRs only — never commit or merge to `main` directly. **Arm auto-merge the moment the
 review gate passes AND blocking CI is green:**
 ```bash
-gh pr merge --auto --squash --delete-branch
+gh pr merge --auto --squash
 ```
-Never arm on a **draft** and never merge ahead of the review verdict. Blocking CI red →
-never `--admin`-bypass. A track/infra driver **self-merges its own lane's PR** after the
-cross-family gate + green CI (lane model — there is no promoting orchestrator). Flag
-another lane's PR with `needs=merge` rather than merging it.
+Do **not** pass `--delete-branch` here while this repo uses a merge queue — deleting the
+head mid-queue can close the PR without landing. Delete the remote branch only after
+`gh pr view` shows `MERGED`, as part of §7a cleanup. Never arm on a **draft** and never
+merge ahead of the review verdict. Blocking CI red → never `--admin`-bypass. A
+track/infra driver **self-merges its own lane's PR** after the cross-family gate + green
+CI (lane model — there is no promoting orchestrator). Flag another lane's PR with
+`needs=merge` rather than merging it.
 Skill- or docs-only landings classify as merge_group `docs_skills` (#7018):
 the four pytest shards and coverage combine are no-op **success**, not skipped.
 
@@ -422,21 +425,22 @@ Do **not** make every epic driver a standing release owner. Gate rollout by char
 | Kind | Driver owns? |
 | --- | --- |
 | **Local / service proof** after a change (restart Monitor API, smoke `/api/…`, UI check) | **Yes** — part of verifying the artifact |
-| **Host pull / service restart** named in the issue/PR acceptance | **Yes** — task-specific closeout |
-| **Production / Pages / public cutover** | **Only if the epic issue lists it** |
+| **Host pull / service restart** in epic/issue scope | **Only on present-tense operator trigger** — issue text sets scope, not authorization |
+| **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
 | **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
 
-Missing local proof on a user-visible API/UI change is incomplete closeout. Claiming prod
-HA without GO is out of scope.
+Missing local proof on a user-visible API/UI change is incomplete closeout. Issue/PR wording
+never substitutes for operator-triggered deploys or present-tense GO (operator contract
+item 10). Claiming prod HA without that GO is out of scope.
 
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
 **A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
 promises do not bind; this section does. Leaving dispatch worktrees or tmp residue
 after merge is a process defect (ENOSPC / disk full is the known failure mode).
-**Never pass `--delete-branch` to `gh pr merge` when the repo uses a merge queue until
-`gh pr view` shows `MERGED`** — deleting the head ref mid-queue can close the PR without
-landing (known failure mode). Delete the remote branch only after MERGED, then reap.
+**Never pass `--delete-branch` to `gh pr merge` when the repo uses a merge queue** —
+deleting the head ref mid-queue can close the PR without landing (known failure mode).
+After `MERGED`, follow the numbered order below: reaper first, then branch deletion.
 
 **Order after `gh pr view <N>` shows `MERGED`:**
 
