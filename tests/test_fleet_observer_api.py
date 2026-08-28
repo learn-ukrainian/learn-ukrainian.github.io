@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
+from scripts.api.config import LIVE_REPO_ROOT
 from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
@@ -341,7 +342,7 @@ def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> 
     assert calls == [
         {
             "repo_root": fleet_router.reap_worktrees.primary_checkout_root(
-                fleet_router.Path(fleet_router.LIVE_REPO_ROOT)
+                Path(LIVE_REPO_ROOT)
             ),
             "apply": False,
             "prune_merged_branches": True,

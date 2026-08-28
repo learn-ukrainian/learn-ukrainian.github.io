@@ -40,6 +40,7 @@ from scripts.api import (
     opsec_scan,
     route_contracts,
     site_router,
+    state_helpers,
     work_router,
     worktrees_router,
 )
@@ -248,6 +249,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # a prior test (or a background projection build) to replay another root's
     # logical work ids into this sweep.
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
+    monkeypatch.setattr(state_helpers, "_ttl_cache", {})
     fixture_ctx = fixture_context(root)
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
     session_connection = fixture_ctx.stores.session_streams_database.connect()
@@ -495,6 +497,8 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             continue
         if "default_plane_root" in vars(module):
             monkeypatch.setattr(module, "default_plane_root", isolated_plane_resolver)
+        if "build_repository_authority" in vars(module):
+            monkeypatch.setattr(module, "build_repository_authority", lambda **_kwargs: None)
 
     for dashboards_dir in {api_main.DASHBOARDS_DIR, docs_router.DASHBOARDS_DIR}:
         dashboards_dir.mkdir(parents=True, exist_ok=True)

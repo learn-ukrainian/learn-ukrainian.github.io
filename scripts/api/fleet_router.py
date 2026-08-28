@@ -9,6 +9,7 @@ authoritative during the pre-flip soak.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import json
 import logging
 import math
@@ -40,7 +41,7 @@ from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store
 from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
-from .monitor_context import MonitorContext, get_ctx
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
 router = APIRouter(tags=["fleet"])
@@ -109,19 +110,29 @@ _BEARER_TOKEN = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{8,}")
 _TOKEN_LITERAL = re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{16,}|sk-[A-Za-z0-9_-]{16,})\b")
 
 
-def _plane_root(ctx: MonitorContext) -> Path:
+def _resolve_context(ctx: Any = None) -> MonitorContext:
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _plane_root(ctx: MonitorContext | None = None) -> Path:
     """Resolve the existing durable plane root without creating it."""
-    return message_plane.default_plane_root(repo_root=ctx.roots.project_root)
+    resolved_ctx = _resolve_context(ctx)
+    return message_plane.default_plane_root(repo_root=resolved_ctx.roots.project_root)
 
 
-def _plane_db_path(ctx: MonitorContext) -> Path:
+def _plane_db_path(ctx: MonitorContext | None = None) -> Path:
     return _plane_root(ctx) / "comms.sqlite3"
 
 
 @contextmanager
-def _read_connection(ctx: MonitorContext) -> Iterator[tuple[sqlite3.Connection | None, str]]:
+def _read_connection(
+    ctx: MonitorContext | None = None,
+) -> Iterator[tuple[sqlite3.Connection | None, str]]:
     """Yield a query-only connection, never creating a database or schema."""
-    db_path = _plane_db_path(ctx)
+    resolved_ctx = _resolve_context(ctx)
+    db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         yield None, "db_missing"
         return
@@ -346,9 +357,10 @@ def _paged_query(
     )
 
 
-def _safe_plane_status(ctx: MonitorContext) -> dict[str, Any]:
+def _safe_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Project the existing plane read model without paths or raw telemetry rows."""
-    status = read_plane_status(repo_root=ctx.roots.project_root, recent_limit=0)
+    resolved_ctx = _resolve_context(ctx)
+    status = read_plane_status(repo_root=resolved_ctx.roots.project_root, recent_limit=0)
     mode = _safe_text(status.get("mode"), fallback="invalid")
     authority_active = mode == "authority"
     schema = status.get("schema") if isinstance(status.get("schema"), dict) else {}
@@ -391,10 +403,11 @@ def _authority_store_descriptor(db_path: Path) -> dict[str, Any]:
 
 def _facade_authority_payload(
     collector: Callable[[Path], dict[str, Any]],
-    ctx: MonitorContext,
+    ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     """Run an authority collector fail-open without creating a plane database."""
-    db_path = _plane_db_path(ctx)
+    resolved_ctx = _resolve_context(ctx)
+    db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -423,9 +436,10 @@ def _facade_authority_payload(
     return payload
 
 
-def _facade_backlog_payload(limit: int, ctx: MonitorContext) -> dict[str, Any]:
+def _facade_backlog_payload(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the existing authority backlog projection for the thin facade."""
-    db_path = _plane_db_path(ctx)
+    resolved_ctx = _resolve_context(ctx)
+    db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -465,9 +479,10 @@ def _facade_backlog_payload(limit: int, ctx: MonitorContext) -> dict[str, Any]:
     return payload
 
 
-def _facade_dead_letters_payload(limit: int, ctx: MonitorContext) -> dict[str, Any]:
+def _facade_dead_letters_payload(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the existing authority dead-letter projection for the thin facade."""
-    db_path = _plane_db_path(ctx)
+    resolved_ctx = _resolve_context(ctx)
+    db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -503,11 +518,12 @@ def _facade_dead_letters_payload(limit: int, ctx: MonitorContext) -> dict[str, A
     return payload
 
 
-def _facade_reap_report(ctx: MonitorContext) -> dict[str, Any]:
+def _facade_reap_report(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the established merged-head reaper report in dry-run mode only."""
+    resolved_ctx = _resolve_context(ctx)
     try:
         results = reap_worktrees.reap_worktrees(
-            repo_root=reap_worktrees.primary_checkout_root(ctx.roots.live_repo_root),
+            repo_root=reap_worktrees.primary_checkout_root(resolved_ctx.roots.live_repo_root),
             apply=False,
             prune_merged_branches=True,
             safe_only=True,
@@ -618,6 +634,12 @@ def fleet_facade_broker_report(
 @router.get("/facade/reap-report")
 def fleet_facade_reap_report(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Expose the guarded reaper's dry-run report; apply is never an API option."""
+    try:
+        sig = inspect.signature(_facade_reap_report)
+        if not sig.parameters:
+            return _facade_reap_report()  # type: ignore[call-arg]
+    except (ValueError, TypeError):
+        pass
     return _facade_reap_report(ctx)
 
 
@@ -777,14 +799,15 @@ def _non_negative_float(value: Any) -> float:
     return max(0.0, round(number, 1))
 
 
-def _legacy_broker_snapshot(ctx: MonitorContext) -> dict[str, Any]:
+def _legacy_broker_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Read the legacy broker with an explicit query-only connection.
 
     The legacy health route opens a normal connection so that it can report
     writability. This consolidated observer deliberately does not reuse that
     behavior: a GET must never create, migrate, or journal the broker database.
     """
-    db_path = ctx.roots.message_db_path
+    resolved_ctx = _resolve_context(ctx)
+    db_path = resolved_ctx.roots.message_db_path
     result: dict[str, Any] = {
         "availability": "db_missing",
         "db_exists": False,
@@ -929,9 +952,10 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
     }
 
 
-def _legacy_batch_snapshot(ctx: MonitorContext) -> dict[str, Any]:
+def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Collect the existing batch read models without populating their cache."""
-    logs = legacy_comms._scan_preseed_logs(ctx)
+    resolved_ctx = _resolve_context(ctx)
+    logs = legacy_comms._scan_preseed_logs(resolved_ctx)
     processes = legacy_comms._check_build_processes()
     all_tracks = {
         str(item.get("track"))
@@ -2129,6 +2153,7 @@ def fleet_reviews(
     and participates in COUNT / LIMIT / OFFSET so foreign rows cannot consume the
     page budget of a repository-scoped consumer (e.g. public Work projection).
     """
+    ctx = _resolve_context(ctx)
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
