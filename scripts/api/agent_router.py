@@ -6,14 +6,14 @@ import uuid
 from pathlib import Path
 
 import yaml
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ router = APIRouter()
 _PROCESS_TIMEOUT_S = 2.0
 
 
-def _run_command(
+def _execute_command(
     args: list[str],
     *,
     cwd: Path | None = None,
@@ -39,9 +39,10 @@ def _run_command(
 
 
 @router.get("/module/{level}/{slug}")
-def get_module_state(level: str, slug: str):
+def get_module_state(level: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+    project_root = ctx.roots.project_root
     try:
-        track_dir = safe_join(PROJECT_ROOT, "curriculum", "l2-uk-en", level)
+        track_dir = safe_join(project_root, "curriculum", "l2-uk-en", level)
         plan_path = safe_join(track_dir, "plans", f"{slug}.yaml")
         orchestration_dir = safe_join(track_dir, "orchestration", slug)
         content_path = safe_join(track_dir, f"{slug}.md")
@@ -66,9 +67,9 @@ def get_module_state(level: str, slug: str):
         "phase_state": state_data.get("phases", {}),
         "audit_status": status_data.get("overall", {}).get("status", "unknown"),
         "key_paths": {
-            "plan": str(plan_path.relative_to(PROJECT_ROOT)) if plan_path.exists() else None,
-            "orchestration_dir": str(safe_join(track_dir, "orchestration", slug).relative_to(PROJECT_ROOT)),
-            "content": str(content_path.relative_to(PROJECT_ROOT))
+            "plan": str(plan_path.relative_to(project_root)) if plan_path.exists() else None,
+            "orchestration_dir": str(safe_join(track_dir, "orchestration", slug).relative_to(project_root)),
+            "content": str(content_path.relative_to(project_root))
             if content_path.exists()
             else None,
         },
@@ -76,9 +77,9 @@ def get_module_state(level: str, slug: str):
 
 
 @router.get("/orchestration/{level}/{slug}")
-def get_orchestration(level: str, slug: str):
+def get_orchestration(level: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     try:
-        track_dir = safe_join(PROJECT_ROOT, "curriculum", "l2-uk-en", level)
+        track_dir = safe_join(ctx.roots.project_root, "curriculum", "l2-uk-en", level)
         orch_dir = safe_join(track_dir, "orchestration", slug)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid level/slug") from None
@@ -111,9 +112,9 @@ def get_orchestration(level: str, slug: str):
 
 
 @router.get("/prompt-summary/{level}/{slug}")
-def get_prompt_summary(level: str, slug: str):
+def get_prompt_summary(level: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     try:
-        track_dir = safe_join(PROJECT_ROOT, "curriculum", "l2-uk-en", level)
+        track_dir = safe_join(ctx.roots.project_root, "curriculum", "l2-uk-en", level)
         orch_dir = safe_join(track_dir, "orchestration", slug)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid level/slug") from None
@@ -138,13 +139,16 @@ def get_prompt_summary(level: str, slug: str):
 
 
 @router.get("/runtime")
-def get_runtime():
+def get_runtime(ctx: MonitorContext = Depends(get_ctx)):
     try:
-        proc = _run_command(["ps", "-x", "-o", "pid,state,command"])
-    except subprocess.TimeoutExpired:
+        proc = _execute_command(["ps", "-x", "-o", "pid,state,command"])
+    except Exception:
+        # Covers a real ps timeout/missing binary and an isolated fixture's
+        # denied subprocess call alike — this route is read-only diagnostics,
+        # so it degrades to its documented empty envelope either way.
         return {"active_processes": [], "error": "ps_timeout"}
     processes = []
-    repo_name = PROJECT_ROOT.name
+    repo_name = ctx.roots.project_root.name
     for line in proc.stdout.splitlines()[1:]:
         parts = line.strip().split(maxsplit=2)
         if len(parts) < 3:
@@ -167,10 +171,13 @@ def get_runtime():
 
 
 @router.get("/worktree")
-def get_worktree():
+def get_worktree(ctx: MonitorContext = Depends(get_ctx)):
     try:
-        proc = _run_command(["git", "status", "--porcelain"], cwd=LIVE_REPO_ROOT)
-    except subprocess.TimeoutExpired:
+        proc = _execute_command(["git", "status", "--porcelain"], cwd=ctx.roots.live_repo_root)
+    except Exception:
+        # Covers a real git timeout/missing binary and an isolated fixture's
+        # denied subprocess call alike — this route is read-only diagnostics,
+        # so it degrades to its documented empty envelope either way.
         return {
             "source_code_changes": [],
             "generated_artifacts": [],

@@ -28,8 +28,6 @@ from scripts.api import (
     governance_router,
     images_router,
     issues_router,
-    project_state_collect,
-    project_state_router,
     site_router,
     work_router,
     worktrees_router,
@@ -84,7 +82,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     handoff_path = root / "batch_state" / "session-handoff.md"
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
     monkeypatch.setattr(api_main, "_health_instance_identity", lambda: {})
-    monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
     monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "opsec-host-alias=opsec-host-id")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "opsec-host-id")
@@ -117,7 +114,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(subprocess, "run", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(
         git_hygiene_router,
         "_run_git",

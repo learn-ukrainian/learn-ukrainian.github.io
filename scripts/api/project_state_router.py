@@ -8,10 +8,11 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
 
+from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy import DEFAULT_HOST_IDS, parse_host_id_map
 from scripts.api.occupancy_local import resolve_launcher_host_id, self_host_opaque_ids
@@ -196,14 +197,19 @@ def reset_local_document_cache() -> None:
         thread.join(timeout=2.0)
 
 
-def allowed_reporter_host_ids() -> frozenset[str]:
+def allowed_reporter_host_ids(ctx: MonitorContext | None = None) -> frozenset[str]:
+    # A fixture-built context is a disposable, isolated instance: it must never
+    # resolve a reporter host id from the real process environment, mirroring
+    # the outside-root guard MonitorContext already applies to db paths.
+    if ctx is not None and ctx.root is not None:
+        return frozenset()
     ids = set(parse_host_id_map().values())
     ids.update(EXTRA_REPORTER_HOST_IDS)
     return {host_id for host_id in ids if _opaque_host_id(host_id)}
 
 
-def _selected_host_ids(host_id: str | None) -> list[str]:
-    allowed = allowed_reporter_host_ids()
+def _selected_host_ids(host_id: str | None, ctx: MonitorContext | None = None) -> list[str]:
+    allowed = allowed_reporter_host_ids(ctx)
     if host_id is not None:
         if host_id not in allowed and host_id not in DEFAULT_HOST_IDS:
             raise HTTPException(status_code=400, detail="unknown host_id")
@@ -266,10 +272,10 @@ def _payload_for_host(host_id: str, *, now_mono: float) -> dict[str, Any]:
     )
 
 
-def projects_payload(*, host_id: str | None = None) -> dict[str, Any]:
+def projects_payload(*, host_id: str | None = None, ctx: MonitorContext | None = None) -> dict[str, Any]:
     now_mono = time.monotonic()
     hosts: dict[str, Any] = {}
-    for opaque in _selected_host_ids(host_id):
+    for opaque in _selected_host_ids(host_id, ctx):
         hosts[opaque] = _payload_for_host(opaque, now_mono=now_mono)
     return {
         "schema": PROJECT_STATE_SCHEMA,
@@ -291,18 +297,25 @@ class ProjectStateReport(BaseModel):
 
 
 @router.get("")
-async def get_projects(host_id: str | None = Query(default=None)) -> JSONResponse:
-    payload = projects_payload(host_id=host_id)
+async def get_projects(
+    host_id: str | None = Query(default=None),
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
+    payload = projects_payload(host_id=host_id, ctx=ctx)
     return JSONResponse(content=payload, headers={"Cache-Control": "no-store"})
 
 
 @router.post("/report")
-async def post_project_report(request: Request, body: ProjectStateReport) -> JSONResponse:
+async def post_project_report(
+    request: Request,
+    body: ProjectStateReport,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
     no_store = {"Cache-Control": "no-store"}
     if not _direct_loopback_peer(request):
         return JSONResponse(status_code=403, content={"detail": "Forbidden"}, headers=no_store)
 
-    allowed = allowed_reporter_host_ids()
+    allowed = allowed_reporter_host_ids(ctx)
     if body.host_id not in allowed:
         return JSONResponse(status_code=400, content={"detail": "unknown host_id"}, headers=no_store)
 

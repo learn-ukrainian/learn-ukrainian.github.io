@@ -38,8 +38,6 @@ from scripts.api import (
     images_router,
     issues_router,
     opsec_scan,
-    project_state_collect,
-    project_state_router,
     route_contracts,
     site_router,
     work_router,
@@ -267,7 +265,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         encoding="utf-8",
     )
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
-    monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", lambda: frozenset())
     monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
@@ -299,7 +296,11 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # These routes intentionally expose read-only local diagnostics, but the
     # sweep must not execute their git/gh/process seams. Return bounded fixture
     # values at the seam so the route exercises its normal response shaping.
-    monkeypatch.setattr(project_state_collect, "_git", lambda *_args, **_kwargs: None)
+    # project_state_collect._git needs no fixture seam of its own: a denied
+    # subprocess call raises AssertionError, which
+    # project_state_router._collect_missing_local_document's existing broad
+    # except already treats as a failed collection, so the route degrades to
+    # its documented "unknown" shape without a route-specific stub.
     monkeypatch.setattr(
         git_hygiene_router,
         "_run_git",
