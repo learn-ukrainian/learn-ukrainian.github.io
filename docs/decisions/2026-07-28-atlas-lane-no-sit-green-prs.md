@@ -8,20 +8,21 @@
 
 When a lane-owned pull request has a green CI Gate and is not a draft:
 
-1. In the same session—or the next cycle while CI is settling—fire formal
-   cross-family `review-pr <N>` unless it has already been sealed.
-2. Poll `asks --task-id review-pr-<N>` until it reaches a terminal state. On a
-   schema or isolation failure, re-fire the review or fix its packaging that
-   day; do not abandon it.
-3. On a sealed **APPROVE** or **correct** verdict, or on non-blocking nits,
-   run `publish-review-verdict` and immediately arm
-   `gh pr merge --auto --squash --delete-branch`. Green, reviewed PRs do not
-   remain idle for later action.
+1. In the same session—or the next cycle while CI is settling—dispatch
+   cross-family review via
+   `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`
+   (shielded `review-pr` is RETIRED).
+2. Wait for that review task to reach a terminal state. On packaging failure,
+   re-fire or fix that day; do not abandon it. Post the verdict on the PR.
+3. On **APPROVE** (or non-blocking nits only), immediately arm
+   `gh pr merge --auto --squash`. Do **not** pass `--delete-branch` while this
+   repo uses a merge queue (delete the remote branch only after `MERGED`).
+   Green, reviewed PRs do not remain idle for later action.
 4. A green, cross-family-passed PR that is not auto-merged for more than one
    hour is a utilization failure. Its owning lane must arm the merge or post a
    blocker naming an owner and ETA.
 5. Grok never self-seals cross-family review, but it still owns driving the
-   seal path and arming the merge.
+   review path and arming the merge.
 6. Holding a green PR for “advisor polish later” requires either a plan-draft
    merge with a follow-up issue for nits, or an explicit operator-hold comment
    on the PR. Silence is not a hold.

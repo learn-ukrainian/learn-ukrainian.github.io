@@ -344,7 +344,6 @@ class GitHubAdapter:
                 repository,
                 "--auto",
                 "--squash",
-                "--delete-branch",
             ]
         )
 

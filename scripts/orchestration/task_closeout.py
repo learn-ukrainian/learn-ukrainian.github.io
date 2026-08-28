@@ -461,7 +461,6 @@ class GhGitHubAdapter:
                 repository,
                 "--auto",
                 "--squash",
-                "--delete-branch",
             ],
             None,
         )

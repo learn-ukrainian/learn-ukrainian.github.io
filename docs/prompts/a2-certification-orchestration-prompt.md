@@ -271,22 +271,22 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
 
 ## Per-Module Workflow
 
-1. Sync and select the next target.
+1. Select the next target, then create/enter the dispatch worktree.
 
    ```bash
-   git fetch --prune origin
-   git switch main
-   git pull --ff-only
-   gh pr list --state open --search "a2" --json number,title,headRefName,url
-   ```
-
-2. Create the worktree.
-
-   ```bash
+   # Never fetch/pull/switch on the primary checkout. Create from the current
+   # origin/main tip (host keeps origin current); refresh refs only inside the worktree.
    git worktree add -b codex/a2-mXX-<slug>-certify \
      .worktrees/dispatch/codex/a2-mXX-<slug>-certify origin/main
    cd .worktrees/dispatch/codex/a2-mXX-<slug>-certify
+   git fetch --prune origin
+   git fetch origin main
+   gh pr list --state open --search "a2" --json number,title,headRefName,url
    ```
+
+   All edits, commits, and PR pushes happen in this worktree only.
+
+2. (Worktree already created in step 1.)
 
 3. Read the target source set and find actual defects.
 
@@ -446,9 +446,9 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
     When CI is green and required reviews are addressed:
 
     ```bash
-    gh pr merge <PR_NUMBER> --squash --delete-branch
-    git switch main
-    git pull --ff-only
+    gh pr merge <PR_NUMBER> --auto --squash
+    # Do not pass --delete-branch under merge queue; delete remote only after MERGED.
+    # Stay in the dispatch worktree — never `git switch` on the primary checkout.
     ```
 
     After deploy, verify:
@@ -457,11 +457,20 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
     curl -sI https://learn-ukrainian.github.io/a2/<slug>/ | head
     ```
 
-    Then clean the worktree:
+    Then clean up **after** `gh pr view` shows `MERGED`. Leave the target
+    worktree first; run cleanup from a separate shell whose cwd is the primary
+    checkout (reaper self-protects if invoked from inside the target):
 
     ```bash
-    git worktree remove .worktrees/dispatch/codex/a2-mXX-<slug>-certify
-    git branch -d codex/a2-mXX-<slug>-certify
+    # primary checkout shell — absolute interpreter via primary .venv
+    .venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged \
+      --worktree .worktrees/dispatch/codex/a2-mXX-<slug>-certify
+    git ls-remote --heads origin "codex/a2-mXX-<slug>-certify"   # must be empty
+    # if remote still exists:
+    # git push origin --delete codex/a2-mXX-<slug>-certify
+    git branch -d codex/a2-mXX-<slug>-certify 2>/dev/null || true
+    git fetch --prune origin
+    git worktree prune
     ```
 
 13. Move to the next module only after the previous module is merged and live.

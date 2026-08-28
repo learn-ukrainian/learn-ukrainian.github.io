@@ -11,8 +11,8 @@
 > **Seat onboarding (canonical ownership matrix):**
 > [`docs/runbooks/agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md) —
 > `discuss` vs `delegate.py` vs fleet-comms/file handoffs vs experimental ACPX vs
-> Buzz deferred; Kimi native max-only vs KimiCC high default; formal `review-pr`
-> separation; fresh-agent smoke.
+> Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
+> `ask-* --type review` (shielded `review-pr` RETIRED); fresh-agent smoke.
 
 ---
 
@@ -28,11 +28,13 @@
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
 **Discussion is not formal review.** Design panels and same-family helpers do not
-seal PRs. Formal CF:
+seal PRs. Formal CF (shielded `review-pr` / `publish-review-verdict` RETIRED):
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
+printf '%s\n' "Cross-family review of PR <N> at exact head <SHA>: VERDICT + findings." \
+  | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+      --task-id review-<N> --type review
+# Post the verdict on the PR; do not treat discussion or same-family helpers as the gate.
 ```
 
 Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheBench).
@@ -323,7 +325,7 @@ does not micromanage that track.
 | State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff (gitignored local), e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` — not in git/PRs |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
-| Merge authority | Final reconcile on cross-track/contested merges; SOLE cross-stream sweeper (integration-owner role) for abandoned out-of-stream PRs green+reviewed idle >1h, via scheduled sweep (#4703; stream-scoped 2026-07-13). Track PRs = own-stream-only, membership authoritative via `/api/issues/streams` | Open PRs, route track feedback; self-merge own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16); arm `gh pr merge --auto --squash --delete-branch` at review-gate-pass |
+| Merge authority | Final reconcile on cross-track/contested merges; SOLE cross-stream sweeper (integration-owner role) for abandoned out-of-stream PRs green+reviewed idle >1h, via scheduled sweep (#4703; stream-scoped 2026-07-13). Track PRs = own-stream-only, membership authoritative via `/api/issues/streams` | Open PRs, route track feedback; self-merge own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16); arm `gh pr merge --auto --squash` at review-gate-pass |
 
 **Boundary rule:** if a track orchestrator exists, the main orchestrator treats
 that track's PRs and delegates as awareness-only unless the track orchestrator
@@ -495,8 +497,9 @@ mcp__message-broker__send_message(
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
 
 **It is NOT formal cross-family review.** Discussion output is design input only.
-Independent PR CF remains `review-pr` / `publish-review-verdict` (see ownership
-matrix in [`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
+Independent PR CF is `ask-<lane> --type review` with the verdict posted on the PR
+(shielded `review-pr` / `publish-review-verdict` RETIRED — see ownership matrix in
+[`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
 

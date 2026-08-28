@@ -157,10 +157,12 @@ the separate challenge proof and `confirm-started` can unlock cleanup.
 
 The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting for
 hours). Every lane: the moment a PR's review gate passes (cross-family review evidence, no
-requested changes), run `gh pr merge <N> --auto --squash --delete-branch` — GitHub merges it
-when CI settles, nobody babysits. Dispatched agents still do NOT self-enable auto-merge
-(review gate first — unchanged). `--auto` waits for green and never bypasses blocking checks
-(#M-0.5 semantics unchanged).
+requested changes), run `gh pr merge <N> --auto --squash` — GitHub merges it when CI
+settles, nobody babysits. Do **not** pass `--delete-branch` while this repo uses a merge
+queue (head deletion mid-queue can close without landing); delete the remote branch only
+after `MERGED`. Dispatched agents still do NOT self-enable auto-merge (review gate first —
+unchanged). `--auto` waits for green and never bypasses blocking checks (#M-0.5 semantics
+unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a

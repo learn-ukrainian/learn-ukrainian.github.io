@@ -59,7 +59,7 @@ tables:
       - when: blocking CI red
         then: red-ci-triage table; never arm over blocking red, never admin-bypass
       - when: cross-family APPROVE ∧ verdict bound to CURRENT head ∧ blocking CI green ∧ no earlier row matched
-        then: arm auto-merge (gh pr merge --auto --squash --delete-branch) the same hour
+        then: arm auto-merge (gh pr merge --auto --squash) the same hour; never --delete-branch while merge queue is in use (delete remote branch only after MERGED)
 
   red-ci-triage:
     mode: static

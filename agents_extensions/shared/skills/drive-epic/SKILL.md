@@ -455,8 +455,9 @@ After `MERGED`, follow the numbered order below: reaper first, then branch delet
    [`worktree-cleanup.md`](../../../../docs/runbooks/worktree-cleanup.md) for the
    kill switch, rescue restore, and allowlisted dual paths before using
    `git worktree remove`.
-4. **Branches** — after the worktree is reaped, delete the local branch; confirm the remote
-   is gone; then run `git fetch --prune` and `git worktree prune`.
+4. **Branches** — after the worktree is reaped, **verify** the local branch is gone
+   (`--merged` reaper already deletes it). Delete manually only if it remains (fallback).
+   Confirm the remote is gone; then run `git fetch --prune` and `git worktree prune`.
 5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
 **Do not** treat merge alone as closeout. **Do not** run sealed formal CF.

@@ -147,7 +147,10 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - Arm **only** when all three hold: the review gate is satisfied — **no BLOCKING finding outstanding**
   per §8.4, so a non-blocking nit does **not** hold arming · PR is **not a draft** · **no failing
   checks**. Standard form:
-  `gh pr merge <N> --auto --squash --delete-branch -R <owner/repo>`.
+  `gh pr merge <N> --auto --squash -R <owner/repo>`.
+  Do **not** pass `--delete-branch` while this repo uses a merge queue — deleting the head
+  mid-queue can close the PR without landing. Delete the remote branch only after
+  `MERGED`, as part of post-merge cleanup (§7a / worktree-cleanup).
 - **Arm as early as those conditions allow, then leave it alone.** The binding policy in
   [`workflow.md`](workflow.md) (§ auto-merge) is explicit: arm `--auto` and *"GitHub merges it when CI
   settles, nobody babysits."* `--auto` waits for green and never bypasses blocking checks, so early
