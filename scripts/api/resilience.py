@@ -10,6 +10,7 @@ import sqlite3
 import time
 from collections import deque
 from datetime import UTC, datetime
+from pathlib import Path
 from threading import Lock
 from typing import Any
 
@@ -154,11 +155,29 @@ def _record_slow_sql(query: str, elapsed_ms: float, caller: str) -> None:
     )
 
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
 def _caller() -> str:
     for frame in inspect.stack()[2:8]:
         if not frame.filename.endswith("scripts/api/resilience.py"):
-            return f"{frame.filename}:{frame.lineno}"
+            return _sanitize_caller(frame.filename, frame.lineno)
     return "unknown"
+
+
+def _sanitize_caller(filename: str, lineno: int) -> str:
+    """Return a repo-relative ``path:line`` caller tag.
+
+    The tag is published on ``/api/health`` (``recent_slow_sql[*].caller``),
+    so it must never carry an absolute filesystem root. In-repo frames become
+    ``scripts/...:line``; anything outside the repo collapses to a basename.
+    """
+    path = Path(filename)
+    try:
+        relative = path.resolve().relative_to(_REPO_ROOT)
+    except ValueError:
+        relative = Path(path.name)
+    return f"{relative.as_posix()}:{lineno}"
 
 
 async def resilience_middleware(request: Request, call_next):

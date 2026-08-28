@@ -101,6 +101,27 @@ def test_slow_request_and_sql_events_surface_in_health(monkeypatch, tmp_path):
     assert "CREATE TABLE sample" in resilience["recent_slow_sql"][0]["query"]
 
 
+def test_slow_sql_caller_never_exposes_absolute_filesystem_root(monkeypatch, tmp_path):
+    """``recent_slow_sql[*].caller`` is published on /api/health, so it must
+    be repo-relative (or a bare basename) — never an absolute host path."""
+    reset_resilience_stats_for_tests()
+    monkeypatch.setenv("API_SLOW_SQL_MS", "0")
+
+    db_path = tmp_path / "timed.db"
+    conn = connect_sqlite(str(db_path))
+    conn.execute("CREATE TABLE sample (id INTEGER PRIMARY KEY)")
+    conn.close()
+
+    snapshot = get_resilience_snapshot()
+    callers = [event["caller"] for event in snapshot["recent_slow_sql"]]
+    assert callers
+    for caller in callers:
+        assert not caller.startswith("/"), caller
+        assert "/home/" not in caller
+        assert "/Users/" not in caller
+    assert any(caller.startswith("tests/test_api_resilience.py:") for caller in callers)
+
+
 def test_normal_api_launch_uses_uvicorn_with_reload():
     """package.json scripts.api / scripts.api:bg launch uvicorn in dev-reload mode.
 

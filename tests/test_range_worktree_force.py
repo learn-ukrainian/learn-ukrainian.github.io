@@ -30,7 +30,7 @@ def test_range_status_slices_and_flattens(monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(state_router, "LEVELS", fake_levels)
 
-    def fake_pipeline(track_id, level_cfg):
+    def fake_pipeline(track_id, level_cfg, **_kw):
         return {
             "track": track_id,
             "modules": [
