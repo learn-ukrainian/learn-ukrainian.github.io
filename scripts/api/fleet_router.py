@@ -749,7 +749,7 @@ def _authority_health_snapshot(
     }
 
 
-def _runtime_activity_snapshot(since: str) -> dict[str, Any]:
+def _runtime_activity_snapshot(since: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Count runtime/delegate ledger records inside the authority evidence window.
 
     The authority health window counts only fleet-comms ``authority_jobs``.
@@ -757,7 +757,7 @@ def _runtime_activity_snapshot(since: str) -> dict[str, Any]:
     "0 jobs" authority window must not be read as "no fleet work today".
     """
     try:
-        records = recent_runtime_records(limit=MAX_ACTIVITY_SCAN).get("records", [])
+        records = recent_runtime_records(limit=MAX_ACTIVITY_SCAN, ctx=ctx).get("records", [])
     except Exception:
         logger.warning("Fleet observer could not derive runtime activity")
         return {
@@ -1079,7 +1079,7 @@ def fleet_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
         since = (datetime.now(UTC) - timedelta(hours=AUTHORITY_HEALTH_WINDOW_HOURS)).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
         )
-    runtime_activity = _runtime_activity_snapshot(since)
+    runtime_activity = _runtime_activity_snapshot(since, ctx)
     return {
         "ok": bool(status["enabled"]) and bool(authority_health["ok"]),
         "observer": "fleet-comms-v1",
@@ -2644,7 +2644,6 @@ def fleet_activity(
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Recent runtime provenance records projected under the unified observer."""
-    del ctx
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -2655,7 +2654,7 @@ def fleet_activity(
         "since": since_value,
         "until": until_value,
     }
-    raw_records = recent_runtime_records(limit=MAX_ACTIVITY_SCAN).get("records", [])
+    raw_records = recent_runtime_records(limit=MAX_ACTIVITY_SCAN, ctx=ctx).get("records", [])
     records: list[dict[str, Any]] = []
     for raw in raw_records:
         if not isinstance(raw, dict):

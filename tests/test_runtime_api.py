@@ -7,6 +7,7 @@ import os
 import sqlite3
 import sys
 import types
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -18,6 +19,18 @@ from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
 DASHBOARDS = Path(__file__).resolve().parents[1] / "dashboards"
+
+
+def _ctx_with_batch_state_dir(batch_state_dir: Path):
+    """Return a MonitorContext pinned to a disposable ``batch_state`` root.
+
+    ``runtime_router`` resolves its usage-log directory from
+    ``ctx.roots.batch_state_dir / "api_usage"`` (no module-level ``Path``
+    global to monkeypatch anymore — see #7324 step 6), so tests redirect it
+    by swapping ``app.state.ctx`` for the duration of the test instead.
+    """
+    base = app.state.ctx
+    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
 
 
 def _iso(dt: datetime) -> str:
@@ -211,7 +224,7 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
     monkeypatch.setattr(
         runtime_router,
         "_routing_plane_status",
-        lambda: {
+        lambda *_args, **_kwargs: {
             "mode": "shadow",
             "enabled": True,
             "authority": "file_handoffs_authoritative",
@@ -424,7 +437,7 @@ def test_agents_endpoint_refreshes_registry_defaults_after_mtime_update(tmp_path
     registry_path = tmp_path / "registry.py"
     registry_path.write_text("AGENTS = {'codex': {'default_model': 'stale-model'}}\n", encoding="utf-8")
 
-    monkeypatch.setattr(runtime_router, "REGISTRY_PATH", registry_path)
+    monkeypatch.setattr(runtime_router.agent_registry, "__file__", str(registry_path))
     monkeypatch.setattr(runtime_router, "_registry_signature", runtime_router._registry_source_signature())
     monkeypatch.setattr(runtime_router, "_registry_models", {"codex": "stale-model"})
 
@@ -451,7 +464,7 @@ def test_agents_endpoint_refreshes_registry_defaults_after_mtime_update(tmp_path
 def test_usage_aggregates_by_agent(tmp_path, monkeypatch):
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(usage_dir.parent))
 
     _write_usage_file(
         usage_dir / f"usage_codex-dispatch_{today:%Y-%m-%d}.jsonl",
@@ -506,7 +519,7 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
 ):
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(usage_dir.parent))
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "shadow")
     original_iter = runtime_router._iter_usage_records
     iter_calls: list[tuple] = []
@@ -655,7 +668,7 @@ def test_acpx_overview_sanitizes_unrecognized_transport_mode(
     tmp_path,
     monkeypatch,
 ):
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", tmp_path / "missing")
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path / "missing"))
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "secret-looking-invalid-value")
 
     response = client.get("/api/runtime/acpx")
@@ -1137,7 +1150,7 @@ def test_headroom_rejects_missing_params():
 def test_recent_limits_results(tmp_path, monkeypatch):
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(usage_dir.parent))
     _write_usage_file(
         usage_dir / f"usage_codex-dispatch_{now:%Y-%m-%d}.jsonl",
         [
@@ -1190,7 +1203,7 @@ def test_recent_limits_results(tmp_path, monkeypatch):
 def test_recent_preserves_typed_body_free_acp_failure(tmp_path, monkeypatch):
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(usage_dir.parent))
     _write_usage_file(
         usage_dir / f"usage_acpx-claude-shadow-acpx-transport_{now:%Y-%m-%d}.jsonl",
         [
@@ -1252,8 +1265,8 @@ def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):
         ),
         encoding="utf-8",
     )
-    monkeypatch.setattr(runtime_router, "CODEX_TRANSPORT_RECEIPT_PATH", receipt_path)
-    monkeypatch.setattr(runtime_router, "CODEX_TRANSPORT_CONFIG_PATH", config_path)
+    monkeypatch.setattr(runtime_router.codex_transport_health, "TRANSPORT_RECEIPT_PATH", receipt_path)
+    monkeypatch.setattr(runtime_router.codex_transport_health, "DEFAULT_CONFIG_PATH", config_path)
 
     response = client.get("/api/runtime/transport-health")
 
@@ -1274,11 +1287,11 @@ def test_transport_health_is_unknown_without_probe_receipt(tmp_path, monkeypatch
         encoding="utf-8",
     )
     monkeypatch.setattr(
-        runtime_router,
-        "CODEX_TRANSPORT_RECEIPT_PATH",
+        runtime_router.codex_transport_health,
+        "TRANSPORT_RECEIPT_PATH",
         tmp_path / "missing.json",
     )
-    monkeypatch.setattr(runtime_router, "CODEX_TRANSPORT_CONFIG_PATH", config_path)
+    monkeypatch.setattr(runtime_router.codex_transport_health, "DEFAULT_CONFIG_PATH", config_path)
 
     response = client.get("/api/runtime/transport-health")
 
