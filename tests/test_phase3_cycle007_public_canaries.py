@@ -172,6 +172,116 @@ def test_batch_runner_classifies_non_success_without_disclosing_provider_text() 
     )
 
 
+def _byte_planner_rows(runner: ModuleType, sidecar_sizes: list[int]) -> tuple[dict[str, object], dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    sidecar_rows: list[dict[str, object]] = []
+    for index, size in enumerate(sidecar_sizes, 1):
+        identity = {"unit_id": f"unit-{index:02d}", "unit_sha256": f"{index:064x}"}
+        rows.append(identity | {"source": "public"})
+        sidecar_rows.append(identity | {"evidence": "x" * size})
+    return (
+        {
+            "rows": rows,
+            "packet_identity_set_sha256": runner.digest(
+                runner.canonical(sorted(runner._identity(row) for row in rows))
+            ),
+        },
+        {"rows": sidecar_rows},
+    )
+
+
+def test_batch_runner_plans_deterministic_frozen_order_byte_bounded_chunks() -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_byte_planner_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    contents, sidecar = _byte_planner_rows(runner, [90_000, 330_000, 90_000, 430_000])
+
+    first = runner.chunks(
+        contents,
+        sidecar,
+        template=b"public prompt",
+        lane="clean_label",
+        request_byte_budget=512 * 1024,
+    )
+    second = runner.chunks(
+        contents,
+        sidecar,
+        template=b"public prompt",
+        lane="clean_label",
+        request_byte_budget=512 * 1024,
+    )
+
+    assert first == second
+    assert [row["unit_id"] for part, _sidecar in first for row in part["rows"]] == [
+        "unit-01",
+        "unit-02",
+        "unit-03",
+        "unit-04",
+    ]
+    assert all(part["request_byte_count"] <= 512 * 1024 for part, _sidecar in first)
+    plan = runner.request_plan(
+        contents,
+        first,
+        lane="clean_label",
+        packet_index=1,
+        request_byte_budget=512 * 1024,
+        label_prompt_sha256="a" * 64,
+    )
+    unsigned = {key: value for key, value in plan.items() if key != "plan_sha256"}
+    assert plan["plan_sha256"] == runner.digest(runner.canonical(unsigned))
+    assert plan["planner_version"] == runner.PLANNER_VERSION
+    assert sum(chunk["row_count"] for chunk in plan["chunks"]) == 4
+
+
+def test_batch_runner_refuses_single_row_over_byte_budget() -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_oversize_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    contents, sidecar = _byte_planner_rows(runner, [600_000])
+
+    with pytest.raises(runner.Error, match="request_byte_budget_exceeded"):
+        runner.chunks(
+            contents,
+            sidecar,
+            template=b"public prompt",
+            lane="clean_label",
+            request_byte_budget=512 * 1024,
+        )
+
+
+def test_batch_runner_forbids_same_budget_retry_after_timeout(tmp_path: Path) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_timeout_retry_guard_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    out = package / runner.OUTPUT / "clean_label/chunks/packet-0001"
+    out.mkdir(parents=True, mode=0o700)
+    started = out / "attempt-1-chunk-01.started.json"
+    terminal = out / "attempt-1-chunk-01.terminal.json"
+    started.write_bytes(runner.canonical({"state": "started", "text_free": True}))
+    terminal.write_bytes(
+        runner.canonical(
+            {
+                "failure_code": "provider_status_timeout",
+                "failure_stage": "provider_return",
+                "request_byte_budget": 512 * 1024,
+                "text_free": True,
+            }
+        )
+    )
+    started.chmod(0o600)
+    terminal.chmod(0o600)
+
+    with pytest.raises(runner.Error, match="same_size_timeout_retry_forbidden"):
+        runner._next_attempt(package, out, 1, request_byte_budget=512 * 1024)
+
+
 def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path: Path) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_recovery_test", path)
