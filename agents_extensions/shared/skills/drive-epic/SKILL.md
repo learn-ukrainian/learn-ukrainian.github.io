@@ -145,6 +145,29 @@ an action. **Step 0 of any dispatch:** `gh pr list --state all
 carry it). If nothing genuinely fits a free lane, log it and leave it idle — never
 manufacture busywork (quality > utilization).
 
+### 2-epic. Epic issue ownership cycle (binding — operator 2026-08-28)
+
+You are an **epic orchestrator**, not a clerk waiting on one PR. Every cycle must advance
+the epic's open issue set:
+
+1. **Inventory** — open GitHub issues for this epic/stream (plus Work API `/next` +
+   grok-bot QA issues per §2b). Quote the count.
+2. **Disposition each item** — for every open issue, exactly one of:
+   - **in_flight** (named PR/task id + head),
+   - **dispatch now** (ROUTING_CARD + `capacity_pick` / `/api/state/routing-budget` +
+     `--check-budget`),
+   - **named hold** with one §2c code (`dependency_blocked | review_wip_cap |
+     ci_capacity | disk_capacity | human_decision | no_ready_work`).
+3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
+4. **Closeout** — after merge: close the issue (or prove residual), delete remote/local
+   branch, reap the worktree (§7a). Merge alone is not done.
+
+**Anti-passive (all seats, Cursor especially):** while CF or CI runs on unit N, you
+**must** either dispatch the next ready epic child or emit a §2c disposition code in the
+same turn. Ending a turn with only "waiting on review/CI" and no fill/disposition is
+forbidden. Overnight/session gaps do not excuse an unfinished CLEAN/MERGEABLE PR —
+re-read checks and finish merge/hygiene on the next live turn.
+
 ### 2a. NO FABRICATED DONE (binding all epic drivers)
 
 - Never invent acceptance thresholds the operator, issue, or epic goal did not set.
@@ -222,6 +245,20 @@ name. Respect the live caps (in-flight ceilings), the language-lane restriction
 per the served rules), folk carve-outs (cross-family only), and the judge-seat rules.
 On limit: note the substitution and reroute per the fallback table — never block on one lane.
 
+**Live capacity (binding every implement / CF settle):** before picking a seat, read
+fresh tool output from **both**:
+
+```bash
+curl -sS --max-time 3 "http://127.0.0.1:8765/api/state/routing-budget"
+.venv/bin/python -m scripts.fleet.capacity_pick
+```
+
+Prefer cooler / higher-headroom seats from that data. Do **not** habit-route to a hot or
+in-flight-saturated lane when a cooler eligible seat exists. CodexBar is an **input to
+the API**, not a separate driver app workflow — if both surfaces are empty/stale, probe
+and record that in the ROUTING_CARD (`NOTE: routing_budget_empty`), then use `/api/rules`
+fallback tables. Never invent burn % from memory.
+
 ### 3-routing. Mandatory ROUTING_CARD_V1 + breadth (operator GO 2026-08-06)
 
 **Binding full text:** `agents_extensions/shared/rules/fleet-driver-routing.md` (served at
@@ -232,14 +269,17 @@ Before **every** implement `delegate.py dispatch`:
 1. Emit a **ROUTING_CARD_V1** (handoff / issue / `batch_state/` receipt) with:
    `tier` (authority|practical|heap) · `model_x_harness` · `why_this_tier` ·
    `advisor_packet` (required if tier=heap) · `owned_paths` · `acceptance_cmd` ·
-   ≥2 `alternatives_considered` · `parallel_free_seats`.
-2. **Default bounded work:** Fable or Sol **brief** → heap/practical **worker(s)** —
+   ≥2 `alternatives_considered` · `parallel_free_seats` · quoted
+   `routing_budget_primary` + `capacity_pick_order` (tool evidence).
+2. **No card = no dispatch.** Skipping the card is a process defect; do not launch the
+   worker and "write the card later."
+3. **Default bounded work:** Fable or Sol **brief** → heap/practical **worker(s)** —
    not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
-3. **Fable path:** native `claude-fable-5` or Cursor pin to Fable; do not spend Fable on
+4. **Fable path:** native `claude-fable-5` or Cursor pin to Fable; do not spend Fable on
    lockfiles / pointer / smoke jobs.
-4. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
+5. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
    written `NOTE: fleet_breadth` with tool-backed blockers.
-5. Before handoff, run and attach:
+6. Before handoff, run and attach:
    ```bash
    .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator "$SESSION_HANDOFF_AGENT" --since-hours 24
    # optional hard check:
@@ -375,11 +415,28 @@ exact-head CF review if the head moved, then re-queue — same hour, never left
 overnight. Do not stand up a bot or recovery workflow for this; it is driver work
 like any other red CI.
 
+### 7-rollout. Local / production proof (when the epic requires it)
+
+Do **not** make every epic driver a standing release owner. Gate rollout by charter:
+
+| Kind | Driver owns? |
+| --- | --- |
+| **Local / service proof** after a change (restart Monitor API, smoke `/api/…`, UI check) | **Yes** — part of verifying the artifact |
+| **Host pull / service restart** named in the issue/PR acceptance | **Yes** — task-specific closeout |
+| **Production / Pages / public cutover** | **Only if the epic issue lists it** |
+| **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
+
+Missing local proof on a user-visible API/UI change is incomplete closeout. Claiming prod
+HA without GO is out of scope.
+
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
 **A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
 promises do not bind; this section does. Leaving dispatch worktrees or tmp residue
 after merge is a process defect (ENOSPC / disk full is the known failure mode).
+**Never pass `--delete-branch` to `gh pr merge` when the repo uses a merge queue until
+`gh pr view` shows `MERGED`** — deleting the head ref mid-queue can close the PR without
+landing (known failure mode). Delete the remote branch only after MERGED, then reap.
 
 **Order after `gh pr view <N>` shows `MERGED`:**
 
@@ -518,7 +575,7 @@ not the utilization half.
 | **Claude (when driving a track)** | Prefer **Sonnet-5** for routine track driving; reserve Opus for the hardest judgment + the CF review of record so Opus quota stays free. If the seat is **Opus 5**, apply the **Claude Opus 5** row below (do not restate its mitigations here). |
 | **Claude Opus 5 (when in the driver seat)** | **Documented damage modes** (Anthropic *Migrating to Claude Opus 5* + *Prompting Claude Opus 5* — encode, do not invent): scope expansion, over-delegation, verification loops when told to verify, premature done claims, verbose handoffs. **Routing:** routine driving → **Sonnet-5**; Opus 5 for judgment moments / reviews of record, **not** long solo drives (same preference as Claude row; seat adjustment, not a roster). **Scope (quote):** "Deliver what was asked, at the scope intended. Make routine judgment calls yourself, and check in only when different readings of the request would lead to materially different work. If the request seems mistaken or a better approach exists, say so in a sentence and continue with the task as asked rather than quietly narrowing, widening, or transforming it. Finish the whole task, and stop short of actions that are clearly beyond what was asked." **Delegation hard cap (Opus 5 over-delegates — inverse of lean-in for earlier Opus):** "Delegate to a subagent only for large tasks that are genuinely independent and parallelizable… Do not delegate work you can finish yourself in a handful of tool calls, and do not use subagents to verify or double-check your own work. If one subagent can complete the task, use one rather than several, and keep spawn counts low." Prefer `scripts/delegate.py` fleet dispatch over intra-session subagent spawn for real work. Filling free fleet lanes per §2c is required and is not intra-session subagent spawn. **Verification scaffolding — DELETE:** Opus 5 "verifies its own work without being told to"; remove / do not add explicit verify / double-check / "use a subagent to verify" instructions — they "cause over-verification". Self-correction already strong; avoid "re-verify before responding". **Handoffs / verbosity (effort ≠ length):** default responses and written deliverables run longer; lowering effort "reduces thinking volume without reliably shortening the visible response." Calibrate: keep handoffs brief, lead with outcome; "Match the length of written documents to what the task needs… do not pad with filler sections, redundant summaries, or boilerplate." **Corrections without rumination:** "Only correct an earlier statement when the error would change the user's code, conclusions, or decisions. State corrections plainly and briefly, then continue the task." **Thinking-config guards:** thinking is on by default; **never** `thinking: disabled` in the driver seat (prefer lower effort for cost). `thinking: {type: "disabled"}` + effort `xhigh`/`max` is a **rejected request** (400). Drive at `high`, bump `xhigh` for the hard judgment turn, then drop back. |
 | **Codex / GPT-5.6 Terra** | Named alternate only for harness / infra (`epic:4707`) and the independent DevOps stream (`epic:5703`). The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits and escalate hard judgment to Sol. |
-| **Cursor (Auto)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Keep Auto; pin `grok-4.6` / `composer-2.5` only when family independence must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. |
+| **Cursor (Auto)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Keep Auto; pin `grok-4.6` / `composer-2.5` only when family independence must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. **Anti-passive (Cursor):** this seat has repeatedly failed by stopping at "CF/CI pending" overnight. Binding: every turn that does not merge/hygiene a CLEAN gate must §2-epic-dispose the next issue or name a §2c code; a CLEAN/MERGEABLE PR with CF APPROVE must be merge-queued the same turn (no `--delete-branch` until MERGED). Session end without that closeout is a driver defect. |
 
 ---
 
