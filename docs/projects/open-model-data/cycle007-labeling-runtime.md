@@ -42,7 +42,9 @@ operator explicitly starts a provider stage.
 ## Non-goals
 
 - No evidence, packet, prompt, label schema, model, validator, endpoint,
-  denominator, chunk size, custody, or certification-policy change.
+  denominator, custody, or certification-policy change. Gemini transport chunks
+  are now derived from exact serialized request bytes instead of a fixed row
+  count; packet and row identities remain frozen.
 - No copy of the approximately 81 GiB evidence bundle.
 - No database, queue service, container platform, or new background daemon.
 - No provider call during installation, storage preparation, status, or plan.
@@ -154,6 +156,30 @@ is deliberately limited to process death and orderly reboot. A power-loss or
 kernel/filesystem crash that leaves an ambiguous attempt fails closed instead
 of being claimed as automatically resumable.
 
+### Gemini byte-budget planner
+
+Gemini no longer receives fixed 20-row requests. Before stdin is opened, the
+runner greedily packs the frozen row order under one reviewed serialized-byte
+ceiling: 512 KiB, 1 MiB, 2 MiB, or 4 MiB. The initial controller ceiling is
+1 MiB because the content-blind packet-1 scan found single serialized rows above
+512 KiB. A content-free immutable request plan records the planner version,
+ordered identity commitments, row counts, exact request bytes, and conservative
+token estimates. A separate pre-call receipt is durable before the started
+marker, so a restart can distinguish planning from a paid call without reading
+the prompt or response.
+
+A timed-out byte-bound request may never be retried at the same or a larger
+ceiling. The ordinary legacy recovery action rejects that transition. The
+explicit `retire-gemini-timeout-for-byte-plan` action archives the exact stopped
+attempt and stop receipt, authorizes zero provider calls, and accepts only a
+smaller reviewed replacement ceiling for byte-bound stops. A single row larger
+than its ceiling stops with `request_byte_budget_exceeded` before provider
+execution. The one-time retirement is valid only for the verified Cycle007
+pre-labeling state: it scans both Gemini lanes and refuses if any legacy chunk
+or packet output was committed. Successful chunks produced by the byte planner
+remain immutable resume checkpoints; only missing chunks are eligible for a
+later call.
+
 ## Recovery guarantees
 
 | Interruption | Recovery behavior |
@@ -173,6 +199,7 @@ of being claimed as automatically resumable.
 | Controller status call exceeds 300 seconds | Fail with `controller_timeout`; status never invokes a provider, so no paid runner is created by this path. |
 | Controller stage call exceeds 72 hours | Kill only the controller wrapper and fail with `controller_timeout`. A surviving paid runner is deliberately not signalled, retains the inherited execution lock, and makes a replacement return `active_worker` with zero additional provider calls. After it exits, durable receipts, seals, and active-stage markers determine the only safe recovery point. |
 | Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
+| Byte-bound Gemini timeout | Refuse the same or a larger request ceiling. The provider-free retirement action hash-binds and archives the exact stopped attempt, authorizes zero calls, and permits only a smaller reviewed ceiling. |
 | Exact Gemini provider-return stop after explicit recovery direction | `recover-gemini-stop --expected-stop-sha256 …` preserves the stop in the private backing filesystem and publishes one text-free receipt for exactly the next attempt. It verifies the contiguous attempt and authorization chain for that packet and chunk, preserves committed earlier chunks and packets without reading their content, and invokes no provider. |
 | Repeated transient Gemini provider-return stops | Each new runner stop atomically includes its chunk, attempt, and terminal-marker digest. Each explicit recovery binds that occurrence, the failed attempt markers, exact provider-call count, and predecessor receipt. A fresh process accepts the resulting next attempt once; another terminal failure remains stopped until another explicit recovery. Attempt numbers are not capped. |
 | Privileged guardian launch left exact text-free files under the mount identity | The provider-free `repair-runtime-ownership --expected-stop-sha256 …` action requires the privileged maintenance identity, all three idle locks, no stage seals or active markers, exact external/installed preflight receipt byte identities, an occurrence-bound Gemini stop, and its exact validated started/terminal pair. It changes ownership only for those six enumerated files (unchanged files are counted but not rewritten), preserves every byte, fsyncs each changed file and parent, and reports zero provider calls. Any foreign owner, symlink, mode, canonical-JSON, text-free, receipt, stop-hash, or terminal-binding drift fails closed. |
