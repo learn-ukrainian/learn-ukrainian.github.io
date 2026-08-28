@@ -252,6 +252,17 @@ def test_batch_runner_refuses_single_row_over_byte_budget() -> None:
             request_byte_budget=512 * 1024,
         )
 
+    parts = runner.chunks(
+        contents,
+        sidecar,
+        template=b"public prompt",
+        lane="clean_label",
+        request_byte_budget=640 * 1024,
+    )
+    assert len(parts) == 1
+    assert parts[0][0]["request_byte_count"] <= 640 * 1024
+    assert runner.DEFAULT_REQUEST_BYTE_BUDGET == 640 * 1024
+
 
 def test_batch_runner_forbids_same_budget_retry_after_timeout(tmp_path: Path) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"

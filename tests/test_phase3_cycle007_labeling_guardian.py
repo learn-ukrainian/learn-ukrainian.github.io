@@ -2327,7 +2327,7 @@ def test_controller_preserves_python_launcher_for_stage_subprocesses(
     assert commands[0][commands[0].index("--expected-server-code-sha") + 1] == "3" * 64
     assert commands[0][commands[0].index("--expected-sources-db-sha") + 1] == "4" * 64
     assert commands[0][commands[0].index("--expected-vesum-db-sha") + 1] == "5" * 64
-    assert commands[0][commands[0].index("--request-byte-budget") + 1] == "1048576"
+    assert commands[0][commands[0].index("--request-byte-budget") + 1] == "655360"
     assert expected_python_sha256 == controller._python_executable_sha256()
     assert controller._require_python_binding(expected_python_sha256) == target
 

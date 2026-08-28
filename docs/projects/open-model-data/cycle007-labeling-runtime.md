@@ -160,9 +160,10 @@ of being claimed as automatically resumable.
 
 Gemini no longer receives fixed 20-row requests. Before stdin is opened, the
 runner greedily packs the frozen row order under one reviewed serialized-byte
-ceiling: 512 KiB, 1 MiB, 2 MiB, or 4 MiB. The initial controller ceiling is
-1 MiB because the content-blind packet-1 scan found single serialized rows above
-512 KiB. A content-free immutable request plan records the planner version,
+ceiling: 512 KiB, 640 KiB, 1 MiB, 2 MiB, or 4 MiB. The initial controller
+ceiling is 640 KiB: the content-blind packet-1 scan found single serialized rows
+above 512 KiB, while a 767,962-byte 1 MiB-planned request timed out. A
+content-free immutable request plan records the planner version,
 ordered identity commitments, row counts, exact request bytes, and conservative
 token estimates. A separate pre-call receipt is durable before the started
 marker, so a restart can distinguish planning from a paid call without reading
