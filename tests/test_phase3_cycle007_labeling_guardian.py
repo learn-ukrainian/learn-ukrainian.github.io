@@ -258,6 +258,336 @@ def _write_private_json(path: Path, value: dict[str, Any]) -> bytes:
     return raw
 
 
+def _seed_ownership_repair_state(
+    guardian: ModuleType,
+    config: Any,
+) -> tuple[str, set[Path]]:
+    control = config.package / "control"
+    control.mkdir(mode=0o700)
+    receipt_pairs = (
+        (config.preflight_receipt, control / "preflight-receipt.json", "preflight"),
+        (config.gemini_canary_receipt, control / "gemini-canary-receipt.json", "gemini"),
+        (config.grok_canary_receipt, control / "grok-canary-receipt.json", "grok"),
+    )
+    privileged_paths: set[Path] = set()
+    for source, installed, kind in receipt_pairs:
+        assert source is not None
+        value = {"kind": kind, "text_free": True}
+        _write_private_json(source, value)
+        _write_private_json(installed, value)
+        if kind != "preflight":
+            privileged_paths.add(installed)
+
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    attempt_root = output / "clean_label/chunks/packet-0001"
+    attempt_root.mkdir(parents=True, mode=0o700)
+    for directory in (
+        output,
+        output / "clean_label",
+        output / "clean_label/chunks",
+        attempt_root,
+    ):
+        os.chmod(directory, 0o700)
+    common = {
+        "schema_version": "phase3_cycle007_gemini_attempt_v1",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": "clean_label",
+        "packet_index": 1,
+        "chunk_index": 1,
+        "attempt": 1,
+        "exact_model": "Gemini 3.6 Flash (High)",
+        "model_family": "google",
+        "harness": "agy",
+        "text_free": True,
+    }
+    started_path = attempt_root / "attempt-1-chunk-01.started.json"
+    _write_private_json(started_path, common | {"state": "started"})
+    terminal = common | {
+        "state": "terminal",
+        "failure_code": "structured_output_envelope_drift",
+        "failure_stage": "provider_return",
+        "provider_call_started": True,
+        "executable_binding_result": "verified",
+        "provider_return_code": "nonzero",
+        "raw_byte_count": 1,
+        "raw_sha256": "0" * 64,
+        "log_byte_count": 1,
+        "log_sha256": "1" * 64,
+        "init_count": 1,
+        "result_count": 1,
+        "first_event_kind": "init",
+        "last_event_kind": "result",
+        "model_binding_result": "verified",
+        "result_status": "non_success",
+        "structured_output_type": "missing",
+    }
+    terminal_path = attempt_root / "attempt-1-chunk-01.terminal.json"
+    terminal_raw = _write_private_json(terminal_path, terminal)
+    stop = {
+        **{
+            key: value
+            for key, value in terminal.items()
+            if key
+            not in {"schema_version", "state", "packet_index", "chunk_index", "attempt"}
+        },
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v2",
+        "terminal_packet_index": 1,
+        "new_provider_calls_allowed": False,
+        "chunk_index": 1,
+        "attempt": 1,
+        "terminal_marker_sha256": guardian._digest(terminal_raw),
+    }
+    stop_path = output / "provider-stop.json"
+    stop_raw = _write_private_json(stop_path, stop)
+    privileged_paths.update({started_path, terminal_path, stop_path})
+    config.guardian_lock.parent.mkdir(mode=0o700)
+    for lock_path in (
+        config.guardian_lock,
+        config.controller_lock,
+        config.execution_lock,
+    ):
+        lock_path.touch(mode=0o600)
+        os.chmod(lock_path, 0o600)
+    return guardian._digest(stop_raw), privileged_paths
+
+
+def test_normal_actions_require_exact_runtime_owner_context(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(guardian, tmp_path)
+    monkeypatch.setattr(os, "geteuid", lambda: config.owner_uid + 1)
+    monkeypatch.setattr(os, "getegid", lambda: config.owner_gid)
+    with pytest.raises(guardian.GuardianError, match="runtime_owner_context_mismatch"):
+        guardian._require_runtime_owner_context(config)
+
+
+def test_owner_context_mismatch_stops_before_lock_or_provider(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        owner_uid=os.getuid() + 1,
+        receipt=tmp_path / "must-not-write.json",
+    )
+    monkeypatch.setattr(guardian, "_config", lambda _args: config)
+    monkeypatch.setattr(
+        guardian,
+        "_lock",
+        lambda *_args, **_kwargs: pytest.fail("owner mismatch acquired a lock"),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: pytest.fail("owner mismatch invoked a controller"),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_atomic_json",
+        lambda *_args, **_kwargs: pytest.fail("owner mismatch wrote a receipt"),
+    )
+    receipts: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        guardian,
+        "print",
+        lambda value: receipts.append(json.loads(value)),
+        raising=False,
+    )
+    assert guardian.main(
+        [
+            "resume",
+            "--package",
+            "/package",
+            "--backing-root",
+            "/backing",
+            "--guardian-lock",
+            "/locks/guardian",
+            "--controller-lock",
+            "/locks/controller",
+            "--execution-lock",
+            "/locks/execution",
+            "--controller",
+            "/controller",
+            "--owner-uid",
+            "1",
+            "--owner-gid",
+            "1",
+            "--min-free-bytes",
+            "1",
+        ]
+    ) == 2
+    assert receipts[0]["failure_code"] == "runtime_owner_context_mismatch"
+
+
+def test_exact_text_free_ownership_repair_changes_only_five_bound_files(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(guardian, tmp_path, action="repair-runtime-ownership")
+    stop_sha, privileged_paths = _seed_ownership_repair_state(guardian, config)
+    config = replace(config, expected_stop_sha256=stop_sha)
+    real_lstat = guardian.Path.lstat
+    repaired_paths: set[Path] = set()
+
+    def fake_lstat(path: Path, *args: Any, **kwargs: Any) -> Any:
+        value = real_lstat(path, *args, **kwargs)
+        if path in privileged_paths and path not in repaired_paths:
+            fields = list(value)
+            fields[4] = 0
+            fields[5] = 0
+            return os.stat_result(fields)
+        return value
+
+    def fake_chown(path: Path, uid: int, gid: int) -> None:
+        assert (uid, gid) == (config.owner_uid, config.owner_gid)
+        repaired_paths.add(path)
+
+    monkeypatch.setattr(os, "geteuid", lambda: 0)
+    monkeypatch.setattr(os, "getegid", lambda: 0)
+    monkeypatch.setattr(guardian.Path, "lstat", fake_lstat)
+    monkeypatch.setattr(guardian, "_durable_chown", fake_chown)
+    monkeypatch.setattr(guardian, "_available_bytes", lambda _path: 123)
+
+    result = guardian._repair_runtime_ownership(config, mounts=[])
+    assert result["validated_file_count"] == 6
+    assert result["repaired_file_count"] == 5
+    assert result["provider_call_count"] == 0
+    assert repaired_paths == privileged_paths
+
+
+@pytest.mark.parametrize(
+    ("effective_uid", "stop_sha"),
+    [
+        (1, "a" * 64),
+        (0, "not-a-sha256"),
+    ],
+)
+def test_ownership_repair_authorization_fails_before_locks_or_chown(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    effective_uid: int,
+    stop_sha: str,
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="repair-runtime-ownership",
+        expected_stop_sha256=stop_sha,
+    )
+    monkeypatch.setattr(os, "geteuid", lambda: effective_uid)
+    monkeypatch.setattr(
+        guardian,
+        "_require_owned_lock_file",
+        lambda *_args, **_kwargs: pytest.fail("unauthorized repair inspected a lock"),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_lock",
+        lambda *_args, **_kwargs: pytest.fail("unauthorized repair acquired a lock"),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_durable_chown",
+        lambda *_args, **_kwargs: pytest.fail("unauthorized repair changed ownership"),
+    )
+    with pytest.raises(guardian.GuardianError, match="ownership_repair_not_authorized"):
+        guardian._repair_runtime_ownership(config, mounts=[])
+
+
+def test_root_repair_refuses_external_receipt_before_lock_inspection(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="repair-runtime-ownership",
+        receipt=tmp_path / "forbidden-receipt.json",
+    )
+    monkeypatch.setattr(guardian, "_config", lambda _args: config)
+    monkeypatch.setattr(
+        guardian,
+        "_require_owned_lock_file",
+        lambda *_args, **_kwargs: pytest.fail("receipt-bearing repair inspected a lock"),
+    )
+    receipts: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        guardian,
+        "print",
+        lambda value: receipts.append(json.loads(value)),
+        raising=False,
+    )
+    assert guardian.main(
+        [
+            "repair-runtime-ownership",
+            "--package",
+            "/package",
+            "--backing-root",
+            "/backing",
+            "--guardian-lock",
+            "/locks/guardian",
+            "--controller-lock",
+            "/locks/controller",
+            "--execution-lock",
+            "/locks/execution",
+            "--controller",
+            "/controller",
+            "--owner-uid",
+            "1",
+            "--owner-gid",
+            "1",
+            "--min-free-bytes",
+            "1",
+        ]
+    ) == 2
+    assert receipts[0]["failure_code"] == "ownership_repair_not_authorized"
+    assert not config.receipt.exists()
+
+
+def test_ownership_repair_releases_execution_lock_when_controller_is_active(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(guardian, tmp_path, action="repair-runtime-ownership")
+    stop_sha, _privileged_paths = _seed_ownership_repair_state(guardian, config)
+    config = replace(config, expected_stop_sha256=stop_sha)
+    monkeypatch.setattr(os, "geteuid", lambda: 0)
+    monkeypatch.setattr(os, "getegid", lambda: 0)
+    active_controller = guardian._lock(
+        config.controller_lock,
+        "controller_already_running",
+    )
+    try:
+        with pytest.raises(guardian.GuardianError, match="controller_already_running"):
+            guardian._repair_runtime_ownership(config, mounts=[])
+        execution = guardian._lock(config.execution_lock, "active_worker")
+        execution.close()
+    finally:
+        active_controller.close()
+
+
+def test_ownership_repair_refuses_changed_stop_identity(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(guardian, tmp_path, action="repair-runtime-ownership")
+    _stop_sha, _privileged_paths = _seed_ownership_repair_state(guardian, config)
+    config = replace(config, expected_stop_sha256="f" * 64)
+    monkeypatch.setattr(os, "geteuid", lambda: 0)
+    monkeypatch.setattr(os, "getegid", lambda: 0)
+    with pytest.raises(guardian.GuardianError, match="ownership_repair_identity_drift"):
+        guardian._repair_runtime_ownership(config, mounts=[])
+
+
 def _seed_second_gemini_timeout(
     guardian: ModuleType,
     config: Any,

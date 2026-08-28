@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Iterable, Sequence
+from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, BinaryIO
@@ -167,18 +168,26 @@ def _exclusive_json(path: Path, value: dict[str, Any]) -> None:
         raise
 
 
-def _private_json(path: Path, uid: int, gid: int) -> tuple[bytes, dict[str, Any]]:
+def _private_json(
+    path: Path,
+    uid: int,
+    gid: int,
+    *,
+    alternate_owner: tuple[int, int] | None = None,
+) -> tuple[bytes, dict[str, Any]]:
     _assert_no_symlink_components(path)
     try:
         info = path.lstat()
     except FileNotFoundError:
         raise GuardianError("stop_recovery_state_drift") from None
+    allowed_owners = {(uid, gid)}
+    if alternate_owner is not None:
+        allowed_owners.add(alternate_owner)
     if (
         not stat.S_ISREG(info.st_mode)
         or stat.S_ISLNK(info.st_mode)
         or stat.S_IMODE(info.st_mode) != 0o600
-        or info.st_uid != uid
-        or info.st_gid != gid
+        or (info.st_uid, info.st_gid) not in allowed_owners
     ):
         raise GuardianError("stop_recovery_state_drift")
 
@@ -198,6 +207,57 @@ def _private_json(path: Path, uid: int, gid: int) -> tuple[bytes, dict[str, Any]
     if not isinstance(value, dict):
         raise GuardianError("stop_recovery_state_drift")
     return raw, value
+
+
+def _canonical_private_json(
+    path: Path,
+    uid: int,
+    gid: int,
+    *,
+    alternate_owner: tuple[int, int] | None = None,
+) -> tuple[bytes, dict[str, Any]]:
+    try:
+        raw, value = _private_json(
+            path,
+            uid,
+            gid,
+            alternate_owner=alternate_owner,
+        )
+    except GuardianError:
+        raise GuardianError("ownership_repair_state_drift") from None
+    if raw != _canonical(value) or value.get("text_free") is not True:
+        raise GuardianError("ownership_repair_state_drift")
+    return raw, value
+
+
+def _require_runtime_owner_context(config: Config) -> None:
+    if (os.geteuid(), os.getegid()) != (config.owner_uid, config.owner_gid):
+        raise GuardianError("runtime_owner_context_mismatch")
+
+
+def _require_owned_lock_file(path: Path, config: Config) -> None:
+    _assert_no_symlink_components(path)
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        raise GuardianError("ownership_repair_state_drift") from None
+    if (
+        not stat.S_ISREG(info.st_mode)
+        or stat.S_ISLNK(info.st_mode)
+        or stat.S_IMODE(info.st_mode) != 0o600
+        or (info.st_uid, info.st_gid) != (config.owner_uid, config.owner_gid)
+    ):
+        raise GuardianError("ownership_repair_state_drift")
+
+
+def _durable_chown(path: Path, uid: int, gid: int) -> None:
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    try:
+        os.fchown(descriptor, uid, gid)
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+    _fsync_directory(path.parent)
 
 
 def _remove_durable(path: Path) -> None:
@@ -710,6 +770,139 @@ def _prepare(config: Config, mounts: list[dict[str, Any]], *, provider_bindings:
     }
 
 
+def _repair_runtime_ownership(
+    config: Config,
+    mounts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Repair only an exact privileged-write incident without invoking a provider."""
+    expected_stop = config.expected_stop_sha256
+    if (
+        os.geteuid() != 0
+        or not isinstance(expected_stop, str)
+        or len(expected_stop) != 64
+        or any(character not in "0123456789abcdef" for character in expected_stop)
+    ):
+        raise GuardianError("ownership_repair_not_authorized")
+    assert config.preflight_receipt is not None
+    assert config.gemini_canary_receipt is not None
+    assert config.grok_canary_receipt is not None
+    privileged_owner = (os.geteuid(), os.getegid())
+    expected_owner = (config.owner_uid, config.owner_gid)
+    for lock_path in (
+        config.guardian_lock,
+        config.controller_lock,
+        config.execution_lock,
+    ):
+        _require_owned_lock_file(lock_path, config)
+
+    with ExitStack() as locks:
+        locks.enter_context(_lock(config.execution_lock, "active_worker"))
+        locks.enter_context(_lock(config.controller_lock, "controller_already_running"))
+        control = config.package / "control"
+        _private_directory(control, config.owner_uid, config.owner_gid, create=False)
+        state_paths = [
+            *(control / f"stage-{stage}.complete.json" for stage in STAGES),
+            *(control / f"guardian-{stage}.active.json" for stage in MARKED_STAGES),
+        ]
+        if any(path.exists() or path.is_symlink() for path in state_paths):
+            raise GuardianError("ownership_repair_state_drift")
+
+        candidates: list[tuple[Path, bytes]] = []
+        receipt_pairs = (
+            (control / "preflight-receipt.json", config.preflight_receipt),
+            (control / "gemini-canary-receipt.json", config.gemini_canary_receipt),
+            (control / "grok-canary-receipt.json", config.grok_canary_receipt),
+        )
+        for installed_path, source_path in receipt_pairs:
+            source_raw, _source = _canonical_private_json(
+                source_path,
+                config.owner_uid,
+                config.owner_gid,
+                alternate_owner=privileged_owner,
+            )
+            installed_raw, _installed = _canonical_private_json(
+                installed_path,
+                config.owner_uid,
+                config.owner_gid,
+                alternate_owner=privileged_owner,
+            )
+            if installed_raw != source_raw:
+                raise GuardianError("ownership_repair_identity_drift")
+            candidates.append((installed_path, installed_raw))
+
+        output = config.backing_root / OUTPUT_ROOTS[0]
+        _private_directory(output, config.owner_uid, config.owner_gid, create=False)
+        stop_path = output / "provider-stop.json"
+        stop_raw, stop = _canonical_private_json(
+            stop_path,
+            config.owner_uid,
+            config.owner_gid,
+            alternate_owner=privileged_owner,
+        )
+        if _digest(stop_raw) != expected_stop:
+            raise GuardianError("ownership_repair_identity_drift")
+        _validate_gemini_stop(stop)
+        if stop.get("schema_version") != "phase3_cycle007_gemini_provider_stop_v2":
+            raise GuardianError("ownership_repair_state_drift")
+        attempt_root, chunk_index, attempt = _stopped_attempt_coordinates(
+            config,
+            output,
+            stop,
+            alternate_owner=privileged_owner,
+        )
+        started_path = attempt_root / f"attempt-{attempt}-chunk-{chunk_index:02d}.started.json"
+        terminal_path = attempt_root / f"attempt-{attempt}-chunk-{chunk_index:02d}.terminal.json"
+        started_raw, _started = _canonical_private_json(
+            started_path,
+            config.owner_uid,
+            config.owner_gid,
+            alternate_owner=privileged_owner,
+        )
+        terminal_raw, _terminal = _canonical_private_json(
+            terminal_path,
+            config.owner_uid,
+            config.owner_gid,
+            alternate_owner=privileged_owner,
+        )
+        if stop.get("terminal_marker_sha256") != _digest(terminal_raw):
+            raise GuardianError("ownership_repair_identity_drift")
+        candidates.extend(
+            (
+                (stop_path, stop_raw),
+                (started_path, started_raw),
+                (terminal_path, terminal_raw),
+            )
+        )
+
+        repaired = 0
+        for path, raw in candidates:
+            info = path.lstat()
+            owner = (info.st_uid, info.st_gid)
+            if owner not in {expected_owner, privileged_owner}:
+                raise GuardianError("ownership_repair_state_drift")
+            if owner != expected_owner:
+                _durable_chown(path, config.owner_uid, config.owner_gid)
+                repaired += 1
+            verified_raw, _verified = _canonical_private_json(
+                path,
+                config.owner_uid,
+                config.owner_gid,
+            )
+            if verified_raw != raw:
+                raise GuardianError("ownership_repair_identity_drift")
+        return {
+            "schema_version": RECEIPT_SCHEMA,
+            "ok": True,
+            "action": "repair-runtime-ownership",
+            "mount_count": len(mounts),
+            "mounts": mounts,
+            "available_bytes": _available_bytes(config.backing_root),
+            "min_free_bytes": config.min_free_bytes,
+            "validated_file_count": len(candidates),
+            "repaired_file_count": repaired,
+            "provider_call_count": 0,
+            "text_free": True,
+        }
 def _resume(config: Config, mounts: list[dict[str, Any]]) -> dict[str, Any]:
     if config.through is None:
         raise GuardianError("through_required")
@@ -798,15 +991,24 @@ def _gemini_attempt_pair(
     packet_index: int,
     chunk_index: int,
     attempt: int,
+    alternate_owner: tuple[int, int] | None = None,
 ) -> tuple[bytes, dict[str, Any], bytes, dict[str, Any]]:
     terminal_path = attempt_root / f"attempt-{attempt}-chunk-{chunk_index:02d}.terminal.json"
     started_path = terminal_path.with_name(
         f"attempt-{attempt}-chunk-{chunk_index:02d}.started.json"
     )
     terminal_raw, terminal = _private_json(
-        terminal_path, config.owner_uid, config.owner_gid
+        terminal_path,
+        config.owner_uid,
+        config.owner_gid,
+        alternate_owner=alternate_owner,
     )
-    started_raw, started = _private_json(started_path, config.owner_uid, config.owner_gid)
+    started_raw, started = _private_json(
+        started_path,
+        config.owner_uid,
+        config.owner_gid,
+        alternate_owner=alternate_owner,
+    )
     common = {
         "schema_version": "phase3_cycle007_gemini_attempt_v1",
         "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
@@ -1152,6 +1354,8 @@ def _stopped_attempt_coordinates(
     config: Config,
     output: Path,
     stop: dict[str, Any],
+    *,
+    alternate_owner: tuple[int, int] | None = None,
 ) -> tuple[Path, int, int]:
     lane = stop.get("lane")
     packet_index = stop.get("terminal_packet_index")
@@ -1200,6 +1404,7 @@ def _stopped_attempt_coordinates(
         packet_index=packet_index,
         chunk_index=chunk_index,
         attempt=terminal_attempt,
+        alternate_owner=alternate_owner,
     )
     if _terminal_projection(terminal) != _stop_projection(stop):
         raise GuardianError("stop_recovery_state_drift")
@@ -1793,7 +1998,15 @@ def _config(args: argparse.Namespace) -> Config:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "action", choices=("prepare", "status", "plan", "recover-gemini-stop", "resume")
+        "action",
+        choices=(
+            "prepare",
+            "status",
+            "plan",
+            "repair-runtime-ownership",
+            "recover-gemini-stop",
+            "resume",
+        ),
     )
     parser.add_argument("--package", type=Path, required=True, help="explicit Cycle 007 package path")
     parser.add_argument("--backing-root", type=Path, required=True, help="explicit separate-filesystem output root")
@@ -1823,7 +2036,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--resolution-advisor-response", type=Path)
     parser.add_argument(
         "--expected-stop-sha256",
-        help="exact stopped Gemini receipt SHA-256; required only for explicit recovery",
+        help="exact stopped Gemini receipt SHA-256; required for recovery or ownership repair",
     )
     return parser
 
@@ -1833,12 +2046,23 @@ def main(argv: Sequence[str] | None = None) -> int:
     result: dict[str, Any]
     config: Config | None = None
     guardian: BinaryIO | None = None
+    receipt_allowed = False
     try:
         config = _config(args)
         if config.owner_uid < 0 or config.owner_gid < 0 or config.min_free_bytes <= 0:
             raise GuardianError("invalid_runtime_parameter")
+        repair_ownership = config.action == "repair-runtime-ownership"
+        if repair_ownership:
+            if config.receipt is not None:
+                raise GuardianError("ownership_repair_not_authorized")
+            _require_owned_lock_file(config.guardian_lock, config)
+        else:
+            _require_runtime_owner_context(config)
+            receipt_allowed = True
         provider_bindings = _provider_bindings_complete(
-            config, required=config.action in {"recover-gemini-stop", "resume"}
+            config,
+            required=config.action
+            in {"repair-runtime-ownership", "recover-gemini-stop", "resume"},
         )
         if config.action in {"prepare", "recover-gemini-stop", "resume"}:
             _validate_mount_command(config.mount_command)
@@ -1856,6 +2080,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 if provider_bindings
                 else _fresh_provider_free_status(config, mounts=mounts)
             )
+        elif config.action == "repair-runtime-ownership":
+            result = _repair_runtime_ownership(config, mounts)
         elif config.action == "recover-gemini-stop":
             result = _gemini_stop_recovery(config, mounts)
         else:
@@ -1877,7 +2103,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     finally:
         if guardian is not None:
             guardian.close()
-    if config is not None and config.receipt is not None:
+    if config is not None and receipt_allowed and config.receipt is not None:
         try:
             _atomic_json(config.receipt, result)
         except Exception:

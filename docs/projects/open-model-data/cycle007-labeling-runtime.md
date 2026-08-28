@@ -65,6 +65,13 @@ operator explicitly starts a provider stage.
 The existing reviewed controller remains the authority for provider preflight,
 packet verification, stage ordering, and stage seals. A pristine installation
 may run provider-free `prepare`, `status`, and `plan` without provider bindings.
+Every normal guardian action must run with the exact configured private runtime
+UID and primary GID. Privilege is delegated only to the guardian's fixed
+non-interactive bind-mount command; the guardian, controller, and providers must
+not be launched as the privileged mount account. This keeps every `0600`
+checkpoint readable by the resumable runtime and fails with
+`runtime_owner_context_mismatch` before any controller or provider process when
+the launch identity is wrong.
 The bootstrap `status` and `plan` paths fail closed if they find any stage state,
 provider receipt, non-empty output root, controller, or worker. Before `resume`, and whenever
 provider state exists, the guardian requires explicit absolute AGY and Grok
@@ -168,6 +175,7 @@ of being claimed as automatically resumable.
 | Provider or semantic stop receipt | Preserve the stop and wait for explicit operator recovery direction. |
 | Exact Gemini provider-return stop after explicit recovery direction | `recover-gemini-stop --expected-stop-sha256 …` preserves the stop in the private backing filesystem and publishes one text-free receipt for exactly the next attempt. It verifies the contiguous attempt and authorization chain for that packet and chunk, preserves committed earlier chunks and packets without reading their content, and invokes no provider. |
 | Repeated transient Gemini provider-return stops | Each new runner stop atomically includes its chunk, attempt, and terminal-marker digest. Each explicit recovery binds that occurrence, the failed attempt markers, exact provider-call count, and predecessor receipt. A fresh process accepts the resulting next attempt once; another terminal failure remains stopped until another explicit recovery. Attempt numbers are not capped. |
+| Privileged guardian launch left exact text-free files under the mount identity | The provider-free `repair-runtime-ownership --expected-stop-sha256 …` action requires the privileged maintenance identity, all three idle locks, no stage seals or active markers, exact external/installed preflight receipt byte identities, an occurrence-bound Gemini stop, and its exact validated started/terminal pair. It changes ownership only for those six enumerated files (unchanged files are counted but not rewritten), preserves every byte, fsyncs each changed file and parent, and reports zero provider calls. Any foreign owner, symlink, mode, canonical-JSON, text-free, receipt, stop-hash, or terminal-binding drift fails closed. |
 | Reviewed code or provider executable identity changes before any stage seal | Provider-bound `prepare` validates the complete successor preflight and both public canaries under the execution and controller locks. Rotation is accepted only when the successor names the exact installed preflight SHA-256, preserves canonical superseded receipts, writes the authoritative preflight copy last, and remains idempotent after interruption. Any existing stage seal blocks rotation. No provider is invoked. |
 
 ## Run sequence
@@ -187,6 +195,11 @@ of being claimed as automatically resumable.
 
 The staged `--through` boundary prevents an operator intending to start one
 provider from accidentally starting the other or entering adjudication.
+Invoke these normal actions as the configured runtime owner, supplying the
+reviewed absolute non-interactive privilege and mount executables only through
+the hidden mount flags. The privileged maintenance account is reserved for the
+hash-bound, provider-free ownership-repair action and must exit before recovery
+or resume is invoked.
 When an exact Gemini call has a recoverable provider-return stop, the operator may
 insert the reviewed `recover-gemini-stop` action before repeating step 4. The
 recovery action is idempotent, preserves the original stop by same-filesystem
