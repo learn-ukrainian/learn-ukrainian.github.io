@@ -1038,7 +1038,7 @@ def _gemini_attempt_pair(
         request_byte_count = started.get("request_byte_count")
         if (
             not _hex_digest(request_plan_sha256)
-            or request_byte_budget not in {524288, 1048576, 2097152, 4194304}
+            or request_byte_budget not in {524288, 655360, 1048576, 2097152, 4194304}
             or not isinstance(request_byte_count, int)
             or isinstance(request_byte_count, bool)
             or not 0 < request_byte_count <= request_byte_budget
@@ -1625,7 +1625,7 @@ def _validate_gemini_stop(stop: dict[str, Any]) -> None:
         stop["schema_version"] == "phase3_cycle007_gemini_provider_stop_v3"
         and (
             not _hex_digest(stop.get("request_plan_sha256"))
-            or stop.get("request_byte_budget") not in {524288, 1048576, 2097152, 4194304}
+            or stop.get("request_byte_budget") not in {524288, 655360, 1048576, 2097152, 4194304}
             or not isinstance(stop.get("request_byte_count"), int)
             or isinstance(stop.get("request_byte_count"), bool)
             or not 0 < stop["request_byte_count"] <= stop["request_byte_budget"]
@@ -2032,7 +2032,7 @@ def _retire_gemini_timeout_for_byte_plan(
     replacement_budget = config.replacement_request_byte_budget
     if not _hex_digest(expected_stop):
         raise GuardianError("expected_stop_sha256_required")
-    if replacement_budget not in {524288, 1048576, 2097152, 4194304}:
+    if replacement_budget not in {524288, 655360, 1048576, 2097152, 4194304}:
         raise GuardianError("replacement_request_byte_budget_required")
     runner_path = config.code_paths.get("gemini_runner")
     if runner_path is None:
@@ -2346,7 +2346,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--replacement-request-byte-budget",
         type=int,
-        choices=(524288, 1048576, 2097152, 4194304),
+        choices=(524288, 655360, 1048576, 2097152, 4194304),
         help="reviewed byte-plan ceiling replacing one exact legacy Gemini timeout",
     )
     return parser
