@@ -274,9 +274,9 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
 1. Sync and select the next target.
 
    ```bash
+   # From primary (read-only) or any worktree: fetch only — do not switch primary.
    git fetch --prune origin
-   git switch main
-   git pull --ff-only
+   git fetch origin main
    gh pr list --state open --search "a2" --json number,title,headRefName,url
    ```
 
@@ -287,7 +287,7 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
      .worktrees/dispatch/codex/a2-mXX-<slug>-certify origin/main
    cd .worktrees/dispatch/codex/a2-mXX-<slug>-certify
    ```
-
+   All edits, commits, and PR pushes happen in this worktree only.
 3. Read the target source set and find actual defects.
 
    Do not churn prose for style alone. Prioritize:
