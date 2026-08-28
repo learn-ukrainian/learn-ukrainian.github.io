@@ -18,10 +18,10 @@ from pathlib import Path
 from threading import Lock
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
-from .config import BATCH_STATE_DIR, PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -44,21 +44,26 @@ from agent_runtime.adapters.acpx import (
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.usage import has_headroom
 
-from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
-from scripts.orchestration.codex_transport_health import (
-    DEFAULT_CONFIG_PATH as CODEX_TRANSPORT_CONFIG_PATH,
-)
-from scripts.orchestration.codex_transport_health import (
-    TRANSPORT_RECEIPT_PATH as CODEX_TRANSPORT_RECEIPT_PATH,
-)
-from scripts.orchestration.codex_transport_health import current_transport_health
+from scripts.fleet_comms import message_plane
+from scripts.fleet_comms.message_plane import read_plane_status
+from scripts.orchestration import codex_transport_health
 
 router = APIRouter(tags=["runtime"])
 
-ADAPTERS_DIR = Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
-_registry_source = getattr(agent_registry, "__file__", None)
-REGISTRY_PATH = Path(_registry_source).resolve() if _registry_source else None
-USAGE_DIR = BATCH_STATE_DIR / "api_usage"
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors ``fleet_router._resolve_context`` (#7393 / #6849): every route
+    handler gets ``ctx`` injected via ``Depends(get_ctx)``, but this router's
+    helpers are also called directly — by other routers, dashboard
+    collectors, and unit tests — outside FastAPI request handling.
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
 _RUNTIME_ATTRIBUTION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,99}$")
 _RUNTIME_ATTRIBUTION_SOURCES = frozenset({"explicit", "session_env", "unknown"})
@@ -173,12 +178,27 @@ _ACP_EVENT_TYPE_ALIASES = {
 }
 
 
+def _registry_path() -> Path | None:
+    """Resolve the on-disk source of the live agent registry, fresh each call.
+
+    Deliberately not a module-level constant: routing this through the
+    imported ``agent_runtime.registry`` module's own ``__file__`` keeps the
+    on-disk source a single live indirection a test can repoint directly
+    (``monkeypatch.setattr(agent_registry, "__file__", ...)``), instead of a
+    second cached ``Path`` this router would need its own OPSEC fixture seam
+    for.
+    """
+    source = getattr(agent_registry, "__file__", None)
+    return Path(source).resolve() if source else None
+
+
 def _registry_source_signature() -> tuple[int, int] | None:
     """Return a cheap change token for the runtime agent registry source."""
-    if REGISTRY_PATH is None:
+    registry_path = _registry_path()
+    if registry_path is None:
         return None
     try:
-        stat = REGISTRY_PATH.stat()
+        stat = registry_path.stat()
     except OSError:
         return None
     return stat.st_mtime_ns, stat.st_size
@@ -203,11 +223,12 @@ def _registry_default_models(registry: Any) -> dict[str, str | None]:
 
 def _load_registry_default_models() -> dict[str, str | None]:
     """Execute the registry source in isolation and return a validated snapshot."""
-    if REGISTRY_PATH is None:
+    registry_path = _registry_path()
+    if registry_path is None:
         raise RuntimeError("agent registry source path is unavailable")
-    spec = importlib.util.spec_from_file_location("agent_runtime._runtime_registry_snapshot", REGISTRY_PATH)
+    spec = importlib.util.spec_from_file_location("agent_runtime._runtime_registry_snapshot", registry_path)
     if spec is None or spec.loader is None:
-        raise ImportError(f"cannot load agent registry from {REGISTRY_PATH}")
+        raise ImportError(f"cannot load agent registry from {registry_path}")
     registry_snapshot = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(registry_snapshot)
     return _registry_default_models(registry_snapshot)
@@ -270,8 +291,14 @@ def _usage_day_from_name(path: Path) -> date | None:
         return None
 
 
-def _usage_files(*, days: int, usage_dir: Path | None = None) -> list[Path]:
-    root = usage_dir if usage_dir is not None else USAGE_DIR
+def _usage_dir(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.batch_state_dir / "api_usage"
+
+
+def _usage_files(
+    *, days: int, usage_dir: Path | None = None, ctx: MonitorContext | None = None
+) -> list[Path]:
+    root = usage_dir if usage_dir is not None else _usage_dir(ctx)
     if not root.exists():
         return []
     today = datetime.now(UTC).date()
@@ -288,8 +315,8 @@ def _usage_files(*, days: int, usage_dir: Path | None = None) -> list[Path]:
     return files
 
 
-def _today_usage_files() -> list[Path]:
-    return _usage_files(days=1)
+def _today_usage_files(ctx: MonitorContext | None = None) -> list[Path]:
+    return _usage_files(days=1, ctx=ctx)
 
 
 def _iter_usage_records(paths: list[Path]) -> list[dict[str, Any]]:
@@ -354,10 +381,10 @@ def _update_comparison_side(
         side["total_tokens"] += tokens
 
 
-def _last_used_agent_models(*, days: int = 7) -> dict[str, str]:
+def _last_used_agent_models(*, days: int = 7, ctx: MonitorContext | None = None) -> dict[str, str]:
     """Extract the most recently used model per agent from runtime usage records."""
     latest_by_agent: dict[str, tuple[datetime, str]] = {}
-    for record in _iter_usage_records(_usage_files(days=days)):
+    for record in _iter_usage_records(_usage_files(days=days, ctx=ctx)):
         agent = record.get("agent")
         model = record.get("model")
         if not isinstance(agent, str) or not isinstance(model, str):
@@ -372,11 +399,29 @@ def _last_used_agent_models(*, days: int = 7) -> dict[str, str]:
     return {agent: model for agent, (_, model) in latest_by_agent.items()}
 
 
-def list_runtime_agents() -> list[dict[str, Any]]:
+def _adapters_dir(ctx: MonitorContext | None = None) -> Path:
+    """Resolve the installed adapters package, fresh each call.
+
+    Not a module-level constant: the adapters package lives beside this
+    router's own code, not under a fixture-swappable data root, so there is
+    no OPSEC-swept ``Path`` global to keep here. A fixture context (``ctx.root
+    is not None``) still must never enumerate — and so never echo — the real
+    installed adapter modules into a scanned response; it gets a definitely
+    empty directory under its own disposable root instead.
+    """
+    resolved_ctx = _resolve_context(ctx)
+    if resolved_ctx.root is not None:
+        return resolved_ctx.root / "runtime_adapters_fixture_stub"
+    return Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
+
+
+def list_runtime_agents(ctx: MonitorContext | None = None) -> list[dict[str, Any]]:
     _refresh_agent_registry_if_changed()
-    last_used = _last_used_agent_models()
+    resolved_ctx = _resolve_context(ctx)
+    last_used = _last_used_agent_models(ctx=resolved_ctx)
+    adapters_dir = _adapters_dir(resolved_ctx)
     agents: list[dict[str, Any]] = []
-    for path in sorted(ADAPTERS_DIR.glob("*.py")):
+    for path in sorted(adapters_dir.glob("*.py")):
         # Skip non-agent helper modules and alternate-harness adapters that
         # alias an existing fleet agent name (hermes_* wrap the same grok /
         # qwen / deepseek identities for ask-hermes only).
@@ -433,13 +478,14 @@ def summarize_runtime_usage(
     agent: str | None = None,
     entrypoint: str | None = None,
     usage_dir: Path | None = None,
+    ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     window_days = min(max(1, int(days)), 30)
     by_agent: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     by_entrypoint: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     total = 0
 
-    for record in _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir)):
+    for record in _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir, ctx=ctx)):
         record_agent = record.get("agent")
         record_entrypoint = record.get("entrypoint")
         if agent and record_agent != agent:
@@ -460,7 +506,7 @@ def summarize_runtime_usage(
     }
 
 
-def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
+def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return a sanitized ACPX shadow posture and evidence snapshot.
 
     This is deliberately not a transport-health probe. It reads the configured
@@ -499,7 +545,7 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
         "native": _new_comparison_side(),
         "shadow": _new_comparison_side(),
     }
-    records = _iter_usage_records(_usage_files(days=window_days))
+    records = _iter_usage_records(_usage_files(days=window_days, ctx=ctx))
     for record in records:
         record_agent = str(record.get("agent") or "")
         if record_agent in evidence_by_seat:
@@ -595,10 +641,10 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
     }
 
 
-def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
+def recent_runtime_records(*, limit: int = 50, ctx: MonitorContext | None = None) -> dict[str, Any]:
     record_limit = min(max(1, int(limit)), 500)
     summaries: list[dict[str, Any]] = []
-    for record in _iter_usage_records(_today_usage_files()):
+    for record in _iter_usage_records(_today_usage_files(ctx)):
         ts = _parse_iso_datetime(record.get("ts"))
         initiator = record.get("initiator")
         if not isinstance(initiator, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(initiator):
@@ -635,10 +681,11 @@ def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
     return {"records": summaries[:record_limit]}
 
 
-def _routing_plane_status() -> dict[str, Any]:
+def _routing_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Expose the actual plane posture without inferring authority from rows."""
+    resolved_ctx = _resolve_context(ctx)
     try:
-        raw = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=0)
+        raw = read_plane_status(repo_root=resolved_ctx.roots.project_root, recent_limit=0)
     except Exception:
         raw = {"mode": "unavailable", "enabled": False}
     mode = str(raw.get("mode") or "unavailable")
@@ -969,7 +1016,7 @@ def _routing_assignment_aggregate(records: list[dict[str, Any]]) -> dict[str, An
     return item
 
 
-def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
+def list_routing_assignments(*, limit: int = 100, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Read persisted routing decisions through the optional authority ledger.
 
     The routing-reservation store is owned by Fleet Comms. Runtime only calls
@@ -978,14 +1025,18 @@ def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
     empty history.
     """
     record_limit = min(max(1, int(limit)), 100)
-    plane = _routing_plane_status()
+    resolved_ctx = _resolve_context(ctx)
+    plane = _routing_plane_status(resolved_ctx)
     try:
         ledger = importlib.import_module("scripts.fleet_comms.routing_reservations")
         reader = ledger.list_routing_decisions
         # The authority projection returns one record per decision event.  Read
         # a bounded event window wide enough to return up to ``limit`` distinct
         # reservations after lifecycle aggregation.
-        rows = reader(root=default_plane_root(repo_root=Path(PROJECT_ROOT)), limit=record_limit * 10)
+        rows = reader(
+            root=message_plane.default_plane_root(repo_root=resolved_ctx.roots.project_root),
+            limit=record_limit * 10,
+        )
     except (ImportError, AttributeError):
         return {
             "availability": "unavailable",
@@ -1030,9 +1081,9 @@ def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
     }
 
 
-def runtime_recent_outcomes_today() -> dict[str, int]:
+def runtime_recent_outcomes_today(ctx: MonitorContext | None = None) -> dict[str, int]:
     counts = {key: 0 for key in _KNOWN_OUTCOMES}
-    for record in _iter_usage_records(_today_usage_files()):
+    for record in _iter_usage_records(_today_usage_files(ctx)):
         outcome = str(record.get("outcome") or "")
         if outcome in counts:
             counts[outcome] += 1
@@ -1069,7 +1120,7 @@ def _rounded(value: Any, digits: int = 2) -> float | None:
 def _acp_db_path() -> Path:
     """Return the configured fleet-comms database without creating it."""
     repo_root = Path(__file__).resolve().parents[2]
-    return default_plane_root(repo_root=repo_root) / "comms.sqlite3"
+    return message_plane.default_plane_root(repo_root=repo_root) / "comms.sqlite3"
 
 
 def _open_acp_db_readonly() -> sqlite3.Connection | None:
@@ -1565,8 +1616,8 @@ def get_acp_conversation_transcript(conversation_id: str) -> dict[str, Any] | No
 
 
 @router.get("/agents")
-async def runtime_agents():
-    agents = await asyncio.to_thread(list_runtime_agents)
+async def runtime_agents(ctx: MonitorContext = Depends(get_ctx)):
+    agents = await asyncio.to_thread(list_runtime_agents, ctx)
     return {"agents": agents}
 
 
@@ -1575,14 +1626,17 @@ async def runtime_usage(
     agent: str | None = Query(None),
     entrypoint: str | None = Query(None),
     days: int = Query(7, ge=1, le=30),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
-    return await asyncio.to_thread(summarize_runtime_usage, days=days, agent=agent, entrypoint=entrypoint)
+    return await asyncio.to_thread(
+        summarize_runtime_usage, days=days, agent=agent, entrypoint=entrypoint, ctx=ctx
+    )
 
 
 @router.get("/acpx")
-async def runtime_acpx(days: int = Query(7, ge=1, le=30)):
+async def runtime_acpx(days: int = Query(7, ge=1, le=30), ctx: MonitorContext = Depends(get_ctx)):
     """Read-only ACPX shadow posture and aggregate evidence; never probe."""
-    return await asyncio.to_thread(acpx_shadow_overview, days=days)
+    return await asyncio.to_thread(acpx_shadow_overview, days=days, ctx=ctx)
 
 
 @router.get("/acp/conversations")
@@ -1628,23 +1682,31 @@ async def runtime_headroom(
 
 
 @router.get("/recent")
-async def runtime_recent(limit: int = Query(50, ge=1, le=500)):
-    return await asyncio.to_thread(recent_runtime_records, limit=limit)
+async def runtime_recent(limit: int = Query(50, ge=1, le=500), ctx: MonitorContext = Depends(get_ctx)):
+    return await asyncio.to_thread(recent_runtime_records, limit=limit, ctx=ctx)
 
 
 @router.get("/routing-assignments")
-async def runtime_routing_assignments(limit: int = Query(100, ge=1, le=100)):
+async def runtime_routing_assignments(
+    limit: int = Query(100, ge=1, le=100), ctx: MonitorContext = Depends(get_ctx)
+):
     """Read-only routing authority decisions and their actual plane posture."""
-    return await asyncio.to_thread(list_routing_assignments, limit=limit)
+    return await asyncio.to_thread(list_routing_assignments, limit=limit, ctx=ctx)
 
 
 @router.get("/transport-health")
 async def runtime_transport_health():
-    """Return the cached Codex fresh-process probe; never launch a model."""
+    """Return the cached Codex fresh-process probe; never launch a model.
+
+    No ``MonitorContext`` root applies here: the config/receipt paths are
+    resolved through ``codex_transport_health``'s own module attributes
+    (read at call time, never re-exported as a local ``Path`` global), and
+    the response is fully sanitized status fields with no filesystem paths.
+    """
     return await asyncio.to_thread(
-        current_transport_health,
-        receipt_path=CODEX_TRANSPORT_RECEIPT_PATH,
-        config_path=CODEX_TRANSPORT_CONFIG_PATH,
+        codex_transport_health.current_transport_health,
+        receipt_path=codex_transport_health.TRANSPORT_RECEIPT_PATH,
+        config_path=codex_transport_health.DEFAULT_CONFIG_PATH,
     )
 
 

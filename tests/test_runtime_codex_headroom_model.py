@@ -10,12 +10,12 @@ for the active model.
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from scripts.api import runtime_router
 from scripts.api.config import DASHBOARDS_DIR
 from scripts.api.main import app
 from scripts.api.runtime_router import list_runtime_agents
@@ -30,13 +30,25 @@ def _write_usage_record(file_path: Path, records: list[dict]) -> None:
             handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def _ctx_with_batch_state_dir(batch_state_dir: Path):
+    """Redirect ``ctx.roots.batch_state_dir`` for both direct calls and the client.
+
+    ``list_runtime_agents`` resolves its usage-log directory from
+    ``ctx.roots.batch_state_dir / "api_usage"`` (#7324 step 6); swapping
+    ``app.state.ctx`` covers HTTP calls through ``client`` too.
+    """
+    base = app.state.ctx
+    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
+
+
 def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, monkeypatch) -> None:
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    ctx = _ctx_with_batch_state_dir(tmp_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     # 1. Without usage records, last_used_model is None and headroom_model falls back to default_model.
-    agents = list_runtime_agents()
+    agents = list_runtime_agents(ctx)
     codex = next(a for a in agents if a["name"] == "codex")
     assert codex["default_model"] == "gpt-5.6-luna"
     assert codex["last_used_model"] is None
@@ -70,7 +82,7 @@ def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, mo
 def test_agents_endpoint_picks_most_recent_model_when_multiple_records(tmp_path: Path, monkeypatch) -> None:
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
 
     usage_file = usage_dir / f"usage_codex-dispatch_{now:%Y-%m-%d}.jsonl"
     _write_usage_record(

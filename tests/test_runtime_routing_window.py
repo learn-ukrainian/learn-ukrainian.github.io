@@ -57,7 +57,7 @@ def _stub_ledger(monkeypatch, rows: list[dict]) -> None:
     monkeypatch.setattr(
         runtime_router,
         "_routing_plane_status",
-        lambda: {"mode": "shadow", "enabled": True, "authority": "test", "cutover": "test"},
+        lambda *_args, **_kwargs: {"mode": "shadow", "enabled": True, "authority": "test", "cutover": "test"},
     )
 
 

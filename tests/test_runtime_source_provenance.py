@@ -8,6 +8,7 @@ must not be forcibly collapsed to 'unknown'.
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -31,13 +32,26 @@ def _write_usage_file(path: Path, records: list[dict]) -> None:
             handle.write(json.dumps(record) + "\n")
 
 
+def _ctx_with_batch_state_dir(batch_state_dir: Path):
+    """Redirect ``ctx.roots.batch_state_dir`` for both direct calls and ``client``.
+
+    ``recent_runtime_records`` resolves its usage-log directory from
+    ``ctx.roots.batch_state_dir / "api_usage"`` (#7324 step 6); swapping
+    ``app.state.ctx`` covers HTTP calls through ``client``, and the same
+    context is passed explicitly to direct-Python calls below.
+    """
+    base = app.state.ctx
+    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
+
+
 def test_explicit_provenance_preserved_when_initiator_fails_regex(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Afternoon-style records with explicit attribution_source stay explicit even if initiator fails regex."""
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    ctx = _ctx_with_batch_state_dir(tmp_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     _write_usage_file(
         usage_dir / f"usage_codex-delegate_{now:%Y-%m-%d}.jsonl",
@@ -56,7 +70,7 @@ def test_explicit_provenance_preserved_when_initiator_fails_regex(
         ],
     )
 
-    records = runtime_router.recent_runtime_records(limit=10)["records"]
+    records = runtime_router.recent_runtime_records(limit=10, ctx=ctx)["records"]
     assert len(records) == 1
     record = records[0]
     assert record["agent"] == "codex"
@@ -72,7 +86,8 @@ def test_explicit_provenance_preserved_when_initiator_is_unknown(
     """When initiator is literal 'unknown' or None, explicit source_provenance is preserved."""
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    ctx = _ctx_with_batch_state_dir(tmp_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     _write_usage_file(
         usage_dir / f"usage_claude-delegate_{now:%Y-%m-%d}.jsonl",
@@ -102,7 +117,7 @@ def test_explicit_provenance_preserved_when_initiator_is_unknown(
         ],
     )
 
-    records = runtime_router.recent_runtime_records(limit=10)["records"]
+    records = runtime_router.recent_runtime_records(limit=10, ctx=ctx)["records"]
     assert len(records) == 2
     # Records sorted by ts desc: r4 then r3
     r4 = records[0]
@@ -124,7 +139,7 @@ def test_morning_and_afternoon_dispatches_provenance_lifecycle(
     """Morning job-host dispatches and later afternoon rounds both preserve caller provenance."""
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
 
     _write_usage_file(
         usage_dir / f"usage_codex-delegate_{now:%Y-%m-%d}.jsonl",
@@ -178,7 +193,8 @@ def test_unrecognized_attribution_source_falls_back_to_unknown(
     """An invalid/unrecognized attribution_source falls back to 'unknown'."""
     usage_dir = tmp_path / "api_usage"
     now = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    ctx = _ctx_with_batch_state_dir(tmp_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     _write_usage_file(
         usage_dir / f"usage_codex-delegate_{now:%Y-%m-%d}.jsonl",
@@ -195,7 +211,7 @@ def test_unrecognized_attribution_source_falls_back_to_unknown(
         ],
     )
 
-    records = runtime_router.recent_runtime_records(limit=1)["records"]
+    records = runtime_router.recent_runtime_records(limit=1, ctx=ctx)["records"]
     assert len(records) == 1
     assert records[0]["source"] == "codex"
     assert records[0]["source_provenance"] == "unknown"
