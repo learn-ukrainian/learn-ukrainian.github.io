@@ -26,7 +26,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
 try:
@@ -34,8 +34,9 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
+from .config import LEVELS
 from .docs_router import collect_html_artifacts
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
@@ -48,7 +49,11 @@ from .state_helpers import (
 
 router = APIRouter(tags=["artifacts"])
 
-PLANS_ROOT = PROJECT_ROOT / "plans"
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
 
 
 # ---------------------------------------------------------------------
@@ -122,6 +127,7 @@ async def html_artifacts(
     status: str | None = Query(None),
     author: str | None = Query(None),
     type_: str | None = Query(None, alias="type", pattern="^(html|md)$"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """List authored artifacts (HTML + MD) with parsed report metadata.
 
@@ -147,6 +153,7 @@ async def html_artifacts(
         status=status,
         author=author,
         types=types,
+        ctx=_resolve_context(ctx),
     )
 
 
@@ -154,7 +161,7 @@ def _level_cfg(track: str) -> dict | None:
     return next((cfg for cfg in LEVELS if cfg["id"] == track), None)
 
 
-def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
+def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the full gate-by-gate snapshot for one module.
 
     Shape::
@@ -181,9 +188,14 @@ def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
+    resolved_ctx = _resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+    plans_root = project_root / "plans"
+
     try:
-        track_dir = safe_join(CURRICULUM_ROOT, cfg["path"])
-        plan_path = safe_join(PLANS_ROOT, track, f"{slug}.yaml")
+        track_dir = safe_join(curriculum_root, cfg["path"])
+        plan_path = safe_join(plans_root, track, f"{slug}.yaml")
     except ValueError:
         return {"error": f"invalid track/slug: {track}/{slug}"}
     content_path = find_content_file(track_dir, slug)
@@ -233,15 +245,15 @@ def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
         },
         "review": review,
         "final_review": final_review,
-        "content_path": (str(content_path.relative_to(PROJECT_ROOT)) if content_path else None),
-        "plan_path": (str(plan_path.relative_to(PROJECT_ROOT)) if plan_path and plan_path.exists() else None),
+        "content_path": (str(content_path.relative_to(project_root)) if content_path else None),
+        "plan_path": (str(plan_path.relative_to(project_root)) if plan_path and plan_path.exists() else None),
     }
 
 
 @router.get("/{track}/{slug}")
-async def module_artifact(track: str, slug: str):
+async def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single-module artifact snapshot."""
-    result = await asyncio.to_thread(_compute_artifact_snapshot, track, slug)
+    result = await asyncio.to_thread(_compute_artifact_snapshot, track, slug, ctx=_resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -252,7 +264,7 @@ async def module_artifact(track: str, slug: str):
 # ---------------------------------------------------------------------
 
 
-def _list_ship_ready(track_filter: str | None) -> dict[str, Any]:
+def _list_ship_ready(track_filter: str | None, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Walk every plan and return the modules whose every gate is green.
 
     ``track_filter`` narrows the scan to one level. Empty tracks or
@@ -269,7 +281,7 @@ def _list_ship_ready(track_filter: str | None) -> dict[str, Any]:
         tracks_scanned.append(cfg["id"])
         for _, slug in get_plan_slugs(cfg["id"]):
             inspected += 1
-            snap = _compute_artifact_snapshot(cfg["id"], slug)
+            snap = _compute_artifact_snapshot(cfg["id"], slug, ctx=ctx)
             if snap.get("ship_ready"):
                 ship_ready.append(
                     {
@@ -294,7 +306,7 @@ def _list_ship_ready(track_filter: str | None) -> dict[str, Any]:
 # ---------------------------------------------------------------------
 
 
-def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
+def _enumerate_force_deletions(track: str, slug: str, ctx: MonitorContext | None = None) -> list[dict[str, Any]]:
     """Mirror ``v6_build._force_reset_module`` — enumerate what would go.
 
     MUST stay in sync with ``scripts/build/v6_build.py`` helpers
@@ -313,8 +325,12 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
     if not cfg:
         return []
 
+    resolved_ctx = _resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+
     try:
-        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        base = safe_join(curriculum_root, cfg["path"])
         orch = safe_join(base, "orchestration", slug)
     except ValueError:
         return []
@@ -325,7 +341,7 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
             return
         targets.append(
             {
-                "path": str(path.relative_to(PROJECT_ROOT)),
+                "path": str(path.relative_to(project_root)),
                 "category": category,
                 "is_dir": path.is_dir(),
                 "size_bytes": (
@@ -366,7 +382,7 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
 
     # Published MDX (see _force_reset_module:877-879).
     mdx = safe_join(
-        PROJECT_ROOT,
+        project_root,
         "site",
         "src",
         "content",
@@ -380,7 +396,7 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
 
 
 @router.get("/{track}/{slug}/force-preview")
-async def force_preview(track: str, slug: str):
+async def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Dry-run preview for ``v6_build.py --force {track} {num}``.
 
     Returns the EXACT list of files ``--force`` would delete, without
@@ -412,29 +428,31 @@ async def force_preview(track: str, slug: str):
             content={"error": f"unknown track: {track}"},
         )
 
-    targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug)
+    resolved_ctx = _resolve_context(ctx)
+    targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug, ctx=resolved_ctx)
 
     try:
-        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        base = safe_join(resolved_ctx.roots.curriculum_root, cfg["path"])
     except ValueError:
         return JSONResponse(
             status_code=400,
             content={"error": f"invalid track path: {track}"},
         )
     preserved: list[str] = []
+    plans_root = resolved_ctx.roots.project_root / "plans"
     try:
-        plan = safe_join(PLANS_ROOT, track, f"{slug}.yaml")
+        plan = safe_join(plans_root, track, f"{slug}.yaml")
     except ValueError:
         plan = None
     if plan and plan.is_file():
-        preserved.append(str(plan.relative_to(PROJECT_ROOT)))
+        preserved.append(str(plan.relative_to(resolved_ctx.roots.project_root)))
     for keep_name in ("index.md", "friction.yaml"):
         try:
             keep = safe_join(base, "orchestration", slug, keep_name)
         except ValueError:
             keep = None
         if keep and keep.is_file():
-            preserved.append(str(keep.relative_to(PROJECT_ROOT)))
+            preserved.append(str(keep.relative_to(resolved_ctx.roots.project_root)))
 
     return {
         "track": track,
@@ -457,6 +475,7 @@ async def ship_ready(
         None,
         description="Narrow the scan to one track id (e.g. 'a1'). Omit to scan all.",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Modules that pass EVERY artifact gate — safe to deploy.
 
@@ -469,7 +488,7 @@ async def ship_ready(
             status_code=404,
             content={"error": f"unknown track: {track}"},
         )
-    return await asyncio.to_thread(_list_ship_ready, track)
+    return await asyncio.to_thread(_list_ship_ready, track, ctx=_resolve_context(ctx))
 
 
 # ---------------------------------------------------------------------
@@ -486,7 +505,7 @@ _ARTIFACT_CATEGORIES: tuple[tuple[str, str], ...] = (
 )
 
 
-def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
+def _classify_module_files(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Walk every file tied to one module and tag its lifecycle role.
 
     Reviewer Codex-2 / #1313: "would make --force work and cleanup
@@ -503,12 +522,17 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
+    resolved_ctx = _resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+    plans_root = project_root / "plans"
+
     try:
-        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        base = safe_join(curriculum_root, cfg["path"])
         orch = safe_join(base, "orchestration", slug)
-        plan_path = safe_join(PLANS_ROOT, track, f"{slug}.yaml")
+        plan_path = safe_join(plans_root, track, f"{slug}.yaml")
         mdx_path = safe_join(
-            PROJECT_ROOT,
+            project_root,
             "site",
             "src",
             "content",
@@ -542,7 +566,7 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
             )
         )
         entry = {
-            "path": str(path.relative_to(PROJECT_ROOT)),
+            "path": str(path.relative_to(project_root)),
             "is_dir": is_dir,
             "size_bytes": size,
             "mtime": mtime,
@@ -602,9 +626,9 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
 
 
 @router.get("/{track}/{slug}/files")
-async def module_files(track: str, slug: str):
+async def module_files(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Classified file manifest for one module (#1313 / Codex-2)."""
-    result = await asyncio.to_thread(_classify_module_files, track, slug)
+    result = await asyncio.to_thread(_classify_module_files, track, slug, ctx=_resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -615,7 +639,7 @@ async def module_files(track: str, slug: str):
 # ---------------------------------------------------------------------
 
 
-def _read_review_file(path: Path) -> dict[str, Any] | None:
+def _read_review_file(path: Path, project_root: Path) -> dict[str, Any] | None:
     """Parse one review file. Extract score, verdict, findings count.
 
     "Empty findings with high score" is the reviewer-gaming pattern
@@ -633,7 +657,7 @@ def _read_review_file(path: Path) -> dict[str, Any] | None:
     findings = count_review_issues(text)
 
     return {
-        "path": str(path.relative_to(PROJECT_ROOT)),
+        "path": str(path.relative_to(project_root)),
         "score": score,
         "verdict": verdict,
         "findings_count": findings,
@@ -641,13 +665,14 @@ def _read_review_file(path: Path) -> dict[str, Any] | None:
     }
 
 
-def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
+def _review_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
     cfg = _level_cfg(track)
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
+    resolved_ctx = _resolve_context(ctx)
     try:
-        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        base = safe_join(resolved_ctx.roots.curriculum_root, cfg["path"])
         review_dir = safe_join(base, "review")
     except ValueError:
         return {"error": f"invalid track/slug: {track}/{slug}"}
@@ -678,7 +703,7 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
                 continue
             main_candidates.append(p)
     main_candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-    main_review = _read_review_file(main_candidates[0]) if main_candidates else None
+    main_review = _read_review_file(main_candidates[0], resolved_ctx.roots.project_root) if main_candidates else None
 
     # Final review — Phase F approved/revise verdict, separate parser.
     # Surface the parsed summary directly rather than re-parsing the
@@ -687,7 +712,7 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
 
     # Style review — separate file, same directory. Empty if absent.
     style_candidates = sorted(review_dir.glob(f"{slug}-style-review*.md")) if review_dir.is_dir() else []
-    style_review = _read_review_file(style_candidates[-1]) if style_candidates else None
+    style_review = _read_review_file(style_candidates[-1], resolved_ctx.roots.project_root) if style_candidates else None
 
     return {
         "track": track,
@@ -703,14 +728,14 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
 
 
 @router.get("/{track}/{slug}/review-snapshot")
-async def review_snapshot(track: str, slug: str):
+async def review_snapshot(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Latest main + style review result with empty-findings flag.
 
     Flags the reviewer-gaming pattern where a high score is reported
     with zero actionable findings (#1313 / Codex-3). Deterministic
     detection so bad-review cases don't slip through.
     """
-    result = await asyncio.to_thread(_review_snapshot, track, slug)
+    result = await asyncio.to_thread(_review_snapshot, track, slug, ctx=_resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -721,7 +746,7 @@ async def review_snapshot(track: str, slug: str):
 # ---------------------------------------------------------------------
 
 
-def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
+def _state_drift_check(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Cross-check state.json vs audit vs review vs published MDX.
 
     Catches the recurring pipeline failure where one system says
@@ -733,8 +758,12 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
+    resolved_ctx = _resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+
     try:
-        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        base = safe_join(curriculum_root, cfg["path"])
         orch = safe_join(base, "orchestration", slug)
     except ValueError:
         return {"error": f"invalid track/slug: {track}/{slug}"}
@@ -745,7 +774,7 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
     final_review = get_final_review_info(base, slug)
     try:
         mdx = safe_join(
-            PROJECT_ROOT,
+            project_root,
             "site",
             "src",
             "content",
@@ -846,9 +875,10 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
 
 
 @router.get("/{track}/{slug}/drift")
-async def drift_check(track: str, slug: str):
+async def drift_check(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Cross-check module state across state.json, audit, review, disk."""
-    result = await asyncio.to_thread(_state_drift_check, track, slug)
+    result = await asyncio.to_thread(_state_drift_check, track, slug, ctx=_resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
+

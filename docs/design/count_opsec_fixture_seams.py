@@ -21,12 +21,10 @@ sys.path.insert(0, str(REPO_ROOT))
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    docs_router,
     entire_context_router,
     epics_router,
     git_hygiene_router,
     governance_router,
-    images_router,
     issues_router,
     site_router,
     work_router,
@@ -178,34 +176,12 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
                 replacement.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(module, name, replacement)
 
-    monkeypatch.setattr(images_router, "IMAGES_DIR", root / "stores" / "images")
-    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", root / "stores" / "textbooks")
-    monkeypatch.setattr(
-        images_router,
-        "ANNOTATIONS_FILE",
-        root / "stores" / "image_text_pairs.jsonl",
-    )
-    monkeypatch.setattr(images_router, "_index", images_router._ImageIndex())
-    monkeypatch.setattr(images_router, "_pdf_pool", images_router._PDFPool())
-    monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
-    monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
-
     broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
     monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: sqlite3.connect(*args, **kwargs))
 
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", root)
-    docs_root = root / "docs"
-    audit_root = root / "audit"
-    docs_root.mkdir(parents=True, exist_ok=True)
-    audit_root.mkdir(parents=True, exist_ok=True)
-    allowed_roots = {"audit": audit_root}
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", allowed_roots)
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (docs_root, audit_root))
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", dict(allowed_roots))
     dashboards_root = root / "dashboards"
     monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
-    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", dashboards_root)
 
     isolated_plane_root = root / "stores" / "fleet-comms"
     isolated_plane_root.mkdir(parents=True, exist_ok=True)

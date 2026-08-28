@@ -47,9 +47,18 @@ def _set_env(tmp_path: Path, monkeypatch):
 
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", tmp_path / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(artifacts_router, "PLANS_ROOT", tmp_path / "plans")
+    from dataclasses import replace
+
+    from scripts.api.monitor_context import fixture_context
+
+    ctx = replace(
+        fixture_context(tmp_path),
+        roots=replace(
+            fixture_context(tmp_path).roots,
+            curriculum_root=tmp_path / "curriculum",
+        ),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
     return curr / "a1", plans
 
 
@@ -187,7 +196,7 @@ def test_ship_ready_aggregates(monkeypatch):
         lambda _track: [(1, "ready"), (2, "stale-plan")],
     )
 
-    def fake_snapshot(track, slug):
+    def fake_snapshot(track, slug, *args, **kwargs):
         if slug == "ready":
             return {
                 "ship_ready": True,
