@@ -93,7 +93,25 @@ def test_presence_rejects_non_loopback_peer() -> None:
     posted = remote_client.post("/api/observer/presence", json=_HEARTBEAT)
     assert posted.status_code == 403
     occupancy = remote_client.get("/api/occupancy")
-    assert "cloud-observer" not in occupancy.json()["hosts"]
+    hosts = occupancy.json()["hosts"]
+    assert "cloud-observer" not in hosts
+    assert "mac-operator" in hosts
+    assert hosts["mac-operator"]["occupants"] == []
+    assert hosts["mac-operator"]["status"] == "unavailable"
+
+
+def test_default_occupancy_keeps_quiet_mac_alongside_cloud_observer() -> None:
+    posted = loop_client.post("/api/observer/presence", json=_HEARTBEAT)
+    assert posted.status_code == 200
+    occupancy = remote_client.get("/api/occupancy")
+    assert occupancy.status_code == 200
+    hosts = occupancy.json()["hosts"]
+    assert "cloud-observer" in hosts
+    assert "mac-operator" in hosts
+    assert hosts["mac-operator"]["occupants"] == []
+    assert hosts["mac-operator"]["status"] == "unavailable"
+    assert hosts["mac-operator"]["idle_or_empty"] is False
+    assert hosts["cloud-observer"]["occupants"][0]["agent"] == "grok-bot"
 
 
 def test_presence_rejects_ram_lease_fields() -> None:

@@ -916,7 +916,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "/api/occupancy",
         "exact",
         "http",
-        "Opaque host occupancy: load fields, sanitized occupants {kind, agent, task_id, epic, optional instance_id}, burn_state in {active, idle, unknown}, top-level attention items empty_host_underused:<host_id> and empty_host_unknown_capacity:<host_id>; burn_sources has exactly atlas_job, driver, and foundry, each with state in {active, clear, unknown} and non-negative observation_age_s. Observer heartbeats partition by opaque host, with dynamic observer-only mac-operator and legacy cloud-observer behavior.",
+        "Opaque host occupancy: load fields, sanitized occupants {kind, agent, task_id, epic, optional instance_id}, burn_state in {active, idle, unknown}, top-level attention items empty_host_underused:<host_id> and empty_host_unknown_capacity:<host_id>; burn_sources has exactly atlas_job, driver, and foundry, each with state in {active, clear, unknown} and non-negative observation_age_s. Default glance always includes host-teacher, host-job, and observer-only mac-operator; live observer heartbeats merge into that Mac row, and legacy cloud-observer stays presence-gated.",
         "In-process atlas-jobs load cache plus local atlas-jobs registry, local session-stream driver leases, optional occupancy markers, and the in-process observer presence store keyed by (host, agent, instance); host keys from MONITOR_OCCUPANCY_HOST_IDS.",
         "Stale-while-revalidate via the existing HOST_LOAD_FRESH_S and HOST_LOAD_MAX_STALE_S load-cache constants; local marker TTL is DEFAULT_MARKER_TTL_S (15 minutes); never probes SSH on the request path.",
         ("operators", "dispatch", "tests", "qa-engineer", "grok-bot"),

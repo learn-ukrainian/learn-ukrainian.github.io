@@ -80,14 +80,37 @@ def test_store_key_isolated_by_host_and_instance() -> None:
     }
 
 
+def test_default_occupancy_keeps_quiet_mac_without_presence() -> None:
+    assert list_live() == []
+    occupancy = loop_client.get("/api/occupancy")
+    assert occupancy.status_code == 200
+    hosts = occupancy.json()["hosts"]
+    assert "mac-operator" in hosts
+    host = hosts["mac-operator"]
+    assert host["host_id"] == "mac-operator"
+    assert host["status"] == "unavailable"
+    assert host["error"] == "unreachable"
+    assert host["occupants"] == []
+    assert host["occupant_count"] == 0
+    assert host["ai_seats"] == []
+    assert host["idle_or_empty"] is False
+    assert "cpu_count" not in host
+    assert "mem" not in host
+
+
 def test_unmocked_testclient_flow_reaches_mac_occupancy_and_manifest(monkeypatch: pytest.MonkeyPatch) -> None:
     session_id = "123e4567-e89b-12d3-a456-426614174000"
     posted = loop_client.post("/api/observer/presence", json=_notebook_body(session_id))
     assert posted.status_code == 200
 
-    occupancy = loop_client.get("/api/occupancy?host_id=mac-operator")
+    occupancy = loop_client.get("/api/occupancy")
     assert occupancy.status_code == 200
-    host = occupancy.json()["hosts"]["mac-operator"]
+    hosts = occupancy.json()["hosts"]
+    assert "mac-operator" in hosts
+    host = hosts["mac-operator"]
+    queried = loop_client.get("/api/occupancy?host_id=mac-operator")
+    assert queried.status_code == 200
+    assert queried.json()["hosts"]["mac-operator"]["occupants"] == host["occupants"]
     assert host["status"] == "unavailable"
     assert host["idle_or_empty"] is False
     assert host["occupants"] == [

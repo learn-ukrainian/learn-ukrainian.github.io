@@ -403,8 +403,10 @@ def _selected_hosts(host_id: str | None) -> dict[str, str | None]:
     for opaque, canonical in reverse.items():
         if opaque not in selected:
             selected[opaque] = canonical
-    if any(row.host_id == MAC_OPERATOR_HOST_ID for row in list_live()):
-        selected[MAC_OPERATOR_HOST_ID] = None
+    # Always keep the Mac glance row. Observer presence is an in-process TTL
+    # store, so a quiet or freshly restarted Monitor must not drop the seat.
+    # Load stays unknown unless a later occupant/load source exists.
+    selected[MAC_OPERATOR_HOST_ID] = None
     return selected
 
 
