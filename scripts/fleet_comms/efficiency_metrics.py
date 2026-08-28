@@ -16,6 +16,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
 
@@ -46,8 +48,7 @@ def _connect_ro(db_path: Path) -> Iterator[sqlite3.Connection]:
     """Open an existing SQLite file read-only (never creates/writes)."""
     if not db_path.is_file():
         raise FileNotFoundError(db_path)
-    uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True)
+    conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -669,7 +670,7 @@ def collect_stream_bottleneck_metrics(
     try:
         if not plane_db.is_file():
             raise FileNotFoundError("plane_db_missing")
-        with _connect(plane_db) as conn:
+        with _connect_ro(plane_db) as conn:
             if not (_table_exists(conn, "formal_review_jobs") and _table_exists(conn, "github_publications")):
                 raise sqlite3.DatabaseError("required formal_review_jobs/github_publications tables missing")
             columns = _column_names(conn, "formal_review_jobs")

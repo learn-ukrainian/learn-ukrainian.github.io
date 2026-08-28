@@ -36,6 +36,8 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
     collect_dead_letters_authority,
@@ -398,7 +400,7 @@ def _open_plane_db_ro(root: Path) -> sqlite3.Connection:
     db_path = root / "comms.sqlite3"
     if not db_path.is_file():
         raise FleetCommsCliError(f"plane DB not found: {db_path}")
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
     conn.row_factory = sqlite3.Row
     return conn
 

@@ -24,6 +24,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
 from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
@@ -83,8 +85,9 @@ class ArtifactStore:
         self._prepare_private_dir(self.root)
         self._prepare_private_dir(self.root / "blobs")
         self._prepare_private_dir(self.blob_root)
-        self._conn = sqlite3.connect(
-            str(self.db_path),
+        self._conn = cp_connect(
+            StoreId.FLEET_COMMS,
+            path=self.db_path,
             # WAL initialization owns its bounded retry loop below. Install
             # the normal statement busy timeout only after WAL is established.
             timeout=0,

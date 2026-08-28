@@ -19,6 +19,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
     _AUTHORITY_BACKLOG_STATES,
     _column_names,
@@ -461,7 +463,7 @@ def _probe_inbox_authority(
     deliveries: list[dict[str, Any]] = []
     total = 0
 
-    conn = sqlite3.connect(f"file:{plane_db.resolve().as_posix()}?mode=ro", uri=True)
+    conn = cp_connect(StoreId.FLEET_COMMS, path=plane_db, read_only=True)
     conn.row_factory = sqlite3.Row
     try:
         if not _table_exists(conn, "authority_deliveries"):
