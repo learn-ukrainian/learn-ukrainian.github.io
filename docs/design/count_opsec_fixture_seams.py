@@ -33,7 +33,6 @@ from scripts.api import (
     worktrees_router,
 )
 from scripts.api import main as api_main
-from scripts.fleet_comms import cold_start_board, message_plane
 from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
@@ -150,17 +149,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
     monkeypatch.setattr(worktree_containment, "primary_checkout_dirty_status", lambda _s: {})
-    monkeypatch.setattr(cold_start_board, "_get_local_git_info", lambda: {})
-    monkeypatch.setattr(
-        cold_start_board,
-        "_resolve_session_streams_db",
-        lambda _repo_root: root / "stores" / "session-streams.sqlite3",
-    )
-    monkeypatch.setattr(
-        cold_start_board,
-        "_probe_gh_pr_list",
-        lambda: cold_start_board.ProbeResult(status="skipped", elapsed_ms=0.0, data={}),
-    )
 
     fixture_sources_db = root / "stores" / "sources.db"
     rag_query = importlib.import_module("rag.query")
@@ -227,7 +215,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
         return isolated_plane_root
 
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(isolated_plane_root))
-    monkeypatch.setattr(cold_start_board, "default_plane_root", isolated_plane_resolver)
     for module_name, module in tuple(sys.modules.items()):
         if not module_name.startswith("scripts.api") or module is None:
             continue

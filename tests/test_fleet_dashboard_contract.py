@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api.fleet_router import router as fleet_router
 from scripts.api.main import app
+from scripts.api.monitor_context import production_context
 from scripts.api.route_contracts import contract_for_page, contract_for_route
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -122,6 +123,7 @@ def test_fleet_page_mutes_missing_local_projection_instead_of_flagging_failure()
 
 def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     observer_app = FastAPI()
+    observer_app.state.ctx = production_context()
     observer_app.include_router(fleet_router, prefix="/api/fleet")
     openapi = observer_app.openapi()["paths"]
     paths = {path for path in openapi if path.startswith("/api/fleet")}
@@ -170,6 +172,7 @@ def test_fleet_page_and_retired_entrypoints_coexist_during_cutover(monkeypatch: 
         assert response.status_code == 200, f"{path} returned {response.status_code}: {response.text[:200]}"
 
     observer_app = FastAPI()
+    observer_app.state.ctx = production_context()
     observer_app.include_router(fleet_router, prefix="/api/fleet")
     observer_client = TestClient(observer_app, raise_server_exceptions=False)
     for path in ["/api/fleet/health", "/api/fleet/requests"]:

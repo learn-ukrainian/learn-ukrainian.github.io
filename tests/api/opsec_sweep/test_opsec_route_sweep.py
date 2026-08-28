@@ -40,12 +40,13 @@ from scripts.api import (
     opsec_scan,
     route_contracts,
     site_router,
+    state_helpers,
     work_router,
     worktrees_router,
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
-from scripts.fleet_comms import cold_start_board, message_plane
+from scripts.fleet_comms import message_plane
 from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
@@ -248,6 +249,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # a prior test (or a background projection build) to replay another root's
     # logical work ids into this sweep.
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
+    monkeypatch.setattr(state_helpers, "_ttl_cache", {})
     fixture_ctx = fixture_context(root)
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
     session_connection = fixture_ctx.stores.session_streams_database.connect()
@@ -368,29 +370,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         },
     )
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
-
-    monkeypatch.setattr(
-        cold_start_board,
-        "_get_local_git_info",
-        lambda: {
-            "branch": "opsec-fixture",
-            "head": "000000000",
-        },
-    )
-    monkeypatch.setattr(
-        cold_start_board,
-        "_resolve_session_streams_db",
-        lambda _repo_root: root / "stores" / "session-streams.sqlite3",
-    )
-    monkeypatch.setattr(
-        cold_start_board,
-        "_probe_gh_pr_list",
-        lambda: cold_start_board.ProbeResult(
-            status="skipped",
-            elapsed_ms=0.0,
-            data={"gh_available": False, "reason": "isolated_fixture"},
-        ),
-    )
 
     # RAG imports its source DB lazily outside the scripts.api namespace. The
     # top-level ``rag.query`` import resolves ``wiki.sources_db`` while this
@@ -513,12 +492,13 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         del repo_root
         return isolated_plane_root
 
-    monkeypatch.setattr(cold_start_board, "default_plane_root", isolated_plane_resolver)
     for module_name, module in tuple(sys.modules.items()):
         if not module_name.startswith("scripts.api") or module is None:
             continue
         if "default_plane_root" in vars(module):
             monkeypatch.setattr(module, "default_plane_root", isolated_plane_resolver)
+        if "build_repository_authority" in vars(module):
+            monkeypatch.setattr(module, "build_repository_authority", lambda **_kwargs: None)
 
     for dashboards_dir in {api_main.DASHBOARDS_DIR, docs_router.DASHBOARDS_DIR}:
         dashboards_dir.mkdir(parents=True, exist_ok=True)
