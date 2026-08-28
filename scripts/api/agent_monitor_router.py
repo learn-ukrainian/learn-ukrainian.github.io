@@ -11,13 +11,14 @@ import os
 import sqlite3
 import time
 import uuid
+from pathlib import Path
 from typing import Any
 
 import psutil
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 
-from .config import BATCH_STATE_DIR
+from .monitor_context import MonitorContext, get_ctx
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,6 @@ def _verify_auth(
         )
 
 
-DB_PATH = BATCH_STATE_DIR / "agent_monitor.sqlite3"
 HOST_RESERVED_RAM_MB = 1250  # Reserved for OS and core services
 MAX_SAFE_RAM_PERCENT = 75.0  # Max allocatable RAM percentage
 
@@ -68,9 +68,13 @@ class HeartbeatRequest(BaseModel):
     pid: int
 
 
-def _get_db() -> sqlite3.Connection:
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, timeout=10.0)
+def _db_path(ctx: MonitorContext) -> Path:
+    return ctx.roots.batch_state_dir / "agent_monitor.sqlite3"
+
+
+def _get_db(db_path: Path) -> sqlite3.Connection:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path, timeout=10.0)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("""
         CREATE TABLE IF NOT EXISTS agent_leases (
@@ -98,12 +102,12 @@ def _calculate_severity(used_percent: float) -> str:
 
 
 @router.get("/status")
-def get_monitor_status() -> dict[str, Any]:
+def get_monitor_status(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Aggregate-only capacity metrics for the local dashboard (omits sensitive process list)."""
     mem = psutil.virtual_memory()
     load = os.getloadavg() if hasattr(os, "getloadavg") else (0.0, 0.0, 0.0)
 
-    conn = _get_db()
+    conn = _get_db(_db_path(ctx))
     cur = conn.cursor()
     now = time.time()
 
@@ -174,11 +178,12 @@ def get_monitor_status() -> dict[str, Any]:
 def get_monitor_status_details(
     x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
     authorization: str | None = Header(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Detailed host capacity status including active lease process listings (requires auth)."""
     _verify_auth(x_agent_monitor_token, authorization)
-    status_data = get_monitor_status()
-    conn = _get_db()
+    status_data = get_monitor_status(ctx)
+    conn = _get_db(_db_path(ctx))
     cur = conn.cursor()
     cur.execute(
         """
@@ -205,12 +210,12 @@ def get_monitor_status_details(
 
 
 @router.post("/preflight")
-def preflight_check(req: PreflightRequest) -> dict[str, Any]:
+def preflight_check(req: PreflightRequest, ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     mem = psutil.virtual_memory()
     total_ram_mb = int(mem.total / (1024 * 1024))
     available_ram_mb = int(mem.available / (1024 * 1024))
 
-    conn = _get_db()
+    conn = _get_db(_db_path(ctx))
     cur = conn.cursor()
     now = time.time()
 
@@ -246,6 +251,7 @@ def register_agent_lease(
     req: LeaseRegisterRequest,
     x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
     authorization: str | None = Header(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     _verify_auth(x_agent_monitor_token, authorization)
     try:
@@ -259,7 +265,7 @@ def register_agent_lease(
     total_ram_mb = int(mem.total / (1024 * 1024))
     available_ram_mb = int(mem.available / (1024 * 1024))
 
-    conn = _get_db()
+    conn = _get_db(_db_path(ctx))
     conn.execute("BEGIN IMMEDIATE")
     cur = conn.cursor()
     now = time.time()
@@ -339,9 +345,10 @@ def heartbeat_agent_lease(
     req: HeartbeatRequest,
     x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
     authorization: str | None = Header(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     _verify_auth(x_agent_monitor_token, authorization)
-    conn = _get_db()
+    conn = _get_db(_db_path(ctx))
     cur = conn.cursor()
     cur.execute(
         "SELECT process_create_time, last_heartbeat FROM agent_leases WHERE lease_token=? AND pid=? AND status='APPROVED'",
@@ -393,9 +400,10 @@ def release_agent_lease(
     lease_token: str,
     x_agent_monitor_token: str | None = Header(None, alias="X-Agent-Monitor-Token"),
     authorization: str | None = Header(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     _verify_auth(x_agent_monitor_token, authorization)
-    conn = _get_db()
+    conn = _get_db(_db_path(ctx))
     cur = conn.cursor()
     cur.execute(
         "UPDATE agent_leases SET status='RELEASED' WHERE lease_token=? AND status='APPROVED'",
