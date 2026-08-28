@@ -460,6 +460,120 @@ def test_exact_text_free_ownership_repair_changes_only_five_bound_files(
     assert repaired_paths == privileged_paths
 
 
+@pytest.mark.parametrize(
+    ("effective_uid", "stop_sha"),
+    [
+        (1, "a" * 64),
+        (0, "not-a-sha256"),
+    ],
+)
+def test_ownership_repair_authorization_fails_before_locks_or_chown(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    effective_uid: int,
+    stop_sha: str,
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="repair-runtime-ownership",
+        expected_stop_sha256=stop_sha,
+    )
+    monkeypatch.setattr(os, "geteuid", lambda: effective_uid)
+    monkeypatch.setattr(
+        guardian,
+        "_require_owned_lock_file",
+        lambda *_args, **_kwargs: pytest.fail("unauthorized repair inspected a lock"),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_lock",
+        lambda *_args, **_kwargs: pytest.fail("unauthorized repair acquired a lock"),
+    )
+    monkeypatch.setattr(
+        guardian,
+        "_durable_chown",
+        lambda *_args, **_kwargs: pytest.fail("unauthorized repair changed ownership"),
+    )
+    with pytest.raises(guardian.GuardianError, match="ownership_repair_not_authorized"):
+        guardian._repair_runtime_ownership(config, mounts=[])
+
+
+def test_root_repair_refuses_external_receipt_before_lock_inspection(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="repair-runtime-ownership",
+        receipt=tmp_path / "forbidden-receipt.json",
+    )
+    monkeypatch.setattr(guardian, "_config", lambda _args: config)
+    monkeypatch.setattr(
+        guardian,
+        "_require_owned_lock_file",
+        lambda *_args, **_kwargs: pytest.fail("receipt-bearing repair inspected a lock"),
+    )
+    receipts: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        guardian,
+        "print",
+        lambda value: receipts.append(json.loads(value)),
+        raising=False,
+    )
+    assert guardian.main(
+        [
+            "repair-runtime-ownership",
+            "--package",
+            "/package",
+            "--backing-root",
+            "/backing",
+            "--guardian-lock",
+            "/locks/guardian",
+            "--controller-lock",
+            "/locks/controller",
+            "--execution-lock",
+            "/locks/execution",
+            "--controller",
+            "/controller",
+            "--owner-uid",
+            "1",
+            "--owner-gid",
+            "1",
+            "--min-free-bytes",
+            "1",
+        ]
+    ) == 2
+    assert receipts[0]["failure_code"] == "ownership_repair_not_authorized"
+    assert not config.receipt.exists()
+
+
+def test_ownership_repair_releases_execution_lock_when_controller_is_active(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(guardian, tmp_path, action="repair-runtime-ownership")
+    stop_sha, _privileged_paths = _seed_ownership_repair_state(guardian, config)
+    config = replace(config, expected_stop_sha256=stop_sha)
+    monkeypatch.setattr(os, "geteuid", lambda: 0)
+    monkeypatch.setattr(os, "getegid", lambda: 0)
+    active_controller = guardian._lock(
+        config.controller_lock,
+        "controller_already_running",
+    )
+    try:
+        with pytest.raises(guardian.GuardianError, match="controller_already_running"):
+            guardian._repair_runtime_ownership(config, mounts=[])
+        execution = guardian._lock(config.execution_lock, "active_worker")
+        execution.close()
+    finally:
+        active_controller.close()
+
+
 def test_ownership_repair_refuses_changed_stop_identity(
     guardian: ModuleType,
     tmp_path: Path,

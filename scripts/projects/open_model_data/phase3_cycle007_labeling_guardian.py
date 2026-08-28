@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Iterable, Sequence
+from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, BinaryIO
@@ -794,9 +795,9 @@ def _repair_runtime_ownership(
     ):
         _require_owned_lock_file(lock_path, config)
 
-    execution = _lock(config.execution_lock, "active_worker")
-    controller = _lock(config.controller_lock, "controller_already_running")
-    try:
+    with ExitStack() as locks:
+        locks.enter_context(_lock(config.execution_lock, "active_worker"))
+        locks.enter_context(_lock(config.controller_lock, "controller_already_running"))
         control = config.package / "control"
         _private_directory(control, config.owner_uid, config.owner_gid, create=False)
         state_paths = [
@@ -902,11 +903,6 @@ def _repair_runtime_ownership(
             "provider_call_count": 0,
             "text_free": True,
         }
-    finally:
-        controller.close()
-        execution.close()
-
-
 def _resume(config: Config, mounts: list[dict[str, Any]]) -> dict[str, Any]:
     if config.through is None:
         raise GuardianError("through_required")
@@ -2040,7 +2036,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--resolution-advisor-response", type=Path)
     parser.add_argument(
         "--expected-stop-sha256",
-        help="exact stopped Gemini receipt SHA-256; required only for explicit recovery",
+        help="exact stopped Gemini receipt SHA-256; required for recovery or ownership repair",
     )
     return parser
 
