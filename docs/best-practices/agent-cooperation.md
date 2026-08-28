@@ -11,8 +11,8 @@
 > **Seat onboarding (canonical ownership matrix):**
 > [`docs/runbooks/agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md) —
 > `discuss` vs `delegate.py` vs fleet-comms/file handoffs vs experimental ACPX vs
-> Buzz deferred; Kimi native max-only vs KimiCC high default; formal `review-pr`
-> separation; fresh-agent smoke.
+> Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
+> `ask-* --type review` (shielded `review-pr` RETIRED); fresh-agent smoke.
 
 ---
 
@@ -28,11 +28,13 @@
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
 **Discussion is not formal review.** Design panels and same-family helpers do not
-seal PRs. Formal CF:
+seal PRs. Formal CF (shielded `review-pr` / `publish-review-verdict` RETIRED):
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
+printf '%s\n' "Cross-family review of PR <N> at exact head <SHA>: VERDICT + findings." \
+  | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+      --task-id review-<N> --type review
+# Post the verdict on the PR; do not treat discussion or same-family helpers as the gate.
 ```
 
 Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheBench).
@@ -495,8 +497,9 @@ mcp__message-broker__send_message(
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
 
 **It is NOT formal cross-family review.** Discussion output is design input only.
-Independent PR CF remains `review-pr` / `publish-review-verdict` (see ownership
-matrix in [`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
+Independent PR CF is `ask-<lane> --type review` with the verdict posted on the PR
+(shielded `review-pr` / `publish-review-verdict` RETIRED — see ownership matrix in
+[`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
 
