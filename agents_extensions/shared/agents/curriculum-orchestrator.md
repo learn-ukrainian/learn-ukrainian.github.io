@@ -169,7 +169,7 @@ dispatch briefs.
 - PRs only; never commit or merge to `main` directly. Drivers SELF-MERGE their own lane's PRs after
   an independent CROSS-FAMILY review + green blocking CI — there is no promoting orchestrator. Main
   merges its OWN arc's PRs plus those flagged `needs=merge`.
-- A ready PR must not sit: arm `gh pr merge --auto --squash --delete-branch` the MOMENT the review
+- A ready PR must not sit: arm `gh pr merge --auto --squash` the MOMENT the review
   gate passes. **Never merge — or arm auto-merge on — a DRAFT, and never merge ahead of the review
   verdict** (a pre-review draft-merge landed buggy code on a live pilot, incident 2026-07-16). One
   PR = one owning lane; a fresh out-of-lane PR is hands-off unless it has sat GREEN >1 hour.

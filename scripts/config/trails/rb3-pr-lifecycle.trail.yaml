@@ -326,7 +326,7 @@ steps:
     intent: Execute the remote arm mutation only after the exact gate-passed outcome.
     command:
       adapter: shell
-      argv: [sh, -c, 'gh pr merge "$PR_NUMBER" --auto --squash --delete-branch >/dev/null 2>&1 && echo arm-command-succeeded || echo arm-command-failed']
+      argv: [sh, -c, 'gh pr merge "$PR_NUMBER" --auto --squash >/dev/null 2>&1 && echo arm-command-succeeded || echo arm-command-failed']
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"

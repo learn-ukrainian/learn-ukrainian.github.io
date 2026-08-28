@@ -211,7 +211,7 @@ is for CROSS-session continuity, not an in-session rot guard. But:
   user" (#M-12). Merge once an independent CROSS-FAMILY review passes AND blocking CI is green
   (pytest / ruff / frontend / schema-drift / gitleaks / radon — never `--admin`-bypass, #M-0.5).
   Never self-review your own PR.
-- **A ready PR must not sit:** arm `gh pr merge --auto --squash --delete-branch` the MOMENT the
+- **A ready PR must not sit:** arm `gh pr merge --auto --squash` the MOMENT the
   review gate passes (#0H). **Never merge — or arm auto-merge on — a DRAFT, and never merge ahead of
   the review verdict:** a draft squash-merged 14 minutes after opening, before its cross-family
   review finished, landed buggy code on a live pilot's main (incident 2026-07-16). One PR = one

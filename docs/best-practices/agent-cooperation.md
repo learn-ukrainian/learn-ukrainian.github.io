@@ -323,7 +323,7 @@ does not micromanage that track.
 | State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff (gitignored local), e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` — not in git/PRs |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
-| Merge authority | Final reconcile on cross-track/contested merges; SOLE cross-stream sweeper (integration-owner role) for abandoned out-of-stream PRs green+reviewed idle >1h, via scheduled sweep (#4703; stream-scoped 2026-07-13). Track PRs = own-stream-only, membership authoritative via `/api/issues/streams` | Open PRs, route track feedback; self-merge own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16); arm `gh pr merge --auto --squash --delete-branch` at review-gate-pass |
+| Merge authority | Final reconcile on cross-track/contested merges; SOLE cross-stream sweeper (integration-owner role) for abandoned out-of-stream PRs green+reviewed idle >1h, via scheduled sweep (#4703; stream-scoped 2026-07-13). Track PRs = own-stream-only, membership authoritative via `/api/issues/streams` | Open PRs, route track feedback; self-merge own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16); arm `gh pr merge --auto --squash` at review-gate-pass |
 
 **Boundary rule:** if a track orchestrator exists, the main orchestrator treats
 that track's PRs and delegates as awareness-only unless the track orchestrator
