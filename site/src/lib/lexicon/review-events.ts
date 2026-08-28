@@ -154,7 +154,9 @@ function fillRandomBytes(bytes: Uint8Array, random?: () => number): void {
   }
   const cryptoRef = globalThis.crypto;
   if (cryptoRef && typeof cryptoRef.getRandomValues === 'function') {
-    cryptoRef.getRandomValues(bytes);
+    const entropy = new Uint8Array(bytes.length);
+    cryptoRef.getRandomValues(entropy);
+    bytes.set(entropy);
     return;
   }
   for (let index = 0; index < bytes.length; index += 1) {
