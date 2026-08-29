@@ -9,6 +9,7 @@ import {
   type RecordLogItem,
 } from 'ts-fsrs';
 import { CEFR_LEVELS, type CefrLevel } from './levels';
+import { recordCardReviewEvent, type ReviewEventPresentation } from './review-events';
 import { PRACTICE_LEVELS } from './runtime-contract';
 
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
@@ -432,6 +433,11 @@ export interface ReviewLogAggregate {
 export interface ReviewMeta {
   blankCase?: string;
   heritageKind?: string;
+  /** §10.1 presentation — ignored by FSRS; kept for restore / slot rotation. */
+  slotId?: string;
+  clozeId?: string;
+  polarity?: string;
+  optionSetId?: string;
 }
 
 export interface SrsSettings {
@@ -1349,6 +1355,19 @@ function serializeReview(
   };
 }
 
+function presentationFromMeta(meta?: ReviewMeta): ReviewEventPresentation | undefined {
+  if (!meta) return undefined;
+  const presentation: ReviewEventPresentation = {
+    ...(meta.slotId ? { slotId: meta.slotId } : {}),
+    ...(meta.clozeId ? { clozeId: meta.clozeId } : {}),
+    ...(meta.polarity ? { polarity: meta.polarity } : {}),
+    ...(meta.optionSetId ? { optionSetId: meta.optionSetId } : {}),
+  };
+  return presentation.slotId || presentation.clozeId || presentation.polarity || presentation.optionSetId
+    ? presentation
+    : undefined;
+}
+
 export function cardKey(lemmaId: string, mode: PracticeMode): string {
   return `${lemmaId}::${mode}`;
 }
@@ -1389,7 +1408,24 @@ export function rateCard(
   state.cards.set(key, next);
   state.reviews.push(serializeReview(key, lemmaId, mode, rating, record, meta));
   compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES);
-  persistWithQuotaRecovery(state, currentStorage(), reviewDate.getTime());
+  const storage = currentStorage();
+  persistWithQuotaRecovery(state, storage, reviewDate.getTime());
+  try {
+    recordCardReviewEvent(
+      {
+        lemmaId,
+        mode,
+        rating,
+        reviewedAt: reviewDate,
+        deckVersion: PRACTICE_MODE_DECK_VERSION,
+        fsrsParamsVersion: state.settings.version,
+        presentation: presentationFromMeta(meta),
+      },
+      storage,
+    );
+  } catch {
+    // Event log is progressive enhancement; derived SRS state already persisted.
+  }
   return next;
 }
 
