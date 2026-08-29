@@ -16,17 +16,19 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_cycle007_materializer as materializer
 from scripts.projects.open_model_data import phase3_cycle007_storage_custody as storage
 
 ROOT = Path(__file__).resolve().parents[1]
-PUBLIC_SUMMARY_JSON = (
-    ROOT / "data/projects/open_model_data/reference/phase3_cycle007_storage_public_summary_v1.json"
+PUBLIC_SUMMARY_SCHEMA = ROOT / (
+    "data/projects/open_model_data/contracts/"
+    "phase3_cycle007_storage_public_summary_v1.schema.json"
 )
-PUBLIC_SUMMARY_SCHEMA = (
-    ROOT
-    / "data/projects/open_model_data/contracts/phase3_cycle007_storage_public_summary_v1.schema.json"
+PUBLIC_SUMMARY = ROOT / (
+    "data/projects/open_model_data/reference/"
+    "phase3_cycle007_storage_public_summary_v1.json"
 )
 
 
@@ -230,7 +232,7 @@ def test_reconcile_reports_unbound_without_private_binding() -> None:
     assert reconcile["public"]["public_row_count"] == 10159
 
 
-def test_retention_chooses_minimal_evaluation_asset() -> None:
+def test_retention_retires_without_held_out_proof() -> None:
     inventory = {
         "packet_count": 3,
         "row_count": 7,
@@ -238,9 +240,38 @@ def test_retention_chooses_minimal_evaluation_asset() -> None:
         "total_allocated_bytes": 1000,
         "receipt_sha256": "a" * 64,
     }
-    decision = storage.decide_retention(inventory=inventory)
+    decision = storage.decide_retention(
+        inventory=inventory,
+        evaluation_firewall_requires_cycle007_identities=True,
+    )
+    assert decision["retention_outcome"] == storage.RETIRE_CYCLE007
+    assert decision["replacement_firewall_owner_issue"] == 7427
+    assert decision["preserves_only_non_content_lineage_hashes"] is True
+    questions = decision["retention_questions"]
+    assert questions["q4_identity_lineage_exclusion_alone_insufficient"] is True
+    assert questions["q1_concrete_source_qualified_held_out_function"] is False
+    assert questions["q6_replacement_firewall_owner_issue"] == 7427
+
+
+def test_retention_retain_requires_complete_held_out_proof() -> None:
+    inventory = {
+        "packet_count": 3,
+        "row_count": 7,
+        "object_count": 5,
+        "total_allocated_bytes": 1000,
+        "receipt_sha256": "a" * 64,
+    }
+    proof = {
+        "held_out_evaluation_function_id": "source_qualified_cell_coverage_v1",
+        "source_qualified": True,
+        "required_fields": ["document_id", "split_id"],
+        "required_identities": ["unit_id", "unit_sha256"],
+        "named_consumer": "issue-7427-evaluation-steward",
+        "text_free_source_rights_adjudication_metadata": True,
+    }
+    decision = storage.decide_retention(inventory=inventory, held_out_evaluation_proof=proof)
     assert decision["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
-    assert decision["rationale_code"] == "evaluation_firewall_requires_identity_assets"
+    assert decision["replacement_firewall_owner_issue"] is None
 
 
 def test_reversible_lane_roundtrip_backup_and_auth_gate(tmp_path: Path) -> None:
@@ -261,7 +292,10 @@ def test_reversible_lane_roundtrip_backup_and_auth_gate(tmp_path: Path) -> None:
     assert lane["lane_complete"] is True
     assert lane["stopped_at"] == "deletion_authorization_gate"
     assert lane["deletion_authorized"] is False
-    assert lane["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
+    assert lane["retention_outcome"] == storage.RETIRE_CYCLE007
+    assert lane["pack_kind"] == "non_content_lineage_hashes"
+    assert lane["second_expanded_tree"] is False
+    assert lane["replacement_firewall_owner_issue"] == 7427
     assert lane["packet_count"] == packet_count
     assert lane["row_count"] == row_count
     assert lane["identity_proof_ok"] is True
@@ -270,6 +304,8 @@ def test_reversible_lane_roundtrip_backup_and_auth_gate(tmp_path: Path) -> None:
     assert lane["deletion_candidate_count"] >= 1
     assert isinstance(lane["reclaimed_byte_forecast"], int)
     assert lane["reclaimed_byte_forecast"] > 0
+    assert not (work / "cycle007-storage-lane" / "roundtrip-restore").exists()
+    assert not (work / "cycle007-storage-lane" / "backup-restore").exists()
 
     # Originals untouched.
     for path in materialization.rglob("*.json"):
@@ -291,6 +327,42 @@ def test_reversible_lane_roundtrip_backup_and_auth_gate(tmp_path: Path) -> None:
             assert mode == storage.PRIVATE_FILE_MODE
 
 
+def test_reversible_lane_retain_streams_content_pack_proof(tmp_path: Path) -> None:
+    materialization, packet_count, row_count = _build_materialization(tmp_path)
+    evidence = _build_evidence(tmp_path, materialization)
+    work = tmp_path / "work"
+    work.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    os.chmod(work, storage.PRIVATE_DIR_MODE)
+    proof = {
+        "held_out_evaluation_function_id": "source_qualified_cell_coverage_v1",
+        "source_qualified": True,
+        "required_fields": ["document_id", "split_id"],
+        "required_identities": ["unit_id", "unit_sha256"],
+        "named_consumer": "issue-7427-evaluation-steward",
+        "text_free_source_rights_adjudication_metadata": True,
+    }
+    bindings = storage.resolve_bindings(
+        fixture=True,
+        materialization=materialization,
+        evidence=evidence,
+        work_root=work,
+    )
+
+    lane = storage.run_reversible_lane(bindings, held_out_evaluation_proof=proof)
+
+    assert lane["lane_complete"] is True
+    assert lane["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
+    assert lane["pack_kind"] == "content_compact"
+    assert lane["packet_count"] == packet_count
+    assert lane["row_count"] == row_count
+    assert lane["identity_proof_ok"] is True
+    assert lane["roundtrip_ok"] is True
+    assert lane["second_expanded_tree"] is False
+    roundtrip = json.loads((work / "cycle007-storage-lane" / "roundtrip.json").read_bytes())
+    assert roundtrip["proof_mode"] == "stream_decompress_hash"
+    assert roundtrip["roundtrip_ok"] is True
+
+
 def test_real_mode_refuses_argv_paths(tmp_path: Path) -> None:
     with pytest.raises(storage.StorageCustodyError) as exc:
         storage.resolve_bindings(
@@ -302,7 +374,7 @@ def test_real_mode_refuses_argv_paths(tmp_path: Path) -> None:
     assert exc.value.code == "path_disclosure_refused"
 
 
-def test_cli_prepare_lane_fixture(tmp_path: Path) -> None:
+def test_cli_prepare_lane_fixture(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     materialization, _packet_count, _row_count = _build_materialization(tmp_path)
     evidence = _build_evidence(tmp_path, materialization)
     work = tmp_path / "work"
@@ -323,28 +395,62 @@ def test_cli_prepare_lane_fixture(tmp_path: Path) -> None:
         ]
     )
     assert code == 0
+    stdout = json.loads(capsys.readouterr().out)
+    _assert_no_host_filesystem_leak(stdout, where="cli stdout")
     summary = json.loads(summary_out.read_bytes())
     assert summary["text_free"] is True
     assert summary["deletion_authorized"] is False
-    assert summary["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
-    assert summary["roundtrip_ok"] is True
-    assert summary["backup_restore_ok"] is True
+    assert summary["retention_outcome"] == storage.RETIRE_CYCLE007
+    assert summary["replacement_firewall_owner_issue"] == 7427
+    assert summary["fixture_roundtrip_ok"] is True
+    assert summary["fixture_backup_restore_ok"] is True
+    assert summary["fixture_representation_proven"] is True
+    assert summary["second_expanded_tree"] is False
+    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(summary)
     _assert_no_host_filesystem_leak(summary, where="cli public summary")
     assert "filesystem_avail_bytes" not in summary
 
 
+def test_public_summary_records_retirement_while_production_is_unbound() -> None:
+    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
+    summary = json.loads(PUBLIC_SUMMARY.read_bytes())
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(summary)
+    assert summary["private_binding_state"] == "UNBOUND"
+    assert summary["production_inventory_frozen"] is False
+    assert summary["retention_outcome"] == storage.RETIRE_CYCLE007
+    assert summary["replacement_firewall_owner_issue"] == 7427
+    assert summary["preserves_only_non_content_lineage_hashes"] is True
+    assert summary["pack_kind"] == "non_content_lineage_hashes"
+    assert summary["deletion_authorized"] is False
+    _assert_no_host_filesystem_leak(summary, where="committed public summary")
+    assert "filesystem_avail_bytes" not in summary
+
+
+def test_public_summary_schema_allows_optional_nulls() -> None:
+    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
+    properties = schema["properties"]
+    for key in ("replacement_firewall_owner_issue", "pack_kind", "safe_failure_code"):
+        variants = properties[key]["anyOf"]
+        assert {"type": "null"} in variants
+
+
 def test_committed_public_summary_omits_host_filesystem_totals() -> None:
-    receipt = json.loads(PUBLIC_SUMMARY_JSON.read_bytes())
+    receipt = json.loads(PUBLIC_SUMMARY.read_bytes())
     schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
     _assert_no_host_filesystem_leak(receipt, where="public summary receipt")
     properties = schema.get("properties") or {}
     assert isinstance(properties, dict)
     _assert_no_host_filesystem_leak(properties, where="public summary schema")
-    combined = PUBLIC_SUMMARY_JSON.read_text(encoding="utf-8") + PUBLIC_SUMMARY_SCHEMA.read_text(
+    combined = PUBLIC_SUMMARY.read_text(encoding="utf-8") + PUBLIC_SUMMARY_SCHEMA.read_text(
         encoding="utf-8"
     )
     assert "workstation_filesystem" not in combined
     assert "fixture_filesystem" not in combined
+    assert "production_filesystem" not in combined
+    assert "filesystem_avail_bytes" not in combined
 
 
 def test_build_public_summary_does_not_emit_live_statvfs() -> None:
@@ -352,7 +458,7 @@ def test_build_public_summary_does_not_emit_live_statvfs() -> None:
         "lane_complete": True,
         "stopped_at": "deletion_authorization_gate",
         "safe_failure_code": None,
-        "retention_outcome": storage.RETAIN_MINIMAL_EVALUATION_ASSET,
+        "retention_outcome": storage.RETIRE_CYCLE007,
         "packet_count": 3,
         "row_count": 7,
         "object_count": 9,
@@ -362,6 +468,7 @@ def test_build_public_summary_does_not_emit_live_statvfs() -> None:
         "deletion_candidate_count": 1,
         "filesystem_avail_bytes": 123456,
         "fixture_filesystem_avail_bytes": 123456,
+        "production_filesystem_total_bytes": 123456,
         "workstation_filesystem": {"total_bytes": 1, "avail_bytes": 1},
         "peak_temporary_bytes": 1,
         "capacity_sufficient_for_peak": True,
@@ -380,3 +487,7 @@ def test_build_public_summary_does_not_emit_live_statvfs() -> None:
     assert "filesystem_avail_bytes" not in summary
     assert "workstation_filesystem" not in summary
     assert "fixture_filesystem_avail_bytes" not in summary
+    assert "production_filesystem_total_bytes" not in summary
+    assert storage.public_summary_forbidden_fs_keys(
+        {"nested": {"workstation_filesystem": {"total_bytes": 1}}}
+    ) == ("workstation_filesystem",)
