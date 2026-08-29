@@ -52,6 +52,7 @@ FROZEN_IDS = frozenset(
         "admin-backup-dir",
         "fleet-workers-host-id",
         "occupancy-host-id",
+        "health-instance-host",
         "retention-plan-dir",
         "retention-archive-root",
         "dashboard-index-localhost",
@@ -164,16 +165,6 @@ def _fixture_reap_run(
     return _fixture_completed_process(args, returncode=127, stderr="fixture git unavailable")
 
 
-def _fixture_health_identity() -> dict[str, str | None]:
-    return {
-        "host": "fixture-host",
-        "git_sha": None,
-        "checkout_sha": None,
-        "serving_sha": None,
-        "serving_mode": "checkout",
-    }
-
-
 REAL_BOARD_PROBE_KEYS = frozenset(
     {
         "capsule_session_env",
@@ -251,7 +242,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         "schema_version: issue-streams.v1\nstreams: {}\n",
         encoding="utf-8",
     )
-    monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", HOST_ID_CANARY)
@@ -375,7 +365,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     )
 
     dashboards_root = root / "dashboards"
-    monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
 
     # Facade/status readers retain imported references to the resolver;
     # redirect every such reference into the disposable tree instead of
@@ -411,10 +400,10 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
 
     # The source and the injected seams must both carry the planted canary
     # before any response is considered safe to scan.
-    assert root / "seams" / "scripts_api_main" / "project_root" == api_main.PROJECT_ROOT
+    assert root == fixture_ctx.roots.project_root
     assert HOST_ALIAS_CANARY in os.environ["MONITOR_OCCUPANCY_HOST_IDS"]
     assert os.environ["LU_MONITOR_HOST_ID"] == HOST_ID_CANARY
-    assert PATH_CANARY in str(api_main.PROJECT_ROOT.parent.parent.parent)
+    assert PATH_CANARY in str(fixture_ctx.roots.project_root)
     assert PATH_CANARY in str(fixture_ctx.roots.effective_roots["audit"])
     assert PATH_CANARY in str(message_plane.default_plane_root())
 

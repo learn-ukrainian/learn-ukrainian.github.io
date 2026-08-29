@@ -21,7 +21,6 @@ sys.path.insert(0, str(REPO_ROOT))
 from scripts.api import (
     issues_router,
 )
-from scripts.api import main as api_main
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db  # noqa: F401 — same import as isolated_fixture
 
@@ -64,7 +63,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     """Mirror isolated_fixture setattr side effects (no pytest tmp_path wrapper)."""
     handoff_path = root / "batch_state" / "session-handoff.md"
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
-    monkeypatch.setattr(api_main, "_health_instance_identity", lambda: {})
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "opsec-host-alias=opsec-host-id")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "opsec-host-id")
     monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
@@ -129,9 +127,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
     monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: sqlite3.connect(*args, **kwargs))
-
-    dashboards_root = root / "dashboards"
-    monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
 
     isolated_plane_root = root / "stores" / "fleet-comms"
     isolated_plane_root.mkdir(parents=True, exist_ok=True)
