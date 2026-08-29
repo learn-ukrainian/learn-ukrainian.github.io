@@ -7,7 +7,6 @@
   "fixture_capacity_sufficient_for_peak": true,
   "fixture_compact_stored_allocated_bytes": 36864,
   "fixture_deletion_candidate_count": 4,
-  "fixture_filesystem_avail_bytes": 17430081536,
   "fixture_identity_proof_ok": true,
   "fixture_lane_complete": true,
   "fixture_lane_receipt_sha256": "9fd174d30f7b3c1211208a83f6d2fba650a6aebcf970f2376c9c2830dca8370c",
@@ -30,7 +29,7 @@
   "provider_derived_training_labels": 0,
   "public_packet_count": 204,
   "public_row_count": 10159,
-  "receipt_sha256": "e01438d650ec01cae425d5d335fbefc07b8a0d0ba641e88a4506b2d7f457c5f7",
+  "receipt_sha256": "bfdfdfae560e77ca03986c6e507774b713ac21fceb66b48d0ba984f40da493ce",
   "reconcile_receipt_sha256": "0998c6854fe87aaa911d04df8e5ea88fcff5db5b54400c649489cb364820bc67",
   "retention_outcome": "RETAIN_MINIMAL_EVALUATION_ASSET",
   "retention_rationale_code": "evaluation_firewall_requires_identity_assets",
@@ -38,14 +37,5 @@
   "safe_failure_code": "private_binding_unbound",
   "schema_version": "phase3_cycle007_storage_public_summary_v1",
   "stopped_at": "private_binding_unbound_then_deletion_authorization_gate",
-  "text_free": true,
-  "workstation_filesystem": {
-    "avail_bytes": 17430134784,
-    "bavail": 4255404,
-    "bfree": 4255404,
-    "blocks": 59840624,
-    "free_bytes": 17430134784,
-    "frsize": 4096,
-    "total_bytes": 245107195904
-  }
+  "text_free": true
 }

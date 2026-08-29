@@ -59,6 +59,25 @@ LABELING_OUTPUT_ROOTS = (
     "dual-label-final-cycle007-v1",
 )
 
+PUBLIC_SUMMARY_FORBIDDEN_FS_KEYS = frozenset(
+    {
+        "workstation_filesystem",
+        "fixture_filesystem_avail_bytes",
+        "filesystem_avail_bytes",
+    }
+)
+
+
+def public_summary_forbidden_fs_keys(value: Mapping[str, Any]) -> tuple[str, ...]:
+    """Return host-filesystem keys that must never appear in public JSON."""
+    leaked = [
+        key
+        for key in value
+        if key in PUBLIC_SUMMARY_FORBIDDEN_FS_KEYS or str(key).startswith("fixture_filesystem_")
+    ]
+    return tuple(sorted(leaked))
+
+
 FAILURE_CODES = frozenset(
     {
         "path_disclosure_refused",
@@ -1101,8 +1120,8 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
 
 
 def build_public_summary(lane: Mapping[str, Any], reconcile: Mapping[str, Any]) -> dict[str, Any]:
-    """Public, topology-free summary safe for issue/PR/repo reference artifacts."""
-    return _receipt(
+    """Public, topology-free summary. Never emits live host statvfs totals."""
+    summary = _receipt(
         {
             "schema_version": "phase3_cycle007_storage_public_summary_v1",
             "outcome_sha256": OUTCOME_SHA256,
@@ -1122,7 +1141,6 @@ def build_public_summary(lane: Mapping[str, Any], reconcile: Mapping[str, Any]) 
             "compact_stored_allocated_bytes": lane.get("compact_stored_allocated_bytes"),
             "reclaimed_byte_forecast": lane.get("reclaimed_byte_forecast"),
             "deletion_candidate_count": lane.get("deletion_candidate_count"),
-            "filesystem_avail_bytes": lane.get("filesystem_avail_bytes"),
             "peak_temporary_bytes": lane.get("peak_temporary_bytes"),
             "capacity_sufficient_for_peak": lane.get("capacity_sufficient_for_peak"),
             "identity_proof_ok": lane.get("identity_proof_ok"),
@@ -1132,6 +1150,10 @@ def build_public_summary(lane: Mapping[str, Any], reconcile: Mapping[str, Any]) 
             "reconcile_receipt_sha256": reconcile.get("receipt_sha256"),
         }
     )
+    leaked = public_summary_forbidden_fs_keys(summary)
+    if leaked:
+        raise StorageCustodyError("path_disclosure_refused")
+    return summary
 
 
 def main(argv: Sequence[str] | None = None) -> int:

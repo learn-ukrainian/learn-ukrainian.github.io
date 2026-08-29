@@ -55,20 +55,6 @@
     "evaluation_firewall_requires_cycle007_identities": {"type": "boolean"},
     "production_inventory_frozen": {"type": "boolean"},
     "fixture_representation_proven": {"type": "boolean"},
-    "workstation_filesystem": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["frsize", "blocks", "bfree", "bavail", "total_bytes", "free_bytes", "avail_bytes"],
-      "properties": {
-        "frsize": {"type": "integer", "minimum": 1},
-        "blocks": {"type": "integer", "minimum": 0},
-        "bfree": {"type": "integer", "minimum": 0},
-        "bavail": {"type": "integer", "minimum": 0},
-        "total_bytes": {"type": "integer", "minimum": 0},
-        "free_bytes": {"type": "integer", "minimum": 0},
-        "avail_bytes": {"type": "integer", "minimum": 0}
-      }
-    },
     "fixture_lane_complete": {"type": "boolean"},
     "fixture_packet_count": {"type": "integer", "minimum": 1},
     "fixture_row_count": {"type": "integer", "minimum": 1},
@@ -83,7 +69,6 @@
     "fixture_lane_receipt_sha256": {"$ref": "#/$defs/sha256"},
     "fixture_peak_temporary_bytes": {"type": "integer", "minimum": 0},
     "fixture_capacity_sufficient_for_peak": {"type": "boolean"},
-    "fixture_filesystem_avail_bytes": {"type": "integer", "minimum": 0},
     "receipt_sha256": {"$ref": "#/$defs/sha256"}
   },
   "$defs": {

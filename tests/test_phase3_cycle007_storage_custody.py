@@ -12,12 +12,28 @@ import json
 import os
 import stat
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import pytest
 
 from scripts.projects.open_model_data import phase3_cycle007_materializer as materializer
 from scripts.projects.open_model_data import phase3_cycle007_storage_custody as storage
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PUBLIC_SUMMARY_JSON = (
+    ROOT / "data/projects/open_model_data/reference/phase3_cycle007_storage_public_summary_v1.json"
+)
+PUBLIC_SUMMARY_SCHEMA = (
+    ROOT
+    / "data/projects/open_model_data/contracts/phase3_cycle007_storage_public_summary_v1.schema.json"
+)
+
+
+def _assert_no_host_filesystem_leak(payload: Mapping[str, Any], *, where: str) -> None:
+    leaked = storage.public_summary_forbidden_fs_keys(payload)
+    assert leaked == (), f"{where} leaked host filesystem keys: {leaked}"
+
 
 
 def _write(path: Path, value: Any, *, raw: bool = False) -> bytes:
@@ -313,3 +329,54 @@ def test_cli_prepare_lane_fixture(tmp_path: Path) -> None:
     assert summary["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
     assert summary["roundtrip_ok"] is True
     assert summary["backup_restore_ok"] is True
+    _assert_no_host_filesystem_leak(summary, where="cli public summary")
+    assert "filesystem_avail_bytes" not in summary
+
+
+def test_committed_public_summary_omits_host_filesystem_totals() -> None:
+    receipt = json.loads(PUBLIC_SUMMARY_JSON.read_bytes())
+    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
+    _assert_no_host_filesystem_leak(receipt, where="public summary receipt")
+    properties = schema.get("properties") or {}
+    assert isinstance(properties, dict)
+    _assert_no_host_filesystem_leak(properties, where="public summary schema")
+    combined = PUBLIC_SUMMARY_JSON.read_text(encoding="utf-8") + PUBLIC_SUMMARY_SCHEMA.read_text(
+        encoding="utf-8"
+    )
+    assert "workstation_filesystem" not in combined
+    assert "fixture_filesystem" not in combined
+
+
+def test_build_public_summary_does_not_emit_live_statvfs() -> None:
+    lane = {
+        "lane_complete": True,
+        "stopped_at": "deletion_authorization_gate",
+        "safe_failure_code": None,
+        "retention_outcome": storage.RETAIN_MINIMAL_EVALUATION_ASSET,
+        "packet_count": 3,
+        "row_count": 7,
+        "object_count": 9,
+        "total_allocated_bytes": 1,
+        "compact_stored_allocated_bytes": 1,
+        "reclaimed_byte_forecast": 1,
+        "deletion_candidate_count": 1,
+        "filesystem_avail_bytes": 123456,
+        "fixture_filesystem_avail_bytes": 123456,
+        "workstation_filesystem": {"total_bytes": 1, "avail_bytes": 1},
+        "peak_temporary_bytes": 1,
+        "capacity_sufficient_for_peak": True,
+        "identity_proof_ok": True,
+        "backup_restore_ok": True,
+        "roundtrip_ok": True,
+        "receipt_sha256": "a" * 64,
+    }
+    reconcile = {
+        "private_binding_state": "UNBOUND",
+        "safe_failure_code": "private_binding_unbound",
+        "receipt_sha256": "b" * 64,
+    }
+    summary = storage.build_public_summary(lane, reconcile)
+    _assert_no_host_filesystem_leak(summary, where="build_public_summary")
+    assert "filesystem_avail_bytes" not in summary
+    assert "workstation_filesystem" not in summary
+    assert "fixture_filesystem_avail_bytes" not in summary
