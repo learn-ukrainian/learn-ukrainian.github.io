@@ -823,7 +823,7 @@ def create_backup(pack_dir: Path, backup_dir: Path) -> dict[str, Any]:
     if backup_dir.exists():
         raise StorageCustodyError("backup_restore_failure")
     shutil.copytree(pack_dir, backup_dir, symlinks=False)
-    for dirpath, dirnames, filenames in os.walk(backup_dir):
+    for dirpath, _dirnames, filenames in os.walk(backup_dir):
         os.chmod(dirpath, PRIVATE_DIR_MODE)
         for filename in filenames:
             os.chmod(Path(dirpath) / filename, PRIVATE_FILE_MODE)
