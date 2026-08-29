@@ -88,21 +88,14 @@ def _patch_config(mock_project_root, broker_db):
     comms_router itself keeps no path globals since #7269 step 5 — it
     resolves everything from the app's MonitorContext — so steering comms
     routes at the fixture root happens via ``app.state.ctx`` (see
-    ``comms_client`` and ``_comms_ctx``). The config patches below remain
-    for the routers that still read config directly (admin, images) and
-    for helpers that read ``scripts.api.config`` at call time.
+    ``comms_client`` and ``_comms_ctx``). admin_router is the same since
+    step 8. The config patches below remain for images_router (still
+    unmigrated; #7325) and helpers that read ``scripts.api.config``.
     """
     with (
         patch("scripts.api.config.PROJECT_ROOT", mock_project_root),
         patch("scripts.api.config.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
         patch("scripts.api.config.MESSAGE_DB", broker_db),
-        patch("scripts.api.admin_router.PROJECT_ROOT", mock_project_root),
-        patch("scripts.api.admin_router.MESSAGE_DB", broker_db),
-        patch("scripts.api.admin_router.BACKUP_DIR", mock_project_root / "data" / "backups"),
-        patch("scripts.api.admin_router.DATA_DIR", mock_project_root / "data"),
-        patch("scripts.api.admin_router.IMAGE_DIR", mock_project_root / "data" / "textbook_images"),
-        patch("scripts.api.admin_router.LOGS_DIR", mock_project_root / "logs"),
-        patch("scripts.api.admin_router.MCP_DIR", mock_project_root / ".mcp"),
     ):
         yield
 
@@ -136,12 +129,20 @@ def comms_client(_patch_config, mock_project_root):
 
 
 @pytest.fixture()
-def admin_client(_patch_config):
-    """TestClient for admin router."""
+def admin_app(_patch_config, mock_project_root):
+    """Bare FastAPI app mounting admin_router against a fixture context."""
     from scripts.api.admin_router import router
+
     app = FastAPI()
+    app.state.ctx = _comms_ctx(mock_project_root)
     app.include_router(router, prefix="/api/admin")
-    return TestClient(app)
+    return app
+
+
+@pytest.fixture()
+def admin_client(admin_app):
+    """TestClient for admin router."""
+    return TestClient(admin_app)
 
 
 @pytest.fixture()
@@ -792,14 +793,14 @@ class TestAdminHelpers:
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
         from scripts.api.admin_router import _broker_health
-        with patch("scripts.api.admin_router.MESSAGE_DB", db_path):
-            result = _broker_health()
+
+        result = _broker_health(_comms_ctx(mock_project_root))
         assert result["status"] == "missing"
 
-    def test_broker_health_with_db(self, _patch_config, broker_db):
+    def test_broker_health_with_db(self, _patch_config, mock_project_root, broker_db):
         from scripts.api.admin_router import _broker_health
-        with patch("scripts.api.admin_router.MESSAGE_DB", broker_db):
-            result = _broker_health()
+
+        result = _broker_health(_comms_ctx(mock_project_root))
         assert result["status"] == "healthy"
 
 
@@ -812,9 +813,14 @@ class TestAdminBackup:
         assert data["count"] == 0
         assert data["backups"] == []
 
-    def test_list_backups_no_dir(self, admin_client):
-        with patch("scripts.api.admin_router.BACKUP_DIR", Path("/nonexistent")):
-            r = admin_client.get("/api/admin/backup/list")
+    def test_list_backups_no_dir(self, admin_client, admin_app):
+        from dataclasses import replace
+
+        admin_app.state.ctx = replace(
+            admin_app.state.ctx,
+            roots=replace(admin_app.state.ctx.roots, backup_dir=Path("/nonexistent")),
+        )
+        r = admin_client.get("/api/admin/backup/list")
         assert r.json()["backups"] == []
 
     def test_list_backups_with_files(self, admin_client, mock_project_root):
@@ -896,8 +902,7 @@ class TestAdminMaintenance:
     def test_vacuum_broker_no_db(self, admin_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
-        with patch("scripts.api.admin_router.MESSAGE_DB", db_path):
-            r = admin_client.post("/api/admin/maintenance/vacuum-broker")
+        r = admin_client.post("/api/admin/maintenance/vacuum-broker")
         assert r.status_code == 404
 
     def test_clean_logs(self, admin_client, mock_project_root):
@@ -944,9 +949,14 @@ class TestAdminMaintenance:
         assert data["cached_files"] == 2
         assert data["source_files"] == 1
 
-    def test_annotation_stats_no_dir(self, admin_client):
-        with patch("scripts.api.admin_router.IMAGE_DIR", Path("/nonexistent")):
-            r = admin_client.get("/api/admin/maintenance/annotation-stats")
+    def test_annotation_stats_no_dir(self, admin_client, admin_app):
+        from dataclasses import replace
+
+        admin_app.state.ctx = replace(
+            admin_app.state.ctx,
+            roots=replace(admin_app.state.ctx.roots, images_dir=Path("/nonexistent")),
+        )
+        r = admin_client.get("/api/admin/maintenance/annotation-stats")
         assert "error" in r.json()
 
     def test_annotation_stats_with_data(self, admin_client, mock_project_root):

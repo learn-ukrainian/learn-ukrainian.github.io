@@ -29,10 +29,8 @@ from starlette.requests import Request
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    entire_context_router,
     epics_router,
     fleet_router,
-    git_hygiene_router,
     governance_router,
     issues_router,
     opsec_scan,
@@ -45,7 +43,6 @@ from scripts.api import (
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet_comms import message_plane
-from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
@@ -301,11 +298,14 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # project_state_router._collect_missing_local_document's existing broad
     # except already treats as a failed collection, so the route degrades to
     # its documented "unknown" shape without a route-specific stub.
-    monkeypatch.setattr(
-        git_hygiene_router,
-        "_run_git",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
+    # NOTE (#7269 step 8): git_hygiene_router._run_git, the three
+    # entire_context_router provider/projection stubs, and
+    # worktree_containment.primary_checkout_dirty_status are gone. Hygiene
+    # routes treat the global denied-subprocess AssertionError as
+    # git-unavailable; entire-context reads the fixture root and degrades
+    # to projection_missing / provider_status_missing; core_router's
+    # existing except around primary_checkout_dirty_status already
+    # degrades that collector.
     monkeypatch.setattr(
         worktrees_router,
         "_run",
@@ -339,34 +339,8 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             "index": [],
         },
     )
-    monkeypatch.setattr(
-        entire_context_router,
-        "projection_path",
-        lambda cwd: Path(cwd) / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3",
-    )
-    monkeypatch.setattr(entire_context_router, "load_provider_status", lambda _root: {})
-    monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
-    monkeypatch.setattr(
-        worktree_containment,
-        "primary_checkout_dirty_status",
-        lambda _start: {
-            "role": "primary",
-            "head_sha": "0" * 40,
-            "branch": "opsec-fixture",
-            "protected_branch": False,
-            "dirty": False,
-            "dirty_count": 0,
-            "tracked_dirty_count": 0,
-            "untracked_dirty_count": 0,
-            "entries": [],
-            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
-            "bare_primary": False,
-            "bare_healed": False,
-            "bare_heal_message": None,
-        },
-    )
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     # RAG imports its source DB lazily outside the scripts.api namespace. The

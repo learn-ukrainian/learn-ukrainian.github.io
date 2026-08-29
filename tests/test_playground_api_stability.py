@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.admin_router as admin_router
 import scripts.api.dashboard_comms as dashboard_comms
 import scripts.api.images_router as images_router
 from scripts.ai_agent_bridge import _db
@@ -248,7 +247,9 @@ def test_p95_of_three_perf_probe_allows_one_slow_tail(monkeypatch, three_run_per
 def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
     broker_db = tmp_path / "messages.db"
     _init_broker_db(broker_db)
-    monkeypatch.setattr(admin_router, "MESSAGE_DB", broker_db)
+    # admin_router keeps no path globals since #7269 step 8 — it resolves
+    # its broker DB from the app's MonitorContext (same as comms_router
+    # since step 5). Pin the context's message DB onto this smoke broker.
     # comms_router keeps no path globals since #7269 step 5 — it resolves
     # its broker DB from the app's MonitorContext. Pin the context's message
     # DB onto this smoke broker while keeping every other production root

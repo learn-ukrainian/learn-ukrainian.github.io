@@ -6,11 +6,12 @@ the optional ``pymupdf`` dependency absent from slim fastlane deps).
 """
 
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
+from scripts.api.monitor_context import fixture_context
 
 
 @pytest.fixture()
@@ -28,16 +29,12 @@ def mock_project_root(tmp_path):
 @pytest.fixture()
 def admin_client(mock_project_root):
     """TestClient for admin router with disk-usage paths pointed at tmp_path."""
-    with (
-        patch("scripts.api.admin_router.PROJECT_ROOT", mock_project_root),
-        patch("scripts.api.admin_router.DATA_DIR", mock_project_root / "data"),
-        patch("scripts.api.admin_router.BACKUP_DIR", mock_project_root / "data" / "backups"),
-        patch("scripts.api.admin_router.LOGS_DIR", mock_project_root / "logs"),
-    ):
-        from scripts.api.admin_router import router
-        app = FastAPI()
-        app.include_router(router, prefix="/api/admin")
-        yield TestClient(app)
+    from scripts.api.admin_router import router
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(mock_project_root)
+    app.include_router(router, prefix="/api/admin")
+    return TestClient(app)
 
 
 class TestAdminDiskUsage:

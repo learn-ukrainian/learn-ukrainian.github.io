@@ -438,7 +438,7 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
         locator_ids=[link.locator_id],
     )
     monkeypatch.setenv("ENTIRE_CONTEXT_DB", str(store.db_path))
-    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_args, **_kwargs: tmp_path)
     monkeypatch.setattr(
         entire_context_router,
         "load_provider_status",
@@ -487,7 +487,7 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
 def test_monitor_status_allowlists_reconciliation_health_and_malformed_aggregates(
     tmp_path: Path, monkeypatch
 ) -> None:
-    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_args, **_kwargs: tmp_path)
     monkeypatch.setattr(
         entire_context_router,
         "_projection_status",
@@ -623,7 +623,7 @@ def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
         observed["rollover_root"] = kwargs["rollover_root"]
         return real_search(*args, **kwargs)
 
-    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: linked)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_args, **_kwargs: linked)
     monkeypatch.setattr(entire_context_router, "search_past_work", observe_search)
     response = TestClient(app).get("/api/ops/entire-context/search", params={"q": "6183"})
 
