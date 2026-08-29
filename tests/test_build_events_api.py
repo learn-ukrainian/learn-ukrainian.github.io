@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -13,6 +14,17 @@ import scripts.api.build_events_router as build_events_router
 from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
+
+
+def _ctx_with_curriculum_root(curriculum_root: Path):
+    """Redirect ``ctx.roots.curriculum_root`` for HTTP calls through ``client``.
+
+    ``build_events_router`` resolves dispatch-meta paths from MonitorContext
+    (#7330 step 12a), so tests swap ``app.state.ctx`` instead of monkeypatching
+    a module Path.
+    """
+    base = app.state.ctx
+    return replace(base, roots=replace(base.roots, curriculum_root=Path(curriculum_root)))
 
 
 def _iso(dt: datetime) -> str:
@@ -57,7 +69,7 @@ def _write_state(root: Path, level: str, slug: str, publish_status: str = "pendi
 
 
 def test_recent_events_newest_first(tmp_path, monkeypatch):
-    monkeypatch.setattr(build_events_router, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
     now = datetime.now(UTC)
     _write_meta(tmp_path, "a2", "a2-bridge", "01-write-meta.json", now - timedelta(minutes=5))
     _write_meta(tmp_path, "a2", "a2-bridge", "02-review-meta.json", now - timedelta(minutes=1), phase="review")
@@ -71,7 +83,7 @@ def test_recent_events_newest_first(tmp_path, monkeypatch):
 
 
 def test_recent_events_level_filter(tmp_path, monkeypatch):
-    monkeypatch.setattr(build_events_router, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
     now = datetime.now(UTC)
     _write_meta(tmp_path, "a1", "one", "01-write-meta.json", now - timedelta(minutes=2))
     _write_meta(tmp_path, "a2", "two", "01-write-meta.json", now - timedelta(minutes=1))
@@ -86,7 +98,7 @@ def test_recent_events_level_filter(tmp_path, monkeypatch):
 
 
 def test_active_events_respects_10_min_window(tmp_path, monkeypatch):
-    monkeypatch.setattr(build_events_router, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
     now = datetime.now(UTC)
     _write_meta(tmp_path, "a2", "fresh", "01-write-meta.json", now - timedelta(minutes=3))
     _write_state(tmp_path, "a2", "fresh", publish_status="pending", current_phase="write")
@@ -105,7 +117,7 @@ def test_active_events_respects_10_min_window(tmp_path, monkeypatch):
 
 
 def test_scan_hard_cap(tmp_path, monkeypatch):
-    monkeypatch.setattr(build_events_router, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
     monkeypatch.setattr(build_events_router, "BUILD_EVENTS_SCAN_CAP", 2)
     now = datetime.now(UTC)
     _write_meta(tmp_path, "a2", "one", "01-write-meta.json", now - timedelta(minutes=3))

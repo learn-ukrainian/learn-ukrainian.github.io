@@ -15,11 +15,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from scripts.lexicon.runner import atlas_job
+
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["atlas-jobs"])
 
@@ -97,6 +99,42 @@ class CloseBody(BaseModel):
     summary: dict[str, Any] | None = None
     skip_pull: bool = False
     skip_restic: bool = False
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _registry_dir(ctx: MonitorContext | None = None) -> Path:
+    """Resolve the atlas-jobs registry the same way ``atlas_job.registry_dir`` does.
+
+    ``ATLAS_JOB_REGISTRY`` remains the operator/test override. Otherwise the
+    path is ``ctx.roots.batch_state_dir / "atlas-jobs"`` so a fixture context
+    never walks the production checkout.
+    """
+    override = os.environ.get("ATLAS_JOB_REGISTRY")
+    if override:
+        return Path(override)
+    return _resolve_context(ctx).roots.batch_state_dir / "atlas-jobs"
+
+
+def _registry_display(ctx: MonitorContext | None = None) -> str:
+    """Registry path for HTTP responses.
+
+    A fixture context must not echo its disposable root (the former
+    ``atlas_job.registry_dir`` sweep seam returned this canary-free relative
+    path). Production still reports the live registry location.
+    """
+    resolved = _resolve_context(ctx)
+    if resolved.root is not None:
+        return "atlas-jobs-fixture"
+    return str(_registry_dir(resolved))
 
 
 def _require_job_id(job_id: str) -> str:
@@ -311,18 +349,19 @@ def _decode_cursor(cursor: str) -> tuple[str, str] | None:
 
 
 @router.get("")
-def list_jobs() -> dict[str, Any]:
+def list_jobs(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
+    del ctx
     rows = atlas_job.list_registry()
     return {"count": len(rows), "jobs": rows}
 
 
 @router.get("/health")
-def atlas_jobs_health() -> dict[str, Any]:
+def atlas_jobs_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     return {
         "ok": True,
         "schema": atlas_job.SCHEMA,
         "restic_sink_blocked": atlas_job.restic_sink_blocked(),
-        "registry": str(atlas_job.registry_dir()),
+        "registry": _registry_display(ctx),
     }
 
 
@@ -330,7 +369,9 @@ def atlas_jobs_health() -> dict[str, Any]:
 async def load_jobs(
     host: str | None = None,
     fresh: bool = False,
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
+    del ctx
     all_hosts = _canonical_allowed_hosts()
     if host is not None:
         canonical = atlas_job._canonical_host(host)
@@ -358,7 +399,9 @@ def results_jobs(
     state: str | None = None,
     limit: int = Query(RESULTS_DEFAULT_LIMIT, ge=1, le=RESULTS_MAX_LIMIT),
     cursor: str | None = None,
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
+    del ctx
     target_host = atlas_job._canonical_host(host) if host is not None else None
     root = atlas_job.registry_dir()
     all_results: list[dict[str, Any]] = []
@@ -428,7 +471,8 @@ def results_jobs(
 
 
 @router.post("/submit")
-def submit_job(body: SubmitBody) -> dict[str, Any]:
+def submit_job(body: SubmitBody, ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
+    del ctx
     errors = atlas_job.validate_plan(body.plan)
     if errors:
         raise HTTPException(status_code=400, detail={"errors": errors})
@@ -444,7 +488,13 @@ def submit_job(body: SubmitBody) -> dict[str, Any]:
 
 
 @router.get("/{job_id}")
-def job_status(job_id: str, host: str = "atlas-runner", audit: bool = False) -> dict[str, Any]:
+def job_status(
+    job_id: str,
+    host: str = "atlas-runner",
+    audit: bool = False,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
+    del ctx
     job_id = _require_job_id(job_id)
     row = atlas_job.load_registry(job_id)
     if row is None:
@@ -461,7 +511,12 @@ def job_status(job_id: str, host: str = "atlas-runner", audit: bool = False) -> 
 
 
 @router.post("/{job_id}/close")
-def close_job(job_id: str, body: CloseBody | None = None) -> dict[str, Any]:
+def close_job(
+    job_id: str,
+    body: CloseBody | None = None,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
+    del ctx
     job_id = _require_job_id(job_id)
     payload = body or CloseBody()
     try:

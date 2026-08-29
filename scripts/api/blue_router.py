@@ -12,14 +12,15 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
+from .config import LEVELS
+from .monitor_context import MonitorContext, get_ctx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from audit.checks.activity_validation import (
@@ -41,16 +42,16 @@ router = APIRouter(tags=["blue"])
 
 
 @router.get("/health")
-async def health():
+async def health(ctx: MonitorContext = Depends(get_ctx)):
     """Health check — Blue dashboard uses this to detect API availability."""
     return {
         "status": "ok",
-        "batch_state_dir_exists": BATCH_STATE_DIR.exists(),
+        "batch_state_dir_exists": ctx.roots.batch_state_dir.exists(),
     }
 
 
 @router.get("/live-status", deprecated=True)
-async def live_status(response: Response):
+async def live_status(response: Response, ctx: MonitorContext = Depends(get_ctx)):
     """Ground truth: scan filesystem for actual module files per track.
 
     DEPRECATED (GH #1309): use ``/api/state/build-status`` (all tracks)
@@ -70,9 +71,10 @@ async def live_status(response: Response):
     response.headers["Warning"] = '299 - "This endpoint is deprecated; migrate to /api/state/build-status (#1309)"'
 
     results = {}
+    curriculum_root = ctx.roots.curriculum_root
     for level_cfg in LEVELS:
         track = level_cfg["id"]
-        level_dir = CURRICULUM_ROOT / level_cfg["path"]
+        level_dir = curriculum_root / level_cfg["path"]
         if not level_dir.exists():
             continue
 
@@ -134,10 +136,11 @@ async def live_status(response: Response):
 
 
 @router.get("/freshness")
-async def data_freshness():
+async def data_freshness(ctx: MonitorContext = Depends(get_ctx)):
     """Return data source ages so dashboard can show staleness warnings."""
     sources = {}
-    for cp_file in BATCH_STATE_DIR.glob("checkpoint_*.json"):
+    batch_state_dir = ctx.roots.batch_state_dir
+    for cp_file in batch_state_dir.glob("checkpoint_*.json"):
         track = cp_file.stem.replace("checkpoint_", "")
         try:
             mtime = cp_file.stat().st_mtime
@@ -147,7 +150,7 @@ async def data_freshness():
         except Exception:
             pass
 
-    ds_file = BATCH_STATE_DIR / "dispatcher_state.json"
+    ds_file = batch_state_dir / "dispatcher_state.json"
     if ds_file.exists():
         try:
             mtime = ds_file.stat().st_mtime
@@ -177,7 +180,9 @@ async def history():
 
 
 @router.get("/audit/{track_id}/{slug}")
-async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
+async def get_audit_status(
+    track_id: str, slug: str, fresh: bool = False, ctx: MonitorContext = Depends(get_ctx)
+):
     """Return audit status for a module.
 
     Default: reads cached status/{slug}.json (instant).
@@ -186,8 +191,9 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
     Returns structured JSON — no need to parse terminal output.
     """
     bare = to_bare_slug(slug)
+    project_root = ctx.roots.project_root
     try:
-        track_dir = safe_join(CURRICULUM_ROOT, track_id)
+        track_dir = safe_join(ctx.roots.curriculum_root, track_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid track/slug") from None
     md_candidates = list(track_dir.glob(f"*{bare}.md"))
@@ -197,13 +203,13 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
     if fresh:
         if not md_path.exists():
             raise HTTPException(status_code=404, detail=f"Module file not found: {md_path}")
-        audit_script = PROJECT_ROOT / "scripts" / "audit_module.sh"
+        audit_script = project_root / "scripts" / "audit_module.sh"
         try:
             subprocess.run(
                 [str(audit_script), str(md_path)],
                 capture_output=True,
                 text=True,
-                cwd=PROJECT_ROOT,
+                cwd=project_root,
                 timeout=AUDIT_MODULE_TIMEOUT_SECONDS,
             )
         except subprocess.TimeoutExpired:
@@ -251,7 +257,7 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
 
 
 @router.get("/activity-errors/{track_id}/{slug}")
-async def get_activity_errors(track_id: str, slug: str):
+async def get_activity_errors(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Run all 7 structural activity checks and return violations as JSON.
 
     Runs in-process (no subprocess) — fast. Checks:
@@ -261,7 +267,7 @@ async def get_activity_errors(track_id: str, slug: str):
       UNJUMBLE_POSSIBLE_OUT_OF_SCOPE_DATIVE
     """
     bare = to_bare_slug(slug)
-    activities_path = safe_join(CURRICULUM_ROOT, track_id, "activities", f"{bare}.yaml")
+    activities_path = safe_join(ctx.roots.curriculum_root, track_id, "activities", f"{bare}.yaml")
 
     if not activities_path.exists():
         return {"track": track_id, "slug": slug, "error": "No activities file found", "violations": []}
@@ -288,7 +294,7 @@ async def get_activity_errors(track_id: str, slug: str):
     return {
         "track": track_id,
         "slug": slug,
-        "activities_file": str(activities_path.relative_to(PROJECT_ROOT)),
+        "activities_file": str(activities_path.relative_to(ctx.roots.project_root)),
         "activity_count": len(activities),
         "total_violations": len(violations),
         "critical_count": len(critical),
@@ -298,7 +304,7 @@ async def get_activity_errors(track_id: str, slug: str):
 
 
 @router.get("/final-review-summary/{track_id}/{slug}")
-async def get_final_review_summary(track_id: str, slug: str):
+async def get_final_review_summary(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate endpoint for Claude's /final-review workflow.
 
     One call returns everything needed to start a final review:
@@ -313,7 +319,7 @@ async def get_final_review_summary(track_id: str, slug: str):
     """
     bare = to_bare_slug(slug)
     try:
-        track_dir = safe_join(CURRICULUM_ROOT, track_id)
+        track_dir = safe_join(ctx.roots.curriculum_root, track_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid track/slug") from None
 

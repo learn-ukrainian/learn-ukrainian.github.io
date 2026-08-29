@@ -426,13 +426,13 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `atlas_jobs_router.py` | `/api/atlas-jobs` | 7 | 484 | — | `_HOST_LOAD_CACHE` | 2 | 12a |
-| `blue_router.py` | `/api/blue` | 8 | 412 | `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT` | — | 3 | 12a |
-| `build_events_router.py` | `/api/build/events` | 2 | 157 | `CURRICULUM_ROOT` | — | 1 | 12a |
-| `coordination_router.py` | `/api/coordination` | 3 | 40 | `PROJECT_ROOT` | — | 1 | 12a |
+| `atlas_jobs_router.py` | `/api/atlas-jobs` | 7 | 484 | — | `_HOST_LOAD_CACHE` | 0 | 12a |
+| `blue_router.py` | `/api/blue` | 8 | 412 | `LEVELS` | — | 0 | 12a |
+| `build_events_router.py` | `/api/build/events` | 2 | 157 | — | — | 0 | 12a |
+| `coordination_router.py` | `/api/coordination` | 3 | 40 | — | — | 0 | 12a |
 | `cost_router.py` | `/api/cost`, `/api/analytics/cost` | 3 | 26 | — | — | 0 | 12a |
 
-**`atlas_jobs_router` seams (2):** `atlas_job.registry_dir`, `primary_checkout_root`.
+**12a migrated (#7330):** path roots now come from `Depends(get_ctx)`. The 7 seams this row listed (`atlas_job.registry_dir`, `atlas_job.primary_checkout_root`, plus the five module-level Path imports on blue / build-events / coordination) are deleted.
 
 ### Step 12b — consultation / delegate / discussions
 

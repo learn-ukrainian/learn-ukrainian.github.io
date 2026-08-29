@@ -44,7 +44,6 @@ from scripts.api import (
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet_comms import message_plane
-from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
 
@@ -261,7 +260,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         encoding="utf-8",
     )
     monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
-    monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", HOST_ID_CANARY)
@@ -339,7 +337,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         },
     )
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
-    monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     # #7269 step 10: sources/RAG routes open the corpus through
