@@ -1,35 +1,55 @@
-# Phase 0 control-plane storage seam (#7365)
+# Phase 0b control-plane storage seam (private #603)
 
 Stamped packet v3 SHA-256:
 `d29a13cedcdc50c6e97516b237155dad9f53116051aba29211b73bfb058c3bcc`
 
-Sqlite remains the live authority in this slice. `scripts/control_plane/storage.py`
-is the single resolver for durable control-plane stores:
+Sqlite remains the **default** live authority. `scripts/control_plane/storage.py`
+is the single resolver for durable control-plane stores — still a resolver, not
+a dialect-neutral SQL switchboard (callers own transactions).
 
 | Store id | Canonical sqlite path |
 | --- | --- |
 | `fleet_comms` | `batch_state/fleet-comms/v1/comms.sqlite3` |
 | `session_streams` | `.agent/session-streams/v1/session-streams.sqlite3` |
 | `write_ownership` | `batch_state/tasks/write-ownership.sqlite3` |
-| `task_index` | *(no sqlite in Phase 0)* |
+| `task_index` | *(no sqlite in Phase 0 / not this slice)* |
 
-Authority per store: `sqlite` (default) · `shadow` · `pg`. Env vars are documented
-in the module docstring. Postgres DSNs are env-only; pg authority refuses sqlite
-opens and fails closed without `LEARN_UKRAINIAN_CP_PG_DSN`.
+Authority per store: `sqlite` (default) · `shadow` · `pg`.
+
+- **`sqlite` / `shadow`**: open the canonical sqlite file. In this slice `shadow`
+  remains a sqlite synonym (no dual-write).
+- **`pg`**: opens a **real** Postgres connection via psycopg 3 using
+  `LEARN_UKRAINIAN_CP_PG_DSN` only. Missing DSN → fail closed
+  (`ControlPlanePgDsnMissingError`). Present → connect with
+  `connect_timeout` ≤ 3s. Never falls back to sqlite and never creates a
+  sqlite file for that store. Errors report the store id only (no DSN
+  hostnames / userinfo).
+
+Env vars are documented in the module docstring. Postgres DSNs are env-only;
+do not flip `LEARN_UKRAINIAN_CP_AUTHORITY` on live hosts in this slice.
+
+Dual-engine contract tests live under `tests/control_plane/` (`sqlite` and
+`postgres`-marked `pg`). CI ephemeral Postgres attaches to the existing
+`python` shard job; local default pytest stays sqlite-only when the DSN is
+unset (`pytest.skip` on `postgres` tests).
 
 First consumer: `scripts/guardrails/delegate_ownership.py` routes `_connect()`
-through the seam.
+through the seam (sqlite by default).
 
-Phase 0 remainder (#7365):
-- `agents_extensions/shared/session_streams/db.py` (`SessionStreamDatabase._connect_once`) routes `session_streams` through the seam, preserving bounded lock retry, migration verification, and synchronous pragmas.
-- `scripts/fleet_comms/artifacts.py` (`ArtifactStore`), `cli.py` (`_open_plane_db_ro`), `cold_start_board.py` (`_probe_inbox_authority`), `message_plane.py` (`_read_applied_schema_version`), `routing_reservations.py` (`list_routing_decisions`), and `efficiency_metrics.py` (`_connect_ro`) route authority-plane `comms.sqlite3` opens through the seam.
-- `scripts/fleet_comms/authority.py` delegates to `ArtifactStore` for its comms plane storage.
+Seam consumers already routed in Phase 0a:
+- `agents_extensions/shared/session_streams/db.py` (`SessionStreamDatabase._connect_once`)
+- `scripts/fleet_comms/artifacts.py` (`ArtifactStore`), `cli.py`, `cold_start_board.py`,
+  `message_plane.py`, `routing_reservations.py`, and `efficiency_metrics.py`
+- `scripts/fleet_comms/authority.py` delegates to `ArtifactStore`
 
 Remaining allowlisted direct opens in `scripts/hygiene/lint_control_plane_sqlite.py`:
 - Monitor API routers (`scripts/api/fleet_router.py`, `scripts/api/fleet_workers_collect.py`, `scripts/api/runtime_router.py` — handled in #7269 steps 3/4/6)
 - Entire context diagnostic readers (`scripts/entire_context/reconcile.py`, `scripts/entire_context/resolvers.py`)
 - Runtime / slot routing readers (`scripts/agent_runtime/acpx_discuss.py`, `scripts/orchestration/slot_routing.py`)
 
-Legacy broker `messages.db` call sites (e.g. `legacy_broker_report.py`, `_probe_inbox_legacy`) remain direct non-authority file opens.
+Legacy broker `messages.db` call sites remain direct non-authority file opens.
 
-No Patroni, dual-write, public bind, or DSN in git in Phase 0.
+Phase 0b residuals on private #603 (not this PR): artifact byte-plane,
+cluster-readiness `SELECT 1`, HTTP Idempotency-Key, `efficiency_metrics` move.
+
+No Patroni, dual-write, public bind, live DSN flip, or DSN in git.

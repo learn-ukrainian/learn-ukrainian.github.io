@@ -587,6 +587,23 @@ jobs:
       no_op: ${{ steps.noop.outputs.no_op || 'false' }}
     permissions:
       contents: read
+    # Ephemeral Postgres for Phase 0b dual-engine control-plane contract tests
+    # (private #603). Job-local password only — not a production DSN.
+    env:
+      POSTGRES_PASSWORD: cp_ci_phase0b
+      LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:cp_ci_phase0b@127.0.0.1:5432/postgres?connect_timeout=3
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: cp_ci_phase0b
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - name: Docs/skills-only — shard no-op success
         id: noop
@@ -748,6 +765,25 @@ jobs:
           path: .venv
           key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
 
+      - name: Wait for CI Postgres (pg_isready)
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            if .venv/bin/python -c 'import os,sys,psycopg; dsn=os.environ["LEARN_UKRAINIAN_CP_PG_DSN"]
+try:
+  with psycopg.connect(dsn, connect_timeout=2) as c: c.execute("SELECT 1")
+except Exception: sys.exit(1)'; then
+              echo "postgres ready (attempt ${attempt})"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::CI Postgres did not become ready" >&2
+          exit 1
+
       - name: Collect and plan this pytest shard locally
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
@@ -784,6 +820,9 @@ jobs:
           COVERAGE_CORE: sysmon
           SHARD: ${{ matrix.shard }}
           PYTEST_BREADCRUMB_DIR: .pytest_breadcrumbs
+          # Inherited job env also sets LEARN_UKRAINIAN_CP_PG_DSN; keep explicit
+          # on the pytest step so dual-engine contract tests see a live DSN.
+          LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:cp_ci_phase0b@127.0.0.1:5432/postgres?connect_timeout=3
         run: |
           set -o pipefail
           mkdir -p ci-artifacts

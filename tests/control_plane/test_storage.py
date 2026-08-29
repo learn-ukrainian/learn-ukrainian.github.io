@@ -1,14 +1,16 @@
-"""Phase 0 control-plane storage seam tests (sqlite authority)."""
+"""Phase 0b control-plane storage seam tests (sqlite default; pg fail-closed)."""
 
 from __future__ import annotations
 
 import sqlite3
+import time
 from pathlib import Path
 
 import pytest
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from scripts.control_plane.storage import (
+    ControlPlanePgConnectError,
     ControlPlanePgDsnMissingError,
     ControlPlaneSqliteRefusedError,
     ControlPlaneStoreUnavailableError,
@@ -22,6 +24,9 @@ from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.hygiene import lint_control_plane_sqlite
 
 pytestmark = pytest.mark.repo_invariant
+
+# Unreachable local port — fails closed quickly without DNS (no example.invalid).
+_UNREACHABLE_DSN = "postgresql://cp_ci:cp_ci@127.0.0.1:1/postgres"
 
 
 @pytest.mark.parametrize(
@@ -107,43 +112,60 @@ def test_pg_without_dsn_fails_closed_no_sqlite_created(
         (StoreId.SESSION_STREAMS, "SESSION_STREAMS"),
     ],
 )
-def test_pg_with_dsn_still_refuses_sqlite(
+def test_pg_unreachable_dsn_fails_closed_quickly_no_sqlite(
     store_id: StoreId,
     env_suffix: str,
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv(f"LEARN_UKRAINIAN_CP_AUTHORITY_{env_suffix}", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", "postgresql://example.invalid/db")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
     target = tmp_path / f"still-not-created-{store_id.value}.sqlite3"
-    with pytest.raises(ControlPlaneSqliteRefusedError, match=store_id.value):
+    started = time.monotonic()
+    with pytest.raises(ControlPlanePgConnectError, match=store_id.value) as raised:
         connect(store_id, path=target)
+    elapsed = time.monotonic() - started
     assert not target.exists()
+    assert elapsed < 8.0, f"pg connect must fail closed quickly; took {elapsed:.1f}s"
+    message = str(raised.value)
+    assert "127.0.0.1" not in message
+    assert "cp_ci" not in message
+    assert "postgresql://" not in message
 
 
-def test_artifact_store_refuses_sqlite_when_pg_authority(
+def test_artifact_store_pg_unreachable_no_sqlite(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", "postgresql://example.invalid/db")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
     plane_root = tmp_path / "plane"
-    with pytest.raises(ControlPlaneSqliteRefusedError, match="fleet_comms"):
+    started = time.monotonic()
+    with pytest.raises(ControlPlanePgConnectError, match="fleet_comms"):
         ArtifactStore(root=plane_root)
+    elapsed = time.monotonic() - started
     assert not (plane_root / "comms.sqlite3").exists()
+    assert elapsed < 8.0
 
 
-def test_session_streams_db_refuses_sqlite_when_pg_authority(
+def test_session_streams_db_pg_unreachable_no_sqlite(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", "postgresql://example.invalid/db")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
     db_target = tmp_path / "session-streams.sqlite3"
     db = SessionStreamDatabase(path=db_target)
-    with pytest.raises(ControlPlaneSqliteRefusedError, match="session_streams"):
+    started = time.monotonic()
+    with pytest.raises(ControlPlanePgConnectError, match="session_streams"):
         db.connect()
+    elapsed = time.monotonic() - started
     assert not db_target.exists()
+    assert elapsed < 8.0
+
+
+def test_control_plane_sqlite_refused_error_still_exported() -> None:
+    assert issubclass(ControlPlaneSqliteRefusedError, Exception)
 
 
 def test_task_index_has_no_sqlite_path() -> None:

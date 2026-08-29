@@ -24,6 +24,7 @@ markers = [
     "repo_invariant: repo-wide invariant checks that run in the PR-tier fastlane",
     "atlas_release: real-DB Atlas runtime-shard release gate (requires data/atlas.db; fails closed)",
     "live_network: opt-out of socket-guard for integration tests requiring outbound network",
+    "postgres: needs LEARN_UKRAINIAN_CP_PG_DSN (live Postgres); skips when unset",
 ]
 
 [tool.ruff]
