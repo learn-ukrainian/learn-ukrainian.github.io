@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 import scripts.api.wiki_router as wiki_router
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context
+from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -108,7 +109,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
     assert data["track"] == "hist"
     assert data["slug"] == "kyivan-rus"
     assert data["compiled"] is True
-    assert data["path"] == str(article_path)
+    assert data["path"] == REDACTED_ABSOLUTE_PATH
     assert data["word_count"] == 9
     assert data["preview"] == article_path.read_text(encoding="utf-8")[:500]
     assert data["source_count"] == 4
