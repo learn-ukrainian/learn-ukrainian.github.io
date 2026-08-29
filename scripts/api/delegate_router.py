@@ -12,13 +12,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
-from .config import BATCH_STATE_DIR
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["delegate"])
 
-TASKS_DIR = BATCH_STATE_DIR / "tasks"
 RESULT_BYTES_LIMIT = 64 * 1024
 TASK_READ_RETRIES = 2
 TASK_READ_RETRY_SECONDS = 0.01
@@ -26,6 +25,25 @@ ACTIVE_TASK_STATUSES = {"running", "spawning"}
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
+    if isinstance(ctx, MonitorContext):
+        return ctx.roots.batch_state_dir / "tasks"
+    # Plain-Python callers (fleet workers collect, research consumption)
+    # historically read BATCH_STATE_DIR / "tasks". Keep that cheap fallback
+    # so they do not construct a production MonitorContext (and its git
+    # session-streams probe) just to resolve a directory.
+    from scripts.api import config  # noqa: PLC0415, I001  # lazy-ok: cheap BATCH_STATE_DIR fallback without production_context
+
+    return Path(config.BATCH_STATE_DIR) / "tasks"
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -40,12 +58,12 @@ def _parse_iso_datetime(value: str | None) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
-def _tasks_root() -> str:
-    return os.path.realpath(str(TASKS_DIR))
+def _tasks_root(ctx: MonitorContext | None = None) -> str:
+    return os.path.realpath(str(_tasks_dir(ctx)))
 
 
-def _task_state_path(task_id: str) -> str:
-    """Resolve ``task_id`` to a state JSON path under ``TASKS_DIR``.
+def _task_state_path(task_id: str, ctx: MonitorContext | None = None) -> str:
+    """Resolve ``task_id`` to a state JSON path under the context tasks dir.
 
     Slash/backslash sanitization alone is not enough. Callers that ``open``
     must re-check ``startswith(root + os.sep)`` in the *same* function as the
@@ -53,16 +71,16 @@ def _task_state_path(task_id: str) -> str:
     (#317). Escapes collapse to a guaranteed-nonexistent path inside the root.
     """
     safe = task_id.replace("/", "_").replace("\\", "_")
-    root = _tasks_root()
+    root = _tasks_root(ctx)
     fullpath = os.path.realpath(os.path.join(root, f"{safe}.json"))
     if not fullpath.startswith(root + os.sep):
         fullpath = os.path.join(root, "__rejected__.json")
     return fullpath
 
 
-def _read_task_state(path: str) -> dict[str, Any] | None:
+def _read_task_state(path: str, ctx: MonitorContext | None = None) -> dict[str, Any] | None:
     """Read task JSON only after a local containment check (CodeQL sink guard)."""
-    root = _tasks_root()
+    root = _tasks_root(ctx)
     fullpath = os.path.realpath(path)
     if not fullpath.startswith(root + os.sep):
         return None
@@ -79,9 +97,9 @@ def _read_task_state(path: str) -> dict[str, Any] | None:
     return None
 
 
-def _read_result_file(result_file: str) -> str | None:
-    """Read a ``.result`` sibling under ``TASKS_DIR`` (check + open colocated)."""
-    root = _tasks_root()
+def _read_result_file(result_file: str, ctx: MonitorContext | None = None) -> str | None:
+    """Read a ``.result`` sibling under the context tasks dir (check + open colocated)."""
+    root = _tasks_root(ctx)
     fullpath = os.path.realpath(result_file)
     if not fullpath.startswith(root + os.sep):
         return None
@@ -165,9 +183,9 @@ def _task_cache_db_path(tasks_dir_str: str) -> Path:
     return Path(tasks_dir_str) / ".task_cache.sqlite3"
 
 
-def _init_task_cache_db(db_path: Path) -> sqlite3.Connection | None:
+def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> sqlite3.Connection | None:
     try:
-        conn = sqlite3.connect(str(db_path), timeout=5.0)
+        conn = _resolve_context(ctx)._open_db(db_path)
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS task_cache (
@@ -201,12 +219,13 @@ def _init_task_cache_db(db_path: Path) -> sqlite3.Connection | None:
 
 def _load_task_cache_from_db(
     tasks_dir_str: str,
+    ctx: MonitorContext | None = None,
 ) -> dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]]:
     db_path = _task_cache_db_path(tasks_dir_str)
     if not db_path.exists():
         return {}
     try:
-        conn = _init_task_cache_db(db_path)
+        conn = _init_task_cache_db(db_path, ctx)
         if conn is None:
             return {}
         cursor = conn.cursor()
@@ -273,10 +292,14 @@ def _load_task_cache_from_db(
         return {}
 
 
-def _save_task_cache_entries(tasks_dir_str: str, records: list[tuple]) -> None:
+def _save_task_cache_entries(
+    tasks_dir_str: str,
+    records: list[tuple],
+    ctx: MonitorContext | None = None,
+) -> None:
     db_path = _task_cache_db_path(tasks_dir_str)
     try:
-        conn = _init_task_cache_db(db_path)
+        conn = _init_task_cache_db(db_path, ctx)
         if conn is None:
             return
         conn.executemany(
@@ -295,6 +318,7 @@ def _delegate_task_rows(
     statuses: set[str] | None = None,
     *,
     repository: str | None = None,
+    ctx: MonitorContext | None = None,
 ) -> list[dict[str, Any]]:
     """Load public-safe task summaries, optionally scoped to one repository.
 
@@ -309,16 +333,18 @@ def _delegate_task_rows(
     """
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
-    tasks_dir_str = str(TASKS_DIR)
+    resolved = _resolve_context(ctx)
+    tasks_dir = _tasks_dir(resolved)
+    tasks_dir_str = str(tasks_dir)
     if tasks_dir_str != _LAST_TASKS_DIR_STR:
         _TASK_STATE_CACHE.clear()
-        _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str))
+        _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str, resolved))
         _LAST_TASKS_DIR_STR = tasks_dir_str
 
     repo_predicate = _normalize_repository_predicate(repository)
 
     rows: list[dict[str, Any]] = []
-    if not TASKS_DIR.exists():
+    if not tasks_dir.exists():
         return rows
 
     is_active_query = statuses == ACTIVE_TASK_STATUSES
@@ -351,7 +377,7 @@ def _delegate_task_rows(
                 if not alive:
                     derived_status = "zombie"
         else:
-            task = _read_task_state(path_str)
+            task = _read_task_state(path_str, resolved)
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)
@@ -436,7 +462,7 @@ def _delegate_task_rows(
         )
 
     if dirty_records:
-        _save_task_cache_entries(tasks_dir_str, dirty_records)
+        _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
 
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at"))
@@ -454,6 +480,7 @@ def list_delegate_tasks(
     ] = "all",
     limit: int = 50,
     repository: str | None = None,
+    ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     """List delegate task summaries.
 
@@ -465,7 +492,7 @@ def list_delegate_tasks(
     """
     task_limit = min(max(1, int(limit)), 500)
     statuses = None if status == "all" else {status}
-    rows = _delegate_task_rows(statuses, repository=repository)
+    rows = _delegate_task_rows(statuses, repository=repository, ctx=ctx)
     return {"total": len(rows), "tasks": rows[:task_limit]}
 
 
@@ -473,9 +500,10 @@ def get_delegate_task_detail(
     task_id: str,
     *,
     run_nonce: str | None = None,
+    ctx: MonitorContext | None = None,
 ) -> tuple[dict[str, Any] | None, dict[str, Any] | None, bool]:
-    path = _task_state_path(task_id)
-    task = _read_task_state(path)
+    path = _task_state_path(task_id, ctx)
+    task = _read_task_state(path, ctx)
     if task is None:
         return None, None, False
 
@@ -488,7 +516,7 @@ def get_delegate_task_detail(
     if task.get("status") != "running":
         result_file = task.get("result_file")
         if result_file:
-            result_text = _read_result_file(str(result_file))
+            result_text = _read_result_file(str(result_file), ctx)
             if result_text is not None and len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
                 while len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
                     result_text = result_text[:-1]
@@ -502,11 +530,15 @@ def get_delegate_task_detail(
     }, False
 
 
-def active_delegate_count() -> int:
-    return len(_delegate_task_rows(ACTIVE_TASK_STATUSES))
+def active_delegate_count(ctx: MonitorContext | None = None) -> int:
+    return len(_delegate_task_rows(ACTIVE_TASK_STATUSES, ctx=ctx))
 
 
-def active_delegate_tasks(*, repository: str | None = None) -> dict[str, Any]:
+def active_delegate_tasks(
+    *,
+    repository: str | None = None,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
     """Return active (running/spawning) task summaries.
 
     Optional *repository* filters task state before total construction. Internal
@@ -514,7 +546,7 @@ def active_delegate_tasks(*, repository: str | None = None) -> dict[str, Any]:
     Returned rows keep the legacy summary shape and never include repository
     attribution fields.
     """
-    active = _delegate_task_rows(ACTIVE_TASK_STATUSES, repository=repository)
+    active = _delegate_task_rows(ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx)
     return {"total": len(active), "tasks": active}
 
 
@@ -525,24 +557,27 @@ async def delegate_tasks(
         "needs_finalize", "no_deliverable", "all",
     ] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
-    return await asyncio.to_thread(list_delegate_tasks, status=status, limit=limit)
+    return await asyncio.to_thread(list_delegate_tasks, status=status, limit=limit, ctx=ctx)
 
 
 @router.get("/active")
-async def delegate_active():
-    return await asyncio.to_thread(active_delegate_tasks)
+async def delegate_active(ctx: MonitorContext = Depends(get_ctx)):
+    return await asyncio.to_thread(active_delegate_tasks, ctx=ctx)
 
 
 @router.get("/tasks/{task_id}")
 async def delegate_task_detail(
     task_id: str,
     run_nonce: str | None = Query(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     task, response, nonce_mismatch = await asyncio.to_thread(
         get_delegate_task_detail,
         task_id,
         run_nonce=run_nonce,
+        ctx=ctx,
     )
     if nonce_mismatch:
         raise HTTPException(

@@ -6,6 +6,7 @@ Uses temp directories to isolate queue state from real data.
 
 import json
 import shutil
+from dataclasses import replace
 from unittest.mock import patch
 
 import pytest
@@ -13,6 +14,7 @@ import yaml
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -69,17 +71,15 @@ SAMPLE_STATE_WITH_CONSULTATIONS = {
 
 
 @pytest.fixture()
-def temp_queue_dir(tmp_path):
-    """Patch QUEUE_DIR, APPLIED_DIR, REJECTED_DIR to use temp directory."""
-    queue_dir = tmp_path / "queue"
-    queue_dir.mkdir()
+def temp_queue_dir(tmp_path, monkeypatch):
+    """Pin the app context queue root to a disposable directory."""
+    ctx = fixture_context(tmp_path)
+    queue_dir = ctx.roots.queue_dir
+    queue_dir.mkdir(parents=True, exist_ok=True)
     applied_dir = queue_dir / "applied"
     rejected_dir = queue_dir / "rejected"
-
-    with patch("scripts.api.consultation_router.QUEUE_DIR", queue_dir), \
-         patch("scripts.api.consultation_router.APPLIED_DIR", applied_dir), \
-         patch("scripts.api.consultation_router.REJECTED_DIR", rejected_dir):
-        yield queue_dir, applied_dir, rejected_dir
+    monkeypatch.setattr(app.state, "ctx", ctx)
+    return queue_dir, applied_dir, rejected_dir
 
 
 @pytest.fixture()
@@ -194,17 +194,16 @@ class TestApprove:
         """When FIND strings match the template, changes are applied."""
         filename, queue_dir, applied_dir, _ = queue_with_proposal
 
-        # Create a fake template with the FIND strings
-        template_dir = tmp_path / "templates"
-        template_dir.mkdir()
+        # Create a fake template with the FIND strings under the context root
+        template_dir = app.state.ctx.roots.project_root / "agents_extensions" / "shared" / "phases" / "gemini"
+        template_dir.mkdir(parents=True)
         template_file = template_dir / "content.md"
         template_file.write_text(
             "Write a 3-word unjumble\nUse simple vocabulary\n",
             "utf-8",
         )
 
-        with patch("scripts.api.consultation_router.TEMPLATE_DIR", template_dir):
-            resp = client.post(f"/api/consultation/queue/{filename}/approve?confirm=true")
+        resp = client.post(f"/api/consultation/queue/{filename}/approve?confirm=true")
 
         assert resp.status_code == 200
         data = resp.json()
@@ -222,9 +221,9 @@ class TestApprove:
         """When apply_template_patch fails, errors are reported in response."""
         filename, _queue_dir, _applied_dir, _ = queue_with_proposal
 
-        # Create a template with matching FIND strings
-        template_dir = tmp_path / "templates"
-        template_dir.mkdir()
+        # Create a template with matching FIND strings under the context root
+        template_dir = app.state.ctx.roots.project_root / "agents_extensions" / "shared" / "phases" / "gemini"
+        template_dir.mkdir(parents=True)
         template_file = template_dir / "content.md"
         template_file.write_text(
             "Write a 3-word unjumble\nUse simple vocabulary\n",
@@ -232,8 +231,7 @@ class TestApprove:
         )
 
         # Mock apply_template_patch to return failure
-        with patch("scripts.api.consultation_router.TEMPLATE_DIR", template_dir), \
-             patch("scripts.api.consultation_router.apply_template_patch", return_value=(False, 0)):
+        with patch("scripts.api.consultation_router.apply_template_patch", return_value=(False, 0)):
             resp = client.post(f"/api/consultation/queue/{filename}/approve?confirm=true")
 
         assert resp.status_code == 200
@@ -281,7 +279,7 @@ class TestReject:
 
 
 class TestHistory:
-    def _mock_collect(self, track=None, outcome=None):
+    def _mock_collect(self, track=None, outcome=None, ctx=None):
         """Return sample consultation entries, applying filters."""
         entries = [
             {"track": "a2", "slug": "being-and-becoming", "num": 1, "outcome": "queued",
@@ -317,23 +315,25 @@ class TestHistory:
         data = resp.json()
         assert data["total"] == 2
 
-    def test_history_module(self, tmp_path):
+    def test_history_module(self, tmp_path, monkeypatch):
         # Create a fake orchestration dir with state.json
         orch_dir = tmp_path / "a2" / "orchestration" / "being-and-becoming"
         orch_dir.mkdir(parents=True)
         state_file = orch_dir / "state.json"
         state_file.write_text(json.dumps(SAMPLE_STATE_WITH_CONSULTATIONS))
 
-        with patch("scripts.api.consultation_router.CURRICULUM_ROOT", tmp_path):
-            resp = client.get("/api/consultation/history/a2/being-and-becoming")
+        ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, curriculum_root=tmp_path))
+        monkeypatch.setattr(app.state, "ctx", ctx)
+        resp = client.get("/api/consultation/history/a2/being-and-becoming")
         assert resp.status_code == 200
         data = resp.json()
         assert data["count"] == 2
         assert data["consultations"][0]["outcome"] == "queued"
 
-    def test_history_module_not_found(self, tmp_path):
-        with patch("scripts.api.consultation_router.CURRICULUM_ROOT", tmp_path):
-            resp = client.get("/api/consultation/history/a2/nonexistent")
+    def test_history_module_not_found(self, tmp_path, monkeypatch):
+        ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, curriculum_root=tmp_path))
+        monkeypatch.setattr(app.state, "ctx", ctx)
+        resp = client.get("/api/consultation/history/a2/nonexistent")
         assert resp.status_code == 404
 
 

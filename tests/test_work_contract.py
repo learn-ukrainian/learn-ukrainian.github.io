@@ -1347,7 +1347,7 @@ def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
     private_repo = "other-org/other-private-repo"
     now = datetime.now(UTC)
@@ -1454,7 +1454,7 @@ def test_delegate_production_preserves_authoritative_total_beyond_page(tmp_path,
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
     now = datetime.now(UTC)
     public_total = DELEGATE_TASK_LIMIT + 1
@@ -1528,7 +1528,7 @@ def test_delegate_production_exact_total_when_within_page(tmp_path, monkeypatch)
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
     now = datetime.now(UTC)
     public_total = 12

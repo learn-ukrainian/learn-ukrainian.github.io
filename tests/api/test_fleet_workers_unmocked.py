@@ -61,7 +61,7 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,job-box=host-job")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
-    monkeypatch.setattr("scripts.api.delegate_router.TASKS_DIR", tasks)
+    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
 
     response = client.get("/api/fleet/workers/v1?host_id=host-job")
     assert response.status_code == 200

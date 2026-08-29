@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -12,6 +13,17 @@ import scripts.api.delegate_router as delegate_router
 from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
+
+
+def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
+    """Redirect delegate task reads to a disposable tasks directory."""
+    tasks_dir = Path(tasks_dir)
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, batch_state_dir=tasks_dir.parent))
+    monkeypatch.setattr(app.state, "ctx", ctx)
+    monkeypatch.setattr(delegate_router, "production_context", lambda: ctx)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
+    return ctx
 
 
 def _iso(dt: datetime) -> str:
@@ -50,7 +62,7 @@ def _task_payload(task_id: str, **overrides) -> dict:
 
 def test_tasks_lists_state_files(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(tasks_dir / "first.json", _task_payload("first", started_at=_iso(datetime.now(UTC) - timedelta(minutes=10))))
     _write_task(tasks_dir / "second.json", _task_payload("second", started_at=_iso(datetime.now(UTC) - timedelta(minutes=1))))
 
@@ -69,7 +81,7 @@ def test_tasks_lists_state_files(tmp_path, monkeypatch):
 
 def test_tasks_status_filter(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(tasks_dir / "done.json", _task_payload("done", status="done"))
     _write_task(tasks_dir / "running.json", _task_payload("running", status="running"))
 
@@ -84,7 +96,7 @@ def test_tasks_status_filter(tmp_path, monkeypatch):
 
 def test_tasks_timeout_status_is_distinct_from_failed(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(tasks_dir / "timeout.json", _task_payload("timeout", status="timeout"))
     _write_task(tasks_dir / "failed.json", _task_payload("failed", status="failed"))
 
@@ -101,7 +113,7 @@ def test_tasks_attention_status_filters_are_queryable(tmp_path, monkeypatch):
     """``needs_finalize``/``no_deliverable`` are real settle states — the API
     must not 422 when an orchestrator filters by them (#5800 review)."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(tasks_dir / "finalize.json", _task_payload("finalize", status="needs_finalize"))
     _write_task(tasks_dir / "nodeliv.json", _task_payload("nodeliv", status="no_deliverable"))
 
@@ -116,7 +128,7 @@ def test_tasks_attention_status_filters_are_queryable(tmp_path, monkeypatch):
 
 def test_active_lists_only_live_running_tasks(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     def fake_kill(pid: int, sig: int) -> None:
         if pid == 222:
@@ -138,7 +150,7 @@ def test_active_lists_only_live_running_tasks(tmp_path, monkeypatch):
 def test_task_state_path_stays_under_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     for task_id in ("normal", "agent/task", "../../etc/passwd", r"..\..\windows"):
         path = Path(delegate_router._task_state_path(task_id))
@@ -150,7 +162,7 @@ def test_task_state_path_stays_under_tasks_dir(tmp_path, monkeypatch):
 def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     # Production writes ``.result`` siblings under TASKS_DIR; reads are
     # containment-checked there (CodeQL py/path-injection).
     result_file = tasks_dir / "large.result"
@@ -170,7 +182,7 @@ def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
 
 def test_task_detail_rejects_result_outside_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     escape = tmp_path / "outside.result"
     escape.write_text("secret", encoding="utf-8")
     _write_task(
@@ -188,7 +200,7 @@ def test_task_detail_rejects_result_outside_tasks_dir(tmp_path, monkeypatch):
 
 def test_zombie_detection_works_on_dead_pid(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     def fake_kill(pid: int, sig: int) -> None:
         raise ProcessLookupError
@@ -236,7 +248,7 @@ def _assert_legacy_summary_shape(tasks: list) -> None:
 def test_list_delegate_tasks_repository_filter_before_limit(tmp_path, monkeypatch):
     """Internal repository predicate filters before total/limit so public rows are not starved."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     public_repo = "learn-ukrainian/learn-ukrainian.github.io"
     private_repo = "other-org/other-private-repo"
     now = datetime.now(UTC)
@@ -389,7 +401,7 @@ def test_delegate_http_redacts_repository_even_when_task_state_has_private(
 ):
     """Unscoped /tasks and /active must never serialize repository/repository_id."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     private_repo = "secret-org/secret-private-infra"
     public_repo = "learn-ukrainian/learn-ukrainian.github.io"
     now = datetime.now(UTC)
@@ -439,7 +451,7 @@ def test_delegate_http_redacts_repository_even_when_task_state_has_private(
 def test_task_detail_detects_stale_run_nonce_split_brain(tmp_path, monkeypatch):
     """#7168: Monitor API task detail returns 409 Conflict if expected run_nonce mismatches."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(
         tasks_dir / "split-task.json",
         _task_payload(

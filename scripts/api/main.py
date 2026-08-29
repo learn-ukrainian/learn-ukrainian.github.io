@@ -979,9 +979,10 @@ def _collect_runtime_orient_data() -> dict:
 
 
 def _collect_delegate_orient_data() -> dict:
-    recent = delegate_api.list_delegate_tasks(status="all", limit=5)
+    ctx = getattr(app.state, "ctx", None)
+    recent = delegate_api.list_delegate_tasks(status="all", limit=5, ctx=ctx)
     return {
-        "active_count": delegate_api.active_delegate_count(),
+        "active_count": delegate_api.active_delegate_count(ctx=ctx),
         "recent": recent["tasks"],
     }
 

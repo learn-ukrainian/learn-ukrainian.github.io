@@ -202,7 +202,7 @@ def test_monitor_api_lineage_endpoint(monkeypatch):
     }
     seen: dict[str, str | None] = {}
 
-    def fake_load_lineage(decision_id: str | None = None) -> dict:
+    def fake_load_lineage(decision_id: str | None = None, **_kw) -> dict:
         seen["decision_id"] = decision_id
         return expected
 

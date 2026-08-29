@@ -14,15 +14,14 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 import yaml
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, PROJECT_ROOT
-from .resilience import connect_sqlite
+from .monitor_context import MonitorContext, get_ctx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -35,9 +34,10 @@ async def health():
 
 
 @router.get("/ground-truth")
-async def ground_truth():
+async def ground_truth(ctx: MonitorContext = Depends(get_ctx)):
     """Scan the entire project for the latest status of every module."""
-    manifest_path = CURRICULUM_ROOT / "curriculum.yaml"
+    curriculum_root = ctx.roots.curriculum_root
+    manifest_path = curriculum_root / "curriculum.yaml"
     if not manifest_path.exists():
         raise HTTPException(status_code=404, detail="Manifest not found")
 
@@ -52,7 +52,7 @@ async def ground_truth():
             result[slug] = {"status": "pending", "level": level_id}
 
     # 2. Hunt for status files in canonical folders
-    for status_file in CURRICULUM_ROOT.rglob("status/*.json"):
+    for status_file in curriculum_root.rglob("status/*.json"):
         if "_archive" in str(status_file):
             continue
         slug = status_file.stem
@@ -67,7 +67,7 @@ async def ground_truth():
 
     # 3. Hunt for 'in-flight' status files in orchestration folders
     # These often look like {slug}.json or contain audit data
-    for orch_file in CURRICULUM_ROOT.rglob("orchestration/**/*.json"):
+    for orch_file in curriculum_root.rglob("orchestration/**/*.json"):
         slug = orch_file.stem
         if slug in result and result[slug]["status"] == "pending":
             try:
@@ -84,9 +84,10 @@ async def ground_truth():
 
 
 @router.get("/union-stats")
-async def union_stats():
+async def union_stats(ctx: MonitorContext = Depends(get_ctx)):
     """State of the Union: Reconcile Manifest vs Plans vs Build vs Status."""
-    manifest_path = CURRICULUM_ROOT / "curriculum.yaml"
+    curriculum_root = ctx.roots.curriculum_root
+    manifest_path = curriculum_root / "curriculum.yaml"
     if not manifest_path.exists():
         raise HTTPException(status_code=404, detail="Manifest not found")
 
@@ -103,7 +104,7 @@ async def union_stats():
     }
 
     # Plans directory
-    plans_root = CURRICULUM_ROOT / "plans"
+    plans_root = curriculum_root / "plans"
 
     for track_id, track_data in manifest.get("levels", {}).items():
         track_modules = track_data.get("modules", [])
@@ -115,7 +116,7 @@ async def union_stats():
             "gaps": [],
         }
 
-        track_dir = safe_join(CURRICULUM_ROOT, track_id)
+        track_dir = safe_join(curriculum_root, track_id)
         plans_dir = safe_join(plans_root, track_id)
         if not track_dir or not plans_dir:
             continue
@@ -169,13 +170,14 @@ async def union_stats():
 
 
 @router.get("/plan-details/{track_id}")
-async def plan_details(track_id: str):
+async def plan_details(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Return detailed blueprint info for every module in a track's plan."""
-    plans_dir = safe_join(CURRICULUM_ROOT, "plans", track_id)
+    curriculum_root = ctx.roots.curriculum_root
+    plans_dir = safe_join(curriculum_root, "plans", track_id)
     if not plans_dir or not plans_dir.exists():
         return {"error": f"Plans directory not found for {track_id}"}
 
-    manifest_path = CURRICULUM_ROOT / "curriculum.yaml"
+    manifest_path = curriculum_root / "curriculum.yaml"
     with open(manifest_path) as f:
         manifest = yaml.safe_load(f)
 
@@ -211,12 +213,13 @@ async def plan_details(track_id: str):
 
 
 @router.get("/inspect/{track_id}/{slug}")
-async def inspect_module(track_id: str, slug: str):
+async def inspect_module(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Deep dive into a specific module's actual file content and its plan."""
+    curriculum_root = ctx.roots.curriculum_root
     res = {"slug": slug, "track": track_id, "build": None, "plan": None, "phases": {"current": 0, "status": "pending"}}
 
     # 1. Check Plan
-    plans_file = safe_join(CURRICULUM_ROOT, "plans", track_id, f"{slug}.yaml")
+    plans_file = safe_join(curriculum_root, "plans", track_id, f"{slug}.yaml")
     if not plans_file:
         return res
     if plans_file.exists():
@@ -227,7 +230,7 @@ async def inspect_module(track_id: str, slug: str):
             pass
 
     # 2. Check Build
-    md_path = safe_join(CURRICULUM_ROOT, track_id, f"{slug}.md")
+    md_path = safe_join(curriculum_root, track_id, f"{slug}.md")
     if not md_path:
         return res
     if md_path.exists():
@@ -241,7 +244,7 @@ async def inspect_module(track_id: str, slug: str):
         }
 
     # 3. Determine Phase from orchestration
-    orch_dir = safe_join(CURRICULUM_ROOT, track_id, "orchestration", slug)
+    orch_dir = safe_join(curriculum_root, track_id, "orchestration", slug)
     if not orch_dir:
         return res
     if orch_dir.exists():
@@ -267,9 +270,9 @@ async def inspect_module(track_id: str, slug: str):
 
 
 @router.get("/orchestration/{track_id}/{slug}")
-async def orchestration_history(track_id: str, slug: str):
+async def orchestration_history(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Reconstruct the phase history from the orchestration folder."""
-    orch_dir = safe_join(CURRICULUM_ROOT, track_id, "orchestration", slug)
+    orch_dir = safe_join(ctx.roots.curriculum_root, track_id, "orchestration", slug)
     if not orch_dir or not orch_dir.exists():
         return []
 
@@ -292,14 +295,14 @@ import sqlite3
 
 
 @router.get("/broker-messages")
-async def broker_messages():
+async def broker_messages(ctx: MonitorContext = Depends(get_ctx)):
     """Read the live message stream from the SQLite broker."""
-    db_path = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
-    if not db_path.exists():
+    handle = ctx.stores.message_db
+    if handle is None or not handle.path.exists():
         return []
 
     try:
-        conn = connect_sqlite(str(db_path))
+        conn = handle.connect()
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         # Get last 100 messages across all tasks
@@ -318,10 +321,13 @@ async def broker_messages():
 
 
 @router.get("/active-orchestration")
-async def active_orchestration():
+async def active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
     """Scan all orchestration folders for active module builds."""
     active = []
-    for track_dir in CURRICULUM_ROOT.iterdir():
+    curriculum_root = ctx.roots.curriculum_root
+    if not curriculum_root.is_dir():
+        return active
+    for track_dir in curriculum_root.iterdir():
         if not track_dir.is_dir():
             continue
 
