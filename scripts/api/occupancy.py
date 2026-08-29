@@ -39,6 +39,8 @@ router = APIRouter(tags=["occupancy"])
 
 OCCUPANCY_SCHEMA = "monitor-occupancy.v1"
 _LOAD_METRIC_KEYS = ("cpu_count", "loadavg", "mem", "disk")
+_FOUNDRY_AGENTS = frozenset({"foundry", "evidence-compiler"})
+_FOUNDRY_TASK_IDS = frozenset({"ukrainian-data-foundry", "phase3-cycle007-evidence-compiler"})
 
 
 DEFAULT_HOST_IDS = ("host-teacher", "host-job")
@@ -281,11 +283,27 @@ def _atlas_job_read(
     return occupants, source
 
 
-def _local_source_payload(read: OccupancyRead) -> dict[str, Any]:
+def _local_source_payload(
+    read: OccupancyRead,
+    *,
+    occupants: list[dict[str, str | None]] | None = None,
+) -> dict[str, Any]:
+    source_occupants = read.occupants if occupants is None else occupants
     return {
-        "state": _source_state(readable=read.readable, occupants=read.occupants),
+        "state": _source_state(readable=read.readable, occupants=source_occupants),
         "observation_age_s": _safe_age(read.observation_age_s),
     }
+
+
+def _is_foundry_occupant(occupant: dict[str, str | None]) -> bool:
+    return occupant.get("agent") in _FOUNDRY_AGENTS or occupant.get("task_id") in _FOUNDRY_TASK_IDS
+
+
+def _has_active_occupant(occupants: list[dict[str, str | None]]) -> bool:
+    return any(
+        occupant.get("kind") != "observer" or occupant.get("status") != "idle"
+        for occupant in occupants
+    )
 
 
 def _burn_state(burn_sources: dict[str, dict[str, Any]]) -> str:
@@ -437,15 +455,20 @@ def _payload_from_entries(
         observer_occupants = _occupants_from_observers(opaque)
         groups = [atlas_occupants, driver_read.occupants, foundry_read.occupants, observer_occupants]
         occupants = _merge_occupants(*groups)
+        foundry_occupants = [occupant for occupant in foundry_read.occupants if _is_foundry_occupant(occupant)]
         burn_sources = dict(
             zip(
                 _BURN_SOURCE_NAMES,
-                (atlas_source, _local_source_payload(driver_read), _local_source_payload(foundry_read)),
+                (
+                    atlas_source,
+                    _local_source_payload(driver_read),
+                    _local_source_payload(foundry_read, occupants=foundry_occupants),
+                ),
                 strict=True,
             )
         )
         burn_state = _burn_state(burn_sources)
-        if any(o.get("status") != "idle" for o in observer_occupants):
+        if _has_active_occupant(occupants):
             burn_state = "active"
         hosts[opaque] = _shape_host(
             opaque,
