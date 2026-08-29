@@ -5,6 +5,51 @@ This document is the durable handoff for the dataset-delivery arc; it does not
 authorize provider execution, model training, storage deletion, or publication
 beyond the rights of the admitted sources.
 
+<!-- BEGIN OUTCOME_FREEZE_V2 -->
+OUTCOME_FREEZE_V2
+
+User-visible outcome:
+Deliver a versioned, reproducible, source-derived dataset that teaches models to produce and preserve proper modern Standard Ukrainian while resisting interference only from the exhaustive V1 allowlist of Slavic language classes written in Cyrillic. The dataset must also identify and protect legitimate historical material, especially the Old East Slavic / Kyivan Rus written-language continuum and Middle Ukrainian, instead of correcting it into modern Ukrainian.
+
+Operational language and context boundary:
+- Target: modern Standard Ukrainian.
+- Exhaustive V1 modern contact/adversarial allowlist: Russian, Belarusian, Bulgarian, Macedonian, Serbian in Cyrillic, and Montenegrin in Cyrillic. No named class may be added without source-qualified domain review and a new outcome freeze.
+- Historical/protected identity classes: Old East Slavic / Kyivan Rus written-language continuum, Middle Ukrainian, Old Church Slavonic or a source-qualified Church Slavonic recension, and source-attested Rusyn.
+- Every span has separate language_identity, script_profile, context_role, period/region/register where applicable, identity_candidates, and scope_status fields. Script never proves language identity.
+- Context roles: unmarked modern Ukrainian, quotation, code-switch, transliteration, metalinguistic example, name/title, dialect or regional form, historical text, and ambiguous/noisy text.
+- Correction truth is eligible only when the exact span is independently adjudicated as unmarked modern Ukrainian and the contrasted contact class is in the exhaustive V1 allowlist. Unknown, mixed-identity, non-Slavic Cyrillic, Latin-script Slavic, transliterated, and other_or_unresolved_slavic_cyrillic spans route to out_of_scope_protected or abstain, never correction truth.
+
+Historical non-erasure invariants:
+For every historical/protected source span: historical_forms_protected=true; modern_correction_eligible=false; old_east_slavic_is_modern_russian=false; historical_ruskyi_auto_mapped_to_modern_russian=false; and no automatic mapping to any modern national successor language. A modern-context rule may apply only to a distinct span independently adjudicated as unmarked modern Ukrainian; it may never relabel a historical source span. Historical records retain period, region, register, recension/editorial layer, identity candidates, and an unresolved historical-Cyrillic route. Old Church Slavonic and later source recensions must be distinguished or explicitly mapped, not flattened.
+
+Frozen source denominator:
+Freeze a versioned source manifest with exact admitted units, hashes, admission cutoff, source/rights capability state, and later-addition policy; later sources require a new dataset version. Derive and freeze an atomic rule denominator R, its algorithm, merge/split rules, and rule-manifest hash before scale. Keep source_unit_disposition separate from coverage_cell_status. Freeze an applicability predicate and explicit required-cell manifest over language x context x phenomenon x role rather than an implicit full Cartesian product. Every frozen source unit is dispositioned exactly once as converted, supporting_only, protected, evaluation_only, rights_limited_locator_only, duplicate, non_rule_bearing, unresolved, or blocked_with_reason. Every required coverage cell is separately marked satisfied, not_applicable_with_evidence, coverage_blocked, or unresolved. An actual protected_case is distinct from not_applicable_with_evidence; N/A never satisfies protected-case coverage. Row count, storage size, schema validity, or model agreement cannot substitute for denominator closure.
+
+Canonical product:
+A source capability ledger; immutable claim-typed evidence records; frozen atomic rule cards; teaching cases containing correct production, correction, minimal contrast, protected, and adjudicated abstention roles; deterministic derived training/evaluation views; versioned source-identity splits; provenance and rights metadata; and a consumer reproduction receipt. Gold targets require source-qualified human adjudication against cited claim-appropriate evidence. Attestation alone cannot establish contextual correctness. Model proposals retain provenance and cannot become targets without human adjudication. A coverage_blocked cell is not an abstention teaching case.
+
+Cycle007 isolation:
+Cycle007 remains evaluation-only and deny-listed from training truth. Freeze the deny-list over row IDs, exact example/source units, document/work/edition groups, labels, case-specific sidecars, prompts, paraphrases, and synthetic siblings. Prohibit evaluation-example and annotation derivation while allowing only shared abstract rule concepts or authority-only citations whose exact held-out spans and annotations are not exposed. Any uncertain lineage is excluded from training views.
+
+Non-goals:
+No general C2 knowledge corpus; no Latin-script Slavic interference program; no non-Slavic Cyrillic program; no model training in this epic; no preference optimization; no mass Gemini/Grok labeling; no provider output promoted to gold; no model-performance learning curve; no prompt-baseline or dataset-backed model-behavior claim as an epic completion gate; no publication of source text beyond rights; no automatic modernization of historical, dialectal, quoted, named, transliterated, or metalinguistic spans.
+
+Role map:
+One accountable orchestrator owns sequencing and disposition. Source/rights owners establish capabilities. Source-qualified human adjudicators establish gold against claim-appropriate evidence. Ukrainian language lanes may propose and independently review mappings but are not truth by themselves. Independent builders implement deterministic artifacts. An evaluation steward freezes held-out partitions before any rule/case derivation and withholds held-out labels from builders. A cross-family reviewer gates every consequential PR. Models may propose candidates but cannot author gold labels.
+
+Independent held-out evaluation:
+Freeze document/source-identity splits, exact and near-duplicate policy, required-cell construction rules, and per-required-cell held-out requirements before rule or case derivation. Keep held-out text, labels, annotations, and case-specific derivatives unavailable to builders. Report dataset integrity and coverage per language, context, phenomenon, and role. Hard global failures are any split leakage, unsupported gold label, destructive edit of a protected case, provenance/rights loss, denominator drift, integrity corruption, or Cycle007 derivative entering training truth. Model training and behavior comparison remain separately authorized after DATASET_READY and cannot close this epic.
+
+Stop, residual, and scale policy:
+Global stop conditions are denominator drift, leakage, protected-span damage, rights/provenance integrity corruption, or Cycle007 contamination. Lane-local stop conditions are unresolved rights, incomplete sources, or insufficient evidence; disjoint safe lanes may continue, while affected required cells remain coverage_blocked or unresolved. Never lower a gate, synthesize authority, or silently expand scope. Scale only after a source-qualified pilot passes; measure a deterministic coverage-yield curve of newly satisfied source-backed atomic coverage versus duplicate/derivative volume, never a model-performance learning curve.
+
+Completion vocabulary:
+INVENTORIED means the frozen source universe is disposition-complete, with blocked and unresolved counts still explicit. PILOT_VALIDATED means the source-qualified pilot, split firewall, and held-out protection/integrity gates pass. DATASET_PARTIAL means reproducible admitted rows exist but at least one frozen required source unit/cell, right, or integrity requirement remains blocked or unresolved. DATASET_READY means the frozen required denominator is covered with zero unresolved or blocked required cells, zero unknown required rights, zero exclusion gaming, all admitted targets human-adjudicated and source-traceable, all views split-safe and reproducible, and the consumer receipt independently reproduces the dataset. Protected, evaluation-only, rights-limited, duplicate, and non-rule-bearing units remain denominator-visible. BLOCKED means a named global stop condition prevents safe progress. TRAINING_VALIDATED is outside this epic and cannot be claimed here.
+
+Legacy and policy disposition:
+The new epic remains a child of open-model-data stream epic #6321. Issue #6375 is superseded for dataset delivery only after a machine-readable handoff receipt validates the controlling outcome SHA, old/new issue IDs, public artifact SHAs, exact text-free Cycle007 state including labeling still OFF and zero provider-derived training labels, residual counts, blockers, owners, and receiving-epic acceptance. Completed historical issues remain closed. Issue #6958 remains open until its machine-readable Wikipedia teaching/gold/training ineligibility field and fail-closed selection gate land; the successor epic pins that policy to the exact merged artifact/check SHA rather than relying on a mutable issue number. The approximately 81 GiB Cycle007 expansion may be reclaimed only through a separate compact-migration child with exact round-trip proof, a recoverable backup, and explicit operator authorization before deletion.
+<!-- END OUTCOME_FREEZE_V2 -->
+
 ## Frozen contract
 
 | Field | Value |
@@ -111,16 +156,17 @@ Before scale, freeze all of the following:
 - source/document identity partitions and exact/near-duplicate policy;
 - the Cycle007 deny-list and evaluator custody boundary.
 
-For every mandatory source family, each frozen unit appears exactly once:
+For every mandatory source family, each frozen source unit appears exactly once:
 
-`input_total == converted + not_rule_bearing + duplicate_representation + evaluation_only + superseded_or_historical + blocked_with_reason`
+`input_total == converted + supporting_only + protected + evaluation_only + rights_limited_locator_only + duplicate + non_rule_bearing + unresolved + blocked_with_reason`
 
-`blocked_with_reason` blocks `SOURCE_COVERAGE_READY` and dataset completion.
-Rights limitation is a capability tag, not a disposition escape. Every
-independently confirmed non-evaluation rule-bearing unit links bidirectionally to
-an immutable evidence/rule artifact and at least one permitted consumer view:
-`supervised_pair`, `preference`, `protection`, `filtering`, `review`,
-`automatic`, or `research_only`.
+Source-unit dispositions remain separate from coverage-cell statuses. Every
+required coverage cell is separately marked `satisfied`,
+`not_applicable_with_evidence`, `coverage_blocked`, or `unresolved`.
+Independently confirmed non-evaluation rule-bearing units link bidirectionally
+to immutable evidence/rule artifacts and to reviewed deterministic
+training/evaluation views, with protection and abstention behavior explicit.
+Later consumer shapes are governed by child contracts.
 
 An actual protected case is distinct from
 `not_applicable_with_evidence`; N/A cannot satisfy protection coverage.
@@ -140,7 +186,7 @@ The canonical case roles are:
 - `not_applicable_with_evidence`;
 - coverage-blocked/unresolved.
 
-Before derivation, the held-out steward freezes source partitions, required
+Before derivation, the evaluation steward freezes source partitions, required
 coverage strata, clean-modern controls, thresholds, rights/role contracts, and
 the near-duplicate policy. Rule authors see only steward-cleared development
 material; they never see held-out text, labels, locators, fingerprints,
@@ -159,25 +205,19 @@ not governed by a model learning curve or a fixed row quota.
 
 ## Roles and evidence
 
-The accountable orchestrator owns scope, sequencing, integration, verification,
-issue truth, and final disposition, but is not the Ukrainian-language authority.
-The following decision roles remain separate across the program:
+The role map is:
 
-1. scope/circularity critic;
-2. Ukrainian source reviewer;
-3. rule author/extractor;
-4. held-out steward;
-5. held-out label reviewer;
-6. scorer;
-7. outsider reproducer;
-8. cross-family code/infra reviewer;
-9. Ukrainian-capable disposition auditor;
-10. Ukrainian-capable textbook non-hit auditor.
+- one accountable orchestrator owns scope, sequencing, integration, verification, issue truth, and final disposition;
+- source/rights owners establish source capabilities and rights boundaries;
+- source-qualified human adjudicators establish gold against claim-appropriate cited evidence;
+- Ukrainian language lanes may propose and independently review mappings but are not truth by themselves;
+- independent builders implement deterministic artifacts;
+- an evaluation steward freezes held-out partitions before any rule/case derivation and withholds held-out labels from builders;
+- a cross-family PR reviewer gates every consequential PR.
 
-One continuing identity may hold at most one role for the program. A provider or
-model switch does not create a new independent role. Ukrainian claims require a
-language-qualified review lane and source-backed verification; model agreement is
-never evidence of authority.
+Independence-sensitive review and steward roles must not self-review their own
+artifacts. Ukrainian claims require a language-qualified review lane and
+source-backed verification; model agreement is never evidence of authority.
 
 ## Ordered issue DAG
 
