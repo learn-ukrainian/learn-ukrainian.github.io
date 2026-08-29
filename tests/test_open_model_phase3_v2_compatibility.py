@@ -20,6 +20,38 @@ def _matrix() -> dict[str, object]:
     return json.loads(compatibility.MATRIX_PATH.read_text(encoding="utf-8"))
 
 
+def test_current_phase_artifacts_are_excluded_without_widening_legacy_denominator() -> None:
+    legacy_path = "data/projects/open_model_data/evidence/correction_protection_adapter_receipt_v1.json"
+    assert compatibility._pre_v2_evidence_paths(
+        {
+            compatibility.MATRIX_LOGICAL_PATH,
+            *compatibility.CURRENT_PHASE_EVIDENCE_PATHS,
+            legacy_path,
+        }
+    ) == {legacy_path}
+
+
+@pytest.mark.parametrize("delta", ["missing", "unexpected"])
+def test_matrix_rejects_missing_or_unexpected_pre_v2_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, delta: str
+) -> None:
+    baseline = _matrix()
+    matrix_paths = {entry["logical_path"] for entry in baseline["inventory"]}  # type: ignore[index]
+    legacy_path = "data/projects/open_model_data/evidence/correction_protection_adapter_receipt_v1.json"
+    if delta == "missing":
+        tracked_paths = matrix_paths - {legacy_path}
+    else:
+        tracked_paths = matrix_paths | {
+            "data/projects/open_model_data/evidence/unexpected_pre_v2_receipt.json"
+        }
+    monkeypatch.setattr(compatibility, "_tracked_evidence_paths", lambda: tracked_paths)
+
+    path = tmp_path / "matrix.json"
+    _write(path, baseline)
+    with pytest.raises(compatibility.CompatibilityError, match="matrix does not exactly cover tracked pre-v2 evidence"):
+        compatibility.verify(path)
+
+
 def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
     result = compatibility.verify()
     assert result == {
