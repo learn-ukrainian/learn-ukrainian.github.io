@@ -27,7 +27,6 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     dashboard_helpers,
     epics_router,
@@ -36,7 +35,6 @@ from scripts.api import (
     opsec_scan,
     route_contracts,
     state_helpers,
-    work_router,
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
@@ -236,7 +234,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # different fixture root. Replace the mutable stores rather than allowing
     # a prior test (or a background projection build) to replay another root's
     # logical work ids into this sweep.
-    monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     monkeypatch.setattr(state_helpers, "_ttl_cache", {})
     dashboard_helpers._track_cache.clear()
     dashboard_helpers._summary_cache.clear()
@@ -244,8 +241,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
     session_connection = fixture_ctx.stores.session_streams_database.connect()
     session_connection.close()
-    epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
-    monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     session_database = SessionStreamDatabase(root / "stores" / "session-streams.sqlite3")
     legacy_connection = session_database.connect()
     legacy_connection.close()
@@ -305,6 +300,22 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
     )
+    # NOTE (#7413): epics graph audit sidecars and spawn workers are isolated
+    # so the sweep never reads/writes host cache or spawns refresh jobs.
+    _idle_refresh = {
+        "schema_version": 1,
+        "run_id": None,
+        "phase": "idle",
+        "requested_at": None,
+        "started_at": None,
+        "last_outcome": "none",
+        "last_outcome_at": None,
+        "failure_code": None,
+        "cooldown_until": None,
+    }
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: None)
+    monkeypatch.setattr(epics_router.audit, "schedule_refresh", lambda force=False: dict(_idle_refresh))
+    monkeypatch.setattr(epics_router.audit, "read_refresh_state", lambda: dict(_idle_refresh))
     # NOTE (#7269 step 12c): collect_adr_governance now short-circuits on a
     # fixture context (ctx.root is not None), so the sweep no longer stubs it.
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)

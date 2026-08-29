@@ -129,16 +129,19 @@ async def _lifespan(_app: FastAPI):
     preload_all()
     install_signal_logging()
     ensure_broker_db_ready()
+    ctx = _app.state.ctx
     seed_manifest_inventory(
-        PROJECT_ROOT,
-        handoff_root=LIVE_REPO_ROOT,
+        ctx.roots.project_root,
+        store=ctx.stores.epics_store,
+        handoff_root=ctx.roots.live_repo_root,
+        ctx=ctx,
     )
     try:
         isa.schedule_refresh(force=False)
     except Exception as exc:
         logger.warning("Issue stream audit refresh schedule on startup failed: %s", exc)
     try:
-        warm_projection_cache()
+        warm_projection_cache(ctx=ctx)
     except Exception as exc:
         logger.warning("Work projection warmup schedule on startup failed: %s", exc)
     start_periodic_refresh()

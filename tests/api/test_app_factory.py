@@ -42,11 +42,11 @@ DB_ACCESS_PATTERNS = (
 # #7269 step 12b removed delegate_router, discussions_router, and gold_router
 # (16 -> 13) after those routes opened stores only through MonitorContext;
 # step 12d removed telemetry_router.py and wiki_router.py (13 -> 11) after
-# both opened stores through MonitorContext.
+# both opened stores through MonitorContext;
+# step 12e removed scripts/api/epics_router.py (11 -> 10).
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/agent_monitor_router.py",
-        "scripts/api/epics_router.py",
         "scripts/api/fleet_router.py",
         "scripts/api/fleet_workers_collect.py",
         "scripts/api/hramatka_cache.py",
@@ -142,6 +142,8 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
     assert context.stores.message_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.session_streams_database.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.epics_database.path.resolve().is_relative_to(tmp_path.resolve())
+    assert context.stores.work_in_flight == {}
+    assert context.stores.work_in_flight is not production_context().stores.work_in_flight
 
     outside = tmp_path.parent / "monitor-context-outside"
     outside.mkdir()
@@ -344,7 +346,6 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
 
 def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
-
     @asynccontextmanager
     async def no_lifespan(_app):
         yield
@@ -563,8 +564,75 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
         assert Path(second_worktrees["worktrees"][0]["path"]).resolve() == second_root.resolve()
 
 
+def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    def _plant(root: Path, stream_id: str, epic: int, title: str) -> None:
+        config = root / "scripts" / "config"
+        config.mkdir(parents=True)
+        (config / "issue_streams.yaml").write_text(
+            "schema_version: 1\n"
+            "streams:\n"
+            f"  {stream_id}:\n"
+            f"    title: {title}\n"
+            f"    epics: [{epic}]\n",
+            encoding="utf-8",
+        )
+
+    first_stream, first_epic = "first-area", 1001
+    second_stream, second_epic = "second-area", 2002
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    _plant(first_root, first_stream, first_epic, "First Area")
+    _plant(second_root, second_stream, second_epic, "Second Area")
+
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+    api_main.seed_manifest_inventory(
+        first_root, store=first_ctx.stores.epics_store, handoff_root=first_root
+    )
+    api_main.seed_manifest_inventory(
+        second_root, store=second_ctx.stores.epics_store, handoff_root=second_root
+    )
+    assert first_ctx.stores.work_in_flight is not None
+    assert second_ctx.stores.work_in_flight is not None
+    first_ctx.stores.work_in_flight["first-only"] = "sentinel"
+    assert "first-only" not in second_ctx.stores.work_in_flight
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_health = first_client.get("/api/epics/v1/health").json()
+        second_health = second_client.get("/api/epics/v1/health").json()
+        assert first_health["ok"] is True
+        assert second_health["ok"] is True
+        assert "path" not in first_health
+        assert "path" not in second_health
+
+        first_ids = {row["stream_id"] for row in first_client.get("/api/epics/v1").json()["streams"]}
+        second_ids = {row["stream_id"] for row in second_client.get("/api/epics/v1").json()["streams"]}
+        assert f"epic:{first_epic}" in first_ids  # allow-hardcoded-epic: isolated fixture stream
+        assert f"epic:{second_epic}" not in first_ids  # allow-hardcoded-epic: isolated fixture stream
+        assert f"epic:{second_epic}" in second_ids  # allow-hardcoded-epic: isolated fixture stream
+        assert f"epic:{first_epic}" not in second_ids  # allow-hardcoded-epic: isolated fixture stream
+
+        first_areas = {area["id"] for area in first_client.get("/api/epics/graph/v1").json()["nodes"]["areas"]}
+        second_areas = {area["id"] for area in second_client.get("/api/epics/graph/v1").json()["nodes"]["areas"]}
+        assert f"area:{first_stream}" in first_areas
+        assert f"area:{second_stream}" not in first_areas
+        assert f"area:{second_stream}" in second_areas
+        assert f"area:{first_stream}" not in second_areas
+
+        assert first_client.get("/api/work/v1/health").json()["ok"] is True
+        assert second_client.get("/api/work/v1/health").json()["ok"] is True
+        assert first_client.get("/api/work/v1/capabilities").json()["mutation"] is False
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 11
+    assert len(DB_ACCESS_ALLOWLIST) == 10
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

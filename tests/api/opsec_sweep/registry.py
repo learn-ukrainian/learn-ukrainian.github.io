@@ -60,8 +60,6 @@ EXERCISED_READ_5XX_REASONS: dict[str, str] = {
     "GET /api/dashboard/comms/conversation/{task_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/message/{message_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/messages": "isolated fixture has no dashboard comms store",
-    "GET /api/epics/graph/v1": "isolated fixture has no seeded epic registry snapshot",
-    "GET /api/epics/v1": "isolated fixture has no seeded epic registry snapshot",
     "GET /api/rules": "isolated fixture has no deployed rule files",
     "GET /api/state/preparation": "sparse isolated fixture omits the curriculum tree",
     "GET /api/state/preparation/{track}/{slug}": "sparse isolated fixture omits the curriculum tree",

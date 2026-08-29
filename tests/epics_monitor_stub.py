@@ -6,6 +6,8 @@ import socket
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import replace
+from pathlib import Path
 from threading import Thread
 from urllib.request import urlopen
 
@@ -14,6 +16,24 @@ from fastapi import FastAPI
 
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import epics_router
+from scripts.api.monitor_context import fixture_context
+
+
+def epics_app_for_store(
+    store: SessionStreamStore,
+    root: Path,
+    *,
+    live_repo_root: Path | None = None,
+) -> FastAPI:
+    """Build a FastAPI app whose epics routes read ``store`` via MonitorContext."""
+    ctx = fixture_context(root)
+    if live_repo_root is not None:
+        ctx = replace(ctx, roots=replace(ctx.roots, live_repo_root=Path(live_repo_root)))
+    ctx = replace(ctx, stores=replace(ctx.stores, epics_store=store))
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(epics_router.router, prefix="/api/epics")
+    return app
 
 
 @contextmanager
@@ -24,10 +44,7 @@ def epics_monitor_stub(store: SessionStreamStore) -> Iterator[str]:
     this wrapper adds a real socket so launcher subprocesses cannot bypass the
     remote lifecycle client with an in-process test adapter.
     """
-    app = FastAPI()
-    app.include_router(epics_router.router, prefix="/api/epics")
-    previous_store = epics_router._store
-    epics_router._store = lambda: store
+    app = epics_app_for_store(store, store.database.path.parent)
 
     with socket.socket() as probe:
         probe.bind(("127.0.0.1", 0))
@@ -60,4 +77,3 @@ def epics_monitor_stub(store: SessionStreamStore) -> Iterator[str]:
     finally:
         server.should_exit = True
         thread.join(timeout=5)
-        epics_router._store = previous_store

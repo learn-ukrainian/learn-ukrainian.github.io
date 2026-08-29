@@ -8,20 +8,25 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import LifecycleError, SessionStreamStore
+from agents_extensions.shared.session_streams.store import LifecycleError
 from scripts.api import epics_router
+from scripts.api.config import LIVE_REPO_ROOT
+from scripts.api.monitor_context import fixture_context
+from tests.epics_monitor_stub import epics_app_for_store
 
 
 def _client(tmp_path: Path, monkeypatch) -> TestClient:
-    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "api.sqlite3"))
-    epics_router.seed_manifest_inventory(epics_router.LIVE_REPO_ROOT, store=store)
-    monkeypatch.setattr(epics_router, "_store", lambda: store)
-    app = FastAPI()
-    app.include_router(epics_router.router, prefix="/api/epics")
+    del monkeypatch
+    live = Path(LIVE_REPO_ROOT)
+    ctx_root = tmp_path / "ctx"
+    ctx_root.mkdir()
+    ctx = fixture_context(ctx_root)
+    store = ctx.stores.epics_store
+    assert store is not None
+    epics_router.seed_manifest_inventory(live, store=store, handoff_root=live)
+    app = epics_app_for_store(store, ctx_root, live_repo_root=live)
     return TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
 
 
@@ -145,15 +150,17 @@ def test_router_responses_have_no_paths_or_host_network_tokens(tmp_path: Path, m
 def test_router_claim_invariant_failures_are_logged_and_not_store_unavailable(
     tmp_path: Path, monkeypatch, caplog, failure: Exception
 ) -> None:
-    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "api.sqlite3"))
+    ctx_root = tmp_path / "ctx"
+    ctx_root.mkdir()
+    ctx = fixture_context(ctx_root)
+    store = ctx.stores.epics_store
+    assert store is not None
 
     def fail_claim(**_kwargs):
         raise failure
 
     monkeypatch.setattr(store, "claim_remote_session", fail_claim)
-    monkeypatch.setattr(epics_router, "_store", lambda: store)
-    app = FastAPI()
-    app.include_router(epics_router.router, prefix="/api/epics")
+    app = epics_app_for_store(store, ctx_root, live_repo_root=Path(LIVE_REPO_ROOT))
 
     with caplog.at_level(logging.ERROR, logger=epics_router.__name__):
         response = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 8765)).post(
@@ -336,6 +343,25 @@ def test_epics_graph_stale_and_no_cache_fallbacks(tmp_path: Path, monkeypatch) -
     resp_fresh = client.get("/api/epics/graph/v1?fresh=true")
     assert resp_fresh.status_code == 200
     assert scheduled == [True]
+
+
+def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, monkeypatch) -> None:
+    """merge_group has no host audit cache; denied Popen must stay 200 no-cache."""
+    client = _client(tmp_path, monkeypatch)
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: None)
+
+    def _denied(*, force: bool = False) -> dict:
+        del force
+        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
+
+    monkeypatch.setattr(epics_router.audit, "schedule_refresh", _denied)
+    response = client.get("/api/epics/graph/v1")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "no-cache"
+    assert data["ok"] is None
+    assert data["refreshing"] is False
+    assert data["refresh"]["phase"] == "idle"
 
 
 def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:

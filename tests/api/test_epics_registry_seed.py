@@ -9,7 +9,6 @@ from pathlib import Path
 
 import pytest
 import yaml
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
@@ -18,6 +17,7 @@ from agents_extensions.shared.session_streams.model import isoformat_z
 from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import epics_router
+from tests.epics_monitor_stub import epics_app_for_store
 
 ROOT = Path(__file__).resolve().parents[2]
 NOW = datetime(2026, 8, 24, 10, 0, tzinfo=UTC)
@@ -66,9 +66,8 @@ def _store(tmp_path: Path) -> SessionStreamStore:
 
 
 def _client(store: SessionStreamStore, monkeypatch: pytest.MonkeyPatch) -> TestClient:
-    monkeypatch.setattr(epics_router, "_store", lambda: store)
-    app = FastAPI()
-    app.include_router(epics_router.router, prefix="/api/epics")
+    del monkeypatch
+    app = epics_app_for_store(store, store.database.path.parent)
     return TestClient(app)
 
 
@@ -366,7 +365,7 @@ def test_api_lifespan_invokes_registry_seed_with_two_roots(monkeypatch: pytest.M
     monkeypatch.setattr(api_main, "install_signal_logging", lambda: None)
     monkeypatch.setattr(api_main, "ensure_broker_db_ready", lambda: None)
     monkeypatch.setattr(api_main.isa, "schedule_refresh", lambda force=False: None)
-    monkeypatch.setattr(api_main, "warm_projection_cache", lambda: None)
+    monkeypatch.setattr(api_main, "warm_projection_cache", lambda **_kwargs: None)
     monkeypatch.setattr(api_main, "start_periodic_refresh", lambda: None)
     monkeypatch.setattr(api_main, "stop_periodic_refresh", lambda: None)
 
@@ -383,5 +382,10 @@ def test_api_lifespan_invokes_registry_seed_with_two_roots(monkeypatch: pytest.M
 
     asyncio.run(run_lifespan())
 
-    assert calls["root"] == api_main.PROJECT_ROOT
-    assert calls["kwargs"] == {"handoff_root": api_main.LIVE_REPO_ROOT}
+    ctx = api_main.app.state.ctx
+    assert calls["root"] == ctx.roots.project_root
+    assert calls["kwargs"] == {
+        "store": ctx.stores.epics_store,
+        "handoff_root": ctx.roots.live_repo_root,
+        "ctx": ctx,
+    }

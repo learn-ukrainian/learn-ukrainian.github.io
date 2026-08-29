@@ -502,7 +502,7 @@ def test_next_cold_cache_503_never_builds(monkeypatch):
     monkeypatch.setattr(
         work_router,
         "_get_or_create_build_task",
-        lambda key, filters: scheduled.append(key),
+        lambda key, filters, ctx=None: scheduled.append(key),
     )
     response = client.get("/api/work/v1/next?stream=infra-harness")
     assert response.status_code == 503, response.text
@@ -562,7 +562,7 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
     monkeypatch.setattr(
         work_router,
         "_get_or_create_build_task",
-        lambda k, filters: scheduled.append(k),
+        lambda k, filters, ctx=None: scheduled.append(k),
     )
     response = client.get("/api/work/v1/next?stream=infra-harness")
     assert response.status_code == 503, response.text

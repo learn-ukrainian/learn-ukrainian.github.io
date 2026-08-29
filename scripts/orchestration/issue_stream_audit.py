@@ -417,7 +417,9 @@ def _spawn_worker(run_id: str) -> bool:
             close_fds=True,
         )
         return True
-    except OSError:
+    except (OSError, AssertionError):
+        # Isolated fixtures deny Popen with AssertionError; treat as spawn_failed
+        # so GET /api/epics/graph/v1 can serve the no-cache envelope (#7413).
         return False
 
 
