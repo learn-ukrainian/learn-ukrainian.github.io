@@ -450,13 +450,18 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `governance_router.py` | `/api/state/governance` | 1 | 162 | `PROJECT_ROOT` | `DECISIONS_FILE` | 3 | 12c |
-| `hermes_cron_router.py` | `/api/hermes-cron` | 1 | 44 | `PROJECT_ROOT` | — | 1 | 12c |
-| `issues_router.py` | `/api/issues` | 2 | 251 | `PROJECT_ROOT` | — | 2 | 12c |
+| `governance_router.py` | `/api/state/governance` | 1 | 162 | — | — | 0 | 12c |
+| `hermes_cron_router.py` | `/api/hermes-cron` | 1 | 44 | — | — | 0 | 12c |
+| `issues_router.py` | `/api/issues` | 2 | 251 | — | — | 1 | 12c |
 | `knowledge_router.py` | `/api/knowledge` | 4 | 172 | — | — | 0 | 12c |
-| `reviewer_ghosts_router.py` | `/api/state/reviewer-ghosts` | 1 | 183 | `CURRICULUM_ROOT`, `LEVELS` | — | 1 | 12c |
+| `reviewer_ghosts_router.py` | `/api/state/reviewer-ghosts` | 1 | 183 | `LEVELS` | — | 0 | 12c |
 
-**`issues_router` seams (2):** `_run_gh`; `path_loop:PROJECT_ROOT`.
+**12c migrated (#7333 dispatch / inventory step 12c):** path roots now come from
+`Depends(get_ctx)`. The 6 Path seams this row listed (`DECISIONS_FILE`,
+`path_loop:PROJECT_ROOT` on governance / hermes / issues, `CURRICULUM_ROOT` on
+reviewer-ghosts, plus the `collect_adr_governance` fixture stub) are deleted.
+`issues_router._run_gh` stays — it is the subprocess deny stub, not a Path
+global. `LEVELS` is track-id config, not a filesystem root.
 
 ### Step 12d — site / wiki / worktrees / telemetry
 

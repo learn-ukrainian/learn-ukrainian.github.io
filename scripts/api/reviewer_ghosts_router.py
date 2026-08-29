@@ -26,20 +26,31 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
-from .config import CURRICULUM_ROOT, LEVELS
+from .config import LEVELS
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["reviewer-ghosts"])
 
 
-def _iter_ghost_bundles(track: str) -> list[Path]:
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _iter_ghost_bundles(track: str, ctx: MonitorContext | None = None) -> list[Path]:
     """Return every ghost-bundle path under the given track's review dir."""
     level_cfg = next((lvl for lvl in LEVELS if lvl["id"] == track), None)
     if not level_cfg:
         return []
-    review_dir = CURRICULUM_ROOT / level_cfg["path"] / "review"
+    review_dir = _resolve_context(ctx).roots.curriculum_root / level_cfg["path"] / "review"
     if not review_dir.is_dir():
         return []
     return sorted(review_dir.glob("*-ghost-review-r*.yaml"))
@@ -102,6 +113,7 @@ def reviewer_ghosts(
         default=None,
         description="Only include bundles generated at-or-after this ISO-8601 instant.",
     ),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Aggregate ghost-finding counts across a track, with optional filters.
 
@@ -122,7 +134,7 @@ def reviewer_ghosts(
     ``recent`` is sorted newest-generated-first and capped at 20 entries —
     callers needing full history can iterate bundles off-API.
     """
-    bundles = _iter_ghost_bundles(track)
+    bundles = _iter_ghost_bundles(track, ctx)
     if not bundles and not any(lvl["id"] == track for lvl in LEVELS):
         return JSONResponse(
             status_code=404,

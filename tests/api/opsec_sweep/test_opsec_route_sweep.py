@@ -32,7 +32,6 @@ from scripts.api import (
     dashboard_helpers,
     epics_router,
     fleet_router,
-    governance_router,
     issues_router,
     opsec_scan,
     route_contracts,
@@ -322,20 +321,8 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             stderr="fixture command unavailable",
         ),
     )
-    monkeypatch.setattr(
-        governance_router,
-        "collect_adr_governance",
-        lambda: {
-            "total": 0,
-            "stale_proposed_count": 0,
-            "error_count": 0,
-            "warning_count": 0,
-            "broken_chains": [],
-            "orphaned_refs": [],
-            "promotion_candidates": [],
-            "index": [],
-        },
-    )
+    # NOTE (#7269 step 12c): collect_adr_governance now short-circuits on a
+    # fixture context (ctx.root is not None), so the sweep no longer stubs it.
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 

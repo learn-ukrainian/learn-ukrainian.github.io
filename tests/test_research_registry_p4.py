@@ -19,7 +19,9 @@ privacy allowlist, and window validation.
 from __future__ import annotations
 
 import json
+import sys
 import time
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -36,6 +38,20 @@ from scripts.research import observability as obs
 from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+
+
+def _ctx_with_live_repo_root(live_repo_root: Path):
+    """Redirect live repo root for HTTP calls through ``client``.
+
+    ``knowledge_router`` resolves registry roots from MonitorContext (#7269 step 12c),
+    so tests swap ``app.state.ctx``.
+    """
+    base = api_main.app.state.ctx
+    root = Path(live_repo_root)
+    return replace(
+        base,
+        roots=replace(base.roots, live_repo_root=root),
+    )
 
 # A real declared stream epic (core-quality) — validate_registry loads streams from
 # the committed issue_streams.yaml, so strict-gate CLI tests use a real epic number.
@@ -964,6 +980,7 @@ def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
 def endpoint_root(tmp_path, monkeypatch):
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
     monkeypatch.setattr(isa, "CACHE_PATH", tmp_path / "no-cache.json")
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     return tmp_path
 
 
@@ -1173,7 +1190,7 @@ def test_strict_adoption_gate_runs_as_bare_script():
     import subprocess
     repo_root = Path(__file__).resolve().parents[1]
     script = repo_root / "scripts" / "audit" / "check_research_registry.py"
-    python = repo_root / ".venv" / "bin" / "python"
+    python = sys.executable
     proc = subprocess.run(
         [str(python), str(script), "--strict-adoption", "--json"],
         cwd=repo_root, capture_output=True, text=True, timeout=30,
