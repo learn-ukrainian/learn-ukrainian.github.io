@@ -41,6 +41,7 @@ GEMINI_RECOVERY_RECEIPT = "provider-recovery.json"
 GEMINI_SECOND_RECOVERY_SCHEMA = "phase3_cycle007_gemini_provider_second_recovery_v1"
 GEMINI_SECOND_RECOVERY_RECEIPT = "provider-recovery-attempt-3.json"
 GEMINI_STOP_RECOVERY_ROOT = ".cycle007-gemini-stop-recovery"
+GEMINI_BYTE_PLAN_RETIREMENT_ROOT = ".cycle007-gemini-byte-plan-retirement"
 GEMINI_RECOVERABLE_FIRST_STOP_CODES = frozenset(
     {
         "structured_output_envelope_drift",
@@ -113,6 +114,7 @@ class Config:
     resolution_nonce_ledger: Path | None
     resolution_advisor_response: Path | None
     expected_stop_sha256: str | None
+    replacement_request_byte_budget: int | None = None
 
 
 def _canonical(value: Any) -> bytes:
@@ -842,7 +844,10 @@ def _repair_runtime_ownership(
         if _digest(stop_raw) != expected_stop:
             raise GuardianError("ownership_repair_identity_drift")
         _validate_gemini_stop(stop)
-        if stop.get("schema_version") != "phase3_cycle007_gemini_provider_stop_v2":
+        if stop.get("schema_version") not in {
+            "phase3_cycle007_gemini_provider_stop_v2",
+            "phase3_cycle007_gemini_provider_stop_v3",
+        }:
             raise GuardianError("ownership_repair_state_drift")
         attempt_root, chunk_index, attempt = _stopped_attempt_coordinates(
             config,
@@ -1009,8 +1014,14 @@ def _gemini_attempt_pair(
         config.owner_gid,
         alternate_owner=alternate_owner,
     )
+    schema_version = started.get("schema_version")
+    if schema_version not in {
+        "phase3_cycle007_gemini_attempt_v1",
+        "phase3_cycle007_gemini_attempt_v2",
+    } or terminal.get("schema_version") != schema_version:
+        raise GuardianError("stop_recovery_state_drift")
     common = {
-        "schema_version": "phase3_cycle007_gemini_attempt_v1",
+        "schema_version": schema_version,
         "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
         "lane": lane,
         "packet_index": packet_index,
@@ -1021,6 +1032,23 @@ def _gemini_attempt_pair(
         "harness": "agy",
         "text_free": True,
     }
+    if schema_version == "phase3_cycle007_gemini_attempt_v2":
+        request_plan_sha256 = started.get("request_plan_sha256")
+        request_byte_budget = started.get("request_byte_budget")
+        request_byte_count = started.get("request_byte_count")
+        if (
+            not _hex_digest(request_plan_sha256)
+            or request_byte_budget not in {524288, 655360, 1048576, 2097152, 4194304}
+            or not isinstance(request_byte_count, int)
+            or isinstance(request_byte_count, bool)
+            or not 0 < request_byte_count <= request_byte_budget
+        ):
+            raise GuardianError("stop_recovery_state_drift")
+        common |= {
+            "request_plan_sha256": request_plan_sha256,
+            "request_byte_budget": request_byte_budget,
+            "request_byte_count": request_byte_count,
+        }
     if any(started.get(key) != value for key, value in common.items()) or (
         set(started) != set(common) | {"state"} or started.get("state") != "started"
     ):
@@ -1105,6 +1133,15 @@ def _gemini_attempt_pair(
         "result_status",
         "structured_output_type",
     }
+    if schema_version == "phase3_cycle007_gemini_attempt_v2" and provider_call_started is True:
+        elapsed_milliseconds = terminal.get("elapsed_milliseconds")
+        if (
+            not isinstance(elapsed_milliseconds, int)
+            or isinstance(elapsed_milliseconds, bool)
+            or elapsed_milliseconds < 0
+        ):
+            raise GuardianError("stop_recovery_state_drift")
+        terminal_fields.add("elapsed_milliseconds")
     if set(terminal) != terminal_fields:
         raise GuardianError("stop_recovery_state_drift")
     return started_raw, started, terminal_raw, terminal
@@ -1408,7 +1445,10 @@ def _stopped_attempt_coordinates(
     )
     if _terminal_projection(terminal) != _stop_projection(stop):
         raise GuardianError("stop_recovery_state_drift")
-    if stop["schema_version"] == "phase3_cycle007_gemini_provider_stop_v2":
+    if stop["schema_version"] in {
+        "phase3_cycle007_gemini_provider_stop_v2",
+        "phase3_cycle007_gemini_provider_stop_v3",
+    }:
         if (
             stop.get("chunk_index") != chunk_index
             or stop.get("attempt") != terminal_attempt
@@ -1437,7 +1477,11 @@ def _provider_call_count(config: Config, output: Path) -> int:
         attempt_count = receipt.get("attempt_count")
         chunk_text = receipt_path.stem.removeprefix("receipt-chunk-")
         if (
-            receipt.get("schema_version") != "phase3_cycle007_gemini_chunk_receipt_v1"
+            receipt.get("schema_version")
+            not in {
+                "phase3_cycle007_gemini_chunk_receipt_v1",
+                "phase3_cycle007_gemini_chunk_receipt_v2",
+            }
             or receipt.get("text_free") is not True
             or not chunk_text.isdigit()
             or not isinstance(attempt_count, int)
@@ -1477,7 +1521,11 @@ def _provider_call_count(config: Config, output: Path) -> int:
         key = (terminal_path.parent, chunk_index, attempt)
         if (
             key in terminals
-            or terminal.get("schema_version") != "phase3_cycle007_gemini_attempt_v1"
+            or terminal.get("schema_version")
+            not in {
+                "phase3_cycle007_gemini_attempt_v1",
+                "phase3_cycle007_gemini_attempt_v2",
+            }
             or terminal.get("state") != "terminal"
             or terminal.get("text_free") is not True
             or (
@@ -1522,6 +1570,7 @@ def _validate_gemini_stop(stop: dict[str, Any]) -> None:
         not in {
             "phase3_cycle007_gemini_provider_stop_v1",
             "phase3_cycle007_gemini_provider_stop_v2",
+            "phase3_cycle007_gemini_provider_stop_v3",
         }
         or stop.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007"
         or lane not in {"clean_label", "residual_label"}
@@ -1566,11 +1615,35 @@ def _validate_gemini_stop(stop: dict[str, Any]) -> None:
         "structured_output_type",
     }
     occurrence_fields = {"chunk_index", "attempt", "terminal_marker_sha256"}
+    request_fields = {
+        "request_plan_sha256",
+        "request_byte_budget",
+        "request_byte_count",
+        "elapsed_milliseconds",
+    }
+    if (
+        stop["schema_version"] == "phase3_cycle007_gemini_provider_stop_v3"
+        and (
+            not _hex_digest(stop.get("request_plan_sha256"))
+            or stop.get("request_byte_budget") not in {524288, 655360, 1048576, 2097152, 4194304}
+            or not isinstance(stop.get("request_byte_count"), int)
+            or isinstance(stop.get("request_byte_count"), bool)
+            or not 0 < stop["request_byte_count"] <= stop["request_byte_budget"]
+            or not isinstance(stop.get("elapsed_milliseconds"), int)
+            or isinstance(stop.get("elapsed_milliseconds"), bool)
+            or stop.get("elapsed_milliseconds", -1) < 0
+        )
+    ):
+        raise GuardianError("stop_recovery_state_drift")
     if set(stop) != base_fields | (
         occurrence_fields
-        if stop["schema_version"] == "phase3_cycle007_gemini_provider_stop_v2"
+        if stop["schema_version"]
+        in {
+            "phase3_cycle007_gemini_provider_stop_v2",
+            "phase3_cycle007_gemini_provider_stop_v3",
+        }
         else set()
-    ):
+    ) | (request_fields if stop["schema_version"] == "phase3_cycle007_gemini_provider_stop_v3" else set()):
         raise GuardianError("stop_recovery_state_drift")
 
 
@@ -1855,6 +1928,11 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
                 stop_path=stop_path,
             )
         _validate_gemini_stop(stop)
+        if (
+            stop.get("schema_version") == "phase3_cycle007_gemini_provider_stop_v3"
+            and stop.get("failure_code") == "provider_status_timeout"
+        ):
+            raise GuardianError("same_size_timeout_retry_forbidden")
         lane = stop["lane"]
         packet_index = stop["terminal_packet_index"]
         attempt_root, chunk_index, terminal_attempt = _stopped_attempt_coordinates(
@@ -1946,6 +2024,231 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
         execution.close()
 
 
+def _retire_gemini_timeout_for_byte_plan(
+    config: Config, mounts: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Archive one exact legacy timeout without authorizing another same-size call."""
+    expected_stop = config.expected_stop_sha256
+    replacement_budget = config.replacement_request_byte_budget
+    if not _hex_digest(expected_stop):
+        raise GuardianError("expected_stop_sha256_required")
+    if replacement_budget not in {524288, 655360, 1048576, 2097152, 4194304}:
+        raise GuardianError("replacement_request_byte_budget_required")
+    runner_path = config.code_paths.get("gemini_runner")
+    if runner_path is None:
+        raise GuardianError("invalid_code_binding")
+    runner_sha256 = _digest(runner_path.read_bytes())
+
+    execution = _lock(config.execution_lock, "active_worker")
+    try:
+        output = config.backing_root / OUTPUT_ROOTS[0]
+        _private_directory(output, config.owner_uid, config.owner_gid, create=False)
+        retirement_root = config.backing_root / GEMINI_BYTE_PLAN_RETIREMENT_ROOT
+        _private_directory(
+            retirement_root, config.owner_uid, config.owner_gid, create=True
+        )
+        archive = retirement_root / str(expected_stop)
+        _private_directory(archive, config.owner_uid, config.owner_gid, create=True)
+        intent_path = archive / "retirement-intent.json"
+        final_path = archive / "retirement-receipt.json"
+        stop_path = output / "provider-stop.json"
+
+        if final_path.exists() or final_path.is_symlink():
+            _raw, final = _private_json(
+                final_path, config.owner_uid, config.owner_gid
+            )
+            unsigned_final = {
+                key: value for key, value in final.items() if key != "receipt_sha256"
+            }
+            if (
+                stop_path.exists()
+                or stop_path.is_symlink()
+                or final.get("source_provider_stop_sha256") != expected_stop
+                or final.get("replacement_request_byte_budget")
+                != replacement_budget
+                or final.get("gemini_runner_sha256") != runner_sha256
+                or final.get("authorized_additional_provider_calls") != 0
+                or final.get("text_free") is not True
+                or final.get("receipt_sha256") != _digest(_canonical(unsigned_final))
+            ):
+                raise GuardianError("stop_retirement_state_drift")
+            return {
+                "schema_version": RECEIPT_SCHEMA,
+                "ok": True,
+                "action": "retire-gemini-timeout-for-byte-plan",
+                "mount_count": len(mounts),
+                "mounts": mounts,
+                "available_bytes": _available_bytes(config.backing_root),
+                "min_free_bytes": config.min_free_bytes,
+                "prior_provider_call_count": final["prior_provider_call_count"],
+                "authorized_additional_provider_calls": 0,
+                "retired_stop_count": 1,
+                "replacement_request_byte_budget": replacement_budget,
+                "text_free": True,
+            }
+
+        intent: dict[str, Any]
+        if intent_path.exists() or intent_path.is_symlink():
+            _intent_raw, intent = _private_json(
+                intent_path, config.owner_uid, config.owner_gid
+            )
+            unsigned = {key: value for key, value in intent.items() if key != "receipt_sha256"}
+            if (
+                intent.get("schema_version")
+                != "phase3_cycle007_gemini_byte_plan_retirement_intent_v1"
+                or intent.get("source_provider_stop_sha256") != expected_stop
+                or intent.get("replacement_request_byte_budget")
+                != replacement_budget
+                or intent.get("gemini_runner_sha256") != runner_sha256
+                or intent.get("receipt_sha256") != _digest(_canonical(unsigned))
+                or intent.get("text_free") is not True
+            ):
+                raise GuardianError("stop_retirement_state_drift")
+        else:
+            status = _invoke_controller(config, "status", execution_fd=execution.fileno())
+            if _completed_stages(status) or status.get("stopped") is not True:
+                raise GuardianError("stop_retirement_state_drift")
+            stop_raw, stop = _private_json(
+                stop_path, config.owner_uid, config.owner_gid
+            )
+            if _digest(stop_raw) != expected_stop:
+                raise GuardianError("stop_recovery_binding_drift")
+            _validate_gemini_stop(stop)
+            if stop.get("failure_code") != "provider_status_timeout":
+                raise GuardianError("stop_retirement_not_timeout")
+            if (
+                stop.get("schema_version") == "phase3_cycle007_gemini_provider_stop_v3"
+                and replacement_budget >= stop["request_byte_budget"]
+            ):
+                raise GuardianError("same_size_timeout_retry_forbidden")
+            lane = str(stop["lane"])
+            packet_index = int(stop["terminal_packet_index"])
+            attempt_root, chunk_index, terminal_attempt = _stopped_attempt_coordinates(
+                config, output, stop
+            )
+            _attempt_chain(
+                config,
+                output,
+                attempt_root,
+                lane=lane,
+                packet_index=packet_index,
+                chunk_index=chunk_index,
+                terminal_attempt=terminal_attempt,
+            )
+            forbidden: list[Path] = []
+            for lane_name in ("clean_label", "residual_label"):
+                lane_root = output / lane_name
+                forbidden.extend(lane_root.glob("labels-[0-9][0-9][0-9][0-9].json"))
+                forbidden.extend(lane_root.glob("receipt-[0-9][0-9][0-9][0-9].json"))
+                forbidden.extend(lane_root.glob("raw-manifest-[0-9][0-9][0-9][0-9].json"))
+                chunks_root = lane_root / "chunks"
+                if chunks_root.is_dir() and not chunks_root.is_symlink():
+                    forbidden.extend(chunks_root.rglob("labels-chunk-*.json"))
+                    forbidden.extend(chunks_root.rglob("receipt-chunk-*.json"))
+                    forbidden.extend(chunks_root.rglob("raw-chunk-*.raw"))
+            if forbidden:
+                raise GuardianError("stop_retirement_committed_label_drift")
+            state_file_count = 0
+            for candidate in attempt_root.rglob("*"):
+                info = candidate.lstat()
+                if candidate.is_symlink() or info.st_uid != config.owner_uid or info.st_gid != config.owner_gid:
+                    raise GuardianError("stop_retirement_state_drift")
+                if candidate.is_dir():
+                    if stat.S_IMODE(info.st_mode) != 0o700:
+                        raise GuardianError("stop_retirement_state_drift")
+                elif not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o600:
+                    raise GuardianError("stop_retirement_state_drift")
+                else:
+                    state_file_count += 1
+            provider_call_count = _provider_call_count(config, output)
+            intent_body = {
+                "schema_version": "phase3_cycle007_gemini_byte_plan_retirement_intent_v1",
+                "evaluation_cycle_id": stop["evaluation_cycle_id"],
+                "source_provider_stop_sha256": expected_stop,
+                "lane": lane,
+                "packet_index": packet_index,
+                "chunk_index": chunk_index,
+                "terminal_attempt": terminal_attempt,
+                "prior_provider_call_count": provider_call_count,
+                "attempt_state_file_count": state_file_count,
+                "replacement_request_byte_budget": replacement_budget,
+                "gemini_runner_sha256": runner_sha256,
+                "authorized_additional_provider_calls": 0,
+                "text_free": True,
+            }
+            intent = intent_body | {
+                "receipt_sha256": _digest(_canonical(intent_body))
+            }
+            _exclusive_json(intent_path, intent)
+
+        lane = str(intent["lane"])
+        packet_index = int(intent["packet_index"])
+        attempt_root = output / lane / "chunks" / f"packet-{packet_index:04d}"
+        archived_attempt_root = archive / "attempt-state"
+        if attempt_root.exists() or attempt_root.is_symlink():
+            if archived_attempt_root.exists() or archived_attempt_root.is_symlink():
+                raise GuardianError("stop_retirement_collision")
+            os.rename(attempt_root, archived_attempt_root)
+            _fsync_directory(attempt_root.parent)
+            _fsync_directory(archive)
+        elif not archived_attempt_root.is_dir() or archived_attempt_root.is_symlink():
+            raise GuardianError("stop_retirement_state_drift")
+
+        for legacy_name in (GEMINI_RECOVERY_RECEIPT, GEMINI_SECOND_RECOVERY_RECEIPT):
+            source = output / legacy_name
+            destination = archive / legacy_name
+            if source.exists() or source.is_symlink():
+                if destination.exists() or destination.is_symlink():
+                    raise GuardianError("stop_retirement_collision")
+                os.rename(source, destination)
+                _fsync_directory(output)
+                _fsync_directory(archive)
+
+        archived_stop = archive / "provider-stop.json"
+        if stop_path.exists() or stop_path.is_symlink():
+            stop_raw, _stop = _private_json(
+                stop_path, config.owner_uid, config.owner_gid
+            )
+            if _digest(stop_raw) != expected_stop or archived_stop.exists() or archived_stop.is_symlink():
+                raise GuardianError("stop_retirement_collision")
+            os.rename(stop_path, archived_stop)
+            _fsync_directory(output)
+            _fsync_directory(archive)
+        elif not archived_stop.is_file() or archived_stop.is_symlink():
+            raise GuardianError("stop_retirement_state_drift")
+
+        final_body = {
+            "schema_version": "phase3_cycle007_gemini_byte_plan_retirement_v1",
+            "evaluation_cycle_id": intent["evaluation_cycle_id"],
+            "source_provider_stop_sha256": expected_stop,
+            "retirement_intent_sha256": _digest(intent_path.read_bytes()),
+            "prior_provider_call_count": intent["prior_provider_call_count"],
+            "retired_attempt_state_file_count": intent["attempt_state_file_count"],
+            "replacement_request_byte_budget": replacement_budget,
+            "gemini_runner_sha256": runner_sha256,
+            "authorized_additional_provider_calls": 0,
+            "text_free": True,
+        }
+        final = final_body | {"receipt_sha256": _digest(_canonical(final_body))}
+        _exclusive_json(final_path, final)
+        return {
+            "schema_version": RECEIPT_SCHEMA,
+            "ok": True,
+            "action": "retire-gemini-timeout-for-byte-plan",
+            "mount_count": len(mounts),
+            "mounts": mounts,
+            "available_bytes": _available_bytes(config.backing_root),
+            "min_free_bytes": config.min_free_bytes,
+            "prior_provider_call_count": intent["prior_provider_call_count"],
+            "authorized_additional_provider_calls": 0,
+            "retired_stop_count": 1,
+            "replacement_request_byte_budget": replacement_budget,
+            "text_free": True,
+        }
+    finally:
+        execution.close()
+
+
 def _parse_code_paths(items: Iterable[str]) -> dict[str, Path]:
     result: dict[str, Path] = {}
     for item in items:
@@ -1992,6 +2295,7 @@ def _config(args: argparse.Namespace) -> Config:
         resolution_nonce_ledger=args.resolution_nonce_ledger,
         resolution_advisor_response=args.resolution_advisor_response,
         expected_stop_sha256=args.expected_stop_sha256,
+        replacement_request_byte_budget=args.replacement_request_byte_budget,
     )
 
 
@@ -2005,6 +2309,7 @@ def _parser() -> argparse.ArgumentParser:
             "plan",
             "repair-runtime-ownership",
             "recover-gemini-stop",
+            "retire-gemini-timeout-for-byte-plan",
             "resume",
         ),
     )
@@ -2038,6 +2343,12 @@ def _parser() -> argparse.ArgumentParser:
         "--expected-stop-sha256",
         help="exact stopped Gemini receipt SHA-256; required for recovery or ownership repair",
     )
+    parser.add_argument(
+        "--replacement-request-byte-budget",
+        type=int,
+        choices=(524288, 655360, 1048576, 2097152, 4194304),
+        help="reviewed byte-plan ceiling replacing one exact legacy Gemini timeout",
+    )
     return parser
 
 
@@ -2062,13 +2373,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         provider_bindings = _provider_bindings_complete(
             config,
             required=config.action
-            in {"repair-runtime-ownership", "recover-gemini-stop", "resume"},
+            in {
+                "repair-runtime-ownership",
+                "recover-gemini-stop",
+                "retire-gemini-timeout-for-byte-plan",
+                "resume",
+            },
         )
-        if config.action in {"prepare", "recover-gemini-stop", "resume"}:
+        if config.action in {
+            "prepare",
+            "recover-gemini-stop",
+            "retire-gemini-timeout-for-byte-plan",
+            "resume",
+        }:
             _validate_mount_command(config.mount_command)
         guardian = _lock(config.guardian_lock, "guardian_already_running")
         mounts = _ensure_mounts(
-            config, mutate=config.action in {"prepare", "recover-gemini-stop", "resume"}
+            config,
+            mutate=config.action
+            in {
+                "prepare",
+                "recover-gemini-stop",
+                "retire-gemini-timeout-for-byte-plan",
+                "resume",
+            },
         )
         _require_free_space(config)
         if config.action == "prepare":
@@ -2084,6 +2412,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = _repair_runtime_ownership(config, mounts)
         elif config.action == "recover-gemini-stop":
             result = _gemini_stop_recovery(config, mounts)
+        elif config.action == "retire-gemini-timeout-for-byte-plan":
+            result = _retire_gemini_timeout_for_byte_plan(config, mounts)
         else:
             result = _resume(config, mounts)
     except GuardianError as exc:

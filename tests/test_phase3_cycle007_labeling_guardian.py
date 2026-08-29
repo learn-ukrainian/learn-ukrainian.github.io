@@ -820,6 +820,211 @@ def test_explicit_gemini_stop_recovery_refuses_unbound_stop(
         guardian._gemini_stop_recovery(config, mounts=[])
 
 
+def test_timeout_retirement_archives_legacy_attempt_without_authorizing_call(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runner_path = tmp_path / "gemini-runner.py"
+    runner_path.write_text("# reviewed byte planner\n", encoding="utf-8")
+    config = _config(
+        guardian,
+        tmp_path,
+        action="retire-gemini-timeout-for-byte-plan",
+        code_paths={"gemini_runner": runner_path},
+        replacement_request_byte_budget=524288,
+    )
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    attempt = output / "clean_label/chunks/packet-0001"
+    attempt.mkdir(parents=True, mode=0o700)
+    for directory in (output, output / "clean_label", output / "clean_label/chunks", attempt):
+        os.chmod(directory, 0o700)
+    common = {
+        "schema_version": "phase3_cycle007_gemini_attempt_v2",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": "clean_label",
+        "packet_index": 1,
+        "chunk_index": 1,
+        "attempt": 1,
+        "exact_model": "Gemini 3.6 Flash (High)",
+        "model_family": "google",
+        "harness": "agy",
+        "text_free": True,
+        "request_plan_sha256": "a" * 64,
+        "request_byte_budget": 4194304,
+        "request_byte_count": 3_000_000,
+    }
+    _write_private_json(attempt / "attempt-1-chunk-01.started.json", common | {"state": "started"})
+    terminal = common | {
+        "state": "terminal",
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "provider_call_started": True,
+        "executable_binding_result": "verified",
+        "provider_return_code": "nonzero",
+        "raw_byte_count": 1,
+        "raw_sha256": "0" * 64,
+        "log_byte_count": 1,
+        "log_sha256": "1" * 64,
+        "init_count": 1,
+        "result_count": 1,
+        "first_event_kind": "init",
+        "last_event_kind": "result",
+        "model_binding_result": "verified",
+        "result_status": "non_success",
+        "structured_output_type": "missing",
+        "elapsed_milliseconds": 305_000,
+    }
+    terminal_raw = _write_private_json(
+        attempt / "attempt-1-chunk-01.terminal.json", terminal
+    )
+    stop = {
+        **{
+            key: terminal[key]
+            for key in terminal
+            if key not in {"schema_version", "state", "packet_index", "chunk_index", "attempt"}
+        },
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v3",
+        "terminal_packet_index": 1,
+        "new_provider_calls_allowed": False,
+        "chunk_index": 1,
+        "attempt": 1,
+        "terminal_marker_sha256": guardian._digest(terminal_raw),
+    }
+    stop_raw = _write_private_json(output / "provider-stop.json", stop)
+    stop_sha = guardian._digest(stop_raw)
+    config = replace(config, expected_stop_sha256=stop_sha)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: {
+            "stopped": (output / "provider-stop.json").exists(),
+            "completed_stages": [],
+        },
+    )
+    monkeypatch.setattr(guardian, "_available_bytes", lambda *_args: 123)
+
+    sibling = output / "residual_label/chunks/packet-0002"
+    sibling.mkdir(parents=True, mode=0o700)
+    for directory in (
+        output / "residual_label",
+        output / "residual_label/chunks",
+        sibling,
+    ):
+        os.chmod(directory, 0o700)
+    legacy_receipt = sibling / "receipt-chunk-01.json"
+    _write_private_json(
+        legacy_receipt,
+        {
+            "schema_version": "phase3_cycle007_gemini_chunk_receipt_v1",
+            "text_free": True,
+        },
+    )
+    with pytest.raises(
+        guardian.GuardianError, match="stop_retirement_committed_label_drift"
+    ):
+        guardian._retire_gemini_timeout_for_byte_plan(config, mounts=[])
+    legacy_receipt.unlink()
+
+    result = guardian._retire_gemini_timeout_for_byte_plan(config, mounts=[])
+
+    assert result["authorized_additional_provider_calls"] == 0
+    assert result["replacement_request_byte_budget"] == 524288
+    assert not (output / "provider-stop.json").exists()
+    assert not attempt.exists()
+    archive = (
+        config.backing_root
+        / guardian.GEMINI_BYTE_PLAN_RETIREMENT_ROOT
+        / stop_sha
+    )
+    assert (archive / "attempt-state/attempt-1-chunk-01.terminal.json").is_file()
+    assert guardian._digest((archive / "provider-stop.json").read_bytes()) == stop_sha
+    receipt = json.loads((archive / "retirement-receipt.json").read_text(encoding="utf-8"))
+    assert receipt["authorized_additional_provider_calls"] == 0
+    assert guardian._retire_gemini_timeout_for_byte_plan(config, mounts=[])["retired_stop_count"] == 1
+
+
+def test_byte_bound_timeout_cannot_use_legacy_same_size_recovery(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="recover-gemini-stop")
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    output.mkdir(mode=0o700)
+    common = {
+        "schema_version": "phase3_cycle007_gemini_attempt_v2",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": "clean_label",
+        "packet_index": 1,
+        "chunk_index": 1,
+        "attempt": 1,
+        "exact_model": "Gemini 3.6 Flash (High)",
+        "model_family": "google",
+        "harness": "agy",
+        "text_free": True,
+        "request_plan_sha256": "a" * 64,
+        "request_byte_budget": 1048576,
+        "request_byte_count": 900000,
+    }
+    attempt = output / "clean_label/chunks/packet-0001"
+    attempt.mkdir(parents=True, mode=0o700)
+    for directory in (output, output / "clean_label", output / "clean_label/chunks", attempt):
+        os.chmod(directory, 0o700)
+    _write_private_json(attempt / "attempt-1-chunk-01.started.json", common | {"state": "started"})
+    terminal = common | {
+        "state": "terminal",
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "provider_call_started": True,
+        "executable_binding_result": "verified",
+        "provider_return_code": "nonzero",
+        "raw_byte_count": 1,
+        "raw_sha256": "0" * 64,
+        "log_byte_count": 1,
+        "log_sha256": "1" * 64,
+        "init_count": 1,
+        "result_count": 1,
+        "first_event_kind": "init",
+        "last_event_kind": "result",
+        "model_binding_result": "verified",
+        "result_status": "non_success",
+        "structured_output_type": "missing",
+        "elapsed_milliseconds": 305000,
+    }
+    terminal_raw = _write_private_json(attempt / "attempt-1-chunk-01.terminal.json", terminal)
+    stop = {
+        **{
+            key: terminal[key]
+            for key in terminal
+            if key not in {"schema_version", "state", "packet_index", "chunk_index", "attempt"}
+        },
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v3",
+        "terminal_packet_index": 1,
+        "new_provider_calls_allowed": False,
+        "chunk_index": 1,
+        "attempt": 1,
+        "terminal_marker_sha256": guardian._digest(terminal_raw),
+    }
+    stop_raw = _write_private_json(output / "provider-stop.json", stop)
+    config = replace(config, expected_stop_sha256=guardian._digest(stop_raw))
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: {"stopped": True, "completed_stages": []},
+    )
+
+    with pytest.raises(guardian.GuardianError, match="same_size_timeout_retry_forbidden"):
+        guardian._gemini_stop_recovery(config, mounts=[])
+
+    runner_path = tmp_path / "gemini-runner.py"
+    runner_path.write_text("# reviewed byte planner\n", encoding="utf-8")
+    retire_config = replace(
+        config,
+        action="retire-gemini-timeout-for-byte-plan",
+        code_paths={"gemini_runner": runner_path},
+        replacement_request_byte_budget=1048576,
+    )
+    with pytest.raises(guardian.GuardianError, match="same_size_timeout_retry_forbidden"):
+        guardian._retire_gemini_timeout_for_byte_plan(retire_config, mounts=[])
+
+
 def test_exact_second_gemini_timeout_recovery_chains_receipt_and_is_idempotent(
     guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2122,6 +2327,7 @@ def test_controller_preserves_python_launcher_for_stage_subprocesses(
     assert commands[0][commands[0].index("--expected-server-code-sha") + 1] == "3" * 64
     assert commands[0][commands[0].index("--expected-sources-db-sha") + 1] == "4" * 64
     assert commands[0][commands[0].index("--expected-vesum-db-sha") + 1] == "5" * 64
+    assert commands[0][commands[0].index("--request-byte-budget") + 1] == "655360"
     assert expected_python_sha256 == controller._python_executable_sha256()
     assert controller._require_python_binding(expected_python_sha256) == target
 

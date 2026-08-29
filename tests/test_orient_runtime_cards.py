@@ -13,12 +13,29 @@ import json
 import re
 import shutil
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 ORIENT = ROOT / "dashboards" / "orient.html"
+
+
+def _patch_usage_batch_state_dir(monkeypatch, runtime_router, batch_state_dir: Path):
+    """Redirect the usage-log root every ``runtime_router`` helper falls back to.
+
+    ``_collect_runtime_orient_data`` (main.py) calls ``summarize_runtime_usage``,
+    ``runtime_recent_outcomes_today``, and ``list_runtime_agents`` with no
+    ``ctx`` — direct-Python callers outside FastAPI request handling resolve
+    through ``production_context()`` (#7324 step 6). Patching that factory
+    (rather than a since-removed ``USAGE_DIR`` module global) redirects every
+    one of those calls, including ones reached through ``/api/orient`` itself.
+    """
+    base_ctx = runtime_router.production_context()
+    patched_ctx = replace(base_ctx, roots=replace(base_ctx.roots, batch_state_dir=Path(batch_state_dir)))
+    monkeypatch.setattr(runtime_router, "production_context", lambda: patched_ctx)
+    return patched_ctx
 
 
 def _extract_runtime_js_block() -> str:
@@ -201,7 +218,7 @@ def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Pat
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    _patch_usage_batch_state_dir(monkeypatch, runtime_router, usage_dir.parent)
 
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",
@@ -250,7 +267,7 @@ def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, mo
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    _patch_usage_batch_state_dir(monkeypatch, runtime_router, usage_dir.parent)
 
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",
@@ -321,7 +338,7 @@ def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)
-    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    _patch_usage_batch_state_dir(monkeypatch, runtime_router, usage_dir.parent)
 
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",

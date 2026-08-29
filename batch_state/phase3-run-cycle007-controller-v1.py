@@ -51,6 +51,7 @@ LABEL_PROMPT_PATHS = {
     },
 }
 GEMINI_MODEL = "Gemini 3.6 Flash (High)"
+GEMINI_REQUEST_BYTE_BUDGET = 640 * 1024
 GROK_MODEL = "grok-4.5"
 REQUIRED_CODE_PATHS = {
     "gemini_runner": HERE / "phase3-run-cycle007-gemini-label-provider-batch-v1.py",
@@ -1468,6 +1469,8 @@ def _commands_for_stage(
                     str(end),
                     "--concurrency",
                     "1",
+                    "--request-byte-budget",
+                    str(GEMINI_REQUEST_BYTE_BUDGET),
                     "--provider-bin",
                     str(agy_executable),
                     "--expected-agy-executable-sha",

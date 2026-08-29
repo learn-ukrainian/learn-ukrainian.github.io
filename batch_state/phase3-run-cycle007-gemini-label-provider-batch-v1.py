@@ -19,6 +19,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -73,7 +74,10 @@ MODEL = "Gemini 3.6 Flash (High)"
 FAMILY = "google"
 HARNESS = "agy"
 OUTPUT = "label-output-gemini-cycle007-v1"
-CHUNK_SIZE = 20
+MAX_PACKET_ROWS = 50
+DEFAULT_REQUEST_BYTE_BUDGET = 640 * 1024
+REQUEST_BYTE_BUDGET_STEPS = (512 * 1024, 640 * 1024, 1024 * 1024, 2 * 1024 * 1024, 4 * 1024 * 1024)
+PLANNER_VERSION = "phase3-cycle007-gemini-byte-greedy-v1"
 LANES = {"clean_label": 40, "residual_label": 164}
 PROMPTS = {
     "clean_label": "prompts/gemini-clean-label.md",
@@ -122,6 +126,9 @@ FAILURE_CODES = frozenset(
         "provider_status_cancelled",
         "provider_status_internal_error",
         "provider_status_unknown",
+        "request_byte_budget_exceeded",
+        "request_plan_binding_drift",
+        "same_size_timeout_retry_forbidden",
     }
 )
 ATTEMPT_FAILURE_STAGES = frozenset(
@@ -623,30 +630,152 @@ def compose_prompt(template: bytes, lane: str, part: dict[str, Any], sidecar_par
     )
 
 
-def chunks(contents: dict[str, Any], sidecar_contents: dict[str, Any]) -> list[tuple[dict[str, Any], dict[str, Any]]]:
-    rows = contents["rows"]
-    sidecar_rows = sidecar_contents["rows"]
-    total = (len(rows) + CHUNK_SIZE - 1) // CHUNK_SIZE
-    result = []
-    for offset in range(total):
-        start = offset * CHUNK_SIZE
-        end = (offset + 1) * CHUNK_SIZE
-        p = {
-            "chunk_index": offset + 1,
+def _request_byte_count(
+    template: bytes,
+    lane: str,
+    rows: list[dict[str, Any]],
+    sidecar_rows: list[dict[str, Any]],
+    *,
+    chunk_index: int,
+    chunk_count: int,
+) -> int:
+    if not rows or len(rows) != len(sidecar_rows):
+        raise Error("request_plan_binding_drift")
+    part = {"chunk_index": chunk_index, "chunk_count": chunk_count, "rows": rows}
+    sidecar_part = {"chunk_index": chunk_index, "chunk_count": chunk_count, "rows": sidecar_rows}
+    return len(stdin_event(compose_prompt(template, lane, part, sidecar_part)))
+
+
+def chunks(
+    contents: dict[str, Any],
+    sidecar_contents: dict[str, Any],
+    *,
+    template: bytes,
+    lane: str,
+    request_byte_budget: int,
+) -> list[tuple[dict[str, Any], dict[str, Any]]]:
+    """Greedily pack frozen-order rows under an exact serialized-byte ceiling."""
+    if (
+        lane not in LANES
+        or not isinstance(request_byte_budget, int)
+        or isinstance(request_byte_budget, bool)
+        or request_byte_budget not in REQUEST_BYTE_BUDGET_STEPS
+    ):
+        raise Error("request_plan_binding_drift")
+    rows = contents.get("rows")
+    sidecar_rows = sidecar_contents.get("rows")
+    if (
+        not isinstance(rows, list)
+        or not isinstance(sidecar_rows, list)
+        or not rows
+        or len(rows) != len(sidecar_rows)
+        or len(rows) > MAX_PACKET_ROWS
+    ):
+        raise Error("request_plan_binding_drift")
+
+    # Four decimal digits are a conservative bound for every Cycle007 packet
+    # chunk index/count.  The persisted exact count is always no larger than
+    # this planning measurement, so the final stdin cannot cross the budget.
+    planned: list[tuple[int, int]] = []
+    start = 0
+    for end in range(1, len(rows) + 1):
+        candidate_bytes = _request_byte_count(
+            template,
+            lane,
+            rows[start:end],
+            sidecar_rows[start:end],
+            chunk_index=9999,
+            chunk_count=9999,
+        )
+        if candidate_bytes <= request_byte_budget:
+            continue
+        if end - start == 1:
+            raise Error("request_byte_budget_exceeded")
+        planned.append((start, end - 1))
+        start = end - 1
+        single_bytes = _request_byte_count(
+            template,
+            lane,
+            rows[start:end],
+            sidecar_rows[start:end],
+            chunk_index=9999,
+            chunk_count=9999,
+        )
+        if single_bytes > request_byte_budget:
+            raise Error("request_byte_budget_exceeded")
+    planned.append((start, len(rows)))
+
+    total = len(planned)
+    result: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    for offset, (row_start, row_end) in enumerate(planned, 1):
+        selected_rows = rows[row_start:row_end]
+        selected_sidecar_rows = sidecar_rows[row_start:row_end]
+        request_bytes = _request_byte_count(
+            template,
+            lane,
+            selected_rows,
+            selected_sidecar_rows,
+            chunk_index=offset,
+            chunk_count=total,
+        )
+        if request_bytes > request_byte_budget:
+            raise Error("request_byte_budget_exceeded")
+        identity_sha256 = digest(canonical([_identity(row) for row in selected_rows]))
+        common = {
+            "chunk_index": offset,
             "chunk_count": total,
-            "rows": rows[start:end],
+            "row_start": row_start + 1,
+            "row_end": row_end,
+            "request_byte_count": request_bytes,
+            "ordered_identity_sha256": identity_sha256,
         }
-        sp = {
-            "chunk_index": offset + 1,
-            "chunk_count": total,
-            "rows": sidecar_rows[start:end],
-        }
-        result.append((p, sp))
+        result.append(
+            (
+                common | {"rows": selected_rows},
+                common | {"rows": selected_sidecar_rows},
+            )
+        )
     return result
 
 
+def request_plan(
+    contents: dict[str, Any],
+    parts: list[tuple[dict[str, Any], dict[str, Any]]],
+    *,
+    lane: str,
+    packet_index: int,
+    request_byte_budget: int,
+    label_prompt_sha256: str,
+) -> dict[str, Any]:
+    body = {
+        "schema_version": "phase3_cycle007_gemini_request_plan_v1",
+        "evaluation_cycle_id": CYCLE,
+        "lane": lane,
+        "packet_index": packet_index,
+        "planner_version": PLANNER_VERSION,
+        "request_byte_budget": request_byte_budget,
+        "row_count": len(contents["rows"]),
+        "packet_identity_set_sha256": contents["packet_identity_set_sha256"],
+        "label_prompt_sha256": _label_prompt_hash(label_prompt_sha256),
+        "chunks": [
+            {
+                "chunk_index": part["chunk_index"],
+                "row_start": part["row_start"],
+                "row_end": part["row_end"],
+                "row_count": len(part["rows"]),
+                "request_byte_count": part["request_byte_count"],
+                "estimated_input_tokens_ceiling": (part["request_byte_count"] * 2 + 4) // 5,
+                "ordered_identity_sha256": part["ordered_identity_sha256"],
+            }
+            for part, _sidecar_part in parts
+        ],
+        "text_free": True,
+    }
+    return body | {"plan_sha256": digest(canonical(body))}
+
+
 def schema(lane: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    if lane not in LANES or not 1 <= len(rows) <= CHUNK_SIZE:
+    if lane not in LANES or not 1 <= len(rows) <= MAX_PACKET_ROWS:
         raise Error("ordinal_identity_binding_drift")
 
     def label_for(row: dict[str, Any]) -> dict[str, Any]:
@@ -972,6 +1101,9 @@ def _mark(
     *,
     metadata: dict[str, Any] | None = None,
     failure_stage: str | None = None,
+    request_plan_sha256: str | None = None,
+    request_byte_budget: int | None = None,
+    request_byte_count: int | None = None,
 ) -> None:
     value: dict[str, Any] = {
         "schema_version": "phase3_cycle007_gemini_attempt_v1",
@@ -986,6 +1118,25 @@ def _mark(
         "harness": HARNESS,
         "text_free": True,
     }
+    request_binding = (request_plan_sha256, request_byte_budget, request_byte_count)
+    if any(value is not None for value in request_binding):
+        if (
+            not isinstance(request_plan_sha256, str)
+            or len(request_plan_sha256) != 64
+            or not isinstance(request_byte_budget, int)
+            or isinstance(request_byte_budget, bool)
+            or request_byte_budget not in REQUEST_BYTE_BUDGET_STEPS
+            or not isinstance(request_byte_count, int)
+            or isinstance(request_byte_count, bool)
+            or not 0 < request_byte_count <= request_byte_budget
+        ):
+            raise Error("request_plan_binding_drift")
+        value |= {
+            "schema_version": "phase3_cycle007_gemini_attempt_v2",
+            "request_plan_sha256": request_plan_sha256,
+            "request_byte_budget": request_byte_budget,
+            "request_byte_count": request_byte_count,
+        }
     if state == "terminal":
         value["failure_code"] = code if code in FAILURE_CODES else "ordinal_identity_binding_drift"
         value["failure_stage"] = failure_stage if failure_stage in ATTEMPT_FAILURE_STAGES else "package_binding"
@@ -1025,7 +1176,9 @@ def stop(
         raise Error("ordinal_identity_binding_drift")
     value = {
         "schema_version": (
-            "phase3_cycle007_gemini_provider_stop_v2"
+            "phase3_cycle007_gemini_provider_stop_v3"
+            if occurrence_bound and metadata is not None and "request_plan_sha256" in metadata
+            else "phase3_cycle007_gemini_provider_stop_v2"
             if occurrence_bound
             else "phase3_cycle007_gemini_provider_stop_v1"
         ),
@@ -1057,6 +1210,7 @@ def stop(
             not in {
                 "phase3_cycle007_gemini_provider_stop_v1",
                 "phase3_cycle007_gemini_provider_stop_v2",
+                "phase3_cycle007_gemini_provider_stop_v3",
             }
             or existing.get("evaluation_cycle_id") != CYCLE
             or existing.get("failure_code") not in FAILURE_CODES
@@ -1167,7 +1321,13 @@ def _verify_recovery_receipt(
     return path.read_bytes(), receipt
 
 
-def _next_attempt(package: Path, out: Path, chunk_index: int) -> int:
+def _next_attempt(
+    package: Path,
+    out: Path,
+    chunk_index: int,
+    *,
+    request_byte_budget: int = DEFAULT_REQUEST_BYTE_BUDGET,
+) -> int:
     """Resolve the one explicitly authorized next call without a retry ceiling."""
     retryable = {
         "stream_json_invalid",
@@ -1210,6 +1370,21 @@ def _next_attempt(package: Path, out: Path, chunk_index: int) -> int:
         failure_code = marker.get("failure_code")
         if failure_code not in retryable:
             raise Error("ordinal_identity_binding_drift")
+        if failure_code == "provider_status_timeout":
+            prior_budget = marker.get("request_byte_budget")
+            if prior_budget is None:
+                # Legacy pre-byte-plan markers remain verifiable only through
+                # their exact recovery chain.  Every newly written marker is
+                # budget-bound and therefore enters the fail-closed branch.
+                pass
+            elif prior_budget == request_byte_budget:
+                raise Error("same_size_timeout_retry_forbidden")
+            elif (
+                not isinstance(prior_budget, int)
+                or isinstance(prior_budget, bool)
+                or prior_budget <= request_byte_budget
+            ):
+                raise Error("request_plan_binding_drift")
         recovery_path = _recovery_path(package, out, chunk_index, attempt + 1)
         if (
             attempt == 1
@@ -1278,6 +1453,87 @@ def _chunk_dir(package: Path, lane: str, index: int) -> Path:
     return path
 
 
+def _bind_request_plan(out: Path, plan: dict[str, Any]) -> str:
+    path = out / "request-plan.json"
+    expected_hash = plan.get("plan_sha256")
+    if (
+        not isinstance(expected_hash, str)
+        or len(expected_hash) != 64
+        or expected_hash != digest(canonical({key: value for key, value in plan.items() if key != "plan_sha256"}))
+    ):
+        raise Error("request_plan_binding_drift")
+    _atomic(path, plan)
+    if _read_json(path) != plan:
+        raise Error("request_plan_binding_drift")
+    return expected_hash
+
+
+def _write_pre_call_receipt(
+    out: Path,
+    *,
+    lane: str,
+    packet_index: int,
+    part: dict[str, Any],
+    attempt: int,
+    request_plan_sha256: str,
+    request_byte_budget: int,
+) -> None:
+    body = {
+        "schema_version": "phase3_cycle007_gemini_pre_call_v1",
+        "evaluation_cycle_id": CYCLE,
+        "lane": lane,
+        "packet_index": packet_index,
+        "chunk_index": part["chunk_index"],
+        "attempt": attempt,
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "row_count": len(part["rows"]),
+        "request_byte_budget": request_byte_budget,
+        "request_byte_count": part["request_byte_count"],
+        "estimated_input_tokens_ceiling": (part["request_byte_count"] * 2 + 4) // 5,
+        "ordered_identity_sha256": part["ordered_identity_sha256"],
+        "text_free": True,
+    }
+    body["receipt_sha256"] = digest(canonical(body))
+    _atomic(out / f"pre-call-attempt-{attempt}-chunk-{part['chunk_index']:02d}.json", body)
+
+
+def _verify_pre_call_receipt(
+    out: Path,
+    *,
+    lane: str,
+    packet_index: int,
+    part: dict[str, Any],
+    attempt: int,
+    request_plan_sha256: str,
+    request_byte_budget: int,
+) -> None:
+    path = out / f"pre-call-attempt-{attempt}-chunk-{part['chunk_index']:02d}.json"
+    receipt = _read_json(path)
+    expected = {
+        "schema_version": "phase3_cycle007_gemini_pre_call_v1",
+        "evaluation_cycle_id": CYCLE,
+        "lane": lane,
+        "packet_index": packet_index,
+        "chunk_index": part["chunk_index"],
+        "attempt": attempt,
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "row_count": len(part["rows"]),
+        "request_byte_budget": request_byte_budget,
+        "request_byte_count": part["request_byte_count"],
+        "estimated_input_tokens_ceiling": (part["request_byte_count"] * 2 + 4) // 5,
+        "ordered_identity_sha256": part["ordered_identity_sha256"],
+        "text_free": True,
+    }
+    if (
+        set(receipt) != set(expected) | {"receipt_sha256"}
+        or any(receipt.get(key) != value for key, value in expected.items())
+        or receipt.get("receipt_sha256") != digest(canonical(expected))
+    ):
+        raise Error("request_plan_binding_drift")
+
+
 def _run_chunk(
     package: Path,
     lane: str,
@@ -1287,6 +1543,8 @@ def _run_chunk(
     provider: Path,
     expected_agy_sha256: str | None,
     expected_label_prompt_sha: str,
+    request_plan_sha256: str,
+    request_byte_budget: int,
 ) -> dict[str, Any]:
     chunk_index = int(part["chunk_index"])
     out = _chunk_dir(package, lane, packet_index)
@@ -1302,12 +1560,14 @@ def _run_chunk(
             part,
             sidecar_part,
             expected_label_prompt_sha=expected_label_prompt_sha,
+            request_plan_sha256=request_plan_sha256,
+            request_byte_budget=request_byte_budget,
         )
         return {"chunk_index": chunk_index, "resumed": True, "text_free": True}
     if (package / OUTPUT / "provider-stop.json").exists():
         raise Error("ordinal_identity_binding_drift")
     while True:
-        attempt = _next_attempt(package, out, chunk_index)
+        attempt = _next_attempt(package, out, chunk_index, request_byte_budget=request_byte_budget)
         terminal = out / f"attempt-{attempt}-chunk-{chunk_index:02d}.terminal.json"
         runtime = Path(
             tempfile.mkdtemp(
@@ -1320,6 +1580,12 @@ def _run_chunk(
         raw_path: Path | None = None
         log_path: Path | None = None
         metadata = _attempt_metadata()
+        request_metadata = {
+            "request_plan_sha256": request_plan_sha256,
+            "request_byte_budget": request_byte_budget,
+            "request_byte_count": part["request_byte_count"],
+        }
+        metadata.update(request_metadata)
         failure_stage = "package_binding"
         try:
             stdin_path, raw_path, schema_path, log_path = (
@@ -1332,18 +1598,45 @@ def _run_chunk(
                 package, lane, expected_label_prompt_sha=expected_label_prompt_sha
             )
             prompt = compose_prompt(prompt_template, lane, part, sidecar_part)
-            _atomic(stdin_path, stdin_event(prompt), raw=True)
+            stdin_bytes = stdin_event(prompt)
+            if (
+                len(stdin_bytes) != part.get("request_byte_count")
+                or len(stdin_bytes) > request_byte_budget
+            ):
+                raise Error("request_byte_budget_exceeded")
+            _atomic(stdin_path, stdin_bytes, raw=True)
             _atomic(schema_path, schema(lane, part["rows"]))
             _atomic(log_path, b"", raw=True)
-            _mark(out, lane, packet_index, chunk_index, attempt, "started")
+            _write_pre_call_receipt(
+                out,
+                lane=lane,
+                packet_index=packet_index,
+                part=part,
+                attempt=attempt,
+                request_plan_sha256=request_plan_sha256,
+                request_byte_budget=request_byte_budget,
+            )
+            _mark(
+                out,
+                lane,
+                packet_index,
+                chunk_index,
+                attempt,
+                "started",
+                request_plan_sha256=request_plan_sha256,
+                request_byte_budget=request_byte_budget,
+                request_byte_count=len(stdin_bytes),
+            )
             marked = True
             if expected_agy_sha256 is not None and agy_executable_sha256(provider) != expected_agy_sha256:
                 metadata = _attempt_metadata(raw_path, log_path, executable_binding_result="mismatch")
+                metadata.update(request_metadata)
                 failure_stage = "executable_binding"
                 raise Error("structured_output_envelope_drift", structural=True)
             metadata = _attempt_metadata(
                 raw_path, log_path, executable_binding_result=("verified" if expected_agy_sha256 else "synthetic")
             )
+            metadata.update(request_metadata)
             with stdin_path.open("rb") as stdin, raw_path.open("xb") as stdout:
                 os.chmod(raw_path, 0o600)
                 metadata = _attempt_metadata(
@@ -1352,6 +1645,8 @@ def _run_chunk(
                     provider_call_started=True,
                     executable_binding_result=("verified" if expected_agy_sha256 else "synthetic"),
                 )
+                metadata.update(request_metadata)
+                provider_started_ns = time.monotonic_ns()
                 completed = subprocess.run(
                     _command(provider, schema_path, log_path),
                     stdin=stdin,
@@ -1361,6 +1656,7 @@ def _run_chunk(
                     shell=False,
                     cwd=runtime,
                 )
+                elapsed_milliseconds = (time.monotonic_ns() - provider_started_ns + 999_999) // 1_000_000
             metadata = _attempt_metadata(
                 raw_path,
                 log_path,
@@ -1368,6 +1664,8 @@ def _run_chunk(
                 executable_binding_result=("verified" if expected_agy_sha256 else "synthetic"),
                 provider_return_code="zero" if completed.returncode == 0 else "nonzero",
             )
+            metadata.update(request_metadata)
+            metadata["elapsed_milliseconds"] = elapsed_milliseconds
             if completed.returncode:
                 failure_stage = "provider_return"
                 try:
@@ -1402,6 +1700,9 @@ def _run_chunk(
                     exc.code,
                     metadata=metadata,
                     failure_stage=failure_stage,
+                    request_plan_sha256=request_plan_sha256,
+                    request_byte_budget=request_byte_budget,
+                    request_byte_count=len(stdin_bytes),
                 )
                 if exc.structural and attempt == 1:
                     continue
@@ -1420,7 +1721,7 @@ def _run_chunk(
             raw_hash = _atomic(out / f"raw-chunk-{chunk_index:02d}.raw", raw, raw=True)
             labels_hash = _atomic(labels_path, labels)
             receipt = {
-                "schema_version": "phase3_cycle007_gemini_chunk_receipt_v1",
+                "schema_version": "phase3_cycle007_gemini_chunk_receipt_v2",
                 "evaluation_cycle_id": CYCLE,
                 "lane": lane,
                 "packet_index": packet_index,
@@ -1428,6 +1729,12 @@ def _run_chunk(
                 "chunk_count": part["chunk_count"],
                 "row_count": len(part["rows"]),
                 "chunk_identity_set_sha256": digest(canonical(sorted(_identity(row) for row in part["rows"]))),
+                "ordered_identity_sha256": part["ordered_identity_sha256"],
+                "request_plan_sha256": request_plan_sha256,
+                "planner_version": PLANNER_VERSION,
+                "request_byte_budget": request_byte_budget,
+                "request_byte_count": len(stdin_bytes),
+                "elapsed_milliseconds": elapsed_milliseconds,
                 "prompt_sha256": prompt_sha256,
                 "label_prompt_sha256": expected_label_prompt_sha,
                 "response_raw_sha256": raw_hash,
@@ -1454,6 +1761,9 @@ def _run_chunk(
                     exc.code,
                     metadata=metadata,
                     failure_stage=failure_stage,
+                    request_plan_sha256=request_plan_sha256,
+                    request_byte_budget=request_byte_budget,
+                    request_byte_count=part["request_byte_count"],
                 )
             stop(
                 package,
@@ -1485,6 +1795,8 @@ def _verify_chunk(
     sidecar_part: dict[str, Any] | None = None,
     *,
     expected_label_prompt_sha: str | None,
+    request_plan_sha256: str,
+    request_byte_budget: int,
 ) -> dict[str, Any]:
     out = _chunk_dir(package, lane, packet_index)
     chunk_index = int(part["chunk_index"])
@@ -1502,7 +1814,7 @@ def _verify_chunk(
         raise _semantic_failure(exc) from exc
     _prompt_template, prompt_sha256 = prompt_binding(package, lane, expected_label_prompt_sha=expected_label_prompt_sha)
     expected = {
-        "schema_version": "phase3_cycle007_gemini_chunk_receipt_v1",
+        "schema_version": "phase3_cycle007_gemini_chunk_receipt_v2",
         "evaluation_cycle_id": CYCLE,
         "lane": lane,
         "packet_index": packet_index,
@@ -1510,6 +1822,12 @@ def _verify_chunk(
         "chunk_count": part["chunk_count"],
         "row_count": len(part["rows"]),
         "chunk_identity_set_sha256": digest(canonical(sorted(_identity(row) for row in part["rows"]))),
+        "ordered_identity_sha256": part["ordered_identity_sha256"],
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "request_byte_budget": request_byte_budget,
+        "request_byte_count": part["request_byte_count"],
+        "elapsed_milliseconds": receipt.get("elapsed_milliseconds"),
         "prompt_sha256": prompt_sha256,
         "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "response_raw_sha256": digest(raw_path.read_bytes()),
@@ -1521,15 +1839,28 @@ def _verify_chunk(
         "text_free": True,
     }
     attempt_count = receipt.get("attempt_count")
+    elapsed_milliseconds = receipt.get("elapsed_milliseconds")
     if (
         not isinstance(attempt_count, int)
         or isinstance(attempt_count, bool)
         or attempt_count < 1
+        or not isinstance(elapsed_milliseconds, int)
+        or isinstance(elapsed_milliseconds, bool)
+        or elapsed_milliseconds < 0
         or set(receipt) != set(expected) | {"receipt_sha256"}
         or any(receipt.get(key) != value for key, value in expected.items())
         or receipt.get("receipt_sha256") != digest(canonical(expected))
     ):
         raise Error("ordinal_identity_binding_drift")
+    _verify_pre_call_receipt(
+        out,
+        lane=lane,
+        packet_index=packet_index,
+        part=part,
+        attempt=attempt_count,
+        request_plan_sha256=request_plan_sha256,
+        request_byte_budget=request_byte_budget,
+    )
     return labels
 
 
@@ -1544,6 +1875,8 @@ def _reassemble(
     parts: list[tuple[dict[str, Any], dict[str, Any]]],
     *,
     expected_label_prompt_sha: str,
+    request_plan_sha256: str,
+    request_byte_budget: int,
 ) -> dict[str, Any]:
     out = package / OUTPUT / lane
     labels_path, receipt_path, raw_manifest_path = (
@@ -1554,7 +1887,13 @@ def _reassemble(
     if labels_path.exists() or receipt_path.exists() or raw_manifest_path.exists():
         if not (labels_path.exists() and receipt_path.exists() and raw_manifest_path.exists()):
             raise Error("ordinal_identity_binding_drift")
-        return verify_packet(package, lane, packet_index, expected_label_prompt_sha=expected_label_prompt_sha)
+        return verify_packet(
+            package,
+            lane,
+            packet_index,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+            request_byte_budget=request_byte_budget,
+        )
     answers, entries = [], []
     for part, sidecar_part in parts:
         labels = _verify_chunk(
@@ -1564,6 +1903,8 @@ def _reassemble(
             part,
             sidecar_part,
             expected_label_prompt_sha=expected_label_prompt_sha,
+            request_plan_sha256=request_plan_sha256,
+            request_byte_budget=request_byte_budget,
         )
         answers.extend(labels["labels"])
         receipt = _read_json(_chunk_dir(package, lane, packet_index) / f"receipt-chunk-{part['chunk_index']:02d}.json")
@@ -1571,6 +1912,8 @@ def _reassemble(
             {
                 "chunk_index": part["chunk_index"],
                 "row_count": len(part["rows"]),
+                "request_byte_count": receipt["request_byte_count"],
+                "elapsed_milliseconds": receipt["elapsed_milliseconds"],
                 "response_raw_sha256": receipt["response_raw_sha256"],
                 "labels_sha256": receipt["labels_sha256"],
                 "chunk_receipt_sha256": receipt["receipt_sha256"],
@@ -1582,18 +1925,21 @@ def _reassemble(
     except SOURCE.Invalid as exc:
         raise _semantic_failure(exc) from exc
     manifest = {
-        "schema_version": "phase3_cycle007_gemini_raw_manifest_v1",
+        "schema_version": "phase3_cycle007_gemini_raw_manifest_v2",
         "evaluation_cycle_id": CYCLE,
         "lane": lane,
         "packet_index": packet_index,
         "chunk_count": len(parts),
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "request_byte_budget": request_byte_budget,
         "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "chunks": entries,
         "text_free": True,
     }
     manifest_hash, labels_hash = _atomic(raw_manifest_path, manifest), _atomic(labels_path, result)
     receipt = {
-        "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
+        "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v2",
         "evaluation_cycle_id": CYCLE,
         "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
@@ -1611,6 +1957,9 @@ def _reassemble(
         "raw_manifest_sha256": manifest_hash,
         "labels_sha256": labels_hash,
         "chunk_count": len(parts),
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "request_byte_budget": request_byte_budget,
         "exact_model": MODEL,
         "model_family": FAMILY,
         "harness": HARNESS,
@@ -1622,10 +1971,33 @@ def _reassemble(
 
 
 def verify_packet(
-    package: Path, lane: str, packet_index: int, *, expected_label_prompt_sha: str | None
+    package: Path,
+    lane: str,
+    packet_index: int,
+    *,
+    expected_label_prompt_sha: str | None,
+    request_byte_budget: int = DEFAULT_REQUEST_BYTE_BUDGET,
 ) -> dict[str, Any]:
     source_path, contents, sidecar_path, sidecar_contents = packet(package, lane, packet_index)
-    parts = chunks(contents, sidecar_contents)
+    prompt_template, _prompt_sha256 = prompt_binding(
+        package, lane, expected_label_prompt_sha=expected_label_prompt_sha
+    )
+    parts = chunks(
+        contents,
+        sidecar_contents,
+        template=prompt_template,
+        lane=lane,
+        request_byte_budget=request_byte_budget,
+    )
+    plan = request_plan(
+        contents,
+        parts,
+        lane=lane,
+        packet_index=packet_index,
+        request_byte_budget=request_byte_budget,
+        label_prompt_sha256=_label_prompt_hash(expected_label_prompt_sha),
+    )
+    request_plan_sha256 = _bind_request_plan(_chunk_dir(package, lane, packet_index), plan)
     out = package / OUTPUT / lane
     labels_path, receipt_path, manifest_path = (
         out / f"labels-{packet_index:04d}.json",
@@ -1641,17 +2013,22 @@ def verify_packet(
             part,
             sidecar_part,
             expected_label_prompt_sha=expected_label_prompt_sha,
+            request_plan_sha256=request_plan_sha256,
+            request_byte_budget=request_byte_budget,
         )
     try:
         SOURCE.validate(lane, {"rows": contents["rows"]}, canonical(labels), sidecar={"rows": sidecar_contents["rows"]})
     except SOURCE.Invalid as exc:
         raise _semantic_failure(exc) from exc
     expected_manifest = {
-        "schema_version": "phase3_cycle007_gemini_raw_manifest_v1",
+        "schema_version": "phase3_cycle007_gemini_raw_manifest_v2",
         "evaluation_cycle_id": CYCLE,
         "lane": lane,
         "packet_index": packet_index,
         "chunk_count": len(parts),
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "request_byte_budget": request_byte_budget,
         "label_prompt_sha256": _label_prompt_hash(expected_label_prompt_sha),
         "chunks": manifest.get("chunks"),
         "text_free": True,
@@ -1659,7 +2036,7 @@ def verify_packet(
     if manifest != expected_manifest:
         raise Error("ordinal_identity_binding_drift")
     expected = {
-        "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v1",
+        "schema_version": "phase3_cycle007_gemini_packet_label_receipt_v2",
         "evaluation_cycle_id": CYCLE,
         "amendment_sha256": AMENDMENT_SHA256,
         "custody_receipt_raw_sha256": digest((package / "custody-receipt.json").read_bytes()),
@@ -1677,6 +2054,9 @@ def verify_packet(
         "raw_manifest_sha256": digest(manifest_path.read_bytes()),
         "labels_sha256": digest(labels_path.read_bytes()),
         "chunk_count": len(parts),
+        "request_plan_sha256": request_plan_sha256,
+        "planner_version": PLANNER_VERSION,
+        "request_byte_budget": request_byte_budget,
         "exact_model": MODEL,
         "model_family": FAMILY,
         "harness": HARNESS,
@@ -1708,8 +2088,12 @@ def run_packet(
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
     expected_label_prompt_sha: str | None = None,
+    request_byte_budget: int = DEFAULT_REQUEST_BYTE_BUDGET,
+    max_new_chunks: int | None = None,
 ) -> dict[str, Any]:
     global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
+    if max_new_chunks not in {None, 1}:
+        raise Error("request_plan_binding_drift")
     if expected_custody_sha256 is not None:
         EXPECTED_CUSTODY_SHA256 = expected_custody_sha256
     if expected_label_manifest_sha256 is not None:
@@ -1733,11 +2117,36 @@ def run_packet(
         if not all(path.exists() and not path.is_symlink() for path in final_paths):
             stop(package, lane, packet_index, "ordinal_identity_binding_drift", failure_stage="package_binding")
             raise Error("ordinal_identity_binding_drift")
-        return verify_packet(package, lane, packet_index, expected_label_prompt_sha=expected_label_prompt_sha)
-    parts = chunks(contents, sidecar_contents)
+        return verify_packet(
+            package,
+            lane,
+            packet_index,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+            request_byte_budget=request_byte_budget,
+        )
+    prompt_template, _prompt_sha256 = prompt_binding(
+        package, lane, expected_label_prompt_sha=expected_label_prompt_sha
+    )
+    parts = chunks(
+        contents,
+        sidecar_contents,
+        template=prompt_template,
+        lane=lane,
+        request_byte_budget=request_byte_budget,
+    )
+    plan = request_plan(
+        contents,
+        parts,
+        lane=lane,
+        packet_index=packet_index,
+        request_byte_budget=request_byte_budget,
+        label_prompt_sha256=expected_label_prompt_sha,
+    )
+    request_plan_sha256 = _bind_request_plan(_chunk_dir(package, lane, packet_index), plan)
     try:
+        new_chunks = 0
         for part, sidecar_part in parts:
-            _run_chunk(
+            chunk_result = _run_chunk(
                 package,
                 lane,
                 packet_index,
@@ -1746,7 +2155,23 @@ def run_packet(
                 provider,
                 expected_agy_sha256,
                 expected_label_prompt_sha,
+                request_plan_sha256,
+                request_byte_budget,
             )
+            if chunk_result.get("resumed") is not True:
+                new_chunks += 1
+            if max_new_chunks is not None and new_chunks >= max_new_chunks:
+                return {
+                    "ok": True,
+                    "partial": True,
+                    "lane": lane,
+                    "packet_index": packet_index,
+                    "new_chunk_count": new_chunks,
+                    "request_plan_sha256": request_plan_sha256,
+                    "request_byte_budget": request_byte_budget,
+                    "planner_version": PLANNER_VERSION,
+                    "text_free": True,
+                }
         _reassemble(
             package,
             lane,
@@ -1757,8 +2182,16 @@ def run_packet(
             sidecar_contents,
             parts,
             expected_label_prompt_sha=expected_label_prompt_sha,
+            request_plan_sha256=request_plan_sha256,
+            request_byte_budget=request_byte_budget,
         )
-        return verify_packet(package, lane, packet_index, expected_label_prompt_sha=expected_label_prompt_sha)
+        return verify_packet(
+            package,
+            lane,
+            packet_index,
+            expected_label_prompt_sha=expected_label_prompt_sha,
+            request_byte_budget=request_byte_budget,
+        )
     except Error as exc:
         stop(package, lane, packet_index, exc.code)
         raise
@@ -1777,6 +2210,7 @@ def batch(
     expected_label_manifest_sha256: str | None = None,
     expected_evidence_manifest_sha256: str | None = None,
     expected_label_prompt_sha: str | None = None,
+    request_byte_budget: int = DEFAULT_REQUEST_BYTE_BUDGET,
 ) -> dict[str, Any]:
     """Resume one contiguous packet range with fail-stop concurrency fixed at one."""
     global EXPECTED_CUSTODY_SHA256, EXPECTED_LABEL_MANIFEST_SHA256, EXPECTED_EVIDENCE_MANIFEST_SHA256
@@ -1803,6 +2237,7 @@ def batch(
                 provider,
                 expected_agy_sha256=expected_agy_sha256,
                 expected_label_prompt_sha=expected_label_prompt_sha,
+                request_byte_budget=request_byte_budget,
             )
         )
     return {
@@ -1813,6 +2248,8 @@ def batch(
         "packet_count": len(results),
         "concurrency": 1,
         "label_prompt_sha256": expected_label_prompt_sha,
+        "request_byte_budget": request_byte_budget,
+        "planner_version": PLANNER_VERSION,
         "text_free": True,
     }
 
@@ -1826,6 +2263,19 @@ def main() -> int:
     selector.add_argument("--start", type=int, help="inclusive contiguous batch range start")
     parser.add_argument("--end", type=int, help="inclusive contiguous batch range end (required with --start)")
     parser.add_argument("--concurrency", type=int, default=1, help="must remain one for fail-stop execution")
+    parser.add_argument(
+        "--request-byte-budget",
+        type=int,
+        choices=REQUEST_BYTE_BUDGET_STEPS,
+        default=DEFAULT_REQUEST_BYTE_BUDGET,
+        help="exact serialized stdin ceiling; frozen into the packet request plan",
+    )
+    parser.add_argument(
+        "--max-new-chunks",
+        type=int,
+        choices=(1,),
+        help="pilot-only fail-stop boundary; return after one newly committed production chunk",
+    )
     provider = parser.add_mutually_exclusive_group(required=True)
     provider.add_argument("--provider-bin", type=Path, help="explicit real AGY executable")
     provider.add_argument("--test-provider-bin", type=Path, help="synthetic provider executable only")
@@ -1897,8 +2347,12 @@ def main() -> int:
                 args.provider_bin or args.test_provider_bin,
                 expected_agy_sha256=args.expected_agy_executable_sha,
                 expected_label_prompt_sha=args.expected_label_prompt_sha,
+                request_byte_budget=args.request_byte_budget,
+                max_new_chunks=args.max_new_chunks,
             )
         elif args.start is not None and args.end is not None:
+            if args.max_new_chunks is not None:
+                raise Error("request_plan_binding_drift")
             result = batch(
                 args.package.resolve(),
                 args.lane,
@@ -1908,6 +2362,7 @@ def main() -> int:
                 concurrency=args.concurrency,
                 expected_agy_sha256=args.expected_agy_executable_sha,
                 expected_label_prompt_sha=args.expected_label_prompt_sha,
+                request_byte_budget=args.request_byte_budget,
             )
         else:
             raise Error("ordinal_identity_binding_drift")

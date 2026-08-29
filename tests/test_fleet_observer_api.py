@@ -750,7 +750,7 @@ def test_acp_and_runtime_provenance_reuse_existing_read_models(
     monkeypatch.setattr(
         fleet_router,
         "recent_runtime_records",
-        lambda *, limit: {
+        lambda *, limit, ctx=None: {
             "records": [
                 {
                     "ts": "2026-08-01T12:06:00Z",

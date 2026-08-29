@@ -74,7 +74,7 @@ def test_health_names_both_ledgers_when_authority_window_is_empty(
     monkeypatch.setattr(
         fleet_router,
         "recent_runtime_records",
-        lambda *, limit: _runtime_records(inside, inside, outside),
+        lambda *, limit, ctx=None: _runtime_records(inside, inside, outside),
     )
 
     health = client.get("/api/fleet/health").json()
@@ -93,7 +93,7 @@ def test_health_runtime_activity_survives_ledger_read_failure(
 ) -> None:
     """A broken runtime ledger degrades the chip hint, never the health verdict."""
 
-    def _boom(*, limit: int) -> dict[str, list[dict[str, str]]]:
+    def _boom(*, limit: int, ctx=None) -> dict[str, list[dict[str, str]]]:
         raise OSError("usage files unreadable")
 
     monkeypatch.setattr(fleet_router, "recent_runtime_records", _boom)
