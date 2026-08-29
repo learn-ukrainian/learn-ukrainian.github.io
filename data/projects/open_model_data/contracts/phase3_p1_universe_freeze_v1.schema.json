@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_p1_universe_freeze_v1.schema.json",
+  "title": "Phase 3 P1 source, rights, language, and applicability freeze v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "status", "controlling_outcome_sha256", "freeze", "source_manifest", "language_universe", "historical_protection", "applicability", "required_cell_manifest", "safety"],
+  "properties": {
+    "schema_version": {"const": "phase3_p1_universe_freeze_v1"},
+    "text_free": {"const": true},
+    "status": {"const": "INVENTORIED"},
+    "controlling_outcome_sha256": {"$ref": "#/$defs/sha256"},
+    "freeze": {
+      "type": "object", "additionalProperties": false,
+      "required": ["admission_cutoff", "freeze_commit", "later_source_policy", "generator"],
+      "properties": {
+        "admission_cutoff": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "freeze_commit": {"$ref": "#/$defs/git_sha"},
+        "later_source_policy": {"const": "later_source_requires_new_dataset_version"},
+        "generator": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"const": "scripts/projects/open_model_data/freeze_phase3_p1_universe.py"}, "sha256": {"$ref": "#/$defs/sha256"}}}
+      }
+    },
+    "source_manifest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_unit_count", "source_units", "source_unit_identity_rule", "disposition_rule", "input_artifacts"],
+      "properties": {
+        "source_unit_count": {"type": "integer", "minimum": 1},
+        "source_units": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/source_unit"}},
+        "source_unit_identity_rule": {"type": "string", "minLength": 1},
+        "disposition_rule": {"const": "exactly_one_source_unit_disposition_per_entry"},
+        "input_artifacts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/artifact"}}
+      }
+    },
+    "language_universe": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_language_identity", "modern_contact_classes", "modern_contact_classes_exhaustive", "historical_protected_classes", "fail_closed_classes", "span_fields_required", "context_roles", "script_is_language_identity", "unknown_mixed_and_unresolved_route"],
+      "properties": {
+        "target_language_identity": {"const": "modern_standard_ukrainian"},
+        "modern_contact_classes": {"const": ["russian", "belarusian", "bulgarian", "macedonian", "serbian_cyrillic", "montenegrin_cyrillic"]},
+        "modern_contact_classes_exhaustive": {"const": true},
+        "historical_protected_classes": {"const": ["old_east_slavic_kyivan_rus", "middle_ukrainian", "church_slavonic_recension", "source_attested_rusyn"]},
+        "fail_closed_classes": {"const": ["other_or_unresolved_slavic_cyrillic", "mixed_identity", "non_slavic_cyrillic", "latin_script_slavic", "unknown"]},
+        "span_fields_required": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "context_roles": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "script_is_language_identity": {"const": false},
+        "unknown_mixed_and_unresolved_route": {"const": "out_of_scope_protected_or_abstain"}
+      }
+    },
+    "historical_protection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["historical_forms_protected", "modern_correction_eligible", "old_east_slavic_is_modern_russian", "historical_ruskyi_auto_mapped_to_modern_russian", "automatic_mapping_to_modern_national_successor", "recension_and_editorial_layer_required"],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "old_east_slavic_is_modern_russian": {"const": false},
+        "historical_ruskyi_auto_mapped_to_modern_russian": {"const": false},
+        "automatic_mapping_to_modern_national_successor": {"const": false},
+        "recension_and_editorial_layer_required": {"const": true}
+      }
+    },
+    "applicability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["predicate_id", "result_when_true", "all_of", "else_route", "script_alone_is_insufficient", "historical_span_relabel_forbidden"],
+      "properties": {
+        "predicate_id": {"const": "phase3_p1_correction_applicability_v1"},
+        "result_when_true": {"const": "correction_eligible"},
+        "all_of": {"type": "array", "minItems": 6, "items": {"$ref": "#/$defs/clause"}},
+        "else_route": {"const": "abstain"},
+        "script_alone_is_insufficient": {"const": true},
+        "historical_span_relabel_forbidden": {"const": true}
+      }
+    },
+    "required_cell_manifest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dimension_order", "implicit_cartesian_product", "cells", "status_semantics"],
+      "properties": {
+        "dimension_order": {"const": ["language_identity", "context_role", "phenomenon", "role"]},
+        "implicit_cartesian_product": {"const": false},
+        "cells": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/cell"}},
+        "status_semantics": {"type": "object", "additionalProperties": false, "required": ["satisfied", "not_applicable_with_evidence", "coverage_blocked", "unresolved"], "properties": {"satisfied": {"type": "string"}, "not_applicable_with_evidence": {"type": "string"}, "coverage_blocked": {"type": "string"}, "unresolved": {"type": "string"}}}
+      }
+    },
+    "safety": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider_calls", "labels_created", "dataset_rows_emitted", "gold_created", "training_performed"],
+      "properties": {"provider_calls": {"const": false}, "labels_created": {"const": false}, "dataset_rows_emitted": {"const": false}, "gold_created": {"const": false}, "training_performed": {"const": false}}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "git_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "pattern": "^[^/].*"}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "source_unit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_unit_id", "source_class", "unit_grain", "unit_count", "identity_sha256", "source_artifact", "provenance", "rights", "source_unit_disposition", "metadata_only"],
+      "properties": {
+        "source_unit_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]+$"},
+        "source_class": {"type": "string", "minLength": 1},
+        "unit_grain": {"type": "string", "minLength": 1},
+        "unit_count": {"type": "integer", "minimum": 0},
+        "identity_sha256": {"$ref": "#/$defs/sha256"},
+        "source_artifact": {"$ref": "#/$defs/artifact"},
+        "provenance": {"type": "object", "minProperties": 1},
+        "rights": {"$ref": "#/$defs/rights"},
+        "source_unit_disposition": {"enum": ["converted", "supporting_only", "protected", "evaluation_only", "rights_limited_locator_only", "duplicate", "non_rule_bearing", "unresolved", "blocked_with_reason"]},
+        "metadata_only": {"const": true},
+        "block_reason": {"type": "string", "minLength": 1},
+        "identity_candidates": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "allOf": [{"if": {"properties": {"rights": {"properties": {"required_state": {"const": "unknown"}}}}, "required": ["rights"]}, "then": {"properties": {"rights": {"required": ["blocked_lanes"]}}}}]
+    },
+    "rights": {
+      "type": "object", "additionalProperties": false,
+      "required": ["capability_state", "required_state", "blocked_lanes"],
+      "properties": {"capability_state": {"type": "string", "minLength": 1}, "required_state": {"enum": ["scoped_capability", "unknown"]}, "blocked_lanes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}},
+      "allOf": [{"if": {"properties": {"required_state": {"const": "unknown"}}, "required": ["required_state"]}, "then": {"properties": {"blocked_lanes": {"minItems": 1}}}}]
+    },
+    "clause": {
+      "type": "object", "additionalProperties": false, "required": ["field", "operator"],
+      "properties": {"field": {"type": "string", "minLength": 1}, "operator": {"enum": ["equals", "in"]}, "value": {"type": "string"}, "values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}},
+      "oneOf": [{"required": ["value"], "not": {"required": ["values"]}}, {"required": ["values"], "not": {"required": ["value"]}}]
+    },
+    "cell": {
+      "type": "object", "additionalProperties": false, "required": ["cell_id", "language_identity", "context_role", "phenomenon", "role", "status", "protection_required"],
+      "properties": {"cell_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]+$"}, "language_identity": {"type": "string", "minLength": 1}, "context_role": {"type": "string", "minLength": 1}, "phenomenon": {"type": "string", "minLength": 1}, "role": {"type": "string", "minLength": 1}, "status": {"enum": ["satisfied", "not_applicable_with_evidence", "coverage_blocked", "unresolved"]}, "protection_required": {"type": "boolean"}},
+      "allOf": [{"if": {"properties": {"status": {"const": "not_applicable_with_evidence"}}, "required": ["status"]}, "then": {"properties": {"protection_required": {"const": false}}}}, {"if": {"properties": {"protection_required": {"const": true}}, "required": ["protection_required"]}, "then": {"properties": {"status": {"not": {"const": "not_applicable_with_evidence"}}}}}]
+    }
+  }
+}
