@@ -70,7 +70,7 @@ material change to the outcome, language boundary, denominator, role map,
 evaluation design, stop policy, or completion terms invalidates this plan and
 requires a new domain review and an independent scope/circularity review before
 implementation continues. The receipt in
-`data/projects/open_model_data/evidence/phase3_cyrillic_slavic_predecessor_handoff_v1.json`
+`data/projects/open_model_data/reference/phase3_cyrillic_slavic_predecessor_handoff_v1.json`
 binds the predecessor state to this identity.
 
 ## Product boundary
