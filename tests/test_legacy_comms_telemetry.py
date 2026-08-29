@@ -21,8 +21,8 @@ from scripts.api.telemetry import legacy_comms
 
 @pytest.fixture()
 def telemetry_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    path = tmp_path / "telemetry" / "legacy-comms.db"
-    monkeypatch.setattr(legacy_comms, "_DB_PATH", path)
+    path = tmp_path / "data" / "telemetry" / "legacy_comms_routes.db"
+    monkeypatch.setattr(legacy_comms, "_default_db_path", lambda: path)
     legacy_comms._reset_initialized_paths_for_tests()
     return path
 

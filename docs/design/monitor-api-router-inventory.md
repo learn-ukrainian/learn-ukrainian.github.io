@@ -467,19 +467,17 @@ global. `LEVELS` is track-id config, not a filesystem root.
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `site_router.py` | `/api/site` | 2 | 260 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `SITE_DIR`, `ASTRO_OUTPUT_DIR` | 5 | 12d |
-| `wiki_router.py` | `/api/wiki` | 8 | 436 | `CURRICULUM_ROOT`, `LEVELS` | `PROJECT_ROOT`, `SOURCES_DB_PATH` | 12 | 12d |
-| `worktrees_router.py` | `/api/worktrees` | 1 | 221 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | — | 3 | 12d |
-| `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | `PROJECT_ROOT` | `_DB_PATH`, `_MODULE_BUILD_DB_PATH` | 7 | 12d |
+| `site_router.py` | `/api/site` | 2 | 260 | — | — | 0 | 12d |
+| `wiki_router.py` | `/api/wiki` | 8 | 436 | `LEVELS` | — | 8 | 12d |
+| `worktrees_router.py` | `/api/worktrees` | 1 | 221 | — | — | 1 | 12d |
+| `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | — | — | 1 | 12d |
 
-**`wiki_router` seams (12):** `path_loop` for `wiki_router` globals;
-`external_store_loop` for `wiki.config.WIKI_STATE_DIR`,
-`wiki.source_attribution.DEFAULT_DB_PATH`, `wiki.state.WIKI_STATE_DIR`,
-`wiki.quality_gate.PROGRESS_DB`, `wiki.dense_rerank`, `wiki.embedding_manifest`,
-`wiki.sources_db` module-global DB/STATE paths.
-
-**`worktrees_router` seams (3):** `_run`; `reap_worktrees._run`;
-`path_loop:LIVE_REPO_ROOT`.
+**12d migrated (#7333):** path roots and database handles now come from
+`Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
+(`site_router` 4 Path globals + `_run` stub, `worktrees_router` 2 Path globals +
+`_run` stub, `telemetry_router` 3 Path globals, `wiki_router` 4 router-local Path
+globals) are deleted. `reap_worktrees._run` and external `wiki.*` /
+`scripts.telemetry.legacy_bridge` store-loop seams remain for unmigrated callers.
 
 ### Step 12e — work / epics
 

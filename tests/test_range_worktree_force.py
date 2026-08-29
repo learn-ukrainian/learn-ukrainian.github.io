@@ -8,6 +8,7 @@ Covers:
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -171,7 +172,14 @@ def test_worktrees_parses_porcelain_output(monkeypatch, tmp_path):
     )
 
     # Release-mode split (#4931): the router targets the live checkout.
-    monkeypatch.setattr(worktrees_router, "LIVE_REPO_ROOT", primary)
+    monkeypatch.setattr(
+        api_main.app.state,
+        "ctx",
+        replace(
+            api_main.app.state.ctx,
+            roots=replace(api_main.app.state.ctx.roots, live_repo_root=primary),
+        ),
+    )
 
     calls: list[list[str]] = []
 
@@ -237,6 +245,17 @@ def test_worktrees_missing_git_binary_degrades(monkeypatch):
     body = client.get("/api/worktrees").json()
     assert body["worktrees"] == []
     assert "FileNotFoundError" in body["error"]
+
+
+def test_worktrees_swallows_opsec_subprocess_deny(monkeypatch):
+    def raises_denied(*_a, **_kw):
+        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
+
+    monkeypatch.setattr(worktrees_router.subprocess, "run", raises_denied)
+
+    body = client.get("/api/worktrees").json()
+    assert body["worktrees"] == []
+    assert "AssertionError" in body["error"]
 
 
 # ---------------------------------------------------------------------

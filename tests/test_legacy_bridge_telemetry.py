@@ -16,6 +16,7 @@ from fastapi.testclient import TestClient
 
 from scripts.ai_agent_bridge import _acp_compat
 from scripts.api import telemetry_router
+from scripts.api.monitor_context import fixture_context
 from scripts.api.telemetry import legacy_comms
 from scripts.telemetry import legacy_bridge
 
@@ -312,6 +313,7 @@ def test_read_only_api_returns_all_targets_and_rejects_invalid_window(
     telemetry_db: Path,
 ) -> None:
     app = FastAPI()
+    app.state.ctx = fixture_context(telemetry_db.parent.parent)
     app.include_router(telemetry_router.router)
     with TestClient(app) as client:
         response = client.get("/api/telemetry/legacy-bridge-asks?window=1h")
@@ -325,6 +327,42 @@ def test_read_only_api_returns_all_targets_and_rejects_invalid_window(
         assert client.get(
             "/api/telemetry/legacy-bridge-asks?window=forever"
         ).status_code == 422
+
+
+def test_worktree_served_api_call_hits_primary_store(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    primary = tmp_path / "primary"
+    primary_db = primary / "data" / "telemetry" / "legacy_comms_routes.db"
+    worktree = tmp_path / "dispatch" / "task"
+    worktree_git_dir = primary / ".git" / "worktrees" / "task"
+    worktree_git_dir.mkdir(parents=True)
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {worktree_git_dir}\n", encoding="utf-8")
+
+    monkeypatch.setattr(legacy_bridge, "_DB_PATH", primary_db)
+    legacy_bridge._reset_initialized_paths_for_tests()
+
+    token = legacy_bridge.record_bridge_invocation_start(
+        "glm", "codex", db_path=primary_db
+    )
+    legacy_bridge.record_bridge_invocation_finish(token, succeeded=True)
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(worktree)
+    app.include_router(telemetry_router.router)
+
+    with TestClient(app) as client:
+        response = client.get("/api/telemetry/legacy-bridge-asks?window=1h")
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["started"] == 1
+        assert payload["succeeded"] == 1
+        glm = next(item for item in payload["targets"] if item["target"] == "glm")
+        assert glm["started"] == 1
+        assert glm["by_caller_family"] == {"openai": 1}
+
+    assert not (worktree / "data" / "telemetry" / "legacy_comms_routes.db").exists()
 
 
 def test_terminal_recovery_recreates_a_conservative_start(telemetry_db: Path) -> None:

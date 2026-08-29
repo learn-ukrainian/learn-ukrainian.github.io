@@ -230,9 +230,9 @@ def test_site_health_graceful_when_offline(monkeypatch):
         site_router, "_canary_probes",
         lambda _url: [{"url": "https://example/", "status": None, "error": "URLError: offline"}],
     )
-    monkeypatch.setattr(site_router, "_last_astro_build", lambda: {"built": False})
-    monkeypatch.setattr(site_router, "_last_deploy_commit", lambda: {"error": "no gh-pages ref"})
-    monkeypatch.setattr(site_router, "_sitemap_freshness", lambda: {"exists": False})
+    monkeypatch.setattr(site_router, "_last_astro_build", lambda *_a, **_k: {"built": False})
+    monkeypatch.setattr(site_router, "_last_deploy_commit", lambda *_a, **_k: {"error": "no gh-pages ref"})
+    monkeypatch.setattr(site_router, "_sitemap_freshness", lambda *_a, **_k: {"exists": False})
 
     resp = client.get("/api/site/health")
     assert resp.status_code == 200
@@ -248,9 +248,9 @@ def test_site_health_reachable_when_canary_200(monkeypatch):
         site_router, "_canary_probes",
         lambda _url: [{"url": "https://example/", "status": 200, "elapsed_ms": 42}],
     )
-    monkeypatch.setattr(site_router, "_last_astro_build", lambda: {"built": True})
-    monkeypatch.setattr(site_router, "_last_deploy_commit", lambda: {"sha": "abc123"})
-    monkeypatch.setattr(site_router, "_sitemap_freshness", lambda: {"exists": True})
+    monkeypatch.setattr(site_router, "_last_astro_build", lambda *_a, **_k: {"built": True})
+    monkeypatch.setattr(site_router, "_last_deploy_commit", lambda *_a, **_k: {"sha": "abc123"})
+    monkeypatch.setattr(site_router, "_sitemap_freshness", lambda *_a, **_k: {"exists": True})
 
     body = client.get("/api/site/health").json()
     assert body["reachable"] is True
@@ -329,6 +329,19 @@ def test_site_run_swallows_missing_binary(monkeypatch):
     proc = site_router._run(["gh", "run", "list"], timeout_s=3.0)
     assert proc.returncode == 127
     assert "FileNotFoundError" in proc.stderr
+
+
+def test_site_run_swallows_opsec_subprocess_deny(monkeypatch):
+    """An isolated fixture's subprocess deny must degrade, not 500."""
+
+    def raises_denied(*_a, **_kw):
+        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
+
+    monkeypatch.setattr(site_router.subprocess, "run", raises_denied)
+
+    proc = site_router._run(["gh", "run", "list"], timeout_s=3.0)
+    assert proc.returncode == 127
+    assert "AssertionError" in proc.stderr
 
 
 def test_site_deployments_200_when_gh_times_out(monkeypatch):

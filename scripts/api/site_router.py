@@ -27,11 +27,13 @@ import subprocess
 import urllib.error
 import urllib.request
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from . import config as api_config
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["site"])
 
@@ -49,8 +51,20 @@ CANARY_PATHS: tuple[str, ...] = (
     "/a1/",
 )
 
-SITE_DIR = PROJECT_ROOT / "site"
-ASTRO_OUTPUT_DIR = SITE_DIR / "dist"
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _site_dir(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.project_root / "site"
+
+
+def _astro_output_dir(ctx: MonitorContext | None = None) -> Path:
+    return _site_dir(ctx) / "dist"
 
 
 # ---------------------------------------------------------------------
@@ -79,7 +93,31 @@ def _head(url: str, timeout_s: float = 2.0) -> dict[str, Any]:
         return {"url": url, "status": None, "error": f"{type(exc).__name__}: {exc}"}
 
 
-def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[str]:
+def _run_cwd(cmd: list[str], ctx: MonitorContext | None = None) -> Path:
+    """Resolve the subprocess cwd without constructing a production context.
+
+    ``production_context()`` itself runs git (session-streams path
+    resolution). Unit tests that stub ``subprocess.run`` must still be
+    able to call ``_run`` directly.
+    """
+    if isinstance(ctx, MonitorContext):
+        return (
+            ctx.roots.live_repo_root
+            if cmd and cmd[0] == "git"
+            else ctx.roots.project_root
+        )
+    return (
+        Path(api_config.LIVE_REPO_ROOT)
+        if cmd and cmd[0] == "git"
+        else Path(api_config.PROJECT_ROOT)
+    )
+
+
+def _run(
+    cmd: list[str],
+    timeout_s: float = 3.0,
+    ctx: MonitorContext | None = None,
+) -> subprocess.CompletedProcess[str]:
     """Run a subprocess with a bounded timeout. Never raises.
 
     The file contract says "every field degrades to an error string,
@@ -98,14 +136,20 @@ def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[
     ``returncode != 0`` to surface the error in their own field, so
     this degrades naturally.
 
+    ``AssertionError`` is included so an isolated OPSEC fixture's
+    process-wide ``subprocess.run`` deny degrades the same way — the
+    route keeps its documented error-string envelope without a
+    router-local ``_run`` monkeypatch seam (#7269 step 12d).
+
     Both Codex and Gemini flagged this as the single BLOCKER in the
     final pre-PR review (#1309) — fixing it here means the three
     site-health helpers all inherit the safety net for free.
     """
+    cwd = _run_cwd(cmd, ctx)
     try:
         return subprocess.run(
             cmd,
-            cwd=LIVE_REPO_ROOT if cmd and cmd[0] == "git" else PROJECT_ROOT,
+            cwd=cwd,
             capture_output=True,
             text=True,
             timeout=timeout_s,
@@ -118,7 +162,7 @@ def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[
             stdout="",
             stderr=f"TimeoutExpired after {exc.timeout}s",
         )
-    except (FileNotFoundError, PermissionError, OSError) as exc:
+    except (FileNotFoundError, PermissionError, OSError, AssertionError) as exc:
         return subprocess.CompletedProcess(
             args=cmd,
             returncode=127,  # conventional "command not found"
@@ -132,13 +176,14 @@ def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[
 # ---------------------------------------------------------------------
 
 
-def _last_astro_build() -> dict[str, Any]:
+def _last_astro_build(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Introspect ``site/dist`` to see when the site was last built."""
-    if not ASTRO_OUTPUT_DIR.is_dir():
+    astro_output_dir = _astro_output_dir(ctx)
+    if not astro_output_dir.is_dir():
         return {"built": False, "reason": "site/dist missing — site never built locally"}
     try:
         latest = max(
-            (p.stat().st_mtime for p in ASTRO_OUTPUT_DIR.rglob("*") if p.is_file()),
+            (p.stat().st_mtime for p in astro_output_dir.rglob("*") if p.is_file()),
             default=None,
         )
     except OSError as exc:
@@ -152,7 +197,7 @@ def _last_astro_build() -> dict[str, Any]:
     }
 
 
-def _last_deploy_commit() -> dict[str, Any]:
+def _last_deploy_commit(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Last commit SHA on the deploy branch (``gh-pages`` by default).
 
     Uses local git refs if present, which is fast. Falls back to a
@@ -160,33 +205,35 @@ def _last_deploy_commit() -> dict[str, Any]:
     failure → ``error`` string, not a 500.
     """
     for ref in ("refs/heads/gh-pages", "refs/remotes/origin/gh-pages"):
-        proc = _run(["git", "rev-parse", "--verify", "--short=9", ref])
+        proc = _run(["git", "rev-parse", "--verify", "--short=9", ref], ctx=ctx)
         if proc.returncode == 0 and proc.stdout.strip():
             sha = proc.stdout.strip()
             ts_proc = _run([
                 "git", "show", "-s", "--format=%cI", sha,
-            ])
+            ], ctx=ctx)
             ts = ts_proc.stdout.strip() if ts_proc.returncode == 0 else None
             return {"sha": sha, "committed_at": ts, "source": ref}
 
     # Last resort: ask the remote.
-    proc = _run(["git", "ls-remote", "origin", "gh-pages"], timeout_s=5.0)
+    proc = _run(["git", "ls-remote", "origin", "gh-pages"], timeout_s=5.0, ctx=ctx)
     if proc.returncode == 0 and proc.stdout:
         sha = proc.stdout.split()[0][:9]
         return {"sha": sha, "committed_at": None, "source": "remote ls-remote"}
     return {"error": (proc.stderr or "gh-pages ref not resolvable").strip()}
 
 
-def _sitemap_freshness() -> dict[str, Any]:
-    sitemap = ASTRO_OUTPUT_DIR / "sitemap-index.xml"
+def _sitemap_freshness(ctx: MonitorContext | None = None) -> dict[str, Any]:
+    astro_output_dir = _astro_output_dir(ctx)
+    project_root = _resolve_context(ctx).roots.project_root
+    sitemap = astro_output_dir / "sitemap-index.xml"
     if not sitemap.is_file():
-        sitemap = ASTRO_OUTPUT_DIR / "sitemap-0.xml"
+        sitemap = astro_output_dir / "sitemap-0.xml"
     if not sitemap.is_file():
         return {"exists": False}
     mtime = sitemap.stat().st_mtime
     return {
         "exists": True,
-        "path": str(sitemap.relative_to(PROJECT_ROOT)),
+        "path": str(sitemap.relative_to(project_root)),
         "last_modified": datetime.fromtimestamp(mtime, tz=UTC).isoformat().replace("+00:00", "Z"),
         "age_seconds": int(datetime.now(UTC).timestamp() - mtime),
     }
@@ -197,24 +244,24 @@ def _canary_probes(base_url: str) -> list[dict[str, Any]]:
     return [_head(base + path) for path in CANARY_PATHS]
 
 
-def _compute_site_health() -> dict[str, Any]:
+def _compute_site_health(ctx: MonitorContext | None = None) -> dict[str, Any]:
     canaries = _canary_probes(PUBLIC_SITE_URL)
     reachable = any(c.get("status") == 200 for c in canaries)
     return {
         "public_url": PUBLIC_SITE_URL,
         "reachable": reachable,
         "canaries": canaries,
-        "last_astro_build": _last_astro_build(),
-        "last_deploy_commit": _last_deploy_commit(),
-        "sitemap": _sitemap_freshness(),
+        "last_astro_build": _last_astro_build(ctx),
+        "last_deploy_commit": _last_deploy_commit(ctx),
+        "sitemap": _sitemap_freshness(ctx),
         "checked_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     }
 
 
 @router.get("/health")
-async def site_health():
+async def site_health(ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate public-site health — reachability, freshness, canaries."""
-    return await asyncio.to_thread(_compute_site_health)
+    return await asyncio.to_thread(_compute_site_health, ctx)
 
 
 # ---------------------------------------------------------------------
@@ -222,7 +269,7 @@ async def site_health():
 # ---------------------------------------------------------------------
 
 
-def _recent_deployments(limit: int) -> dict[str, Any]:
+def _recent_deployments(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Recent GitHub Actions ``pages-build-deployment`` runs via ``gh``.
 
     Falls back to an empty list + error string if ``gh`` isn't
@@ -236,6 +283,7 @@ def _recent_deployments(limit: int) -> dict[str, Any]:
             "--json", "databaseId,conclusion,displayTitle,createdAt,updatedAt,headSha,event,status",
         ],
         timeout_s=5.0,
+        ctx=ctx,
     )
     if proc.returncode != 0:
         return {
@@ -255,6 +303,7 @@ def _recent_deployments(limit: int) -> dict[str, Any]:
 @router.get("/deployments")
 async def site_deployments(
     limit: int = Query(5, ge=1, le=20, description="Max runs to return."),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Recent GH Pages build+deploy workflow runs."""
-    return await asyncio.to_thread(_recent_deployments, limit)
+    return await asyncio.to_thread(_recent_deployments, limit, ctx)

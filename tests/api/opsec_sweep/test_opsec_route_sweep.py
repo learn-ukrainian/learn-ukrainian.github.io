@@ -35,10 +35,8 @@ from scripts.api import (
     issues_router,
     opsec_scan,
     route_contracts,
-    site_router,
     state_helpers,
     work_router,
-    worktrees_router,
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
@@ -303,23 +301,9 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # existing except around primary_checkout_dirty_status already
     # degrades that collector.
     monkeypatch.setattr(
-        worktrees_router,
-        "_run",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
-    monkeypatch.setattr(
         issues_router,
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
-    )
-    monkeypatch.setattr(
-        site_router,
-        "_run",
-        lambda args, **_kwargs: _fixture_completed_process(
-            args,
-            returncode=127,
-            stderr="fixture command unavailable",
-        ),
     )
     # NOTE (#7269 step 12c): collect_adr_governance now short-circuits on a
     # fixture context (ctx.root is not None), so the sweep no longer stubs it.
