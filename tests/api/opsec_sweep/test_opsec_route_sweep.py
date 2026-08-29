@@ -29,13 +29,11 @@ from starlette.requests import Request
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    docs_router,
     entire_context_router,
     epics_router,
     fleet_router,
     git_hygiene_router,
     governance_router,
-    images_router,
     issues_router,
     opsec_scan,
     route_contracts,
@@ -412,21 +410,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
                 replacement.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(module, name, replacement)
 
-    # Image discovery is also lazy, but its index and page caches are module
-    # singletons. Repoint its file roots and recreate the singletons so a prior
-    # test cannot leak real checkout data into this isolated route sweep.
-    monkeypatch.setattr(images_router, "IMAGES_DIR", root / "stores" / "images")
-    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", root / "stores" / "textbooks")
-    monkeypatch.setattr(
-        images_router,
-        "ANNOTATIONS_FILE",
-        root / "stores" / "image_text_pairs.jsonl",
-    )
-    monkeypatch.setattr(images_router, "_index", images_router._ImageIndex())
-    monkeypatch.setattr(images_router, "_pdf_pool", images_router._PDFPool())
-    monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
-    monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
-
     # NOTE (#7269 step 5): the step-5 inventory row originally attributed
     # this seam to comms_router, but its only sweep consumer is the
     # still-unmigrated fleet facade route (fleet_router.py:598 ->
@@ -448,34 +431,8 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         _deny_real_database_connect(root, sqlite3.connect),
     )
 
-    # These docs roots are derived once at import time rather than exposed as
-    # individual Path globals. Rebuild the lookup tables so docs requests
-    # cannot traverse back into the checkout.
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", root)
-    docs_root = root / "docs"
-    audit_root = root / "audit"
-    allowed_roots = {
-        "audit": audit_root,
-        "session-state": docs_root / "session-state",
-        "handoffs": docs_root / "handoffs",
-        "reports": docs_root / "reports",
-        "architecture": docs_root / "architecture",
-        "best-practices": docs_root / "best-practices",
-        "decisions": docs_root / "decisions",
-        "references": docs_root / "references" / "external",
-        "proposals": docs_root / "proposals",
-        "poc": docs_root / "poc",
-    }
-    for path in [*allowed_roots.values(), docs_root, audit_root]:
-        path.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", allowed_roots)
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (docs_root, audit_root))
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", dict(allowed_roots))
-    # Dashboard paths are imported from PROJECT_ROOT at module import time;
-    # bind both consumers to the same resolved fixture root as the docs roots.
     dashboards_root = root / "dashboards"
     monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
-    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", dashboards_root)
 
     # Facade/status readers retain imported references to the resolver;
     # redirect every such reference into the disposable tree instead of
@@ -500,10 +457,9 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         if "build_repository_authority" in vars(module):
             monkeypatch.setattr(module, "build_repository_authority", lambda **_kwargs: None)
 
-    for dashboards_dir in {api_main.DASHBOARDS_DIR, docs_router.DASHBOARDS_DIR}:
-        dashboards_dir.mkdir(parents=True, exist_ok=True)
-        for filename in ("index.html", "artifacts.html"):
-            (dashboards_dir / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
+    dashboards_root.mkdir(parents=True, exist_ok=True)
+    for filename in ("index.html", "artifacts.html"):
+        (dashboards_root / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
     shutil.copytree(
         Path(__file__).resolve().parents[3] / "dashboards",
         dashboards_root,
@@ -516,7 +472,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     assert HOST_ALIAS_CANARY in os.environ["MONITOR_OCCUPANCY_HOST_IDS"]
     assert os.environ["LU_MONITOR_HOST_ID"] == HOST_ID_CANARY
     assert PATH_CANARY in str(api_main.PROJECT_ROOT.parent.parent.parent)
-    assert PATH_CANARY in str(docs_router.EFFECTIVE_ROOTS["audit"])
+    assert PATH_CANARY in str(fixture_ctx.roots.effective_roots["audit"])
     assert PATH_CANARY in str(message_plane.default_plane_root())
 
     return IsolatedFixture(

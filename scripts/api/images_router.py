@@ -13,6 +13,8 @@ Data sources:
   - PDFs: data/textbooks/grade-*/*.pdf
 """
 
+from __future__ import annotations
+
 import asyncio
 import json
 import shutil
@@ -21,32 +23,90 @@ from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
 from pydantic import BaseModel
 
-from .config import PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 # Ensure scripts/ is importable for rag.poc_pair_page
-_scripts_dir = str(PROJECT_ROOT / "scripts")
+_scripts_dir = str(Path(__file__).resolve().parents[1])
 if _scripts_dir not in sys.path:
     sys.path.insert(0, _scripts_dir)
 
 router = APIRouter(tags=["images"])
 
-# ── Paths ────────────────────────────────────────────────────────────
 
-IMAGES_DIR = PROJECT_ROOT / "data" / "textbook_images"
-TEXTBOOKS_DIR = PROJECT_ROOT / "data" / "textbooks"
-ANNOTATIONS_FILE = IMAGES_DIR / "image_text_pairs.jsonl"
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
 
 
-# ── Data Index (lazy singleton) ──────────────────────────────────────
+_PAGE_CACHE_MAX = 100
+
+
+def _cache_page_render(
+    key: str,
+    png_bytes: bytes,
+    page_cache: OrderedDict[str, bytes] | None = None,
+    ctx: MonitorContext | None = None,
+) -> None:
+    if page_cache is None:
+        store = _resolve_image_store(ctx)
+        page_cache = store.page_cache
+    page_cache[key] = png_bytes
+    page_cache.move_to_end(key)
+    while len(page_cache) > _PAGE_CACHE_MAX:
+        page_cache.popitem(last=False)
+
+
+def _read_pdf_page_count(
+    pdf_path: str,
+    page_count_cache: dict[str, tuple[float, int, int]] | None = None,
+) -> int:
+    try:
+        stat = Path(pdf_path).stat()
+    except OSError:
+        return 0
+
+    if page_count_cache is not None:
+        cached = page_count_cache.get(pdf_path)
+        if cached and cached[0] == stat.st_mtime and cached[1] == stat.st_size:
+            return cached[2]
+
+    try:
+        import pymupdf  # noqa: PLC0415 — optional PDF rendering dependency
+
+        doc = pymupdf.open(pdf_path)
+        try:
+            page_count = len(doc)
+        finally:
+            doc.close()
+    except Exception:
+        page_count = 0
+
+    if page_count_cache is not None:
+        page_count_cache[pdf_path] = (stat.st_mtime, stat.st_size, page_count)
+    return page_count
+
+
+# ── Data Index ───────────────────────────────────────────────────────
 
 class _ImageIndex:
     """In-memory index of all image metadata + annotations."""
 
-    def __init__(self):
+    def __init__(
+        self,
+        images_dir: Path | None = None,
+        annotations_file: Path | None = None,
+        textbooks_dir: Path | None = None,
+        page_count_cache: dict[str, tuple[float, int, int]] | None = None,
+    ):
+        self._images_dir = images_dir
+        self._annotations_file = annotations_file
+        self._textbooks_dir = textbooks_dir
+        self._page_count_cache = page_count_cache if page_count_cache is not None else {}
         self._loaded = False
         self._records: dict[str, dict] = {}           # image_id -> merged record
         self._by_pdf_page: dict[str, dict[int, list]] = {}  # pdf_stem -> page -> [records]
@@ -59,10 +119,14 @@ class _ImageIndex:
         records = {}
         annotations = {}
 
+        images_dir = self._images_dir
+        annotations_file = self._annotations_file
+        textbooks_dir = self._textbooks_dir
+
         # 1. Load per-book structural JSONLs
-        if IMAGES_DIR.exists():
-            for jsonl_file in sorted(IMAGES_DIR.rglob("*-images.jsonl")):
-                with open(jsonl_file) as f:
+        if images_dir and images_dir.exists():
+            for jsonl_file in sorted(images_dir.rglob("*-images.jsonl")):
+                with open(jsonl_file, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if not line:
@@ -73,8 +137,8 @@ class _ImageIndex:
                             records[image_id] = rec
 
         # 2. Load global annotations
-        if ANNOTATIONS_FILE.exists():
-            with open(ANNOTATIONS_FILE) as f:
+        if annotations_file and annotations_file.exists():
+            with open(annotations_file, encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
                     if not line:
@@ -102,8 +166,8 @@ class _ImageIndex:
 
         # 5. Scan for actual PDFs on disk
         pdf_catalog = {}
-        if TEXTBOOKS_DIR.exists():
-            for grade_dir in sorted(TEXTBOOKS_DIR.iterdir()):
+        if textbooks_dir and textbooks_dir.exists():
+            for grade_dir in sorted(textbooks_dir.iterdir()):
                 if not grade_dir.is_dir() or not grade_dir.name.startswith("grade-"):
                     continue
                 for pdf_file in sorted(grade_dir.glob("*.pdf")):
@@ -111,7 +175,7 @@ class _ImageIndex:
                         "path": str(pdf_file),
                         "grade_dir": grade_dir.name,
                         "stem": pdf_file.stem,
-                        "page_count": _read_pdf_page_count(str(pdf_file)),
+                        "page_count": _read_pdf_page_count(str(pdf_file), self._page_count_cache),
                     }
 
         self._records = records
@@ -152,9 +216,6 @@ class _ImageIndex:
         return self._pdf_catalog
 
 
-_index = _ImageIndex()
-
-
 # ── PDF Pool (LRU, max 10 open docs) ────────────────────────────────
 
 class _PDFPool:
@@ -188,46 +249,49 @@ class _PDFPool:
             self._pool.clear()
 
 
-_pdf_pool = _PDFPool()
+class ImageStore:
+    """Encapsulates image indexing, caching, and document pooling for a MonitorContext."""
+
+    def __init__(
+        self,
+        images_dir: Path,
+        textbooks_dir: Path,
+        annotations_file: Path,
+        project_root: Path,
+    ):
+        self.images_dir = images_dir
+        self.textbooks_dir = textbooks_dir
+        self.annotations_file = annotations_file
+        self.project_root = project_root
+        self.pdf_page_count_cache: dict[str, tuple[float, int, int]] = {}
+        self.index = _ImageIndex(
+            images_dir=images_dir,
+            annotations_file=annotations_file,
+            textbooks_dir=textbooks_dir,
+            page_count_cache=self.pdf_page_count_cache,
+        )
+        self.pdf_pool = _PDFPool()
+        self.page_cache: OrderedDict[str, bytes] = OrderedDict()
+        self.write_lock = asyncio.Lock()
 
 
-# ── Page render cache (LRU, max 100 pages) ──────────────────────────
+def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
+    resolved_ctx = _resolve_context(ctx)
+    if resolved_ctx.stores.image_store is not None:
+        return resolved_ctx.stores.image_store
+    roots = resolved_ctx.roots
+    images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
+    textbooks_dir = roots.textbooks_dir or (roots.project_root / "data" / "textbooks")
+    annotations_file = images_dir / "image_text_pairs.jsonl"
+    return ImageStore(
+        images_dir=images_dir,
+        textbooks_dir=textbooks_dir,
+        annotations_file=annotations_file,
+        project_root=roots.project_root,
+    )
 
-_page_cache: OrderedDict[str, bytes] = OrderedDict()
-_PAGE_CACHE_MAX = 100
-_pdf_page_count_cache: dict[str, tuple[float, int, int]] = {}
 
-
-def _cache_page_render(key: str, png_bytes: bytes):
-    _page_cache[key] = png_bytes
-    _page_cache.move_to_end(key)
-    while len(_page_cache) > _PAGE_CACHE_MAX:
-        _page_cache.popitem(last=False)
-
-
-def _read_pdf_page_count(pdf_path: str) -> int:
-    try:
-        stat = Path(pdf_path).stat()
-    except OSError:
-        return 0
-
-    cached = _pdf_page_count_cache.get(pdf_path)
-    if cached and cached[0] == stat.st_mtime and cached[1] == stat.st_size:
-        return cached[2]
-
-    try:
-        import pymupdf  # noqa: PLC0415 — optional PDF rendering dependency
-
-        doc = pymupdf.open(pdf_path)
-        try:
-            page_count = len(doc)
-        finally:
-            doc.close()
-    except Exception:
-        page_count = 0
-
-    _pdf_page_count_cache[pdf_path] = (stat.st_mtime, stat.st_size, page_count)
-    return page_count
+get_image_store = _resolve_image_store
 
 
 # ── Request/Response models ──────────────────────────────────────────
@@ -251,31 +315,36 @@ class CleanupRequest(BaseModel):
 
 # ── JSONL write helper ───────────────────────────────────────────────
 
-_write_lock = asyncio.Lock()
 
-
-async def _rewrite_annotations_jsonl():
+async def _rewrite_annotations_jsonl(store: ImageStore) -> None:
     """Rewrite the global annotations JSONL from in-memory index.
 
     Creates a timestamped .bak before writing.
     """
-    async with _write_lock:
-        await asyncio.to_thread(_rewrite_annotations_jsonl_sync)
+    async with store.write_lock:
+        await asyncio.to_thread(_rewrite_annotations_jsonl_sync, store)
 
 
-def _rewrite_annotations_jsonl_sync():
-    if ANNOTATIONS_FILE.exists():
+def _rewrite_annotations_jsonl_sync(
+    store: ImageStore | None = None,
+    ctx: MonitorContext | None = None,
+) -> None:
+    if store is None:
+        store = _resolve_image_store(ctx)
+    annotations_file = store.annotations_file
+    if annotations_file.exists():
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        bak = ANNOTATIONS_FILE.with_suffix(f".jsonl.bak.{ts}")
-        shutil.copy2(ANNOTATIONS_FILE, bak)
+        bak = annotations_file.with_suffix(f".jsonl.bak.{ts}")
+        shutil.copy2(annotations_file, bak)
 
     annotation_fields = {
         "image_id", "description_uk", "associated_text_uk",
         "teaching_value", "element_type", "position",
     }
 
-    with open(ANNOTATIONS_FILE, "w") as f:
-        for image_id, rec in sorted(_index.records.items()):
+    annotations_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(annotations_file, "w", encoding="utf-8") as f:
+        for image_id, rec in sorted(store.index.records.items()):
             # Only write records that have annotation data
             ann = {k: rec[k] for k in annotation_fields if k in rec and rec[k] is not None}
             if len(ann) <= 1:  # Only image_id, no real annotation
@@ -287,14 +356,15 @@ def _rewrite_annotations_jsonl_sync():
 # ── Endpoints ────────────────────────────────────────────────────────
 
 @router.get("/textbooks")
-async def list_textbooks():
+async def list_textbooks(ctx: MonitorContext = Depends(get_ctx)):
     """List PDFs on disk with image counts and annotation coverage."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
     result = []
-    for stem, info in sorted(_index.pdf_catalog.items()):
+    for stem, info in sorted(store.index.pdf_catalog.items()):
         # Count images from this PDF
-        pages_with_images = _index.by_pdf_page.get(stem, {})
+        pages_with_images = store.index.by_pdf_page.get(stem, {})
         image_count = sum(len(imgs) for imgs in pages_with_images.values())
         annotated_count = sum(
             1 for imgs in pages_with_images.values()
@@ -315,15 +385,20 @@ async def list_textbooks():
 
 
 @router.get("/page/{pdf_stem}/{page_num}")
-async def get_page_context(pdf_stem: str, page_num: int):
+async def get_page_context(
+    pdf_stem: str,
+    page_num: int,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Get page metadata: image bboxes with annotations, text block bboxes."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
-    if pdf_stem not in _index.pdf_catalog:
+    if pdf_stem not in store.index.pdf_catalog:
         raise HTTPException(404, f"PDF not found: {pdf_stem}")
 
-    pdf_path = _index.pdf_catalog[pdf_stem]["path"]
-    doc = await _pdf_pool.get(pdf_path)
+    pdf_path = store.index.pdf_catalog[pdf_stem]["path"]
+    doc = await store.pdf_pool.get(pdf_path)
 
     if page_num < 1 or page_num > len(doc):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
@@ -345,7 +420,7 @@ async def get_page_context(pdf_stem: str, page_num: int):
     )
 
     # Merge with annotation data
-    page_records = _index.by_pdf_page.get(pdf_stem, {}).get(page_num, [])
+    page_records = store.index.by_pdf_page.get(pdf_stem, {}).get(page_num, [])
     records_by_index = {r.get("image_index"): r for r in page_records}
 
     image_data = []
@@ -379,24 +454,29 @@ async def get_page_context(pdf_stem: str, page_num: int):
 
 
 @router.get("/page_render/{pdf_stem}/{page_num}.png")
-async def render_page_png(pdf_stem: str, page_num: int):
+async def render_page_png(
+    pdf_stem: str,
+    page_num: int,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Render a PDF page as PNG at 150 DPI. Cached."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
-    if pdf_stem not in _index.pdf_catalog:
+    if pdf_stem not in store.index.pdf_catalog:
         raise HTTPException(404, f"PDF not found: {pdf_stem}")
 
     cache_key = f"{pdf_stem}:{page_num}"
-    if cache_key in _page_cache:
-        _page_cache.move_to_end(cache_key)
+    if cache_key in store.page_cache:
+        store.page_cache.move_to_end(cache_key)
         return Response(
-            content=_page_cache[cache_key],
+            content=store.page_cache[cache_key],
             media_type="image/png",
             headers={"Cache-Control": "max-age=3600"},
         )
 
-    pdf_path = _index.pdf_catalog[pdf_stem]["path"]
-    doc = await _pdf_pool.get(pdf_path)
+    pdf_path = store.index.pdf_catalog[pdf_stem]["path"]
+    doc = await store.pdf_pool.get(pdf_path)
 
     if page_num < 1 or page_num > len(doc):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
@@ -408,7 +488,7 @@ async def render_page_png(pdf_stem: str, page_num: int):
         return pix.tobytes("png")
 
     png_bytes = await asyncio.to_thread(_render, doc, page_num)
-    _cache_page_render(cache_key, png_bytes)
+    _cache_page_render(cache_key, png_bytes, store.page_cache)
 
     return Response(
         content=png_bytes,
@@ -426,12 +506,14 @@ async def browse_annotations(
     q: str | None = Query(None, description="Search description_uk"),
     page: int = Query(0, ge=0),
     per_page: int = Query(50, ge=1, le=200),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Browse annotations with filters and pagination."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
     results = []
-    for rec in _index.records.values():
+    for rec in store.index.records.values():
         if grade is not None and rec.get("grade") != grade:
             continue
         if teaching_value and rec.get("teaching_value") != teaching_value:
@@ -471,28 +553,37 @@ async def browse_annotations(
 
 
 @router.put("/annotations/{image_id}")
-async def update_annotation(image_id: str, body: AnnotationUpdate):
+async def update_annotation(
+    image_id: str,
+    body: AnnotationUpdate,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Update annotation fields for a single image."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
-    if image_id not in _index.records:
+    if image_id not in store.index.records:
         raise HTTPException(404, f"Image not found: {image_id}")
 
-    rec = _index.records[image_id]
+    rec = store.index.records[image_id]
     updates = body.model_dump(exclude_none=True)
     if not updates:
         raise HTTPException(400, "No fields to update")
 
     rec.update(updates)
-    await _rewrite_annotations_jsonl()
+    await _rewrite_annotations_jsonl(store)
 
     return {"status": "ok", "image_id": image_id, "updated_fields": list(updates.keys())}
 
 
 @router.post("/annotations/bulk")
-async def bulk_update_annotations(body: BulkAnnotationUpdate):
+async def bulk_update_annotations(
+    body: BulkAnnotationUpdate,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Bulk update annotation fields for multiple images."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
     updates = body.updates.model_dump(exclude_none=True)
     if not updates:
@@ -501,14 +592,14 @@ async def bulk_update_annotations(body: BulkAnnotationUpdate):
     updated = []
     missing = []
     for image_id in body.image_ids:
-        if image_id in _index.records:
-            _index.records[image_id].update(updates)
+        if image_id in store.index.records:
+            store.index.records[image_id].update(updates)
             updated.append(image_id)
         else:
             missing.append(image_id)
 
     if updated:
-        await _rewrite_annotations_jsonl()
+        await _rewrite_annotations_jsonl(store)
 
     return {
         "status": "ok",
@@ -518,12 +609,13 @@ async def bulk_update_annotations(body: BulkAnnotationUpdate):
 
 
 @router.get("/stats")
-async def get_stats():
+async def get_stats(ctx: MonitorContext = Depends(get_ctx)):
     """Image collection statistics and quality metrics."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
-    total = len(_index.records)
-    annotated = sum(1 for r in _index.records.values() if r.get("description_uk"))
+    total = len(store.index.records)
+    annotated = sum(1 for r in store.index.records.values() if r.get("description_uk"))
     unannotated = total - annotated
 
     # Teaching value distribution
@@ -531,7 +623,7 @@ async def get_stats():
     et_dist: dict[str, int] = {}
     grade_dist: dict[int, dict] = {}
 
-    for rec in _index.records.values():
+    for rec in store.index.records.values():
         tv = rec.get("teaching_value", "unset")
         tv_dist[tv] = tv_dist.get(tv, 0) + 1
 
@@ -554,7 +646,7 @@ async def get_stats():
         "annotated": annotated,
         "unannotated": unannotated,
         "bad_candidates": bad_count,
-        "pdfs_on_disk": len(_index.pdf_catalog),
+        "pdfs_on_disk": len(store.index.pdf_catalog),
         "teaching_value": dict(sorted(tv_dist.items())),
         "element_type": dict(sorted(et_dist.items())),
         "per_grade": {str(k): v for k, v in sorted(grade_dist.items())},
@@ -562,15 +654,19 @@ async def get_stats():
 
 
 @router.post("/cleanup")
-async def cleanup_images(body: CleanupRequest):
+async def cleanup_images(
+    body: CleanupRequest,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Delete image PNG files from disk and remove from indexes."""
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    await store.index.ensure_loaded()
 
     deleted = []
     not_found = []
 
     for image_id in body.image_ids:
-        rec = _index.records.get(image_id)
+        rec = store.index.records.get(image_id)
         if not rec:
             not_found.append(image_id)
             continue
@@ -578,8 +674,8 @@ async def cleanup_images(body: CleanupRequest):
         # Delete PNG file if it exists (with path containment check)
         img_path = rec.get("image_path", "")
         if img_path:
-            full_path = (PROJECT_ROOT / img_path).resolve()
-            data_root = (PROJECT_ROOT / "data").resolve()
+            full_path = (store.project_root / img_path).resolve()
+            data_root = (store.project_root / "data").resolve()
             # Prevent arbitrary file deletion — must stay within data/
             if not full_path.is_relative_to(data_root):
                 not_found.append(image_id)
@@ -588,14 +684,14 @@ async def cleanup_images(body: CleanupRequest):
                 full_path.unlink()
 
         # Remove from in-memory index
-        del _index.records[image_id]
+        del store.index.records[image_id]
 
         # Remove from by_pdf_page index
         stem = rec.get("pdf_stem", "")
         page = rec.get("page")
         if stem and page is not None:
-            page_list = _index.by_pdf_page.get(stem, {}).get(page, [])
-            _index.by_pdf_page[stem][page] = [
+            page_list = store.index.by_pdf_page.get(stem, {}).get(page, [])
+            store.index.by_pdf_page[stem][page] = [
                 r for r in page_list if r.get("image_id") != image_id
             ]
 
@@ -604,8 +700,8 @@ async def cleanup_images(body: CleanupRequest):
     # Also remove from per-book JSONLs
     if deleted:
         deleted_set = set(deleted)
-        await asyncio.to_thread(_remove_from_book_jsonls, deleted_set)
-        await _rewrite_annotations_jsonl()
+        await asyncio.to_thread(_remove_from_book_jsonls, deleted_set, store.images_dir)
+        await _rewrite_annotations_jsonl(store)
 
     return {
         "status": "ok",
@@ -614,12 +710,21 @@ async def cleanup_images(body: CleanupRequest):
     }
 
 
-def _remove_from_book_jsonls(deleted_ids: set[str]):
+def _remove_from_book_jsonls(
+    deleted_ids: set[str],
+    images_dir: Path | None = None,
+    ctx: MonitorContext | None = None,
+) -> None:
     """Remove entries from per-book structural JSONLs."""
-    for jsonl_file in IMAGES_DIR.rglob("*-images.jsonl"):
+    if images_dir is None:
+        store = _resolve_image_store(ctx)
+        images_dir = store.images_dir
+    if not images_dir.exists():
+        return
+    for jsonl_file in images_dir.rglob("*-images.jsonl"):
         lines = []
         changed = False
-        with open(jsonl_file) as f:
+        with open(jsonl_file, encoding="utf-8") as f:
             for line in f:
                 line_stripped = line.strip()
                 if not line_stripped:
@@ -630,20 +735,22 @@ def _remove_from_book_jsonls(deleted_ids: set[str]):
                     continue
                 lines.append(line_stripped)
         if changed:
-            with open(jsonl_file, "w") as f:
+            with open(jsonl_file, "w", encoding="utf-8") as f:
                 for l in lines:
                     f.write(l + "\n")
 
 
 @router.post("/reload")
-async def reload_index():
+async def reload_index(ctx: MonitorContext = Depends(get_ctx)):
     """Force reload all data from disk."""
-    _index.reload()
-    _page_cache.clear()
-    await _pdf_pool.clear()
-    await _index.ensure_loaded()
+    store = _resolve_image_store(ctx)
+    store.index.reload()
+    store.page_cache.clear()
+    await store.pdf_pool.clear()
+    await store.index.ensure_loaded()
     return {
         "status": "ok",
-        "total_records": len(_index.records),
-        "pdfs_on_disk": len(_index.pdf_catalog),
+        "total_records": len(store.index.records),
+        "pdfs_on_disk": len(store.index.pdf_catalog),
     }
+

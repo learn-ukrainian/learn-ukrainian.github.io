@@ -254,25 +254,34 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     # DB onto this smoke broker while keeping every other production root
     # intact for the non-comms dashboards this test also exercises.
     base_ctx = production_context()
-    broker_ctx = replace(
-        base_ctx,
-        roots=replace(base_ctx.roots, message_db_path=broker_db),
-        stores=replace(base_ctx.stores, message_db=DatabaseHandle(broker_db, base_ctx._open_db)),
-    )
-    monkeypatch.setattr(app.state, "ctx", broker_ctx)
-    monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
-    db_handle = DatabaseHandle(broker_db, app.state.ctx._open_db)
-    new_stores = replace(app.state.ctx.stores, message_db=db_handle)
-    monkeypatch.setattr(app.state, "ctx", replace(app.state.ctx, stores=new_stores))
     image_root = tmp_path / "textbook_images"
     textbooks_dir = tmp_path / "textbooks"
     image_root.mkdir()
     textbooks_dir.mkdir()
-    monkeypatch.setattr(images_router, "IMAGES_DIR", image_root)
-    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", textbooks_dir)
-    monkeypatch.setattr(images_router, "ANNOTATIONS_FILE", image_root / "image_text_pairs.jsonl")
-    images_router._index.reload()
-    images_router._page_cache.clear()
+    image_store = images_router.ImageStore(
+        images_dir=image_root,
+        textbooks_dir=textbooks_dir,
+        annotations_file=image_root / "image_text_pairs.jsonl",
+        project_root=base_ctx.roots.project_root,
+    )
+    test_ctx = replace(
+        base_ctx,
+        roots=replace(
+            base_ctx.roots,
+            message_db_path=broker_db,
+            images_dir=image_root,
+            textbooks_dir=textbooks_dir,
+        ),
+        stores=replace(
+            base_ctx.stores,
+            message_db=DatabaseHandle(broker_db, base_ctx._open_db),
+            image_store=image_store,
+        ),
+    )
+    monkeypatch.setattr(app.state, "ctx", test_ctx)
+    monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
+    app.state.ctx.stores.image_store.index.reload()
+    app.state.ctx.stores.image_store.page_cache.clear()
 
     client = TestClient(app, raise_server_exceptions=False)
     endpoint_timings: list[tuple[str, str, float]] = []

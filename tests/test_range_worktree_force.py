@@ -292,9 +292,18 @@ def test_force_preview_enumerates_every_deletion_target(tmp_path, monkeypatch):
     proj = _lay_out_module(tmp_path)
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
-    monkeypatch.setattr(artifacts_router, "PLANS_ROOT", proj / "plans")
+    from dataclasses import replace
+
+    from scripts.api.monitor_context import fixture_context
+
+    ctx = replace(
+        fixture_context(proj),
+        roots=replace(
+            fixture_context(proj).roots,
+            curriculum_root=proj / "curriculum",
+        ),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
     resp = client.get("/api/artifacts/a1/hello/force-preview")
     assert resp.status_code == 200
@@ -332,9 +341,18 @@ def test_force_preview_empty_for_nonexistent_slug(tmp_path, monkeypatch):
     monkeypatch.setattr(
         artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
-    monkeypatch.setattr(artifacts_router, "PLANS_ROOT", proj / "plans")
+    from dataclasses import replace
+
+    from scripts.api.monitor_context import fixture_context
+
+    ctx = replace(
+        fixture_context(proj),
+        roots=replace(
+            fixture_context(proj).roots,
+            curriculum_root=proj / "curriculum",
+        ),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
     body = client.get("/api/artifacts/a1/never-existed/force-preview").json()
     assert body["count"] == 0

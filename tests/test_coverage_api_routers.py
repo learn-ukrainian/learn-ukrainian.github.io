@@ -103,10 +103,6 @@ def _patch_config(mock_project_root, broker_db):
         patch("scripts.api.admin_router.IMAGE_DIR", mock_project_root / "data" / "textbook_images"),
         patch("scripts.api.admin_router.LOGS_DIR", mock_project_root / "logs"),
         patch("scripts.api.admin_router.MCP_DIR", mock_project_root / ".mcp"),
-        patch("scripts.api.images_router.IMAGES_DIR", mock_project_root / "data" / "textbook_images"),
-        patch("scripts.api.images_router.TEXTBOOKS_DIR", mock_project_root / "data" / "textbooks"),
-        patch("scripts.api.images_router.ANNOTATIONS_FILE", mock_project_root / "data" / "textbook_images" / "image_text_pairs.jsonl"),
-        patch("scripts.api.images_router.PROJECT_ROOT", mock_project_root),
     ):
         yield
 
@@ -151,12 +147,11 @@ def admin_client(_patch_config):
 @pytest.fixture()
 def images_client(_patch_config, mock_project_root):
     """TestClient for images router."""
-    # Reset the singleton index
     from scripts.api import images_router
-    images_router._index.reload()
-    images_router._page_cache.clear()
+    from scripts.api.monitor_context import fixture_context
 
     app = FastAPI()
+    app.state.ctx = fixture_context(mock_project_root)
     app.include_router(images_router.router, prefix="/api/images")
     return TestClient(app)
 
@@ -1046,8 +1041,8 @@ class TestImageIndex:
                 f.write(json.dumps(ann) + "\n")
 
         # Reset and reload
-        from scripts.api import images_router
-        images_router._index.reload()
+        store = images_client.app.state.ctx.stores.image_store
+        store.index.reload()
 
         r = images_client.get("/api/images/stats")
         data = r.json()
@@ -1074,80 +1069,80 @@ class TestImagesAnnotations:
         assert data["items"] == []
 
     def test_browse_annotations_with_data(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index.reload()
+        store = images_client.app.state.ctx.stores.image_store
+        store.index.reload()
         # Manually inject test records
-        images_router._index._records = {
+        store.index._records = {
             "img1": {"image_id": "img1", "grade": 1, "teaching_value": "high", "description_uk": "desc", "element_type": "diagram"},
             "img2": {"image_id": "img2", "grade": 2, "teaching_value": "low", "description_uk": "", "element_type": "photo"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations")
         assert r.json()["total"] == 2
 
     def test_browse_annotations_filter_grade(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "grade": 1},
             "img2": {"image_id": "img2", "grade": 2},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations", params={"grade": 1})
         assert r.json()["total"] == 1
 
     def test_browse_annotations_filter_teaching_value(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "teaching_value": "high"},
             "img2": {"image_id": "img2", "teaching_value": "low"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations", params={"teaching_value": "high"})
         assert r.json()["total"] == 1
 
     def test_browse_annotations_filter_element_type(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "element_type": "diagram"},
             "img2": {"image_id": "img2", "element_type": "photo"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations", params={"element_type": "diagram"})
         assert r.json()["total"] == 1
 
     def test_browse_annotations_unannotated_filter(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "description_uk": "has desc"},
             "img2": {"image_id": "img2", "description_uk": ""},
             "img3": {"image_id": "img3"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations", params={"unannotated": True})
         assert r.json()["total"] == 2
 
     def test_browse_annotations_search(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "description_uk": "cat sitting"},
             "img2": {"image_id": "img2", "description_uk": "dog running"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations", params={"q": "cat"})
         assert r.json()["total"] == 1
 
     def test_browse_annotations_pagination(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             f"img{i}": {"image_id": f"img{i}"} for i in range(10)
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/annotations", params={"per_page": 3, "page": 1})
         data = r.json()
@@ -1160,11 +1155,11 @@ class TestImagesAnnotationUpdate:
     """Tests for PUT /api/images/annotations/{image_id}."""
 
     def test_update_annotation(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "description_uk": "old"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
             r = images_client.put("/api/images/annotations/img1", json={"description_uk": "new"})
@@ -1172,17 +1167,17 @@ class TestImagesAnnotationUpdate:
         assert r.json()["updated_fields"] == ["description_uk"]
 
     def test_update_annotation_not_found(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {}
+        store.index._loaded = True
 
         r = images_client.put("/api/images/annotations/nonexistent", json={"description_uk": "x"})
         assert r.status_code == 404
 
     def test_update_annotation_no_fields(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {"img1": {"image_id": "img1"}}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {"img1": {"image_id": "img1"}}
+        store.index._loaded = True
 
         r = images_client.put("/api/images/annotations/img1", json={})
         assert r.status_code == 400
@@ -1192,12 +1187,12 @@ class TestImagesBulkUpdate:
     """Tests for POST /api/images/annotations/bulk."""
 
     def test_bulk_update(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1"},
             "img2": {"image_id": "img2"},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
             r = images_client.post("/api/images/annotations/bulk", json={
@@ -1209,9 +1204,9 @@ class TestImagesBulkUpdate:
         assert data["missing"] == ["img3"]
 
     def test_bulk_update_no_fields(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {"img1": {"image_id": "img1"}}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {"img1": {"image_id": "img1"}}
+        store.index._loaded = True
 
         r = images_client.post("/api/images/annotations/bulk", json={
             "image_ids": ["img1"],
@@ -1220,9 +1215,9 @@ class TestImagesBulkUpdate:
         assert r.status_code == 400
 
     def test_bulk_update_all_missing(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {}
+        store.index._loaded = True
 
         with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
             r = images_client.post("/api/images/annotations/bulk", json={
@@ -1242,13 +1237,13 @@ class TestImagesStats:
         assert data["pdfs_on_disk"] == 0
 
     def test_stats_with_data(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "description_uk": "desc", "teaching_value": "high", "element_type": "diagram", "grade": 1},
             "img2": {"image_id": "img2", "description_uk": "", "teaching_value": "low", "element_type": "photo", "grade": 1},
             "img3": {"image_id": "img3", "description_uk": "x", "teaching_value": "none", "element_type": "diagram", "grade": 2},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.get("/api/images/stats")
         data = r.json()
@@ -1264,16 +1259,16 @@ class TestImagesCleanup:
     """Tests for POST /api/images/cleanup."""
 
     def test_cleanup(self, images_client, mock_project_root):
-        from scripts.api import images_router
+        store = images_client.app.state.ctx.stores.image_store
         img_path = mock_project_root / "data" / "textbook_images" / "test.png"
         img_path.write_bytes(b"PNG")
-        images_router._index._records = {
+        store.index._records = {
             "img1": {"image_id": "img1", "image_path": "data/textbook_images/test.png", "pdf_stem": "book", "page": 1},
         }
-        images_router._index._by_pdf_page = {
-            "book": {1: [images_router._index._records["img1"]]},
+        store.index._by_pdf_page = {
+            "book": {1: [store.index._records["img1"]]},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         with (
             patch("scripts.api.images_router._remove_from_book_jsonls"),
@@ -1285,19 +1280,19 @@ class TestImagesCleanup:
         assert not img_path.exists()
 
     def test_cleanup_not_found(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {}
+        store.index._loaded = True
 
         r = images_client.post("/api/images/cleanup", json={"image_ids": ["nope"]})
         assert r.json()["not_found"] == ["nope"]
 
     def test_cleanup_no_image_path(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._records = {
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
             "img1": {"image_id": "img1", "image_path": "", "pdf_stem": "", "page": None},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         with (
             patch("scripts.api.images_router._remove_from_book_jsonls"),
@@ -1307,21 +1302,21 @@ class TestImagesCleanup:
         assert r.json()["deleted_count"] == 1
 
     def test_cleanup_rejects_path_traversal(self, images_client, mock_project_root):
-        from scripts.api import images_router
+        store = images_client.app.state.ctx.stores.image_store
 
         outside_file = mock_project_root.parent / "outside.png"
         outside_file.write_bytes(b"PNG")
-        images_router._index._records = {
+        store.index._records = {
             "img1": {"image_id": "img1", "image_path": "../outside.png", "pdf_stem": "", "page": None},
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
         r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
 
         assert r.json()["deleted_count"] == 0
         assert r.json()["not_found"] == ["img1"]
         assert outside_file.exists()
-        assert "img1" in images_router._index.records
+        assert "img1" in store.index.records
 
 
 class TestRagBrowseImages:
@@ -1351,9 +1346,9 @@ class TestImagesPageContext:
     """Tests for /api/images/page/{pdf_stem}/{page_num}."""
 
     def test_page_context_pdf_not_found(self, images_client):
-        from scripts.api import images_router
-        images_router._index._pdf_catalog = {}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._pdf_catalog = {}
+        store.index._loaded = True
 
         r = images_client.get("/api/images/page/nonexistent/1")
         assert r.status_code == 404
@@ -1363,19 +1358,19 @@ class TestImagesPageRender:
     """Tests for /api/images/page_render/{pdf_stem}/{page_num}.png."""
 
     def test_render_pdf_not_found(self, images_client):
-        from scripts.api import images_router
-        images_router._index._pdf_catalog = {}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._pdf_catalog = {}
+        store.index._loaded = True
 
         r = images_client.get("/api/images/page_render/nonexistent/1.png")
         assert r.status_code == 404
 
     def test_render_cache_hit(self, images_client, mock_project_root):
-        from scripts.api import images_router
-        images_router._index._pdf_catalog = {"test": {"path": "/fake/test.pdf"}}
-        images_router._index._loaded = True
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._pdf_catalog = {"test": {"path": "/fake/test.pdf"}}
+        store.index._loaded = True
         # Pre-populate cache
-        images_router._page_cache["test:1"] = b"\x89PNG fake"
+        store.page_cache["test:1"] = b"\x89PNG fake"
 
         r = images_client.get("/api/images/page_render/test/1.png")
         assert r.status_code == 200
@@ -1386,13 +1381,13 @@ class TestImagesHelpers:
     """Tests for helper functions in images_router."""
 
     def test_cache_page_render_eviction(self):
-        from scripts.api.images_router import _PAGE_CACHE_MAX, _cache_page_render, _page_cache
-        _page_cache.clear()
-        # Fill cache beyond max
+        from collections import OrderedDict
+
+        from scripts.api.images_router import _PAGE_CACHE_MAX, _cache_page_render
+        page_cache = OrderedDict()
         for i in range(_PAGE_CACHE_MAX + 5):
-            _cache_page_render(f"key:{i}", b"data")
-        assert len(_page_cache) == _PAGE_CACHE_MAX
-        _page_cache.clear()
+            _cache_page_render(f"key:{i}", b"data", page_cache=page_cache)
+        assert len(page_cache) == _PAGE_CACHE_MAX
 
     def test_remove_from_book_jsonls(self, mock_project_root, _patch_config):
         from scripts.api.images_router import _remove_from_book_jsonls
@@ -1408,7 +1403,7 @@ class TestImagesHelpers:
             for rec in records:
                 f.write(json.dumps(rec) + "\n")
 
-        _remove_from_book_jsonls({"delete"})
+        _remove_from_book_jsonls({"delete"}, images_dir=img_dir)
 
         with open(jsonl_path) as f:
             remaining = [json.loads(line) for line in f if line.strip()]
@@ -1416,17 +1411,21 @@ class TestImagesHelpers:
         assert remaining[0]["image_id"] == "keep"
 
     def test_rewrite_annotations_jsonl_sync(self, mock_project_root, _patch_config):
-        from scripts.api import images_router
+        from scripts.api.monitor_context import fixture_context
+        ctx = fixture_context(mock_project_root)
+        store = ctx.stores.image_store
         ann_file = mock_project_root / "data" / "textbook_images" / "image_text_pairs.jsonl"
+        ann_file.parent.mkdir(parents=True, exist_ok=True)
         ann_file.write_text('{"image_id": "old"}\n')
 
-        images_router._index._records = {
+        store.index._records = {
             "img1": {"image_id": "img1", "description_uk": "test", "teaching_value": "high"},
             "img2": {"image_id": "img2"},  # no annotation data, should be skipped
         }
-        images_router._index._loaded = True
+        store.index._loaded = True
 
-        images_router._rewrite_annotations_jsonl_sync()
+        from scripts.api import images_router
+        images_router._rewrite_annotations_jsonl_sync(store=store)
 
         with open(ann_file) as f:
             lines = [line.strip() for line in f if line.strip()]
