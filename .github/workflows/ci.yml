@@ -765,25 +765,6 @@ jobs:
           path: .venv
           key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
 
-      - name: Wait for CI Postgres (pg_isready)
-        if: >-
-          needs.landing-class.outputs.class != 'docs_skills'
-          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 30); do
-            if .venv/bin/python -c 'import os,sys,psycopg; dsn=os.environ["LEARN_UKRAINIAN_CP_PG_DSN"]
-try:
-  with psycopg.connect(dsn, connect_timeout=2) as c: c.execute("SELECT 1")
-except Exception: sys.exit(1)'; then
-              echo "postgres ready (attempt ${attempt})"
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "::error::CI Postgres did not become ready" >&2
-          exit 1
-
       - name: Collect and plan this pytest shard locally
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
