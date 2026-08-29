@@ -144,11 +144,13 @@ def _require_job_id(job_id: str) -> str:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-def _read_result_receipt(job_id: str) -> dict[str, Any] | None:
+def _read_result_receipt(job_id: str, ctx: MonitorContext | None = None) -> dict[str, Any] | None:
     """Load ``{job_id}.result.json`` only when contained under the registry root."""
     try:
-        result_file = atlas_job.result_path(job_id)
-        root_real = os.path.realpath(str(atlas_job.registry_dir()))
+        safe_id = atlas_job.require_safe_job_id(job_id)
+        root = _registry_dir(ctx)
+        result_file = atlas_job._path_under(root, f"{safe_id}.result.json")
+        root_real = os.path.realpath(str(root))
         candidate = os.path.realpath(str(result_file))
         if not candidate.startswith(root_real + os.sep):
             return None
@@ -401,9 +403,8 @@ def results_jobs(
     cursor: str | None = None,
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    del ctx
     target_host = atlas_job._canonical_host(host) if host is not None else None
-    root = atlas_job.registry_dir()
+    root = _registry_dir(ctx)
     all_results: list[dict[str, Any]] = []
 
     if root.is_dir():
@@ -413,7 +414,7 @@ def results_jobs(
                 safe_id = atlas_job.require_safe_job_id(job_id)
             except ValueError:
                 continue
-            receipt = _read_result_receipt(safe_id)
+            receipt = _read_result_receipt(safe_id, ctx=ctx)
             if receipt is None:
                 continue
 
@@ -494,7 +495,6 @@ def job_status(
     audit: bool = False,
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    del ctx
     job_id = _require_job_id(job_id)
     row = atlas_job.load_registry(job_id)
     if row is None:
@@ -504,7 +504,7 @@ def job_status(
     row = atlas_job.load_registry(job_id) or row
     return {
         "job": row,
-        "result": _read_result_receipt(job_id),
+        "result": _read_result_receipt(job_id, ctx=ctx),
         "status_exit_code": rc,
         "restic_sink_blocked": atlas_job.restic_sink_blocked(),
     }
@@ -516,7 +516,6 @@ def close_job(
     body: CloseBody | None = None,
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    del ctx
     job_id = _require_job_id(job_id)
     payload = body or CloseBody()
     try:
@@ -529,7 +528,7 @@ def close_job(
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     row = atlas_job.load_registry(job_id)
-    result = _read_result_receipt(job_id)
+    result = _read_result_receipt(job_id, ctx=ctx)
     if rc == 2:
         raise HTTPException(status_code=404, detail={"exit_code": rc, "message": "no registry row"})
     response = {"exit_code": rc, "job": row, "result": result}

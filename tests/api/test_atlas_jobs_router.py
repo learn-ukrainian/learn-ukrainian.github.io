@@ -809,3 +809,48 @@ def test_results_skips_corrupt_and_non_object_receipts(
     assert data["results"][0]["host"] == "atlas-runner"
     assert data["results"][0]["targets"] == 20
     assert data["results"][0]["filled_translation"] == 18
+
+
+def test_results_and_receipt_resolve_via_monitor_context(
+    tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.api.monitor_context import fixture_context
+
+    monkeypatch.delenv("ATLAS_JOB_REGISTRY", raising=False)
+    ctx_root = tmp_path / "custom_ctx"
+    registry_dir = ctx_root / "batch_state" / "atlas-jobs"
+    registry_dir.mkdir(parents=True)
+
+    receipt = {
+        "schema": "atlas-job-result.v1",
+        "id": "job-ctx",
+        "host": "atlas-runner",
+        "kind": "reenrich",
+        "state": "succeeded",
+        "closed_at": "2026-08-17T15:00:00Z",
+        "issue": 7402,
+        "denominator": 1,
+        "delivery": "ok",
+        "pulled": True,
+        "summary": {
+            "targets": 10,
+            "filled_translation": 10,
+            "circuit_breaker_tripped": False,
+        },
+    }
+    (registry_dir / "job-ctx.result.json").write_text(json.dumps(receipt), encoding="utf-8")
+
+    fctx = fixture_context(ctx_root)
+    monkeypatch.setattr(app.state, "ctx", fctx)
+
+    resp = client.get("/api/atlas-jobs/results")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["count"] == 1
+    assert data["results"][0]["id"] == "job-ctx"
+    assert data["results"][0]["targets"] == 10
+
+    health = client.get("/api/atlas-jobs/health")
+    assert health.status_code == 200
+    assert health.json()["registry"] == "atlas-jobs-fixture"
+
