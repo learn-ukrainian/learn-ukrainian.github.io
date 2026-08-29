@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -11,6 +12,22 @@ import scripts.analytics.cost_report as cost_report
 from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
+
+
+def _ctx_with_cost_roots(curriculum_root: Path):
+    """Redirect cost roots for HTTP calls through ``client``.
+
+    ``cost_router`` always passes ``ctx.roots.curriculum_root`` and
+    ``ctx.roots.batch_state_dir / "api_usage"`` into ``build_cost_windows``
+    (#7330 step 12a), so tests swap ``app.state.ctx`` instead of
+    monkeypatching ``cost_report.CURRICULUM_ROOT``.
+    """
+    base = app.state.ctx
+    root = Path(curriculum_root)
+    return replace(
+        base,
+        roots=replace(base.roots, curriculum_root=root, batch_state_dir=root / "batch_state"),
+    )
 
 
 def _write_meta(root: Path, level: str, slug: str, filename: str, phase: str, prompt_chars: int, response_chars: int) -> None:
@@ -37,7 +54,7 @@ def _write_meta(root: Path, level: str, slug: str, filename: str, phase: str, pr
 
 
 def test_cost_summary_empty_payload(tmp_path, monkeypatch):
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
 
     response = client.get("/api/analytics/cost")
 
@@ -48,7 +65,7 @@ def test_cost_summary_empty_payload(tmp_path, monkeypatch):
 
 
 def test_cost_summary_compat_alias(tmp_path, monkeypatch):
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
 
     response = client.get("/api/cost")
 
@@ -57,7 +74,7 @@ def test_cost_summary_compat_alias(tmp_path, monkeypatch):
 
 
 def test_cost_module_route_returns_windows(tmp_path, monkeypatch):
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
     _write_meta(tmp_path, "a1", "my-family", "01-write-meta.json", "write", 3800, 380)
 
     response = client.get("/api/analytics/cost/module/a1/my-family")
@@ -69,7 +86,7 @@ def test_cost_module_route_returns_windows(tmp_path, monkeypatch):
 
 
 def test_cost_phase_route_filters_phase(tmp_path, monkeypatch):
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", tmp_path)
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
     _write_meta(tmp_path, "a1", "alpha", "01-write-meta.json", "write", 3800, 380)
     _write_meta(tmp_path, "a1", "alpha", "02-review-meta.json", "review", 1900, 190)
 

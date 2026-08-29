@@ -29,7 +29,6 @@ from scripts.api import (
     worktrees_router,
 )
 from scripts.api import main as api_main
-from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db  # noqa: F401 — same import as isolated_fixture
 
@@ -76,7 +75,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     handoff_path = root / "batch_state" / "session-handoff.md"
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
     monkeypatch.setattr(api_main, "_health_instance_identity", lambda: {})
-    monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "opsec-host-alias=opsec-host-id")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "opsec-host-id")
     monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
@@ -130,7 +128,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     )
     monkeypatch.setattr(governance_router, "collect_adr_governance", lambda: {"total": 0})
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
-    monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
 
     # Keep ``wiki.sources_db`` loaded so the wiki-prefix external-store
     # loop still owns that module's Path globals (step 12d). Step 10
