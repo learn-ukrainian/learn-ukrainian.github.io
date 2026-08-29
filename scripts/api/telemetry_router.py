@@ -414,10 +414,10 @@ def read_legacy_comms_routes(
 @router.get("/legacy-bridge-asks")
 def read_legacy_bridge_asks(
     window: Literal["1h", "24h", "7d", "30d", "90d"] = Query("7d"),
-    ctx: MonitorContext = Depends(get_ctx),
+    _ctx: MonitorContext = Depends(get_ctx),
 ):
     """Return body-free one-shot bridge usage and coverage truth."""
-    return bridge_usage_summary(window, db_path=_legacy_comms_db_path(ctx))
+    return bridge_usage_summary(window)
 
 
 @router.post("/module-builds")
