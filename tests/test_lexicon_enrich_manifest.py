@@ -88,6 +88,8 @@ from scripts.lexicon.source_attribution import (
     E2U_LABEL,
     GOROH_LABEL,
     HOLOSKEVYCH_LABEL,
+    KHRESHCHATYK_LABEL,
+    LINGUISTIC_NORM_LABEL,
     MIYKLAS_LABEL,
     ORTHOEPY_LABEL,
     ORTHOGRAPHY_LABEL,
@@ -921,6 +923,18 @@ def test_usage_notes_slovnyk_returns_none_without_davydov_row() -> None:
     assert _usage_notes_slovnyk("вода", cache) is None
 
 
+def test_usage_notes_slovnyk_returns_none_without_any_family_row() -> None:
+    cache = {
+        "lookups": {
+            "davydov": None,
+            "linguistic_norm": None,
+            "khreshchatyk": None,
+            "vts": {"text": "irrelevant", "dictionary_slug": "vts"},
+        }
+    }
+    assert _usage_notes_slovnyk("вода", cache) is None
+
+
 def test_usage_notes_slovnyk_returns_none_for_too_short_stub() -> None:
     cache = {
         "lookups": {
@@ -933,6 +947,123 @@ def test_usage_notes_slovnyk_returns_none_for_too_short_stub() -> None:
         }
     }
     assert _usage_notes_slovnyk("х", cache) is None
+
+
+def test_usage_notes_slovnyk_linguistic_norm_cache_row() -> None:
+    """#6460: linguistic_norm shares the usage_notes family. Fixture is a
+    cache-shaped row (no live slovnyk.me fetch, no invented catalog entry)."""
+    cache = {
+        "lookups": {
+            "linguistic_norm": {
+                "dictionary_slug": "linguistic_norm",
+                "dictionary_label": LINGUISTIC_NORM_LABEL,
+                "word": "включати",
+                "source_url": "https://slovnyk.me/dict/linguistic_norm/включати",
+                "text": (
+                    "включати Умикати, а не включати світло. У цьому кеш-рядку "
+                    "перевіряється лише витяг секції usage_notes для "
+                    "linguistic_norm, не словникова стаття каталогу."
+                ),
+            }
+        }
+    }
+
+    section = _usage_notes_slovnyk("включати", cache)
+
+    assert section is not None
+    assert section["source"] == LINGUISTIC_NORM_LABEL
+    assert len(section["items"]) == 1
+    item = section["items"][0]
+    assert item["source"] == LINGUISTIC_NORM_LABEL
+    assert "умикати" in item["text"].casefold() or "Умикати" in (item.get("title") or "")
+    assert "source_urls" not in section
+    assert section["mirror_source_urls"] == [
+        "https://slovnyk.me/dict/linguistic_norm/включати"
+    ]
+    assert "source_url" not in item
+    assert item.get("mirror_source_url") == "https://slovnyk.me/dict/linguistic_norm/включати"
+
+
+def test_usage_notes_slovnyk_khreshchatyk_cache_row() -> None:
+    """#6460: khreshchatyk shares the usage_notes family. Fixture is a
+    cache-shaped row (no live slovnyk.me fetch, no invented catalog entry)."""
+    cache = {
+        "lookups": {
+            "khreshchatyk": {
+                "dictionary_slug": "khreshchatyk",
+                "dictionary_label": KHRESHCHATYK_LABEL,
+                "word": "казати",
+                "source_url": "https://slovnyk.me/dict/khreshchatyk/казати",
+                "text": (
+                    "казати Говорити й казати не завжди взаємозамінні. У цьому "
+                    "кеш-рядку перевіряється лише витяг секції usage_notes для "
+                    "khreshchatyk, не словникова стаття каталогу."
+                ),
+            }
+        }
+    }
+
+    section = _usage_notes_slovnyk("казати", cache)
+
+    assert section is not None
+    assert section["source"] == KHRESHCHATYK_LABEL
+    assert len(section["items"]) == 1
+    item = section["items"][0]
+    assert item["source"] == KHRESHCHATYK_LABEL
+    assert "взаємозамінні" in item["text"] or "Говорити й казати" in (item.get("title") or "")
+    assert "source_urls" not in section
+    assert section["mirror_source_urls"] == [
+        "https://slovnyk.me/dict/khreshchatyk/казати"
+    ]
+    assert "source_url" not in item
+    assert item.get("mirror_source_url") == "https://slovnyk.me/dict/khreshchatyk/казати"
+
+
+def test_usage_notes_slovnyk_merges_davydov_family_without_inventing_rows() -> None:
+    """All three P0 usage-essay slugs become items; missing slugs stay absent."""
+    davydov_essay = (
+        "що Що, який, котрий, которий У багатьох людей, що вивчили українську "
+        "мову не в колисці з уст матері, а з книжок, часом виникає питання, "
+        "коли саме слід ставити той чи той займенник із цих трьох."
+    )
+    cache = {
+        "lookups": {
+            "davydov": {
+                "dictionary_slug": "davydov",
+                "dictionary_label": DAVYDOV_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
+                "text": davydov_essay,
+            },
+            "linguistic_norm": {
+                "dictionary_slug": "linguistic_norm",
+                "dictionary_label": LINGUISTIC_NORM_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/linguistic_norm/%D1%89%D0%BE",
+                "text": (
+                    "що Займенник що в підрядному реченні. У цьому кеш-рядку "
+                    "перевіряється злиття кількох джерел usage_notes без "
+                    "вигадування словникових статей."
+                ),
+            },
+            "khreshchatyk": None,
+        }
+    }
+
+    section = _usage_notes_slovnyk("що", cache)
+
+    assert section is not None
+    assert len(section["items"]) == 2
+    sources = [item["source"] for item in section["items"]]
+    assert sources == [DAVYDOV_LABEL, LINGUISTIC_NORM_LABEL]
+    assert section["source"] == join_academic_source_labels(
+        [DAVYDOV_LABEL, LINGUISTIC_NORM_LABEL]
+    )
+    assert "source_urls" not in section
+    assert set(section["mirror_source_urls"]) == {
+        "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
+        "https://slovnyk.me/dict/linguistic_norm/%D1%89%D0%BE",
+    }
 
 
 def test_usage_notes_and_warning_chips_coexist_without_essay_duplication() -> None:

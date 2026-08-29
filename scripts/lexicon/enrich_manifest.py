@@ -18,11 +18,13 @@ no fabrication):
   synonym database, preserving their original set boundaries.
 - **sections.synonyms / sections.antonyms / sections.idioms / sections.proverbs
   / sections.usage_notes / sections.form_notes** — mphdict synonym groups and
-  local dictionary rows (Вікісловник antonyms; Фразеологічний; Приповідки; «Як
-  ми говоримо» essays; compact orthography/Holoskevych/orthoepy form strip).
+  local dictionary rows (Вікісловник antonyms; Фразеологічний; Приповідки;
+  davydov-family usage essays; compact orthography/Holoskevych/orthoepy form
+  strip).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
   (Антоненко-Давидович chips when corrective, «Неправильно-правильно», Штепа
-  чужослів). Full Davydov essays live in ``sections.usage_notes`` (#6463).
+  чужослів). Full usage essays live in ``sections.usage_notes`` (#6463 davydov;
+  #6460 linguistic_norm / khreshchatyk).
 - **etymology** — offline mphdict ЕСУМ roots, with the source volume/page
   citation and bibliography retained from the dictionary export.
 
@@ -225,9 +227,10 @@ _SLOVNYK_LOOKUP_SLUGS = tuple(
 )
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_PROVERB_SLUGS = ("proverbs",)
-# Full essays as sections.usage_notes (#6463). linguistic_norm / khreshchatyk
-# share the same section family later; only davydov is wired in this slice.
-_SLOVNYK_USAGE_NOTE_SLUGS = ("davydov",)
+# Full essays as sections.usage_notes. #6463 wired davydov; #6460 adds the
+# other two P0 usage-essay slugs named on the hub design (same section family,
+# same extractor). voloschak / foreign_shtepa stay on the warning-chip path.
+_SLOVNYK_USAGE_NOTE_SLUGS = ("davydov", "linguistic_norm", "khreshchatyk")
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _USAGE_NOTE_MIN_BODY_CHARS = 40
 # Compact form/pronunciation strip (#6465): the orthographic norm, the 1929
@@ -2519,7 +2522,12 @@ def _split_usage_note_title(body: str) -> tuple[str | None, str]:
 
 
 def _usage_note_item_from_row(row: dict[str, Any], lemma: str) -> dict[str, Any] | None:
-    """Build one usage-note item from a davydov-family slovnyk cache row."""
+    """Build one usage-note item from a davydov-family slovnyk cache row.
+
+    Family slugs: davydov, linguistic_norm, khreshchatyk. The row's
+    ``dictionary_label`` / slug picks the academic source; this helper does
+    not invent essay text.
+    """
     raw = _SOURCE_TAIL_RE.sub("", str(row.get("text") or "")).strip()
     if not raw:
         return None
@@ -2553,12 +2561,14 @@ def _usage_note_item_from_row(row: dict[str, Any], lemma: str) -> dict[str, Any]
 
 
 def _usage_notes_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
-    """Usage / style-norm essays from the davydov family (#6463).
+    """Usage / style-norm essays from the davydov family (#6463, #6460).
 
-    Full Антоненко-Давидович «Як ми говоримо» text becomes a learner section
-    (not warning-only). Corrective alternative chips remain on the separate
-    ``_warning_slovnyk`` path when the essay text matches corrective cues —
-    chips only, never a second full-text dump of the same essay.
+    Full Антоненко-Давидович «Як ми говоримо» text, plus «Літературне
+    слововживання» and «Уроки державної мови» (Хрещатик) when a cache row
+    exists, become learner section items (not warning-only). Corrective
+    alternative chips remain on the separate ``_warning_slovnyk`` path when
+    the essay text matches corrective cues — chips only, never a second
+    full-text dump of the same essay.
     """
     cache = cache if cache is not None else _slovnyk_cache(lemma)
     items: list[dict[str, Any]] = []
