@@ -438,11 +438,13 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `consultation_router.py` | `/api/consultation` | 7 | 495 | `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT` | `APPLIED_DIR`, `QUEUE_DIR`, `REJECTED_DIR`, `TEMPLATE_DIR` | 6 | 12b |
-| `decisions_router.py` | `/api/decisions` | 6 | 168 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `DECISIONS_FILE`, `_cache`, `_lineage_cache` | 3 | 12b |
-| `delegate_router.py` | `/api/delegate` | 3 | 554 | `BATCH_STATE_DIR` | `TASKS_DIR`, `_LAST_TASKS_DIR_STR`, `_TASK_STATE_CACHE` | 2 | 12b |
-| `discussions_router.py` | `/api/discussions` | 1 | 122 | `MESSAGE_DB` | — | 1 | 12b |
-| `gold_router.py` | `/api/gold` | 8 | 351 | `CURRICULUM_ROOT`, `PROJECT_ROOT` | — | 2 | 12b |
+| `consultation_router.py` | `/api/consultation` | 7 | 495 | `LEVELS` | — | 0 | 12b |
+| `decisions_router.py` | `/api/decisions` | 6 | 168 | — | `_cache`, `_lineage_cache` | 0 | 12b |
+| `delegate_router.py` | `/api/delegate` | 3 | 554 | — | `_LAST_TASKS_DIR_STR`, `_TASK_STATE_CACHE` | 0 | 12b |
+| `discussions_router.py` | `/api/discussions` | 1 | 122 | — | — | 0 | 12b |
+| `gold_router.py` | `/api/gold` | 8 | 351 | — | — | 0 | 12b |
+
+**12b migrated (#7331):** path roots now come from `Depends(get_ctx)`. The 14 seams this row listed (the path-loop seams on consultation / decisions / delegate / discussions / gold) are deleted.
 
 ### Step 12c — governance / issues / knowledge
 
