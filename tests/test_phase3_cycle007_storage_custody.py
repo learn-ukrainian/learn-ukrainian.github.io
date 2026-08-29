@@ -11,14 +11,14 @@ import hashlib
 import json
 import os
 import stat
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 import pytest
 
 from scripts.projects.open_model_data import phase3_cycle007_materializer as materializer
 from scripts.projects.open_model_data import phase3_cycle007_storage_custody as storage
-
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SUMMARY_JSON = (
