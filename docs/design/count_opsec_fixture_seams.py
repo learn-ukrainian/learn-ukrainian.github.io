@@ -21,9 +21,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    entire_context_router,
     epics_router,
-    git_hygiene_router,
     governance_router,
     issues_router,
     site_router,
@@ -31,7 +29,6 @@ from scripts.api import (
     worktrees_router,
 )
 from scripts.api import main as api_main
-from scripts.guardrails import worktree_containment
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
@@ -112,11 +109,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(
-        git_hygiene_router,
-        "_run_git",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
-    monkeypatch.setattr(
         worktrees_router,
         "_run",
         lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
@@ -137,16 +129,8 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
         ),
     )
     monkeypatch.setattr(governance_router, "collect_adr_governance", lambda: {"total": 0})
-    monkeypatch.setattr(
-        entire_context_router,
-        "projection_path",
-        lambda cwd: Path(cwd) / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3",
-    )
-    monkeypatch.setattr(entire_context_router, "load_provider_status", lambda _root: {})
-    monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
-    monkeypatch.setattr(worktree_containment, "primary_checkout_dirty_status", lambda _s: {})
 
     fixture_sources_db = root / "stores" / "sources.db"
     rag_query = importlib.import_module("rag.query")

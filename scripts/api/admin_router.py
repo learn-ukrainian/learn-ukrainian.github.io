@@ -24,7 +24,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 try:
@@ -32,25 +32,34 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import MESSAGE_DB, PROJECT_ROOT
-from .resilience import connect_sqlite
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["admin"])
 START_TIME = time.time()
 
-# ── Config ────────────────────────────────────────────────────────
+# Roots and store handles come from MonitorContext via Depends(get_ctx)
+# (#7269 step 8): this module keeps no module-global Path seams.
 
-BACKUP_DIR = Path(
-    os.environ.get(
-        "BACKUP_DIR",
-        str(PROJECT_ROOT / "data" / "backups"),
-    )
-)
-DATA_DIR = PROJECT_ROOT / "data"
-IMAGE_DIR = DATA_DIR / "textbook_images"
-LOGS_DIR = PROJECT_ROOT / "logs"
-MCP_DIR = PROJECT_ROOT / ".mcp"
 ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _data_dir(ctx: MonitorContext) -> Path:
+    return ctx.roots.project_root / "data"
+
+
+def _image_dir(ctx: MonitorContext) -> Path:
+    return ctx.roots.images_dir or (_data_dir(ctx) / "textbook_images")
+
+
+def _mcp_dir(ctx: MonitorContext) -> Path:
+    return ctx.roots.project_root / ".mcp"
 
 
 # ── Helpers ───────────────────────────────────────────────────────
@@ -76,15 +85,21 @@ def _format_bytes(n: int) -> str:
     return f"{n:.1f} TB"
 
 
-def _broker_health() -> dict:
+def _broker_health(ctx: MonitorContext | None = None) -> dict:
     """Read broker DB health synchronously."""
+    resolved = _resolve_context(ctx)
+    message_db = resolved.roots.message_db_path
     result = {"status": "missing", "size_bytes": 0, "queue_depth": 0}
-    if not MESSAGE_DB.exists():
+    if message_db is None or not message_db.exists():
         return result
     result["status"] = "healthy"
-    result["size_bytes"] = MESSAGE_DB.stat().st_size
+    result["size_bytes"] = message_db.stat().st_size
     try:
-        conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+        handle = resolved.stores.message_db
+        if handle is None:
+            result["status"] = "error"
+            return result
+        conn = handle.connect(read_only=True)
         result["queue_depth"] = conn.execute(
             "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
         ).fetchone()[0]
@@ -98,14 +113,15 @@ def _broker_health() -> dict:
 
 
 @router.get("/backup/list")
-async def list_backups():
+async def list_backups(ctx: MonitorContext = Depends(get_ctx)):
     """List existing backup files with timestamps and sizes."""
-    if not BACKUP_DIR.exists():
-        return {"backups": [], "total_size_bytes": 0, "backup_dir": str(BACKUP_DIR)}
+    backup_dir = ctx.roots.backup_dir
+    if not backup_dir.exists():
+        return {"backups": [], "total_size_bytes": 0, "backup_dir": str(backup_dir)}
 
     # Collect stats in one pass to avoid double stat() per file
     entries = []
-    for f in BACKUP_DIR.iterdir():
+    for f in backup_dir.iterdir():
         if not f.is_file():
             continue
         try:
@@ -132,15 +148,15 @@ async def list_backups():
         "count": len(backups),
         "total_size_bytes": total,
         "total_size_human": _format_bytes(total),
-        "backup_dir": str(BACKUP_DIR),
+        "backup_dir": str(backup_dir),
     }
 
 
 @router.delete("/backup/{filename}")
-async def delete_backup(filename: str):
+async def delete_backup(filename: str, ctx: MonitorContext = Depends(get_ctx)):
     """Delete a backup file."""
     try:
-        path = safe_join(BACKUP_DIR, filename)
+        path = safe_join(ctx.roots.backup_dir, filename)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid filename") from None
 
@@ -155,12 +171,12 @@ async def delete_backup(filename: str):
 
 # ── Health ────────────────────────────────────────────────────────
 @router.get("/health")
-async def unified_health():
+async def unified_health(ctx: MonitorContext = Depends(get_ctx)):
     """Unified health check: broker, disk, and API uptime."""
-    broker = _broker_health()
+    broker = _broker_health(ctx)
     if inspect.isawaitable(broker):
         broker = await broker
-    disk = shutil.disk_usage(PROJECT_ROOT)
+    disk = shutil.disk_usage(ctx.roots.project_root)
     disk_pct = round(disk.used / disk.total * 100, 1)
 
     broker_payload = dict(broker)
@@ -181,16 +197,17 @@ async def unified_health():
 
 
 @router.get("/disk-usage")
-async def disk_usage():
+async def disk_usage(ctx: MonitorContext = Depends(get_ctx)):
     """Detailed disk usage breakdown for data directories."""
+    data_dir = _data_dir(ctx)
     dirs = {
-        "textbook_images": DATA_DIR / "textbook_images",
-        "textbooks": DATA_DIR / "textbooks",
-        "literary_texts": DATA_DIR / "literary_texts",
-        "textbook_chunks": DATA_DIR / "textbook_chunks",
-        "backups": BACKUP_DIR,
-        "logs": LOGS_DIR,
-        "vesum_db": DATA_DIR / "vesum.db",
+        "textbook_images": data_dir / "textbook_images",
+        "textbooks": data_dir / "textbooks",
+        "literary_texts": data_dir / "literary_texts",
+        "textbook_chunks": data_dir / "textbook_chunks",
+        "backups": ctx.roots.backup_dir,
+        "logs": ctx.roots.logs_dir,
+        "vesum_db": data_dir / "vesum.db",
     }
 
     # Run all dir_size calls in parallel
@@ -221,14 +238,16 @@ async def disk_usage():
 
 
 @router.post("/maintenance/vacuum-broker")
-async def vacuum_broker():
+async def vacuum_broker(ctx: MonitorContext = Depends(get_ctx)):
     """VACUUM the SQLite message broker database to reclaim space."""
-    if not MESSAGE_DB.exists():
+    message_db = ctx.roots.message_db_path
+    handle = ctx.stores.message_db
+    if message_db is None or not message_db.exists() or handle is None:
         return JSONResponse(status_code=404, content={"error": "Broker DB not found"})
 
-    size_before = MESSAGE_DB.stat().st_size
+    size_before = message_db.stat().st_size
     try:
-        conn = connect_sqlite(str(MESSAGE_DB))
+        conn = handle.connect()
         conn.execute("VACUUM")
         conn.close()
     except Exception:
@@ -236,7 +255,7 @@ async def vacuum_broker():
             status_code=500,
             content={"error": "VACUUM failed"},
         )
-    size_after = MESSAGE_DB.stat().st_size
+    size_after = message_db.stat().st_size
 
     return {
         "status": "ok",
@@ -248,13 +267,16 @@ async def vacuum_broker():
 
 
 @router.post("/maintenance/clean-logs")
-async def clean_logs(max_age_days: int = Query(30, ge=1, le=365)):
+async def clean_logs(
+    max_age_days: int = Query(30, ge=1, le=365),
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Delete log files older than max_age_days."""
     cutoff = time.time() - (max_age_days * 86400)
     deleted = []
 
-    scan_dirs = [LOGS_DIR]
-    mcp_servers = MCP_DIR / "servers"
+    scan_dirs = [ctx.roots.logs_dir]
+    mcp_servers = _mcp_dir(ctx) / "servers"
     if mcp_servers.exists():
         for server_dir in mcp_servers.iterdir():
             log_sub = server_dir / "logs"
@@ -273,7 +295,7 @@ async def clean_logs(max_age_days: int = Query(30, ge=1, le=365)):
                 if st.st_mtime < cutoff:
                     f.unlink()
                     total_freed += st.st_size
-                    deleted.append({"path": str(f.relative_to(PROJECT_ROOT)), "size": st.st_size})
+                    deleted.append({"path": str(f.relative_to(ctx.roots.project_root)), "size": st.st_size})
             except OSError:
                 pass
 
@@ -288,9 +310,10 @@ async def clean_logs(max_age_days: int = Query(30, ge=1, le=365)):
 
 
 @router.get("/maintenance/embedding-cache-stats")
-async def embedding_cache_stats():
+async def embedding_cache_stats(ctx: MonitorContext = Depends(get_ctx)):
     """Show embedding cache status from data/literary_texts/.embed_cache/."""
-    cache_dir = DATA_DIR / "literary_texts" / ".embed_cache"
+    data_dir = _data_dir(ctx)
+    cache_dir = data_dir / "literary_texts" / ".embed_cache"
     if not cache_dir.exists():
         return {"exists": False, "cached_files": 0, "total_size_bytes": 0}
 
@@ -308,7 +331,7 @@ async def embedding_cache_stats():
         bucket["count"] += 1
         bucket["size"] += st.st_size
 
-    lit_dir = DATA_DIR / "literary_texts"
+    lit_dir = data_dir / "literary_texts"
     source_files = sum(1 for f in lit_dir.iterdir() if f.is_file() and f.suffix in (".txt", ".md"))
 
     return {
@@ -322,9 +345,10 @@ async def embedding_cache_stats():
 
 
 @router.get("/maintenance/annotation-stats")
-async def annotation_stats():
+async def annotation_stats(ctx: MonitorContext = Depends(get_ctx)):
     """Image annotation quality stats: teaching_value distribution, empty/garbled counts."""
-    if not IMAGE_DIR.exists():
+    image_dir = _image_dir(ctx)
+    if not image_dir.exists():
         return {"error": "textbook_images directory not found"}
 
     total_images = 0
@@ -333,7 +357,7 @@ async def annotation_stats():
     empty_descriptions = 0
     garbled_count = 0
 
-    for grade_dir in sorted(IMAGE_DIR.iterdir()):
+    for grade_dir in sorted(image_dir.iterdir()):
         if not grade_dir.is_dir() or not grade_dir.name.startswith("grade-"):
             continue
 

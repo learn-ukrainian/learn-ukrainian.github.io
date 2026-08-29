@@ -27,16 +27,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from scripts.common.git_context import sanitized_git_env
 
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["git"])
-
-POLICY_DOC = PROJECT_ROOT / "docs" / "best-practices" / "git-hygiene.md"
 FALLBACK_EXEMPTION_PATTERNS = (
     "wiki/**",
     "data/corpus_audit/draft_tickets/*.md",
@@ -50,6 +48,17 @@ BUCKET_NAMES = (
 )
 
 _GIT_TIMEOUT_S = 2.0
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _policy_doc(project_root: Path) -> Path:
+    return project_root / "docs" / "best-practices" / "git-hygiene.md"
 
 
 class StaleBranch(BaseModel):
@@ -133,7 +142,10 @@ def _run_git(
         return proc.returncode, proc.stdout, proc.stderr
     except subprocess.TimeoutExpired as exc:
         return 124, "", f"TimeoutExpired after {exc.timeout}s"
-    except (FileNotFoundError, PermissionError, OSError) as exc:
+    except (FileNotFoundError, PermissionError, OSError, AssertionError) as exc:
+        # AssertionError covers the OPSEC sweep's denied-subprocess backstop
+        # so /api/git/* can degrade to the documented git-unavailable shape
+        # without a router-local _run_git monkeypatch seam (#7269 step 8).
         return 127, "", f"{type(exc).__name__}: {exc}"
 
 
@@ -234,7 +246,7 @@ def _disk_bytes(path: Path) -> int | None:
             timeout=_GIT_TIMEOUT_S,
             check=False,
         )
-    except (subprocess.TimeoutExpired, FileNotFoundError, PermissionError, OSError):
+    except (subprocess.TimeoutExpired, FileNotFoundError, PermissionError, OSError, AssertionError):
         return None
     if proc.returncode != 0:
         return None
@@ -245,8 +257,8 @@ def _disk_bytes(path: Path) -> int | None:
         return None
 
 
-def _active_task_ids(project_root: Path | None = None) -> set[str]:
-    tasks_dir = (project_root or PROJECT_ROOT) / "batch_state" / "tasks"
+def _active_task_ids(project_root: Path) -> set[str]:
+    tasks_dir = project_root / "batch_state" / "tasks"
     active: set[str] = set()
     if not tasks_dir.exists():
         return active
@@ -282,9 +294,9 @@ def _is_protected(
     path: Path,
     branch: str,
     active_task_ids: set[str],
-    project_root: Path | None = None,
+    project_root: Path,
 ) -> tuple[bool, str | None]:
-    root = project_root or PROJECT_ROOT
+    root = project_root
     try:
         if path.resolve() == root.resolve():
             return True, "primary checkout"
@@ -329,7 +341,7 @@ def _worktree_reason(upstream_gone: bool, fully_merged_to_main: bool, clean: boo
 
 def compute_git_cleanup(project_root: Path | None = None) -> CleanupReport:
     if project_root is None:
-        project_root = PROJECT_ROOT
+        project_root = _resolve_context().roots.live_repo_root
 
     started = time.perf_counter()
     computed_at = _isoformat_z(datetime.now(UTC))
@@ -420,7 +432,7 @@ def _parse_status(stdout: str) -> list[StatusEntry]:
     return entries
 
 
-def _extract_policy_exemptions(policy_doc: Path = POLICY_DOC) -> list[str]:
+def _extract_policy_exemptions(policy_doc: Path) -> list[str]:
     """Load exemption paths from the policy doc, with an explicit fallback.
 
     The policy's "Exemption paths" section is the source of truth for
@@ -655,11 +667,11 @@ def _suggestions(buckets: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
 
 def compute_git_hygiene(project_root: Path | None = None) -> dict[str, Any]:
     if project_root is None:
-        project_root = PROJECT_ROOT
+        project_root = _resolve_context().roots.live_repo_root
 
     started = time.perf_counter()
     generated_at = _isoformat_z(datetime.now(UTC))
-    policy_doc = project_root / "docs" / "best-practices" / "git-hygiene.md"
+    policy_doc = _policy_doc(project_root)
     exemption_patterns = _extract_policy_exemptions(policy_doc)
 
     code, stdout, stderr = _run_git(
@@ -738,12 +750,12 @@ def compute_git_hygiene(project_root: Path | None = None) -> dict[str, Any]:
 
 
 @router.get("/hygiene")
-async def git_hygiene():
+async def git_hygiene(ctx: MonitorContext = Depends(get_ctx)):
     """Classify current working-tree drift into actionable buckets."""
-    return await asyncio.to_thread(compute_git_hygiene, LIVE_REPO_ROOT)
+    return await asyncio.to_thread(compute_git_hygiene, ctx.roots.live_repo_root)
 
 
 @router.get("/cleanup", response_model=CleanupReport, response_model_exclude_none=True)
-async def git_cleanup() -> CleanupReport:
+async def git_cleanup(ctx: MonitorContext = Depends(get_ctx)) -> CleanupReport:
     """Classify stale branches and removable worktrees without changing git state."""
-    return await asyncio.to_thread(compute_git_cleanup, LIVE_REPO_ROOT)
+    return await asyncio.to_thread(compute_git_cleanup, ctx.roots.live_repo_root)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -32,10 +33,10 @@ DB_ACCESS_PATTERNS = (
 # unique files. Infrastructure files are listed too so the denominator cannot
 # silently shrink when the exemptions below are changed. #7269 step 5 removed
 # scripts/api/comms_router.py deliberately (20 -> 19); step 2 removed
-# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18).
+# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18);
+# step 8 removed scripts/api/admin_router.py (18 -> 17).
 DB_ACCESS_ALLOWLIST = frozenset(
     {
-        "scripts/api/admin_router.py",
         "scripts/api/agent_monitor_router.py",
         "scripts/api/dashboard_comms.py",
         "scripts/api/delegate_router.py",
@@ -339,8 +340,73 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         assert "session" in second_manifest
 
 
+def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
+    """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_backups = first_root / "data" / "backups"
+    second_backups = second_root / "data" / "backups"
+    first_backups.mkdir(parents=True)
+    second_backups.mkdir(parents=True)
+    (first_backups / "first.tar").write_bytes(b"first")
+    (second_backups / "second.tar").write_bytes(b"second")
+
+    first_plan = first_root / "batch_state" / "fleet-comms" / "retention"
+    second_plan = second_root / "batch_state" / "fleet-comms" / "retention"
+    first_plan.mkdir(parents=True)
+    second_plan.mkdir(parents=True)
+    (first_plan / "latest.json").write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1", "marker": "first-plan"}),
+        encoding="utf-8",
+    )
+    (second_plan / "latest.json").write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1", "marker": "second-plan"}),
+        encoding="utf-8",
+    )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_backups_body = first_client.get("/api/admin/backup/list").json()
+        second_backups_body = second_client.get("/api/admin/backup/list").json()
+        assert {item["filename"] for item in first_backups_body["backups"]} == {"first.tar"}
+        assert {item["filename"] for item in second_backups_body["backups"]} == {"second.tar"}
+        assert "first.tar" not in json.dumps(second_backups_body)
+        assert "second.tar" not in json.dumps(first_backups_body)
+
+        first_retention = first_client.get("/api/ops/v1/retention/latest").json()
+        second_retention = second_client.get("/api/ops/v1/retention/latest").json()
+        assert first_retention["marker"] == "first-plan"
+        assert second_retention["marker"] == "second-plan"
+        assert first_retention["missing"] is False
+        assert second_retention["missing"] is False
+
+        first_status = first_client.get("/api/ops/entire-context/status").json()
+        second_status = second_client.get("/api/ops/entire-context/status").json()
+        assert first_status["schema"] == "entire-context-monitor.v1"
+        assert second_status["schema"] == "entire-context-monitor.v1"
+        assert first_status["recall"]["available"] is False
+        assert second_status["recall"]["available"] is False
+
+        first_hygiene = first_client.get("/api/git/hygiene").json()
+        second_hygiene = second_client.get("/api/git/hygiene").json()
+        assert first_hygiene["dirty_total"] == 0
+        assert second_hygiene["dirty_total"] == 0
+        assert "error" in first_hygiene
+        assert "error" in second_hygiene
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 18
+    assert len(DB_ACCESS_ALLOWLIST) == 17
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []
