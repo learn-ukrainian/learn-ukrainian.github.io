@@ -1,0 +1,63 @@
+{
+  "schema_version": "phase3_cyrillic_slavic_predecessor_handoff_v1",
+  "text_free": true,
+  "contract": {
+    "outcome_sha256": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47",
+    "state": "V2_REVIEWED_ACTIVE",
+    "superseded_contract_active": false
+  },
+  "predecessor": {
+    "issue": 6375,
+    "state": "CYCLE007_EVALUATION_ONLY_HISTORICAL",
+    "cycle007": {
+      "packet_count": 204,
+      "row_count": 10159,
+      "labeling_state": "OFF",
+      "provider_calls": 0,
+      "provider_derived_training_labels": 0
+    }
+  },
+  "successor": {
+    "issue": 7423,
+    "state": "ACCEPTED_SUCCESSOR",
+    "child_issues": [7424, 7425, 7426, 7427, 7428, 7429, 7430, 7431, 7432, 7433, 7434],
+    "acceptance": "EPIC_CONTRACT_AND_NATIVE_DAG_PUBLISHED"
+  },
+  "public_code_identities": {
+    "merged_main_commit": "ba4834f3ff5e067b603055d068b3bddacd0e601e",
+    "reviewed_pr_head": "5cf66b68c222b48b0ba16bc0a3d8cacb6f622bb5",
+    "reviewed_artifacts": [
+      {
+        "path": "scripts/projects/open_model_data/phase3_cycle007_labeling_guardian.py",
+        "sha256_at_reviewed_pr_head": "0c7ea4dca7948b79989e89e9a00c930c2ccb9357f198ec28240bcdcf6f69c3a0"
+      },
+      {
+        "path": "batch_state/phase3-run-cycle007-controller-v1.py",
+        "sha256_at_reviewed_pr_head": "e8bf50f2fa278e2a6943ff4caae24712fc3ebbfd738609fbe6a9dfa9e88077a7"
+      },
+      {
+        "path": "docs/projects/open-model-data/cycle007-labeling-runtime.md",
+        "sha256_at_reviewed_pr_head": "f40538cd532b6e05a8152734e53442b0835997f77fc4a246258872111b5f6839"
+      }
+    ]
+  },
+  "residual_owners": [
+    {
+      "issue": 6958,
+      "owner": "wikipedia_teaching_gold_training_ineligibility_policy_gate",
+      "state": "OPEN_BLOCKING_DEPENDENCY"
+    },
+    {
+      "issue": 7434,
+      "owner": "cycle007_storage_compaction_and_reclaim",
+      "state": "OPEN_PARALLEL_CUSTODY_WORK"
+    }
+  ],
+  "successor_acceptance": {
+    "outcome_sha256_matches": true,
+    "predecessor_state_bound": true,
+    "cycle007_training_lineage_denied": true,
+    "next_stage": "P1_SOURCE_RIGHTS_LANGUAGE_APPLICABILITY_UNIVERSE"
+  },
+  "receipt_sha256": "056fa042edb4c2ee0df19264107fc3d3bbd9c033158ec52b9df603d6eb1dd94c"
+}
