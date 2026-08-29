@@ -73,6 +73,8 @@ FROZEN_EVIDENCE_CODE_HASHES = {
 MODEL = "Gemini 3.6 Flash (High)"
 FAMILY = "google"
 HARNESS = "agy"
+AGY_PRINT_TIMEOUT = "120m"
+TIMEOUT_FIX_RECOVERY_SCHEMA = "phase3_cycle007_gemini_timeout_fix_recovery_v1"
 OUTPUT = "label-output-gemini-cycle007-v1"
 MAX_PACKET_ROWS = 50
 DEFAULT_REQUEST_BYTE_BUDGET = 640 * 1024
@@ -1263,6 +1265,7 @@ def _verify_recovery_receipt(
     *,
     prior_recovery_raw: bytes | None,
     prior_provider_call_count: int | None,
+    request_byte_budget: int,
 ) -> tuple[bytes, dict[str, Any]]:
     """Require one exact, marker-bound operator authorization for the next call."""
     authorized_attempt = failed_attempt + 1
@@ -1277,12 +1280,9 @@ def _verify_recovery_receipt(
         _mode(marker, 0o600)
     terminal_value = _read_json(terminal)
     call_count = receipt.get("prior_provider_call_count")
+    timeout_fix = receipt.get("schema_version") == TIMEOUT_FIX_RECOVERY_SCHEMA
     expected = {
-        "schema_version": (
-            "phase3_cycle007_gemini_provider_recovery_v1"
-            if prior_recovery_raw is None
-            else "phase3_cycle007_gemini_provider_second_recovery_v1"
-        ),
+        "schema_version": receipt.get("schema_version"),
         "evaluation_cycle_id": CYCLE,
         "source_provider_stop_sha256": receipt.get("source_provider_stop_sha256"),
         "started_marker_sha256": digest(started.read_bytes()),
@@ -1296,6 +1296,19 @@ def _verify_recovery_receipt(
         "harness": HARNESS,
         "text_free": True,
     }
+    if timeout_fix:
+        expected |= {
+            "authorized_attempt": authorized_attempt,
+            "request_byte_budget": request_byte_budget,
+            "gemini_runner_sha256": digest(Path(__file__).read_bytes()),
+            "agy_print_timeout": AGY_PRINT_TIMEOUT,
+        }
+    elif expected["schema_version"] != (
+        "phase3_cycle007_gemini_provider_recovery_v1"
+        if prior_recovery_raw is None
+        else "phase3_cycle007_gemini_provider_second_recovery_v1"
+    ):
+        raise Error("ordinal_identity_binding_drift")
     if prior_recovery_raw is not None:
         expected |= {
             "prior_recovery_receipt_sha256": digest(prior_recovery_raw),
@@ -1370,6 +1383,7 @@ def _next_attempt(
         failure_code = marker.get("failure_code")
         if failure_code not in retryable:
             raise Error("ordinal_identity_binding_drift")
+        same_size_timeout = False
         if failure_code == "provider_status_timeout":
             prior_budget = marker.get("request_byte_budget")
             if prior_budget is None:
@@ -1378,7 +1392,7 @@ def _next_attempt(
                 # budget-bound and therefore enters the fail-closed branch.
                 pass
             elif prior_budget == request_byte_budget:
-                raise Error("same_size_timeout_retry_forbidden")
+                same_size_timeout = True
             elif (
                 not isinstance(prior_budget, int)
                 or isinstance(prior_budget, bool)
@@ -1392,6 +1406,8 @@ def _next_attempt(
             and recovery_path is None
         ):
             continue
+        if same_size_timeout and recovery_path is None:
+            raise Error("same_size_timeout_retry_forbidden")
         prior_recovery_raw, receipt = _verify_recovery_receipt(
             package,
             out,
@@ -1399,7 +1415,10 @@ def _next_attempt(
             attempt,
             prior_recovery_raw=prior_recovery_raw,
             prior_provider_call_count=prior_provider_call_count,
+            request_byte_budget=request_byte_budget,
         )
+        if same_size_timeout and receipt.get("schema_version") != TIMEOUT_FIX_RECOVERY_SCHEMA:
+            raise Error("same_size_timeout_retry_forbidden")
         prior_provider_call_count = receipt["prior_provider_call_count"]
     return maximum + 1
 
@@ -1420,6 +1439,8 @@ def _command(provider: Path, schema_path: Path, log_path: Path) -> list[str]:
         "stream-json",
         "--output-format",
         "stream-json",
+        "--print-timeout",
+        AGY_PRINT_TIMEOUT,
         "--json-schema",
         str(schema_path),
         "--log-file",

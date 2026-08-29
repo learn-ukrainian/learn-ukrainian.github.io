@@ -293,6 +293,63 @@ def test_batch_runner_forbids_same_budget_retry_after_timeout(tmp_path: Path) ->
         runner._next_attempt(package, out, 1, request_byte_budget=512 * 1024)
 
 
+def test_batch_runner_accepts_same_budget_only_for_exact_timeout_fix_receipt(
+    tmp_path: Path,
+) -> None:
+    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    spec = importlib.util.spec_from_file_location("cycle007_gemini_timeout_fix_test", path)
+    assert spec is not None and spec.loader is not None
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    package = tmp_path / "package"
+    out = package / runner.OUTPUT / "clean_label/chunks/packet-0001"
+    out.mkdir(parents=True, mode=0o700)
+    started = out / "attempt-1-chunk-01.started.json"
+    terminal = out / "attempt-1-chunk-01.terminal.json"
+    started.write_bytes(runner.canonical({"state": "started", "text_free": True}))
+    terminal_value = {
+        "schema_version": "phase3_cycle007_gemini_attempt_v2",
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "request_byte_budget": 640 * 1024,
+        "text_free": True,
+    }
+    terminal.write_bytes(runner.canonical(terminal_value))
+    started.chmod(0o600)
+    terminal.chmod(0o600)
+    body = {
+        "schema_version": runner.TIMEOUT_FIX_RECOVERY_SCHEMA,
+        "evaluation_cycle_id": runner.CYCLE,
+        "source_provider_stop_sha256": "a" * 64,
+        "started_marker_sha256": runner.digest(started.read_bytes()),
+        "terminal_marker_sha256": runner.digest(terminal.read_bytes()),
+        "failure_code": terminal_value["failure_code"],
+        "failure_stage": terminal_value["failure_stage"],
+        "prior_provider_call_count": 1,
+        "authorized_additional_provider_calls": 1,
+        "exact_model": runner.MODEL,
+        "model_family": runner.FAMILY,
+        "harness": runner.HARNESS,
+        "text_free": True,
+        "authorized_attempt": 2,
+        "request_byte_budget": 640 * 1024,
+        "gemini_runner_sha256": runner.digest(path.read_bytes()),
+        "agy_print_timeout": runner.AGY_PRINT_TIMEOUT,
+    }
+    receipt = body | {"receipt_sha256": runner.digest(runner.canonical(body))}
+    receipt_path = package / runner.OUTPUT / runner.RECOVERY_RECEIPT
+    receipt_path.write_bytes(runner.canonical(receipt))
+    receipt_path.chmod(0o600)
+
+    assert runner._next_attempt(package, out, 1, request_byte_budget=640 * 1024) == 2
+    receipt["gemini_runner_sha256"] = "0" * 64
+    unsigned = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = runner.digest(runner.canonical(unsigned))
+    receipt_path.write_bytes(runner.canonical(receipt))
+    with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
+        runner._next_attempt(package, out, 1, request_byte_budget=640 * 1024)
+
+
 def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path: Path) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_recovery_test", path)
@@ -728,6 +785,16 @@ def test_batch_stream_input_command_has_no_print_prompt() -> None:
     assert command[command.index("--output-format") + 1] == "stream-json"
     assert "--print" not in command
     assert "--new-project" in command
+    assert command.count("--print-timeout") == 1
+    assert command[command.index("--print-timeout") + 1] == runner.AGY_PRINT_TIMEOUT == "120m"
+
+
+def test_public_canary_uses_the_same_explicit_agy_print_timeout() -> None:
+    canary = _load_runner()
+    command = canary._gemini_command(Path("/provider"), Path("/schema.json"), Path("/agy.log"))
+
+    assert command.count("--print-timeout") == 1
+    assert command[command.index("--print-timeout") + 1] == canary.AGY_PRINT_TIMEOUT == "120m"
 
 
 def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:

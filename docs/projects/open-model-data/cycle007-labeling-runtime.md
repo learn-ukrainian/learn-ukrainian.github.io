@@ -140,6 +140,12 @@ operational layer:
    `ambiguous_provider_attempt` and performs zero provider calls. If the stage
    seal is complete, the marker is safely stale and may be removed without
    rerunning the stage.
+   Every AGY stream-input invocation sets an explicit `120m` print wait, below
+   the guardian's 72-hour stage boundary, instead of inheriting AGY's five-minute
+   print-mode default. An exact timeout produced by that retired default may
+   authorize one same-byte-budget retry only through a text-free recovery receipt
+   bound to the stopped attempt, the reviewed Gemini runner SHA-256, and the
+   explicit timeout value. Ordinary same-size timeout retries remain forbidden.
 8. Atomically write a text-free guardian receipt containing counts, stage,
    mount identities, code identity, and safe failure code. It contains no
    packet content, prompts, labels, responses, account data, or infrastructure
