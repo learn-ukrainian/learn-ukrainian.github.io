@@ -260,7 +260,7 @@ def test_monitor_client_mutation_non_idempotent_no_retry(monkeypatch: pytest.Mon
 def test_monitor_client_mutation_idempotent_retries_with_stable_key(monkeypatch: pytest.MonkeyPatch) -> None:
     """A keyed mutation on an allowlisted cluster-authoritative path retries across [A, B]."""
     calls: list[tuple[str, dict[str, str]]] = []
-    path = "/api/epics/v1/epic:7178/handoff"
+    path = "/api/epics/v1/epic:test-failover/handoff"
 
     def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
         url = req.full_url
