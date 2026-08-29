@@ -29,10 +29,13 @@ script. Run from the repository root::
     .venv/bin/python -m scripts.lexicon.promote_atlas_6370_named_multiword_residual --report
     .venv/bin/python -m scripts.lexicon.promote_atlas_6370_named_multiword_residual --write --report
 
+Practice admission matches the teacher P1 promote path
+(``promote_teacher_lesson_intake``): each decision row carries
+``surface_admission.practice=True``. Daily Word and cloze stay frozen.
+
 This script only mutates the local (gitignored) hydrated Atlas manifest and
-its DB-free fingerprint sidecar. It does not upload a release asset or flip
-``site/src/data/lexicon-manifest.pointer.json`` — that pointer-safe publish
-step is a separate, explicitly operator-gated action (see PR description).
+its DB-free fingerprint sidecar. Pointer write / release upload is a separate
+publish step (see ``scripts/lexicon/publish_manifest.py``).
 """
 
 from __future__ import annotations
@@ -108,6 +111,8 @@ TARGET_ENTRY_TYPES: dict[str, str] = {
     "час від часу": "phraseologism",
 }
 ZABOJATYSJA_LEMMA = "забоятися"
+# Same opt-in the teacher P1 promoter writes onto approved rows.
+PRACTICE_ADMISSION = {"practice": True}
 
 
 def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None) -> dict[str, Any]:
@@ -134,7 +139,7 @@ def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None
         # verified present in VESUM via mcp__sources__verify_words before this
         # batch was authored (see PR description); none is heritage-flagged.
         "heritage_status": {
-            "classification": "standard_modern",
+            "classification": "standard",
             "attestations": [],
             "is_russianism": False,
             "russian_shadow": False,
@@ -142,6 +147,7 @@ def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None
             "calque_warning": None,
             "warning_severity": "none",
         },
+        "surface_admission": dict(PRACTICE_ADMISSION),
     }
     if entry_type:
         entry["entry_type"] = entry_type
@@ -151,11 +157,9 @@ def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None
 def _scratch_decision_subset(source_path: Path, lemmas: set[str], out_path: Path) -> Path:
     """Write a decision-ledger subset containing only rows for ``lemmas``.
 
-    The rows themselves are copied verbatim from the already-committed,
-    already-approved ledger at ``source_path`` — this is a read filter for
-    ``plan_source_inventory_promotion.build_promotion_plan`` (which otherwise
-    reports every unmatched approved row in the ledger as a missing candidate),
-    not a new approval.
+    Approval fields are copied from the already-committed ledger at
+    ``source_path``. ``surface_admission.practice=True`` is stamped here so the
+    apply path matches teacher P1; historical ledgers stay browse-only.
     """
     doc = yaml.safe_load(source_path.read_text(encoding="utf-8"))
     rows = [row for row in doc["decisions"] if row.get("lemma") in lemmas]
@@ -164,8 +168,14 @@ def _scratch_decision_subset(source_path: Path, lemmas: set[str], out_path: Path
     if missing:
         raise SourceInventoryError(f"{source_path}: no approve_for_publish row for {sorted(missing)}")
 
+    stamped = []
+    for row in rows:
+        stamped_row = dict(row)
+        stamped_row["surface_admission"] = dict(PRACTICE_ADMISSION)
+        stamped.append(stamped_row)
+
     scratch = dict(doc)
-    scratch["decisions"] = rows
+    scratch["decisions"] = stamped
     scratch["source_queue"] = dict(doc["source_queue"])
     scratch["source_queue"].pop("first_promotion_batch_size", None)
     scratch["source_queue"]["promotion_batch_size"] = len(rows)
@@ -210,7 +220,15 @@ def build_candidates_and_decisions(scratch_dir: Path) -> tuple[Path, list[Path]]
     big_scratch = _scratch_decision_subset(
         BIG_DECISIONS, set(big_lemmas), scratch_dir / "big-ledger-subset-decisions.yaml"
     )
-    decision_files = [big_scratch, LEG_DECISIONS, SPACE_COLLAPSE_DECISIONS]
+    leg_scratch = _scratch_decision_subset(
+        LEG_DECISIONS, {"виходити заміж"}, scratch_dir / "leg-ledger-subset-decisions.yaml"
+    )
+    collapse_scratch = _scratch_decision_subset(
+        SPACE_COLLAPSE_DECISIONS,
+        {ZABOJATYSJA_LEMMA},
+        scratch_dir / "space-collapse-ledger-subset-decisions.yaml",
+    )
+    decision_files = [big_scratch, leg_scratch, collapse_scratch]
     return candidates_path, decision_files
 
 
@@ -235,6 +253,9 @@ def _self_check(manifest_path: Path, promoted_lemmas: list[str]) -> int:
         expected_entry_type = TARGET_ENTRY_TYPES.get(lemma)
         if expected_entry_type and entry.get("entry_type") != expected_entry_type:
             failures.append(f"{lemma}: entry_type {entry.get('entry_type')!r} != {expected_entry_type!r}")
+        admission = entry.get("surface_admission")
+        if not isinstance(admission, dict) or admission.get("practice") is not True:
+            failures.append(f"{lemma}: missing surface_admission.practice")
     if failures:
         print("SELF-CHECK FAIL", failures[:20], flush=True)
         return 2

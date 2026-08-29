@@ -65,6 +65,10 @@ def test_build_candidate_from_committed_inventory(lemma: str) -> None:
     assert (candidate["gloss"] or "").strip()
     assert candidate["heritage_status"]["vesum_attested"] is True
     assert candidate["heritage_status"]["is_russianism"] is False
+    # Conformance gate (validate_atlas_conformance.STANDARD_OR_UNKNOWN_CLASSIFICATIONS)
+    # only accepts "", "standard", "unknown" for evidence-free entries.
+    assert candidate["heritage_status"]["classification"] == "standard"
+    assert candidate["surface_admission"] == {"practice": True}
     provenance = candidate["source_provenance"]
     assert provenance and all(item.get("inventory_path") for item in provenance)
 
@@ -78,6 +82,8 @@ def test_build_candidate_for_zabojatysja_has_no_explicit_entry_type() -> None:
     assert candidate["lemma"] == ZABOJATYSJA_LEMMA
     assert "entry_type" not in candidate
     assert candidate["pos"] == "verb"
+    assert candidate["heritage_status"]["classification"] == "standard"
+    assert candidate["surface_admission"] == {"practice": True}
 
 
 def test_scratch_decision_subset_raises_on_missing_lemma(tmp_path: Path) -> None:
@@ -98,6 +104,7 @@ def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path) -> No
     doc = yaml.safe_load(out.read_text(encoding="utf-8"))
     assert {row["lemma"] for row in doc["decisions"]} == lemmas
     assert doc["source_queue"]["promotion_batch_size"] == len(lemmas)
+    assert all(row.get("surface_admission") == {"practice": True} for row in doc["decisions"])
 
 
 def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(tmp_path: Path) -> None:
@@ -131,6 +138,33 @@ def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(tmp_path: Pa
         entry = entries_by_lemma[lemma]
         assert entry["entry_type"] == expected_type
         assert " " in entry["lemma"], f"{lemma} must stay a genuine multiword lemma, not collapsed"
+        assert entry.get("surface_admission") == {"practice": True}
     zabojatysja = entries_by_lemma[ZABOJATYSJA_LEMMA]
     assert zabojatysja["pos"] == "verb"
     assert zabojatysja.get("entry_type") is None
+    assert zabojatysja.get("surface_admission") == {"practice": True}
+
+    # Heritage conformance regression: all 9 must be "standard" and never "standard_modern" without attestation
+    for _lemma, entry in entries_by_lemma.items():
+        heritage = entry.get("heritage_status") or {}
+        assert heritage.get("classification") == "standard"
+        assert heritage.get("classification") != "standard_modern"
+
+
+def test_all_nine_candidates_have_standard_classification_and_not_standard_modern() -> None:
+    from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
+        BIG_INVENTORY,
+        LEG_INVENTORY,
+        SPACE_COLLAPSE_INVENTORY,
+    )
+
+    for lemma in MULTIWORD_LEMMAS:
+        inv = LEG_INVENTORY if lemma == "виходити заміж" else BIG_INVENTORY
+        candidate = _build_candidate(lemma, inv, entry_type=TARGET_ENTRY_TYPES[lemma])
+        assert candidate["heritage_status"]["classification"] == "standard"
+        assert candidate["heritage_status"]["classification"] != "standard_modern"
+
+    zabojatysja = _build_candidate(ZABOJATYSJA_LEMMA, SPACE_COLLAPSE_INVENTORY, entry_type=None)
+    assert zabojatysja["heritage_status"]["classification"] == "standard"
+    assert zabojatysja["heritage_status"]["classification"] != "standard_modern"
+
