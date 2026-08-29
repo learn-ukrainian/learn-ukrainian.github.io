@@ -73,6 +73,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
     article_path = article_dir / "kyivan-rus.md"
     article_path.write_text("# Kyivan Rus\n\nKyiv was a major political center.\n", encoding="utf-8")
 
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
     monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
     monkeypatch.setattr(
@@ -174,6 +175,7 @@ def test_build_log_filters_by_track(monkeypatch):
         seen["last_n"] = last_n
         return []
 
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.state.read_log", fake_read_log)
 
     response = client.get("/api/wiki/build-log?track=hist")
@@ -206,6 +208,7 @@ def test_sources_endpoint_handles_missing_table(tmp_path, monkeypatch):
 
 
 def test_sources_per_module_returns_404_when_discovery_missing(monkeypatch):
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
 
     def fake_gather_discovery_sources(track, slug):
