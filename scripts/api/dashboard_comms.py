@@ -1,22 +1,42 @@
 """Communications and broker helpers for the dashboard API router.
 
 Handles broker DB access, watcher health, stuck task collection,
-pipeline queue scanning, and dispatcher state.
+pipeline queue scanning, and dispatcher state. Roots and store handles
+come from MonitorContext — no module-level Path globals.
 """
+
+from __future__ import annotations
 
 import json
 import os
 import sqlite3
+from pathlib import Path
 
-from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
-from .resilience import connect_sqlite
-
-WATCHER_PID_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.pid"
-WATCHER_LOG_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.log"
-STUCK_DIR = CURRICULUM_ROOT / "stuck"
+from .monitor_context import MonitorContext, production_context
 
 # Schema column check cache for backward compat
 _BROKER_COLS: set | None = None
+
+_BROKER_DIR = Path(".mcp") / "servers" / "message-broker"
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _broker_dir(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.project_root / _BROKER_DIR
+
+
+def _watcher_pid_file(ctx: MonitorContext | None = None) -> Path:
+    return _broker_dir(ctx) / "watcher.pid"
+
+
+def _watcher_log_file(ctx: MonitorContext | None = None) -> Path:
+    return _broker_dir(ctx) / "watcher.log"
 
 
 def ensure_broker_cols(conn: sqlite3.Connection) -> set:
@@ -29,22 +49,25 @@ def ensure_broker_cols(conn: sqlite3.Connection) -> set:
     return _BROKER_COLS
 
 
-def get_broker_db():
-    """Get a read-only connection to the broker SQLite database."""
-    if not MESSAGE_DB.exists():
+def get_broker_db(ctx: MonitorContext | None = None):
+    """Get a connection to the broker SQLite database via MonitorContext."""
+    resolved = _resolve_context(ctx)
+    handle = resolved.stores.message_db
+    if handle is None or not handle.path.exists():
         return None
-    conn = connect_sqlite(str(MESSAGE_DB))
+    conn = handle.connect()
     conn.row_factory = sqlite3.Row
     return conn
 
 
-def is_watcher_running() -> dict:
+def is_watcher_running(ctx: MonitorContext | None = None) -> dict:
     """Check watcher daemon health."""
+    pid_file = _watcher_pid_file(ctx)
     pid = None
     running = False
-    if WATCHER_PID_FILE.exists():
+    if pid_file.exists():
         try:
-            pid = int(WATCHER_PID_FILE.read_text().strip())
+            pid = int(pid_file.read_text().strip())
             os.kill(pid, 0)
             running = True
         except (ValueError, OSError):
@@ -52,12 +75,15 @@ def is_watcher_running() -> dict:
     return {"running": running, "pid": pid}
 
 
-def collect_stuck_tasks() -> list[dict]:
+def collect_stuck_tasks(ctx: MonitorContext | None = None) -> list[dict]:
     """Collect stuck tasks from filesystem directories."""
+    resolved = _resolve_context(ctx)
+    curriculum_root = resolved.roots.curriculum_root
+    stuck_dir = curriculum_root / "stuck"
     stuck_tasks = []
 
-    if STUCK_DIR.exists():
-        for f in sorted(STUCK_DIR.glob("*.md")):
+    if stuck_dir.exists():
+        for f in sorted(stuck_dir.glob("*.md")):
             try:
                 text = f.read_text()
                 stuck_tasks.append({
@@ -68,56 +94,56 @@ def collect_stuck_tasks() -> list[dict]:
             except Exception:
                 pass
 
-    for track_dir in CURRICULUM_ROOT.iterdir():
-        stuck_sub = track_dir / "stuck"
-        if stuck_sub.exists() and stuck_sub.is_dir():
-            for f in sorted(stuck_sub.glob("*.md")):
-                try:
-                    text = f.read_text()
-                    stuck_tasks.append({
-                        "file": f"{track_dir.name}/{f.name}",
-                        "task_id": f.stem,
-                        "preview": text[:300],
-                    })
-                except Exception:
-                    pass
+    if curriculum_root.exists():
+        for track_dir in curriculum_root.iterdir():
+            stuck_sub = track_dir / "stuck"
+            if stuck_sub.exists() and stuck_sub.is_dir():
+                for f in sorted(stuck_sub.glob("*.md")):
+                    try:
+                        text = f.read_text()
+                        stuck_tasks.append({
+                            "file": f"{track_dir.name}/{f.name}",
+                            "task_id": f.stem,
+                            "preview": text[:300],
+                        })
+                    except Exception:
+                        pass
 
     return stuck_tasks
 
 
-def get_watcher_log_tail(num_lines: int = 20) -> list[str]:
+def get_watcher_log_tail(num_lines: int = 20, ctx: MonitorContext | None = None) -> list[str]:
     """Read the last N lines of the watcher log file."""
-    if not WATCHER_LOG_FILE.exists():
+    log_file = _watcher_log_file(ctx)
+    if not log_file.exists():
         return []
     try:
-        return WATCHER_LOG_FILE.read_text().splitlines()[-num_lines:]
+        return log_file.read_text().splitlines()[-num_lines:]
     except Exception:
         return []
 
 
-def fetch_broker_messages() -> list[dict]:
+def fetch_broker_messages(ctx: MonitorContext | None = None) -> list[dict]:
     """Fetch the last 20 broker messages from the SQLite database."""
-    db_path = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
-    if not db_path.exists():
+    conn = get_broker_db(ctx)
+    if conn is None:
         return []
     try:
-        conn = connect_sqlite(str(db_path))
-        conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         cur.execute("""
             SELECT id, task_id, from_llm, to_llm, message_type, content, timestamp, status
             FROM messages ORDER BY id DESC LIMIT 20
         """)
-        messages = [dict(row) for row in cur.fetchall()]
-        conn.close()
-        return messages
+        return [dict(row) for row in cur.fetchall()]
     except Exception:
         return []
+    finally:
+        conn.close()
 
 
-def read_dispatcher_state() -> dict:
+def read_dispatcher_state(ctx: MonitorContext | None = None) -> dict:
     """Read the batch dispatcher state from disk."""
-    ds_file = BATCH_STATE_DIR / "dispatcher_state.json"
+    ds_file = _resolve_context(ctx).roots.batch_state_dir / "dispatcher_state.json"
     if not ds_file.exists():
         return {}
     try:

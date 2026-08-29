@@ -713,7 +713,6 @@ class TestDashboardModuleDetail:
         (meta_dir / "test-slug.yaml").write_text("title: Test\n")
 
         monkeypatch.setattr(dashboard_router, "LEVELS", [{"id": "a1", "path": "a1"}])
-        monkeypatch.setattr(dashboard_router, "CURRICULUM_ROOT", tmp_path / "curriculum")
         monkeypatch.setattr(dashboard_router, "read_yaml_file", lambda _path: None)
         monkeypatch.setattr(dashboard_router, "find_research_path", lambda _track_dir, _slug: None)
         monkeypatch.setattr(dashboard_router, "default_research_info", lambda _track: {"exists": False})
@@ -728,7 +727,13 @@ class TestDashboardModuleDetail:
         )
         monkeypatch.setattr(dashboard_router, "get_orchestration_info", lambda _orch_dir: {})
 
-        result = asyncio.run(dashboard_router.module_detail("a1", "test-slug"))
+        from dataclasses import replace
+
+        from scripts.api.monitor_context import fixture_context
+
+        ctx = fixture_context(tmp_path)
+        ctx = replace(ctx, roots=replace(ctx.roots, curriculum_root=tmp_path / "curriculum"))
+        result = asyncio.run(dashboard_router.module_detail("a1", "test-slug", ctx=ctx))
         assert result["status"] == {"overall": {"status": "pass"}}
         assert result["status_is_fresh"] is False
         assert result["status_stale_sources"] == ["meta"]

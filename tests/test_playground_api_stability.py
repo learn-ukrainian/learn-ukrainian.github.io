@@ -356,7 +356,7 @@ def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_pa
         "_peek_state_summary",
         lambda: (summary, "hit", 0.0),
     )
-    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
     try:
         client = TestClient(app, raise_server_exceptions=False)
