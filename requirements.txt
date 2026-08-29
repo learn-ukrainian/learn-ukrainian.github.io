@@ -36,6 +36,7 @@ ruff>=0.15.21
 
 # Database
 aiosqlite>=0.22
+psycopg[binary]>=3.3  # control-plane storage seam pg authority (Phase 0b #603)
 
 # Process / file-locking / fuzzy-match utilities (#6830 manifest-debt fix —
 # these were installed transitively and worked until a from-scratch venv

@@ -1,12 +1,13 @@
-"""Control-plane storage resolver (Phase 0 — sqlite authority, pg-ready seam).
+"""Control-plane storage resolver (Phase 0b — sqlite default, real pg adapter).
 
-Issue #7365 · stamped packet v3
+Private tracker #603 · stamped packet v3
 ``d29a13cedcdc50c6e97516b237155dad9f53116051aba29211b73bfb058c3bcc``
 
-Sqlite remains the live brain in this slice. This module is a small resolver —
+Sqlite remains the default live brain. This module is a small resolver —
 not a dialect-neutral SQL switchboard. Callers that need durable control-plane
 state open storage here instead of hard-coding ``sqlite3.connect`` against the
-canonical paths.
+canonical paths. Authority ``pg`` opens a real Postgres connection via
+psycopg 3; it never falls back to sqlite.
 
 Stores (closed enum)
 --------------------
@@ -49,6 +50,7 @@ _MODULE_ROOT = resolve_repo_root(Path(__file__), 2)
 _ENV_AUTHORITY = "LEARN_UKRAINIAN_CP_AUTHORITY"
 _ENV_PG_DSN = "LEARN_UKRAINIAN_CP_PG_DSN"
 _ENV_AUTHORITY_PREFIX = "LEARN_UKRAINIAN_CP_AUTHORITY_"
+_PG_CONNECT_TIMEOUT_S = 3
 
 
 class StoreId(StrEnum):
@@ -78,6 +80,10 @@ class ControlPlanePgDsnMissingError(ControlPlaneError):
 
 class ControlPlaneStoreUnavailableError(ControlPlaneError):
     """Raised when a store has no sqlite backing in this slice."""
+
+
+class ControlPlanePgConnectError(ControlPlaneError):
+    """Raised when a Postgres connect fails (message carries store id only)."""
 
 
 def _repo_root(repo_root: Path | None) -> Path:
@@ -138,6 +144,32 @@ def _pg_dsn() -> str:
     return (os.environ.get(_ENV_PG_DSN) or "").strip()
 
 
+def _connect_postgres(store: StoreId, *, read_only: bool) -> Any:
+    """Open a real Postgres connection; never touch sqlite paths."""
+    import psycopg
+
+    dsn = _pg_dsn()
+    if not dsn:
+        raise ControlPlanePgDsnMissingError(
+            f"control-plane store {store.value!r} requires {_ENV_PG_DSN}"
+        )
+
+    connect_kwargs: dict[str, Any] = {
+        "connect_timeout": _PG_CONNECT_TIMEOUT_S,
+    }
+    if read_only:
+        # Session-default read-only so autocommit and explicit txs honor it.
+        connect_kwargs["options"] = "-c default_transaction_read_only=on"
+
+    try:
+        return psycopg.connect(dsn, **connect_kwargs)
+    except Exception as exc:
+        # OPSEC: never surface hostnames / userinfo from the DSN or libpq.
+        raise ControlPlanePgConnectError(
+            f"control-plane store {store.value!r} postgres connect failed"
+        ) from exc
+
+
 def connect(
     store: StoreId,
     *,
@@ -148,18 +180,21 @@ def connect(
 ) -> sqlite3.Connection | Any:
     """Open the configured backend for ``store``.
 
-    ``sqlite`` and ``shadow`` open the existing canonical sqlite files.
-    ``pg`` refuses sqlite for that store and requires ``LEARN_UKRAINIAN_CP_PG_DSN``.
+    ``sqlite`` and ``shadow`` open the existing canonical sqlite files
+    (``shadow`` remains a sqlite synonym in this slice).
+
+    ``pg`` requires ``LEARN_UKRAINIAN_CP_PG_DSN`` and opens Postgres via
+    psycopg 3. It never creates or opens a sqlite file for that store and
+    never falls back to sqlite. A ``path`` argument is ignored under ``pg``
+    (callers historically pass the sqlite location; it must not be touched).
+    ``ControlPlaneSqliteRefusedError`` remains for explicit sqlite-under-pg
+    refusals elsewhere; it is not the ``pg`` success path.
     """
     authority = resolve_authority(store)
     if authority is Authority.PG:
-        if not _pg_dsn():
-            raise ControlPlanePgDsnMissingError(
-                f"control-plane store {store.value!r} requires {_ENV_PG_DSN}"
-            )
-        raise ControlPlaneSqliteRefusedError(
-            f"control-plane store {store.value!r} uses pg authority; sqlite is refused"
-        )
+        # Never open or create the sqlite path — even when callers pass one.
+        # path / sqlite_kwargs / repo_root apply only to sqlite|shadow.
+        return _connect_postgres(store, read_only=read_only)
 
     if authority not in {Authority.SQLITE, Authority.SHADOW}:
         raise ControlPlaneError(f"unsupported authority for store {store.value!r}")
