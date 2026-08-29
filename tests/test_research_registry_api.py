@@ -14,6 +14,7 @@ static no-side-effects guard.
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,20 @@ from scripts.audit import check_research_registry as crr
 from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+
+
+def _ctx_with_live_repo_root(live_repo_root: Path):
+    """Redirect live repo root for HTTP calls through ``client``.
+
+    ``knowledge_router`` resolves registry roots from MonitorContext (#7269 step 12c),
+    so tests swap ``app.state.ctx``.
+    """
+    base = api_main.app.state.ctx
+    root = Path(live_repo_root)
+    return replace(
+        base,
+        roots=replace(base.roots, live_repo_root=root),
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -91,6 +106,7 @@ def _write_registry(root: Path, records: list[dict[str, Any]], *, header: str = 
 def reg_root(tmp_path, monkeypatch):
     """Point the runtime at a hermetic tmp root and force the feature ON via env."""
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "true")
     return tmp_path
 
@@ -180,6 +196,7 @@ def test_live_file_malformed_resolves_false(tmp_path, monkeypatch, content):
 # --------------------------------------------------------------------------- #
 def test_disabled_mode_exact(tmp_path, monkeypatch):
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "false")
 
     km = client.get("/api/knowledge/manifest")
@@ -192,6 +209,7 @@ def test_disabled_mode_exact(tmp_path, monkeypatch):
 
 def test_disabled_loader_not_invoked(tmp_path, monkeypatch):
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "false")
 
     def _boom(**_kwargs):
