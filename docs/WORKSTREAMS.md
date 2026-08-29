@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-08-03 (Foundry engine complete; evidence-bearing prepared-data program active under #6321; training remains prohibited) |
+| **Last refreshed** | 2026-08-29 (Cyrillic-Slavic dataset delivery active under #7423; Cycle007 retained as historical evidence; training remains prohibited) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -66,7 +66,7 @@ is the single source of truth for membership (auditor:
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | monitor | #7177 | Monitor API + UI — fleet & host observability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
-| open-model-data | #6321 (successor to closed #6164 and #6056) | Build evidence-bearing prepared Ukrainian data products on the completed Foundry engine. Community usefulness is primary; adoption is secondary evidence, not a gate. Every shipped artifact names a concrete consumer decision/use case. Current truth: #6375 is the active Phase 3 v2.1 functional-role and runtime rebinding task; #6333 is historical `ENGINE_READY` evidence only and establishes no linguistic, source, consumer, or completion status; Phase 4 remains blocked. |
+| open-model-data | #6321 (successor to closed #6164 and #6056) | Build the source-derived Cyrillic-Slavic Ukrainian dataset under #7423 on the completed Foundry engine. Community usefulness is primary; adoption is secondary evidence, not a gate. Every shipped artifact names a concrete consumer decision/use case. Current truth: #7423 is the active dataset-delivery epic; #6375/Cycle007 is completed historical evaluation evidence only; #6333 remains historical `ENGINE_READY` evidence; Phase 4 remains blocked. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
@@ -98,7 +98,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
-| open-model-data | ACTIVE | Execute #6375 under combined v2.1 contract `2f3ef840…a907`: migrate task-scoped role, held-out, disposition, textbook, Pravopys, lexical, packet, scorer, and reproduction runtimes; retain #6333 only as historical `ENGINE_READY` provenance. | The v2.1 role graph and every runtime gate are merged and hash-bound; all pre-v2 semantic/source/consumer/completion claims remain invalidated; the four Phase 3 statuses pass on merged-main evidence; Phase 4 remains blocked. |
+| open-model-data | ACTIVE | Execute #7423: Cyrillic-Slavic Ukrainian dataset delivery with protected Old East Slavic/Kyivan Rus, Middle Ukrainian, Church Slavonic recension, and source-attested Rusyn boundaries; retain #6375/Cycle007 as completed historical evaluation evidence. | The #7423 contract and issue DAG are merged and hash-bound; source/rights/applicability, atomic rules, historical protection, held-out/lineage firewall, pilot, scale, consumer reproduction, and final residual gates pass; Phase 4 remains blocked. |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |

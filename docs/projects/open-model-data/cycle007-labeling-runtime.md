@@ -1,9 +1,21 @@
-# Cycle 007 resumable labeling runtime
+# Cycle 007 resumable labeling runtime (historical)
 
-Status: implementation plan for issue #6375. Labeling remains OFF until the
-operator explicitly starts a provider stage.
+> **Historical record — not an active execution contract.** This page preserves
+> the reviewed runtime and recovery guarantees for predecessor issue #6375.
+> Cycle007 is evaluation-only, no provider labeling has been started, and this
+> page must not be used to start Gemini, Grok, adjudication, resolution, or
+> certification. The active dataset-delivery plan is
+> [Cyrillic-Slavic Ukrainian dataset delivery](cyrillic-slavic-dataset-delivery-plan.md)
+> under epic #7423.
 
-## Frozen outcome contract
+Status: retained implementation evidence for the completed Cycle007 preparation
+state. Labeling remains OFF.
+
+## Superseded execution contract (historical)
+
+The following runtime contract is retained for provenance and recovery review;
+it is superseded for dataset delivery by the #7423 contract above. Its provider
+stages are not authorized by this page.
 
 - User-visible outcome: independently label every one of the 10,159 frozen
   Cycle 007 rows with Gemini and Grok, deterministically compare both label
