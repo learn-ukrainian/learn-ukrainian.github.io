@@ -49,8 +49,25 @@ Remaining allowlisted direct opens in `scripts/hygiene/lint_control_plane_sqlite
 
 Legacy broker `messages.db` call sites remain direct non-authority file opens.
 
-Phase 0b residuals on private #603 (not this PR): artifact byte-plane,
-HTTP Idempotency-Key, `efficiency_metrics` move. Cluster-readiness now
-pings Postgres with `SELECT 1` (DSN presence alone is not readiness).
+Cluster-readiness pings Postgres with `SELECT 1` (DSN presence alone is not
+readiness).
+
+## Artifact byte-plane (this slice)
+
+`ArtifactStore.store_bytes` / `read_bytes` / `get` / `materialize`: when
+`fleet_comms` authority is `pg`, payload bytes live in Postgres (`BYTEA`,
+content-addressed by sha256) in a small dedicated table
+(`fleet_comms_artifact_blobs`) — not a mirror of the sqlite `artifacts`
+schema, just enough columns to serve `ArtifactRecord` plus the payload. This
+closes the NO-GO: a pg metadata row can no longer point at a blob file that
+only exists on the writer's host — a second process with the DSN and no
+local `blobs/sha256/...` tree still reads bytes back correctly. Default
+authority stays sqlite (today's file-backed content-addressed store,
+unchanged). `reference` / `is_referenced` / `garbage_collect_unreferenced`
+remain sqlite-only in this slice (out of scope; they hang off the sqlite
+`comms_messages` / authority tables that don't exist under `pg` here).
+
+Phase 0b residuals on private #603 (not this PR): HTTP Idempotency-Key,
+`efficiency_metrics` move.
 
 No Patroni, dual-write, public bind, live DSN flip, or DSN in git.
