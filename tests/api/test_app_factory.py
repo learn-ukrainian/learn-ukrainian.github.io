@@ -35,12 +35,12 @@ DB_ACCESS_PATTERNS = (
 # scripts/api/comms_router.py deliberately (20 -> 19); step 2 removed
 # scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18);
 # step 8 removed scripts/api/admin_router.py (18 -> 17);
-# step 9 removed scripts/api/dashboard_comms.py (17 -> 16).
+# step 9 removed scripts/api/dashboard_comms.py (17 -> 16);
+# #7269 step 12b removed delegate_router, discussions_router, and gold_router
+# (16 -> 13) after those routes opened stores only through MonitorContext.
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/agent_monitor_router.py",
-        "scripts/api/delegate_router.py",
-        "scripts/api/discussions_router.py",
         "scripts/api/epics_router.py",
         "scripts/api/fleet_router.py",
         "scripts/api/fleet_workers_collect.py",
@@ -52,7 +52,6 @@ DB_ACCESS_ALLOWLIST = frozenset(
         "scripts/api/telemetry/legacy_comms.py",
         "scripts/api/telemetry_router.py",
         "scripts/api/wiki_router.py",
-        "scripts/api/gold_router.py",
         "agents_extensions/shared/session_streams/db.py",
     }
 )
@@ -490,7 +489,7 @@ def test_step11_contracts_router_cluster_isolation(tmp_path: Path) -> None:
 
 
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 16
+    assert len(DB_ACCESS_ALLOWLIST) == 13
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

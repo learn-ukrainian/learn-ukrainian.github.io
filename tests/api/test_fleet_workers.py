@@ -273,7 +273,7 @@ def test_oversized_task_id_dropped_not_500(
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-job"})
-    monkeypatch.setattr("scripts.api.delegate_router.TASKS_DIR", tasks)
+    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
     response = client.get("/api/fleet/workers/v1?host_id=host-job")
     assert response.status_code == 200
     data = response.json()
@@ -621,7 +621,7 @@ def test_workers_payload_warm_cache_skips_delegate_collector(
     )
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
-    monkeypatch.setattr("scripts.api.delegate_router.TASKS_DIR", tasks)
+    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-job"})
     monkeypatch.setattr(
         collect_mod,

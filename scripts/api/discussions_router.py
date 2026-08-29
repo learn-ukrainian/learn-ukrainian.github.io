@@ -6,13 +6,19 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
-from .config import MESSAGE_DB
-from .resilience import connect_sqlite
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["discussions"])
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
 
 
 def _parse_ts(value: str | None) -> datetime | None:
@@ -55,13 +61,19 @@ def _discussion_status(messages: list[sqlite3.Row], last_message_at: datetime, l
     return "running"
 
 
-def collect_active_discussions(limit: int = 25, lookback_days: int = 7) -> dict[str, Any]:
+def collect_active_discussions(
+    limit: int = 25,
+    lookback_days: int = 7,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
     """Return recent ab-discuss-style threads grouped from channel messages."""
-    if not MESSAGE_DB.exists():
+    resolved = _resolve_context(ctx)
+    handle = resolved.stores.message_db
+    if handle is None or not handle.path.exists():
         return {"discussions": [], "count": 0, "error": "Broker DB not found"}
 
     cutoff = (datetime.now(UTC) - timedelta(days=lookback_days)).isoformat()
-    conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+    conn = handle.connect(read_only=True)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(
@@ -114,9 +126,10 @@ def collect_active_discussions(limit: int = 25, lookback_days: int = 7) -> dict[
 async def active_discussions(
     limit: int = Query(25, ge=1, le=100),
     lookback_days: int = Query(7, ge=1, le=30),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Recent discussion threads with running/converged/timed_out status."""
     try:
-        return collect_active_discussions(limit=limit, lookback_days=lookback_days)
+        return collect_active_discussions(limit=limit, lookback_days=lookback_days, ctx=ctx)
     except sqlite3.Error as exc:
         return JSONResponse(status_code=500, content={"error": "broker_query_failed", "detail": str(exc)})

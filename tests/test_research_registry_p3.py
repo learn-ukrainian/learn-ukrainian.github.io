@@ -292,7 +292,7 @@ def task_store(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
 
     def _put(task_id: str, *, status: str = "spawning", pid: int | None = None) -> None:
         safe = task_id.replace("/", "_").replace("\\", "_")
@@ -412,7 +412,7 @@ def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
     from scripts.api import delegate_router
 
-    (delegate_router.TASKS_DIR / "collide.json").write_text(
+    (delegate_router._tasks_dir() / "collide.json").write_text(
         json.dumps({"task_id": "other-id", "status": "running", "pid": os.getpid()}), "utf-8"
     )
     resp = client.get("/api/knowledge/record/r1", params={"task": "collide"})
