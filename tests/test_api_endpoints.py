@@ -15,6 +15,7 @@ Validates:
 
 import asyncio
 import json
+import os
 import subprocess
 import threading
 import time
@@ -709,8 +710,12 @@ class TestDashboardModuleDetail:
         meta_dir = track_dir / "meta"
         status_dir.mkdir(parents=True)
         meta_dir.mkdir(parents=True)
-        (status_dir / "test-slug.json").write_text(json.dumps({"overall": {"status": "pass"}}))
-        (meta_dir / "test-slug.yaml").write_text("title: Test\n")
+        status_file = status_dir / "test-slug.json"
+        meta_file = meta_dir / "test-slug.yaml"
+        status_file.write_text(json.dumps({"overall": {"status": "pass"}}))
+        meta_file.write_text("title: Test\n")
+        newer = status_file.stat().st_mtime + 2
+        os.utime(meta_file, (newer, newer))
 
         monkeypatch.setattr(dashboard_router, "LEVELS", [{"id": "a1", "path": "a1"}])
         monkeypatch.setattr(dashboard_router, "read_yaml_file", lambda _path: None)

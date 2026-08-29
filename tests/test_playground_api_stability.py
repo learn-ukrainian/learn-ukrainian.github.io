@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.dashboard_comms as dashboard_comms
 import scripts.api.images_router as images_router
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
@@ -280,7 +279,6 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
         ),
     )
     monkeypatch.setattr(app.state, "ctx", test_ctx)
-    monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
     app.state.ctx.stores.image_store.index.reload()
     app.state.ctx.stores.image_store.page_cache.clear()
 
