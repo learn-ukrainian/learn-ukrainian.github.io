@@ -1297,6 +1297,13 @@ def _verify_recovery_receipt(
         "text_free": True,
     }
     if timeout_fix:
+        if (
+            terminal_value.get("schema_version") != "phase3_cycle007_gemini_attempt_v2"
+            or terminal_value.get("failure_code") != "provider_status_timeout"
+            or terminal_value.get("request_byte_budget") not in REQUEST_BYTE_BUDGET_STEPS
+            or terminal_value.get("request_byte_budget") != request_byte_budget
+        ):
+            raise Error("ordinal_identity_binding_drift")
         expected |= {
             "authorized_attempt": authorized_attempt,
             "request_byte_budget": request_byte_budget,

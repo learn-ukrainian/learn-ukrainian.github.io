@@ -349,6 +349,17 @@ def test_batch_runner_accepts_same_budget_only_for_exact_timeout_fix_receipt(
     with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
         runner._next_attempt(package, out, 1, request_byte_budget=640 * 1024)
 
+    terminal_value["failure_code"] = "structured_output_envelope_drift"
+    terminal.write_bytes(runner.canonical(terminal_value))
+    receipt["failure_code"] = terminal_value["failure_code"]
+    receipt["terminal_marker_sha256"] = runner.digest(terminal.read_bytes())
+    receipt["gemini_runner_sha256"] = runner.digest(path.read_bytes())
+    unsigned = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = runner.digest(runner.canonical(unsigned))
+    receipt_path.write_bytes(runner.canonical(receipt))
+    with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
+        runner._next_attempt(package, out, 1, request_byte_budget=640 * 1024)
+
 
 def test_batch_runner_requires_exact_recovery_receipt_for_stopped_retry(tmp_path: Path) -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
