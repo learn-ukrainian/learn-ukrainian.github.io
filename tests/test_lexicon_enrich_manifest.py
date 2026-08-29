@@ -94,6 +94,8 @@ from scripts.lexicon.source_attribution import (
     ORTHOEPY_LABEL,
     ORTHOGRAPHY_LABEL,
     PROVERBS_LABEL,
+    SHTEPA_LABEL,
+    VOLOSHCHAK_LABEL,
     WIKIDATA_LABEL,
     join_academic_source_labels,
 )
@@ -1103,6 +1105,143 @@ def test_usage_notes_and_warning_chips_coexist_without_essay_duplication() -> No
             detail = str(row.get("detail") or "")
             # Evidence is truncated (#warning path) and is not the learner section.
             assert detail != section["items"][0]["text"]
+
+
+def test_usage_notes_slovnyk_voloschak_corrective_full_note() -> None:
+    """#6460: voloschak full note joins usage_notes when corrective (hub §6).
+    Fixture mirrors the attested «Наслідуючи приклад → Беручи за приклад»
+    entry shape; it is a cache-shaped row, not an invented catalog article."""
+    cache = {
+        "lookups": {
+            "voloschak": {
+                "dictionary_slug": "voloschak",
+                "dictionary_label": VOLOSHCHAK_LABEL,
+                "word": "Наслідуючи приклад",
+                "source_url": "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад",
+                "text": "Наслідуючи приклад Беручи за приклад",
+            }
+        }
+    }
+
+    section = _usage_notes_slovnyk("Наслідуючи приклад", cache)
+    warning = _warning_slovnyk("Наслідуючи приклад", cache)
+
+    assert section is not None
+    assert section["source"] == VOLOSHCHAK_LABEL
+    assert len(section["items"]) == 1
+    item = section["items"][0]
+    assert item["source"] == VOLOSHCHAK_LABEL
+    assert item["text"] == "Беручи за приклад"
+    # Telegraphic correction notes carry no invented essay title.
+    assert "title" not in item
+    assert "source_urls" not in section
+    assert section["mirror_source_urls"] == [
+        "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад"
+    ]
+    assert item.get("mirror_source_url") == "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад"
+    # Chips keep flowing on the warning path for the same row.
+    assert warning is not None
+    assert "беручи за приклад" in warning["alternatives"]
+
+
+def test_usage_notes_slovnyk_foreign_shtepa_corrective_full_note() -> None:
+    """#6460: Штепа чужослів full note joins usage_notes when corrective.
+    Fixture mirrors the attested «конекція → Лучба, сполука, зв'язок» entry."""
+    cache = {
+        "lookups": {
+            "foreign_shtepa": {
+                "dictionary_slug": "foreign_shtepa",
+                "dictionary_label": SHTEPA_LABEL,
+                "word": "конекція",
+                "source_url": "https://slovnyk.me/dict/foreign_shtepa/конекція",
+                "text": "конекція Лучба, сполука, зв'язок.",
+            }
+        }
+    }
+
+    section = _usage_notes_slovnyk("конекція", cache)
+
+    assert section is not None
+    assert section["source"] == SHTEPA_LABEL
+    assert len(section["items"]) == 1
+    item = section["items"][0]
+    assert item["source"] == SHTEPA_LABEL
+    assert item["text"] == "Лучба, сполука, зв'язок."
+    assert "title" not in item
+    assert "source_urls" not in section
+    assert section["mirror_source_urls"] == [
+        "https://slovnyk.me/dict/foreign_shtepa/конекція"
+    ]
+
+
+def test_usage_notes_slovnyk_corrective_row_without_replacement_stays_out() -> None:
+    """#6460: a cross-reference-only voloschak row is NOT a corrective note —
+    nothing joins usage_notes, and no plain gloss dump inflates the section."""
+    cache = {
+        "lookups": {
+            "voloschak": {
+                "dictionary_slug": "voloschak",
+                "dictionary_label": VOLOSHCHAK_LABEL,
+                "word": "відщепенець",
+                "source_url": "https://slovnyk.me/dict/voloschak/відщепенець",
+                "text": "відщепенець див. відступник",
+            }
+        }
+    }
+
+    assert _usage_notes_slovnyk("відщепенець", cache) is None
+
+
+def test_usage_notes_slovnyk_corrective_notes_merge_after_family_essays() -> None:
+    """P0 essays come first, then corrective notes; missing slugs stay absent."""
+    davydov_essay = (
+        "що Що, який, котрий, которий У багатьох людей, що вивчили українську "
+        "мову не в колисці з уст матері, а з книжок, часом виникає питання, "
+        "коли саме слід ставити той чи той займенник із цих трьох."
+    )
+    cache = {
+        "lookups": {
+            "davydov": {
+                "dictionary_slug": "davydov",
+                "dictionary_label": DAVYDOV_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
+                "text": davydov_essay,
+            },
+            "linguistic_norm": None,
+            "khreshchatyk": None,
+            "voloschak": {
+                "dictionary_slug": "voloschak",
+                "dictionary_label": VOLOSHCHAK_LABEL,
+                "word": "Наслідуючи приклад",
+                "source_url": "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад",
+                "text": "Наслідуючи приклад Беручи за приклад",
+            },
+            "foreign_shtepa": {
+                "dictionary_slug": "foreign_shtepa",
+                "dictionary_label": SHTEPA_LABEL,
+                "word": "конекція",
+                "source_url": "https://slovnyk.me/dict/foreign_shtepa/конекція",
+                "text": "конекція Лучба, сполука, зв'язок.",
+            },
+        }
+    }
+
+    section = _usage_notes_slovnyk("що", cache)
+
+    assert section is not None
+    assert len(section["items"]) == 3
+    sources = [item["source"] for item in section["items"]]
+    assert sources == [DAVYDOV_LABEL, VOLOSHCHAK_LABEL, SHTEPA_LABEL]
+    assert section["source"] == join_academic_source_labels(
+        [DAVYDOV_LABEL, VOLOSHCHAK_LABEL, SHTEPA_LABEL]
+    )
+    assert "source_urls" not in section
+    assert set(section["mirror_source_urls"]) == {
+        "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
+        "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад",
+        "https://slovnyk.me/dict/foreign_shtepa/конекція",
+    }
 
 
 def test_parse_slovnyk_entry_reconstructs_inline_markup_word_through_form_notes() -> None:

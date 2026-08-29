@@ -14,7 +14,9 @@ from scripts.lexicon.source_attribution import (
     LINGUISTIC_NORM_LABEL,
     MIYKLAS_LABEL,
     PHRASEOLOGY_LABEL,
+    SHTEPA_LABEL,
     SUM20_ACADEMIC_LABEL,
+    VOLOSHCHAK_LABEL,
     WIKIDATA_LABEL,
     academic_label_for_slug,
     apply_entry_attribution,
@@ -55,6 +57,25 @@ def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> No
     assert official_url_from_mirror("https://slovnyk.me/dict/linguistic_norm/%D1%89%D0%BE") is None
     assert (
         official_url_from_mirror("https://slovnyk.me/dict/khreshchatyk/%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8")
+        is None
+    )
+
+
+def test_usage_notes_corrective_labels_match_slovnyk_me_and_stay_mirror_only() -> None:
+    """#6460: voloschak / foreign_shtepa corrective notes reuse slovnyk.me
+    labels; no official edition URLs are invented for them either."""
+    assert SLOVNYK_ME_DICTS["voloschak"] == VOLOSHCHAK_LABEL
+    assert SLOVNYK_ME_DICTS["foreign_shtepa"] == SHTEPA_LABEL
+    assert academic_label_for_slug("voloschak") == VOLOSHCHAK_LABEL
+    assert academic_label_for_slug("foreign_shtepa") == SHTEPA_LABEL
+    assert official_url_for_slug("voloschak", "відщепенець") is None
+    assert official_url_for_slug("foreign_shtepa", "конекція") is None
+    assert (
+        official_url_from_mirror("https://slovnyk.me/dict/voloschak/%D0%B2%D1%96%D0%B4%D1%89%D0%B5%D0%BF%D0%B5%D0%BD%D0%B5%D1%86%D1%8C")
+        is None
+    )
+    assert (
+        official_url_from_mirror("https://slovnyk.me/dict/foreign_shtepa/%D0%BA%D0%BE%D0%BD%D0%B5%D0%BA%D1%86%D1%96%D1%8F")
         is None
     )
 
