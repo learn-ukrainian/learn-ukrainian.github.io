@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import inspect
+import sqlite3
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -92,9 +93,37 @@ def test_module_detail_reads_curriculum_from_context(tmp_path: Path) -> None:
     assert result["track"] == "a1"
 
 
+def _seed_empty_broker_db(ctx) -> None:
+    """Create the messages table so /comms does not return before stuck-task scan."""
+    path = ctx.roots.message_db_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(path)
+    try:
+        conn.execute(
+            """
+            CREATE TABLE messages (
+                id INTEGER,
+                task_id TEXT,
+                from_llm TEXT,
+                to_llm TEXT,
+                message_type TEXT,
+                content TEXT,
+                timestamp TEXT,
+                acknowledged INTEGER,
+                status TEXT
+            )
+            """
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def test_comms_and_pipeline_isolate_to_fixture_context(tmp_path: Path) -> None:
     first = fixture_context(tmp_path / "first")
     second = fixture_context(tmp_path / "second")
+    _seed_empty_broker_db(first)
+    _seed_empty_broker_db(second)
 
     first_stuck = first.roots.curriculum_root / "stuck"
     first_stuck.mkdir(parents=True)
