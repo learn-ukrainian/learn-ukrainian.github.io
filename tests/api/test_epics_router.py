@@ -81,6 +81,53 @@ def test_router_claim_heartbeat_handoff_release_round_trip(tmp_path: Path, monke
     )  # allow-hardcoded-epic: remote lifecycle route fixture
 
 
+def test_router_handoff_accepts_idempotency_key_header_alias(tmp_path: Path, monkeypatch) -> None:
+    """The Idempotency-Key HTTP header is accepted as an alias for body.idempotency_key."""
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)["lease"]
+    handoff = client.post(
+        "/api/epics/v1/epic:7178/handoff",
+        json={**lease, "type": "state", "body": "working"},
+        headers={"Idempotency-Key": "hdr-state-1"},
+    )
+    assert handoff.status_code == 200, handoff.text
+    assert handoff.json()["entry"]["type"] == "state"
+    assert "Idempotent-Replayed" not in handoff.headers
+
+
+def test_router_handoff_header_body_idempotency_key_conflict_is_400(tmp_path: Path, monkeypatch) -> None:
+    """A header/body idempotency-key mismatch is refused rather than silently preferring one."""
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)["lease"]
+    handoff = client.post(
+        "/api/epics/v1/epic:7178/handoff",
+        json={**lease, "type": "state", "body": "working", "idempotency_key": "body-key"},
+        headers={"Idempotency-Key": "header-key"},
+    )
+    assert handoff.status_code == 400
+
+
+def test_router_handoff_replay_sets_idempotent_replayed_header(tmp_path: Path, monkeypatch) -> None:
+    """Replaying the exact same handoff key/content marks the response as a replay."""
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)["lease"]
+    first = client.post(
+        "/api/epics/v1/epic:7178/handoff",
+        json={**lease, "type": "state", "body": "working", "idempotency_key": "replay-key-1"},
+    )
+    assert first.status_code == 200, first.text
+    assert "Idempotent-Replayed" not in first.headers
+
+    replay = client.post(
+        "/api/epics/v1/epic:7178/handoff",
+        json={**lease, "type": "state", "body": "working"},
+        headers={"Idempotency-Key": "replay-key-1"},
+    )
+    assert replay.status_code == 200, replay.text
+    assert replay.headers.get("Idempotent-Replayed") == "true"
+    assert replay.json()["entry"]["type"] == "state"
+
+
 def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
     _claim(client)

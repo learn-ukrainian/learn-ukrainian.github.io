@@ -24,6 +24,7 @@ Monitor API is always local (localhost:8765), so urllib is plenty.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -44,6 +45,29 @@ _KNOWLEDGE_COLD_START_PATH = "/api/knowledge/cold-start"
 
 # Bound the consumer label before it ever reaches a hash or a filesystem path.
 _MAX_CONSUMER_LEN = 128
+
+# HAProxy/edge transport failures that look like an HTTP response but carry no
+# application answer: 502/503/504 with neither app JSON nor ``server: uvicorn``.
+# 500/501/408/429 are deliberately excluded — those are application-origin
+# outcomes (or a client-rate-limit answer), never a transport ambiguity, and
+# must not trigger a retry against the other base URL (#603 Phase 0b).
+_AMBIGUOUS_TRANSPORT_HTTP_STATUSES = frozenset({502, 503, 504})
+
+# The API's own well-formed 503 answers (busy-building, stale-cache-only,
+# registry-unavailable) — these are real application responses, not proxy
+# failures, and must never trigger a base-URL hop.
+_APP_ORIGIN_503_STATUS_VALUES = frozenset({"building", "stale", "registry_unavailable"})
+
+# Positive allowlist of path prefixes that MAY retry a keyed mutation (POST/
+# PUT/PATCH/DELETE carrying a stable Idempotency-Key) across the [A, B] base
+# URL list. This must equal
+# ``{c.pattern for c in ROUTE_CONTRACTS if c.mutates and c.locality == "cluster_authoritative"}``
+# in ``scripts/api/route_contracts.py`` — kept as a literal here (rather than
+# imported) so this stdlib-only client module never pulls in FastAPI.
+# ``tests/test_monitor_client_failover.py`` asserts the two sets stay identical.
+_CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES: frozenset[str] = frozenset({
+    "/api/epics/v1",
+})
 
 
 def _normalize_base_urls(
@@ -196,6 +220,40 @@ def _empty_changed_projection(cached_body: str) -> str:
     return _serialize_projection(proj["enabled"], [])
 
 
+def _is_app_origin_503(status: int, body: str, headers: dict[str, str]) -> bool:
+    """True only for the API's own well-formed ``503`` answer.
+
+    Requires both a ``server: uvicorn`` response header AND a JSON body whose
+    ``status`` field is one of the app's documented busy states. Anything
+    short of that (an edge/proxy 503 with no body, an unrelated JSON shape, a
+    missing/different ``server`` header) is treated as an ambiguous transport
+    failure eligible for failover, never as an answer.
+    """
+    if status != 503:
+        return False
+    if "uvicorn" not in (headers.get("server") or "").lower():
+        return False
+    try:
+        data = json.loads(body) if body else None
+    except (json.JSONDecodeError, TypeError):
+        return False
+    return isinstance(data, dict) and data.get("status") in _APP_ORIGIN_503_STATUS_VALUES
+
+
+def _mutation_path_may_failover(path: str) -> bool:
+    """True when ``path`` (query stripped) is a cluster-authoritative mutation
+    route allowed to retry a keyed mutation on base URL B.
+
+    See ``_CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES`` above.
+    """
+    clean = path.split("?", 1)[0]
+    for prefix in _CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES:
+        stripped = prefix.rstrip("/")
+        if clean == stripped or clean.startswith(f"{stripped}/"):
+            return True
+    return False
+
+
 @dataclass
 class ComponentResult:
     """One cached-or-fetched component + why we chose it."""
@@ -249,11 +307,20 @@ class MonitorClient:
         """Low-level HTTP request across configured [A, B] base URLs.
 
         Failover rules:
-        - GET / HEAD requests are idempotent and may fail over across the base URL list.
+        - GET / HEAD / OPTIONS requests are idempotent and may fail over across the
+          base URL list.
         - Mutations (POST, PUT, DELETE, PATCH) retry after ambiguous transport failure
           ONLY when a stable idempotency key is present (via ``idempotency_key`` or
-          an existing ``Idempotency-Key`` / ``X-Idempotency-Key`` header).
+          an existing ``Idempotency-Key`` / ``X-Idempotency-Key`` header) AND ``path``
+          is on the ``_CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES`` allowlist. Host-affine
+          mutations (agent-monitor register/heartbeat, etc.) never retry, key or not.
         - Non-idempotent mutations without an idempotency key NEVER fail over across URLs.
+        - An ambiguous transport HTTP status (502/503/504 that is not the app's own
+          well-formed 503 answer — see ``_is_app_origin_503``) is treated exactly like
+          a network-level transport failure for failover purposes. 500/501/408/429
+          are always application answers and never trigger a hop.
+        - ``http.client.HTTPException`` (``IncompleteRead``, ``BadStatusLine``, ...) is
+          an ambiguous transport failure alongside ``URLError``/``ConnectionError``.
         """
         method_upper = method.upper()
         is_idempotent = method_upper in {"GET", "HEAD", "OPTIONS"}
@@ -272,9 +339,12 @@ class MonitorClient:
         if self.session_id and not any(k.lower() == "x-session-id" for k in merged_headers):
             merged_headers["X-Session-Id"] = self.session_id
 
-        can_failover = is_idempotent or bool(effective_idemp_key)
+        can_failover = is_idempotent or (
+            bool(effective_idemp_key) and _mutation_path_may_failover(path)
+        )
 
         last_exc: Exception | None = None
+        last_response: tuple[int, str, dict[str, str]] | None = None
         for base in self.base_urls:
             url = base + path
             req = urllib.request.Request(
@@ -299,15 +369,31 @@ class MonitorClient:
                         body = raw.decode("utf-8", errors="replace")
                 except Exception:
                     pass
+                last_response = (exc.code, body, resp_headers)
+                if (
+                    can_failover
+                    and exc.code in _AMBIGUOUS_TRANSPORT_HTTP_STATUSES
+                    and not _is_app_origin_503(exc.code, body, resp_headers)
+                ):
+                    continue
                 return exc.code, body, resp_headers
-            except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as exc:
+            except (
+                urllib.error.URLError,
+                TimeoutError,
+                ConnectionError,
+                http.client.HTTPException,
+                OSError,
+            ) as exc:
                 last_exc = exc
                 if not can_failover:
                     # Non-idempotent mutation without idempotency key: do not retry across URLs
                     raise
+                continue
 
         if last_exc is not None:
             raise last_exc
+        if last_response is not None:
+            return last_response
         return 500, "", {}
 
     def _get(
