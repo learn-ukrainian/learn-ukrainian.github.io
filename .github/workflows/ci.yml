@@ -1486,21 +1486,25 @@ jobs:
   #    unconditional for its tier, so `skipped` is as much a failure as
   #    `failure`/`cancelled` when it is required.
 
-  # Duration data is intentionally published only after every matrix member of
-  # a push to main succeeds. For mq_validated it republishes the proof run's
-  # shard artifacts; the job is in the push Gate required set, so missing
-  # artifacts fail visibly instead of silently starving the main cache. PRs
-  # and failed main runs can consume a prior main dataset but can never
-  # overwrite it.
+  # Duration data is published after every successful full-tier python matrix
+  # on merge_group and on push to main. merge_group writes the step summary
+  # and a pytest-durations artifact so the proof run itself is measurable
+  # (#7141). Cache *save* stays push-to-main only: queue-branch caches are
+  # not readable from later groups or from main. For mq_validated the job
+  # republishes the proof run's shard artifacts; it remains in the push Gate
+  # required set so missing artifacts fail visibly instead of silently
+  # starving the main cache. PRs and failed main runs can consume a prior
+  # main dataset but can never overwrite it. merge_group Gate does not
+  # require this job — a publisher flake must not dequeue a green spine.
   pytest-duration-publish:
     name: Publish pytest durations
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: >-
-      github.event_name == 'push'
-      && github.ref == 'refs/heads/main'
-      && needs.python.result == 'success'
+      needs.python.result == 'success'
       && needs.landing-class.outputs.class != 'docs_skills'
+      && (github.event_name == 'merge_group'
+          || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
     needs: [python, landing-class]
     permissions:
       contents: read
@@ -1536,7 +1540,7 @@ jobs:
               exit 1
             fi
           done
-      - name: Publish successful-main durations and p95 summary
+      - name: Publish successful landing-tier durations and p95 summary
         run: |
           python scripts/ci/pytest_shards.py publish-durations \
             --log ci-artifacts/pytest-shard-1/main.log \
@@ -1545,8 +1549,17 @@ jobs:
             --log ci-artifacts/pytest-shard-4/main.log \
             --previous ci-artifacts/pytest-durations.json \
             --output ci-artifacts/pytest-durations.json \
-            --summary "${GITHUB_STEP_SUMMARY}"
+            --summary "${GITHUB_STEP_SUMMARY}" \
+            --event "${{ github.event_name }}"
+      - name: Upload published duration dataset
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-durations
+          path: ci-artifacts/pytest-durations.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Save successful-main duration dataset
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ci-artifacts/pytest-durations.json
