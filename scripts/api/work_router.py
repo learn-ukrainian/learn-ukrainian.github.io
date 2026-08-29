@@ -16,13 +16,6 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
-from .monitor_context import (
-    MonitorContext,
-    _WORK_IN_FLIGHT_BUILDS,
-    get_ctx,
-    production_context,
-)
-
 from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set
 from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
 from scripts.orchestration.issue_stream_audit import load_registry
@@ -36,6 +29,13 @@ from scripts.work.schema import (
     validate_projection,
 )
 from scripts.work.sources_public import private_capability_seam, public_repository_id
+
+from .monitor_context import (
+    _WORK_IN_FLIGHT_BUILDS,
+    MonitorContext,
+    get_ctx,
+    production_context,
+)
 
 log = logging.getLogger(__name__)
 

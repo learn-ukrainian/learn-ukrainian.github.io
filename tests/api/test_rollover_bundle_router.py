@@ -15,7 +15,6 @@ from fastapi.testclient import TestClient
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api import epics_router
 from scripts.orchestration import thread_handoff as th
 from tests.epics_monitor_stub import epics_app_for_store
 

@@ -10,8 +10,10 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
+from agents_extensions.shared.session_streams.store import LifecycleError
 from scripts.api import epics_router
 from scripts.api.config import LIVE_REPO_ROOT
+from scripts.api.monitor_context import fixture_context
 from tests.epics_monitor_stub import epics_app_for_store
 
 
@@ -20,8 +22,6 @@ def _client(tmp_path: Path, monkeypatch) -> TestClient:
     live = Path(LIVE_REPO_ROOT)
     ctx_root = tmp_path / "ctx"
     ctx_root.mkdir()
-    from scripts.api.monitor_context import fixture_context
-
     ctx = fixture_context(ctx_root)
     store = ctx.stores.epics_store
     assert store is not None
@@ -152,8 +152,6 @@ def test_router_claim_invariant_failures_are_logged_and_not_store_unavailable(
 ) -> None:
     ctx_root = tmp_path / "ctx"
     ctx_root.mkdir()
-    from scripts.api.monitor_context import fixture_context
-
     ctx = fixture_context(ctx_root)
     store = ctx.stores.epics_store
     assert store is not None
