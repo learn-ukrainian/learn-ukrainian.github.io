@@ -9,24 +9,39 @@ CI pytest invocation. This module keeps the *call-site* fence from regrowing and
 proves a hang fails fast *and names the test*.
 
 ``subprocess.Popen`` cannot take ``timeout=`` at construction; callers must bound
-``.wait()`` / ``.communicate()`` (or an equivalent deadline). The AST guard below
-covers ``run`` / ``check_output`` / ``call`` / ``check_call`` only.
+``.wait()`` / ``.communicate()`` (or an equivalent deadline). The AST guard in
+``scripts/ci/subprocess_timeout_guard.py`` covers ``run`` / ``check_output`` /
+``call`` / ``check_call`` only. Scripts/ keys include a call-shape hash so a
+different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 """
 
 from __future__ import annotations
 
 import ast
 import os
-import re
 import subprocess
 import textwrap
-from collections import Counter, defaultdict
 from pathlib import Path
-from typing import NamedTuple
 
 import pytest
 
-from scripts.ci.test_source_cache import parse_test_source, read_test_source
+from scripts.ci.subprocess_timeout_guard import (
+    ALLOWLIST_KEY_PARTS,
+    SHAPE_HASH_HEX_LEN,
+    SORT_ADVICE,
+    STALE_PREAMBLE,
+    UNALLOWLISTED_PREAMBLE,
+    compare_allowlist,
+    format_stale_line,
+    format_unallowlisted_line,
+    load_allowlist,
+    parse_allowlist_key,
+    scan_scripts,
+    sort_allowlist_entries,
+    timeout_less_calls,
+    timeout_less_calls_from_source,
+    validate_allowlist_entry,
+)
 from tests.project_python import project_python
 
 pytestmark = pytest.mark.repo_invariant
@@ -35,88 +50,17 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TESTS_ROOT = _REPO_ROOT / "tests"
 _SCRIPTS_ROOT = _REPO_ROOT / "scripts"
 _ALLOWLIST_PATH = _SCRIPTS_ROOT / "ci" / "subprocess_timeout_allowlist.txt"
-_BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
-_SUBPROCESS_IMPORT_RE = re.compile(r"(?m)^\s*(?:import subprocess|from subprocess import)\b")
 
 # Documented per-test budget (must stay aligned with pyproject + ci.yml).
 _EXPECTED_PYTEST_TIMEOUT_SECONDS = 120
 _EXPECTED_TIMEOUT_METHOD = "thread"
 
 
-class TimeoutLessCall(NamedTuple):
-    lineno: int
-    name: str
-    qualname: str
-
-
-class _SubprocessCallVisitor(ast.NodeVisitor):
-    def __init__(self, aliases: dict[str, str | None]) -> None:
-        self._aliases = aliases
-        self._scope_stack: list[str] = []
-        self.hits: list[TimeoutLessCall] = []
-
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
-        self._scope_stack.append(node.name)
-        self.generic_visit(node)
-        self._scope_stack.pop()
-
-    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
-        self._scope_stack.append(node.name)
-        self.generic_visit(node)
-        self._scope_stack.pop()
-
-    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
-        self._scope_stack.append(node.name)
-        self.generic_visit(node)
-        self._scope_stack.pop()
-
-    def visit_Call(self, node: ast.Call) -> None:
-        name: str | None = None
-        if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
-            base = node.func.value.id
-            if base in self._aliases and self._aliases[base] is None and node.func.attr in _BOUNDED_FUNCS:
-                name = f"subprocess.{node.func.attr}"
-        elif isinstance(node.func, ast.Name) and node.func.id in self._aliases:
-            attr = self._aliases[node.func.id]
-            if attr in _BOUNDED_FUNCS:
-                name = f"subprocess.{attr}"
-        if name is not None:
-            kwargs = {kw.arg for kw in node.keywords if kw.arg}
-            if "timeout" not in kwargs:
-                qualname = ".".join(self._scope_stack) if self._scope_stack else "<module>"
-                self.hits.append(TimeoutLessCall(node.lineno, name, qualname))
-        self.generic_visit(node)
-
-
-def _timeout_less_calls(path: Path) -> list[TimeoutLessCall]:
-    src = read_test_source(path)
-    if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
-        return []
-    tree = parse_test_source(path)
-    aliases: dict[str, str | None] = {}
-    for node in ast.walk(tree):
-        if isinstance(node, ast.ImportFrom) and node.module == "subprocess":
-            for alias in node.names:
-                aliases[alias.asname or alias.name] = alias.name
-        elif isinstance(node, ast.Import):
-            for alias in node.names:
-                if alias.name == "subprocess":
-                    aliases[alias.asname or "subprocess"] = None
-    visitor = _SubprocessCallVisitor(aliases)
-    visitor.visit(tree)
-    return visitor.hits
-
-
-def _load_subprocess_timeout_allowlist() -> list[str]:
-    text = _ALLOWLIST_PATH.read_text(encoding="utf-8")
-    return [line.strip() for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")]
-
-
 def test_pytest_timeout_budget_is_documented_in_pyproject() -> None:
     """The 120s per-test budget must stay explicit in tool.pytest.ini_options."""
     # Avoid importing tomllib only for this — pyproject is small; parse lightly.
     text = (_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "timeout = 120" in text or "timeout = 120" in text
+    assert "timeout = 120" in text
     assert 'timeout_method = "thread"' in text or "timeout_method = 'thread'" in text
     assert "pytest-timeout" in (_REPO_ROOT / "requirements.txt").read_text(encoding="utf-8")
     lock = (_REPO_ROOT / "requirements-lock.txt").read_text(encoding="utf-8")
@@ -134,7 +78,7 @@ def test_no_timeout_less_subprocess_calls_under_tests() -> None:
     offenders: list[str] = []
     for path in sorted(_TESTS_ROOT.rglob("*.py")):
         try:
-            hits = _timeout_less_calls(path)
+            hits = timeout_less_calls(path)
         except SyntaxError as exc:
             offenders.append(f"{path}: syntax error while scanning ({exc})")
             continue
@@ -149,77 +93,139 @@ def test_no_timeout_less_subprocess_calls_under_tests() -> None:
 
 
 def test_subprocess_timeout_allowlist_is_sorted_and_valid() -> None:
-    """The allowlist must be non-empty, sorted, and well-formed (#7176)."""
+    """Allowlist may be empty (endgame). Non-empty rows must be shaped and C-sorted (#7213)."""
     assert _ALLOWLIST_PATH.is_file(), f"allowlist not found at {_ALLOWLIST_PATH}"
-    entries = _load_subprocess_timeout_allowlist()
-    assert entries, "subprocess timeout allowlist must not be empty"
-    assert entries == sorted(entries), (
-        "subprocess timeout allowlist must be sorted alphabetically. "
-        "Run a sort on scripts/ci/subprocess_timeout_allowlist.txt."
-    )
+    entries = load_allowlist(_ALLOWLIST_PATH)
+    assert entries == sort_allowlist_entries(entries), SORT_ADVICE
     for entry in entries:
-        parts = entry.split("::")
-        assert len(parts) >= 3, f"invalid allowlist entry format (expected path::qualname::callee): {entry}"
-        path = _REPO_ROOT / parts[0]
-        assert path.is_file(), f"allowlist entry refers to non-existent file: {parts[0]}"
+        validate_allowlist_entry(entry, _REPO_ROOT)
 
 
 def test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts() -> None:
     """Fail CI on unallowlisted timeout-less subprocess calls in scripts/ and reject stale allowlist entries (#7176)."""
-    allowlist_entries = _load_subprocess_timeout_allowlist()
-    allowlist_counts = Counter(allowlist_entries)
-
-    actual_hits: dict[str, list[tuple[Path, TimeoutLessCall]]] = defaultdict(list)
-    scan_errors: list[str] = []
-
-    for path in sorted(_SCRIPTS_ROOT.rglob("*.py")):
-        try:
-            hits = _timeout_less_calls(path)
-        except SyntaxError as exc:
-            scan_errors.append(f"{path}: syntax error while scanning ({exc})")
-            continue
-        rel = path.relative_to(_REPO_ROOT).as_posix()
-        for hit in hits:
-            key = f"{rel}::{hit.qualname}::{hit.name}"
-            actual_hits[key].append((path, hit))
-
+    allowlist_entries = load_allowlist(_ALLOWLIST_PATH)
+    actual_hits, scan_errors = scan_scripts(_SCRIPTS_ROOT, _REPO_ROOT)
     if scan_errors:
         pytest.fail("Syntax errors encountered while scanning scripts/:\n" + "\n".join(scan_errors))
 
-    unallowlisted: list[str] = []
-    for key, hits in sorted(actual_hits.items()):
-        allowed_count = allowlist_counts.get(key, 0)
-        if len(hits) > allowed_count:
-            excess = hits[allowed_count:]
-            for path, hit in excess:
-                rel = path.relative_to(_REPO_ROOT).as_posix()
-                unallowlisted.append(
-                    f"{rel}:{hit.lineno} {hit.name} in {hit.qualname} "
-                    f"(found {len(hits)}, allowlist permits {allowed_count})"
-                )
-
-    stale_entries: list[str] = []
-    for key, allowed_count in sorted(allowlist_counts.items()):
-        actual_count = len(actual_hits.get(key, []))
-        if allowed_count > actual_count:
-            stale_entries.append(f"{key} (allowlist has {allowed_count}, actual violations {actual_count})")
-
+    unallowlisted, stale_entries = compare_allowlist(allowlist_entries, actual_hits)
     errors: list[str] = []
     if unallowlisted:
-        errors.append(
-            "Timeout-less subprocess calls under scripts/ not in allowlist (issue #7176).\n"
-            "Pass an explicit timeout= (typically 30 for git fixtures/helpers, 60–120 for "
-            "heavier scripts) to bound the subprocess call. Popen callers must bound "
-            ".wait() / .communicate() instead.\n" + "\n".join(unallowlisted)
-        )
+        errors.append(UNALLOWLISTED_PREAMBLE + "\n".join(unallowlisted))
     if stale_entries:
-        errors.append(
-            "Stale entries in scripts/ci/subprocess_timeout_allowlist.txt (issue #7176).\n"
-            "The allowlist is shrink-only. When a subprocess call is given a timeout= or removed, "
-            "its entry must be removed from scripts/ci/subprocess_timeout_allowlist.txt:\n" + "\n".join(stale_entries)
-        )
+        errors.append(STALE_PREAMBLE + "\n".join(stale_entries))
 
     assert not errors, "\n\n".join(errors)
+
+
+_ROTATION_BEFORE = textwrap.dedent(
+    """\
+    import subprocess
+
+    def helper():
+        subprocess.run(["git", "status"], check=False)
+        subprocess.run(["sleep", "999"], check=False)
+    """
+)
+
+_ROTATION_AFTER = textwrap.dedent(
+    """\
+    import subprocess
+
+    def helper():
+        subprocess.run(["git", "status"], check=False, timeout=30)
+        subprocess.run(["other", "cmd"], check=False)
+    """
+)
+
+
+def test_call_shape_hash_is_location_independent_and_argument_sensitive() -> None:
+    """F4: same call text keeps its hash after a line shift; a different argv does not."""
+    moved = textwrap.dedent(
+        """\
+        import subprocess
+
+        def helper():
+            x = 1
+            subprocess.run(["git", "status"], check=False)
+        """
+    )
+    original = timeout_less_calls_from_source(_ROTATION_BEFORE)
+    shifted = timeout_less_calls_from_source(moved)
+    assert len(original) == 2
+    assert len(shifted) == 1
+    # First original call is the git-status site; moving it must keep the shape.
+    assert shifted[0].shape_hash == original[0].shape_hash
+    assert shifted[0].lineno != original[0].lineno
+    assert original[0].shape_hash != original[1].shape_hash
+    assert original[0].qualname == "helper"
+    assert len(original[0].shape_hash) == SHAPE_HASH_HEX_LEN
+
+
+def test_rotated_call_under_same_qualname_cannot_reuse_old_key() -> None:
+    """F4: bounding one site and adding a different timeout-less call fails both ways."""
+    before = timeout_less_calls_from_source(_ROTATION_BEFORE)
+    after = timeout_less_calls_from_source(_ROTATION_AFTER)
+    rel = "scripts/demo.py"
+    before_keys = [hit.allowlist_key(rel) for hit in before]
+    after_keys = [hit.allowlist_key(rel) for hit in after]
+    assert len(before_keys) == 2
+    assert len(after_keys) == 1
+    # Old count-only key would have been path::helper::subprocess.run with count 2→1.
+    # The remaining after-call must not share a shape with either before-call.
+    assert after_keys[0] not in before_keys
+
+    unallowlisted, stale = compare_allowlist(before_keys, {after_keys[0]: after})
+    assert len(unallowlisted) == 1
+    assert after_keys[0] in unallowlisted[0]
+    assert unallowlisted[0].startswith(after_keys[0])
+    stale_keys = {line.split(" ", 1)[0] for line in stale}
+    assert set(before_keys) == stale_keys
+
+
+def test_unallowlisted_line_is_paste_ready_key() -> None:
+    """F3: the unallowlisted line starts with path::qualname::callee::shape."""
+    hits = timeout_less_calls_from_source(_ROTATION_BEFORE)
+    key = hits[0].allowlist_key("scripts/demo.py")
+    path, qualname, callee, shape = parse_allowlist_key(key)
+    assert (path, qualname, callee) == ("scripts/demo.py", "helper", "subprocess.run")
+    assert len(shape) == SHAPE_HASH_HEX_LEN
+    line = format_unallowlisted_line(key, lineno=hits[0].lineno, actual_count=1, allowed_count=0)
+    assert line.startswith(key)
+    assert line.split("  #", 1)[0] == key
+    assert key.count("::") == ALLOWLIST_KEY_PARTS - 1
+    assert "path::qualname::callee::shape" in UNALLOWLISTED_PREAMBLE
+    with pytest.raises(ValueError, match="path::qualname::callee::shape"):
+        parse_allowlist_key("scripts/demo.py::helper::subprocess.run")
+
+
+def test_stale_message_mentions_rename_case() -> None:
+    """F3: stale-entry copy names the rename / qualname-move case."""
+    assert "renamed" in STALE_PREAMBLE
+    assert "qualname" in STALE_PREAMBLE
+    line = format_stale_line(
+        "scripts/old.py::gone::subprocess.run::0123456789abcdef",
+        allowed_count=1,
+        actual_count=0,
+    )
+    assert line.startswith("scripts/old.py::gone::subprocess.run::0123456789abcdef")
+
+
+def test_empty_allowlist_is_valid_endgame() -> None:
+    """F7: burning down to zero keys must not fail CI."""
+    unallowlisted, stale = compare_allowlist([], {})
+    assert unallowlisted == []
+    assert stale == []
+    entries = load_allowlist(_ALLOWLIST_PATH)
+    # File may still hold SKIP rows today; empty is legal once they go.
+    assert entries == sort_allowlist_entries(entries)
+
+
+def test_allowlist_sort_advice_is_c_locale() -> None:
+    """F7: sort advice must not depend on the operator's libc locale."""
+    assert "LC_ALL=C" in SORT_ADVICE
+    # Byte order, not locale-aware str collation.
+    assert sort_allowlist_entries(["b::x", "a::x", "A::x"]) == ["A::x", "a::x", "b::x"]
 
 
 def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) -> None:

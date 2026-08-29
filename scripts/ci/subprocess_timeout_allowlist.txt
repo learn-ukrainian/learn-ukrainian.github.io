@@ -1,24 +1,41 @@
-# Subprocess timeout allowlist (#7176 Stage 1).
+# Subprocess timeout allowlist (#7176 Stage 1, key hardened in #7213).
 #
-# This file freezes existing timeout-less `subprocess.run/check_output/call/check_call`
+# This file freezes remaining timeout-less `subprocess.run/check_output/call/check_call`
 # invocations in production scripts under `scripts/`.
+#
+# KEY FORMAT: `path::qualname::callee::shape` (C-locale / UTF-8 byte order).
+# `shape` is 16 lowercase hex chars of sha256(ast.dump(call, include_attributes=False)).
+# Line/column shifts do not change `shape`. A different callee or argument tree does,
+# so a vacated slot cannot be reused by rotating a different timeout-less call into
+# the same enclosing function (review F4). Identical-shape duplicates still use
+# repeated lines (count).
 #
 # BURN-DOWN RULES:
 # 1. SHRINK-ONLY: As call sites in scripts are migrated to include explicit `timeout=...`
 #    (or deleted), their corresponding entries MUST be removed from this file.
 # 2. NO STALE ENTRIES: The guard fails CI if any entry in this file has 0 matching
-#    violations in the codebase (or fewer violations than listed).
+#    violations in the codebase (or fewer violations than listed). A rename of the
+#    file or enclosing function is a stale key — replace it with the new paste-ready
+#    key, do not leave the old row.
 # 3. NO NEW VIOLATIONS: Any new timeout-less subprocess call in scripts/ that is not
-#    covered by an existing entry in this file will fail CI.
-# 4. KEY FORMAT: `path::qualname::callee` (sorted alphabetically). Duplicate lines
-#    represent multiple timeout-less calls within the same enclosing function/scope.
-scripts/lexicon/runner/atlas_job.py::_run_backup_doctor::subprocess.call
-scripts/lexicon/runner/atlas_job.py::run_restic_sink::subprocess.run
-scripts/lexicon/runner/atlas_job.py::run_restic_sink::subprocess.run
-scripts/lexicon/runner/durable_mirror.py::sync_source_to_mirror::subprocess.run
-scripts/projects/open_model_data/phase3_heldout_label_transport.py::run_cycle002::subprocess.run
-scripts/projects/open_model_data/phase3_rule_author_runner.py::run::subprocess.run
-scripts/projects/open_model_data/phase3_source_production_transport.py::_subprocess_invoke::subprocess.run
-scripts/projects/ua_eval_harness/build_heldout_manifest.py::_git_head::subprocess.run
-scripts/projects/ua_eval_harness/run_codex_baseline.py::_cli_version::subprocess.run
-scripts/sync/promote_module.py::_run_make_atlas::subprocess.run
+#    covered by an existing entry in this file will fail CI. Unallowlisted lines
+#    start with the paste-ready key.
+# 4. ENDGAME: an empty body (this header only) is valid. Do not require a non-empty
+#    list — the last bounded site must be allowed to delete the last row.
+# 5. SORT: LC_ALL=C sort (not the operator locale).
+#
+# Remaining rows are SKIP-class. Do not wrap them without operator GO:
+# - atlas_job / durable_mirror: unbounded data-plane backup and mirror sync
+# - promote_module._run_make_atlas: unbounded atlas rebuild
+# - ua_eval_harness _git_head / _cli_version: freeze-pinned release bytes (do not mint v0.1.2)
+# - phase3 transports: long-running labeling / source-production bridges
+scripts/lexicon/runner/atlas_job.py::_run_backup_doctor::subprocess.call::a3c992b50c6b5fbb
+scripts/lexicon/runner/atlas_job.py::run_restic_sink::subprocess.run::9c01452a3233e414
+scripts/lexicon/runner/atlas_job.py::run_restic_sink::subprocess.run::d002f3a7dfa2eaec
+scripts/lexicon/runner/durable_mirror.py::sync_source_to_mirror::subprocess.run::b47dbf0cbe2ea412
+scripts/projects/open_model_data/phase3_heldout_label_transport.py::run_cycle002::subprocess.run::cd55d4b869aa2fb6
+scripts/projects/open_model_data/phase3_rule_author_runner.py::run::subprocess.run::8bbd88a0f382594c
+scripts/projects/open_model_data/phase3_source_production_transport.py::_subprocess_invoke::subprocess.run::48f0ccc9f97ce5cf
+scripts/projects/ua_eval_harness/build_heldout_manifest.py::_git_head::subprocess.run::52be25699a03c4cb
+scripts/projects/ua_eval_harness/run_codex_baseline.py::_cli_version::subprocess.run::462a8f20644a0f2e
+scripts/sync/promote_module.py::_run_make_atlas::subprocess.run::fd33a92306710473
