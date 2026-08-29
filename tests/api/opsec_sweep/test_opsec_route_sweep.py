@@ -29,6 +29,7 @@ from starlette.requests import Request
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
+    dashboard_helpers,
     epics_router,
     fleet_router,
     governance_router,
@@ -245,6 +246,8 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # logical work ids into this sweep.
     monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     monkeypatch.setattr(state_helpers, "_ttl_cache", {})
+    dashboard_helpers._track_cache.clear()
+    dashboard_helpers._summary_cache.clear()
     fixture_ctx = fixture_context(root)
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
     session_connection = fixture_ctx.stores.session_streams_database.connect()

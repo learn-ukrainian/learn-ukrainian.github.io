@@ -1220,33 +1220,42 @@ class TestBuildModuleSummary:
 # ==================== dashboard_comms ====================
 
 
+def _dashboard_ctx(tmp_path):
+    from scripts.api.monitor_context import fixture_context
+
+    return fixture_context(tmp_path)
+
+
+def _broker_dir(tmp_path):
+    path = tmp_path / ".mcp" / "servers" / "message-broker"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
 class TestIsWatcherRunning:
     """is_watcher_running checks PID file."""
 
     def test_no_pid_file(self, tmp_path):
         from scripts.api.dashboard_comms import is_watcher_running
 
-        with patch("scripts.api.dashboard_comms.WATCHER_PID_FILE", tmp_path / "nonexistent.pid"):
-            result = is_watcher_running()
+        result = is_watcher_running(_dashboard_ctx(tmp_path))
         assert result["running"] is False
         assert result["pid"] is None
 
     def test_invalid_pid(self, tmp_path):
         from scripts.api.dashboard_comms import is_watcher_running
 
-        pid_file = tmp_path / "watcher.pid"
+        pid_file = _broker_dir(tmp_path) / "watcher.pid"
         pid_file.write_text("not_a_number")
-        with patch("scripts.api.dashboard_comms.WATCHER_PID_FILE", pid_file):
-            result = is_watcher_running()
+        result = is_watcher_running(_dashboard_ctx(tmp_path))
         assert result["running"] is False
 
     def test_dead_process(self, tmp_path):
         from scripts.api.dashboard_comms import is_watcher_running
 
-        pid_file = tmp_path / "watcher.pid"
+        pid_file = _broker_dir(tmp_path) / "watcher.pid"
         pid_file.write_text("999999999")  # very unlikely to be running
-        with patch("scripts.api.dashboard_comms.WATCHER_PID_FILE", pid_file):
-            result = is_watcher_running()
+        result = is_watcher_running(_dashboard_ctx(tmp_path))
         assert result["running"] is False
         assert result["pid"] == 999999999
 
@@ -1257,21 +1266,18 @@ class TestCollectStuckTasks:
     def test_no_stuck_dir(self, tmp_path):
         from scripts.api.dashboard_comms import collect_stuck_tasks
 
-        with patch("scripts.api.dashboard_comms.STUCK_DIR", tmp_path / "nonexistent"), \
-             patch("scripts.api.dashboard_comms.CURRICULUM_ROOT", tmp_path):
-            result = collect_stuck_tasks()
+        result = collect_stuck_tasks(_dashboard_ctx(tmp_path))
         assert result == []
 
     def test_stuck_files_collected(self, tmp_path):
         from scripts.api.dashboard_comms import collect_stuck_tasks
 
-        stuck_dir = tmp_path / "stuck"
-        stuck_dir.mkdir()
+        ctx = _dashboard_ctx(tmp_path)
+        stuck_dir = ctx.roots.curriculum_root / "stuck"
+        stuck_dir.mkdir(parents=True)
         (stuck_dir / "task-1.md").write_text("Stuck on word count")
         (stuck_dir / "task-2.md").write_text("Stuck on activities")
-        with patch("scripts.api.dashboard_comms.STUCK_DIR", stuck_dir), \
-             patch("scripts.api.dashboard_comms.CURRICULUM_ROOT", tmp_path):
-            result = collect_stuck_tasks()
+        result = collect_stuck_tasks(ctx)
         assert len(result) == 2
         assert result[0]["task_id"] == "task-1"
         assert "Stuck on word count" in result[0]["preview"]
@@ -1279,14 +1285,11 @@ class TestCollectStuckTasks:
     def test_track_stuck_dirs(self, tmp_path):
         from scripts.api.dashboard_comms import collect_stuck_tasks
 
-        track = tmp_path / "a1"
-        track.mkdir()
-        stuck = track / "stuck"
-        stuck.mkdir()
+        ctx = _dashboard_ctx(tmp_path)
+        stuck = ctx.roots.curriculum_root / "a1" / "stuck"
+        stuck.mkdir(parents=True)
         (stuck / "issue.md").write_text("track-level stuck task")
-        with patch("scripts.api.dashboard_comms.STUCK_DIR", tmp_path / "nonexistent"), \
-             patch("scripts.api.dashboard_comms.CURRICULUM_ROOT", tmp_path):
-            result = collect_stuck_tasks()
+        result = collect_stuck_tasks(ctx)
         assert len(result) == 1
         assert "a1/" in result[0]["file"]
 
@@ -1297,16 +1300,14 @@ class TestGetWatcherLogTail:
     def test_no_log_file(self, tmp_path):
         from scripts.api.dashboard_comms import get_watcher_log_tail
 
-        with patch("scripts.api.dashboard_comms.WATCHER_LOG_FILE", tmp_path / "missing.log"):
-            assert get_watcher_log_tail() == []
+        assert get_watcher_log_tail(ctx=_dashboard_ctx(tmp_path)) == []
 
     def test_reads_last_lines(self, tmp_path):
         from scripts.api.dashboard_comms import get_watcher_log_tail
 
-        log_file = tmp_path / "watcher.log"
+        log_file = _broker_dir(tmp_path) / "watcher.log"
         log_file.write_text("\n".join(f"line {i}" for i in range(50)))
-        with patch("scripts.api.dashboard_comms.WATCHER_LOG_FILE", log_file):
-            lines = get_watcher_log_tail(5)
+        lines = get_watcher_log_tail(5, ctx=_dashboard_ctx(tmp_path))
         assert len(lines) == 5
         assert lines[-1] == "line 49"
 
@@ -1317,28 +1318,27 @@ class TestReadDispatcherState:
     def test_valid_state(self, tmp_path):
         from scripts.api.dashboard_comms import read_dispatcher_state
 
-        state_dir = tmp_path / "batch_state"
-        state_dir.mkdir()
-        (state_dir / "dispatcher_state.json").write_text('{"running": true, "queue": []}')
-        with patch("scripts.api.dashboard_comms.BATCH_STATE_DIR", state_dir):
-            result = read_dispatcher_state()
+        ctx = _dashboard_ctx(tmp_path)
+        ctx.roots.batch_state_dir.mkdir(parents=True, exist_ok=True)
+        (ctx.roots.batch_state_dir / "dispatcher_state.json").write_text(
+            '{"running": true, "queue": []}'
+        )
+        result = read_dispatcher_state(ctx)
         assert result["running"] is True
 
     def test_missing_state(self, tmp_path):
         from scripts.api.dashboard_comms import read_dispatcher_state
 
-        with patch("scripts.api.dashboard_comms.BATCH_STATE_DIR", tmp_path):
-            result = read_dispatcher_state()
+        result = read_dispatcher_state(_dashboard_ctx(tmp_path))
         assert result == {}
 
     def test_invalid_json(self, tmp_path):
         from scripts.api.dashboard_comms import read_dispatcher_state
 
-        state_dir = tmp_path / "batch_state"
-        state_dir.mkdir()
-        (state_dir / "dispatcher_state.json").write_text("broken{{{")
-        with patch("scripts.api.dashboard_comms.BATCH_STATE_DIR", state_dir):
-            result = read_dispatcher_state()
+        ctx = _dashboard_ctx(tmp_path)
+        ctx.roots.batch_state_dir.mkdir(parents=True, exist_ok=True)
+        (ctx.roots.batch_state_dir / "dispatcher_state.json").write_text("broken{{{")
+        result = read_dispatcher_state(ctx)
         assert result == {}
 
 
@@ -1348,8 +1348,7 @@ class TestGetBrokerDb:
     def test_missing_db(self, tmp_path):
         from scripts.api.dashboard_comms import get_broker_db
 
-        with patch("scripts.api.dashboard_comms.MESSAGE_DB", tmp_path / "missing.db"):
-            assert get_broker_db() is None
+        assert get_broker_db(_dashboard_ctx(tmp_path)) is None
 
 
 class TestEnsureBrokerCols:

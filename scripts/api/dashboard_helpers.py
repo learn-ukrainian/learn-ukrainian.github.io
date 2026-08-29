@@ -13,7 +13,8 @@ from pathlib import Path
 
 import yaml
 
-from .config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
+from .config import LEVELS, SEMINAR_TRACK_IDS
+from .monitor_context import MonitorContext, production_context
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -35,19 +36,35 @@ _TRACK_CACHE_TTL = 30.0  # seconds
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 
-def scan_track_cached(track_id: str, track_path: str, manifest_modules: list) -> dict:
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _curriculum_root(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.curriculum_root
+
+
+def scan_track_cached(
+    track_id: str,
+    track_path: str,
+    manifest_modules: list,
+    ctx: MonitorContext | None = None,
+) -> dict:
     """Cached wrapper around scan_track."""
     entry = _track_cache.get(track_id)
     if entry and (time.time() - entry[0]) < _TRACK_CACHE_TTL:
         return entry[1]
-    result = scan_track(track_id, track_path, manifest_modules)
+    result = scan_track(track_id, track_path, manifest_modules, ctx=ctx)
     _track_cache[track_id] = (time.time(), result)
     return result
 
 
-def load_manifest() -> dict:
+def load_manifest(ctx: MonitorContext | None = None) -> dict:
     """Load the curriculum manifest YAML file."""
-    manifest_path = CURRICULUM_ROOT / "curriculum.yaml"
+    manifest_path = _curriculum_root(ctx) / "curriculum.yaml"
     if not manifest_path.exists():
         return {}
     with open(manifest_path) as f:
@@ -410,20 +427,31 @@ _summary_cache: dict[str, tuple[float, dict]] = {}
 _SUMMARY_CACHE_TTL = 60.0  # seconds
 
 
-def scan_track_summary_cached(track_id: str, track_path: str, manifest_modules: list) -> dict:
+def scan_track_summary_cached(
+    track_id: str,
+    track_path: str,
+    manifest_modules: list,
+    ctx: MonitorContext | None = None,
+) -> dict:
     """Cached wrapper around scan_track_summary."""
     entry = _summary_cache.get(track_id)
     if entry and (time.time() - entry[0]) < _SUMMARY_CACHE_TTL:
         return entry[1]
-    result = scan_track_summary(track_id, track_path, manifest_modules)
+    result = scan_track_summary(track_id, track_path, manifest_modules, ctx=ctx)
     _summary_cache[track_id] = (time.time(), result)
     return result
 
 
-def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -> dict:
+def scan_track_summary(
+    track_id: str,
+    track_path: str,
+    manifest_modules: list,
+    ctx: MonitorContext | None = None,
+) -> dict:
     """Lightweight track scan — only status/badges per module, no research or full detail."""
-    track_dir = _safe_join(CURRICULUM_ROOT, track_path)
-    plans_dir = _safe_join(CURRICULUM_ROOT, "plans", track_id)
+    curriculum_root = _curriculum_root(ctx)
+    track_dir = _safe_join(curriculum_root, track_path)
+    plans_dir = _safe_join(curriculum_root, "plans", track_id)
     if not track_dir or not plans_dir:
         return {
             "track_id": track_id,
@@ -433,7 +461,12 @@ def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -
             "modules": [],
         }
 
-    module_entries = manifest_modules or [slug for _num, slug in get_plan_slugs(track_id)]
+    module_entries = manifest_modules or [
+        slug
+        for _num, slug in get_plan_slugs(
+            track_id, curriculum_root=curriculum_root, plans_root=curriculum_root / "plans"
+        )
+    ]
     modules = [
         build_module_summary(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
         for idx, m_entry in enumerate(module_entries)
@@ -448,10 +481,16 @@ def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -
     }
 
 
-def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
+def scan_track(
+    track_id: str,
+    track_path: str,
+    manifest_modules: list,
+    ctx: MonitorContext | None = None,
+) -> dict:
     """Scan a single track and return module-level detail."""
-    track_dir = _safe_join(CURRICULUM_ROOT, track_path)
-    plans_dir = _safe_join(CURRICULUM_ROOT, "plans", track_id)
+    curriculum_root = _curriculum_root(ctx)
+    track_dir = _safe_join(curriculum_root, track_path)
+    plans_dir = _safe_join(curriculum_root, "plans", track_id)
     if not track_dir or not plans_dir:
         return {
             "track_id": track_id,
@@ -462,7 +501,12 @@ def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             "modules": [],
         }
 
-    module_entries = manifest_modules or [slug for _num, slug in get_plan_slugs(track_id)]
+    module_entries = manifest_modules or [
+        slug
+        for _num, slug in get_plan_slugs(
+            track_id, curriculum_root=curriculum_root, plans_root=curriculum_root / "plans"
+        )
+    ]
     modules = [
         build_module_info(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
         for idx, m_entry in enumerate(module_entries)
@@ -478,10 +522,13 @@ def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
     }
 
 
-def find_active_builds() -> list[dict]:
+def find_active_builds(ctx: MonitorContext | None = None) -> list[dict]:
     """Find orchestration dirs modified in last 15 minutes."""
     active_builds = []
-    for track_dir in CURRICULUM_ROOT.iterdir():
+    curriculum_root = _curriculum_root(ctx)
+    if not curriculum_root.exists():
+        return active_builds
+    for track_dir in curriculum_root.iterdir():
         if not track_dir.is_dir():
             continue
         orch_dir = track_dir / "orchestration"
@@ -546,9 +593,10 @@ def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | 
     return None
 
 
-def scan_pipeline_queues() -> tuple[list, list, list]:
+def scan_pipeline_queues(ctx: MonitorContext | None = None) -> tuple[list, list, list]:
     """Scan all tracks to build otaman, hetman, and final_review queues."""
-    manifest = load_manifest()
+    curriculum_root = _curriculum_root(ctx)
+    manifest = load_manifest(ctx)
     otaman_queue: list[dict] = []
     hetman_queue: list[dict] = []
     final_review_queue: list[dict] = []
@@ -557,7 +605,7 @@ def scan_pipeline_queues() -> tuple[list, list, list]:
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_dir = _safe_join(CURRICULUM_ROOT, level_cfg["path"])
+        track_dir = _safe_join(curriculum_root, level_cfg["path"])
         status_dir = _safe_join(track_dir, "status") if track_dir else None
         if not status_dir:
             continue

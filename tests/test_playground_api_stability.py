@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.dashboard_comms as dashboard_comms
 import scripts.api.images_router as images_router
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
@@ -280,7 +279,6 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
         ),
     )
     monkeypatch.setattr(app.state, "ctx", test_ctx)
-    monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
     app.state.ctx.stores.image_store.index.reload()
     app.state.ctx.stores.image_store.page_cache.clear()
 
@@ -356,7 +354,7 @@ def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_pa
         "_peek_state_summary",
         lambda: (summary, "hit", 0.0),
     )
-    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
     try:
         client = TestClient(app, raise_server_exceptions=False)
