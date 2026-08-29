@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.telemetry_router as telemetry_router
 from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -19,16 +20,20 @@ def _iso(dt: datetime) -> str:
     return dt.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
+def _bind_fixture_ctx(tmp_path: Path, monkeypatch):
+    ctx = fixture_context(tmp_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
+    return ctx
+
+
 def _use_temp_db(tmp_path: Path, monkeypatch) -> Path:
-    db_path = tmp_path / "tool_timings.db"
-    monkeypatch.setattr(telemetry_router, "_DB_PATH", db_path)
-    return db_path
+    ctx = _bind_fixture_ctx(tmp_path, monkeypatch)
+    return telemetry_router._tool_timings_path(ctx)
 
 
 def _use_temp_module_db(tmp_path: Path, monkeypatch) -> Path:
-    db_path = tmp_path / "module_builds.db"
-    monkeypatch.setattr(telemetry_router, "_MODULE_BUILD_DB_PATH", db_path)
-    return db_path
+    ctx = _bind_fixture_ctx(tmp_path, monkeypatch)
+    return telemetry_router._module_build_db_path(ctx)
 
 
 def _insert_timing(
@@ -39,7 +44,7 @@ def _insert_timing(
     duration_ms: int,
     failed: bool = False,
 ) -> None:
-    telemetry_router._init_db(db_path)
+    telemetry_router._init_db(app.state.ctx, db_path)
     with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute(
             """

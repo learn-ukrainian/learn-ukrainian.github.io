@@ -23,11 +23,11 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from scripts.common.git_context import sanitized_git_env
 
-from .config import LIVE_REPO_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["worktrees"])
 
@@ -36,6 +36,13 @@ router = APIRouter(tags=["worktrees"])
 # bounded; the aggregate endpoint budget is ~4 × timeout_s per
 # worktree.
 _GIT_TIMEOUT_S = 2.0
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
 def _worktree_git_env() -> dict[str, str]:
     """Prevent the release service's live-root Git redirect leaking to another worktree."""
     return sanitized_git_env()
@@ -44,6 +51,11 @@ def _worktree_git_env() -> dict[str, str]:
 def _run(cmd: list[str], cwd: Path, timeout_s: float = _GIT_TIMEOUT_S) -> tuple[int, str, str]:
     """Subprocess helper that never raises. Mirrors the pattern used
     in ``site_router._run`` — see that file for the rationale.
+
+    ``AssertionError`` is included so an isolated OPSEC fixture's
+    process-wide ``subprocess.run`` deny degrades to the documented
+    error-string envelope without a router-local ``_run`` monkeypatch
+    seam (#7269 step 12d).
     """
     try:
         proc = subprocess.run(
@@ -58,7 +70,7 @@ def _run(cmd: list[str], cwd: Path, timeout_s: float = _GIT_TIMEOUT_S) -> tuple[
         return proc.returncode, proc.stdout, proc.stderr
     except subprocess.TimeoutExpired as exc:
         return 124, "", f"TimeoutExpired after {exc.timeout}s"
-    except (FileNotFoundError, PermissionError, OSError) as exc:
+    except (FileNotFoundError, PermissionError, OSError, AssertionError) as exc:
         return 127, "", f"{type(exc).__name__}: {exc}"
 
 
@@ -146,7 +158,7 @@ def _wt_status(path: Path) -> dict[str, Any]:
 
 
 @router.get("")
-async def list_worktrees():
+async def list_worktrees(ctx: MonitorContext = Depends(get_ctx)):
     """Active git worktrees with per-worktree status.
 
     Shape::
@@ -168,16 +180,19 @@ async def list_worktrees():
         }
 
     ``is_primary`` flags the main worktree (the one whose ``path``
-    matches ``PROJECT_ROOT``). Every other worktree was created with
-    ``git worktree add`` and is a sibling checkout.
+    matches the serving context's live repo root). Every other worktree
+    was created with ``git worktree add`` and is a sibling checkout.
 
     Reviewer Codex-5 / #1313: "would have prevented the branch /
     worktree confusion we hit". Read-only; never mutates git state.
     """
+    resolved = _resolve_context(ctx)
+    live_repo_root = resolved.roots.live_repo_root
+
     def _compute() -> dict:
         code, stdout, stderr = _run(
             ["git", "worktree", "list", "--porcelain"],
-            cwd=LIVE_REPO_ROOT,
+            cwd=live_repo_root,
         )
         if code != 0:
             return {
@@ -188,12 +203,12 @@ async def list_worktrees():
 
         parsed = _parse_worktree_list(stdout)
         try:
-            project_root_str = str(LIVE_REPO_ROOT.resolve())
+            project_root_str = str(live_repo_root.resolve())
         except OSError:
             # Permission or symlink-loop edge case on the primary
             # worktree. Fall back to the non-resolved path so the
             # whole response doesn't die for one bad mount.
-            project_root_str = str(LIVE_REPO_ROOT)
+            project_root_str = str(live_repo_root)
 
         enriched: list[dict[str, Any]] = []
         for record in parsed:

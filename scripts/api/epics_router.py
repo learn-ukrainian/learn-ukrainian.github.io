@@ -14,10 +14,9 @@ from threading import Lock
 from typing import Any
 
 import yaml
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import JSONResponse
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase, default_database_path
 from agents_extensions.shared.session_streams.inventory import resolve_streams_yaml, streams_yaml_sha256
 from agents_extensions.shared.session_streams.model import (
     EntryRef,
@@ -42,7 +41,7 @@ from agents_extensions.shared.session_streams.store import (
     SessionStreamStore,
     validate_entry_body,
 )
-from scripts.api.config import LIVE_REPO_ROOT
+from scripts.api.monitor_context import MonitorContext, get_ctx, production_context
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 from scripts.orchestration import issue_stream_audit as audit
@@ -86,9 +85,19 @@ _REGISTRY_HEALTH: dict[str, Any] = {
 }
 
 
-def _store() -> SessionStreamStore:
-    """Open the API-host store; the path never crosses the HTTP boundary."""
-    return SessionStreamStore(SessionStreamDatabase(default_database_path(LIVE_REPO_ROOT)))
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _store(ctx: MonitorContext | None = None) -> SessionStreamStore:
+    """Return the API-host epic store; the path never crosses the HTTP boundary."""
+    store = _resolve_context(ctx).stores.epics_store
+    if store is None:
+        raise FileNotFoundError("epic store is unavailable")
+    return store
 
 
 def _response_registry_text(value: Any) -> str | None:
@@ -158,8 +167,14 @@ def seed_manifest_inventory(
     store: SessionStreamStore | None = None,
     handoff_root: Path | None = None,
     now: datetime | None = None,
+    ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     """Fail-open startup seed from the release registry into the live store."""
+    resolved = ctx if isinstance(ctx, MonitorContext) else None
+    if store is None or handoff_root is None:
+        resolved = resolved or production_context()
+        store = store or _store(resolved)
+        handoff_root = handoff_root or resolved.roots.live_repo_root
     registry_path: Path | None = None
     source_sha256: str | None = None
     try:
@@ -188,10 +203,10 @@ def seed_manifest_inventory(
 
     try:
         result = register_manifest_inventory(
-            store or _store(),
+            store,
             registry_root,
             streams_yaml=registry_path,
-            handoff_root=handoff_root or LIVE_REPO_ROOT,
+            handoff_root=handoff_root,
             read_handoff_files=False,
             now=now,
         )
@@ -505,9 +520,9 @@ def _claim_values(body: dict[str, Any]) -> tuple[str, str, str, LeaseHolder, int
 
 
 @router.get("/v1/health")
-def remote_health() -> JSONResponse:
+def remote_health(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
     try:
-        store = _store()
+        store = _store(ctx)
         # A first health probe is allowed to initialize the API-host schema;
         # subsequent reads verify the committed migration receipt.
         connection = store.database.connect()
@@ -528,9 +543,9 @@ def remote_health() -> JSONResponse:
 
 
 @router.get("/v1")
-def remote_epic_list() -> JSONResponse:
+def remote_epic_list(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
     try:
-        store = _store()
+        store = _store(ctx)
         registry_status = registry_health_snapshot()["status"]
         rows = []
         for row in store.list_remote_projections():
@@ -570,9 +585,9 @@ def remote_epic_list() -> JSONResponse:
     )
 
 
-def _load_issue_streams() -> dict[str, Any]:
+def _load_issue_streams(ctx: MonitorContext | None = None) -> dict[str, Any]:
     try:
-        path = resolve_streams_yaml(LIVE_REPO_ROOT)
+        path = resolve_streams_yaml(_resolve_context(ctx).roots.live_repo_root)
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
         if isinstance(data, dict) and isinstance(data.get("streams"), dict):
             return data["streams"]
@@ -581,24 +596,61 @@ def _load_issue_streams() -> dict[str, Any]:
     return {}
 
 
-@router.get("/graph/v1")
-async def remote_epics_graph(
-    fresh: bool = Query(False, description="Schedule a refresh instead of only serving the cache."),
-) -> JSONResponse:
-    """Epics & Areas Relationship Map backing endpoint (#7295, M5 of #7177)."""
+_GRAPH_IDLE_REFRESH = {
+    "schema_version": 1,
+    "run_id": None,
+    "phase": "idle",
+    "requested_at": None,
+    "started_at": None,
+    "last_outcome": "none",
+    "last_outcome_at": None,
+    "failure_code": None,
+    "cooldown_until": None,
+}
 
-    def _load() -> dict[str, Any]:
-        store = _store()
+
+def _graph_audit_inputs(*, fresh: bool) -> tuple[dict[str, Any] | None, dict[str, Any] | None, dict[str, Any]]:
+    """Load audit cache and refresh state without raising into the graph 503 wrapper.
+
+    Isolated OPSEC and merge-group checkouts have no host audit sidecar and
+    deny ``Popen``. ``schedule_refresh`` only swallows ``OSError``, so a denied
+    spawn leaked ``AssertionError`` as GET /api/epics/graph/v1 503 (#7413).
+    Degrade to the documented no-cache / idle envelope instead.
+    """
+    report: dict[str, Any] | None = None
+    stale: dict[str, Any] | None = None
+    try:
         report = audit.read_cache(max_age_s=3600)
-        stale = None if report is not None else audit.read_cache(max_age_s=7 * 24 * 3600)
-
+        if report is None:
+            stale = audit.read_cache(max_age_s=7 * 24 * 3600)
+    except Exception:
+        report = None
+        stale = None
+    try:
         state = (
             audit.schedule_refresh(force=fresh)
             if fresh or report is None
             else audit.read_refresh_state()
         )
+    except Exception:
+        state = dict(_GRAPH_IDLE_REFRESH)
+    if not isinstance(state, dict):
+        state = dict(_GRAPH_IDLE_REFRESH)
+    return report, stale, state
 
-        streams_data = _load_issue_streams()
+
+@router.get("/graph/v1")
+async def remote_epics_graph(
+    fresh: bool = Query(False, description="Schedule a refresh instead of only serving the cache."),
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
+    """Epics & Areas Relationship Map backing endpoint (#7295, M5 of #7177)."""
+
+    def _load() -> dict[str, Any]:
+        store = _store(ctx)
+        report, stale, state = _graph_audit_inputs(fresh=fresh)
+
+        streams_data = _load_issue_streams(ctx)
         audit_data = report if report is not None else (stale or {})
         effective_membership = audit_data.get("effective_membership") or {}
         open_issue_numbers = {int(n) for n in (audit_data.get("open_issue_numbers") or [])}
@@ -763,11 +815,15 @@ async def remote_epics_graph(
 
 
 @router.get("/v1/{stream_id}")
-def remote_epic_status(stream_id: str, limit: int = 20) -> JSONResponse:
+def remote_epic_status(
+    stream_id: str, limit: int = 20, ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     try:
         stream_id = _epic_stream(stream_id)
         limit = _digest_limit(limit)
-        return JSONResponse(content=_stream_response(_store(), stream_id, limit), headers={"Cache-Control": "no-store"})
+        return JSONResponse(
+            content=_stream_response(_store(ctx), stream_id, limit), headers={"Cache-Control": "no-store"}
+        )
     except NotFoundError:
         return _error(404, "epic stream not found")
     except (ValueError, ContentRejectedError):
@@ -777,14 +833,16 @@ def remote_epic_status(stream_id: str, limit: int = 20) -> JSONResponse:
 
 
 @router.post("/v1/{stream_id}/claim")
-def remote_claim(stream_id: str, request: Request, body: dict[str, Any]) -> JSONResponse:
+def remote_claim(
+    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     denied = _check_mutation_peer(request)
     if denied is not None:
         return denied
     try:
         stream_id = _epic_stream(stream_id)
         session_id, lease_id, lineage_id, holder, ttl, limit = _claim_values({**body, "stream_id": stream_id})
-        store = _store()
+        store = _store(ctx)
         _lease, outcome = store.claim_remote_session(
             stream_id=stream_id,
             holder=holder,
@@ -822,7 +880,9 @@ def remote_claim(stream_id: str, request: Request, body: dict[str, Any]) -> JSON
 
 
 @router.post("/v1/{stream_id}/heartbeat")
-def remote_heartbeat(stream_id: str, request: Request, body: dict[str, Any]) -> JSONResponse:
+def remote_heartbeat(
+    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     denied = _check_mutation_peer(request)
     if denied is not None:
         return denied
@@ -831,7 +891,7 @@ def remote_heartbeat(stream_id: str, request: Request, body: dict[str, Any]) -> 
         lease = _lease_from_payload({**body, "stream_id": stream_id})
         if lease.stream_id != stream_id:
             raise ValueError("stream mismatch")
-        store = _store()
+        store = _store(ctx)
         renewed = store.heartbeat(lease)
         projection = store.remote_stream_projection(stream_id)["lease"]
         return JSONResponse(
@@ -855,7 +915,9 @@ def remote_heartbeat(stream_id: str, request: Request, body: dict[str, Any]) -> 
 
 
 @router.post("/v1/{stream_id}/handoff")
-def remote_handoff(stream_id: str, request: Request, body: dict[str, Any]) -> JSONResponse:
+def remote_handoff(
+    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     denied = _check_mutation_peer(request)
     if denied is not None:
         return denied
@@ -879,7 +941,7 @@ def remote_handoff(stream_id: str, request: Request, body: dict[str, Any]) -> JS
                     "target_entry_id": _integer(ref.get("target_entry_id"), "target_entry_id"),
                 }
             )
-        store = _store()
+        store = _store(ctx)
         entry = store.append_entry(
             lease,
             entry_type=entry_type,
@@ -905,7 +967,9 @@ def remote_handoff(stream_id: str, request: Request, body: dict[str, Any]) -> JS
 
 
 @router.post("/v1/{stream_id}/bundles")
-def remote_bundle_upload(stream_id: str, request: Request, body: dict[str, Any]) -> JSONResponse:
+def remote_bundle_upload(
+    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     """Upload one cross-host bundle through the same fenced loopback mutation path."""
     denied = _check_mutation_peer(request)
     if denied is not None:
@@ -924,7 +988,7 @@ def remote_bundle_upload(stream_id: str, request: Request, body: dict[str, Any])
         if secret_hits:
             member, rule = secret_hits[0]
             raise ContentRejectedError(f"bundle member {member} matched {rule} rule")
-        store = _store()
+        store = _store(ctx)
         stored = store.upload_bundle(lease, manifest=manifest, blob=blob)
         return JSONResponse(
             content={"schema": SCHEMA, **_bundle_api_payload(stored, include_blob=False)},
@@ -944,10 +1008,11 @@ def remote_bundle_list(
     agent: str | None = None,
     lineage_id: str | None = None,
     limit: int = 20,
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     try:
         stream_id = _epic_stream(stream_id)
-        bundles = _store().list_rollover_bundles(
+        bundles = _store(ctx).list_rollover_bundles(
             stream_id,
             agent=agent,
             lineage_id=lineage_id,
@@ -966,10 +1031,15 @@ def remote_bundle_list(
 
 
 @router.get("/v1/{stream_id}/bundles/latest")
-def remote_bundle_latest(stream_id: str, agent: str | None = None, lineage_id: str | None = None) -> JSONResponse:
+def remote_bundle_latest(
+    stream_id: str,
+    agent: str | None = None,
+    lineage_id: str | None = None,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
     try:
         stream_id = _epic_stream(stream_id)
-        stored = _store().latest_rollover_bundle(stream_id, agent=agent, lineage_id=lineage_id)
+        stored = _store(ctx).latest_rollover_bundle(stream_id, agent=agent, lineage_id=lineage_id)
         return JSONResponse(
             content={"schema": SCHEMA, "stream_id": stream_id, **_bundle_api_payload(stored, include_blob=True)},
             headers={"Cache-Control": "no-store"},
@@ -983,10 +1053,12 @@ def remote_bundle_latest(stream_id: str, agent: str | None = None, lineage_id: s
 
 
 @router.get("/v1/{stream_id}/bundles/{upload_seq}")
-def remote_bundle_by_upload_seq(stream_id: str, upload_seq: int) -> JSONResponse:
+def remote_bundle_by_upload_seq(
+    stream_id: str, upload_seq: int, ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     try:
         stream_id = _epic_stream(stream_id)
-        stored = _store().rollover_bundle_by_upload_seq(stream_id, upload_seq)
+        stored = _store(ctx).rollover_bundle_by_upload_seq(stream_id, upload_seq)
         return JSONResponse(
             content={"schema": SCHEMA, "stream_id": stream_id, **_bundle_api_payload(stored, include_blob=True)},
             headers={"Cache-Control": "no-store"},
@@ -1000,13 +1072,15 @@ def remote_bundle_by_upload_seq(stream_id: str, upload_seq: int) -> JSONResponse
 
 
 @router.post("/v1/{stream_id}/release")
-def remote_release(stream_id: str, request: Request, body: dict[str, Any]) -> JSONResponse:
+def remote_release(
+    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+) -> JSONResponse:
     denied = _check_mutation_peer(request)
     if denied is not None:
         return denied
     try:
         stream_id = _epic_stream(stream_id)
-        store = _store()
+        store = _store(ctx)
         if body.get("force") is True:
             actor_agent = _token(body.get("actor_agent"), "actor_agent")
             actor_host_id = _host(body.get("actor_host_id"))

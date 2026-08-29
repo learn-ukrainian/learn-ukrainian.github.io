@@ -2,7 +2,11 @@ tests/ai_agent_bridge/test_module_identity.py
 tests/api/opsec_sweep/test_opsec_route_sweep.py
 tests/api/opsec_sweep/test_opsec_scan.py
 tests/api/test_app_factory.py
+tests/api/test_cluster_readiness.py
+tests/api/test_dashboard_monitor_context.py
 tests/api/test_import_pinning.py
+tests/api/test_route_locality.py
+tests/api/test_sources_router_context.py
 tests/control_plane/test_storage.py
 tests/test_ask_opencode.py
 tests/test_bio_preparation_ci_routing.py
@@ -13,6 +17,7 @@ tests/test_fleet_routing_open_model_data_import_guard.py
 tests/test_frontend_change_scope.py
 tests/test_lexicon_manifest_fingerprint.py
 tests/test_lint_test_assertions.py
+tests/test_monitor_client_failover.py
 tests/test_path_safety.py
 tests/test_repo_invariant_fastlane.py
 tests/test_ruff_ci_scope.py

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -13,6 +14,20 @@ import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+
+
+def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
+    """Redirect delegate task reads to a disposable tasks directory."""
+    tasks_dir = Path(tasks_dir)
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    ctx = replace(
+        api_main.app.state.ctx,
+        roots=replace(api_main.app.state.ctx.roots, batch_state_dir=tasks_dir.parent),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
+    monkeypatch.setattr(delegate_router, "production_context", lambda: ctx)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
+    return ctx
 
 
 def _iso(dt: datetime) -> str:
@@ -76,7 +91,7 @@ def _patch_non_delegate_orient_sources(monkeypatch) -> None:
 
 def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _reset_orient_cache()
     _patch_non_delegate_orient_sources(monkeypatch)
 
@@ -123,7 +138,7 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
 
 def test_delegate_active_filters_before_limit_truncation(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     def fake_kill(pid: int, sig: int) -> None:
         if pid != 111:
@@ -170,7 +185,7 @@ def test_delegate_active_filters_before_limit_truncation(tmp_path, monkeypatch):
 def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     task_path = tasks_dir / "running.json"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(task_path, _task_payload("running", status="running", pid=111))
 
     # _read_task_state opens via builtins.open (CodeQL sink-colocated guard),
@@ -208,7 +223,7 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
 
 def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     def fake_kill(pid: int, sig: int) -> None:
         if pid != 111:
@@ -261,7 +276,7 @@ def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
 def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_path, monkeypatch):
     """Cold process restart loads persistent SQLite cache and skips reading terminal files."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     now = datetime.now(UTC)
     for index in range(50):
@@ -308,7 +323,7 @@ def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_pat
 def test_delegate_persistent_cache_invalidates_on_mtime_change(tmp_path, monkeypatch):
     """When a task state file is updated on disk (mtime changes), the cache refreshes."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     task_file = tasks_dir / "task-1.json"
     _write_task(task_file, _task_payload("task-1", status="spawning", pid=None))
@@ -335,7 +350,7 @@ def test_delegate_persistent_cache_invalidates_on_mtime_change(tmp_path, monkeyp
 def test_delegate_persistent_cache_detects_dead_pid_on_restart(tmp_path, monkeypatch):
     """Dead PIDs are reclassified as zombie even when loaded from persistent cache."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _pin_tasks_dir(monkeypatch, tasks_dir)
 
     _write_task(
         tasks_dir / "crashed.json",

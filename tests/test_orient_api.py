@@ -8,6 +8,7 @@ import os
 import subprocess
 import threading
 import time
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -193,10 +194,13 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     repo = _init_orient_git_repo(tmp_path)
     (repo / "tracked.txt").write_text("dirty\n", encoding="utf-8")
     _patch_orient_sources(monkeypatch)
-    monkeypatch.setattr(api_main, "PROJECT_ROOT", repo)
-    # Release-mode split (#4931): git probes target the live checkout, so the
-    # collector reads LIVE_REPO_ROOT — patch it where used alongside PROJECT_ROOT.
-    monkeypatch.setattr(api_main, "LIVE_REPO_ROOT", repo)
+    base_ctx = api_main.production_context()
+    patched_ctx = replace(
+        base_ctx,
+        roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
+    )
+    monkeypatch.setattr(api_main, "production_context", lambda: patched_ctx)
+    monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
 
     response = client.get("/api/orient?fresh=true")
@@ -225,9 +229,13 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
     original_git_collector = api_main._collect_git_orient_data
     repo = _init_orient_git_repo(tmp_path)
     _patch_orient_sources(monkeypatch)
-    monkeypatch.setattr(api_main, "PROJECT_ROOT", repo)
-    # Release-mode split (#4931): see the dirty-signal test above.
-    monkeypatch.setattr(api_main, "LIVE_REPO_ROOT", repo)
+    base_ctx = api_main.production_context()
+    patched_ctx = replace(
+        base_ctx,
+        roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
+    )
+    monkeypatch.setattr(api_main, "production_context", lambda: patched_ctx)
+    monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
 
     from scripts.guardrails import worktree_containment

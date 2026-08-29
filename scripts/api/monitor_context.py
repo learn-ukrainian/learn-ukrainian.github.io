@@ -18,10 +18,14 @@ from agents_extensions.shared.session_streams.db import (
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 from . import config
-from .docs_router import EFFECTIVE_ROOTS
 from .observer_presence import _STORE as _PRESENCE_STORE
 from .project_state_store import _STORE as _REPORT_STORE
 from .resilience import connect_sqlite
+
+# Production singleton for work-router single-flight handles. Fixture contexts
+# get a fresh dict; production_context() reuses this object so existing tests
+# that inspect ``work_router._IN_FLIGHT_BUILDS`` keep seeing the live slot map.
+_WORK_IN_FLIGHT_BUILDS: dict[Any, Any] = {}
 
 
 def _as_path(value: os.PathLike[str] | str) -> Path:
@@ -49,10 +53,18 @@ class MonitorRoots:
     effective_roots: Mapping[str, Path] = field(default_factory=dict)
     images_dir: Path | None = None
     textbooks_dir: Path | None = None
-    sources_db_path: Path | None = None
-    message_db_path: Path | None = None
-    session_streams_db_path: Path | None = None
-    epics_db_path: Path | None = None
+    sources_db_path: Path = Path()
+    message_db_path: Path = Path()
+    session_streams_db_path: Path = Path()
+    epics_db_path: Path = Path()
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.effective_roots, MappingProxyType):
+            object.__setattr__(
+                self,
+                "effective_roots",
+                _frozen_mapping(self.effective_roots),
+            )
 
     def __getitem__(self, name: str) -> Path | Mapping[str, Path] | None:
         return getattr(self, name)
@@ -60,13 +72,12 @@ class MonitorRoots:
 
 @dataclass(frozen=True)
 class DatabaseHandle:
-    """A validated database target whose connection is opened on demand."""
+    """Read-only or read-write handle to a SQLite database."""
 
     path: Path
     _opener: Callable[..., Any] = field(repr=False, compare=False)
 
     def connect(self, *, read_only: bool = False) -> Any:
-        """Open the database through its owning context."""
         return self._opener(self.path, read_only=read_only)
 
     open = connect
@@ -84,6 +95,8 @@ class MonitorStores:
     session_streams_store: SessionStreamStore | None = None
     epics_database: SessionStreamDatabase | None = None
     epics_store: SessionStreamStore | None = None
+    image_store: Any = None
+    work_in_flight: dict[Any, Any] | None = None
 
     def __getitem__(self, name: str) -> Any:
         return getattr(self, name)
@@ -132,16 +145,11 @@ def get_ctx(request: Request) -> MonitorContext:
 
 
 def _effective_roots(project_root: Path) -> Mapping[str, Path]:
-    project_root_resolved = project_root.resolve()
-    remapped: dict[str, Path] = {}
-    for name, path in EFFECTIVE_ROOTS.items():
-        candidate = Path(path)
-        try:
-            relative = candidate.resolve().relative_to(project_root_resolved)
-        except ValueError:
-            relative = Path(name)
-        remapped[name] = project_root / relative
-    return _frozen_mapping(remapped)
+    from .docs_router import (  # noqa: PLC0415  # lazy-ok: avoid circular import between monitor_context and docs_router
+        build_effective_roots,
+    )
+
+    return _frozen_mapping(build_effective_roots(project_root))
 
 
 def _roots(
@@ -185,9 +193,25 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
     if fixture:
         presence_store: dict[Any, Any] = {}
         report_store: dict[Any, Any] = {}
+        work_in_flight: dict[Any, Any] = {}
     else:
         presence_store = _PRESENCE_STORE
         report_store = _REPORT_STORE
+        work_in_flight = _WORK_IN_FLIGHT_BUILDS
+
+    from .images_router import (  # noqa: PLC0415  # lazy-ok: avoid circular import between monitor_context and images_router
+        ImageStore,
+    )
+
+    images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
+    textbooks_dir = roots.textbooks_dir or (roots.project_root / "data" / "textbooks")
+    annotations_file = images_dir / "image_text_pairs.jsonl"
+    image_store = ImageStore(
+        images_dir=images_dir,
+        textbooks_dir=textbooks_dir,
+        annotations_file=annotations_file,
+        project_root=roots.project_root,
+    )
 
     return MonitorStores(
         sources_db=DatabaseHandle(roots.sources_db_path, context._open_db),
@@ -198,6 +222,8 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         session_streams_store=SessionStreamStore(session_database),
         epics_database=epics_database,
         epics_store=SessionStreamStore(epics_database),
+        image_store=image_store,
+        work_in_flight=work_in_flight,
     )
 
 

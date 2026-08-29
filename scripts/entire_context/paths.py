@@ -39,7 +39,10 @@ def shared_repository_root(cwd: Path | str) -> Path:
             check=False,
             timeout=10,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, subprocess.TimeoutExpired, AssertionError):
+        # AssertionError covers test/OPSEC denied-subprocess backstops so a
+        # non-repository caller still falls back to its own working directory
+        # instead of leaking a 500 through Monitor (#7269 step 8).
         return root
     if completed.returncode != 0:
         return root

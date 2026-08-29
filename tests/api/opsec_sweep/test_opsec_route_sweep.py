@@ -27,28 +27,18 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    docs_router,
-    entire_context_router,
+    dashboard_helpers,
     epics_router,
     fleet_router,
-    git_hygiene_router,
-    governance_router,
-    images_router,
     issues_router,
     opsec_scan,
     route_contracts,
-    site_router,
     state_helpers,
-    work_router,
-    worktrees_router,
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet_comms import message_plane
-from scripts.guardrails import worktree_containment
-from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
 
@@ -62,6 +52,7 @@ FROZEN_IDS = frozenset(
         "admin-backup-dir",
         "fleet-workers-host-id",
         "occupancy-host-id",
+        "health-instance-host",
         "retention-plan-dir",
         "retention-archive-root",
         "dashboard-index-localhost",
@@ -164,10 +155,6 @@ def _fixture_run_command(args: Any, **_kwargs: Any) -> subprocess.CompletedProce
     return _fixture_completed_process(args)
 
 
-def _fixture_missing_sources_db() -> Any:
-    raise FileNotFoundError("isolated OPSEC fixture has no source database")
-
-
 def _fixture_reap_run(
     args: list[str],
     *,
@@ -176,16 +163,6 @@ def _fixture_reap_run(
 ) -> subprocess.CompletedProcess[str]:
     del cwd, timeout
     return _fixture_completed_process(args, returncode=127, stderr="fixture git unavailable")
-
-
-def _fixture_health_identity() -> dict[str, str | None]:
-    return {
-        "host": "fixture-host",
-        "git_sha": None,
-        "checkout_sha": None,
-        "serving_sha": None,
-        "serving_mode": "checkout",
-    }
 
 
 REAL_BOARD_PROBE_KEYS = frozenset(
@@ -248,14 +225,13 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # different fixture root. Replace the mutable stores rather than allowing
     # a prior test (or a background projection build) to replay another root's
     # logical work ids into this sweep.
-    monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     monkeypatch.setattr(state_helpers, "_ttl_cache", {})
+    dashboard_helpers._track_cache.clear()
+    dashboard_helpers._summary_cache.clear()
     fixture_ctx = fixture_context(root)
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
     session_connection = fixture_ctx.stores.session_streams_database.connect()
     session_connection.close()
-    epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
-    monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     session_database = SessionStreamDatabase(root / "stores" / "session-streams.sqlite3")
     legacy_connection = session_database.connect()
     legacy_connection.close()
@@ -266,8 +242,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         "schema_version: issue-streams.v1\nstreams: {}\n",
         encoding="utf-8",
     )
-    monkeypatch.setattr(api_main, "_health_instance_identity", _fixture_health_identity)
-    monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"{HOST_ALIAS_CANARY}={HOST_ID_CANARY}")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", HOST_ID_CANARY)
@@ -303,89 +277,46 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # project_state_router._collect_missing_local_document's existing broad
     # except already treats as a failed collection, so the route degrades to
     # its documented "unknown" shape without a route-specific stub.
-    monkeypatch.setattr(
-        git_hygiene_router,
-        "_run_git",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
-    monkeypatch.setattr(
-        worktrees_router,
-        "_run",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
+    # NOTE (#7269 step 8): git_hygiene_router._run_git, the three
+    # entire_context_router provider/projection stubs, and
+    # worktree_containment.primary_checkout_dirty_status are gone. Hygiene
+    # routes treat the global denied-subprocess AssertionError as
+    # git-unavailable; entire-context reads the fixture root and degrades
+    # to projection_missing / provider_status_missing; core_router's
+    # existing except around primary_checkout_dirty_status already
+    # degrades that collector.
     monkeypatch.setattr(
         issues_router,
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
     )
-    monkeypatch.setattr(
-        site_router,
-        "_run",
-        lambda args, **_kwargs: _fixture_completed_process(
-            args,
-            returncode=127,
-            stderr="fixture command unavailable",
-        ),
-    )
-    monkeypatch.setattr(
-        governance_router,
-        "collect_adr_governance",
-        lambda: {
-            "total": 0,
-            "stale_proposed_count": 0,
-            "error_count": 0,
-            "warning_count": 0,
-            "broken_chains": [],
-            "orphaned_refs": [],
-            "promotion_candidates": [],
-            "index": [],
-        },
-    )
-    monkeypatch.setattr(
-        entire_context_router,
-        "projection_path",
-        lambda cwd: Path(cwd) / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3",
-    )
-    monkeypatch.setattr(entire_context_router, "load_provider_status", lambda _root: {})
-    monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
+    # NOTE (#7413): epics graph audit sidecars and spawn workers are isolated
+    # so the sweep never reads/writes host cache or spawns refresh jobs.
+    _idle_refresh = {
+        "schema_version": 1,
+        "run_id": None,
+        "phase": "idle",
+        "requested_at": None,
+        "started_at": None,
+        "last_outcome": "none",
+        "last_outcome_at": None,
+        "failure_code": None,
+        "cooldown_until": None,
+    }
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: None)
+    monkeypatch.setattr(epics_router.audit, "schedule_refresh", lambda force=False: dict(_idle_refresh))
+    monkeypatch.setattr(epics_router.audit, "read_refresh_state", lambda: dict(_idle_refresh))
+    # NOTE (#7269 step 12c): collect_adr_governance now short-circuits on a
+    # fixture context (ctx.root is not None), so the sweep no longer stubs it.
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
-    monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
-    monkeypatch.setattr(
-        worktree_containment,
-        "primary_checkout_dirty_status",
-        lambda _start: {
-            "role": "primary",
-            "head_sha": "0" * 40,
-            "branch": "opsec-fixture",
-            "protected_branch": False,
-            "dirty": False,
-            "dirty_count": 0,
-            "tracked_dirty_count": 0,
-            "untracked_dirty_count": 0,
-            "entries": [],
-            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
-            "bare_primary": False,
-            "bare_healed": False,
-            "bare_heal_message": None,
-        },
-    )
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
-    # RAG imports its source DB lazily outside the scripts.api namespace. The
-    # top-level ``rag.query`` import resolves ``wiki.sources_db`` while this
-    # fixture imports ``scripts.wiki.sources_db``; both module identities must
-    # point at the same nonexistent worker-local path. The missing-corpus
-    # behavior then stays on the documented empty-response path.
-    fixture_sources_db = root / "stores" / "sources.db"
-    rag_query = importlib.import_module("rag.query")
-    search_db_modules = {
-        sources_db,
-        rag_query.sources_db,
-    }
-    for search_db_module in search_db_modules:
-        monkeypatch.setattr(search_db_module, "SOURCES_DB_PATH", fixture_sources_db)
-        monkeypatch.setattr(search_db_module, "_conn", None)
-    monkeypatch.setattr(sources_db, "_get_conn", _fixture_missing_sources_db)
+    # #7269 step 10: sources/RAG routes open the corpus through
+    # ``ctx.stores.sources_db`` (``fixture_context`` already roots that
+    # handle under this worker tree). Keep ``rag.query`` imported so the
+    # wiki-prefix external-store loop still owns ``wiki.sources_db``
+    # Path globals (step 12d). The RAG-specific setattr copies are gone.
+    importlib.import_module("rag.query")
 
     # The route sweep also traverses diagnostics that import their own local
     # stores outside ``scripts.api``. Repoint those module-level paths before
@@ -412,21 +343,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
                 replacement.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(module, name, replacement)
 
-    # Image discovery is also lazy, but its index and page caches are module
-    # singletons. Repoint its file roots and recreate the singletons so a prior
-    # test cannot leak real checkout data into this isolated route sweep.
-    monkeypatch.setattr(images_router, "IMAGES_DIR", root / "stores" / "images")
-    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", root / "stores" / "textbooks")
-    monkeypatch.setattr(
-        images_router,
-        "ANNOTATIONS_FILE",
-        root / "stores" / "image_text_pairs.jsonl",
-    )
-    monkeypatch.setattr(images_router, "_index", images_router._ImageIndex())
-    monkeypatch.setattr(images_router, "_pdf_pool", images_router._PDFPool())
-    monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
-    monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
-
     # NOTE (#7269 step 5): the step-5 inventory row originally attributed
     # this seam to comms_router, but its only sweep consumer is the
     # still-unmigrated fleet facade route (fleet_router.py:598 ->
@@ -448,34 +364,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         _deny_real_database_connect(root, sqlite3.connect),
     )
 
-    # These docs roots are derived once at import time rather than exposed as
-    # individual Path globals. Rebuild the lookup tables so docs requests
-    # cannot traverse back into the checkout.
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", root)
-    docs_root = root / "docs"
-    audit_root = root / "audit"
-    allowed_roots = {
-        "audit": audit_root,
-        "session-state": docs_root / "session-state",
-        "handoffs": docs_root / "handoffs",
-        "reports": docs_root / "reports",
-        "architecture": docs_root / "architecture",
-        "best-practices": docs_root / "best-practices",
-        "decisions": docs_root / "decisions",
-        "references": docs_root / "references" / "external",
-        "proposals": docs_root / "proposals",
-        "poc": docs_root / "poc",
-    }
-    for path in [*allowed_roots.values(), docs_root, audit_root]:
-        path.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", allowed_roots)
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (docs_root, audit_root))
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", dict(allowed_roots))
-    # Dashboard paths are imported from PROJECT_ROOT at module import time;
-    # bind both consumers to the same resolved fixture root as the docs roots.
     dashboards_root = root / "dashboards"
-    monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
-    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", dashboards_root)
 
     # Facade/status readers retain imported references to the resolver;
     # redirect every such reference into the disposable tree instead of
@@ -500,10 +389,9 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         if "build_repository_authority" in vars(module):
             monkeypatch.setattr(module, "build_repository_authority", lambda **_kwargs: None)
 
-    for dashboards_dir in {api_main.DASHBOARDS_DIR, docs_router.DASHBOARDS_DIR}:
-        dashboards_dir.mkdir(parents=True, exist_ok=True)
-        for filename in ("index.html", "artifacts.html"):
-            (dashboards_dir / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
+    dashboards_root.mkdir(parents=True, exist_ok=True)
+    for filename in ("index.html", "artifacts.html"):
+        (dashboards_root / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
     shutil.copytree(
         Path(__file__).resolve().parents[3] / "dashboards",
         dashboards_root,
@@ -512,11 +400,11 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
 
     # The source and the injected seams must both carry the planted canary
     # before any response is considered safe to scan.
-    assert root / "seams" / "scripts_api_main" / "project_root" == api_main.PROJECT_ROOT
+    assert root == fixture_ctx.roots.project_root
     assert HOST_ALIAS_CANARY in os.environ["MONITOR_OCCUPANCY_HOST_IDS"]
     assert os.environ["LU_MONITOR_HOST_ID"] == HOST_ID_CANARY
-    assert PATH_CANARY in str(api_main.PROJECT_ROOT.parent.parent.parent)
-    assert PATH_CANARY in str(docs_router.EFFECTIVE_ROOTS["audit"])
+    assert PATH_CANARY in str(fixture_ctx.roots.project_root)
+    assert PATH_CANARY in str(fixture_ctx.roots.effective_roots["audit"])
     assert PATH_CANARY in str(message_plane.default_plane_root())
 
     return IsolatedFixture(

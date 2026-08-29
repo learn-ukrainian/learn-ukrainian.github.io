@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 import urllib.error
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +34,20 @@ from scripts.research import consumption
 from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+
+
+def _ctx_with_live_repo_root(live_repo_root: Path):
+    """Redirect live repo root for HTTP calls through ``client``.
+
+    ``knowledge_router`` resolves registry roots from MonitorContext (#7269 step 12c),
+    so tests swap ``app.state.ctx``.
+    """
+    base = api_main.app.state.ctx
+    root = Path(live_repo_root)
+    return replace(
+        base,
+        roots=replace(base.roots, live_repo_root=root),
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -93,6 +108,7 @@ def _write_registry(root: Path, records: list[dict[str, Any]]) -> None:
 def reg_root(tmp_path, monkeypatch):
     """Hermetic tmp root with the feature forced ON via env."""
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "true")
     return tmp_path
 
@@ -224,6 +240,7 @@ def test_orient_roles_do_not_share_cache(reg_root):
 
 def test_orient_disabled_has_no_research_even_with_role(tmp_path, monkeypatch):
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "false")
     _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
     assert "research" not in _orient({"role": "quality"}).json()
@@ -264,6 +281,7 @@ def test_cold_start_endpoint_uses_cold_start_roles_not_routing(reg_root):
 
 def test_cold_start_endpoint_disabled_and_missing_role(tmp_path, monkeypatch):
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "false")
     _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
     assert client.get("/api/knowledge/cold-start", params={"role": "quality"}).json() == {
@@ -292,7 +310,7 @@ def task_store(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
 
     def _put(task_id: str, *, status: str = "spawning", pid: int | None = None) -> None:
         safe = task_id.replace("/", "_").replace("\\", "_")
@@ -412,7 +430,7 @@ def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
     from scripts.api import delegate_router
 
-    (delegate_router.TASKS_DIR / "collide.json").write_text(
+    (delegate_router._tasks_dir() / "collide.json").write_text(
         json.dumps({"task_id": "other-id", "status": "running", "pid": os.getpid()}), "utf-8"
     )
     resp = client.get("/api/knowledge/record/r1", params={"task": "collide"})

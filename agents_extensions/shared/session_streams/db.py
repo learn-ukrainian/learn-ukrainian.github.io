@@ -66,7 +66,12 @@ def canonical_state_root(repo_root: Path | None = None) -> Path:
 
 
 def default_database_path(repo_root: Path | None = None) -> Path:
-    return canonical_state_root(repo_root) / DEFAULT_RELATIVE_DATABASE
+    try:
+        return canonical_state_root(repo_root) / DEFAULT_RELATIVE_DATABASE
+    except SessionStreamDatabaseError:
+        if repo_root is not None:
+            return (repo_root / DEFAULT_RELATIVE_DATABASE).resolve()
+        raise
 
 
 def load_migrations() -> tuple[Migration, ...]:

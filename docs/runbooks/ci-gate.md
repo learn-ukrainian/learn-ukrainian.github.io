@@ -18,7 +18,10 @@ an operational guard, not a change to `ci.yml`'s job graph or `CI Gate` needs.
   duration snapshot; each Python shard collects the required selection and
   computes its own file-grouped LPT plan in parallel. CI Gate verifies the
   source/selection/snapshot metadata, exact node-ID receipts, JUnit counts,
-  and complete four-shard partition.
+  and complete four-shard partition. `Publish pytest durations` now runs on
+  successful merge_group as well as push-to-main (step summary + artifact).
+  Cache save stays push-to-main only. The merge_group Gate does not require
+  that job; the push Gate still does.
 
 Aggregation is `scripts/ci/gate_required_results.py` (fail-closed on missing,
 failed, cancelled, or unexpectedly skipped required jobs). The fastlane's

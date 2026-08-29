@@ -26,7 +26,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
@@ -56,17 +56,12 @@ from .artifacts_router import router as artifacts_router
 from .atlas_jobs_router import router as atlas_jobs_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
+from .cluster_router import router as cluster_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
 from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
 from .config import (
-    BATCH_STATE_DIR,
-    CURRICULUM_ROOT,
-    DASHBOARDS_DIR,
     LEVELS,
-    LIVE_REPO_ROOT,
-    MESSAGE_DB,
-    PROJECT_ROOT,
 )
 from .consultation_router import router as consultation_router
 from .coordination_router import router as coordination_router
@@ -88,7 +83,7 @@ from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
-from .monitor_context import MonitorContext, production_context
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .observer_presence import router as observer_presence_router
 from .occupancy import router as occupancy_router
 from .occupancy_local import resolve_launcher_host_id
@@ -129,16 +124,19 @@ async def _lifespan(_app: FastAPI):
     preload_all()
     install_signal_logging()
     ensure_broker_db_ready()
+    ctx = _app.state.ctx
     seed_manifest_inventory(
-        PROJECT_ROOT,
-        handoff_root=LIVE_REPO_ROOT,
+        ctx.roots.project_root,
+        store=ctx.stores.epics_store,
+        handoff_root=ctx.roots.live_repo_root,
+        ctx=ctx,
     )
     try:
         isa.schedule_refresh(force=False)
     except Exception as exc:
         logger.warning("Issue stream audit refresh schedule on startup failed: %s", exc)
     try:
-        warm_projection_cache()
+        warm_projection_cache(ctx=ctx)
     except Exception as exc:
         logger.warning("Work projection warmup schedule on startup failed: %s", exc)
     start_periodic_refresh()
@@ -238,8 +236,16 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Server start time for uptime calculation
 _SERVER_START = datetime.now(UTC)
-SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
-SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    app_ctx = getattr(app.state, "ctx", None) if "app" in globals() else None
+    if isinstance(app_ctx, MonitorContext):
+        return app_ctx
+    return production_context()
 
 # --- /api/orient caching + failure isolation (GH #1309) ----------------
 #
@@ -398,23 +404,31 @@ def _isoformat_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _run_command(args: list[str], *, timeout: float = 2.0) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        args,
-        cwd=LIVE_REPO_ROOT if args and args[0] == "git" else PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-        check=False,
-    )
+def _run_command(args: list[str], *, timeout: float = 2.0, ctx: MonitorContext | None = None) -> subprocess.CompletedProcess[str]:
+    resolved_ctx = _resolve_context(ctx)
+    cwd = resolved_ctx.roots.live_repo_root if args and args[0] == "git" else resolved_ctx.roots.project_root
+    if not Path(cwd).exists():
+        return subprocess.CompletedProcess(args=args, returncode=127, stdout="", stderr="cwd does not exist")
+    try:
+        return subprocess.run(
+            args,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        return subprocess.CompletedProcess(args=args, returncode=127, stdout="", stderr=str(exc))
 
 
-def _collect_git_orient_data() -> dict:
-    branch_proc = _run_command(["git", "branch", "--show-current"])
-    head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"])
-    full_head_proc = _run_command(["git", "rev-parse", "HEAD"])
-    ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"])
-    log_proc = _run_command(["git", "log", "--oneline", "-5"])
+def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
+    resolved_ctx = _resolve_context(ctx)
+    branch_proc = _run_command(["git", "branch", "--show-current"], ctx=ctx) if ctx is not None else _run_command(["git", "branch", "--show-current"])
+    head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-parse", "--short=9", "HEAD"])
+    full_head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-parse", "HEAD"])
+    ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-list", "--count", "origin/main..HEAD"])
+    log_proc = _run_command(["git", "log", "--oneline", "-5"], ctx=ctx) if ctx is not None else _run_command(["git", "log", "--oneline", "-5"])
 
     if branch_proc.returncode != 0:
         raise RuntimeError(branch_proc.stderr.strip() or "git branch failed")
@@ -438,7 +452,7 @@ def _collect_git_orient_data() -> dict:
         except ValueError:
             ahead_value = 0
     try:
-        primary_status = worktree_containment.primary_checkout_dirty_status(LIVE_REPO_ROOT)
+        primary_status = worktree_containment.primary_checkout_dirty_status(resolved_ctx.roots.live_repo_root)
     except Exception:
         branch = branch_proc.stdout.strip()
         primary_status = {
@@ -452,8 +466,8 @@ def _collect_git_orient_data() -> dict:
 
     branch = branch_proc.stdout.strip()
     authority = build_repository_authority(
-        project_root=PROJECT_ROOT,
-        live_repo_root=LIVE_REPO_ROOT,
+        project_root=resolved_ctx.roots.project_root,
+        live_repo_root=resolved_ctx.roots.live_repo_root,
         data_branch=branch,
     )
     return {
@@ -468,12 +482,12 @@ def _collect_git_orient_data() -> dict:
             or (full_head_proc.stdout.strip() if full_head_proc.returncode == 0 else None),
             "dirty_count": int(primary_status.get("dirty_count", 0)),
         },
-        "cwd_role": cwd_role(Path(LIVE_REPO_ROOT)),
+        "cwd_role": cwd_role(Path(resolved_ctx.roots.live_repo_root)),
         "authority": authority,
     }
 
 
-def _collect_issues_orient_data() -> dict:
+def _collect_issues_orient_data(ctx: MonitorContext | None = None) -> dict:
     """Fetch open GitHub issues via ``gh``.
 
     Raises ``RuntimeError`` on any failure (subprocess error, non-zero
@@ -482,22 +496,18 @@ def _collect_issues_orient_data() -> dict:
     not poison the issues cache for the full TTL window (reviewer
     BLOCKER, GH #1309).
     """
-    proc = _run_command(
-        [
-            "gh",
-            "issue",
-            "list",
-            "--state",
-            "open",
-            "--limit",
-            "10",
-            "--json",
-            "number,title,labels,createdAt",
-        ],
-        # /api/orient is part of dashboard cold load. Issue details are useful,
-        # but not important enough to let a slow gh/network path dominate it.
-        timeout=5.0,
-    )
+    cmd = [
+        "gh",
+        "issue",
+        "list",
+        "--state",
+        "open",
+        "--limit",
+        "10",
+        "--json",
+        "number,title,labels,createdAt",
+    ]
+    proc = _run_command(cmd, timeout=5.0, ctx=ctx) if ctx is not None else _run_command(cmd, timeout=5.0)
 
     if proc.returncode != 0:
         error = proc.stderr.strip() or proc.stdout.strip() or "gh issue list failed"
@@ -646,29 +656,27 @@ def _eligible_idle_pr(pr: dict[str, Any], *, now: datetime) -> dict[str, Any] | 
     }
 
 
-def _collect_idle_prs_orient_data() -> dict[str, Any]:
+def _collect_idle_prs_orient_data(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Fetch and filter the compact green+reviewed+idle PR projection.
 
     This function is only called by the detached refresh worker. The endpoint
     itself uses ``_cached_idle_pr_section`` and never waits for this ``gh``
     subprocess.
     """
-    proc = _run_command(
-        [
-            "gh",
-            "pr",
-            "list",
-            "--repo",
-            IDLE_PR_REPOSITORY,
-            "--state",
-            "open",
-            "--limit",
-            "1000",
-            "--json",
-            "number,state,isDraft,headRefName,headRefOid,updatedAt,reviewDecision,reviews,comments,statusCheckRollup,mergeStateStatus",
-        ],
-        timeout=IDLE_PR_FETCH_TIMEOUT_S,
-    )
+    cmd = [
+        "gh",
+        "pr",
+        "list",
+        "--repo",
+        IDLE_PR_REPOSITORY,
+        "--state",
+        "open",
+        "--limit",
+        "1000",
+        "--json",
+        "number,state,isDraft,headRefName,headRefOid,updatedAt,reviewDecision,reviews,comments,statusCheckRollup,mergeStateStatus",
+    ]
+    proc = _run_command(cmd, timeout=IDLE_PR_FETCH_TIMEOUT_S, ctx=ctx) if ctx is not None else _run_command(cmd, timeout=IDLE_PR_FETCH_TIMEOUT_S)
     if proc.returncode != 0:
         error = proc.stderr.strip() or proc.stdout.strip() or "gh pr list failed"
         raise RuntimeError(error)
@@ -886,8 +894,9 @@ async def _cached_detached_orient_section(
     return fallback, meta
 
 
-async def _collect_pipeline_orient_data() -> dict:
-    return {"summary": await state_api.state_summary()}
+async def _collect_pipeline_orient_data(ctx: MonitorContext | None = None) -> dict:
+    resolved_ctx = _resolve_context(ctx)
+    return {"summary": await state_api.state_summary(fresh=False, ctx=resolved_ctx)}
 
 
 _gc_sweep_lock = threading.Lock()
@@ -895,7 +904,7 @@ _gc_sweep_thread: threading.Thread | None = None
 _last_gc_sweep_summary: dict[str, Any] | None = None
 
 
-def _maybe_run_worktree_gc_sweep() -> None:
+def _maybe_run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
     # Check kill switch first
     kill_switch = os.environ.get("LEARN_UK_WORKTREE_GC", "1")
     if kill_switch in ("0", "false", "no", "False", "NO"):
@@ -914,18 +923,20 @@ def _maybe_run_worktree_gc_sweep() -> None:
     # Set cache to prevent concurrent triggering
     cache_set("worktree_gc_sweep", True)
 
+    resolved_ctx = _resolve_context(ctx)
     global _gc_sweep_thread
     with _gc_sweep_lock:
         if _gc_sweep_thread is not None and _gc_sweep_thread.is_alive():
             return
-        _gc_sweep_thread = threading.Thread(target=_run_worktree_gc_sweep, daemon=True)
+        _gc_sweep_thread = threading.Thread(target=_run_worktree_gc_sweep, args=(resolved_ctx,), daemon=True)
         _gc_sweep_thread.start()
 
 
-def _run_worktree_gc_sweep() -> None:
+def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
     global _last_gc_sweep_summary
     try:
-        repo_root = primary_checkout_root(PROJECT_ROOT)
+        resolved_ctx = _resolve_context(ctx)
+        repo_root = primary_checkout_root(resolved_ctx.roots.project_root)
 
         results = reap_worktrees(
             repo_root=repo_root,
@@ -949,9 +960,17 @@ def _run_worktree_gc_sweep() -> None:
         logger.exception("worktree GC sweep failed: %s", exc)
 
 
-def _collect_runtime_orient_data() -> dict:
-    _maybe_run_worktree_gc_sweep()
-    agents = runtime_api.list_runtime_agents()
+def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
+    if ctx is not None:
+        _maybe_run_worktree_gc_sweep(ctx=ctx)
+        agents = runtime_api.list_runtime_agents(ctx=ctx)
+        usage = runtime_api.summarize_runtime_usage(days=1, ctx=ctx)
+        recent = runtime_api.runtime_recent_outcomes_today(ctx=ctx)
+    else:
+        _maybe_run_worktree_gc_sweep()
+        agents = runtime_api.list_runtime_agents()
+        usage = runtime_api.summarize_runtime_usage(days=1)
+        recent = runtime_api.runtime_recent_outcomes_today()
     headroom = {}
     for agent_info in agents:
         name = agent_info.get("name")
@@ -964,12 +983,11 @@ def _collect_runtime_orient_data() -> dict:
             ok = False
         headroom[str(name)] = ok
 
-    usage = runtime_api.summarize_runtime_usage(days=1)
     by_agent = usage.get("by_agent", {})
 
     res = {
         "agents": [agent["name"] for agent in agents if agent.get("name")],
-        "recent_outcomes": runtime_api.runtime_recent_outcomes_today(),
+        "recent_outcomes": recent,
         "by_agent": by_agent,
         "headroom": headroom,
     }
@@ -978,16 +996,28 @@ def _collect_runtime_orient_data() -> dict:
     return res
 
 
-def _collect_delegate_orient_data() -> dict:
-    recent = delegate_api.list_delegate_tasks(status="all", limit=5)
+def _collect_delegate_orient_data(ctx: MonitorContext | None = None) -> dict:
+    if ctx is not None:
+        recent = delegate_api.list_delegate_tasks(status="all", limit=5, ctx=ctx)
+        active = delegate_api.active_delegate_count(ctx=ctx)
+    else:
+        recent = delegate_api.list_delegate_tasks(status="all", limit=5)
+        active = delegate_api.active_delegate_count()
     return {
-        "active_count": delegate_api.active_delegate_count(),
+        "active_count": active,
         "recent": recent["tasks"],
     }
 
 
-def _collect_capacity_orient_data() -> dict:
-    budget = state_api.compute_routing_budget()
+def _collect_capacity_orient_data(ctx: MonitorContext | None = None) -> dict:
+    resolved_ctx = _resolve_context(ctx)
+    budget = state_api.compute_routing_budget(
+        budget_config_path=resolved_ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+        tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
+        project_root=resolved_ctx.roots.project_root,
+        curriculum_root=resolved_ctx.roots.curriculum_root,
+        batch_state_dir=resolved_ctx.roots.batch_state_dir,
+    )
     lanes_summary = {}
     agents = budget.get("agents", {})
     in_flight = budget.get("in_flight", {})
@@ -1009,17 +1039,19 @@ def _collect_capacity_orient_data() -> dict:
     }
 
 
-def _collect_bridge_pending_orient_data() -> dict:
+def _collect_bridge_pending_orient_data(ctx: MonitorContext | None = None) -> dict:
+    _resolve_context(ctx)
     from scripts.ai_agent_bridge import _channels  # noqa: PLC0415 — optional broker bridge
 
     return _channels.bridge_pending_summary()
 
 
-def _collect_rollovers_orient_data() -> dict:
-    return collect_rollover_orient_data()
+def _collect_rollovers_orient_data(ctx: MonitorContext | None = None) -> dict:
+    resolved_ctx = _resolve_context(ctx)
+    return collect_rollover_orient_data(live_repo_root=resolved_ctx.roots.live_repo_root)
 
 
-def _collect_wiki_orient_data() -> dict:
+def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
     """Per-track compiled article counts.
 
     The previous implementation called ``_resolve_article`` inside the per-slug
@@ -1032,13 +1064,15 @@ def _collect_wiki_orient_data() -> dict:
     Fix: build the candidates index once (~6 ms) and resolve in pure dict
     lookups + Path.exists() checks. Same answer, ~50× faster.
     """
+    resolved_ctx = _resolve_context(ctx)
     wiki_api.wiki_state.get_status_summary()
 
     candidates = wiki_api._list_article_candidates()  # one full-tree scan
-    wiki_dir = wiki_api.wiki_config.WIKI_DIR
+    wiki_dir = resolved_ctx.roots.project_root / "wiki"
 
     by_track: dict[str, dict[str, Any]] = {}
-    for track in wiki_api._known_tracks():
+    known_tracks = wiki_api._known_tracks(ctx=ctx) if ctx is not None else wiki_api._known_tracks()
+    for track in known_tracks:
         slugs = wiki_api._track_slugs(track)
         if not slugs:
             continue
@@ -1066,8 +1100,8 @@ def _collect_wiki_orient_data() -> dict:
     return {"by_track": by_track}
 
 
-def _collect_governance_orient_data() -> dict[str, int]:
-    return collect_governance_summary()
+def _collect_governance_orient_data(ctx: MonitorContext | None = None) -> dict[str, int]:
+    return collect_governance_summary(ctx=ctx) if ctx is not None else collect_governance_summary()
 
 
 logger = logging.getLogger(__name__)
@@ -1085,7 +1119,7 @@ def _readable_file(path: Path) -> bool:
     return path.exists() and path.is_file() and os.access(path, os.R_OK)
 
 
-def _core_bare_canary() -> bool:
+def _core_bare_canary(ctx: MonitorContext | None = None) -> bool:
     """Detection canary for issue #2842: ``core.bare`` must stay false.
 
     ``core.bare`` lives in the SHARED ``.git/config``; if any subprocess flips it
@@ -1095,12 +1129,13 @@ def _core_bare_canary() -> bool:
     it's needed. On drift it auto-resets to false and logs an alert. Never raises:
     the canary must not break health collection.
     """
+    resolved_ctx = _resolve_context(ctx)
     try:
         from scripts.audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
         from audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     try:
-        ok, message = check_core_bare(PROJECT_ROOT, fix=True)
+        ok, message = check_core_bare(resolved_ctx.roots.project_root, fix=True)
     except Exception:
         logger.exception("core.bare canary (#2842) failed to run")
         return True  # fail-open: don't raise a false alarm on canary error
@@ -1109,7 +1144,7 @@ def _core_bare_canary() -> bool:
     return ok
 
 
-def _self_symlink_canary() -> bool:
+def _self_symlink_canary(ctx: MonitorContext | None = None) -> bool:
     """Detection canary for the node_modules ELOOP footgun.
 
     A self-referential ``node_modules`` symlink (``X -> X``) is an infinite
@@ -1123,12 +1158,13 @@ def _self_symlink_canary() -> bool:
     collection. See the autopsy
     ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
     """
+    resolved_ctx = _resolve_context(ctx)
     try:
         from scripts.audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
         from audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     try:
-        ok, message = check_self_symlinks(PROJECT_ROOT, fix=False)
+        ok, message = check_self_symlinks(resolved_ctx.roots.project_root, fix=False)
     except Exception:
         logger.exception("node_modules ELOOP canary failed to run")
         return True  # fail-open: don't raise a false alarm on canary error
@@ -1137,7 +1173,7 @@ def _self_symlink_canary() -> bool:
     return ok
 
 
-def _primary_integrity_canary() -> bool:
+def _primary_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """Read-only checkout diagnostic for primary-checkout drift.
 
     #5803 follow-up: a worker detached the primary checkout (`checkout: moving
@@ -1147,6 +1183,7 @@ def _primary_integrity_canary() -> bool:
     fetching, or pulling the human's checkout.
     Never raises: the canary must not break health collection.
     """
+    resolved_ctx = _resolve_context(ctx)
     try:
         from scripts.audit.check_primary_integrity import (  # noqa: PLC0415 — script-path fallback
             check_primary_integrity,
@@ -1155,9 +1192,9 @@ def _primary_integrity_canary() -> bool:
         from audit.check_primary_integrity import check_primary_integrity  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_primary_integrity(
-            PROJECT_ROOT,
+            resolved_ctx.roots.project_root,
             fix=False,
-            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+            tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
         )
     except Exception:
         logger.exception("primary-integrity canary failed to run")
@@ -1167,7 +1204,7 @@ def _primary_integrity_canary() -> bool:
     return ok
 
 
-def _node_modules_integrity_canary() -> bool:
+def _node_modules_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """Read-only diagnostic for symlink corruption of the primary's node_modules.
 
     #6818 follow-up: `_provision_data_symlinks` (`scripts/delegate.py`)
@@ -1177,6 +1214,7 @@ def _node_modules_integrity_canary() -> bool:
     `_primary_integrity_canary` — detects and records, never repairs. Never
     raises: the canary must not break health collection.
     """
+    resolved_ctx = _resolve_context(ctx)
     try:
         from scripts.audit.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
             check_node_modules_integrity,
@@ -1187,8 +1225,8 @@ def _node_modules_integrity_canary() -> bool:
         )
     try:
         ok, message = check_node_modules_integrity(
-            PROJECT_ROOT,
-            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+            resolved_ctx.roots.project_root,
+            tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
         )
     except Exception:
         logger.exception("node_modules-integrity canary failed to run")
@@ -1198,7 +1236,7 @@ def _node_modules_integrity_canary() -> bool:
     return ok
 
 
-def _venv_integrity_canary() -> bool:
+def _venv_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """Read-only diagnostic for an empty/broken primary venv.
 
     #6830 follow-up: a mid-session venv rebuild left `.venv` with no
@@ -1208,14 +1246,15 @@ def _venv_integrity_canary() -> bool:
     detects and records, never repairs. Never raises: the canary must not
     break health collection.
     """
+    resolved_ctx = _resolve_context(ctx)
     try:
         from scripts.audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
         from audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_venv_integrity(
-            PROJECT_ROOT,
-            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+            resolved_ctx.roots.project_root,
+            tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
         )
     except Exception:
         logger.exception("venv-integrity canary failed to run")
@@ -1225,7 +1264,7 @@ def _venv_integrity_canary() -> bool:
     return ok
 
 
-def _worktree_cleanup_integrity_canary() -> bool:
+def _worktree_cleanup_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """Read-only diagnostic for a dark/red worktree-cleanup LaunchAgent.
 
     #6937 follow-up: launchd stopped starting the job after a venv rewrite
@@ -1234,6 +1273,7 @@ def _worktree_cleanup_integrity_canary() -> bool:
     records, never reloads launchd. Never raises: the canary must not break
     health collection.
     """
+    resolved_ctx = _resolve_context(ctx)
     try:
         from scripts.audit.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
             check_worktree_cleanup_integrity,
@@ -1244,8 +1284,8 @@ def _worktree_cleanup_integrity_canary() -> bool:
         )
     try:
         ok, message = check_worktree_cleanup_integrity(
-            PROJECT_ROOT,
-            tasks_dir=PROJECT_ROOT / "batch_state" / "tasks",
+            resolved_ctx.roots.project_root,
+            tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
         )
     except Exception:
         logger.exception("worktree-cleanup-integrity canary failed to run")
@@ -1275,21 +1315,36 @@ def _tmp_usability_canary() -> dict:
         return {"ok": True, "writable": True, "error": None, "probe_error": True}
 
 
-def _collect_health_orient_data() -> dict:
+def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
+    resolved_ctx = _resolve_context(ctx)
     mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
     tmp_usability = _tmp_usability_canary()
+    if ctx is not None:
+        core_bare_ok = _core_bare_canary(ctx=ctx)
+        self_symlink_ok = _self_symlink_canary(ctx=ctx)
+        primary_integrity_ok = _primary_integrity_canary(ctx=ctx)
+        node_modules_integrity_ok = _node_modules_integrity_canary(ctx=ctx)
+        venv_integrity_ok = _venv_integrity_canary(ctx=ctx)
+        worktree_cleanup_integrity_ok = _worktree_cleanup_integrity_canary(ctx=ctx)
+    else:
+        core_bare_ok = _core_bare_canary()
+        self_symlink_ok = _self_symlink_canary()
+        primary_integrity_ok = _primary_integrity_canary()
+        node_modules_integrity_ok = _node_modules_integrity_canary()
+        venv_integrity_ok = _venv_integrity_canary()
+        worktree_cleanup_integrity_ok = _worktree_cleanup_integrity_canary()
     return {
         "api": True,
         "mcp_sources": mcp_sources_ok,
         "mcp_rag": mcp_sources_ok,
-        "sources_db": _readable_file(SOURCES_DB_PATH),
-        "message_broker": _readable_file(MESSAGE_DB),
-        "git_core_bare_ok": _core_bare_canary(),
-        "node_modules_symlinks_ok": _self_symlink_canary(),
-        "primary_integrity_ok": _primary_integrity_canary(),
-        "node_modules_integrity_ok": _node_modules_integrity_canary(),
-        "venv_integrity_ok": _venv_integrity_canary(),
-        "worktree_cleanup_integrity_ok": _worktree_cleanup_integrity_canary(),
+        "sources_db": _readable_file(resolved_ctx.roots.sources_db_path),
+        "message_broker": _readable_file(resolved_ctx.roots.message_db_path),
+        "git_core_bare_ok": core_bare_ok,
+        "node_modules_symlinks_ok": self_symlink_ok,
+        "primary_integrity_ok": primary_integrity_ok,
+        "node_modules_integrity_ok": node_modules_integrity_ok,
+        "venv_integrity_ok": venv_integrity_ok,
+        "worktree_cleanup_integrity_ok": worktree_cleanup_integrity_ok,
         "tmp_usability_ok": bool(tmp_usability.get("ok")),
         "tmp_usability": tmp_usability,
     }
@@ -1306,14 +1361,16 @@ def _first_non_empty_line(path: Path) -> str:
     return ""
 
 
-def _collect_session_hints_orient_data() -> list[dict]:
-    if not SESSION_STATE_DIR.exists():
+def _collect_session_hints_orient_data(ctx: MonitorContext | None = None) -> list[dict]:
+    resolved_ctx = _resolve_context(ctx)
+    session_state_dir = resolved_ctx.roots.project_root / "docs" / "session-state"
+    if not session_state_dir.exists():
         return []
     hints = []
-    for path in sorted(SESSION_STATE_DIR.glob("*.md"), reverse=True)[:10]:
+    for path in sorted(session_state_dir.glob("*.md"), reverse=True)[:10]:
         hints.append(
             {
-                "file": str(path.relative_to(PROJECT_ROOT)),
+                "file": str(path.relative_to(resolved_ctx.roots.project_root)),
                 "first_line": _first_non_empty_line(path),
             }
         )
@@ -1323,12 +1380,13 @@ def _collect_session_hints_orient_data() -> list[dict]:
 # ==================== SHARED ENDPOINTS ====================
 
 
-def _health_instance_identity() -> dict[str, str | None]:
+def _health_instance_identity(ctx: MonitorContext | None = None) -> dict[str, str | None]:
     """Return loopback-safe opaque host id and serving vs checkout SHAs for /api/health."""
+    resolved_ctx = _resolve_context(ctx)
     host_label = resolve_launcher_host_id()
-    head_proc = _run_command(["git", "rev-parse", "HEAD"])
+    head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-parse", "HEAD"])
     checkout_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
-    project_root = PROJECT_ROOT.resolve()
+    project_root = resolved_ctx.roots.project_root.resolve()
     if is_release_root(project_root):
         serving_sha = project_root.name
         serving_mode = "release"
@@ -1351,7 +1409,7 @@ async def api_index():
 
 
 @core_router.get("/api/health")
-async def health_check(request: Request):
+async def health_check(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     """Root health check — returns server status, version, uptime."""
     now = datetime.now(UTC)
     uptime = now - _SERVER_START
@@ -1361,7 +1419,7 @@ async def health_check(request: Request):
         "uptime_seconds": int(uptime.total_seconds()),
         "started_at": _SERVER_START.isoformat(),
         "checked_at": now.isoformat(),
-        "instance": _health_instance_identity(),
+        "instance": _health_instance_identity(ctx),
         "resilience": get_resilience_snapshot(),
         "codexbar": scheduler_status(),
     }
@@ -1658,7 +1716,7 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
 
 
 @core_router.get("/api/config")
-async def get_config(request: Request):
+async def get_config(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     # Import pipeline phase config — single source of truth
     try:
         from scripts.build.phase_constants import PHASE_LABELS, PHASES  # noqa: PLC0415 — preserves endpoint fallback
@@ -1670,8 +1728,8 @@ async def get_config(request: Request):
 
 
 @core_router.get("/api/batch/dispatcher")
-async def get_dispatcher_state():
-    state_file = BATCH_STATE_DIR / "dispatcher_state.json"
+async def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
+    state_file = ctx.roots.batch_state_dir / "dispatcher_state.json"
     if not state_file.exists():
         return {"tracks": {}}
     with open(state_file) as f:
@@ -1679,9 +1737,11 @@ async def get_dispatcher_state():
 
 
 @core_router.get("/api/batch/active")
-async def get_active_orchestration():
+async def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
     active = []
-    for track_dir in CURRICULUM_ROOT.iterdir():
+    if not ctx.roots.curriculum_root.exists():
+        return active
+    for track_dir in ctx.roots.curriculum_root.iterdir():
         if not track_dir.is_dir():
             continue
         orch_dir = track_dir / "orchestration"
@@ -1690,7 +1750,7 @@ async def get_active_orchestration():
         for module_dir in orch_dir.iterdir():
             if not module_dir.is_dir():
                 continue
-            latest_mtime = 0
+            latest_mtime = 0.0
             for f in module_dir.iterdir():
                 if f.is_file():
                     latest_mtime = max(latest_mtime, f.stat().st_mtime)
@@ -1706,8 +1766,8 @@ async def get_active_orchestration():
 
 
 @core_router.get("/api/batch/failures")
-async def get_failure_queue():
-    f_file = BATCH_STATE_DIR / "failure_queue.json"
+async def get_failure_queue(ctx: MonitorContext = Depends(get_ctx)):
+    f_file = ctx.roots.batch_state_dir / "failure_queue.json"
     if not f_file.exists():
         return []
     with open(f_file) as f:
@@ -1715,8 +1775,8 @@ async def get_failure_queue():
 
 
 @core_router.get("/api/batch/usage")
-async def get_batch_usage():
-    usage_dir = BATCH_STATE_DIR / "api_usage"
+async def get_batch_usage(ctx: MonitorContext = Depends(get_ctx)):
+    usage_dir = ctx.roots.batch_state_dir / "api_usage"
     if not usage_dir.exists():
         return {}
     summaries = {}
@@ -1731,9 +1791,11 @@ async def get_batch_usage():
 
 
 @core_router.get("/api/batch/checkpoints")
-async def get_all_checkpoints():
+async def get_all_checkpoints(ctx: MonitorContext = Depends(get_ctx)):
     results = {}
-    for f in BATCH_STATE_DIR.glob("checkpoint_*.json"):
+    if not ctx.roots.batch_state_dir.exists():
+        return results
+    for f in ctx.roots.batch_state_dir.glob("checkpoint_*.json"):
         track = f.stem.replace("checkpoint_", "")
         try:
             with open(f) as fh:
@@ -1749,22 +1811,22 @@ async def dispatcher_running():
 
 
 @core_router.post("/api/batch/dispatcher/scan")
-async def run_dispatcher_scan():
+async def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
     cmd = [
-        str(LIVE_REPO_ROOT / ".venv" / "bin" / "python"),
-        str(LIVE_REPO_ROOT / "scripts" / "batch_dispatcher.py"),
+        str(ctx.roots.live_repo_root / ".venv" / "bin" / "python"),
+        str(ctx.roots.live_repo_root / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]
     # Use asyncio.to_thread to avoid blocking the event loop
-    result = await asyncio.to_thread(subprocess.run, cmd, cwd=LIVE_REPO_ROOT)
+    result = await asyncio.to_thread(subprocess.run, cmd, cwd=ctx.roots.live_repo_root)
     if result.returncode != 0:
         raise HTTPException(status_code=500, detail="Dispatcher scan failed")
     return {"status": "ok"}
 
 
 @core_router.get("/api/batch/dispatcher/logs")
-async def get_dispatcher_logs(lines: int = 50):
-    log_file = PROJECT_ROOT / "logs" / "dispatcher.log"
+async def get_dispatcher_logs(lines: int = 50, ctx: MonitorContext = Depends(get_ctx)):
+    log_file = ctx.roots.project_root / "logs" / "dispatcher.log"
     if not log_file.exists():
         return {"lines": []}
     return {"lines": log_file.read_text().splitlines()[-lines:]}
@@ -1786,7 +1848,6 @@ async def batch_websocket(websocket: WebSocket):
 
 # ==================== IMAGE SERVING ====================
 
-_IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
 _ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 _MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
 
@@ -1799,9 +1860,10 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
 
 
 @core_router.get("/images/{path:path}")
-async def serve_image(path: str):
+async def serve_image(path: str, ctx: MonitorContext = Depends(get_ctx)):
     """Serve textbook images with caching. Path relative to data/textbook_images/."""
-    file_path = _safe_join(_IMAGE_DIR, path)
+    image_dir = ctx.roots.images_dir or (ctx.roots.project_root / "data" / "textbook_images")
+    file_path = _safe_join(image_dir, path)
     if file_path is None:
         raise HTTPException(status_code=403, detail="Invalid image path")
     if file_path.suffix.lower() not in _ALLOWED_IMG_EXT:
@@ -1810,7 +1872,7 @@ async def serve_image(path: str):
         raise HTTPException(status_code=404)
     # Prevent path traversal
     try:
-        file_path.resolve().relative_to(_IMAGE_DIR.resolve())
+        file_path.resolve().relative_to(image_dir.resolve())
     except ValueError as e:
         raise HTTPException(status_code=403, detail="Path traversal not allowed") from e
     return FileResponse(
@@ -1824,13 +1886,14 @@ async def serve_image(path: str):
 
 
 @core_router.get("/{path:path}")
-async def serve_static(path: str):
+async def serve_static(path: str, ctx: MonitorContext = Depends(get_ctx)):
+    dashboards_dir = ctx.roots.dashboards_dir
     if not path or path == "/":
-        return FileResponse(DASHBOARDS_DIR / "index.html")
-    file_path = _safe_join(DASHBOARDS_DIR, path)
+        return FileResponse(dashboards_dir / "index.html")
+    file_path = _safe_join(dashboards_dir, path)
     if file_path is None:
         raise HTTPException(status_code=403, detail="Path traversal not allowed")
-    dashboards_root = DASHBOARDS_DIR.resolve()
+    dashboards_root = dashboards_dir.resolve()
     # Keep explicit traversal guard if relative path join bypassed via symlink tricks.
     if not file_path.resolve().is_relative_to(dashboards_root):
         raise HTTPException(status_code=403, detail="Path traversal not allowed")
@@ -1839,7 +1902,7 @@ async def serve_static(path: str):
     if file_path.is_dir() and (file_path / "index.html").is_file():
         return FileResponse(file_path / "index.html")
     if not file_path.suffix:
-        html_candidate = _safe_join(DASHBOARDS_DIR, f"{path}.html")
+        html_candidate = _safe_join(dashboards_dir, f"{path}.html")
         if (
             html_candidate is not None
             and html_candidate.resolve().is_relative_to(dashboards_root)
@@ -1896,6 +1959,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
     factory_app.include_router(coordination_router, prefix="/api/coordination")
     factory_app.include_router(consultation_router, prefix="/api/consultation")
+    factory_app.include_router(cluster_router, prefix="/api/cluster", tags=["cluster"])
     factory_app.include_router(cost_router, prefix="/api/cost")
     factory_app.include_router(cost_router, prefix="/api/analytics/cost")
     factory_app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])

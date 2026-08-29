@@ -1010,7 +1010,7 @@ def test_byte_bound_timeout_cannot_use_legacy_same_size_recovery(
         lambda *_args, **_kwargs: {"stopped": True, "completed_stages": []},
     )
 
-    with pytest.raises(guardian.GuardianError, match="same_size_timeout_retry_forbidden"):
+    with pytest.raises(guardian.GuardianError, match="invalid_code_binding"):
         guardian._gemini_stop_recovery(config, mounts=[])
 
     runner_path = tmp_path / "gemini-runner.py"
@@ -1023,6 +1023,75 @@ def test_byte_bound_timeout_cannot_use_legacy_same_size_recovery(
     )
     with pytest.raises(guardian.GuardianError, match="same_size_timeout_retry_forbidden"):
         guardian._retire_gemini_timeout_for_byte_plan(retire_config, mounts=[])
+
+    reviewed_runner = ROOT / "batch_state/phase3-run-cycle007-gemini-label-provider-batch-v1.py"
+    recovery_config = replace(config, code_paths={"gemini_runner": reviewed_runner})
+    result = guardian._gemini_stop_recovery(recovery_config, mounts=[])
+    assert result["authorized_additional_provider_calls"] == 1
+    assert result["authorized_attempt"] == 2
+    recovery_path = output / guardian.GEMINI_RECOVERY_RECEIPT
+    recovery = json.loads(recovery_path.read_text(encoding="utf-8"))
+    assert recovery["schema_version"] == guardian.GEMINI_TIMEOUT_FIX_RECOVERY_SCHEMA
+    assert recovery["request_byte_budget"] == 1048576
+    assert recovery["agy_print_timeout"] == "120m"
+    assert recovery["gemini_runner_sha256"] == guardian._digest(reviewed_runner.read_bytes())
+    assert not (output / "provider-stop.json").exists()
+
+    second_common = common | {"attempt": 2}
+    _write_private_json(
+        attempt / "attempt-2-chunk-01.started.json",
+        second_common | {"state": "started"},
+    )
+    second_terminal = second_common | {
+        "state": "terminal",
+        "failure_code": "provider_status_timeout",
+        "failure_stage": "provider_return",
+        "provider_call_started": True,
+        "executable_binding_result": "verified",
+        "provider_return_code": "nonzero",
+        "raw_byte_count": 1,
+        "raw_sha256": "2" * 64,
+        "log_byte_count": 1,
+        "log_sha256": "3" * 64,
+        "init_count": 1,
+        "result_count": 1,
+        "first_event_kind": "init",
+        "last_event_kind": "result",
+        "model_binding_result": "verified",
+        "result_status": "non_success",
+        "structured_output_type": "missing",
+        "elapsed_milliseconds": 305000,
+    }
+    second_terminal_raw = _write_private_json(
+        attempt / "attempt-2-chunk-01.terminal.json", second_terminal
+    )
+    second_stop = {
+        **{
+            key: second_terminal[key]
+            for key in second_terminal
+            if key not in {"schema_version", "state", "packet_index", "chunk_index", "attempt"}
+        },
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v3",
+        "terminal_packet_index": 1,
+        "new_provider_calls_allowed": False,
+        "chunk_index": 1,
+        "attempt": 2,
+        "terminal_marker_sha256": guardian._digest(second_terminal_raw),
+    }
+    second_stop_raw = _write_private_json(output / "provider-stop.json", second_stop)
+    second_config = replace(
+        recovery_config,
+        expected_stop_sha256=guardian._digest(second_stop_raw),
+    )
+
+    second_result = guardian._gemini_stop_recovery(second_config, mounts=[])
+    assert second_result["authorized_attempt"] == 3
+    second_recovery_path = output / guardian.GEMINI_SECOND_RECOVERY_RECEIPT
+    second_recovery = json.loads(second_recovery_path.read_text(encoding="utf-8"))
+    assert second_recovery["schema_version"] == guardian.GEMINI_TIMEOUT_FIX_RECOVERY_SCHEMA
+    assert second_recovery["prior_recovery_receipt_sha256"] == guardian._digest(
+        recovery_path.read_bytes()
+    )
 
 
 def test_exact_second_gemini_timeout_recovery_chains_receipt_and_is_idempotent(

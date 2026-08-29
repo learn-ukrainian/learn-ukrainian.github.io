@@ -22,11 +22,14 @@ Helpers:
 - clip_quote_safe() — quote-safe clipping keeping «» balanced
 """
 
+import contextvars
 import hashlib
 import json
 import sqlite3
 from collections import defaultdict
+from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from pathlib import Path
 
 import yaml
@@ -64,6 +67,19 @@ TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
 _MAX_PATH_PROBE_BYTES = 255
 
 _conn: sqlite3.Connection | None = None
+_active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
+    "sources_db_active_connection", default=None
+)
+
+
+@contextmanager
+def using_connection(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
+    """Use ``conn`` for ``_get_conn()`` for the rest of this task/request."""
+    token = _active_connection.set(conn)
+    try:
+        yield conn
+    finally:
+        _active_connection.reset(token)
 
 
 # ── ULIF DictUA cache -------------------------------------------------
@@ -521,6 +537,9 @@ def _open_conn(db_path: Path) -> sqlite3.Connection:
 
 def _get_conn() -> sqlite3.Connection:
     """Get or create a cached database connection."""
+    override = _active_connection.get()
+    if override is not None:
+        return override
     global _conn
     if _conn is None:
         if not SOURCES_DB_PATH.exists():

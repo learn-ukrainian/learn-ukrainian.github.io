@@ -721,6 +721,82 @@ def test_occupancy_fresh_compiler_marker_wins_at_low_hardware_load(tmp_path, mon
         load_mod.clear_host_load_cache()
 
 
+def test_occupancy_generic_service_marker_preserves_occupant_with_clear_foundry_burn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    markers = tmp_path / "markers"
+    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
+    write_marker(
+        kind="service",
+        agent="codex",
+        task_id="lu-codex-6375",
+        epic="6375",
+        host_id="host-job",
+        path=markers,
+    )
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        low_load = fake.host_load("job-box")
+        low_load["loadavg"] = [0.05, 0.05, 0.05]
+        low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
+        load_mod.set_host_load_cache("job-box", low_load)
+        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        assert host["occupants"] == [
+            {"kind": "service", "agent": "codex", "task_id": "lu-codex-6375", "epic": "6375"}
+        ]
+        assert host["burn_sources"]["foundry"]["state"] == "clear"
+        assert host["burn_state"] == "active"
+        assert host["idle_or_empty"] is False
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_occupancy_foundry_and_generic_markers_keep_foundry_burn_honest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    markers = tmp_path / "markers"
+    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
+    write_marker(
+        kind="service",
+        agent="cursor",
+        task_id="routine-service",
+        host_id="host-job",
+        path=markers,
+    )
+    write_marker(
+        kind="service",
+        agent="evidence-compiler",
+        task_id="phase3-cycle007-evidence-compiler",
+        epic="phase3-cycle007",
+        host_id="host-job",
+        path=markers,
+    )
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        low_load = fake.host_load("job-box")
+        low_load["loadavg"] = [0.05, 0.05, 0.05]
+        low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
+        load_mod.set_host_load_cache("job-box", low_load)
+        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        assert host["occupant_count"] == 2
+        assert {row["agent"] for row in host["occupants"]} == {"cursor", "evidence-compiler"}
+        assert host["burn_sources"]["foundry"]["state"] == "active"
+        assert host["burn_state"] == "active"
+        assert host["idle_or_empty"] is False
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
 def test_occupancy_unreadable_marker_store_is_unknown_and_opsec_safe(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)

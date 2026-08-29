@@ -282,12 +282,30 @@ def test_publish_durations_writes_main_dataset_and_rolling_p95(tmp_path: Path) -
     output = tmp_path / "dataset.json"
     summary = tmp_path / "summary.md"
 
-    pytest_shards.publish_durations(log_paths=logs, previous=previous, output=output, summary=summary)
+    pytest_shards.publish_durations(
+        log_paths=logs, previous=previous, output=output, summary=summary, event="merge_group"
+    )
 
     dataset = json.loads(output.read_text(encoding="utf-8"))
+    assert dataset["event"] == "merge_group"
     assert dataset["node_durations"]["tests/test_4.py::test_case"] == 4.0
     assert dataset["slowest_shard_seconds"] == [2.0, 8.0, 4.0]
-    assert "Slowest-shard p95: **8.00s** across 3 successful main run(s)." in summary.read_text(encoding="utf-8")
+    text = summary.read_text(encoding="utf-8")
+    assert "Successful merge group run shard test durations: 1.00s, 2.00s, 3.00s, 4.00s." in text
+    assert "Slowest-shard p95: **8.00s** across 3 successful landing-tier run(s)." in text
+
+
+def test_publish_durations_rejects_unknown_event(tmp_path: Path) -> None:
+    log = tmp_path / "shard.log"
+    log.write_text("  1.00s call     tests/test_1.py::test_case\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="unsupported duration-publish event"):
+        pytest_shards.publish_durations(
+            log_paths=[log],
+            previous=None,
+            output=tmp_path / "out.json",
+            summary=tmp_path / "summary.md",
+            event="pull_request",
+        )
 
 
 def test_run_nodeids_passes_exact_planner_output_to_pytest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

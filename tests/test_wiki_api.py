@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.wiki_router as wiki_router
 from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -16,7 +17,7 @@ def test_status_returns_track_summary(tmp_path, monkeypatch):
     article_dir.mkdir(parents=True)
     (article_dir / "kyivan-rus.md").write_text("# Kyivan Rus\n\nOne two three four\n", encoding="utf-8")
 
-    monkeypatch.setattr(wiki_router, "_known_tracks", lambda: ["hist"])
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
     monkeypatch.setattr("wiki.state.get_status_summary", lambda: {"total_compiled": 1, "total_words": 6})
     monkeypatch.setattr("wiki.state.list_wiki_articles", lambda: [{"path": "periods/kyivan-rus.md"}])
@@ -72,6 +73,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
     article_path = article_dir / "kyivan-rus.md"
     article_path.write_text("# Kyivan Rus\n\nKyiv was a major political center.\n", encoding="utf-8")
 
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
     monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
     monkeypatch.setattr(
@@ -114,7 +116,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
 
 
 def test_quality_gate_aggregates_tracks(monkeypatch):
-    monkeypatch.setattr(wiki_router, "_known_tracks", lambda: ["hist", "folk"])
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist", "folk"])
 
     def fake_scan_track(track):
         if track == "hist":
@@ -173,6 +175,7 @@ def test_build_log_filters_by_track(monkeypatch):
         seen["last_n"] = last_n
         return []
 
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.state.read_log", fake_read_log)
 
     response = client.get("/api/wiki/build-log?track=hist")
@@ -189,7 +192,11 @@ def test_sources_endpoint_handles_missing_table(tmp_path, monkeypatch):
     conn.commit()
     conn.close()
 
-    monkeypatch.setattr(wiki_router, "SOURCES_DB_PATH", db_path)
+    ctx = fixture_context(tmp_path)
+    sources_path = ctx.roots.sources_db_path
+    sources_path.parent.mkdir(parents=True, exist_ok=True)
+    db_path.replace(sources_path)
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     response = client.get("/api/wiki/sources")
 
@@ -201,6 +208,7 @@ def test_sources_endpoint_handles_missing_table(tmp_path, monkeypatch):
 
 
 def test_sources_per_module_returns_404_when_discovery_missing(monkeypatch):
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
 
     def fake_gather_discovery_sources(track, slug):
@@ -220,7 +228,7 @@ def test_status_read_only_does_not_generate_discovery_files(tmp_path, monkeypatc
     plans_dir.mkdir(parents=True)
     (plans_dir / "plan-only.yaml").write_text("title: Plan Only\n", encoding="utf-8")
 
-    monkeypatch.setattr(wiki_router, "_known_tracks", lambda: ["hist"])
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.sources.CURRICULUM_DIR", curriculum_dir)
     monkeypatch.setattr("wiki.state.get_status_summary", lambda: {})
     monkeypatch.setattr("wiki.state.list_wiki_articles", lambda: [])

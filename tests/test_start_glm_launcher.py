@@ -64,9 +64,9 @@ def _stub_claude(tmp_path: Path) -> Path:
 
 
 def test_glm_rejects_native_harness_and_missing_explicit_credential(tmp_path: Path) -> None:
-    native = run_launcher("start-glm.sh", "--harness", "native")
+    native = run_launcher("start-glmcc.sh", "--harness", "native")
     missing = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")},
     )
     assert native.returncode == 2
@@ -78,7 +78,7 @@ def test_glm_rejects_native_harness_and_missing_explicit_credential(tmp_path: Pa
 def test_glm_never_uses_an_ambient_anthropic_token(tmp_path: Path) -> None:
     foreign = "anthropic-secret-must-not-appear"
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home"), "ANTHROPIC_AUTH_TOKEN": foreign},
     )
     assert result.returncode == 3
@@ -90,7 +90,7 @@ def test_glm_never_uses_an_ambient_anthropic_token(tmp_path: Path) -> None:
 def test_glm_accepts_each_explicit_credential_source_without_leaking_value(credential: str, tmp_path: Path) -> None:
     secret = f"{credential.lower()}-secret"
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, credential: secret, "HOME": str(tmp_path / "home")},
     )
     assert result.returncode == 0, result.stderr
@@ -101,7 +101,7 @@ def test_glm_accepts_each_explicit_credential_source_without_leaking_value(crede
 @pytest.mark.parametrize("alias", ("glm-5.3", "glm53", "glm"))
 def test_glm_catalog_aliases_resolve_to_the_allowlisted_model(alias: str, tmp_path: Path) -> None:
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         "--model",
         alias,
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
@@ -112,7 +112,7 @@ def test_glm_catalog_aliases_resolve_to_the_allowlisted_model(alias: str, tmp_pa
 
 def test_glm52_alias_still_resolves_to_fallback_glm_5_2(tmp_path: Path) -> None:
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         "--model",
         "glm52",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
@@ -123,9 +123,9 @@ def test_glm52_alias_still_resolves_to_fallback_glm_5_2(tmp_path: Path) -> None:
 
 def test_glm_rejects_unknown_model_endpoint_and_isolation_value(tmp_path: Path) -> None:
     env = {**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")}
-    model = run_launcher("start-glm.sh", "--model", "unknown", env=env)
-    endpoint = run_launcher("start-glm.sh", "--endpoint", "unknown", env=env)
-    isolation = run_launcher("start-glm.sh", env={**env, "LAUNCHER_ISOLATE_CONFIG": "2"})
+    model = run_launcher("start-glmcc.sh", "--model", "unknown", env=env)
+    endpoint = run_launcher("start-glmcc.sh", "--endpoint", "unknown", env=env)
+    isolation = run_launcher("start-glmcc.sh", env={**env, "LAUNCHER_ISOLATE_CONFIG": "2"})
     assert model.returncode == endpoint.returncode == isolation.returncode == 2
 
 
@@ -137,7 +137,7 @@ def test_glm_no_isolate_config_fails_closed_on_route_pins(tmp_path: Path) -> Non
         json.dumps({"env": {"ANTHROPIC_BASE_URL": "https://foreign.invalid"}}), encoding="utf-8"
     )
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         "--no-isolate-config",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(home), "CLAUDE_CONFIG_DIR": ""},
     )
@@ -345,7 +345,7 @@ def test_glm_exports_trusted_profile_and_capacity_to_the_claude_adapter(tmp_path
     bin_dir = _stub_claude(tmp_path)
     monkeypatch.setenv("PATH", f"{bin_dir}:{os.environ['PATH']}")
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
         dry_run=False,
     )
@@ -386,7 +386,7 @@ def test_glm_rejects_group_readable_secret_file(tmp_path: Path) -> None:
     secret_path.chmod(0o640)
 
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(home)},
     )
     assert result.returncode == 3
@@ -403,10 +403,28 @@ def test_glm_env_credential_wins_over_secret_file(tmp_path: Path) -> None:
     secret_path.chmod(0o600)
 
     result = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(home), "ZAI_API_KEY": "env-secret-wins"},
     )
     assert result.returncode == 0, result.stderr
     assert "credential_source=ZAI_API_KEY" in result.stdout
     assert "file-secret-should-lose" not in result.stdout + result.stderr
     assert "env-secret-wins" not in result.stdout + result.stderr
+
+
+def test_start_glm_sh_is_opencode_flash_headless_no_network(tmp_path: Path) -> None:
+    """#7416: start-glm.sh dry-run is OpenCode Flash, stdin closed, not prepaid."""
+    result = run_launcher("start-glm.sh", env={"HOME": str(tmp_path / "home")})
+    assert result.returncode == 0, result.stderr
+    out = result.stdout
+    assert "opencode run --auto --format json -m zai-coding-plan/glm-5.3-flash" in out
+    assert "< /dev/null" in out
+    assert "openrouter" not in out.lower()
+    assert "zai/glm-5.3-flash" not in out
+    assert "would exec claude" not in out
+
+
+def test_start_glm_sh_rejects_native_harness(tmp_path: Path) -> None:
+    result = run_launcher("start-glm.sh", "--harness", "native", env={"HOME": str(tmp_path / "home")})
+    assert result.returncode == 2
+    assert "native is unsupported" in result.stderr

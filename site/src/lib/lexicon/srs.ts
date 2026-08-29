@@ -9,6 +9,13 @@ import {
   type RecordLogItem,
 } from 'ts-fsrs';
 import { CEFR_LEVELS, type CefrLevel } from './levels';
+import {
+  backfillReviewEventsFromSrsReviews,
+  foldImportedReviewEvents,
+  importReviewEventExport,
+  mergeFoldedCardsIntoSrs,
+} from './review-event-backfill';
+import { loadReviewEventLog, recordCardReviewEvent, type ReviewEventPresentation } from './review-events';
 import { PRACTICE_LEVELS } from './runtime-contract';
 
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
@@ -432,6 +439,11 @@ export interface ReviewLogAggregate {
 export interface ReviewMeta {
   blankCase?: string;
   heritageKind?: string;
+  /** §10.1 presentation — ignored by FSRS; kept for restore / slot rotation. */
+  slotId?: string;
+  clozeId?: string;
+  polarity?: string;
+  optionSetId?: string;
 }
 
 export interface SrsSettings {
@@ -1144,6 +1156,7 @@ export function loadState(
         persistWithQuotaRecovery(state, resolved, toTime(now) ?? Date.now());
       }
       activeState = state;
+      maybeBackfillReviewEvents(state, resolved);
       return state;
     }
     activeState = {
@@ -1169,6 +1182,7 @@ export function loadState(
     if (!state) throw new Error('migrated SRS schema is invalid');
     activeState = state;
     persistWithQuotaRecovery(state, resolved, toTime(now) ?? Date.now());
+    maybeBackfillReviewEvents(state, resolved);
     return state;
   } catch {
     activeState = {
@@ -1181,6 +1195,23 @@ export function loadState(
       raw,
     };
     return activeState;
+  }
+}
+
+function maybeBackfillReviewEvents(state: LoadedSrsState, storage: StorageLike): void {
+  if (state.reviews.length === 0) return;
+  try {
+    backfillReviewEventsFromSrsReviews(
+      state.reviews,
+      storage,
+      {
+        deckVersion: PRACTICE_MODE_DECK_VERSION,
+        fsrsParamsVersion: state.settings.version,
+      },
+      state.reviewAggregates,
+    );
+  } catch {
+    // Event-log backfill is progressive enhancement; derived SRS already loaded.
   }
 }
 
@@ -1349,6 +1380,19 @@ function serializeReview(
   };
 }
 
+function presentationFromMeta(meta?: ReviewMeta): ReviewEventPresentation | undefined {
+  if (!meta) return undefined;
+  const presentation: ReviewEventPresentation = {
+    ...(meta.slotId ? { slotId: meta.slotId } : {}),
+    ...(meta.clozeId ? { clozeId: meta.clozeId } : {}),
+    ...(meta.polarity ? { polarity: meta.polarity } : {}),
+    ...(meta.optionSetId ? { optionSetId: meta.optionSetId } : {}),
+  };
+  return presentation.slotId || presentation.clozeId || presentation.polarity || presentation.optionSetId
+    ? presentation
+    : undefined;
+}
+
 export function cardKey(lemmaId: string, mode: PracticeMode): string {
   return `${lemmaId}::${mode}`;
 }
@@ -1389,8 +1433,50 @@ export function rateCard(
   state.cards.set(key, next);
   state.reviews.push(serializeReview(key, lemmaId, mode, rating, record, meta));
   compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES);
-  persistWithQuotaRecovery(state, currentStorage(), reviewDate.getTime());
+  const storage = currentStorage();
+  persistWithQuotaRecovery(state, storage, reviewDate.getTime());
+  try {
+    recordCardReviewEvent(
+      {
+        lemmaId,
+        mode,
+        rating,
+        reviewedAt: reviewDate,
+        deckVersion: PRACTICE_MODE_DECK_VERSION,
+        fsrsParamsVersion: state.settings.version,
+        presentation: presentationFromMeta(meta),
+      },
+      storage,
+    );
+  } catch {
+    // Event log is progressive enhancement; derived SRS state already persisted.
+  }
   return next;
+}
+
+/**
+ * §10.2 local restore: ingest an export, fold with the §10.1 clock clamp, and
+ * write derived cards. Cards with no events are left on today's SRS state.
+ */
+export function restoreSrsFromReviewEventExport(
+  raw: unknown,
+  storage: StorageLike = resolveStorage(),
+  now: Date | number = Date.now(),
+) {
+  const imported = importReviewEventExport(raw, storage);
+  const receivedAt = toTime(now) ?? Date.now();
+  if (!imported.ok) {
+    return { ...imported, updated: 0, persisted: false };
+  }
+  const state = loadState(storage, receivedAt);
+  const folded = foldImportedReviewEvents(
+    loadReviewEventLog(storage).events,
+    state.settings.params,
+    receivedAt,
+  );
+  const { updated } = mergeFoldedCardsIntoSrs(state.cards, folded);
+  const saved = saveState(state, storage, receivedAt);
+  return { ...imported, updated, persisted: saved.ok };
 }
 
 export function masteredCount(threshold = 21, mode: PracticeMode = 'flashcards'): number {

@@ -30,11 +30,18 @@ name: CI
 # spine/planner/coverage combine/Gate artifact verify on the push run; frontend
 # and E2E stay out of this patch.
 #
-# Residual: main-scoped pip-wheels-*, lexicon-manifest-*, and npm caches can
-# stay cold after a lockfile/manifest rotation because queue-branch caches are
-# not readable from main. They refresh on the daily backstop only until Wave B
-# patch 4 adds cache warming. Measure every push run, with >=10 pushes after
-# enablement, using scripts/ci/ci_timings.py.
+# Wave B item 4 (#7141): cache the lock-minus-live-ML `.venv` as ci-venv-* for
+# fastlane, the four shards, and coverage-floor. Live evidence 2026-08-28:
+# pip-wheels already hits, but `pip install` into a fresh venv is still ~79s
+# on the PR fastlane critical path and each merge_group shard. An accepted
+# venv hit skips that unpack. Broken/missing venv fails open to the existing
+# install. Exact key only — no restore-keys (wrong lockfile must not reuse).
+#
+# Residual: main-scoped pip-wheels-*, ci-venv-*, lexicon-manifest-*, and npm
+# caches can stay cold after a lockfile/manifest rotation because queue-branch
+# caches are not readable from main. They refresh on the next successful
+# push-to-main shard run or the daily backstop. Measure with
+# scripts/ci/ci_timings.py.
 #
 # Invariant (encodes #3873 #4888 #4936 #5351 #5354): on the full tier, pytest
 # must NEVER be selected or skipped by changed files. pytest-fastlane uses
@@ -302,8 +309,24 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
-      - name: Restore pip wheel cache
+      - name: Restore CI venv
         if: steps.plan.outputs.has_tests == 'true'
+        id: ci-venv-cache
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .venv
+          key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
+
+      - name: Accept restored CI venv
+        if: steps.plan.outputs.has_tests == 'true'
+        id: ci-venv
+        env:
+          RESTORE_HIT: ${{ steps.ci-venv-cache.outputs.cache-hit }}
+        run: python3 scripts/ci/accept_ci_venv.py
+
+      - name: Restore pip wheel cache
+        if: steps.plan.outputs.has_tests == 'true' && steps.ci-venv.outputs.cache-hit != 'true'
         id: pip-wheel-cache
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -312,7 +335,7 @@ jobs:
           key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
 
       - name: Install fastlane test dependencies (lock minus live ML)
-        if: steps.plan.outputs.has_tests == 'true'
+        if: steps.plan.outputs.has_tests == 'true' && steps.ci-venv.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
           python -m venv .venv
@@ -336,11 +359,18 @@ jobs:
           exit 1
 
       - name: Save pip wheel cache
-        if: steps.plan.outputs.has_tests == 'true' && steps.pip-wheel-cache.outputs.cache-hit != 'true'
+        if: steps.plan.outputs.has_tests == 'true' && steps.ci-venv.outputs.cache-hit != 'true' && steps.pip-wheel-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
           key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
+
+      - name: Save CI venv
+        if: steps.plan.outputs.has_tests == 'true' && steps.ci-venv.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .venv
+          key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
 
       - name: Run directly changed test modules
         if: steps.plan.outputs.has_tests == 'true'
@@ -632,10 +662,33 @@ jobs:
       # Sole owner of ~/.cache/pip for this job (setup-python cache disabled).
       # Cache-service errors are recoverable: continue to a cold pip install.
       # A restore miss or outage must not kill the shard (#7002).
+      # ci-venv-* skips the ~79s lockfile unpack when the populated tree
+      # still imports pytest+coverage (#7141 Wave B item 4).
+      - name: Restore CI venv
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+        id: ci-venv-cache
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .venv
+          key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
+
+      - name: Accept restored CI venv
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+        id: ci-venv
+        env:
+          RESTORE_HIT: ${{ steps.ci-venv-cache.outputs.cache-hit }}
+        run: python3 scripts/ci/accept_ci_venv.py
+
       - name: Restore pip wheel cache
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
           && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && steps.ci-venv.outputs.cache-hit != 'true'
         id: pip-wheel-cache
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -651,6 +704,7 @@ jobs:
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
           && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && steps.ci-venv.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
           python -m venv .venv
@@ -677,11 +731,22 @@ jobs:
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
           && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && steps.ci-venv.outputs.cache-hit != 'true'
           && steps.pip-wheel-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
           key: pip-wheels-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml
+
+      - name: Save CI venv
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && steps.ci-venv.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .venv
+          key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
 
       - name: Collect and plan this pytest shard locally
         if: >-
@@ -1421,21 +1486,25 @@ jobs:
   #    unconditional for its tier, so `skipped` is as much a failure as
   #    `failure`/`cancelled` when it is required.
 
-  # Duration data is intentionally published only after every matrix member of
-  # a push to main succeeds. For mq_validated it republishes the proof run's
-  # shard artifacts; the job is in the push Gate required set, so missing
-  # artifacts fail visibly instead of silently starving the main cache. PRs
-  # and failed main runs can consume a prior main dataset but can never
-  # overwrite it.
+  # Duration data is published after every successful full-tier python matrix
+  # on merge_group and on push to main. merge_group writes the step summary
+  # and a pytest-durations artifact so the proof run itself is measurable
+  # (#7141). Cache *save* stays push-to-main only: queue-branch caches are
+  # not readable from later groups or from main. For mq_validated the job
+  # republishes the proof run's shard artifacts; it remains in the push Gate
+  # required set so missing artifacts fail visibly instead of silently
+  # starving the main cache. PRs and failed main runs can consume a prior
+  # main dataset but can never overwrite it. merge_group Gate does not
+  # require this job — a publisher flake must not dequeue a green spine.
   pytest-duration-publish:
     name: Publish pytest durations
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: >-
-      github.event_name == 'push'
-      && github.ref == 'refs/heads/main'
-      && needs.python.result == 'success'
+      needs.python.result == 'success'
       && needs.landing-class.outputs.class != 'docs_skills'
+      && (github.event_name == 'merge_group'
+          || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
     needs: [python, landing-class]
     permissions:
       contents: read
@@ -1471,7 +1540,7 @@ jobs:
               exit 1
             fi
           done
-      - name: Publish successful-main durations and p95 summary
+      - name: Publish successful landing-tier durations and p95 summary
         run: |
           python scripts/ci/pytest_shards.py publish-durations \
             --log ci-artifacts/pytest-shard-1/main.log \
@@ -1480,8 +1549,17 @@ jobs:
             --log ci-artifacts/pytest-shard-4/main.log \
             --previous ci-artifacts/pytest-durations.json \
             --output ci-artifacts/pytest-durations.json \
-            --summary "${GITHUB_STEP_SUMMARY}"
+            --summary "${GITHUB_STEP_SUMMARY}" \
+            --event "${{ github.event_name }}"
+      - name: Upload published duration dataset
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-durations
+          path: ci-artifacts/pytest-durations.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Save successful-main duration dataset
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ci-artifacts/pytest-durations.json
@@ -1523,6 +1601,30 @@ jobs:
           && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           python-version: '3.12'
+      - name: Restore CI venv
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && (github.event_name == 'merge_group'
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+              || github.event_name == 'schedule')
+        id: ci-venv-cache
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .venv
+          key: ci-venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements-lock.txt') }}-no-live-ml-mp0.70.18-hf1.24.0
+      - name: Accept restored CI venv
+        if: >-
+          needs.landing-class.outputs.class != 'docs_skills'
+          && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
+          && (github.event_name == 'merge_group'
+              || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+              || github.event_name == 'schedule')
+        id: ci-venv
+        env:
+          RESTORE_HIT: ${{ steps.ci-venv-cache.outputs.cache-hit }}
+        run: python3 scripts/ci/accept_ci_venv.py
       - name: Download shard coverage data
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
@@ -1541,23 +1643,30 @@ jobs:
           && (github.event_name == 'merge_group'
               || (github.event_name == 'push' && github.ref == 'refs/heads/main')
               || github.event_name == 'schedule')
+        env:
+          CI_VENV_HIT: ${{ steps.ci-venv.outputs.cache-hit }}
         run: |
           set -euo pipefail
-          # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
-          for attempt in 1 2 3; do
-            echo "coverage pip install attempt ${attempt}/3"
-            if python -m pip install --quiet coverage; then
-              break
-            fi
-            case "${attempt}" in
-              1) sleep 10 ;;
-              2) sleep 30 ;;
-              3)
-                echo "::error::coverage pip install failed after 3 attempts" >&2
-                exit 1
-                ;;
-            esac
-          done
+          if [[ "${CI_VENV_HIT}" == "true" ]]; then
+            coverage_cmd=(.venv/bin/python -m coverage)
+          else
+            # Bounded retry absorbs transient PyPI blips (#7002; Stanza idiom).
+            for attempt in 1 2 3; do
+              echo "coverage pip install attempt ${attempt}/3"
+              if python -m pip install --quiet coverage; then
+                break
+              fi
+              case "${attempt}" in
+                1) sleep 10 ;;
+                2) sleep 30 ;;
+                3)
+                  echo "::error::coverage pip install failed after 3 attempts" >&2
+                  exit 1
+                  ;;
+              esac
+            done
+            coverage_cmd=(python -m coverage)
+          fi
           i=0
           for f in coverage-artifacts/*/.coverage; do
             i=$((i + 1))
@@ -1565,8 +1674,9 @@ jobs:
           done
           echo "combining $i shard coverage files"
           if [ "$i" -eq 0 ]; then echo "::error::no coverage data — refusing to pass vacuously"; exit 1; fi
-          python -m coverage combine
-          python -m coverage report --fail-under=35 | tee coverage-report.txt
+          # coverage combine + coverage report --fail-under=35 (venv or pip).
+          "${coverage_cmd[@]}" combine
+          "${coverage_cmd[@]}" report --fail-under=35 | tee coverage-report.txt
 
       - name: Upload coverage report and combined data
         if: >-

@@ -26,12 +26,15 @@ from fastapi.routing import APIRoute
 from starlette.background import BackgroundTask
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from ..config import PROJECT_ROOT
+from .. import config as api_config
 from ..resilience import connect_sqlite
 
 logger = logging.getLogger(__name__)
 
-_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "legacy_comms_routes.db"
+
+def _default_db_path() -> Path:
+    """Resolve the production default without a module-level Path seam."""
+    return Path(api_config.PROJECT_ROOT) / "data" / "telemetry" / "legacy_comms_routes.db"
 _RETENTION_DAYS = 90
 _WINDOWS = {
     "1h": timedelta(hours=1),
@@ -151,7 +154,7 @@ def initialize_legacy_comms_telemetry(
     now: datetime | None = None,
 ) -> Path:
     """Initialize the aggregate store once per process and return its path."""
-    path = db_path or _DB_PATH
+    path = db_path or _default_db_path()
     key = path.resolve(strict=False)
     with _init_lock:
         if key not in _initialized_paths or not path.exists():

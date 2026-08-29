@@ -17,14 +17,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.config import ACTIVITY_COMPLEXITY, ACTIVITY_RESTRICTIONS, LEVEL_CONFIG, VALID_ACTIVITY_TYPES
 from common.thresholds import REVIEW_PASS_FLOOR
 
-from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT, SEMINAR_TRACK_IDS
+from .config import LEVELS, SEMINAR_TRACK_IDS
 from .dashboard_comms import (
     collect_stuck_tasks,
     ensure_broker_cols,
@@ -48,6 +48,7 @@ from .dashboard_helpers import (
     scan_track_summary_cached,
     stats_from_state_summary,
 )
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .state_coverage import compute_summary
 from .state_helpers import cache_get_with_age, cache_invalidate, cache_set, get_plan_slugs
 
@@ -63,6 +64,20 @@ from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors ``runtime_router._resolve_context`` (#7398 / #6849): every route
+    handler gets ``ctx`` injected via ``Depends(get_ctx)``, but helpers are
+    also called directly by unit tests outside FastAPI request handling.
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
 DASHBOARD_STATE_SUMMARY_TTL_S = 60.0
 DASHBOARD_OVERVIEW_CACHE_KEY = "dashboard_overview"
 DASHBOARD_OVERVIEW_TTL_S = 60.0
@@ -84,12 +99,12 @@ _overview_last_good: dict | None = None
 _overview_disk_loaded = False
 
 
-def overview_last_good_path() -> Path:
+def overview_last_good_path(ctx: MonitorContext | None = None) -> Path:
     """Durable last-good snapshot written by the background overview scan."""
     override = os.environ.get(DASHBOARD_OVERVIEW_LAST_GOOD_ENV)
     if override:
         return Path(override)
-    return PROJECT_ROOT / ".cache" / "dashboard_overview_last_good.json"
+    return _resolve_context(ctx).roots.project_root / ".cache" / "dashboard_overview_last_good.json"
 
 
 def reset_overview_state_for_tests() -> None:
@@ -224,21 +239,21 @@ def _usable_overview_last_good(payload: dict | None) -> dict | None:
     return payload
 
 
-def persist_overview_last_good(payload: dict) -> None:
+def persist_overview_last_good(payload: dict, ctx: MonitorContext | None = None) -> None:
     """Write the full-scan overview snapshot so a Monitor bounce can reload it."""
     if _usable_overview_last_good(payload) is None:
         return
     try:
         _atomic_write_text(
-            overview_last_good_path(),
+            overview_last_good_path(ctx),
             json.dumps(payload, ensure_ascii=False),
         )
     except OSError:
         logger.exception("dashboard overview last-good persist failed")
 
 
-def read_persisted_overview_last_good() -> dict | None:
-    path = overview_last_good_path()
+def read_persisted_overview_last_good(ctx: MonitorContext | None = None) -> dict | None:
+    path = overview_last_good_path(ctx)
     try:
         if not path.is_file():
             return None
@@ -248,7 +263,7 @@ def read_persisted_overview_last_good() -> dict | None:
     return _usable_overview_last_good(data)
 
 
-def hydrate_overview_last_good_from_disk() -> dict | None:
+def hydrate_overview_last_good_from_disk(ctx: MonitorContext | None = None) -> dict | None:
     """Load durable last-good into process memory once per lifetime (or bounce)."""
     global _overview_last_good, _overview_disk_loaded
     if _overview_last_good is not None:
@@ -257,7 +272,7 @@ def hydrate_overview_last_good_from_disk() -> dict | None:
     if _overview_disk_loaded:
         return None
     _overview_disk_loaded = True
-    payload = read_persisted_overview_last_good()
+    payload = read_persisted_overview_last_good(ctx)
     if payload is None:
         return None
     _overview_last_good = payload
@@ -270,9 +285,11 @@ def _build_overview_from_state_summary(
     age_s: float | None,
     *,
     track_scan: str,
+    ctx: MonitorContext | None = None,
 ) -> dict:
     """Assemble overview from cached summary + manifest. No per-module FS scan."""
-    manifest = load_manifest()
+    resolved = _resolve_context(ctx)
+    manifest = load_manifest(resolved)
     levels = manifest.get("levels", {})
     state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
 
@@ -283,7 +300,12 @@ def _build_overview_from_state_summary(
         track_id = level_cfg["id"]
         summary_stats = state_tracks.get(track_id, {})
         track_modules = levels.get(track_id, {}).get("modules", []) or [
-            slug for _num, slug in get_plan_slugs(track_id)
+            slug
+            for _num, slug in get_plan_slugs(
+                track_id,
+                curriculum_root=resolved.roots.curriculum_root,
+                plans_root=resolved.roots.plans_root,
+            )
         ]
         module_count = int(summary_stats.get("total") or 0) or len(track_modules)
         if not module_count:
@@ -335,9 +357,10 @@ def _build_overview_from_state_summary(
     return payload
 
 
-def _build_overview_payload_from_scans() -> dict:
+def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dict:
     """Full overview including per-module status badges. Background refresh only."""
-    manifest = load_manifest()
+    resolved = _resolve_context(ctx)
+    manifest = load_manifest(resolved)
     levels = manifest.get("levels", {})
     cached = cache_get_with_age("summary", ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
     if cached is not None:
@@ -356,12 +379,19 @@ def _build_overview_payload_from_scans() -> dict:
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
         track_modules = levels.get(track_id, {}).get("modules", []) or [
-            slug for _num, slug in get_plan_slugs(track_id)
+            slug
+            for _num, slug in get_plan_slugs(
+                track_id,
+                curriculum_root=resolved.roots.curriculum_root,
+                plans_root=resolved.roots.plans_root,
+            )
         ]
         if not track_modules:
             continue
 
-        track_data = scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
+        track_data = scan_track_summary_cached(
+            track_id, level_cfg["path"], track_modules, ctx=resolved
+        )
         track_data["stats"] = compute_track_stats(track_data["modules"], track_id)
         summary_stats = state_tracks.get(track_id, {})
         s = track_data["stats"]
@@ -413,13 +443,15 @@ def _build_overview_payload_from_scans() -> dict:
     return payload
 
 
-def _schedule_overview_refresh() -> None:
+def _schedule_overview_refresh(ctx: MonitorContext | None = None) -> None:
     global _overview_refresh_thread
+    resolved = _resolve_context(ctx)
     with _overview_refresh_lock:
         if _overview_refresh_thread is not None and _overview_refresh_thread.is_alive():
             return
         _overview_refresh_thread = threading.Thread(
             target=_run_overview_refresh,
+            args=(resolved,),
             daemon=True,
             name="dashboard-overview-refresh",
         )
@@ -432,17 +464,17 @@ def _overview_refresh_running() -> bool:
     return thread is not None and thread.is_alive()
 
 
-def _run_overview_refresh() -> None:
+def _run_overview_refresh(ctx: MonitorContext | None = None) -> None:
     global _overview_last_good, _overview_disk_loaded
     try:
-        payload = _build_overview_payload_from_scans()
+        payload = _build_overview_payload_from_scans(ctx)
         if _usable_overview_last_good(payload) is None:
             logger.warning("dashboard overview refresh produced no tracks; keeping last-good")
             return
         cache_set(DASHBOARD_OVERVIEW_CACHE_KEY, payload)
         _overview_last_good = payload
         _overview_disk_loaded = True
-        persist_overview_last_good(payload)
+        persist_overview_last_good(payload, ctx)
     except Exception:
         logger.exception("dashboard overview background refresh failed")
 
@@ -451,7 +483,7 @@ def _run_overview_refresh() -> None:
 
 
 @router.get("/overview")
-async def overview():
+async def overview(ctx: MonitorContext = Depends(get_ctx)):
     """All tracks with module counts and pass/prose/fail stats.
 
     The request path never walks the curriculum tree. A warm TTL cache or
@@ -486,10 +518,10 @@ async def overview():
         payload["meta"] = meta
         return payload
 
-    last_good = hydrate_overview_last_good_from_disk()
+    last_good = hydrate_overview_last_good_from_disk(ctx)
     if last_good is not None:
         if not _overview_refresh_running():
-            _schedule_overview_refresh()
+            _schedule_overview_refresh(ctx)
         payload = copy.deepcopy(last_good)
         payload["timestamp"] = datetime.now(UTC).isoformat()
         meta = dict(payload.get("meta") or {})
@@ -505,33 +537,39 @@ async def overview():
         payload["meta"] = meta
         return payload
 
-    _schedule_overview_refresh()
+    _schedule_overview_refresh(ctx)
     payload = _build_overview_from_state_summary(
         state_summary,
         cache_state,
         age_s,
         track_scan="skipped",
+        ctx=ctx,
     )
     payload.setdefault("meta", {})["refreshing"] = True
     return payload
 
 
 @router.get("/research")
-async def research_overview():
+async def research_overview(ctx: MonitorContext = Depends(get_ctx)):
     """Research coverage across all tracks with rubric-based quality scoring."""
-    manifest = load_manifest()
+    manifest = load_manifest(ctx)
     levels = manifest.get("levels", {})
 
     tracks = []
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
         track_modules = levels.get(track_id, {}).get("modules", []) or [
-            slug for _num, slug in get_plan_slugs(track_id)
+            slug
+            for _num, slug in get_plan_slugs(
+                track_id,
+                curriculum_root=ctx.roots.curriculum_root,
+                plans_root=ctx.roots.plans_root,
+            )
         ]
         if not track_modules:
             continue
 
-        track_data = scan_track_cached(track_id, level_cfg["path"], track_modules)
+        track_data = scan_track_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
         rs = track_data["stats"].get("research", {})
 
         mod_research = []
@@ -570,48 +608,59 @@ async def research_overview():
 
 
 @router.get("/track/{track_id}/summary")
-async def track_summary(track_id: str):
+async def track_summary(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Lightweight per-module summary: slug, status, pipeline version, review badges only."""
-    manifest = load_manifest()
+    manifest = load_manifest(ctx)
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
     track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", []) or [
-        slug for _num, slug in get_plan_slugs(track_id)
+        slug
+        for _num, slug in get_plan_slugs(
+            track_id,
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        )
     ]
-    return scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
+    return scan_track_summary_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
 
 
 @router.get("/track/{track_id}")
-async def track_detail(track_id: str):
+async def track_detail(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module detail for one track."""
-    manifest = load_manifest()
+    manifest = load_manifest(ctx)
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
     track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", []) or [
-        slug for _num, slug in get_plan_slugs(track_id)
+        slug
+        for _num, slug in get_plan_slugs(
+            track_id,
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        )
     ]
-    return scan_track_cached(track_id, level_cfg["path"], track_modules)
+    return scan_track_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
 
 
 @router.get("/module/{track_id}/{slug}")
-async def module_detail(track_id: str, slug: str):
+async def module_detail(track_id: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Deep inspection of a single module: plan, meta, gates, orchestration."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
+    curriculum_root = ctx.roots.curriculum_root
     try:
-        track_dir = safe_join(CURRICULUM_ROOT, level_cfg["path"])
+        track_dir = safe_join(curriculum_root, level_cfg["path"])
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=f"Invalid track path for {track_id}") from exc
     result = {"slug": slug, "track": track_id}
 
     try:
-        result["plan"] = read_yaml_file(safe_join(CURRICULUM_ROOT, "plans", track_id, f"{slug}.yaml"))
+        result["plan"] = read_yaml_file(safe_join(curriculum_root, "plans", track_id, f"{slug}.yaml"))
         result["meta"] = read_yaml_file(safe_join(track_dir, "meta", f"{slug}.yaml"))
     except ValueError as exc:
         raise HTTPException(
@@ -698,12 +747,12 @@ async def module_detail(track_id: str, slug: str):
 
 
 @router.get("/pipeline")
-async def pipeline_status():
+async def pipeline_status(ctx: MonitorContext = Depends(get_ctx)):
     """Two-stage pipeline status: otaman queue, hetman queue, active builds."""
-    active_builds = find_active_builds()
-    otaman_queue, hetman_queue, final_review_queue = scan_pipeline_queues()
-    broker_messages = fetch_broker_messages()
-    dispatcher_state = read_dispatcher_state()
+    active_builds = find_active_builds(ctx)
+    otaman_queue, hetman_queue, final_review_queue = scan_pipeline_queues(ctx)
+    broker_messages = fetch_broker_messages(ctx)
+    dispatcher_state = read_dispatcher_state(ctx)
 
     return {
         "active_builds": active_builds,
@@ -720,7 +769,7 @@ async def pipeline_status():
 
 
 @router.get("/activity-config")
-async def activity_config():
+async def activity_config(_ctx: MonitorContext = Depends(get_ctx)):
     """Activity type reference: types, min items per level, forbidden types."""
     types = []
     for act_type in VALID_ACTIVITY_TYPES:
@@ -763,10 +812,10 @@ async def activity_config():
 
 
 @router.get("/comms")
-async def comms_status():
+async def comms_status(ctx: MonitorContext = Depends(get_ctx)):
     """Communications monitoring: watcher health, message stats, delivery metrics."""
     result = {
-        "watcher": is_watcher_running(),
+        "watcher": is_watcher_running(ctx),
         "stats": {},
         "unread": {},
         "tasks": [],
@@ -777,7 +826,7 @@ async def comms_status():
         "timestamp": datetime.now(UTC).isoformat(),
     }
 
-    conn = get_broker_db()
+    conn = get_broker_db(ctx)
     if not conn:
         result["error"] = "Broker database not found"
         return result
@@ -866,16 +915,16 @@ async def comms_status():
 
     conn.close()
 
-    result["stuck_tasks"] = collect_stuck_tasks()
-    result["watcher_log_tail"] = get_watcher_log_tail()
+    result["stuck_tasks"] = collect_stuck_tasks(ctx)
+    result["watcher_log_tail"] = get_watcher_log_tail(ctx=ctx)
 
     return result
 
 
 @router.get("/comms/message/{message_id}")
-async def comms_message_detail(message_id: int):
+async def comms_message_detail(message_id: int, ctx: MonitorContext = Depends(get_ctx)):
     """Full content of a single message."""
-    conn = get_broker_db()
+    conn = get_broker_db(ctx)
     if not conn:
         raise HTTPException(status_code=503, detail="Broker database not found")
     cur = conn.cursor()
@@ -905,9 +954,9 @@ async def comms_message_detail(message_id: int):
 
 
 @router.get("/comms/conversation/{task_id}")
-async def comms_conversation(task_id: str):
+async def comms_conversation(task_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Full conversation thread for a task, chronological order."""
-    conn = get_broker_db()
+    conn = get_broker_db(ctx)
     if not conn:
         raise HTTPException(status_code=503, detail="Broker database not found")
     cur = conn.cursor()
@@ -944,9 +993,10 @@ async def comms_messages(
     to_llm: str | None = None,
     task_id: str | None = None,
     unread_only: bool = False,
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Paginated, filterable message list."""
-    conn = get_broker_db()
+    conn = get_broker_db(ctx)
     if not conn:
         raise HTTPException(status_code=503, detail="Broker database not found")
     cur = conn.cursor()

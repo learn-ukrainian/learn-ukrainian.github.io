@@ -113,7 +113,10 @@ def sqlite_path(store: StoreId, *, repo_root: Path | None = None) -> Path:
     if store is StoreId.FLEET_COMMS:
         from scripts.fleet_comms.paths import default_plane_root
 
-        plane_root = default_plane_root(repo_root=root)
+        plane_root = default_plane_root(
+            repo_root=root,
+            allow_non_git=repo_root is not None or bool(os.environ.get("LEARN_UK_REPO_ROOT")),
+        )
         return plane_root / "comms.sqlite3"
     if store is StoreId.SESSION_STREAMS:
         from agents_extensions.shared.session_streams.db import default_database_path

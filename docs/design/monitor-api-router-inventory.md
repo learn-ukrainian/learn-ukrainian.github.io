@@ -426,68 +426,78 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `atlas_jobs_router.py` | `/api/atlas-jobs` | 7 | 484 | — | `_HOST_LOAD_CACHE` | 2 | 12a |
-| `blue_router.py` | `/api/blue` | 8 | 412 | `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT` | — | 3 | 12a |
-| `build_events_router.py` | `/api/build/events` | 2 | 157 | `CURRICULUM_ROOT` | — | 1 | 12a |
-| `coordination_router.py` | `/api/coordination` | 3 | 40 | `PROJECT_ROOT` | — | 1 | 12a |
+| `atlas_jobs_router.py` | `/api/atlas-jobs` | 7 | 484 | — | `_HOST_LOAD_CACHE` | 0 | 12a |
+| `blue_router.py` | `/api/blue` | 8 | 412 | `LEVELS` | — | 0 | 12a |
+| `build_events_router.py` | `/api/build/events` | 2 | 157 | — | — | 0 | 12a |
+| `coordination_router.py` | `/api/coordination` | 3 | 40 | — | — | 0 | 12a |
 | `cost_router.py` | `/api/cost`, `/api/analytics/cost` | 3 | 26 | — | — | 0 | 12a |
 
-**`atlas_jobs_router` seams (2):** `atlas_job.registry_dir`, `primary_checkout_root`.
+**12a migrated (#7330):** path roots now come from `Depends(get_ctx)`. The 7 seams this row listed (`atlas_job.registry_dir`, `atlas_job.primary_checkout_root`, plus the five module-level Path imports on blue / build-events / coordination) are deleted.
 
 ### Step 12b — consultation / delegate / discussions
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `consultation_router.py` | `/api/consultation` | 7 | 495 | `CURRICULUM_ROOT`, `LEVELS`, `PROJECT_ROOT` | `APPLIED_DIR`, `QUEUE_DIR`, `REJECTED_DIR`, `TEMPLATE_DIR` | 6 | 12b |
-| `decisions_router.py` | `/api/decisions` | 6 | 168 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `DECISIONS_FILE`, `_cache`, `_lineage_cache` | 3 | 12b |
-| `delegate_router.py` | `/api/delegate` | 3 | 554 | `BATCH_STATE_DIR` | `TASKS_DIR`, `_LAST_TASKS_DIR_STR`, `_TASK_STATE_CACHE` | 2 | 12b |
-| `discussions_router.py` | `/api/discussions` | 1 | 122 | `MESSAGE_DB` | — | 1 | 12b |
-| `gold_router.py` | `/api/gold` | 8 | 351 | `CURRICULUM_ROOT`, `PROJECT_ROOT` | — | 2 | 12b |
+| `consultation_router.py` | `/api/consultation` | 7 | 495 | `LEVELS` | — | 0 | 12b |
+| `decisions_router.py` | `/api/decisions` | 6 | 168 | — | `_cache`, `_lineage_cache` | 0 | 12b |
+| `delegate_router.py` | `/api/delegate` | 3 | 554 | — | `_LAST_TASKS_DIR_STR`, `_TASK_STATE_CACHE` | 0 | 12b |
+| `discussions_router.py` | `/api/discussions` | 1 | 122 | — | — | 0 | 12b |
+| `gold_router.py` | `/api/gold` | 8 | 351 | — | — | 0 | 12b |
+
+**12b migrated (#7331):** path roots now come from `Depends(get_ctx)`. The 14 seams this row listed (the path-loop seams on consultation / decisions / delegate / discussions / gold) are deleted.
 
 ### Step 12c — governance / issues / knowledge
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `governance_router.py` | `/api/state/governance` | 1 | 162 | `PROJECT_ROOT` | `DECISIONS_FILE` | 3 | 12c |
-| `hermes_cron_router.py` | `/api/hermes-cron` | 1 | 44 | `PROJECT_ROOT` | — | 1 | 12c |
-| `issues_router.py` | `/api/issues` | 2 | 251 | `PROJECT_ROOT` | — | 2 | 12c |
+| `governance_router.py` | `/api/state/governance` | 1 | 162 | — | — | 0 | 12c |
+| `hermes_cron_router.py` | `/api/hermes-cron` | 1 | 44 | — | — | 0 | 12c |
+| `issues_router.py` | `/api/issues` | 2 | 251 | — | — | 1 | 12c |
 | `knowledge_router.py` | `/api/knowledge` | 4 | 172 | — | — | 0 | 12c |
-| `reviewer_ghosts_router.py` | `/api/state/reviewer-ghosts` | 1 | 183 | `CURRICULUM_ROOT`, `LEVELS` | — | 1 | 12c |
+| `reviewer_ghosts_router.py` | `/api/state/reviewer-ghosts` | 1 | 183 | `LEVELS` | — | 0 | 12c |
 
-**`issues_router` seams (2):** `_run_gh`; `path_loop:PROJECT_ROOT`.
+**12c migrated (#7333 dispatch / inventory step 12c):** path roots now come from
+`Depends(get_ctx)`. The 6 Path seams this row listed (`DECISIONS_FILE`,
+`path_loop:PROJECT_ROOT` on governance / hermes / issues, `CURRICULUM_ROOT` on
+reviewer-ghosts, plus the `collect_adr_governance` fixture stub) are deleted.
+`issues_router._run_gh` stays — it is the subprocess deny stub, not a Path
+global. `LEVELS` is track-id config, not a filesystem root.
 
 ### Step 12d — site / wiki / worktrees / telemetry
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `site_router.py` | `/api/site` | 2 | 260 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | `SITE_DIR`, `ASTRO_OUTPUT_DIR` | 5 | 12d |
-| `wiki_router.py` | `/api/wiki` | 8 | 436 | `CURRICULUM_ROOT`, `LEVELS` | `PROJECT_ROOT`, `SOURCES_DB_PATH` | 12 | 12d |
-| `worktrees_router.py` | `/api/worktrees` | 1 | 221 | `LIVE_REPO_ROOT`, `PROJECT_ROOT` | — | 3 | 12d |
-| `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | `PROJECT_ROOT` | `_DB_PATH`, `_MODULE_BUILD_DB_PATH` | 7 | 12d |
+| `site_router.py` | `/api/site` | 2 | 260 | — | — | 0 | 12d |
+| `wiki_router.py` | `/api/wiki` | 8 | 436 | `LEVELS` | — | 8 | 12d |
+| `worktrees_router.py` | `/api/worktrees` | 1 | 221 | — | — | 1 | 12d |
+| `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | — | — | 1 | 12d |
 
-**`wiki_router` seams (12):** `path_loop` for `wiki_router` globals;
-`external_store_loop` for `wiki.config.WIKI_STATE_DIR`,
-`wiki.source_attribution.DEFAULT_DB_PATH`, `wiki.state.WIKI_STATE_DIR`,
-`wiki.quality_gate.PROGRESS_DB`, `wiki.dense_rerank`, `wiki.embedding_manifest`,
-`wiki.sources_db` module-global DB/STATE paths.
-
-**`worktrees_router` seams (3):** `_run`; `reap_worktrees._run`;
-`path_loop:LIVE_REPO_ROOT`.
+**12d migrated (#7333):** path roots and database handles now come from
+`Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
+(`site_router` 4 Path globals + `_run` stub, `worktrees_router` 2 Path globals +
+`_run` stub, `telemetry_router` 3 Path globals, `wiki_router` 4 router-local Path
+globals) are deleted. `reap_worktrees._run` and external `wiki.*` /
+`scripts.telemetry.legacy_bridge` store-loop seams remain for unmigrated callers.
 
 ### Step 12e — work / epics
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `work_router.py` | `/api/work` | 4 | 633 | — | `_IN_FLIGHT_BUILDS` | 1 | 12e |
-| `epics_router.py` | `/api/epics` | 11 | 854 | `LIVE_REPO_ROOT` | `_store()` (`SessionStreamStore`) | 2 | 12e |
+| `work_router.py` | `/api/work` | 4 | 633 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
+| `epics_router.py` | `/api/epics` | 11 | 854 | — | — | 0 | 12e |
 
-**`epics_router` seams (2):** `_store`; `path_loop:LIVE_REPO_ROOT`.
+**12e migrated (#7334):** stores and live repo root now come from
+`Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`
+fixture setattr, `epics_router._store` fixture setattr, and
+`path_loop:LIVE_REPO_ROOT`) are deleted.
 
 ### Step 13 — `core_router` (last)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LEVELS`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT` | `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR` | 17 | 13 |
+| `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `LEVELS` | — | 0 | 13 |
+
+**13 migrated (#7335):** 15 inline routes and orient collectors read roots from `Depends(get_ctx)`. Measured unique logical seams at this head: **21** (base after #7413 was **36**, delta **−15**). The seams this row previously listed (`_health_instance_identity`, `_run_command` in `main.py`, and the Path globals `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`, `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR`) are deleted.
 
 **Routes:** `/api` (redirect), `/api/health`, `/api/orient`, `/api/config`,
 `/api/batch/dispatcher`, `/api/batch/active`, `/api/batch/failures`,
@@ -500,12 +510,6 @@ stay registered after all `/api/*` prefixed routers (§4.2). #7302 migrated thes
 15 inline handlers to `core_router` reading `request.app` / existing `main.py`
 helpers; no separate `_repo_root` / `_store` beyond the config imports and
 module globals listed above.
-
-**`core_router` seams (17):** `api_main._health_instance_identity`,
-`DASHBOARDS_DIR`; `path_loop` for `main` and shared `config` module globals;
-`run_command_loop:main._run_command`; includes `BATCH_STATE_DIR`,
-`CURRICULUM_ROOT`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`,
-`SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR`.
 
 ---
 

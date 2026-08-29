@@ -40,6 +40,8 @@ GEMINI_RECOVERY_SCHEMA = "phase3_cycle007_gemini_provider_recovery_v1"
 GEMINI_RECOVERY_RECEIPT = "provider-recovery.json"
 GEMINI_SECOND_RECOVERY_SCHEMA = "phase3_cycle007_gemini_provider_second_recovery_v1"
 GEMINI_SECOND_RECOVERY_RECEIPT = "provider-recovery-attempt-3.json"
+GEMINI_TIMEOUT_FIX_RECOVERY_SCHEMA = "phase3_cycle007_gemini_timeout_fix_recovery_v1"
+AGY_PRINT_TIMEOUT = "120m"
 GEMINI_STOP_RECOVERY_ROOT = ".cycle007-gemini-stop-recovery"
 GEMINI_BYTE_PLAN_RETIREMENT_ROOT = ".cycle007-gemini-byte-plan-retirement"
 GEMINI_RECOVERABLE_FIRST_STOP_CODES = frozenset(
@@ -1232,12 +1234,9 @@ def _verified_recovery_receipt(
 ) -> tuple[bytes, dict[str, Any]]:
     recovery_raw, recovery = _private_json(path, config.owner_uid, config.owner_gid)
     call_count = recovery.get("prior_provider_call_count")
+    timeout_fix = recovery.get("schema_version") == GEMINI_TIMEOUT_FIX_RECOVERY_SCHEMA
     body = {
-        "schema_version": (
-            GEMINI_RECOVERY_SCHEMA
-            if prior_recovery_raw is None
-            else GEMINI_SECOND_RECOVERY_SCHEMA
-        ),
+        "schema_version": recovery.get("schema_version"),
         "evaluation_cycle_id": terminal["evaluation_cycle_id"],
         "source_provider_stop_sha256": recovery.get("source_provider_stop_sha256"),
         "started_marker_sha256": _digest(started_raw),
@@ -1251,6 +1250,26 @@ def _verified_recovery_receipt(
         "harness": terminal["harness"],
         "text_free": True,
     }
+    if timeout_fix:
+        if (
+            terminal.get("schema_version") != "phase3_cycle007_gemini_attempt_v2"
+            or terminal.get("failure_code") != "provider_status_timeout"
+            or terminal.get("request_byte_budget")
+            not in {524288, 655360, 1048576, 2097152, 4194304}
+        ):
+            raise GuardianError("stop_recovery_state_drift")
+        body |= {
+            "authorized_attempt": authorized_attempt,
+            "request_byte_budget": terminal["request_byte_budget"],
+            "gemini_runner_sha256": _gemini_timeout_fix_runner_sha256(config),
+            "agy_print_timeout": AGY_PRINT_TIMEOUT,
+        }
+    elif body["schema_version"] != (
+        GEMINI_RECOVERY_SCHEMA
+        if prior_recovery_raw is None
+        else GEMINI_SECOND_RECOVERY_SCHEMA
+    ):
+        raise GuardianError("stop_recovery_state_drift")
     if prior_recovery_raw is not None:
         body |= {
             "prior_recovery_receipt_sha256": _digest(prior_recovery_raw),
@@ -1281,6 +1300,21 @@ def _verified_recovery_receipt(
     if _digest(archived_raw) != body["source_provider_stop_sha256"]:
         raise GuardianError("stop_recovery_binding_drift")
     return recovery_raw, recovery
+
+
+def _gemini_timeout_fix_runner_sha256(config: Config) -> str:
+    runner = config.code_paths.get("gemini_runner")
+    if runner is None:
+        raise GuardianError("invalid_code_binding")
+    _assert_no_symlink_components(runner)
+    try:
+        info = runner.lstat()
+        raw = runner.read_bytes()
+    except OSError:
+        raise GuardianError("invalid_code_binding") from None
+    if not stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode):
+        raise GuardianError("invalid_code_binding")
+    return _digest(raw)
 
 
 def _attempt_chain(
@@ -1928,11 +1962,15 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
                 stop_path=stop_path,
             )
         _validate_gemini_stop(stop)
-        if (
+        timeout_fix_recovery = (
             stop.get("schema_version") == "phase3_cycle007_gemini_provider_stop_v3"
             and stop.get("failure_code") == "provider_status_timeout"
-        ):
-            raise GuardianError("same_size_timeout_retry_forbidden")
+        )
+        timeout_fix_runner_sha256 = (
+            _gemini_timeout_fix_runner_sha256(config)
+            if timeout_fix_recovery
+            else None
+        )
         lane = stop["lane"]
         packet_index = stop["terminal_packet_index"]
         attempt_root, chunk_index, terminal_attempt = _stopped_attempt_coordinates(
@@ -1972,9 +2010,13 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
         provider_call_count = _provider_call_count(config, output)
         receipt_body: dict[str, Any] = {
             "schema_version": (
-                GEMINI_RECOVERY_SCHEMA
-                if prior_recovery_raw is None
-                else GEMINI_SECOND_RECOVERY_SCHEMA
+                GEMINI_TIMEOUT_FIX_RECOVERY_SCHEMA
+                if timeout_fix_recovery
+                else (
+                    GEMINI_RECOVERY_SCHEMA
+                    if prior_recovery_raw is None
+                    else GEMINI_SECOND_RECOVERY_SCHEMA
+                )
             ),
             "evaluation_cycle_id": terminal["evaluation_cycle_id"],
             "source_provider_stop_sha256": expected_stop,
@@ -1989,6 +2031,13 @@ def _gemini_stop_recovery(config: Config, mounts: list[dict[str, Any]]) -> dict[
             "harness": terminal["harness"],
             "text_free": True,
         }
+        if timeout_fix_recovery:
+            receipt_body |= {
+                "authorized_attempt": authorized_attempt,
+                "request_byte_budget": terminal["request_byte_budget"],
+                "gemini_runner_sha256": timeout_fix_runner_sha256,
+                "agy_print_timeout": AGY_PRINT_TIMEOUT,
+            }
         if prior_recovery_raw is not None:
             receipt_body |= {
                 "prior_recovery_receipt_sha256": _digest(prior_recovery_raw),

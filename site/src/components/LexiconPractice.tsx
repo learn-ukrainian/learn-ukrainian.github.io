@@ -74,6 +74,7 @@ import {
   type PracticeSessionSnapshots,
   type PracticeStressItem,
   type ReviewLogEntry,
+  type ReviewMeta,
   type SelectionHistoryItem,
   type SessionBudget,
   type SessionScopeStats,
@@ -1023,6 +1024,24 @@ function reviewLemmaId(selection: PracticeSelection): string {
   const parsed = parseCardKey(selection.cardKey);
   if (!parsed.quarantined && parsed.mode === selection.mode) return parsed.lemmaId;
   return selection.lemma.lemmaId;
+}
+
+function reviewMetaFromSelection(selection: PracticeSelection): ReviewMeta {
+  const polarity = selection.mode === 'choice' ? selection.choicePolarity : selection.synonym?.polarity;
+  return {
+    ...(selection.cloze?.blankCase ? { blankCase: selection.cloze.blankCase } : {}),
+    ...(selection.heritage?.kind ? { heritageKind: selection.heritage.kind } : {}),
+    ...(selection.cloze?.clozeId ? { clozeId: selection.cloze.clozeId } : {}),
+    ...(polarity ? { polarity } : {}),
+    ...(selection.classifySetId ? { optionSetId: selection.classifySetId } : {}),
+    ...(selection.paradigm?.paradigmId
+      ? { slotId: selection.paradigm.paradigmId }
+      : selection.heritage?.heritageId
+        ? { slotId: selection.heritage.heritageId }
+        : selection.stress?.stressId
+          ? { slotId: selection.stress.stressId }
+          : {}),
+  };
 }
 
 function orderedChoiceOptions(
@@ -2774,10 +2793,7 @@ function LexiconPracticeIsland({
             prevSelection.mode,
             matchedSelectedRatingRef.current,
             new Date(),
-            {
-              blankCase: prevSelection.cloze?.blankCase,
-              heritageKind: prevSelection.heritage?.kind,
-            }
+            reviewMetaFromSelection(prevSelection),
           );
         } catch (e) {
           // ignore or handle storage warning
@@ -3509,10 +3525,7 @@ function LexiconPracticeIsland({
     const nextUnresolved = new Set(unresolvedCardKeys);
     let nextDeferred = [...deferredLemmas];
     try {
-      rateCard(reviewLemmaId(current), current.mode, rating, new Date(), {
-        blankCase: current.cloze?.blankCase,
-        heritageKind: current.heritage?.kind,
-      });
+      rateCard(reviewLemmaId(current), current.mode, rating, new Date(), reviewMetaFromSelection(current));
       setStreak(recordStreak());
       if (rating === 'good' || rating === 'easy') {
         setSessionCorrect((value) => value + 1);

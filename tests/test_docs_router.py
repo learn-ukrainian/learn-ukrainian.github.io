@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from pathlib import Path
 from urllib.parse import quote
 
@@ -10,6 +11,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api import docs_router
 from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context, production_context
 from tests.latency_budget import assert_under_budget
 
 
@@ -37,10 +39,15 @@ def controlled_docs_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dic
     dashboards.mkdir()
     (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
 
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {"safe": safe_root})
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", {"safe": safe_root})
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (safe_root,))
+    ctx = replace(
+        fixture_context(tmp_path),
+        roots=replace(
+            fixture_context(tmp_path).roots,
+            effective_roots={"safe": safe_root},
+            dashboards_dir=dashboards,
+        ),
+    )
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     return {"safe": safe_root, "outside": outside_root}
 
@@ -123,15 +130,15 @@ def docs_tree_with_md(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[s
     dashboards.mkdir()
     (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
 
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
-    # Clear ALLOWED_ROOTS so _build_effective_roots only discovers tmp_path dirs.
-    # CRITICAL: EFFECTIVE_ROOTS must be monkeypatched (not assigned) so xdist
-    # workers restore module state — a bare assignment poisons later tests
-    # with 403 "Path not under an approved documentation root".
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {})
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", docs_router._build_effective_roots())
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (tmp_path / "docs",))
-    monkeypatch.setattr(docs_router, "DISCOVERY_EXCLUDES", ("docs/archive", "docs/resources/podcasts/raw"))
+    ctx = replace(
+        fixture_context(tmp_path),
+        roots=replace(
+            fixture_context(tmp_path).roots,
+            effective_roots=docs_router.build_effective_roots(tmp_path),
+            dashboards_dir=dashboards,
+        ),
+    )
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     return {"docs": docs_dir, "proposals": proposals_dir, "handoffs": handoffs_dir, "archive": archive_dir}
 
@@ -155,9 +162,10 @@ def _first_allowed_file(root_path: Path) -> Path:
     return candidates[0]
 
 
-@pytest.mark.parametrize("root_key", list(docs_router.ALLOWED_ROOTS))
+@pytest.mark.parametrize("root_key", list(docs_router.build_allowed_roots(Path("."))))
 def test_docs_router_serves_allowed_root_files(client: TestClient, root_key: str):
-    root_path = docs_router.ALLOWED_ROOTS[root_key]
+    ctx = production_context()
+    root_path = ctx.roots.effective_roots[root_key]
     file_path = _first_allowed_file(root_path)
     artifact_path = f"/artifacts/{root_key}/{file_path.relative_to(root_path).as_posix()}"
 
@@ -173,7 +181,8 @@ def test_docs_router_root_index_lists_allowed_roots(client: TestClient):
 
     assert response.status_code == 200
     body = response.json()
-    assert {root["id"] for root in body["roots"]} == set(docs_router.EFFECTIVE_ROOTS)
+    ctx = production_context()
+    assert {root["id"] for root in body["roots"]} == set(ctx.roots.effective_roots)
     assert len(body["roots"]) >= 10  # ≥ 10 — EFFECTIVE_ROOTS may grow with dynamic roots (#2106)
     assert all({"id", "path", "exists"} <= set(root) for root in body["roots"])
 
@@ -259,13 +268,16 @@ def test_docs_router_serves_symlinked_root_with_logical_paths(
 
     (logical_root / "docs").symlink_to(real_docs_root, target_is_directory=True)
 
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", logical_root)
-    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", logical_root / "dashboards")
     roots = {"docs/reports": logical_root / "docs" / "reports"}
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", roots)
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", roots)
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (logical_root / "docs",))
-    monkeypatch.setattr(docs_router, "DISCOVERY_EXCLUDES", ())
+    ctx = replace(
+        fixture_context(logical_root),
+        roots=replace(
+            fixture_context(logical_root).roots,
+            effective_roots=roots,
+            dashboards_dir=dashboards_root,
+        ),
+    )
+    monkeypatch.setattr(app.state, "ctx", ctx)
 
     client = TestClient(app, raise_server_exceptions=False)
 

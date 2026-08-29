@@ -50,6 +50,7 @@ DOMAIN = "phase3-cycle007-public-canary-v1"
 GEMINI_MODEL = "Gemini 3.6 Flash (High)"
 GEMINI_FAMILY = "google"
 GEMINI_HARNESS = "agy"
+AGY_PRINT_TIMEOUT = "120m"
 AGY = Path("/Users/krisztiankoos/.local/bin/agy")
 GEMINI_SCHEMA_VERSION = "phase3_cycle007_gemini_public_canary_receipt_v1"
 
@@ -544,6 +545,30 @@ def grok_prompt(challenge: str, rows: list[dict[str, Any]], sidecar: dict[str, A
         + json.dumps(sidecar, ensure_ascii=False, indent=2)
         + "\n--- END IMMUTABLE EVIDENCE SIDECAR JSON ---\n"
     ).encode("utf-8")
+
+
+def _gemini_command(provider_bin: Path, schema_path: Path, log_path: Path) -> list[str]:
+    """Build the reviewed AGY stream-input invocation with an explicit wait."""
+    return [
+        str(provider_bin),
+        "--model",
+        GEMINI_MODEL,
+        "--mode",
+        "plan",
+        "--new-project",
+        "--sandbox",
+        "--disable-slash-commands",
+        "--input-format",
+        "stream-json",
+        "--output-format",
+        "stream-json",
+        "--print-timeout",
+        AGY_PRINT_TIMEOUT,
+        "--json-schema",
+        str(schema_path),
+        "--log-file",
+        str(log_path),
+    ]
 
 
 def _grok_command(
@@ -1143,24 +1168,7 @@ def invoke_canary(
             _atomic(log_path, b"", raw=True)
             # Stream-input turns come exclusively from stdin.  Supplying an
             # empty --print prompt can make AGY terminate SUCCESS with no result.
-            cmd = [
-                str(provider_bin),
-                "--model",
-                GEMINI_MODEL,
-                "--mode",
-                "plan",
-                "--new-project",
-                "--sandbox",
-                "--disable-slash-commands",
-                "--input-format",
-                "stream-json",
-                "--output-format",
-                "stream-json",
-                "--json-schema",
-                str(schema_path),
-                "--log-file",
-                str(log_path),
-            ]
+            cmd = _gemini_command(provider_bin, schema_path, log_path)
         else:
             prompt_bytes = grok_prompt(challenge, rows, sidecar)
             stdin_path = runtime / "prompt.stdin"

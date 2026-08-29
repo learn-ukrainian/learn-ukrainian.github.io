@@ -17,10 +17,10 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
-from .config import CURRICULUM_ROOT, LEVELS
-from .resilience import connect_sqlite
+from .config import LEVELS
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .state_helpers import cache_get, cache_set
 
 # scripts/wiki is not a package, so we add the scripts/ root to sys.path
@@ -37,8 +37,6 @@ except ImportError:
 
 router = APIRouter(tags=["wiki"])
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 _TABLE_NAMES = [
     "textbooks",
     "literary",
@@ -59,8 +57,15 @@ _TABLE_NAMES = [
 _WORD_COUNT_WORKERS = 4
 
 
-def _known_tracks() -> list[str]:
-    plan_root = CURRICULUM_ROOT / "plans"
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _known_tracks(ctx: MonitorContext | None = None) -> list[str]:
+    plan_root = _resolve_context(ctx).roots.curriculum_root / "plans"
     configured = [level["id"] for level in LEVELS]
     existing = {path.name for path in plan_root.iterdir() if path.is_dir()} if plan_root.exists() else set()
     ordered = [track for track in configured if track in existing]
@@ -68,8 +73,8 @@ def _known_tracks() -> list[str]:
     return ordered + extras
 
 
-def _track_exists(track: str) -> bool:
-    return track in _known_tracks()
+def _track_exists(track: str, ctx: MonitorContext | None = None) -> bool:
+    return track in _known_tracks(ctx)
 
 
 def _safe_join(base: Path, *parts: str | Path) -> Path | None:
@@ -79,8 +84,8 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
         return None
 
 
-def _ensure_track_exists(track: str) -> None:
-    if not _track_exists(track):
+def _ensure_track_exists(track: str, ctx: MonitorContext | None = None) -> None:
+    if not _track_exists(track, ctx):
         raise HTTPException(status_code=404, detail=f"Track not found: {track}")
 
 
@@ -233,8 +238,9 @@ def _track_status_rows(
     track: str,
     candidates_by_slug: dict[str, list[dict[str, Any]]] | None = None,
     word_count_cache: dict[Path, int] | None = None,
+    ctx: MonitorContext | None = None,
 ) -> list[dict[str, Any]]:
-    _ensure_track_exists(track)
+    _ensure_track_exists(track, ctx)
     slugs = _track_slugs(track)
     article_candidates = (
         _list_article_candidates() if candidates_by_slug is None else candidates_by_slug
@@ -267,9 +273,9 @@ def _track_status_rows(
 
 
 @router.get("/status")
-async def wiki_status():
+async def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
     """Per-track wiki compilation status."""
-    known_tracks = _known_tracks()
+    known_tracks = _known_tracks(ctx)
     cache_key = f"wiki_status_{wiki_config.WIKI_DIR}_" + ",".join(known_tracks)
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
@@ -284,7 +290,7 @@ async def wiki_status():
         slugs = _track_slugs(track)
         if not slugs:
             continue
-        modules = _track_status_rows(track, article_candidates, word_count_cache)
+        modules = _track_status_rows(track, article_candidates, word_count_cache, ctx=ctx)
         total = len(modules)
         compiled = sum(1 for module in modules if module["compiled"])
         total_words = sum(module["word_count"] for module in modules)
@@ -302,21 +308,21 @@ async def wiki_status():
 
 
 @router.get("/status/{track}")
-async def wiki_status_track(track: str):
+async def wiki_status_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module wiki compilation status for one track."""
     cache_key = f"wiki_status_track_{track}_{wiki_config.WIKI_DIR}"
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
-    result = _track_status_rows(track)
+    result = _track_status_rows(track, ctx=ctx)
     cache_set(cache_key, result)
     return result
 
 
 @router.get("/article/{track}/{slug}")
-async def wiki_article(track: str, slug: str):
+async def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single article metadata plus a short preview."""
-    _ensure_track_exists(track)
+    _ensure_track_exists(track, ctx)
     if slug not in _track_slugs(track):
         raise HTTPException(status_code=404, detail=f"Article not found: {track}/{slug}")
 
@@ -373,15 +379,15 @@ async def wiki_article(track: str, slug: str):
 
 
 @router.get("/quality-gate")
-async def wiki_quality_gate():
+async def wiki_quality_gate(ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate wiki quality gate issues for all tracks."""
-    return {track: wiki_quality.scan_track(track) for track in _known_tracks()}
+    return {track: wiki_quality.scan_track(track) for track in _known_tracks(ctx)}
 
 
 @router.get("/quality-gate/{track}")
-async def wiki_quality_gate_track(track: str):
+async def wiki_quality_gate_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Quality gate issues for one track."""
-    _ensure_track_exists(track)
+    _ensure_track_exists(track, ctx)
     return {track: wiki_quality.scan_track(track)}
 
 
@@ -389,24 +395,26 @@ async def wiki_quality_gate_track(track: str):
 async def wiki_build_log(
     track: str | None = Query(None),
     limit: int = Query(50, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Recent wiki build log events."""
     if track is not None:
-        _ensure_track_exists(track)
+        _ensure_track_exists(track, ctx)
     events = wiki_state.read_log(track=track, last_n=limit)
     return {"events": events[-limit:]}
 
 
 @router.get("/sources")
-async def wiki_sources_inventory():
+async def wiki_sources_inventory(ctx: MonitorContext = Depends(get_ctx)):
     """Row counts for the sources SQLite database."""
-    if not SOURCES_DB_PATH.exists():
+    handle = ctx.stores.sources_db
+    if handle is None or not handle.path.exists():
         return {"tables": [], "total_entries": 0}
 
     tables = []
     total_entries = 0
 
-    with connect_sqlite(str(SOURCES_DB_PATH)) as conn:
+    with handle.connect() as conn:
         for table_name in _TABLE_NAMES:
             try:
                 row_count = conn.execute(f"SELECT count(*) FROM {table_name}").fetchone()[0]
@@ -419,9 +427,11 @@ async def wiki_sources_inventory():
 
 
 @router.get("/sources/{track}/{slug}")
-async def wiki_sources_module(track: str, slug: str):
+async def wiki_sources_module(
+    track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)
+):
     """Source availability for a single module."""
-    _ensure_track_exists(track)
+    _ensure_track_exists(track, ctx)
     if slug not in _track_slugs(track):
         raise HTTPException(status_code=404, detail=f"Article not found: {track}/{slug}")
 

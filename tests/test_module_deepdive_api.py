@@ -10,15 +10,29 @@ Covers:
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.artifacts_router as artifacts_router
 import scripts.api.main as api_main
 import scripts.api.state_router as state_router
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+
+
+def _set_test_ctx(proj: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    ctx = replace(
+        fixture_context(proj),
+        roots=replace(
+            fixture_context(proj).roots,
+            curriculum_root=proj / "curriculum",
+        ),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
 
 # ---------------------------------------------------------------------
@@ -141,9 +155,7 @@ def _classification_fixture(tmp_path: Path, monkeypatch):
         "LEVELS",
         [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
-    monkeypatch.setattr(artifacts_router, "PLANS_ROOT", proj / "plans")
+    _set_test_ctx(proj, monkeypatch)
     return proj, plan
 
 
@@ -206,8 +218,7 @@ def test_review_snapshot_flags_empty_findings_with_high_score(tmp_path, monkeypa
         "LEVELS",
         [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
+    _set_test_ctx(proj, monkeypatch)
 
     body = client.get("/api/artifacts/a1/hello/review-snapshot").json()
     assert body["main_review"]["score"] == 9.5
@@ -230,8 +241,7 @@ def test_review_snapshot_no_flag_when_low_score_or_findings(tmp_path, monkeypatc
         "LEVELS",
         [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
+    _set_test_ctx(proj, monkeypatch)
 
     body = client.get("/api/artifacts/a1/hi/review-snapshot").json()
     assert body["main_review"]["findings_count"] == 1
@@ -269,8 +279,7 @@ def test_review_snapshot_does_not_pick_final_review_as_main(tmp_path, monkeypatc
         "LEVELS",
         [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
+    _set_test_ctx(proj, monkeypatch)
     # get_final_review_info is called to populate final_review field.
     monkeypatch.setattr(
         artifacts_router,
@@ -295,8 +304,7 @@ def test_review_snapshot_handles_missing_files(tmp_path, monkeypatch):
         "LEVELS",
         [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
+    _set_test_ctx(proj, monkeypatch)
 
     body = client.get("/api/artifacts/a1/absent/review-snapshot").json()
     assert body["main_review"] is None
@@ -322,8 +330,7 @@ def _drift_fixture(tmp_path: Path, monkeypatch):
         "LEVELS",
         [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
+    _set_test_ctx(proj, monkeypatch)
     return proj, base, mdx_dir
 
 

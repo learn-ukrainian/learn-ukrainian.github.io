@@ -18,25 +18,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    docs_router,
-    entire_context_router,
-    epics_router,
-    git_hygiene_router,
-    governance_router,
-    images_router,
     issues_router,
-    site_router,
-    work_router,
-    worktrees_router,
 )
-from scripts.api import main as api_main
-from scripts.guardrails import worktree_containment
-from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
-from scripts.wiki import sources_db
+from scripts.wiki import sources_db  # noqa: F401 — same import as isolated_fixture
 
 GLOBAL_SEAMS = frozenset(
     {
@@ -75,13 +61,8 @@ class MonkeypatchRecorder:
 
 def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> None:
     """Mirror isolated_fixture setattr side effects (no pytest tmp_path wrapper)."""
-    monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
-    epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
-    monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     handoff_path = root / "batch_state" / "session-handoff.md"
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
-    monkeypatch.setattr(api_main, "_health_instance_identity", lambda: {})
-    monkeypatch.setattr(atlas_job, "registry_dir", lambda: Path("atlas-jobs-fixture"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "opsec-host-alias=opsec-host-id")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "opsec-host-id")
     monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
@@ -114,53 +95,18 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(
-        git_hygiene_router,
-        "_run_git",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
-    monkeypatch.setattr(
-        worktrees_router,
-        "_run",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
-    monkeypatch.setattr(
         issues_router,
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
     )
-    monkeypatch.setattr(
-        site_router,
-        "_run",
-        lambda args, **_kwargs: subprocess.CompletedProcess(
-            args=args,
-            returncode=127,
-            stderr="fixture command unavailable",
-            stdout="",
-        ),
-    )
-    monkeypatch.setattr(governance_router, "collect_adr_governance", lambda: {"total": 0})
-    monkeypatch.setattr(
-        entire_context_router,
-        "projection_path",
-        lambda cwd: Path(cwd) / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3",
-    )
-    monkeypatch.setattr(entire_context_router, "load_provider_status", lambda _root: {})
-    monkeypatch.setattr(entire_context_router, "load_provider_capabilities", lambda _root: {})
+    # NOTE (#7269 step 12c): collect_adr_governance short-circuits on fixture
+    # context; no sweep stub.
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
-    monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
-    monkeypatch.setattr(worktree_containment, "primary_checkout_dirty_status", lambda _s: {})
 
-    fixture_sources_db = root / "stores" / "sources.db"
-    rag_query = importlib.import_module("rag.query")
-    for search_db_module in (sources_db, rag_query.sources_db):
-        monkeypatch.setattr(search_db_module, "SOURCES_DB_PATH", fixture_sources_db)
-        monkeypatch.setattr(search_db_module, "_conn", None)
-    monkeypatch.setattr(
-        sources_db,
-        "_get_conn",
-        lambda: (_ for _ in ()).throw(FileNotFoundError("fixture")),
-    )
-
+    # Keep ``wiki.sources_db`` loaded so the wiki-prefix external-store
+    # loop still owns that module's Path globals (step 12d). Step 10
+    # deleted the RAG-specific setattr copies, not the wiki loop.
+    importlib.import_module("rag.query")
     importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
@@ -178,34 +124,9 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
                 replacement.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(module, name, replacement)
 
-    monkeypatch.setattr(images_router, "IMAGES_DIR", root / "stores" / "images")
-    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", root / "stores" / "textbooks")
-    monkeypatch.setattr(
-        images_router,
-        "ANNOTATIONS_FILE",
-        root / "stores" / "image_text_pairs.jsonl",
-    )
-    monkeypatch.setattr(images_router, "_index", images_router._ImageIndex())
-    monkeypatch.setattr(images_router, "_pdf_pool", images_router._PDFPool())
-    monkeypatch.setattr(images_router, "_page_cache", images_router.OrderedDict())
-    monkeypatch.setattr(images_router, "_pdf_page_count_cache", {})
-
     broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
     monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: sqlite3.connect(*args, **kwargs))
-
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", root)
-    docs_root = root / "docs"
-    audit_root = root / "audit"
-    docs_root.mkdir(parents=True, exist_ok=True)
-    audit_root.mkdir(parents=True, exist_ok=True)
-    allowed_roots = {"audit": audit_root}
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", allowed_roots)
-    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (docs_root, audit_root))
-    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", dict(allowed_roots))
-    dashboards_root = root / "dashboards"
-    monkeypatch.setattr(api_main, "DASHBOARDS_DIR", dashboards_root)
-    monkeypatch.setattr(docs_router, "DASHBOARDS_DIR", dashboards_root)
 
     isolated_plane_root = root / "stores" / "fleet-comms"
     isolated_plane_root.mkdir(parents=True, exist_ok=True)
