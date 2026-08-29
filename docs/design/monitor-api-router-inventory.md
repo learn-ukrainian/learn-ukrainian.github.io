@@ -483,10 +483,13 @@ globals) are deleted. `reap_worktrees._run` and external `wiki.*` /
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `work_router.py` | `/api/work` | 4 | 633 | — | `_IN_FLIGHT_BUILDS` | 1 | 12e |
-| `epics_router.py` | `/api/epics` | 11 | 854 | `LIVE_REPO_ROOT` | `_store()` (`SessionStreamStore`) | 2 | 12e |
+| `work_router.py` | `/api/work` | 4 | 633 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
+| `epics_router.py` | `/api/epics` | 11 | 854 | — | — | 0 | 12e |
 
-**`epics_router` seams (2):** `_store`; `path_loop:LIVE_REPO_ROOT`.
+**12e migrated (#7334):** stores and live repo root now come from
+`Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`
+fixture setattr, `epics_router._store` fixture setattr, and
+`path_loop:LIVE_REPO_ROOT`) are deleted.
 
 ### Step 13 — `core_router` (last)
 
