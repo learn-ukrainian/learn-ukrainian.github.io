@@ -345,6 +345,25 @@ def test_epics_graph_stale_and_no_cache_fallbacks(tmp_path: Path, monkeypatch) -
     assert scheduled == [True]
 
 
+def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, monkeypatch) -> None:
+    """merge_group has no host audit cache; denied Popen must stay 200 no-cache."""
+    client = _client(tmp_path, monkeypatch)
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: None)
+
+    def _denied(*, force: bool = False) -> dict:
+        del force
+        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
+
+    monkeypatch.setattr(epics_router.audit, "schedule_refresh", _denied)
+    response = client.get("/api/epics/graph/v1")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "no-cache"
+    assert data["ok"] is None
+    assert data["refreshing"] is False
+    assert data["refresh"]["phase"] == "idle"
+
+
 def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
 

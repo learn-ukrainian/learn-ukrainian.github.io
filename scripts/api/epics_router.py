@@ -596,6 +596,49 @@ def _load_issue_streams(ctx: MonitorContext | None = None) -> dict[str, Any]:
     return {}
 
 
+_GRAPH_IDLE_REFRESH = {
+    "schema_version": 1,
+    "run_id": None,
+    "phase": "idle",
+    "requested_at": None,
+    "started_at": None,
+    "last_outcome": "none",
+    "last_outcome_at": None,
+    "failure_code": None,
+    "cooldown_until": None,
+}
+
+
+def _graph_audit_inputs(*, fresh: bool) -> tuple[dict[str, Any] | None, dict[str, Any] | None, dict[str, Any]]:
+    """Load audit cache and refresh state without raising into the graph 503 wrapper.
+
+    Isolated OPSEC and merge-group checkouts have no host audit sidecar and
+    deny ``Popen``. ``schedule_refresh`` only swallows ``OSError``, so a denied
+    spawn leaked ``AssertionError`` as GET /api/epics/graph/v1 503 (#7413).
+    Degrade to the documented no-cache / idle envelope instead.
+    """
+    report: dict[str, Any] | None = None
+    stale: dict[str, Any] | None = None
+    try:
+        report = audit.read_cache(max_age_s=3600)
+        if report is None:
+            stale = audit.read_cache(max_age_s=7 * 24 * 3600)
+    except Exception:
+        report = None
+        stale = None
+    try:
+        state = (
+            audit.schedule_refresh(force=fresh)
+            if fresh or report is None
+            else audit.read_refresh_state()
+        )
+    except Exception:
+        state = dict(_GRAPH_IDLE_REFRESH)
+    if not isinstance(state, dict):
+        state = dict(_GRAPH_IDLE_REFRESH)
+    return report, stale, state
+
+
 @router.get("/graph/v1")
 async def remote_epics_graph(
     fresh: bool = Query(False, description="Schedule a refresh instead of only serving the cache."),
@@ -605,14 +648,7 @@ async def remote_epics_graph(
 
     def _load() -> dict[str, Any]:
         store = _store(ctx)
-        report = audit.read_cache(max_age_s=3600)
-        stale = None if report is not None else audit.read_cache(max_age_s=7 * 24 * 3600)
-
-        state = (
-            audit.schedule_refresh(force=fresh)
-            if fresh or report is None
-            else audit.read_refresh_state()
-        )
+        report, stale, state = _graph_audit_inputs(fresh=fresh)
 
         streams_data = _load_issue_streams(ctx)
         audit_data = report if report is not None else (stale or {})
