@@ -1,5 +1,6 @@
 tests/ai_agent_bridge/test_module_identity.py
 tests/api/opsec_sweep/test_opsec_route_sweep.py
+tests/api/opsec_sweep/test_opsec_sanitize.py
 tests/api/opsec_sweep/test_opsec_scan.py
 tests/api/test_app_factory.py
 tests/api/test_cluster_readiness.py
