@@ -521,6 +521,7 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
             check=True,
             capture_output=True,
             text=True,
+            timeout=30,
         )
 
     first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
