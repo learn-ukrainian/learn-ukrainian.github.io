@@ -31,6 +31,7 @@ from scripts.api import (
 from scripts.api import main as api_main
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
+from scripts.wiki import sources_db  # noqa: F401 — same import as isolated_fixture
 
 GLOBAL_SEAMS = frozenset(
     {

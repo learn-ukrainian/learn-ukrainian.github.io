@@ -7,22 +7,22 @@ import sqlite3
 import sys
 from collections.abc import Callable
 from pathlib import Path
-from typing import TypeVar
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
+from .config import PROJECT_ROOT
 from .monitor_context import MonitorContext, get_ctx
 
-_scripts_dir = str(Path(__file__).resolve().parents[1])
+# PROJECT_ROOT stays imported so the optional ``rag.query`` path works and
+# the remaining path_loop seam is the config import, not IMAGE_DIR.
+_scripts_dir = str(PROJECT_ROOT / "scripts")
 if _scripts_dir not in sys.path:
     sys.path.insert(0, _scripts_dir)
 
 router = APIRouter(tags=["sources"])
 
 ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
-
-_T = TypeVar("_T")
 
 
 def _image_dir(ctx: MonitorContext) -> Path:
@@ -31,7 +31,7 @@ def _image_dir(ctx: MonitorContext) -> Path:
     return ctx.roots.project_root / "data" / "textbook_images"
 
 
-def _run_sources_query(ctx: MonitorContext, callback: Callable[[], _T]) -> _T:
+def _run_sources_query[T](ctx: MonitorContext, callback: Callable[[], T]) -> T:
     """Run a RAG query against the context-owned sources handle."""
     from rag.query import sources_db as query_sources_db  # noqa: PLC0415 — optional RAG dependency
 
