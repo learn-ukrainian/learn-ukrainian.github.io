@@ -32,6 +32,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Query
 
+from . import config as api_config
 from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["site"])
@@ -92,6 +93,26 @@ def _head(url: str, timeout_s: float = 2.0) -> dict[str, Any]:
         return {"url": url, "status": None, "error": f"{type(exc).__name__}: {exc}"}
 
 
+def _run_cwd(cmd: list[str], ctx: MonitorContext | None = None) -> Path:
+    """Resolve the subprocess cwd without constructing a production context.
+
+    ``production_context()`` itself runs git (session-streams path
+    resolution). Unit tests that stub ``subprocess.run`` must still be
+    able to call ``_run`` directly.
+    """
+    if isinstance(ctx, MonitorContext):
+        return (
+            ctx.roots.live_repo_root
+            if cmd and cmd[0] == "git"
+            else ctx.roots.project_root
+        )
+    return (
+        Path(api_config.LIVE_REPO_ROOT)
+        if cmd and cmd[0] == "git"
+        else Path(api_config.PROJECT_ROOT)
+    )
+
+
 def _run(
     cmd: list[str],
     timeout_s: float = 3.0,
@@ -124,12 +145,7 @@ def _run(
     final pre-PR review (#1309) — fixing it here means the three
     site-health helpers all inherit the safety net for free.
     """
-    resolved = _resolve_context(ctx)
-    cwd = (
-        resolved.roots.live_repo_root
-        if cmd and cmd[0] == "git"
-        else resolved.roots.project_root
-    )
+    cwd = _run_cwd(cmd, ctx)
     try:
         return subprocess.run(
             cmd,

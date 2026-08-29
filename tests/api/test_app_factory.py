@@ -7,6 +7,7 @@ import re
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -541,7 +542,11 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
 
         first_timing = first_client.post(
             "/api/telemetry/tool-timings",
-            json={"ts": "2026-04-25T00:12:34.567Z", "tool_name": "Bash", "duration_ms": 10},
+            json={
+                "ts": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                "tool_name": "Bash",
+                "duration_ms": 10,
+            },
         )
         assert first_timing.status_code == 200
         assert first_client.get("/api/telemetry/tool-timings?window=24h").json()[0]["count"] == 1
