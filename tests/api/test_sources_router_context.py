@@ -1,4 +1,7 @@
-"""#7269 step 10: sources/RAG routes read MonitorContext, not module globals."""
+"""#7269 step 10: sources/RAG routes read MonitorContext, not module globals.
+
+Listed in scripts/ci/fastlane_always_tests.txt (repo_invariant).
+"""
 
 from __future__ import annotations
 
