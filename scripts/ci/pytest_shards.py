@@ -482,8 +482,20 @@ def _nearest_rank_p95(values: Sequence[float]) -> float:
     return ordered[max(0, (95 * len(ordered) + 99) // 100 - 1)]
 
 
-def publish_durations(*, log_paths: Sequence[Path], previous: Path | None, output: Path, summary: Path) -> None:
-    """Publish successful-main timings and quote rolling slowest-shard p95."""
+_PUBLISH_EVENTS = frozenset({"merge_group", "push", "schedule"})
+
+
+def publish_durations(
+    *,
+    log_paths: Sequence[Path],
+    previous: Path | None,
+    output: Path,
+    summary: Path,
+    event: str = "push",
+) -> None:
+    """Publish landing-tier timings and quote rolling slowest-shard p95."""
+    if event not in _PUBLISH_EVENTS:
+        raise ValueError(f"unsupported duration-publish event {event!r}")
     node_durations = parse_durations(log_paths)
     prior: dict[str, Any] = _read_json(previous) if previous and previous.exists() else {}
     history = prior.get("slowest_shard_seconds", []) if isinstance(prior, dict) else []
@@ -496,16 +508,19 @@ def publish_durations(*, log_paths: Sequence[Path], previous: Path | None, outpu
     _write_json(
         output,
         {
+            "event": event,
             "node_durations": node_durations,
             "schema_version": _DATASET_VERSION,
             "slowest_shard_seconds": history,
         },
     )
+    event_label = event.replace("_", " ")
     summary.parent.mkdir(parents=True, exist_ok=True)
     summary.write_text(
         "## Pytest shard duration record\n\n"
-        f"Successful main run shard test durations: {', '.join(f'{total:.2f}s' for total in shard_totals)}.\n\n"
-        f"Slowest-shard p95: **{p95:.2f}s** across {len(history)} successful main run(s).\n",
+        f"Successful {event_label} run shard test durations: "
+        f"{', '.join(f'{total:.2f}s' for total in shard_totals)}.\n\n"
+        f"Slowest-shard p95: **{p95:.2f}s** across {len(history)} successful landing-tier run(s).\n",
         encoding="utf-8",
     )
 
@@ -620,11 +635,17 @@ def _parser() -> argparse.ArgumentParser:
     verify.add_argument("--expected-source-sha", help="Require every plan source SHA to equal this event SHA.")
     verify.add_argument("--require-plan-metadata", action="store_true", help="Require and cross-check immutable snapshot/planner metadata.")
     verify.add_argument("--require-execution-receipt", action="store_true", help="Require each shard's reported execution node-ID receipt.")
-    publish = commands.add_parser("publish-durations", help="Publish successful-main test timings for later shard balancing.", description="Parse shard logs and write the rolling duration dataset.", formatter_class=formatter)
+    publish = commands.add_parser("publish-durations", help="Publish landing-tier test timings for later shard balancing.", description="Parse shard logs and write the rolling duration dataset.", formatter_class=formatter)
     publish.add_argument("--log", type=Path, action="append", required=True, help="Pytest log path; repeat once per shard.")
     publish.add_argument("--previous", type=Path, help="Prior duration dataset, if available.")
     publish.add_argument("--output", type=Path, required=True, help="Output duration dataset JSON path.")
     publish.add_argument("--summary", type=Path, required=True, help="Markdown summary output path.")
+    publish.add_argument(
+        "--event",
+        default="push",
+        choices=sorted(_PUBLISH_EVENTS),
+        help="github.event_name for the summary label (default: push).",
+    )
     run = commands.add_parser("run", help="Run exactly the node IDs in a shard plan.", description="Execute a node-ID file with pytest and optionally record reported execution IDs.", formatter_class=formatter)
     run.add_argument("--nodeids", type=Path, required=True, help="Newline-delimited planned node-ID file.")
     run.add_argument("--execution-receipt", type=Path, help="Optional JSON receipt path recording planned and reported node IDs.")
@@ -665,7 +686,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 require_execution_receipt=args.require_execution_receipt,
             )
         elif args.command == "publish-durations":
-            publish_durations(log_paths=args.log, previous=args.previous, output=args.output, summary=args.summary)
+            publish_durations(
+                log_paths=args.log,
+                previous=args.previous,
+                output=args.output,
+                summary=args.summary,
+                event=args.event,
+            )
         elif args.command == "run":
             return run_nodeids(args.nodeids, args.pytest_args, receipt_path=args.execution_receipt)
     except (OSError, RuntimeError, ValueError, element_tree.ParseError) as error:
