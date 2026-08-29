@@ -390,7 +390,8 @@ def load_atlas_lemma_keys(
             )
             report["keys"] = keys
             return report
-        except Exception as exc:  # noqa: BLE001 — census must record the exact blocker
+        except Exception as exc:
+            # Census must record the exact blocker; do not re-raise.
             report["error"] = f"{type(exc).__name__}: {exc}"
             report["keys"] = keys
             return report

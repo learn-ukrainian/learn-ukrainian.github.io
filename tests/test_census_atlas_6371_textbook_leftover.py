@@ -310,10 +310,10 @@ def test_committed_oneshot_and_named_leftover_paths_exist() -> None:
 def test_committed_oneshot_stream_matches_published_denominator() -> None:
     """Lock the honest #6371 oneshot denominator without a full YAML object graph."""
     from scripts.lexicon.census_atlas_6371_textbook_leftover import (
-        load_oneshot_decisions,
-        load_oneshot_inventory_rows,
         load_named_decisions,
         load_named_inventory_rows,
+        load_oneshot_decisions,
+        load_oneshot_inventory_rows,
     )
 
     inventory = load_oneshot_inventory_rows()
