@@ -10,7 +10,6 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
@@ -18,13 +17,12 @@ from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import epics_router
 from scripts.orchestration import thread_handoff as th
+from tests.epics_monitor_stub import epics_app_for_store
 
 
 def _client(tmp_path: Path, monkeypatch) -> TestClient:
     store = SessionStreamStore(SessionStreamDatabase(tmp_path / "api.sqlite3"))
-    monkeypatch.setattr(epics_router, "_store", lambda: store)
-    app = FastAPI()
-    app.include_router(epics_router.router, prefix="/api/epics")
+    app = epics_app_for_store(store, tmp_path)
     return TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
 
 

@@ -27,16 +27,13 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     dashboard_helpers,
-    epics_router,
     fleet_router,
     issues_router,
     opsec_scan,
     route_contracts,
     state_helpers,
-    work_router,
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
@@ -236,7 +233,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # different fixture root. Replace the mutable stores rather than allowing
     # a prior test (or a background projection build) to replay another root's
     # logical work ids into this sweep.
-    monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
     monkeypatch.setattr(state_helpers, "_ttl_cache", {})
     dashboard_helpers._track_cache.clear()
     dashboard_helpers._summary_cache.clear()
@@ -244,8 +240,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_ctx)
     session_connection = fixture_ctx.stores.session_streams_database.connect()
     session_connection.close()
-    epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
-    monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     session_database = SessionStreamDatabase(root / "stores" / "session-streams.sqlite3")
     legacy_connection = session_database.connect()
     legacy_connection.close()

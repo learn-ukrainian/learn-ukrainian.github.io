@@ -22,6 +22,11 @@ from .observer_presence import _STORE as _PRESENCE_STORE
 from .project_state_store import _STORE as _REPORT_STORE
 from .resilience import connect_sqlite
 
+# Production singleton for work-router single-flight handles. Fixture contexts
+# get a fresh dict; production_context() reuses this object so existing tests
+# that inspect ``work_router._IN_FLIGHT_BUILDS`` keep seeing the live slot map.
+_WORK_IN_FLIGHT_BUILDS: dict[Any, Any] = {}
+
 
 def _as_path(value: os.PathLike[str] | str) -> Path:
     return Path(value).expanduser()
@@ -91,6 +96,7 @@ class MonitorStores:
     epics_database: SessionStreamDatabase | None = None
     epics_store: SessionStreamStore | None = None
     image_store: Any = None
+    work_in_flight: dict[Any, Any] | None = None
 
     def __getitem__(self, name: str) -> Any:
         return getattr(self, name)
@@ -187,9 +193,11 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
     if fixture:
         presence_store: dict[Any, Any] = {}
         report_store: dict[Any, Any] = {}
+        work_in_flight: dict[Any, Any] = {}
     else:
         presence_store = _PRESENCE_STORE
         report_store = _REPORT_STORE
+        work_in_flight = _WORK_IN_FLIGHT_BUILDS
 
     from .images_router import (  # noqa: PLC0415  # lazy-ok: avoid circular import between monitor_context and images_router
         ImageStore,
@@ -215,6 +223,7 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         epics_database=epics_database,
         epics_store=SessionStreamStore(epics_database),
         image_store=image_store,
+        work_in_flight=work_in_flight,
     )
 
 

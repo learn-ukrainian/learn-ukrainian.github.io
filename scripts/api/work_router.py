@@ -13,8 +13,15 @@ import logging
 import threading
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
+
+from .monitor_context import (
+    MonitorContext,
+    _WORK_IN_FLIGHT_BUILDS,
+    get_ctx,
+    production_context,
+)
 
 from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set
 from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
@@ -130,11 +137,29 @@ def _build_sync(filters: dict[str, Any], *, cache_age_s: float = 0.0) -> dict[st
 # ``asyncio.create_task`` work when that portal exits — so ``cache_set``
 # never runs and every /next retry stays 503 stale (CI #7015). Production
 # uvicorn keeps the server loop; we still do not await the refresh on /next.
-_IN_FLIGHT_BUILDS: dict[str, concurrent.futures.Future[dict[str, Any]]] = {}
+# The production slot map is the MonitorContext singleton; fixture contexts
+# get an isolated dict so the OPSEC sweep no longer monkeypatches this name.
+_IN_FLIGHT_BUILDS: dict[str, concurrent.futures.Future[dict[str, Any]]] = _WORK_IN_FLIGHT_BUILDS
 _IN_FLIGHT_LOCK = threading.Lock()
 _WORKER_LOOP: asyncio.AbstractEventLoop | None = None
 _WORKER_THREAD: threading.Thread | None = None
 _WORKER_LOOP_LOCK = threading.Lock()
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _in_flight_builds(
+    ctx: MonitorContext | None = None,
+) -> dict[str, concurrent.futures.Future[dict[str, Any]]]:
+    store = _resolve_context(ctx).stores.work_in_flight
+    if store is None:
+        raise RuntimeError("work in-flight map is unavailable")
+    return store
 
 
 def _ensure_worker_loop() -> asyncio.AbstractEventLoop:
@@ -228,14 +253,16 @@ def _follow_cfuture(
 def _ensure_in_flight(
     key: str,
     filters: dict[str, Any],
+    ctx: MonitorContext | None = None,
 ) -> concurrent.futures.Future[dict[str, Any]]:
     """Start or join the single-flight build; never tied to the request loop."""
+    slots = _in_flight_builds(ctx)
     with _IN_FLIGHT_LOCK:
-        existing = _IN_FLIGHT_BUILDS.get(key)
+        existing = slots.get(key)
         if existing is not None and not existing.done():
             return existing
         handle: concurrent.futures.Future[dict[str, Any]] = concurrent.futures.Future()
-        _IN_FLIGHT_BUILDS[key] = handle
+        slots[key] = handle
 
     def _finish_handle(src: concurrent.futures.Future[dict[str, Any]]) -> None:
         if handle.done():
@@ -251,8 +278,8 @@ def _ensure_in_flight(
 
     def _clear(_src: concurrent.futures.Future[dict[str, Any]]) -> None:
         with _IN_FLIGHT_LOCK:
-            if _IN_FLIGHT_BUILDS.get(key) is handle:
-                _IN_FLIGHT_BUILDS.pop(key, None)
+            if slots.get(key) is handle:
+                slots.pop(key, None)
 
     try:
         worker_loop = _ensure_worker_loop()
@@ -274,12 +301,15 @@ def _ensure_in_flight(
 def _get_or_create_build_task(
     key: str,
     filters: dict[str, Any],
+    ctx: MonitorContext | None = None,
 ) -> concurrent.futures.Future[dict[str, Any]]:
     """Kick (or join) the single-flight refresh. /next does not await this."""
-    return _ensure_in_flight(key, filters)
+    return _ensure_in_flight(key, filters, ctx)
 
 
-def wait_for_in_flight_build(key: str, timeout: float = 10.0) -> None:
+def wait_for_in_flight_build(
+    key: str, timeout: float = 10.0, ctx: MonitorContext | None = None
+) -> None:
     """Block until the single-flight build for ``key`` settles.
 
     Sync TestClient does not pump request-loop ``create_task`` work between
@@ -287,8 +317,9 @@ def wait_for_in_flight_build(key: str, timeout: float = 10.0) -> None:
     and re-polling. No-op when nothing is in flight. Job failures (including
     ``NEXT_BUILD_TIMEOUT_S``) are swallowed — callers assert on cache/slot.
     """
+    slots = _in_flight_builds(ctx)
     with _IN_FLIGHT_LOCK:
-        fut = _IN_FLIGHT_BUILDS.get(key)
+        fut = slots.get(key)
     if fut is None:
         return
     try:
@@ -303,6 +334,7 @@ def wait_for_in_flight_build(key: str, timeout: float = 10.0) -> None:
 
 def warm_projection_cache(
     filters: dict[str, Any] | None = None,
+    ctx: MonitorContext | None = None,
 ) -> asyncio.Future[dict[str, Any]] | None:
     """Schedule asynchronous background warm-up of the public projection cache."""
     canonical = admit_projection_filters(filters or {})
@@ -314,13 +346,14 @@ def warm_projection_cache(
         _ = asyncio.get_running_loop()
     except RuntimeError:
         return None
-    return _follow_cfuture(_get_or_create_build_task(key, canonical))
+    return _follow_cfuture(_get_or_create_build_task(key, canonical, ctx))
 
 
 @router.get("/v1/projection")
 async def work_projection(
     request: Request,
     fresh: bool = Query(False, description="Bypass warm projection cache."),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Normalized public attention list with source envelopes and degradation."""
     filters = _filters_from_request(request)
@@ -339,7 +372,7 @@ async def work_projection(
     if fresh:
         cache_invalidate(CACHE_KEY)
 
-    handle = _get_or_create_build_task(key, filters)
+    handle = _get_or_create_build_task(key, filters, ctx)
     try:
         payload = await asyncio.wait_for(asyncio.shield(_follow_cfuture(handle)), timeout=TIMEOUT_S)
     except TimeoutError as exc:
@@ -421,6 +454,7 @@ async def work_next(
         description="Stream key from scripts/config/issue_streams.yaml (the caller's lane epic).",
     ),
     limit: int = Query(NEXT_DEFAULT_LIMIT, ge=1, le=NEXT_MAX_LIMIT),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any] | JSONResponse:
     """Stream-scoped actionable pick list served strictly from the warm cache (#6880).
 
@@ -476,7 +510,7 @@ async def work_next(
         )
     payload, age = cached
     if age >= NEXT_MAX_STALE_S:
-        _get_or_create_build_task(key, {})
+        _get_or_create_build_task(key, {}, ctx)
         return _next_error(
             503,
             {
@@ -489,7 +523,7 @@ async def work_next(
             headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
         )
     if age >= CACHE_TTL_S:
-        _get_or_create_build_task(key, {})
+        _get_or_create_build_task(key, {}, ctx)
 
     items = [i for i in payload.get("items") or [] if isinstance(i, dict)]
     actionable = [i for i in items if is_actionable(i)]

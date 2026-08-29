@@ -18,12 +18,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
-    epics_router,
     issues_router,
-    work_router,
 )
 from scripts.api import main as api_main
 from scripts.orchestration import reap_worktrees
@@ -66,9 +62,6 @@ class MonkeypatchRecorder:
 
 def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> None:
     """Mirror isolated_fixture setattr side effects (no pytest tmp_path wrapper)."""
-    monkeypatch.setattr(work_router, "_IN_FLIGHT_BUILDS", {})
-    epics_store = SessionStreamStore(SessionStreamDatabase(root / "stores" / "epics.sqlite3"))
-    monkeypatch.setattr(epics_router, "_store", lambda: epics_store)
     handoff_path = root / "batch_state" / "session-handoff.md"
     handoff_path.write_text("fixture handoff\n", encoding="utf-8")
     monkeypatch.setattr(api_main, "_health_instance_identity", lambda: {})
