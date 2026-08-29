@@ -631,6 +631,65 @@ def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
         assert first_client.get("/api/work/v1/capabilities").json()["mutation"] is False
 
 
+def test_step13_core_router_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    # Set up dashboards
+    (first_root / "dashboards").mkdir(parents=True, exist_ok=True)
+    (first_root / "dashboards" / "index.html").write_text("<html>First Dashboard</html>\n", encoding="utf-8")
+    (second_root / "dashboards").mkdir(parents=True, exist_ok=True)
+    (second_root / "dashboards" / "index.html").write_text("<html>Second Dashboard</html>\n", encoding="utf-8")
+
+    # Set up dispatcher state
+    (first_root / "batch_state").mkdir(parents=True, exist_ok=True)
+    (first_root / "batch_state" / "dispatcher_state.json").write_text(
+        json.dumps({"tracks": {"first_track": {"status": "active"}}}),
+        encoding="utf-8",
+    )
+    (second_root / "batch_state").mkdir(parents=True, exist_ok=True)
+    (second_root / "batch_state" / "dispatcher_state.json").write_text(
+        json.dumps({"tracks": {"second_track": {"status": "active"}}}),
+        encoding="utf-8",
+    )
+
+    # Set up dispatcher logs
+    (first_root / "logs").mkdir(parents=True, exist_ok=True)
+    (first_root / "logs" / "dispatcher.log").write_text("First dispatcher log line\n", encoding="utf-8")
+    (second_root / "logs").mkdir(parents=True, exist_ok=True)
+    (second_root / "logs" / "dispatcher.log").write_text("Second dispatcher log line\n", encoding="utf-8")
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        # Static serving isolation
+        first_static = first_client.get("/")
+        second_static = second_client.get("/")
+        assert "First Dashboard" in first_static.text
+        assert "Second Dashboard" not in first_static.text
+        assert "Second Dashboard" in second_static.text
+        assert "First Dashboard" not in second_static.text
+
+        # Batch dispatcher state isolation
+        assert "first_track" in first_client.get("/api/batch/dispatcher").json()["tracks"]
+        assert "second_track" not in first_client.get("/api/batch/dispatcher").json()["tracks"]
+        assert "second_track" in second_client.get("/api/batch/dispatcher").json()["tracks"]
+        assert "first_track" not in second_client.get("/api/batch/dispatcher").json()["tracks"]
+
+        # Batch logs isolation
+        assert "First dispatcher log line" in first_client.get("/api/batch/dispatcher/logs").json()["lines"]
+        assert "Second dispatcher log line" not in first_client.get("/api/batch/dispatcher/logs").json()["lines"]
+        assert "Second dispatcher log line" in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
+        assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
     assert len(DB_ACCESS_ALLOWLIST) == 10
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))

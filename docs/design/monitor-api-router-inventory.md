@@ -495,7 +495,9 @@ fixture setattr, `epics_router._store` fixture setattr, and
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LEVELS`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT` | `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR` | 17 | 13 |
+| `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `LEVELS` | — | 0 | 13 |
+
+**13 migrated (#7335):** 15 inline routes and orient collectors read roots from `Depends(get_ctx)`. Measured unique logical seams at this head: **21** (base after #7413 was **36**, delta **−15**). The seams this row previously listed (`_health_instance_identity`, `_run_command` in `main.py`, and the Path globals `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`, `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR`) are deleted.
 
 **Routes:** `/api` (redirect), `/api/health`, `/api/orient`, `/api/config`,
 `/api/batch/dispatcher`, `/api/batch/active`, `/api/batch/failures`,
@@ -508,12 +510,6 @@ stay registered after all `/api/*` prefixed routers (§4.2). #7302 migrated thes
 15 inline handlers to `core_router` reading `request.app` / existing `main.py`
 helpers; no separate `_repo_root` / `_store` beyond the config imports and
 module globals listed above.
-
-**`core_router` seams (17):** `api_main._health_instance_identity`,
-`DASHBOARDS_DIR`; `path_loop` for `main` and shared `config` module globals;
-`run_command_loop:main._run_command`; includes `BATCH_STATE_DIR`,
-`CURRICULUM_ROOT`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`,
-`SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR`.
 
 ---
 

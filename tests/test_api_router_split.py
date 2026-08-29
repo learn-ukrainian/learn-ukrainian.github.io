@@ -201,13 +201,22 @@ class TestStaticServing:
         assert r.status_code in (200, 404)
 
     def test_static_path_traversal_is_rejected(self, tmp_path, monkeypatch):
+        from dataclasses import replace
+
+        import scripts.api.main as api_main
+
         dashboards_dir = tmp_path / "dashboards"
         dashboards_dir.mkdir()
         (dashboards_dir / "index.html").write_text("ok", "utf-8")
         outside_file = tmp_path / "secret.txt"
         outside_file.write_text("secret", "utf-8")
 
-        monkeypatch.setattr("scripts.api.main.DASHBOARDS_DIR", dashboards_dir)
+        base_ctx = api_main.app.state.ctx
+        patched_ctx = replace(
+            base_ctx,
+            roots=replace(base_ctx.roots, dashboards_dir=dashboards_dir),
+        )
+        monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
 
         r = client.get("/%2e%2e/secret.txt")
 
