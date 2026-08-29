@@ -466,6 +466,29 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
         assert first_legacy["sources_db"]["points_count"] == 3
 
 
+def test_step11_contracts_router_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_routes = first_client.get("/api/contracts/routes").json()
+        second_routes = second_client.get("/api/contracts/routes").json()
+        assert "route_contracts" in first_routes
+        assert "route_contracts" in second_routes
+        assert len(first_routes["route_contracts"]) == len(second_routes["route_contracts"])
+        assert "page_contracts" in first_routes
+        assert "page_contracts" in second_routes
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
     assert len(DB_ACCESS_ALLOWLIST) == 16
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))

@@ -170,6 +170,18 @@ def rag_client(mock_project_root):
     yield TestClient(app)
 
 
+@pytest.fixture()
+def contracts_client(mock_project_root):
+    """TestClient for contracts router."""
+    from scripts.api.monitor_context import fixture_context
+    from scripts.api.route_contracts import router
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(mock_project_root)
+    app.include_router(router, prefix="/api/contracts")
+    yield TestClient(app)
+
+
 # ===========================================================================
 # COMMS ROUTER TESTS
 # ===========================================================================
@@ -1670,3 +1682,33 @@ class TestCommsPreseedLogParsing:
         (log_dir / "random.log").write_text("no timestamp\n")
         result = _scan_preseed_logs(_comms_ctx(mock_project_root))
         assert result == []
+
+
+class TestContractsRoutes:
+    """Tests for /api/contracts routes (#7329)."""
+
+    def test_get_routes_returns_200(self, contracts_client):
+        r = contracts_client.get("/api/contracts/routes")
+        assert r.status_code == 200
+        data = r.json()
+        assert "generated_at" in data
+        assert "route_contracts" in data
+        assert "page_contracts" in data
+        assert len(data["route_contracts"]) > 0
+        assert len(data["page_contracts"]) > 0
+
+    def test_plain_python_invocation(self, mock_project_root):
+        import asyncio
+
+        from scripts.api.monitor_context import fixture_context
+        from scripts.api.route_contracts import route_contracts
+
+        ctx = fixture_context(mock_project_root)
+        data = asyncio.run(route_contracts(ctx=ctx))
+        assert "route_contracts" in data
+        assert "page_contracts" in data
+
+        data_default = asyncio.run(route_contracts())
+        assert "route_contracts" in data_default
+        assert "page_contracts" in data_default
+
