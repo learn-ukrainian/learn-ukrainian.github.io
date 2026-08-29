@@ -40,6 +40,17 @@
     },
     "retention_receipt_sha256": {"$ref": "#/$defs/sha256"},
     "retention_rationale_code": {"type": "string", "minLength": 1},
+    "replacement_firewall_owner_issue": {
+      "anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]
+    },
+    "preserves_only_non_content_lineage_hashes": {"type": "boolean"},
+    "pack_kind": {
+      "anyOf": [
+        {"enum": ["non_content_lineage_hashes", "content_compact"]},
+        {"type": "null"}
+      ]
+    },
+    "second_expanded_tree": {"const": false},
     "deletion_authorized": {"const": false},
     "issue_7434_is_not_deletion_authorization": {"const": true},
     "authorization_gate": {"type": "string", "minLength": 1},
@@ -55,6 +66,20 @@
     "evaluation_firewall_requires_cycle007_identities": {"type": "boolean"},
     "production_inventory_frozen": {"type": "boolean"},
     "fixture_representation_proven": {"type": "boolean"},
+    "production_packet_count": {"type": "integer", "minimum": 1},
+    "production_row_count": {"type": "integer", "minimum": 1},
+    "production_object_count": {"type": "integer", "minimum": 1},
+    "production_total_allocated_bytes": {"type": "integer", "minimum": 0},
+    "production_compact_stored_allocated_bytes": {"type": "integer", "minimum": 0},
+    "production_reclaimed_byte_forecast": {"type": "integer", "minimum": 0},
+    "production_deletion_candidate_count": {"type": "integer", "minimum": 0},
+    "production_peak_temporary_bytes": {"type": "integer", "minimum": 0},
+    "production_capacity_sufficient_for_peak": {"type": "boolean"},
+    "production_identity_proof_ok": {"type": "boolean"},
+    "production_backup_restore_ok": {"type": "boolean"},
+    "production_roundtrip_ok": {"type": "boolean"},
+    "production_lane_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "production_min_free_bytes": {"type": "integer", "minimum": 0},
     "fixture_lane_complete": {"type": "boolean"},
     "fixture_packet_count": {"type": "integer", "minimum": 1},
     "fixture_row_count": {"type": "integer", "minimum": 1},

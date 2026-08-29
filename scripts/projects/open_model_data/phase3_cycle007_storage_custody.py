@@ -40,6 +40,24 @@ AUTH_SCHEMA_VERSION = "phase3_cycle007_storage_deletion_auth_request_v1"
 RETAIN_MINIMAL_EVALUATION_ASSET = "RETAIN_MINIMAL_EVALUATION_ASSET"
 RETIRE_CYCLE007 = "RETIRE_CYCLE007"
 RETENTION_OUTCOMES = frozenset({RETAIN_MINIMAL_EVALUATION_ASSET, RETIRE_CYCLE007})
+REPLACEMENT_FIREWALL_OWNER_ISSUE = 7427
+MIN_FREE_BYTES = 10 * 1024 * 1024 * 1024
+LINEAGE_PACK_SCHEMA_VERSION = "phase3_cycle007_storage_lineage_pack_v1"
+IDENTITY_BEARING_CLASSES = frozenset(
+    {
+        "materialization_packet",
+        "materialization_custody",
+        "materialization_manifest",
+        "evidence_manifest",
+    }
+)
+CONTENT_EXPANSION_CLASSES = frozenset(
+    {
+        "evidence_sidecar",
+        "labeling_expansion",
+        "compile_expansion",
+    }
+)
 
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
@@ -62,19 +80,35 @@ LABELING_OUTPUT_ROOTS = (
 PUBLIC_SUMMARY_FORBIDDEN_FS_KEYS = frozenset(
     {
         "workstation_filesystem",
-        "fixture_filesystem_avail_bytes",
+        "filesystem",
         "filesystem_avail_bytes",
+        "filesystem_total_bytes",
+        "filesystem_used_bytes",
+        "filesystem_free_bytes",
+        "filesystem_f_bavail_free_bytes",
     }
 )
+PUBLIC_SUMMARY_FORBIDDEN_FS_PREFIXES = ("fixture_filesystem_", "production_filesystem_", "filesystem_")
 
 
-def public_summary_forbidden_fs_keys(value: Mapping[str, Any]) -> tuple[str, ...]:
-    """Return host-filesystem keys that must never appear in public JSON."""
-    leaked = [
-        key
-        for key in value
-        if key in PUBLIC_SUMMARY_FORBIDDEN_FS_KEYS or str(key).startswith("fixture_filesystem_")
-    ]
+def public_summary_forbidden_fs_keys(value: Any) -> tuple[str, ...]:
+    """Return forbidden host-filesystem keys found anywhere in public JSON."""
+    leaked: set[str] = set()
+
+    def visit(node: Any) -> None:
+        if isinstance(node, Mapping):
+            for key, child in node.items():
+                key_text = str(key)
+                if key_text in PUBLIC_SUMMARY_FORBIDDEN_FS_KEYS or key_text.startswith(
+                    PUBLIC_SUMMARY_FORBIDDEN_FS_PREFIXES
+                ):
+                    leaked.add(key_text)
+                visit(child)
+        elif isinstance(node, list):
+            for child in node:
+                visit(child)
+
+    visit(value)
     return tuple(sorted(leaked))
 
 
@@ -93,6 +127,8 @@ FAILURE_CODES = frozenset(
         "fixture_flag_required",
         "work_root_failure",
         "source_mode_drift",
+        "preflight_conflict",
+        "topology_blocker",
     }
 )
 
@@ -549,15 +585,74 @@ def _evidence_counts(package: Path | None) -> dict[str, Any]:
     }
 
 
+def evaluate_held_out_proof(proof: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Adversarial gate for RETAIN_MINIMAL_EVALUATION_ASSET.
+
+    Identity-lineage exclusion alone is insufficient. Text-free source/rights/
+    adjudication metadata must prove a concrete source-qualified held-out
+    evaluation function, required fields/identities, and a named consumer.
+    """
+    questions = {
+        "q1_concrete_source_qualified_held_out_function": False,
+        "q2_required_fields_and_identities_present": False,
+        "q3_named_consumer_present": False,
+        "q4_identity_lineage_exclusion_alone_insufficient": True,
+        "q5_text_free_source_rights_adjudication_metadata_present": False,
+        "q6_replacement_firewall_owner_issue": REPLACEMENT_FIREWALL_OWNER_ISSUE,
+    }
+    if not isinstance(proof, Mapping):
+        return {
+            "proof_valid": False,
+            "questions": questions,
+            "failure_reason": "held_out_evaluation_proof_absent",
+        }
+    function_id = proof.get("held_out_evaluation_function_id")
+    required_fields = proof.get("required_fields")
+    required_identities = proof.get("required_identities")
+    consumer = proof.get("named_consumer")
+    source_qualified = proof.get("source_qualified") is True
+    text_free_meta = proof.get("text_free_source_rights_adjudication_metadata") is True
+    questions["q1_concrete_source_qualified_held_out_function"] = bool(
+        isinstance(function_id, str)
+        and function_id.strip()
+        and source_qualified
+    )
+    questions["q2_required_fields_and_identities_present"] = bool(
+        isinstance(required_fields, list)
+        and len(required_fields) > 0
+        and all(isinstance(item, str) and item for item in required_fields)
+        and isinstance(required_identities, list)
+        and len(required_identities) > 0
+        and all(isinstance(item, str) and item for item in required_identities)
+    )
+    questions["q3_named_consumer_present"] = bool(isinstance(consumer, str) and consumer.strip())
+    questions["q5_text_free_source_rights_adjudication_metadata_present"] = bool(text_free_meta)
+    # q4 remains True: lineage exclusion never upgrades to RETAIN on its own.
+    proof_valid = all(
+        (
+            questions["q1_concrete_source_qualified_held_out_function"],
+            questions["q2_required_fields_and_identities_present"],
+            questions["q3_named_consumer_present"],
+            questions["q5_text_free_source_rights_adjudication_metadata_present"],
+        )
+    )
+    return {
+        "proof_valid": proof_valid,
+        "questions": questions,
+        "failure_reason": None if proof_valid else "held_out_evaluation_proof_incomplete",
+    }
+
+
 def decide_retention(
     *,
     inventory: Mapping[str, Any],
     labeling_state: str = "OFF",
     provider_calls: int = 0,
     provider_derived_training_labels: int = 0,
-    evaluation_firewall_requires_cycle007_identities: bool = True,
+    held_out_evaluation_proof: Mapping[str, Any] | None = None,
+    evaluation_firewall_requires_cycle007_identities: bool | None = None,
 ) -> dict[str, Any]:
-    """Choose retention using custody/evaluation necessity and text-free metrics only."""
+    """Choose retention adversarially; lineage exclusion alone forces RETIRE."""
     _require(labeling_state == "OFF", "retention_blocked")
     _require(provider_calls == 0, "retention_blocked")
     _require(provider_derived_training_labels == 0, "retention_blocked")
@@ -568,13 +663,19 @@ def decide_retention(
     _require(isinstance(row_count, int) and row_count > 0, "retention_blocked")
     _require(isinstance(object_count, int) and object_count > 0, "retention_blocked")
 
-    if evaluation_firewall_requires_cycle007_identities:
+    proof = evaluate_held_out_proof(held_out_evaluation_proof)
+    # Legacy boolean alone is treated as lineage-exclusion claim, not proof.
+    lineage_only_claim = bool(evaluation_firewall_requires_cycle007_identities)
+    if proof["proof_valid"]:
         outcome = RETAIN_MINIMAL_EVALUATION_ASSET
-        rationale_code = "evaluation_firewall_requires_identity_assets"
+        rationale_code = "held_out_evaluation_function_proven"
     else:
-        # Full retirement is only expressible when evaluation necessity is false.
         outcome = RETIRE_CYCLE007
-        rationale_code = "evaluation_firewall_does_not_require_cycle007"
+        rationale_code = (
+            "identity_lineage_exclusion_only_retire"
+            if lineage_only_claim or held_out_evaluation_proof is None
+            else "held_out_evaluation_proof_incomplete_retire"
+        )
 
     return _receipt(
         {
@@ -585,9 +686,14 @@ def decide_retention(
             "labeling_state": labeling_state,
             "provider_calls": provider_calls,
             "provider_derived_training_labels": provider_derived_training_labels,
-            "evaluation_firewall_requires_cycle007_identities": (
-                evaluation_firewall_requires_cycle007_identities
+            "evaluation_firewall_requires_cycle007_identities": lineage_only_claim,
+            "held_out_evaluation_proof_valid": proof["proof_valid"],
+            "held_out_evaluation_proof_failure_reason": proof["failure_reason"],
+            "retention_questions": proof["questions"],
+            "replacement_firewall_owner_issue": (
+                None if outcome == RETAIN_MINIMAL_EVALUATION_ASSET else REPLACEMENT_FIREWALL_OWNER_ISSUE
             ),
+            "preserves_only_non_content_lineage_hashes": outcome == RETIRE_CYCLE007,
             "packet_count": packet_count,
             "row_count": row_count,
             "object_count": object_count,
@@ -602,18 +708,20 @@ def forecast_peak_temporary_bytes(
     *,
     compact_stored_bytes: int,
     backup_stored_bytes: int,
+    destination_avail_bytes: int,
+    min_free_bytes: int = MIN_FREE_BYTES,
+    second_expanded_tree: bool = False,
 ) -> dict[str, Any]:
     allocated = int(inventory["total_allocated_bytes"])
-    # Sequential reversible peaks while originals remain untouched:
-    # 1) write compact pack beside originals
-    # 2) write backup of pack
-    # 3) restore into a temporary workspace for proof
-    peak_compact = allocated + compact_stored_bytes
-    peak_backup = allocated + compact_stored_bytes + backup_stored_bytes
-    peak_restore = allocated + compact_stored_bytes + backup_stored_bytes + allocated
-    peak = max(peak_compact, peak_backup, peak_restore)
-    filesystem = inventory["filesystem"]
-    avail = int(filesystem["avail_bytes"])
+    # Reversible peaks while originals remain untouched. A second expanded tree
+    # is forbidden on the custody lane; streaming identity proof replaces it.
+    peak_compact = compact_stored_bytes
+    peak_backup = compact_stored_bytes + backup_stored_bytes
+    peak_hash_index = compact_stored_bytes + backup_stored_bytes
+    peak = max(peak_compact, peak_backup, peak_hash_index)
+    if second_expanded_tree:
+        peak = max(peak, allocated + compact_stored_bytes + backup_stored_bytes + allocated)
+    remaining_after_peak = destination_avail_bytes - peak
     return _receipt(
         {
             "schema_version": "phase3_cycle007_storage_peak_forecast_v1",
@@ -622,8 +730,14 @@ def forecast_peak_temporary_bytes(
             "compact_stored_bytes": compact_stored_bytes,
             "backup_stored_bytes": backup_stored_bytes,
             "peak_temporary_bytes": peak,
-            "filesystem_avail_bytes": avail,
-            "capacity_sufficient_for_peak": avail >= peak,
+            "peak_compact_bytes": peak_compact,
+            "peak_backup_bytes": peak_backup,
+            "peak_hash_index_bytes": peak_hash_index,
+            "destination_avail_bytes": destination_avail_bytes,
+            "min_free_bytes": min_free_bytes,
+            "remaining_after_peak_bytes": remaining_after_peak,
+            "capacity_sufficient_for_peak": remaining_after_peak >= min_free_bytes,
+            "second_expanded_tree": second_expanded_tree,
             "inventory_receipt_sha256": inventory.get("receipt_sha256"),
         }
     )
@@ -634,6 +748,175 @@ def _store_object_bytes(raw: bytes) -> tuple[str, bytes, int]:
     if len(compressed) + 64 < len(raw):
         return "lzma", compressed, len(compressed)
     return "raw", raw, len(raw)
+
+
+def write_lineage_pack(inventory: Mapping[str, Any], pack_dir: Path) -> dict[str, Any]:
+    """RETIRE path: store only text-free identity/lineage hashes (no content bodies)."""
+    if pack_dir.exists():
+        raise StorageCustodyError("pack_shape_failure")
+    pack_dir.mkdir(mode=PRIVATE_DIR_MODE)
+    os.chmod(pack_dir, PRIVATE_DIR_MODE)
+    lineage_objects: list[dict[str, Any]] = []
+    for item in inventory["objects"]:
+        entry = {
+            "role_relative_path": item["role_relative_path"],
+            "selection_class": item["selection_class"],
+            "sha256": item["sha256"],
+            "size_bytes": item["size_bytes"],
+            "allocated_bytes": item["allocated_bytes"],
+            "mode": item["mode"],
+            "packet_identity_set_sha256": item.get("packet_identity_set_sha256"),
+            "sidecar_id": item.get("sidecar_id"),
+            "row_count": item.get("row_count"),
+            "packet_index": item.get("packet_index"),
+            "lane": item.get("lane"),
+            "content_retained": False,
+        }
+        lineage_objects.append(entry)
+    body = {
+        "schema_version": LINEAGE_PACK_SCHEMA_VERSION,
+        "outcome_sha256": OUTCOME_SHA256,
+        "evaluation_cycle_id": EVALUATION_CYCLE_ID,
+        "pack_kind": "non_content_lineage_hashes",
+        "fixture": inventory.get("fixture", False),
+        "packet_count": inventory["packet_count"],
+        "row_count": inventory["row_count"],
+        "object_count": len(lineage_objects),
+        "ordered_row_identity_commitment_sha256": inventory[
+            "ordered_row_identity_commitment_sha256"
+        ],
+        "object_set_sha256": inventory["object_set_sha256"],
+        "inventory_receipt_sha256": inventory["receipt_sha256"],
+        "total_original_allocated_bytes": inventory["total_allocated_bytes"],
+        "objects": lineage_objects,
+        "replacement_firewall_owner_issue": REPLACEMENT_FIREWALL_OWNER_ISSUE,
+    }
+    pack_manifest = _receipt(body)
+    _atomic_write_json(pack_dir / "pack-manifest.json", pack_manifest)
+    # Store a second durable copy of the object digest set only.
+    digest_blob = (
+        "\n".join(f"{item['role_relative_path']}\t{item['sha256']}" for item in lineage_objects)
+        + "\n"
+    ).encode("utf-8")
+    stored_alloc = allocated_bytes(pack_dir / "pack-manifest.json")
+    digest_path = pack_dir / "object-digest-set.txt"
+    _atomic_write(digest_path, digest_blob)
+    stored_alloc += allocated_bytes(digest_path)
+    pack_manifest = _receipt(
+        {
+            **{k: v for k, v in pack_manifest.items() if k != "receipt_sha256"},
+            "total_stored_allocated_bytes": stored_alloc,
+            "content_bodies_stored": False,
+        }
+    )
+    _atomic_write_json(pack_dir / "pack-manifest.json", pack_manifest)
+    return pack_manifest
+
+
+def prove_lineage_against_sources(
+    inventory: Mapping[str, Any],
+    bindings: Bindings,
+    pack_manifest: Mapping[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Exact identity proof without creating a second expanded tree."""
+    _require(pack_manifest.get("schema_version") == LINEAGE_PACK_SCHEMA_VERSION, "pack_shape_failure")
+    path_index = _path_index(bindings)
+    verified: list[tuple[str, str]] = []
+    for item in inventory["objects"]:
+        rel = item["role_relative_path"]
+        source = path_index[rel]
+        _regular(source, "identity_roundtrip_failure")
+        sha = digest_file(source)
+        _require(sha == item["sha256"], "identity_roundtrip_failure")
+        _require(sha == next(
+            entry["sha256"]
+            for entry in pack_manifest["objects"]
+            if entry["role_relative_path"] == rel
+        ), "identity_roundtrip_failure")
+        verified.append((rel, sha))
+    object_set = digest("\n".join(f"{rel}\t{sha}" for rel, sha in verified).encode("utf-8"))
+    _require(object_set == inventory["object_set_sha256"], "identity_roundtrip_failure")
+    _require(object_set == pack_manifest["object_set_sha256"], "identity_roundtrip_failure")
+    roundtrip = _receipt(
+        {
+            "schema_version": "phase3_cycle007_storage_roundtrip_v1",
+            "outcome_sha256": OUTCOME_SHA256,
+            "pack_manifest_sha256": pack_manifest["receipt_sha256"],
+            "object_count": len(verified),
+            "object_set_sha256": object_set,
+            "ordered_row_identity_commitment_sha256": inventory[
+                "ordered_row_identity_commitment_sha256"
+            ],
+            "packet_count": inventory["packet_count"],
+            "row_count": inventory["row_count"],
+            "roundtrip_ok": True,
+            "second_expanded_tree": False,
+            "proof_mode": "stream_hash_against_sources",
+        }
+    )
+    identity_proof = _receipt(
+        {
+            "schema_version": "phase3_cycle007_storage_identity_proof_v1",
+            "outcome_sha256": OUTCOME_SHA256,
+            "packet_count": inventory["packet_count"],
+            "row_count": inventory["row_count"],
+            "object_count": inventory["object_count"],
+            "object_set_sha256": object_set,
+            "ordered_row_identity_commitment_sha256": inventory[
+                "ordered_row_identity_commitment_sha256"
+            ],
+            "identity_proof_ok": True,
+            "inventory_receipt_sha256": inventory["receipt_sha256"],
+            "second_expanded_tree": False,
+            "proof_mode": "stream_hash_against_sources",
+        }
+    )
+    return roundtrip, identity_proof
+
+
+def prove_backup_byte_identity(pack_dir: Path, backup_dir: Path) -> dict[str, Any]:
+    """Prove backup restores to the compact/lineage pack without expanding content."""
+    _directory(pack_dir, "backup_restore_failure")
+    _directory(backup_dir, "backup_restore_failure")
+    pack_files: dict[str, str] = {}
+    for dirpath, _dirnames, filenames in os.walk(pack_dir, followlinks=False):
+        for filename in sorted(filenames):
+            path = Path(dirpath) / filename
+            if path.is_symlink() or not path.is_file():
+                continue
+            rel = path.relative_to(pack_dir).as_posix()
+            pack_files[rel] = digest_file(path)
+    backup_files: dict[str, str] = {}
+    for dirpath, _dirnames, filenames in os.walk(backup_dir, followlinks=False):
+        for filename in sorted(filenames):
+            path = Path(dirpath) / filename
+            if path.is_symlink() or not path.is_file():
+                continue
+            rel = path.relative_to(backup_dir).as_posix()
+            backup_files[rel] = digest_file(path)
+    _require(pack_files == backup_files, "backup_restore_failure")
+    manifest = _read_json(backup_dir / "pack-manifest.json", "backup_restore_failure")
+    return _receipt(
+        {
+            "schema_version": "phase3_cycle007_storage_backup_restore_proof_v1",
+            "outcome_sha256": OUTCOME_SHA256,
+            "pack_manifest_sha256": manifest["receipt_sha256"],
+            "object_set_sha256": manifest.get("object_set_sha256"),
+            "object_count": manifest.get("object_count"),
+            "packet_count": manifest.get("packet_count"),
+            "row_count": manifest.get("row_count"),
+            "backup_restore_ok": True,
+            "second_expanded_tree": False,
+            "proof_mode": "byte_identity_pack_to_backup",
+        }
+    )
+
+
+def estimate_content_pack_bytes(inventory: Mapping[str, Any]) -> int:
+    """Conservative upper bound used before writing a content pack."""
+    # Worst case: store raw. Real write_pack may lzma-shrink, but capacity must
+    # admit the upper bound while preserving the free-space floor.
+    return int(inventory["total_size_bytes"]) + 1024 * 1024
 
 
 def write_pack(inventory: Mapping[str, Any], bindings: Bindings, pack_dir: Path) -> dict[str, Any]:
@@ -678,6 +961,7 @@ def write_pack(inventory: Mapping[str, Any], bindings: Bindings, pack_dir: Path)
                 "row_count": item.get("row_count"),
                 "packet_index": item.get("packet_index"),
                 "lane": item.get("lane"),
+                "content_retained": True,
             }
         )
 
@@ -686,6 +970,7 @@ def write_pack(inventory: Mapping[str, Any], bindings: Bindings, pack_dir: Path)
             "schema_version": PACK_SCHEMA_VERSION,
             "outcome_sha256": OUTCOME_SHA256,
             "evaluation_cycle_id": EVALUATION_CYCLE_ID,
+            "pack_kind": "content_compact",
             "fixture": bindings.fixture,
             "packet_count": inventory["packet_count"],
             "row_count": inventory["row_count"],
@@ -697,6 +982,7 @@ def write_pack(inventory: Mapping[str, Any], bindings: Bindings, pack_dir: Path)
             "inventory_receipt_sha256": inventory["receipt_sha256"],
             "total_original_allocated_bytes": inventory["total_allocated_bytes"],
             "total_stored_allocated_bytes": total_stored,
+            "content_bodies_stored": True,
             "objects": stored_objects,
         }
     )
@@ -1013,6 +1299,123 @@ def reconcile_public_private(
     )
 
 
+def prove_content_pack_stream(
+    inventory: Mapping[str, Any],
+    pack_dir: Path,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Exact content-pack round-trip by streaming decompress+hash; no second tree."""
+    _directory(pack_dir, "pack_shape_failure")
+    manifest = _read_json(pack_dir / "pack-manifest.json", "pack_shape_failure")
+    _require(isinstance(manifest, Mapping), "pack_shape_failure")
+    _require(manifest.get("schema_version") == PACK_SCHEMA_VERSION, "pack_shape_failure")
+    restored_rows: list[tuple[str, str]] = []
+    restored_objects: list[tuple[str, str]] = []
+    has_materialization_packets = any(
+        item["selection_class"] == "materialization_packet" for item in inventory["objects"]
+    )
+    by_rel = {item["role_relative_path"]: item for item in inventory["objects"]}
+    for item in manifest["objects"]:
+        object_path = pack_dir / item["object_relative_path"]
+        payload = object_path.read_bytes()
+        _require(digest(payload) == item["stored_sha256"], "identity_roundtrip_failure")
+        if item["storage"] == "lzma":
+            raw = lzma.decompress(payload)
+        elif item["storage"] == "raw":
+            raw = payload
+        else:
+            raise StorageCustodyError("pack_shape_failure")
+        sha = digest(raw)
+        _require(sha == item["sha256"], "identity_roundtrip_failure")
+        _require(len(raw) == item["size_bytes"], "identity_roundtrip_failure")
+        inv = by_rel[item["role_relative_path"]]
+        _require(sha == inv["sha256"], "identity_roundtrip_failure")
+        restored_objects.append((item["role_relative_path"], sha))
+        selection = item["selection_class"]
+        if selection == "materialization_packet":
+            payload_json = json.loads(raw.decode("utf-8", "strict"))
+            _require(isinstance(payload_json, Mapping), "identity_roundtrip_failure")
+            rows = payload_json.get("rows")
+            _require(isinstance(rows, list), "identity_roundtrip_failure")
+            identities: list[tuple[str, str]] = []
+            for row in rows:
+                _require(isinstance(row, Mapping), "identity_roundtrip_failure")
+                unit_id = row.get("unit_id")
+                unit_sha256 = row.get("unit_sha256")
+                _require(isinstance(unit_id, str) and bool(unit_id), "identity_roundtrip_failure")
+                _require(
+                    isinstance(unit_sha256, str) and len(unit_sha256) == 64,
+                    "identity_roundtrip_failure",
+                )
+                identities.append((unit_id, unit_sha256))
+            restored_rows.extend(identities)
+            recomputed = materializer.identity_set(
+                [{"unit_id": u, "unit_sha256": s} for u, s in identities]
+            )
+            _require(recomputed == inv["packet_identity_set_sha256"], "identity_roundtrip_failure")
+        elif selection == "evidence_sidecar" and not has_materialization_packets:
+            # Sidecar identity fields only; never retain evidence text.
+            tmp = Path(tempfile.mkdtemp(prefix=".c007-side-"))
+            try:
+                os.chmod(tmp, PRIVATE_DIR_MODE)
+                side = tmp / "sidecar.json"
+                _atomic_write(side, raw)
+                meta = _sidecar_identity(side)
+                restored_rows.extend(meta["row_identities"])
+            finally:
+                shutil.rmtree(tmp, ignore_errors=True)
+
+    if restored_rows:
+        ordered = digest(
+            "\n".join(f"{unit_id}\t{unit_sha256}" for unit_id, unit_sha256 in restored_rows).encode(
+                "utf-8"
+            )
+        )
+        _require(
+            ordered == inventory["ordered_row_identity_commitment_sha256"],
+            "identity_roundtrip_failure",
+        )
+    object_set = digest(
+        "\n".join(f"{rel}\t{sha}" for rel, sha in restored_objects).encode("utf-8")
+    )
+    _require(object_set == inventory["object_set_sha256"], "identity_roundtrip_failure")
+    _require(object_set == manifest["object_set_sha256"], "identity_roundtrip_failure")
+    roundtrip = _receipt(
+        {
+            "schema_version": "phase3_cycle007_storage_roundtrip_v1",
+            "outcome_sha256": OUTCOME_SHA256,
+            "pack_manifest_sha256": manifest["receipt_sha256"],
+            "object_count": len(restored_objects),
+            "object_set_sha256": object_set,
+            "ordered_row_identity_commitment_sha256": inventory[
+                "ordered_row_identity_commitment_sha256"
+            ],
+            "packet_count": inventory["packet_count"],
+            "row_count": inventory["row_count"],
+            "roundtrip_ok": True,
+            "second_expanded_tree": False,
+            "proof_mode": "stream_decompress_hash",
+        }
+    )
+    identity_proof = _receipt(
+        {
+            "schema_version": "phase3_cycle007_storage_identity_proof_v1",
+            "outcome_sha256": OUTCOME_SHA256,
+            "packet_count": inventory["packet_count"],
+            "row_count": inventory["row_count"],
+            "object_count": inventory["object_count"],
+            "object_set_sha256": object_set,
+            "ordered_row_identity_commitment_sha256": inventory[
+                "ordered_row_identity_commitment_sha256"
+            ],
+            "identity_proof_ok": True,
+            "inventory_receipt_sha256": inventory["receipt_sha256"],
+            "second_expanded_tree": False,
+            "proof_mode": "stream_decompress_hash",
+        }
+    )
+    return roundtrip, identity_proof
+
+
 def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
     """Execute all safe reversible steps. Never deletes originals."""
     work = bindings.work_root / "cycle007-storage-lane"
@@ -1049,20 +1452,69 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
     retention = decide_retention(inventory=inventory)
     _atomic_write_json(work / "retention-decision.json", retention)
 
-    pack_dir = work / "pack"
-    pack_manifest = write_pack(inventory, bindings, pack_dir)
-    _atomic_write_json(work / "pack-manifest.receipt.json", pack_manifest)
+    destination_avail = available_bytes(bindings.work_root)
+    retire = retention["retention_outcome"] == RETIRE_CYCLE007
+    if retire:
+        # Lineage pack is tiny; forecast before write using a conservative 4 MiB bound.
+        pre_compact = 4 * 1024 * 1024
+        pre_backup = pre_compact
+    else:
+        pre_compact = estimate_content_pack_bytes(inventory)
+        pre_backup = pre_compact
+    pre_forecast = forecast_peak_temporary_bytes(
+        inventory,
+        compact_stored_bytes=pre_compact,
+        backup_stored_bytes=pre_backup,
+        destination_avail_bytes=destination_avail,
+        second_expanded_tree=False,
+    )
+    _atomic_write_json(work / "peak-forecast-prewrite.json", pre_forecast)
+    if not pre_forecast["capacity_sufficient_for_peak"] and not bindings.fixture:
+        lane = _receipt(
+            {
+                "schema_version": LANE_RECEIPT_SCHEMA_VERSION,
+                "outcome_sha256": OUTCOME_SHA256,
+                "lane_complete": False,
+                "stopped_at": "capacity_insufficient",
+                "safe_failure_code": "capacity_insufficient",
+                "deletion_authorized": False,
+                "retention_outcome": retention["retention_outcome"],
+                "packet_count": inventory["packet_count"],
+                "row_count": inventory["row_count"],
+                "object_count": inventory["object_count"],
+                "total_allocated_bytes": inventory["total_allocated_bytes"],
+                "filesystem_avail_bytes": destination_avail,
+                "peak_temporary_bytes": pre_forecast["peak_temporary_bytes"],
+                "capacity_sufficient_for_peak": False,
+                "min_free_bytes": MIN_FREE_BYTES,
+                "reconcile_receipt_sha256": reconcile["receipt_sha256"],
+                "inventory_receipt_sha256": inventory["receipt_sha256"],
+                "retention_receipt_sha256": retention["receipt_sha256"],
+                "peak_forecast_receipt_sha256": pre_forecast["receipt_sha256"],
+                "replacement_firewall_owner_issue": retention.get(
+                    "replacement_firewall_owner_issue"
+                ),
+            }
+        )
+        _atomic_write_json(work / "lane-receipt.json", lane)
+        return lane
 
-    roundtrip_dir = work / "roundtrip-restore"
-    expand_receipt = expand_pack(pack_dir, roundtrip_dir)
-    identity_proof = verify_roundtrip_identities(inventory, roundtrip_dir)
+    pack_dir = work / "pack"
+    if retire:
+        pack_manifest = write_lineage_pack(inventory, pack_dir)
+        expand_receipt, identity_proof = prove_lineage_against_sources(
+            inventory, bindings, pack_manifest
+        )
+    else:
+        pack_manifest = write_pack(inventory, bindings, pack_dir)
+        expand_receipt, identity_proof = prove_content_pack_stream(inventory, pack_dir)
+    _atomic_write_json(work / "pack-manifest.receipt.json", pack_manifest)
     _atomic_write_json(work / "roundtrip.json", expand_receipt)
     _atomic_write_json(work / "identity-proof.json", identity_proof)
 
     backup_dir = work / "backup"
     backup = create_backup(pack_dir, backup_dir)
-    restore_dir = work / "backup-restore"
-    restore_proof = prove_backup_restore(backup_dir, restore_dir)
+    restore_proof = prove_backup_byte_identity(pack_dir, backup_dir)
     backup["restore_proof_pending"] = False
     backup = _receipt({k: v for k, v in backup.items() if k != "receipt_sha256"})
     _atomic_write_json(work / "backup.json", backup)
@@ -1072,11 +1524,43 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
         inventory,
         compact_stored_bytes=int(pack_manifest["total_stored_allocated_bytes"]),
         backup_stored_bytes=int(backup["backup_allocated_bytes"]),
+        destination_avail_bytes=destination_avail,
+        second_expanded_tree=False,
     )
     _atomic_write_json(work / "peak-forecast.json", forecast)
     if not forecast["capacity_sufficient_for_peak"] and not bindings.fixture:
-        # Still reversible prep is complete except operator capacity remediation.
-        pass
+        lane = _receipt(
+            {
+                "schema_version": LANE_RECEIPT_SCHEMA_VERSION,
+                "outcome_sha256": OUTCOME_SHA256,
+                "lane_complete": False,
+                "stopped_at": "capacity_insufficient",
+                "safe_failure_code": "capacity_insufficient",
+                "deletion_authorized": False,
+                "retention_outcome": retention["retention_outcome"],
+                "packet_count": inventory["packet_count"],
+                "row_count": inventory["row_count"],
+                "object_count": inventory["object_count"],
+                "total_allocated_bytes": inventory["total_allocated_bytes"],
+                "compact_stored_allocated_bytes": pack_manifest["total_stored_allocated_bytes"],
+                "filesystem_avail_bytes": destination_avail,
+                "peak_temporary_bytes": forecast["peak_temporary_bytes"],
+                "capacity_sufficient_for_peak": False,
+                "reconcile_receipt_sha256": reconcile["receipt_sha256"],
+                "inventory_receipt_sha256": inventory["receipt_sha256"],
+                "retention_receipt_sha256": retention["receipt_sha256"],
+                "pack_manifest_sha256": pack_manifest["receipt_sha256"],
+                "peak_forecast_receipt_sha256": forecast["receipt_sha256"],
+                "identity_proof_ok": identity_proof["identity_proof_ok"],
+                "backup_restore_ok": restore_proof["backup_restore_ok"],
+                "roundtrip_ok": expand_receipt["roundtrip_ok"],
+                "replacement_firewall_owner_issue": retention.get(
+                    "replacement_firewall_owner_issue"
+                ),
+            }
+        )
+        _atomic_write_json(work / "lane-receipt.json", lane)
+        return lane
 
     auth = deletion_auth_request(inventory, pack_manifest, retention, backup, restore_proof)
     _atomic_write_json(work / "deletion-auth-request.json", auth)
@@ -1090,6 +1574,12 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
             "safe_failure_code": None,
             "deletion_authorized": False,
             "retention_outcome": retention["retention_outcome"],
+            "retention_rationale_code": retention["rationale_code"],
+            "replacement_firewall_owner_issue": retention.get("replacement_firewall_owner_issue"),
+            "preserves_only_non_content_lineage_hashes": retention.get(
+                "preserves_only_non_content_lineage_hashes"
+            ),
+            "pack_kind": pack_manifest.get("pack_kind"),
             "packet_count": inventory["packet_count"],
             "row_count": inventory["row_count"],
             "object_count": inventory["object_count"],
@@ -1097,9 +1587,15 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
             "compact_stored_allocated_bytes": pack_manifest["total_stored_allocated_bytes"],
             "reclaimed_byte_forecast": auth["reclaimed_byte_forecast"],
             "deletion_candidate_count": auth["deletion_candidate_count"],
-            "filesystem_avail_bytes": inventory["filesystem"]["avail_bytes"],
+            "filesystem_avail_bytes": destination_avail,
+            "filesystem_total_bytes": filesystem_totals(bindings.work_root)["total_bytes"],
+            "filesystem_used_bytes": filesystem_totals(bindings.work_root)["total_bytes"]
+            - filesystem_totals(bindings.work_root)["free_bytes"],
+            "filesystem_f_bavail_free_bytes": destination_avail,
+            "min_free_bytes": MIN_FREE_BYTES,
             "peak_temporary_bytes": forecast["peak_temporary_bytes"],
             "capacity_sufficient_for_peak": forecast["capacity_sufficient_for_peak"],
+            "second_expanded_tree": False,
             "reconcile_receipt_sha256": reconcile["receipt_sha256"],
             "inventory_receipt_sha256": inventory["receipt_sha256"],
             "retention_receipt_sha256": retention["receipt_sha256"],
@@ -1113,43 +1609,105 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
             "identity_proof_ok": identity_proof["identity_proof_ok"],
             "backup_restore_ok": restore_proof["backup_restore_ok"],
             "roundtrip_ok": expand_receipt["roundtrip_ok"],
+            "retention_questions": retention.get("retention_questions"),
         }
     )
     _atomic_write_json(work / "lane-receipt.json", lane)
     return lane
 
 
-def build_public_summary(lane: Mapping[str, Any], reconcile: Mapping[str, Any]) -> dict[str, Any]:
-    """Public, topology-free summary. Never emits live host statvfs totals."""
-    summary = _receipt(
-        {
-            "schema_version": "phase3_cycle007_storage_public_summary_v1",
-            "outcome_sha256": OUTCOME_SHA256,
-            "handoff_receipt_sha256": HANDOFF_RECEIPT_SHA256,
-            "issue": 7434,
-            "epic": 7423,
-            "private_binding_state": reconcile.get("private_binding_state"),
-            "lane_complete": lane.get("lane_complete"),
-            "stopped_at": lane.get("stopped_at"),
-            "safe_failure_code": lane.get("safe_failure_code") or reconcile.get("safe_failure_code"),
-            "retention_outcome": lane.get("retention_outcome"),
-            "deletion_authorized": False,
-            "packet_count": lane.get("packet_count") or EXPECTED_PACKET_COUNT,
-            "row_count": lane.get("row_count") or EXPECTED_ROW_COUNT,
-            "object_count": lane.get("object_count"),
-            "total_allocated_bytes": lane.get("total_allocated_bytes"),
-            "compact_stored_allocated_bytes": lane.get("compact_stored_allocated_bytes"),
-            "reclaimed_byte_forecast": lane.get("reclaimed_byte_forecast"),
-            "deletion_candidate_count": lane.get("deletion_candidate_count"),
-            "peak_temporary_bytes": lane.get("peak_temporary_bytes"),
-            "capacity_sufficient_for_peak": lane.get("capacity_sufficient_for_peak"),
-            "identity_proof_ok": lane.get("identity_proof_ok"),
-            "backup_restore_ok": lane.get("backup_restore_ok"),
-            "roundtrip_ok": lane.get("roundtrip_ok"),
-            "lane_receipt_sha256": lane.get("receipt_sha256"),
-            "reconcile_receipt_sha256": reconcile.get("receipt_sha256"),
-        }
-    )
+def build_public_summary(
+    lane: Mapping[str, Any],
+    reconcile: Mapping[str, Any],
+    *,
+    fixture_lane: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Public, topology-free summary safe for issue/PR/repo reference artifacts."""
+    bound = reconcile.get("private_binding_state") == "BOUND"
+    fixture = fixture_lane or {}
+    body: dict[str, Any] = {
+        "schema_version": "phase3_cycle007_storage_public_summary_v1",
+        "outcome_sha256": OUTCOME_SHA256,
+        "handoff_receipt_sha256": HANDOFF_RECEIPT_SHA256,
+        "issue": 7434,
+        "epic": 7423,
+        "private_binding_state": reconcile.get("private_binding_state"),
+        "retention_outcome": lane.get("retention_outcome") or fixture.get("retention_outcome"),
+        "retention_rationale_code": lane.get("retention_rationale_code")
+        or fixture.get("retention_rationale_code"),
+        "deletion_authorized": False,
+        "issue_7434_is_not_deletion_authorization": True,
+        "authorization_gate": "operator_explicit_authorization_required",
+        "public_packet_count": EXPECTED_PACKET_COUNT,
+        "public_row_count": EXPECTED_ROW_COUNT,
+        "labeling_state": "OFF",
+        "provider_calls": 0,
+        "provider_derived_training_labels": 0,
+        "evaluation_firewall_requires_cycle007_identities": False,
+        "production_inventory_frozen": bool(bound and lane.get("inventory_receipt_sha256")),
+        "fixture_representation_proven": bool(fixture.get("lane_complete")),
+        "stopped_at": lane.get("stopped_at"),
+        "safe_failure_code": lane.get("safe_failure_code") or reconcile.get("safe_failure_code"),
+        "reconcile_receipt_sha256": reconcile.get("receipt_sha256"),
+        "retention_receipt_sha256": lane.get("retention_receipt_sha256")
+        or fixture.get("retention_receipt_sha256"),
+        "replacement_firewall_owner_issue": lane.get("replacement_firewall_owner_issue")
+        or fixture.get("replacement_firewall_owner_issue"),
+        "preserves_only_non_content_lineage_hashes": lane.get(
+            "preserves_only_non_content_lineage_hashes"
+        )
+        if lane.get("preserves_only_non_content_lineage_hashes") is not None
+        else fixture.get("preserves_only_non_content_lineage_hashes"),
+        "pack_kind": lane.get("pack_kind") or fixture.get("pack_kind"),
+        "second_expanded_tree": False,
+    }
+    if bound and lane.get("lane_complete"):
+        body.update(
+            {
+                "production_packet_count": lane.get("packet_count"),
+                "production_row_count": lane.get("row_count"),
+                "production_object_count": lane.get("object_count"),
+                "production_total_allocated_bytes": lane.get("total_allocated_bytes"),
+                "production_compact_stored_allocated_bytes": lane.get(
+                    "compact_stored_allocated_bytes"
+                ),
+                "production_reclaimed_byte_forecast": lane.get("reclaimed_byte_forecast"),
+                "production_deletion_candidate_count": lane.get("deletion_candidate_count"),
+                "production_peak_temporary_bytes": lane.get("peak_temporary_bytes"),
+                "production_capacity_sufficient_for_peak": lane.get(
+                    "capacity_sufficient_for_peak"
+                ),
+                "production_identity_proof_ok": lane.get("identity_proof_ok"),
+                "production_backup_restore_ok": lane.get("backup_restore_ok"),
+                "production_roundtrip_ok": lane.get("roundtrip_ok"),
+                "production_lane_receipt_sha256": lane.get("receipt_sha256"),
+                "production_min_free_bytes": lane.get("min_free_bytes"),
+            }
+        )
+    if fixture:
+        body.update(
+            {
+                "fixture_lane_complete": fixture.get("lane_complete"),
+                "fixture_packet_count": fixture.get("packet_count"),
+                "fixture_row_count": fixture.get("row_count"),
+                "fixture_object_count": fixture.get("object_count"),
+                "fixture_total_allocated_bytes": fixture.get("total_allocated_bytes"),
+                "fixture_compact_stored_allocated_bytes": fixture.get(
+                    "compact_stored_allocated_bytes"
+                ),
+                "fixture_reclaimed_byte_forecast": fixture.get("reclaimed_byte_forecast"),
+                "fixture_deletion_candidate_count": fixture.get("deletion_candidate_count"),
+                "fixture_identity_proof_ok": fixture.get("identity_proof_ok"),
+                "fixture_backup_restore_ok": fixture.get("backup_restore_ok"),
+                "fixture_roundtrip_ok": fixture.get("roundtrip_ok"),
+                "fixture_lane_receipt_sha256": fixture.get("receipt_sha256"),
+                "fixture_peak_temporary_bytes": fixture.get("peak_temporary_bytes"),
+                "fixture_capacity_sufficient_for_peak": fixture.get(
+                    "capacity_sufficient_for_peak"
+                ),
+            }
+        )
+    summary = _receipt(body)
     leaked = public_summary_forbidden_fs_keys(summary)
     if leaked:
         raise StorageCustodyError("path_disclosure_refused")
@@ -1192,7 +1750,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         lane = run_reversible_lane(bindings)
         reconcile_path = bindings.work_root / "cycle007-storage-lane" / "reconcile.json"
         reconcile = _read_json(reconcile_path)
-        summary = build_public_summary(lane, reconcile)
+        summary = build_public_summary(
+            lane,
+            reconcile,
+            fixture_lane=lane if bindings.fixture else None,
+        )
         if args.public_summary_out is not None:
             _atomic_write_json(args.public_summary_out, summary)
         print(json.dumps({
@@ -1201,15 +1763,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             "stopped_at": lane.get("stopped_at"),
             "safe_failure_code": lane.get("safe_failure_code"),
             "retention_outcome": lane.get("retention_outcome"),
+            "replacement_firewall_owner_issue": lane.get("replacement_firewall_owner_issue"),
+            "pack_kind": lane.get("pack_kind"),
             "deletion_authorized": False,
             "packet_count": lane.get("packet_count"),
             "row_count": lane.get("row_count"),
             "object_count": lane.get("object_count"),
             "total_allocated_bytes": lane.get("total_allocated_bytes"),
+            "compact_stored_allocated_bytes": lane.get("compact_stored_allocated_bytes"),
             "reclaimed_byte_forecast": lane.get("reclaimed_byte_forecast"),
+            "deletion_candidate_count": lane.get("deletion_candidate_count"),
+            "filesystem_avail_bytes": lane.get("filesystem_avail_bytes"),
+            "filesystem_total_bytes": lane.get("filesystem_total_bytes"),
+            "filesystem_used_bytes": lane.get("filesystem_used_bytes"),
+            "peak_temporary_bytes": lane.get("peak_temporary_bytes"),
+            "capacity_sufficient_for_peak": lane.get("capacity_sufficient_for_peak"),
             "identity_proof_ok": lane.get("identity_proof_ok"),
             "backup_restore_ok": lane.get("backup_restore_ok"),
             "roundtrip_ok": lane.get("roundtrip_ok"),
+            "second_expanded_tree": False,
             "receipt_sha256": lane.get("receipt_sha256"),
             "public_summary_sha256": summary["receipt_sha256"],
         }, sort_keys=True))
@@ -1220,7 +1792,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         reconcile_path = bindings.work_root / "cycle007-storage-lane" / "reconcile.json"
         lane = _read_json(lane_path)
         reconcile = _read_json(reconcile_path)
-        summary = build_public_summary(lane, reconcile)
+        summary = build_public_summary(
+            lane,
+            reconcile,
+            fixture_lane=lane if bindings.fixture else None,
+        )
         if args.public_summary_out is not None:
             _atomic_write_json(args.public_summary_out, summary)
         print(json.dumps({
