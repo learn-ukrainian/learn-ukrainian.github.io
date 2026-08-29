@@ -29,6 +29,7 @@ from starlette.requests import Request
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from scripts.api import (
     dashboard_helpers,
+    epics_router,
     fleet_router,
     issues_router,
     opsec_scan,
@@ -299,6 +300,22 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
     )
+    # NOTE (#7413): epics graph audit sidecars and spawn workers are isolated
+    # so the sweep never reads/writes host cache or spawns refresh jobs.
+    _idle_refresh = {
+        "schema_version": 1,
+        "run_id": None,
+        "phase": "idle",
+        "requested_at": None,
+        "started_at": None,
+        "last_outcome": "none",
+        "last_outcome_at": None,
+        "failure_code": None,
+        "cooldown_until": None,
+    }
+    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: None)
+    monkeypatch.setattr(epics_router.audit, "schedule_refresh", lambda force=False: dict(_idle_refresh))
+    monkeypatch.setattr(epics_router.audit, "read_refresh_state", lambda: dict(_idle_refresh))
     # NOTE (#7269 step 12c): collect_adr_governance now short-circuits on a
     # fixture context (ctx.root is not None), so the sweep no longer stubs it.
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
