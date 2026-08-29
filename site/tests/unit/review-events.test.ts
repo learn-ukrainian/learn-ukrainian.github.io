@@ -14,6 +14,7 @@ import {
   exportReviewEventLog,
   foldReviewEventsToCards,
   loadReviewEventLog,
+  mintDeterministicUlid,
   mintUlid,
   recordCardReviewEvent,
   resetReviewEventEntropy,
@@ -83,6 +84,17 @@ describe('mintUlid', () => {
     const second = mintUlid(NOW.getTime(), () => 0.9);
     expect(first).not.toBe(second);
     expect(first < second).toBe(true);
+  });
+});
+
+describe('mintDeterministicUlid', () => {
+  test('is stable for the same fingerprint and sorts by time', () => {
+    const first = mintDeterministicUlid(NOW.getTime(), 'alpha\\0flashcards\\0good\\0' + NOW.getTime());
+    const again = mintDeterministicUlid(NOW.getTime(), 'alpha\\0flashcards\\0good\\0' + NOW.getTime());
+    const later = mintDeterministicUlid(LATER.getTime(), 'alpha\\0flashcards\\0good\\0' + LATER.getTime());
+    expect(first).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
+    expect(first).toBe(again);
+    expect(first < later).toBe(true);
   });
 });
 
