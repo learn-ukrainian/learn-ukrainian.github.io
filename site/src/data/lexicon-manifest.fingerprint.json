@@ -58,6 +58,10 @@
         "sha256": "beb42751a66bea7c1c23f11f782a6001c91284e8c8a97da9cc063cd9276dab6c"
       },
       {
+        "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+        "sha256": "303cc2eda92ff6a55eba68fca51716bf9362fe984301891eb6640c4ed0346714"
+      },
+      {
         "path": "scripts/lexicon/check_manifest_freshness.py",
         "sha256": "6737fc9befb4e349e81011713ee8f7fc5c466aadbd34fdd318851391250dd08a"
       },
