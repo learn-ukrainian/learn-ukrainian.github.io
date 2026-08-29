@@ -16,19 +16,15 @@ from pathlib import Path
 from typing import Any, Literal
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from scripts.telemetry.legacy_bridge import bridge_usage_summary
 
-from .config import PROJECT_ROOT
-from .resilience import connect_sqlite
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .telemetry.legacy_comms import legacy_comms_summary
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
-
-_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "tool_timings.db"
-_MODULE_BUILD_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "module_builds.db"
 _WINDOWS = {
     "5m": timedelta(minutes=5),
     "15m": timedelta(minutes=15),
@@ -83,6 +79,30 @@ class ModuleBuildTelemetryIngest(BaseModel):
     participants: list[ModuleBuildParticipantIngest] = Field(default_factory=list)
 
 
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _tool_timings_path(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.project_root / "data" / "telemetry" / "tool_timings.db"
+
+
+def _module_build_db_path(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.project_root / "data" / "telemetry" / "module_builds.db"
+
+
+def _legacy_comms_db_path(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.project_root / "data" / "telemetry" / "legacy_comms_routes.db"
+
+
+def _open_telemetry_db(ctx: MonitorContext, path: Path) -> sqlite3.Connection:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return ctx._open_db(path)
+
+
 def _isoformat_z(value: datetime) -> str:
     if value.tzinfo is None:
         value = value.replace(tzinfo=UTC)
@@ -117,10 +137,10 @@ def _computed_total_tokens(participant: ModuleBuildParticipantIngest) -> int | N
     return int(prompt or 0) + int(response or 0)
 
 
-def _init_db(db_path: Path | None = None) -> None:
-    path = db_path or _DB_PATH
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with closing(connect_sqlite(str(path))) as conn:
+def _init_db(ctx: MonitorContext | None = None, db_path: Path | None = None) -> None:
+    resolved = _resolve_context(ctx)
+    path = db_path or _tool_timings_path(resolved)
+    with closing(_open_telemetry_db(resolved, path)) as conn:
         conn.executescript("""
             CREATE TABLE IF NOT EXISTS tool_timings (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -137,10 +157,10 @@ def _init_db(db_path: Path | None = None) -> None:
         conn.commit()
 
 
-def _init_module_build_db(db_path: Path | None = None) -> None:
-    path = db_path or _MODULE_BUILD_DB_PATH
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with closing(connect_sqlite(str(path))) as conn:
+def _init_module_build_db(ctx: MonitorContext | None = None, db_path: Path | None = None) -> None:
+    resolved = _resolve_context(ctx)
+    path = db_path or _module_build_db_path(resolved)
+    with closing(_open_telemetry_db(resolved, path)) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
         conn.executescript("""
             CREATE TABLE IF NOT EXISTS module_build_runs (
@@ -309,9 +329,12 @@ def _runs_summary(runs: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 @router.post("/tool-timings")
-def ingest_tool_timing(payload: ToolTimingIngest) -> dict[str, bool]:
-    _init_db()
-    with closing(connect_sqlite(str(_DB_PATH))) as conn:
+def ingest_tool_timing(
+    payload: ToolTimingIngest,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, bool]:
+    _init_db(ctx)
+    with closing(_open_telemetry_db(ctx, _tool_timings_path(ctx))) as conn:
         conn.execute(
             """
             INSERT INTO tool_timings (ts, tool_name, duration_ms, tool_use_id, session_id, failed)
@@ -334,8 +357,9 @@ def ingest_tool_timing(payload: ToolTimingIngest) -> dict[str, bool]:
 def read_tool_timings(
     window: str = Query("1h"),
     tool: str | None = Query(None),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> list[dict[str, Any]]:
-    _init_db()
+    _init_db(ctx)
     conditions = ["ts >= ?"]
     params: list[Any] = [_window_start(window)]
     if tool:
@@ -343,7 +367,7 @@ def read_tool_timings(
         params.append(tool)
 
     where = " AND ".join(conditions)
-    with closing(connect_sqlite(str(_DB_PATH))) as conn:
+    with closing(_open_telemetry_db(ctx, _tool_timings_path(ctx))) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             f"""
@@ -381,22 +405,27 @@ def read_tool_timings(
 @router.get("/legacy-comms-routes")
 def read_legacy_comms_routes(
     window: Literal["1h", "24h", "7d", "30d", "90d"] = Query("7d"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Return body-free legacy-route aggregates with explicit coverage truth."""
-    return legacy_comms_summary(window)
+    return legacy_comms_summary(window, db_path=_legacy_comms_db_path(ctx))
 
 
 @router.get("/legacy-bridge-asks")
 def read_legacy_bridge_asks(
     window: Literal["1h", "24h", "7d", "30d", "90d"] = Query("7d"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Return body-free one-shot bridge usage and coverage truth."""
-    return bridge_usage_summary(window)
+    return bridge_usage_summary(window, db_path=_legacy_comms_db_path(ctx))
 
 
 @router.post("/module-builds")
-def ingest_module_build_telemetry(payload: ModuleBuildTelemetryIngest) -> dict[str, Any]:
-    _init_module_build_db()
+def ingest_module_build_telemetry(
+    payload: ModuleBuildTelemetryIngest,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> dict[str, Any]:
+    _init_module_build_db(ctx)
     created_at = _isoformat_z(payload.recorded_at) if payload.recorded_at else _now_z()
     updated_at = _now_z()
     run_id = _required_text(payload.run_id, "run_id")
@@ -425,7 +454,7 @@ def ingest_module_build_telemetry(payload: ModuleBuildTelemetryIngest) -> dict[s
         for participant in payload.participants
     ]
 
-    with closing(connect_sqlite(str(_MODULE_BUILD_DB_PATH))) as conn:
+    with closing(_open_telemetry_db(ctx, _module_build_db_path(ctx))) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
         conn.execute(
             """
@@ -495,8 +524,9 @@ def read_module_build_telemetry(
     slug: str | None = Query(None),
     swarm_used: bool | None = Query(None),
     limit: int = Query(100, ge=1, le=500),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    _init_module_build_db()
+    _init_module_build_db(ctx)
     conditions: list[str] = []
     params: list[Any] = []
     if level:
@@ -511,7 +541,7 @@ def read_module_build_telemetry(
 
     where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
     params.append(limit)
-    with closing(connect_sqlite(str(_MODULE_BUILD_DB_PATH))) as conn:
+    with closing(_open_telemetry_db(ctx, _module_build_db_path(ctx))) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             f"""
@@ -540,8 +570,11 @@ def read_module_build_telemetry_for_module(
     level: str,
     slug: str,
     limit: int = Query(20, ge=1, le=200),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
-    payload = read_module_build_telemetry(level=level, slug=slug, swarm_used=None, limit=limit)
+    payload = read_module_build_telemetry(
+        level=level, slug=slug, swarm_used=None, limit=limit, ctx=ctx
+    )
     return {
         "generated_at": payload["generated_at"],
         "level": level.strip().lower(),

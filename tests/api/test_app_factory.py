@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
+import subprocess
 from contextlib import asynccontextmanager
 from pathlib import Path
 from unittest.mock import Mock
@@ -37,7 +39,9 @@ DB_ACCESS_PATTERNS = (
 # step 8 removed scripts/api/admin_router.py (18 -> 17);
 # step 9 removed scripts/api/dashboard_comms.py (17 -> 16);
 # #7269 step 12b removed delegate_router, discussions_router, and gold_router
-# (16 -> 13) after those routes opened stores only through MonitorContext.
+# (16 -> 13) after those routes opened stores only through MonitorContext;
+# step 12d removed telemetry_router.py and wiki_router.py (13 -> 11) after
+# both opened stores through MonitorContext.
 DB_ACCESS_ALLOWLIST = frozenset(
     {
         "scripts/api/agent_monitor_router.py",
@@ -50,8 +54,6 @@ DB_ACCESS_ALLOWLIST = frozenset(
         "scripts/api/resilience.py",
         "scripts/api/runtime_router.py",
         "scripts/api/telemetry/legacy_comms.py",
-        "scripts/api/telemetry_router.py",
-        "scripts/api/wiki_router.py",
         "agents_extensions/shared/session_streams/db.py",
     }
 )
@@ -488,8 +490,75 @@ def test_step11_contracts_router_cluster_isolation(tmp_path: Path) -> None:
         assert "page_contracts" in second_routes
 
 
+def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_dist = first_root / "site" / "dist"
+    second_dist = second_root / "site" / "dist"
+    first_dist.mkdir(parents=True)
+    second_dist.mkdir(parents=True)
+    (first_dist / "sitemap-index.xml").write_text("<first/>", encoding="utf-8")
+    (second_dist / "sitemap-index.xml").write_text("<second/>", encoding="utf-8")
+
+    for root, ctx in ((first_root, first_ctx), (second_root, second_ctx)):
+        ctx.roots.sources_db_path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(str(ctx.roots.sources_db_path)) as conn:
+            conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY)")
+            count = 1 if root is first_root else 2
+            conn.executemany("INSERT INTO textbooks DEFAULT VALUES", [()] * count)
+            conn.commit()
+        subprocess.run(
+            ["git", "init", "--quiet", "-b", "main"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_site = first_client.get("/api/site/health").json()
+        second_site = second_client.get("/api/site/health").json()
+        assert first_site["last_astro_build"]["built"] is True
+        assert second_site["last_astro_build"]["built"] is True
+        assert first_site["sitemap"]["path"] == "site/dist/sitemap-index.xml"
+        assert second_site["sitemap"]["path"] == "site/dist/sitemap-index.xml"
+        assert first_site["sitemap"]["path"] == second_site["sitemap"]["path"]
+
+        first_sources = first_client.get("/api/wiki/sources").json()
+        second_sources = second_client.get("/api/wiki/sources").json()
+        assert first_sources["total_entries"] == 1
+        assert second_sources["total_entries"] == 2
+
+        first_timing = first_client.post(
+            "/api/telemetry/tool-timings",
+            json={"ts": "2026-04-25T00:12:34.567Z", "tool_name": "Bash", "duration_ms": 10},
+        )
+        assert first_timing.status_code == 200
+        assert first_client.get("/api/telemetry/tool-timings?window=24h").json()[0]["count"] == 1
+        assert second_client.get("/api/telemetry/tool-timings?window=24h").json() == []
+
+        first_worktrees = first_client.get("/api/worktrees").json()
+        second_worktrees = second_client.get("/api/worktrees").json()
+        assert first_worktrees["count"] == 1
+        assert second_worktrees["count"] == 1
+        assert first_worktrees["worktrees"][0]["is_primary"] is True
+        assert second_worktrees["worktrees"][0]["is_primary"] is True
+        assert Path(first_worktrees["worktrees"][0]["path"]).resolve() == first_root.resolve()
+        assert Path(second_worktrees["worktrees"][0]["path"]).resolve() == second_root.resolve()
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 13
+    assert len(DB_ACCESS_ALLOWLIST) == 11
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

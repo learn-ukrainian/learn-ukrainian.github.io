@@ -23,9 +23,7 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     epics_router,
     issues_router,
-    site_router,
     work_router,
-    worktrees_router,
 )
 from scripts.api import main as api_main
 from scripts.orchestration import reap_worktrees
@@ -106,24 +104,9 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(
-        worktrees_router,
-        "_run",
-        lambda *_args, **_kwargs: (127, "", "fixture git unavailable"),
-    )
-    monkeypatch.setattr(
         issues_router,
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
-    )
-    monkeypatch.setattr(
-        site_router,
-        "_run",
-        lambda args, **_kwargs: subprocess.CompletedProcess(
-            args=args,
-            returncode=127,
-            stderr="fixture command unavailable",
-            stdout="",
-        ),
     )
     # NOTE (#7269 step 12c): collect_adr_governance short-circuits on fixture
     # context; no sweep stub.
