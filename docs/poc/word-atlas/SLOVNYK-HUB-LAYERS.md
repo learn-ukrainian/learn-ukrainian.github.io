@@ -62,6 +62,7 @@ sections.usage_notes = { items[{title?, text, source, source_url}], source }  # 
 | #6459 | Sense synonyms + multi-idioms |
 | #6462 | Proverbs |
 | #6463 | Davydov usage essays |
+| #6460 follow-on | linguistic_norm + khreshchatyk share `usage_notes` family |
 | #6464 | Грінченко definition card |
 | #6465 | Form strip (orthography/holoskevych/orthoepy) |
 | #6466 | Full-catalog re-enrich + export + disk budget |

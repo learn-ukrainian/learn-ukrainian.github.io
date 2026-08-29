@@ -10,18 +10,23 @@ from scripts.lexicon.source_attribution import (
     GRAC_LABEL,
     GRINCHENKO_LABEL,
     KARAVANSKY_LABEL,
+    KHRESHCHATYK_LABEL,
+    LINGUISTIC_NORM_LABEL,
     MIYKLAS_LABEL,
     PHRASEOLOGY_LABEL,
     SUM20_ACADEMIC_LABEL,
     WIKIDATA_LABEL,
+    academic_label_for_slug,
     apply_entry_attribution,
     join_academic_source_labels,
     learner_facing_mirror_violations,
     learner_facing_unmapped_source_violations,
     normalize_academic_label,
+    official_url_for_slug,
     official_url_from_mirror,
     remap_mirror_source_string,
 )
+from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
 
 
 def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:
@@ -37,6 +42,21 @@ def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:
 def test_official_url_from_mirror_maps_sum20() -> None:
     mirror = "https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%81%D0%B0"
     assert official_url_from_mirror(mirror) == "https://services.ulif.org.ua/expl/#/word/%D0%BA%D0%BE%D1%81%D0%B0"
+
+
+def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> None:
+    """#6460: reuse slovnyk.me labels; do not invent official edition URLs."""
+    assert SLOVNYK_ME_DICTS["linguistic_norm"] == LINGUISTIC_NORM_LABEL
+    assert SLOVNYK_ME_DICTS["khreshchatyk"] == KHRESHCHATYK_LABEL
+    assert academic_label_for_slug("linguistic_norm") == LINGUISTIC_NORM_LABEL
+    assert academic_label_for_slug("khreshchatyk") == KHRESHCHATYK_LABEL
+    assert official_url_for_slug("linguistic_norm", "що") is None
+    assert official_url_for_slug("khreshchatyk", "казати") is None
+    assert official_url_from_mirror("https://slovnyk.me/dict/linguistic_norm/%D1%89%D0%BE") is None
+    assert (
+        official_url_from_mirror("https://slovnyk.me/dict/khreshchatyk/%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8")
+        is None
+    )
 
 
 def test_join_academic_source_labels_deduplicates() -> None:

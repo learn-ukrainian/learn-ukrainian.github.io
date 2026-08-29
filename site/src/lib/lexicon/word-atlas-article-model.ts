@@ -200,7 +200,7 @@ export interface LexiconSections {
     source: string;
     source_urls?: string[];
   };
-  /** Davydov-family usage / style-norm essays (#6463). */
+  /** Davydov-family usage / style-norm essays (#6463 davydov; #6460 linguistic_norm, khreshchatyk). */
   usage_notes?: {
     items: Array<{
       title?: string;

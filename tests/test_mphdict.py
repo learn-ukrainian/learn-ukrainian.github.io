@@ -272,3 +272,17 @@ def test_active_slovnyk_cache_excludes_retired_synonym_slugs() -> None:
     # primary sense-split source; only the secondary `synonyms_karavansky` stays retired.
     assert "synonyms" in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
     assert "synonyms_karavansky" not in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
+
+
+def test_usage_notes_family_slugs_are_looked_up_and_not_warning_only() -> None:
+    """#6460: linguistic_norm / khreshchatyk join davydov in usage_notes."""
+    assert enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS == (
+        "davydov",
+        "linguistic_norm",
+        "khreshchatyk",
+    )
+    for slug in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS:
+        assert slug in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
+    # P1 corrective dicts stay on the warning-chip path, not this family.
+    assert "voloschak" not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS
+    assert "foreign_shtepa" not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS

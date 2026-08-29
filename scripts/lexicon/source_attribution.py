@@ -41,6 +41,8 @@ PROVERBS_LABEL = "Приповідки або українсько-народн�
 BALLA_LABEL = "Українсько-англійський словник (М. Балла)"
 BALLA_SHORT_LABEL = "Українсько-англійський словник"
 DAVYDOV_LABEL = "«Як ми говоримо» Антоненка-Давидовича"
+LINGUISTIC_NORM_LABEL = "Літературне слововживання"
+KHRESHCHATYK_LABEL = "«Уроки державної мови» з газети «Хрещатик»"
 VOLOSHCHAK_LABEL = "Неправильно-правильно"
 SHTEPA_LABEL = "Словник чужослів Павла Штепи"
 CORRECTION_DICTIONARIES_LABEL = "Словники мовних поправок"
@@ -79,6 +81,8 @@ SLUG_ACADEMIC_LABELS: dict[str, str] = {
     "proverbs": PROVERBS_LABEL,
     "ukreng": BALLA_LABEL,
     "davydov": DAVYDOV_LABEL,
+    "linguistic_norm": LINGUISTIC_NORM_LABEL,
+    "khreshchatyk": KHRESHCHATYK_LABEL,
     "voloschak": VOLOSHCHAK_LABEL,
     "foreign_shtepa": SHTEPA_LABEL,
     "orthography": ORTHOGRAPHY_LABEL,
@@ -122,6 +126,8 @@ KNOWN_ACADEMIC_LABELS = frozenset(
         BALLA_LABEL,
         BALLA_SHORT_LABEL,
         DAVYDOV_LABEL,
+        LINGUISTIC_NORM_LABEL,
+        KHRESHCHATYK_LABEL,
         VOLOSHCHAK_LABEL,
         SHTEPA_LABEL,
         CORRECTION_DICTIONARIES_LABEL,
