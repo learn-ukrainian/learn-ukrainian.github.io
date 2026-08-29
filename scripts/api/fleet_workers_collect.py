@@ -618,7 +618,7 @@ def collect_local_workers_for_reporter(
     now: datetime | None = None,
 ) -> list[dict[str, Any]]:
     clock = now or datetime.now(UTC)
-    workers = collect_delegate_workers(tasks_dir or delegate_router.TASKS_DIR, now=clock)
+    workers = collect_delegate_workers(tasks_dir or delegate_router._tasks_dir(), now=clock)
     return [worker_row_dict(item.row) for item in workers[:200]]
 
 
@@ -665,7 +665,7 @@ def _build_workers_payload(
             workers_status = "reported"
             canonical = reverse.get(opaque)
             host_workers.extend(
-                collect_delegate_workers(tasks_dir or delegate_router.TASKS_DIR, now=clock, tally=tally)
+                collect_delegate_workers(tasks_dir or delegate_router._tasks_dir(), now=clock, tally=tally)
             )
             host_workers.extend(item for item in driver_attributed if item.host_id == opaque)
             if canonical is not None:

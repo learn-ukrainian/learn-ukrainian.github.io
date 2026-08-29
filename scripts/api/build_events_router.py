@@ -8,18 +8,32 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["build-events"])
 
 BUILD_EVENTS_SCAN_CAP = 5000
+
+
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _curriculum_root(ctx: MonitorContext | None = None) -> Path:
+    return _resolve_context(ctx).roots.curriculum_root
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -38,12 +52,16 @@ def _isoformat_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _scan_dispatch_meta_files(level: str | None = None, slug: str | None = None) -> list[Path]:
+def _scan_dispatch_meta_files(
+    level: str | None = None,
+    slug: str | None = None,
+    ctx: MonitorContext | None = None,
+) -> list[Path]:
     level_part = level or "*"
     slug_part = slug or "*"
     pattern = f"{level_part}/orchestration/{slug_part}/dispatch/*-meta.json"
     paths = sorted(
-        CURRICULUM_ROOT.glob(pattern),
+        _curriculum_root(ctx).glob(pattern),
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )
@@ -75,10 +93,16 @@ def _event_from_meta(path: Path, meta: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def recent_build_events(*, level: str | None = None, slug: str | None = None, limit: int = 100) -> dict[str, Any]:
+def recent_build_events(
+    *,
+    level: str | None = None,
+    slug: str | None = None,
+    limit: int = 100,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
     event_limit = min(max(1, int(limit)), 1000)
     events: list[dict[str, Any]] = []
-    for path in _scan_dispatch_meta_files(level=level, slug=slug):
+    for path in _scan_dispatch_meta_files(level=level, slug=slug, ctx=ctx):
         meta = _read_json(path)
         if meta is None:
             continue
@@ -87,9 +111,12 @@ def recent_build_events(*, level: str | None = None, slug: str | None = None, li
     return {"events": events[:event_limit]}
 
 
-def _latest_dispatch_meta_by_module(level: str | None = None) -> dict[tuple[str, str], tuple[Path, dict[str, Any]]]:
+def _latest_dispatch_meta_by_module(
+    level: str | None = None,
+    ctx: MonitorContext | None = None,
+) -> dict[tuple[str, str], tuple[Path, dict[str, Any]]]:
     latest: dict[tuple[str, str], tuple[Path, dict[str, Any]]] = {}
-    for path in _scan_dispatch_meta_files(level=level):
+    for path in _scan_dispatch_meta_files(level=level, ctx=ctx):
         meta = _read_json(path)
         if meta is None:
             continue
@@ -117,15 +144,15 @@ def _current_phase_from_state(state: dict[str, Any]) -> str | None:
     return "publish"
 
 
-def active_build_events(*, level: str | None = None) -> dict[str, Any]:
+def active_build_events(*, level: str | None = None, ctx: MonitorContext | None = None) -> dict[str, Any]:
     now = datetime.now(UTC)
     cutoff = now - timedelta(minutes=10)
     active: list[dict[str, Any]] = []
-    for (track, slug), (_path, meta) in _latest_dispatch_meta_by_module(level=level).items():
+    for (track, slug), (_path, meta) in _latest_dispatch_meta_by_module(level=level, ctx=ctx).items():
         ts = _parse_iso_datetime(meta.get("timestamp"))
         if ts is None or ts < cutoff:
             continue
-        state_path = safe_join(CURRICULUM_ROOT / track / "orchestration" / slug, "state.json")
+        state_path = safe_join(_curriculum_root(ctx) / track / "orchestration" / slug, "state.json")
         state = _read_json(state_path)
         if state is None:
             continue
@@ -148,10 +175,14 @@ async def build_events_recent(
     level: str | None = Query(None),
     slug: str | None = Query(None),
     limit: int = Query(100, ge=1, le=1000),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
-    return await asyncio.to_thread(recent_build_events, level=level, slug=slug, limit=limit)
+    return await asyncio.to_thread(recent_build_events, level=level, slug=slug, limit=limit, ctx=ctx)
 
 
 @router.get("/active")
-async def build_events_active(level: str | None = Query(None)):
-    return await asyncio.to_thread(active_build_events, level=level)
+async def build_events_active(
+    level: str | None = Query(None),
+    ctx: MonitorContext = Depends(get_ctx),
+):
+    return await asyncio.to_thread(active_build_events, level=level, ctx=ctx)

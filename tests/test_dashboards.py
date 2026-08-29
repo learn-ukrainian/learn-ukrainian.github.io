@@ -286,7 +286,7 @@ class TestOverviewLastGoodHonesty:
             "_peek_state_summary",
             lambda: (_published_summary(), "hit", 0.0),
         )
-        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
         before = {
             "pass": 0,
@@ -353,7 +353,7 @@ class TestOverviewLastGoodHonesty:
         }
         dashboard_router.persist_overview_last_good(payload)
         dashboard_router.simulate_overview_process_bounce_for_tests()
-        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
         monkeypatch.setattr(
             dashboard_router,
             "_peek_state_summary",
@@ -390,7 +390,7 @@ class TestOverviewLastGoodHonesty:
             "_peek_state_summary",
             lambda: (summary, "hit", 0.0),
         )
-        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
         resp = self._client().get("/api/dashboard/overview")
         assert resp.status_code == 200
@@ -419,7 +419,7 @@ class TestOverviewLastGoodHonesty:
             "_peek_state_summary",
             lambda: (summary, "hit", 0.0),
         )
-        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
         resp = self._client().get("/api/dashboard/overview")
         assert resp.status_code == 200

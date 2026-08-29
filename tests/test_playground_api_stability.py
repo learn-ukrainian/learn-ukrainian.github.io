@@ -11,8 +11,6 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.admin_router as admin_router
-import scripts.api.dashboard_comms as dashboard_comms
 import scripts.api.images_router as images_router
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
@@ -248,31 +246,41 @@ def test_p95_of_three_perf_probe_allows_one_slow_tail(monkeypatch, three_run_per
 def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
     broker_db = tmp_path / "messages.db"
     _init_broker_db(broker_db)
-    monkeypatch.setattr(admin_router, "MESSAGE_DB", broker_db)
+    # admin_router keeps no path globals since #7269 step 8 — it resolves
+    # its broker DB from the app's MonitorContext (same as comms_router
+    # since step 5). Pin the context's message DB onto this smoke broker.
     # comms_router keeps no path globals since #7269 step 5 — it resolves
     # its broker DB from the app's MonitorContext. Pin the context's message
     # DB onto this smoke broker while keeping every other production root
     # intact for the non-comms dashboards this test also exercises.
     base_ctx = production_context()
-    broker_ctx = replace(
-        base_ctx,
-        roots=replace(base_ctx.roots, message_db_path=broker_db),
-        stores=replace(base_ctx.stores, message_db=DatabaseHandle(broker_db, base_ctx._open_db)),
-    )
-    monkeypatch.setattr(app.state, "ctx", broker_ctx)
-    monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
-    db_handle = DatabaseHandle(broker_db, app.state.ctx._open_db)
-    new_stores = replace(app.state.ctx.stores, message_db=db_handle)
-    monkeypatch.setattr(app.state, "ctx", replace(app.state.ctx, stores=new_stores))
     image_root = tmp_path / "textbook_images"
     textbooks_dir = tmp_path / "textbooks"
     image_root.mkdir()
     textbooks_dir.mkdir()
-    monkeypatch.setattr(images_router, "IMAGES_DIR", image_root)
-    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", textbooks_dir)
-    monkeypatch.setattr(images_router, "ANNOTATIONS_FILE", image_root / "image_text_pairs.jsonl")
-    images_router._index.reload()
-    images_router._page_cache.clear()
+    image_store = images_router.ImageStore(
+        images_dir=image_root,
+        textbooks_dir=textbooks_dir,
+        annotations_file=image_root / "image_text_pairs.jsonl",
+        project_root=base_ctx.roots.project_root,
+    )
+    test_ctx = replace(
+        base_ctx,
+        roots=replace(
+            base_ctx.roots,
+            message_db_path=broker_db,
+            images_dir=image_root,
+            textbooks_dir=textbooks_dir,
+        ),
+        stores=replace(
+            base_ctx.stores,
+            message_db=DatabaseHandle(broker_db, base_ctx._open_db),
+            image_store=image_store,
+        ),
+    )
+    monkeypatch.setattr(app.state, "ctx", test_ctx)
+    app.state.ctx.stores.image_store.index.reload()
+    app.state.ctx.stores.image_store.page_cache.clear()
 
     client = TestClient(app, raise_server_exceptions=False)
     endpoint_timings: list[tuple[str, str, float]] = []
@@ -346,7 +354,7 @@ def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_pa
         "_peek_state_summary",
         lambda: (summary, "hit", 0.0),
     )
-    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda: None)
+    monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
     try:
         client = TestClient(app, raise_server_exceptions=False)

@@ -5,13 +5,17 @@ import json
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(app, raise_server_exceptions=False)
 
 
+def _pin_hermes_root(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(app.state, "ctx", fixture_context(tmp_path))
+
+
 def test_hermes_cron_router_returns_404_when_missing(tmp_path, monkeypatch):
-    from scripts.api import hermes_cron_router
-    monkeypatch.setattr(hermes_cron_router, "PROJECT_ROOT", tmp_path)
+    _pin_hermes_root(monkeypatch, tmp_path)
 
     # Request JSON
     resp_json = client.get("/api/hermes-cron/latest")
@@ -25,8 +29,7 @@ def test_hermes_cron_router_returns_404_when_missing(tmp_path, monkeypatch):
 
 
 def test_hermes_cron_router_returns_correct_content(tmp_path, monkeypatch):
-    from scripts.api import hermes_cron_router
-    monkeypatch.setattr(hermes_cron_router, "PROJECT_ROOT", tmp_path)
+    _pin_hermes_root(monkeypatch, tmp_path)
 
     # Write fake reports to tmp_path/batch_state/hermes_cron/
     cron_dir = tmp_path / "batch_state" / "hermes_cron"

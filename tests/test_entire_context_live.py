@@ -79,6 +79,21 @@ def test_projection_path_is_shared_across_linked_worktrees(tmp_path: Path) -> No
     assert projection_path(linked) == projection_path(primary)
 
 
+def test_shared_repository_root_falls_back_when_subprocess_is_denied(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A denied git probe must not raise; Monitor degrades to the given cwd."""
+
+    def _deny(*_args, **_kwargs):
+        raise AssertionError("subprocess forbidden")
+
+    monkeypatch.setattr(subprocess, "run", _deny)
+    assert shared_repository_root(tmp_path) == tmp_path.resolve()
+    assert projection_path(tmp_path) == (
+        tmp_path.resolve() / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3"
+    )
+
+
 def test_use_receipt_is_explicit_idempotent_and_separate_from_search(tmp_path: Path) -> None:
     store, link = _promoted_store(tmp_path)
     before = store.status()
@@ -438,7 +453,7 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
         locator_ids=[link.locator_id],
     )
     monkeypatch.setenv("ENTIRE_CONTEXT_DB", str(store.db_path))
-    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_args, **_kwargs: tmp_path)
     monkeypatch.setattr(
         entire_context_router,
         "load_provider_status",
@@ -487,7 +502,7 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
 def test_monitor_status_allowlists_reconciliation_health_and_malformed_aggregates(
     tmp_path: Path, monkeypatch
 ) -> None:
-    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_args, **_kwargs: tmp_path)
     monkeypatch.setattr(
         entire_context_router,
         "_projection_status",
@@ -623,7 +638,7 @@ def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
         observed["rollover_root"] = kwargs["rollover_root"]
         return real_search(*args, **kwargs)
 
-    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: linked)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_args, **_kwargs: linked)
     monkeypatch.setattr(entire_context_router, "search_past_work", observe_search)
     response = TestClient(app).get("/api/ops/entire-context/search", params={"q": "6183"})
 

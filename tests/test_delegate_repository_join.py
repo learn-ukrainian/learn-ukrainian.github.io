@@ -46,7 +46,7 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
     monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
-    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     # The router keeps a process-wide scan cache keyed by tasks-dir path;
     # force a cold read so each test sees only its own fixture rows.
     monkeypatch.setattr(delegate_router, "_TASK_STATE_CACHE", {})

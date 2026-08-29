@@ -8,6 +8,7 @@ Covers:
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -171,7 +172,14 @@ def test_worktrees_parses_porcelain_output(monkeypatch, tmp_path):
     )
 
     # Release-mode split (#4931): the router targets the live checkout.
-    monkeypatch.setattr(worktrees_router, "LIVE_REPO_ROOT", primary)
+    monkeypatch.setattr(
+        api_main.app.state,
+        "ctx",
+        replace(
+            api_main.app.state.ctx,
+            roots=replace(api_main.app.state.ctx.roots, live_repo_root=primary),
+        ),
+    )
 
     calls: list[list[str]] = []
 
@@ -239,6 +247,17 @@ def test_worktrees_missing_git_binary_degrades(monkeypatch):
     assert "FileNotFoundError" in body["error"]
 
 
+def test_worktrees_swallows_opsec_subprocess_deny(monkeypatch):
+    def raises_denied(*_a, **_kw):
+        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
+
+    monkeypatch.setattr(worktrees_router.subprocess, "run", raises_denied)
+
+    body = client.get("/api/worktrees").json()
+    assert body["worktrees"] == []
+    assert "AssertionError" in body["error"]
+
+
 # ---------------------------------------------------------------------
 # /api/artifacts/{track}/{slug}/force-preview
 # ---------------------------------------------------------------------
@@ -292,9 +311,18 @@ def test_force_preview_enumerates_every_deletion_target(tmp_path, monkeypatch):
     proj = _lay_out_module(tmp_path)
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
-    monkeypatch.setattr(artifacts_router, "PLANS_ROOT", proj / "plans")
+    from dataclasses import replace
+
+    from scripts.api.monitor_context import fixture_context
+
+    ctx = replace(
+        fixture_context(proj),
+        roots=replace(
+            fixture_context(proj).roots,
+            curriculum_root=proj / "curriculum",
+        ),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
     resp = client.get("/api/artifacts/a1/hello/force-preview")
     assert resp.status_code == 200
@@ -332,9 +360,18 @@ def test_force_preview_empty_for_nonexistent_slug(tmp_path, monkeypatch):
     monkeypatch.setattr(
         artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
-    monkeypatch.setattr(artifacts_router, "PLANS_ROOT", proj / "plans")
+    from dataclasses import replace
+
+    from scripts.api.monitor_context import fixture_context
+
+    ctx = replace(
+        fixture_context(proj),
+        roots=replace(
+            fixture_context(proj).roots,
+            curriculum_root=proj / "curriculum",
+        ),
+    )
+    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
     body = client.get("/api/artifacts/a1/never-existed/force-preview").json()
     assert body["count"] == 0

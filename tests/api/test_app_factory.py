@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import re
+import sqlite3
+import subprocess
 from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -32,14 +36,16 @@ DB_ACCESS_PATTERNS = (
 # unique files. Infrastructure files are listed too so the denominator cannot
 # silently shrink when the exemptions below are changed. #7269 step 5 removed
 # scripts/api/comms_router.py deliberately (20 -> 19); step 2 removed
-# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18).
+# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18);
+# step 8 removed scripts/api/admin_router.py (18 -> 17);
+# step 9 removed scripts/api/dashboard_comms.py (17 -> 16);
+# #7269 step 12b removed delegate_router, discussions_router, and gold_router
+# (16 -> 13) after those routes opened stores only through MonitorContext;
+# step 12d removed telemetry_router.py and wiki_router.py (13 -> 11) after
+# both opened stores through MonitorContext.
 DB_ACCESS_ALLOWLIST = frozenset(
     {
-        "scripts/api/admin_router.py",
         "scripts/api/agent_monitor_router.py",
-        "scripts/api/dashboard_comms.py",
-        "scripts/api/delegate_router.py",
-        "scripts/api/discussions_router.py",
         "scripts/api/epics_router.py",
         "scripts/api/fleet_router.py",
         "scripts/api/fleet_workers_collect.py",
@@ -49,9 +55,6 @@ DB_ACCESS_ALLOWLIST = frozenset(
         "scripts/api/resilience.py",
         "scripts/api/runtime_router.py",
         "scripts/api/telemetry/legacy_comms.py",
-        "scripts/api/telemetry_router.py",
-        "scripts/api/wiki_router.py",
-        "scripts/api/gold_router.py",
         "agents_extensions/shared/session_streams/db.py",
     }
 )
@@ -339,8 +342,229 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         assert "session" in second_manifest
 
 
+def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
+    """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_backups = first_root / "data" / "backups"
+    second_backups = second_root / "data" / "backups"
+    first_backups.mkdir(parents=True)
+    second_backups.mkdir(parents=True)
+    (first_backups / "first.tar").write_bytes(b"first")
+    (second_backups / "second.tar").write_bytes(b"second")
+
+    first_plan = first_root / "batch_state" / "fleet-comms" / "retention"
+    second_plan = second_root / "batch_state" / "fleet-comms" / "retention"
+    first_plan.mkdir(parents=True)
+    second_plan.mkdir(parents=True)
+    (first_plan / "latest.json").write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1", "marker": "first-plan"}),
+        encoding="utf-8",
+    )
+    (second_plan / "latest.json").write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1", "marker": "second-plan"}),
+        encoding="utf-8",
+    )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_backups_body = first_client.get("/api/admin/backup/list").json()
+        second_backups_body = second_client.get("/api/admin/backup/list").json()
+        assert {item["filename"] for item in first_backups_body["backups"]} == {"first.tar"}
+        assert {item["filename"] for item in second_backups_body["backups"]} == {"second.tar"}
+        assert "first.tar" not in json.dumps(second_backups_body)
+        assert "second.tar" not in json.dumps(first_backups_body)
+
+        first_retention = first_client.get("/api/ops/v1/retention/latest").json()
+        second_retention = second_client.get("/api/ops/v1/retention/latest").json()
+        assert first_retention["marker"] == "first-plan"
+        assert second_retention["marker"] == "second-plan"
+        assert first_retention["missing"] is False
+        assert second_retention["missing"] is False
+
+        first_status = first_client.get("/api/ops/entire-context/status").json()
+        second_status = second_client.get("/api/ops/entire-context/status").json()
+        assert first_status["schema"] == "entire-context-monitor.v1"
+        assert second_status["schema"] == "entire-context-monitor.v1"
+        assert first_status["recall"]["available"] is False
+        assert second_status["recall"]["available"] is False
+
+        first_hygiene = first_client.get("/api/git/hygiene").json()
+        second_hygiene = second_client.get("/api/git/hygiene").json()
+        assert first_hygiene["dirty_total"] == 0
+        assert second_hygiene["dirty_total"] == 0
+        assert "error" in first_hygiene
+        assert "error" in second_hygiene
+
+
+def _seed_sources_db(path: Path, *, rows: int) -> None:
+    import sqlite3
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(path)
+    connection.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, text TEXT)")
+    connection.executemany("INSERT INTO textbooks (text) VALUES (?)", [("chunk",)] * rows)
+    connection.commit()
+    connection.close()
+
+
+def _write_textbook_png(root: Path, *, grade: str, name: str) -> None:
+    directory = root / "data" / "textbook_images" / grade
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / name).write_bytes(b"\x89PNG" + b"\x00" * 8)
+
+
+def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    _write_textbook_png(first_root, grade="grade-01", name="first.png")
+    _write_textbook_png(second_root, grade="grade-02", name="second.png")
+    _seed_sources_db(first_ctx.roots.sources_db_path, rows=3)
+    _seed_sources_db(second_ctx.roots.sources_db_path, rows=7)
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_browse = first_client.get("/api/sources/browse_images").json()
+        second_browse = second_client.get("/api/sources/browse_images").json()
+        assert first_browse["total"] == 1
+        assert first_browse["images"][0]["name"] == "first.png"
+        assert first_browse["images"][0]["grade"] == "grade-01"
+        assert second_browse["total"] == 1
+        assert second_browse["images"][0]["name"] == "second.png"
+        assert second_browse["images"][0]["grade"] == "grade-02"
+        assert first_browse["images"][0]["name"] not in {
+            image["name"] for image in second_browse["images"]
+        }
+
+        first_stats = first_client.get("/api/sources/stats").json()
+        second_stats = second_client.get("/api/sources/stats").json()
+        assert first_stats["sources_db"]["status"] == "ok"
+        assert second_stats["sources_db"]["status"] == "ok"
+        assert first_stats["sources_db"]["points_count"] == 3
+        assert second_stats["sources_db"]["points_count"] == 7
+        assert first_stats["sources_db"]["tables"]["textbooks"] == 3
+        assert second_stats["sources_db"]["tables"]["textbooks"] == 7
+
+        first_legacy = first_client.get("/api/rag/stats").json()
+        assert first_legacy["sources_db"]["points_count"] == 3
+
+
+def test_step11_contracts_router_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_routes = first_client.get("/api/contracts/routes").json()
+        second_routes = second_client.get("/api/contracts/routes").json()
+        assert "route_contracts" in first_routes
+        assert "route_contracts" in second_routes
+        assert len(first_routes["route_contracts"]) == len(second_routes["route_contracts"])
+        assert "page_contracts" in first_routes
+        assert "page_contracts" in second_routes
+
+
+def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_dist = first_root / "site" / "dist"
+    second_dist = second_root / "site" / "dist"
+    first_dist.mkdir(parents=True)
+    second_dist.mkdir(parents=True)
+    (first_dist / "sitemap-index.xml").write_text("<first/>", encoding="utf-8")
+    (second_dist / "sitemap-index.xml").write_text("<second/>", encoding="utf-8")
+
+    for root, ctx in ((first_root, first_ctx), (second_root, second_ctx)):
+        ctx.roots.sources_db_path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(str(ctx.roots.sources_db_path)) as conn:
+            conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY)")
+            count = 1 if root is first_root else 2
+            conn.executemany("INSERT INTO textbooks DEFAULT VALUES", [()] * count)
+            conn.commit()
+        subprocess.run(
+            ["git", "init", "--quiet", "-b", "main"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_site = first_client.get("/api/site/health").json()
+        second_site = second_client.get("/api/site/health").json()
+        assert first_site["last_astro_build"]["built"] is True
+        assert second_site["last_astro_build"]["built"] is True
+        assert first_site["sitemap"]["path"] == "site/dist/sitemap-index.xml"
+        assert second_site["sitemap"]["path"] == "site/dist/sitemap-index.xml"
+        assert first_site["sitemap"]["path"] == second_site["sitemap"]["path"]
+
+        first_sources = first_client.get("/api/wiki/sources").json()
+        second_sources = second_client.get("/api/wiki/sources").json()
+        assert first_sources["total_entries"] == 1
+        assert second_sources["total_entries"] == 2
+
+        first_timing = first_client.post(
+            "/api/telemetry/tool-timings",
+            json={
+                "ts": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                "tool_name": "Bash",
+                "duration_ms": 10,
+            },
+        )
+        assert first_timing.status_code == 200
+        assert first_client.get("/api/telemetry/tool-timings?window=24h").json()[0]["count"] == 1
+        assert second_client.get("/api/telemetry/tool-timings?window=24h").json() == []
+
+        first_worktrees = first_client.get("/api/worktrees").json()
+        second_worktrees = second_client.get("/api/worktrees").json()
+        assert first_worktrees["count"] == 1
+        assert second_worktrees["count"] == 1
+        assert first_worktrees["worktrees"][0]["is_primary"] is True
+        assert second_worktrees["worktrees"][0]["is_primary"] is True
+        assert Path(first_worktrees["worktrees"][0]["path"]).resolve() == first_root.resolve()
+        assert Path(second_worktrees["worktrees"][0]["path"]).resolve() == second_root.resolve()
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 18
+    assert len(DB_ACCESS_ALLOWLIST) == 11
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
     files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
     findings: list[str] = []

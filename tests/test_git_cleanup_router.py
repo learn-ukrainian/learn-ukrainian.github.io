@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -16,7 +17,7 @@ client = TestClient(app, raise_server_exceptions=False)
 
 def _git(repo: Path, *args: str) -> str:
     env = os.environ.copy()
-    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR"):
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR", "AGENT_NO_MERGE"):
         env.pop(key, None)
     proc = subprocess.run(
         ["git", *args],
@@ -104,13 +105,20 @@ def _cleanup_fixture(tmp_path: Path, monkeypatch) -> Path:
         json.dumps({"task_id": "1526-item2-anchor-parity", "status": "running"}),
     )
 
-    monkeypatch.setattr(git_hygiene_router, "PROJECT_ROOT", repo)
-    # The /cleanup ROUTE serves LIVE_REPO_ROOT (git_hygiene_router.py:738) — without
-    # patching it too, endpoint tests scan the REAL repository: 100+ branches and a
-    # dozen multi-GB worktrees on a working orchestrator machine → the resilience
-    # middleware's deadline converts the slow scan into a 504 (#5360 isolation class;
-    # it only ever passed on checkouts with no worktrees, e.g. CI).
-    monkeypatch.setattr(git_hygiene_router, "LIVE_REPO_ROOT", repo)
+    # The /cleanup route serves ctx.roots.live_repo_root (#7269 step 8) —
+    # without swapping the app context, endpoint tests scan the REAL
+    # repository: 100+ branches and a dozen multi-GB worktrees on a working
+    # orchestrator machine → the resilience middleware's deadline converts
+    # the slow scan into a 504 (#5360 isolation class; it only ever passed
+    # on checkouts with no worktrees, e.g. CI).
+    monkeypatch.setattr(
+        app.state,
+        "ctx",
+        replace(
+            app.state.ctx,
+            roots=replace(app.state.ctx.roots, live_repo_root=repo, project_root=repo),
+        ),
+    )
     return repo
 
 

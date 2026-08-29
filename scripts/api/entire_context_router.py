@@ -8,7 +8,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
 from scripts.entire_context.paths import projection_path, shared_repository_root
 from scripts.entire_context.provider import load_provider_capabilities, load_provider_status
@@ -19,9 +19,9 @@ from scripts.entire_context.resolvers import (
     default_monitor_root,
 )
 from scripts.entire_context.store import ContextLinkStore
-from scripts.fleet_comms.message_plane import default_plane_root
+from scripts.fleet_comms import message_plane
 
-from .config import LIVE_REPO_ROOT, PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 from .repository_authority import preparation_data_root
 
 router = APIRouter(tags=["entire-context"])
@@ -39,10 +39,18 @@ _ACP_HEALTH_TEXT_FIELDS = (
 )
 
 
-def _repo_root() -> Path:
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers."""
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _repo_root(ctx: MonitorContext | None = None) -> Path:
+    resolved = _resolve_context(ctx)
     return preparation_data_root(
-        project_root=Path(PROJECT_ROOT),
-        live_repo_root=Path(LIVE_REPO_ROOT),
+        project_root=Path(resolved.roots.project_root),
+        live_repo_root=Path(resolved.roots.live_repo_root),
     )
 
 
@@ -168,9 +176,9 @@ def _projection_status(root: Path) -> dict[str, Any]:
 
 
 @router.get("/status")
-def entire_context_status() -> dict[str, Any]:
+def entire_context_status(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Truthfully distinguish capture, recall availability, and proven use."""
-    root = _repo_root()
+    root = _repo_root(ctx)
     projection = _public_projection_status(_projection_status(root))
     provider = load_provider_status(root)
     capabilities = load_provider_capabilities(root)
@@ -226,9 +234,10 @@ def entire_context_status() -> dict[str, Any]:
 def entire_context_search(
     q: str = Query(min_length=1, max_length=256),
     limit: int = Query(default=5, ge=1, le=10),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Return reverified local locator cards; never call Entire or the network."""
-    root = _repo_root()
+    root = _repo_root(ctx)
     status = _projection_status(root)
     if status.get("available") is not True:
         return {
@@ -238,7 +247,10 @@ def entire_context_search(
             "results": [],
         }
     acp_root = Path(
-        os.environ.get("ENTIRE_CONTEXT_ACP_ROOT", default_plane_root(repo_root=root))
+        os.environ.get(
+            "ENTIRE_CONTEXT_ACP_ROOT",
+            message_plane.default_plane_root(repo_root=root),
+        )
     )
     try:
         payload = search_past_work(

@@ -520,7 +520,7 @@ def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> 
 
     glm_secret = "glm-secret-must-not-appear"
     glm = run_launcher(
-        "start-glm.sh",
+        "start-glmcc.sh",
         env={"HOME": str(home), "ZAI_API_KEY": glm_secret},
     )
     assert glm.returncode == 0, glm.stderr
@@ -558,7 +558,11 @@ def test_compat_wrappers_forward_to_shared_adapters() -> None:
     kimicc = (REPO / "start-kimicc.sh").read_text(encoding="utf-8")
     glmcc = (REPO / "start-glmcc.sh").read_text(encoding="utf-8")
     assert 'exec "$ROOT/start-kimi.sh" --harness claude-code "$@"' in kimicc
-    assert 'exec "$ROOT/start-glm.sh" "$@"' in glmcc
+    assert "launcher_main glm interactive" in glmcc
+    assert "GLM_OPENCODE_FLASH" not in glmcc
+    start_glm = (REPO / "start-glm.sh").read_text(encoding="utf-8")
+    assert "GLM_OPENCODE_FLASH=1" in start_glm
+    assert "launcher_main glm interactive" in start_glm
     # Wrappers must not set route credentials themselves — isolation stays in
     # the shared route helpers.
     for body in (kimicc, glmcc):

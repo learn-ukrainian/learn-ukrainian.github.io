@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import delegate
 
 from scripts.api import coordination_router
+from scripts.api.monitor_context import fixture_context
 from scripts.orchestration import agent_ledger, orchestrator_control, task_identity, task_lifecycle
 
 NOW = "2026-07-16T10:00:00Z"
@@ -64,7 +65,7 @@ def test_delegate_loads_validated_carrier_and_prompt(tmp_path: Path) -> None:
 
 
 def test_agent_ledger_persists_carrier_and_monitor_returns_it(
-    tmp_path: Path, monkeypatch
+    tmp_path: Path,
 ) -> None:
     path = _lifecycle_file(tmp_path)
     task = agent_ledger.upsert_task(
@@ -74,9 +75,9 @@ def test_agent_ledger_persists_carrier_and_monitor_returns_it(
         status="running",
         lifecycle_file=path,
     )
-    monkeypatch.setattr(coordination_router, "PROJECT_ROOT", tmp_path)
-
-    monitored = asyncio.run(coordination_router.coordination_task("closeout-worker"))
+    monitored = asyncio.run(
+        coordination_router.coordination_task("closeout-worker", ctx=fixture_context(tmp_path))
+    )
 
     assert task["task_lifecycle"]["state_file"] == str(path.resolve())
     assert monitored["task_lifecycle"] == task["task_lifecycle"]

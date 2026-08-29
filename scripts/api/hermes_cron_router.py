@@ -4,18 +4,21 @@ from __future__ import annotations
 
 import json
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 
-from .config import PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx
 
 router = APIRouter(tags=["hermes-cron"])
 
 
 @router.get("/latest")
-async def get_latest(format: str | None = Query(None, description="Output format: 'json' or 'markdown'")):
+async def get_latest(
+    format: str | None = Query(None, description="Output format: 'json' or 'markdown'"),
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Get the latest nightly audit report."""
-    cron_dir = PROJECT_ROOT / "batch_state" / "hermes_cron"
+    cron_dir = ctx.roots.batch_state_dir / "hermes_cron"
 
     if format == "markdown":
         md_file = cron_dir / "latest.md"

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from fastapi.testclient import TestClient
 
 from scripts.ai_agent_bridge import _db
 from scripts.api import discussions_router
+from scripts.api.monitor_context import DatabaseHandle, fixture_context
 
 
 def _insert_message(
@@ -42,8 +44,21 @@ def _insert_message(
     )
 
 
+def _discussions_client(root: Path, db_path: Path) -> TestClient:
+    ctx = fixture_context(root)
+    pinned = replace(
+        ctx,
+        roots=replace(ctx.roots, message_db_path=db_path),
+        stores=replace(ctx.stores, message_db=DatabaseHandle(db_path, ctx._open_db)),
+    )
+    app = FastAPI()
+    app.state.ctx = pinned
+    app.include_router(discussions_router.router, prefix="/api/discussions")
+    return TestClient(app, raise_server_exceptions=False)
+
+
 @pytest.fixture()
-def discussions_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
+def discussions_client(tmp_path: Path) -> TestClient:
     db_path = tmp_path / "messages.db"
     conn = sqlite3.connect(db_path)
     conn.executescript(_db._CHANNELS_SCHEMA)
@@ -68,10 +83,7 @@ def discussions_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestC
     _insert_message(conn, message_id="m12", thread_id="lowercase-agree", round_index=2, from_agent="claude", body="Parallel reply [agree]", created_at=now - timedelta(minutes=1))
     conn.commit()
     conn.close()
-    monkeypatch.setattr(discussions_router, "MESSAGE_DB", db_path)
-    app = FastAPI()
-    app.include_router(discussions_router.router, prefix="/api/discussions")
-    return TestClient(app, raise_server_exceptions=False)
+    return _discussions_client(tmp_path, db_path)
 
 
 def test_active_discussions_classifies_running_converged_and_timed_out(discussions_client: TestClient):
@@ -106,10 +118,7 @@ def test_active_discussions_lookback_includes_older_threads(discussions_client: 
     assert "old" in by_thread
 
 
-def test_active_discussions_negative_path_missing_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(discussions_router, "MESSAGE_DB", tmp_path / "missing.db")
-    app = FastAPI()
-    app.include_router(discussions_router.router, prefix="/api/discussions")
-    response = TestClient(app, raise_server_exceptions=False).get("/api/discussions/active")
+def test_active_discussions_negative_path_missing_db(tmp_path: Path):
+    response = _discussions_client(tmp_path, tmp_path / "missing.db").get("/api/discussions/active")
     assert response.status_code == 200
     assert response.json()["error"] == "Broker DB not found"

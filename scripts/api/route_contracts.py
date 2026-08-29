@@ -11,7 +11,9 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from typing import Literal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 ContractKind = Literal["http", "websocket"]
 MatchType = Literal["exact", "prefix"]
@@ -1336,6 +1338,18 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
 router = APIRouter(tags=["contracts"])
 
 
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors other routers (#7393 / #6849): every route handler gets ``ctx``
+    injected via ``Depends(get_ctx)``, but helpers and unit tests may also
+    invoke handlers directly outside FastAPI request handling.
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
 def contracts_for_route(path: str, kind: ContractKind = "http") -> list[RouteContract]:
     """Return matching contracts, most specific first."""
     return sorted(
@@ -1358,8 +1372,9 @@ def contract_for_page(filename: str) -> PageContract | None:
 
 
 @router.get("/routes")
-async def route_contracts():
+async def route_contracts(ctx: MonitorContext = Depends(get_ctx)):
     """Public Monitor route/page contract registry."""
+    _ = _resolve_context(ctx)
     return {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "route_contracts": [contract.to_dict() for contract in ROUTE_CONTRACTS],
